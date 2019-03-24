@@ -2,7 +2,7 @@
 
 DBML (database markup language) is a simple, readable DSL language designed to define database structures.
 
-**Benefits**
+### Benefits
 
 - It is simple, flexible and highly human-readable
 - It is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
