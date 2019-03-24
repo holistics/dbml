@@ -102,7 +102,7 @@ DDL also comes with a few more drawbacks:
     
     Ref: U.id < posts.user_id
 
-## Column Settings
+### Column Settings
 
 Each column can take have optinal settings, defined in square brackets like so:
 
