@@ -10,17 +10,19 @@ DBML (database markup language) is a simple, readable DSL language designed to d
 
 Consider the following SQL DDL statements that define a table with a few columns and indexes
 
-    CREATE TABLE "users"
-    (
-    	id integer primary key,
-      username varchar(255) not null unique,
-      created_at timestamp without time zone default NOW()
-    );
+```sql
+CREATE TABLE "users"
+(
+  id integer primary key,
+  username varchar(255) not null unique,
+  created_at timestamp without time zone default NOW()
+);
     
-    comment on column users.username is 'Used to log in';
+comment on column users.username is 'Used to log in';
     
-    CREATE INDEX on users (username);
-    CREATE INDEX on users (created_at);
+CREATE INDEX on users (username);
+CREATE INDEX on users (created_at);
+```
 
 Compare that with a DBML syntax:
 
