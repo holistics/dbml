@@ -142,14 +142,14 @@ The list of column settings you can use:
 - `null` or `not null`: mark a column null or not null
 - `unique`: mark the column unique
 - `note: "string to add notes"`: add a metadata note to this column
-- `default: some_value`: set a default value of the column, please refer to the Default Value section below *(coming soon)*
+- `default: some_value`: set a default value of the column, please refer to the Default Value section below (coming soon)
 - `auto increment`: mark the column as auto increment (coming soon)
 
 **Default Value (coming soon):** You can set default value as:
 
 - number value starts blank: `default: 123` or `default: 123.456`
 - string value starts with single quotes: `default: 'some string value'`
-- expression value is wrapped with parenthesis: `default: now() - interval '5 days'`
+- expression value is wrapped with parenthesis: ``default: `now() - interval '5 days'` ``
 - boolean (true/false/null): `default: false` or `default: null`
 
 Example,
@@ -188,7 +188,7 @@ Example,
         }
     }
 
-*Index Settings (coming soon)*
+Index Settings (coming soon)
 
 - `type`: type of index (btree, gin, gist, hash depending on DB)
 - `name`: name of index
@@ -283,4 +283,4 @@ DBML is the standard language for database and the syntax is consistent to provi
 - `column_name` is stated in just plain text
 - single quote as `'string'`: string value
 - double quote as `"column_name"`: quoting variable (coming soon)
-- `backslash`: function expression (coming soon)
+- backtick`` ` ``: function expression (coming soon)
