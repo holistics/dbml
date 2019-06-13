@@ -283,4 +283,4 @@ DBML is the standard language for database and the syntax is consistent to provi
 - `column_name` is stated in just plain text
 - single quote as `'string'`: string value
 - double quote as `"column_name"`: quoting variable (coming soon)
-- backtick`` ` ``: function expression (coming soon)
+- backtick `` ` ``: function expression (coming soon)
