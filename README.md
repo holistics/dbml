@@ -76,22 +76,22 @@ DDL also comes with a few more drawbacks:
 ## DBML Docs
 
 DBML supports defining the following:
-- [Table Definition](https://github.com/holistics/dbml/blob/master/README.md#table-definition)
+- [Table Definition](#table-definition)
     - Table Alias
     - Table Notes (coming soon)
     - Table Settings
-- [Column Definition](https://github.com/holistics/dbml/blob/master/README.md#column-definition)
+- [Column Definition](#column-definition)
     - Column Settings
     - Default Value (coming soon)
     - Index Definition (coming soon)
         - Index Settings (coming soon)
-- [Relationships & Foreign Key Definitions](https://github.com/holistics/dbml/blob/master/README.md#relationships--foreign-key-definitions)
+- [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
     - Many-to-many relationship
-- [Comments](https://github.com/holistics/dbml/blob/master/README.md#comments)
-- [Metadata Notes](https://github.com/holistics/dbml/blob/master/README.md#metadata-notes)
-- [Enum Definition](https://github.com/holistics/dbml/blob/master/README.md#enum-definition)
+- [Comments](#comments)
+- [Metadata Notes](#metadata-notes)
+- [Enum Definition](#enum-definition)
 - TableGroup, ColorScheme (coming soon)
-- [Syntax Consistency](https://github.com/holistics/dbml/blob/master/README.md#syntax-consistency)
+- [Syntax Consistency](#syntax-consistency)
 
 ### Table Definition
     
