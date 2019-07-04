@@ -290,7 +290,8 @@ DBML is the standard language for database and the syntax is consistent to provi
 **Emacs Mode for DBML (Contributed by ccod)**
 
 https://github.com/ccod/dbd-mode
-```(defconst dbdiagram-mode-syntax-table
+``` 
+(defconst dbdiagram-mode-syntax-table
   (let ((table (make-syntax-table)))
     ;; / is punctuation, but // is a comment starter
     (modify-syntax-entry ?/ ". 12" table)
@@ -321,3 +322,4 @@ https://github.com/ccod/dbd-mode
   (font-lock-fontify-buffer))
 
 (add-to-list 'auto-mode-alist '("\\.dbd\\'" . dbdiagram-mode))
+```
