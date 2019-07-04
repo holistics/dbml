@@ -92,7 +92,7 @@ DBML supports defining the following:
 - [Enum Definition](#enum-definition)
 - TableGroup, ColorScheme (coming soon)
 - [Syntax Consistency](#syntax-consistency)
-- [Community Contributions] (#community-contributions)
+- [Community Contributions](#community-contributions)
 
 ### Table Definition
     
@@ -288,6 +288,7 @@ DBML is the standard language for database and the syntax is consistent to provi
 
 ### Community Contributions
 **Emacs Mode for DBML (Contributed by ccod)**
+
 https://github.com/ccod/dbd-mode
 ```(defconst dbdiagram-mode-syntax-table
   (let ((table (make-syntax-table)))
@@ -319,4 +320,4 @@ https://github.com/ccod/dbd-mode
   (setq-local python-indent 2)
   (font-lock-fontify-buffer))
 
-(add-to-list 'auto-mode-alist '("\\.dbd\\'" . dbdiagram-mode))```
+(add-to-list 'auto-mode-alist '("\\.dbd\\'" . dbdiagram-mode))
