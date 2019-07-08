@@ -146,7 +146,7 @@ The list of column settings you can use:
 - `default: some_value`: set a default value of the column, please refer to the Default Value section below (coming soon)
 - `auto increment`: mark the column as auto increment (coming soon)
 
-**Default Value (coming soon):** You can set default value as:
+**Default Value (NEW):** You can set default value as:
 
 - number value starts blank: `default: 123` or `default: 123.456`
 - string value starts with single quotes: `default: 'some string value'`
@@ -163,12 +163,6 @@ Example,
         created_at timestamp [default: `now()`]
         rating integer [default: 10]
     }
-
-    Table posts as P {
-        id integer [primary key]
-        user_id integer
-    }
-
     
 **Index Definition (coming soon):** Indexes allow users to quickly locate and access the data.
 
