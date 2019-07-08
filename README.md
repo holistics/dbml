@@ -2,7 +2,7 @@
 
 DBML (database markup language) is a simple, readable DSL language designed to define database structures.
 
-### Benefits
+## Benefits
 
 - It is simple, flexible and highly human-readable
 - It is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
@@ -10,7 +10,7 @@ DBML (database markup language) is a simple, readable DSL language designed to d
 
 (**Coming soon):** A `dbml-to-sql` generator to generate SQL from `.dbml` file
 
-### Example
+## Example
 
 Example of a database definition of a simple blogging site:
 
@@ -57,7 +57,7 @@ Example of a database definition of a simple blogging site:
       draft
     }
 
-### Is this similar to SQL DDL?
+## Is this similar to SQL DDL?
 
 Not quite. Despite its name (data "definition" language), DDL is designed mainly to help physically create, modify or remove tables, not to define them.
 
@@ -67,7 +67,7 @@ DDL also comes with a few more drawbacks:
 - It is database specific (Oracle vs PostgreSQL vs MySQL, etc)
 - Since it is imperative (vs declarative), to fully reconstruct a table definition you have to trace through all the code (instead of focusing on just 1 single section).
 
-### How to generate SQL from DBML?
+## How to generate SQL from DBML?
 
 1. Go to dbdiagram.io
 2. Type up your DBML code
@@ -269,7 +269,7 @@ When hovering over the column in the canvas, the enum values will be displayed.
         status job_status
     }
 
-### Syntax Consistency
+## Syntax Consistency
 DBML is the standard language for database and the syntax is consistent to provide clear and extensive functions.
 
 - curly brackets `{}`: grouping for indexes, constraints and table definitions
@@ -280,6 +280,6 @@ DBML is the standard language for database and the syntax is consistent to provi
 - double quote as `"column_name"`: quoting variable (coming soon)
 - backtick `` ` ``: function expression (coming soon)
 
-### Community Contributions
+## Community Contributions
 
 * Emacs Mode for DBML (Contributed by ccod): https://github.com/ccod/dbd-mode
