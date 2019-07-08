@@ -82,7 +82,7 @@ DBML supports defining the following:
     - Table Settings
 - [Column Definition](#column-definition)
     - Column Settings
-    - Default Value (coming soon)
+    - Default Value (NEW)
     - Index Definition (coming soon)
         - Index Settings (coming soon)
 - [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
