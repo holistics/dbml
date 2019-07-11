@@ -80,11 +80,11 @@ DBML supports defining the following:
     - Table Alias
     - Table Notes (coming soon)
     - Table Settings
+    - Index Definition (NEW)
+        - Index Settings
 - [Column Definition](#column-definition)
     - Column Settings
     - Default Value (NEW)
-    - Index Definition (NEW)
-        - Index Settings
 - [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
     - Many-to-many relationship
 - [Comments](#comments)
@@ -126,6 +126,31 @@ Each setting item can take in 2 forms: `Key: Value` or `keyword`, similar to tha
 - `color: <color_code>`: change the table header color (coming soon)
 
     Example, `[color: blue]`
+    
+**Index Definition (NEW):** Indexes allow users to quickly locate and access the data.
+
+    Table bookings {
+        id integer [primary key]
+        country varchar
+        booking_date date
+        created_at timestamp
+
+        indexes {
+            created_at [note: 'Date']
+            booking_date
+            (country, booking_date) [unique]
+            booking_date [type: 'hash']
+		    (`id*2`)
+		    (`id*3`,`getdate()`)
+		    (`id*3`,id)
+        }
+    }
+
+Index Settings
+
+- `type`: type of index (btree, gin, gist, hash depending on DB)
+- `name`: name of index
+- `unique`: unique index
 
 ### Column Definition
 
@@ -163,31 +188,6 @@ Example,
         created_at timestamp [default: `now()`]
         rating integer [default: 10]
     }
-    
-**Index Definition (NEW):** Indexes allow users to quickly locate and access the data.
-
-    Table bookings {
-        id integer [primary key]
-        country varchar
-        booking_date date
-        created_at timestamp
-
-        indexes {
-            created_at [note: 'Date']
-            booking_date
-            (country, booking_date) [unique]
-            booking_date [type: 'hash']
-		    (`id*2`)
-		    (`id*3`,`getdate()`)
-		    (`id*3`,id)
-        }
-    }
-
-Index Settings
-
-- `type`: type of index (btree, gin, gist, hash depending on DB)
-- `name`: name of index
-- `unique`: unique index
 
 ### Relationships & Foreign Key Definitions
 Relationships are used to define foreign key constraints between tables.
