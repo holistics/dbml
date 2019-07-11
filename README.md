@@ -83,8 +83,8 @@ DBML supports defining the following:
 - [Column Definition](#column-definition)
     - Column Settings
     - Default Value (NEW)
-    - Index Definition (coming soon)
-        - Index Settings (coming soon)
+    - Index Definition (NEW)
+        - Index Settings
 - [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
     - Many-to-many relationship
 - [Comments](#comments)
@@ -164,7 +164,7 @@ Example,
         rating integer [default: 10]
     }
     
-**Index Definition (coming soon):** Indexes allow users to quickly locate and access the data.
+**Index Definition (NEW):** Indexes allow users to quickly locate and access the data.
 
     Table bookings {
         id integer [primary key]
@@ -183,7 +183,7 @@ Example,
         }
     }
 
-Index Settings (coming soon)
+Index Settings
 
 - `type`: type of index (btree, gin, gist, hash depending on DB)
 - `name`: name of index
