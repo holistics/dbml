@@ -130,20 +130,20 @@ Each setting item can take in 2 forms: `Key: Value` or `keyword`, similar to tha
 **Index Definition (NEW):** Indexes allow users to quickly locate and access the data.
 
     Table bookings {
-        id integer [primary key]
-        country varchar
-        booking_date date
-        created_at timestamp
+      id integer [primary key]
+      country varchar
+      booking_date date
+      created_at timestamp
 
-        indexes {
-            created_at [note: 'Date']
-            booking_date
-            (country, booking_date) [unique]
-            booking_date [type: 'hash']
-		    (`id*2`)
-		    (`id*3`,`getdate()`)
-		    (`id*3`,id)
-        }
+      indexes {
+          created_at [note: 'Date']
+          booking_date
+          (country, booking_date) [unique]
+          booking_date [type: 'hash']
+          (`id*2`)
+          (`id*3`,`getdate()`)
+          (`id*3`,id)
+      }
     }
 
 Index Settings
