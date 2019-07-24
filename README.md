@@ -28,7 +28,7 @@ Example of a database definition of a simple blogging site:
     }
     
     Table posts {
-      id integer [auto increment, primary key]
+      id integer [increment, primary key]
       title varchar(255) [not null]
       body text
       user_id integer [ref: >users.id] // inline references
@@ -37,7 +37,7 @@ Example of a database definition of a simple blogging site:
     }
     
     Table cats {
-      id integer [auto increment, primary key]
+      id integer [increment, primary key]
       slug varchar(255) [unique]
       name varchar(255)
     }
@@ -144,7 +144,7 @@ The list of column settings you can use:
 - `unique`: mark the column unique
 - `note: "string to add notes"`: add a metadata note to this column
 - `default: some_value`: set a default value of the column, please refer to the Default Value section below (coming soon)
-- `auto increment`: mark the column as auto increment (coming soon)
+- `increment`: mark the column as auto increment (NEW)
 
 **Default Value (NEW):** You can set default value as:
 
