@@ -109,7 +109,7 @@ DBML supports defining the following:
 - `column_name` is stated in just plain text
 - column_name can be wrapped in a `double quote as "column_name"`
     
-**Table Alias:** You can alias the table, and use them in the references later on
+**Table Alias:** You can alias the table, and use them in the references later on.
 
     Table very_long_user_table as U {
         ...
