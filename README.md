@@ -15,47 +15,21 @@ DBML (database markup language) is a simple, readable DSL language designed to d
 Example of a database definition of a simple blogging site:
 
     Table users {
-      id integer [primary key]
-      username varchar(255) [not null]
-      "display name" varchar(255)
-      role UserRole [not null, note: "Role of user"]
-      created_at timestamp [default: 'now()']
-    
-      indexes {
-        created_at,
-        username [unique]
-      }
+        id integer
+        username varchar
+        role varchar
+        created_at timestamp
     }
-    
+
     Table posts {
-      id integer [increment, primary key]
-      title varchar(255) [not null]
-      body text
-      user_id integer [ref: >users.id] // inline references
-      cat_id integer [ref: >cats.id]
-      status PostStatus
+        id integer [primary key]
+        title varchar
+        body text [note: "Content of the post"]
+        user_id integer
+        created_at timestamp
     }
-    
-    Table cats {
-      id integer [increment, primary key]
-      slug varchar(255) [unique]
-      name varchar(255)
-    }
-    
+
     Ref: posts.user_id > users.id // many-to-one
-    Ref: cats.id < posts.cat_id   // one-to-many
-    
-    Enum UserRole {
-      admin
-      editor
-      viewer
-    }
-    
-    Enum PostStatus {
-      public
-      private
-      draft
-    }
 
 ## Is this similar to SQL DDL?
 
@@ -90,7 +64,7 @@ DBML supports defining the following:
 - [Comments](#comments)
 - [Metadata Notes](#metadata-notes)
 - [Enum Definition](#enum-definition)
-- TableGroup (coming soon)
+- [TableGroup](https://github.com/holistics/dbml#tablegroup-coming-soon) (coming soon)
 - [Syntax Consistency](#syntax-consistency)
 - [Community Contributions](#community-contributions)
 
@@ -151,7 +125,7 @@ The list of column settings you can use:
 - `null` or `not null`: mark a column null or not null
 - `unique`: mark the column unique
 - `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below (NEW)
-- `increment`: mark the column as auto increment (NEW)
+- `increment`: mark the column as auto-increment (NEW)
 
 **Default Value (NEW):** You can set default value as:
 
@@ -251,8 +225,8 @@ Example,
 
     // order_items refer to items from that order
     
-### Metadata Notes
-You can add notes to your field, so you can easily refer to it when hovering over the field in the diagram canvas.
+### Metadata Column Notes
+You can add notes to your columns, so you can easily refer to it when hovering over the column in the diagram canvas.
 
     column_name column_type [note: 'replace text here']
 Example,
@@ -262,9 +236,9 @@ Example,
         note: '
         💸 1 = processing, 
         ✔️ 2 = shipped, 
-	    ❌ 3 = cancelled,
-	    😔 4 = refunded
-	    ']
+        ❌ 3 = cancelled,
+        😔 4 = refunded
+        ']
     }
 
 ### Enum Definition
@@ -287,15 +261,15 @@ When hovering over the column in the canvas, the enum values will be displayed.
 `TableGroup` allows users to group the related or associated tables together.
 
     TableGroup tablegroup_name { // tablegroup is case-insensitive.
-	table1 
-	table2 
-	table3
+        table1 
+        table2 
+        table3
     }
 
     //example
     TableGroup e-commerce1 {
-	merchants
-	countries
+        merchants
+        countries
     }
 
 ## Syntax Consistency
