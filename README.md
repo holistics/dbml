@@ -117,7 +117,14 @@ DBML supports defining the following:
     
     Ref: U.id < posts.user_id
     
-**Table Notes (coming soon):** You can add notes to the table, and refer to them in the visual plane
+**Table Notes (coming soon):** You can add notes to the table, and refer to them in the visual plane.
+    
+    Table users {
+        id integer
+        status varchar [note: "status"]
+	
+        [note: "Contains all users information"]
+    }
 
 **Table Settings:** Settings are all defined within square brackets: `[setting1: value1, setting2: value2, setting3, setting4]`
 
