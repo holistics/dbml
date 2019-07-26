@@ -64,7 +64,7 @@ DBML supports defining the following:
 - [Comments](#comments)
 - [Metadata Notes](#metadata-notes)
 - [Enum Definition](#enum-definition)
-- [TableGroup](https://github.com/holistics/dbml#tablegroup-coming-soon) (coming soon)
+- [TableGroup](#tablegroup-coming-soon) (coming soon)
 - [Syntax Consistency](#syntax-consistency)
 - [Community Contributions](#community-contributions)
 
