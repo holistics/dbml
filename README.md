@@ -17,8 +17,8 @@ Example of a database definition of a simple blogging site:
     Table users {
       id integer [primary key]
       username varchar(255) [not null]
-      display_name varchar(255)
-      role UserRole [not null]
+      "display name" varchar(255)
+      role UserRole [not null, note: "Role of user"]
       created_at timestamp [default: 'now()']
     
       indexes {
@@ -90,7 +90,7 @@ DBML supports defining the following:
 - [Comments](#comments)
 - [Metadata Notes](#metadata-notes)
 - [Enum Definition](#enum-definition)
-- TableGroup, ColorScheme (coming soon)
+- TableGroup (coming soon)
 - [Syntax Consistency](#syntax-consistency)
 - [Community Contributions](#community-contributions)
 
@@ -107,7 +107,7 @@ DBML supports defining the following:
 - settings are wrapped in `square brackets []`
 - string value is be wrapped in a `single quote as 'string'`
 - `column_name` is stated in just plain text
-- (coming soon) column_name can be wrapped in a `double quote as "column_name"`
+- column_name can be wrapped in a `double quote as "column_name"`
     
 **Table Alias:** You can alias the table, and use them in the references later on
 
@@ -125,7 +125,7 @@ Each setting item can take in 2 forms: `Key: Value` or `keyword`, similar to tha
 
 - `color: <color_code>`: change the table header color (coming soon)
 
-    Example, `[color: blue]`
+    Example, `[color: #3498db]`
 
 ### Column Definition
 
@@ -139,11 +139,11 @@ Each setting item can take in 2 forms: `Key: Value` or `keyword`, similar to tha
 
 The list of column settings you can use:
 
-- `primary key` or `pk`: mark a column as primary key. For composite primary key, refer to the Indexes section
+- `note: "string to add notes"`: add a metadata note to this column
+- `primary key` or `pk`: mark a column as primary key. For composite primary key, refer to the 'Indexes' section
 - `null` or `not null`: mark a column null or not null
 - `unique`: mark the column unique
-- `note: "string to add notes"`: add a metadata note to this column
-- `default: some_value`: set a default value of the column, please refer to the Default Value section below (coming soon)
+- `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below (NEW)
 - `increment`: mark the column as auto increment (NEW)
 
 **Default Value (NEW):** You can set default value as:
@@ -164,7 +164,7 @@ Example,
         rating integer [default: 10]
     }
 
-**Index Definition (NEW):** Indexes allow users to quickly locate and access the data.
+**Index Definition (NEW):** Indexes allow users to quickly locate and access the data. Users can define single or multi-column indexes. 
 
     Table bookings {
       id integer [primary key]
@@ -192,7 +192,7 @@ There are 3 types of index definitions:
 
 Index Settings
 
-- `type`: type of index (btree, gin, gist, hash depending on DB)
+- `type`: type of index (btree, gin, gist, hash depending on DB). For now, only type btree and hash are accepted.
 - `name`: name of index
 - `unique`: unique index
 
@@ -221,11 +221,11 @@ In DBML, there are 3 syntaxes to define relationships:
 
     //Long form
     Ref name_optional {
-      table1.field1 < table2.field2
+      table1.column1 < table2.column2
     }
 
     //Short form:
-    Ref name_optional: table1.field1 < table2.field2
+    Ref name_optional: table1.column1 < table2.column2
     
     // Inline form
     Table posts {
@@ -276,6 +276,21 @@ When hovering over the column in the canvas, the enum values will be displayed.
         status job_status
     }
 
+## TableGroup (coming soon)
+`TableGroup` allows users to group the related or associated tables together.
+
+    TableGroup tablegroup_name { // tablegroup is case-insensitive.
+	table1 
+	table2 
+	table3
+    }
+
+    //example
+    TableGroup e-commerce1 {
+	merchants
+	countries
+    }
+
 ## Syntax Consistency
 DBML is the standard language for database and the syntax is consistent to provide clear and extensive functions.
 
@@ -284,7 +299,7 @@ DBML is the standard language for database and the syntax is consistent to provi
 - forward slashes `//`: comments
 - `column_name` is stated in just plain text
 - single quote as `'string'`: string value
-- double quote as `"column_name"`: quoting variable (coming soon)
+- double quote as `"column name"`: quoting variable
 - backtick `` ` ``: function expression (coming soon)
 
 ## Community Contributions
