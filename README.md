@@ -62,7 +62,7 @@ DBML supports defining the following:
 - [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
     - Many-to-many relationship
 - [Comments](#comments)
-- [Metadata Notes](#metadata-notes)
+- [Metadata Column Notes](#metadata-column-notes)
 - [Enum Definition](#enum-definition)
 - [TableGroup](#tablegroup-coming-soon) (coming soon)
 - [Syntax Consistency](#syntax-consistency)
