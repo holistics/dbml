@@ -112,7 +112,7 @@ DBML supports defining the following:
 **Table Alias:** You can alias the table, and use them in the references later on
 
     Table very_long_user_table as U {
-      ...
+        ...
     }
     
     Ref: U.id < posts.user_id
