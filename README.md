@@ -77,7 +77,7 @@ DBML supports defining the following:
 - title of database table is listed as `table_name`
 - name of the column is listed as `column_name`
 - type of the data in the column listed as `column_type`
-    - supports all data types, as long as it is a single word (remove all spaces in the data type). Example, JSON, JSONB, decimal(1,2)
+    - supports all data types, as long as it is a single word (remove all spaces in the data type). Example, JSON, JSONB, decimal(1,2), etc.
 - list is wrapped in `curly brackets {}`, for indexes, constraints and table definitions.
 - settings are wrapped in `square brackets []`
 - string value is be wrapped in a `single quote as 'string'`
