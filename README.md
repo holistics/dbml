@@ -24,7 +24,7 @@ Example of a database definition of a simple blogging site:
     Table posts {
         id integer [primary key]
         title varchar
-        body text [note: "Content of the post"]
+        body text [note: 'Content of the post']
         user_id integer
         created_at timestamp
     }
@@ -95,9 +95,9 @@ DBML supports defining the following:
     
     Table users {
         id integer
-        status varchar [note: "status"]
+        status varchar [note: 'status']
 	
-        [note: "Contains all users information"]
+        [note: 'Contains all users information']
     }
 
 **Table Settings:** Settings are all defined within square brackets: `[setting1: value1, setting2: value2, setting3, setting4]`
@@ -114,13 +114,13 @@ Each setting item can take in 2 forms: `Key: Value` or `keyword`, similar to tha
 
     Table buildings {
         ...
-        address varchar(255) [unique, not null, note: "to include unit number"]
-        id integer [ pk, unique, default: 123, note: "Number" ]
+        address varchar(255) [unique, not null, note: 'to include unit number']
+        id integer [ pk, unique, default: 123, note: 'Number' ]
     }
 
 The list of column settings you can use:
 
-- `note: "string to add notes"`: add a metadata note to this column
+- `note: 'string to add notes'`: add a metadata note to this column
 - `primary key` or `pk`: mark a column as primary key. For composite primary key, refer to the 'Indexes' section
 - `null` or `not null`: mark a column null or not null
 - `unique`: mark the column unique
