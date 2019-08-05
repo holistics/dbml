@@ -10,7 +10,7 @@ DBML (database markup language) is a simple, readable DSL language designed to d
 
 ## Command-Line Interface (CLI)
 **(coming soon)** A `dbml-to-sql` generator to generate SQL from `.dbml` file
-- Allow users integrate DBML with their workflow
+- Allow users to integrate DBML with their workflow
 - Each project will have one or several `.dbml` files to define database schema
 - DBML-CLI will be used to export `.dbml` files to specific SQL (MySQL, PostgreSQL, etc), JSON format, etc
 - DBML-CLI could also be used to generate `.dbml` files from other SQL or JSON files
@@ -56,23 +56,23 @@ Not quite. Despite its name (data "definition" language), DDL is designed mainly
 
 DBML supports defining the following:
 - [Table Definition](#table-definition)
-    - [Table Alias](#table-alias)
-    - [Table Notes](#table-notes-coming-soon) (coming soon)
-    - [Table Settings](#table-settings)
+    - Table Alias
+    - Table Notes (coming soon)
+    - Table Settings
 - [Column Definition](#column-definition)
-    - [Column Settings](#column-settings)
-    - [Default Value](#default-value-new) (NEW)
-    - [Index Definition](#index-definition-new) (NEW)
-        - [Index Settings](#index-settings)
+    - Column Settings
+    - Default Value (NEW)
+    - Index Definition (NEW)
+        - Index Settings
 - [Relationships & Foreign Key Definitions](#relationships-foreign-key-definitions)
-    - [Many-to-many relationship](#many-to-many-relationship)
+    - Many-to-many relationship
 - [Comments](#comments)
 - [Metadata Column Notes](#metadata-column-notes)
 - [Enum Definition](#enum-definition)
 - [TableGroup](#tablegroup-coming-soon) (coming soon)
 - [Syntax Consistency](#syntax-consistency)
 - [Community Contributions](#community-contributions)
-    - [Emacs Mode for DBML](#emacs-mode-for-dbml) 
+    - Emacs Mode for DBML 
 
 ### Table Definition
     
@@ -228,7 +228,7 @@ In DBML, there are 3 syntaxes to define relationships:
     
 **Many-to-many relationship**
 
-For many-to-many relationship, we don't have a syntax for it as we believe it should be represented as 2 many-to-one relationships. For more information, please refer to [https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/](https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/)
+For many-to-many relationship, we don't have a syntax for it as we believe it should be represented as 2 many-to-one relationships. For more information, please refer to https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/
 
 ### Comments
 You can comment in your code using `//`, so it is easier for you to review the code later.
@@ -299,4 +299,4 @@ DBML is the standard language for database and the syntax is consistent to provi
 
 **Emacs Mode for DBML**
 
-(Contributed by ccod): [https://github.com/ccod/dbd-mode](https://github.com/ccod/dbd-mode)
+(Contributed by ccod): https://github.com/ccod/dbd-mode
