@@ -64,7 +64,7 @@ DBML supports defining the following:
     - Default Value (NEW)
     - Index Definition (NEW)
         - Index Settings
-- [Relationships & Foreign Key Definitions](#relationships-foreign-key-definitions)
+- [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
     - Many-to-many relationship
 - [Comments](#comments)
 - [Metadata Column Notes](#metadata-column-notes)
