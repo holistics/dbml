@@ -8,7 +8,12 @@ DBML (database markup language) is a simple, readable DSL language designed to d
 - It is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
 - Comes with a free, simple database visualiser at [dbdiagram.io](http://dbdiagram.io)
 
-(**Coming soon):** A `dbml-to-sql` generator to generate SQL from `.dbml` file
+## Command-Line Interface (CLI)
+**(coming soon)** A `dbml-to-sql` generator to generate SQL from `.dbml` file
+- Allow users integrate DBML with their workflow
+- Each project will have one or several `.dbml` files to define database schema
+- DBML-CLI will be used to export `.dbml` files to specific SQL (MySQL, PostgreSQL, etc), JSON format, etc
+- DBML-CLI could also be used to generate `.dbml` files from other SQL or JSON files
 
 ## Example
 
@@ -35,7 +40,7 @@ Example of a database definition of a simple blogging site:
 
 Not quite. Despite its name (data "definition" language), DDL is designed mainly to help physically create, modify or remove tables, not to define them.
 
-DDL also comes with a few more drawbacks:
+**DDL also comes with a few more drawbacks:**
 
 - It is hard to read, especially when trying to add multiple column/table settings together.
 - It is database specific (Oracle vs PostgreSQL vs MySQL, etc)
@@ -47,26 +52,27 @@ DDL also comes with a few more drawbacks:
 2. Type up your DBML code
 3. Go to Export > SQL (choose your DB)
 
-## DBML Docs
+## DBML Full Syntax Docs
 
 DBML supports defining the following:
 - [Table Definition](#table-definition)
-    - Table Alias
-    - Table Notes (coming soon)
-    - Table Settings
+    - [Table Alias](#table-alias)
+    - [Table Notes](#table-notes-coming-soon) (coming soon)
+    - [Table Settings](#table-settings)
 - [Column Definition](#column-definition)
-    - Column Settings
-    - Default Value (NEW)
-    - Index Definition (NEW)
-        - Index Settings
-- [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
-    - Many-to-many relationship
+    - [Column Settings](#column-settings)
+    - [Default Value](#default-value-new) (NEW)
+    - [Index Definition](#index-definition-new) (NEW)
+        - [Index Settings](#index-settings)
+- [Relationships & Foreign Key Definitions](#relationships-foreign-key-definitions)
+    - [Many-to-many relationship](#many-to-many-relationship)
 - [Comments](#comments)
 - [Metadata Column Notes](#metadata-column-notes)
 - [Enum Definition](#enum-definition)
 - [TableGroup](#tablegroup-coming-soon) (coming soon)
 - [Syntax Consistency](#syntax-consistency)
 - [Community Contributions](#community-contributions)
+    - [Emacs Mode for DBML](#emacs-mode-for-dbml) 
 
 ### Table Definition
     
@@ -78,13 +84,13 @@ DBML supports defining the following:
 - name of the column is listed as `column_name`
 - type of the data in the column listed as `column_type`
     - supports all data types, as long as it is a single word (remove all spaces in the data type). Example, JSON, JSONB, decimal(1,2), etc.
-- list is wrapped in `curly brackets {}`, for indexes, constraints and table definitions.
+- list is wrapped in `curly brackets {}`, for indexes, constraints and table definitions
 - settings are wrapped in `square brackets []`
-- string value is be wrapped in a `single quote as 'string'`
-- `column_name` is stated in just plain text
-- column_name can be wrapped in a `double quote as "column_name"`
+- string value is to be wrapped in a `single quote as 'string'`
+- `column_name` can be stated in just plain text, or wrapped in a `double quote as "column name"`
     
-**Table Alias:** You can alias the table, and use them in the references later on.
+**Table Alias:** 
+You can alias the table, and use them in the references later on.
 
     Table very_long_user_table as U {
         ...
@@ -92,7 +98,8 @@ DBML supports defining the following:
     
     Ref: U.id < posts.user_id
     
-**Table Notes (coming soon):** You can add notes to the table, and refer to them in the visual plane.
+**Table Notes (coming soon):** 
+You can add notes to the table, and refer to them in the visual plane.
     
     Table users {
         id integer
@@ -101,7 +108,8 @@ DBML supports defining the following:
         [note: 'Contains all users information']
     }
 
-**Table Settings:** Settings are all defined within square brackets: `[setting1: value1, setting2: value2, setting3, setting4]`
+**Table Settings:** 
+Settings are all defined within square brackets: `[setting1: value1, setting2: value2, setting3, setting4]`
 
 Each setting item can take in 2 forms: `Key: Value` or `keyword`, similar to that of Python function parameters.
 
@@ -111,7 +119,8 @@ Each setting item can take in 2 forms: `Key: Value` or `keyword`, similar to tha
 
 ### Column Definition
 
-**Column Settings:** Each column can take have optinal settings, defined in square brackets like:
+**Column Settings:** 
+Each column can take have optinal settings, defined in square brackets like:
 
     Table buildings {
         ...
@@ -128,7 +137,8 @@ The list of column settings you can use:
 - `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below (NEW)
 - `increment`: mark the column as auto-increment (NEW)
 
-**Default Value (NEW):** You can set default value as:
+**Default Value (NEW):** 
+You can set default value as:
 
 - number value starts blank: `default: 123` or `default: 123.456`
 - string value starts with single quotes: `default: 'some string value'`
@@ -146,7 +156,8 @@ Example,
         rating integer [default: 10]
     }
 
-**Index Definition (NEW):** Indexes allow users to quickly locate and access the data. Users can define single or multi-column indexes. 
+**Index Definition (NEW):** 
+Indexes allow users to quickly locate and access the data. Users can define single or multi-column indexes. 
 
     Table bookings {
       id integer [primary key]
@@ -155,7 +166,7 @@ Example,
       created_at timestamp
 
       indexes {
-          created_at [note: 'Date']
+          created_at [name: 'Date']
           booking_date
           (country, booking_date) [unique]
           booking_date [type: hash]
@@ -258,7 +269,7 @@ When hovering over the column in the canvas, the enum values will be displayed.
         status job_status
     }
 
-## TableGroup (coming soon)
+### TableGroup (coming soon)
 `TableGroup` allows users to group the related or associated tables together.
 
     TableGroup tablegroup_name { // tablegroup is case-insensitive.
@@ -273,7 +284,7 @@ When hovering over the column in the canvas, the enum values will be displayed.
         countries
     }
 
-## Syntax Consistency
+### Syntax Consistency
 DBML is the standard language for database and the syntax is consistent to provide clear and extensive functions.
 
 - curly brackets `{}`: grouping for indexes, constraints and table definitions
@@ -282,8 +293,10 @@ DBML is the standard language for database and the syntax is consistent to provi
 - `column_name` is stated in just plain text
 - single quote as `'string'`: string value
 - double quote as `"column name"`: quoting variable
-- backtick `` ` ``: function expression (coming soon)
+- backtick `` ` ``: function expression
 
-## Community Contributions
+### Community Contributions
 
-* Emacs Mode for DBML (Contributed by ccod): https://github.com/ccod/dbd-mode
+**Emacs Mode for DBML**
+
+(Contributed by ccod): [https://github.com/ccod/dbd-mode](https://github.com/ccod/dbd-mode)
