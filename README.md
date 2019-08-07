@@ -72,7 +72,6 @@ DBML supports defining the following:
 - [TableGroup](#tablegroup-coming-soon) (coming soon)
 - [Syntax Consistency](#syntax-consistency)
 - [Community Contributions](#community-contributions)
-    - Emacs Mode for DBML 
 
 ### Table Definition
     
@@ -300,3 +299,6 @@ DBML is the standard language for database and the syntax is consistent to provi
 **Emacs Mode for DBML**
 
 (Contributed by ccod): https://github.com/ccod/dbd-mode
+
+**Code generator for dbdiagram.io from Postgres**
+(Contributed by nsingla): https://github.com/nsingla/dbdiagrams
