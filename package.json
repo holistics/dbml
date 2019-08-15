@@ -6,7 +6,12 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jest": "^22.15.1",
-    "lerna": "^3.16.4"
+    "lerna": "^3.16.4",
+    "lerna-changelog": "^0.8.2"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/holistics/dbml"
+  }
 }
