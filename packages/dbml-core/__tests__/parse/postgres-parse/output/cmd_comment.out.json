@@ -1,0 +1,20 @@
+{
+  "tables": [
+    {
+      "name": "my_table",
+      "fields": [
+        {
+          "name": "my_column",
+          "type": {
+            "type_name": "varchar",
+            "args": null
+          },
+          "note": "Employee ID number"
+        }
+      ],
+      "indexes": []
+    }
+  ],
+  "refs": [],
+  "enums": []
+}

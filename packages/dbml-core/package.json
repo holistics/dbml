@@ -1,0 +1,52 @@
+{
+  "name": "@dbml/core",
+  "version": "0.0.1",
+  "description": "> TODO: description",
+  "author": "phuongduyphan <phuongduyphan@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "jest",
+    "build:lib": "babel src --out-dir lib --copy-files",
+    "build:parser": "npx babel-node src/parse/buildParser.js",
+    "build": "npm run build:parser && npm run build:lib",
+    "prepublish": "npm run build",
+    "postinstall": "npm run build"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "pluralize": "^8.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-jest": "^24.8.0",
+    "bluebird": "^3.5.5",
+    "expect": "^24.8.0",
+    "jest": "^24.8.0",
+    "jest-raw-loader": "^1.0.1",
+    "pegjs-require-import": "0.0.6"
+  },
+  "jest": {
+    "setupFiles": [
+      "./jestHelpers.js"
+    ],
+    "transform": {
+      "^.+\\.js$": "babel-jest",
+      "\\.(?!json$)[^.]*$": "jest-raw-loader"
+    }
+  }
+}

@@ -1,0 +1,322 @@
+{
+  "tables": [
+    {
+      "name": "jobs",
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 215,
+              "line": 10,
+              "column": 3
+            },
+            "end": {
+              "offset": 231,
+              "line": 11,
+              "column": 1
+            }
+          },
+          "inline_refs": [],
+          "pk": true
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "job_status",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 231,
+              "line": 11,
+              "column": 1
+            },
+            "end": {
+              "offset": 283,
+              "line": 12,
+              "column": 1
+            }
+          },
+          "inline_refs": [],
+          "note": "This is a column note"
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 200,
+          "line": 9,
+          "column": 1
+        },
+        "end": {
+          "offset": 284,
+          "line": 12,
+          "column": 2
+        }
+      },
+      "indexes": []
+    },
+    {
+      "name": "orders",
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 397,
+              "line": 22,
+              "column": 3
+            },
+            "end": {
+              "offset": 414,
+              "line": 23,
+              "column": 1
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "unique": true
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "order status",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 414,
+              "line": 23,
+              "column": 1
+            },
+            "end": {
+              "offset": 438,
+              "line": 24,
+              "column": 1
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 438,
+              "line": 24,
+              "column": 1
+            },
+            "end": {
+              "offset": 459,
+              "line": 25,
+              "column": 1
+            }
+          },
+          "inline_refs": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 380,
+          "line": 21,
+          "column": 1
+        },
+        "end": {
+          "offset": 460,
+          "line": 25,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
+  ],
+  "refs": [],
+  "enums": [
+    {
+      "name": "job_status",
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 198,
+          "line": 7,
+          "column": 2
+        }
+      },
+      "values": [
+        {
+          "name": "created",
+          "token": {
+            "start": {
+              "offset": 20,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 62,
+              "line": 3,
+              "column": 1
+            }
+          },
+          "note": "Job created and pending"
+        },
+        {
+          "name": "running",
+          "token": {
+            "start": {
+              "offset": 62,
+              "line": 3,
+              "column": 1
+            },
+            "end": {
+              "offset": 115,
+              "line": 4,
+              "column": 1
+            }
+          },
+          "note": "Waiting for warehouse to process"
+        },
+        {
+          "name": "done",
+          "token": {
+            "start": {
+              "offset": 115,
+              "line": 4,
+              "column": 1
+            },
+            "end": {
+              "offset": 122,
+              "line": 5,
+              "column": 1
+            }
+          }
+        },
+        {
+          "name": "failed",
+          "token": {
+            "start": {
+              "offset": 122,
+              "line": 5,
+              "column": 1
+            },
+            "end": {
+              "offset": 131,
+              "line": 6,
+              "column": 1
+            }
+          }
+        },
+        {
+          "name": "wait for validation",
+          "token": {
+            "start": {
+              "offset": 131,
+              "line": 6,
+              "column": 1
+            },
+            "end": {
+              "offset": 197,
+              "line": 7,
+              "column": 1
+            }
+          },
+          "note": "Enum label that has white spaces"
+        }
+      ]
+    },
+    {
+      "name": "order status",
+      "token": {
+        "start": {
+          "offset": 286,
+          "line": 14,
+          "column": 1
+        },
+        "end": {
+          "offset": 378,
+          "line": 19,
+          "column": 2
+        }
+      },
+      "values": [
+        {
+          "name": "created",
+          "token": {
+            "start": {
+              "offset": 310,
+              "line": 15,
+              "column": 3
+            },
+            "end": {
+              "offset": 342,
+              "line": 16,
+              "column": 1
+            }
+          },
+          "note": "Order created"
+        },
+        {
+          "name": "pending",
+          "token": {
+            "start": {
+              "offset": 342,
+              "line": 16,
+              "column": 1
+            },
+            "end": {
+              "offset": 352,
+              "line": 17,
+              "column": 1
+            }
+          }
+        },
+        {
+          "name": "processing",
+          "token": {
+            "start": {
+              "offset": 352,
+              "line": 17,
+              "column": 1
+            },
+            "end": {
+              "offset": 365,
+              "line": 18,
+              "column": 1
+            }
+          }
+        },
+        {
+          "name": "completed",
+          "token": {
+            "start": {
+              "offset": 365,
+              "line": 18,
+              "column": 1
+            },
+            "end": {
+              "offset": 377,
+              "line": 19,
+              "column": 1
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
