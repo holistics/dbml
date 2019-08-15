@@ -1,13 +1,12 @@
 {
   "name": "@dbml/cli",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
     "test": "jest",
     "build": "babel src --out-dir lib --copy-files",
-    "prepublish": "npm run build",
-    "postinstall": "npm run build"
+    "prepublish": "npm run build"
   },
   "bin": {
     "dbml": "bin/dbml.js"
@@ -16,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/cli": "^7.5.5",
-    "@dbml/core": "^0.0.1",
+    "@dbml/core": "^0.1.0",
     "bluebird": "^3.5.5",
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
@@ -42,5 +41,6 @@
     "transform": {
       "^.+\\.js$": "babel-jest"
     }
-  }
+  },
+  "gitHead": "c3380a7d206db05f864d4f8842d802c35e09a87d"
 }

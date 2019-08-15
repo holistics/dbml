@@ -1,6 +1,6 @@
 {
   "name": "@dbml/core",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "> TODO: description",
   "author": "phuongduyphan <phuongduyphan@gmail.com>",
   "homepage": "",
@@ -21,8 +21,7 @@
     "build:lib": "babel src --out-dir lib --copy-files",
     "build:parser": "npx babel-node src/parse/buildParser.js",
     "build": "npm run build:parser && npm run build:lib",
-    "prepublish": "npm run build",
-    "postinstall": "npm run build"
+    "prepublish": "npm run build"
   },
   "dependencies": {
     "lodash": "^4.17.15",
@@ -48,5 +47,6 @@
       "^.+\\.js$": "babel-jest",
       "\\.(?!json$)[^.]*$": "jest-raw-loader"
     }
-  }
+  },
+  "gitHead": "c3380a7d206db05f864d4f8842d802c35e09a87d"
 }
