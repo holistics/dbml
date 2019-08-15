@@ -1,0 +1,17 @@
+.npmrc
+.DS_Store
+node_modules/
+/dist/
+*.log
+*.cache
+/packages/*/node_modules
+/packages/*/lib
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
