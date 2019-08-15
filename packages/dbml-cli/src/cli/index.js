@@ -2,16 +2,17 @@ import program from 'commander';
 import importHandler from './import';
 import exportHandler from './export';
 import visualizeHandler from './visualize';
-
+import projectInfo from '../../package.json';
 
 export default function cli (args) {
-  program.version('0.0.1');
+  program.version(projectInfo.version);
 
   program
     .command('import <pathspec>')
     .option('--mysql')
     .option('--postgres')
     .option('--json')
+    .option('--schemarb')
     .option('-o, --output <pathspec>', 'Generated file location', './')
     .action(importHandler);
 
