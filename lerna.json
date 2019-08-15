@@ -3,5 +3,14 @@
     "packages/*"
   ],
   "version": "0.0.0",
-  "npmClient": "yarn"
+  "npmClient": "yarn",
+  "changelog": {
+    "labels": {
+      "PR: Performance :running_woman:": ":running_woman: Performance",
+      "PR: Docs :memo:": ":memo: Documentation",
+      "PR: Bug Fix :bug:": ":bug: Bug Fix",
+      "PR: New Feature :rocket:": ":rocket: New Feature",
+      "PR: Breaking Change :boom:": ":boom: Breaking Change"
+    }
+  }
 }
