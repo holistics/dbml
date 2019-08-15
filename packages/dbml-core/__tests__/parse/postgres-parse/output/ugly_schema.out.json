@@ -1,0 +1,1037 @@
+{
+  "tables": [
+    {
+      "name": "tipo_cliente",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "increment": true,
+          "pk": true
+        },
+        {
+          "name": "nombre",
+          "type": {
+            "type_name": "CHARACTER VARYING",
+            "args": null
+          },
+          "not_null": true
+        },
+        {
+          "name": "descripcion",
+          "type": {
+            "type_name": "CHARACTER VARYING",
+            "args": null
+          }
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "permiso_funcion",
+      "fields": [
+        {
+          "name": "uuid",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "pk": true,
+          "dbdefault": {
+            "value": "uuid_generate_v4()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "nombre",
+          "type": {
+            "type_name": "CHARACTER VARYING(255)",
+            "args": "255"
+          },
+          "not_null": true
+        },
+        {
+          "name": "descripcion",
+          "type": {
+            "type_name": "CHARACTER VARYING(255)",
+            "args": "255"
+          }
+        },
+        {
+          "name": "es_categoria",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "FALSE",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "id_aplicacion",
+          "type": {
+            "type_name": "INT",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          },
+          "inline_refs": [
+            {
+              "tableName": "aplicacion",
+              "fieldName": "id",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "orden",
+          "type": {
+            "type_name": "INT",
+            "args": null
+          }
+        },
+        {
+          "name": "mostrar_funcion",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "bloquear",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "FALSE",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "uuid_categoria",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          }
+        },
+        {
+          "name": "id_tipo_cliente",
+          "type": {
+            "type_name": "INT",
+            "args": null
+          },
+          "not_null": true,
+          "inline_refs": [
+            {
+              "tableName": "tipo_cliente",
+              "fieldName": "id",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "mostrar_crear",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "mostrar_ver",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "mostrar_modificar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "mostrar_eliminar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "permiso_perfil",
+      "fields": [
+        {
+          "name": "uuid",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "pk": true,
+          "dbdefault": {
+            "value": "uuid_generate_v4()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "nombre",
+          "type": {
+            "type_name": "CHARACTER VARYING",
+            "args": null
+          },
+          "not_null": true
+        },
+        {
+          "name": "descripcion",
+          "type": {
+            "type_name": "CHARACTER VARYING",
+            "args": null
+          },
+          "not_null": true
+        },
+        {
+          "name": "mostrar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "TRUE",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "modificable",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "TRUE",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "id_tipo_cliente",
+          "type": {
+            "type_name": "INT",
+            "args": null
+          },
+          "not_null": true,
+          "inline_refs": [
+            {
+              "tableName": "tipo_cliente",
+              "fieldName": "id",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_cliente",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          },
+          "inline_refs": [
+            {
+              "tableName": "cliente",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_grupo_cliente",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          },
+          "inline_refs": [
+            {
+              "tableName": "grupo_cliente",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "id_aplicacion",
+          "type": {
+            "type_name": "INT",
+            "args": null
+          },
+          "inline_refs": [
+            {
+              "tableName": "aplicacion",
+              "fieldName": "id",
+              "relation": "1"
+            }
+          ]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "permiso_perfil_funcion_cliente",
+      "fields": [
+        {
+          "name": "uuid",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "pk": true,
+          "dbdefault": {
+            "value": "uuid_generate_v4()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "uuid_funcion",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "not_null": true,
+          "inline_refs": [
+            {
+              "tableName": "permiso_funcion",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_perfil",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "not_null": true,
+          "inline_refs": [
+            {
+              "tableName": "permiso_perfil",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_cliente",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          },
+          "inline_refs": [
+            {
+              "tableName": "cliente",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_grupo_cliente",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          },
+          "inline_refs": [
+            {
+              "tableName": "grupo_cliente",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "alias",
+          "type": {
+            "type_name": "CHARACTER VARYING",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "habilitar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "crear",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "modificar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "eliminar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "permiso_funcion_perfil_global",
+      "fields": [
+        {
+          "name": "uuid",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "pk": true,
+          "dbdefault": {
+            "value": "uuid_generate_v4()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "uuid_funcion",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "not_null": true,
+          "inline_refs": [
+            {
+              "tableName": "permiso_funcion",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_perfil",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "not_null": true,
+          "inline_refs": [
+            {
+              "tableName": "permiso_perfil",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "habilitar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "crear",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "modificar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "eliminar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "permiso_usuario_cliente_funcion",
+      "fields": [
+        {
+          "name": "uuid",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "pk": true,
+          "dbdefault": {
+            "value": "uuid_generate_v4()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "uuid_funcion",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "inline_refs": [
+            {
+              "tableName": "permiso_funcion",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_usuario",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "inline_refs": [
+            {
+              "tableName": "usuario",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_cliente",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          },
+          "inline_refs": [
+            {
+              "tableName": "cliente",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_grupo_cliente",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          },
+          "inline_refs": [
+            {
+              "tableName": "grupo_cliente",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "funcion_modificada",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "FALSE",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "habilitar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "crear",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "modificar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        },
+        {
+          "name": "eliminar",
+          "type": {
+            "type_name": "BOOLEAN",
+            "args": null
+          }
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "permiso_perfil_tipo_usuario",
+      "fields": [
+        {
+          "name": "uuid",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "pk": true,
+          "dbdefault": {
+            "value": "uuid_generate_v4()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "uuid_perfil",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "inline_refs": [
+            {
+              "tableName": "permiso_perfil",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "tipo_usuario",
+          "type": {
+            "type_name": "INT",
+            "args": null
+          }
+        },
+        {
+          "name": "descripcion",
+          "type": {
+            "type_name": "CHARACTER VARYING",
+            "args": null
+          }
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "permiso_usuario_cliente_perfil",
+      "fields": [
+        {
+          "name": "uuid",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "pk": true,
+          "dbdefault": {
+            "value": "uuid_generate_v4()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "uuid_usuario",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "inline_refs": [
+            {
+              "tableName": "usuario",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_perfil",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "inline_refs": [
+            {
+              "tableName": "permiso_perfil",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_cliente",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          },
+          "inline_refs": [
+            {
+              "tableName": "cliente",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        },
+        {
+          "name": "uuid_grupo_cliente",
+          "type": {
+            "type_name": "UUID",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          },
+          "inline_refs": [
+            {
+              "tableName": "grupo_cliente",
+              "fieldName": "uuid",
+              "relation": "1"
+            }
+          ]
+        }
+      ],
+      "indexes": []
+    }
+  ],
+  "refs": [
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_funcion",
+          "fieldName": "id_aplicacion",
+          "relation": "1"
+        },
+        {
+          "tableName": "aplicacion",
+          "fieldName": "id",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_funcion",
+          "fieldName": "id_tipo_cliente",
+          "relation": "1"
+        },
+        {
+          "tableName": "tipo_cliente",
+          "fieldName": "id",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_perfil",
+          "fieldName": "id_tipo_cliente",
+          "relation": "1"
+        },
+        {
+          "tableName": "tipo_cliente",
+          "fieldName": "id",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_perfil",
+          "fieldName": "uuid_cliente",
+          "relation": "1"
+        },
+        {
+          "tableName": "cliente",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_perfil",
+          "fieldName": "uuid_grupo_cliente",
+          "relation": "1"
+        },
+        {
+          "tableName": "grupo_cliente",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_perfil",
+          "fieldName": "id_aplicacion",
+          "relation": "1"
+        },
+        {
+          "tableName": "aplicacion",
+          "fieldName": "id",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_perfil_funcion_cliente",
+          "fieldName": "uuid_funcion",
+          "relation": "1"
+        },
+        {
+          "tableName": "permiso_funcion",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_perfil_funcion_cliente",
+          "fieldName": "uuid_perfil",
+          "relation": "1"
+        },
+        {
+          "tableName": "permiso_perfil",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_perfil_funcion_cliente",
+          "fieldName": "uuid_cliente",
+          "relation": "1"
+        },
+        {
+          "tableName": "cliente",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_perfil_funcion_cliente",
+          "fieldName": "uuid_grupo_cliente",
+          "relation": "1"
+        },
+        {
+          "tableName": "grupo_cliente",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_funcion_perfil_global",
+          "fieldName": "uuid_funcion",
+          "relation": "1"
+        },
+        {
+          "tableName": "permiso_funcion",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_funcion_perfil_global",
+          "fieldName": "uuid_perfil",
+          "relation": "1"
+        },
+        {
+          "tableName": "permiso_perfil",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_usuario_cliente_funcion",
+          "fieldName": "uuid_funcion",
+          "relation": "1"
+        },
+        {
+          "tableName": "permiso_funcion",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_usuario_cliente_funcion",
+          "fieldName": "uuid_usuario",
+          "relation": "1"
+        },
+        {
+          "tableName": "usuario",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_usuario_cliente_funcion",
+          "fieldName": "uuid_cliente",
+          "relation": "1"
+        },
+        {
+          "tableName": "cliente",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_usuario_cliente_funcion",
+          "fieldName": "uuid_grupo_cliente",
+          "relation": "1"
+        },
+        {
+          "tableName": "grupo_cliente",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_perfil_tipo_usuario",
+          "fieldName": "uuid_perfil",
+          "relation": "1"
+        },
+        {
+          "tableName": "permiso_perfil",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_usuario_cliente_perfil",
+          "fieldName": "uuid_usuario",
+          "relation": "1"
+        },
+        {
+          "tableName": "usuario",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_usuario_cliente_perfil",
+          "fieldName": "uuid_perfil",
+          "relation": "1"
+        },
+        {
+          "tableName": "permiso_perfil",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_usuario_cliente_perfil",
+          "fieldName": "uuid_cliente",
+          "relation": "1"
+        },
+        {
+          "tableName": "cliente",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "permiso_usuario_cliente_perfil",
+          "fieldName": "uuid_grupo_cliente",
+          "relation": "1"
+        },
+        {
+          "tableName": "grupo_cliente",
+          "fieldName": "uuid",
+          "relation": "1"
+        }
+      ]
+    }
+  ],
+  "enums": []
+}
