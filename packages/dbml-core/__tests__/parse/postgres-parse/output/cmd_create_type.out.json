@@ -1,0 +1,20 @@
+{
+  "tables": [],
+  "refs": [],
+  "enums": [
+    {
+      "name": "bug_status",
+      "values": [
+        {
+          "name": "new"
+        },
+        {
+          "name": "open"
+        },
+        {
+          "name": "closed"
+        }
+      ]
+    }
+  ]
+}

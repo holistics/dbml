@@ -1,0 +1,161 @@
+{
+  "tables": [
+    {
+      "name": "courses",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "string"
+          }
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "datetime"
+          }
+        },
+        {
+          "name": "updated_at",
+          "type": {
+            "type_name": "datetime"
+          }
+        }
+      ]
+    },
+    {
+      "name": "students",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "string"
+          }
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "datetime"
+          }
+        },
+        {
+          "name": "updated_at",
+          "type": {
+            "type_name": "datetime"
+          }
+        },
+        {
+          "name": "course_id",
+          "type": {
+            "type_name": "integer"
+          }
+        }
+      ]
+    },
+    {
+      "name": "classes",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "string"
+          }
+        },
+        {
+          "name": "course_id",
+          "type": {
+            "type_name": "varchar"
+          }
+        }
+      ]
+    },
+    {
+      "name": "rooms",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "string"
+          }
+        },
+        {
+          "name": "class_id",
+          "type": {
+            "type_name": "varchar"
+          }
+        }
+      ]
+    }
+  ],
+  "refs": [
+    {
+      "name": "fk_rails_classes_courses",
+      "endpoints": [
+        {
+          "tableName": "classes",
+          "fieldName": "course_id",
+          "relation": "1"
+        },
+        {
+          "tableName": "courses",
+          "fieldName": "id",
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_rails_rooms_classes",
+      "endpoints": [
+        {
+          "tableName": "rooms",
+          "relation": "1",
+          "fieldName": "class_id"
+        },
+        {
+          "tableName": "classes",
+          "relation": "1",
+          "fieldName": "id"
+        }
+      ]
+    },
+    {
+      "name": "fk_rails_students_courses",
+      "endpoints": [
+        {
+          "tableName": "students",
+          "fieldName": "course_id",
+          "relation": "1"
+        },
+        {
+          "tableName": "courses",
+          "fieldName": "id",
+          "relation": "1"
+        }
+      ]
+    }
+  ]
+}
