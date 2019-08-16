@@ -19,7 +19,6 @@ module.exports = {
       ],
     }
   },
-  ga: `${require('./secret').ga}`,
   plugins: [
     [
       '@vuepress/google-analytics',
