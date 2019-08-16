@@ -1,0 +1,22 @@
+{
+  "name": "@dbml/homepage",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "authors": {
+    "name": "",
+    "email": ""
+  },
+  "repository": "https://github.com/holistics/dbml/tree/master/packages/dbml-homepage",
+  "scripts": {
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs",
+    "deploy": "sh deploy.sh"
+  },
+  "devDependencies": {
+    "vuepress": "^1.0.0",
+    "@vuepress/plugin-back-to-top": "^1.0.0",
+    "@vuepress/plugin-medium-zoom": "^1.0.0",
+    "@vuepress/theme-default": "^1.0.2"
+  }
+}
