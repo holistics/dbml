@@ -12,7 +12,8 @@
     "dbml": "bin/dbml.js"
   },
   "author": "",
-  "license": "ISC",
+  "homepage": "https://www.dbml-lang.org/home/",
+  "repository": "https://github.com/holistics/dbml/tree/master/packages/dbml-cli",
   "dependencies": {
     "@babel/cli": "^7.5.5",
     "@dbml/core": "^0.1.0",
@@ -42,5 +43,8 @@
       "^.+\\.js$": "babel-jest"
     }
   },
-  "gitHead": "b8fa11de1fc44f3a24f17eb94a1472347d63bccc"
+  "gitHead": "b8fa11de1fc44f3a24f17eb94a1472347d63bccc",
+  "gitpkg": {
+    "registry": "https://github.com/phuongduyphan/private-registry.git"
+  }
 }
