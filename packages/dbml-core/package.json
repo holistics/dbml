@@ -1,8 +1,9 @@
 {
   "name": "@dbml/core",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "> TODO: description",
-  "author": "phuongduyphan <phuongduyphan@gmail.com>",
+  "author": "Holistics <dev@holistics.io>",
+  "license": "Apache-2.0",
   "homepage": "https://www.dbml-lang.org/home/",
   "repository": "https://github.com/holistics/dbml/tree/master/packages/dbml-core",
   "directories": {
@@ -48,5 +49,5 @@
       "\\.(?!json$)[^.]*$": "jest-raw-loader"
     }
   },
-  "gitHead": "c3380a7d206db05f864d4f8842d802c35e09a87d"
+  "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556"
 }
