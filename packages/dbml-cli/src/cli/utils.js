@@ -10,13 +10,16 @@ Promise.promisifyAll(fs);
 function validate (flags) {
   const keys = Object.keys(flags).filter(key => key !== 'output');
   let counter = 0;
-  let format = 'json';
+  let format = '';
   for (let i = 0; i < keys.length; i += 1) {
     if (flags[keys[i]]) {
       counter += 1;
       if (counter > 1) throw new Error('Too many options');
       format = keys[i];
     }
+  }
+  if (!format) {
+    throw new Error('Please specify your format');
   }
   return format;
 }
