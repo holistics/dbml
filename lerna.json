@@ -13,5 +13,8 @@
       "PR: Breaking Change :boom:": ":boom: Breaking Change",
       "PR: Internal :house_with_garden:": ":house_with_garden: Internal"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

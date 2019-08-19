@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "",
   "main": "lib/index.js",
+  "license": "Apache-2.0",
   "scripts": {
     "test": "jest",
     "build": "babel src --out-dir lib --copy-files",
@@ -11,7 +12,7 @@
   "bin": {
     "dbml": "bin/dbml.js"
   },
-  "author": "",
+  "author": "Holistics <dev@holistics.io>",
   "homepage": "https://www.dbml-lang.org/home/",
   "repository": "https://github.com/holistics/dbml/tree/master/packages/dbml-cli",
   "dependencies": {
