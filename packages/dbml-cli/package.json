@@ -1,6 +1,6 @@
 {
   "name": "@dbml/cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
   "license": "Apache-2.0",
@@ -17,7 +17,7 @@
   "repository": "https://github.com/holistics/dbml/tree/master/packages/dbml-cli",
   "dependencies": {
     "@babel/cli": "^7.5.5",
-    "@dbml/core": "^0.1.0",
+    "@dbml/core": "^1.0.0",
     "bluebird": "^3.5.5",
     "chalk": "^2.4.2",
     "commander": "^2.20.0",

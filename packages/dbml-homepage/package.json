@@ -1,6 +1,6 @@
 {
   "name": "@dbml/homepage",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "authors": {
@@ -19,6 +19,5 @@
     "@vuepress/plugin-medium-zoom": "^1.0.0",
     "@vuepress/theme-default": "^1.0.2",
     "vuepress": "^1.0.0"
-  },
-  "dependencies": {}
+  }
 }
