@@ -14,9 +14,11 @@
     "deploy": "sh deploy.sh"
   },
   "devDependencies": {
-    "vuepress": "^1.0.0",
     "@vuepress/plugin-back-to-top": "^1.0.0",
+    "@vuepress/plugin-google-analytics": "^1.0.0-rc.1",
     "@vuepress/plugin-medium-zoom": "^1.0.0",
-    "@vuepress/theme-default": "^1.0.2"
-  }
+    "@vuepress/theme-default": "^1.0.2",
+    "vuepress": "^1.0.0"
+  },
+  "dependencies": {}
 }
