@@ -30,11 +30,6 @@ It is designed to be simple, highly readable and database-agnostic.
 * It is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
 * Comes with a free, simple database visualiser at [dbdiagram.io](https://dbdiagram.io)
 
-## DBML Syntax
-
-For full DBML syntax documentation, refer to the [Docs](/docs/) section.
-
-
 ## Is this similar to SQL DDL?
 
 Not quite. Despite its name (data "definition" language), DDL is designed mainly to help physically create, modify or
@@ -44,6 +39,9 @@ remove tables, not to define them. In other words, **DDL is imperative, while DB
 DDL is also database specific (Oracle, PostgreSQL, etc), while DBML is designed to focus on the high-level database
  design stage instead of low-level database creation stage.
 
+## DBML Syntax
+
+For full DBML syntax documentation, refer to the [Docs](https://dbml-lang.org/docs/) section.
 
 
 ## What can I do now?
