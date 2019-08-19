@@ -1,13 +1,13 @@
-# `@dbml/core`
+# Tooling
 
-## Installation
+## core
+
+### Install
 ```bash
 npm install @dbml/core
 # or
 yarn add @dbml/core
 ```
-
-## APIs
 
 ### importer
 ```javascript
