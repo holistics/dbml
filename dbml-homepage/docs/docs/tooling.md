@@ -2,19 +2,21 @@
 
 ## core
 
-### Install
+### Installation
 ```bash
 npm install @dbml/core
 # or
 yarn add @dbml/core
 ```
 
-### importer
+### APIs
+
+#### importer
 ```javascript
 import { importer } from '@babel/core';
 ```
 
-#### importer.import(str, format)
+##### .import(str, format)
 
 * **Arguments:**  
   * ```{string} str```
@@ -24,12 +26,12 @@ import { importer } from '@babel/core';
 * **Usage:**  
 Generate dbml from other formats
 
-### exporter
+#### exporter
 ```javascript
 import { exporter } from '@babel/core';
 ```
 
-#### exporter.export(str, format)
+##### .export(str, format)
 
 * **Arguments:**  
   * ```{string} str```
@@ -39,14 +41,14 @@ import { exporter } from '@babel/core';
 * **Usage:**  
 Export dbml to other formats
 
-### Parser Object
+#### Parser Object
 
 ```javascript
 import { Parser } from '@dbml/core';
 const parser = new Parser();
 ```
 
-#### .parse(str, format)
+##### .parse(str, format)
 * **Arguments:**  
   * ```{string} str```
   * ```{'json'|'mysql'|'postgres'|'dbml'|'schemarb'} format```
@@ -55,14 +57,14 @@ const parser = new Parser();
 * **Usage:**  
 Parse specified format to ```Schema``` Object
 
-### SchemaExporter Object
+#### SchemaExporter Object
 
 ```javascript
 import { SchemaExporter } from '@dbml/core';
 const schemaExporter = new SchemaExporter(schema); // schema is the Schema Object
 ```
 
-#### .export(format)
+##### .export(format)
 * **Arguments:**  
   * ```{'json'|'mysql'|'postgres'|'dbml'} format```
 
