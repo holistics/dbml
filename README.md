@@ -57,19 +57,6 @@ Not quite. Despite its name (data "definition" language), DDL is designed mainly
 Please refer to the [docs section](https://dbml-lang.org/docs) on the website.
 
 
-### Syntax Consistency
-DBML is the standard language for database and the syntax is consistent to provide clear and extensive functions.
-
-- curly brackets `{}`: grouping for indexes, constraints and table definitions
-- square brackets `[]`: settings
-- forward slashes `//`: comments
-- `column_name` is stated in just plain text
-- single quote as `'string'`: string value
-- double quote as `"column name"`: quoting variable
-- backtick `` ` ``: function expression
-
 ### Community Contributions
 
-**Emacs Mode for DBML**
-
-(Contributed by ccod): https://github.com/ccod/dbd-mode
+* Emacs Mode for DBML (Contributed by ccod): https://github.com/ccod/dbd-mode
