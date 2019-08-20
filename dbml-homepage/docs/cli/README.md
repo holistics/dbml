@@ -24,13 +24,13 @@ dbml <command> [<args>]
 * dbml export [--mysql|--postgres] <input-pathspec> [-o|--output <output-pathspec>]
 ```
 
-### Import file
+## Generate DBML file from SQL file (Import)
 
 ```bash
-dbml import [--mysql|--postgres] <input-pathspec> [-o|--output <output-pathspec>]
+dbml import [--mysql|--postgres] <input-sql-files> [-o|--output <output-dbml-files>]
 ```
 
-#### Args
+### Args
 
 * **-- mysql, --postgres**  
 Specify the import format.
@@ -48,7 +48,7 @@ The path to the file or directory that you want to import from.
 Specify the generated file path. If omitted, the default generated file path will be at the current directory and file names 
 will be the same as input's file names
 
-#### Examples
+### Examples
 
 * Generate `schema.dbml` from `postgres.sql`:
 
@@ -70,13 +70,13 @@ The dbml file will be generated as `mysql.dbml` in the current directory
 $ dbml import --postgres ./postgres -o ./dbml
 ```
 
-### Export file
+## Generate SQL file from DBML file (Export)
 
 ```bash
 $ dbml export [--mysql|--postgres] <input-pathspec> [-o|--output <output-pathspec>]
 ```
 
-#### Args
+### Args
 
 * **-- mysql, --postgres**  
 Specify the export format.
@@ -93,7 +93,7 @@ The path to the file or directory that you want to export to.
 Specify the generated file path. If omitted, the default generated file path will be at the current directory and file names 
 will be the same as input's file names
 
-#### Examples
+### Examples
 
 * Export `schema.dbml` to `postgres.sql`:
 
