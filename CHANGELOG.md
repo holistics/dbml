@@ -1,4 +1,8 @@
-## Unreleased (2019-08-19)
+## Unreleased (2019-08-20)
+
+#### :memo: Documentation
+* `dbml-cli`
+  * [#19](https://github.com/holistics/dbml/pull/19) docs: add cli and tooling docs ([@phuongduyphan](https://github.com/phuongduyphan))
 
 #### :house_with_garden: Internal
 * `dbml-cli`, `dbml-core`
