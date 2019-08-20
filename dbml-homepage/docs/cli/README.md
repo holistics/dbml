@@ -1,6 +1,7 @@
 # CLI
 DBML comes with a built-in CLI which can be used to import and export files from
-the command line
+the command line  
+
 ![img](./cli.gif)
 ## Installation
 ```bash
