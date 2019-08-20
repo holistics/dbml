@@ -1,6 +1,6 @@
-# dbml-homepage
+# DBML Homepage
 
-> 
+This is the source code of dbml-lang.org
 
 ## Development
 
