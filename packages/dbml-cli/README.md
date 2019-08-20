@@ -21,7 +21,7 @@ dbml <command> [<args>]
 * dbml export [--mysql|--postgres] <input-pathspec> [-o|--output <output-pathspec>]
 ```
 
-### Importing file
+### Import file
 
 ```shell
 dbml import [--mysql|--postgres] <input-pathspec> [-o|--output <output-pathspec>]
@@ -67,7 +67,7 @@ The dbml file will be generated as `mysql.dbml` in the current directory
 $ dbml import --postgres ./postgres -o ./dbml
 ```
 
-### Exporting file
+### Export file
 
 ```shell
 $ dbml export [--mysql|--postgres] <input-pathspec> [-o|--output <output-pathspec>]
