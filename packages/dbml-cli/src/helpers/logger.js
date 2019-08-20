@@ -6,14 +6,23 @@ const { combine, timestamp, printf } = format;
 
 const consoleFormat = printf((info) => {
   const { level, message } = info;
-  return `  ${chalk.bgRed.bold(level.toUpperCase())}: ${message}\n
+  return `  ${chalk.red(level.toUpperCase())}: ${message}\n
   A complete log can be found in:
      ${path.resolve(process.cwd(), 'dbml-error.log')}`;
 });
 
 const fileFormat = printf((info) => {
   const { timestamp, stack, rootError } = info;
-  return `${timestamp} ${stack}\n${rootError ? `\n${rootError}\n` : ''}`;
+  let logContent = `${timestamp}\n${stack}\n`;
+  if (rootError) {
+    logContent += '\nROOT_ERROR:';
+    logContent += `\n${rootError.stack}`;
+    if (rootError.location) {
+      logContent += `\n${JSON.stringify(rootError.location)}`;
+    }
+    logContent += '\n';
+  }
+  return logContent;
 });
 
 const consoleLogger = createLogger({

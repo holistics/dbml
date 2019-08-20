@@ -138,7 +138,9 @@ describe('Utils', () => {
       flagObject.json = undefined;
     });
     test('no option', () => {
-      expect(validate(flagObject)).toEqual('json');
+      expect(() => {
+        validate(flagObject);
+      }).toThrow('Please specify your format');
     });
     test('one option --mysql', () => {
       flagObject.mysql = true;

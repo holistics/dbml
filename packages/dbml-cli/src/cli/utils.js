@@ -95,7 +95,7 @@ async function createGenerateTaskList (filePathList, format, generateAsyncFuncti
   await tasks.run();
   if (filePathList.length !== 0) {
     console.log('');
-    console.log(`  ${chalk.bgGreen.bold('DONE')} Generated files at ${path.dirname(filePathList[0].outputFile)}`);
+    console.log(`  ${chalk.green('DONE')} Generated files at ${path.dirname(filePathList[0].outputFile)}`);
   }
 }
 
