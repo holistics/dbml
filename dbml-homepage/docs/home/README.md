@@ -28,7 +28,6 @@ It is designed to be simple, highly readable and database-agnostic.
 
 * It is simple, flexible and highly human-readable
 * It is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
-* Comes with a free, simple database visualiser at [dbdiagram.io](https://dbdiagram.io)
 
 ## DBML Syntax
 
@@ -40,31 +39,37 @@ Not quite. Despite its name (data "definition" language), DDL is designed mainly
 remove tables, not to define them. In other words, **DDL is imperative, while DBML is declarative**. This makes DBML
  so much easier to write, read and maintain.
 
-DDL is also database specific (Oracle, PostgreSQL, etc), while DBML is designed to focus on the high-level database
- design stage instead of low-level database creation stage.
+DDL is also database specific (Oracle, PostgreSQL, etc), while DBML is database-agnostic and designed to focus on the high-level database design stage instead of low-level database creation stage.
 
 ## What can I do now?
 
-At the moment, DBML is primarily used by dbdiagram.io, a tool we built to design and visualize
- database diagram.
+DBML comes with:
+1. A command-line tool to help to convert SQL to DBML files and vice versa.
+1. A free, simple database visualiser at [dbdiagram.io](https://dbdiagram.io)
+
+### Command-line Tool (CLI)
+
+A simple command-line tool to help you convert between SQL (DDL) and DBML.
+
+![img](../cli/cli.gif)
+
+To learn more, check out [CLI docs](/cli)
+
+### dbdiagram
+
+dbdiagram.io is a tool to help you design and visualize database diagram.
+
+![img](https://i.imgur.com/8T1tIZp.gif)
 
 1. Go to [dbdiagram.io](https://dbdiagram.io)
 2. Type up your DBML code
-3. Go to Export > SQL (choose your DB)
-
-Concurrently, we're actively working on open-sourcing DBML to support more use cases. The plan is to provide a command-line tool and NPM
-package so that you can do that programmatically.
-
+3. Go to Export -> SQL
 
 ## How DBML was born
 
-DBML was born out from [dbdiagram.io](https://dbdiagram.io), a simple database diagram visualizer. At the time (Aug 2018) we were looking for
- a simple tool to design database structure but couldn't come up with one we liked. So we decided to build one.
+DBML was born out from [dbdiagram.io](https://dbdiagram.io), a simple database diagram visualizer. At the time (Aug 2018) we were looking for a simple tool to design database structure but couldn't come up with one we liked. So we decided to build one.
 
-After that, we then realized the syntax we designed for users to draw diagram is well received, and thought this could
- become a good standardized way to document database structures as well. That's how DBML is born.
-
-![img](https://i.imgur.com/8T1tIZp.gif)
+After 1 year and over 100k diagrams created by 60k internet users later, we then realized the syntax we designed for users to draw diagram is well received, and thought this could become a good standardized way to document database structures as well. That's how DBML is born.
 
 ## DBML Statistics
 
@@ -74,7 +79,7 @@ After that, we then realized the syntax we designed for users to draw diagram is
 ## Community
 
 * DBML is [being open-sourced on Github](https://github.com/holistics/dbml/)
-* Have a question or suggestion, use [the dbml community forum](https://community.dbdiagram.io/)
+* Have a question, suggestion or want to contribute? Use [the dbml issues page](https://github.com/holistics/dbml/issues)
 
 ## Community Contributions
 
