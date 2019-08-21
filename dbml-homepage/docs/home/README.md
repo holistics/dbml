@@ -2,9 +2,9 @@
 
 ## Intro
 
-**DBML (Database Markup Language)** is a simple DSL language designed to define and document database schemas and structures.
-It is designed to be simple, highly readable and database-agnostic.
+**DBML (Database Markup Language)** is an open-source DSL language designed to define and document database schemas and structures. It is designed to be simple, consistent and highly-readable.
 
+It also comes with command-line tool and open-source module to help you convert between DBML and SQL.
 
     Table users {
       id integer
@@ -18,18 +18,21 @@ It is designed to be simple, highly readable and database-agnostic.
       title varchar
       body text [note: 'Content of the post']
       user_id integer
+      status post_status
       created_at timestamp
+    }
+
+    Enum post_status {
+      draft
+      published
+      private [note: 'visible via URL only']
     }
 
     Ref: posts.user_id > users.id // many-to-one
 
+_See the above dbml doc [visualized on dbdiagram](https://dbdiagram.io/d/5d5cb582ced98361d6ddc5ab)_
+
 For full DBML syntax documentation, refer to the [Docs](/docs/) section.
-
-**Benefits:**
-
-* DBML is simple, flexible and highly human-readable
-* DBML is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
-* Comes with open-source JS library and command-line tool
 
 ## Is this similar to SQL DDL?
 
@@ -37,7 +40,7 @@ Not quite. Despite its name (data "definition" language), DDL is designed mainly
 remove tables, not to define them. In other words, **DDL is imperative, while DBML is declarative**. This makes DBML
  so much easier to write, read and maintain.
 
-DDL is also database specific (Oracle, PostgreSQL, etc), while DBML is database-agnostic and designed to focus on the high-level database design stage instead of low-level database creation stage.
+DDL is also database specific (Oracle, PostgreSQL, etc), while **DBML is database-agnostic** and designed for the high-level database design instead of low-level database creation.
 
 ## What can I do now?
 
@@ -54,20 +57,25 @@ A simple command-line tool to help you convert between SQL (DDL) and DBML. Refer
 
 ### dbdiagram
 
-[dbdiagram.io](https://dbdiagram.io) is a free tool to help you visualize database diagrams from DBML code. 
+[dbdiagram.io](https://dbdiagram.io?utm_source=dbml) is a free tool to help you visualize database diagrams from DBML code. 
 
 ![img](https://i.imgur.com/8T1tIZp.gif)
 
 ## DBML History
 
-DBML was born out from [dbdiagram.io](https://dbdiagram.io), a simple database diagram visualizer. At the time (Aug 2018) we were looking for a simple tool to design database structure but couldn't come up with one we liked. So we decided to build one.
+DBML was born out from [dbdiagram.io](https://dbdiagram.io?utm_source=dbml), a simple database diagram visualizer. At the time (Aug 2018) we were looking for a simple tool to design database structure but couldn't come up with one we liked. So we decided to build one.
 
-After 1 year and over 100k diagrams created by 60k internet users later, we then realized the syntax we designed for users to draw diagram is well received, and thought this could become a good standardized way to document database structures as well. That's how DBML is born.
+After 1 year and over 100k diagrams created by 60k internet users later, we realized the syntax we designed for users to draw diagram is very received and one of the key values of the tool. That's how DBML is born. Our aim is to make DBML a good and simple way for developers to design and document database structures.
 
 ## DBML Statistics
 
-* 110k Diagrams created on dbdiagram.io using DBML (as of July 2019)
-* 59.5k Users using DBML (as of July 2019)
+* 110k DBML docs created via dbdiagram.io (as of July 2019)
+* 59.5k users using DBML (as of July 2019)
+
+## Who's behind DBML?
+
+DBML is created and maintained by [Holistics](https://holistics.io?utm_source=dbml), an analytics platform company.
+
 
 ## Community
 
