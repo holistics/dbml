@@ -6,7 +6,7 @@ module.exports = {
       { text: 'Docs', link: '/docs/' },
       { text: 'CLI', link: '/cli/' },
       { text: 'Github',link: 'https://github.com/holistics/dbml'},
-      { text: 'Community', link: 'https://community.dbdiagram.io/'}
+      { text: 'Community', link: 'https://github.com/holistics/dbml/issues/'}
     ],
     sidebarDepth: 2,
     sidebar: {
