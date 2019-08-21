@@ -2,18 +2,13 @@
 
 DBML (database markup language) is a simple, readable DSL language designed to define database structures.
 
+For more information, please check out [DBML homepage](https://dbml-lang.org)
+
 ## Benefits
 
 - It is simple, flexible and highly human-readable
 - It is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
 - Comes with a free, simple database visualiser at [dbdiagram.io](http://dbdiagram.io)
-
-## Command-Line Interface (CLI)
-**(coming soon)** A `dbml-to-sql` generator to generate SQL from `.dbml` file
-- Allow users to integrate DBML with their workflow
-- Each project will have one or several `.dbml` files to define database schema
-- DBML-CLI will be used to export `.dbml` files to specific SQL (MySQL, PostgreSQL, etc), JSON format, etc
-- DBML-CLI could also be used to generate `.dbml` files from other SQL or JSON files
 
 ## Example
 
