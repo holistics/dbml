@@ -23,15 +23,13 @@ It is designed to be simple, highly readable and database-agnostic.
 
     Ref: posts.user_id > users.id // many-to-one
 
+For full DBML syntax documentation, refer to the [Docs](/docs/) section.
 
 **Benefits:**
 
-* It is simple, flexible and highly human-readable
-* It is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
-
-## DBML Syntax
-
-For full DBML syntax documentation, refer to the [Docs](/docs/) section.
+* DBML is simple, flexible and highly human-readable
+* DBML is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
+* Comes with open-source JS library and command-line tool
 
 ## Is this similar to SQL DDL?
 
@@ -45,27 +43,22 @@ DDL is also database specific (Oracle, PostgreSQL, etc), while DBML is database-
 
 DBML comes with:
 1. A command-line tool to help to convert SQL to DBML files and vice versa.
-1. A free, simple database visualiser at [dbdiagram.io](https://dbdiagram.io)
+2. A free, simple database visualiser at [dbdiagram.io](https://dbdiagram.io)
+3. An open-source JS library (NPM package) for you to programmatically convert between DBML and SQL DDL. Detailed docs coming soon.
 
 ### Command-line Tool (CLI)
 
-A simple command-line tool to help you convert between SQL (DDL) and DBML.
+A simple command-line tool to help you convert between SQL (DDL) and DBML. Refer to [CLI docs](/cli) for more info.
 
 ![img](../cli/cli.gif)
 
-To learn more, check out [CLI docs](/cli)
-
 ### dbdiagram
 
-dbdiagram.io is a tool to help you design and visualize database diagram.
+[dbdiagram.io](https://dbdiagram.io) is a free tool to help you visualize database diagrams from DBML code. 
 
 ![img](https://i.imgur.com/8T1tIZp.gif)
 
-1. Go to [dbdiagram.io](https://dbdiagram.io)
-2. Type up your DBML code
-3. Go to Export -> SQL
-
-## How DBML was born
+## DBML History
 
 DBML was born out from [dbdiagram.io](https://dbdiagram.io), a simple database diagram visualizer. At the time (Aug 2018) we were looking for a simple tool to design database structure but couldn't come up with one we liked. So we decided to build one.
 
