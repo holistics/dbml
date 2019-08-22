@@ -15,7 +15,7 @@ echo 'www.dbml-lang.org' > CNAME
 cp "home/index.html" "./"
 
 git init
-git remote add origin https://github.com/holistics/dbml-homepage.git
+git remote add origin https://github.com/holistics/dbml.git
 git checkout -b gh-pages
 git add -A
 git commit -m 'deploy'
