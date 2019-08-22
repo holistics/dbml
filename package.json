@@ -1,11 +1,21 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "test": "jest"
+  },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-jest": "^24.9.0",
+    "coveralls": "^3.0.6",
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jest": "^22.15.1",
+    "jest": "^24.9.0",
+    "jest-raw-loader": "^1.0.1",
     "lerna": "^3.16.4",
     "lerna-changelog": "^0.8.2"
   },
@@ -13,5 +23,20 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/holistics/dbml"
+  },
+  "jest": {
+    "setupFiles": [
+      "./packages/dbml-core/jestHelpers.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/testSetupFile.js"
+    ],    
+    "transform": {
+      "^.+\\.js$": "babel-jest",
+      "\\.(?!json$)[^.]*$": "jest-raw-loader"
+    }
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.5.5"
   }
 }

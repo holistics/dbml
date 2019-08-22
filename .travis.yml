@@ -1,0 +1,24 @@
+git:
+  depth: 5
+language: node_js
+node_js:
+  - node
+  - "12"
+  - "10"
+  - "8"
+cache:
+  yarn: true
+  directories:
+    - node_modules
+    - packages/dbml-core/node_modules
+    - packages/dbml-cli/node_modules
+install:
+  - yarn install
+  - lerna exec -- yarn install
+script:
+  - yarn test
+branches:
+  only:
+    - master
+notification:
+  email: false
