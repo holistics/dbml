@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "jest",
+    "test": "npm run build && jest",
     "build": "babel src --out-dir lib --copy-files",
     "prepublish": "npm run build"
   },
@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/runtime": "^7.5.5",
@@ -43,6 +44,9 @@
     "jest": "^24.8.0"
   },
   "jest": {
+    "setupFiles": [
+      "./jestHelpers.js"
+    ],
     "transform": {
       "^.+\\.js$": "babel-jest"
     }

@@ -1,0 +1,40 @@
+Table staff {
+  id int [pk]
+  first_name varchar
+  last_name varchar
+  address_id int
+  picture blob
+  email varchar
+  store_id int [ref: > store.id]
+  active boolean
+  user_name varchar
+  password varchar
+  last_update timestamp
+}
+
+Table store {
+  id int [pk]
+  manager_staff_id int [ref: > staff.id]
+  address_id int
+  last_update timestamp
+}
+
+table payment {
+  id int [pk]
+  customer_id int
+  staff_id int [ref: > staff.id]
+  rental_id int [ref: > rental.id]
+  amount decimal
+  payment_date datetime
+  last_update timestamp
+}
+
+Table rental {
+  id int [pk]
+  rental_date datetime
+  inventory_id int
+  customer_id int
+  return_date ddatetime
+  staff_id int [ref: > staff.id]
+  last_update timestamp
+}
