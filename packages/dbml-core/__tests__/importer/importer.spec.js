@@ -1,7 +1,7 @@
 import importer from '../../src/import';
 
 describe('@dbml/core', () => {
-  describe('import', () => {
+  describe('importer', () => {
     /**
      * @param {string} format = [json|mysql|postgres]
      */

@@ -5,7 +5,7 @@ import MysqlExporter from '../../src/export/MysqlExporter';
 import PostgresExporter from '../../src/export/PostgresExporter';
 
 describe('@dbml/core', () => {
-  describe('export', () => {
+  describe('schema-exporter', () => {
     /**
      * @param {string} format = [json|mysql|dbml|postgres]
      */
