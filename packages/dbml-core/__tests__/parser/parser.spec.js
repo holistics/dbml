@@ -1,7 +1,7 @@
 import Parser from '../../src/parse/Parser';
 
 describe('@dbml/core', () => {
-  describe('parse', () => {
+  describe('parser', () => {
     const parser = new Parser();
 
     /**
