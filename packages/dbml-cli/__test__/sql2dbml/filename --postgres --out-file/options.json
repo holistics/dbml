@@ -1,0 +1,8 @@
+{
+  "args": [
+    "./in-files/schema.sql",
+    "--postgres",
+    "-o",
+    "./out-files/schema.dbml"
+  ]
+}

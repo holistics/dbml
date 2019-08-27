@@ -1,0 +1,174 @@
+Table "staff" {
+  "id" int [pk]
+  "first_name" varchar(255)
+  "last_name" varchar(255)
+  "address_id" int
+  "picture" blob
+  "email" varchar(255)
+  "store_id" int
+  "active" boolean
+  "user_name" varchar(255)
+  "password" varchar(255)
+  "last_update" timestamp
+}
+
+Table "store" {
+  "id" int [pk]
+  "manager_staff_id" int
+  "address_id" int
+  "last_update" timestamp
+}
+
+Table "payment" {
+  "id" int [pk]
+  "customer_id" int
+  "staff_id" int
+  "rental_id" int
+  "amount" decimal
+  "payment_date" datetime
+  "last_update" timestamp
+}
+
+Table "rental" {
+  "id" int [pk]
+  "rental_date" datetime
+  "inventory_id" int
+  "customer_id" int
+  "return_date" ddatetime
+  "staff_id" int
+  "last_update" timestamp
+}
+
+Ref:"store"."id" < "staff"."store_id"
+
+Ref:"staff"."id" < "store"."manager_staff_id"
+
+Ref:"staff"."id" < "payment"."staff_id"
+
+Ref:"rental"."id" < "payment"."rental_id"
+
+Ref:"staff"."id" < "rental"."staff_id"
+
+Table "country" {
+  "id" int [pk]
+  "country" varchar(255)
+  "last_update" timestamp
+}
+
+Table "city" {
+  "id" int [pk]
+  "city" varchar(255)
+  "country_id" int
+  "last_update" timestamp
+}
+
+Table "address" {
+  "id" int [pk]
+  "address" varchar(255)
+  "address2" varchar(255)
+  "district" varchar(255)
+  "city_id" int
+  "postal_code" varchar(255)
+  "phone" varchar(255)
+  "last_update" timestamp
+}
+
+Table "customer" {
+  "id" int [pk]
+  "store_id" int
+  "first_name" varchar(255)
+  "last_name" varchar(255)
+  "email" varchar(255)
+  "address_id" int
+  "active" boolean
+  "create_Date" timestamp
+  "last_update" timestamp
+
+        
+Indexes {
+  (id, first_name) [type: btree, name: "customer_index_0"]
+}
+}
+
+Ref:"country"."id" < "city"."country_id"
+
+Ref:"city"."id" < "address"."city_id"
+
+Ref:"address"."id" < "customer"."address_id"
+
+Table "category" {
+  "id" int [pk]
+  "name" varchar(255)
+  "last_update" timestamp
+}
+
+Table "film_category" {
+  "id" int [pk]
+  "category_id" int
+  "last_update" timestamp
+}
+
+Table "language" {
+  "id" int [pk]
+  "name" varchar(255)
+  "last_update" timestamp
+}
+
+Table "film_text" {
+  "id" int [pk]
+  "film_id" int
+  "title" varchar(255)
+  "description" text
+}
+
+Table "actor" {
+  "id" int [pk]
+  "first_name" varchar(255)
+  "last_name" varchar(255)
+  "last_update" timestamp
+}
+
+Table "film" {
+  "id" int [pk]
+  "title" varchar(255)
+  "description" text
+  "releaase_year" int
+  "language_id" int
+  "original_language_id" int
+  "rental_duration" int
+  "rental_rate" decimal
+  "length" int
+  "replacement_cost" decimal
+  "rating" varchar(255)
+  "special_feature" varchar(255)
+  "last_update" timestamp
+}
+
+Table "film_actor" {
+  "id" int [pk]
+  "film_id" int
+  "actor_id" int
+  "last_update" timestamp
+}
+
+Table "inventory" {
+  "id" int [pk]
+  "film_id" int
+  "store_id" int
+  "last_update" timestamp
+}
+
+Ref:"category"."id" < "film_category"."category_id"
+
+Ref:"inventory"."film_id" < "film_text"."film_id"
+
+Ref:"language"."id" < "film"."language_id"
+
+Ref:"language"."id" < "film"."original_language_id"
+
+Ref:"film"."id" < "film_actor"."film_id"
+
+Ref:"actor"."id" < "film_actor"."actor_id"
+
+Ref:"film"."id" < "inventory"."film_id"
+
