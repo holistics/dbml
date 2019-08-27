@@ -1,71 +1,11 @@
-# `@dbml/core`
+# @dbml/core
+
+See our website [@dbml/core](https://www.dbml-lang.org/js-module/#core) for more information
 
 ## Installation
-```bash
+```shell
 npm install @dbml/core
-# or
+
+# or if you're using yarn
 yarn add @dbml/core
 ```
-
-## APIs
-
-### importer
-```javascript
-import { importer } from '@babel/core';
-```
-
-#### importer.import(str, format)
-
-* **Arguments:**  
-  * ```{string} str```
-  * ```{'json'|'mysql'|'postgres'|'schemarb'} format```
-
-* **Returns:** the dbml string
-* **Usage:**  
-Generate dbml from other formats
-
-### exporter
-```javascript
-import { exporter } from '@babel/core';
-```
-
-#### exporter.export(str, format)
-
-* **Arguments:**  
-  * ```{string} str```
-  * ```{'json'|'mysql'|'postgres'} format```
-
-* **Returns:** the exported format string
-* **Usage:**  
-Export dbml to other formats
-
-### Parser Object
-
-```javascript
-import { Parser } from '@dbml/core';
-const parser = new Parser();
-```
-
-#### .parse(str, format)
-* **Arguments:**  
-  * ```{string} str```
-  * ```{'json'|'mysql'|'postgres'|'dbml'|'schemarb'} format```
-
-* **Returns:** ```Schema``` Object
-* **Usage:**  
-Parse specified format to ```Schema``` Object
-
-### SchemaExporter Object
-
-```javascript
-import { SchemaExporter } from '@dbml/core';
-const schemaExporter = new SchemaExporter(schema); // schema is the Schema Object
-```
-
-#### .export(format)
-* **Arguments:**  
-  * ```{'json'|'mysql'|'postgres'|'dbml'} format```
-
-* **Returns:** format string
-* **Usage:**  
-Export ```Schema``` Object to specified format string
