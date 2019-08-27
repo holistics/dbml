@@ -1,0 +1,39 @@
+Table country {
+  id int [pk]
+  country varchar
+  last_update timestamp
+}
+
+Table city {
+  id int [pk]
+  city varchar
+  country_id int [ref: > country.id]
+  last_update timestamp
+}
+
+Table address {
+  id int [pk]
+  address varchar
+  address2 varchar
+  district varchar
+  city_id int [ref: > city.id]
+  postal_code varchar
+  phone varchar
+  last_update timestamp
+}
+
+Table customer {
+  id int [pk]
+  store_id int
+  first_name varchar
+  last_name varchar
+  email varchar
+  address_id int [ref: > address.id]
+  active boolean
+  create_Date timestamp
+  last_update timestamp
+
+  Indexes {
+    (id, first_name) [type: btree]
+  }
+}

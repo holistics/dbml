@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "jest",
+    "test": "npm run build && jest",
     "build": "babel src --out-dir lib --copy-files",
     "prepublish": "npm run build"
   },
@@ -13,7 +13,8 @@
     "access": "public"
   },
   "bin": {
-    "dbml": "bin/dbml.js"
+    "dbml2sql": "bin/dbml2sql.js",
+    "sql2dbml": "bin/sql2dbml.js"
   },
   "author": "Holistics <dev@holistics.io>",
   "homepage": "https://www.dbml-lang.org/home/",
@@ -25,13 +26,13 @@
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
     "figures": "^3.0.0",
-    "listr": "^0.14.3",
     "lodash": "^4.17.15",
     "pegjs-require-import": "^0.0.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/runtime": "^7.5.5",
@@ -43,6 +44,9 @@
     "jest": "^24.8.0"
   },
   "jest": {
+    "setupFiles": [
+      "./jestHelpers.js"
+    ],
     "transform": {
       "^.+\\.js$": "babel-jest"
     }
