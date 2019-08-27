@@ -13,13 +13,18 @@ describe('@dbml/cli', () => {
     const opts = JSON.parse(optsRaw);
     args.push(...opts.args);
 
+    const isOutFile = fs.existsSync(path.join(dirName, './expect-out-files'));
+    if (isOutFile && !fs.existsSync(path.join(dirName, './out-files'))) {
+      fs.mkdirSync(path.join(dirName, './out-files'));
+    }
+
     const { stdout } = await exec(`${process.execPath} ${args.join(' ')}`);
 
     const expectStdout = fs.readFileSync(path.join(dirName, './stdout.txt'), 'utf-8');
 
-    expect(stdout).toBe(expectStdout);
+    expect(stdout.replace(/(?:\n)*$/g, '')).toBe(expectStdout.replace(/(?:\n)*$/g, ''));
 
-    if (fs.existsSync(path.join(dirName, './expect-out-files'))) {
+    if (isOutFile) {
       const fileNames = fs.readdirSync(path.join(dirName, './out-files'));
       let content = fs.readFileSync(path.join(dirName, './out-files', fileNames[0]), 'utf-8');
       content = content.replace(/--.*(?:\n)*/g, '');
