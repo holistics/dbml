@@ -6,9 +6,9 @@ import childProcess from 'child_process';
 const exec = util.promisify(childProcess.exec);
 
 describe('@dbml/cli', () => {
-  const runTest = async (dirName) => {
+  const runTest = async (dirName, binFile) => {
     process.chdir(dirName);
-    const args = [path.join(__dirname, 'dbml2sql_bin.js')];
+    const args = [path.join(__dirname, binFile)];
     const optsRaw = fs.readFileSync(path.join(dirName, './options.json'), 'utf-8');
     const opts = JSON.parse(optsRaw);
     args.push(...opts.args);
@@ -30,7 +30,11 @@ describe('@dbml/cli', () => {
 
   /* eslint-disable */
   test.each(scanDirNames(__dirname, 'dbml2sql'))('dbml2sql/%s', async (dirName) => {
-    await runTest(path.join(__dirname, 'dbml2sql', dirName));
+    await runTest(path.join(__dirname, 'dbml2sql', dirName), 'dbml2sql_bin.js');
+  });
+
+  test.each(scanDirNames(__dirname, 'sql2dbml'))('sql2dbml/%s', async (dirName) => {
+    await runTest(path.join(__dirname, 'sql2dbml', dirName), 'sql2dbml_bin.js');
   });
   /* eslint-enable */
 });
