@@ -7,6 +7,7 @@ node_modules/
 *.package-lock.json
 /packages/*/node_modules
 /packages/*/lib
+**/out-files/**
 
 # Editor directories and files
 .idea
