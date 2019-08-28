@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import util from 'util';
 import childProcess from 'child_process';
+import stripAnsi from 'strip-ansi';
 
 const exec = util.promisify(childProcess.exec);
 
@@ -20,11 +21,10 @@ describe('@dbml/cli', () => {
 
     const { stdout } = await exec(`${process.execPath} ${args.join(' ')}`);
     const expectStdout = fs.readFileSync(path.join(dirName, './stdout.txt'), 'utf-8');
-    if (expectStdout !== stdout) {
-      console.log(expectStdout);
-      console.log(stdout);
-    }
-    expect(stdout.replace(/(?:\n)*$/g, '')).toBe(expectStdout.replace(/(?:\n)*$/g, ''));
+
+    const actualStdout = stripAnsi(stdout);
+
+    expect(actualStdout).toBe(expectStdout);
 
     if (isOutFile) {
       const fileNames = fs.readdirSync(path.join(dirName, './out-files'));

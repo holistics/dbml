@@ -28,6 +28,7 @@
     "figures": "^3.0.0",
     "lodash": "^4.17.15",
     "pegjs-require-import": "^0.0.2",
+    "strip-ansi": "^5.2.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
