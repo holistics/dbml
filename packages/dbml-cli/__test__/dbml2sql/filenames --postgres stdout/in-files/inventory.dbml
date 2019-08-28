@@ -1,0 +1,61 @@
+Table category {
+  id int [pk]
+  name varchar
+  last_update timestamp
+}
+
+Table film_category {
+  id int [pk]
+  category_id int [ref: > category.id]
+  last_update timestamp
+}
+
+Table language {
+  id int [pk]
+  name varchar
+  last_update timestamp
+}
+
+Table film_text {
+  id int [pk]
+  film_id int [ref: > inventory.film_id]
+  title varchar
+  description text
+}
+
+Table actor {
+  id int [pk]
+  first_name varchar
+  last_name varchar
+  last_update timestamp
+}
+
+Table film {
+  id int [pk]
+  title varchar
+  description text
+  releaase_year int
+  language_id int [ref: > language.id]
+  original_language_id int [ref: > language.id]
+  rental_duration int 
+  rental_rate decimal
+  length int
+  replacement_cost decimal
+  rating varchar
+  special_feature varchar
+  last_update timestamp
+}
+
+Table film_actor {
+  id int [pk]
+  film_id int [ref: > film.id]
+  actor_id int [ref: > actor.id]
+  last_update timestamp
+}
+
+Table inventory {
+  id int [pk]
+  film_id int [ref: > film.id]
+  store_id int 
+  last_update timestamp
+}

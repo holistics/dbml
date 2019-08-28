@@ -6,103 +6,81 @@ the command line
 ## Installation
 ```bash
 npm install -g @dbml/cli
-# or
+
+# or if you're using yarn
 yarn global add @dbml/cli
 ```
 
-## Usage
+## Convert a DBML file to SQL
 
 ```bash
-dbml <command> [<args>]
+$ dbml2sql schema.dbml
 
-* dbml [-v|--version]
-
-* dbml [-h|--help]
-
-* dbml import [--mysql|--postgres] <input-pathspec> [-o|--output <output-pathspec>]
-
-* dbml export [--mysql|--postgres] <input-pathspec> [-o|--output <output-pathspec>]
+CREATE TABLE "staff" (
+  "id" INT PRIMARY KEY,
+  "name" VARCHAR,
+  "age" INT,
+  "email" VARCHAR
+);
+...
 ```
 
-## Generate DBML file from SQL file (Import)
+By default it will generate to "PostgreSQL". To specify which database to generate to:
 
 ```bash
-dbml import [--mysql|--postgres] <input-sql-files> [-o|--output <output-dbml-files>]
+$ dbml2sql schema.dbml --mysql
+
+CREATE TABLE `staff` (
+  `id` INT PRIMARY KEY,
+  `name` VARCHAR(255),
+  `age` INT,
+  `email` VARCHAR(255)
+);
+...
 ```
 
-### Args
-
-* **-- mysql, --postgres**  
-Specify the import format.
-
-* **input-pathspec**  
-The path to the file or directory that you want to import from.
-  * *path to a file:*  
-     DBML-CLI will import from the file.
-  * *path to a directory:*  
-     DBML-CLI will try to import all files with file extension specified in 
-     the option but you should distinguish between MySQL files and PostgreSQL files, also the output-pathspec
-     is expected to be an existed directory.
- 
-* **-o, --output**  
-Specify the generated file path. If omitted, the default generated file path will be at the current directory and file names 
-will be the same as input's file names
-
-### Examples
-
-* Generate `schema.dbml` from `postgres.sql`:
+To **output to a file** you may use `--out-file` or `-o`:
 
 ```bash
-$ dbml import --postgres postgres.sql --output ./db/schema.dbml
+$ dbml2sql schema.dbml -o schema.sql
+  ✔ Generated SQL dump file (PostgreSQL): schema.sql
 ```
 
-* Omitting -o, - - output option:
+### Syntax Manual
 
 ```bash
-$ dbml import --mysql mysql.sql
+$ dbml2sql <path-to-dbml-file>
+           [--mysql|--postgres]
+           [-o|--out-file <output-filepath>]
 ```
 
-The dbml file will be generated as `mysql.dbml` in the current directory
+## Convert  a SQL file to DBML
 
-* Generate dbml files in `/dbml` directory from all PostgreSQL files in `/postgres` directory:
+To convert SQL to DBML file:
 
 ```bash
-$ dbml import --postgres ./postgres -o ./dbml
+$ sql2dbml dump.sql --postgres
+
+Table staff {
+  id int [pk]
+  name varchar
+  age int
+  email varchar
+}
+...
 ```
 
-## Generate SQL file from DBML file (Export)
+**Output to a file:**
 
 ```bash
-$ dbml export [--mysql|--postgres] <input-pathspec> [-o|--output <output-pathspec>]
+$ sql2dbml --mysql dump.sql -o mydatabase.dbml
+  ✔ Generated DBML file from SQL file (MySQL): mydatabase.dbml
 ```
 
-### Args
-
-* **-- mysql, --postgres**  
-Specify the export format.
-
-* **input-pathspec**  
-The path to the file or directory that you want to export to.
-  * *path to a file:*  
-     DBML-CLI will try to export from the .dbml file to the specified format.
-  * *path to a directory:*  
-      DBML-CLI will try to export all .dbml files from the directory to the specified format. 
-      The output-pathspec is expected to be an existed directory.
- 
-* **-o, --output**  
-Specify the generated file path. If omitted, the default generated file path will be at the current directory and file names 
-will be the same as input's file names
-
-### Examples
-
-* Export `schema.dbml` to `postgres.sql`:
+### Syntax Manual
 
 ```bash
-$ dbml export --postgres schema.dbml --output postgres.sql
-```
-
-* Export all dbml files in `/dbml` directory to JSON format in `/postgres` directory:
-
-```bash
-$ dbml export --postgres ./dbml -o ./postgres
+$ sql2dbml <path-to-sql-file>
+           [--mysql|--postgres]
+           [-o|--out-file <output-filepath>]
 ```

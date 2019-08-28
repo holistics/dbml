@@ -1,3 +1,9 @@
+@import "~prismjs/themes/prism-solarizedlight.css"
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection, code[class*="language-"]::selection, code[class*="language-"] ::selection {
+    background: rgba(45, 170, 219, 0.3);
+}
+
 {$contentClass}
   code
     color $textColor
@@ -12,7 +18,6 @@
       &.inserted
         color $accentColor
 
-{$contentClass}
   pre, pre[class*="language-"]
     line-height 1.4
     padding 1.25rem 1.5rem
@@ -21,7 +26,18 @@
     border-radius 6px
     overflow auto
     code
-      color black
+      color #343638
       padding 0
       background-color transparent
       border-radius 0
+  h2
+    font-size 1.9rem
+
+  h3
+    font-size 1.7rem
+  
+  h4
+    font-size 1.5rem
+
+  h5
+    font-size 1.2rem
