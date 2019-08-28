@@ -1,0 +1,10 @@
+{
+  "args": [
+    "--postgres",
+    "./in-files/business.dbml",
+    "./in-files/customer.dbml",
+    "./in-files/inventory.dbml",
+    "-o",
+    "./out-files/schema.sql"
+  ]
+}
