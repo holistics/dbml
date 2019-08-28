@@ -19,9 +19,11 @@ describe('@dbml/cli', () => {
     }
 
     const { stdout } = await exec(`${process.execPath} ${args.join(' ')}`);
-
     const expectStdout = fs.readFileSync(path.join(dirName, './stdout.txt'), 'utf-8');
-
+    if (expectStdout !== stdout) {
+      console.log(expectStdout);
+      console.log(stdout);
+    }
     expect(stdout.replace(/(?:\n)*$/g, '')).toBe(expectStdout.replace(/(?:\n)*$/g, ''));
 
     if (isOutFile) {
