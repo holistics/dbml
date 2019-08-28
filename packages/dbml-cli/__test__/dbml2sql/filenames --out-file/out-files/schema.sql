@@ -1,6 +1,6 @@
 -- SQL dump generated using DBML (dbml-lang.org)
 -- Database: PostgreSQL
--- Generated at: 2019-08-27T10:41:44.880Z
+-- Generated at: 2019-08-28T03:05:04.909Z
 
 CREATE TABLE "staff" (
   "id" int PRIMARY KEY,
