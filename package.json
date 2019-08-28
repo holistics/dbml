@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage --coverageReporters=text-lcov | coveralls"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -38,7 +38,6 @@
     }
   },
   "dependencies": {
-    "@babel/runtime": "^7.5.5",
-    "chalk": "^2.4.2"
+    "@babel/runtime": "^7.5.5"
   }
 }
