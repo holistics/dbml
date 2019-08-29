@@ -5,6 +5,7 @@ module.exports = {
       { text: 'Home', link: '/home/' },
       { text: 'Docs', link: '/docs/' },
       { text: 'CLI', link: '/cli/' },
+      { text: 'JS Module', link: '/js-module/' },
       { text: 'Github',link: 'https://github.com/holistics/dbml'},
       { text: 'Community', link: 'https://github.com/holistics/dbml/issues/'}
     ],
@@ -12,7 +13,6 @@ module.exports = {
     sidebar: {
       '/docs/':[
         '',
-        'tooling'
       ],
       //home sidebar
       '/home/':[
@@ -21,6 +21,9 @@ module.exports = {
       '/cli/': [
         ''
       ],
+      '/js-module/': [
+        ''
+      ]
     }
   },
   plugins: [
