@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "npm run build && jest",
+    "test": "jest",
     "build": "babel src --out-dir lib --copy-files",
     "prepublish": "npm run build"
   },
