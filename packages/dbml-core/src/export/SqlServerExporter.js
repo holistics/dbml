@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Exporter from './Exporter';
 
-class MySQLExporter extends Exporter {
+class SqlServerExporter extends Exporter {
   constructor (schema = {}) {
     super(schema);
     this.indexes = Exporter.getIndexesFromSchema(schema);
@@ -11,7 +11,7 @@ class MySQLExporter extends Exporter {
     const lines = table.fields.map((field) => {
       let line = '';
       if (field.enumRef) {
-        line = `\`${field.name}\` ENUM (`;
+        line = `"${field.name}" varchar(255) NOT NULL CHECK (${field.name} IN(`;
         const enumValues = field.enumRef.values.map(value => {
           return `'${value.name}'`;
         });
@@ -30,7 +30,7 @@ class MySQLExporter extends Exporter {
         line += ' NOT NULL';
       }
       if (field.increment) {
-        line += ' AUTO_INCREMENT';
+        line += ' IDENTITY(1, 1)';
       }
       if (field.dbdefault) {
         if (field.dbdefault.type === 'expression') {
@@ -41,7 +41,6 @@ class MySQLExporter extends Exporter {
           line += ` DEFAULT ${field.dbdefault.value}`;
         }
       }
-
       return line;
     });
 
@@ -51,7 +50,7 @@ class MySQLExporter extends Exporter {
   getTableContentArr () {
     const tableContentArr = this.schema.tables.map((table) => {
       const { name } = table;
-      const fieldContents = MySQLExporter.getFieldLines(table);
+      const fieldContents = SqlServerExporter.getFieldLines(table);
 
       return {
         name,
@@ -67,7 +66,7 @@ class MySQLExporter extends Exporter {
 
     const tableStrs = tableContentArr.map((table) => {
       /* eslint-disable indent */
-      const tableStr = `CREATE TABLE \`${table.name}\` (\n${
+      const tableStr = `CREATE TABLE "${table.name}" (\n${
         table.fieldContents.map(line => `  ${line}`).join(',\n') // format with tab
         }\n);\n`;
       /* eslint-enable indent */
@@ -156,4 +155,4 @@ class MySQLExporter extends Exporter {
   }
 }
 
-export default MySQLExporter;
+export default SqlServerExporter;
