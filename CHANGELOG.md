@@ -1,11 +1,16 @@
-## Unreleased (2019-08-20)
+## Unreleased (2019-08-30)
 
 #### :memo: Documentation
-* `dbml-cli`
+* `dbml-homepage`
+  * [#23](https://github.com/holistics/dbml/pull/23) dbml homepage/change docs ([@phuongduyphan](https://github.com/phuongduyphan))
   * [#19](https://github.com/holistics/dbml/pull/19) docs: add cli and tooling docs ([@phuongduyphan](https://github.com/phuongduyphan))
 
+#### :boom: Breaking Change
+* `dbml-cli`
+  * [#24](https://github.com/holistics/dbml/pull/24) Change CLI interface ([@phuongduyphan](https://github.com/phuongduyphan))
+
 #### :house_with_garden: Internal
-* `dbml-cli`, `dbml-core`
+* `dbml-homepage`
   * [#21](https://github.com/holistics/dbml/pull/21) chore: move dbml-homepage outside, add readme ([@phuongduyphan](https://github.com/phuongduyphan))
 
 #### Committers: 1
