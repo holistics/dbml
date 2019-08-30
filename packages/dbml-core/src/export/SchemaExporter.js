@@ -13,6 +13,7 @@ class SchemaExporter extends Exporter {
     this.mysqlExporter = new MysqlExporter(schema);
     this.postgresExporter = new PostgresExporter(schema);
     this.jsonExporter = new JsonExporter(schema);
+    this.sqlServerExporter = new SqlServerExporter(schema);
   }
 
   export (format) {

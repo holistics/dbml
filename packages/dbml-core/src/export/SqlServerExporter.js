@@ -11,13 +11,13 @@ class SqlServerExporter extends Exporter {
     const lines = table.fields.map((field) => {
       let line = '';
       if (field.enumRef) {
-        line = `"${field.name}" varchar(255) NOT NULL CHECK (${field.name} IN(`;
+        line = `"${field.name}" nvarchar(255) NOT NULL CHECK ("${field.name}" IN(`;
         const enumValues = field.enumRef.values.map(value => {
           return `'${value.name}'`;
         });
         line += `${enumValues.join(', ')})`;
       } else {
-        line = `\`${field.name}\` ${field.type.type_name !== 'varchar' ? field.type.type_name : 'varchar(255)'}`;
+        line = `"${field.name}" ${field.type.type_name !== 'varchar' ? field.type.type_name : 'nvarchar(255)'}`;
       }
 
       if (field.unique) {
@@ -26,7 +26,7 @@ class SqlServerExporter extends Exporter {
       if (field.pk) {
         line += ' PRIMARY KEY';
       }
-      if (field.not_null) {
+      if (!field.enumRef && field.not_null) {
         line += ' NOT NULL';
       }
       if (field.increment) {
@@ -36,9 +36,9 @@ class SqlServerExporter extends Exporter {
         if (field.dbdefault.type === 'expression') {
           line += ` DEFAULT (${field.dbdefault.value})`;
         } else if (field.dbdefault.type === 'string') {
-          line += ` DEFAULT "${field.dbdefault.value}"`;
+          line += ` DEFAULT '${field.dbdefault.value}'`;
         } else {
-          line += ` DEFAULT ${field.dbdefault.value}`;
+          line += ` DEFAULT (${field.dbdefault.value})`;
         }
       }
       return line;
@@ -68,7 +68,7 @@ class SqlServerExporter extends Exporter {
       /* eslint-disable indent */
       const tableStr = `CREATE TABLE "${table.name}" (\n${
         table.fieldContents.map(line => `  ${line}`).join(',\n') // format with tab
-        }\n);\n`;
+        }\n)\nGO\n`;
       /* eslint-enable indent */
       return tableStr;
     });
@@ -88,10 +88,10 @@ class SqlServerExporter extends Exporter {
       const foreignEndpoint = ref.endpoints[1 - refEndpointIndex];
       const refEndpoint = ref.endpoints[refEndpointIndex];
 
-      let line = `ALTER TABLE \`${foreignEndpoint.tableName}\` ADD `;
-      if (ref.name) { line += `CONSTRAINT \`${ref.name}\` `; }
-      line += `FOREIGN KEY (\`${foreignEndpoint.fieldName}\`) REFERENCES \`${refEndpoint.tableName}\` (\`${refEndpoint.fieldName}\`);`;
-      line += '\n';
+      let line = `ALTER TABLE "${foreignEndpoint.tableName}" ADD `;
+      if (ref.name) { line += `CONSTRAINT "${ref.name}" `; }
+      line += `FOREIGN KEY ("${foreignEndpoint.fieldName}") REFERENCES "${refEndpoint.tableName}" ("${refEndpoint.fieldName}")`;
+      line += '\nGO\n';
 
       return line;
     });
@@ -105,8 +105,8 @@ class SqlServerExporter extends Exporter {
       if (index.unique) {
         line += ' UNIQUE';
       }
-      const indexName = index.name ? `\`${index.name}\`` : `\`${index.table.name}_index_${i}\``;
-      line += ` INDEX ${indexName} ON \`${index.table.name}\``;
+      const indexName = index.name ? `"${index.name}"` : `"${index.table.name}_index_${i}"`;
+      line += ` INDEX ${indexName} ON "${index.table.name}"`;
 
       const columnArr = [];
       index.columns.forEach((column) => {
@@ -114,7 +114,7 @@ class SqlServerExporter extends Exporter {
         if (column.type === 'expression') {
           columnStr = `(${column.value})`;
         } else {
-          columnStr = `\`${column.value}\``;
+          columnStr = `"${column.value}"`;
         }
         columnArr.push(columnStr);
       });
@@ -123,7 +123,7 @@ class SqlServerExporter extends Exporter {
       if (index.type) {
         line += ` USING ${index.type.toUpperCase()}`;
       }
-      line += ';\n';
+      line += '\nGO\n';
 
       return line;
     });
