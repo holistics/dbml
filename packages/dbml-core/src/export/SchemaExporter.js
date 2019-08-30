@@ -2,6 +2,7 @@ import DbmlExporter from './DbmlExporter';
 import MysqlExporter from './MysqlExporter';
 import PostgresExporter from './PostgresExporter';
 import JsonExporter from './JsonExporter';
+import SqlServerExporter from './SqlServerExporter';
 import Exporter from './Exporter';
 
 class SchemaExporter extends Exporter {
@@ -32,6 +33,10 @@ class SchemaExporter extends Exporter {
 
       case 'json':
         res = this.jsonExporter.export();
+        break;
+
+      case 'mssql':
+        res = this.sqlServerExporter.export();
         break;
 
       default:
