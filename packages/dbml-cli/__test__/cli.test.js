@@ -22,7 +22,11 @@ describe('@dbml/cli', () => {
 
     const expectStdout = fs.readFileSync(path.join(dirName, './stdout.txt'), 'utf-8');
 
-    expect(stdout.replace(/(?:\n)*$/g, '')).toBe(expectStdout.replace(/(?:\n)*$/g, ''));
+    if (path.basename(dirName) === 'syntax-error') {
+      expect(stdout).toContain(expectStdout);
+    } else {
+      expect(stdout.replace(/(?:\n)*$/g, '')).toBe(expectStdout.replace(/(?:\n)*$/g, ''));
+    }
 
     if (isOutFile) {
       const fileNames = fs.readdirSync(path.join(dirName, './out-files'));
