@@ -1,4 +1,4 @@
-## Unreleased (2019-08-30)
+## v1.1.0 (2019-09-02)
 
 #### :memo: Documentation
 * `dbml-homepage`
