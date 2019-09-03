@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import { SyntaxError } from '../errors';
 
 function resolvePaths (paths) {
   if (!Array.isArray(paths)) {
@@ -34,8 +35,12 @@ function getFormatOpt (opts) {
 function generate (inputPaths, transform, outputPlugin) {
   inputPaths.forEach((_path) => {
     const source = fs.readFileSync(_path, 'utf-8');
-    const content = transform(source);
-    outputPlugin.write(content);
+    try {
+      const content = transform(source);
+      outputPlugin.write(content);
+    } catch (err) {
+      throw new SyntaxError(path.basename(_path), err);
+    }
   });
 }
 
