@@ -331,7 +331,7 @@ enum "enum" = "enum"i
 header_color = "headercolor"i
 
 // Commonly used tokens
-relation ">,_ or <" = [>\-<]
+relation ">, - or <" = [>\-<]
 name "valid name"
   = c:(character+) { return c.join("") }
   / quote c:[^\"\n]+ quote { return c.join("") }
