@@ -67,6 +67,13 @@ class Table extends Element {
     this.refs.push(ref);
   }
 
+  checkSameId (table) {
+    return this.name === table.name
+      || this.alias === table.name
+      || this.name === table.alias
+      || (this.alias && this.alias === table.alias);
+  }
+
   export () {
     return {
       name: this.name,
