@@ -3,10 +3,11 @@ import Field from './field';
 import Index from './indexes';
 
 class Table extends Element {
-  constructor ({ name, alias, fields = [], token, indexes = [] } = {}) {
+  constructor ({ name, alias, fields = [], token, indexes = [], headerColor = '#316896' } = {}) {
     super(token);
     this.name = name;
     this.alias = alias;
+    this.headerColor = headerColor;
     this.fields = [];
     this.indexes = [];
     // Connected ref

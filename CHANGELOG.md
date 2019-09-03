@@ -1,4 +1,13 @@
-## Unreleased (2019-08-30)
+## v1.1.1 (2019-09-03)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-core`
+  * [#26](https://github.com/holistics/dbml/pull/26) Output Syntax Error location to console ([@phuongduyphan](https://github.com/phuongduyphan))
+
+#### Committers: 1
+- Phuong Duy Phan ([@phuongduyphan](https://github.com/phuongduyphan))
+
+## v1.1.0 (2019-09-02)
 
 #### :memo: Documentation
 * `dbml-homepage`

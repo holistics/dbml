@@ -4,16 +4,16 @@ DBML (database markup language) is a simple, readable DSL language designed to d
 outlines the full syntax documentations of DBML.
 
 - [Table Definition](#table-definition)
-    - [Table Alias](#table-alias)
-    - [Table Notes](#table-notes-coming-soon) (coming soon)
-    - [Table Settings](#table-settings)
+  - [Table Alias](#table-alias)
+  - [Table Notes](#table-notes-coming-soon) (coming soon)
+  - [Table Settings](#table-settings)
 - [Column Definition](#column-definition)
-    - [Column Settings](#column-settings)
-    - [Default Value](#default-value)
-    - [Index Definition](#index-definition)
-        - [Index Settings](#index-settings)
+  - [Column Settings](#column-settings)
+  - [Default Value](#default-value)
+- [Index Definition](#index-definition)
+  - [Index Settings](#index-settings)
 - [Relationships & Foreign Key Definitions](#relationships-foreign-key-definitions)
-    - [Many-to-many relationship](#many-to-many-relationship)
+  - [Many-to-many relationship](#many-to-many-relationship)
 - [Comments](#comments)
 - [Metadata Column Notes](#metadata-column-notes)
 - [Enum Definition](#enum-definition)
@@ -70,7 +70,7 @@ You can add notes to the table, and refer to them in the visual plane.
     Table users {
         id integer
         status varchar [note: 'status']
-	
+    
         [note: 'Contains all users information']
     }
 
@@ -122,7 +122,7 @@ Example,
         rating integer [default: 10]
     }
 
-### Index Definition
+## Index Definition
 Indexes allow users to quickly locate and access the data. Users can define single or multi-column indexes. 
 
     Table bookings {
@@ -149,7 +149,7 @@ There are 3 types of index definitions:
 - Index with an expression: `CREATE INDEX ON films ( first_name + last_name )`
 - (bonus) Composite index with expression: `CREATE INDEX ON users ( country, (lower(name)) )`
 
-##### Index Settings
+### Index Settings
 
 - `type`: type of index (btree, gin, gist, hash depending on DB). For now, only type btree and hash are accepted.
 - `name`: name of index
@@ -215,9 +215,9 @@ Example,
         note: '
         💸 1 = processing, 
         ✔️ 2 = shipped, 
-	    ❌ 3 = cancelled,
-	    😔 4 = refunded
-	    ']
+        ❌ 3 = cancelled,
+        😔 4 = refunded
+        ']
     } 
 
 ## Enum Definition
