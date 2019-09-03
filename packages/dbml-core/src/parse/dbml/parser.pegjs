@@ -60,9 +60,10 @@ ref_body
 
 // Tables
 TableSyntax
-  = table sp+ name:name alias:alias_def? _ "{" body:TableBody "}" {
+  = table sp+ name:name alias:alias_def? headerColor:(__ c:HeaderColor{return c})? _ "{" body:TableBody "}" {
       let fields = body.fields || [];
       let indexes = body.indexes || [];
+      headerColor = headerColor || '#316896'
       // Handle list of partial inline_refs
       let refs = []
 
@@ -97,6 +98,7 @@ TableSyntax
         fields: fields,
         token: location(),
         indexes: indexes,
+        headerColor: headerColor
       };
     }
 
@@ -299,6 +301,18 @@ alias_def
       return alias
     }
 
+HeaderColor
+  = _ "[" _ header_color ":" _ s:sharp color:hex_color _ "]" {return s + color.join('')}
+
+hex_color
+  = six_char / three_char
+
+three_char
+  = hex_char hex_char hex_char
+
+six_char
+  = hex_char hex_char hex_char hex_char hex_char hex_char
+
 // To be deprecated
 constrain
   = unique
@@ -314,6 +328,7 @@ indexes "indexes" = "indexes"i
 btree "btree" = "btree"i
 hash "hash" = "hash"i
 enum "enum" = "enum"i
+header_color = "headercolor"i
 
 // Commonly used tokens
 relation ">,_ or <" = [>\-<]
@@ -350,6 +365,7 @@ exprCharNoCommaSpace = [\'.a-z0-9_+-]i
 allowed_chars = (! ('{'/ '}'/ whitespace_quote)) . {return text()}
 character "letter, number or underscore" = [a-z0-9_]i
 
+hex_char = c:[0-9a-fA-F] {return c.toLowerCase()}
 quote = "\""
 
 // Ignored
@@ -364,6 +380,7 @@ whitespace "whitespace" = [ \t\r\n\r]
 whitespace_quote "whitespace" = [ \t\r\n\r\"]
 sp = " "
 Comma = ","
+sharp = "#" {return "#"}
 
 
 // Copied from https://github.com/pegjs/pegjs/issues/292
