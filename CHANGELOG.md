@@ -1,4 +1,4 @@
-## Unreleased (2019-09-03)
+## v1.1.1 (2019-09-03)
 
 #### :bug: Bug Fix
 * `dbml-cli`, `dbml-core`
