@@ -112,7 +112,8 @@
               "column": 2
            }
         },
-        "indexes": []
+        "indexes": [],
+        "headerColor": "#316896"
      },
      {
         "name": "order_items",
@@ -191,7 +192,8 @@
               "column": 2
            }
         },
-        "indexes": []
+        "indexes": [],
+        "headerColor": "#316896"
      },
      {
         "name": "products",
@@ -348,7 +350,8 @@
               "column": 2
            }
         },
-        "indexes": []
+        "indexes": [],
+        "headerColor": "#316896"
      }
   ],
   "refs": [],

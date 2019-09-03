@@ -101,7 +101,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "headerColor": "#316896"
     },
     {
       "name": "order_items",
@@ -184,7 +185,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "headerColor": "#316896"
     },
     {
       "name": "products",
@@ -377,7 +379,8 @@
           "type": "hash",
           "unique": true
         }
-      ]
+      ],
+      "headerColor": "#316896"
     },
     {
       "name": "users",
@@ -538,7 +541,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "headerColor": "#316896"
     },
     {
       "name": "merchants",
@@ -658,7 +662,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "headerColor": "#316896"
     },
     {
       "name": "countries",
@@ -738,7 +743,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "headerColor": "#316896"
     }
   ],
   "refs": [
