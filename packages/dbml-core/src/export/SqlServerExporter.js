@@ -11,13 +11,14 @@ class SqlServerExporter extends Exporter {
     const lines = table.fields.map((field) => {
       let line = '';
       if (field.enumRef) {
-        line = `"${field.name}" nvarchar(255) NOT NULL CHECK ("${field.name}" IN(`;
+        line = `[${field.name}] nvarchar(255) NOT NULL CHECK ([${field.name}] IN (`;
         const enumValues = field.enumRef.values.map(value => {
           return `'${value.name}'`;
         });
         line += `${enumValues.join(', ')})`;
       } else {
-        line = `"${field.name}" ${field.type.type_name !== 'varchar' ? field.type.type_name : 'nvarchar(255)'}`;
+        line = `[${field.name}] ${field.type.type_name !== 'varchar' ? field.type.type_name : 'nvarchar(255)'}`;
+        line = line.replace(/char|varchar|nvarchar/gi, '[$&]');
       }
 
       if (field.unique) {
@@ -66,7 +67,7 @@ class SqlServerExporter extends Exporter {
 
     const tableStrs = tableContentArr.map((table) => {
       /* eslint-disable indent */
-      const tableStr = `CREATE TABLE "${table.name}" (\n${
+      const tableStr = `CREATE TABLE [${table.name}](\n${
         table.fieldContents.map(line => `  ${line}`).join(',\n') // format with tab
         }\n)\nGO\n`;
       /* eslint-enable indent */
@@ -88,9 +89,9 @@ class SqlServerExporter extends Exporter {
       const foreignEndpoint = ref.endpoints[1 - refEndpointIndex];
       const refEndpoint = ref.endpoints[refEndpointIndex];
 
-      let line = `ALTER TABLE "${foreignEndpoint.tableName}" ADD `;
-      if (ref.name) { line += `CONSTRAINT "${ref.name}" `; }
-      line += `FOREIGN KEY ("${foreignEndpoint.fieldName}") REFERENCES "${refEndpoint.tableName}" ("${refEndpoint.fieldName}")`;
+      let line = `ALTER TABLE [${foreignEndpoint.tableName}] ADD `;
+      if (ref.name) { line += `CONSTRAINT [${ref.name}] `; }
+      line += `FOREIGN KEY ([${foreignEndpoint.fieldName}]) REFERENCES [${refEndpoint.tableName}] ([${refEndpoint.fieldName}])`;
       line += '\nGO\n';
 
       return line;
@@ -105,8 +106,8 @@ class SqlServerExporter extends Exporter {
       if (index.unique) {
         line += ' UNIQUE';
       }
-      const indexName = index.name ? `"${index.name}"` : `"${index.table.name}_index_${i}"`;
-      line += ` INDEX ${indexName} ON "${index.table.name}"`;
+      const indexName = index.name ? `[${index.name}]` : `[${index.table.name}_index_${i}]`;
+      line += ` INDEX ${indexName} ON [${index.table.name}]`;
 
       const columnArr = [];
       index.columns.forEach((column) => {
