@@ -712,14 +712,6 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@dbml/core@^1.0.0":
-  version "1.0.1"
-  resolved "https://npm-staging.dbml-lang.org/@dbml%2fcore/-/core-1.0.1.tgz#05155a53f9a4928a9a3195e1ff817567c73133aa"
-  integrity sha512-NlSay5E9MUt9O3NiasjhAis6OQLw7pe8jP6/RJEhjF8gHoPQMZtrsENce0fWkmIfvJXk8v8nlIIQuwy2HDI/rQ==
-  dependencies:
-    lodash "^4.17.15"
-    pluralize "^8.0.0"
-
 "@jest/console@^24.7.1":
   version "24.7.1"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.7.1.tgz#32a9e42535a97aedfe037e725bd67e954b459545"
@@ -4024,11 +4016,6 @@ pkg-dir@^3.0.0:
   integrity sha512-/E57AYkoeQ25qkxMj5PBOVgF8Kiu/h7cYS30Z5+R7WaiCCBfLq58ZI/dSeaEKb9WVJV5n/03QwrN3IeWIFllvw==
   dependencies:
     find-up "^3.0.0"
-
-pluralize@^8.0.0:
-  version "8.0.0"
-  resolved "https://npm-staging.dbml-lang.org/pluralize/-/pluralize-8.0.0.tgz#1a6fa16a38d12a1901e0320fa017051c539ce3b1"
-  integrity sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==
 
 pn@^1.1.0:
   version "1.1.0"
