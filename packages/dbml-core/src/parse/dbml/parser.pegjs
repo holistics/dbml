@@ -2,7 +2,8 @@
   const data = {
   	tables: [],
     refs: [],
-    enums: []
+    enums: [],
+    tableGroups: []
   };
 }
 
@@ -15,7 +16,20 @@ expr
   = t:TableSyntax { data.tables.push(t) }
   / r:RefSyntax { data.refs.push(r) }
   / e:EnumSyntax { data.enums.push(e) }
+  / tg:TableGroupSyntax { data.tableGroups.push(tg) }
   / __
+
+TableGroupSyntax = table_group sp+ name:name _ "{" _ body:table_group_body _ "}" {
+  return {
+    name: name,
+    tableNames: body,
+    token: location()
+  }
+}
+
+table_group_body = tables:(name __)* {
+  return tables.map(t => t[0]);
+}
 
 // References
 RefSyntax
@@ -329,6 +343,7 @@ btree "btree" = "btree"i
 hash "hash" = "hash"i
 enum "enum" = "enum"i
 header_color = "headercolor"i
+table_group "Table Group" = "TableGroup"i
 
 // Commonly used tokens
 relation ">, - or <" = [>\-<]

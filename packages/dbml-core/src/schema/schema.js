@@ -3,17 +3,20 @@ import Endpoint from './endpoint';
 import Ref from './ref';
 import Table from './table';
 import Enum from './enum';
+import TableGroup from './tableGroup';
 
 class Schema {
-  constructor ({ tables = [], enums = [], refs = [] }) {
+  constructor ({ tables = [], enums = [], refs = [], tableGroups = [] } = {}) {
     this.refs = [];
     this.tables = [];
     this.enums = [];
+    this.tableGroups = [];
 
     // The process order is important. Do not change !
     this.processTables(tables);
     this.processRefs(refs);
     this.processEnums(enums);
+    this.processTableGroups(tableGroups);
   }
 
   processTables (rawTables) {
@@ -38,6 +41,12 @@ class Schema {
       this.pushEnum(new Enum(_enum));
     });
     this.bindEnumRefToFields();
+  }
+
+  processTableGroups (rawTableGroups) {
+    rawTableGroups.forEach((tableGroup) => {
+      this.pushTableGroup(new TableGroup(tableGroup));
+    });
   }
 
   bindEnumRefToFields () {
@@ -80,6 +89,12 @@ class Schema {
     });
   }
 
+  pushTableGroup (tableGroup) {
+    this.checkTableGroup(tableGroup);
+    tableGroup.processTableNames(this);
+    this.tableGroups.push(tableGroup);
+  }
+
   checkEnum (_enum) {
     if (this.enums.some(e => e.name === _enum.name)) {
       _enum.error(`Enum ${_enum.name} existed`);
@@ -96,6 +111,12 @@ class Schema {
   checkRef (ref) {
     if (this.refs.some(r => r.equals(ref))) {
       ref.error('Reference with same endpoints existed');
+    }
+  }
+
+  checkTableGroup (tableGroup) {
+    if (this.tableGroups.some(tg => tg.name === tableGroup.name)) {
+      tableGroup.error(`Table Group named ${tableGroup.name} existed`);
     }
   }
 
