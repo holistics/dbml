@@ -1,3 +1,18 @@
+## v1.1.2 (2019-09-04)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#27](https://github.com/holistics/dbml/pull/27) Fix relationship description ([@duynvu](https://github.com/duynvu))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#28](https://github.com/holistics/dbml/pull/28) Add supporting TableGroup syntax ([@phuongduyphan](https://github.com/phuongduyphan))
+
+#### Committers: 3
+- Khoa Huỳnh ([@khoahuynhf](https://github.com/khoahuynhf))
+- Phuong Duy Phan ([@phuongduyphan](https://github.com/phuongduyphan))
+- Vũ Duy ([@duynvu](https://github.com/duynvu))
+
 ## v1.1.1 (2019-09-03)
 
 #### :bug: Bug Fix
