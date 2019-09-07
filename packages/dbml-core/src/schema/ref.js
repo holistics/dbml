@@ -11,10 +11,12 @@ function isEqualPair (pair1, pair2) {
 }
 
 class Ref extends Element {
-  constructor ({ name, endpoints, token } = {}) {
+  constructor ({ name, endpoints, token, onUpdate, onDelete } = {}) {
     super(token);
     this.name = name;
     this.endpoints = endpoints;
+    this.onUpdate = onUpdate;
+    this.onDelete = onDelete;
     if (this.endpoints[0].equals(this.endpoints[1])) {
       this.error('Two endpoints are the same');
     }
@@ -29,6 +31,8 @@ class Ref extends Element {
     return {
       name: this.name,
       endpoints: this.endpoints.map(e => e.export()),
+      onUpdate: this.onUpdate,
+      onDelete: this.onDelete,
     };
   }
 }
