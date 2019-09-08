@@ -62,7 +62,7 @@
           },
           "dbdefault": {
             "value": "null",
-            "type": "number"
+            "type": "boolean"
           }
         },
         {
@@ -72,7 +72,7 @@
             "args": null
           },
           "dbdefault": {
-            "value": "1",
+            "value": 1,
             "type": "number"
           }
         }
