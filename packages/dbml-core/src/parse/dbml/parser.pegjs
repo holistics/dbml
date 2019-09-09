@@ -98,9 +98,9 @@ RefSetting
   = _ v:OnUpdate _ { return { type: 'update', value: v } }
   / _ v:OnDelete _ { return { type: 'delete', value: v } }
 OnUpdate
-  = "update:"i _ val:(no_action/restrict/cascade/set_null) { return val }
+  = "update:"i _ val:(no_action/restrict/cascade/set_null/set_default) { return val }
 OnDelete
-  = "delete:"i _ val:(no_action/restrict/cascade/set_null) { return val }
+  = "delete:"i _ val:(no_action/restrict/cascade/set_null/set_default) { return val }
 
 // Tables
 TableSyntax
@@ -410,6 +410,7 @@ no_action "no action" = "no action"i
 restrict "restrict" = "restrict"i
 cascade "cascade" = "cascade"i
 set_null "set null" = "set null"i
+set_default "set default" = "set default"i
 
 // Commonly used tokens
 relation ">, - or <" = [>\-<]
