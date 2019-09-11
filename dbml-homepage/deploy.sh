@@ -10,7 +10,7 @@ npm run build
 cd docs/.vuepress/dist
 
 # if you are deploying to a custom domain
-echo 'www.dbml-lang.org' > CNAME
+echo 'www.dbml.org' > CNAME
 
 cp "home/index.html" "./"
 
