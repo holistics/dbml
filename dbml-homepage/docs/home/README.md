@@ -85,3 +85,4 @@ DBML is created and maintained by [Holistics](https://holistics.io?utm_source=db
 ## Community Contributions
 
 * [Emacs Mode for DBML by ccod](https://github.com/ccod/dbd-mode)
+* [Vim Plugin for DBML by jidn](https://github.com/jidn/vim-dbml)

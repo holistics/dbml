@@ -34,3 +34,4 @@ Example of a database definition of a simple blogging site:
 ## Community Contributions
 
 * Emacs Mode for DBML (Contributed by ccod): https://github.com/ccod/dbd-mode
+* Vim Plugin for DBML (Contributed by jidn): https://github.com/jidn/vim-dbml
