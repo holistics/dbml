@@ -2,6 +2,12 @@
 
 ## core
 
+A core package that is responsible for parsing and converting between different formats
+
+* Parse DBML and SQL to `Schema` Object
+* Export SQL and DBML from `Schema` Object
+* Convert DBML to SQL and SQL to DBML
+
 ### Installation
 ```bash
 npm install @dbml/core
@@ -55,7 +61,7 @@ const { exporter } = require('@dbml/core');
   * ```{string} SQL```
 
 * **Usage:**  
-Generate SQL from DBML
+Export DBML to SQL
 
 ```javascript
 const fs = require('fs');

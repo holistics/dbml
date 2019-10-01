@@ -1,0 +1,106 @@
+{
+  "tables": [
+    {
+      "name": "orders",
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 75,
+              "line": 2,
+              "column": 2
+            },
+            "end": {
+              "offset": 92,
+              "line": 3,
+              "column": 1
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 92,
+              "line": 3,
+              "column": 1
+            },
+            "end": {
+              "offset": 105,
+              "line": 4,
+              "column": 1
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 105,
+              "line": 4,
+              "column": 1
+            },
+            "end": {
+              "offset": 121,
+              "line": 5,
+              "column": 1
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "create_at",
+          "type": {
+            "type_name": "date_time",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 121,
+              "line": 5,
+              "column": 1
+            },
+            "end": {
+              "offset": 142,
+              "line": 6,
+              "column": 1
+            }
+          },
+          "inline_refs": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 143,
+          "line": 6,
+          "column": 2
+        }
+      },
+      "indexes": null,
+      "headerColor": "#0065ab"
+    }
+  ],
+  "refs": [],
+  "enums": []
+}
