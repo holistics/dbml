@@ -15,7 +15,7 @@ function validateInputFilePaths (paths, validatePlugin) {
 
 function getFormatOpt (opts) {
   const formatOpts = Object.keys(opts).filter((opt) => {
-    return opt === 'postgres' || opt === 'mysql';
+    return opt === 'postgres' || opt === 'mysql' || opt === 'mssql';
   });
 
   let format = 'postgres';
