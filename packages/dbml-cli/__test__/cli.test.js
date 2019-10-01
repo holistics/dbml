@@ -21,10 +21,13 @@ describe('@dbml/cli', () => {
 
     const { stdout } = await exec(`${process.execPath} ${args.join(' ')}`);
     const expectStdout = fs.readFileSync(path.join(dirName, './stdout.txt'), 'utf-8');
-
     const actualStdout = stripAnsi(stdout);
 
-    expect(actualStdout).toBe(expectStdout);
+    if (path.basename(dirName) === 'syntax-error') {
+      expect(actualStdout).toContain(expectStdout);
+    } else {
+      expect(actualStdout).toBe(expectStdout);
+    }
 
     if (isOutFile) {
       const fileNames = fs.readdirSync(path.join(dirName, './out-files'));

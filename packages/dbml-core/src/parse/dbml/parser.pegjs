@@ -2,7 +2,8 @@
   const data = {
   	tables: [],
     refs: [],
-    enums: []
+    enums: [],
+    tableGroups: []
   };
 }
 
@@ -15,7 +16,20 @@ expr
   = t:TableSyntax { data.tables.push(t) }
   / r:RefSyntax { data.refs.push(r) }
   / e:EnumSyntax { data.enums.push(e) }
+  / tg:TableGroupSyntax { data.tableGroups.push(tg) }
   / __
+
+TableGroupSyntax = table_group sp+ name:name _ "{" _ body:table_group_body _ "}" {
+  return {
+    name: name,
+    tableNames: body,
+    token: location()
+  }
+}
+
+table_group_body = tables:(name __)* {
+  return tables.map(t => t[0]);
+}
 
 // References
 RefSyntax
@@ -60,9 +74,10 @@ ref_body
 
 // Tables
 TableSyntax
-  = table sp+ name:name alias:alias_def? _ "{" body:TableBody "}" {
+  = table sp+ name:name alias:alias_def? headerColor:(__ c:HeaderColor{return c})? _ "{" body:TableBody "}" {
       let fields = body.fields || [];
       let indexes = body.indexes || [];
+      headerColor = headerColor || '#316896'
       // Handle list of partial inline_refs
       let refs = []
 
@@ -97,6 +112,7 @@ TableSyntax
         fields: fields,
         token: location(),
         indexes: indexes,
+        headerColor: headerColor
       };
     }
 
@@ -299,6 +315,18 @@ alias_def
       return alias
     }
 
+HeaderColor
+  = _ "[" _ header_color ":" _ s:sharp color:hex_color _ "]" {return s + color.join('')}
+
+hex_color
+  = six_char / three_char
+
+three_char
+  = hex_char hex_char hex_char
+
+six_char
+  = hex_char hex_char hex_char hex_char hex_char hex_char
+
 // To be deprecated
 constrain
   = unique
@@ -314,9 +342,11 @@ indexes "indexes" = "indexes"i
 btree "btree" = "btree"i
 hash "hash" = "hash"i
 enum "enum" = "enum"i
+header_color = "headercolor"i
+table_group "Table Group" = "TableGroup"i
 
 // Commonly used tokens
-relation ">,_ or <" = [>\-<]
+relation ">, - or <" = [>\-<]
 name "valid name"
   = c:(character+) { return c.join("") }
   / quote c:[^\"\n]+ quote { return c.join("") }
@@ -350,6 +380,7 @@ exprCharNoCommaSpace = [\'.a-z0-9_+-]i
 allowed_chars = (! ('{'/ '}'/ whitespace_quote)) . {return text()}
 character "letter, number or underscore" = [a-z0-9_]i
 
+hex_char = c:[0-9a-fA-F] {return c.toLowerCase()}
 quote = "\""
 
 // Ignored
@@ -364,6 +395,7 @@ whitespace "whitespace" = [ \t\r\n\r]
 whitespace_quote "whitespace" = [ \t\r\n\r\"]
 sp = " "
 Comma = ","
+sharp = "#" {return "#"}
 
 
 // Copied from https://github.com/pegjs/pegjs/issues/292
