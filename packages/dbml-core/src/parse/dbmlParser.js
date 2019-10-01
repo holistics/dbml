@@ -450,7 +450,7 @@ function peg$parse(input, options) {
       peg$c107 = peg$otherExpectation("Table Group"),
       peg$c108 = "tablegroup",
       peg$c109 = peg$literalExpectation("TableGroup", true),
-      peg$c110 = peg$otherExpectation(">,_ or <"),
+      peg$c110 = peg$otherExpectation(">, - or <"),
       peg$c111 = /^[>\-<]/,
       peg$c112 = peg$classExpectation([">", "-", "<"], false, false),
       peg$c113 = peg$otherExpectation("valid name"),
