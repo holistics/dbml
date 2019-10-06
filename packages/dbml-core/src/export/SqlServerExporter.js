@@ -15,10 +15,10 @@ class SqlServerExporter extends Exporter {
         const enumValues = field.enumRef.values.map(value => {
           return `'${value.name}'`;
         });
-        line += `${enumValues.join(', ')})`;
+        line += `${enumValues.join(', ')}))`;
       } else {
         line = `[${field.name}] ${field.type.type_name !== 'varchar' ? field.type.type_name : 'nvarchar(255)'}`;
-        line = line.replace(/char|varchar|nvarchar/gi, '[$&]');
+        // line = line.replace(/char|varchar|nvarchar/gi, '[$&]');
       }
 
       if (field.unique) {
@@ -41,6 +41,7 @@ class SqlServerExporter extends Exporter {
         } else {
           line += ` DEFAULT (${field.dbdefault.value})`;
         }
+        line = line.replace(/now/gi, 'GETDATE');
       }
       return line;
     });
@@ -67,7 +68,7 @@ class SqlServerExporter extends Exporter {
 
     const tableStrs = tableContentArr.map((table) => {
       /* eslint-disable indent */
-      const tableStr = `CREATE TABLE [${table.name}](\n${
+      const tableStr = `CREATE TABLE [${table.name}] (\n${
         table.fieldContents.map(line => `  ${line}`).join(',\n') // format with tab
         }\n)\nGO\n`;
       /* eslint-enable indent */
@@ -121,9 +122,6 @@ class SqlServerExporter extends Exporter {
       });
 
       line += ` (${columnArr.join(', ')})`;
-      if (index.type) {
-        line += ` USING ${index.type.toUpperCase()}`;
-      }
       line += '\nGO\n';
 
       return line;
