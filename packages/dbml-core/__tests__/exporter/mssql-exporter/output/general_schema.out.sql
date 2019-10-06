@@ -1,52 +1,52 @@
-CREATE TABLE [orders](
+CREATE TABLE [orders] (
   [id] int PRIMARY KEY IDENTITY(1, 1),
   [user_id] int UNIQUE NOT NULL,
-  [status] nvarchar(255) NOT NULL CHECK ([status] IN ('created', 'running', 'done', 'failure'),
-  [created_at] [varchar](255)
+  [status] nvarchar(255) NOT NULL CHECK ([status] IN ('created', 'running', 'done', 'failure')),
+  [created_at] varchar(255)
 )
 GO
 
-CREATE TABLE [order_items](
+CREATE TABLE [order_items] (
   [order_id] int,
   [product_id] int,
   [quantity] int DEFAULT (1)
 )
 GO
 
-CREATE TABLE [products](
+CREATE TABLE [products] (
   [id] int PRIMARY KEY,
-  [name] [varchar](255),
+  [name] varchar(255),
   [merchant_id] int NOT NULL,
   [price] int,
-  [status] nvarchar(255) NOT NULL CHECK ([status] IN ('Out of Stock', 'In Stock'),
-  [created_at] datetime DEFAULT (now())
+  [status] nvarchar(255) NOT NULL CHECK ([status] IN ('Out of Stock', 'In Stock')),
+  [created_at] datetime DEFAULT (GETDATE())
 )
 GO
 
-CREATE TABLE [users](
+CREATE TABLE [users] (
   [id] int PRIMARY KEY,
-  [full_name] [varchar](255),
-  [email] [varchar](255) UNIQUE,
-  [gender] [varchar](255),
-  [date_of_birth] [varchar](255),
-  [created_at] [varchar](255),
+  [full_name] varchar(255),
+  [email] varchar(255) UNIQUE,
+  [gender] varchar(255),
+  [date_of_birth] varchar(255),
+  [created_at] varchar(255),
   [country_code] int
 )
 GO
 
-CREATE TABLE [merchants](
+CREATE TABLE [merchants] (
   [id] int PRIMARY KEY,
-  [merchant_name] [varchar](255),
+  [merchant_name] varchar(255),
   [country_code] int,
-  [created_at] [varchar](255),
+  [created_at] varchar(255),
   [admin_id] int
 )
 GO
 
-CREATE TABLE [countries](
+CREATE TABLE [countries] (
   [code] int PRIMARY KEY,
-  [name] [varchar](255),
-  [continent_name] [varchar](255)
+  [name] varchar(255),
+  [continent_name] varchar(255)
 )
 GO
 
@@ -71,5 +71,5 @@ GO
 CREATE INDEX [product_status] ON [products] ("merchant_id", "status")
 GO
 
-CREATE UNIQUE INDEX [products_index_1] ON [products] ("id") USING HASH
+CREATE UNIQUE INDEX [products_index_1] ON [products] ("id")
 GO
