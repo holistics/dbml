@@ -6,7 +6,7 @@ CREATE TABLE [users] (
   [date_of_birth] varchar(255),
   [created_at] varchar(255),
   [country_code] int,
-  [active] boolean NOT NULL
+  [active] BIT NOT NULL
 )
 GO
 
