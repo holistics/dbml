@@ -18,6 +18,7 @@ class SqlServerExporter extends Exporter {
         line += `${enumValues.join(', ')}))`;
       } else {
         line = `[${field.name}] ${field.type.type_name !== 'varchar' ? field.type.type_name : 'nvarchar(255)'}`;
+        line = line.replace(/boolean/gi, 'BIT'); // SQL Server does not have type BOOLEAN
         // line = line.replace(/char|varchar|nvarchar/gi, '[$&]');
       }
 
@@ -34,7 +35,14 @@ class SqlServerExporter extends Exporter {
         line += ' IDENTITY(1, 1)';
       }
       if (field.dbdefault) {
-        if (field.dbdefault.type === 'expression') {
+        if (field.type.type_name.match(/boolean/gi)) {
+          // SQL Server does not have type BOOLEAN so we change it to BIT
+          if (field.dbdefault.value.match(/true/gi)) {
+            line += ' DEFAULT 1';
+          } else {
+            line += ' DEFAULT 0';
+          }
+        } else if (field.dbdefault.type === 'expression') {
           line += ` DEFAULT (${field.dbdefault.value})`;
         } else if (field.dbdefault.type === 'string') {
           line += ` DEFAULT '${field.dbdefault.value}'`;
