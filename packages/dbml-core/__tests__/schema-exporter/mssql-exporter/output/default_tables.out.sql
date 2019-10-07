@@ -5,7 +5,7 @@ CREATE TABLE [products] (
   [price] float DEFAULT (123.12),
   [status] varchar(255) DEFAULT (NULL),
   [created_at] varchar(255) DEFAULT (GETDATE()),
-  [stock] boolean DEFAULT (true),
+  [stock] BIT DEFAULT 1,
   [expiration] date DEFAULT (current_date + interval 1 year)
 )
 GO
