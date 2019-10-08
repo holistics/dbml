@@ -1,0 +1,111 @@
+{
+  "tables": [
+    {
+      "name": "jobs",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "integer",
+            "args": null
+          },
+          "pk": true
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "jobs_status_enum",
+            "args": "'created', 'running', 'done', 'failed', 'wait for validation'"
+          }
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "orders",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "pk": true
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          }
+        },
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "orders_priority_enum",
+            "args": "'low', 'medium', 'high'"
+          }
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "orders_status_enum",
+            "args": "'pending', 'processing', 'done'"
+          }
+        }
+      ],
+      "indexes": []
+    }
+  ],
+  "refs": [],
+  "enums": [
+    {
+      "name": "jobs_status_enum",
+      "values": [
+        {
+          "name": "created"
+        },
+        {
+          "name": "running"
+        },
+        {
+          "name": "done"
+        },
+        {
+          "name": "failed"
+        },
+        {
+          "name": "wait for validation"
+        }
+      ]
+    },
+    {
+      "name": "orders_priority_enum",
+      "values": [
+        {
+          "name": "low"
+        },
+        {
+          "name": "medium"
+        },
+        {
+          "name": "high"
+        }
+      ]
+    },
+    {
+      "name": "orders_status_enum",
+      "values": [
+        {
+          "name": "pending"
+        },
+        {
+          "name": "processing"
+        },
+        {
+          "name": "done"
+        }
+      ]
+    }
+  ]
+}

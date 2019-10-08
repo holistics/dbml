@@ -3,6 +3,7 @@ import DbmlExporter from '../../src/export/DbmlExporter';
 import JsonExporter from '../../src/export/JsonExporter';
 import MysqlExporter from '../../src/export/MysqlExporter';
 import PostgresExporter from '../../src/export/PostgresExporter';
+import SqlServerExporter from '../../src/export/SqlServerExporter';
 
 describe('@dbml/core', () => {
   describe('schema-exporter', () => {
@@ -47,6 +48,10 @@ describe('@dbml/core', () => {
 
     test.each(scanTestNames(__dirname, 'postgres-exporter/input'))('postgres-exporter/%s', (name) => {
       runTest(name, 'postgres-exporter', 'postgres', PostgresExporter);
+    });
+
+    test.each(scanTestNames(__dirname, 'mssql-exporter/input'))('mssql-exporter/%s', (name) => {
+      runTest(name, 'mssql-exporter', 'mssql', SqlServerExporter);
     });
     /* eslint-enable */
   });
