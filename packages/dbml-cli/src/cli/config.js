@@ -5,4 +5,7 @@ export default {
   postgres: {
     name: 'PostgreSQL',
   },
+  mssql: {
+    name: 'SQL Server',
+  },
 };

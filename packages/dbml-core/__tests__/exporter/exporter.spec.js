@@ -24,6 +24,10 @@ describe('@dbml/core', () => {
     test.each(scanTestNames(__dirname, 'postgres-exporter/input'))('postgres-exporter/%s', (name) => {
       runTest(name, 'postgres-exporter', 'postgres');
     });
+
+    test.each(scanTestNames(__dirname, 'postgres-exporter/input'))('postgres-exporter/%s', (name) => {
+      runTest(name, 'mssql-exporter', 'mssql');
+    });
     /* eslint-enable */
   });
 });
