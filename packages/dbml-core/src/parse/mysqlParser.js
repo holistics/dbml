@@ -248,7 +248,7 @@ function peg$parse(input, options) {
       					fieldName: field,
       					relation: "*",
       				},
-              {
+      				{
       					tableName: table2,
       					fieldName: fields2[index],
       					relation: "1",
