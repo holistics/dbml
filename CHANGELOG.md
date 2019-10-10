@@ -1,4 +1,4 @@
-## Unreleased (2019-10-10)
+## v1.1.3 (2019-10-10)
 
 #### :rocket: New Feature
 * `dbml-cli`, `dbml-core`
