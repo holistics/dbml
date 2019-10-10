@@ -139,7 +139,7 @@ FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _
 	"(" _ fields:ListOfNames _ ")" _
 	references _ table2:table_name _ "(" _ fields2:ListOfNames _ ")" _
 	onDelete:FKOnDelete? _
-  onUpdate:FKOnUpdate?
+	onUpdate:FKOnUpdate?
 {
 	const name = constraint ? constraint[2] : null;
 	const arr = [];
@@ -152,7 +152,7 @@ FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _
 					fieldName: field,
 					relation: "*",
 				},
-        {
+				{
 					tableName: table2,
 					fieldName: fields2[index],
 					relation: "1",
