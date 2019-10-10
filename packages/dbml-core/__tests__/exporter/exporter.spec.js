@@ -25,7 +25,7 @@ describe('@dbml/core', () => {
       runTest(name, 'postgres-exporter', 'postgres');
     });
 
-    test.each(scanTestNames(__dirname, 'postgres-exporter/input'))('postgres-exporter/%s', (name) => {
+    test.each(scanTestNames(__dirname, 'mssql-exporter/input'))('mssql-exporter/%s', (name) => {
       runTest(name, 'mssql-exporter', 'mssql');
     });
     /* eslint-enable */

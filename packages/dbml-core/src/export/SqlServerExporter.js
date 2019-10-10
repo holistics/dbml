@@ -127,6 +127,12 @@ class SqlServerExporter extends Exporter {
       let line = `ALTER TABLE [${foreignEndpoint.tableName}] ADD `;
       if (ref.name) { line += `CONSTRAINT [${ref.name}] `; }
       line += `FOREIGN KEY ([${foreignEndpoint.fieldName}]) REFERENCES [${refEndpoint.tableName}] ([${refEndpoint.fieldName}])`;
+      if (ref.onDelete) {
+        line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
+      }
+      if (ref.onUpdate) {
+        line += ` ON UPDATE ${ref.onUpdate.toUpperCase()}`;
+      }
       line += '\nGO\n';
 
       return line;
