@@ -158,7 +158,8 @@ table_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 	/ PRIMARY_KEY _ "("_ column_names:column_names _ ")" (__ index_parameters)? { return { type: "pk", t_value: column_names } }
 	/ EXCLUDE (__ USING __ index_method)? __ "(" exclude_element_with_operator_list  ")" __ index_parameters (__ WHERE _ "(" _ predicate:expression _ ")")? { return { type: "not_supported" }}
 	/ FOREIGN_KEY _ "(" _ column_names:column_names _ ")" _ REFERENCES __ reftable:table_name refcolumn:( _ "(" _ refcolumn:column_names _ ")" {return refcolumn})?
-		(__ MATCH __ FULL/__ MATCH __ PARTIAL/__ MATCH __ SIMPLE)? (__ ON __  DELETE __ fk_action/__ ON __ UPDATE __ fk_action)? {
+		(__ MATCH __ FULL/__ MATCH __ PARTIAL/__ MATCH __ SIMPLE)?
+		onDelete:fk_on_delete? onUpdate:fk_on_update? {
 			const value = [];
 			if(refcolumn && refcolumn.length > column_names.length) {
 				//throw Error(`Line ${location().start.line}: There are extra ${refcolumn.length - column_names.length} refer column(s) not matched.`);
@@ -178,8 +179,10 @@ table_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 							tableName: reftable,
 							fieldName: refcolumn ? refcolumn[key] : null,
 							relation: "1",
-						}
-					]
+						},
+					],
+					onUpdate: onUpdate,
+					onDelete: onDelete,
 				})
 			})
 			return {
@@ -193,7 +196,10 @@ table_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 
 like_option = (INCLUDING / EXCLUDING) __ (COMMENTS / CONSTRAINTS / DEFAULTS / IDENTITY / INDEXES / STATISTICS/ STORAGE / ALL)
 
-fk_action = ("RESTRICT"i / "CASCADE"i / "NO"i __ "ACTION"i / "SET"i __ "NULL"i / "SET"i __ "DEFAULT"i)
+fk_on_delete = __ ON __  DELETE __ action:fk_action { return action.toLowerCase() }
+fk_on_update = __ ON __  UPDATE __ action:fk_action { return action.toLowerCase() }
+
+fk_action = $ ("RESTRICT"i / "CASCADE"i / "NO"i __ "ACTION"i / "SET"i __ "NULL"i / "SET"i __ "DEFAULT"i)
 
 index_method = index_method:("HASH"i / "BTREE"i / "GIST"i / "GIN"i / "BRIN"i / "SP-GIST"i) {
 	return index_method;
