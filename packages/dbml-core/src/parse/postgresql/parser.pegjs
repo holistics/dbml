@@ -63,8 +63,8 @@ parser = commands:command* {
 				}
 				break;
 			case "create_index":
-        const { table_name } = value;
-        delete value.table_name; // remove table_name from column
+				const { table_name } = value;
+				delete value.table_name; // remove table_name from column
 				const table_index = tables.find(table => table.name === table_name);
 				if (table_index.indexes) {
 					table_index.indexes.push(value);
