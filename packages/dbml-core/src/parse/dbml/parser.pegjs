@@ -223,7 +223,8 @@ Indexes
     }
 
 Index
- =  _ syntax:IndexSyntax  sp* index_settings:(IndexSettings)? {
+ = PrimaryCompositeSyntax
+ / _ syntax:IndexSyntax  sp* index_settings:(IndexSettings)? {
   	if (!Array.isArray(syntax)) {
     	syntax = [syntax];
     }
@@ -235,6 +236,14 @@ Index
     Object.assign(index, index_settings);
     return index;
  }
+ 
+PrimaryCompositeSyntax = _ syntax:CompositeIndex sp* "[" sp* "pk"i sp* "]" {
+  return {
+    columns: syntax,
+    pk: true,
+    token: location()
+  }
+}
 
 IndexSyntax
 = SingleIndex
