@@ -48,14 +48,39 @@ class MySQLExporter extends Exporter {
     return lines;
   }
 
+  static getPrimaryCompositeKey (table) {
+    const primaryCompositeKey = table.indexes ? table.indexes.filter(index => index.pk) : [];
+    const lines = primaryCompositeKey.map((key) => {
+      let line = 'PRIMARY KEY';
+      const columnArr = [];
+      key.columns.forEach((column) => {
+        let columnStr = '';
+        if (column.type === 'expression') {
+          columnStr = `(${column.value})`;
+        } else {
+          columnStr = `\`${column.value}\``;
+        }
+        columnArr.push(columnStr);
+      });
+
+      line += ` (${columnArr.join(', ')})`;
+
+      return line;
+    });
+
+    return lines;
+  }
+
   getTableContentArr () {
     const tableContentArr = this.schema.tables.map((table) => {
       const { name } = table;
       const fieldContents = MySQLExporter.getFieldLines(table);
+      const primaryCompositeKey = MySQLExporter.getPrimaryCompositeKey(table);
 
       return {
         name,
         fieldContents,
+        primaryCompositeKey,
       };
     });
 
@@ -66,9 +91,10 @@ class MySQLExporter extends Exporter {
     const tableContentArr = this.getTableContentArr();
 
     const tableStrs = tableContentArr.map((table) => {
+      const content = [...table.fieldContents, ...table.primaryCompositeKey];
       /* eslint-disable indent */
       const tableStr = `CREATE TABLE \`${table.name}\` (\n${
-        table.fieldContents.map(line => `  ${line}`).join(',\n') // format with tab
+        content.map(line => `  ${line}`).join(',\n') // format with tab
         }\n);\n`;
       /* eslint-enable indent */
       return tableStr;
