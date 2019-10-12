@@ -10,7 +10,9 @@ class Exporter {
 
     schema.tables.forEach((table) => {
       if (!_.isEmpty(table.indexes)) {
-        indexes.push(...table.indexes);
+        // primary composite key is not included here
+        const tableIndexes = table.indexes.filter((index) => index.pk);
+        indexes.push(...tableIndexes);
       }
     });
 
