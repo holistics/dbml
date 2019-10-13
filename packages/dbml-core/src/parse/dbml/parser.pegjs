@@ -130,6 +130,9 @@ TableBody
         value: field.name,
         type: 'column'
       }));
+      // remove property `pk` for each field in this list
+      primaryKeyList.forEach(field => delete field.pk);
+
       if (!Array.isArray(indexes)) {
         indexes = [];
       }
