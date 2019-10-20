@@ -2,49 +2,49 @@
   "tables": [
     {
       "name": "users",
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
             "type_name": "int",
             "args": null
-          },
-          "pk": true
+          }
         },
         {
           "name": "full_name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar",
+            "args": null
           }
         },
         {
           "name": "email",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar",
+            "args": null
           },
           "unique": true
         },
         {
           "name": "gender",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar",
+            "args": null
           }
         },
         {
           "name": "date_of_birth",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar",
+            "args": null
           }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar",
+            "args": null
           }
         },
         {
@@ -59,8 +59,7 @@
           "type": {
             "type_name": "boolean",
             "args": null
-          },
-          "not_null": true
+          }
         }
       ],
       "indexes": [
@@ -68,34 +67,45 @@
           "columns": [
             {
               "value": "id",
-              "type": "string"
+              "type": "column"
             }
           ],
-          "name": "index_name",
           "unique": true
         },
         {
           "columns": [
             {
+              "value": "id",
+              "type": "column"
+            },
+            {
               "value": "full_name",
-              "type": "string"
+              "type": "column"
             }
           ],
-          "name": "User Name"
+          "pk": true
+        },
+        {
+          "name": "User Name",
+          "columns": [
+            {
+              "value": "full_name",
+              "type": "column"
+            }
+          ]
         },
         {
           "columns": [
             {
               "value": "email",
-              "type": "string"
+              "type": "column"
             },
             {
               "value": "created_at",
-              "type": "string"
+              "type": "column"
             }
           ],
-          "name": "index_name1",
-          "type": "HASH"
+          "type": "hash"
         },
         {
           "columns": [
@@ -103,34 +113,27 @@
               "value": "now()",
               "type": "expression"
             }
-          ],
-          "name": "index_name2"
+          ]
         },
         {
           "columns": [
             {
               "value": "active",
-              "type": "string"
+              "type": "column"
             },
             {
-              "value": "lower(full_name)",
+              "value": "(lower(full_name))",
               "type": "expression"
             }
-          ],
-          "name": "index_name3"
+          ]
         },
         {
           "columns": [
             {
-              "value": "getdate()",
-              "type": "expression"
-            },
-            {
-              "value": "upper(gender)",
+              "value": "(getdate()), (upper(gender))",
               "type": "expression"
             }
-          ],
-          "name": "index_name4"
+          ]
         },
         {
           "columns": [
@@ -138,8 +141,7 @@
               "value": "reverse(country_code)",
               "type": "expression"
             }
-          ],
-          "name": "index_name5"
+          ]
         }
       ]
     }

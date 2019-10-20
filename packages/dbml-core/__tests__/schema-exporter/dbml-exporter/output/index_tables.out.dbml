@@ -1,5 +1,5 @@
 Table "users" {
-  "id" int [pk]
+  "id" int
   "full_name" varchar
   "email" varchar [unique]
   "gender" varchar
@@ -11,6 +11,7 @@ Table "users" {
         
 Indexes {
   id [unique]
+  (id, full_name) [pk]
   full_name [name: "User Name"]
   (email, created_at) [type: hash]
   `now()`
