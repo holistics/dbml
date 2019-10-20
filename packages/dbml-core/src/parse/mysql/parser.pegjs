@@ -94,8 +94,20 @@ TableBody = _ lines:Line* _ {
 	const indexes = _.flatten(lines.filter(l => l.type === "index").map(l => l.index));
 	const fields = lines.filter(l => l.type === "field").map(l => l.field);
 	const refs = [];
-	// set Primary Key
-	pks.forEach(key => fields.find(f => f.name === key).pk = true);
+	// process primary key. If it's composite key, push it into indexes
+	if (pks.length > 1) {
+		const index = {
+			columns: pks.map(field => ({
+				value: field,
+				type: 'column'
+			})),
+			pk: true
+		};
+
+		indexes.push(index);
+	} else {
+		pks.forEach(key => fields.find(f => f.name === key).pk = true);
+	}
 					
 	// Set inline_ref for fields
 	fks.map(key => {
@@ -277,12 +289,35 @@ AlterSyntax = alter_table _ table:name _
 {
 	const fks = _.flatten(options.filter(o => o.type === "add_fk").map(o => o.fks));
 	fks.forEach(fk => {fk[0].tableName = table});
-	const endpoints = fks.map(fk => ({endpoints: [...fk]}))
-	refs.push(...endpoints)
+	const endpoints = fks.map(fk => ({endpoints: [...fk]}));
+	refs.push(...endpoints);
+
+	const pks = _.flatten(options.filter(o => o.type === "add_pk").map(o => o.pks));
+	const tableAlter = tables.find((t) => t.name === table);
+	
+	const index = {
+		columns: pks.map(field => ({
+			value: field,
+			type: 'column'
+		})),
+		pk: true
+	};
+
+	if (pks.length > 1) {
+		if (tableAlter.indexes) {
+			tableAlter.indexes.push(index);
+		} else {
+			tableAlter.indexes = [index];
+		}
+	} else if (pks.length === 1) {
+		const pkField = tableAlter.fields.find(field => field.name === pks[0]);
+		pkField.pk = true;
+	}
 }
 
 AddOptions = "ADD"i _ 
 	( ("CONSTRAINT"i __ name)? _ fks:FKSyntax { return {type:"add_fk", fks} }
+	/ ("CONSTRAINT"i __ name)? _ pks:PKSyntax { return {type:"add_pk", pks} }
 	/ ("COLUMN"i)? _ col_name:name _ col_type:type { return {type:"add_column", field:{col_name, col_type}}}
 	/ ("INDEX"i/"KEY"i) _ index_name:name _ column:IndexColumn { return { type: "add_index", index: {column} } }
 	/ ("CONSTRAINT"i __ name)? "UNIQUE"i ("INDEX"i/"KEY"i)
