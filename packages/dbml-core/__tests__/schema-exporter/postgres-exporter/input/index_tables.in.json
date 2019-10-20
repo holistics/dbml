@@ -2,14 +2,14 @@
   "tables": [
     {
       "name": "users",
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
             "type_name": "int",
             "args": null
-          },
-          "pk": true
+          }
         },
         {
           "name": "full_name",
@@ -67,7 +67,7 @@
           "columns": [
             {
               "value": "id",
-              "type": "string"
+              "type": "column"
             }
           ],
           "unique": true
@@ -75,24 +75,37 @@
         {
           "columns": [
             {
+              "value": "id",
+              "type": "column"
+            },
+            {
               "value": "full_name",
-              "type": "string"
+              "type": "column"
             }
           ],
-          "name": "User Name"
+          "pk": true
+        },
+        {
+          "name": "User Name",
+          "columns": [
+            {
+              "value": "full_name",
+              "type": "column"
+            }
+          ]
         },
         {
           "columns": [
             {
               "value": "email",
-              "type": "string"
+              "type": "column"
             },
             {
               "value": "created_at",
-              "type": "string"
+              "type": "column"
             }
           ],
-          "type": "HASH"
+          "type": "hash"
         },
         {
           "columns": [
@@ -106,10 +119,10 @@
           "columns": [
             {
               "value": "active",
-              "type": "string"
+              "type": "column"
             },
             {
-              "value": "lower(full_name)",
+              "value": "(lower(full_name))",
               "type": "expression"
             }
           ]
@@ -117,11 +130,7 @@
         {
           "columns": [
             {
-              "value": "getdate()",
-              "type": "expression"
-            },
-            {
-              "value": "upper(gender)",
+              "value": "(getdate()), (upper(gender))",
               "type": "expression"
             }
           ]

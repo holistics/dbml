@@ -1,32 +1,33 @@
 CREATE TABLE [users] (
-  [id] int PRIMARY KEY,
-  [full_name] varchar(255),
-  [email] varchar(255) UNIQUE,
-  [gender] varchar(255),
-  [date_of_birth] varchar(255),
-  [created_at] varchar(255),
+  [id] int,
+  [full_name] nvarchar(255),
+  [email] nvarchar(255) UNIQUE,
+  [gender] nvarchar(255),
+  [date_of_birth] nvarchar(255),
+  [created_at] nvarchar(255),
   [country_code] int,
-  [active] BIT NOT NULL
+  [active] BIT,
+  PRIMARY KEY ([id], [full_name])
 )
 GO
 
-CREATE UNIQUE INDEX [index_name] ON [users] ("id")
+CREATE UNIQUE INDEX [users_index_0] ON [users] ("id")
 GO
 
 CREATE INDEX [User Name] ON [users] ("full_name")
 GO
 
-CREATE INDEX [index_name1] ON [users] ("email", "created_at")
+CREATE INDEX [users_index_2] ON [users] ("email", "created_at")
 GO
 
-CREATE INDEX [index_name2] ON [users] ((now()))
+CREATE INDEX [users_index_3] ON [users] ((now()))
 GO
 
-CREATE INDEX [index_name3] ON [users] ("active", (lower(full_name)))
+CREATE INDEX [users_index_4] ON [users] ("active", ((lower(full_name))))
 GO
 
-CREATE INDEX [index_name4] ON [users] ((getdate()), (upper(gender)))
+CREATE INDEX [users_index_5] ON [users] (((getdate()), (upper(gender))))
 GO
 
-CREATE INDEX [index_name5] ON [users] ((reverse(country_code)))
+CREATE INDEX [users_index_6] ON [users] ((reverse(country_code)))
 GO
