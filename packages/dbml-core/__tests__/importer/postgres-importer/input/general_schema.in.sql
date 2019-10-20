@@ -24,12 +24,13 @@ CREATE TABLE "order_items" (
 );
 
 CREATE TABLE "products" (
-  "id" int PRIMARY KEY,
+  "id" int,
   "name" varchar,
   "merchant_id" int NOT NULL,
   "price" int,
   "status" "product status",
-  "created_at" datetime DEFAULT (now())
+  "created_at" datetime DEFAULT (now()),
+  PRIMARY KEY ("id", "name")
 );
 
 CREATE TABLE "users" (
