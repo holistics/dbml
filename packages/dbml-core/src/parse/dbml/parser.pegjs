@@ -253,7 +253,7 @@ Indexes
 Index
   = index:(SingleIndexSyntax/CompositeIndexSyntax) { return index }
 
-SingleIndexSyntax = _ syntax:SingleIndex sp* index_settings:SingleIndexSettings? {
+SingleIndexSyntax = _ syntax:SingleIndex sp* index_settings:IndexSettings? {
   const index = {
     columns: [syntax],
     token: location()
@@ -262,12 +262,8 @@ SingleIndexSyntax = _ syntax:SingleIndex sp* index_settings:SingleIndexSettings?
   return index;
  }
 
-SingleIndexSettings = "[" index_settings:IndexSettings "]" {
-  return index_settings;
-}
-
 // CompositeIndexSyntax includes normal composite index and composite primary key
-CompositeIndexSyntax = _ syntax:CompositeIndex sp* index_settings:CompositeIndexSettings? {
+CompositeIndexSyntax = _ syntax:CompositeIndex sp* index_settings:IndexSettings? {
   const index = {
     columns: syntax,
     token: location()
@@ -275,10 +271,6 @@ CompositeIndexSyntax = _ syntax:CompositeIndex sp* index_settings:CompositeIndex
   Object.assign(index, index_settings);
   return index;
 }
-
-CompositeIndexSettings
-  = "[" sp* pk sp* "]" { return { pk: true } }
-  / index_settings:SingleIndexSettings { return index_settings }
 
 SingleIndex
  =  column:name sp* {
@@ -301,7 +293,8 @@ CompositeIndex
 }
 
 IndexSettings
-  = first:IndexSetting rest:(Comma IndexSetting)* {
+  = "[" sp* pk sp* "]" { return { pk: true } }
+  / "[" first:IndexSetting rest:(Comma IndexSetting)* "]" {
     let arrSettings = [first].concat(rest.map(el => el[1]));
         let res = {};
     arrSettings.forEach((ele) => {
