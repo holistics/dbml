@@ -93,6 +93,9 @@ class DbmlExporter {
       }
 
       const indexSettings = [];
+      if (index.pk) {
+        indexSettings.push('pk');
+      }
       if (index.type) {
         indexSettings.push(`type: ${index.type.toLowerCase()}`);
       }
