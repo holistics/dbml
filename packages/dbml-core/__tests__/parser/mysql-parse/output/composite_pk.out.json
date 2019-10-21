@@ -1,0 +1,282 @@
+{
+  "tables": [
+    {
+      "name": "users",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          }
+        },
+        {
+          "name": "full_name",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          }
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          },
+          "unique": true
+        },
+        {
+          "name": "gender",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          }
+        },
+        {
+          "name": "date_of_birth",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          }
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          }
+        },
+        {
+          "name": "country_code",
+          "type": {
+            "type_name": "int",
+            "args": null
+          }
+        },
+        {
+          "name": "active",
+          "type": {
+            "type_name": "boolean",
+            "args": null
+          }
+        }
+      ],
+      "indexes": [
+        {
+          "columns": [
+            {
+              "value": "id",
+              "type": "column"
+            },
+            {
+              "value": "full_name",
+              "type": "column"
+            }
+          ],
+          "pk": true
+        },
+        {
+          "columns": [
+            {
+              "value": "id",
+              "type": "string"
+            }
+          ],
+          "name": "users_index_0",
+          "unique": true
+        },
+        {
+          "columns": [
+            {
+              "value": "full_name",
+              "type": "string"
+            }
+          ],
+          "name": "User Name"
+        },
+        {
+          "columns": [
+            {
+              "value": "email",
+              "type": "string"
+            },
+            {
+              "value": "created_at",
+              "type": "string"
+            }
+          ],
+          "name": "users_index_2",
+          "type": "HASH"
+        },
+        {
+          "columns": [
+            {
+              "value": "(now())",
+              "type": "expression"
+            }
+          ],
+          "name": "users_index_3"
+        },
+        {
+          "columns": [
+            {
+              "value": "active",
+              "type": "string"
+            },
+            {
+              "value": "((lower(full_name)))",
+              "type": "expression"
+            }
+          ],
+          "name": "users_index_4"
+        },
+        {
+          "columns": [
+            {
+              "value": "((getdate()), (upper(gender)))",
+              "type": "expression"
+            }
+          ],
+          "name": "users_index_5"
+        },
+        {
+          "columns": [
+            {
+              "value": "(reverse(country_code))",
+              "type": "expression"
+            }
+          ],
+          "name": "users_index_6"
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "pk": true,
+          "dbdefault": {
+            "value": 123,
+            "type": "number"
+          }
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          },
+          "dbdefault": {
+            "value": "Tea",
+            "type": "string"
+          }
+        },
+        {
+          "name": "merchant_id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "not_null": true
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "float",
+            "args": null
+          },
+          "dbdefault": {
+            "value": 123.12,
+            "type": "number"
+          }
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          },
+          "dbdefault": {
+            "value": "now()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "stock",
+          "type": {
+            "type_name": "boolean",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "true",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "expiration",
+          "type": {
+            "type_name": "date",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "current_date + interval 1 year",
+            "type": "expression"
+          }
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "cities",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          }
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          }
+        }
+      ],
+      "indexes": [
+        {
+          "columns": [
+            {
+              "value": "id",
+              "type": "column"
+            },
+            {
+              "value": "code",
+              "type": "column"
+            }
+          ],
+          "pk": true
+        }
+      ]
+    }
+  ],
+  "refs": [],
+  "enums": []
+}

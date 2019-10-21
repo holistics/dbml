@@ -12,12 +12,13 @@ CREATE TABLE `order_items` (
 );
 
 CREATE TABLE `products` (
-  `id` int PRIMARY KEY,
+  `id` int,
   `name` varchar(255),
   `merchant_id` int NOT NULL,
   `price` int,
   `status` ENUM ('Out of Stock', 'In Stock'),
-  `created_at` datetime DEFAULT (now())
+  `created_at` datetime DEFAULT (now()),
+  PRIMARY KEY (`id`, `name`)
 );
 
 CREATE TABLE `users` (

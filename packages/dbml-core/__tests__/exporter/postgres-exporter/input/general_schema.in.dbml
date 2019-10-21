@@ -24,7 +24,7 @@ Table "order_items" {
 }
 
 Table "products" {
-  "id" int [pk]
+  "id" int
   "name" varchar
   "merchant_id" int [not null]
   "price" int
@@ -33,6 +33,7 @@ Table "products" {
 
         
 Indexes {
+  (id, name) [pk]
   (merchant_id, status) [name: "product_status"]
   id [type: hash, unique]
 }

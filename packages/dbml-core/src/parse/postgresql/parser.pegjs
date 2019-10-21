@@ -12,8 +12,11 @@ parser = commands:command* {
 				switch(syntax_name.toLowerCase()) {
 					case "create_table_normal":
 						tables.push(table);
-						// process inline_refs
+
+						const pkList = [];
+
 						table.fields.forEach(field => {
+							// process inline_refs
 							if (field.inline_refs) {
 								refs.push(...field.inline_refs.map(ref => ({
 									endpoints: [
@@ -25,7 +28,33 @@ parser = commands:command* {
 									ref]
 								})));
 							}
-						})
+
+							// process composite primary key, if primary key is in composite form, push it into indexes
+							if (field.pk) {
+								pkList.push(field);
+							}
+						});
+
+						if (pkList.length > 1) {
+							table.fields = table.fields.map((field) => {
+								delete field.pk
+								return field;
+							});
+
+							const index = {
+								columns: pkList.map(field => ({
+									value: field.name,
+									type: 'column'
+								})),
+								pk: true
+							};
+							
+							if (table.indexes) {
+								table.indexes.push(index);
+							} else {
+								table.indexes = [index];
+							}
+						}
 						break;
 					case "create_table_of":
 						break;

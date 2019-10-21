@@ -118,8 +118,36 @@ TableSyntax
 
 TableBody
   = _ fields: Field + _ indexes:(Indexes)? _ {
+    // process field for composite primary key:
+    const primaryKeyList = [];
+    fields.forEach(field => {
+      if (field.pk) {
+        primaryKeyList.push(field);
+      }
+    })
+    if (primaryKeyList.length > 1) {
+      const columns = primaryKeyList.map(field => ({
+        value: field.name,
+        type: 'column'
+      }));
+      // remove property `pk` for each field in this list
+      primaryKeyList.forEach(field => delete field.pk);
 
-    return {fields: fields, indexes : indexes }}
+      if (!Array.isArray(indexes)) {
+        indexes = [];
+      }
+      indexes.push({
+        columns: columns,
+        token: _.head(primaryKeyList).tokens,
+        pk: true
+      })
+    }
+
+    return {
+      fields,
+      indexes,
+    }
+  }
 
 Field
   = _ name:name sp+ type:type constrains:(sp+ constrain)* sp* field_settings:FieldSettings? sp* comment? newline {
@@ -223,24 +251,36 @@ Indexes
     }
 
 Index
- =  _ syntax:IndexSyntax  sp* index_settings:(IndexSettings)? {
-  	if (!Array.isArray(syntax)) {
-    	syntax = [syntax];
-    }
-    
-    const index = {
-    	columns: syntax,
-      token: location()
-    };
-    Object.assign(index, index_settings);
-    return index;
+  = index:(SingleIndexSyntax/CompositeIndexSyntax) { return index }
+
+SingleIndexSyntax = _ syntax:SingleIndex sp* index_settings:SingleIndexSettings? {
+  const index = {
+    columns: [syntax],
+    token: location()
+  };
+  Object.assign(index, index_settings);
+  return index;
  }
 
-IndexSyntax
-= SingleIndex
-/ CompositeIndex
+SingleIndexSettings = "[" index_settings:IndexSettings "]" {
+  return index_settings;
+}
 
- SingleIndex
+// CompositeIndexSyntax includes normal composite index and composite primary key
+CompositeIndexSyntax = _ syntax:CompositeIndex sp* index_settings:CompositeIndexSettings? {
+  const index = {
+    columns: syntax,
+    token: location()
+  };
+  Object.assign(index, index_settings);
+  return index;
+}
+
+CompositeIndexSettings
+  = "[" sp* pk sp* "]" { return { pk: true } }
+  / index_settings:SingleIndexSettings { return index_settings }
+
+SingleIndex
  =  column:name sp* {
     const singleIndex = {
       value: column,
@@ -261,7 +301,7 @@ CompositeIndex
 }
 
 IndexSettings
-  = "[" first:IndexSetting rest:(Comma IndexSetting)* "]" {
+  = first:IndexSetting rest:(Comma IndexSetting)* {
     let arrSettings = [first].concat(rest.map(el => el[1]));
         let res = {};
     arrSettings.forEach((ele) => {
