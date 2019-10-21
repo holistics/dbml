@@ -1,3 +1,12 @@
+## v1.1.3 (2019-10-10)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#32](https://github.com/holistics/dbml/pull/32) Add SQL Server export ([@duynvu](https://github.com/duynvu))
+
+#### Committers: 1
+- Vũ Duy ([@duynvu](https://github.com/duynvu))
+
 ## v1.1.2 (2019-09-04)
 
 #### :bug: Bug Fix
