@@ -5,6 +5,7 @@ class PostgresExporter extends Exporter {
   constructor (schema = {}) {
     super(schema);
     this.indexes = Exporter.getIndexesFromSchema(schema);
+    this.comments = Exporter.getCommentsFromSchema(schema);
   }
 
   exportEnums () {
@@ -171,6 +172,22 @@ class PostgresExporter extends Exporter {
     return indexArr.length ? indexArr.join('\n') : '';
   }
 
+  exportComments () {
+    const commentArr = this.comments.map((comment) => {
+      let line = 'COMMENT ON';
+
+      if (comment.type === 'column') {
+        line += ` COLUMN "${comment.table.name}"."${comment.field.name}" IS '${comment.field.note}'`;
+      }
+
+      line += ';\n';
+
+      return line;
+    });
+
+    return commentArr.length ? commentArr.join('\n') : '';
+  }
+
   export () {
     let res = '';
     let hasBlockAbove = false;
@@ -195,6 +212,12 @@ class PostgresExporter extends Exporter {
     if (!_.isEmpty(this.indexes)) {
       if (hasBlockAbove) res += '\n';
       res += this.exportIndexes();
+      hasBlockAbove = true;
+    }
+
+    if (!_.isEmpty(this.comments)) {
+      if (hasBlockAbove) res += '\n';
+      res += this.exportComments();
       hasBlockAbove = true;
     }
 
