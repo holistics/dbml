@@ -126,12 +126,13 @@ Example,
 Indexes allow users to quickly locate and access the data. Users can define single or multi-column indexes. 
 
     Table bookings {
-      id integer [primary key]
+      id integer
       country varchar
       booking_date date
       created_at timestamp
 
       indexes {
+          (id, country) [pk] // composite primary key
           created_at [note: 'Date']
           booking_date
           (country, booking_date) [unique]
@@ -154,6 +155,7 @@ There are 3 types of index definitions:
 - `type`: type of index (btree, gin, gist, hash depending on DB). For now, only type btree and hash are accepted.
 - `name`: name of index
 - `unique`: unique index
+- `pk`: primary key 
 
 ## Relationships & Foreign Key Definitions
 Relationships are used to define foreign key constraints between tables.
