@@ -19,6 +19,24 @@ class Exporter {
     return indexes;
   }
 
+  static getCommentsFromSchema (schema) {
+    const comments = [];
+
+    schema.tables.forEach((table) => {
+      table.fields.forEach((field) => {
+        if (field.note) {
+          comments.push({
+            type: 'column',
+            table,
+            field,
+          });
+        }
+      });
+    });
+
+    return comments;
+  }
+
   static hasWhiteSpace (s) {
     return /\s/g.test(s);
   }

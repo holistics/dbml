@@ -1,0 +1,45 @@
+{
+  "tables": [
+    {
+      "name": "products",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "pk": true,
+          "dbdefault": {
+            "value": 123,
+            "type": "number"
+          },
+          "note": "just a comment"
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          },
+          "dbdefault": {
+            "value": "Tea",
+            "type": "string"
+          },
+          "note": "name length <= 255"
+        },
+        {
+          "name": "merchant_id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "not_null": true
+        }
+      ],
+      "indexes": []
+    }
+  ],
+  "refs": [],
+  "enums": []
+}

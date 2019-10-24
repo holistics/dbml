@@ -220,8 +220,7 @@ FieldSetting "field setting"
 	/ _ a:"AUTO_INCREMENT"i _ { return "increment" }
 	/ _ a:"UNSIGNED"i _ { return "unsigned"}
 	/ _ (
-      _ "COMMENT"i _ StringLiteral _ 
-    / _ "COLLATE"i _ name _ 
+      _ "COLLATE"i _ name _ 
     / _ "COLUMN_FORMAT"i _ StringLiteral _ 
     / _ "STORAGE"i _ StringLiteral _ 
     / _ "CHECK"i _ "(" expression")" _ 

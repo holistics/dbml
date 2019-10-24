@@ -17,7 +17,7 @@ class DbmlExporter {
     const enumStrs = this.schema.enums.map(_enum => (
       /* eslint-disable indent */
       `Enum ${`"${_enum.name}"`} {\n${
-      _enum.values.map(value => `  "${value.name}"`).join('\n')
+      _enum.values.map(value => `  "${value.name}"${value.note ? ` [note: '${value.note}']` : ''}`).join('\n')
       }\n}\n`
       /* eslint-enable indent */
     ));
@@ -65,6 +65,9 @@ class DbmlExporter {
             break;
         }
         constraints.push(value);
+      }
+      if (field.note) {
+        constraints.push(`note: '${field.note}'`);
       }
 
       if (constraints.length > 0) {
