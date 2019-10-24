@@ -1,4 +1,4 @@
-## Unreleased (2019-10-24)
+## v1.2.0 (2019-10-24)
 
 #### :rocket: New Feature
 * `dbml-core`
