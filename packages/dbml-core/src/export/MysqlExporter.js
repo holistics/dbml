@@ -41,6 +41,9 @@ class MySQLExporter extends Exporter {
           line += ` DEFAULT ${field.dbdefault.value}`;
         }
       }
+      if (field.note) {
+        line += ` COMMENT '${field.note}'`;
+      }
 
       return line;
     });
