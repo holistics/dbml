@@ -446,10 +446,8 @@ function peg$parse(input, options) {
       peg$c153 = peg$literalExpectation("ENFORCE", true),
       peg$c154 = function(table, options) {
       	const fks = _.flatten(options.filter(o => o.type === "add_fk").map(o => o.fks));
-      <<<<<<< HEAD
-      	fks.forEach(fk => {fk[0].tableName = table});
-      	const endpoints = fks.map(fk => ({endpoints: [...fk]}));
-      	refs.push(...endpoints);
+      	fks.forEach(fk => {fk.endpoints[0].tableName = table});
+      	refs.push(...fks)
 
       	const pks = _.flatten(options.filter(o => o.type === "add_pk").map(o => o.pks));
       	const tableAlter = tables.find((t) => t.name === table);
@@ -472,14 +470,6 @@ function peg$parse(input, options) {
       		const pkField = tableAlter.fields.find(field => field.name === pks[0]);
       		pkField.pk = true;
       	}
-      ||||||| merged common ancestors
-      	fks.forEach(fk => {fk[0].tableName = table});
-      	const endpoints = fks.map(fk => ({endpoints: [...fk]}))
-      	refs.push(...endpoints)
-      =======
-      	fks.forEach(fk => {fk.endpoints[0].tableName = table});
-      	refs.push(...fks)
-      >>>>>>> Add referential actions support to mysql parser
       },
       peg$c155 = "add",
       peg$c156 = peg$literalExpectation("ADD", true),
