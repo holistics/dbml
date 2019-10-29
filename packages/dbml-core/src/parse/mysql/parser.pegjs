@@ -138,13 +138,12 @@ PKSyntax = _ primary_key _ "(" _ names:ListOfNames _ ")"
 FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _ 
 	"(" _ fields:ListOfNames _ ")" _
 	references _ table2:table_name _ "(" _ fields2:ListOfNames _ ")" _
-	onDelete:FKOnDelete? _
-	onUpdate:FKOnUpdate?
+	fkActions:FKAction*
 {
 	const name = constraint ? constraint[2] : null;
 	const arr = [];
 	fields.forEach((field, index) => {
-		arr.push({
+		const fkObj = {
 			name: name,
 			endpoints: [
 				{
@@ -158,18 +157,21 @@ FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _
 					relation: "1",
 				}
 			],
-			onUpdate: onUpdate,
-			onDelete: onDelete
-		})
+		};
+		fkActions.forEach(fkAction => {
+			if (fkAction.type === 'delete') {
+				fkObj.onDelete = fkAction.action;
+				return;
+			}
+			fkObj.onUpdate = fkAction.action;
+		});
+		arr.push(fkObj);
 	})
   return arr
 }
 
-FKOnDelete
-  = "ON"i _ "DELETE"i _ action:references_options { return action.toLowerCase() }
-
-FKOnUpdate
-  = "ON"i _ "UPDATE"i _ action:references_options { return action.toLowerCase() }
+FKAction
+  = _ "ON"i _ type:("UPDATE"i / "DELETE"i) _ action:references_options { return {type: type.toLowerCase(), action: action.toLowerCase()} }
 
 // UniqueSyntax: Support "UNIQUE(field[, field]*)"
 UniqueSyntax 
