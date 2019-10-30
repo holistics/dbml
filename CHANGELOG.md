@@ -1,3 +1,12 @@
+## Unreleased (2019-10-30)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#41](https://github.com/holistics/dbml/pull/41) Remove defaut header color ([@phuongduyphan](https://github.com/phuongduyphan))
+
+#### Committers: 1
+- Phuong Duy Phan ([@phuongduyphan](https://github.com/phuongduyphan))
+
 ## v1.2.0 (2019-10-24)
 
 #### :rocket: New Feature
