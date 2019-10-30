@@ -77,7 +77,6 @@ TableSyntax
   = table sp+ name:name alias:alias_def? headerColor:(__ c:HeaderColor{return c})? _ "{" body:TableBody "}" {
       let fields = body.fields || [];
       let indexes = body.indexes || [];
-      headerColor = headerColor || '#316896'
       // Handle list of partial inline_refs
       let refs = []
 

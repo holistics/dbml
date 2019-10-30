@@ -3,7 +3,7 @@ import Field from './field';
 import Index from './indexes';
 
 class Table extends Element {
-  constructor ({ name, alias, fields = [], token, indexes = [], headerColor = '#316896' } = {}) {
+  constructor ({ name, alias, fields = [], token, indexes = [], headerColor } = {}) {
     super(token);
     this.name = name;
     this.alias = alias;
