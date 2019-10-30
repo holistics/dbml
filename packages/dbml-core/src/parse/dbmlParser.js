@@ -204,7 +204,6 @@ function peg$parse(input, options) {
       peg$c20 = function(name, alias, headerColor, body) {
             let fields = body.fields || [];
             let indexes = body.indexes || [];
-            headerColor = headerColor || '#316896'
             // Handle list of partial inline_refs
             let refs = []
 
