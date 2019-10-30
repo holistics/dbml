@@ -137,7 +137,7 @@ column_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 	/ UNIQUE (__ index_parameters)? { return { type: "unique" } }
 	/ PRIMARY_KEY (__ index_parameters)? { return { type: "pk" } }
 	/ REFERENCES __ reftable:table_name refcolumn:(_ "(" _ refcolumn:column_name _ ")" {return refcolumn})? (__ MATCH __ FULL/__ MATCH __ PARTIAL/__ MATCH __ SIMPLE)?
-		(__ ON __ DELETE __ fk_action/__ ON __ UPDATE __ fk_action)? {
+		fk_action* {
 			return {
 				type: "fk",
 				value: {
@@ -159,7 +159,7 @@ table_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 	/ EXCLUDE (__ USING __ index_method)? __ "(" exclude_element_with_operator_list  ")" __ index_parameters (__ WHERE _ "(" _ predicate:expression _ ")")? { return { type: "not_supported" }}
 	/ FOREIGN_KEY _ "(" _ column_names:column_names _ ")" _ REFERENCES __ reftable:table_name refcolumn:( _ "(" _ refcolumn:column_names _ ")" {return refcolumn})?
 		(__ MATCH __ FULL/__ MATCH __ PARTIAL/__ MATCH __ SIMPLE)?
-		onDelete:fk_on_delete? onUpdate:fk_on_update? {
+		fk_actions:fk_action* {
 			const value = [];
 			if(refcolumn && refcolumn.length > column_names.length) {
 				//throw Error(`Line ${location().start.line}: There are extra ${refcolumn.length - column_names.length} refer column(s) not matched.`);
@@ -168,7 +168,7 @@ table_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 				if(refcolumn && key >= refcolumn.length) {
 					//throw Error(`Line ${location().start.line}: ${column_name} do not have referenced column.`)
 				}
-				value.push({
+				const v = {
 					endpoints: [
 						{
 							tableName: null,
@@ -181,9 +181,15 @@ table_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 							relation: "1",
 						},
 					],
-					onUpdate: onUpdate,
-					onDelete: onDelete,
-				})
+				};
+				fk_actions.forEach(fkAction => {
+					if (fkAction.type === 'delete') {
+						v.onDelete = fkAction.action;
+						return;
+					}
+					v.onUpdate = fkAction.action;
+				});
+				value.push(v);
 			})
 			return {
 				type: "fk",
@@ -196,10 +202,9 @@ table_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 
 like_option = (INCLUDING / EXCLUDING) __ (COMMENTS / CONSTRAINTS / DEFAULTS / IDENTITY / INDEXES / STATISTICS/ STORAGE / ALL)
 
-fk_on_delete = __ ON __  DELETE __ action:fk_action { return action.toLowerCase() }
-fk_on_update = __ ON __  UPDATE __ action:fk_action { return action.toLowerCase() }
+fk_action = __ ON __  type:(UPDATE / DELETE) __ action:fk_action_options { return { type: type.toLowerCase(), action: action.toLowerCase() } }
 
-fk_action = $ ("RESTRICT"i / "CASCADE"i / "NO"i __ "ACTION"i / "SET"i __ "NULL"i / "SET"i __ "DEFAULT"i)
+fk_action_options = $ ("RESTRICT"i / "CASCADE"i / "NO"i __ "ACTION"i / "SET"i __ "NULL"i / "SET"i __ "DEFAULT"i)
 
 index_method = index_method:("HASH"i / "BTREE"i / "GIST"i / "GIN"i / "BRIN"i / "SP-GIST"i) {
 	return index_method;
