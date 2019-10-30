@@ -185,8 +185,7 @@
           "column": 2
         }
       },
-      "indexes": [],
-      "headerColor": "#316896"
+      "indexes": []
     },
     {
       "name": "products",
@@ -379,8 +378,7 @@
           "type": "hash",
           "unique": true
         }
-      ],
-      "headerColor": "#316896"
+      ]
     },
     {
       "name": "users",
@@ -541,8 +539,7 @@
           "column": 2
         }
       },
-      "indexes": [],
-      "headerColor": "#316896"
+      "indexes": []
     },
     {
       "name": "merchants",
@@ -662,8 +659,7 @@
           "column": 2
         }
       },
-      "indexes": [],
-      "headerColor": "#316896"
+      "indexes": []
     },
     {
       "name": "countries",
@@ -743,8 +739,7 @@
           "column": 2
         }
       },
-      "indexes": [],
-      "headerColor": "#316896"
+      "indexes": []
     }
   ],
   "refs": [
