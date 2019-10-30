@@ -220,7 +220,8 @@
           "relation": "1"
         }
       ],
-      "onDelete": "restrict"
+      "onDelete": "restrict",
+      "onUpdate": "no action"
     },
     {
       "name": null,
@@ -236,7 +237,8 @@
           "relation": "1"
         }
       ],
-      "onDelete": "cascade"
+      "onDelete": "cascade",
+      "onUpdate": "restrict"
     },
     {
       "name": null,
@@ -268,7 +270,8 @@
           "relation": "1"
         }
       ],
-      "onDelete": "no action"
+      "onDelete": "no action",
+      "onUpdate": "no action"
     }
   ],
   "enums": []
