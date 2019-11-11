@@ -51,9 +51,13 @@ TableSyntax
 					fieldName: field.name,
 					relation: "*", //set by default
 				},
-				ref,
+				ref.endpoint,
 			]
-			refs.push({endpoints});
+			refs.push({
+				endpoints,
+				onUpdate: ref.onUpdate,
+				onDelete: ref.onDelete,
+			});
 		})
 		
 		// process enum: rename enum and push to array `enums`
@@ -115,7 +119,11 @@ TableBody = _ lines:Line* _ {
 		if(!field.inline_ref) {
 			field.inline_ref = [];
 		}
-		field.inline_ref.push(key.endpoints[1]);
+		field.inline_ref.push({
+			endpoint: key.endpoints[1],
+			onUpdate: key.onUpdate,
+			onDelete: key.onDelete,
+		});
 	})
 	
 	return {fields, indexes}
