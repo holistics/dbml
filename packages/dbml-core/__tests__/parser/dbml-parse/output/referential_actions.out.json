@@ -32,8 +32,7 @@
           }
         }
       ],
-      "indexes": [],
-      "headerColor": "#316896"
+      "indexes": []
     },
     {
       "name": "order_items",
@@ -78,8 +77,7 @@
           }
         }
       ],
-      "indexes": [],
-      "headerColor": "#316896"
+      "indexes": []
     },
 
     {
@@ -120,8 +118,7 @@
           }
         }
       ],
-      "indexes": [],
-      "headerColor": "#316896"
+      "indexes": []
     },
     {
       "name": "users",
@@ -177,8 +174,7 @@
           "not_null": true
         }
       ],
-      "indexes": [],
-      "headerColor": "#316896"
+      "indexes": []
     },
     {
       "name": "countries",
@@ -206,8 +202,7 @@
           }
         }
       ],
-      "indexes": [],
-      "headerColor": "#316896"
+      "indexes": []
     }
   ],
   "refs": [
