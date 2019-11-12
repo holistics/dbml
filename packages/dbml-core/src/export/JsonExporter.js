@@ -6,7 +6,7 @@ class JsonExporter extends Exporter {
   }
 
   export () {
-    return JSON.stringify(this.schema.export());
+    return JSON.stringify(this.schema.export(), null, 2);
   }
 }
 
