@@ -44,8 +44,8 @@ create_table_normal =
 							})
 							break;
 						case "fk": // set inline_ref for column
-							t_value.forEach(({ endpoints }) => {
-								const { fieldName } = endpoints[0];
+							t_value.forEach((ref) => {
+								const { fieldName } = ref.endpoints[0];
 								// set tableName for endpoints[0];
 								// endpoints[0].tableName = table_name;
 								const field = table.fields.find(field => field.name === fieldName);
@@ -55,7 +55,11 @@ create_table_normal =
 								if(!field.inline_refs) {
 									field.inline_refs = [];
 								}
-								field.inline_refs.push(endpoints[1])
+								field.inline_refs.push({
+									endpoint: ref.endpoints[1],
+									onDelete: ref.onDelete,
+									onUpdate: ref.onUpdate
+								});
 							})
 							break;
 					}
@@ -137,13 +141,26 @@ column_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 	/ UNIQUE (__ index_parameters)? { return { type: "unique" } }
 	/ PRIMARY_KEY (__ index_parameters)? { return { type: "pk" } }
 	/ REFERENCES __ reftable:table_name refcolumn:(_ "(" _ refcolumn:column_name _ ")" {return refcolumn})? (__ MATCH __ FULL/__ MATCH __ PARTIAL/__ MATCH __ SIMPLE)?
-		fk_action* {
+		fk_actions:fk_action* {
+			let ref_actions = {};
+
+			fk_actions.forEach(fkAction => {
+				if (fkAction.type === 'delete') {
+						ref_actions.onDelete = fkAction.action;
+						return;
+					}
+					ref_actions.onUpdate = fkAction.action;
+			});
+
 			return {
 				type: "fk",
 				value: {
-					tableName: reftable,
-					fieldName: refcolumn ? refcolumn : null,
-					relation: "*"
+					endpoint: {
+						tableName: reftable,
+						fieldName: refcolumn ? refcolumn : null,
+						relation: "1"
+					},
+					...ref_actions
 				}
 			}
 		}

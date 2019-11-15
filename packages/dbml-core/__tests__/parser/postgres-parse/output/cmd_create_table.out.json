@@ -38,9 +38,12 @@
           },
           "inline_refs": [
             {
-              "tableName": "a",
-              "fieldName": "id",
-              "relation": "*"
+              "endpoint": {
+                "tableName": "a",
+                "fieldName": "id",
+                "relation": "1"
+              },
+              "onDelete": "no action"
             }
           ]
         },
@@ -91,9 +94,11 @@
           },
           "inline_refs": [
             {
-              "tableName": "a",
-              "fieldName": "name",
-              "relation": "1"
+              "endpoint": {
+                "tableName": "a",
+                "fieldName": "name",
+                "relation": "1"
+              }
             }
           ]
         }
@@ -120,21 +125,22 @@
         {
           "tableName": "b",
           "fieldName": "id",
-          "relation": "1"
+          "relation": "*"
         },
         {
           "tableName": "a",
           "fieldName": "id",
-          "relation": "*"
+          "relation": "1"
         }
-      ]
+      ],
+      "onDelete": "no action"
     },
     {
       "endpoints": [
         {
           "tableName": "c",
           "fieldName": "time",
-          "relation": "1"
+          "relation": "*"
         },
         {
           "tableName": "a",

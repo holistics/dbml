@@ -157,15 +157,20 @@ function peg$parse(input, options) {
       						table.fields.forEach(field => {
       							// process inline_refs
       							if (field.inline_refs) {
-      								refs.push(...field.inline_refs.map(ref => ({
-      									endpoints: [
-      									{
-      										tableName: table.name,
-      										fieldName: field.name,
-      										relation: "1",
-      									},
-      									ref]
-      								})));
+      								refs.push(...field.inline_refs.map(ref => {
+      									return {
+      										endpoints: [
+      											{
+      												tableName: table.name,
+      												fieldName: field.name,
+      												relation: "*",
+      											},
+      											ref.endpoint
+      										],
+      										onDelete: ref.onDelete,
+      										onUpdate: ref.onUpdate
+      									}
+      								}));
       							}
 
       							// process composite primary key, if primary key is in composite form, push it into indexes
@@ -665,8 +670,8 @@ function peg$parse(input, options) {
       							})
       							break;
       						case "fk": // set inline_ref for column
-      							t_value.forEach(({ endpoints }) => {
-      								const { fieldName } = endpoints[0];
+      							t_value.forEach((ref) => {
+      								const { fieldName } = ref.endpoints[0];
       								// set tableName for endpoints[0];
       								// endpoints[0].tableName = table_name;
       								const field = table.fields.find(field => field.name === fieldName);
@@ -676,7 +681,11 @@ function peg$parse(input, options) {
       								if(!field.inline_refs) {
       									field.inline_refs = [];
       								}
-      								field.inline_refs.push(endpoints[1])
+      								field.inline_refs.push({
+      									endpoint: ref.endpoints[1],
+      									onDelete: ref.onDelete,
+      									onUpdate: ref.onUpdate
+      								});
       							})
       							break;
       					}
@@ -751,13 +760,26 @@ function peg$parse(input, options) {
       peg$c338 = function() { return { type: "unique" } },
       peg$c339 = function() { return { type: "pk" } },
       peg$c340 = function(reftable, refcolumn) {return refcolumn},
-      peg$c341 = function(reftable, refcolumn) {
+      peg$c341 = function(reftable, refcolumn, fk_actions) {
+      			let ref_actions = {};
+
+      			fk_actions.forEach(fkAction => {
+      				if (fkAction.type === 'delete') {
+      						ref_actions.onDelete = fkAction.action;
+      						return;
+      					}
+      					ref_actions.onUpdate = fkAction.action;
+      			});
+
       			return {
       				type: "fk",
       				value: {
-      					tableName: reftable,
-      					fieldName: refcolumn ? refcolumn : null,
-      					relation: "*"
+      					endpoint: {
+      						tableName: reftable,
+      						fieldName: refcolumn ? refcolumn : null,
+      						relation: "1"
+      					},
+      					...ref_actions
       				}
       			}
       		},
@@ -6216,7 +6238,7 @@ function peg$parse(input, options) {
                               }
                               if (s8 !== peg$FAILED) {
                                 peg$savedPos = s2;
-                                s3 = peg$c341(s5, s6);
+                                s3 = peg$c341(s5, s6, s8);
                                 s2 = s3;
                               } else {
                                 peg$currPos = s2;
