@@ -18,15 +18,20 @@ parser = commands:command* {
 						table.fields.forEach(field => {
 							// process inline_refs
 							if (field.inline_refs) {
-								refs.push(...field.inline_refs.map(ref => ({
-									endpoints: [
-									{
-										tableName: table.name,
-										fieldName: field.name,
-										relation: "1",
-									},
-									ref]
-								})));
+								refs.push(...field.inline_refs.map(ref => {
+									return {
+										endpoints: [
+											{
+												tableName: table.name,
+												fieldName: field.name,
+												relation: "*",
+											},
+											ref.endpoint
+										],
+										onDelete: ref.onDelete,
+										onUpdate: ref.onUpdate
+									}
+								}));
 							}
 
 							// process composite primary key, if primary key is in composite form, push it into indexes
@@ -63,8 +68,8 @@ parser = commands:command* {
 				}
 				break;
 			case "create_index":
-        const { table_name } = value;
-        delete value.table_name; // remove table_name from column
+				const { table_name } = value;
+				delete value.table_name; // remove table_name from column
 				const table_index = tables.find(table => table.name === table_name);
 				if (table_index.indexes) {
 					table_index.indexes.push(value);

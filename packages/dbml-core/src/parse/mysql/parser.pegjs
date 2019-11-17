@@ -17,7 +17,7 @@
     const arrAfterTrim = arr.map(ele => {
       return ele.replace(/^[\s]+|[\s]+$|[\r\n]|\s(?=\s)/g, '');
     });
-    return arrAfterTrim.join(', ');
+    return arrAfterTrim.join(',');
   }
 }
 
@@ -51,9 +51,13 @@ TableSyntax
 					fieldName: field.name,
 					relation: "*", //set by default
 				},
-				ref,
+				ref.endpoint,
 			]
-			refs.push({endpoints});
+			refs.push({
+				endpoints,
+				onUpdate: ref.onUpdate,
+				onDelete: ref.onDelete,
+			});
 		})
 		
 		// process enum: rename enum and push to array `enums`
@@ -111,11 +115,15 @@ TableBody = _ lines:Line* _ {
 					
 	// Set inline_ref for fields
 	fks.map(key => {
-		const field = fields.find(f => f.name === key[0].fieldName);
+		const field = fields.find(f => f.name === key.endpoints[0].fieldName);
 		if(!field.inline_ref) {
 			field.inline_ref = [];
 		}
-		field.inline_ref.push(key[1]);
+		field.inline_ref.push({
+			endpoint: key.endpoints[1],
+			onUpdate: key.onUpdate,
+			onDelete: key.onDelete,
+		});
 	})
 	
 	return {fields, indexes}
@@ -135,26 +143,43 @@ PKSyntax = _ primary_key _ "(" _ names:ListOfNames _ ")"
 {return names}
 
 // FKSyntax: Support "FOREIGN KEY (field[, field]*) REFERENCES `table`(field[, field]*)"
-FKSyntax = _ ("CONSTRAINT"i _ name)? _ foreign_key _ 
+FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _ 
 	"(" _ fields:ListOfNames _ ")" _
 	references _ table2:table_name _ "(" _ fields2:ListOfNames _ ")" _
-	("ON"i _ ("DELETE"i/"UPDATE"i) _ references_options)?
+	fkActions:FKAction*
 {
+	const name = constraint ? constraint[2] : null;
 	const arr = [];
 	fields.forEach((field, index) => {
-	arr.push(
-		[{
-			tableName: null,
-			fieldName: field,
-			relation: "*",
-		}, {
-			tableName: table2,
-			fieldName: fields2[index],
-			relation:"1",
-		}]
-	)})
+		const fkObj = {
+			name: name,
+			endpoints: [
+				{
+					tableName: null,
+					fieldName: field,
+					relation: "*",
+				},
+				{
+					tableName: table2,
+					fieldName: fields2[index],
+					relation: "1",
+				}
+			],
+		};
+		fkActions.forEach(fkAction => {
+			if (fkAction.type === 'delete') {
+				fkObj.onDelete = fkAction.action;
+				return;
+			}
+			fkObj.onUpdate = fkAction.action;
+		});
+		arr.push(fkObj);
+	})
   return arr
 }
+
+FKAction
+  = _ "ON"i _ type:("UPDATE"i / "DELETE"i) _ action:references_options { return {type: type.toLowerCase(), action: action.toLowerCase()} }
 
 // UniqueSyntax: Support "UNIQUE(field[, field]*)"
 UniqueSyntax 
@@ -287,9 +312,8 @@ AlterSyntax = alter_table _ table:name _
   semicolon
 {
 	const fks = _.flatten(options.filter(o => o.type === "add_fk").map(o => o.fks));
-	fks.forEach(fk => {fk[0].tableName = table});
-	const endpoints = fks.map(fk => ({endpoints: [...fk]}));
-	refs.push(...endpoints);
+	fks.forEach(fk => {fk.endpoints[0].tableName = table});
+	refs.push(...fks)
 
 	const pks = _.flatten(options.filter(o => o.type === "add_pk").map(o => o.pks));
 	const tableAlter = tables.find((t) => t.name === table);
@@ -441,7 +465,7 @@ primary_key = "PRIMARY"i _ "KEY"i
 foreign_key = "FOREIGN"i _ "KEY"i
 references = "REFERENCES"i
 unique = "UNIQUE"i
-references_options = "RESTRICT"i/"CASCADE"i/"SET"i _ "NULL"i/"NO"i _ "ACTION"i/"SET"i _ "DEFAULT"i
+references_options = $ ("RESTRICT"i/"CASCADE"i/"SET"i _ "NULL"i/"NO"i _ "ACTION"i/"SET"i _ "DEFAULT"i)
 index_type "index type" = "USING"i _ type:("BTREE"i/"HASH"i) { return type.toUpperCase() }
 name "valid name"
   = c:(character)+ { return c.join("") }

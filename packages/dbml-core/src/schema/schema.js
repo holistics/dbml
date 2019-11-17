@@ -31,6 +31,8 @@ class Schema {
         name: r.name,
         token: r.token,
         endpoints: r.endpoints.map(e => new Endpoint(e, this)),
+        onUpdate: r.onUpdate,
+        onDelete: r.onDelete,
       };
       this.pushRef(new Ref(ref));
     });

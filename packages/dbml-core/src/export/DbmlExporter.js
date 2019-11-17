@@ -179,7 +179,19 @@ class DbmlExporter {
       line += `"${refEndpoint.tableName}"."${refEndpoint.fieldName}" `;
       if (foreignEndpoint === '1') line += '- ';
       else line += '< ';
-      line += `"${foreignEndpoint.tableName}"."${foreignEndpoint.fieldName}"\n`;
+      line += `"${foreignEndpoint.tableName}"."${foreignEndpoint.fieldName}"`;
+
+      const refActions = [];
+      if (ref.onUpdate) {
+        refActions.push(`update: ${ref.onUpdate.toLowerCase()}`);
+      }
+      if (ref.onDelete) {
+        refActions.push(`delete: ${ref.onDelete.toLowerCase()}`);
+      }
+      if (refActions.length > 0) {
+        line += ` [${refActions.join(', ')}]`;
+      }
+      line += '\n';
 
       return line;
     });

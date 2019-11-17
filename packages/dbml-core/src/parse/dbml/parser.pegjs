@@ -37,24 +37,28 @@ RefSyntax
 
 ref_long
   = ref name:(__ name)? _ "{" _ body:ref_body _ "}" {
-      return {
+      const ref = {
         name: name? name[2] : null,
-        endpoints: body,
+        endpoints: body.endpoints,
         token: location()
-      }
+      };
+      Object.assign(ref, body.settings);
+      return ref;
     }
 
 ref_short
   = ref name:(sp+ name)? sp* ":" sp* body:ref_body {
-      return {
+      const ref = {
         name: name? name[1] : null,
-        endpoints: body,
+        endpoints: body.endpoints,
         token: location()
-      }
+      };
+      Object.assign(ref, body.settings);
+      return ref;
     }
 
 ref_body
-  = table1:name "." field1:name sp+ relation:relation sp+ table2:name "." field2:name {
+  = table1:name "." field1:name sp+ relation:relation sp+ table2:name "." field2:name sp* ref_settings:RefSettings? {
     const endpoints = [
       {
         tableName: table1,
@@ -69,8 +73,34 @@ ref_body
         token: location()
       }
     ];
-    return endpoints;
+    return {
+      endpoints: endpoints,
+      settings: ref_settings
+    };
   }
+
+RefSettings
+  = "[" first:RefSetting rest:(Comma RefSetting)* "]" {
+    let arrSettings = [first].concat(rest.map(el => el[1]));
+    let res = {};
+    arrSettings.forEach((ele) => {
+      if (ele.type === "update") {
+        res.onUpdate = ele.value;
+      }
+      if (ele.type === "delete") {
+        res.onDelete = ele.value;
+      }
+    });
+    return res;
+  }
+
+RefSetting
+  = _ v:OnUpdate _ { return { type: 'update', value: v } }
+  / _ v:OnDelete _ { return { type: 'delete', value: v } }
+OnUpdate
+  = "update:"i _ val:(no_action/restrict/cascade/set_null/set_default) { return val }
+OnDelete
+  = "delete:"i _ val:(no_action/restrict/cascade/set_null/set_default) { return val }
 
 // Tables
 TableSyntax
@@ -376,6 +406,11 @@ hash "hash" = "hash"i
 enum "enum" = "enum"i
 header_color = "headercolor"i
 table_group "Table Group" = "TableGroup"i
+no_action "no action" = "no action"i
+restrict "restrict" = "restrict"i
+cascade "cascade" = "cascade"i
+set_null "set null" = "set null"i
+set_default "set default" = "set default"i
 
 // Commonly used tokens
 relation ">, - or <" = [>\-<]
