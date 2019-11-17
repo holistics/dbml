@@ -18,21 +18,17 @@
             "type_name": "int",
             "args": null
           },
-          "unique": true,
           "not_null": true
-        },
-        {
-          "name": "status",
-          "type": {
-            "type_name": "orders_status_enum",
-            "args": "'created','running','done','failure'"
-          }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "datetime",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "now()",
+            "type": "expression"
           }
         }
       ],
@@ -42,17 +38,31 @@
       "name": "order_items",
       "fields": [
         {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "pk": true,
+          "increment": true
+        },
+        {
           "name": "order_id",
           "type": {
             "type_name": "int",
             "args": null
-          }
+          },
+          "not_null": true
         },
         {
           "name": "product_id",
           "type": {
             "type_name": "int",
             "args": null
+          },
+          "dbdefault": {
+            "value": "null",
+            "type": "boolean"
           }
         },
         {
@@ -69,6 +79,7 @@
       ],
       "indexes": []
     },
+
     {
       "name": "products",
       "fields": [
@@ -78,7 +89,8 @@
             "type_name": "int",
             "args": null
           },
-          "pk": true
+          "pk": true,
+          "increment": true
         },
         {
           "name": "name",
@@ -88,25 +100,10 @@
           }
         },
         {
-          "name": "merchant_id",
-          "type": {
-            "type_name": "int",
-            "args": null
-          },
-          "not_null": true
-        },
-        {
           "name": "price",
           "type": {
-            "type_name": "int",
-            "args": null
-          }
-        },
-        {
-          "name": "status",
-          "type": {
-            "type_name": "products_status_enum",
-            "args": "'Out of Stock','In Stock'"
+            "type_name": "decimal(10,4)",
+            "args": "10,4"
           }
         },
         {
@@ -121,32 +118,7 @@
           }
         }
       ],
-      "indexes": [
-        {
-          "columns": [
-            {
-              "value": "merchant_id",
-              "type": "string"
-            },
-            {
-              "value": "status",
-              "type": "string"
-            }
-          ],
-          "name": "product_status"
-        },
-        {
-          "columns": [
-            {
-              "value": "id",
-              "type": "string"
-            }
-          ],
-          "name": "products_index_1",
-          "unique": true,
-          "type": "HASH"
-        }
-      ]
+      "indexes": []
     },
     {
       "name": "users",
@@ -157,10 +129,11 @@
             "type_name": "int",
             "args": null
           },
-          "pk": true
+          "pk": true,
+          "increment": true
         },
         {
-          "name": "full_name",
+          "name": "name",
           "type": {
             "type_name": "varchar(255)",
             "args": "255"
@@ -175,74 +148,30 @@
           "unique": true
         },
         {
-          "name": "gender",
-          "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
-          }
-        },
-        {
           "name": "date_of_birth",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "datetime",
+            "args": null
           }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "datetime",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "now()",
+            "type": "expression"
           }
         },
         {
           "name": "country_code",
-          "type": {
-            "type_name": "int",
-            "args": null
-          }
-        }
-      ],
-      "indexes": []
-    },
-    {
-      "name": "merchants",
-      "fields": [
-        {
-          "name": "id",
           "type": {
             "type_name": "int",
             "args": null
           },
-          "pk": true
-        },
-        {
-          "name": "merchant_name",
-          "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
-          }
-        },
-        {
-          "name": "country_code",
-          "type": {
-            "type_name": "int",
-            "args": null
-          }
-        },
-        {
-          "name": "created_at",
-          "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
-          }
-        },
-        {
-          "name": "admin_id",
-          "type": {
-            "type_name": "int",
-            "args": null
-          }
+          "not_null": true
         }
       ],
       "indexes": []
@@ -278,6 +207,24 @@
   ],
   "refs": [
     {
+      "name": null,
+      "endpoints": [
+        {
+          "tableName": "orders",
+          "fieldName": "user_id",
+          "relation": "*"
+        },
+        {
+          "tableName": "users",
+          "fieldName": "id",
+          "relation": "1"
+        }
+      ],
+      "onDelete": "restrict",
+      "onUpdate": "no action"
+    },
+    {
+      "name": null,
       "endpoints": [
         {
           "tableName": "order_items",
@@ -289,9 +236,12 @@
           "fieldName": "id",
           "relation": "1"
         }
-      ]
+      ],
+      "onDelete": "cascade",
+      "onUpdate": "restrict"
     },
     {
+      "name": null,
       "endpoints": [
         {
           "tableName": "order_items",
@@ -303,9 +253,11 @@
           "fieldName": "id",
           "relation": "1"
         }
-      ]
+      ],
+      "onDelete": "set null"
     },
     {
+      "name": null,
       "endpoints": [
         {
           "tableName": "users",
@@ -317,79 +269,10 @@
           "fieldName": "code",
           "relation": "1"
         }
-      ]
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "merchants",
-          "fieldName": "country_code",
-          "relation": "*"
-        },
-        {
-          "tableName": "countries",
-          "fieldName": "code",
-          "relation": "1"
-        }
-      ]
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "products",
-          "fieldName": "merchant_id",
-          "relation": "*"
-        },
-        {
-          "tableName": "merchants",
-          "fieldName": "id",
-          "relation": "1"
-        }
-      ]
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "merchants",
-          "fieldName": "admin_id",
-          "relation": "*"
-        },
-        {
-          "tableName": "users",
-          "fieldName": "id",
-          "relation": "1"
-        }
-      ]
+      ],
+      "onDelete": "no action",
+      "onUpdate": "no action"
     }
   ],
-  "enums": [
-    {
-      "name": "orders_status_enum",
-      "values": [
-        {
-          "name": "created"
-        },
-        {
-          "name": "running"
-        },
-        {
-          "name": "done"
-        },
-        {
-          "name": "failure"
-        }
-      ]
-    },
-    {
-      "name": "products_status_enum",
-      "values": [
-        {
-          "name": "Out of Stock"
-        },
-        {
-          "name": "In Stock"
-        }
-      ]
-    }
-  ]
+  "enums": []
 }
