@@ -1,3 +1,4 @@
+/* eslint-disable */
 class ElementError extends Error {
   constructor (message, location = { start: { line: 1, column: 1 } }) {
     super(message);
@@ -8,6 +9,16 @@ class ElementError extends Error {
 class Element {
   constructor (token) {
     this.token = token;
+    this.generateId();
+  }
+
+  static incIdCounter () {
+    Element.idCounter += 1;
+  }
+
+  generateId () {
+    this.id = Element.idCounter;
+    Element.incIdCounter();
   }
 
   bind (selection) {
@@ -19,4 +30,7 @@ class Element {
   }
 }
 
+Element.idCounter = 1;
+
 export default Element;
+/* eslint-enable */

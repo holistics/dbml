@@ -1,4 +1,4 @@
-import Schema from '../schema/schema';
+import Database from '../model_structure/database';
 import mysqlParser from './mysqlParser';
 import postgresParser from './postgresParser';
 import dbmlParser from './dbmlParser';
@@ -12,8 +12,8 @@ class Parser {
     this.schemarbParser = schemarbParser;
   }
 
-  static parseJSONToSchema (rawSchema) {
-    const schema = new Schema(rawSchema);
+  static parseJSONToDatabase (rawDatabase) {
+    const schema = new Database(rawDatabase);
     return schema;
   }
 
@@ -34,29 +34,29 @@ class Parser {
   }
 
   parse (str, format) {
-    let rawSchema = {};
+    let rawDatabase = {};
     switch (format) {
       case 'mysql':
-        rawSchema = this.parseMySQLToJSON(str);
+        rawDatabase = this.parseMySQLToJSON(str);
         break;
 
       case 'postgres':
-        rawSchema = this.parsePostgresToJSON(str);
+        rawDatabase = this.parsePostgresToJSON(str);
         break;
 
       case 'dbml':
-        rawSchema = this.parseDBMLToJSON(str);
+        rawDatabase = this.parseDBMLToJSON(str);
         break;
 
       case 'schemarb':
-        rawSchema = this.parseSchemaRbToJSON(str);
+        rawDatabase = this.parseSchemaRbToJSON(str);
         break;
 
       case 'json':
         if (typeof str === 'object') {
-          rawSchema = str;
+          rawDatabase = str;
         } else {
-          rawSchema = JSON.parse(str);
+          rawDatabase = JSON.parse(str);
         }
         break;
 
@@ -64,7 +64,7 @@ class Parser {
         break;
     }
 
-    const schema = Parser.parseJSONToSchema(rawSchema);
+    const schema = Parser.parseJSONToDatabase(rawDatabase);
     return schema;
   }
 }

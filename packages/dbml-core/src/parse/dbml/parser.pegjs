@@ -1,5 +1,6 @@
 {
   const data = {
+    schemas: [],
   	tables: [],
     refs: [],
     enums: [],
@@ -22,13 +23,15 @@ expr
 TableGroupSyntax = table_group sp+ name:name _ "{" _ body:table_group_body _ "}" {
   return {
     name: name,
-    tableNames: body,
+    tables: body,
     token: location()
   }
 }
 
 table_group_body = tables:(name __)* {
-  return tables.map(t => t[0]);
+  return tables.map(t => ({
+    name: t[0]
+  }));
 }
 
 // References

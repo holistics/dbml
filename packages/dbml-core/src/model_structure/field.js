@@ -1,8 +1,8 @@
 import Element from './element';
 
 class Field extends Element {
-  constructor ({ name, type, unique, pk, token, not_null, note, inline_refs, dbdefault,
-    increment } = {}) {
+  constructor ({ name, type, unique, pk, token, not_null, note, dbdefault,
+    increment, table = {} } = {}) {
     super(token);
     if (!name) { this.error('Field must have a name'); }
     if (!type) { this.error('Field must have a type'); }
@@ -14,18 +14,23 @@ class Field extends Element {
     this.isConnected = false;
     this.not_null = not_null;
     this.note = note;
-    this.inline_refs = inline_refs;
     this.dbdefault = dbdefault;
     this.increment = increment;
-    // this.settings = settings; // debugging purpose
-    // this.enumRef = null;
+    this.table = table;
+    this.endpoints = [];
   }
 
-  connect () {
-    this.isConnected = true;
+  pushEndpoint (endpoint) {
+    this.endpoints.push(endpoint);
   }
 
   export () {
+    return {
+      ...this.shallowExport(),
+    };
+  }
+
+  shallowExport () {
     return {
       name: this.name,
       type: this.type,
@@ -35,7 +40,15 @@ class Field extends Element {
       note: this.note,
       dbdefault: this.dbdefault,
       increment: this.increment,
-      // settings: this.settings, // debugging purpose
+    };
+  }
+
+  normalize (model) {
+    model.fields = {
+      ...model.fields,
+      [this.id]: {
+        ...this.shallowExport(),
+      },
     };
   }
 }

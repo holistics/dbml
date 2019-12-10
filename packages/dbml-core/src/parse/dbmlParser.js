@@ -157,12 +157,14 @@ function peg$parse(input, options) {
       peg$c9 = function(name, body) {
         return {
           name: name,
-          tableNames: body,
+          tables: body,
           token: location()
         }
       },
       peg$c10 = function(tables) {
-        return tables.map(t => t[0]);
+        return tables.map(t => ({
+          name: t[0]
+        }));
       },
       peg$c11 = function(r) { return r; },
       peg$c12 = function(name, body) {
@@ -4775,6 +4777,7 @@ function peg$parse(input, options) {
 
 
     const data = {
+      schemas: [],
     	tables: [],
       refs: [],
       enums: [],

@@ -1,28 +1,37 @@
 import Element from './element';
+import { DEFAULT_SCHEMA_NAME } from './config';
 
 class Endpoint extends Element {
-  constructor ({ tableName, fieldName, relation, token }, schema) {
+  constructor ({ tableName, schemaName = DEFAULT_SCHEMA_NAME, fieldName, relation, token, ref }) {
     super(token);
     this.relation = relation;
 
+    this.schemaName = schemaName;
     this.tableName = tableName;
     this.fieldName = fieldName;
-    // Use name of table and field object
+    this.ref = ref;
+    // Use name of schema,table and field object
     // Name in constructor could be alias
-    const table = schema.findTable(tableName);
-    this.setTable(table);
+    const schema = ref.database.findSchema(schemaName);
 
+    const table = schema.findTable(tableName);
     const field = table.findField(fieldName);
     this.setField(field);
   }
 
   equals (endpoint) {
-    return this.tableName === endpoint.tableName
-      && this.fieldName === endpoint.fieldName;
+    return this.field.id === endpoint.id;
   }
 
   export () {
     return {
+      ...this.shallowExport(),
+    };
+  }
+
+  shallowExport () {
+    return {
+      schemaName: this.schemaName,
       tableName: this.tableName,
       fieldName: this.fieldName,
       relation: this.relation,
@@ -34,15 +43,15 @@ class Endpoint extends Element {
       this.error(`Can't find field ${this.fieldName} in table ${this.tableName}`);
     }
     this.field = field;
-    this.fieldName = field.name;
   }
 
-  setTable (table) {
-    if (!table) {
-      this.error(`Can't find table ${this.tableName} in schema`);
+  normalize (model) {
+    model.endpoints = {
+      ...model.endpoints,
+      [this.id]: {
+        ...this.shallowExport(),
+      }
     }
-    this.table = table;
-    this.tableName = table.name;
   }
 }
 
