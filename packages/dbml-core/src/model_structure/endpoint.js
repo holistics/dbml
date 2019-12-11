@@ -29,6 +29,13 @@ class Endpoint extends Element {
     };
   }
 
+  exportParentIds () {
+    return {
+      ref_id: this.ref.id,
+      field_id: this.field.id,
+    };
+  }
+
   shallowExport () {
     return {
       schemaName: this.schemaName,
@@ -50,8 +57,9 @@ class Endpoint extends Element {
       ...model.endpoints,
       [this.id]: {
         ...this.shallowExport(),
-      }
-    }
+        ...this.exportParentIds(),
+      },
+    };
   }
 }
 

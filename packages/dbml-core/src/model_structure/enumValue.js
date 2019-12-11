@@ -15,6 +15,12 @@ class EnumValue extends Element {
     };
   }
 
+  exportParentIds () {
+    return {
+      enum_id: this._enum.id,
+    };
+  }
+
   shallowExport () {
     return {
       name: this.name,
@@ -27,6 +33,7 @@ class EnumValue extends Element {
       ...model.enumValues,
       [this.id]: {
         ...this.shallowExport(),
+        ...this.exportParentIds(),
       },
     };
   }

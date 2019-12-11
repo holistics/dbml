@@ -149,7 +149,12 @@ class Database extends Element {
 
   normalize () {
     const normalizedModel = {
-      hasDefaultSchema: this.hasDefaultSchema,
+      database: {
+        [this.id]: {
+          ...this.shallowExport(),
+          ...this.exportChildIds(),
+        },
+      },
       schemas: {},
       refs: {},
       enums: {},

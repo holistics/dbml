@@ -30,6 +30,13 @@ class Field extends Element {
     };
   }
 
+  exportParentIds () {
+    return {
+      table_id: this.table.id,
+      enum_id: this._enum ? this._enum.id : null,
+    };
+  }
+
   shallowExport () {
     return {
       name: this.name,
@@ -48,6 +55,7 @@ class Field extends Element {
       ...model.fields,
       [this.id]: {
         ...this.shallowExport(),
+        ...this.exportParentIds(),
       },
     };
   }

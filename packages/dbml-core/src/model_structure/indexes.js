@@ -50,6 +50,12 @@ class Index extends Element {
     };
   }
 
+  exportParentIds () {
+    return {
+      table_id: this.table.id,
+    };
+  }
+
   shallowExport () {
     return {
       name: this.name,
@@ -65,6 +71,7 @@ class Index extends Element {
       [this.id]: {
         ...this.shallowExport(),
         ...this.exportChildIds(),
+        ...this.exportParentIds(),
       },
     };
 

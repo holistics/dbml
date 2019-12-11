@@ -63,12 +63,19 @@ class Ref extends Element {
     };
   }
 
+  exportParentIds () {
+    return {
+      database_id: this.database.id,
+    };
+  }
+
   normalize (model) {
     model.refs = {
       ...model.refs,
       [this.id]: {
         ...this.shallowExport(),
         ...this.exportChildIds(),
+        ...this.exportParentIds(),
       },
     };
 

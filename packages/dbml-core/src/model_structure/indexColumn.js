@@ -14,6 +14,12 @@ class IndexColumn extends Element {
     };
   }
 
+  exportParentIds () {
+    return {
+      index_id: this.index.id,
+    };
+  }
+
   shallowExport () {
     return {
       type: this.type,
@@ -26,6 +32,7 @@ class IndexColumn extends Element {
       ...model.indexColumns,
       [this.id]: {
         ...this.shallowExport(),
+        ...this.exportParentIds(),
       },
     };
   }

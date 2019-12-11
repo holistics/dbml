@@ -55,6 +55,12 @@ class TableGroup extends Element {
     };
   }
 
+  exportParentIds () {
+    return {
+      schema_id: this.schema.id,
+    };
+  }
+
   shallowExport () {
     return {
       name: this.name,
@@ -67,6 +73,7 @@ class TableGroup extends Element {
       [this.id]: {
         ...this.shallowExport(),
         ...this.exportChildIds(),
+        ...this.exportParentIds(),
       },
     };
   }

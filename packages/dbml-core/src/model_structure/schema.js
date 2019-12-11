@@ -119,6 +119,12 @@ class Schema extends Element {
     };
   }
 
+  exportParentIds () {
+    return {
+      database_id: this.database.id,
+    };
+  }
+
   shallowExport () {
     return {
       name: this.name,
@@ -133,6 +139,7 @@ class Schema extends Element {
       [this.id]: {
         ...this.shallowExport(),
         ...this.exportChildIds(),
+        ...this.exportParentIds(),
       },
     };
 
