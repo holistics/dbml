@@ -11,7 +11,6 @@ class Database extends Element {
     super();
     this.schemas = [];
     this.refs = [];
-    this.hasDefaultSchema = false;
 
     // The process order is important. Do not change !
     this.processSchemas(schemas);
@@ -24,21 +23,17 @@ class Database extends Element {
   processSchemas (rawSchemas) {
     rawSchemas.forEach((schema) => {
       this.pushSchema(new Schema({ ...schema, database: this }));
-
-      if (schema.name === DEFAULT_SCHEMA_NAME) {
-        this.hasDefaultSchema = true;
-      }
     });
   }
 
-  pushSchema (schemas) {
-    this.checkSchemas();
-    this.schemas.push(schemas);
+  pushSchema (schema) {
+    this.checkSchema(schema);
+    this.schemas.push(schema);
   }
 
-  checkSchemas (schemas) {
-    if (this.schemas.some(s => s.name === schemas.name)) {
-      schemas.error(`Schemas ${schemas.name} existed`);
+  checkSchema (schema) {
+    if (this.schemas.some(s => s.name === schema.name)) {
+      schema.error(`Schemas ${schema.name} existed`);
     }
   }
 
@@ -56,19 +51,18 @@ class Database extends Element {
   }
 
   findSchema (schemaName) {
-    if (schemaName === DEFAULT_SCHEMA_NAME && !this.hasDefaultSchema) {
-      const schema = new Schema({
-        name: DEFAULT_SCHEMA_NAME,
-        note: 'Default Public Schema',
+    let schema = this.schemas.find(s => s.name === schemaName || s.alias === schemaName);
+    if (!schema) {
+      schema = new Schema({
+        name: schemaName,
+        note: schemaName === DEFAULT_SCHEMA_NAME ? 'Default Public Schema' : '',
         database: this,
       });
 
       this.pushSchema(schema);
-      this.hasDefaultSchema = true;
-
-      return schema;
     }
-    return this.schemas.find(s => s.name === schemaName || s.alias === schemaName);
+
+    return schema;
   }
 
   processRefs (rawRefs) {
@@ -122,7 +116,6 @@ class Database extends Element {
 
   export () {
     return {
-      ...this.shallowExport(),
       ...this.exportChild(),
     };
   }
@@ -141,17 +134,10 @@ class Database extends Element {
     };
   }
 
-  shallowExport () {
-    return {
-      hasDefaultSchema: this.hasDefaultSchema,
-    };
-  }
-
   normalize () {
     const normalizedModel = {
       database: {
         [this.id]: {
-          ...this.shallowExport(),
           ...this.exportChildIds(),
         },
       },
