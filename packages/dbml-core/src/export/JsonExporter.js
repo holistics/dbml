@@ -1,12 +1,6 @@
-import Exporter from './Exporter';
-
-class JsonExporter extends Exporter {
-  constructor (schema = {}) {
-    super(schema);
-  }
-
-  export () {
-    return JSON.stringify(this.schema.export(), null, 2);
+class JsonExporter {
+  static export (database) {
+    return JSON.stringify(database.export(), null, 2);
   }
 }
 

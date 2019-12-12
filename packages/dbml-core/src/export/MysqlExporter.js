@@ -1,11 +1,10 @@
 import _ from 'lodash';
-import Exporter from './Exporter';
 
-class MySQLExporter extends Exporter {
-  constructor (schema = {}) {
-    super(schema);
-    this.indexes = Exporter.getIndexesFromSchema(schema);
-  }
+class MySQLExporter {
+  // constructor (schema = {}) {
+  //   super(schema);
+  //   this.indexes = Exporter.getIndexesFromSchema(schema);
+  // }
 
   static getFieldLines (table) {
     const lines = table.fields.map((field) => {

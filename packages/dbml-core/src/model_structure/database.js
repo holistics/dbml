@@ -87,7 +87,7 @@ class Database extends Element {
     let schema;
     rawEnums.forEach((_enum) => {
       if (_enum.schemaName) {
-        schema = this.findSchema(schema.schemaName);
+        schema = this.findSchema(_enum.schemaName);
       } else {
         schema = this.findSchema(DEFAULT_SCHEMA_NAME);
       }
@@ -99,7 +99,7 @@ class Database extends Element {
     let schema;
     rawTableGroups.forEach((tableGroup) => {
       if (tableGroup.schemaName) {
-        schema = this.findSchema(schema.schemaName);
+        schema = this.findSchema(tableGroup.schemaName);
       } else {
         schema = this.findSchema(DEFAULT_SCHEMA_NAME);
       }

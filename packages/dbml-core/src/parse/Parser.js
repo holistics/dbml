@@ -5,51 +5,44 @@ import dbmlParser from './dbmlParser';
 import schemarbParser from './schemarbParser';
 
 class Parser {
-  constructor () {
-    this.mysqlParser = mysqlParser;
-    this.postgresParser = postgresParser;
-    this.dbmlParser = dbmlParser;
-    this.schemarbParser = schemarbParser;
-  }
-
   static parseJSONToDatabase (rawDatabase) {
     const schema = new Database(rawDatabase);
     return schema;
   }
 
-  parseMySQLToJSON (str) {
-    return this.mysqlParser.parse(str);
+  static parseMySQLToJSON (str) {
+    return mysqlParser.parse(str);
   }
 
-  parsePostgresToJSON (str) {
-    return this.postgresParser.parse(str);
+  static parsePostgresToJSON (str) {
+    return postgresParser.parse(str);
   }
 
-  parseDBMLToJSON (str) {
-    return this.dbmlParser.parse(str);
+  static parseDBMLToJSON (str) {
+    return dbmlParser.parse(str);
   }
 
-  parseSchemaRbToJSON (str) {
-    return this.schemarbParser.parse(str);
+  static parseSchemaRbToJSON (str) {
+    return schemarbParser.parse(str);
   }
 
-  parse (str, format) {
+  static parse (str, format) {
     let rawDatabase = {};
     switch (format) {
       case 'mysql':
-        rawDatabase = this.parseMySQLToJSON(str);
+        rawDatabase = Parser.parseMySQLToJSON(str);
         break;
 
       case 'postgres':
-        rawDatabase = this.parsePostgresToJSON(str);
+        rawDatabase = Parser.parsePostgresToJSON(str);
         break;
 
       case 'dbml':
-        rawDatabase = this.parseDBMLToJSON(str);
+        rawDatabase = Parser.parseDBMLToJSON(str);
         break;
 
       case 'schemarb':
-        rawDatabase = this.parseSchemaRbToJSON(str);
+        rawDatabase = Parser.parseSchemaRbToJSON(str);
         break;
 
       case 'json':

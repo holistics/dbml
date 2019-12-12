@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import Database from '../../src/model_structure/database';
-import jsonDb from './general_schema.json';
+import jsonDb from './single_schema.json';
 import { DEFAULT_SCHEMA_NAME } from '../../src/model_structure/config';
 
 describe('@dbml/core - model_structure', () => {

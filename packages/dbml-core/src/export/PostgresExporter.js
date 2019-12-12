@@ -1,12 +1,11 @@
 import _ from 'lodash';
-import Exporter from './Exporter';
 
-class PostgresExporter extends Exporter {
-  constructor (schema = {}) {
-    super(schema);
-    this.indexes = Exporter.getIndexesFromSchema(schema);
-    this.comments = Exporter.getCommentsFromSchema(schema);
-  }
+class PostgresExporter {
+  // constructor (schema = {}) {
+  //   super(schema);
+  //   this.indexes = Exporter.getIndexesFromSchema(schema);
+  //   this.comments = Exporter.getCommentsFromSchema(schema);
+  // }
 
   exportEnums () {
     const enumArr = this.schema.enums.map((_enum) => {
