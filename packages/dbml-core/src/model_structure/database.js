@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Schema from './schema';
 import Ref from './ref';
 import Enum from './enum';
@@ -55,7 +56,7 @@ class Database extends Element {
     if (!schema) {
       schema = new Schema({
         name: schemaName,
-        note: schemaName === DEFAULT_SCHEMA_NAME ? 'Default Public Schema' : '',
+        note: schemaName === DEFAULT_SCHEMA_NAME ? `Default ${_.capitalize(DEFAULT_SCHEMA_NAME)} Schema` : '',
         database: this,
       });
 

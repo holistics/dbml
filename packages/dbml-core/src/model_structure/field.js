@@ -11,7 +11,6 @@ class Field extends Element {
     this.type = type;
     this.unique = unique;
     this.pk = pk;
-    this.isConnected = false;
     this.not_null = not_null;
     this.note = note;
     this.dbdefault = dbdefault;

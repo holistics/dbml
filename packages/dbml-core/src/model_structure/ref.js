@@ -48,6 +48,8 @@ class Ref extends Element {
   shallowExport () {
     return {
       name: this.name,
+      onDelete: this.onDelete,
+      onUpdate: this.onUpdate,
     };
   }
 

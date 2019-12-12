@@ -94,7 +94,7 @@ class Table extends Element {
   exportParentIds () {
     return {
       schema_id: this.schema.id,
-      tableGroup_id: this.group ? this.group.id : null,
+      group_id: this.group ? this.group.id : null,
     };
   }
 
