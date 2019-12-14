@@ -10,6 +10,7 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 class Database extends Element {
   constructor ({ schemas = [], tables = [], enums = [], refs = [], tableGroups = [] }) {
     super();
+    this.hasDefaultSchema = false;
     this.schemas = [];
     this.refs = [];
 
@@ -44,6 +45,9 @@ class Database extends Element {
     rawTables.forEach((table) => {
       if (table.schemaName) {
         schema = this.findSchema(table.schemaName);
+        if (table.schemaName === DEFAULT_SCHEMA_NAME) {
+          this.hasDefaultSchema = true;
+        }
       } else {
         schema = this.findSchema(DEFAULT_SCHEMA_NAME);
       }
@@ -88,6 +92,9 @@ class Database extends Element {
     rawEnums.forEach((_enum) => {
       if (_enum.schemaName) {
         schema = this.findSchema(_enum.schemaName);
+        if (_enum.schemaName === DEFAULT_SCHEMA_NAME) {
+          this.hasDefaultSchema = true;
+        }
       } else {
         schema = this.findSchema(DEFAULT_SCHEMA_NAME);
       }
@@ -100,6 +107,9 @@ class Database extends Element {
     rawTableGroups.forEach((tableGroup) => {
       if (tableGroup.schemaName) {
         schema = this.findSchema(tableGroup.schemaName);
+        if (tableGroup.schemaName === DEFAULT_SCHEMA_NAME) {
+          this.hasDefaultSchema = true;
+        }
       } else {
         schema = this.findSchema(DEFAULT_SCHEMA_NAME);
       }
@@ -121,6 +131,12 @@ class Database extends Element {
     };
   }
 
+  shallowExport () {
+    return {
+      hasDefaultSchema: this.hasDefaultSchema,
+    };
+  }
+
   exportChild () {
     return {
       schemas: this.schemas.map(s => s.export()),
@@ -130,8 +146,8 @@ class Database extends Element {
 
   exportChildIds () {
     return {
-      schema_ids: this.schemas.map(s => s.id),
-      ref_ids: this.refs.map(r => r.id),
+      schemaIds: this.schemas.map(s => s.id),
+      refIds: this.refs.map(r => r.id),
     };
   }
 
@@ -139,6 +155,7 @@ class Database extends Element {
     const normalizedModel = {
       database: {
         [this.id]: {
+          ...this.shallowExport(),
           ...this.exportChildIds(),
         },
       },

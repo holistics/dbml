@@ -1,18 +1,19 @@
 import _ from 'lodash';
+import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
 class MySQLExporter {
-  // constructor (schema = {}) {
-  //   super(schema);
-  //   this.indexes = Exporter.getIndexesFromSchema(schema);
-  // }
+  static getFieldLines (tableId, model) {
+    const table = model.tables[tableId];
 
-  static getFieldLines (table) {
-    const lines = table.fields.map((field) => {
+    const lines = table.fieldIds.map((fieldId) => {
+      const field = model.fields[fieldId];
       let line = '';
-      if (field.enumRef) {
+
+      if (field.enumId) {
+        const _enum = model.enums[field.enumId];
         line = `\`${field.name}\` ENUM (`;
-        const enumValues = field.enumRef.values.map(value => {
-          return `'${value.name}'`;
+        const enumValues = _enum.valueIds.map(valueId => {
+          return `'${model.enumValues[valueId].name}'`;
         });
         line += `${enumValues.join(', ')})`;
       } else {
@@ -50,12 +51,17 @@ class MySQLExporter {
     return lines;
   }
 
-  static getPrimaryCompositeKey (table) {
-    const primaryCompositeKey = table.indexes ? table.indexes.filter(index => index.pk) : [];
-    const lines = primaryCompositeKey.map((key) => {
+  static getCompositePK (tableId, model) {
+    const table = model.tables[tableId];
+
+    const compositePkIds = table.indexIds ? table.indexIds.filter(indexId => model.indexes[indexId].pk) : [];
+    const lines = compositePkIds.map((keyId) => {
+      const key = model.indexes[keyId];
       let line = 'PRIMARY KEY';
       const columnArr = [];
-      key.columns.forEach((column) => {
+
+      key.columnIds.forEach((columnId) => {
+        const column = model.indexColumns[columnId];
         let columnStr = '';
         if (column.type === 'expression') {
           columnStr = `(${column.value})`;
@@ -73,14 +79,13 @@ class MySQLExporter {
     return lines;
   }
 
-  getTableContentArr () {
-    const tableContentArr = this.schema.tables.map((table) => {
-      const { name } = table;
-      const fieldContents = MySQLExporter.getFieldLines(table);
-      const primaryCompositeKey = MySQLExporter.getPrimaryCompositeKey(table);
+  static getTableContentArr (tableIds, model) {
+    const tableContentArr = tableIds.map((tableId) => {
+      const fieldContents = MySQLExporter.getFieldLines(tableId, model);
+      const primaryCompositeKey = MySQLExporter.getCompositePK(tableId, model);
 
       return {
-        name,
+        tableId,
         fieldContents,
         primaryCompositeKey,
       };
@@ -89,37 +94,48 @@ class MySQLExporter {
     return tableContentArr;
   }
 
-  exportTables () {
-    const tableContentArr = this.getTableContentArr();
+  static exportTables (tableIds, model) {
+    const tableContentArr = MySQLExporter.getTableContentArr(tableIds, model);
 
-    const tableStrs = tableContentArr.map((table) => {
-      const content = [...table.fieldContents, ...table.primaryCompositeKey];
-      /* eslint-disable indent */
-      const tableStr = `CREATE TABLE \`${table.name}\` (\n${
-        content.map(line => `  ${line}`).join(',\n') // format with tab
-        }\n);\n`;
-      /* eslint-enable indent */
+    const tableStrs = tableContentArr.map((tableContent) => {
+      const content = [...tableContent.fieldContents, ...tableContent.primaryCompositeKey];
+      const table = model.tables[tableContent.tableId];
+      const schema = model.schemas[table.schemaId];
+      const tableStr = `CREATE TABLE ${schema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
+        ? '' : `\`${schema.name}\`.`}\`${table.name}\` (\n${
+        content.map(line => `  ${line}`).join(',\n')}\n);\n`;
       return tableStr;
     });
 
     return tableStrs.length ? tableStrs.join('\n') : '';
   }
 
-  exportRefs () {
-    const validRefs = this.schema.refs.filter((ref) => (
-      ref.endpoints.every(endpoint => {
-        return this.schema.tables.find((table) => table.name === endpoint.tableName);
-      })
-    ));
+  static exportRefs (refIds, model) {
+    const strArr = refIds.map((refId) => {
+      const ref = model.refs[refId];
+      const refEndpointIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
+      const refEndpointId = ref.endpointIds[refEndpointIndex];
+      const foreignEndpoint = model.endpoints[foreignEndpointId];
+      const refEndpoint = model.endpoints[refEndpointId];
 
-    const strArr = validRefs.map((ref) => {
-      const refEndpointIndex = ref.endpoints.findIndex(endpoint => endpoint.relation === '1');
-      const foreignEndpoint = ref.endpoints[1 - refEndpointIndex];
-      const refEndpoint = ref.endpoints[refEndpointIndex];
+      const refEndpointField = model.fields[refEndpoint.fieldId];
+      const refEndpointTable = model.tables[refEndpointField.tableId];
+      const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
 
-      let line = `ALTER TABLE \`${foreignEndpoint.tableName}\` ADD `;
-      if (ref.name) { line += `CONSTRAINT \`${ref.name}\` `; }
-      line += `FOREIGN KEY (\`${foreignEndpoint.fieldName}\`) REFERENCES \`${refEndpoint.tableName}\` (\`${refEndpoint.fieldName}\`)`;
+      const foreignEndpointField = model.fields[foreignEndpoint.fieldId];
+      const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
+      const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
+
+      let line = `ALTER TABLE ${foreignEndpointSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema ? ''
+        : `\`${foreignEndpointSchema.name}\`.`}\`${foreignEndpointTable.name}\` ADD `;
+
+      if (ref.name) {
+        line += `CONSTRAINT \`${ref.name}\` `;
+      }
+
+      line += `FOREIGN KEY (\`${foreignEndpointField.name}\`) REFERENCES ${refEndpointSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema ? ''
+        : `\`${refEndpointSchema.name}\`.`}\`${refEndpointTable.name}\` (\`${refEndpointField.name}\`)`;
       if (ref.onDelete) {
         line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
       }
@@ -134,17 +150,24 @@ class MySQLExporter {
     return strArr.length ? strArr.join('\n') : '';
   }
 
-  exportIndexes () {
-    const indexArr = this.indexes.map((index, i) => {
+  static exportIndexes (indexIds, model) {
+    const indexArr = indexIds.map((indexId, i) => {
+      const index = model.indexes[indexId];
+      const table = model.tables[index.tableId];
+      const schema = model.schemas[table.schemaId];
+
       let line = 'CREATE';
       if (index.unique) {
         line += ' UNIQUE';
       }
-      const indexName = index.name ? `\`${index.name}\`` : `\`${index.table.name}_index_${i}\``;
-      line += ` INDEX ${indexName} ON \`${index.table.name}\``;
+      const indexName = index.name ? `\`${index.name}\`` : `\`${schema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
+        ? '' : `${schema.name}.`}${table.name}_index_${i}\``;
+      line += ` INDEX ${indexName} ON ${schema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
+        ? '' : `\`${schema.name}\`.`}\`${table.name}\``;
 
       const columnArr = [];
-      index.columns.forEach((column) => {
+      index.columnIds.forEach((columnId) => {
+        const column = model.indexColumns[columnId];
         let columnStr = '';
         if (column.type === 'expression') {
           columnStr = `(${column.value})`;
@@ -166,23 +189,40 @@ class MySQLExporter {
     return indexArr.length ? indexArr.join('\n') : '';
   }
 
-  export () {
+  static export (model) {
     let res = '';
     let hasBlockAbove = false;
-    if (!_.isEmpty(this.schema.tables)) {
-      res += this.exportTables();
+    const database = model.database['1'];
+    const indexIds = [];
+
+    database.schemaIds.forEach((schemaId) => {
+      const schema = model.schemas[schemaId];
+      const { tableIds } = schema;
+
+      if (schema.name !== DEFAULT_SCHEMA_NAME || (schema.name === DEFAULT_SCHEMA_NAME && model.database['1'].hasDefaultSchema)) {
+        if (hasBlockAbove) res += '\n';
+        res += `CREATE DATABASE \`${schema.name}\`;\n`;
+        hasBlockAbove = true;
+      }
+
+      if (!_.isEmpty(tableIds)) {
+        if (hasBlockAbove) res += '\n';
+        res += MySQLExporter.exportTables(tableIds, model);
+        hasBlockAbove = true;
+      }
+
+      indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
+    });
+
+    if (!_.isEmpty(indexIds)) {
+      if (hasBlockAbove) res += '\n';
+      res += this.exportIndexes(indexIds, model);
       hasBlockAbove = true;
     }
 
-    if (!_.isEmpty(this.schema.refs)) {
+    if (!_.isEmpty(database.refIds)) {
       if (hasBlockAbove) res += '\n';
-      res += this.exportRefs();
-      hasBlockAbove = true;
-    }
-
-    if (!_.isEmpty(this.indexes)) {
-      if (hasBlockAbove) res += '\n';
-      res += this.exportIndexes();
+      res += MySQLExporter.exportRefs(database.refIds, model);
       hasBlockAbove = true;
     }
 

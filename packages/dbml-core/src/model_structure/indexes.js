@@ -46,13 +46,13 @@ class Index extends Element {
 
   exportChildIds () {
     return {
-      column_ids: this.columns.map(c => c.id),
+      columnIds: this.columns.map(c => c.id),
     };
   }
 
   exportParentIds () {
     return {
-      table_id: this.table.id,
+      tableId: this.table.id,
     };
   }
 

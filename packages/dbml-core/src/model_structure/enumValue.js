@@ -17,7 +17,7 @@ class EnumValue extends Element {
 
   exportParentIds () {
     return {
-      enum_id: this._enum.id,
+      enumId: this._enum.id,
     };
   }
 

@@ -16,7 +16,7 @@ class IndexColumn extends Element {
 
   exportParentIds () {
     return {
-      index_id: this.index.id,
+      indexId: this.index.id,
     };
   }
 

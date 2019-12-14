@@ -113,15 +113,15 @@ class Schema extends Element {
 
   exportChildIds () {
     return {
-      table_ids: this.tables.map(t => t.id),
-      enum_ids: this.enums.map(e => e.id),
-      tableGroup_ids: this.tableGroups.map(tg => tg.id),
+      tableIds: this.tables.map(t => t.id),
+      enumIds: this.enums.map(e => e.id),
+      tableGroupIds: this.tableGroups.map(tg => tg.id),
     };
   }
 
   exportParentIds () {
     return {
-      database_id: this.database.id,
+      databaseId: this.database.id,
     };
   }
 

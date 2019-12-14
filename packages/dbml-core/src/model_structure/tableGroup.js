@@ -51,13 +51,13 @@ class TableGroup extends Element {
 
   exportChildIds () {
     return {
-      table_ids: this.tables.map(t => t.id),
+      tableIds: this.tables.map(t => t.id),
     };
   }
 
   exportParentIds () {
     return {
-      schema_id: this.schema.id,
+      schemaId: this.schema.id,
     };
   }
 

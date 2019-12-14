@@ -31,8 +31,8 @@ class Endpoint extends Element {
 
   exportParentIds () {
     return {
-      ref_id: this.ref.id,
-      field_id: this.field.id,
+      refId: this.ref.id,
+      fieldId: this.field.id,
     };
   }
 

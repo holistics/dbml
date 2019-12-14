@@ -5,7 +5,7 @@ import PostgresExporter from './PostgresExporter';
 import JsonExporter from './JsonExporter';
 import SqlServerExporter from './SqlServerExporter';
 
-class DatabaseExporter {
+class ModelExporter {
   static getIndexesFromSchema (schema) {
     const indexes = [];
 
@@ -42,28 +42,29 @@ class DatabaseExporter {
     return /\s/g.test(s);
   }
 
-  static export (database = {}, format) {
+  static export (model = {}, format, isNormalized = true) {
     let res = '';
+    const normalizedModel = isNormalized ? model : model.normalize();
 
     switch (format) {
       case 'dbml':
-        res = DbmlExporter.export(database);
+        res = DbmlExporter.export(normalizedModel);
         break;
 
       case 'mysql':
-        res = MysqlExporter.export(database);
+        res = MysqlExporter.export(normalizedModel);
         break;
 
       case 'postgres':
-        res = PostgresExporter.export(database);
+        res = PostgresExporter.export(normalizedModel);
         break;
 
       case 'json':
-        res = JsonExporter.export(database);
+        res = JsonExporter.export(model, isNormalized);
         break;
 
       case 'mssql':
-        res = SqlServerExporter.export(database);
+        res = SqlServerExporter.export(normalizedModel);
         break;
 
       default:
@@ -74,4 +75,4 @@ class DatabaseExporter {
   }
 }
 
-export default DatabaseExporter;
+export default ModelExporter;

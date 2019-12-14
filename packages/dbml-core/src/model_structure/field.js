@@ -31,8 +31,8 @@ class Field extends Element {
 
   exportParentIds () {
     return {
-      table_id: this.table.id,
-      enum_id: this._enum ? this._enum.id : null,
+      tableId: this.table.id,
+      enumId: this._enum ? this._enum.id : null,
     };
   }
 

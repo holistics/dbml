@@ -86,15 +86,15 @@ class Table extends Element {
 
   exportChildIds () {
     return {
-      field_ids: this.fields.map(f => f.id),
-      index_ids: this.indexes.map(i => i.id),
+      fieldIds: this.fields.map(f => f.id),
+      indexIds: this.indexes.map(i => i.id),
     };
   }
 
   exportParentIds () {
     return {
-      schema_id: this.schema.id,
-      group_id: this.group ? this.group.id : null,
+      schemaId: this.schema.id,
+      groupId: this.group ? this.group.id : null,
     };
   }
 

@@ -61,13 +61,13 @@ class Ref extends Element {
 
   exportChildIds () {
     return {
-      endpoint_ids: this.endpoints.map(e => e.id),
+      endpointIds: this.endpoints.map(e => e.id),
     };
   }
 
   exportParentIds () {
     return {
-      database_id: this.database.id,
+      databaseId: this.database.id,
     };
   }
 

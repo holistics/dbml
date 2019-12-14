@@ -1,6 +1,10 @@
 class JsonExporter {
-  static export (database) {
-    return JSON.stringify(database.export(), null, 2);
+  static export (model, isNormalized) {
+    if (!isNormalized) {
+      return JSON.stringify(model.export(), null, 2);
+    }
+
+    return JSON.stringify(model, null, 2);
   }
 }
 

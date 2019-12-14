@@ -2,10 +2,6 @@ import _ from 'lodash';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
 class DbmlExporter {
-  constructor (database = {}) {
-    this.database = database;
-  }
-
   static hasWhiteSpace (str) {
     return /\s/g.test(str);
   }
@@ -14,24 +10,28 @@ class DbmlExporter {
     return /\s*(\*|\+|-|\([A-Za-z0-9_]+\)|\(\))/g.test(str);
   }
 
-  static exportEnums (enums) {
-    const enumStrs = enums.map(_enum => (
-      /* eslint-disable indent */
-      `Enum ${_enum.schema.name === DEFAULT_SCHEMA_NAME ? '' : `"${_enum.schema.name}".`}"${_enum.name}" {\n${
-      _enum.values.map(value => `  "${value.name}"${value.note ? ` [note: '${value.note}']` : ''}`).join('\n')
-      }\n}\n`
-      /* eslint-enable indent */
-    ));
+  static exportEnums (enumIds, model) {
+    const enumStrs = enumIds.map(enumId => {
+      const _enum = model.enums[enumId];
+      const schema = model.schemas[_enum.schemaId];
+
+      return `Enum ${schema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
+        ? '' : `"${schema.name}".`}"${_enum.name}" {\n${
+        _enum.valueIds.map(valueId => `  "${model.enumValues[valueId].name}"${model.enumValues[valueId].note
+          ? ` [note: '${model.enumValues[valueId].note}']` : ''}`).join('\n')}\n}\n`;
+    });
 
     return enumStrs.length ? enumStrs.join('\n') : '';
   }
 
-  static getFieldLines (table) {
-    const lines = table.fields.map((field) => {
-      /* eslint-disable indent */
+  static getFieldLines (tableId, model) {
+    const table = model.tables[tableId];
+
+    const lines = table.fieldIds.map((fieldId) => {
+      const field = model.fields[fieldId];
+
       let line = `"${field.name}" ${DbmlExporter.hasWhiteSpace(field.type.type_name)
         ? `"${field.type.type_name}"` : field.type.type_name}`;
-      /* eslint-enable indent */
 
       const constraints = [];
       if (field.unique) {
@@ -80,20 +80,25 @@ class DbmlExporter {
     return lines;
   }
 
-  static getIndexLines (table) {
-    const lines = table.indexes.map((index) => {
-      let line = '';
+  static getIndexLines (tableId, model) {
+    const table = model.tables[tableId];
 
-      if (index.columns.length > 1) {
-        line = `(${index.columns.map((column) => {
+    const lines = table.indexIds.map((indexId) => {
+      let line = '';
+      const index = model.indexes[indexId];
+
+      if (index.columnIds.length > 1) {
+        line = `(${index.columnIds.map((columnId) => {
+          const column = model.indexColumns[columnId];
           if (column.type === 'expression') {
             return `\`${column.value}\``;
           }
           return column.value;
         }).join(', ')})`;
-      } else if (index.columns.length === 1) {
-        line = index.columns[0].type === 'expression'
-          ? `\`${index.columns[0].value}\`` : index.columns[0].value;
+      } else if (index.columnIds.length === 1) {
+        const column = model.indexColumns[index.columnIds[0]];
+        line = column.type === 'expression'
+          ? `\`${column.value}\`` : column.value;
       }
 
       const indexSettings = [];
@@ -121,13 +126,13 @@ class DbmlExporter {
     return lines;
   }
 
-  static getTableContentArr (tables) {
-    const tableContentArr = tables.map((table) => {
-      const fieldContents = DbmlExporter.getFieldLines(table);
-      const indexContents = DbmlExporter.getIndexLines(table);
+  static getTableContentArr (tableIds, model) {
+    const tableContentArr = tableIds.map((tableId) => {
+      const fieldContents = DbmlExporter.getFieldLines(tableId, model);
+      const indexContents = DbmlExporter.getIndexLines(tableId, model);
 
       return {
-        ...table,
+        tableId,
         fieldContents,
         indexContents,
       };
@@ -136,22 +141,21 @@ class DbmlExporter {
     return tableContentArr;
   }
 
-  static exportTables (tables) {
-    const tableContentArr = DbmlExporter.getTableContentArr(tables);
+  static exportTables (tableIds, model) {
+    const tableContentArr = DbmlExporter.getTableContentArr(tableIds, model);
 
-    const tableStrs = tableContentArr.map((table) => {
+    const tableStrs = tableContentArr.map((tableContent) => {
+      const table = model.tables[tableContent.tableId];
+      const schema = model.schemas[table.schemaId];
+
       let indexStr = '';
-      if (!_.isEmpty(table.indexContents)) {
-        /* eslint-disable indent */
-        indexStr = `\nIndexes {\n${table.indexContents.map(indexLine => `  ${indexLine}`).join('\n')}\n}`;
-        /* eslint-enable indent */
+      if (!_.isEmpty(tableContent.indexContents)) {
+        indexStr = `\nIndexes {\n${tableContent.indexContents.map(indexLine => `  ${indexLine}`).join('\n')}\n}`;
       }
 
-      /* eslint-disable indent */
-      const tableStr = `Table ${table.schema.name === DEFAULT_SCHEMA_NAME ? '' : `"${table.schema.name}".`}"${table.name}" {\n${
-        table.fieldContents.map(line => `  ${line}`).join('\n') // format with tab
-        }\n${indexStr ? `${indexStr}\n` : ''}}\n`;
-      /* eslint-enable indent */
+      const tableStr = `Table ${schema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
+        ? '' : `"${schema.name}".`}"${table.name}" {\n${
+        tableContent.fieldContents.map(line => `  ${line}`).join('\n')}\n${indexStr ? `${indexStr}\n` : ''}}\n`;
 
       return tableStr;
     });
@@ -159,23 +163,33 @@ class DbmlExporter {
     return tableStrs.length ? tableStrs.join('\n') : '';
   }
 
-  static exportRefs (refs) {
-    const strArr = refs.map((ref) => {
-      const refEndpointIndex = ref.endpoints.findIndex(endpoint => endpoint.relation === '1');
-      const foreignEndpoint = ref.endpoints[1 - refEndpointIndex];
-      const refEndpoint = ref.endpoints[refEndpointIndex];
+  static exportRefs (refIds, model) {
+    const strArr = refIds.map((refId) => {
+      const ref = model.refs[refId];
+      const refEndpointIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
+      const refEndpointId = ref.endpointIds[refEndpointIndex];
+      const foreignEndpoint = model.endpoints[foreignEndpointId];
+      const refEndpoint = model.endpoints[refEndpointId];
 
       let line = 'Ref';
+      const refEndpointField = model.fields[refEndpoint.fieldId];
+      const refEndpointTable = model.tables[refEndpointField.tableId];
+      const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
 
       if (ref.name) { line += ` "${ref.name}"`; }
       line += ':';
-      line += `${refEndpoint.field.table.schema.name === DEFAULT_SCHEMA_NAME ? ''
-        : `"${refEndpoint.field.table.schema.name}".`}"${refEndpoint.field.table.name}"."${refEndpoint.field.name}" `;
+      line += `${refEndpointSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema ? ''
+        : `"${refEndpointSchema.name}".`}"${refEndpointTable.name}"."${refEndpointField.name}" `;
+
+      const foreignEndpointField = model.fields[foreignEndpoint.fieldId];
+      const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
+      const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
 
       if (foreignEndpoint === '1') line += '- ';
       else line += '< ';
-      line += `${foreignEndpoint.field.table.schema.name === DEFAULT_SCHEMA_NAME ? ''
-        : `"${foreignEndpoint.field.table.schema.name}".`}"${foreignEndpoint.field.table.name}"."${foreignEndpoint.field.name}" `;
+      line += `${foreignEndpointSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema ? ''
+        : `"${foreignEndpointSchema.name}".`}"${foreignEndpointTable.name}"."${foreignEndpointField.name}" `;
 
       const refActions = [];
       if (ref.onUpdate) {
@@ -195,45 +209,54 @@ class DbmlExporter {
     return strArr.length ? strArr.join('\n') : '';
   }
 
-  static exportTableGroups (tableGroups) {
-    const tableGroupStrs = tableGroups.map(group => (
-      /* eslint-disable indent */
-      `TableGroup ${group.schema.name === DEFAULT_SCHEMA_NAME ? '' : `"${group.schema.name}".`}"${group.name}" {\n${
-      group.tables.map(table => `  ${table.schema.name === DEFAULT_SCHEMA_NAME ? '' : `"${table.schema.name}".`}"${table.name}"`).join('\n')
-      }\n}\n`
-      /* eslint-enable indent */
-    ));
+  static exportTableGroups (tableGroupIds, model) {
+    const tableGroupStrs = tableGroupIds.map(groupId => {
+      const group = model.tableGroups[groupId];
+      const groupSchema = model.schemas[group.schemaId];
+
+      return `TableGroup ${groupSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
+        ? '' : `"${groupSchema.name}".`}"${group.name}" {\n${
+        group.tableIds.map(tableId => {
+          const table = model.tables[tableId];
+          const tableSchema = model.schemas[table.schemaId];
+          return `  ${tableSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
+            ? '' : `"${tableSchema.name}".`}"${table.name}"`;
+        }).join('\n')}\n}\n`;
+    });
 
     return tableGroupStrs.length ? tableGroupStrs.join('\n') : '';
   }
 
-  static export (database) {
+  static export (model) {
     let res = '';
     let hasBlockAbove = false;
+    const database = model.database['1'];
 
-    database.schemas.forEach((schema) => {
-      if (!_.isEmpty(schema.enums)) {
+    database.schemaIds.forEach((schemaId) => {
+      const { enumIds, tableIds, tableGroupIds } = model.schemas[schemaId];
+
+      if (!_.isEmpty(enumIds)) {
         if (hasBlockAbove) res += '\n';
-        res += DbmlExporter.exportEnums(schema.enums);
+        res += DbmlExporter.exportEnums(enumIds, model);
         hasBlockAbove = true;
       }
 
-      if (!_.isEmpty(schema.tables)) {
+      if (!_.isEmpty(tableIds)) {
         if (hasBlockAbove) res += '\n';
-        res += DbmlExporter.exportTables(schema.tables);
+        res += DbmlExporter.exportTables(tableIds, model);
         hasBlockAbove = true;
       }
 
-      if (!_.isEmpty(schema.tableGroups)) {
+      if (!_.isEmpty(tableGroupIds)) {
         if (hasBlockAbove) res += '\n';
-        res += DbmlExporter.exportTableGroups(schema.tableGroups);
+        res += DbmlExporter.exportTableGroups(tableGroupIds, model);
         hasBlockAbove = true;
       }
     });
 
-    if (!_.isEmpty(database.refs)) {
+    if (!_.isEmpty(database.refIds)) {
       if (hasBlockAbove) res += '\n';
-      res += DbmlExporter.exportRefs(database.refs);
+      res += DbmlExporter.exportRefs(database.refIds, model);
       hasBlockAbove = true;
     }
 

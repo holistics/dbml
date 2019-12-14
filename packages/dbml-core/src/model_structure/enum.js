@@ -57,14 +57,14 @@ class Enum extends Element {
 
   exportChildIds () {
     return {
-      value_ids: this.values.map(value => value.id),
-      field_ids: this.fields.map(field => field.id),
+      valueIds: this.values.map(value => value.id),
+      fieldIds: this.fields.map(field => field.id),
     };
   }
 
   exportParentIds () {
     return {
-      schema_id: this.schema.id,
+      schemaId: this.schema.id,
     };
   }
 

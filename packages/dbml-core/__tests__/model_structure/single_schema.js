@@ -21,7 +21,7 @@ describe('@dbml/core - model_structure', () => {
       test('database - contains all schemas', () => {
         expect(database.schemas).toHaveLength(1);
 
-        expect(database.schemas.map((schema => schema.name))).toEqual(expect.arrayContaining(['public']));
+        expect(database.schemas.map((schema => schema.name))).toEqual(expect.arrayContaining([DEFAULT_SCHEMA_NAME]));
       });
 
       test('database - contains all refs', () => {
@@ -45,13 +45,13 @@ describe('@dbml/core - model_structure', () => {
             onUpdate: 'no action',
             endpoints: expect.arrayContaining([
               {
-                schemaName: 'public',
+                schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'users',
                 fieldName: 'country_code',
                 relation: '*',
               },
               {
-                schemaName: 'public',
+                schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'countries',
                 fieldName: 'code',
                 relation: '1',
@@ -78,7 +78,7 @@ describe('@dbml/core - model_structure', () => {
       test('schema "public" - check properties', () => {
         const schema = database.schemas[0];
 
-        expect(schema.name).toEqual('public');
+        expect(schema.name).toEqual(DEFAULT_SCHEMA_NAME);
         expect(schema.note).toEqual(`Default ${_.capitalize(DEFAULT_SCHEMA_NAME)} Schema`);
       });
 
@@ -183,7 +183,7 @@ describe('@dbml/core - model_structure', () => {
       test('enum "products_status" contains all parent references', () => {
         const _enum = database.schemas[0].enums[0];
 
-        expect(_enum.schema.name).toEqual('public');
+        expect(_enum.schema.name).toEqual(DEFAULT_SCHEMA_NAME);
       });
 
       test('all tableGroups - contains all properties', () => {
@@ -214,7 +214,7 @@ describe('@dbml/core - model_structure', () => {
       test('tableGroup "g1" contains all parent references', () => {
         const group = database.schemas[0].tableGroups[0];
 
-        expect(group.schema.name).toEqual('public');
+        expect(group.schema.name).toEqual(DEFAULT_SCHEMA_NAME);
       });
 
       test('all tables - contains all properties', () => {
@@ -335,7 +335,7 @@ describe('@dbml/core - model_structure', () => {
       test('table "users" - contains all parent references', () => {
         const table = database.schemas[0].findTable('users');
 
-        expect(table.schema.name).toEqual('public');
+        expect(table.schema.name).toEqual(DEFAULT_SCHEMA_NAME);
         expect(table.group.name).toEqual('g1');
       });
     });
@@ -356,27 +356,27 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('database - contains all schemas', () => {
-        expect(getEle('database', '1').schema_ids).toHaveLength(1);
+        expect(getEle('database', '1').schemaIds).toHaveLength(1);
 
         // eslint-disable-next-line
-        const schemas = getEle('database', '1').schema_ids.map((schema_id) => getEle('schemas', schema_id).name);
-        expect(schemas).toEqual(expect.arrayContaining(['public']));
+        const schemas = getEle('database', '1').schemaIds.map((schemaId) => getEle('schemas', schemaId).name);
+        expect(schemas).toEqual(expect.arrayContaining([DEFAULT_SCHEMA_NAME]));
       });
 
       test('database - contains all refs', () => {
-        expect(getEle('database', '1').ref_ids).toHaveLength(6);
+        expect(getEle('database', '1').refIds).toHaveLength(6);
 
         // eslint-disable-next-line
-        const refs = getEle('database', '1').ref_ids.map((ref_id) => ({
-          name: getEle('refs', ref_id).name,
-          onDelete: getEle('refs', ref_id).onDelete,
-          onUpdate: getEle('refs', ref_id).onUpdate,
+        const refs = getEle('database', '1').refIds.map((refId) => ({
+          name: getEle('refs', refId).name,
+          onDelete: getEle('refs', refId).onDelete,
+          onUpdate: getEle('refs', refId).onUpdate,
           // eslint-disable-next-line
-          endpoints: getEle('refs', ref_id).endpoint_ids.map((endpoint_id) => ({
-            schemaName: getEle('schemas', getEle('tables', getEle('fields', getEle('endpoints', endpoint_id).field_id).table_id).schema_id).name,
-            tableName: getEle('tables', getEle('fields', getEle('endpoints', endpoint_id).field_id).table_id).name,
-            fieldName: getEle('fields', getEle('endpoints', endpoint_id).field_id).name,
-            relation: getEle('endpoints', endpoint_id).relation,
+          endpoints: getEle('refs', refId).endpointIds.map((endpointId) => ({
+            schemaName: getEle('schemas', getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldId).tableId).schemaId).name,
+            tableName: getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldId).tableId).name,
+            fieldName: getEle('fields', getEle('endpoints', endpointId).fieldId).name,
+            relation: getEle('endpoints', endpointId).relation,
           })),
         }));
 
@@ -386,13 +386,13 @@ describe('@dbml/core - model_structure', () => {
             onUpdate: 'no action',
             endpoints: expect.arrayContaining([
               {
-                schemaName: 'public',
+                schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'users',
                 fieldName: 'country_code',
                 relation: '*',
               },
               {
-                schemaName: 'public',
+                schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'countries',
                 fieldName: 'code',
                 relation: '1',
@@ -403,60 +403,60 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('schema "public" - check properties', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
 
-        expect(schema.name).toEqual('public');
+        expect(schema.name).toEqual(DEFAULT_SCHEMA_NAME);
         expect(schema.note).toEqual(`Default ${_.capitalize(DEFAULT_SCHEMA_NAME)} Schema`);
       });
 
       test('schema "public" - contains all tables', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
 
-        expect(schema.table_ids).toHaveLength(6);
+        expect(schema.tableIds).toHaveLength(6);
 
         const tables = ['merchants', 'users', 'countries', 'order_items', 'orders', 'products'];
         // eslint-disable-next-line
-        expect(schema.table_ids.map((table_id) => getEle('tables', table_id).name)).toEqual(expect.arrayContaining(tables));
+        expect(schema.tableIds.map((tableId) => getEle('tables', tableId).name)).toEqual(expect.arrayContaining(tables));
       });
 
       test('schema "public" - contains all enums', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
 
-        expect(schema.enum_ids).toHaveLength(1);
+        expect(schema.enumIds).toHaveLength(1);
 
         const enums = ['products_status'];
         // eslint-disable-next-line
-        expect(schema.enum_ids.map((enum_id) => getEle('enums', enum_id).name)).toEqual(expect.arrayContaining(enums));
+        expect(schema.enumIds.map((enumId) => getEle('enums', enumId).name)).toEqual(expect.arrayContaining(enums));
       });
 
       test('schema "public" - contains all tableGroups', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
 
-        expect(schema.tableGroup_ids).toHaveLength(1);
+        expect(schema.tableGroupIds).toHaveLength(1);
 
         const tableGroups = ['g1'];
         // eslint-disable-next-line
-        expect(schema.tableGroup_ids.map((group_id) => getEle('tableGroups', group_id).name)).toEqual(expect.arrayContaining(tableGroups));
+        expect(schema.tableGroupIds.map((groupId) => getEle('tableGroups', groupId).name)).toEqual(expect.arrayContaining(tableGroups));
       });
 
       test('schema "public" - contains all parent references', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
 
-        expect(schema.database_id).toEqual(1);
+        expect(schema.databaseId).toEqual(1);
       });
 
       test('enum "products_status" - check properties', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
-        const _enum = getEle('enums', schema.enum_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
+        const _enum = getEle('enums', schema.enumIds[0]);
 
         expect(_enum.name).toEqual('products_status');
       });
 
       test('enum "products_status" contains all values', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
-        const _enum = getEle('enums', schema.enum_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
+        const _enum = getEle('enums', schema.enumIds[0]);
 
-        expect(_enum.value_ids).toHaveLength(3);
+        expect(_enum.valueIds).toHaveLength(3);
 
         const values = [
           {
@@ -473,53 +473,53 @@ describe('@dbml/core - model_structure', () => {
           },
         ];
         // eslint-disable-next-line
-        expect(_enum.value_ids.map((value_id) => ({
-          name: getEle('enumValues', value_id).name,
-          note: getEle('enumValues', value_id).note ? getEle('enumValues', value_id).note : null,
+        expect(_enum.valueIds.map((valueId) => ({
+          name: getEle('enumValues', valueId).name,
+          note: getEle('enumValues', valueId).note ? getEle('enumValues', valueId).note : null,
         }))).toEqual(expect.arrayContaining(values));
       });
 
       test('enum "products_status" contains all fields', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
-        const _enum = getEle('enums', schema.enum_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
+        const _enum = getEle('enums', schema.enumIds[0]);
 
-        expect(_enum.field_ids).toHaveLength(1);
+        expect(_enum.fieldIds).toHaveLength(1);
 
         const fields = ['status'];
         // eslint-disable-next-line
-        expect(_enum.field_ids.map((field_id) => getEle('fields', field_id).name)).toEqual(expect.arrayContaining(fields));
+        expect(_enum.fieldIds.map((fieldId) => getEle('fields', fieldId).name)).toEqual(expect.arrayContaining(fields));
       });
 
       test('enum "products_status" contains all parent references', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
-        const _enum = getEle('enums', schema.enum_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
+        const _enum = getEle('enums', schema.enumIds[0]);
 
-        expect(getEle('schemas', _enum.schema_id).name).toEqual('public');
+        expect(getEle('schemas', _enum.schemaId).name).toEqual(DEFAULT_SCHEMA_NAME);
       });
 
       test('tableGroup "g1" - check properties', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
-        const group = getEle('tableGroups', schema.tableGroup_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
+        const group = getEle('tableGroups', schema.tableGroupIds[0]);
 
         expect(group.name).toEqual('g1');
       });
 
       test('tableGroup "g1" contains all tables', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
-        const group = getEle('tableGroups', schema.tableGroup_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
+        const group = getEle('tableGroups', schema.tableGroupIds[0]);
 
-        expect(group.table_ids).toHaveLength(2);
+        expect(group.tableIds).toHaveLength(2);
 
         const tables = ['users', 'merchants'];
         // eslint-disable-next-line
-        expect(group.table_ids.map((table_id) => getEle('tables', table_id).name)).toEqual(expect.arrayContaining(tables));
+        expect(group.tableIds.map((tableId) => getEle('tables', tableId).name)).toEqual(expect.arrayContaining(tables));
       });
 
       test('tableGroup "g1" contains all parent references', () => {
-        const schema = getEle('schemas', getEle('database', '1').schema_ids[0]);
-        const group = getEle('tableGroups', schema.tableGroup_ids[0]);
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
+        const group = getEle('tableGroups', schema.tableGroupIds[0]);
 
-        expect(getEle('schemas', group.schema_id).name).toEqual('public');
+        expect(getEle('schemas', group.schemaId).name).toEqual(DEFAULT_SCHEMA_NAME);
       });
 
       test('table "users" - check properties', () => {
@@ -535,15 +535,15 @@ describe('@dbml/core - model_structure', () => {
         const table = getEle('tables', tableId);
 
         // eslint-disable-next-line
-        const fields = table.field_ids.map((field_id) => ({
-          name: getEle('fields', field_id).name,
-          type: getEle('fields', field_id).type,
-          not_null: getEle('fields', field_id).not_null,
-          unique: getEle('fields', field_id).unique,
-          pk: getEle('fields', field_id).pk,
-          note: getEle('fields', field_id).note,
-          increment: getEle('fields', field_id).increment,
-          dbdefault: getEle('fields', field_id).dbdefault,
+        const fields = table.fieldIds.map((fieldId) => ({
+          name: getEle('fields', fieldId).name,
+          type: getEle('fields', fieldId).type,
+          not_null: getEle('fields', fieldId).not_null,
+          unique: getEle('fields', fieldId).unique,
+          pk: getEle('fields', fieldId).pk,
+          note: getEle('fields', fieldId).note,
+          increment: getEle('fields', fieldId).increment,
+          dbdefault: getEle('fields', fieldId).dbdefault,
         }));
 
         expect(fields).toEqual(expect.arrayContaining([
@@ -588,15 +588,15 @@ describe('@dbml/core - model_structure', () => {
         const table = getEle('tables', tableId);
 
         // eslint-disable-next-line
-        const indexes = table.index_ids.map((index_id) => ({
-          name: getEle('indexes', index_id).name,
-          type: getEle('indexes', index_id).type,
-          unique: getEle('indexes', index_id).unique,
-          pk: getEle('indexes', index_id).pk,
+        const indexes = table.indexIds.map((indexId) => ({
+          name: getEle('indexes', indexId).name,
+          type: getEle('indexes', indexId).type,
+          unique: getEle('indexes', indexId).unique,
+          pk: getEle('indexes', indexId).pk,
           // eslint-disable-next-line
-          columns: getEle('indexes', index_id).column_ids.map((column_id) => ({
-            type: getEle('indexColumns', column_id).type,
-            value: getEle('indexColumns', column_id).value,
+          columns: getEle('indexes', indexId).columnIds.map((columnId) => ({
+            type: getEle('indexColumns', columnId).type,
+            value: getEle('indexColumns', columnId).value,
           })),
         }));
 
@@ -632,8 +632,8 @@ describe('@dbml/core - model_structure', () => {
         const tableId = Object.keys(normalizedModel.tables).find((key) => getEle('tables', key).name === 'users');
         const table = getEle('tables', tableId);
 
-        expect(getEle('schemas', table.schema_id).name).toEqual('public');
-        expect(getEle('tableGroups', table.group_id).name).toEqual('g1');
+        expect(getEle('schemas', table.schemaId).name).toEqual(DEFAULT_SCHEMA_NAME);
+        expect(getEle('tableGroups', table.groupId).name).toEqual('g1');
       });
     });
   });
