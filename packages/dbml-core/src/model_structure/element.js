@@ -16,6 +16,10 @@ class Element {
     Element.idCounter += 1;
   }
 
+  static resetIdCounter () {
+    Element.idCounter = 1;
+  }
+
   generateId () {
     this.id = Element.idCounter;
     Element.incIdCounter();

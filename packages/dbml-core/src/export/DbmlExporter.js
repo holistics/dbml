@@ -189,7 +189,7 @@ class DbmlExporter {
       if (foreignEndpoint === '1') line += '- ';
       else line += '< ';
       line += `${shouldPrintSchema(foreignEndpointSchema, model)
-        ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}"."${foreignEndpointField.name}" `;
+        ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}"."${foreignEndpointField.name}"`;
 
       const refActions = [];
       if (ref.onUpdate) {

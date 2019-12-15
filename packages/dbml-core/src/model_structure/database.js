@@ -9,6 +9,7 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 
 class Database extends Element {
   constructor ({ schemas = [], tables = [], enums = [], refs = [], tableGroups = [] }) {
+    Element.resetIdCounter();
     super();
     this.hasDefaultSchema = false;
     this.schemas = [];

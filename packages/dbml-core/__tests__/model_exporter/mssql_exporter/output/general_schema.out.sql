@@ -14,13 +14,12 @@ CREATE TABLE [order_items] (
 GO
 
 CREATE TABLE [products] (
-  [id] int,
+  [id] int PRIMARY KEY,
   [name] varchar(255),
   [merchant_id] int NOT NULL,
   [price] int,
   [status] nvarchar(255) NOT NULL CHECK ([status] IN ('Out of Stock', 'In Stock')),
-  [created_at] datetime DEFAULT (now()),
-  PRIMARY KEY ([id], [name])
+  [created_at] datetime DEFAULT (now())
 )
 GO
 

@@ -157,7 +157,8 @@ class PostgresExporter {
   }
 
   static exportIndexes (indexIds, model) {
-    const indexArr = indexIds.map((indexId) => {
+    // exclude composite pk index
+    const indexArr = indexIds.filter((indexId) => !model.indexes[indexId].pk).map((indexId) => {
       const index = model.indexes[indexId];
       const table = model.tables[index.tableId];
       const schema = model.schemas[table.schemaId];

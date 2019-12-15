@@ -2,7 +2,7 @@ import Element from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
 
 class Endpoint extends Element {
-  constructor ({ tableName, schemaName = DEFAULT_SCHEMA_NAME, fieldName, relation, token, ref }) {
+  constructor ({ tableName, schemaName, fieldName, relation, token, ref }) {
     super(token);
     this.relation = relation;
 
@@ -12,7 +12,7 @@ class Endpoint extends Element {
     this.ref = ref;
     // Use name of schema,table and field object
     // Name in constructor could be alias
-    const schema = ref.database.findSchema(schemaName);
+    const schema = ref.database.findSchema(schemaName || DEFAULT_SCHEMA_NAME);
 
     const table = schema.findTable(tableName);
     const field = table.findField(fieldName);

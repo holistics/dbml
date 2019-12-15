@@ -1,5 +1,5 @@
 class JsonExporter {
-  static export (model, isNormalized) {
+  static export (model, isNormalized = true) {
     if (!isNormalized) {
       return JSON.stringify(model.export(), null, 2);
     }

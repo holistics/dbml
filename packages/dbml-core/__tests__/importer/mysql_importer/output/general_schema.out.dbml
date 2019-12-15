@@ -31,7 +31,6 @@ Table "products" {
   "status" products_status_enum
   "created_at" datetime [default: `now()`]
 
-        
 Indexes {
   (id, price) [pk]
   (merchant_id, status) [name: "product_status"]

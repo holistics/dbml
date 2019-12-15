@@ -6,8 +6,8 @@ import schemarbParser from './schemarbParser';
 
 class Parser {
   static parseJSONToDatabase (rawDatabase) {
-    const schema = new Database(rawDatabase);
-    return schema;
+    const database = new Database(rawDatabase);
+    return database;
   }
 
   static parseMySQLToJSON (str) {
