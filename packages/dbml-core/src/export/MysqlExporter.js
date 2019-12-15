@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
+import { shouldPrintSchema } from './utils';
 
 class MySQLExporter {
   static getFieldLines (tableId, model) {
@@ -51,7 +51,7 @@ class MySQLExporter {
     return lines;
   }
 
-  static getCompositePK (tableId, model) {
+  static getCompositePKs (tableId, model) {
     const table = model.tables[tableId];
 
     const compositePkIds = table.indexIds ? table.indexIds.filter(indexId => model.indexes[indexId].pk) : [];
@@ -82,12 +82,12 @@ class MySQLExporter {
   static getTableContentArr (tableIds, model) {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = MySQLExporter.getFieldLines(tableId, model);
-      const primaryCompositeKey = MySQLExporter.getCompositePK(tableId, model);
+      const compositePKs = MySQLExporter.getCompositePKs(tableId, model);
 
       return {
         tableId,
         fieldContents,
-        primaryCompositeKey,
+        compositePKs,
       };
     });
 
@@ -98,11 +98,11 @@ class MySQLExporter {
     const tableContentArr = MySQLExporter.getTableContentArr(tableIds, model);
 
     const tableStrs = tableContentArr.map((tableContent) => {
-      const content = [...tableContent.fieldContents, ...tableContent.primaryCompositeKey];
+      const content = [...tableContent.fieldContents, ...tableContent.compositePKs];
       const table = model.tables[tableContent.tableId];
       const schema = model.schemas[table.schemaId];
-      const tableStr = `CREATE TABLE ${schema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
-        ? '' : `\`${schema.name}\`.`}\`${table.name}\` (\n${
+      const tableStr = `CREATE TABLE ${shouldPrintSchema(schema, model)
+        ? `\`${schema.name}\`.` : ''}\`${table.name}\` (\n${
         content.map(line => `  ${line}`).join(',\n')}\n);\n`;
       return tableStr;
     });
@@ -127,15 +127,15 @@ class MySQLExporter {
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
 
-      let line = `ALTER TABLE ${foreignEndpointSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema ? ''
-        : `\`${foreignEndpointSchema.name}\`.`}\`${foreignEndpointTable.name}\` ADD `;
+      let line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
+        ? `\`${foreignEndpointSchema.name}\`.` : ''}\`${foreignEndpointTable.name}\` ADD `;
 
       if (ref.name) {
         line += `CONSTRAINT \`${ref.name}\` `;
       }
 
-      line += `FOREIGN KEY (\`${foreignEndpointField.name}\`) REFERENCES ${refEndpointSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema ? ''
-        : `\`${refEndpointSchema.name}\`.`}\`${refEndpointTable.name}\` (\`${refEndpointField.name}\`)`;
+      line += `FOREIGN KEY (\`${foreignEndpointField.name}\`) REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
+        ? `\`${refEndpointSchema.name}\`.` : ''}\`${refEndpointTable.name}\` (\`${refEndpointField.name}\`)`;
       if (ref.onDelete) {
         line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
       }
@@ -160,10 +160,10 @@ class MySQLExporter {
       if (index.unique) {
         line += ' UNIQUE';
       }
-      const indexName = index.name ? `\`${index.name}\`` : `\`${schema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
-        ? '' : `${schema.name}.`}${table.name}_index_${i}\``;
-      line += ` INDEX ${indexName} ON ${schema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
-        ? '' : `\`${schema.name}\`.`}\`${table.name}\``;
+      const indexName = index.name ? `\`${index.name}\`` : `\`${shouldPrintSchema(schema, model)
+        ? `\`${schema.name}\`.` : ''}${table.name}_index_${i}\``;
+      line += ` INDEX ${indexName} ON ${shouldPrintSchema(schema, model)
+        ? `\`${schema.name}\`.` : ''}\`${table.name}\``;
 
       const columnArr = [];
       index.columnIds.forEach((columnId) => {
@@ -199,7 +199,7 @@ class MySQLExporter {
       const schema = model.schemas[schemaId];
       const { tableIds } = schema;
 
-      if (schema.name !== DEFAULT_SCHEMA_NAME || (schema.name === DEFAULT_SCHEMA_NAME && model.database['1'].hasDefaultSchema)) {
+      if (shouldPrintSchema(schema, model)) {
         if (hasBlockAbove) res += '\n';
         res += `CREATE DATABASE \`${schema.name}\`;\n`;
         hasBlockAbove = true;
@@ -216,7 +216,7 @@ class MySQLExporter {
 
     if (!_.isEmpty(indexIds)) {
       if (hasBlockAbove) res += '\n';
-      res += this.exportIndexes(indexIds, model);
+      res += MySQLExporter.exportIndexes(indexIds, model);
       hasBlockAbove = true;
     }
 

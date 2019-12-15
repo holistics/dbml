@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
+import { shouldPrintSchema } from './utils';
 
 class DbmlExporter {
   static hasWhiteSpace (str) {
@@ -15,8 +15,8 @@ class DbmlExporter {
       const _enum = model.enums[enumId];
       const schema = model.schemas[_enum.schemaId];
 
-      return `Enum ${schema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
-        ? '' : `"${schema.name}".`}"${_enum.name}" {\n${
+      return `Enum ${shouldPrintSchema(schema, model)
+        ? `"${schema.name}".` : ''}"${_enum.name}" {\n${
         _enum.valueIds.map(valueId => `  "${model.enumValues[valueId].name}"${model.enumValues[valueId].note
           ? ` [note: '${model.enumValues[valueId].note}']` : ''}`).join('\n')}\n}\n`;
     });
@@ -153,8 +153,8 @@ class DbmlExporter {
         indexStr = `\nIndexes {\n${tableContent.indexContents.map(indexLine => `  ${indexLine}`).join('\n')}\n}`;
       }
 
-      const tableStr = `Table ${schema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
-        ? '' : `"${schema.name}".`}"${table.name}" {\n${
+      const tableStr = `Table ${shouldPrintSchema(schema, model)
+        ? `"${schema.name}".` : ''}"${table.name}" {\n${
         tableContent.fieldContents.map(line => `  ${line}`).join('\n')}\n${indexStr ? `${indexStr}\n` : ''}}\n`;
 
       return tableStr;
@@ -179,8 +179,8 @@ class DbmlExporter {
 
       if (ref.name) { line += ` "${ref.name}"`; }
       line += ':';
-      line += `${refEndpointSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema ? ''
-        : `"${refEndpointSchema.name}".`}"${refEndpointTable.name}"."${refEndpointField.name}" `;
+      line += `${shouldPrintSchema(refEndpointSchema, model)
+        ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTable.name}"."${refEndpointField.name}" `;
 
       const foreignEndpointField = model.fields[foreignEndpoint.fieldId];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
@@ -188,8 +188,8 @@ class DbmlExporter {
 
       if (foreignEndpoint === '1') line += '- ';
       else line += '< ';
-      line += `${foreignEndpointSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema ? ''
-        : `"${foreignEndpointSchema.name}".`}"${foreignEndpointTable.name}"."${foreignEndpointField.name}" `;
+      line += `${shouldPrintSchema(foreignEndpointSchema, model)
+        ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}"."${foreignEndpointField.name}" `;
 
       const refActions = [];
       if (ref.onUpdate) {
@@ -214,13 +214,13 @@ class DbmlExporter {
       const group = model.tableGroups[groupId];
       const groupSchema = model.schemas[group.schemaId];
 
-      return `TableGroup ${groupSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
-        ? '' : `"${groupSchema.name}".`}"${group.name}" {\n${
+      return `TableGroup ${shouldPrintSchema(groupSchema, model)
+        ? `"${groupSchema.name}".` : ''}"${group.name}" {\n${
         group.tableIds.map(tableId => {
           const table = model.tables[tableId];
           const tableSchema = model.schemas[table.schemaId];
-          return `  ${tableSchema.name === DEFAULT_SCHEMA_NAME && !model.database['1'].hasDefaultSchema
-            ? '' : `"${tableSchema.name}".`}"${table.name}"`;
+          return `  ${shouldPrintSchema(tableSchema, model)
+            ? `"${tableSchema.name}".` : ''}"${table.name}"`;
         }).join('\n')}\n}\n`;
     });
 

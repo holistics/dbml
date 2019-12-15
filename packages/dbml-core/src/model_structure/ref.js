@@ -1,5 +1,6 @@
 import Element from './element';
 import Endpoint from './endpoint';
+import { DEFAULT_SCHEMA_NAME } from './config';
 
 /**
  * Compare two pairs of objects
@@ -26,6 +27,9 @@ class Ref extends Element {
   processEndpoints (rawEndpoints) {
     rawEndpoints.forEach((endpoint) => {
       this.endpoints.push(new Endpoint({ ...endpoint, ref: this }));
+      if (endpoint.schemaName === DEFAULT_SCHEMA_NAME) {
+        this.database.hasDefaultSchema = true;
+      }
     });
 
     if (this.endpoints[0].equals(this.endpoints[1])) {
