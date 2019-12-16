@@ -31,6 +31,7 @@ class IndexColumn extends Element {
     model.indexColumns = {
       ...model.indexColumns,
       [this.id]: {
+        id: this.id,
         ...this.shallowExport(),
         ...this.exportParentIds(),
       },

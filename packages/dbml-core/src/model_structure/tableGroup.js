@@ -71,6 +71,7 @@ class TableGroup extends Element {
     model.tableGroups = {
       ...model.tableGroups,
       [this.id]: {
+        id: this.id,
         ...this.shallowExport(),
         ...this.exportChildIds(),
         ...this.exportParentIds(),

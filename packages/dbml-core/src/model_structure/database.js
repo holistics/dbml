@@ -156,6 +156,7 @@ class Database extends Element {
     const normalizedModel = {
       database: {
         [this.id]: {
+          id: this.id,
           ...this.shallowExport(),
           ...this.exportChildIds(),
         },

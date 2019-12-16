@@ -53,6 +53,7 @@ class Field extends Element {
     model.fields = {
       ...model.fields,
       [this.id]: {
+        id: this.id,
         ...this.shallowExport(),
         ...this.exportParentIds(),
       },

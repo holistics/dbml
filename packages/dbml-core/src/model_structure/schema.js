@@ -137,6 +137,7 @@ class Schema extends Element {
     model.schemas = {
       ...model.schemas,
       [this.id]: {
+        id: this.id,
         ...this.shallowExport(),
         ...this.exportChildIds(),
         ...this.exportParentIds(),

@@ -110,6 +110,7 @@ class Table extends Element {
     model.tables = {
       ...model.tables,
       [this.id]: {
+        id: this.id,
         ...this.shallowExport(),
         ...this.exportChildIds(),
         ...this.exportParentIds(),

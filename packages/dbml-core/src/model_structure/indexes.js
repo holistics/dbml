@@ -69,6 +69,7 @@ class Index extends Element {
     model.indexes = {
       ...model.indexes,
       [this.id]: {
+        id: this.id,
         ...this.shallowExport(),
         ...this.exportChildIds(),
         ...this.exportParentIds(),

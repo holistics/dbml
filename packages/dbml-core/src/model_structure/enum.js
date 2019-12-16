@@ -79,6 +79,7 @@ class Enum extends Element {
     model.enums = {
       ...model.enums,
       [this.id]: {
+        id: this.id,
         ...this.shallowExport(),
         ...this.exportChildIds(),
         ...this.exportParentIds(),

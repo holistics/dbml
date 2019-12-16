@@ -32,6 +32,7 @@ class EnumValue extends Element {
     model.enumValues = {
       ...model.enumValues,
       [this.id]: {
+        id: this.id,
         ...this.shallowExport(),
         ...this.exportParentIds(),
       },

@@ -79,6 +79,7 @@ class Ref extends Element {
     model.refs = {
       ...model.refs,
       [this.id]: {
+        id: this.id,
         ...this.shallowExport(),
         ...this.exportChildIds(),
         ...this.exportParentIds(),
