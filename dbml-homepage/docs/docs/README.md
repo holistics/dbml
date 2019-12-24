@@ -193,6 +193,12 @@ In DBML, there are 3 syntaxes to define relationships:
         id integer
         user_id integer [ref: > users.id]
     }
+
+### Relationship settings
+    Ref: products.merchant_id > merchants.id [delete: cascade, update: no action]
+
+* `delete / update: cascade | restrict | set null | set default | no action`  
+Define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
     
 ### Many-to-many relationship
 
