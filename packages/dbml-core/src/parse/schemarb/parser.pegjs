@@ -127,6 +127,7 @@
       tableName: toTable,
       relation: '1',
     }]);    
+    let refProp = {};
     for (let i = 0; i < props.length; i += 1) {
       const currentProp = props[i];
       if (currentProp.columnName) {
@@ -135,10 +136,23 @@
       if (currentProp.primaryKey) {
         endpoints[1].fieldName = currentProp.primaryKey;
       }
+      if (currentProp.onDelete) {
+        refProp = {
+          ...refProp,
+          onDelete: currentProp.onDelete
+        }
+      }
+      if (currentProp.onUpdate) {
+        refProp = {
+          ...refProp,
+          onUpdate: currentProp.onUpdate
+        }
+      }
     }
     return {
       name: `fk_rails_${fromTable}_${toTable}`,
-      endpoints
+      endpoints,
+      ...refProp
     };
   }
 
@@ -260,6 +274,18 @@ add_foreign_key_syntax
 add_foreign_key_props_syntax
 = "," sp* column":" sp* columnName:name { return ({ columnName }) }
 / "," sp* primary_key":" sp* primaryKey:name { return ({ primaryKey }) }
+/ "," sp* r:referential_actions":" sp* value:symbol { 
+  switch (r.toLowerCase()) {
+    case 'on_delete':
+      return {
+        onDelete: value.split('_').join(' ')
+      }
+    case 'on_update':
+      return {
+        onUpdate: value.split('_').join(' ')
+      }
+  }
+ }
 
 create_table_syntax
   = create_table sp* name:name whateters endline
@@ -305,6 +331,8 @@ field_type_syntax = type:field_type sp+ name:name {
 reference_value = ":"reference:variable { return reference }
   / reference:name { return reference }
 
+referential_actions = "on_delete"i / "on_update"i
+
 // Keywords
 add_index "add index" = "add_index"
 schema_define "schema define" = "ActiveRecord::Schema.define"
@@ -323,6 +351,7 @@ other_class_prop = variable whateters endline?
 
 // normal syntax
 name = quote c:[^\"\n]* quote { return c.join("") }
+symbol = ":" c:character* { return c.join("") }
 variable = c:(character+) { return c.join("") }
 field_type = character"."c:(character+) { return c.join("") }
 not_whitespace = !whitespace . {return text()}
