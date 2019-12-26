@@ -1,7 +1,7 @@
 {
   const data = {
     schemas: [],
-  	tables: [],
+    tables: [],
     refs: [],
     enums: [],
     tableGroups: []
@@ -107,7 +107,7 @@ OnDelete
 
 // Tables
 TableSyntax
-  = table sp+ name:name alias:alias_def? headerColor:(__ c:HeaderColor{return c})? _ "{" body:TableBody "}" {
+  = table sp+ name:name alias:alias_def? sp* table_settings:TableSettings? sp* "{" body:TableBody "}" {
       let fields = body.fields || [];
       let indexes = body.indexes || [];
       // Handle list of partial inline_refs
@@ -137,14 +137,13 @@ TableSyntax
           data.refs.push(ref);
         })
       });
-
       return {
         name: name,
         alias: alias,
         fields: fields,
         token: location(),
         indexes: indexes,
-        headerColor: headerColor
+        ...table_settings
       };
     }
 
@@ -264,6 +263,28 @@ FieldSettings
     return res;
   }
 
+TableSettings
+  = "[" first:TableSetting rest:(Comma TableSetting)* "]" {
+    let settings = [first, ...rest.map(el => el[1])];
+    const result = {};
+    settings.forEach((el) => {
+        if (typeof el === 'string') {
+        if (el.startsWith('#')) {
+          result.headerColor = el.toUpperCase();
+        }
+        } else {
+         if (el.type === "note") {
+           result.note = el.value;
+          }
+        }
+    });
+    return result;
+  }
+
+TableSetting
+  = _ v:ObjectNote _ { return { type: 'note', value: v } }
+  / _ c: HeaderColor _ { return c }
+
 FieldSetting
   = _ a:"not null"i _ { return a }
   / _ a:"null"i _ { return a }
@@ -381,7 +402,7 @@ alias_def
     }
 
 HeaderColor
-  = _ "[" _ header_color ":" _ s:sharp color:hex_color _ "]" {return s + color.join('')}
+  = _ header_color ":" _ s:sharp color:hex_color _ {return s + color.join('')}
 
 hex_color
   = six_char / three_char
@@ -428,7 +449,7 @@ type_name = type_name:name args:(sp* "(" sp* expression sp* ")")? {
 	if (type_name.toLowerCase() !== 'enum') {
 		type_name = args ? type_name + '(' + args + ')' : type_name;
 	}
-	
+
 	return {
 		type_name,
 		args
@@ -441,7 +462,7 @@ factor = factors:(character+ sp* "(" expression ")"
     / "(" expression ")"
     / (exprCharNoCommaSpace+ &(sp*/","/");"/endline");")) / exprChar+ &.) {
     	return _.flattenDeep(factors).join("");
-    }   
+    }
 exprChar = [\',.a-z0-9_+-\`]i
     / sp
     / newline
