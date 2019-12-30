@@ -103,6 +103,7 @@ class Table extends Element {
       name: this.name,
       alias: this.alias,
       note: this.note,
+      headerColor: this.headerColor,
     };
   }
 

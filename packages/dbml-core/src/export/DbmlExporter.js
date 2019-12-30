@@ -141,12 +141,28 @@ class DbmlExporter {
     return tableContentArr;
   }
 
+  static getTableSettings (table) {
+    let settingStr = '';
+    const settingSep = ', ';
+    if (table.headerColor) {
+      settingStr += `headerColor: ${table.headerColor}${settingSep}`;
+    }
+    if (table.note) {
+      settingStr += `note: '${table.note}'${settingSep}`;
+    }
+    if (settingStr.endsWith(', ')) {
+      settingStr = settingStr.replace(/,\s$/, '');
+    }
+    return settingStr ? ` [${settingStr}] ` : '';
+  }
+
   static exportTables (tableIds, model) {
     const tableContentArr = DbmlExporter.getTableContentArr(tableIds, model);
 
     const tableStrs = tableContentArr.map((tableContent) => {
       const table = model.tables[tableContent.tableId];
       const schema = model.schemas[table.schemaId];
+      const tableSettingStr = this.getTableSettings(table);
 
       let indexStr = '';
       if (!_.isEmpty(tableContent.indexContents)) {
@@ -154,7 +170,7 @@ class DbmlExporter {
       }
 
       const tableStr = `Table ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".` : ''}"${table.name}" {\n${
+        ? `"${schema.name}".` : ''}"${table.name}" ${tableSettingStr}{\n${
         tableContent.fieldContents.map(line => `  ${line}`).join('\n')}\n${indexStr ? `${indexStr}\n` : ''}}\n`;
 
       return tableStr;
