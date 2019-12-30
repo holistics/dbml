@@ -153,7 +153,7 @@ class DbmlExporter {
     if (settingStr.endsWith(', ')) {
       settingStr = settingStr.replace(/,\s$/, '');
     }
-    return settingStr ? ` [${settingStr}] ` : '';
+    return settingStr ? ` [${settingStr}]` : '';
   }
 
   static exportTables (tableIds, model) {
@@ -170,7 +170,7 @@ class DbmlExporter {
       }
 
       const tableStr = `Table ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".` : ''}"${table.name}" ${tableSettingStr}{\n${
+        ? `"${schema.name}".` : ''}"${table.name}"${tableSettingStr} {\n${
         tableContent.fieldContents.map(line => `  ${line}`).join('\n')}\n${indexStr ? `${indexStr}\n` : ''}}\n`;
 
       return tableStr;
