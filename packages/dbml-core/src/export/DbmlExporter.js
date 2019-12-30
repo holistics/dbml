@@ -177,7 +177,7 @@ class DbmlExporter {
       if (ref.name) { line += ` "${ref.name}"`; }
       line += ':';
       line += `"${refEndpoint.tableName}"."${refEndpoint.fieldName}" `;
-      if (foreignEndpoint === '1') line += '- ';
+      if (foreignEndpoint.relation === '1') line += '- ';
       else line += '< ';
       line += `"${foreignEndpoint.tableName}"."${foreignEndpoint.fieldName}"`;
 
