@@ -1,0 +1,20 @@
+{
+  "tables": [],
+  "refs": [
+    {
+      "endpoints": [
+        {
+          "tableName": "distributors",
+          "fieldName": "address",
+          "relation": "*"
+        },
+        {
+          "tableName": "addresses",
+          "fieldName": "address",
+          "relation": "1"
+        }
+      ]
+    }
+  ],
+  "enums": []
+}
