@@ -1,0 +1,98 @@
+{
+  "tables": [
+    {
+      "name": "products",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "pk": true,
+          "dbdefault": {
+            "value": 123,
+            "type": "number"
+          }
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          },
+          "dbdefault": {
+            "value": "Tea",
+            "type": "string"
+          }
+        },
+        {
+          "name": "merchant_id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "not_null": true
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "float",
+            "args": null
+          },
+          "dbdefault": {
+            "value": 123.12,
+            "type": "number"
+          }
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          },
+          "dbdefault": {
+            "value": "now()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "stock",
+          "type": {
+            "type_name": "boolean",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "true",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "expiration",
+          "type": {
+            "type_name": "date",
+            "args": null
+          },
+          "dbdefault": {
+            "value": "current_date + interval 1 year",
+            "type": "expression"
+          }
+        }
+      ],
+      "indexes": []
+    }
+  ],
+  "refs": [],
+  "enums": []
+}
