@@ -6,11 +6,13 @@ import TableGroup from './tableGroup';
 import Table from './table';
 import Element from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
+import DbState from './dbState';
 
 class Database extends Element {
   constructor ({ schemas = [], tables = [], enums = [], refs = [], tableGroups = [] }) {
-    Element.resetIdCounter();
     super();
+    this.dbState = new DbState();
+    this.generateId();
     this.hasDefaultSchema = false;
     this.schemas = [];
     this.refs = [];
@@ -21,6 +23,10 @@ class Database extends Element {
     this.processRefs(refs);
     this.processEnums(enums);
     this.processTableGroups(tableGroups);
+  }
+
+  generateId () {
+    this.id = this.dbState.generateId('dbId');
   }
 
   processSchemas (rawSchemas) {
@@ -179,5 +185,7 @@ class Database extends Element {
     return normalizedModel;
   }
 }
+
+Database.idCounter = 1;
 
 export default Database;

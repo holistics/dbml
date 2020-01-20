@@ -18,10 +18,16 @@ class Ref extends Element {
     this.name = name;
     this.onDelete = onDelete;
     this.onUpdate = onUpdate;
-    this.database = database;
     this.endpoints = [];
+    this.database = database;
+    this.dbState = this.database.dbState;
+    this.generateId();
 
     this.processEndpoints(endpoints);
+  }
+
+  generateId () {
+    this.id = this.dbState.generateId('refId');
   }
 
   processEndpoints (rawEndpoints) {

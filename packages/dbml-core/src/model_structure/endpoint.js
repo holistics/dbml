@@ -10,6 +10,8 @@ class Endpoint extends Element {
     this.tableName = tableName;
     this.fieldName = fieldName;
     this.ref = ref;
+    this.dbState = this.ref.dbState;
+    this.generateId();
     // Use name of schema,table and field object
     // Name in constructor could be alias
     const schema = ref.database.findSchema(schemaName || DEFAULT_SCHEMA_NAME);
@@ -19,8 +21,12 @@ class Endpoint extends Element {
     this.setField(field);
   }
 
+  generateId () {
+    this.id = this.dbState.generateId('endpointId');
+  }
+
   equals (endpoint) {
-    return this.field.id === endpoint.id;
+    return this.field.id === endpoint.field.id;
   }
 
   export () {

@@ -9,20 +9,6 @@ class ElementError extends Error {
 class Element {
   constructor (token) {
     this.token = token;
-    this.generateId();
-  }
-
-  static incIdCounter () {
-    Element.idCounter += 1;
-  }
-
-  static resetIdCounter () {
-    Element.idCounter = 1;
-  }
-
-  generateId () {
-    this.id = Element.idCounter;
-    Element.incIdCounter();
   }
 
   bind (selection) {
@@ -33,8 +19,6 @@ class Element {
     throw new ElementError(message, this.token);
   }
 }
-
-Element.idCounter = 1;
 
 export default Element;
 /* eslint-enable */

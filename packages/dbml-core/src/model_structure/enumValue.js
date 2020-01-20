@@ -7,6 +7,12 @@ class EnumValue extends Element {
     this.name = name;
     this.note = note;
     this._enum = _enum;
+    this.dbState = this._enum.dbState;
+    this.generateId();
+  }
+
+  generateId () {
+    this.id = this.dbState.generateId('enumValueId');
   }
 
   export () {

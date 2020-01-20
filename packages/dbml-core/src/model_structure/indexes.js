@@ -10,8 +10,14 @@ class Index extends Element {
     this.pk = pk;
     this.columns = [];
     this.table = table;
+    this.dbState = this.table.dbState;
+    this.generateId();
 
     this.processIndexColumns(columns);
+  }
+
+  generateId () {
+    this.id = this.dbState.generateId('indexId');
   }
 
   processIndexColumns (rawColumns) {

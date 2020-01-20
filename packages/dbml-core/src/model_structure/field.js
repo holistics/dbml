@@ -15,8 +15,14 @@ class Field extends Element {
     this.note = note;
     this.dbdefault = dbdefault;
     this.increment = increment;
-    this.table = table;
     this.endpoints = [];
+    this.table = table;
+    this.dbState = this.table.dbState;
+    this.generateId();
+  }
+
+  generateId () {
+    this.id = this.dbState.generateId('fieldId');
   }
 
   pushEndpoint (endpoint) {

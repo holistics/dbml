@@ -6,8 +6,14 @@ class TableGroup extends Element {
     this.name = name;
     this.tables = [];
     this.schema = schema;
+    this.dbState = this.schema.dbState;
+    this.generateId();
 
     this.processTables(tables);
+  }
+
+  generateId () {
+    this.id = this.dbState.generateId('tableGroupId');
   }
 
   processTables (rawTables) {
@@ -79,5 +85,7 @@ class TableGroup extends Element {
     };
   }
 }
+
+TableGroup.idCounter = 1;
 
 export default TableGroup;

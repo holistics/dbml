@@ -13,9 +13,15 @@ class Table extends Element {
     this.fields = [];
     this.indexes = [];
     this.schema = schema;
+    this.dbState = this.schema.dbState;
+    this.generateId();
 
     this.processFields(fields);
     this.processIndexes(indexes);
+  }
+
+  generateId () {
+    this.id = this.dbState.generateId('tableId');
   }
 
   processFields (rawFields) {

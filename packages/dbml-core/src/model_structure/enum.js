@@ -10,8 +10,14 @@ class Enum extends Element {
     this.values = [];
     this.fields = [];
     this.schema = schema;
+    this.dbState = this.schema.dbState;
+    this.generateId();
 
     this.processValues(values);
+  }
+
+  generateId () {
+    this.id = this.dbState.generateId('enumId');
   }
 
   processValues (rawValues) {
@@ -89,5 +95,7 @@ class Enum extends Element {
     this.values.forEach(v => v.normalize(model));
   }
 }
+
+Enum.idCounter = 1;
 
 export default Enum;

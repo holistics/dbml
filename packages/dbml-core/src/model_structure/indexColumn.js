@@ -6,6 +6,12 @@ class IndexColumn extends Element {
     this.type = type;
     this.value = value;
     this.index = index;
+    this.dbState = this.index.dbState;
+    this.generateId();
+  }
+
+  generateId () {
+    this.id = this.dbState.generateId('indexColumnId');
   }
 
   export () {

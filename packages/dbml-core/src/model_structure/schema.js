@@ -14,10 +14,16 @@ class Schema extends Element {
     this.note = note;
     this.alias = alias;
     this.database = database;
+    this.dbState = this.database.dbState;
+    this.generateId();
 
     this.processTables(tables);
     this.processEnums(enums);
     this.processTableGroups(tableGroups);
+  }
+
+  generateId () {
+    this.id = this.dbState.generateId('schemaId');
   }
 
   processTables (rawTables) {
@@ -149,5 +155,7 @@ class Schema extends Element {
     this.tableGroups.forEach((tableGroup) => tableGroup.normalize(model));
   }
 }
+
+Schema.idCounter = 1;
 
 export default Schema;
