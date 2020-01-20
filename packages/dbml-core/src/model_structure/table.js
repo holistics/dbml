@@ -2,6 +2,7 @@ import Element from './element';
 import Field from './field';
 import Index from './indexes';
 import { DEFAULT_SCHEMA_NAME } from './config';
+import { shouldPrintSchema } from './utils';
 
 class Table extends Element {
   constructor ({ name, alias, note, fields = [], indexes = [], schema = {}, token, headerColor } = {}) {
@@ -41,7 +42,8 @@ class Table extends Element {
 
   checkField (field) {
     if (this.fields.some(f => f.name === field.name)) {
-      field.error(`Field ${field.name} existed in table ${this.name}`);
+      field.error(`Field "${field.name}" existed in table ${shouldPrintSchema(this.schema)
+        ? `"${this.schema.name}".` : ''}"${this.name}"`);
     }
   }
 
@@ -59,7 +61,8 @@ class Table extends Element {
   checkIndex (index) {
     index.columns.forEach((column) => {
       if (column.type === 'column' && !(this.findField(column.value))) {
-        index.error(`Column ${column.value} do not exist in table ${this.name}`);
+        index.error(`Column "${column.value}" do not exist in table ${shouldPrintSchema(this.schema)
+          ? `"${this.schema.name}".` : ''}"${this.name}"`);
       }
     });
   }

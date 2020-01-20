@@ -1,5 +1,6 @@
 import Element from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
+import { shouldPrintSchema } from './utils';
 
 class Endpoint extends Element {
   constructor ({ tableName, schemaName, fieldName, relation, token, ref }) {
@@ -14,11 +15,15 @@ class Endpoint extends Element {
     this.generateId();
     // Use name of schema,table and field object
     // Name in constructor could be alias
-    const schema = ref.database.findSchema(schemaName || DEFAULT_SCHEMA_NAME);
+    const schema = ref.schema.database.findSchema(schemaName || DEFAULT_SCHEMA_NAME);
 
     const table = schema.findTable(tableName);
+    if (!table) {
+      this.error(`Can't find table ${shouldPrintSchema(schema)
+        ? `"${schema.name}".` : ''}"${tableName}"`);
+    }
     const field = table.findField(fieldName);
-    this.setField(field);
+    this.setField(field, table);
   }
 
   generateId () {
@@ -51,9 +56,10 @@ class Endpoint extends Element {
     };
   }
 
-  setField (field) {
+  setField (field, table) {
     if (!field) {
-      this.error(`Can't find field ${this.fieldName} in table ${this.tableName}`);
+      this.error(`Can't find field ${shouldPrintSchema(table.schema)
+        ? `"${table.schema.name}".` : ''}"${this.fieldName}" in table "${this.tableName}"`);
     }
     this.field = field;
   }

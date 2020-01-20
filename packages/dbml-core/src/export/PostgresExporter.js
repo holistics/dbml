@@ -229,7 +229,7 @@ class PostgresExporter {
 
     database.schemaIds.forEach((schemaId) => {
       const schema = model.schemas[schemaId];
-      const { tableIds, enumIds } = schema;
+      const { tableIds, enumIds, refIds } = schema;
 
       if (shouldPrintSchema(schema, model)) {
         if (hasBlockAbove) res += '\n';
@@ -249,6 +249,12 @@ class PostgresExporter {
         hasBlockAbove = true;
       }
 
+      if (!_.isEmpty(refIds)) {
+        if (hasBlockAbove) res += '\n';
+        res += PostgresExporter.exportRefs(refIds, model);
+        hasBlockAbove = true;
+      }
+
       indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
       comments.push(...(_.flatten(tableIds.map((tableId) => {
         const { fieldIds } = model.tables[tableId];
@@ -261,12 +267,6 @@ class PostgresExporter {
     if (!_.isEmpty(indexIds)) {
       if (hasBlockAbove) res += '\n';
       res += PostgresExporter.exportIndexes(indexIds, model);
-      hasBlockAbove = true;
-    }
-
-    if (!_.isEmpty(database.refIds)) {
-      if (hasBlockAbove) res += '\n';
-      res += PostgresExporter.exportRefs(database.refIds, model);
       hasBlockAbove = true;
     }
 

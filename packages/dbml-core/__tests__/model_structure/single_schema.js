@@ -24,43 +24,6 @@ describe('@dbml/core - model_structure', () => {
         expect(database.schemas.map((schema => schema.name))).toEqual(expect.arrayContaining([DEFAULT_SCHEMA_NAME]));
       });
 
-      test('database - contains all refs', () => {
-        expect(database.refs).toHaveLength(6);
-
-        const refs = database.refs.map((ref) => ({
-          name: ref.name,
-          onDelete: ref.onDelete,
-          onUpdate: ref.onUpdate,
-          endpoints: ref.endpoints.map((endpoint) => ({
-            schemaName: endpoint.field.table.schema.name,
-            tableName: endpoint.field.table.name,
-            fieldName: endpoint.field.name,
-            relation: endpoint.relation,
-          })),
-        }));
-
-        expect(refs).toEqual(expect.arrayContaining([
-          expect.objectContaining({
-            onDelete: 'cascade',
-            onUpdate: 'no action',
-            endpoints: expect.arrayContaining([
-              {
-                schemaName: DEFAULT_SCHEMA_NAME,
-                tableName: 'users',
-                fieldName: 'country_code',
-                relation: '*',
-              },
-              {
-                schemaName: DEFAULT_SCHEMA_NAME,
-                tableName: 'countries',
-                fieldName: 'code',
-                relation: '1',
-              },
-            ]),
-          }),
-        ]));
-      });
-
       test('all schemas - contains all properties', () => {
         database.schemas.forEach((schema) => {
           expect(schema.id).toBeDefined();
@@ -107,6 +70,44 @@ describe('@dbml/core - model_structure', () => {
 
         const tableGroups = ['g1'];
         expect(schema.tableGroups.map(group => group.name)).toEqual(expect.arrayContaining(tableGroups));
+      });
+
+      test('database - contains all refs', () => {
+        const schema = database.schemas[0];
+        expect(schema.refs).toHaveLength(6);
+
+        const refs = schema.refs.map((ref) => ({
+          name: ref.name,
+          onDelete: ref.onDelete,
+          onUpdate: ref.onUpdate,
+          endpoints: ref.endpoints.map((endpoint) => ({
+            schemaName: endpoint.field.table.schema.name,
+            tableName: endpoint.field.table.name,
+            fieldName: endpoint.field.name,
+            relation: endpoint.relation,
+          })),
+        }));
+
+        expect(refs).toEqual(expect.arrayContaining([
+          expect.objectContaining({
+            onDelete: 'cascade',
+            onUpdate: 'no action',
+            endpoints: expect.arrayContaining([
+              {
+                schemaName: DEFAULT_SCHEMA_NAME,
+                tableName: 'users',
+                fieldName: 'country_code',
+                relation: '*',
+              },
+              {
+                schemaName: DEFAULT_SCHEMA_NAME,
+                tableName: 'countries',
+                fieldName: 'code',
+                relation: '1',
+              },
+            ]),
+          }),
+        ]));
       });
 
       test('schema "public" - contains all parent references', () => {
@@ -363,45 +364,6 @@ describe('@dbml/core - model_structure', () => {
         expect(schemas).toEqual(expect.arrayContaining([DEFAULT_SCHEMA_NAME]));
       });
 
-      test('database - contains all refs', () => {
-        expect(getEle('database', '1').refIds).toHaveLength(6);
-
-        // eslint-disable-next-line
-        const refs = getEle('database', '1').refIds.map((refId) => ({
-          name: getEle('refs', refId).name,
-          onDelete: getEle('refs', refId).onDelete,
-          onUpdate: getEle('refs', refId).onUpdate,
-          // eslint-disable-next-line
-          endpoints: getEle('refs', refId).endpointIds.map((endpointId) => ({
-            schemaName: getEle('schemas', getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldId).tableId).schemaId).name,
-            tableName: getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldId).tableId).name,
-            fieldName: getEle('fields', getEle('endpoints', endpointId).fieldId).name,
-            relation: getEle('endpoints', endpointId).relation,
-          })),
-        }));
-
-        expect(refs).toEqual(expect.arrayContaining([
-          expect.objectContaining({
-            onDelete: 'cascade',
-            onUpdate: 'no action',
-            endpoints: expect.arrayContaining([
-              {
-                schemaName: DEFAULT_SCHEMA_NAME,
-                tableName: 'users',
-                fieldName: 'country_code',
-                relation: '*',
-              },
-              {
-                schemaName: DEFAULT_SCHEMA_NAME,
-                tableName: 'countries',
-                fieldName: 'code',
-                relation: '1',
-              },
-            ]),
-          }),
-        ]));
-      });
-
       test('schema "public" - check properties', () => {
         const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
 
@@ -437,6 +399,46 @@ describe('@dbml/core - model_structure', () => {
         const tableGroups = ['g1'];
         // eslint-disable-next-line
         expect(schema.tableGroupIds.map((groupId) => getEle('tableGroups', groupId).name)).toEqual(expect.arrayContaining(tableGroups));
+      });
+
+      test('schema "public" - contains all refs', () => {
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
+        expect(schema.refIds).toHaveLength(6);
+
+        // eslint-disable-next-line
+        const refs = schema.refIds.map((refId) => ({
+          name: getEle('refs', refId).name,
+          onDelete: getEle('refs', refId).onDelete,
+          onUpdate: getEle('refs', refId).onUpdate,
+          // eslint-disable-next-line
+          endpoints: getEle('refs', refId).endpointIds.map((endpointId) => ({
+            schemaName: getEle('schemas', getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldId).tableId).schemaId).name,
+            tableName: getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldId).tableId).name,
+            fieldName: getEle('fields', getEle('endpoints', endpointId).fieldId).name,
+            relation: getEle('endpoints', endpointId).relation,
+          })),
+        }));
+
+        expect(refs).toEqual(expect.arrayContaining([
+          expect.objectContaining({
+            onDelete: 'cascade',
+            onUpdate: 'no action',
+            endpoints: expect.arrayContaining([
+              {
+                schemaName: DEFAULT_SCHEMA_NAME,
+                tableName: 'users',
+                fieldName: 'country_code',
+                relation: '*',
+              },
+              {
+                schemaName: DEFAULT_SCHEMA_NAME,
+                tableName: 'countries',
+                fieldName: 'code',
+                relation: '1',
+              },
+            ]),
+          }),
+        ]));
       });
 
       test('schema "public" - contains all parent references', () => {

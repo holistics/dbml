@@ -1,5 +1,6 @@
 import Element from './element';
 import EnumValue from './enumValue';
+import { shouldPrintSchema } from './utils';
 
 class Enum extends Element {
   constructor ({ name, token, values, note, schema } = {}) {
@@ -33,7 +34,8 @@ class Enum extends Element {
 
   checkValue (value) {
     if (this.values.some(v => v.name === value.name)) {
-      value.error(`Enum value ${value.name} existed in enum ${this.name}`);
+      value.error(`Enum value "${value.name}" existed in enum ${shouldPrintSchema(this.schema)
+        ? `"${this.schema.name}".` : ''}"${this.name}"`);
     }
   }
 
@@ -44,7 +46,9 @@ class Enum extends Element {
 
   checkField (field) {
     if (this.fields.some(f => f.id === field.id)) {
-      this.error(`Field ${field.table.schema.name}.${field.table.name}.${field.name} already associated with enum ${this.schema.name}.${this.name}`);
+      this.error(`Field ${shouldPrintSchema(field.table.schema)
+        ? `"${field.table.schema.name}".` : ''}"${field.table.name}"."${field.name}" already associated with enum ${shouldPrintSchema(this.schema)
+        ? `"${this.schema.name}".` : ''}${this.name}"`);
     }
   }
 
@@ -95,7 +99,5 @@ class Enum extends Element {
     this.values.forEach(v => v.normalize(model));
   }
 }
-
-Enum.idCounter = 1;
 
 export default Enum;

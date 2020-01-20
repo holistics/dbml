@@ -198,7 +198,7 @@ class MySQLExporter {
 
     database.schemaIds.forEach((schemaId) => {
       const schema = model.schemas[schemaId];
-      const { tableIds } = schema;
+      const { tableIds, refIds } = schema;
 
       if (shouldPrintSchema(schema, model)) {
         if (hasBlockAbove) res += '\n';
@@ -212,18 +212,18 @@ class MySQLExporter {
         hasBlockAbove = true;
       }
 
+      if (!_.isEmpty(refIds)) {
+        if (hasBlockAbove) res += '\n';
+        res += MySQLExporter.exportRefs(refIds, model);
+        hasBlockAbove = true;
+      }
+
       indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
     });
 
     if (!_.isEmpty(indexIds)) {
       if (hasBlockAbove) res += '\n';
       res += MySQLExporter.exportIndexes(indexIds, model);
-      hasBlockAbove = true;
-    }
-
-    if (!_.isEmpty(database.refIds)) {
-      if (hasBlockAbove) res += '\n';
-      res += MySQLExporter.exportRefs(database.refIds, model);
       hasBlockAbove = true;
     }
 

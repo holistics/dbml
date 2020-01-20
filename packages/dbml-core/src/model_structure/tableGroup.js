@@ -1,4 +1,5 @@
 import Element from './element';
+import { shouldPrintSchema } from './utils';
 
 class TableGroup extends Element {
   constructor ({ name, token, tables = [], schema = {} }) {
@@ -20,7 +21,7 @@ class TableGroup extends Element {
     rawTables.forEach((rawTable) => {
       const table = this.schema.database.findTable(rawTable);
       if (!table) {
-        this.error(`Table ${rawTable.schemaName ? `${rawTable.schemaName}.` : ''}${rawTable.name} don't exist`);
+        this.error(`Table ${rawTable.schemaName ? `"${rawTable.schemaName}".` : ''}${rawTable.name} don't exist`);
       }
       this.pushTable(table);
     });
@@ -34,11 +35,13 @@ class TableGroup extends Element {
 
   checkTable (table) {
     if (this.tables.some(t => t.id === table.id)) {
-      this.error(`Table ${table.schema.name}.${table.name} is already in the group`);
+      this.error(`Table ${shouldPrintSchema(table.schema) ? `"${table.schema.name}".` : ''}.${table.name} is already in the group`);
     }
 
     if (table.group) {
-      this.error(`Table ${table.schema.name}.${table.name} is already in group ${table.group.name}`);
+      this.error(`Table ${shouldPrintSchema(table.schema)
+        ? `"${table.schema.name}".` : ''}.${table.name} is already in group ${shouldPrintSchema(table.group.schema)
+        ? `"${table.group.schema.name}".` : ''}${table.group.name}`);
     }
   }
 
@@ -85,7 +88,5 @@ class TableGroup extends Element {
     };
   }
 }
-
-TableGroup.idCounter = 1;
 
 export default TableGroup;

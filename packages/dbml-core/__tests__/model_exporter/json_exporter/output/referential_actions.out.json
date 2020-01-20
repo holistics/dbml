@@ -209,71 +209,71 @@
         }
       ],
       "enums": [],
-      "tableGroups": []
-    }
-  ],
-  "refs": [
-    {
-      "name": null,
-      "onDelete": "restrict",
-      "endpoints": [
+      "tableGroups": [],
+      "refs": [
         {
-          "tableName": "users",
-          "fieldName": "id",
-          "relation": "1"
+          "name": null,
+          "onDelete": "restrict",
+          "endpoints": [
+            {
+              "tableName": "users",
+              "fieldName": "id",
+              "relation": "1"
+            },
+            {
+              "tableName": "orders",
+              "fieldName": "user_id",
+              "relation": "*"
+            }
+          ]
         },
         {
-          "tableName": "orders",
-          "fieldName": "user_id",
-          "relation": "*"
-        }
-      ]
-    },
-    {
-      "name": null,
-      "onDelete": "cascade",
-      "endpoints": [
-        {
-          "tableName": "orders",
-          "fieldName": "id",
-          "relation": "1"
+          "name": null,
+          "onDelete": "cascade",
+          "endpoints": [
+            {
+              "tableName": "orders",
+              "fieldName": "id",
+              "relation": "1"
+            },
+            {
+              "tableName": "order_items",
+              "fieldName": "order_id",
+              "relation": "*"
+            }
+          ]
         },
         {
-          "tableName": "order_items",
-          "fieldName": "order_id",
-          "relation": "*"
-        }
-      ]
-    },
-    {
-      "name": null,
-      "onDelete": "set null",
-      "endpoints": [
-        {
-          "tableName": "products",
-          "fieldName": "id",
-          "relation": "1"
+          "name": null,
+          "onDelete": "set null",
+          "endpoints": [
+            {
+              "tableName": "products",
+              "fieldName": "id",
+              "relation": "1"
+            },
+            {
+              "tableName": "order_items",
+              "fieldName": "product_id",
+              "relation": "*"
+            }
+          ]
         },
         {
-          "tableName": "order_items",
-          "fieldName": "product_id",
-          "relation": "*"
-        }
-      ]
-    },
-    {
-      "name": null,
-      "onDelete": "no action",
-      "endpoints": [
-        {
-          "tableName": "countries",
-          "fieldName": "code",
-          "relation": "1"
-        },
-        {
-          "tableName": "users",
-          "fieldName": "country_code",
-          "relation": "*"
+          "name": null,
+          "onDelete": "no action",
+          "endpoints": [
+            {
+              "tableName": "countries",
+              "fieldName": "code",
+              "relation": "1"
+            },
+            {
+              "tableName": "users",
+              "fieldName": "country_code",
+              "relation": "*"
+            }
+          ]
         }
       ]
     }

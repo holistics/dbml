@@ -64,6 +64,7 @@ class Database extends Element {
 
   findSchema (schemaName) {
     let schema = this.schemas.find(s => s.name === schemaName || s.alias === schemaName);
+    // create new schema if schema not found
     if (!schema) {
       schema = new Schema({
         name: schemaName,
@@ -78,20 +79,19 @@ class Database extends Element {
   }
 
   processRefs (rawRefs) {
+    let schema;
+
     rawRefs.forEach((ref) => {
-      this.pushRef(new Ref({ ...ref, database: this }));
+      if (ref.schemaName) {
+        schema = this.findSchema(ref.schemaName);
+        if (ref.schemaName === DEFAULT_SCHEMA_NAME) {
+          this.hasDefaultSchema = true;
+        }
+      } else {
+        schema = this.findSchema(DEFAULT_SCHEMA_NAME);
+      }
+      schema.pushRef(new Ref({ ...ref, schema }));
     });
-  }
-
-  pushRef (ref) {
-    this.checkRef(ref);
-    this.refs.push(ref);
-  }
-
-  checkRef (ref) {
-    if (this.refs.some(r => r.equals(ref))) {
-      ref.error('Reference with same endpoints duplicated');
-    }
   }
 
   processEnums (rawEnums) {
@@ -147,14 +147,12 @@ class Database extends Element {
   exportChild () {
     return {
       schemas: this.schemas.map(s => s.export()),
-      refs: this.refs.map(r => r.export()),
     };
   }
 
   exportChildIds () {
     return {
       schemaIds: this.schemas.map(s => s.id),
-      refIds: this.refs.map(r => r.id),
     };
   }
 
@@ -180,12 +178,8 @@ class Database extends Element {
     };
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));
-    this.refs.forEach((ref) => ref.normalize(normalizedModel));
-
     return normalizedModel;
   }
 }
-
-Database.idCounter = 1;
 
 export default Database;

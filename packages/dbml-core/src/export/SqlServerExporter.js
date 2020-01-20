@@ -218,7 +218,7 @@ class SqlServerExporter {
 
     database.schemaIds.forEach((schemaId) => {
       const schema = model.schemas[schemaId];
-      const { tableIds } = schema;
+      const { tableIds, refIds } = schema;
 
       if (shouldPrintSchema(schema, model)) {
         if (hasBlockAbove) res += '\n';
@@ -229,6 +229,12 @@ class SqlServerExporter {
       if (!_.isEmpty(tableIds)) {
         if (hasBlockAbove) res += '\n';
         res += SqlServerExporter.exportTables(tableIds, model);
+        hasBlockAbove = true;
+      }
+
+      if (!_.isEmpty(refIds)) {
+        if (hasBlockAbove) res += '\n';
+        res += SqlServerExporter.exportRefs(refIds, model);
         hasBlockAbove = true;
       }
 
@@ -244,12 +250,6 @@ class SqlServerExporter {
     if (!_.isEmpty(indexIds)) {
       if (hasBlockAbove) res += '\n';
       res += SqlServerExporter.exportIndexes(indexIds, model);
-      hasBlockAbove = true;
-    }
-
-    if (!_.isEmpty(database.refIds)) {
-      if (hasBlockAbove) res += '\n';
-      res += SqlServerExporter.exportRefs(database.refIds, model);
       hasBlockAbove = true;
     }
 

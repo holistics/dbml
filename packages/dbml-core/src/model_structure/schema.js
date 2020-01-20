@@ -2,14 +2,17 @@ import Table from './table';
 import Element from './element';
 import Enum from './enum';
 import { DEFAULT_SCHEMA_NAME } from './config';
+import { shouldPrintSchema } from './utils';
 import TableGroup from './tableGroup';
+import Ref from './ref';
 
 class Schema extends Element {
-  constructor ({ name, alias, note, tables = [], enums = [], tableGroups = [], token, database = {} } = {}) {
+  constructor ({ name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {} } = {}) {
     super(token);
     this.tables = [];
     this.enums = [];
     this.tableGroups = [];
+    this.refs = [];
     this.name = name;
     this.note = note;
     this.alias = alias;
@@ -19,6 +22,7 @@ class Schema extends Element {
 
     this.processTables(tables);
     this.processEnums(enums);
+    this.processRefs(refs);
     this.processTableGroups(tableGroups);
   }
 
@@ -39,7 +43,7 @@ class Schema extends Element {
 
   checkTable (table) {
     if (this.tables.some(t => t.name === table.name)) {
-      table.error(`Table ${table.name} existed`);
+      table.error(`Table ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${table.name}" existed`);
     }
   }
 
@@ -61,7 +65,8 @@ class Schema extends Element {
 
   checkEnum (_enum) {
     if (this.enums.some(e => e.name === _enum.name)) {
-      _enum.error(`Enum ${this.name}.${_enum.name} existed`);
+      _enum.error(`Enum ${shouldPrintSchema(this)
+        ? `"${this.name}".` : ''}"${_enum.name}" existed`);
     }
   }
 
@@ -78,6 +83,23 @@ class Schema extends Element {
     });
   }
 
+  processRefs (rawRefs) {
+    rawRefs.forEach((ref) => {
+      this.pushRef(new Ref({ ...ref, schema: this }));
+    });
+  }
+
+  pushRef (ref) {
+    this.checkRef(ref);
+    this.refs.push(ref);
+  }
+
+  checkRef (ref) {
+    if (this.refs.some(r => r.equals(ref))) {
+      ref.error('Reference with same endpoints duplicated');
+    }
+  }
+
   processTableGroups (rawTableGroups) {
     rawTableGroups.forEach((tableGroup) => {
       this.pushTableGroup(new TableGroup({ ...tableGroup, schema: this }));
@@ -91,7 +113,7 @@ class Schema extends Element {
 
   checkTableGroup (tableGroup) {
     if (this.tableGroups.some(tg => tg.name === tableGroup.name)) {
-      tableGroup.error(`Table Group named ${tableGroup.name} existed`);
+      tableGroup.error(`Table Group ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${tableGroup.name}" existed`);
     }
   }
 
@@ -114,6 +136,7 @@ class Schema extends Element {
       tables: this.tables.map(t => t.export()),
       enums: this.enums.map(e => e.export()),
       tableGroups: this.tableGroups.map(tg => tg.export()),
+      refs: this.refs.map(r => r.export()),
     };
   }
 
@@ -122,6 +145,7 @@ class Schema extends Element {
       tableIds: this.tables.map(t => t.id),
       enumIds: this.enums.map(e => e.id),
       tableGroupIds: this.tableGroups.map(tg => tg.id),
+      refIds: this.refs.map(r => r.id),
     };
   }
 
@@ -153,9 +177,8 @@ class Schema extends Element {
     this.tables.forEach((table) => table.normalize(model));
     this.enums.forEach((_enum) => _enum.normalize(model));
     this.tableGroups.forEach((tableGroup) => tableGroup.normalize(model));
+    this.refs.forEach((ref) => ref.normalize(model));
   }
 }
-
-Schema.idCounter = 1;
 
 export default Schema;

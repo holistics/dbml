@@ -193,7 +193,10 @@ class DbmlExporter {
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
 
-      if (ref.name) { line += ` "${ref.name}"`; }
+      if (ref.name) {
+        line += ` ${shouldPrintSchema(model.schemas[ref.schemaId], model)
+          ? `"${model.schemas[ref.schemaId].name}".` : ''}"${ref.name}"`;
+      }
       line += ':';
       line += `${shouldPrintSchema(refEndpointSchema, model)
         ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTable.name}"."${refEndpointField.name}" `;
@@ -249,7 +252,7 @@ class DbmlExporter {
     const database = model.database['1'];
 
     database.schemaIds.forEach((schemaId) => {
-      const { enumIds, tableIds, tableGroupIds } = model.schemas[schemaId];
+      const { enumIds, tableIds, tableGroupIds, refIds } = model.schemas[schemaId];
 
       if (!_.isEmpty(enumIds)) {
         if (hasBlockAbove) res += '\n';
@@ -268,14 +271,13 @@ class DbmlExporter {
         res += DbmlExporter.exportTableGroups(tableGroupIds, model);
         hasBlockAbove = true;
       }
+
+      if (!_.isEmpty(refIds)) {
+        if (hasBlockAbove) res += '\n';
+        res += DbmlExporter.exportRefs(refIds, model);
+        hasBlockAbove = true;
+      }
     });
-
-    if (!_.isEmpty(database.refIds)) {
-      if (hasBlockAbove) res += '\n';
-      res += DbmlExporter.exportRefs(database.refIds, model);
-      hasBlockAbove = true;
-    }
-
     return res;
   }
 }

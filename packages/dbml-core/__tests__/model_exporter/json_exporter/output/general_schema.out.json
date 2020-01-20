@@ -327,97 +327,97 @@
           ]
         }
       ],
-      "tableGroups": []
-    }
-  ],
-  "refs": [
-    {
-      "name": null,
-      "endpoints": [
+      "tableGroups": [],
+      "refs": [
         {
-          "tableName": "orders",
-          "fieldName": "id",
-          "relation": "1"
+          "name": null,
+          "endpoints": [
+            {
+              "tableName": "orders",
+              "fieldName": "id",
+              "relation": "1"
+            },
+            {
+              "tableName": "order_items",
+              "fieldName": "order_id",
+              "relation": "*"
+            }
+          ]
         },
         {
-          "tableName": "order_items",
-          "fieldName": "order_id",
-          "relation": "*"
-        }
-      ]
-    },
-    {
-      "name": null,
-      "endpoints": [
-        {
-          "tableName": "products",
-          "fieldName": "id",
-          "relation": "1"
+          "name": null,
+          "endpoints": [
+            {
+              "tableName": "products",
+              "fieldName": "id",
+              "relation": "1"
+            },
+            {
+              "tableName": "order_items",
+              "fieldName": "product_id",
+              "relation": "*"
+            }
+          ]
         },
         {
-          "tableName": "order_items",
-          "fieldName": "product_id",
-          "relation": "*"
-        }
-      ]
-    },
-    {
-      "name": null,
-      "endpoints": [
-        {
-          "tableName": "countries",
-          "fieldName": "code",
-          "relation": "1"
+          "name": null,
+          "endpoints": [
+            {
+              "tableName": "countries",
+              "fieldName": "code",
+              "relation": "1"
+            },
+            {
+              "tableName": "users",
+              "fieldName": "country_code",
+              "relation": "*"
+            }
+          ]
         },
         {
-          "tableName": "users",
-          "fieldName": "country_code",
-          "relation": "*"
-        }
-      ]
-    },
-    {
-      "name": null,
-      "endpoints": [
-        {
-          "tableName": "countries",
-          "fieldName": "code",
-          "relation": "1"
+          "name": null,
+          "endpoints": [
+            {
+              "tableName": "countries",
+              "fieldName": "code",
+              "relation": "1"
+            },
+            {
+              "tableName": "merchants",
+              "fieldName": "country_code",
+              "relation": "*"
+            }
+          ]
         },
         {
-          "tableName": "merchants",
-          "fieldName": "country_code",
-          "relation": "*"
-        }
-      ]
-    },
-    {
-      "name": null,
-      "endpoints": [
-        {
-          "tableName": "merchants",
-          "fieldName": "id",
-          "relation": "1"
+          "name": null,
+          "endpoints": [
+            {
+              "tableName": "merchants",
+              "fieldName": "id",
+              "relation": "1"
+            },
+            {
+              "tableName": "products",
+              "fieldName": "merchant_id",
+              "relation": "*"
+            }
+          ]
         },
         {
-          "tableName": "products",
-          "fieldName": "merchant_id",
-          "relation": "*"
-        }
-      ]
-    },
-    {
-      "name": null,
-      "endpoints": [
-        {
-          "tableName": "users",
-          "fieldName": "id",
-          "relation": "1"
-        },
-        {
-          "tableName": "merchants",
-          "fieldName": "admin_id",
-          "relation": "*"
+          "name": null,
+          "endpoints": [
+            {
+              "tableName": "users",
+              "fieldName": "id",
+              "relation": "1"
+            },
+            {
+              "tableName": "merchants",
+              "fieldName": "admin_id",
+              "relation": "*"
+            }
+          ]
         }
       ]
     }

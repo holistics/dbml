@@ -13,14 +13,14 @@ function isEqualPair (pair1, pair2) {
 }
 
 class Ref extends Element {
-  constructor ({ name, endpoints, onDelete, onUpdate, token, database = {} } = {}) {
+  constructor ({ name, endpoints, onDelete, onUpdate, token, schema = {} } = {}) {
     super(token);
     this.name = name;
     this.onDelete = onDelete;
     this.onUpdate = onUpdate;
     this.endpoints = [];
-    this.database = database;
-    this.dbState = this.database.dbState;
+    this.schema = schema;
+    this.dbState = this.schema.dbState;
     this.generateId();
 
     this.processEndpoints(endpoints);
@@ -77,7 +77,7 @@ class Ref extends Element {
 
   exportParentIds () {
     return {
-      databaseId: this.database.id,
+      schemaId: this.schema.id,
     };
   }
 
