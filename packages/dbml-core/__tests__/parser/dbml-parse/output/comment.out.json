@@ -102,7 +102,49 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [
+        {
+          "columns": [
+            {
+              "value": "id",
+              "type": "column"
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 223,
+              "line": 8,
+              "column": 5
+            },
+            "end": {
+              "offset": 226,
+              "line": 8,
+              "column": 8
+            }
+          },
+          "type": "hash"
+        },
+        {
+          "columns": [
+            {
+              "value": "created_at",
+              "type": "column"
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 237,
+              "line": 9,
+              "column": 5
+            },
+            "end": {
+              "offset": 248,
+              "line": 9,
+              "column": 16
+            }
+          }
+        }
+      ]
     }
   ],
   "refs": [],
