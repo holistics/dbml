@@ -275,14 +275,17 @@ FieldSetting
   / _ v:Default _ {return {type: 'default', value: v} }
 
 Indexes
-  = _ indexes _ "{" newline first: Index rest:(sp* newline Index)* _ "}" sp* newline
+  = _ indexes _ "{" body:IndexesBody "}"
     {
-      let result= [first].concat(rest.map(el => el[2]));
-      return result;
+      return body;
     }
+    
+IndexesBody = _ index: Index+ _ {
+  return index;
+}
 
 Index
-  = index:(SingleIndexSyntax/CompositeIndexSyntax) { return index }
+  = _ index:(SingleIndexSyntax/CompositeIndexSyntax) _ { return index }
 
 SingleIndexSyntax = _ syntax:SingleIndex sp* index_settings:IndexSettings? {
   const index = {
