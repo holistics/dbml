@@ -179,7 +179,7 @@ TableBody
   }
 
 Field
-  = _ name:name sp+ type:type constrains:(sp+ constrain)* sp* field_settings:FieldSettings? sp* comment? newline {
+  = _ name:name sp+ type:type constrains:(sp+ constrain)* field_settings:(sp+ FieldSettings)? sp* comment? newline {
     const field = {
       name: name,
       type: type,
@@ -187,7 +187,9 @@ Field
       inline_refs: []
     }
     Object.assign(field, ...constrains.map(c => c[1]));
-    Object.assign(field, field_settings);
+    if (field_settings) {
+      Object.assign(field, field_settings[1]);
+    }
     return field;
   }
 
@@ -418,14 +420,17 @@ name "valid name"
   = c:(character+) { return c.join("") }
   / quote c:[^\"\n]+ quote { return c.join("") }
 
-type "type" = c:type_name { return c }
-type_name = type_name:name args:(sp* "(" sp* expression sp* ")")? {
+type_name "valid name"
+  = c:(type_character+) { return c.join("") }
+  / quote c:[^\"\n]+ quote { return c.join("") }
+
+type "type" = type_name:type_name args:(sp* "(" sp* expression sp* ")")? {
   args = args ? args[3] : null;
 
 	if (type_name.toLowerCase() !== 'enum') {
 		type_name = args ? type_name + '(' + args + ')' : type_name;
 	}
-	
+
 	return {
 		type_name,
 		args
@@ -445,6 +450,7 @@ exprChar = [\',.a-z0-9_+-\`]i
     / tab
 exprCharNoCommaSpace = [\'.a-z0-9_+-]i
 allowed_chars = (! ('{'/ '}'/ whitespace_quote)) . {return text()}
+type_character = character / [\[\]]
 character "letter, number or underscore" = [a-z0-9_]i
 
 hex_char = c:[0-9a-fA-F] {return c.toLowerCase()}
