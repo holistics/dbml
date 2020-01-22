@@ -1,3 +1,15 @@
+## Unreleased (2020-01-22)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#65](https://github.com/holistics/dbml/pull/65) Fix parsing index comment ([@phuongduyphan](https://github.com/phuongduyphan))
+  * [#64](https://github.com/holistics/dbml/pull/64) Parse array type for dbml ([@phuongduyphan](https://github.com/phuongduyphan))
+  * [#57](https://github.com/holistics/dbml/pull/57) Fix DBML one-to-one relation exporting bug  ([@dawitkk](https://github.com/dawitkk))
+
+#### Committers: 2
+- Dawit Kidane ([@dawitkk](https://github.com/dawitkk))
+- Phuong Duy Phan ([@phuongduyphan](https://github.com/phuongduyphan))
+
 ## v1.3.0 (2019-12-24)
 
 #### :rocket: New Feature
