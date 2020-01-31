@@ -496,14 +496,30 @@ StringLiteral "string"
       return { value: chars.join(''), type: 'string' } ;
     }
   / "'" chars:SingleStringCharacter* "'" {
-      return { value: chars.join(''), type: 'string' } ;
+      const rawStr = chars.join('');
+      let lines = rawStr.split(/[ ]{2,}\n/);
+      lines = lines.map(line => line.replace(/\n/g, ''));
+
+      const leadingSpaces = (str) => {
+        let i = 0;
+        while (i < str.length && str[i] === ' ') {
+          i += 1;
+        }
+        return i;
+      }
+
+      const minLeadingSpaces = lines.filter(line => line).reduce((acc, cur) => Math.min(acc, leadingSpaces(cur)), Number.MAX_SAFE_INTEGER);
+      lines = lines.map(line => line ? line.slice(minLeadingSpaces) : line);
+      const finalStr = lines.join('\n');
+
+      return { value: finalStr, type: 'string' } ;
     }
 DoubleStringCharacter
   = '\\' '"' { return '"'; }
   / !'"' SourceCharacter { return text(); }
 
 SingleStringCharacter
-  = '\\' "'" { return "'"; }
+  = "''" { return "'"; }
   / !"'" SourceCharacter { return text(); }
 
 SourceCharacter
