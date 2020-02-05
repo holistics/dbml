@@ -42,6 +42,12 @@ class Field extends Element {
     };
   }
 
+  exportChildIds () {
+    return {
+      endpointIds: this.endpoints.map(e => e.id),
+    };
+  }
+
   shallowExport () {
     return {
       name: this.name,
@@ -61,6 +67,7 @@ class Field extends Element {
       [this.id]: {
         id: this.id,
         ...this.shallowExport(),
+        ...this.exportChildIds(),
         ...this.exportParentIds(),
       },
     };

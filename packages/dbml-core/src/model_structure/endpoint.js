@@ -62,6 +62,7 @@ class Endpoint extends Element {
         ? `"${table.schema.name}".` : ''}"${this.fieldName}" in table "${this.tableName}"`);
     }
     this.field = field;
+    field.pushEndpoint(this);
   }
 
   normalize (model) {
