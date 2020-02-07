@@ -15,7 +15,6 @@ class Database extends Element {
     this.generateId();
     this.hasDefaultSchema = false;
     this.schemas = [];
-    this.refs = [];
 
     // The process order is important. Do not change !
     this.processSchemas(schemas);
