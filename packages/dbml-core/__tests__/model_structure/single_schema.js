@@ -15,7 +15,6 @@ describe('@dbml/core - model_structure', () => {
       test('database - contains all properties', () => {
         expect(database.id).toBeDefined();
         expect(database.schemas).toBeDefined();
-        expect(database.refs).toBeDefined();
       });
 
       test('database - contains all schemas', () => {
@@ -72,7 +71,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.tableGroups.map(group => group.name)).toEqual(expect.arrayContaining(tableGroups));
       });
 
-      test('database - contains all refs', () => {
+      test('schema "public" - contains all refs', () => {
         const schema = database.schemas[0];
         expect(schema.refs).toHaveLength(6);
 
@@ -117,9 +116,10 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('all refs - contains all properties', () => {
-        database.refs.forEach((ref) => {
+        const schema = database.schemas[0];
+        schema.refs.forEach((ref) => {
           expect(ref.id).toBeDefined();
-          expect(ref.database).toBeDefined();
+          expect(ref.schema).toBeDefined();
           expect(ref.endpoints).toBeDefined();
 
           expect(ref).toHaveProperty('name');
