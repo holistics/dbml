@@ -13,6 +13,7 @@ outlines the full syntax documentations of DBML.
 - [Index Definition](#index-definition)
   - [Index Settings](#index-settings)
 - [Relationships & Foreign Key Definitions](#relationships-foreign-key-definitions)
+  - [Relationship settings](#relationship-settings)
   - [Many-to-many relationship](#many-to-many-relationship)
 - [Comments](#comments)
 - [Metadata Column Notes](#metadata-column-notes)
@@ -193,6 +194,14 @@ In DBML, there are 3 syntaxes to define relationships:
         id integer
         user_id integer [ref: > users.id]
     }
+
+### Relationship settings 
+    Ref: products.merchant_id > merchants.id [delete: cascade, update: no action]
+
+* `delete / update: cascade | restrict | set null | set default | no action`  
+Define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
+
+*Relationship settings are not supported for inline form ref.*
     
 ### Many-to-many relationship
 

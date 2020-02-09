@@ -181,7 +181,7 @@ TableBody
   }
 
 Field
-  = _ name:name sp+ type:type constrains:(sp+ constrain)* sp* field_settings:FieldSettings? sp* comment? newline {
+  = _ name:name sp+ type:type constrains:(sp+ constrain)* field_settings:(sp+ FieldSettings)? sp* comment? newline {
     const field = {
       name: name,
       type: type,
@@ -189,7 +189,9 @@ Field
       inline_refs: []
     }
     Object.assign(field, ...constrains.map(c => c[1]));
-    Object.assign(field, field_settings);
+    if (field_settings) {
+      Object.assign(field, field_settings[1]);
+    }
     return field;
   }
 
@@ -297,14 +299,17 @@ FieldSetting
   / _ v:Default _ {return {type: 'default', value: v} }
 
 Indexes
-  = _ indexes _ "{" newline first: Index rest:(sp* newline Index)* _ "}" sp* newline
+  = _ indexes _ "{" body:IndexesBody "}"
     {
-      let result= [first].concat(rest.map(el => el[2]));
-      return result;
+      return body;
     }
+    
+IndexesBody = _ index: Index+ _ {
+  return index;
+}
 
 Index
-  = index:(SingleIndexSyntax/CompositeIndexSyntax) { return index }
+  = _ index:(SingleIndexSyntax/CompositeIndexSyntax) _ { return index }
 
 SingleIndexSyntax = _ syntax:SingleIndex sp* index_settings:IndexSettings? {
   const index = {
@@ -442,8 +447,11 @@ name "valid name"
   = c:(character+) { return c.join("") }
   / quote c:[^\"\n]+ quote { return c.join("") }
 
-type "type" = c:type_name { return c }
-type_name = type_name:name args:(sp* "(" sp* expression sp* ")")? {
+type_name "valid name"
+  = c:(type_character+) { return c.join("") }
+  / quote c:[^\"\n]+ quote { return c.join("") }
+
+type "type" = type_name:type_name args:(sp* "(" sp* expression sp* ")")? {
   args = args ? args[3] : null;
 
 	if (type_name.toLowerCase() !== 'enum') {
@@ -469,6 +477,7 @@ exprChar = [\',.a-z0-9_+-\`]i
     / tab
 exprCharNoCommaSpace = [\'.a-z0-9_+-]i
 allowed_chars = (! ('{'/ '}'/ whitespace_quote)) . {return text()}
+type_character = character / [\[\]]
 character "letter, number or underscore" = [a-z0-9_]i
 
 hex_char = c:[0-9a-fA-F] {return c.toLowerCase()}

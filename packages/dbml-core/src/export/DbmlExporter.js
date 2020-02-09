@@ -205,7 +205,7 @@ class DbmlExporter {
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
 
-      if (foreignEndpoint === '1') line += '- ';
+      if (foreignEndpoint.relation === '1') line += '- ';
       else line += '< ';
       line += `${shouldPrintSchema(foreignEndpointSchema, model)
         ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}"."${foreignEndpointField.name}"`;
