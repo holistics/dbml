@@ -15,6 +15,13 @@ describe('@dbml/core - model_structure', () => {
       test('database - contains all properties', () => {
         expect(database.id).toBeDefined();
         expect(database.schemas).toBeDefined();
+        expect(database.note).toBeDefined();
+        expect(database.databaseType).toBeDefined();
+      });
+
+      test('database - check properties', () => {
+        expect(database.note).toEqual('# Introduction\nThis is an ecommerce project\n\n# Description\n...');
+        expect(database.databaseType).toEqual('PostgreSQL');
       });
 
       test('database - contains all schemas', () => {
@@ -353,7 +360,17 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('database - contains all properties', () => {
-        expect(getEle('database', '1')).toBeDefined();
+        const database = getEle('database', '1');
+        expect(database.id).toBeDefined();
+        expect(database.schemaIds).toBeDefined();
+        expect(database.note).toBeDefined();
+        expect(database.databaseType).toBeDefined();
+      });
+
+      test('database - check properties', () => {
+        const database = getEle('database', '1');
+        expect(database.note).toEqual('# Introduction\nThis is an ecommerce project\n\n# Description\n...');
+        expect(database.databaseType).toEqual('PostgreSQL');
       });
 
       test('database - contains all schemas', () => {

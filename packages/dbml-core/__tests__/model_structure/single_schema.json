@@ -1221,5 +1221,14 @@
         }
       }
     }
-  ]
+  ],
+  "project": {
+    "name": "ecommerce",
+    "tables": [],
+    "refs": [],
+    "enums": [],
+    "tableGroups": [],
+    "note": "# Introduction\nThis is an ecommerce project\n\n# Description\n...",
+    "database_type": "PostgreSQL"
+  }
 }

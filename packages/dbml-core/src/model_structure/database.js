@@ -9,12 +9,14 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 import DbState from './dbState';
 
 class Database extends Element {
-  constructor ({ schemas = [], tables = [], enums = [], refs = [], tableGroups = [] }) {
+  constructor ({ schemas = [], tables = [], enums = [], refs = [], tableGroups = [], project = {} }) {
     super();
     this.dbState = new DbState();
     this.generateId();
     this.hasDefaultSchema = false;
     this.schemas = [];
+    this.note = project.note
+    this.databaseType = project.database_type
 
     // The process order is important. Do not change !
     this.processSchemas(schemas);
@@ -140,6 +142,8 @@ class Database extends Element {
   shallowExport () {
     return {
       hasDefaultSchema: this.hasDefaultSchema,
+      note: this.note,
+      databaseType: this.databaseType
     };
   }
 

@@ -4,8 +4,10 @@
     tables: [],
     refs: [],
     enums: [],
-    tableGroups: []
+    tableGroups: [],
+    project: {},
   };
+  let projectCnt = 0;
 }
 
 rules
@@ -18,7 +20,107 @@ expr
   / r:RefSyntax { data.refs.push(r) }
   / e:EnumSyntax { data.enums.push(e) }
   / tg:TableGroupSyntax { data.tableGroups.push(tg) }
+  / p: ProjectSyntax {
+    projectCnt += 1;
+    if (projectCnt > 1) {
+      error('Project is already defined');
+    }
+    data.project = p;
+    data.tables = data.tables.concat(p.tables);
+    data.refs = data.refs.concat(p.refs);
+    data.enums = data.enums.concat(p.enums);
+    data.tableGroups = data.tableGroups.concat(p.tableGroups);
+  }
   / __
+
+ProjectSyntax 
+  = project name:(__ name)? _ "{" _ body:ProjectBody _ "}" {
+    return {
+      name: name ? name[1] : null,
+      ...body
+    }
+  }
+
+ProjectBody
+  = _ elements: ProjectElement* _ {
+    const tables = [];
+    const refs = [];
+    const enums = [];
+    const tableGroups = [];
+    let note = null;
+    const projectFields = {};
+
+    elements.forEach(ele => {
+      if (ele.type === 'table') {
+        tables.push(ele.value);
+      } else if (ele.type === 'ref') {
+        refs.push(ele.value);
+      } else if (ele.type === 'enum') {
+        enums.push(ele.value);
+      } else if (ele.type === 'table_group') {
+        tableGroups.push(ele.value);
+      } else if (ele.type === 'note') {
+        note = ele.value;
+      } else {
+        projectFields[ele.value.name] = ele.value.value;
+      }
+    });
+
+    return {
+      tables,
+      refs,
+      enums,
+      tableGroups,
+      note,
+      ...projectFields
+    }
+  }
+
+ProjectElement
+  = _ note: ObjectNoteElement _ {
+    return {
+      type: 'note',
+      value: note
+    }
+  }
+  / _ t: TableSyntax _ {
+    return {
+      type: 'table',
+      value: t
+    }
+  }
+  / _ r: RefSyntax _ {
+    return {
+      type: 'ref',
+      value: r
+    }
+  }
+  / _ e: EnumSyntax _ {
+    return {
+      type: 'enum',
+      value: e
+    }
+  }
+  / tg: TableGroupSyntax _ {
+    return {
+      type: 'table_group',
+      value: tg
+    }
+  }
+  / _ element: ProjectField _ {
+    return {
+      type: 'element',
+      value: element
+    }
+  }
+
+ProjectField
+  = name:name _ ":" _ value: StringLiteral {
+    return {
+      name,
+      value: value.value
+    }
+  }
 
 TableGroupSyntax = table_group sp+ name:name _ "{" _ body:table_group_body _ "}" {
   return {
@@ -41,7 +143,7 @@ RefSyntax
 ref_long
   = ref name:(__ name)? _ "{" _ body:ref_body _ "}" {
       const ref = {
-        name: name? name[2] : null,
+        name: name? name[1] : null,
         endpoints: body.endpoints,
         token: location()
       };
@@ -187,7 +289,7 @@ TableBody
     return {
       fields,
       indexes,
-      note: note ? note.value : undefined
+      note: note ? note.value : null
     }
   }
 
@@ -452,6 +554,7 @@ constrain
   / pk
 
 // Keywords
+project "project" = "project"i
 table "table" = "table"i
 as = "as"i
 ref "references" = "ref"i
