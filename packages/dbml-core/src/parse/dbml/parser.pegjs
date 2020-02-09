@@ -137,25 +137,38 @@ TableSyntax
           data.refs.push(ref);
         })
       });
-      return {
+
+      let res = {
         name: name,
         alias: alias,
         fields: fields,
         token: location(),
         indexes: indexes,
-        ...table_settings
-      };
+        ...table_settings,
+      }
+      if (body.note) {
+        res = {
+          ...res,
+          note: body.note
+        }
+      }
+      return res;
     }
 
 TableBody
-  = _ fields: Field + _ indexes:(Indexes)? _ {
+  = _ fields: Field+ _ elements: TableElement* _ {
+    // concat all indexes
+    const indexes = _.flatMap(elements.filter(ele => ele.type === 'indexes'), (ele => ele.value));
+    // pick the last note
+    const note = elements.slice().reverse().find(ele => ele.type === 'note');
+
     // process field for composite primary key:
     const primaryKeyList = [];
     fields.forEach(field => {
       if (field.pk) {
         primaryKeyList.push(field);
       }
-    })
+    });
     if (primaryKeyList.length > 1) {
       const columns = primaryKeyList.map(field => ({
         value: field.name,
@@ -164,12 +177,9 @@ TableBody
       // remove property `pk` for each field in this list
       primaryKeyList.forEach(field => delete field.pk);
 
-      if (!Array.isArray(indexes)) {
-        indexes = [];
-      }
       indexes.push({
         columns: columns,
-        token: _.head(primaryKeyList).tokens,
+        token: _.head(primaryKeyList).token,
         pk: true
       })
     }
@@ -177,6 +187,21 @@ TableBody
     return {
       fields,
       indexes,
+      note: note ? note.value : undefined
+    }
+  }
+
+TableElement
+  = _ indexes: Indexes _ {
+    return {
+      type: 'indexes',
+      value: indexes
+    }
+  }
+  / _ note: ObjectNoteElement _ {
+    return {
+      type: 'note',
+      value: note
     }
   }
 
@@ -382,6 +407,9 @@ IndexSetting
   / _ v:IndexType _ { return { type: 'type', value: v } }
 IndexName
   = "name:"i _ val:StringLiteral { return val.value }
+ObjectNoteElement
+  = note: ObjectNote { return note }
+  / "note"i _ "{" _ val:StringLiteral _ "}" { return val.value }
 ObjectNote
   = "note:"i _ val:StringLiteral { return val.value }
 IndexType
@@ -497,9 +525,7 @@ sp = " "
 Comma = ","
 sharp = "#" {return "#"}
 
-
 // Copied from https://github.com/pegjs/pegjs/issues/292
-
 StringLiteral "string"
   = '"' chars:DoubleStringCharacter* '"' {
       return { value: chars.join(''), type: 'string' } ;
