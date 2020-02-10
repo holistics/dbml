@@ -729,9 +729,9 @@ function peg$parse(input, options) {
       peg$c211 = peg$literalExpectation("'''", false),
       peg$c212 = function(chars) {
               let str = chars.join('');
-              str = str.replace(/\\[\n|\r\n]?/g, '');
+              str = str.replace(/\\(?:\n|\r\n)?/g, '');
 
-              let lines = str.split(/[\n|\r\n]/);
+              let lines = str.split(/\n|\r\n?/);
 
               const leadingSpaces = (str) => {
                 let i = 0;

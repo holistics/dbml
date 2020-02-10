@@ -635,9 +635,9 @@ StringLiteral "string"
     }
     / "'''" chars: MultiLineStringCharacter* "'''" {
         let str = chars.join('');
-        str = str.replace(/\\[\n|\r\n]?/g, '');
+        str = str.replace(/\\(?:\n|\r\n)?/g, '');
 
-        let lines = str.split(/[\n|\r\n]/);
+        let lines = str.split(/\n|\r\n?/);
 
         const leadingSpaces = (str) => {
           let i = 0;
