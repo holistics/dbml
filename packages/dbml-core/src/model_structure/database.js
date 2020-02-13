@@ -15,8 +15,9 @@ class Database extends Element {
     this.generateId();
     this.hasDefaultSchema = false;
     this.schemas = [];
-    this.note = project.note
-    this.databaseType = project.database_type
+    this.note = project.note;
+    this.databaseType = project.database_type;
+    this.name = project.name;
 
     // The process order is important. Do not change !
     this.processSchemas(schemas);
@@ -143,7 +144,8 @@ class Database extends Element {
     return {
       hasDefaultSchema: this.hasDefaultSchema,
       note: this.note,
-      databaseType: this.databaseType
+      databaseType: this.databaseType,
+      name: this.name
     };
   }
 

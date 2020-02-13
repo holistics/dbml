@@ -22,6 +22,7 @@ describe('@dbml/core - model_structure', () => {
       test('database - check properties', () => {
         expect(database.note).toEqual('# Introduction\nThis is an ecommerce project\n\n# Description\n...');
         expect(database.databaseType).toEqual('PostgreSQL');
+        expect(database.name).toEqual('ecommerce');
       });
 
       test('database - contains all schemas', () => {
@@ -371,6 +372,7 @@ describe('@dbml/core - model_structure', () => {
         const database = getEle('database', '1');
         expect(database.note).toEqual('# Introduction\nThis is an ecommerce project\n\n# Description\n...');
         expect(database.databaseType).toEqual('PostgreSQL');
+        expect(database.name).toEqual('ecommerce');
       });
 
       test('database - contains all schemas', () => {
