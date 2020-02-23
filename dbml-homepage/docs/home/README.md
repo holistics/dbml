@@ -86,3 +86,4 @@ DBML is created and maintained by [Holistics](https://holistics.io?utm_source=db
 
 * [Emacs Mode for DBML by ccod](https://github.com/ccod/dbd-mode)
 * [Vim Plugin for DBML by jidn](https://github.com/jidn/vim-dbml)
+* [VSCode Plugin for DBML by duynvu](https://marketplace.visualstudio.com/items?itemName=duynvu.dbml-language)
