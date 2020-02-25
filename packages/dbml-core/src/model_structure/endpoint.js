@@ -15,7 +15,7 @@ class Endpoint extends Element {
     this.generateId();
     // Use name of schema,table and field object
     // Name in constructor could be alias
-    const schema = ref.schema.database.findSchema(schemaName || DEFAULT_SCHEMA_NAME);
+    const schema = ref.schema.database.findOrCreateSchema(schemaName || DEFAULT_SCHEMA_NAME);
 
     const table = schema.findTable(tableName);
     if (!table) {

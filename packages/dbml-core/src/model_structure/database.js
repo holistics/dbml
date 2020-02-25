@@ -5,7 +5,7 @@ import Enum from './enum';
 import TableGroup from './tableGroup';
 import Table from './table';
 import Element from './element';
-import { DEFAULT_SCHEMA_NAME } from './config';
+import { DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, TAG } from './config';
 import DbState from './dbState';
 import Tag from './tag';
 
@@ -22,11 +22,12 @@ class Database extends Element {
 
     // The process order is important. Do not change !
     this.processSchemas(schemas);
-    this.processTables(tables);
-    this.processTags(tags);
-    this.processRefs(refs);
-    this.processEnums(enums);
-    this.processTableGroups(tableGroups);
+    this.processSchemaElements(tables, TABLE);
+    this.processSchemaElements(tags, TAG);
+    this.bindTagToTable()
+    this.processSchemaElements(refs, REF);
+    this.processSchemaElements(enums, ENUM);
+    this.processSchemaElements(tableGroups, TABLE_GROUP);
   }
 
   generateId () {
@@ -50,37 +51,44 @@ class Database extends Element {
     }
   }
 
-  processTables (rawTables) {
+  processSchemaElements (elements, elementType) {
     let schema;
 
-    rawTables.forEach((table) => {
-      if (table.schemaName) {
-        schema = this.findSchema(table.schemaName);
-        if (table.schemaName === DEFAULT_SCHEMA_NAME) {
+    elements.forEach((element) => {
+      if (element.schemaName) {
+        schema = this.findOrCreateSchema(element.schemaName);
+        if (element.schemaName === DEFAULT_SCHEMA_NAME) {
           this.hasDefaultSchema = true;
         }
       } else {
-        schema = this.findSchema(DEFAULT_SCHEMA_NAME);
+        schema = this.findOrCreateSchema(DEFAULT_SCHEMA_NAME);
       }
-      schema.pushTable(new Table({ ...table, schema }));
-    });
-  }
 
-  processTags (rawTags) {
-    let schema;
-    rawTags.forEach((tag) => {
-      if (tag.schemaName) {
-        schema = this.findSchema(tag.schemaName);
-        if (tag.schemaName === DEFAULT_SCHEMA_NAME) {
-          this.hasDefaultSchema = true;
-        }
-      } else {
-        schema = this.findSchema(DEFAULT_SCHEMA_NAME);
+      switch (elementType) {
+        case TABLE:
+          schema.pushTable(new Table({ ...element, schema }));
+          break;
+
+        case ENUM:
+          schema.pushEnum(new Enum({ ...element, schema }));
+          break;
+
+        case TABLE_GROUP:
+          schema.pushTableGroup(new TableGroup({ ...element, schema }));
+          break;
+
+        case REF:
+          schema.pushRef(new Ref({ ...element, schema }));
+          break;
+
+        case TAG:
+          schema.pushTag(new Tag({ ...element, schema }));
+          break;
+
+        default:
+          break;
       }
-      schema.pushTag(new Tag({ ...tag, schema }));
     });
-
-    this.bindTagToTable();
   }
 
   bindTagToTable () {
@@ -107,7 +115,7 @@ class Database extends Element {
     });
   }
 
-  findSchema (schemaName) {
+  findOrCreateSchema (schemaName) {
     let schema = this.schemas.find(s => s.name === schemaName || s.alias === schemaName);
     // create new schema if schema not found
     if (!schema) {
@@ -123,54 +131,8 @@ class Database extends Element {
     return schema;
   }
 
-  processRefs (rawRefs) {
-    let schema;
-
-    rawRefs.forEach((ref) => {
-      if (ref.schemaName) {
-        schema = this.findSchema(ref.schemaName);
-        if (ref.schemaName === DEFAULT_SCHEMA_NAME) {
-          this.hasDefaultSchema = true;
-        }
-      } else {
-        schema = this.findSchema(DEFAULT_SCHEMA_NAME);
-      }
-      schema.pushRef(new Ref({ ...ref, schema }));
-    });
-  }
-
-  processEnums (rawEnums) {
-    let schema;
-    rawEnums.forEach((_enum) => {
-      if (_enum.schemaName) {
-        schema = this.findSchema(_enum.schemaName);
-        if (_enum.schemaName === DEFAULT_SCHEMA_NAME) {
-          this.hasDefaultSchema = true;
-        }
-      } else {
-        schema = this.findSchema(DEFAULT_SCHEMA_NAME);
-      }
-      schema.pushEnum(new Enum({ ..._enum, schema }));
-    });
-  }
-
-  processTableGroups (rawTableGroups) {
-    let schema;
-    rawTableGroups.forEach((tableGroup) => {
-      if (tableGroup.schemaName) {
-        schema = this.findSchema(tableGroup.schemaName);
-        if (tableGroup.schemaName === DEFAULT_SCHEMA_NAME) {
-          this.hasDefaultSchema = true;
-        }
-      } else {
-        schema = this.findSchema(DEFAULT_SCHEMA_NAME);
-      }
-      schema.pushTableGroup(new TableGroup({ ...tableGroup, schema }));
-    });
-  }
-
   findTable (rawTable) {
-    const schema = this.findSchema(rawTable.schemaName || DEFAULT_SCHEMA_NAME);
+    const schema = this.findOrCreateSchema(rawTable.schemaName || DEFAULT_SCHEMA_NAME);
     if (!schema) {
       this.error(`Schema ${rawTable.schemaName || DEFAULT_SCHEMA_NAME} don't exist`);
     }
@@ -188,7 +150,7 @@ class Database extends Element {
       hasDefaultSchema: this.hasDefaultSchema,
       note: this.note,
       databaseType: this.databaseType,
-      name: this.name
+      name: this.name,
     };
   }
 
