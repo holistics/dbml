@@ -98,9 +98,13 @@ class Schema extends Element {
   }
 
   checkTag (tag) {
-    if(this.tags.some(t => t.name === tag.name)) {
+    if (this.tags.some(t => t.name === tag.name)) {
       tag.error(`Tag ${tag.name} has already existed`);
     }
+  }
+
+  findTag (tagName) {
+    return this.tags.find(tag => tag.name === tagName);
   }
 
   processRefs (rawRefs) {

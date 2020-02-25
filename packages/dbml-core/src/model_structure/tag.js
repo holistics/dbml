@@ -36,7 +36,7 @@ class Tag extends Element {
 
   exportChildIds () {
     return {
-      table_ids: this.tables.map(table => table.id),
+      tableIds: this.tables.map(table => table.id),
     }
   }
 

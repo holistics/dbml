@@ -347,6 +347,39 @@ describe('@dbml/core - model_structure', () => {
         expect(table.schema.name).toEqual(DEFAULT_SCHEMA_NAME);
         expect(table.group.name).toEqual('g1');
       });
+
+      test('schemal "public" - contains all pre-defined tags', () => {
+        const schema = database.schemas[0];
+        const tags= ['invoice', 'v1.0'];
+        expect(schema.tags.map((tag) => tag.name)).toEqual(expect.arrayContaining(tags));
+      })
+
+      test('all pre-defined tags - contains all properties', () => {
+        const schema = database.schemas[0];
+        schema.tags.forEach((tag) => {
+          expect(tag.id).toBeDefined();
+          expect(tag.name).toBeDefined();
+
+          expect(tag).toHaveProperty('note');
+        });
+      });
+
+      test('tag "invoice" - check properties', () => {
+        const tag = database.schemas[0].findTag('invoice');
+        expect(tag).toBeDefined();
+
+        expect(tag.id).toBe(1);
+        expect(tag.name).toBe('invoice');
+        expect(tag.note).toBe('Invoice information');
+      });
+
+      test('table "orders" - contains tag "invoice"', () => {
+        const table = database.schemas[0].findTable('orders');
+        const tag = table.tags.find(tag => tag.name === 'invoice');
+        
+        expect(tag).toBeDefined();
+        expect(tag.name).toBe('invoice');
+      });
     });
 
     describe('normalized_structure', () => {
@@ -459,6 +492,16 @@ describe('@dbml/core - model_structure', () => {
           }),
         ]));
       });
+      
+      test('schema "public" - contain all tags', () => {
+        const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
+
+        expect(schema.tagIds).toHaveLength(4);
+
+        const tags = ["v1.0", "invoice", "location", "invoice_item"];
+
+        expect(schema.tagIds.map((tagId) => getEle('tags', tagId).name)).toEqual(expect.arrayContaining(tags));
+      });
 
       test('schema "public" - contains all parent references', () => {
         const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
@@ -551,7 +594,7 @@ describe('@dbml/core - model_structure', () => {
         expect(table.alias).toEqual('U');
       });
 
-      test('table "users - contains all fields', () => {
+      test('table "users" - contains all fields', () => {
         const tableId = Object.keys(normalizedModel.tables).find((key) => getEle('tables', key).name === 'users');
         const table = getEle('tables', tableId);
 
@@ -604,7 +647,7 @@ describe('@dbml/core - model_structure', () => {
         ]));
       });
 
-      test('table "users - contains all indexes', () => {
+      test('table "users" - contains all indexes', () => {
         const tableId = Object.keys(normalizedModel.tables).find((key) => getEle('tables', key).name === 'users');
         const table = getEle('tables', tableId);
 
@@ -655,6 +698,34 @@ describe('@dbml/core - model_structure', () => {
 
         expect(getEle('schemas', table.schemaId).name).toEqual(DEFAULT_SCHEMA_NAME);
         expect(getEle('tableGroups', table.groupId).name).toEqual('g1');
+      });
+
+      test('table "order_items" - contains all tags', () => {
+        const tableId = Object.keys(normalizedModel.tables).find((key) => getEle('tables', key).name === 'order_items');
+        const table = getEle('tables', tableId);
+
+        const tags = table.tagIds.map((tagId) => ({
+          name: getEle('tags', tagId).name,
+          note: getEle('tags', tagId).note,
+        }));
+
+        expect(tags).toEqual(expect.arrayContaining([{
+          name: 'invoice',
+          note: 'Invoice information'
+        }, {
+          name: 'invoice_item',
+          note: null
+        }]));
+      });
+
+      test('tag "invoice" - contains all child reference', () => {
+        const tagId = Object.keys(normalizedModel.tags).find((key) => getEle('tags', key).name === 'invoice');
+        const tag = getEle('tags', tagId);
+        expect(tag.tableIds).toHaveLength(2);
+
+        const tables = tag.tableIds.map((tableId) => getEle('tables', tableId).name);
+
+        expect(tables).toEqual(expect.arrayContaining(['orders', 'order_items']));
       });
     });
   });

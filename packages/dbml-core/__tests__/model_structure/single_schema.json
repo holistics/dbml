@@ -157,6 +157,24 @@
           "name": "time index"
         }
       ],
+      "tags": [
+        {
+          "name": "v1.0",
+          "note": null,
+          "token": {
+            "start": {
+              "offset": 454,
+              "line": 26,
+              "column": 3
+            },
+            "end": {
+              "offset": 470,
+              "line": 27,
+              "column": 1
+            }
+          }
+        }
+      ],
       "headerColor": null
     },
     {
@@ -313,6 +331,7 @@
           "pk": true
         }
       ],
+      "tags": [],
       "headerColor": null
     },
     {
@@ -394,6 +413,24 @@
         }
       },
       "indexes": [],
+      "tags": [
+        {
+          "name": "location",
+          "note": null,
+          "token": {
+            "start": {
+              "offset": 741,
+              "line": 46,
+              "column": 3
+            },
+            "end": {
+              "offset": 759,
+              "line": 47,
+              "column": 1
+            }
+          }
+        }
+      ],
       "headerColor": null
     },
     {
@@ -496,6 +533,40 @@
         }
       },
       "indexes": [],
+      "tags": [
+        {
+          "name": "invoice",
+          "note": null,
+          "token": {
+            "start": {
+              "offset": 853,
+              "line": 54,
+              "column": 3
+            },
+            "end": {
+              "offset": 870,
+              "line": 55,
+              "column": 1
+            }
+          }
+        },
+        {
+          "name": "invoice_item",
+          "note": null,
+          "token": {
+            "start": {
+              "offset": 875,
+              "line": 57,
+              "column": 3
+            },
+            "end": {
+              "offset": 905,
+              "line": 58,
+              "column": 1
+            }
+          }
+        }
+      ],
       "headerColor": null
     },
     {
@@ -600,6 +671,24 @@
         }
       },
       "indexes": [],
+      "tags": [
+        {
+          "name": "invoice",
+          "note": null,
+          "token": {
+            "start": {
+              "offset": 1015,
+              "line": 63,
+              "column": 3
+            },
+            "end": {
+              "offset": 1032,
+              "line": 64,
+              "column": 1
+            }
+          }
+        }
+      ],
       "headerColor": null
     },
     {
@@ -818,6 +907,7 @@
           "type": "hash"
         }
       ],
+      "tags": [],
       "headerColor": null
     }
   ],
@@ -1217,6 +1307,56 @@
         "end": {
           "offset": 468,
           "line": 27,
+          "column": 2
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "invoice",
+      "note": "Invoice information",
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 45,
+          "line": 3,
+          "column": 2
+        }
+      }
+    },
+    {
+      "name": "v1.0",
+      "note": "version 1.0",
+      "token": {
+        "start": {
+          "offset": 47,
+          "line": 5,
+          "column": 1
+        },
+        "end": {
+          "offset": 83,
+          "line": 7,
+          "column": 2
+        }
+      }
+    },
+    {
+      "name": "invoice_item",
+      "note": null,
+      "token": {
+        "start": {
+          "offset": 85,
+          "line": 9,
+          "column": 1
+        },
+        "end": {
+          "offset": 105,
+          "line": 10,
           "column": 2
         }
       }

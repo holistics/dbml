@@ -1,0 +1,4 @@
+table user {
+  id int pk
+  tags { "v1.0" init }
+}

@@ -1,0 +1,17 @@
+tag "v1.0" {
+  note: "note 1"
+}
+
+tag "v2.0" {
+  note: "note 2"
+}
+
+table user {
+  int id pk
+  tags { "v1.0" }
+}
+
+table profile {
+  int id pk
+  tags { "v2.0" }
+}

@@ -1,0 +1,84 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "user",
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 15,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 25,
+              "line": 3,
+              "column": 1
+            }
+          },
+          "inline_refs": [],
+          "pk": true
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 49,
+          "line": 4,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "tags": [
+        {
+          "name": "v1.0",
+          "note": null,
+          "token": {
+            "start": {
+              "offset": 27,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 48,
+              "line": 4,
+              "column": 1
+            }
+          }
+        },
+        {
+          "name": "init",
+          "note": null,
+          "token": {
+            "start": {
+              "offset": 27,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 48,
+              "line": 4,
+              "column": 1
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "project": {},
+  "tags": []
+}

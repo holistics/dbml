@@ -1,0 +1,159 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "user",
+      "alias": null,
+      "fields": [
+        {
+          "name": "int",
+          "type": {
+            "type_name": "id",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 81,
+              "line": 10,
+              "column": 3
+            },
+            "end": {
+              "offset": 91,
+              "line": 11,
+              "column": 1
+            }
+          },
+          "inline_refs": [],
+          "pk": true
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 66,
+          "line": 9,
+          "column": 1
+        },
+        "end": {
+          "offset": 110,
+          "line": 12,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "tags": [
+        {
+          "name": "v1.0",
+          "note": null,
+          "token": {
+            "start": {
+              "offset": 93,
+              "line": 11,
+              "column": 3
+            },
+            "end": {
+              "offset": 109,
+              "line": 12,
+              "column": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "profile",
+      "alias": null,
+      "fields": [
+        {
+          "name": "int",
+          "type": {
+            "type_name": "id",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 130,
+              "line": 15,
+              "column": 3
+            },
+            "end": {
+              "offset": 140,
+              "line": 16,
+              "column": 1
+            }
+          },
+          "inline_refs": [],
+          "pk": true
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 112,
+          "line": 14,
+          "column": 1
+        },
+        "end": {
+          "offset": 159,
+          "line": 17,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "tags": [
+        {
+          "name": "v2.0",
+          "note": null,
+          "token": {
+            "start": {
+              "offset": 142,
+              "line": 16,
+              "column": 3
+            },
+            "end": {
+              "offset": 158,
+              "line": 17,
+              "column": 1
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "project": {},
+  "tags": [
+    {
+      "name": "v1.0",
+      "note": "note 1",
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 31,
+          "line": 3,
+          "column": 2
+        }
+      }
+    },
+    {
+      "name": "v2.0",
+      "note": "note 2",
+      "token": {
+        "start": {
+          "offset": 33,
+          "line": 5,
+          "column": 1
+        },
+        "end": {
+          "offset": 64,
+          "line": 7,
+          "column": 2
+        }
+      }
+    }
+  ]
+}

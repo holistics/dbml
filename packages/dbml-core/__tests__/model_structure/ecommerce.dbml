@@ -1,0 +1,99 @@
+Tag invoice {
+  note: "Invoice information"
+}
+
+Tag "v1.0" {
+  note: "version 1.0"
+}
+
+Tag invoice_item {
+}
+
+Enum "products_status" {
+  "out_of_stock"
+  "in_stock"
+  "running_low" [note: 'less than 20']
+}
+
+Table "users" {
+  "id" int [pk, increment, note: 'Id of user']
+  "full_name" varchar [unique]
+  "created_at" timestamp [default: `current_timestamp()`]
+  "country_code" int
+
+  Indexes {
+    (id, full_name) [pk]
+    `now()` [type: btree, unique, name: "time index"]
+  }
+
+  tags { "v1.0" }
+}
+
+Table "merchants" {
+  "id" int
+  "merchant_name" varchar
+  "country_code" int [default: null]
+  "created at" varchar
+  "admin_id" int
+
+  Indexes {
+    (id, merchant_name) [pk]
+  }
+}
+
+Table "countries" {
+  "code" int [pk]
+  "name" varchar
+  "continent_name" varchar
+
+  tags { location }
+}
+
+Table "order_items" {
+  "order_id" int
+  "product_id" int
+  "quantity" int [default: 1]
+
+  tags { invoice invoice_item }
+}
+
+Table "orders" {
+  "id" int [pk]
+  "user_id" int [unique, not null]
+  "status" varchar
+  "created_at" varchar [note: 'When order created']
+
+  tags { invoice }
+}
+
+Table "products" {
+  "id" int [pk]
+  "name" varchar
+  "merchant_id" int [not null]
+  "price" int
+  "status" products_status
+  "created_at" datetime [default: `now()`]
+
+  Indexes {
+    (merchant_id, status) [name: "product_status"]
+    id [unique]
+    (id, `getdate`) [type: hash]
+  }
+}
+
+TableGroup "g1" {
+  "users"
+  "merchants"
+}
+
+Ref:"users"."id" < "merchants"."admin_id"
+
+Ref:"countries"."code" < "users"."country_code" [update: no action, delete: cascade]
+
+Ref:"countries"."code" < "merchants"."country_code" [update: no action]
+
+Ref:"orders"."id" < "order_items"."order_id"
+
+Ref:"products"."id" < "order_items"."product_id"
+
+Ref:"merchants"."id" < "products"."merchant_id"

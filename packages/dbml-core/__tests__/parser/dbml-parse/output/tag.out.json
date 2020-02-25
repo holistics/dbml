@@ -1,0 +1,42 @@
+{
+  "schemas": [],
+  "tables": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "project": {},
+  "tags": [
+    {
+      "name": "v1.0",
+      "note": "note 1",
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 31,
+          "line": 3,
+          "column": 2
+        }
+      }
+    },
+    {
+      "name": "v2.0",
+      "note": "note 2",
+      "token": {
+        "start": {
+          "offset": 33,
+          "line": 5,
+          "column": 1
+        },
+        "end": {
+          "offset": 64,
+          "line": 7,
+          "column": 2
+        }
+      }
+    }
+  ]
+}
