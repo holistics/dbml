@@ -11,6 +11,7 @@ export default class DbState {
     this.indexId = 1;
     this.fieldId = 1;
     this.indexColumnId = 1;
+    this.tagId = 1;
   }
 
   generateId (el) {

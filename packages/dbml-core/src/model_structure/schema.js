@@ -5,11 +5,13 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
 import TableGroup from './tableGroup';
 import Ref from './ref';
+import Tag from './tag';
 
 class Schema extends Element {
-  constructor ({ name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {} } = {}) {
+  constructor ({ name, alias, note, tables = [], refs = [], enums = [], tags = [], tableGroups = [], token, database = {} } = {}) {
     super(token);
     this.tables = [];
+    this.tags = [];
     this.enums = [];
     this.tableGroups = [];
     this.refs = [];
@@ -21,6 +23,7 @@ class Schema extends Element {
     this.generateId();
 
     this.processTables(tables);
+    this.processTags(tags);
     this.processEnums(enums);
     this.processRefs(refs);
     this.processTableGroups(tableGroups);
@@ -83,6 +86,23 @@ class Schema extends Element {
     });
   }
 
+  processTags (rawTags) {
+    rawTags.forEach((tag) => {
+      this.pushTag(new Tag({ ...tag, schema: this}));
+    });
+  }
+
+  pushTag (tag) {
+    this.checkTag(tag);
+    this.tags.push(tag);
+  }
+
+  checkTag (tag) {
+    if(this.tags.some(t => t.name === tag.name)) {
+      tag.error(`Tag ${tag.name} has already existed`);
+    }
+  }
+
   processRefs (rawRefs) {
     rawRefs.forEach((ref) => {
       this.pushRef(new Ref({ ...ref, schema: this }));
@@ -137,6 +157,7 @@ class Schema extends Element {
       enums: this.enums.map(e => e.export()),
       tableGroups: this.tableGroups.map(tg => tg.export()),
       refs: this.refs.map(r => r.export()),
+      tags: this.tags.map(t => t.export()),
     };
   }
 
@@ -146,6 +167,7 @@ class Schema extends Element {
       enumIds: this.enums.map(e => e.id),
       tableGroupIds: this.tableGroups.map(tg => tg.id),
       refIds: this.refs.map(r => r.id),
+      tagIds: this.tags.map(t => t.id),
     };
   }
 
@@ -178,6 +200,7 @@ class Schema extends Element {
     this.enums.forEach((_enum) => _enum.normalize(model));
     this.tableGroups.forEach((tableGroup) => tableGroup.normalize(model));
     this.refs.forEach((ref) => ref.normalize(model));
+    this.tags.forEach((tag) => tag.normalize(model));
   }
 }
 

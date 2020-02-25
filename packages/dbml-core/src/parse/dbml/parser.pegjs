@@ -6,6 +6,7 @@
     enums: [],
     tableGroups: [],
     project: {},
+    tags: []
   };
   let projectCnt = 0;
 }
@@ -31,6 +32,7 @@ expr
     data.enums = data.enums.concat(p.enums);
     data.tableGroups = data.tableGroups.concat(p.tableGroups);
   }
+  / tag: TagSyntax { data.tags.push(tag); }
   / __
 
 ProjectSyntax 
@@ -207,6 +209,31 @@ OnUpdate
 OnDelete
   = "delete:"i _ val:(no_action/restrict/cascade/set_null/set_default) { return val }
 
+TagSyntax
+  = tag sp+ name:name sp+ "{" body: TagBody "}" {
+  	return ({
+    	name,
+        note: body.note,
+        token: location()
+    });
+  }
+ 
+TagBody
+  = _ value:ObjectNote? _ {
+	return {
+    	note: value
+    }
+  }
+
+TableTags
+  = "tags"i sp+ "{" __ names:(name __)* "}" __ {
+    return names.map(name => ({
+      name: name[0],
+      note: null,
+      token: location()
+    }));
+  }
+
 // Tables
 TableSyntax
   = table sp+ name:name alias:alias_def? sp* table_settings:TableSettings? sp* "{" body:TableBody "}" {
@@ -254,6 +281,13 @@ TableSyntax
           note: body.note
         }
       }
+      if(body.tags) {
+        res = {
+          ...res,
+          tags: body.tags
+        }
+      }
+
       return res;
     }
 
@@ -261,6 +295,7 @@ TableBody
   = _ fields: Field+ _ elements: TableElement* _ {
     // concat all indexes
     const indexes = _.flatMap(elements.filter(ele => ele.type === 'indexes'), (ele => ele.value));
+    const tags = _.flatMap(elements.filter(ele => ele.type === 'tags'), (ele => ele.value));
     // pick the last note
     const note = elements.slice().reverse().find(ele => ele.type === 'note');
 
@@ -289,6 +324,7 @@ TableBody
     return {
       fields,
       indexes,
+      tags,
       note: note ? note.value : null
     }
   }
@@ -304,6 +340,12 @@ TableElement
     return {
       type: 'note',
       value: note
+    }
+  }
+  / _ tags:TableTags _ {
+    return {
+      type: 'tags',
+      value: tags
     }
   }
 
@@ -571,6 +613,8 @@ restrict "restrict" = "restrict"i
 cascade "cascade" = "cascade"i
 set_null "set null" = "set null"i
 set_default "set default" = "set default"i
+tags "tags" = "tags"i
+tag "tag" = "tag"i
 
 // Commonly used tokens
 relation ">, - or <" = [>\-<]

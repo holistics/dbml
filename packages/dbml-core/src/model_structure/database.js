@@ -7,9 +7,10 @@ import Table from './table';
 import Element from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import DbState from './dbState';
+import Tag from './tag';
 
 class Database extends Element {
-  constructor ({ schemas = [], tables = [], enums = [], refs = [], tableGroups = [], project = {} }) {
+  constructor ({ schemas = [], tables = [], enums = [], refs = [], tableGroups = [], tags = [], project = {} }) {
     super();
     this.dbState = new DbState();
     this.generateId();
@@ -22,6 +23,7 @@ class Database extends Element {
     // The process order is important. Do not change !
     this.processSchemas(schemas);
     this.processTables(tables);
+    this.processTags(tags);
     this.processRefs(refs);
     this.processEnums(enums);
     this.processTableGroups(tableGroups);
@@ -61,6 +63,47 @@ class Database extends Element {
         schema = this.findSchema(DEFAULT_SCHEMA_NAME);
       }
       schema.pushTable(new Table({ ...table, schema }));
+    });
+  }
+
+  processTags (rawTags) {
+    let schema;
+    rawTags.forEach((tag) => {
+      if (tag.schemaName) {
+        schema = this.findSchema(tag.schemaName);
+        if (tag.schemaName === DEFAULT_SCHEMA_NAME) {
+          this.hasDefaultSchema = true;
+        }
+      } else {
+        schema = this.findSchema(DEFAULT_SCHEMA_NAME);
+      }
+      schema.pushTag(new Tag({ ...tag, schema }));
+    });
+
+    this.bindTagToTable();
+  }
+
+  bindTagToTable () {
+    this.schemas.forEach((schema) => {
+      schema.tables.forEach((table) => {
+        table.rawTags.forEach((rawTag) => {
+          let hasTag = false;
+          schema.tags.forEach((tag) => {
+            if(tag.name === rawTag.name) {
+              hasTag = true;
+              table.pushTag(tag);
+              tag.pushTable(table);
+            }
+          });
+          // create tag if tag isn't defined before
+          if (hasTag === false) {
+            const tag = new Tag({ ...rawTag, schema });
+            schema.pushTag(tag);
+            table.pushTag(tag);
+            tag.pushTable(table);
+          }
+        });
+      });
     });
   }
 
@@ -174,6 +217,7 @@ class Database extends Element {
       refs: {},
       enums: {},
       tableGroups: {},
+      tags: {},
       tables: {},
       endpoints: {},
       enumValues: {},

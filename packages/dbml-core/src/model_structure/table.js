@@ -5,7 +5,7 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
 
 class Table extends Element {
-  constructor ({ name, alias, note, fields = [], indexes = [], schema = {}, token, headerColor } = {}) {
+  constructor ({ name, alias, note, fields = [], indexes = [], schema = {}, tags = [], token, headerColor } = {}) {
     super(token);
     this.name = name;
     this.alias = alias;
@@ -13,6 +13,8 @@ class Table extends Element {
     this.headerColor = headerColor;
     this.fields = [];
     this.indexes = [];
+    this.rawTags = tags;
+    this.tags = [];
     this.schema = schema;
     this.dbState = this.schema.dbState;
     this.generateId();
@@ -79,6 +81,18 @@ class Table extends Element {
         || (this.alias && this.alias === table.alias));
   }
 
+  pushTag (tag) {
+    this.checkTag(tag);
+    this.tags.push(tag);
+  }
+
+  checkTag (tag) {
+    if (this.tags.some(t => t.name === tag.name)) {
+      this.error(`Table ${shouldPrintSchema(this.schema)
+        ? `${this.schema.name}.` : `` }${this.name} has already associated with tag "${tag.name}"`);
+    }
+  }
+
   export () {
     return {
       ...this.shallowExport(),
@@ -104,6 +118,7 @@ class Table extends Element {
     return {
       schemaId: this.schema.id,
       groupId: this.group ? this.group.id : null,
+      tagIds: this.tags.map(tag => tag.id),
     };
   }
 
