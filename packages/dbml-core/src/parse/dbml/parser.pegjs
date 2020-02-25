@@ -635,8 +635,9 @@ StringLiteral "string"
     }
     / "'''" chars: MultiLineStringCharacter* "'''" {
         let str = chars.join('');
-        str = str.replace(/(?<!\\)\\(?!\\)(?:\n|\r\n)?/g, '');
-        str = str.replace(/\\\\/, '\\');
+        // // replace line continuation using look around, but this is not compatible with firefox, safari.
+        // str = str.replace(/(?<!\\)\\(?!\\)(?:\n|\r\n)?/g, ''); 
+        // str = str.replace(/\\\\/, '\\');
 
         let lines = str.split(/\n|\r\n?/);
 
@@ -677,6 +678,12 @@ SingleStringCharacter
   / !"'" SourceCharacter { return text(); }
 MultiLineStringCharacter
  = "\\'" { return "'"; }
+ / "\\" bl:"\\"+ { // escape character \. \\n => \n. Remove one backslash in the result string.
+   return bl.join('');
+ }
+ / "\\" "\n"? { // replace line continuation
+   return ''
+ }
  / !"'''" SourceCharacter { return text(); }
 
 SourceCharacter
