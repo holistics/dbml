@@ -119,7 +119,7 @@ class Database extends Element {
       hasDefaultSchema: this.hasDefaultSchema,
       note: this.note,
       databaseType: this.databaseType,
-      name: this.name
+      name: this.name,
     };
   }
 
