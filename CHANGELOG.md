@@ -1,4 +1,4 @@
-## Unreleased (2020-02-27)
+## v2.0.0-alpha.0 (2020-02-27)
 
 #### :boom: Breaking Change
 * `dbml-core`
