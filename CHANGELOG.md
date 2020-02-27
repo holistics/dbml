@@ -15,7 +15,7 @@
 #### :bug: Bug Fix
 * [#69](https://github.com/holistics/dbml/pull/69) Fix typo in readme ([@bmitchinson](https://github.com/bmitchinson))
 
-#### Committers: 1
+#### Committers: 2
 - Ben Mitchinson ([@bmitchinson](https://github.com/bmitchinson))
 - Phuong Duy Phan ([@phuongduyphan](https://github.com/phuongduyphan))
 
