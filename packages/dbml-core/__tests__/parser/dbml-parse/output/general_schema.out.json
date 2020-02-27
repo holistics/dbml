@@ -102,7 +102,7 @@
         }
       },
       "indexes": [],
-      "headerColor": "#fff"
+      "headerColor": "#FFF"
     },
     {
       "name": "order_items",
@@ -1179,9 +1179,13 @@
   "tableGroups": [
     {
       "name": "g1",
-      "tableNames": [
-        "users",
-        "merchants"
+      "tables": [
+        {
+          "name": "users"
+        },
+        {
+          "name": "merchants"
+        }
       ],
       "token": {
         "start": {
@@ -1198,9 +1202,13 @@
     },
     {
       "name": "g2",
-      "tableNames": [
-        "countries",
-        "orders"
+      "tables": [
+        {
+          "name": "countries"
+        },
+        {
+          "name": "orders"
+        }
       ],
       "token": {
         "start": {

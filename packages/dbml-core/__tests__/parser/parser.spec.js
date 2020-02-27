@@ -2,8 +2,6 @@ import Parser from '../../src/parse/Parser';
 
 describe('@dbml/core', () => {
   describe('parser', () => {
-    const parser = new Parser();
-
     /**
      * @param {string} format = [json|mysql|postgres|dbml|schemarb]
      */
@@ -12,7 +10,7 @@ describe('@dbml/core', () => {
       const fileExtension = getFileExtension(format);
       const input = require(`./${testDir}/input/${fileName}.in.${fileExtension}`);
       const output = require(`./${testDir}/output/${fileName}.out.json`);
-      const jsonSchema = parser[parseFuncName](input);
+      const jsonSchema = Parser[parseFuncName](input, format);
       
       isEqualExcludeTokenEmpty(jsonSchema, output);
       /* eslint-enable */
