@@ -1,4 +1,4 @@
-import ModelExporter from './export/ModelExporter';
+import SchemaExporter from './export/SchemaExporter';
 import Parser from './parse/Parser';
 import importer from './import';
 import exporter from './export';
@@ -6,6 +6,6 @@ import exporter from './export';
 export {
   importer,
   exporter,
-  ModelExporter,
+  SchemaExporter,
   Parser,
 };

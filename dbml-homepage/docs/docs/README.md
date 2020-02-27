@@ -3,10 +3,9 @@
 DBML (database markup language) is a simple, readable DSL language designed to define database structures. This page
 outlines the full syntax documentations of DBML.
 
-- [Project Definition](#project-definition)
 - [Table Definition](#table-definition)
   - [Table Alias](#table-alias)
-  - [Table Notes](#table-notes)
+  - [Table Notes](#table-notes-coming-soon) (coming soon)
   - [Table Settings](#table-settings)
 - [Column Definition](#column-definition)
   - [Column Settings](#column-settings)
@@ -17,11 +16,7 @@ outlines the full syntax documentations of DBML.
   - [Relationship settings](#relationship-settings)
   - [Many-to-many relationship](#many-to-many-relationship)
 - [Comments](#comments)
-- [Note Definition](#note-definition)
-  - [Project Notes](#project-notes)
-  - [Table Notes](#table-notes)
-  - [Column Notes](#column-notes)
-- [Multi-line String](#multi-line-string)
+- [Metadata Column Notes](#metadata-column-notes)
 - [Enum Definition](#enum-definition)
 - [TableGroup](#tablegroup-coming-soon) (coming soon)
 - [Syntax Consistency](#syntax-consistency)
@@ -45,14 +40,6 @@ outlines the full syntax documentations of DBML.
     }
 
     Ref: posts.user_id > users.id // many-to-one
-
-## Project Definition
-You can give overall description of the project.
-
-    Project project_name {
-      database_type: 'PostgreSQL'
-      Note: 'Description of the project'
-    }
 
 ## Table Definition
     
@@ -78,14 +65,14 @@ You can alias the table, and use them in the references later on.
     
     Ref: U.id < posts.user_id
     
-### Table Notes
+### Table Notes (coming soon)
 You can add notes to the table, and refer to them in the visual plane.
     
     Table users {
         id integer
         status varchar [note: 'status']
     
-        Note: 'Stores user data'
+        [note: 'Contains all users information']
     }
 
 ### Table Settings
@@ -93,9 +80,9 @@ Settings are all defined within square brackets: `[setting1: value1, setting2: v
 
 Each setting item can take in 2 forms: `Key: Value` or `keyword`, similar to that of Python function parameters.
 
-- `headercolor: <color_code>`: change the table header color (coming soon)
+- `color: <color_code>`: change the table header color (coming soon)
 
-    Example, `[headercolor: #3498db]`
+    Example, `[color: #3498db]`
 
 ## Column Definition
 
@@ -226,46 +213,8 @@ You can comment in your code using `//`, so it is easier for you to review the c
 Example,
 
     // order_items refer to items from that order
-
-## Note Definition
-Note allows users to give description for a particular DBML element.
-
-    Table users {
-      id int [pk]
-      name varchar
-
-      Note: 'This is a note of this table'
-      // or
-      Note {
-        'This is a note of this table'
-      }
-    }
-
-Note's value is a string. If your note spans over multiple lines, you can use [multi-line string](#multi-line-string) to define your note.
-
-### Project Notes
-    Project DBML {
-      Note: '''
-        # DBML - Database Markup Language
-        DBML (database markup language) is a simple, readable DSL language designed to define database structures.
-
-        ## Benefits
-        
-        * It is simple, flexible and highly human-readable
-        * It is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
-        * Comes with a free, simple database visualiser at [dbdiagram.io](http://dbdiagram.io)
-      '''
-    }
-
-### Table Notes
-    Table users {
-      id int [pk]
-      name varchar
-
-      Note: 'Stores user data'
-    }
-
-### Column Notes
+    
+## Metadata Column Notes
 You can add notes to your columns, so you can easily refer to it when hovering over the column in the diagram canvas.
 
     column_name column_type [note: 'replace text here']
@@ -281,24 +230,6 @@ Example,
         😔 4 = refunded
         ']
     } 
-    
-## Multi-line String
-Multiline string will be defined between triple single quote `'''`
-
-    Note: '''
-      This is a block string
-      This string can spans over multiple lines.
-    '''
-
-* Line breaks: \<enter\> key
-* Line continuation: `\` backslash
-* Escaping characters:
-  * `\`: using double backslash `\\`
-  * `'''`: using `\'''`
-* The number of spaces you use to indent a block string will be the minimum number of leading spaces among all lines. The parser will automatically remove the number of indentation spaces in the final output. The result of the above example will be: 
-
-      This is a block string
-      This string can spans over multiple lines.
 
 ## Enum Definition
 `Enum` allows users to define different values of a particular column.
@@ -341,5 +272,4 @@ DBML is the standard language for database and the syntax is consistent to provi
 - `column_name` is stated in just plain text
 - single quote as `'string'`: string value
 - double quote as `"column name"`: quoting variable
-- triple quote as `'''multi-line string'''`: multi-line string value
 - backtick `` ` ``: function expression

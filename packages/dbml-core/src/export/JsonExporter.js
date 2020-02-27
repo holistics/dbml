@@ -1,10 +1,12 @@
-class JsonExporter {
-  static export (model, isNormalized = true) {
-    if (!isNormalized) {
-      return JSON.stringify(model.export(), null, 2);
-    }
+import Exporter from './Exporter';
 
-    return JSON.stringify(model, null, 2);
+class JsonExporter extends Exporter {
+  constructor (schema = {}) {
+    super(schema);
+  }
+
+  export () {
+    return JSON.stringify(this.schema.export(), null, 2);
   }
 }
 

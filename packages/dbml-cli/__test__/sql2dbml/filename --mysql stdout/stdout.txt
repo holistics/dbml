@@ -31,6 +31,7 @@ Table "products" {
   "status" products_status_enum
   "created_at" datetime [default: `now()`]
 
+        
 Indexes {
   (merchant_id, status) [name: "product_status"]
   id [type: hash, unique, name: "products_index_1"]

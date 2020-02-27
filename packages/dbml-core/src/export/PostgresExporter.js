@@ -1,36 +1,33 @@
 import _ from 'lodash';
-import { hasWhiteSpace, shouldPrintSchema } from './utils';
+import Exporter from './Exporter';
 
-class PostgresExporter {
-  static exportEnums (enumIds, model) {
-    const enumArr = enumIds.map((enumId) => {
-      const _enum = model.enums[enumId];
-      const schema = model.schemas[_enum.schemaId];
+class PostgresExporter extends Exporter {
+  constructor (schema = {}) {
+    super(schema);
+    this.indexes = Exporter.getIndexesFromSchema(schema);
+    this.comments = Exporter.getCommentsFromSchema(schema);
+  }
 
-      const enumValueArr = _enum.valueIds.map((valueId) => {
-        const value = model.enumValues[valueId];
+  exportEnums () {
+    const enumArr = this.schema.enums.map((_enum) => {
+      const enumValueArr = _enum.values.map((value) => {
         return `  '${value.name}'`;
       });
       const enumValueStr = enumValueArr.join(',\n');
 
-      const line = `CREATE TYPE ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".` : ''}"${_enum.name}" AS ENUM (\n${enumValueStr}\n);\n`;
+      const line = `CREATE TYPE "${_enum.name}" AS ENUM (\n${enumValueStr}\n);\n`;
       return line;
     });
 
     return enumArr.length ? enumArr.join('\n') : '';
   }
 
-  static getFieldLines (tableId, model) {
-    const table = model.tables[tableId];
-
-    const lines = table.fieldIds.map((fieldId) => {
-      const field = model.fields[fieldId];
-
+  static getFieldLines (table) {
+    const lines = table.fields.map((field) => {
       let line = '';
       if (field.increment) {
         line = `"${field.name}" SERIAL`;
-      } else if (hasWhiteSpace(field.type.type_name)) {
+      } else if (Exporter.hasWhiteSpace(field.type.type_name)) {
         line = `"${field.name}" "${field.type.type_name}"`;
       } else {
         line = `"${field.name}" ${field.type.type_name}`;
@@ -61,17 +58,12 @@ class PostgresExporter {
     return lines;
   }
 
-  static getCompositePKs (tableId, model) {
-    const table = model.tables[tableId];
-
-    const compositePkIds = table.indexIds ? table.indexIds.filter(indexId => model.indexes[indexId].pk) : [];
-    const lines = compositePkIds.map((keyId) => {
-      const key = model.indexes[keyId];
+  static getPrimaryCompositeKey (table) {
+    const primaryCompositeKey = table.indexes ? table.indexes.filter(index => index.pk) : [];
+    const lines = primaryCompositeKey.map((key) => {
       let line = 'PRIMARY KEY';
       const columnArr = [];
-
-      key.columnIds.forEach((columnId) => {
-        const column = model.indexColumns[columnId];
+      key.columns.forEach((column) => {
         let columnStr = '';
         if (column.type === 'expression') {
           columnStr = `(${column.value})`;
@@ -89,59 +81,53 @@ class PostgresExporter {
     return lines;
   }
 
-  static getTableContentArr (tableIds, model) {
-    const tableContentArr = tableIds.map((tableId) => {
-      const fieldContents = PostgresExporter.getFieldLines(tableId, model);
-      const compositePKs = PostgresExporter.getCompositePKs(tableId, model);
+  getTableContentArr () {
+    const tableContentArr = this.schema.tables.map((table) => {
+      const { name } = table;
+      const fieldContents = PostgresExporter.getFieldLines(table);
+      const primaryCompositeKey = PostgresExporter.getPrimaryCompositeKey(table);
 
       return {
-        tableId,
+        name,
         fieldContents,
-        compositePKs,
+        primaryCompositeKey,
       };
     });
 
     return tableContentArr;
   }
 
-  static exportTables (tableIds, model) {
-    const tableContentArr = PostgresExporter.getTableContentArr(tableIds, model);
+  exportTables () {
+    const tableContentArr = this.getTableContentArr();
 
-    const tableStrs = tableContentArr.map((tableContent) => {
-      const content = [...tableContent.fieldContents, ...tableContent.compositePKs];
-      const table = model.tables[tableContent.tableId];
-      const schema = model.schemas[table.schemaId];
-      const tableStr = `CREATE TABLE ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".` : ''}"${table.name}" (\n${
-        content.map(line => `  ${line}`).join(',\n')}\n);\n`;
+    const tableStrs = tableContentArr.map((table) => {
+      const content = [...table.fieldContents, ...table.primaryCompositeKey];
+      /* eslint-disable indent */
+      const tableStr = `CREATE TABLE "${table.name}" (\n${
+        content.map(line => `  ${line}`).join(',\n')
+        }\n);\n`;
+      /* eslint-enable indent */
       return tableStr;
     });
 
     return tableStrs.length ? tableStrs.join('\n') : '';
   }
 
-  static exportRefs (refIds, model) {
-    const strArr = refIds.map((refId) => {
-      const ref = model.refs[refId];
-      const refEndpointIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
-      const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
-      const refEndpointId = ref.endpointIds[refEndpointIndex];
-      const foreignEndpoint = model.endpoints[foreignEndpointId];
-      const refEndpoint = model.endpoints[refEndpointId];
+  exportRefs () {
+    const validRefs = this.schema.refs.filter((ref) => (
+      ref.endpoints.every(endpoint => {
+        return this.schema.tables.find((table) => table.name === endpoint.tableName);
+      })
+    ));
 
-      const refEndpointField = model.fields[refEndpoint.fieldId];
-      const refEndpointTable = model.tables[refEndpointField.tableId];
-      const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
+    const strArr = validRefs.map((ref) => {
+      const refEndpointIndex = ref.endpoints.findIndex(endpoint => endpoint.relation === '1');
+      const foreignEndpoint = ref.endpoints[1 - refEndpointIndex];
+      const refEndpoint = ref.endpoints[refEndpointIndex];
 
-      const foreignEndpointField = model.fields[foreignEndpoint.fieldId];
-      const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
-      const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-
-      let line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
-        ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}" ADD `;
+      let line = `ALTER TABLE "${foreignEndpoint.tableName}" ADD `;
       if (ref.name) { line += `CONSTRAINT "${ref.name}" `; }
-      line += `FOREIGN KEY ("${foreignEndpointField.name}") REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
-        ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTable.name}" ("${refEndpointField.name}")`;
+      line += `FOREIGN KEY ("${foreignEndpoint.fieldName}") REFERENCES "${refEndpoint.tableName}" ("${refEndpoint.fieldName}")`;
       if (ref.onDelete) {
         line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
       }
@@ -156,13 +142,8 @@ class PostgresExporter {
     return strArr.length ? strArr.join('\n') : '';
   }
 
-  static exportIndexes (indexIds, model) {
-    // exclude composite pk index
-    const indexArr = indexIds.filter((indexId) => !model.indexes[indexId].pk).map((indexId) => {
-      const index = model.indexes[indexId];
-      const table = model.tables[index.tableId];
-      const schema = model.schemas[table.schemaId];
-
+  exportIndexes () {
+    const indexArr = this.indexes.map((index) => {
       let line = 'CREATE';
       if (index.unique) {
         line += ' UNIQUE';
@@ -172,15 +153,13 @@ class PostgresExporter {
       if (indexName) {
         line += ` ${indexName}`;
       }
-      line += ` ON ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".` : ''}"${table.name}"`;
+      line += ` ON "${index.table.name}"`;
       if (index.type) {
         line += ` USING ${index.type.toUpperCase()}`;
       }
 
       const columnArr = [];
-      index.columnIds.forEach((columnId) => {
-        const column = model.indexColumns[columnId];
+      index.columns.forEach((column) => {
         let columnStr = '';
         if (column.type === 'expression') {
           columnStr = `(${column.value})`;
@@ -199,17 +178,12 @@ class PostgresExporter {
     return indexArr.length ? indexArr.join('\n') : '';
   }
 
-  static exportComments (comments, model) {
-    const commentArr = comments.map((comment) => {
+  exportComments () {
+    const commentArr = this.comments.map((comment) => {
       let line = 'COMMENT ON';
 
       if (comment.type === 'column') {
-        const field = model.fields[comment.fieldId];
-        const table = model.tables[field.tableId];
-        const schema = model.schemas[table.schemaId];
-
-        line += ` COLUMN ${shouldPrintSchema(schema, model)
-          ? `"${schema.name}".` : ''}"${table.name}"."${field.name}" IS '${field.note}'`;
+        line += ` COLUMN "${comment.table.name}"."${comment.field.name}" IS '${comment.field.note}'`;
       }
 
       line += ';\n';
@@ -220,59 +194,36 @@ class PostgresExporter {
     return commentArr.length ? commentArr.join('\n') : '';
   }
 
-  static export (model) {
+  export () {
     let res = '';
     let hasBlockAbove = false;
-    const database = model.database['1'];
-    const indexIds = [];
-    const comments = [];
 
-    database.schemaIds.forEach((schemaId) => {
-      const schema = model.schemas[schemaId];
-      const { tableIds, enumIds, refIds } = schema;
-
-      if (shouldPrintSchema(schema, model)) {
-        if (hasBlockAbove) res += '\n';
-        res += `CREATE SCHEMA "${schema.name}";\n`;
-        hasBlockAbove = true;
-      }
-
-      if (!_.isEmpty(enumIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += PostgresExporter.exportEnums(enumIds, model);
-        hasBlockAbove = true;
-      }
-
-      if (!_.isEmpty(tableIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += PostgresExporter.exportTables(tableIds, model);
-        hasBlockAbove = true;
-      }
-
-      if (!_.isEmpty(refIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += PostgresExporter.exportRefs(refIds, model);
-        hasBlockAbove = true;
-      }
-
-      indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
-      comments.push(...(_.flatten(tableIds.map((tableId) => {
-        const { fieldIds } = model.tables[tableId];
-        return fieldIds
-          .filter((fieldId) => model.fields[fieldId].note)
-          .map((fieldId) => ({ type: 'column', fieldId }));
-      }))));
-    });
-
-    if (!_.isEmpty(indexIds)) {
-      if (hasBlockAbove) res += '\n';
-      res += PostgresExporter.exportIndexes(indexIds, model);
+    if (!_.isEmpty(this.schema.enums)) {
+      res += this.exportEnums();
       hasBlockAbove = true;
     }
 
-    if (!_.isEmpty(comments)) {
+    if (!_.isEmpty(this.schema.tables)) {
       if (hasBlockAbove) res += '\n';
-      res += PostgresExporter.exportComments(comments, model);
+      res += this.exportTables();
+      hasBlockAbove = true;
+    }
+
+    if (!_.isEmpty(this.schema.refs)) {
+      if (hasBlockAbove) res += '\n';
+      res += this.exportRefs();
+      hasBlockAbove = true;
+    }
+
+    if (!_.isEmpty(this.indexes)) {
+      if (hasBlockAbove) res += '\n';
+      res += this.exportIndexes();
+      hasBlockAbove = true;
+    }
+
+    if (!_.isEmpty(this.comments)) {
+      if (hasBlockAbove) res += '\n';
+      res += this.exportComments();
       hasBlockAbove = true;
     }
 

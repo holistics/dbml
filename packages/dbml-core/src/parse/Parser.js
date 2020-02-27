@@ -1,55 +1,62 @@
-import Database from '../model_structure/database';
+import Schema from '../schema/schema';
 import mysqlParser from './mysqlParser';
 import postgresParser from './postgresParser';
 import dbmlParser from './dbmlParser';
 import schemarbParser from './schemarbParser';
 
 class Parser {
-  static parseJSONToDatabase (rawDatabase) {
-    const database = new Database(rawDatabase);
-    return database;
+  constructor () {
+    this.mysqlParser = mysqlParser;
+    this.postgresParser = postgresParser;
+    this.dbmlParser = dbmlParser;
+    this.schemarbParser = schemarbParser;
   }
 
-  static parseMySQLToJSON (str) {
-    return mysqlParser.parse(str);
+  static parseJSONToSchema (rawSchema) {
+    const schema = new Schema(rawSchema);
+    return schema;
   }
 
-  static parsePostgresToJSON (str) {
-    return postgresParser.parse(str);
+  parseMySQLToJSON (str) {
+    return this.mysqlParser.parse(str);
   }
 
-  static parseDBMLToJSON (str) {
-    return dbmlParser.parse(str);
+  parsePostgresToJSON (str) {
+    return this.postgresParser.parse(str);
   }
 
-  static parseSchemaRbToJSON (str) {
-    return schemarbParser.parse(str);
+  parseDBMLToJSON (str) {
+    return this.dbmlParser.parse(str);
   }
 
-  static parse (str, format) {
-    let rawDatabase = {};
+  parseSchemaRbToJSON (str) {
+    return this.schemarbParser.parse(str);
+  }
+
+  parse (str, format) {
+    let rawSchema = {};
     switch (format) {
       case 'mysql':
-        rawDatabase = Parser.parseMySQLToJSON(str);
+        rawSchema = this.parseMySQLToJSON(str);
         break;
 
       case 'postgres':
-        rawDatabase = Parser.parsePostgresToJSON(str);
+        rawSchema = this.parsePostgresToJSON(str);
         break;
 
       case 'dbml':
-        rawDatabase = Parser.parseDBMLToJSON(str);
+        rawSchema = this.parseDBMLToJSON(str);
         break;
 
       case 'schemarb':
-        rawDatabase = Parser.parseSchemaRbToJSON(str);
+        rawSchema = this.parseSchemaRbToJSON(str);
         break;
 
       case 'json':
         if (typeof str === 'object') {
-          rawDatabase = str;
+          rawSchema = str;
         } else {
-          rawDatabase = JSON.parse(str);
+          rawSchema = JSON.parse(str);
         }
         break;
 
@@ -57,7 +64,7 @@ class Parser {
         break;
     }
 
-    const schema = Parser.parseJSONToDatabase(rawDatabase);
+    const schema = Parser.parseJSONToSchema(rawSchema);
     return schema;
   }
 }
