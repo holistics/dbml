@@ -1,3 +1,24 @@
+## Unreleased (2020-02-27)
+
+#### :boom: Breaking Change
+* `dbml-core`
+  * [#47](https://github.com/holistics/dbml/pull/47) Restructure and normalize models ([@phuongduyphan](https://github.com/phuongduyphan))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#47](https://github.com/holistics/dbml/pull/47) Add Project, Note and multi-line string syntax ([@phuongduyphan](https://github.com/phuongduyphan))
+
+#### :memo: Documentation
+* [#69](https://github.com/holistics/dbml/pull/69) Fix typo in readme ([@bmitchinson](https://github.com/bmitchinson))
+* [#47](https://github.com/holistics/dbml/pull/47) Add Project, Note and multi-line string syntax ([@phuongduyphan](https://github.com/phuongduyphan))
+
+#### :bug: Bug Fix
+* [#69](https://github.com/holistics/dbml/pull/69) Fix typo in readme ([@bmitchinson](https://github.com/bmitchinson))
+
+#### Committers: 1
+- Ben Mitchinson ([@bmitchinson](https://github.com/bmitchinson))
+- Phuong Duy Phan ([@phuongduyphan](https://github.com/phuongduyphan))
+
 ## v1.3.1 (2020-01-22)
 
 #### :bug: Bug Fix
