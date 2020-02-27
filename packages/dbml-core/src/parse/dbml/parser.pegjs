@@ -209,7 +209,7 @@ OnDelete
 
 // Tables
 TableSyntax
-  = table sp+ name:name alias:alias_def? sp* table_settings:TableSettings? sp* "{" body:TableBody "}" {
+  = table sp+ name:name alias:alias_def? sp* table_settings:TableSettings? _ "{" body:TableBody "}" {
       let fields = body.fields || [];
       let indexes = body.indexes || [];
       // Handle list of partial inline_refs
