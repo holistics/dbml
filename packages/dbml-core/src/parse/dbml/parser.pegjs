@@ -1,10 +1,13 @@
 {
   const data = {
-  	tables: [],
+    schemas: [],
+    tables: [],
     refs: [],
     enums: [],
-    tableGroups: []
+    tableGroups: [],
+    project: {},
   };
+  let projectCnt = 0;
 }
 
 rules
@@ -17,18 +20,120 @@ expr
   / r:RefSyntax { data.refs.push(r) }
   / e:EnumSyntax { data.enums.push(e) }
   / tg:TableGroupSyntax { data.tableGroups.push(tg) }
+  / p: ProjectSyntax {
+    projectCnt += 1;
+    if (projectCnt > 1) {
+      error('Project is already defined');
+    }
+    data.project = p;
+    data.tables = data.tables.concat(p.tables);
+    data.refs = data.refs.concat(p.refs);
+    data.enums = data.enums.concat(p.enums);
+    data.tableGroups = data.tableGroups.concat(p.tableGroups);
+  }
   / __
+
+ProjectSyntax 
+  = project name:(__ name)? _ "{" _ body:ProjectBody _ "}" {
+    return {
+      name: name ? name[1] : null,
+      ...body
+    }
+  }
+
+ProjectBody
+  = _ elements: ProjectElement* _ {
+    const tables = [];
+    const refs = [];
+    const enums = [];
+    const tableGroups = [];
+    let note = null;
+    const projectFields = {};
+
+    elements.forEach(ele => {
+      if (ele.type === 'table') {
+        tables.push(ele.value);
+      } else if (ele.type === 'ref') {
+        refs.push(ele.value);
+      } else if (ele.type === 'enum') {
+        enums.push(ele.value);
+      } else if (ele.type === 'table_group') {
+        tableGroups.push(ele.value);
+      } else if (ele.type === 'note') {
+        note = ele.value;
+      } else {
+        projectFields[ele.value.name] = ele.value.value;
+      }
+    });
+
+    return {
+      tables,
+      refs,
+      enums,
+      tableGroups,
+      note,
+      ...projectFields
+    }
+  }
+
+ProjectElement
+  = _ note: ObjectNoteElement _ {
+    return {
+      type: 'note',
+      value: note
+    }
+  }
+  / _ t: TableSyntax _ {
+    return {
+      type: 'table',
+      value: t
+    }
+  }
+  / _ r: RefSyntax _ {
+    return {
+      type: 'ref',
+      value: r
+    }
+  }
+  / _ e: EnumSyntax _ {
+    return {
+      type: 'enum',
+      value: e
+    }
+  }
+  / tg: TableGroupSyntax _ {
+    return {
+      type: 'table_group',
+      value: tg
+    }
+  }
+  / _ element: ProjectField _ {
+    return {
+      type: 'element',
+      value: element
+    }
+  }
+
+ProjectField
+  = name:name _ ":" _ value: StringLiteral {
+    return {
+      name,
+      value: value.value
+    }
+  }
 
 TableGroupSyntax = table_group sp+ name:name _ "{" _ body:table_group_body _ "}" {
   return {
     name: name,
-    tableNames: body,
+    tables: body,
     token: location()
   }
 }
 
 table_group_body = tables:(name __)* {
-  return tables.map(t => t[0]);
+  return tables.map(t => ({
+    name: t[0]
+  }));
 }
 
 // References
@@ -38,7 +143,7 @@ RefSyntax
 ref_long
   = ref name:(__ name)? _ "{" _ body:ref_body _ "}" {
       const ref = {
-        name: name? name[2] : null,
+        name: name? name[1] : null,
         endpoints: body.endpoints,
         token: location()
       };
@@ -104,7 +209,7 @@ OnDelete
 
 // Tables
 TableSyntax
-  = table sp+ name:name alias:alias_def? headerColor:(__ c:HeaderColor{return c})? _ "{" body:TableBody "}" {
+  = table sp+ name:name alias:alias_def? sp* table_settings:TableSettings? sp* "{" body:TableBody "}" {
       let fields = body.fields || [];
       let indexes = body.indexes || [];
       // Handle list of partial inline_refs
@@ -135,25 +240,37 @@ TableSyntax
         })
       });
 
-      return {
+      let res = {
         name: name,
         alias: alias,
         fields: fields,
         token: location(),
         indexes: indexes,
-        headerColor: headerColor
-      };
+        ...table_settings,
+      }
+      if (body.note) {
+        res = {
+          ...res,
+          note: body.note
+        }
+      }
+      return res;
     }
 
 TableBody
-  = _ fields: Field + _ indexes:(Indexes)? _ {
+  = _ fields: Field+ _ elements: TableElement* _ {
+    // concat all indexes
+    const indexes = _.flatMap(elements.filter(ele => ele.type === 'indexes'), (ele => ele.value));
+    // pick the last note
+    const note = elements.slice().reverse().find(ele => ele.type === 'note');
+
     // process field for composite primary key:
     const primaryKeyList = [];
     fields.forEach(field => {
       if (field.pk) {
         primaryKeyList.push(field);
       }
-    })
+    });
     if (primaryKeyList.length > 1) {
       const columns = primaryKeyList.map(field => ({
         value: field.name,
@@ -162,12 +279,9 @@ TableBody
       // remove property `pk` for each field in this list
       primaryKeyList.forEach(field => delete field.pk);
 
-      if (!Array.isArray(indexes)) {
-        indexes = [];
-      }
       indexes.push({
         columns: columns,
-        token: _.head(primaryKeyList).tokens,
+        token: _.head(primaryKeyList).token,
         pk: true
       })
     }
@@ -175,6 +289,21 @@ TableBody
     return {
       fields,
       indexes,
+      note: note ? note.value : null
+    }
+  }
+
+TableElement
+  = _ indexes: Indexes _ {
+    return {
+      type: 'indexes',
+      value: indexes
+    }
+  }
+  / _ note: ObjectNoteElement _ {
+    return {
+      type: 'note',
+      value: note
     }
   }
 
@@ -262,6 +391,28 @@ FieldSettings
     });
     return res;
   }
+
+TableSettings
+  = "[" first:TableSetting rest:(Comma TableSetting)* "]" {
+    let settings = [first, ...rest.map(el => el[1])];
+    const result = {};
+    settings.forEach((el) => {
+        if (typeof el === 'string') {
+        if (el.startsWith('#')) {
+          result.headerColor = el.toUpperCase();
+        }
+        } else {
+         if (el.type === "note") {
+           result.note = el.value;
+          }
+        }
+    });
+    return result;
+  }
+
+TableSetting
+  = _ v:ObjectNote _ { return { type: 'note', value: v } }
+  / _ c: HeaderColor _ { return c }
 
 FieldSetting
   = _ a:"not null"i _ { return a }
@@ -358,6 +509,9 @@ IndexSetting
   / _ v:IndexType _ { return { type: 'type', value: v } }
 IndexName
   = "name:"i _ val:StringLiteral { return val.value }
+ObjectNoteElement
+  = note: ObjectNote { return note }
+  / "note"i _ "{" _ val:StringLiteral _ "}" { return val.value }
 ObjectNote
   = "note:"i _ val:StringLiteral { return val.value }
 IndexType
@@ -383,7 +537,7 @@ alias_def
     }
 
 HeaderColor
-  = _ "[" _ header_color ":" _ s:sharp color:hex_color _ "]" {return s + color.join('')}
+  = _ header_color ":" _ s:sharp color:hex_color _ {return s + color.join('')}
 
 hex_color
   = six_char / three_char
@@ -400,6 +554,7 @@ constrain
   / pk
 
 // Keywords
+project "project" = "project"i
 table "table" = "table"i
 as = "as"i
 ref "references" = "ref"i
@@ -446,7 +601,7 @@ factor = factors:(character+ sp* "(" expression ")"
     / "(" expression ")"
     / (exprCharNoCommaSpace+ &(sp*/","/");"/endline");")) / exprChar+ &.) {
     	return _.flattenDeep(factors).join("");
-    }   
+    }
 exprChar = [\',.a-z0-9_+-\`]i
     / sp
     / newline
@@ -473,12 +628,43 @@ sp = " "
 Comma = ","
 sharp = "#" {return "#"}
 
-
 // Copied from https://github.com/pegjs/pegjs/issues/292
-
 StringLiteral "string"
   = '"' chars:DoubleStringCharacter* '"' {
       return { value: chars.join(''), type: 'string' } ;
+    }
+    / "'''" chars: MultiLineStringCharacter* "'''" {
+        let str = chars.join('');
+        // // replace line continuation using look around, but this is not compatible with firefox, safari.
+        // str = str.replace(/(?<!\\)\\(?!\\)(?:\n|\r\n)?/g, ''); 
+        // str = str.replace(/\\\\/, '\\');
+
+        let lines = str.split(/\n|\r\n?/);
+
+        const leadingSpaces = (str) => {
+          let i = 0;
+          while (i < str.length && str[i] === ' ') {
+            i += 1;
+          }
+          return i;
+        }
+
+        const minLeadingSpaces = lines.filter(line => line.replace(/\s+/g, ''))
+          .reduce((acc, cur) => Math.min(acc, leadingSpaces(cur)), Number.MAX_SAFE_INTEGER);
+        lines = lines.map(line => line ? line.slice(minLeadingSpaces) : line);
+
+        const countLeadingEmptyLine = (lines) => {
+          let i = 0;
+          while (i < lines.length && !lines[i].replace(/\s+/g, '')) {
+            i += 1;
+          }
+          return i;
+        }
+        lines.splice(0, countLeadingEmptyLine(lines));
+        lines.splice(lines.length - countLeadingEmptyLine(lines.slice().reverse()));
+
+        const finalStr = lines.join('\n');
+        return { value: finalStr, type: 'string' } ;
     }
   / "'" chars:SingleStringCharacter* "'" {
       return { value: chars.join(''), type: 'string' } ;
@@ -488,8 +674,17 @@ DoubleStringCharacter
   / !'"' SourceCharacter { return text(); }
 
 SingleStringCharacter
-  = '\\' "'" { return "'"; }
+  = "\\'" { return "'"; }
   / !"'" SourceCharacter { return text(); }
+MultiLineStringCharacter
+ = "\\'" { return "'"; }
+ / "\\" bl:"\\"+ { // escape character \. \\n => \n. Remove one backslash in the result string.
+   return bl.join('');
+ }
+ / "\\" "\n"? { // replace line continuation
+   return ''
+ }
+ / !"'''" SourceCharacter { return text(); }
 
 SourceCharacter
   = .

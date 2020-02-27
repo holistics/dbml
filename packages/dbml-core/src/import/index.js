@@ -1,11 +1,9 @@
 import Parser from '../parse/Parser';
-import SchemaExporter from '../export/SchemaExporter';
+import ModelExporter from '../export/ModelExporter';
 
 function _import (str, format) {
-  const parser = new Parser();
-  const schema = parser.parse(str, format);
-  const schemaExporter = new SchemaExporter(schema);
-  const dbml = schemaExporter.export('dbml');
+  const database = Parser.parse(str, format);
+  const dbml = ModelExporter.export(database.normalize(), 'dbml');
 
   return dbml;
 }

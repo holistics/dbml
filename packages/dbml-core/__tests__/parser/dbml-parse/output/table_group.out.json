@@ -294,9 +294,13 @@
   "tableGroups": [
     {
       "name": "g1",
-      "tableNames": [
-        "users",
-        "merchants"
+      "tables": [
+        {
+          "name": "users"
+        },
+        {
+          "name": "merchants"
+        }
       ],
       "token": {
         "start": {
