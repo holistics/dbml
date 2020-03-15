@@ -34,6 +34,25 @@ _See the above dbml doc [visualized on dbdiagram](https://dbdiagram.io/d/5d5cb58
 
 For full DBML syntax documentation, refer to the [Docs](/docs/) section.
 
+DBML is not to be confused with Microsoft's DBML file extension (XML format).
+
+## Benefits
+
+DBML is born to solve the frustrations of developers working on large, complex software projects:
+* Do not get a big picture of entire project's database structure
+* Don't understand some tables and what their fields mean, and which feature are they related to;
+* Existing ER diagram or SQL DDL code is hard to read, and usually outdated.
+
+Our recommended best practices is to have a `database.dbml` file in your root repository
+_(similar to other config files like `packages.json` or `README.md`)_ 
+
+```
+.
+|_ ...
+|_ database.dbml
+|_ README.md
+```
+
 ## Is this similar to SQL DDL?
 
 Not quite. Despite its name (data "definition" language), DDL is designed mainly to help physically create, modify or
@@ -45,9 +64,15 @@ DDL is also database specific (Oracle, PostgreSQL, etc), while **DBML is databas
 ## What can I do now?
 
 DBML comes with:
-1. A command-line tool to help to convert SQL to DBML files and vice versa.
-2. A free, simple database visualiser at [dbdiagram.io](https://dbdiagram.io)
+1. A free, simple database visualiser at [dbdiagram.io](https://dbdiagram.io)
+2. A command-line tool to help to convert SQL to DBML files and vice versa.
 3. An [open-source JS library](/js-module/) (NPM package) for you to programmatically convert between DBML and SQL DDL.
+
+### dbdiagram
+
+[dbdiagram.io](https://dbdiagram.io?utm_source=dbml) is a free tool to help you visualize database diagrams from DBML code. 
+
+![img](https://i.imgur.com/8T1tIZp.gif)
 
 ### Command-line Tool (CLI)
 
@@ -55,11 +80,6 @@ A simple command-line tool to help you convert between SQL (DDL) and DBML. Refer
 
 ![img](../cli/cli.gif)
 
-### dbdiagram
-
-[dbdiagram.io](https://dbdiagram.io?utm_source=dbml) is a free tool to help you visualize database diagrams from DBML code. 
-
-![img](https://i.imgur.com/8T1tIZp.gif)
 
 ## DBML History
 
