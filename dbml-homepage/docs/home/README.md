@@ -47,7 +47,7 @@ DDL is also database specific (Oracle, PostgreSQL, etc), while **DBML is databas
 DBML comes with:
 1. A command-line tool to help to convert SQL to DBML files and vice versa.
 2. A free, simple database visualiser at [dbdiagram.io](https://dbdiagram.io)
-3. An open-source JS library (NPM package) for you to programmatically convert between DBML and SQL DDL. Detailed docs coming soon.
+3. An [open-source JS library](/js-module/) (NPM package) for you to programmatically convert between DBML and SQL DDL.
 
 ### Command-line Tool (CLI)
 
