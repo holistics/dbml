@@ -126,7 +126,7 @@
     {
       tableName: toTable,
       relation: '1',
-    }]);    
+    }]);
     let refProp = {};
     for (let i = 0; i < props.length; i += 1) {
       const currentProp = props[i];
@@ -274,7 +274,7 @@ add_foreign_key_syntax
 add_foreign_key_props_syntax
 = "," sp* column":" sp* columnName:name { return ({ columnName }) }
 / "," sp* primary_key":" sp* primaryKey:name { return ({ primaryKey }) }
-/ "," sp* r:referential_actions":" sp* value:symbol { 
+/ "," sp* r:referential_actions":" sp* value:symbol {
   switch (r.toLowerCase()) {
     case 'on_delete':
       return {
@@ -350,7 +350,9 @@ lambda_function "lambda function" = "=>" / "->"
 other_class_prop = variable whateters endline?
 
 // normal syntax
-name = quote c:[^\"\n]* quote { return c.join("") }
+name = double_quote_name / single_quote_name
+double_quote_name = double_quote c:[^\"\n]* double_quote { return c.join("") }
+single_quote_name = single_quote c:[^\'\n]* single_quote { return c.join("") }
 symbol = ":" c:character* { return c.join("") }
 variable = c:(character+) { return c.join("") }
 field_type = character"."c:(character+) { return c.join("") }
@@ -362,7 +364,8 @@ whatever_line = whitespace* (whateters ! end) endline?
 comment_line "comment line" = whitespace* "#" whateters endline?
 whateters "whatever" = [^\t\r\n]*
 whatever = [^\t\r\n]
-quote = "\""
+single_quote = "'"
+double_quote = "\""
 
 // Ignored
 _ = (comment/whitespace)*
