@@ -1,0 +1,174 @@
+{
+   "tables": [
+      {
+         "name": "actions",
+         "fields": [
+            {
+               "name": "id",
+               "type": {
+                  "type_name": "varchar"
+               }
+            },
+            {
+               "name": "action_type",
+               "type": {
+                  "type_name": "string"
+               }
+            },
+            {
+               "name": "action_option",
+               "type": {
+                  "type_name": "string"
+               }
+            },
+            {
+               "name": "target_type",
+               "type": {
+                  "type_name": "string"
+               }
+            },
+            {
+               "name": "target_id",
+               "type": {
+                  "type_name": "integer"
+               }
+            },
+            {
+               "name": "user_type",
+               "type": {
+                  "type_name": "string"
+               }
+            },
+            {
+               "name": "user_id",
+               "type": {
+                  "type_name": "integer"
+               }
+            },
+            {
+               "name": "created_at",
+               "type": {
+                  "type_name": "datetime"
+               }
+            },
+            {
+               "name": "updated_at",
+               "type": {
+                  "type_name": "datetime"
+               }
+            }
+         ]
+      },
+      {
+         "name": "active_storage_attachments",
+         "fields": [
+            {
+               "name": "id",
+               "type": {
+                  "type_name": "varchar"
+               }
+            },
+            {
+               "name": "name",
+               "type": {
+                  "type_name": "string"
+               }
+            },
+            {
+               "name": "record_type",
+               "type": {
+                  "type_name": "string"
+               }
+            },
+            {
+               "name": "record_id",
+               "type": {
+                  "type_name": "bigint"
+               }
+            },
+            {
+               "name": "blob_id",
+               "type": {
+                  "type_name": "bigint"
+               }
+            },
+            {
+               "name": "created_at",
+               "type": {
+                  "type_name": "datetime"
+               }
+            }
+         ]
+      },
+      {
+         "name": "active_storage_blobs",
+         "fields": [
+            {
+               "name": "id",
+               "type": {
+                  "type_name": "varchar"
+               }
+            },
+            {
+               "name": "key",
+               "type": {
+                  "type_name": "string"
+               }
+            },
+            {
+               "name": "filename",
+               "type": {
+                  "type_name": "string"
+               }
+            },
+            {
+               "name": "content_type",
+               "type": {
+                  "type_name": "string"
+               }
+            },
+            {
+               "name": "metadata",
+               "type": {
+                  "type_name": "text"
+               }
+            },
+            {
+               "name": "byte_size",
+               "type": {
+                  "type_name": "bigint"
+               }
+            },
+            {
+               "name": "checksum",
+               "type": {
+                  "type_name": "string"
+               }
+            },
+            {
+               "name": "created_at",
+               "type": {
+                  "type_name": "datetime"
+               }
+            }
+         ]
+      }
+   ],
+   "refs": [
+      {
+         "name": "fk_rails_active_storage_attachments_active_storage_blobs",
+         "endpoints": [
+            {
+               "tableName": "active_storage_attachments",
+               "relation": "1",
+               "fieldName": "blob_id"
+            },
+            {
+               "tableName": "active_storage_blobs",
+               "relation": "1",
+               "fieldName": "id"
+            }
+         ]
+      }
+   ]
+}
