@@ -1,3 +1,14 @@
+## Unreleased (2020-04-16)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#83](https://github.com/holistics/dbml/pull/83) Parse index note for DBML ([@phuongduyphan](https://github.com/phuongduyphan))
+  * [#80](https://github.com/holistics/dbml/pull/80) Schemarb/support single quote ([@khoahuynhf](https://github.com/khoahuynhf))
+
+#### Committers: 2
+- Khoa Huỳnh ([@khoahuynhf](https://github.com/khoahuynhf))
+- Phuong Duy Phan ([@phuongduyphan](https://github.com/phuongduyphan))
+
 ## v2.0.0-alpha.0 (2020-02-27)
 
 #### :boom: Breaking Change
