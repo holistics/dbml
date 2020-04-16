@@ -9,7 +9,7 @@ Table users {
   active boolean [not null]
   
   indexes {
-    (id) [unique]
+    (id) [unique, note: 'index note']
     full_name [name: "User Name"]
     (email,created_at) [type: hash]
     `now()`
