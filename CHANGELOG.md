@@ -1,4 +1,4 @@
-## Unreleased (2020-04-16)
+## v2.0.1 (2020-04-16)
 
 #### :bug: Bug Fix
 * `dbml-core`
