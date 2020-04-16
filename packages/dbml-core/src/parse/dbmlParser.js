@@ -557,19 +557,9 @@ function peg$parse(input, options) {
               let res = {};
           arrSettings.forEach((ele) => {
             if (typeof ele === 'string') {
-              if (ele.toLowerCase() == "unique") {
-                res.unique = true;
-              }
+              res[ele.toLowerCase()] = true;
             } else {
-              if (ele.type === "name") {
-                res.name = ele.value;
-              }
-              if (ele.type === "type") {
-                res.type = ele.value;
-              }
-              if (ele.type === "default") {
-                res.dbdefault = ele.value;
-              }
+              res[ele.type] = ele.value;
             }
           });
           return res;
@@ -3686,6 +3676,30 @@ function peg$parse(input, options) {
         } else {
           peg$currPos = s0;
           s0 = peg$FAILED;
+        }
+        if (s0 === peg$FAILED) {
+          s0 = peg$currPos;
+          s1 = peg$parse_();
+          if (s1 !== peg$FAILED) {
+            s2 = peg$parseObjectNote();
+            if (s2 !== peg$FAILED) {
+              s3 = peg$parse_();
+              if (s3 !== peg$FAILED) {
+                peg$savedPos = s0;
+                s1 = peg$c50(s2);
+                s0 = s1;
+              } else {
+                peg$currPos = s0;
+                s0 = peg$FAILED;
+              }
+            } else {
+              peg$currPos = s0;
+              s0 = peg$FAILED;
+            }
+          } else {
+            peg$currPos = s0;
+            s0 = peg$FAILED;
+          }
         }
       }
     }

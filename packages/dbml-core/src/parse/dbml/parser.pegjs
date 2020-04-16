@@ -484,19 +484,9 @@ IndexSettings
         let res = {};
     arrSettings.forEach((ele) => {
       if (typeof ele === 'string') {
-        if (ele.toLowerCase() == "unique") {
-          res.unique = true;
-        }
+        res[ele.toLowerCase()] = true;
       } else {
-        if (ele.type === "name") {
-          res.name = ele.value;
-        }
-        if (ele.type === "type") {
-          res.type = ele.value;
-        }
-        if (ele.type === "default") {
-          res.dbdefault = ele.value;
-        }
+        res[ele.type] = ele.value;
       }
     });
     return res;
@@ -507,6 +497,7 @@ IndexSetting
     _ a:"unique"i _ { return a }
   / _ v:IndexName _ { return { type: 'name', value: v } }
   / _ v:IndexType _ { return { type: 'type', value: v } }
+  / _ v:ObjectNote _ { return { type: 'note', value: v } }
 IndexName
   = "name:"i _ val:StringLiteral { return val.value }
 ObjectNoteElement

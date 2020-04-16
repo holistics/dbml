@@ -307,6 +307,7 @@ describe('@dbml/core - model_structure', () => {
           type: index.type,
           unique: index.unique,
           pk: index.pk,
+          note: index.note,
           columns: index.columns.map((column) => ({
             type: column.type,
             value: column.value,
@@ -316,6 +317,7 @@ describe('@dbml/core - model_structure', () => {
         expect(indexes).toEqual(expect.arrayContaining([
           expect.objectContaining({
             pk: true,
+            note: 'index note',
             columns: expect.arrayContaining([
               {
                 type: 'column',
@@ -614,6 +616,7 @@ describe('@dbml/core - model_structure', () => {
           type: getEle('indexes', indexId).type,
           unique: getEle('indexes', indexId).unique,
           pk: getEle('indexes', indexId).pk,
+          note: getEle('indexes', indexId).note,
           // eslint-disable-next-line
           columns: getEle('indexes', indexId).columnIds.map((columnId) => ({
             type: getEle('indexColumns', columnId).type,
@@ -624,6 +627,7 @@ describe('@dbml/core - model_structure', () => {
         expect(indexes).toEqual(expect.arrayContaining([
           expect.objectContaining({
             pk: true,
+            note: 'index note',
             columns: expect.arrayContaining([
               {
                 type: 'column',
