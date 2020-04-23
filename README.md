@@ -11,7 +11,8 @@ For more information, please check out [DBML homepage](https://dbml.org)
 
 - It is simple, flexible and highly human-readable
 - It is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
-- Comes with a free, simple database visualiser at [dbdiagram.io](http://dbdiagram.io)
+- Comes with a free, simple database visualiser at [dbdiagram.io](https://dbdiagram.io)
+- Also comes with a free database documentation app at [dbdocs.io](https://dbdocs.io)
 
 ## Example
 
