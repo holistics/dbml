@@ -15,13 +15,13 @@ The following is a set of guidelines for contributing to DBML and its packages, 
 
 ### Setup
 
-DBML is structured as monorepo project. We uses [Lerna](https://github.com/lerna/lerna) to organize and manage multiple packages.
+DBML is structured as monorepo project. We uses [yarn](https://yarnpkg.com/) and [Lerna](https://github.com/lerna/lerna) to organize and manage multiple packages.
 
-**Install Lerna first:**
+**Install Yarn then Lerna first:**
 
-    $ npm install -g lerna
-    
-    # or if you're using yarn
+    $ npm install -g yarn lerna
+
+    # or if you're already using yarn
     $ yarn global add lerna
 
 **Clone and build DBML**:
@@ -44,7 +44,7 @@ DBML is structured as monorepo project. We uses [Lerna](https://github.com/lerna
 Example of running test for @dbml/cli:
 
     $ lerna run test --scope @dbml/cli
-    
+
     info cli using local version of lerna
     lerna notice cli v3.16.4
     lerna info filter [ '@dbml/cli' ]
