@@ -12,7 +12,7 @@ CREATE TYPE "product status" AS ENUM (
 
 CREATE TABLE "orders" (
   "id" SERIAL PRIMARY KEY,
-  "user_id" int UNIQUE NOT NULL,
+  "user_id" bigint UNIQUE NOT NULL,
   "status" orders_status,
   "created_at" varchar
 );
@@ -34,7 +34,7 @@ CREATE TABLE "products" (
 );
 
 CREATE TABLE "users" (
-  "id" int PRIMARY KEY,
+  "id" BIGSERIAL PRIMARY KEY,
   "full_name" varchar,
   "email" varchar UNIQUE,
   "gender" varchar,
