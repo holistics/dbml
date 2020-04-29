@@ -12,7 +12,7 @@ Enum "product status" {
 
 Table "orders" {
   "id" int [pk, increment]
-  "user_id" int [unique, not null]
+  "user_id" bigint [unique, not null]
   "status" orders_status
   "created_at" varchar
 }
@@ -31,7 +31,7 @@ Table "products" {
   "status" "product status"
   "created_at" datetime [default: `now()`]
 
-        
+
 Indexes {
   (id, name) [pk]
   (merchant_id, status) [name: "product_status"]
@@ -40,7 +40,7 @@ Indexes {
 }
 
 Table "users" {
-  "id" int [pk]
+  "id" bigint [pk, increment]
   "full_name" varchar
   "email" varchar [unique]
   "gender" varchar
