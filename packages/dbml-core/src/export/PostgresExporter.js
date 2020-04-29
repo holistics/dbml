@@ -29,8 +29,8 @@ class PostgresExporter {
 
       let line = '';
       if (field.increment) {
-        const type_serial = 'bigint' === field.type.type_name ? 'BIGSERIAL' : 'SERIAL';
-        line = `"${field.name}" ${type_serial}`;
+        const typeSerial = field.type.type_name === 'bigint' ? 'BIGSERIAL' : 'SERIAL';
+        line = `"${field.name}" ${typeSerial}`;
       } else if (hasWhiteSpace(field.type.type_name)) {
         line = `"${field.name}" "${field.type.type_name}"`;
       } else {
