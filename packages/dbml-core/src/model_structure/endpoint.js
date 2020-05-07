@@ -10,6 +10,7 @@ class Endpoint extends Element {
     this.schemaName = schemaName;
     this.tableName = tableName;
     this.fieldName = fieldName;
+    this.fields = [];
     this.ref = ref;
     this.dbState = this.ref.dbState;
     this.generateId();
@@ -22,8 +23,7 @@ class Endpoint extends Element {
       this.error(`Can't find table ${shouldPrintSchema(schema)
         ? `"${schema.name}".` : ''}"${tableName}"`);
     }
-    const field = table.findField(fieldName);
-    this.setField(field, table);
+    this.setFields(fieldName, table) 
   }
 
   generateId () {
@@ -31,9 +31,18 @@ class Endpoint extends Element {
   }
 
   equals (endpoint) {
-    return this.field.id === endpoint.field.id;
+    if (this.fields.length != endpoint.fields.length) return false;
+    return this.fields.length == 1 ? this.field.id === endpoint.field.id : this.compareFields(endpoint);
   }
 
+  compareFields(endpoint){
+    sortedThisFields = this.fields.slice().sort();
+    sortedEndpointFields = endpoint.fields.slice().sort();
+    for (let i = 0; i < sortedThisFields.length; i++){
+      if (sortedThisFields[i] != sortedEndpointFields[i]) return false;  
+    }
+    return true;
+  }
   export () {
     return {
       ...this.shallowExport(),
@@ -43,7 +52,8 @@ class Endpoint extends Element {
   exportParentIds () {
     return {
       refId: this.ref.id,
-      fieldId: this.field.id,
+      fieldIds: this.fields,
+      fieldId: this.field.id
     };
   }
 
@@ -55,13 +65,23 @@ class Endpoint extends Element {
       relation: this.relation,
     };
   }
+//CHANGE
+  
+  setFields (fieldNames, table) {
+    if (typeof fieldNames == "string") fieldNames = [fieldNames] 
+    fieldNames.forEach(fieldName => {
+      const field = table.findField(fieldName);
+      this.setField(field, table);
+    });
+  }
 
   setField (field, table) {
     if (!field) {
       this.error(`Can't find field ${shouldPrintSchema(table.schema)
         ? `"${table.schema.name}".` : ''}"${this.fieldName}" in table "${this.tableName}"`);
     }
-    this.field = field;
+    if (!this.field) this.field = field;
+    this.fields.push(field.id);
     field.pushEndpoint(this);
   }
 
