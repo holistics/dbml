@@ -163,7 +163,7 @@ ref_short
     }
 
 ref_body
-  = table1:name "." field1:name sp+ relation:relation sp+ table2:name "." field2:name sp* ref_settings:RefSettings? {
+  = table1:name "." field1:RefField sp+ relation:relation sp+ table2:name "." field2:RefField sp* ref_settings:RefSettings? {
     const endpoints = [
       {
         tableName: table1,
@@ -182,6 +182,18 @@ ref_body
       endpoints: endpoints,
       settings: ref_settings
     };
+  }
+//CHANGE
+RefField
+  = field:(RefSingleField/RefMultipleFields) { return field; }
+
+RefSingleField
+  =  field:name { return field; }
+ 
+RefMultipleFields
+  = "(" sp* first:RefSingleField rest:(Comma sp* RefSingleField)* ")"  {
+    let arrField = [first].concat(rest.map(el => el[2]));
+    return arrField;
   }
 
 RefSettings
