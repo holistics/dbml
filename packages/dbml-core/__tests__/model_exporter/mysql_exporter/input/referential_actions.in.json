@@ -2,15 +2,21 @@
   "tables": [
     {
       "name": "orders",
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
             "type_name": "int",
             "args": null
-          },
-          "pk": true,
-          "increment": true
+          }
+        },
+        {
+          "name": "cool_id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          }
         },
         {
           "name": "user_id",
@@ -18,51 +24,63 @@
             "type_name": "int",
             "args": null
           },
+          "unique": true,
           "not_null": true
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "orders_status_enum",
+            "args": null
+          }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "datetime",
-            "args": null
-          },
-          "dbdefault": {
-            "value": "now()",
-            "type": "expression"
+            "type_name": "varchar(255)",
+            "args": "255"
           }
         }
       ],
-      "indexes": []
+      "indexes": [
+        {
+          "pk": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "id"
+            },
+            {
+              "type": "column",
+              "value": "cool_id"
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "order_items",
+      "alias": null,
       "fields": [
-        {
-          "name": "id",
-          "type": {
-            "type_name": "int",
-            "args": null
-          },
-          "pk": true,
-          "increment": true
-        },
         {
           "name": "order_id",
           "type": {
             "type_name": "int",
             "args": null
-          },
-          "not_null": true
+          }
+        },
+        {
+          "name": "cool_order_id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          }
         },
         {
           "name": "product_id",
           "type": {
             "type_name": "int",
             "args": null
-          },
-          "dbdefault": {
-            "value": "null",
-            "type": "boolean"
           }
         },
         {
@@ -72,16 +90,16 @@
             "args": null
           },
           "dbdefault": {
-            "value": 1,
-            "type": "number"
+            "type": "number",
+            "value": 1
           }
         }
       ],
       "indexes": []
     },
-
     {
       "name": "products",
+      "alias": null,
       "fields": [
         {
           "name": "id",
@@ -122,6 +140,7 @@
     },
     {
       "name": "users",
+      "alias": null,
       "fields": [
         {
           "name": "id",
@@ -178,6 +197,7 @@
     },
     {
       "name": "countries",
+      "alias": null,
       "fields": [
         {
           "name": "code",
@@ -205,71 +225,78 @@
       "indexes": []
     }
   ],
+  "enums": [],
+  "tableGroups": [],
   "refs": [
     {
       "name": null,
+      "onDelete": "restrict",
       "endpoints": [
         {
           "tableName": "users",
-          "fieldName": "id",
-          "relation": "1"
+          "relation": "1",
+          "fieldName": "id"
         },
         {
           "tableName": "orders",
-          "fieldName": "user_id",
-          "relation": "*"
+          "relation": "*",
+          "fieldName": "user_id"
         }
-      ],
-      "onDelete": "restrict"
+      ]
     },
     {
       "name": null,
+      "onDelete": "cascade",
       "endpoints": [
         {
           "tableName": "orders",
-          "fieldName": "id",
-          "relation": "1"
+          "relation": "1",
+          "fieldName": [
+            "id",
+            "cool_id"
+          ]
         },
         {
           "tableName": "order_items",
-          "fieldName": "order_id",
-          "relation": "*"
+          "relation": "*",
+          "fieldName": [
+            "order_id",
+            "cool_order_id"
+          ]
         }
-      ],
-      "onDelete": "cascade"
+      ]
     },
     {
       "name": null,
+      "onDelete": "set null",
       "endpoints": [
         {
           "tableName": "products",
-          "fieldName": "id",
-          "relation": "1"
+          "relation": "1",
+          "fieldName": "id"
         },
         {
           "tableName": "order_items",
-          "fieldName": "product_id",
-          "relation": "*"
+          "relation": "*",
+          "fieldName": "product_id"
         }
-      ],
-      "onDelete": "set null"
+      ]
     },
     {
       "name": null,
+      "onDelete": "no action",
       "endpoints": [
         {
           "tableName": "countries",
-          "fieldName": "code",
-          "relation": "1"
+          "relation": "1",
+          "fieldName": "code"
         },
         {
           "tableName": "users",
-          "fieldName": "country_code",
-          "relation": "*"
+          "relation": "*",
+          "fieldName": "country_code"
         }
-      ],
-      "onDelete": "no action"
+      ]
     }
-  ],
-  "enums": []
+  ]
 }
