@@ -24,6 +24,6 @@ export function buildFieldName (fieldIds, model, format) {
       break;
   }
   let fieldNames = fieldIds.map(fieldId => encloserLeft + model.fields[fieldId].name + encloserRight);
-  return fieldIds.length == 1 ? parenthesis ? `(${fieldNames.join("")})` : fieldNames.join("")  
+  return fieldIds.length == 1 ? (parenthesis ? `(${fieldNames.join("")})` : fieldNames.join("")) 
                               : `(${fieldNames.join(", ")})`;
 }
