@@ -81,7 +81,7 @@ describe('@dbml/core - model_structure', () => {
 
       test('schema "public" - contains all refs', () => {
         const schema = database.schemas[0];
-        expect(schema.refs).toHaveLength(6);
+        expect(schema.refs).toHaveLength(7);
 
         const refs = schema.refs.map((ref) => ({
           name: ref.name,
@@ -424,7 +424,7 @@ describe('@dbml/core - model_structure', () => {
 
       test('schema "public" - contains all refs', () => {
         const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
-        expect(schema.refIds).toHaveLength(6);
+        expect(schema.refIds).toHaveLength(7);
 
         // eslint-disable-next-line
         const refs = schema.refIds.map((refId) => ({
@@ -459,6 +459,28 @@ describe('@dbml/core - model_structure', () => {
                 fieldName: ['code'],
                 relation: '1',
               },
+            ]),
+          }),
+          expect.objectContaining({
+            endpoints: expect.arrayContaining([
+              {
+                schemaName: DEFAULT_SCHEMA_NAME,
+                tableName: 'products',
+                fieldName: [
+                  "id",
+                  "name"
+                ],
+                relation: "1",
+              },
+              {
+                schemaName: DEFAULT_SCHEMA_NAME,
+                tableName: 'order_items',
+                fieldName: [
+                  "product_id",
+                  "product_name"
+                ],
+                relation: "*",
+              }
             ]),
           }),
         ]));

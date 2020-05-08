@@ -460,6 +460,26 @@
           "inline_refs": []
         },
         {
+          "name": "product_name",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 958,
+              "line": 48,
+              "column": 1
+            },
+            "end": {
+              "offset": 979,
+              "line": 49,
+              "column": 1
+            }
+          },
+          "inline_refs": []
+        },
+        {
           "name": "quantity",
           "type": {
             "type_name": "int",
@@ -625,8 +645,7 @@
               "column": 1
             }
           },
-          "inline_refs": [],
-          "pk": true
+          "inline_refs": []
         },
         {
           "name": "name",
@@ -773,6 +792,19 @@
           "name": "product_status"
         },
         {
+          "pk": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "id"
+            },
+            {
+              "type": "column",
+              "value": "name"
+            }
+          ]
+        },
+        {
           "columns": [
             {
               "value": "id",
@@ -846,6 +878,57 @@
         {
           "tableName": "merchants",
           "fieldName": "admin_id",
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 378,
+              "line": 21,
+              "column": 17
+            },
+            "end": {
+              "offset": 389,
+              "line": 21,
+              "column": 28
+            }
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 378,
+          "line": 21,
+          "column": 17
+        },
+        "end": {
+          "offset": 389,
+          "line": 21,
+          "column": 28
+        }
+      }
+    },
+    {
+      "name": null,
+      "endpoints": [
+        {
+          "tableName": "products",
+          "fieldName": ["id", "name"],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 378,
+              "line": 21,
+              "column": 17
+            },
+            "end": {
+              "offset": 389,
+              "line": 21,
+              "column": 28
+            }
+          }
+        },
+        {
+          "tableName": "order_items",
+          "fieldName": ["product_id", "product_name"],
           "relation": "*",
           "token": {
             "start": {
