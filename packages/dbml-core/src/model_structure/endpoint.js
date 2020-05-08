@@ -9,7 +9,7 @@ class Endpoint extends Element {
 
     this.schemaName = schemaName;
     this.tableName = tableName;
-    this.fieldName = fieldName;
+    this.fieldName = fieldName; // can be an array of names
     this.fields = [];
     this.ref = ref;
     this.dbState = this.ref.dbState;
@@ -36,8 +36,8 @@ class Endpoint extends Element {
   }
 
   compareFields(endpoint){
-    sortedThisFields = this.fields.slice().sort();
-    sortedEndpointFields = endpoint.fields.slice().sort();
+    let sortedThisFields = this.fields.slice().sort();
+    let sortedEndpointFields = endpoint.fields.slice().sort();
     for (let i = 0; i < sortedThisFields.length; i++){
       if (sortedThisFields[i] != sortedEndpointFields[i]) return false;  
     }
@@ -46,9 +46,9 @@ class Endpoint extends Element {
   export () {
     return {
       ...this.shallowExport(),
+      fieldName: this.fieldName
     };
   }
-
   exportParentIds () {
     return {
       refId: this.ref.id,
@@ -61,7 +61,7 @@ class Endpoint extends Element {
     return {
       schemaName: this.schemaName,
       tableName: this.tableName,
-      fieldName: this.fieldName,
+      //fieldName: this.fieldName,
       relation: this.relation,
     };
   }
@@ -78,7 +78,7 @@ class Endpoint extends Element {
   setField (field, table) {
     if (!field) {
       this.error(`Can't find field ${shouldPrintSchema(table.schema)
-        ? `"${table.schema.name}".` : ''}"${this.fieldName}" in table "${this.tableName}"`);
+        ? `"${table.schema.name}".` : ''}"${field.name}" in table "${this.tableName}"`);
     }
     if (!this.field) this.field = field;
     this.fields.push(field.id);
