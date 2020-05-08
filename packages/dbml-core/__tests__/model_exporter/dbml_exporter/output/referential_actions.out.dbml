@@ -1,13 +1,19 @@
 Table "orders" {
-  "id" int [pk, increment]
-  "user_id" int [not null]
-  "created_at" datetime [default: `now()`]
+  "id" int
+  "cool_id" int
+  "user_id" int [unique, not null]
+  "status" orders_status_enum
+  "created_at" varchar(255)
+
+Indexes {
+  (id, cool_id) [pk]
+}
 }
 
 Table "order_items" {
-  "id" int [pk, increment]
-  "order_id" int [not null]
-  "product_id" int [default: null]
+  "order_id" int
+  "cool_order_id" int
+  "product_id" int
   "quantity" int [default: 1]
 }
 
@@ -35,7 +41,7 @@ Table "countries" {
 
 Ref:"users"."id" < "orders"."user_id" [delete: restrict]
 
-Ref:"orders"."id" < "order_items"."order_id" [delete: cascade]
+Ref:"orders".("id", "cool_id") < "order_items".("order_id", "cool_order_id") [delete: cascade]
 
 Ref:"products"."id" < "order_items"."product_id" [delete: set null]
 

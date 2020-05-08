@@ -1,13 +1,16 @@
 CREATE TABLE `orders` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `created_at` datetime DEFAULT (now())
+  `id` int,
+  `cool_id` int,
+  `user_id` int UNIQUE NOT NULL,
+  `status` orders_status_enum,
+  `created_at` varchar(255),
+  PRIMARY KEY (`id`, `cool_id`)
 );
 
 CREATE TABLE `order_items` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `order_id` int NOT NULL,
-  `product_id` int DEFAULT null,
+  `order_id` int,
+  `cool_order_id` int,
+  `product_id` int,
   `quantity` int DEFAULT 1
 );
 
@@ -35,8 +38,9 @@ CREATE TABLE `countries` (
 
 ALTER TABLE `orders` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT;
 
-ALTER TABLE `order_items` ADD FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
+ALTER TABLE `order_items` ADD FOREIGN KEY (`order_id`, `cool_order_id`) REFERENCES `orders` (`id`, `cool_id`) ON DELETE CASCADE;
 
 ALTER TABLE `order_items` ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE SET NULL;
 
 ALTER TABLE `users` ADD FOREIGN KEY (`country_code`) REFERENCES `countries` (`code`) ON DELETE NO ACTION;
+
