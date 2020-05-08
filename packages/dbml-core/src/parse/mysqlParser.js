@@ -247,18 +247,18 @@ function peg$parse(input, options) {
       peg$c16 = function(constraint, fields, table2, fields2, fkActions) {
       	const name = constraint ? constraint[2] : null;
       	const arr = [];
-      	fields.forEach((field, index) => {
+      	//fields.forEach((field, index) => {
       		const fkObj = {
       			name: name,
       			endpoints: [
       				{
       					tableName: null,
-      					fieldName: field,
+      					fieldName: fields,
       					relation: "*",
       				},
       				{
       					tableName: table2,
-      					fieldName: fields2[index],
+      					fieldName: fields2,//[index],
       					relation: "1",
       				}
       			],
@@ -271,7 +271,7 @@ function peg$parse(input, options) {
       			fkObj.onUpdate = fkAction.action;
       		});
       		arr.push(fkObj);
-      	})
+      	//})
         return arr
       },
       peg$c17 = "on",

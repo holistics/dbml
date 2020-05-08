@@ -150,18 +150,18 @@ FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _
 {
 	const name = constraint ? constraint[2] : null;
 	const arr = [];
-	fields.forEach((field, index) => {
+	//fields.forEach((field, index) => {
 		const fkObj = {
 			name: name,
 			endpoints: [
 				{
 					tableName: null,
-					fieldName: field,
+					fieldName: fields,
 					relation: "*",
 				},
 				{
 					tableName: table2,
-					fieldName: fields2[index],
+					fieldName: fields2,//[index],
 					relation: "1",
 				}
 			],
@@ -174,7 +174,7 @@ FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _
 			fkObj.onUpdate = fkAction.action;
 		});
 		arr.push(fkObj);
-	})
+	//})
   return arr
 }
 
