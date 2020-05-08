@@ -123,12 +123,14 @@
           "inline_ref": [
             {
               "endpoint": {
-                "fieldName": "code",
-                "relation": "1",
-                "tableName": "countries"
+                "tableName": "countries",
+                "fieldName": [
+                  "code"
+                ],
+                "relation": "1"
               },
-              "onDelete":"no action",
-              "onUpdate":"no action"
+              "onUpdate": "no action",
+              "onDelete": "no action"
             }
           ]
         }
@@ -157,12 +159,14 @@
           "inline_ref": [
             {
               "endpoint": {
-                "fieldName": "id",
-                "relation": "1",
-                "tableName": "users"
+                "tableName": "users",
+                "fieldName": [
+                  "id"
+                ],
+                "relation": "1"
               },
-              "onDelete":"restrict",
-              "onUpdate":"no action"
+              "onUpdate": "no action",
+              "onDelete": "restrict"
             }
           ]
         },
@@ -202,12 +206,14 @@
           "inline_ref": [
             {
               "endpoint": {
-                "fieldName": "id",
-                "relation": "1",
-                "tableName": "orders"
+                "tableName": "orders",
+                "fieldName": [
+                  "id"
+                ],
+                "relation": "1"
               },
-              "onDelete":"cascade",
-              "onUpdate":"restrict"
+              "onUpdate": "restrict",
+              "onDelete": "cascade"
             }
           ]
         },
@@ -224,11 +230,13 @@
           "inline_ref": [
             {
               "endpoint": {
-                "fieldName": "id",
-                "relation": "1",
-                "tableName": "products"
+                "tableName": "products",
+                "fieldName": [
+                  "id"
+                ],
+                "relation": "1"
               },
-              "onDelete":"set null"
+              "onDelete": "set null"
             }
           ]
         },
@@ -249,7 +257,6 @@
   ],
   "refs": [
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "users",
@@ -258,15 +265,16 @@
         },
         {
           "tableName": "countries",
-          "fieldName": "code",
+          "fieldName": [
+            "code"
+          ],
           "relation": "1"
         }
       ],
-      "onDelete": "no action",
-      "onUpdate": "no action"
+      "onUpdate": "no action",
+      "onDelete": "no action"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "orders",
@@ -275,15 +283,16 @@
         },
         {
           "tableName": "users",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ],
-      "onDelete": "restrict",
-      "onUpdate": "no action"
+      "onUpdate": "no action",
+      "onDelete": "restrict"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "order_items",
@@ -292,15 +301,16 @@
         },
         {
           "tableName": "orders",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ],
-      "onDelete": "cascade",
-      "onUpdate": "restrict"
+      "onUpdate": "restrict",
+      "onDelete": "cascade"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "order_items",
@@ -309,7 +319,9 @@
         },
         {
           "tableName": "products",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ],

@@ -185,7 +185,10 @@ ref_body
   }
 //CHANGE
 RefField
-  = field:(RefSingleField/RefMultipleFields) { return field; }
+  = field:(RefSingleField/RefMultipleFields) { 
+    if (typeof field === "string") field = [field];
+    return field; 
+  }
 
 RefSingleField
   =  field:name { return field; }
