@@ -23,7 +23,9 @@
             {
               "endpoint": {
                 "tableName": "users",
-                "fieldName": "id",
+                "fieldName": [
+                  "id"
+                ],
                 "relation": "1"
               },
               "onDelete": "restrict"
@@ -88,7 +90,9 @@
             {
               "endpoint": {
                 "tableName": "products",
-                "fieldName": "id",
+                "fieldName": [
+                  "id"
+                ],
                 "relation": "1"
               },
               "onDelete": "set null"
@@ -205,7 +209,9 @@
             {
               "endpoint": {
                 "tableName": "countries",
-                "fieldName": "code",
+                "fieldName": [
+                  "code"
+                ],
                 "relation": "1"
               },
               "onDelete": "no action"
@@ -254,7 +260,9 @@
         },
         {
           "tableName": "users",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ],
@@ -284,7 +292,9 @@
         },
         {
           "tableName": "products",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ],
@@ -299,7 +309,9 @@
         },
         {
           "tableName": "countries",
-          "fieldName": "code",
+          "fieldName": [
+            "code"
+          ],
           "relation": "1"
         }
       ],

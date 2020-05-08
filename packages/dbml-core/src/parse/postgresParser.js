@@ -674,7 +674,7 @@ function peg$parse(input, options) {
       								const { fieldName } = ref.endpoints[0];
       								// set tableName for endpoints[0];
       								// endpoints[0].tableName = table_name;
-      								const field = table.fields.find(field => field.name === fieldName);
+      								const field = table.fields.find(field => field.name === fieldName[0]);
       								if(!field) {
       									//throw Error(`${table_name}: FOREIGN KEY - Can not find column ${fieldName}`);
       								}
@@ -796,20 +796,20 @@ function peg$parse(input, options) {
       			if(refcolumn && refcolumn.length > column_names.length) {
       				//throw Error(`Line ${location().start.line}: There are extra ${refcolumn.length - column_names.length} refer column(s) not matched.`);
       			}
-      			column_names.forEach((column_name, key) => {
-      				if(refcolumn && key >= refcolumn.length) {
+      			//column_names.forEach((column_name, key) => {
+      				//if(refcolumn && key >= refcolumn.length) {
       					//throw Error(`Line ${location().start.line}: ${column_name} do not have referenced column.`)
-      				}
+      				//}
       				const v = {
       					endpoints: [
       						{
       							tableName: null,
-      							fieldName: column_name,
+      							fieldName: column_names,
       							relation: "*",
       						},
       						{
       							tableName: reftable,
-      							fieldName: refcolumn ? refcolumn[key] : null,
+      							fieldName: refcolumn,// ? refcolumn[key] : null,
       							relation: "1",
       						},
       					],
@@ -822,7 +822,7 @@ function peg$parse(input, options) {
       					v.onUpdate = fkAction.action;
       				});
       				value.push(v);
-      			})
+      			//})
       			return {
       				type: "fk",
       				t_value: value 
