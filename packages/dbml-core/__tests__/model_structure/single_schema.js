@@ -433,9 +433,11 @@ describe('@dbml/core - model_structure', () => {
           onUpdate: getEle('refs', refId).onUpdate,
           // eslint-disable-next-line
           endpoints: getEle('refs', refId).endpointIds.map((endpointId) => ({
-            schemaName: getEle('schemas', getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldId).tableId).schemaId).name,
-            tableName: getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldId).tableId).name,
-            fieldName: getEle('fields', getEle('endpoints', endpointId).fieldId).name,
+            schemaName: getEle('schemas', getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldIds[0]).tableId).schemaId).name,
+            tableName: getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldIds[0]).tableId).name,
+            fieldName: getEle('endpoints', endpointId).fieldIds.map((fieldId) => {
+              return getEle('fields', fieldId).name;
+            }),
             relation: getEle('endpoints', endpointId).relation,
           })),
         }));
@@ -448,13 +450,13 @@ describe('@dbml/core - model_structure', () => {
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'users',
-                fieldName: 'country_code',
+                fieldName: ['country_code'],
                 relation: '*',
               },
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'countries',
-                fieldName: 'code',
+                fieldName: ['code'],
                 relation: '1',
               },
             ]),
