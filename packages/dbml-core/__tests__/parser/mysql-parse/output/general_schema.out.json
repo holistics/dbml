@@ -278,85 +278,115 @@
   ],
   "refs": [
     {
+      "name": null,
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldName": "order_id",
+          "fieldName": [
+            "order_id"
+          ],
           "relation": "*"
         },
         {
           "tableName": "orders",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ]
     },
     {
+      "name": null,
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldName": "product_id",
+          "fieldName": [
+            "product_id"
+          ],
           "relation": "*"
         },
         {
           "tableName": "products",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ]
     },
     {
+      "name": null,
       "endpoints": [
         {
           "tableName": "users",
-          "fieldName": "country_code",
+          "fieldName": [
+            "country_code"
+          ],
           "relation": "*"
         },
         {
           "tableName": "countries",
-          "fieldName": "code",
+          "fieldName": [
+            "code"
+          ],
           "relation": "1"
         }
       ]
     },
     {
+      "name": null,
       "endpoints": [
         {
           "tableName": "merchants",
-          "fieldName": "country_code",
+          "fieldName": [
+            "country_code"
+          ],
           "relation": "*"
         },
         {
           "tableName": "countries",
-          "fieldName": "code",
+          "fieldName": [
+            "code"
+          ],
           "relation": "1"
         }
       ]
     },
     {
+      "name": null,
       "endpoints": [
         {
           "tableName": "products",
-          "fieldName": "merchant_id",
+          "fieldName": [
+            "merchant_id"
+          ],
           "relation": "*"
         },
         {
           "tableName": "merchants",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ]
     },
     {
+      "name": null,
       "endpoints": [
         {
           "tableName": "merchants",
-          "fieldName": "admin_id",
+          "fieldName": [
+            "admin_id"
+          ],
           "relation": "*"
         },
         {
           "tableName": "users",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ]

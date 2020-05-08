@@ -13,13 +13,13 @@
           },
           "token": {
             "start": {
-              "offset": 38,
-              "line": 3,
+              "offset": 37,
+              "line": 2,
               "column": 3
             },
             "end": {
-              "offset": 52,
-              "line": 4,
+              "offset": 51,
+              "line": 3,
               "column": 1
             }
           },
@@ -34,13 +34,13 @@
           },
           "token": {
             "start": {
-              "offset": 52,
-              "line": 4,
+              "offset": 51,
+              "line": 3,
               "column": 1
             },
             "end": {
-              "offset": 68,
-              "line": 5,
+              "offset": 67,
+              "line": 4,
               "column": 1
             }
           },
@@ -49,13 +49,13 @@
       ],
       "token": {
         "start": {
-          "offset": 1,
-          "line": 2,
+          "offset": 0,
+          "line": 1,
           "column": 1
         },
         "end": {
-          "offset": 69,
-          "line": 5,
+          "offset": 68,
+          "line": 4,
           "column": 2
         }
       },
@@ -74,13 +74,13 @@
           },
           "token": {
             "start": {
-              "offset": 118,
-              "line": 8,
+              "offset": 117,
+              "line": 7,
               "column": 3
             },
             "end": {
-              "offset": 132,
-              "line": 9,
+              "offset": 131,
+              "line": 8,
               "column": 1
             }
           },
@@ -95,13 +95,13 @@
           },
           "token": {
             "start": {
-              "offset": 132,
-              "line": 9,
+              "offset": 131,
+              "line": 8,
               "column": 1
             },
             "end": {
-              "offset": 159,
-              "line": 10,
+              "offset": 158,
+              "line": 9,
               "column": 1
             }
           },
@@ -111,13 +111,13 @@
       ],
       "token": {
         "start": {
-          "offset": 71,
-          "line": 7,
+          "offset": 70,
+          "line": 6,
           "column": 1
         },
         "end": {
-          "offset": 160,
-          "line": 10,
+          "offset": 159,
+          "line": 9,
           "column": 2
         }
       },
@@ -136,13 +136,13 @@
           },
           "token": {
             "start": {
-              "offset": 238,
-              "line": 13,
+              "offset": 237,
+              "line": 12,
               "column": 3
             },
             "end": {
-              "offset": 252,
-              "line": 14,
+              "offset": 251,
+              "line": 13,
               "column": 1
             }
           },
@@ -157,13 +157,13 @@
           },
           "token": {
             "start": {
-              "offset": 252,
-              "line": 14,
+              "offset": 251,
+              "line": 13,
               "column": 1
             },
             "end": {
-              "offset": 268,
-              "line": 15,
+              "offset": 267,
+              "line": 14,
               "column": 1
             }
           },
@@ -177,13 +177,13 @@
           },
           "token": {
             "start": {
-              "offset": 268,
-              "line": 15,
+              "offset": 267,
+              "line": 14,
               "column": 1
             },
             "end": {
-              "offset": 297,
-              "line": 16,
+              "offset": 296,
+              "line": 15,
               "column": 1
             }
           },
@@ -193,13 +193,13 @@
       ],
       "token": {
         "start": {
-          "offset": 162,
-          "line": 12,
+          "offset": 161,
+          "line": 11,
           "column": 1
         },
         "end": {
-          "offset": 298,
-          "line": 16,
+          "offset": 297,
+          "line": 15,
           "column": 2
         }
       },
@@ -219,13 +219,13 @@
           },
           "token": {
             "start": {
-              "offset": 374,
-              "line": 19,
+              "offset": 373,
+              "line": 18,
               "column": 3
             },
             "end": {
-              "offset": 388,
-              "line": 20,
+              "offset": 387,
+              "line": 19,
               "column": 1
             }
           },
@@ -240,13 +240,13 @@
           },
           "token": {
             "start": {
-              "offset": 388,
-              "line": 20,
+              "offset": 387,
+              "line": 19,
               "column": 1
             },
             "end": {
-              "offset": 404,
-              "line": 21,
+              "offset": 403,
+              "line": 20,
               "column": 1
             }
           },
@@ -260,13 +260,13 @@
           },
           "token": {
             "start": {
-              "offset": 404,
-              "line": 21,
+              "offset": 403,
+              "line": 20,
               "column": 1
             },
             "end": {
-              "offset": 423,
-              "line": 22,
+              "offset": 422,
+              "line": 21,
               "column": 1
             }
           },
@@ -280,13 +280,13 @@
           },
           "token": {
             "start": {
-              "offset": 423,
-              "line": 22,
+              "offset": 422,
+              "line": 21,
               "column": 1
             },
             "end": {
-              "offset": 442,
-              "line": 23,
+              "offset": 441,
+              "line": 22,
               "column": 1
             }
           },
@@ -295,13 +295,13 @@
       ],
       "token": {
         "start": {
-          "offset": 300,
-          "line": 18,
+          "offset": 299,
+          "line": 17,
           "column": 1
         },
         "end": {
-          "offset": 443,
-          "line": 23,
+          "offset": 442,
+          "line": 22,
           "column": 2
         }
       },
@@ -316,34 +316,38 @@
       "endpoints": [
         {
           "tableName": "user",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1",
           "token": {
             "start": {
-              "offset": 449,
-              "line": 25,
+              "offset": 448,
+              "line": 24,
               "column": 5
             },
             "end": {
-              "offset": 483,
-              "line": 25,
+              "offset": 482,
+              "line": 24,
               "column": 39
             }
           }
         },
         {
           "tableName": "merchant",
-          "fieldName": "user_id",
+          "fieldName": [
+            "user_id"
+          ],
           "relation": "*",
           "token": {
             "start": {
-              "offset": 449,
-              "line": 25,
+              "offset": 448,
+              "line": 24,
               "column": 5
             },
             "end": {
-              "offset": 483,
-              "line": 25,
+              "offset": 482,
+              "line": 24,
               "column": 39
             }
           }
@@ -351,13 +355,13 @@
       ],
       "token": {
         "start": {
-          "offset": 445,
-          "line": 25,
+          "offset": 444,
+          "line": 24,
           "column": 1
         },
         "end": {
-          "offset": 483,
-          "line": 25,
+          "offset": 482,
+          "line": 24,
           "column": 39
         }
       }
@@ -367,34 +371,38 @@
       "endpoints": [
         {
           "tableName": "product",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1",
           "token": {
             "start": {
-              "offset": 489,
-              "line": 27,
+              "offset": 488,
+              "line": 26,
               "column": 5
             },
             "end": {
-              "offset": 529,
-              "line": 27,
+              "offset": 528,
+              "line": 26,
               "column": 45
             }
           }
         },
         {
           "tableName": "merchant",
-          "fieldName": "product_id",
+          "fieldName": [
+            "product_id"
+          ],
           "relation": "*",
           "token": {
             "start": {
-              "offset": 489,
-              "line": 27,
+              "offset": 488,
+              "line": 26,
               "column": 5
             },
             "end": {
-              "offset": 529,
-              "line": 27,
+              "offset": 528,
+              "line": 26,
               "column": 45
             }
           }
@@ -402,18 +410,19 @@
       ],
       "token": {
         "start": {
-          "offset": 485,
-          "line": 27,
+          "offset": 484,
+          "line": 26,
           "column": 1
         },
         "end": {
-          "offset": 529,
-          "line": 27,
+          "offset": 528,
+          "line": 26,
           "column": 45
         }
       }
     }
   ],
   "enums": [],
-  "tableGroups": []
+  "tableGroups": [],
+  "project": {}
 }

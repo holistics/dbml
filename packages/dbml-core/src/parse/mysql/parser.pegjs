@@ -115,7 +115,7 @@ TableBody = _ lines:Line* _ {
 					
 	// Set inline_ref for fields
 	fks.map(key => {
-		const field = fields.find(f => f.name === key.endpoints[0].fieldName);
+		const field = fields.find(f => f.name === key.endpoints[0].fieldName[0]);
 		if(!field.inline_ref) {
 			field.inline_ref = [];
 		}
