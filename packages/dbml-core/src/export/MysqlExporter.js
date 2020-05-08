@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { shouldPrintSchema } from './utils';
+import { shouldPrintSchema, buildFieldName } from './utils';
 
 class MySQLExporter {
   static getFieldLines (tableId, model) {
@@ -119,13 +119,15 @@ class MySQLExporter {
       const foreignEndpoint = model.endpoints[foreignEndpointId];
       const refEndpoint = model.endpoints[refEndpointId];
 
-      const refEndpointField = model.fields[refEndpoint.fieldId];
+      const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
+      const refEndpointFieldName = buildFieldName(refEndpoint.fieldIds, model, 'mysql');
 
-      const foreignEndpointField = model.fields[foreignEndpoint.fieldId];
+      const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
+      const foreignEndpointFieldName = buildFieldName(foreignEndpoint.fieldIds, model, 'mysql');
 
       let line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
         ? `\`${foreignEndpointSchema.name}\`.` : ''}\`${foreignEndpointTable.name}\` ADD `;
@@ -134,8 +136,8 @@ class MySQLExporter {
         line += `CONSTRAINT \`${ref.name}\` `;
       }
 
-      line += `FOREIGN KEY (\`${foreignEndpointField.name}\`) REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
-        ? `\`${refEndpointSchema.name}\`.` : ''}\`${refEndpointTable.name}\` (\`${refEndpointField.name}\`)`;
+      line += `FOREIGN KEY ${foreignEndpointFieldName} REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
+        ? `\`${refEndpointSchema.name}\`.` : ''}\`${refEndpointTable.name}\` ${refEndpointFieldName}`;
       if (ref.onDelete) {
         line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
       }

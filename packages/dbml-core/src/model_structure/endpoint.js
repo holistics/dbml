@@ -65,7 +65,6 @@ class Endpoint extends Element {
       relation: this.relation,
     };
   }
-//CHANGE
   
   setFields (fieldNames, table) {
     if (typeof fieldNames == "string") fieldNames = [fieldNames] 
