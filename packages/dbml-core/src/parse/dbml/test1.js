@@ -15,7 +15,7 @@ Table users as U {
   created_at timestamp
   country_code int
 }
-Ref: U."(a,b)" < U.b
+Ref: U.(a,b) < U.b
 `;
 const result = parser.parse(content);
 console.log(result.refs[0].endpoints);
