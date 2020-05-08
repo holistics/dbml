@@ -41,6 +41,8 @@ class Ref extends Element {
     if (this.endpoints[0].equals(this.endpoints[1])) {
       this.error('Two endpoints are the same');
     }
+
+    //TODO: Handle Error with different number of fields
   }
 
   equals (ref) {
