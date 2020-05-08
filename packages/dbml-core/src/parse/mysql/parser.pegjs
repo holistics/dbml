@@ -150,31 +150,29 @@ FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _
 {
 	const name = constraint ? constraint[2] : null;
 	const arr = [];
-	//fields.forEach((field, index) => {
-		const fkObj = {
-			name: name,
-			endpoints: [
-				{
-					tableName: null,
-					fieldName: fields,
-					relation: "*",
-				},
-				{
-					tableName: table2,
-					fieldName: fields2,//[index],
-					relation: "1",
-				}
-			],
-		};
-		fkActions.forEach(fkAction => {
-			if (fkAction.type === 'delete') {
-				fkObj.onDelete = fkAction.action;
-				return;
+	const fkObj = {
+		name: name,
+		endpoints: [
+			{
+				tableName: null,
+				fieldName: fields,
+				relation: "*",
+			},
+			{
+				tableName: table2,
+				fieldName: fields2,
+				relation: "1",
 			}
-			fkObj.onUpdate = fkAction.action;
-		});
-		arr.push(fkObj);
-	//})
+		],
+	};
+	fkActions.forEach(fkAction => {
+		if (fkAction.type === 'delete') {
+			fkObj.onDelete = fkAction.action;
+			return;
+		}
+		fkObj.onUpdate = fkAction.action;
+	});
+	arr.push(fkObj);
   return arr
 }
 

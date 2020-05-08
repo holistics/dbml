@@ -5,12 +5,16 @@
       "endpoints": [
         {
           "tableName": "distributors",
-          "fieldName": "address",
+          "fieldName": [
+            "address"
+          ],
           "relation": "*"
         },
         {
           "tableName": "addresses",
-          "fieldName": "address",
+          "fieldName": [
+            "address"
+          ],
           "relation": "1"
         }
       ]

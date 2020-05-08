@@ -9,8 +9,8 @@
             "type_name": "int",
             "args": null
           },
-          "pk": true,
-          "increment": true
+          "increment": true,
+          "pk": true
         },
         {
           "name": "user_id",
@@ -43,8 +43,8 @@
             "type_name": "int",
             "args": null
           },
-          "pk": true,
-          "increment": true
+          "increment": true,
+          "pk": true
         },
         {
           "name": "order_id",
@@ -79,7 +79,6 @@
       ],
       "indexes": []
     },
-
     {
       "name": "products",
       "fields": [
@@ -89,8 +88,8 @@
             "type_name": "int",
             "args": null
           },
-          "pk": true,
-          "increment": true
+          "increment": true,
+          "pk": true
         },
         {
           "name": "name",
@@ -129,8 +128,8 @@
             "type_name": "int",
             "args": null
           },
-          "pk": true,
-          "increment": true
+          "increment": true,
+          "pk": true
         },
         {
           "name": "name",
@@ -207,33 +206,39 @@
   ],
   "refs": [
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "orders",
-          "fieldName": "user_id",
+          "fieldName": [
+            "user_id"
+          ],
           "relation": "*"
         },
         {
           "tableName": "users",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ],
-      "onDelete": "restrict",
-      "onUpdate": "no action"
+      "onUpdate": "no action",
+      "onDelete": "restrict"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldName": "order_id",
+          "fieldName": [
+            "order_id"
+          ],
           "relation": "*"
         },
         {
           "tableName": "orders",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ],
@@ -241,32 +246,38 @@
       "onUpdate": "restrict"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldName": "product_id",
+          "fieldName": [
+            "product_id"
+          ],
           "relation": "*"
         },
         {
           "tableName": "products",
-          "fieldName": "id",
+          "fieldName": [
+            "id"
+          ],
           "relation": "1"
         }
       ],
       "onDelete": "set null"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "users",
-          "fieldName": "country_code",
+          "fieldName": [
+            "country_code"
+          ],
           "relation": "*"
         },
         {
           "tableName": "countries",
-          "fieldName": "code",
+          "fieldName": [
+            "code"
+          ],
           "relation": "1"
         }
       ],
