@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { shouldPrintSchema } from './utils';
+import { shouldPrintSchema, buildFieldName } from './utils';
 
 class DbmlExporter {
   static hasWhiteSpace (str) {
@@ -178,11 +178,7 @@ class DbmlExporter {
 
     return tableStrs.length ? tableStrs.join('\n') : '';
   }
-  static buildFieldName (fieldIds, model) {
-    let result;
-    let fieldNames = fieldIds.map(fieldId => `"${model.fields[fieldId].name}"`);
-    return fieldIds.length == 1 ? fieldNames.join("") : `(${fieldNames.join(", ")})`;
-  }
+  
   static exportRefs (refIds, model) {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
@@ -196,7 +192,7 @@ class DbmlExporter {
       const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = DbmlExporter.buildFieldName(refEndpoint.fieldIds, model); 
+      const refEndpointFieldName = buildFieldName(refEndpoint.fieldIds, model, 'dbml'); 
       //console.log(`FILEDS: ${DbmlExporter.buildFieldName(refEndpointFieldIds, model)}`);
 
       if (ref.name) {
@@ -210,7 +206,7 @@ class DbmlExporter {
       const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-      const foreignEndpointFieldName = DbmlExporter.buildFieldName(foreignEndpoint.fieldIds, model);
+      const foreignEndpointFieldName = buildFieldName(foreignEndpoint.fieldIds, model, 'dbml');
       
       if (foreignEndpoint.relation === '1') line += '- ';
       else line += '< ';
