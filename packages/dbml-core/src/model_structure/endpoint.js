@@ -46,14 +46,12 @@ class Endpoint extends Element {
   export () {
     return {
       ...this.shallowExport(),
-      fieldName: this.fieldName
     };
   }
   exportParentIds () {
     return {
       refId: this.ref.id,
-      fieldIds: this.fields,
-      fieldId: this.field.id
+      fieldIds: this.fields
     };
   }
 
@@ -61,13 +59,13 @@ class Endpoint extends Element {
     return {
       schemaName: this.schemaName,
       tableName: this.tableName,
-      //fieldName: this.fieldName,
+      fieldName: this.fieldName,
       relation: this.relation,
     };
   }
   
   setFields (fieldNames, table) {
-    if (typeof fieldNames == "string") fieldNames = [fieldNames] 
+    if (typeof fieldNames === "string") fieldNames = [fieldNames] 
     fieldNames.forEach(fieldName => {
       const field = table.findField(fieldName);
       this.setField(field, table);
