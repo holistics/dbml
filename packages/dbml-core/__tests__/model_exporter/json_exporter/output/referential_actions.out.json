@@ -6,11 +6,13 @@
       "tables": [
         {
           "name": "orders",
+          "alias": null,
           "fields": [
             {
               "name": "id",
               "type": {
-                "type_name": "int"
+                "type_name": "int",
+                "args": null
               },
               "pk": true,
               "increment": true
@@ -18,7 +20,8 @@
             {
               "name": "user_id",
               "type": {
-                "type_name": "int"
+                "type_name": "int",
+                "args": null
               },
               "unique": true,
               "not_null": true
@@ -26,7 +29,8 @@
             {
               "name": "status",
               "type": {
-                "type_name": "orders_status_enum"
+                "type_name": "orders_status_enum",
+                "args": null
               }
             },
             {
@@ -41,23 +45,20 @@
         },
         {
           "name": "order_items",
+          "alias": null,
           "fields": [
             {
               "name": "order_id",
               "type": {
-                "type_name": "int"
-              }
-            },
-            {
-              "name": "cool_order_id",
-              "type": {
-                "type_name": "int"
+                "type_name": "int",
+                "args": null
               }
             },
             {
               "name": "product_id",
               "type": {
-                "type_name": "int"
+                "type_name": "int",
+                "args": null
               }
             },
             {
@@ -70,7 +71,8 @@
             {
               "name": "quantity",
               "type": {
-                "type_name": "int"
+                "type_name": "int",
+                "args": null
               },
               "dbdefault": {
                 "type": "number",
@@ -82,11 +84,13 @@
         },
         {
           "name": "products",
+          "alias": null,
           "fields": [
             {
               "name": "id",
               "type": {
-                "type_name": "int"
+                "type_name": "int",
+                "args": null
               }
             },
             {
@@ -106,7 +110,8 @@
             {
               "name": "created_at",
               "type": {
-                "type_name": "datetime"
+                "type_name": "datetime",
+                "args": null
               },
               "dbdefault": {
                 "value": "now()",
@@ -132,11 +137,13 @@
         },
         {
           "name": "users",
+          "alias": null,
           "fields": [
             {
               "name": "id",
               "type": {
-                "type_name": "int"
+                "type_name": "int",
+                "args": null
               },
               "pk": true,
               "increment": true
@@ -159,13 +166,15 @@
             {
               "name": "date_of_birth",
               "type": {
-                "type_name": "datetime"
+                "type_name": "datetime",
+                "args": null
               }
             },
             {
               "name": "created_at",
               "type": {
-                "type_name": "datetime"
+                "type_name": "datetime",
+                "args": null
               },
               "dbdefault": {
                 "value": "now()",
@@ -175,7 +184,8 @@
             {
               "name": "country_code",
               "type": {
-                "type_name": "int"
+                "type_name": "int",
+                "args": null
               },
               "not_null": true
             }
@@ -184,11 +194,13 @@
         },
         {
           "name": "countries",
+          "alias": null,
           "fields": [
             {
               "name": "code",
               "type": {
-                "type_name": "int"
+                "type_name": "int",
+                "args": null
               },
               "pk": true
             },
@@ -214,6 +226,7 @@
       "tableGroups": [],
       "refs": [
         {
+          "name": null,
           "onDelete": "restrict",
           "endpoints": [
             {
@@ -233,6 +246,7 @@
           ]
         },
         {
+          "name": null,
           "onDelete": "cascade",
           "endpoints": [
             {
@@ -252,6 +266,7 @@
           ]
         },
         {
+          "name": null,
           "onDelete": "set null",
           "endpoints": [
             {
@@ -273,6 +288,7 @@
           ]
         },
         {
+          "name": null,
           "onDelete": "no action",
           "endpoints": [
             {

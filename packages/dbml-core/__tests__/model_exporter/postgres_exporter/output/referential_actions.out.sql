@@ -7,7 +7,6 @@ CREATE TABLE "orders" (
 
 CREATE TABLE "order_items" (
   "order_id" int,
-  "cool_order_id" int,
   "product_id" int,
   "product_name" varchar(255),
   "quantity" int DEFAULT 1

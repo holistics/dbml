@@ -40,37 +40,54 @@
               "column": 1
             },
             "end": {
-              "offset": 71,
+              "offset": 79,
               "line": 4,
               "column": 1
             }
           },
           "inline_refs": [],
+          "unique": true,
           "not_null": true
         },
         {
-          "name": "created_at",
+          "name": "status",
           "type": {
-            "type_name": "datetime",
+            "type_name": "orders_status_enum",
             "args": null
           },
           "token": {
             "start": {
-              "offset": 71,
+              "offset": 79,
               "line": 4,
               "column": 1
             },
             "end": {
-              "offset": 114,
+              "offset": 109,
               "line": 5,
               "column": 1
             }
           },
-          "inline_refs": [],
-          "dbdefault": {
-            "value": "now()",
-            "type": "expression"
-          }
+          "inline_refs": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          },
+          "token": {
+            "start": {
+              "offset": 109,
+              "line": 5,
+              "column": 1
+            },
+            "end": {
+              "offset": 137,
+              "line": 6,
+              "column": 1
+            }
+          },
+          "inline_refs": []
         }
       ],
       "token": {
@@ -80,8 +97,8 @@
           "column": 1
         },
         "end": {
-          "offset": 115,
-          "line": 5,
+          "offset": 138,
+          "line": 6,
           "column": 2
         }
       },
@@ -92,28 +109,6 @@
       "alias": null,
       "fields": [
         {
-          "name": "id",
-          "type": {
-            "type_name": "int",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 141,
-              "line": 8,
-              "column": 3
-            },
-            "end": {
-              "offset": 166,
-              "line": 9,
-              "column": 1
-            }
-          },
-          "inline_refs": [],
-          "pk": true,
-          "increment": true
-        },
-        {
           "name": "order_id",
           "type": {
             "type_name": "int",
@@ -121,18 +116,17 @@
           },
           "token": {
             "start": {
-              "offset": 166,
+              "offset": 164,
               "line": 9,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 194,
+              "offset": 179,
               "line": 10,
               "column": 1
             }
           },
-          "inline_refs": [],
-          "not_null": true
+          "inline_refs": []
         },
         {
           "name": "product_id",
@@ -142,21 +136,37 @@
           },
           "token": {
             "start": {
-              "offset": 194,
+              "offset": 179,
               "line": 10,
               "column": 1
             },
             "end": {
-              "offset": 229,
+              "offset": 198,
               "line": 11,
               "column": 1
             }
           },
-          "inline_refs": [],
-          "dbdefault": {
-            "type": "boolean",
-            "value": "null"
-          }
+          "inline_refs": []
+        },
+        {
+          "name": "product_name",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
+          },
+          "token": {
+            "start": {
+              "offset": 198,
+              "line": 11,
+              "column": 1
+            },
+            "end": {
+              "offset": 228,
+              "line": 12,
+              "column": 1
+            }
+          },
+          "inline_refs": []
         },
         {
           "name": "quantity",
@@ -166,13 +176,13 @@
           },
           "token": {
             "start": {
-              "offset": 229,
-              "line": 11,
+              "offset": 228,
+              "line": 12,
               "column": 1
             },
             "end": {
-              "offset": 259,
-              "line": 12,
+              "offset": 258,
+              "line": 13,
               "column": 1
             }
           },
@@ -185,13 +195,13 @@
       ],
       "token": {
         "start": {
-          "offset": 117,
-          "line": 7,
+          "offset": 140,
+          "line": 8,
           "column": 1
         },
         "end": {
-          "offset": 260,
-          "line": 12,
+          "offset": 259,
+          "line": 13,
           "column": 2
         }
       },
@@ -209,19 +219,17 @@
           },
           "token": {
             "start": {
-              "offset": 283,
-              "line": 15,
+              "offset": 282,
+              "line": 16,
               "column": 3
             },
             "end": {
-              "offset": 308,
-              "line": 16,
+              "offset": 291,
+              "line": 17,
               "column": 1
             }
           },
-          "inline_refs": [],
-          "pk": true,
-          "increment": true
+          "inline_refs": []
         },
         {
           "name": "name",
@@ -231,13 +239,13 @@
           },
           "token": {
             "start": {
-              "offset": 308,
-              "line": 16,
+              "offset": 291,
+              "line": 17,
               "column": 1
             },
             "end": {
-              "offset": 330,
-              "line": 17,
+              "offset": 313,
+              "line": 18,
               "column": 1
             }
           },
@@ -251,13 +259,13 @@
           },
           "token": {
             "start": {
-              "offset": 330,
-              "line": 17,
+              "offset": 313,
+              "line": 18,
               "column": 1
             },
             "end": {
-              "offset": 354,
-              "line": 18,
+              "offset": 337,
+              "line": 19,
               "column": 1
             }
           },
@@ -271,13 +279,13 @@
           },
           "token": {
             "start": {
-              "offset": 354,
-              "line": 18,
+              "offset": 337,
+              "line": 19,
               "column": 1
             },
             "end": {
-              "offset": 397,
-              "line": 19,
+              "offset": 380,
+              "line": 20,
               "column": 1
             }
           },
@@ -290,17 +298,43 @@
       ],
       "token": {
         "start": {
-          "offset": 262,
-          "line": 14,
+          "offset": 261,
+          "line": 15,
           "column": 1
         },
         "end": {
-          "offset": 398,
-          "line": 19,
+          "offset": 412,
+          "line": 24,
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [
+        {
+          "columns": [
+            {
+              "value": "id",
+              "type": "column"
+            },
+            {
+              "value": "name",
+              "type": "column"
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 393,
+              "line": 22,
+              "column": 3
+            },
+            "end": {
+              "offset": 408,
+              "line": 22,
+              "column": 18
+            }
+          },
+          "pk": true
+        }
+      ]
     },
     {
       "name": "users",
@@ -314,13 +348,13 @@
           },
           "token": {
             "start": {
-              "offset": 418,
-              "line": 22,
+              "offset": 432,
+              "line": 27,
               "column": 3
             },
             "end": {
-              "offset": 443,
-              "line": 23,
+              "offset": 457,
+              "line": 28,
               "column": 1
             }
           },
@@ -336,13 +370,13 @@
           },
           "token": {
             "start": {
-              "offset": 443,
-              "line": 23,
+              "offset": 457,
+              "line": 28,
               "column": 1
             },
             "end": {
-              "offset": 465,
-              "line": 24,
+              "offset": 479,
+              "line": 29,
               "column": 1
             }
           },
@@ -356,13 +390,13 @@
           },
           "token": {
             "start": {
-              "offset": 465,
-              "line": 24,
+              "offset": 479,
+              "line": 29,
               "column": 1
             },
             "end": {
-              "offset": 497,
-              "line": 25,
+              "offset": 511,
+              "line": 30,
               "column": 1
             }
           },
@@ -377,13 +411,13 @@
           },
           "token": {
             "start": {
-              "offset": 497,
-              "line": 25,
+              "offset": 511,
+              "line": 30,
               "column": 1
             },
             "end": {
-              "offset": 524,
-              "line": 26,
+              "offset": 538,
+              "line": 31,
               "column": 1
             }
           },
@@ -397,13 +431,13 @@
           },
           "token": {
             "start": {
-              "offset": 524,
-              "line": 26,
+              "offset": 538,
+              "line": 31,
               "column": 1
             },
             "end": {
-              "offset": 567,
-              "line": 27,
+              "offset": 581,
+              "line": 32,
               "column": 1
             }
           },
@@ -421,13 +455,13 @@
           },
           "token": {
             "start": {
-              "offset": 567,
-              "line": 27,
+              "offset": 581,
+              "line": 32,
               "column": 1
             },
             "end": {
-              "offset": 599,
-              "line": 28,
+              "offset": 613,
+              "line": 33,
               "column": 1
             }
           },
@@ -437,13 +471,13 @@
       ],
       "token": {
         "start": {
-          "offset": 400,
-          "line": 21,
+          "offset": 414,
+          "line": 26,
           "column": 1
         },
         "end": {
-          "offset": 600,
-          "line": 28,
+          "offset": 614,
+          "line": 33,
           "column": 2
         }
       },
@@ -461,13 +495,13 @@
           },
           "token": {
             "start": {
-              "offset": 624,
-              "line": 31,
+              "offset": 638,
+              "line": 36,
               "column": 3
             },
             "end": {
-              "offset": 640,
-              "line": 32,
+              "offset": 654,
+              "line": 37,
               "column": 1
             }
           },
@@ -482,13 +516,13 @@
           },
           "token": {
             "start": {
-              "offset": 640,
-              "line": 32,
+              "offset": 654,
+              "line": 37,
               "column": 1
             },
             "end": {
-              "offset": 662,
-              "line": 33,
+              "offset": 676,
+              "line": 38,
               "column": 1
             }
           },
@@ -502,13 +536,13 @@
           },
           "token": {
             "start": {
-              "offset": 662,
-              "line": 33,
+              "offset": 676,
+              "line": 38,
               "column": 1
             },
             "end": {
-              "offset": 694,
-              "line": 34,
+              "offset": 708,
+              "line": 39,
               "column": 1
             }
           },
@@ -517,13 +551,13 @@
       ],
       "token": {
         "start": {
-          "offset": 602,
-          "line": 30,
+          "offset": 616,
+          "line": 35,
           "column": 1
         },
         "end": {
-          "offset": 695,
-          "line": 34,
+          "offset": 709,
+          "line": 39,
           "column": 2
         }
       },
@@ -542,13 +576,13 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 701,
-              "line": 36,
+              "offset": 715,
+              "line": 41,
               "column": 5
             },
             "end": {
-              "offset": 753,
-              "line": 36,
+              "offset": 767,
+              "line": 41,
               "column": 57
             }
           }
@@ -561,13 +595,13 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 701,
-              "line": 36,
+              "offset": 715,
+              "line": 41,
               "column": 5
             },
             "end": {
-              "offset": 753,
-              "line": 36,
+              "offset": 767,
+              "line": 41,
               "column": 57
             }
           }
@@ -575,13 +609,13 @@
       ],
       "token": {
         "start": {
-          "offset": 697,
-          "line": 36,
+          "offset": 711,
+          "line": 41,
           "column": 1
         },
         "end": {
-          "offset": 753,
-          "line": 36,
+          "offset": 767,
+          "line": 41,
           "column": 57
         }
       },
@@ -598,13 +632,13 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 759,
-              "line": 38,
+              "offset": 773,
+              "line": 43,
               "column": 5
             },
             "end": {
-              "offset": 817,
-              "line": 38,
+              "offset": 831,
+              "line": 43,
               "column": 63
             }
           }
@@ -617,13 +651,13 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 759,
-              "line": 38,
+              "offset": 773,
+              "line": 43,
               "column": 5
             },
             "end": {
-              "offset": 817,
-              "line": 38,
+              "offset": 831,
+              "line": 43,
               "column": 63
             }
           }
@@ -631,13 +665,13 @@
       ],
       "token": {
         "start": {
-          "offset": 755,
-          "line": 38,
+          "offset": 769,
+          "line": 43,
           "column": 1
         },
         "end": {
-          "offset": 817,
-          "line": 38,
+          "offset": 831,
+          "line": 43,
           "column": 63
         }
       },
@@ -649,52 +683,54 @@
         {
           "tableName": "products",
           "fieldName": [
-            "id"
+            "id",
+            "name"
           ],
           "relation": "1",
           "token": {
             "start": {
-              "offset": 823,
-              "line": 40,
+              "offset": 837,
+              "line": 45,
               "column": 5
             },
             "end": {
-              "offset": 886,
-              "line": 40,
-              "column": 68
+              "offset": 928,
+              "line": 45,
+              "column": 96
             }
           }
         },
         {
           "tableName": "order_items",
           "fieldName": [
-            "product_id"
+            "product_id",
+            "product_name"
           ],
           "relation": "*",
           "token": {
             "start": {
-              "offset": 823,
-              "line": 40,
+              "offset": 837,
+              "line": 45,
               "column": 5
             },
             "end": {
-              "offset": 886,
-              "line": 40,
-              "column": 68
+              "offset": 928,
+              "line": 45,
+              "column": 96
             }
           }
         }
       ],
       "token": {
         "start": {
-          "offset": 819,
-          "line": 40,
+          "offset": 833,
+          "line": 45,
           "column": 1
         },
         "end": {
-          "offset": 886,
-          "line": 40,
-          "column": 68
+          "offset": 928,
+          "line": 45,
+          "column": 96
         }
       },
       "onDelete": "set null"
@@ -710,13 +746,13 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 892,
-              "line": 42,
+              "offset": 934,
+              "line": 47,
               "column": 5
             },
             "end": {
-              "offset": 955,
-              "line": 42,
+              "offset": 997,
+              "line": 47,
               "column": 68
             }
           }
@@ -729,13 +765,13 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 892,
-              "line": 42,
+              "offset": 934,
+              "line": 47,
               "column": 5
             },
             "end": {
-              "offset": 955,
-              "line": 42,
+              "offset": 997,
+              "line": 47,
               "column": 68
             }
           }
@@ -743,13 +779,13 @@
       ],
       "token": {
         "start": {
-          "offset": 888,
-          "line": 42,
+          "offset": 930,
+          "line": 47,
           "column": 1
         },
         "end": {
-          "offset": 955,
-          "line": 42,
+          "offset": 997,
+          "line": 47,
           "column": 68
         }
       },

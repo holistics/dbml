@@ -32,7 +32,7 @@ class Endpoint extends Element {
 
   equals (endpoint) {
     if (this.fields.length != endpoint.fields.length) return false;
-    return this.fields.length == 1 ? this.field.id === endpoint.field.id : this.compareFields(endpoint);
+    return this.compareFields(endpoint);
   }
 
   compareFields(endpoint){
