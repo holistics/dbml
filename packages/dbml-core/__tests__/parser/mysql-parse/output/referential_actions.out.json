@@ -18,17 +18,21 @@
             "type_name": "int",
             "args": null
           },
+          "unique": true,
           "not_null": true
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "orders_status_enum",
+            "args": null
+          }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "datetime",
-            "args": null
-          },
-          "dbdefault": {
-            "value": "now()",
-            "type": "expression"
+            "type_name": "varchar(255)",
+            "args": "255"
           }
         }
       ],
@@ -38,31 +42,24 @@
       "name": "order_items",
       "fields": [
         {
-          "name": "id",
-          "type": {
-            "type_name": "int",
-            "args": null
-          },
-          "pk": true,
-          "increment": true
-        },
-        {
           "name": "order_id",
           "type": {
             "type_name": "int",
             "args": null
-          },
-          "not_null": true
+          }
         },
         {
           "name": "product_id",
           "type": {
             "type_name": "int",
             "args": null
-          },
-          "dbdefault": {
-            "value": "null",
-            "type": "boolean"
+          }
+        },
+        {
+          "name": "product_name",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
           }
         },
         {
@@ -87,9 +84,7 @@
           "type": {
             "type_name": "int",
             "args": null
-          },
-          "pk": true,
-          "increment": true
+          }
         },
         {
           "name": "name",
@@ -117,7 +112,21 @@
           }
         }
       ],
-      "indexes": []
+      "indexes": [
+        {
+          "columns": [
+            {
+              "value": "id",
+              "type": "column"
+            },
+            {
+              "value": "name",
+              "type": "column"
+            }
+          ],
+          "pk": true
+        }
+      ]
     },
     {
       "name": "users",
@@ -223,7 +232,6 @@
           "relation": "1"
         }
       ],
-      "onUpdate": "no action",
       "onDelete": "restrict"
     },
     {
@@ -244,8 +252,7 @@
           "relation": "1"
         }
       ],
-      "onDelete": "cascade",
-      "onUpdate": "restrict"
+      "onDelete": "cascade"
     },
     {
       "name": null,
@@ -253,14 +260,16 @@
         {
           "tableName": "order_items",
           "fieldName": [
-            "product_id"
+            "product_id",
+            "product_name"
           ],
           "relation": "*"
         },
         {
           "tableName": "products",
           "fieldName": [
-            "id"
+            "id",
+            "name"
           ],
           "relation": "1"
         }
@@ -285,8 +294,7 @@
           "relation": "1"
         }
       ],
-      "onDelete": "no action",
-      "onUpdate": "no action"
+      "onDelete": "no action"
     }
   ],
   "enums": []
