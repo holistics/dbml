@@ -48,7 +48,7 @@ TableSyntax
 			const endpoints = [
 				{
 					tableName: name,
-					fieldName: field.name,
+					fieldNames: field.name,
 					relation: "*", //set by default
 				},
 				ref.endpoint,
@@ -115,7 +115,7 @@ TableBody = _ lines:Line* _ {
 					
 	// Set inline_ref for fields
 	fks.map(key => {
-		const field = fields.find(f => f.name === key.endpoints[0].fieldName[0]);
+		const field = fields.find(f => f.name === key.endpoints[0].fieldNames[0]);
 		if(!field.inline_ref) {
 			field.inline_ref = [];
 		}
@@ -155,12 +155,12 @@ FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _
 		endpoints: [
 			{
 				tableName: null,
-				fieldName: fields,
+				fieldNames: fields,
 				relation: "*",
 			},
 			{
 				tableName: table2,
-				fieldName: fields2,
+				fieldNames: fields2,
 				relation: "1",
 			}
 		],

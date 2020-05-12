@@ -162,7 +162,7 @@ function peg$parse(input, options) {
       										endpoints: [
       											{
       												tableName: table.name,
-      												fieldName: field.name,
+      												fieldNames: field.name,
       												relation: "*",
       											},
       											ref.endpoint
@@ -671,12 +671,12 @@ function peg$parse(input, options) {
       							break;
       						case "fk": // set inline_ref for column
       							t_value.forEach((ref) => {
-      								const { fieldName } = ref.endpoints[0];
+      								const { fieldNames } = ref.endpoints[0];
       								// set tableName for endpoints[0];
       								// endpoints[0].tableName = table_name;
-      								const field = table.fields.find(field => field.name === fieldName[0]);
+      								const field = table.fields.find(field => field.name === fieldNames[0]);
       								if(!field) {
-      									//throw Error(`${table_name}: FOREIGN KEY - Can not find column ${fieldName}`);
+      									//throw Error(`${table_name}: FOREIGN KEY - Can not find column ${fieldNames}`);
       								}
       								if(!field.inline_refs) {
       									field.inline_refs = [];
@@ -776,7 +776,7 @@ function peg$parse(input, options) {
       				value: {
       					endpoint: {
       						tableName: reftable,
-      						fieldName: refcolumn ? refcolumn : null,
+      						fieldNames: refcolumn ? refcolumn : null,
       						relation: "1"
       					},
       					...ref_actions
@@ -804,12 +804,12 @@ function peg$parse(input, options) {
       					endpoints: [
       						{
       							tableName: null,
-      							fieldName: column_names,
+      							fieldNames: column_names,
       							relation: "*",
       						},
       						{
       							tableName: reftable,
-      							fieldName: refcolumn,// ? refcolumn[key] : null,
+      							fieldNames: refcolumn,// ? refcolumn[key] : null,
       							relation: "1",
       						},
       					],

@@ -219,14 +219,14 @@
       "endpoints": [
         {
           "tableName": "orders",
-          "fieldName": [
+          "fieldNames": [
             "user_id"
           ],
           "relation": "*"
         },
         {
           "tableName": "users",
-          "fieldName": [
+          "fieldNames": [
             "id"
           ],
           "relation": "1"
@@ -239,14 +239,14 @@
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldName": [
+          "fieldNames": [
             "order_id"
           ],
           "relation": "*"
         },
         {
           "tableName": "orders",
-          "fieldName": [
+          "fieldNames": [
             "id"
           ],
           "relation": "1"
@@ -259,7 +259,7 @@
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldName": [
+          "fieldNames": [
             "product_id",
             "product_name"
           ],
@@ -267,7 +267,7 @@
         },
         {
           "tableName": "products",
-          "fieldName": [
+          "fieldNames": [
             "id",
             "name"
           ],
@@ -281,14 +281,14 @@
       "endpoints": [
         {
           "tableName": "users",
-          "fieldName": [
+          "fieldNames": [
             "country_code"
           ],
           "relation": "*"
         },
         {
           "tableName": "countries",
-          "fieldName": [
+          "fieldNames": [
             "code"
           ],
           "relation": "1"

@@ -160,7 +160,7 @@ function peg$parse(input, options) {
       			const endpoints = [
       				{
       					tableName: name,
-      					fieldName: field.name,
+      					fieldNames: field.name,
       					relation: "*", //set by default
       				},
       				ref.endpoint,
@@ -223,7 +223,7 @@ function peg$parse(input, options) {
       					
       	// Set inline_ref for fields
       	fks.map(key => {
-      		const field = fields.find(f => f.name === key.endpoints[0].fieldName[0]);
+      		const field = fields.find(f => f.name === key.endpoints[0].fieldNames[0]);
       		if(!field.inline_ref) {
       			field.inline_ref = [];
       		}
@@ -252,12 +252,12 @@ function peg$parse(input, options) {
       		endpoints: [
       			{
       				tableName: null,
-      				fieldName: fields,
+      				fieldNames: fields,
       				relation: "*",
       			},
       			{
       				tableName: table2,
-      				fieldName: fields2,
+      				fieldNames: fields2,
       				relation: "1",
       			}
       		],

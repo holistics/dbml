@@ -316,7 +316,7 @@
       "endpoints": [
         {
           "tableName": "user",
-          "fieldName": [
+          "fieldNames": [
             "id"
           ],
           "relation": "1",
@@ -335,7 +335,7 @@
         },
         {
           "tableName": "merchant",
-          "fieldName": [
+          "fieldNames": [
             "user_id"
           ],
           "relation": "*",
@@ -371,7 +371,7 @@
       "endpoints": [
         {
           "tableName": "product",
-          "fieldName": [
+          "fieldNames": [
             "id"
           ],
           "relation": "1",
@@ -390,7 +390,7 @@
         },
         {
           "tableName": "merchant",
-          "fieldName": [
+          "fieldNames": [
             "product_id"
           ],
           "relation": "*",

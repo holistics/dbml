@@ -281,12 +281,12 @@
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldName": "order_id",
+          "fieldNames": "order_id",
           "relation": "*"
         },
         {
           "tableName": "orders",
-          "fieldName": "id",
+          "fieldNames": "id",
           "relation": "1"
         }
       ]
@@ -295,12 +295,12 @@
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldName": "product_id",
+          "fieldNames": "product_id",
           "relation": "*"
         },
         {
           "tableName": "products",
-          "fieldName": "id",
+          "fieldNames": "id",
           "relation": "1"
         }
       ]
@@ -309,12 +309,12 @@
       "endpoints": [
         {
           "tableName": "users",
-          "fieldName": "country_code",
+          "fieldNames": "country_code",
           "relation": "*"
         },
         {
           "tableName": "countries",
-          "fieldName": "code",
+          "fieldNames": "code",
           "relation": "1"
         }
       ]
@@ -323,12 +323,12 @@
       "endpoints": [
         {
           "tableName": "merchants",
-          "fieldName": "country_code",
+          "fieldNames": "country_code",
           "relation": "*"
         },
         {
           "tableName": "countries",
-          "fieldName": "code",
+          "fieldNames": "code",
           "relation": "1"
         }
       ]
@@ -337,12 +337,12 @@
       "endpoints": [
         {
           "tableName": "products",
-          "fieldName": "merchant_id",
+          "fieldNames": "merchant_id",
           "relation": "*"
         },
         {
           "tableName": "merchants",
-          "fieldName": "id",
+          "fieldNames": "id",
           "relation": "1"
         }
       ]
@@ -351,12 +351,12 @@
       "endpoints": [
         {
           "tableName": "merchants",
-          "fieldName": "admin_id",
+          "fieldNames": "admin_id",
           "relation": "*"
         },
         {
           "tableName": "users",
-          "fieldName": "id",
+          "fieldNames": "id",
           "relation": "1"
         }
       ]
