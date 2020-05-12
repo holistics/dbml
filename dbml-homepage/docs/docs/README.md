@@ -23,7 +23,7 @@ outlines the full syntax documentations of DBML.
   - [Column Notes](#column-notes)
 - [Multi-line String](#multi-line-string)
 - [Enum Definition](#enum-definition)
-- [TableGroup](#tablegroup-coming-soon) (coming soon)
+- [TableGroup](#tablegroup)
 - [Syntax Consistency](#syntax-consistency)
 - [Community Contributions](#community-contributions)
 
@@ -316,7 +316,7 @@ When hovering over the column in the canvas, the enum values will be displayed.
         status job_status
     } 
 
-## TableGroup (coming soon)
+## TableGroup
 `TableGroup` allows users to group the related or associated tables together.
 
     TableGroup tablegroup_name { // tablegroup is case-insensitive.
