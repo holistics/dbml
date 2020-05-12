@@ -276,13 +276,13 @@ function peg$parse(input, options) {
           const endpoints = [
             {
               tableName: table1,
-              fieldName: field1,
+              fieldNames: field1,
               relation: relation === ">" ? "*" : "1",
               token: location()
             },
             {
               tableName: table2,
-              fieldName: field2,
+              fieldNames: field2,
               relation: relation === "<" ? "*" : "1",
               token: location()
             }
@@ -340,13 +340,13 @@ function peg$parse(input, options) {
                 const endpoints = [
                 {
                   tableName: iref.tableName,
-                  fieldName: iref.fieldName,
+                  fieldNames: iref.fieldNames,
                   relation: iref.relation === "<" ? "*" : "1",
                   token: iref.token
                 },
                 {
                   tableName: name,
-                  fieldName: field.name,
+                  fieldNames: field.name,
                   relation: iref.relation === ">" ? "*" : "1",
                   token: iref.token
                 }];
@@ -590,7 +590,7 @@ function peg$parse(input, options) {
       peg$c102 = function(relation, table2, field2) {
             return {
               tableName: table2,
-              fieldName: field2,
+              fieldNames: field2,
               relation: relation,
               token: location(),
             }

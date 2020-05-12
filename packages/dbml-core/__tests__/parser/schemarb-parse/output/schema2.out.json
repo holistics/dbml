@@ -117,12 +117,12 @@
       "endpoints": [
         {
           "tableName": "classes",
-          "fieldName": "course_id",
+          "fieldNames": "course_id",
           "relation": "1"
         },
         {
           "tableName": "courses",
-          "fieldName": "id",
+          "fieldNames": "id",
           "relation": "1"
         }
       ]
@@ -133,12 +133,12 @@
         {
           "tableName": "rooms",
           "relation": "1",
-          "fieldName": "class_id"
+          "fieldNames": "class_id"
         },
         {
           "tableName": "classes",
           "relation": "1",
-          "fieldName": "id"
+          "fieldNames": "id"
         }
       ]
     },
@@ -147,12 +147,12 @@
       "endpoints": [
         {
           "tableName": "students",
-          "fieldName": "course_id",
+          "fieldNames": "course_id",
           "relation": "1"
         },
         {
           "tableName": "courses",
-          "fieldName": "id",
+          "fieldNames": "id",
           "relation": "1"
         }
       ]

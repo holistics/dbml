@@ -299,12 +299,12 @@
       "endpoints": [
         {
           "tableName": "orders",
-          "fieldName": "id",
+          "fieldNames": "id",
           "relation": "1"
         },
         {
           "tableName": "order_items",
-          "fieldName": "order_id",
+          "fieldNames": "order_id",
           "relation": "*"
         }
       ]
@@ -314,12 +314,12 @@
       "endpoints": [
         {
           "tableName": "products",
-          "fieldName": "id",
+          "fieldNames": "id",
           "relation": "1"
         },
         {
           "tableName": "order_items",
-          "fieldName": "product_id",
+          "fieldNames": "product_id",
           "relation": "*"
         }
       ]
@@ -329,12 +329,12 @@
       "endpoints": [
         {
           "tableName": "countries",
-          "fieldName": "code",
+          "fieldNames": "code",
           "relation": "1"
         },
         {
           "tableName": "users",
-          "fieldName": "country_code",
+          "fieldNames": "country_code",
           "relation": "*"
         }
       ]
@@ -344,12 +344,12 @@
       "endpoints": [
         {
           "tableName": "countries",
-          "fieldName": "code",
+          "fieldNames": "code",
           "relation": "1"
         },
         {
           "tableName": "merchants",
-          "fieldName": "country_code",
+          "fieldNames": "country_code",
           "relation": "*"
         }
       ]
@@ -359,12 +359,12 @@
       "endpoints": [
         {
           "tableName": "merchants",
-          "fieldName": "id",
+          "fieldNames": "id",
           "relation": "1"
         },
         {
           "tableName": "products",
-          "fieldName": "merchant_id",
+          "fieldNames": "merchant_id",
           "relation": "*"
         }
       ]
@@ -374,12 +374,12 @@
       "endpoints": [
         {
           "tableName": "users",
-          "fieldName": "id",
+          "fieldNames": "id",
           "relation": "1"
         },
         {
           "tableName": "merchants",
-          "fieldName": "admin_id",
+          "fieldNames": "admin_id",
           "relation": "*"
         }
       ]

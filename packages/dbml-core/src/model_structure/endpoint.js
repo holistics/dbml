@@ -3,13 +3,13 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
 
 class Endpoint extends Element {
-  constructor ({ tableName, schemaName, fieldName, relation, token, ref }) {
+  constructor ({ tableName, schemaName, fieldNames, relation, token, ref }) {
     super(token);
     this.relation = relation;
 
     this.schemaName = schemaName;
     this.tableName = tableName;
-    this.fieldName = fieldName; // can be an array of names
+    this.fieldNames = fieldNames; // can be an array of names
     this.fields = [];
     this.ref = ref;
     this.dbState = this.ref.dbState;
@@ -23,7 +23,7 @@ class Endpoint extends Element {
       this.error(`Can't find table ${shouldPrintSchema(schema)
         ? `"${schema.name}".` : ''}"${tableName}"`);
     }
-    this.setFields(fieldName, table) 
+    this.setFields(fieldNames, table) 
   }
 
   generateId () {
@@ -51,7 +51,7 @@ class Endpoint extends Element {
   exportParentIds () {
     return {
       refId: this.ref.id,
-      fieldIds: this.fields
+      fieldIds: this.fields.map(field => field.id)
     };
   }
 
@@ -59,15 +59,15 @@ class Endpoint extends Element {
     return {
       schemaName: this.schemaName,
       tableName: this.tableName,
-      fieldName: this.fieldName,
+      fieldNames: this.fieldNames,
       relation: this.relation,
     };
   }
   
   setFields (fieldNames, table) {
     if (typeof fieldNames === "string") fieldNames = [fieldNames] 
-    fieldNames.forEach(fieldName => {
-      const field = table.findField(fieldName);
+    fieldNames.forEach(fieldNames => {
+      const field = table.findField(fieldNames);
       this.setField(field, table);
     });
   }
@@ -77,8 +77,7 @@ class Endpoint extends Element {
       this.error(`Can't find field ${shouldPrintSchema(table.schema)
         ? `"${table.schema.name}".` : ''}"${field.name}" in table "${this.tableName}"`);
     }
-    if (!this.field) this.field = field;
-    this.fields.push(field.id);
+    this.fields.push(field);
     field.pushEndpoint(this);
   }
 

@@ -167,13 +167,13 @@ ref_body
     const endpoints = [
       {
         tableName: table1,
-        fieldName: field1,
+        fieldNames: field1,
         relation: relation === ">" ? "*" : "1",
         token: location()
       },
       {
         tableName: table2,
-        fieldName: field2,
+        fieldNames: field2,
         relation: relation === "<" ? "*" : "1",
         token: location()
       }
@@ -235,13 +235,13 @@ TableSyntax
           const endpoints = [
           {
             tableName: iref.tableName,
-            fieldName: iref.fieldName,
+            fieldNames: iref.fieldNames,
             relation: iref.relation === "<" ? "*" : "1",
             token: iref.token
           },
           {
             tableName: name,
-            fieldName: field.name,
+            fieldNames: field.name,
             relation: iref.relation === ">" ? "*" : "1",
             token: iref.token
           }];
@@ -526,7 +526,7 @@ RefInline
   = "ref:" sp* relation:relation sp+ table2:name "." field2:name {
       return {
         tableName: table2,
-        fieldName: field2,
+        fieldNames: field2,
         relation: relation,
         token: location(),
       }
