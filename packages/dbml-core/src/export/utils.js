@@ -8,22 +8,32 @@ export function shouldPrintSchema (schema, model) {
   return schema.name !== DEFAULT_SCHEMA_NAME || (schema.name === DEFAULT_SCHEMA_NAME && model.database['1'].hasDefaultSchema);
 }
 export function buildFieldName (fieldIds, model, format) {
-  let encloserLeft = '"', encloserRight = '"';
+  let encloserLeft = '"'; let
+    encloserRight = '"';
   let parenthesis = true;
-  switch (format){
-    case "mysql":
+  switch (format) {
+    case 'mysql':
       encloserLeft = '`';
       encloserRight = '`';
       break;
-    case "mssql":
+    case 'mssql':
       encloserLeft = '[';
       encloserRight = ']';
       break;
-    case "dbml":
+    case 'dbml':
       parenthesis = false;
       break;
+    default:
+      break;
   }
-  let fieldNames = fieldIds.map(fieldId => encloserLeft + model.fields[fieldId].name + encloserRight);
-  return fieldIds.length == 1 ? (parenthesis ? `(${fieldNames.join("")})` : fieldNames.join("")) 
-                              : `(${fieldNames.join(", ")})`;
+  const fieldNames = fieldIds.map(fieldId => encloserLeft + model.fields[fieldId].name + encloserRight);
+
+  let result;
+  if (fieldIds.length === 1) {
+    result = parenthesis ? `(${fieldNames.join('')})` : fieldNames.join('');
+  } else {
+    result = `(${fieldNames.join(', ')})`;
+  }
+
+  return result;
 }

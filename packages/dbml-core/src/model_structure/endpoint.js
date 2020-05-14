@@ -3,13 +3,15 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
 
 class Endpoint extends Element {
-  constructor ({ tableName, schemaName, fieldNames, relation, token, ref }) {
+  constructor ({
+    tableName, schemaName, fieldNames, relation, token, ref,
+  }) {
     super(token);
     this.relation = relation;
 
     this.schemaName = schemaName;
     this.tableName = tableName;
-    this.fieldNames = fieldNames; // can be an array of names
+    this.fieldNames = fieldNames;
     this.fields = [];
     this.ref = ref;
     this.dbState = this.ref.dbState;
@@ -23,7 +25,7 @@ class Endpoint extends Element {
       this.error(`Can't find table ${shouldPrintSchema(schema)
         ? `"${schema.name}".` : ''}"${tableName}"`);
     }
-    this.setFields(fieldNames, table) 
+    this.setFields(fieldNames, table);
   }
 
   generateId () {
@@ -31,27 +33,29 @@ class Endpoint extends Element {
   }
 
   equals (endpoint) {
-    if (this.fields.length != endpoint.fields.length) return false;
+    if (this.fields.length !== endpoint.fields.length) return false;
     return this.compareFields(endpoint);
   }
 
-  compareFields(endpoint){
-    let sortedThisFields = this.fields.slice().sort();
-    let sortedEndpointFields = endpoint.fields.slice().sort();
-    for (let i = 0; i < sortedThisFields.length; i++){
-      if (sortedThisFields[i] != sortedEndpointFields[i]) return false;  
+  compareFields (endpoint) {
+    const sortedThisFields = this.fields.slice().sort();
+    const sortedEndpointFields = endpoint.fields.slice().sort();
+    for (let i = 0; i < sortedThisFields.length; i += 1) {
+      if (sortedThisFields[i] !== sortedEndpointFields[i]) return false;
     }
     return true;
   }
+
   export () {
     return {
       ...this.shallowExport(),
     };
   }
+
   exportParentIds () {
     return {
       refId: this.ref.id,
-      fieldIds: this.fields.map(field => field.id)
+      fieldIds: this.fields.map(field => field.id),
     };
   }
 
@@ -63,11 +67,10 @@ class Endpoint extends Element {
       relation: this.relation,
     };
   }
-  
+
   setFields (fieldNames, table) {
-    if (typeof fieldNames === "string") fieldNames = [fieldNames] 
-    fieldNames.forEach(fieldNames => {
-      const field = table.findField(fieldNames);
+    fieldNames.forEach(fieldName => {
+      const field = table.findField(fieldName);
       this.setField(field, table);
     });
   }

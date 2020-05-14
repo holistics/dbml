@@ -253,7 +253,7 @@
           "inline_refs": [
             {
               "tableName": "U",
-              "fieldNames": "id",
+             "fieldNames": ["id"],
               "relation": ">",
               "token": {
                 "start": {
@@ -291,7 +291,7 @@
           "inline_refs": [
             {
               "tableName": "product",
-              "fieldNames": "id",
+             "fieldNames": ["id"],
               "relation": ">",
               "token": {
                 "start": {
@@ -352,7 +352,7 @@
       "endpoints": [
         {
           "tableName": "U",
-          "fieldNames": "id",
+         "fieldNames": ["id"],
           "relation": "1",
           "token": {
             "start": {
@@ -369,7 +369,7 @@
         },
         {
           "tableName": "merchant",
-          "fieldNames": "user_id",
+         "fieldNames": ["user_id"],
           "relation": "*",
           "token": {
             "start": {
@@ -403,7 +403,7 @@
       "endpoints": [
         {
           "tableName": "product",
-          "fieldNames": "id",
+         "fieldNames": ["id"],
           "relation": "1",
           "token": {
             "start": {
@@ -420,7 +420,7 @@
         },
         {
           "tableName": "merchant",
-          "fieldNames": "product_id",
+          "fieldNames": ["product_id"],
           "relation": "*",
           "token": {
             "start": {
