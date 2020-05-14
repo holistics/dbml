@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import DbmlExporter from './DbmlExporter';
 import MysqlExporter from './MysqlExporter';
 import PostgresExporter from './PostgresExporter';

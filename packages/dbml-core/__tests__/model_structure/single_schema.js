@@ -120,20 +120,20 @@ describe('@dbml/core - model_structure', () => {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'products',
                 fieldNames: [
-                  "id",
-                  "name"
+                  'id',
+                  'name',
                 ],
-                relation: "1",
+                relation: '1',
               },
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'order_items',
                 fieldNames: [
-                  "product_id",
-                  "product_name"
+                  'product_id',
+                  'product_name',
                 ],
-                relation: "*",
-              }
+                relation: '*',
+              },
             ]),
           }),
         ]));
@@ -489,20 +489,20 @@ describe('@dbml/core - model_structure', () => {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'products',
                 fieldNames: [
-                  "id",
-                  "name"
+                  'id',
+                  'name',
                 ],
-                relation: "1",
+                relation: '1',
               },
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'order_items',
                 fieldNames: [
-                  "product_id",
-                  "product_name"
+                  'product_id',
+                  'product_name',
                 ],
-                relation: "*",
-              }
+                relation: '*',
+              },
             ]),
           }),
         ]));

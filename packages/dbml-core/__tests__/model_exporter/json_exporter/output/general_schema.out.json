@@ -84,7 +84,8 @@
               "type": {
                 "type_name": "int",
                 "args": null
-              }
+              },
+              "pk": true
             },
             {
               "name": "name",
@@ -128,19 +129,6 @@
             }
           ],
           "indexes": [
-            {
-              "pk": true,
-              "columns": [
-                {
-                  "type": "column",
-                  "value": "id"
-                },
-                {
-                  "type": "column",
-                  "value": "name"
-                }
-              ]
-            },
             {
               "name": "product_status",
               "columns": [
@@ -334,12 +322,16 @@
           "endpoints": [
             {
               "tableName": "orders",
-              "fieldNames": "id",
+              "fieldNames": [
+                "id"
+              ],
               "relation": "1"
             },
             {
               "tableName": "order_items",
-              "fieldNames": "order_id",
+              "fieldNames": [
+                "order_id"
+              ],
               "relation": "*"
             }
           ]
@@ -349,12 +341,16 @@
           "endpoints": [
             {
               "tableName": "products",
-              "fieldNames": "id",
+              "fieldNames": [
+                "id"
+              ],
               "relation": "1"
             },
             {
               "tableName": "order_items",
-              "fieldNames": "product_id",
+              "fieldNames": [
+                "product_id"
+              ],
               "relation": "*"
             }
           ]
@@ -364,12 +360,16 @@
           "endpoints": [
             {
               "tableName": "countries",
-              "fieldNames": "code",
+              "fieldNames": [
+                "code"
+              ],
               "relation": "1"
             },
             {
               "tableName": "users",
-              "fieldNames": "country_code",
+              "fieldNames": [
+                "country_code"
+              ],
               "relation": "*"
             }
           ]
@@ -379,12 +379,16 @@
           "endpoints": [
             {
               "tableName": "countries",
-              "fieldNames": "code",
+              "fieldNames": [
+                "code"
+              ],
               "relation": "1"
             },
             {
               "tableName": "merchants",
-              "fieldNames": "country_code",
+              "fieldNames": [
+                "country_code"
+              ],
               "relation": "*"
             }
           ]
@@ -394,12 +398,16 @@
           "endpoints": [
             {
               "tableName": "merchants",
-              "fieldNames": "id",
+              "fieldNames": [
+                "id"
+              ],
               "relation": "1"
             },
             {
               "tableName": "products",
-              "fieldNames": "merchant_id",
+              "fieldNames": [
+                "merchant_id"
+              ],
               "relation": "*"
             }
           ]
@@ -409,12 +417,16 @@
           "endpoints": [
             {
               "tableName": "users",
-              "fieldNames": "id",
+              "fieldNames": [
+                "id"
+              ],
               "relation": "1"
             },
             {
               "tableName": "merchants",
-              "fieldNames": "admin_id",
+              "fieldNames": [
+                "admin_id"
+              ],
               "relation": "*"
             }
           ]

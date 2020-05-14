@@ -178,7 +178,7 @@ class DbmlExporter {
 
     return tableStrs.length ? tableStrs.join('\n') : '';
   }
-  
+
   static exportRefs (refIds, model) {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
@@ -192,8 +192,7 @@ class DbmlExporter {
       const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = buildFieldName(refEndpoint.fieldIds, model, 'dbml'); 
-      //console.log(`FILEDS: ${DbmlExporter.buildFieldName(refEndpointFieldIds, model)}`);
+      const refEndpointFieldName = buildFieldName(refEndpoint.fieldIds, model, 'dbml');
 
       if (ref.name) {
         line += ` ${shouldPrintSchema(model.schemas[ref.schemaId], model)
@@ -207,7 +206,7 @@ class DbmlExporter {
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
       const foreignEndpointFieldName = buildFieldName(foreignEndpoint.fieldIds, model, 'dbml');
-      
+
       if (foreignEndpoint.relation === '1') line += '- ';
       else line += '< ';
       line += `${shouldPrintSchema(foreignEndpointSchema, model)
@@ -255,7 +254,9 @@ class DbmlExporter {
     const database = model.database['1'];
 
     database.schemaIds.forEach((schemaId) => {
-      const { enumIds, tableIds, tableGroupIds, refIds } = model.schemas[schemaId];
+      const {
+        enumIds, tableIds, tableGroupIds, refIds,
+      } = model.schemas[schemaId];
 
       if (!_.isEmpty(enumIds)) {
         if (hasBlockAbove) res += '\n';

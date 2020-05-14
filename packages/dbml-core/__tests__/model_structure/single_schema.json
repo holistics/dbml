@@ -269,7 +269,7 @@
           "inline_refs": [
             {
               "tableName": "U",
-              "fieldNames": "id",
+              "fieldNames": ["id"],
               "relation": ">",
               "token": {
                 "start": {
@@ -422,7 +422,7 @@
           "inline_refs": [
             {
               "tableName": "orders",
-              "fieldNames": "id",
+              "fieldNames": ["id"],
               "relation": ">",
               "token": {
                 "start": {
@@ -860,7 +860,7 @@
       "endpoints": [
         {
           "tableName": "U",
-          "fieldNames": "id",
+          "fieldNames": ["id"],
           "relation": "1",
           "token": {
             "start": {
@@ -877,7 +877,7 @@
         },
         {
           "tableName": "merchants",
-          "fieldNames": "admin_id",
+          "fieldNames": ["admin_id"],
           "relation": "*",
           "token": {
             "start": {
@@ -962,7 +962,7 @@
       "endpoints": [
         {
           "tableName": "U",
-          "fieldNames": "country_code",
+          "fieldNames": ["country_code"],
           "relation": "*",
           "token": {
             "start": {
@@ -979,7 +979,7 @@
         },
         {
           "tableName": "countries",
-          "fieldNames": "code",
+          "fieldNames": ["code"],
           "relation": "1",
           "token": {
             "start": {
@@ -1015,7 +1015,7 @@
       "endpoints": [
         {
           "tableName": "merchants",
-          "fieldNames": "country_code",
+          "fieldNames": ["country_code"],
           "relation": "*",
           "token": {
             "start": {
@@ -1032,7 +1032,7 @@
         },
         {
           "tableName": "countries",
-          "fieldNames": "code",
+          "fieldNames": ["code"],
           "relation": "1",
           "token": {
             "start": {
@@ -1067,7 +1067,7 @@
       "endpoints": [
         {
           "tableName": "orders",
-          "fieldNames": "id",
+          "fieldNames": ["id"],
           "relation": "1",
           "token": {
             "start": {
@@ -1084,7 +1084,7 @@
         },
         {
           "tableName": "order_items",
-          "fieldNames": "order_id",
+          "fieldNames": ["order_id"],
           "relation": "*",
           "token": {
             "start": {
@@ -1118,7 +1118,7 @@
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldNames": "product_id",
+          "fieldNames": ["product_id"],
           "relation": "*",
           "token": {
             "start": {
@@ -1135,7 +1135,7 @@
         },
         {
           "tableName": "products",
-          "fieldNames": "id",
+          "fieldNames": ["id"],
           "relation": "1",
           "token": {
             "start": {
@@ -1169,7 +1169,7 @@
       "endpoints": [
         {
           "tableName": "products",
-          "fieldNames": "merchant_id",
+          "fieldNames": ["merchant_id"],
           "relation": "*",
           "token": {
             "start": {
@@ -1186,7 +1186,7 @@
         },
         {
           "tableName": "merchants",
-          "fieldNames": "id",
+          "fieldNames": ["id"],
           "relation": "1",
           "token": {
             "start": {

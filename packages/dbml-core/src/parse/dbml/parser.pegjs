@@ -185,7 +185,7 @@ ref_body
   }
 //CHANGE
 RefField
-  = field:(RefSingleField/RefMultipleFields) { 
+  = sp* field:(RefSingleField/RefMultipleFields) { 
     if (typeof field === "string") field = [field];
     return field; 
   }
@@ -194,8 +194,8 @@ RefSingleField
   =  field:name { return field; }
  
 RefMultipleFields
-  = "(" sp* first:RefSingleField rest:(Comma sp* RefSingleField)* ")"  {
-    let arrField = [first].concat(rest.map(el => el[2]));
+  = "(" sp* first:RefSingleField rest:(sp* Comma sp* RefSingleField)* sp* ")"  {
+    let arrField = [first].concat(rest.map(el => el[3]));
     return arrField;
   }
 
@@ -241,7 +241,7 @@ TableSyntax
           },
           {
             tableName: name,
-            fieldNames: field.name,
+            fieldNames: [field.name],
             relation: iref.relation === ">" ? "*" : "1",
             token: iref.token
           }];
@@ -526,7 +526,7 @@ RefInline
   = "ref:" sp* relation:relation sp+ table2:name "." field2:name {
       return {
         tableName: table2,
-        fieldNames: field2,
+        fieldNames: [field2],
         relation: relation,
         token: location(),
       }
