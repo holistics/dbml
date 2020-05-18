@@ -13,7 +13,7 @@ CREATE TABLE `order_items` (
 
 CREATE TABLE `products` (
   `id` int PRIMARY KEY,
-  `name` varchar(255),
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `merchant_id` int NOT NULL,
   `price` int,
   `status` ENUM ('Out of Stock', 'In Stock'),

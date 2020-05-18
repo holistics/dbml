@@ -252,6 +252,7 @@ FieldSetting "field setting"
     / _ "GENERATED_ALWAYS"i? _ "AS"i _ "(" expression ")"
     / _ "VIRTUAL"i _
     / _ "STORED"i 
+	/ _ ("CHARACTER"i _ "SET"i/"CHARSET"i) _ name _
     ) { return "not_supported" }
 	/ _ v:Default {return {type: "default", value: v} }
 	/ _ v:Comment { return {type: "comment", value: v }}
