@@ -260,7 +260,7 @@
       "endpoints": [
         {
           "tableName": "users",
-          "fieldNames": "country_code",
+          "fieldNames": ["country_code"],
           "relation": "*"
         },
         {
@@ -278,7 +278,7 @@
       "endpoints": [
         {
           "tableName": "orders",
-          "fieldNames": "user_id",
+          "fieldNames": ["user_id"],
           "relation": "*"
         },
         {
@@ -296,7 +296,7 @@
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldNames": "order_id",
+          "fieldNames": ["order_id"],
           "relation": "*"
         },
         {
@@ -314,7 +314,7 @@
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldNames": "product_id",
+          "fieldNames": ["product_id"],
           "relation": "*"
         },
         {

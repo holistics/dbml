@@ -48,7 +48,7 @@ TableSyntax
 			const endpoints = [
 				{
 					tableName: name,
-					fieldNames: field.name,
+					fieldNames: [field.name],
 					relation: "*", //set by default
 				},
 				ref.endpoint,

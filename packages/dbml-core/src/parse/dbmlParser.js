@@ -1760,32 +1760,18 @@ function peg$parse(input, options) {
   }
 
   function peg$parseRefField() {
-    var s0, s1, s2;
+    var s0, s1;
 
     s0 = peg$currPos;
-    s1 = [];
-    s2 = peg$parsesp();
-    while (s2 !== peg$FAILED) {
-      s1.push(s2);
-      s2 = peg$parsesp();
+    s1 = peg$parseRefSingleField();
+    if (s1 === peg$FAILED) {
+      s1 = peg$parseRefMultipleFields();
     }
     if (s1 !== peg$FAILED) {
-      s2 = peg$parseRefSingleField();
-      if (s2 === peg$FAILED) {
-        s2 = peg$parseRefMultipleFields();
-      }
-      if (s2 !== peg$FAILED) {
-        peg$savedPos = s0;
-        s1 = peg$c28(s2);
-        s0 = s1;
-      } else {
-        peg$currPos = s0;
-        s0 = peg$FAILED;
-      }
-    } else {
-      peg$currPos = s0;
-      s0 = peg$FAILED;
+      peg$savedPos = s0;
+      s1 = peg$c28(s1);
     }
+    s0 = s1;
 
     return s0;
   }
