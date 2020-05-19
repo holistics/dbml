@@ -149,7 +149,6 @@ FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _
 	fkActions:FKAction*
 {
 	const name = constraint ? constraint[2] : null;
-	const arr = [];
 	const fkObj = {
 		name: name,
 		endpoints: [
@@ -172,8 +171,7 @@ FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _
 		}
 		fkObj.onUpdate = fkAction.action;
 	});
-	arr.push(fkObj);
-  return arr
+  	return fkObj;
 }
 
 FKAction
