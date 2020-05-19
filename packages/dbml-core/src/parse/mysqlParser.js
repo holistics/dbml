@@ -246,7 +246,6 @@ function peg$parse(input, options) {
       peg$c15 = peg$literalExpectation("CONSTRAINT", true),
       peg$c16 = function(constraint, fields, table2, fields2, fkActions) {
       	const name = constraint ? constraint[2] : null;
-      	const arr = [];
       	const fkObj = {
       		name: name,
       		endpoints: [
@@ -269,8 +268,7 @@ function peg$parse(input, options) {
       		}
       		fkObj.onUpdate = fkAction.action;
       	});
-      	arr.push(fkObj);
-        return arr
+        	return fkObj;
       },
       peg$c17 = "on",
       peg$c18 = peg$literalExpectation("ON", true),

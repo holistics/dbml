@@ -796,33 +796,31 @@ function peg$parse(input, options) {
       			if(refcolumn && refcolumn.length > column_names.length) {
       				//throw Error(`Line ${location().start.line}: There are extra ${refcolumn.length - column_names.length} refer column(s) not matched.`);
       			}
-      			//column_names.forEach((column_name, key) => {
-      				//if(refcolumn && key >= refcolumn.length) {
-      					//throw Error(`Line ${location().start.line}: ${column_name} do not have referenced column.`)
-      				//}
-      				const v = {
-      					endpoints: [
-      						{
-      							tableName: null,
-      							fieldNames: column_names,
-      							relation: "*",
-      						},
-      						{
-      							tableName: reftable,
-      							fieldNames: refcolumn,// ? refcolumn[key] : null,
-      							relation: "1",
-      						},
-      					],
-      				};
-      				fk_actions.forEach(fkAction => {
-      					if (fkAction.type === 'delete') {
-      						v.onDelete = fkAction.action;
-      						return;
-      					}
-      					v.onUpdate = fkAction.action;
-      				});
-      				value.push(v);
-      			//})
+      			//if(refcolumn && key >= refcolumn.length) {
+      				//throw Error(`Line ${location().start.line}: ${column_name} do not have referenced column.`)
+      			//}
+      			const v = {
+      				endpoints: [
+      					{
+      						tableName: null,
+      						fieldNames: column_names,
+      						relation: "*",
+      					},
+      					{
+      						tableName: reftable,
+      						fieldNames: refcolumn,// ? refcolumn[key] : null,
+      						relation: "1",
+      					},
+      				],
+      			};
+      			fk_actions.forEach(fkAction => {
+      				if (fkAction.type === 'delete') {
+      					v.onDelete = fkAction.action;
+      					return;
+      				}
+      				v.onUpdate = fkAction.action;
+      			});
+      			value.push(v);
       			return {
       				type: "fk",
       				t_value: value 
