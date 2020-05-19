@@ -23,7 +23,7 @@ parser = commands:command* {
 										endpoints: [
 											{
 												tableName: table.name,
-												fieldNames: field.name,
+												fieldNames: [field.name],
 												relation: "*",
 											},
 											ref.endpoint

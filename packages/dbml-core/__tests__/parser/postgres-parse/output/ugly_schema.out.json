@@ -826,7 +826,7 @@
       "endpoints": [
         {
           "tableName": "permiso_funcion",
-          "fieldNames": "id_aplicacion",
+          "fieldNames": ["id_aplicacion"],
           "relation": "*"
         },
         {
@@ -842,7 +842,7 @@
       "endpoints": [
         {
           "tableName": "permiso_funcion",
-          "fieldNames": "id_tipo_cliente",
+          "fieldNames": ["id_tipo_cliente"],
           "relation": "*"
         },
         {
@@ -858,7 +858,7 @@
       "endpoints": [
         {
           "tableName": "permiso_perfil",
-          "fieldNames": "id_tipo_cliente",
+          "fieldNames": ["id_tipo_cliente"],
           "relation": "*"
         },
         {
@@ -874,7 +874,7 @@
       "endpoints": [
         {
           "tableName": "permiso_perfil",
-          "fieldNames": "uuid_cliente",
+          "fieldNames": ["uuid_cliente"],
           "relation": "*"
         },
         {
@@ -890,7 +890,7 @@
       "endpoints": [
         {
           "tableName": "permiso_perfil",
-          "fieldNames": "uuid_grupo_cliente",
+          "fieldNames": ["uuid_grupo_cliente"],
           "relation": "*"
         },
         {
@@ -906,7 +906,7 @@
       "endpoints": [
         {
           "tableName": "permiso_perfil",
-          "fieldNames": "id_aplicacion",
+          "fieldNames": ["id_aplicacion"],
           "relation": "*"
         },
         {
@@ -922,7 +922,7 @@
       "endpoints": [
         {
           "tableName": "permiso_perfil_funcion_cliente",
-          "fieldNames": "uuid_funcion",
+          "fieldNames": ["uuid_funcion"],
           "relation": "*"
         },
         {
@@ -938,7 +938,7 @@
       "endpoints": [
         {
           "tableName": "permiso_perfil_funcion_cliente",
-          "fieldNames": "uuid_perfil",
+          "fieldNames": ["uuid_perfil"],
           "relation": "*"
         },
         {
@@ -954,7 +954,7 @@
       "endpoints": [
         {
           "tableName": "permiso_perfil_funcion_cliente",
-          "fieldNames": "uuid_cliente",
+          "fieldNames": ["uuid_cliente"],
           "relation": "*"
         },
         {
@@ -970,7 +970,7 @@
       "endpoints": [
         {
           "tableName": "permiso_perfil_funcion_cliente",
-          "fieldNames": "uuid_grupo_cliente",
+          "fieldNames": ["uuid_grupo_cliente"],
           "relation": "*"
         },
         {
@@ -986,7 +986,7 @@
       "endpoints": [
         {
           "tableName": "permiso_funcion_perfil_global",
-          "fieldNames": "uuid_funcion",
+          "fieldNames": ["uuid_funcion"],
           "relation": "*"
         },
         {
@@ -1002,7 +1002,7 @@
       "endpoints": [
         {
           "tableName": "permiso_funcion_perfil_global",
-          "fieldNames": "uuid_perfil",
+          "fieldNames": ["uuid_perfil"],
           "relation": "*"
         },
         {
@@ -1018,7 +1018,7 @@
       "endpoints": [
         {
           "tableName": "permiso_usuario_cliente_funcion",
-          "fieldNames": "uuid_funcion",
+          "fieldNames": ["uuid_funcion"],
           "relation": "*"
         },
         {
@@ -1034,7 +1034,7 @@
       "endpoints": [
         {
           "tableName": "permiso_usuario_cliente_funcion",
-          "fieldNames": "uuid_usuario",
+          "fieldNames": ["uuid_usuario"],
           "relation": "*"
         },
         {
@@ -1050,7 +1050,7 @@
       "endpoints": [
         {
           "tableName": "permiso_usuario_cliente_funcion",
-          "fieldNames": "uuid_cliente",
+          "fieldNames": ["uuid_cliente"],
           "relation": "*"
         },
         {
@@ -1066,7 +1066,7 @@
       "endpoints": [
         {
           "tableName": "permiso_usuario_cliente_funcion",
-          "fieldNames": "uuid_grupo_cliente",
+          "fieldNames": ["uuid_grupo_cliente"],
           "relation": "*"
         },
         {
@@ -1082,7 +1082,7 @@
       "endpoints": [
         {
           "tableName": "permiso_perfil_tipo_usuario",
-          "fieldNames": "uuid_perfil",
+          "fieldNames": ["uuid_perfil"],
           "relation": "*"
         },
         {
@@ -1098,7 +1098,7 @@
       "endpoints": [
         {
           "tableName": "permiso_usuario_cliente_perfil",
-          "fieldNames": "uuid_usuario",
+          "fieldNames": ["uuid_usuario"],
           "relation": "*"
         },
         {
@@ -1114,7 +1114,7 @@
       "endpoints": [
         {
           "tableName": "permiso_usuario_cliente_perfil",
-          "fieldNames": "uuid_perfil",
+          "fieldNames": ["uuid_perfil"],
           "relation": "*"
         },
         {
@@ -1130,7 +1130,7 @@
       "endpoints": [
         {
           "tableName": "permiso_usuario_cliente_perfil",
-          "fieldNames": "uuid_cliente",
+          "fieldNames": ["uuid_cliente"],
           "relation": "*"
         },
         {
@@ -1146,7 +1146,7 @@
       "endpoints": [
         {
           "tableName": "permiso_usuario_cliente_perfil",
-          "fieldNames": "uuid_grupo_cliente",
+          "fieldNames": ["uuid_grupo_cliente"],
           "relation": "*"
         },
         {

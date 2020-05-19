@@ -38,10 +38,10 @@ class Endpoint extends Element {
   }
 
   compareFields (endpoint) {
-    const sortedThisFields = this.fields.slice().sort();
-    const sortedEndpointFields = endpoint.fields.slice().sort();
-    for (let i = 0; i < sortedThisFields.length; i += 1) {
-      if (sortedThisFields[i] !== sortedEndpointFields[i]) return false;
+    const sortedThisFieldIds = this.fields.map(field => field.id).sort();
+    const sortedEndpointFieldIds = endpoint.fields.map(field => field.id).sort();
+    for (let i = 0; i < sortedThisFieldIds.length; i += 1) {
+      if (sortedThisFieldIds[i] !== sortedEndpointFieldIds[i]) return false;
     }
     return true;
   }

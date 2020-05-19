@@ -40,7 +40,7 @@
             {
               "endpoint": {
                 "tableName": "a",
-                "fieldNames": "id",
+                "fieldNames": ["id"],
                 "relation": "1"
               },
               "onDelete": "no action"
@@ -126,12 +126,12 @@
       "endpoints": [
         {
           "tableName": "b",
-          "fieldNames": "id",
+          "fieldNames": ["id"],
           "relation": "*"
         },
         {
           "tableName": "a",
-          "fieldNames": "id",
+          "fieldNames": ["id"],
           "relation": "1"
         }
       ],
@@ -141,7 +141,7 @@
       "endpoints": [
         {
           "tableName": "c",
-          "fieldNames": "time",
+          "fieldNames": ["time"],
           "relation": "*"
         },
         {

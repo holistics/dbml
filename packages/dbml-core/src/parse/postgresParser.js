@@ -162,7 +162,7 @@ function peg$parse(input, options) {
       										endpoints: [
       											{
       												tableName: table.name,
-      												fieldNames: field.name,
+      												fieldNames: [field.name],
       												relation: "*",
       											},
       											ref.endpoint
@@ -776,7 +776,7 @@ function peg$parse(input, options) {
       				value: {
       					endpoint: {
       						tableName: reftable,
-      						fieldNames: refcolumn ? refcolumn : null,
+      						fieldNames: refcolumn ? [refcolumn] : null,
       						relation: "1"
       					},
       					...ref_actions

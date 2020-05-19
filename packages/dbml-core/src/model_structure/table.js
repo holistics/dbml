@@ -67,8 +67,8 @@ class Table extends Element {
     });
   }
 
-  findField (fieldNames) {
-    return this.fields.find(f => f.name === fieldNames);
+  findField (fieldName) {
+    return this.fields.find(f => f.name === fieldName);
   }
 
   checkSameId (table) {

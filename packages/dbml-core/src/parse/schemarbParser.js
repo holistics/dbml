@@ -2199,7 +2199,8 @@ function peg$parse(input, options) {
     }
 
     function isSameEndpoints (endpoint1, endpoint2) {
-      return endpoint1.tableName == endpoint2.tableName && endpoint1.fieldNames == endpoint2.fieldNames
+      return endpoint1.tableName == endpoint2.tableName && 
+        lodash.isEqual(lodash.sortBy(endpoint1.fieldNames), lodash.sortBy(endpoint2.fieldNames))
     }
 
     function isSameEndpointsPairs (endpointsPair1, endpointsPair2) {
@@ -2250,7 +2251,7 @@ function peg$parse(input, options) {
       if (!endpoints[0].fieldNames) {
         const singleNameOfPrimaryTable = pluralize.singular(endpoints[1].tableName)
         const columnName = `${singleNameOfPrimaryTable}_id`;
-        endpoints[0].fieldNames = columnName;
+        endpoints[0].fieldNames = [columnName];
         const columnField = fromTable.fields.find(field => field.name === columnName);
         if (!columnField) {
           // TODO: handle erro
@@ -2260,11 +2261,11 @@ function peg$parse(input, options) {
           // return ref;
           return null;
         }
-        endpoints[0].fieldNames = columnName;
+        endpoints[0].fieldNames = [columnName];
       }
       if (!endpoints[1].fieldNames) {
         const primaryKey = 'id';
-        endpoints[1].fieldNames = primaryKey;
+        endpoints[1].fieldNames = [primaryKey];
       }
       return ref;
     }
@@ -2282,10 +2283,10 @@ function peg$parse(input, options) {
       for (let i = 0; i < props.length; i += 1) {
         const currentProp = props[i];
         if (currentProp.columnName) {
-          endpoints[0].fieldNames = currentProp.columnName;
+          endpoints[0].fieldNames = [currentProp.columnName];
         }
         if (currentProp.primaryKey) {
-          endpoints[1].fieldNames = currentProp.primaryKey;
+          endpoints[1].fieldNames = [currentProp.primaryKey];
         }
         if (currentProp.onDelete) {
           refProp = {
@@ -2340,12 +2341,12 @@ function peg$parse(input, options) {
           endpoints: [
             {
               tableName: table.name,
-              fieldNames: columnName,
+              fieldNames: [columnName],
               relation: '1',
             },
             {
               tableName: referenceTable,
-              fieldNames: primaryKeyName,
+              fieldNames: [primaryKeyName],
               relation: '1',
             }
           ]
@@ -2375,12 +2376,12 @@ function peg$parse(input, options) {
               endpoints: [
                 {
                   tableName: table.name,
-                  fieldNames: field.name,
+                  fieldNames: [field.name],
                   relation: '1',
                 },
                 {
                   tableName: refWithTable.name,
-                  fieldNames: 'id',
+                  fieldNames: ['id'],
                   relation: '1',
                 }
               ]

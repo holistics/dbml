@@ -185,7 +185,7 @@ ref_body
   }
 //CHANGE
 RefField
-  = sp* field:(RefSingleField/RefMultipleFields) { 
+  = field:(RefSingleField/RefMultipleFields) { 
     if (typeof field === "string") field = [field];
     return field; 
   }

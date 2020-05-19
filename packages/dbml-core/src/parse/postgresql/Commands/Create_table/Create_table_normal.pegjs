@@ -157,7 +157,7 @@ column_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 				value: {
 					endpoint: {
 						tableName: reftable,
-						fieldNames: refcolumn ? refcolumn : null,
+						fieldNames: refcolumn ? [refcolumn] : null,
 						relation: "1"
 					},
 					...ref_actions
