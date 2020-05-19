@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { shouldPrintSchema, buildFieldName } from './utils';
+import { shouldPrintSchema } from './utils';
 
 class SqlServerExporter {
   static getFieldLines (tableId, model) {
@@ -107,6 +107,11 @@ class SqlServerExporter {
     return tableStrs.length ? tableStrs.join('\n') : '';
   }
 
+  static buildFieldName (fieldIds, model) {
+    const fieldNames = fieldIds.map(fieldId => `[${model.fields[fieldId].name}]`).join(', ');
+    return `(${fieldNames})`;
+  }
+
   static exportRefs (refIds, model) {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
@@ -119,12 +124,12 @@ class SqlServerExporter {
       const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = buildFieldName(refEndpoint.fieldIds, model, 'mssql');
+      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model, 'mssql');
 
       const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-      const foreignEndpointFieldName = buildFieldName(foreignEndpoint.fieldIds, model, 'mssql');
+      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'mssql');
 
       let line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
         ? `[${foreignEndpointSchema.name}].` : ''}[${foreignEndpointTable.name}] ADD `;
