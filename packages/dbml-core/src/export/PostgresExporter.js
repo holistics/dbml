@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { hasWhiteSpace, shouldPrintSchema, buildFieldName } from './utils';
+import { hasWhiteSpace, shouldPrintSchema } from './utils';
 
 class PostgresExporter {
   static exportEnums (enumIds, model) {
@@ -121,6 +121,11 @@ class PostgresExporter {
     return tableStrs.length ? tableStrs.join('\n') : '';
   }
 
+  static buildFieldName (fieldIds, model) {
+    const fieldNames = fieldIds.map(fieldId => `"${model.fields[fieldId].name}"`).join(', ');
+    return `(${fieldNames})`;
+  }
+
   static exportRefs (refIds, model) {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
@@ -133,12 +138,12 @@ class PostgresExporter {
       const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = buildFieldName(refEndpoint.fieldIds, model, 'postgres');
+      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model, 'postgres');
 
       const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-      const foreignEndpointFieldName = buildFieldName(foreignEndpoint.fieldIds, model, 'postgres');
+      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'postgres');
 
       let line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
         ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}" ADD `;
