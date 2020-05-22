@@ -42,3 +42,4 @@ Example of a database definition of a simple blogging site:
 * [VSCode Plugin for DBML by duynvu](https://marketplace.visualstudio.com/items?itemName=duynvu.dbml-language)
 * [Python parser for DBML by Vanderhoof](https://github.com/Vanderhoof/PyDBML)
 * [FloorPlan: Android's Room to DBML by julioz](https://github.com/julioz/FloorPlan)
+* [Go parser for DBML by duythinht](https://github.com/duythinht/dbml-go)
