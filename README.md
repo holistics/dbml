@@ -43,3 +43,4 @@ Example of a database definition of a simple blogging site:
 * [Python parser for DBML by Vanderhoof](https://github.com/Vanderhoof/PyDBML)
 * [FloorPlan: Android's Room to DBML by julioz](https://github.com/julioz/FloorPlan)
 * [Go parser for DBML by duythinht](https://github.com/duythinht/dbml-go)
+* [DbmlForDjango: Converter between Django models.py and DBML](https://github.com/hamedsj/DbmlForDjango)
