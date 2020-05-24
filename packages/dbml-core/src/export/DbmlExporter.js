@@ -179,6 +179,11 @@ class DbmlExporter {
     return tableStrs.length ? tableStrs.join('\n') : '';
   }
 
+  static buildFieldName (fieldIds, model) {
+    const fieldNames = fieldIds.map(fieldId => `"${model.fields[fieldId].name}"`).join(', ');
+    return fieldIds.length === 1 ? fieldNames : `(${fieldNames})`;
+  }
+
   static exportRefs (refIds, model) {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
@@ -189,9 +194,10 @@ class DbmlExporter {
       const refEndpoint = model.endpoints[refEndpointId];
 
       let line = 'Ref';
-      const refEndpointField = model.fields[refEndpoint.fieldId];
+      const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
+      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model, 'dbml');
 
       if (ref.name) {
         line += ` ${shouldPrintSchema(model.schemas[ref.schemaId], model)
@@ -199,16 +205,17 @@ class DbmlExporter {
       }
       line += ':';
       line += `${shouldPrintSchema(refEndpointSchema, model)
-        ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTable.name}"."${refEndpointField.name}" `;
+        ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTable.name}".${refEndpointFieldName} `;
 
-      const foreignEndpointField = model.fields[foreignEndpoint.fieldId];
+      const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
+      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'dbml');
 
       if (foreignEndpoint.relation === '1') line += '- ';
       else line += '< ';
       line += `${shouldPrintSchema(foreignEndpointSchema, model)
-        ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}"."${foreignEndpointField.name}"`;
+        ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}".${foreignEndpointFieldName}`;
 
       const refActions = [];
       if (ref.onUpdate) {
@@ -252,7 +259,9 @@ class DbmlExporter {
     const database = model.database['1'];
 
     database.schemaIds.forEach((schemaId) => {
-      const { enumIds, tableIds, tableGroupIds, refIds } = model.schemas[schemaId];
+      const {
+        enumIds, tableIds, tableGroupIds, refIds,
+      } = model.schemas[schemaId];
 
       if (!_.isEmpty(enumIds)) {
         if (hasBlockAbove) res += '\n';

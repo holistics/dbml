@@ -110,6 +110,11 @@ class MySQLExporter {
     return tableStrs.length ? tableStrs.join('\n') : '';
   }
 
+  static buildFieldName (fieldIds, model) {
+    const fieldNames = fieldIds.map(fieldId => `\`${model.fields[fieldId].name}\``).join(', ');
+    return `(${fieldNames})`;
+  }
+
   static exportRefs (refIds, model) {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
@@ -119,13 +124,15 @@ class MySQLExporter {
       const foreignEndpoint = model.endpoints[foreignEndpointId];
       const refEndpoint = model.endpoints[refEndpointId];
 
-      const refEndpointField = model.fields[refEndpoint.fieldId];
+      const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
       const refEndpointTable = model.tables[refEndpointField.tableId];
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
+      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model, 'mysql');
 
-      const foreignEndpointField = model.fields[foreignEndpoint.fieldId];
+      const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
+      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'mysql');
 
       let line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
         ? `\`${foreignEndpointSchema.name}\`.` : ''}\`${foreignEndpointTable.name}\` ADD `;
@@ -134,8 +141,8 @@ class MySQLExporter {
         line += `CONSTRAINT \`${ref.name}\` `;
       }
 
-      line += `FOREIGN KEY (\`${foreignEndpointField.name}\`) REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
-        ? `\`${refEndpointSchema.name}\`.` : ''}\`${refEndpointTable.name}\` (\`${refEndpointField.name}\`)`;
+      line += `FOREIGN KEY ${foreignEndpointFieldName} REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
+        ? `\`${refEndpointSchema.name}\`.` : ''}\`${refEndpointTable.name}\` ${refEndpointFieldName}`;
       if (ref.onDelete) {
         line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
       }

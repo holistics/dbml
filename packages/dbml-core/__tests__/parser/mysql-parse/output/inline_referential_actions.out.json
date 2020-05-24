@@ -123,12 +123,14 @@
           "inline_ref": [
             {
               "endpoint": {
-                "fieldName": "code",
-                "relation": "1",
-                "tableName": "countries"
+                "tableName": "countries",
+                "fieldNames": [
+                  "code"
+                ],
+                "relation": "1"
               },
-              "onDelete":"no action",
-              "onUpdate":"no action"
+              "onUpdate": "no action",
+              "onDelete": "no action"
             }
           ]
         }
@@ -157,12 +159,14 @@
           "inline_ref": [
             {
               "endpoint": {
-                "fieldName": "id",
-                "relation": "1",
-                "tableName": "users"
+                "tableName": "users",
+                "fieldNames": [
+                  "id"
+                ],
+                "relation": "1"
               },
-              "onDelete":"restrict",
-              "onUpdate":"no action"
+              "onUpdate": "no action",
+              "onDelete": "restrict"
             }
           ]
         },
@@ -202,12 +206,14 @@
           "inline_ref": [
             {
               "endpoint": {
-                "fieldName": "id",
-                "relation": "1",
-                "tableName": "orders"
+                "tableName": "orders",
+                "fieldNames": [
+                  "id"
+                ],
+                "relation": "1"
               },
-              "onDelete":"cascade",
-              "onUpdate":"restrict"
+              "onUpdate": "restrict",
+              "onDelete": "cascade"
             }
           ]
         },
@@ -224,11 +230,13 @@
           "inline_ref": [
             {
               "endpoint": {
-                "fieldName": "id",
-                "relation": "1",
-                "tableName": "products"
+                "tableName": "products",
+                "fieldNames": [
+                  "id"
+                ],
+                "relation": "1"
               },
-              "onDelete":"set null"
+              "onDelete": "set null"
             }
           ]
         },
@@ -249,67 +257,71 @@
   ],
   "refs": [
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "users",
-          "fieldName": "country_code",
+          "fieldNames": ["country_code"],
           "relation": "*"
         },
         {
           "tableName": "countries",
-          "fieldName": "code",
+          "fieldNames": [
+            "code"
+          ],
           "relation": "1"
         }
       ],
-      "onDelete": "no action",
-      "onUpdate": "no action"
+      "onUpdate": "no action",
+      "onDelete": "no action"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "orders",
-          "fieldName": "user_id",
+          "fieldNames": ["user_id"],
           "relation": "*"
         },
         {
           "tableName": "users",
-          "fieldName": "id",
+          "fieldNames": [
+            "id"
+          ],
           "relation": "1"
         }
       ],
-      "onDelete": "restrict",
-      "onUpdate": "no action"
+      "onUpdate": "no action",
+      "onDelete": "restrict"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldName": "order_id",
+          "fieldNames": ["order_id"],
           "relation": "*"
         },
         {
           "tableName": "orders",
-          "fieldName": "id",
+          "fieldNames": [
+            "id"
+          ],
           "relation": "1"
         }
       ],
-      "onDelete": "cascade",
-      "onUpdate": "restrict"
+      "onUpdate": "restrict",
+      "onDelete": "cascade"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "order_items",
-          "fieldName": "product_id",
+          "fieldNames": ["product_id"],
           "relation": "*"
         },
         {
           "tableName": "products",
-          "fieldName": "id",
+          "fieldNames": [
+            "id"
+          ],
           "relation": "1"
         }
       ],

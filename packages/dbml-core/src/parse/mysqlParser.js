@@ -160,7 +160,7 @@ function peg$parse(input, options) {
       			const endpoints = [
       				{
       					tableName: name,
-      					fieldName: field.name,
+      					fieldNames: [field.name],
       					relation: "*", //set by default
       				},
       				ref.endpoint,
@@ -223,7 +223,7 @@ function peg$parse(input, options) {
       					
       	// Set inline_ref for fields
       	fks.map(key => {
-      		const field = fields.find(f => f.name === key.endpoints[0].fieldName);
+      		const field = fields.find(f => f.name === key.endpoints[0].fieldNames[0]);
       		if(!field.inline_ref) {
       			field.inline_ref = [];
       		}
@@ -246,33 +246,29 @@ function peg$parse(input, options) {
       peg$c15 = peg$literalExpectation("CONSTRAINT", true),
       peg$c16 = function(constraint, fields, table2, fields2, fkActions) {
       	const name = constraint ? constraint[2] : null;
-      	const arr = [];
-      	fields.forEach((field, index) => {
-      		const fkObj = {
-      			name: name,
-      			endpoints: [
-      				{
-      					tableName: null,
-      					fieldName: field,
-      					relation: "*",
-      				},
-      				{
-      					tableName: table2,
-      					fieldName: fields2[index],
-      					relation: "1",
-      				}
-      			],
-      		};
-      		fkActions.forEach(fkAction => {
-      			if (fkAction.type === 'delete') {
-      				fkObj.onDelete = fkAction.action;
-      				return;
+      	const fkObj = {
+      		name: name,
+      		endpoints: [
+      			{
+      				tableName: null,
+      				fieldNames: fields,
+      				relation: "*",
+      			},
+      			{
+      				tableName: table2,
+      				fieldNames: fields2,
+      				relation: "1",
       			}
-      			fkObj.onUpdate = fkAction.action;
-      		});
-      		arr.push(fkObj);
-      	})
-        return arr
+      		],
+      	};
+      	fkActions.forEach(fkAction => {
+      		if (fkAction.type === 'delete') {
+      			fkObj.onDelete = fkAction.action;
+      			return;
+      		}
+      		fkObj.onUpdate = fkAction.action;
+      	});
+        	return fkObj;
       },
       peg$c17 = "on",
       peg$c18 = peg$literalExpectation("ON", true),

@@ -3,13 +3,16 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
 
 class Endpoint extends Element {
-  constructor ({ tableName, schemaName, fieldName, relation, token, ref }) {
+  constructor ({
+    tableName, schemaName, fieldNames, relation, token, ref,
+  }) {
     super(token);
     this.relation = relation;
 
     this.schemaName = schemaName;
     this.tableName = tableName;
-    this.fieldName = fieldName;
+    this.fieldNames = fieldNames;
+    this.fields = [];
     this.ref = ref;
     this.dbState = this.ref.dbState;
     this.generateId();
@@ -22,8 +25,7 @@ class Endpoint extends Element {
       this.error(`Can't find table ${shouldPrintSchema(schema)
         ? `"${schema.name}".` : ''}"${tableName}"`);
     }
-    const field = table.findField(fieldName);
-    this.setField(field, table);
+    this.setFields(fieldNames, table);
   }
 
   generateId () {
@@ -31,7 +33,17 @@ class Endpoint extends Element {
   }
 
   equals (endpoint) {
-    return this.field.id === endpoint.field.id;
+    if (this.fields.length !== endpoint.fields.length) return false;
+    return this.compareFields(endpoint);
+  }
+
+  compareFields (endpoint) {
+    const sortedThisFieldIds = this.fields.map(field => field.id).sort();
+    const sortedEndpointFieldIds = endpoint.fields.map(field => field.id).sort();
+    for (let i = 0; i < sortedThisFieldIds.length; i += 1) {
+      if (sortedThisFieldIds[i] !== sortedEndpointFieldIds[i]) return false;
+    }
+    return true;
   }
 
   export () {
@@ -43,7 +55,7 @@ class Endpoint extends Element {
   exportParentIds () {
     return {
       refId: this.ref.id,
-      fieldId: this.field.id,
+      fieldIds: this.fields.map(field => field.id),
     };
   }
 
@@ -51,17 +63,24 @@ class Endpoint extends Element {
     return {
       schemaName: this.schemaName,
       tableName: this.tableName,
-      fieldName: this.fieldName,
+      fieldNames: this.fieldNames,
       relation: this.relation,
     };
+  }
+
+  setFields (fieldNames, table) {
+    fieldNames.forEach(fieldName => {
+      const field = table.findField(fieldName);
+      this.setField(field, table);
+    });
   }
 
   setField (field, table) {
     if (!field) {
       this.error(`Can't find field ${shouldPrintSchema(table.schema)
-        ? `"${table.schema.name}".` : ''}"${this.fieldName}" in table "${this.tableName}"`);
+        ? `"${table.schema.name}".` : ''}"${field.name}" in table "${this.tableName}"`);
     }
-    this.field = field;
+    this.fields.push(field);
     field.pushEndpoint(this);
   }
 
