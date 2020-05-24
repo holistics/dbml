@@ -163,17 +163,17 @@ ref_short
     }
 
 ref_body
-  = table1:name "." field1:name sp+ relation:relation sp+ table2:name "." field2:name sp* ref_settings:RefSettings? {
+  = table1:name "." field1:RefField sp+ relation:relation sp+ table2:name "." field2:RefField sp* ref_settings:RefSettings? {
     const endpoints = [
       {
         tableName: table1,
-        fieldName: field1,
+        fieldNames: field1,
         relation: relation === ">" ? "*" : "1",
         token: location()
       },
       {
         tableName: table2,
-        fieldName: field2,
+        fieldNames: field2,
         relation: relation === "<" ? "*" : "1",
         token: location()
       }
@@ -182,6 +182,21 @@ ref_body
       endpoints: endpoints,
       settings: ref_settings
     };
+  }
+//CHANGE
+RefField
+  = field:(RefSingleField/RefMultipleFields) { 
+    if (typeof field === "string") field = [field];
+    return field; 
+  }
+
+RefSingleField
+  =  field:name { return field; }
+ 
+RefMultipleFields
+  = "(" sp* first:RefSingleField rest:(sp* Comma sp* RefSingleField)* sp* ")"  {
+    let arrField = [first].concat(rest.map(el => el[3]));
+    return arrField;
   }
 
 RefSettings
@@ -220,13 +235,13 @@ TableSyntax
           const endpoints = [
           {
             tableName: iref.tableName,
-            fieldName: iref.fieldName,
+            fieldNames: iref.fieldNames,
             relation: iref.relation === "<" ? "*" : "1",
             token: iref.token
           },
           {
             tableName: name,
-            fieldName: field.name,
+            fieldNames: [field.name],
             relation: iref.relation === ">" ? "*" : "1",
             token: iref.token
           }];
@@ -511,7 +526,7 @@ RefInline
   = "ref:" sp* relation:relation sp+ table2:name "." field2:name {
       return {
         tableName: table2,
-        fieldName: field2,
+        fieldNames: [field2],
         relation: relation,
         token: location(),
       }
