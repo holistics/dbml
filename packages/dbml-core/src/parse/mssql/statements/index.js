@@ -3,6 +3,7 @@ const BP = require('../base_parsers');
 const S = require('../statement_types');
 const wss = require('../whitespaces');
 const A = require('./actions');
+const { pIgnore } = require('../composite_parsers');
 
 const Lang = P.createLanguage({
   Statements: (r) => wss.then(r.Seperator)
@@ -13,6 +14,7 @@ const Lang = P.createLanguage({
     S.pCreateIndex,
     S.pCreateTable,
     S.pAlterTable,
+    pIgnore.result(null),
   ),
   Seperator: () => P.alt(BP.Semicolon, BP.KeywordGo, P.seq(BP.Semicolon, BP.KeywordGo)).many(),
 });

@@ -24,6 +24,7 @@ function handleStatement (statements) {
   };
 
   statements.forEach(statement => {
+    if (!statement) return;
     switch (statement.type) {
       case 'tables':
         handleTable(statement.value, ast);
@@ -34,7 +35,7 @@ function handleStatement (statements) {
       default:
         break;
     }
-    if (statement) ast[statement.type].push(statement.value);
+    if (statement.type) ast[statement.type].push(statement.value);
   });
   ast.indexes = null;
   return ast;
