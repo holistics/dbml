@@ -18,8 +18,12 @@ function createRefFromInlineRef (linesRefs, inlineRef, fieldName, tableName) {
 
 function pushOutEnum (linesEnums, fieldValue, tableName) {
   if (fieldValue.enums) {
-    fieldValue.enums.name = `${tableName}_${fieldValue.enums.name}`;
-    linesEnums.push(fieldValue.enums);
+    const _enum = fieldValue.enums;
+    const fieldType = fieldValue.type;
+    _enum.name = `${tableName}_${fieldValue.enums.name}`;
+    fieldType.type_name = _enum.name;
+    fieldType.args = _enum.values.map(value => `'${value.name}'`).join(', ');
+    linesEnums.push(_enum);
     fieldValue.enums = null;
   }
 }
