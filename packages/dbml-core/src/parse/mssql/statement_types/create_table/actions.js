@@ -46,11 +46,15 @@ function getLinesValue (lines, tableName) {
     indexes: [],
   };
   lines.forEach(line => {
-    if (line) {
+    if (line && value[line.type]) {
       if (line.type === 'fields') {
         pushOutEnum(value.enums, line.value, tableName);
         pushOutIndex(value.indexes, line.value);
         createRefFromInlineRef(value.refs, line.value.inline_refs, tableName);
+      }
+      if (line.type === 'refs') {
+        const ref = line.value;
+        ref.endpoints[0].tableName = tableName;
       }
       value[line.type].push(line.value);
     }

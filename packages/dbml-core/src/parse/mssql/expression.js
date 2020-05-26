@@ -43,14 +43,17 @@ const Lang = P.createLanguage({
     return enclosedOrNot(pUnaryExp);
   },
   BinaryExpressionLR: (r) => {
-    const pBinaryOp = P.regexp(/[+\-*/%=!<>&^|]{1,2}/).thru(streamline('binary_operator')).skip(wss);
+    const pBinaryOp = P.regexp(/[+\-*/%=!<>&^|]{1,2}/)
+      .map(operator => ` ${operator} `)
+      .thru(streamline('binary_operator')).skip(wss);
     const pBinaryExp = P.seq(pBinaryOp, r.Expression).skip(wss);
     return pBinaryExp;
   },
-  SimpleExpression: () => {
-    const pExp = P.alt(pConst, pDotDelimitedName, pFunction).skip(wss);
+  SimpleExpression: (r) => {
+    const pExp = P.alt(pFunction, pConst, r.ExpressionDDN).skip(wss);
     return enclosedOrNot(pExp);
   },
+  ExpressionDDN: () => pDotDelimitedName.map(value => value.join('.')).thru(streamline('identifier')),
 });
 
 module.exports = Lang.ExpressionFinal;
