@@ -32,6 +32,10 @@ describe('@dbml/core', () => {
     test.each(scanTestNames(__dirname, 'schemarb-parse/input'))('schemarb-parse/%s', (name) => {
       runTest(name, 'schemarb-parse', 'schemarb', 'parseSchemaRbToJSON');
     });
+
+    test.each(scanTestNames(__dirname, 'mssql-parse/input'))('msql-parse/%s', (name) => {
+      runTest(name, 'mssql-parse', 'mssql', 'parseMSSQLToJSON');
+    });
     /* eslint-enable */
   });
 });

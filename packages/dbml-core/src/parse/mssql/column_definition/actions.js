@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 function makeDataType (typeName, args) {
-  const argsString = args ? args.join(', ') : null;
+  const argsString = args ? args.join(',') : null;
   return {
     type: 'type',
     value: {
