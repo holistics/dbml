@@ -1,5 +1,5 @@
 function handleIndexes (index, ast) {
-  const table = ast.tables.find(table => table.name === index.tableName);
+  const table = ast.tables.find(_table => _table.name === index.tableName);
   table.indexes.push(index);
   index.tableName = null;
 }

@@ -30,8 +30,8 @@ GO
 INSERT something;
 GO
 ALTER TABLE [order_items] ADD FOREIGN KEY ([order_id]) REFERENCES [orders] ([id]);
-ALTER TABLE [table] WITH;
-ALTER TABLE [table] SET;
-ALTER TABLE [table] SWITCH; 
+ALTER TABLE [table] WITH sth;
+ALTER TABLE [table] SET sth;
+ALTER TABLE [table] SWITCH sth; 
 CREATE UNIQUE INDEX [products_id] ON [order_items] ("id");
 CREATE WRONGSYNTAX;
