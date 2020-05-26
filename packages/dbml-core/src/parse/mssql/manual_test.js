@@ -166,7 +166,7 @@ prettyPrint(pCreateTable, testCreateTable, false);
 prettyPrint(pCreateIndex, testCreateIndex, false);
 prettyPrint(pAlterTable, testAlterTable, false);
 prettyPrint(pStatements, testStatements, false);
-prettyPrint(pExpression, '(1 + 2 + ((3) * 4) - (5/-(-3)))', true);
+prettyPrint(pExpression, 'schema.[column] + (1 + 2 + ((3) * 4) - (5/-(-3))) + FUNC()', true);
 // const statementJSON = pStatements.tryParse(testStatements);
 // console.log(JSON.stringify(statementJSON.refs.map(ref => ref.endpoints), null, 2));
 // console.log(JSON.stringify(statementJSON.tables, null, 2));

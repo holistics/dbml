@@ -1,7 +1,7 @@
 const P = require('parsimmon');
 const BP = require('../base_parsers');
 const {
-  pIdentifier, pKeywordClusteredOrNon, pFunction, pOptionList, pColumnNames, pKeywordPKOrUnique,
+  pIdentifier, pKeywordClusteredOrNon, pFunction, pOptionList, pColumnNames, pKeywordPKOrUnique, pOption,
 } = require('../composite_parsers');
 const { makeNode } = require('../utils');
 const A = require('./actions');
@@ -27,7 +27,6 @@ const Lang = P.createLanguage({
 
   ColumnConstraintIndex: (r) => P.seq(
     pKeywordPKOrUnique,
-    r.IgnoredIndexOptions,
   ).skip(r.IgnoredIndexOptions).map(value => value[0]),
 
   ColumnIndex: (r) => P.seqMap(
@@ -44,7 +43,7 @@ const Lang = P.createLanguage({
     r.WithFillFactorOption,
   ),
   WithIndexOption: () => P.seq(BP.KeywordWith, pOptionList),
-  WithFillFactorOption: () => P.seq(BP.KeywordWith, pIdentifier),
+  WithFillFactorOption: () => P.seq(BP.KeywordWith, pOption),
   OnIndexOption: () => P.seq(BP.KeywordOn, P.alt(pIdentifier, pFunction)),
   ColumnIndexFilestream: () => P.seq(BP.KeywordFilestream_On, pIdentifier),
 });

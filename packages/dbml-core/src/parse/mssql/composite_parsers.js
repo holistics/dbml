@@ -10,7 +10,17 @@ const Lang = P.createLanguage({
   pDotDelimitedName: (r) => P.sepBy1(r.pIdentifier, P.string('.')),
 
   pOptionList: (r) => makeList(r.pOption),
-  pOption: (r) => P.seq(r.pRegularIdentifier, BP.Equal, P.alt(r.pRegularIdentifier, r.pString)),
+  pOption: (r) => P.seq(
+    r.pIdentifier,
+    BP.Equal,
+    P.seq(
+      P.alt(r.pIdentifier, r.pString).many(),
+      P.alt(
+        r.pOptionList,
+        makeList(r.pIdentifier.many()),
+      ).fallback(null),
+    ),
+  ),
 
   pComparsionOp: () => P.regex(/IS|IS[^\S\r\n]+NOT|=|<>|!=|>|>=|!>|<|<=|!</i).skip(wss),
   pConst: (r) => P.alt(r.pString, r.pUnicode, r.pBinary, r.pScience, r.pMoney, r.pSigned, r.pNumber),
