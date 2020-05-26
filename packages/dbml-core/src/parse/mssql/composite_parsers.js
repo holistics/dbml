@@ -4,7 +4,7 @@ const BP = require('./base_parsers');
 const wss = require('./whitespaces');
 
 const Lang = P.createLanguage({
-  pIgnore: () => P.regex(/[^;]*/),
+  pIgnore: () => P.regex(/[^;]+/),
   pColumnNames: (r) => makeList(P.seq(r.pIdentifier, r.pKeywordAscOrDesc.fallback(null)).map(value => value[0])),
 
   pDotDelimitedName: (r) => P.sepBy1(r.pIdentifier, P.string('.')),
