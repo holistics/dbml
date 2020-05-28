@@ -1,14 +1,18 @@
 const P = require('parsimmon');
 const wss = require('./whitespaces');
 
-const keywords = [];
 exports.word = function (string) {
-  return P.string(string).skip(wss);
+  return P.string(string).skip(wss).desc(`"${string}"`);
 };
 
-exports.keyword = function (regex, op = false) {
-  if (!op) keywords.push(regex);
-  return P.regexp(regex).skip(wss);
+exports.keyword = function (regexp, multiword = false) {
+  let newRegexp = regexp;
+  const desc = regexp.source;
+  if (multiword) {
+    let string = String(regexp);
+    string = string.replace(/[\s]+/g, '[^\\S\\r]+');
+    const lastSlash = string.lastIndexOf('/');
+    newRegexp = new RegExp(string.slice(1, lastSlash), string.slice(lastSlash + 1));
+  }
+  return P.regexp(newRegexp).skip(wss).desc(`"${desc}"`);
 };
-
-exports.keywords = keywords;
