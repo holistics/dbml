@@ -13,6 +13,7 @@ mssqlParser.parseWithPegError = function (input) {
     const lastExpected = err.result.expected.pop();
     const expectedString = `${err.result.expected.join(', ')}, or ${lastExpected}`;
     pegJSError.message = `Expected ${expectedString} but "${pegJSError.found}" found.`;
+    // eslint-disable-next-line no-console
     console.error(err.message);
     throw (pegJSError);
   }
