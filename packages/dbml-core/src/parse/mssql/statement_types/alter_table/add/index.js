@@ -10,7 +10,9 @@ const { pColumnsDefinition } = require('../../../column_definition');
 
 const Lang = P.createLanguage({
   AddAction: (r) => P.seq(BP.KeywordAdd, r.AddOption).map(value => value[1]),
-  AddOption: (r) => P.alt(r.AddConstraint, pColumnsDefinition.result(null)),
+  AddOption: (r) => P.alt(r.AddConstraint, pColumnsDefinition.result(null), r.IgnoredAddSystemTimeOption.result(null)),
+
+  IgnoredAddSystemTimeOption: () => P.alt(pIdentifier, P.regexp(/[(),]/)).many(),
   AddConstraint: (r) => P.seqMap(
     pConstraintName.fallback(null),
     r.AddConstraintOption,
