@@ -18,7 +18,6 @@ const Lang = P.createLanguage({
   AlterTableKeywords: () => P.seq(BP.KeywordAlter, BP.KeywordTable),
 
   IgnoredAlterTableActions: (r) => P.seq(r.IgnoredAlterTableActionKeywords, pIgnore).result(null),
-  // move the action to a new folder like AddAction if decide to support
   IgnoredAlterTableActionKeywords: () => P.alt(
     BP.KeywordWith,
     BP.KeywordAlterColumn,

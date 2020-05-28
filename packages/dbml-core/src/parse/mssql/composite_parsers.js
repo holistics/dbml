@@ -23,7 +23,12 @@ const Lang = P.createLanguage({
   ),
 
   pComparsionOp: () => P.regex(/IS|IS[^\S\r\n]+NOT|=|<>|!=|>|>=|!>|<|<=|!</i).skip(wss),
+  // SQL SERVER do not support boolean literal
   pConst: (r) => P.alt(r.pString, r.pUnicode, r.pBinary, r.pScience, r.pMoney, r.pSigned, r.pNumber),
+
+  pFunction: (r) => P.seq(r.pIdentifier, makeList(r.pFunctionParam, true))
+    .map(value => `${value[0]}(${value[1].join(',')})`).thru(streamline('function')),
+  pFunctionParam: (r) => P.alt(r.pNumber, r.pIdentifier),
 
   pMoney: (r) => P.seq(P.regexp(/[+-]\$/), r.pNumber).thru(streamline('money')),
   pSigned: (r) => P.seq(P.regexp(/[+-]/), r.pNumber).thru(streamline('signed')),
@@ -53,11 +58,6 @@ const Lang = P.createLanguage({
     P.string(']'),
   ).map(value => value[1]).skip(wss),
 
-  pFunction: (r) => P.seq(r.pIdentifier, makeList(r.pFunctionParam, true))
-    .map(value => `${value[0]}(${value[1].join(',')})`).thru(streamline('function')),
-  pFunctionParam: (r) => P.alt(r.pNumber, r.pIdentifier),
-
-  // SQL SERVER do not support boolean literal
 
   pKeywordPKOrUnique: () => P.alt(
     BP.KeywordPrimaryKey.result({ type: 'pk', value: true }),

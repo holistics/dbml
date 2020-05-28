@@ -1,0 +1,63 @@
+Date : 2020-05-26 19:36:43
+Directory : /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql
+Total : 28 files,  1267 codes, 8 comments, 179 blanks, all 1454 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         28 |      1,267 |          8 |        179 |      1,454 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                      | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                         |         28 |      1,267 |          8 |        179 |      1,454 |
+| ..                                                                                                        |          1 |          2 |          0 |          2 |          4 |
+| column_definition                                                                                         |          2 |        106 |          0 |         17 |        123 |
+| constraint_definition                                                                                     |          2 |        119 |          0 |         18 |        137 |
+| fk_definition                                                                                             |          2 |        106 |          0 |         18 |        124 |
+| index_definition                                                                                          |          2 |         98 |          0 |         16 |        114 |
+| statement_types                                                                                           |          9 |        257 |          1 |         40 |        298 |
+| statement_types/alter_table                                                                               |          4 |         90 |          1 |         16 |        107 |
+| statement_types/alter_table/add                                                                           |          2 |         41 |          0 |          7 |         48 |
+| statement_types/create_index                                                                              |          2 |         51 |          0 |          9 |         60 |
+| statement_types/create_table                                                                              |          2 |        108 |          0 |         13 |        121 |
+| statements                                                                                                |          2 |        110 |          0 |         15 |        125 |
++-----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                                  | language   | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/base_parsers.js                            | JavaScript |        105 |          0 |          5 |        110 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/base_utils.js                              | JavaScript |         11 |          0 |          4 |         15 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/column_definition/actions.js               | JavaScript |         29 |          0 |          4 |         33 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/column_definition/index.js                 | JavaScript |         77 |          0 |         13 |         90 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/composite_parsers.js                       | JavaScript |         58 |          1 |         12 |         71 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/constraint_definition/actions.js           | JavaScript |         53 |          0 |          5 |         58 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/constraint_definition/index.js             | JavaScript |         66 |          0 |         13 |         79 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/expression.js                              | JavaScript |         55 |          0 |          5 |         60 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/fk_definition/actions.js                   | JavaScript |         59 |          0 |         11 |         70 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/fk_definition/index.js                     | JavaScript |         47 |          0 |          7 |         54 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/index.js                                   | JavaScript |          1 |          0 |          1 |          2 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/index_definition/actions.js                | JavaScript |         48 |          0 |          9 |         57 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/index_definition/index.js                  | JavaScript |         50 |          0 |          7 |         57 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/manual_test.js                             | JavaScript |        156 |          3 |         14 |        173 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/statement_types/alter_table/actions.js     | JavaScript |         19 |          0 |          5 |         24 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/statement_types/alter_table/add/actions.js | JavaScript |          4 |          0 |          2 |          6 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/statement_types/alter_table/add/index.js   | JavaScript |         37 |          0 |          5 |         42 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/statement_types/alter_table/index.js       | JavaScript |         30 |          1 |          4 |         35 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/statement_types/create_index/actions.js    | JavaScript |         22 |          0 |          2 |         24 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/statement_types/create_index/index.js      | JavaScript |         29 |          0 |          7 |         36 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/statement_types/create_table/actions.js    | JavaScript |         77 |          0 |          8 |         85 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/statement_types/create_table/index.js      | JavaScript |         31 |          0 |          5 |         36 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/statement_types/index.js                   | JavaScript |          8 |          0 |          2 |         10 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/statements/actions.js                      | JavaScript |         41 |          0 |          4 |         45 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/statements/index.js                        | JavaScript |         69 |          0 |         11 |         80 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/utils.js                                   | JavaScript |         75 |          3 |          9 |         87 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssql/whitespaces.js                             | JavaScript |          8 |          0 |          3 |         11 |
+| /home/pbminh/holistics/dbml/packages/dbml-core/src/parse/mssqlParser.js                                   | JavaScript |          2 |          0 |          2 |          4 |
+| Total                                                                                                     |            |      1,267 |          8 |        179 |      1,454 |
++-----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

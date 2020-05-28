@@ -15,7 +15,7 @@ function tokenizeParen (parser) {
 function enclose (parser) {
   const ManyRParen = RParen.thru(tokenizeParen);
   const ManyLParen = LParen.thru(tokenizeParen);
-  return P.seq(ManyLParen, parser, ManyRParen);// ()skip(LParen, parser, RParen.fallback(null));
+  return P.seq(ManyLParen, parser, ManyRParen);
 }
 
 function enclosedOrNot (parser) {
