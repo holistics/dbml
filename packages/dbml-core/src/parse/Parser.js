@@ -28,7 +28,7 @@ class Parser {
   }
 
   static parseMSSQLToJSON (str) {
-    return mssqlParser.tryParse(str);
+    return mssqlParser.parseWithPegError(str);
   }
 
   static parse (str, format) {
