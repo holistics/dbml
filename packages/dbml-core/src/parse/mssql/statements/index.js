@@ -4,7 +4,6 @@ const S = require('../statement_types');
 const wss = require('../whitespaces');
 const A = require('./actions');
 const { pIgnore } = require('../composite_parsers');
-const { parseRegexpUnlessExceptions } = require('../utils');
 
 const Lang = P.createLanguage({
   Statements: (r) => wss.then(r.Seperator)
@@ -71,8 +70,8 @@ const Lang = P.createLanguage({
     BP.KeywordRestore,
   ),
 
-  KeywordCreateWithoutTable: () => parseRegexpUnlessExceptions(/CREATE/i, [/TABLE/i]),
-  KeywordAlterWithoutTable: () => parseRegexpUnlessExceptions(/ALTER/i, [/TABLE/i]),
+  KeywordCreateWithoutTable: () => BP.KeywordCreate.notFollowedBy(BP.KeywordTable),
+  KeywordAlterWithoutTable: () => BP.KeywordAlter.notFollowedBy(BP.KeywordTable),
   Seperator: () => P.alt(BP.Semicolon, BP.KeywordGo, P.seq(BP.Semicolon, BP.KeywordGo)).many(),
 });
 

@@ -27,5 +27,9 @@ describe('@dbml/core - importer', () => {
   test.each(scanTestNames(__dirname, 'postgres_importer/input'))('postgres_importer/%s', (name) => {
     runTest(name, 'postgres_importer', 'postgres');
   });
+
+  test.each(scanTestNames(__dirname, 'mssql_importer/input'))('mssql_importer/%s', (name) => {
+    runTest(name, 'mssql_importer', 'mssql');
+  });
   /* eslint-enable */
 });
