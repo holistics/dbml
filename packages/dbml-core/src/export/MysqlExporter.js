@@ -79,6 +79,12 @@ class MySQLExporter {
     return lines;
   }
 
+  ///////////Export Table Comment///////////
+  // static exportTableComment (tableIds, model) {
+  //   const tableContentArr = tableIds.map((tableId) => {
+  //     return ; 
+  // }
+
   static getTableContentArr (tableIds, model) {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = MySQLExporter.getFieldLines(tableId, model);
@@ -103,7 +109,7 @@ class MySQLExporter {
       const schema = model.schemas[table.schemaId];
       const tableStr = `CREATE TABLE ${shouldPrintSchema(schema, model)
         ? `\`${schema.name}\`.` : ''}\`${table.name}\` (\n${
-        content.map(line => `  ${line}`).join(',\n')}\n);\n`;
+        content.map(line => `  ${line}`).join(',\n')}\n);\n`; // Perhaps adding comment here? 
       return tableStr;
     });
 
@@ -227,6 +233,11 @@ class MySQLExporter {
       hasBlockAbove = true;
     }
 
+    if (!_.isEmpty(schema.note)) {
+      if (hasBlockAbove) res += '\n';
+      res += ` COMMENT '${schema.note}'`;
+      hasBlockAbove = true;
+    }
     return res;
   }
 }

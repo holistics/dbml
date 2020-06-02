@@ -174,7 +174,7 @@ class SqlServerExporter {
         }
         columnArr.push(columnStr);
       });
-
+  
       line += ` (${columnArr.join(', ')})`;
       line += '\nGO\n';
 
@@ -187,18 +187,49 @@ class SqlServerExporter {
   static exportComments (comments, model) {
     const commentArr = comments.map((comment) => {
       let line = '';
+      const commentType = {'column': 'Column',
+                          'table': 'Table',
+                          'project': 'Project'};
 
-      if (comment.type === 'column') {
-        const field = model.fields[comment.fieldId];
-        const table = model.tables[field.tableId];
-        const schema = model.schemas[table.schemaId];
-
-        line = 'EXEC sp_addextendedproperty\n';
-        line += '@name = N\'Column_Description\'\n';
-        line += `@value = '${field.note}'\n`;
-        line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
-        line += `@level1type = N'Table',  @level1name = '${table.name}',\n`;
-        line += `@level2type = N'Column', @level2name = '${field.name}';\n`;
+      // if (comment.type === 'column') {
+      // if (comment.type in commentType) {
+      switch (comment.type) { 
+        case 'project': {
+          // const field = model.fields[comment.fieldId];
+          // const table = model.tables[comment.tableId];
+          const schema = model.schemas[comment.schemaId];
+          line = 'EXEC sp_addextendedproperty\n';
+          line += `@name = N\'${commentType[comment.type]}_Description\'\n`;
+          line += `@value = '${schema.note}'\n`; 
+          line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
+          // line += `@level1type = N'Table',  @level1name = '${table.name}',\n`; 
+          // line += `@level2type = N'Column', @level2name = '${field.name}';\n`;
+          break; 
+        }
+        case 'table': {
+          // const field = model.fields[comment.fieldId];
+          const table = model.tables[comment.tableId];
+          const schema = model.schemas[table.schemaId];
+          line = 'EXEC sp_addextendedproperty\n';
+          line += `@name = N\'${commentType[comment.type]}_Description\'\n`;
+          line += `@value = '${table.note}'\n`; 
+          line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
+          line += `@level1type = N'Table',  @level1name = '${table.name}',\n`; 
+          // line += `@level2type = N'Column', @level2name = '${field.name}';\n`;
+          break; 
+        }
+        case 'column': {
+          const field = model.fields[comment.fieldId];
+          const table = model.tables[field.tableId];
+          const schema = model.schemas[table.schemaId];
+          line = 'EXEC sp_addextendedproperty\n';
+          line += `@name = N\'${commentType[comment.type]}_Description\'\n`;
+          line += `@value = '${field.note}'\n`; 
+          line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
+          line += `@level1type = N'Table',  @level1name = '${table.name}',\n`; 
+          line += `@level2type = N'Column', @level2name = '${field.name}';\n`;
+          break;
+        }
       }
 
       line += 'GO\n';
@@ -219,6 +250,12 @@ class SqlServerExporter {
     database.schemaIds.forEach((schemaId) => {
       const schema = model.schemas[schemaId];
       const { tableIds, refIds } = schema;
+      const { note } = schema; 
+      if (note) {
+        comments.push({type: 'project', schemaId});
+      }
+      // console.log(schema, "schema");
+      // console.log(tableIds, "tableIds"); 
 
       if (shouldPrintSchema(schema, model)) {
         if (hasBlockAbove) res += '\n';
@@ -238,13 +275,25 @@ class SqlServerExporter {
         hasBlockAbove = true;
       }
 
+      /////////PUSH COMMENTS TO COLUMN/////////
+      // console.log(JSON.stringify(tableIds, null, 2));
       indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
       comments.push(...(_.flatten(tableIds.map((tableId) => {
         const { fieldIds } = model.tables[tableId];
+        const {note} = model.tables[tableId]; 
+        if (note) {
+          return [{type: 'table', tableId}, fieldIds
+          .filter((fieldId) => model.fields[fieldId].note)
+          .map((fieldId) => ({ type: 'column', fieldId }))];
+        }
+        // console.log(fieldIds
+        //   .filter((fieldId) => model.fields[fieldId].note)
+        //   .map((fieldId) => ({ type: 'column', fieldId })));
         return fieldIds
           .filter((fieldId) => model.fields[fieldId].note)
           .map((fieldId) => ({ type: 'column', fieldId }));
       }))));
+    console.log(comments, "commentsssss");
     });
 
     if (!_.isEmpty(indexIds)) {
