@@ -196,11 +196,34 @@ class MySQLExporter {
     return indexArr.length ? indexArr.join('\n') : '';
   }
 
+  static exportComments (comments, model) {
+    const commentArr = comments.map((comment) => {
+      let line = '';
+      // line = 'ALTER TABLE ';
+      if (comment.type === 'table') {
+        const table = model.tables[comment.tableId];
+        const schema = model.schemas[table.schemaId];
+        line += `ALTER TABLE ${table.name} COMMENT = "${table.note}"`;
+        // return line 
+        // line += `@value = '${table.note}';`; 
+        // line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
+        // line += `@level1type = N'Table','${table.name}',\n`; 
+      }
+
+      line += ';\n';
+
+      return line;
+    });
+
+    return commentArr.length ? commentArr.join('\n') : '';
+  }
+
   static export (model) {
     let res = '';
     let hasBlockAbove = false;
     const database = model.database['1'];
     const indexIds = [];
+    const comments = [];
 
     database.schemaIds.forEach((schemaId) => {
       const schema = model.schemas[schemaId];
@@ -225,6 +248,14 @@ class MySQLExporter {
       }
 
       indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
+      comments.push(...(_.flatten(tableIds.map((tableId) => {
+        const { note } = model.tables[tableId];
+        if (note) {
+          return { type: 'table', tableId }; 
+        }
+        // return note ? [{type: 'table', tableId}] : ; 
+      }))));
+      console.log(comments);
     });
 
     if (!_.isEmpty(indexIds)) {
@@ -233,11 +264,18 @@ class MySQLExporter {
       hasBlockAbove = true;
     }
 
-    if (!_.isEmpty(schema.note)) {
+    if (!_.isEmpty(comments)) {
       if (hasBlockAbove) res += '\n';
-      res += ` COMMENT '${schema.note}'`;
+      res += MySQLExporter.exportComments(comments, model);
       hasBlockAbove = true;
     }
+
+    // if (!_.isEmpty(table.note)) {
+    //   if (hasBlockAbove) res += '\n';
+    //   res += `This is the table note: ${table.note}`; 
+    //   // res += ` COMMENT '${schema.note}'`;
+    //   hasBlockAbove = true;
+    // }
     return res;
   }
 }

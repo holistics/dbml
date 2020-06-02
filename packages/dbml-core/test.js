@@ -38,4 +38,4 @@ Project DBML {
 const db = Parser.parse(dbml, 'dbml');
 // const dbNormalize = JSON.stringify(db.normalize(), null, 2);
 // console.log(dbNormalize);
-console.log(ModelExporter.export(db, 'mssql', false));
+console.log(ModelExporter.export(db, 'mysql', false));
