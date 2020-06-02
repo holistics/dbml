@@ -1,7 +1,7 @@
 const P = require('parsimmon');
 const {
   LParen, RParen, Comma,
-} = require('./base_parsers');
+} = require('./keyword_parsers');
 
 const wss = require('./whitespaces');
 

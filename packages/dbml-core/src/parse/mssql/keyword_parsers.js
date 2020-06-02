@@ -1,4 +1,4 @@
-const { keyword, word } = require('./base_utils');
+const { keyword, word } = require('./keyword_utils');
 
 exports.KeywordIdentity = keyword(/IDENTITY/i);
 exports.KeywordIndex = keyword(/INDEX/i);

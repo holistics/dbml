@@ -1,14 +1,14 @@
 const P = require('parsimmon');
-const BP = require('../base_parsers');
+const KP = require('../keyword_parsers');
 const { pDotDelimitedName, pIdentifier, pColumnNames } = require('../composite_parsers');
 const { makeList, makeNode } = require('../utils');
 const A = require('./actions');
 
 const Lang = P.createLanguage({
   TableConstraintFK: (r) => P.seqMap(
-    BP.KeywordForeignKey.fallback(null),
+    KP.KeywordForeignKey.fallback(null),
     r.TableEndpoint,
-    BP.KeywordReferences,
+    KP.KeywordReferences,
     pDotDelimitedName,
     r.TableEndpoint,
     r.FKOptions.fallback(null),
@@ -28,22 +28,22 @@ const Lang = P.createLanguage({
     A.makeColumnConstraintFK,
   ),
   FKOptions: (r) => P.alt(r.FKOnDelete, r.FKOnUpdate, r.FKNFR).many(),
-  FKKeywords: () => P.seq(BP.KeywordForeignKey.fallback(null), BP.KeywordReferences),
+  FKKeywords: () => P.seq(KP.KeywordForeignKey.fallback(null), KP.KeywordReferences),
 
   FKOnDelete: (r) => P.seqMap(
-    BP.KeywordOnDelete,
+    KP.KeywordOnDelete,
     r.FKOnOptions,
     A.makeOnSetting,
   ),
   FKOnUpdate: (r) => P.seqMap(
-    BP.KeywordOnUpdate,
+    KP.KeywordOnUpdate,
     r.FKOnOptions,
     A.makeOnSetting,
   ),
-  FKNFR: () => BP.KeywordNFR.map(value => {
+  FKNFR: () => KP.KeywordNFR.map(value => {
     return { type: value };
   }),
-  FKOnOptions: () => P.alt(BP.KeywordNoAction, BP.KeywordCascade, BP.KeywordSetDefault, BP.KeywordSetNull),
+  FKOnOptions: () => P.alt(KP.KeywordNoAction, KP.KeywordCascade, KP.KeywordSetDefault, KP.KeywordSetNull),
 
 
 });

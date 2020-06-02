@@ -1,8 +1,8 @@
 const P = require('parsimmon');
-const BP = require('../../base_parsers');
+const KP = require('../../../keyword_parsers');
 const {
   pDotDelimitedName, pIgnore,
-} = require('../../composite_parsers');
+} = require('../../../composite_parsers');
 const A = require('./actions');
 const pAddAction = require('./add');
 
@@ -15,19 +15,19 @@ const Lang = P.createLanguage({
     A.handleAlterTableResult,
   ),
   AlterTableActions: (r) => P.alt(pAddAction, r.IgnoredAlterTableActions),
-  AlterTableKeywords: () => P.seq(BP.KeywordAlter, BP.KeywordTable),
+  AlterTableKeywords: () => P.seq(KP.KeywordAlter, KP.KeywordTable),
 
   IgnoredAlterTableActions: (r) => P.seq(r.IgnoredAlterTableActionKeywords, pIgnore).result(null),
   IgnoredAlterTableActionKeywords: () => P.alt(
-    BP.KeywordWith,
-    BP.KeywordAlterColumn,
-    BP.KeywordDrop,
-    BP.KeywordEnable,
-    BP.KeywordDisable,
-    BP.KeywordCheck,
-    BP.KeywordSwitch,
-    BP.KeywordSet,
-    BP.KeywordRebuild,
+    KP.KeywordWith,
+    KP.KeywordAlterColumn,
+    KP.KeywordDrop,
+    KP.KeywordEnable,
+    KP.KeywordDisable,
+    KP.KeywordCheck,
+    KP.KeywordSwitch,
+    KP.KeywordSet,
+    KP.KeywordRebuild,
   ),
 });
 module.exports = Lang.AlterTable;

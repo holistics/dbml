@@ -1,5 +1,5 @@
 const P = require('parsimmon');
-const BP = require('../base_parsers');
+const KP = require('../keyword_parsers');
 const {
   pDotDelimitedName, pIdentifier, pNumberList, pOptionList,
 } = require('../composite_parsers');
@@ -26,13 +26,13 @@ const Lang = P.createLanguage({
 
   ColumnSetDefinition: () => P.seq(
     pIdentifier,
-    BP.KeywordColumnSet,
+    KP.KeywordColumnSet,
   ),
   ComputedColumnDefinition: () => P.seq(
     pIdentifier,
-    BP.KeywordAs,
+    KP.KeywordAs,
     pExpression,
-    P.seq(BP.KeywordPersisted, BP.KeywordNotNull.fallback(null)).fallback(null),
+    P.seq(KP.KeywordPersisted, KP.KeywordNotNull.fallback(null)).fallback(null),
     pColumnConstraint.fallback(null),
   ),
   ColumnSetting: (r) => P.alt(
@@ -54,28 +54,28 @@ const Lang = P.createLanguage({
     makeList(P.alt(r.DataTypeXML, pIdentifier)).fallback(null),
     A.makeDataType,
   ),
-  DataTypeXML: () => P.seq(P.alt(BP.KeywordDocument, BP.KeywordContent), pIdentifier)
+  DataTypeXML: () => P.seq(P.alt(KP.KeywordDocument, KP.KeywordContent), pIdentifier)
     .tieWith(' '),
 
 
-  NullOrNot: () => P.alt(BP.KeywordNull.result(false), BP.KeywordNotNull.result(true))
+  NullOrNot: () => P.alt(KP.KeywordNull.result(false), KP.KeywordNotNull.result(true))
     .thru(streamline('not_null')),
 
-  Identity: () => BP.KeywordIdentity.result(true).skip(pNumberList.fallback(null))
+  Identity: () => KP.KeywordIdentity.result(true).skip(pNumberList.fallback(null))
     .thru(streamline('increment')),
 
   ColumnSetting1Word: () => P.alt(
-    BP.KeywordFilestream,
-    BP.KeywordNFR,
-    BP.KeywordRowGUIDCol,
-    BP.KeywordSparse,
+    KP.KeywordFilestream,
+    KP.KeywordNFR,
+    KP.KeywordRowGUIDCol,
+    KP.KeywordSparse,
   ),
-  ColumnSettingWith: () => P.seq(P.alt(BP.KeywordMasked, BP.KeywordEncrypted), BP.KeywordWith, pOptionList),
-  ColumnSettingCollate: () => P.seq(BP.KeywordCollate, pIdentifier),
+  ColumnSettingWith: () => P.seq(P.alt(KP.KeywordMasked, KP.KeywordEncrypted), KP.KeywordWith, pOptionList),
+  ColumnSettingCollate: () => P.seq(KP.KeywordCollate, pIdentifier),
   ColumnSettingGAAR: () => P.seq(
-    BP.KeywordGeneratedAAR,
-    P.alt(BP.KeywordStart, BP.KeywordEnd),
-    BP.KeywordHidden.fallback(null),
+    KP.KeywordGeneratedAAR,
+    P.alt(KP.KeywordStart, KP.KeywordEnd),
+    KP.KeywordHidden.fallback(null),
   ),
 
 

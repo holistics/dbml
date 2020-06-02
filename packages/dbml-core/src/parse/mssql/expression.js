@@ -5,7 +5,7 @@ const {
 } = require('./composite_parsers');
 const {
   LParen, RParen,
-} = require('./base_parsers');
+} = require('./keyword_parsers');
 const wss = require('./whitespaces');
 const { streamline } = require('./utils');
 

@@ -1,6 +1,6 @@
 const P = require('parsimmon');
-const BP = require('../base_parsers');
-const S = require('../statement_types');
+const KP = require('../keyword_parsers');
+const S = require('./statement_types');
 const wss = require('../whitespaces');
 const A = require('./actions');
 const { pIgnore } = require('../composite_parsers');
@@ -25,54 +25,54 @@ const Lang = P.createLanguage({
     r.IgnoredBackupAndRestoreSyntax,
     r.IgnoredServiceBrokerSyntax,
     r.IgnoredPermissionSyntax,
-    BP.KeywordAdd,
-    BP.KeywordClose,
-    BP.KeywordSet,
+    KP.KeywordAdd,
+    KP.KeywordClose,
+    KP.KeywordSet,
   ),
 
   IgnoredDDLSyntax: (r) => P.alt(
     r.KeywordCreateWithoutTable,
     r.KeywordAlterWithoutTable,
-    BP.KeywordCollate,
-    BP.KeywordDrop,
-    BP.KeywordRename,
-    BP.KeywordEnable,
-    BP.KeywordDisable,
+    KP.KeywordCollate,
+    KP.KeywordDrop,
+    KP.KeywordRename,
+    KP.KeywordEnable,
+    KP.KeywordDisable,
   ),
 
   IgnoredDMLSyntax: () => P.alt(
-    BP.KeywordBulkInsert,
-    BP.KeywordInsert,
-    BP.KeywordUpdate,
-    BP.KeywordMerge,
-    BP.KeywordTruncateTable,
-    BP.KeywordDelete,
+    KP.KeywordBulkInsert,
+    KP.KeywordInsert,
+    KP.KeywordUpdate,
+    KP.KeywordMerge,
+    KP.KeywordTruncateTable,
+    KP.KeywordDelete,
   ),
 
   IgnoredServiceBrokerSyntax: () => P.alt(
-    BP.KeywordBegin,
-    BP.KeywordEnd,
-    BP.KeywordMove,
-    BP.KeywordReceive,
-    BP.KeywordSend,
+    KP.KeywordBegin,
+    KP.KeywordEnd,
+    KP.KeywordMove,
+    KP.KeywordReceive,
+    KP.KeywordSend,
   ),
 
   IgnoredPermissionSyntax: () => P.alt(
-    BP.KeywordDeny,
-    BP.KeywordExecute,
-    BP.KeywordGrant,
-    BP.KeywordOpen,
-    BP.KeywordRevoke,
+    KP.KeywordDeny,
+    KP.KeywordExecute,
+    KP.KeywordGrant,
+    KP.KeywordOpen,
+    KP.KeywordRevoke,
   ),
 
   IgnoredBackupAndRestoreSyntax: () => P.alt(
-    BP.KeywordBackup,
-    BP.KeywordRestore,
+    KP.KeywordBackup,
+    KP.KeywordRestore,
   ),
 
-  KeywordCreateWithoutTable: () => BP.KeywordCreate.notFollowedBy(BP.KeywordTable),
-  KeywordAlterWithoutTable: () => BP.KeywordAlter.notFollowedBy(BP.KeywordTable),
-  Seperator: () => P.alt(BP.Semicolon, BP.KeywordGo, P.seq(BP.Semicolon, BP.KeywordGo)).many(),
+  KeywordCreateWithoutTable: () => KP.KeywordCreate.notFollowedBy(KP.KeywordTable),
+  KeywordAlterWithoutTable: () => KP.KeywordAlter.notFollowedBy(KP.KeywordTable),
+  Seperator: () => P.alt(KP.Semicolon, KP.KeywordGo, P.seq(KP.Semicolon, KP.KeywordGo)).many(),
 });
 
 module.exports = Lang.Statements;
