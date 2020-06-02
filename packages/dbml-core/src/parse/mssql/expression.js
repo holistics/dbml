@@ -2,7 +2,7 @@ const P = require('parsimmon');
 const _ = require('lodash');
 const {
   pFunction, pDotDelimitedName, pConst,
-} = require('./composite_parsers');
+} = require('./base_parsers');
 const {
   LParen, RParen,
 } = require('./keyword_parsers');

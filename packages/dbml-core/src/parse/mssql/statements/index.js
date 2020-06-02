@@ -3,7 +3,7 @@ const KP = require('../keyword_parsers');
 const S = require('./statement_types');
 const wss = require('../whitespaces');
 const A = require('./actions');
-const { pIgnore } = require('../composite_parsers');
+const { pIgnore } = require('../base_parsers');
 
 const Lang = P.createLanguage({
   Statements: (r) => wss.then(r.Seperator)

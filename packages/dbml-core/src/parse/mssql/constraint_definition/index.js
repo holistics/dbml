@@ -3,7 +3,7 @@ const KP = require('../keyword_parsers');
 const pExpression = require('../expression');
 const {
   pIdentifier, pConst, pFunction,
-} = require('../composite_parsers');
+} = require('../base_parsers');
 const { makeList, streamline, makeNode } = require('../utils');
 const { pColumnConstraintFK, pTableConstraintFK } = require('../fk_definition');
 const { pColumnConstraintIndex, pTableConstraintIndex } = require('../index_definition');

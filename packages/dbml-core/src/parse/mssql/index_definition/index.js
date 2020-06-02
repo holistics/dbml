@@ -2,7 +2,7 @@ const P = require('parsimmon');
 const KP = require('../keyword_parsers');
 const {
   pIdentifier, pKeywordClusteredOrNon, pFunction, pOptionList, pColumnNames, pKeywordPKOrUnique, pOption,
-} = require('../composite_parsers');
+} = require('../base_parsers');
 const { makeNode } = require('../utils');
 const A = require('./actions');
 

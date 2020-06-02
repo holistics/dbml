@@ -2,7 +2,7 @@ const P = require('parsimmon');
 const KP = require('../../../keyword_parsers');
 const {
   pIdentifier, pDotDelimitedName,
-} = require('../../../composite_parsers');
+} = require('../../../base_parsers');
 const { makeNode, makeList } = require('../../../utils');
 const { pTableConstraint } = require('../../../constraint_definition');
 const { pTableIndex, pIgnoredIndexOption } = require('../../../index_definition');
