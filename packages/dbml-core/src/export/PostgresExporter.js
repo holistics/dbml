@@ -203,13 +203,17 @@ class PostgresExporter {
   static exportComments (comments, model) {
     const commentArr = comments.map((comment) => {
       let line = 'COMMENT ON';
+      const commentType = {'column': 'COLUMN',
+                          'table': 'TABLE'};
 
-      if (comment.type === 'column') {
-        const field = model.fields[comment.fieldId];
+      // if (comment.type === 'column' || comment.type === 'table') {
+      if (comment.type in commentType) {
+        const field = model.fields[comment.fieldId]; // MAYBE I need to fix this!!! field > table > schema 
         const table = model.tables[field.tableId];
         const schema = model.schemas[table.schemaId];
 
-        line += ` COLUMN ${shouldPrintSchema(schema, model)
+        // line += ` COLUMN ${shouldPrintSchema(schema, model)
+        line += ` ${commentType[comment.type]} ${shouldPrintSchema(schema, model)
           ? `"${schema.name}".` : ''}"${table.name}"."${field.name}" IS '${field.note}'`;
       }
 
