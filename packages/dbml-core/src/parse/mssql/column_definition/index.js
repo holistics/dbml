@@ -2,7 +2,7 @@ const P = require('parsimmon');
 const KP = require('../keyword_parsers');
 const {
   pDotDelimitedName, pIdentifier, pNumberList, pOptionList,
-} = require('../composite_parsers');
+} = require('../base_parsers');
 const { makeNode, makeList, streamline } = require('../utils');
 const { pColumnIndex } = require('../index_definition');
 const { pColumnConstraint } = require('../constraint_definition');

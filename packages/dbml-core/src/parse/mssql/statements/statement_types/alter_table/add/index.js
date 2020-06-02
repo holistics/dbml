@@ -1,6 +1,6 @@
 const P = require('parsimmon');
 const KP = require('../../../../keyword_parsers');
-const { pIdentifier } = require('../../../../composite_parsers');
+const { pIdentifier } = require('../../../../base_parsers');
 const { makeNode, makeList } = require('../../../../utils');
 const A = require('./actions');
 const { pTableConstraintFK } = require('../../../../fk_definition');

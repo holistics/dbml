@@ -2,7 +2,7 @@ const P = require('parsimmon');
 const KP = require('../../../keyword_parsers');
 const {
   pDotDelimitedName, pIgnore,
-} = require('../../../composite_parsers');
+} = require('../../../base_parsers');
 const A = require('./actions');
 const pAddAction = require('./add');
 
