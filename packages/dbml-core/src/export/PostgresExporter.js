@@ -203,23 +203,9 @@ class PostgresExporter {
   static exportComments (comments, model) {
     const commentArr = comments.map((comment) => {
       let line = 'COMMENT ON';
-      // const commentType = {'column': 'COLUMN',
-      //                     'table': 'TABLE',
-      //                     'schema': 'SCHEMA'};
 
-      // if (comment.type === 'column' || comment.type === 'table') {
-      // if (comment.type in commentType) {
       switch (comment.type) {
-        case 'schema': {
-          // const field = model.fields[comment.fieldId]; 
-          // const table = model.tables[field.tableId];
-          const schema = model.schemas[comment.schemaId];         
-          line += ` SCHEMA ${shouldPrintSchema(schema, model)
-            ? `"${schema.name}".` : ''}" IS '${schema.note}'`;
-          break;
-        }
         case 'table': {
-          // const field = model.fields[comment.fieldId]; 
           const table = model.tables[comment.tableId];
           const schema = model.schemas[table.schemaId];          
           line += ` TABLE ${shouldPrintSchema(schema, model)
@@ -253,13 +239,7 @@ class PostgresExporter {
 
     database.schemaIds.forEach((schemaId) => {
       const schema = model.schemas[schemaId];
-      const { tableIds, enumIds, refIds, note } = schema;
-      // console.log(note, "schema.note");
-      // console.log(schema, "schema"); 
-
-      if (note) {
-        comments.push({type: 'schema', schemaId});
-      }
+      const { tableIds, enumIds, refIds } = schema;
 
       if (shouldPrintSchema(schema, model)) {
         if (hasBlockAbove) res += '\n';
@@ -286,12 +266,6 @@ class PostgresExporter {
       }
 
       indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
-      // comments.push(...(_.flatten(tableIds.map((tableId) => {
-      //   const { fieldIds } = model.tables[tableId];
-      //   return fieldIds
-      //     .filter((fieldId) => model.fields[fieldId].note)
-      //     .map((fieldId) => ({ type: 'column', fieldId }));
-      // }))));
       comments.push(...(_.flatten(tableIds.map((tableId) => {
         const { fieldIds, note } = model.tables[tableId];
         const fieldObject = fieldIds
@@ -299,7 +273,6 @@ class PostgresExporter {
           .map((fieldId) => ({ type: 'column', fieldId }));
         return note ? [{type: 'table', tableId}].concat(fieldObject) : fieldObject;
       }))));
-      console.log(comments, "commentssss");
     });
 
     if (!_.isEmpty(indexIds)) {
