@@ -1,5 +1,9 @@
 
+
+
 ENABLE something;
+
+
 GO
 CREATE TABLE [schema].[orders] AS FileTable (
   [id] int PRIMARY KEY CLUSTERED ON filegroup WITH FILLFACTOR = [fill]
@@ -13,7 +17,8 @@ CREATE TABLE [schema].[orders] AS FileTable (
         REMOTE_DATA_ARCHIVE = OFF (MIGRATION_STATE = PAUSED)
     );
 
-CREATE TABLE [order_items] (
+CREATE 
+TABLE [order_items] (
   [order_id] int ENCRYPTED WITH (COLUMN_ENCRYPTION_KEY = [key]),
   [product_id] int CONSTRAINT [con_name] CHECK NOT FOR REPLICATION (1 > 2),
   [quantity] int DEFAULT (1) INDEX [index] CLUSTERED 
@@ -29,7 +34,8 @@ DROP something;
 GO
 INSERT something;
 GO
-ALTER TABLE [order_items] ADD FOREIGN KEY ([order_id]) REFERENCES [orders] ([id]);
+ALTER 
+TABLE [order_items] ADD FOREIGN KEY ([order_id]) REFERENCES [orders] ([id]);
 ALTER TABLE [table] WITH sth;
 ALTER TABLE [table] SET sth;
 ALTER TABLE [table] SWITCH sth; 

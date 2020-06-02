@@ -1,15 +1,15 @@
 const P = require('parsimmon');
-const BP = require('../../../base_parsers');
-const { pIdentifier } = require('../../../composite_parsers');
-const { makeNode, makeList } = require('../../../utils');
+const KP = require('../../../../keyword_parsers');
+const { pIdentifier } = require('../../../../composite_parsers');
+const { makeNode, makeList } = require('../../../../utils');
 const A = require('./actions');
-const { pTableConstraintFK } = require('../../../fk_definition');
-const { pTableConstraintIndex } = require('../../../index_definition');
-const { pConstraintCheck, pConstExpr, pConstraintName } = require('../../../constraint_definition');
-const { pColumnsDefinition } = require('../../../column_definition');
+const { pTableConstraintFK } = require('../../../../fk_definition');
+const { pTableConstraintIndex } = require('../../../../index_definition');
+const { pConstraintCheck, pConstExpr, pConstraintName } = require('../../../../constraint_definition');
+const { pColumnsDefinition } = require('../../../../column_definition');
 
 const Lang = P.createLanguage({
-  AddAction: (r) => P.seq(BP.KeywordAdd, r.AddOption).map(value => value[1]),
+  AddAction: (r) => P.seq(KP.KeywordAdd, r.AddOption).map(value => value[1]),
   AddOption: (r) => P.alt(r.AddConstraint, pColumnsDefinition.result(null), r.IgnoredAddSystemTimeOption.result(null)),
 
   IgnoredAddSystemTimeOption: () => P.alt(pIdentifier, P.regexp(/[(),]/)).many(),
@@ -28,16 +28,16 @@ const Lang = P.createLanguage({
   ),
 
   AddConstraintDefault: () => P.seq(
-    BP.KeywordDefault,
+    KP.KeywordDefault,
     pConstExpr,
-    BP.KeywordFor,
+    KP.KeywordFor,
     pIdentifier,
-    BP.KeywordWithValues.fallback(null),
+    KP.KeywordWithValues.fallback(null),
   ),
 
   AddConstraintConnection: () => P.seq(
-    BP.KeywordConnection,
-    makeList(P.seq(pIdentifier, BP.KeywordTo, pIdentifier)),
+    KP.KeywordConnection,
+    makeList(P.seq(pIdentifier, KP.KeywordTo, pIdentifier)),
   ),
 });
 module.exports = Lang.AddAction;

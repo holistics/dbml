@@ -1,5 +1,5 @@
 const P = require('parsimmon');
-const BP = require('../base_parsers');
+const KP = require('../keyword_parsers');
 const {
   pIdentifier, pKeywordClusteredOrNon, pFunction, pOptionList, pColumnNames, pKeywordPKOrUnique, pOption,
 } = require('../composite_parsers');
@@ -9,11 +9,11 @@ const A = require('./actions');
 const Lang = P.createLanguage({
 
   TableIndex: (r) => P.seqMap(
-    BP.KeywordIndex,
+    KP.KeywordIndex,
     pIdentifier,
-    BP.KeywordUnique.fallback(null),
+    KP.KeywordUnique.fallback(null),
     pKeywordClusteredOrNon.fallback(null),
-    BP.KeywordColumnStore.fallback(null),
+    KP.KeywordColumnStore.fallback(null),
     pColumnNames,
     A.makeTableIndex,
   ).thru(makeNode()).skip(r.IgnoredIndexOptions),
@@ -30,7 +30,7 @@ const Lang = P.createLanguage({
   ).skip(r.IgnoredIndexOptions).map(value => value[0]),
 
   ColumnIndex: (r) => P.seqMap(
-    BP.KeywordIndex,
+    KP.KeywordIndex,
     pIdentifier,
     A.makeColumnIndex,
   ).thru(makeNode()).skip(r.IgnoredIndexOptions),
@@ -42,10 +42,10 @@ const Lang = P.createLanguage({
     r.OnIndexOption,
     r.WithFillFactorOption,
   ),
-  WithIndexOption: () => P.seq(BP.KeywordWith, pOptionList),
-  WithFillFactorOption: () => P.seq(BP.KeywordWith, pOption),
-  OnIndexOption: () => P.seq(BP.KeywordOn, P.alt(pIdentifier, pFunction)),
-  ColumnIndexFilestream: () => P.seq(BP.KeywordFilestream_On, pIdentifier),
+  WithIndexOption: () => P.seq(KP.KeywordWith, pOptionList),
+  WithFillFactorOption: () => P.seq(KP.KeywordWith, pOption),
+  OnIndexOption: () => P.seq(KP.KeywordOn, P.alt(pIdentifier, pFunction)),
+  ColumnIndexFilestream: () => P.seq(KP.KeywordFilestream_On, pIdentifier),
 });
 module.exports = {
   pColumnIndex: Lang.ColumnIndex,

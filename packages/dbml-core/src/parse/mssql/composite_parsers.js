@@ -1,6 +1,6 @@
 const P = require('parsimmon');
 const { makeList, streamline } = require('./utils');
-const BP = require('./base_parsers');
+const KP = require('./keyword_parsers');
 const wss = require('./whitespaces');
 
 const Lang = P.createLanguage({
@@ -12,7 +12,7 @@ const Lang = P.createLanguage({
   pOptionList: (r) => makeList(r.pOption),
   pOption: (r) => P.seq(
     r.pIdentifier,
-    BP.Equal,
+    KP.Equal,
     P.seq(
       P.alt(r.pIdentifier, r.pString).many(),
       P.alt(
@@ -60,11 +60,11 @@ const Lang = P.createLanguage({
 
 
   pKeywordPKOrUnique: () => P.alt(
-    BP.KeywordPrimaryKey.result({ type: 'pk', value: true }),
-    BP.KeywordUnique.result({ type: 'unique', value: true }),
+    KP.KeywordPrimaryKey.result({ type: 'pk', value: true }),
+    KP.KeywordUnique.result({ type: 'unique', value: true }),
   ),
-  pKeywordClusteredOrNon: () => P.alt(BP.KeywordClustered, BP.KeywordNonclustered),
-  pKeywordAscOrDesc: () => P.alt(BP.KeywordAsc, BP.KeywordDesc),
+  pKeywordClusteredOrNon: () => P.alt(KP.KeywordClustered, KP.KeywordNonclustered),
+  pKeywordAscOrDesc: () => P.alt(KP.KeywordAsc, KP.KeywordDesc),
 });
 
 module.exports = Lang;
