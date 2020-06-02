@@ -188,33 +188,23 @@ class SqlServerExporter {
     const commentArr = comments.map((comment) => {
       let line = '';
       line = 'EXEC sp_addextendedproperty\n';
-      // const commentType = {'column': 'Column',
-      //                     'table': 'Table',
-      //                     'schema': 'Schema'};
 
       switch (comment.type) { 
-        case 'schema': {
-          const schema = model.schemas[comment.schemaId];
-          line += `@name = N\'Schema_Description\'\n`;
-          line += `@value = '${schema.note}'\n`; 
-          line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
-          break; 
-        }
         case 'table': {
           const table = model.tables[comment.tableId];
           const schema = model.schemas[table.schemaId];
-          line += `@name = N\'Table_Description\'\n`;
-          line += `@value = '${table.note}'\n`; 
+          line += `@name = N\'Table_Description\',\n`;
+          line += `@value = '${table.note}',\n`; 
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
-          line += `@level1type = N'Table',  @level1name = '${table.name}',\n`; 
+          line += `@level1type = N'Table',  @level1name = '${table.name}';\n`; 
           break; 
         }
         case 'column': {
           const field = model.fields[comment.fieldId];
           const table = model.tables[field.tableId];
           const schema = model.schemas[table.schemaId];
-          line += `@name = N\'Column_Description\'\n`;
-          line += `@value = '${field.note}'\n`; 
+          line += `@name = N\'Column_Description\',\n`;
+          line += `@value = '${field.note}',\n`; 
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
           line += `@level1type = N'Table',  @level1name = '${table.name}',\n`; 
           line += `@level2type = N'Column', @level2name = '${field.name}';\n`;
@@ -239,11 +229,7 @@ class SqlServerExporter {
 
     database.schemaIds.forEach((schemaId) => {
       const schema = model.schemas[schemaId];
-      const { tableIds, refIds, note } = schema;
-
-      if (note) {
-        comments.push({type: 'schema', schemaId});
-      }
+      const { tableIds, refIds } = schema; 
 
       if (shouldPrintSchema(schema, model)) {
         if (hasBlockAbove) res += '\n';
@@ -273,7 +259,6 @@ class SqlServerExporter {
           .map((fieldId) => ({ type: 'column', fieldId }));
         return note ? [{type: 'table', tableId}].concat(fieldObject) : fieldObject;
       }))));
-      // console.log(comments);
     });
 
     if (!_.isEmpty(indexIds)) {

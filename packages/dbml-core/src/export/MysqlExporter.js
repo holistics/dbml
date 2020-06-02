@@ -79,12 +79,6 @@ class MySQLExporter {
     return lines;
   }
 
-  ///////////Export Table Comment///////////
-  // static exportTableComment (tableIds, model) {
-  //   const tableContentArr = tableIds.map((tableId) => {
-  //     return ; 
-  // }
-
   static getTableContentArr (tableIds, model) {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = MySQLExporter.getFieldLines(tableId, model);
@@ -109,7 +103,7 @@ class MySQLExporter {
       const schema = model.schemas[table.schemaId];
       const tableStr = `CREATE TABLE ${shouldPrintSchema(schema, model)
         ? `\`${schema.name}\`.` : ''}\`${table.name}\` (\n${
-        content.map(line => `  ${line}`).join(',\n')}\n);\n`; // Perhaps adding comment here? 
+        content.map(line => `  ${line}`).join(',\n')}\n);\n`;
       return tableStr;
     });
 
@@ -199,22 +193,13 @@ class MySQLExporter {
   static exportComments (comments, model) {
     const commentArr = comments.map((comment) => {
       let line = '';
-      // line = 'ALTER TABLE ';
       if (comment.type === 'table') {
-        const table = model.tables[comment.tableId];
-        const schema = model.schemas[table.schemaId];
-        line += `ALTER TABLE ${table.name} COMMENT = "${table.note}"`;
-        // return line 
-        // line += `@value = '${table.note}';`; 
-        // line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
-        // line += `@level1type = N'Table','${table.name}',\n`; 
+      const table = model.tables[comment.tableId];
+      line += `ALTER TABLE \`${table.name}\` COMMENT = "${table.note}"`;
       }
-
       line += ';\n';
-
       return line;
     });
-
     return commentArr.length ? commentArr.join('\n') : '';
   }
 
@@ -250,12 +235,8 @@ class MySQLExporter {
       indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
       comments.push(...(_.flatten(tableIds.map((tableId) => {
         const { note } = model.tables[tableId];
-        if (note) {
-          return { type: 'table', tableId }; 
-        }
-        // return note ? [{type: 'table', tableId}] : ; 
+        return note ? [{type: 'table', tableId}] : [];
       }))));
-      console.log(comments);
     });
 
     if (!_.isEmpty(indexIds)) {
@@ -269,13 +250,6 @@ class MySQLExporter {
       res += MySQLExporter.exportComments(comments, model);
       hasBlockAbove = true;
     }
-
-    // if (!_.isEmpty(table.note)) {
-    //   if (hasBlockAbove) res += '\n';
-    //   res += `This is the table note: ${table.note}`; 
-    //   // res += ` COMMENT '${schema.note}'`;
-    //   hasBlockAbove = true;
-    // }
     return res;
   }
 }
