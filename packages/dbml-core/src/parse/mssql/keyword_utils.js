@@ -7,15 +7,13 @@ exports.word = function (string) {
 
 function replaceWhitespaceWithRegexp (regexp) {
   let string = String(regexp);
-  string = string.replace(/[\s]+/g, '[^\\S\\r]+');
+  string = string.replace(/[\s]+/g, '\\s+');
   const lastSlash = string.lastIndexOf('/');
   return new RegExp(string.slice(1, lastSlash), string.slice(lastSlash + 1));
 }
-exports.keyword = function (regexp, multiword = false) {
+exports.keyword = function (regexp) {
   let newRegexp = regexp;
   const desc = regexp.source;
-  if (multiword) {
-    newRegexp = replaceWhitespaceWithRegexp(regexp);
-  }
+  newRegexp = replaceWhitespaceWithRegexp(regexp);
   return P.regexp(newRegexp).skip(wss).desc(`"${desc}"`);
 };
