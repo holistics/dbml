@@ -81,16 +81,16 @@ describe('@dbml/core - model_structure', () => {
 
       test('schema "public" - contains all refs', () => {
         const schema = database.schemas[0];
-        expect(schema.refs).toHaveLength(6);
+        expect(schema.refs).toHaveLength(7);
 
         const refs = schema.refs.map((ref) => ({
           name: ref.name,
           onDelete: ref.onDelete,
           onUpdate: ref.onUpdate,
           endpoints: ref.endpoints.map((endpoint) => ({
-            schemaName: endpoint.field.table.schema.name,
-            tableName: endpoint.field.table.name,
-            fieldName: endpoint.field.name,
+            schemaName: endpoint.fields[0].table.schema.name,
+            tableName: endpoint.fields[0].table.name,
+            fieldNames: endpoint.fields.map(field => field.name),
             relation: endpoint.relation,
           })),
         }));
@@ -103,14 +103,36 @@ describe('@dbml/core - model_structure', () => {
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'users',
-                fieldName: 'country_code',
+                fieldNames: ['country_code'],
                 relation: '*',
               },
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'countries',
-                fieldName: 'code',
+                fieldNames: ['code'],
                 relation: '1',
+              },
+            ]),
+          }),
+          expect.objectContaining({
+            endpoints: expect.arrayContaining([
+              {
+                schemaName: DEFAULT_SCHEMA_NAME,
+                tableName: 'products',
+                fieldNames: [
+                  'id',
+                  'name',
+                ],
+                relation: '1',
+              },
+              {
+                schemaName: DEFAULT_SCHEMA_NAME,
+                tableName: 'order_items',
+                fieldNames: [
+                  'product_id',
+                  'product_name',
+                ],
+                relation: '*',
               },
             ]),
           }),
@@ -424,7 +446,7 @@ describe('@dbml/core - model_structure', () => {
 
       test('schema "public" - contains all refs', () => {
         const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
-        expect(schema.refIds).toHaveLength(6);
+        expect(schema.refIds).toHaveLength(7);
 
         // eslint-disable-next-line
         const refs = schema.refIds.map((refId) => ({
@@ -433,9 +455,11 @@ describe('@dbml/core - model_structure', () => {
           onUpdate: getEle('refs', refId).onUpdate,
           // eslint-disable-next-line
           endpoints: getEle('refs', refId).endpointIds.map((endpointId) => ({
-            schemaName: getEle('schemas', getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldId).tableId).schemaId).name,
-            tableName: getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldId).tableId).name,
-            fieldName: getEle('fields', getEle('endpoints', endpointId).fieldId).name,
+            schemaName: getEle('schemas', getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldIds[0]).tableId).schemaId).name,
+            tableName: getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldIds[0]).tableId).name,
+            fieldNames: getEle('endpoints', endpointId).fieldIds.map((fieldId) => {
+              return getEle('fields', fieldId).name;
+            }),
             relation: getEle('endpoints', endpointId).relation,
           })),
         }));
@@ -448,14 +472,36 @@ describe('@dbml/core - model_structure', () => {
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'users',
-                fieldName: 'country_code',
+                fieldNames: ['country_code'],
                 relation: '*',
               },
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'countries',
-                fieldName: 'code',
+                fieldNames: ['code'],
                 relation: '1',
+              },
+            ]),
+          }),
+          expect.objectContaining({
+            endpoints: expect.arrayContaining([
+              {
+                schemaName: DEFAULT_SCHEMA_NAME,
+                tableName: 'products',
+                fieldNames: [
+                  'id',
+                  'name',
+                ],
+                relation: '1',
+              },
+              {
+                schemaName: DEFAULT_SCHEMA_NAME,
+                tableName: 'order_items',
+                fieldNames: [
+                  'product_id',
+                  'product_name',
+                ],
+                relation: '*',
               },
             ]),
           }),

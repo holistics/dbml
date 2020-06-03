@@ -204,7 +204,7 @@
           "inline_refs": [
             {
               "tableName": "U",
-              "fieldName": "id",
+              "fieldNames": ["id"],
               "relation": ">",
               "token": {
                 "start": {
@@ -243,7 +243,7 @@
       "endpoints": [
         {
           "tableName": "U",
-          "fieldName": "id",
+          "fieldNames": ["id"],
           "relation": "1",
           "token": {
             "start": {
@@ -260,7 +260,7 @@
         },
         {
           "tableName": "merchants",
-          "fieldName": "admin_id",
+          "fieldNames": ["admin_id"],
           "relation": "*",
           "token": {
             "start": {

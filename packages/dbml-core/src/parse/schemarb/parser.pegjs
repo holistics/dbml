@@ -48,7 +48,8 @@
   }
 
   function isSameEndpoints (endpoint1, endpoint2) {
-    return endpoint1.tableName == endpoint2.tableName && endpoint1.fieldName == endpoint2.fieldName
+    return endpoint1.tableName == endpoint2.tableName && 
+      lodash.isEqual(lodash.sortBy(endpoint1.fieldNames), lodash.sortBy(endpoint2.fieldNames))
   }
 
   function isSameEndpointsPairs (endpointsPair1, endpointsPair2) {
@@ -96,10 +97,10 @@
       // return ref;
       return null;
     }
-    if (!endpoints[0].fieldName) {
+    if (!endpoints[0].fieldNames) {
       const singleNameOfPrimaryTable = pluralize.singular(endpoints[1].tableName)
       const columnName = `${singleNameOfPrimaryTable}_id`;
-      endpoints[0].fieldName = columnName;
+      endpoints[0].fieldNames = [columnName];
       const columnField = fromTable.fields.find(field => field.name === columnName);
       if (!columnField) {
         // TODO: handle erro
@@ -109,11 +110,11 @@
         // return ref;
         return null;
       }
-      endpoints[0].fieldName = columnName;
+      endpoints[0].fieldNames = [columnName];
     }
-    if (!endpoints[1].fieldName) {
+    if (!endpoints[1].fieldNames) {
       const primaryKey = 'id';
-      endpoints[1].fieldName = primaryKey;
+      endpoints[1].fieldNames = [primaryKey];
     }
     return ref;
   }
@@ -131,10 +132,10 @@
     for (let i = 0; i < props.length; i += 1) {
       const currentProp = props[i];
       if (currentProp.columnName) {
-        endpoints[0].fieldName = currentProp.columnName;
+        endpoints[0].fieldNames = [currentProp.columnName];
       }
       if (currentProp.primaryKey) {
-        endpoints[1].fieldName = currentProp.primaryKey;
+        endpoints[1].fieldNames = [currentProp.primaryKey];
       }
       if (currentProp.onDelete) {
         refProp = {
@@ -189,12 +190,12 @@
         endpoints: [
           {
             tableName: table.name,
-            fieldName: columnName,
+            fieldNames: [columnName],
             relation: '1',
           },
           {
             tableName: referenceTable,
-            fieldName: primaryKeyName,
+            fieldNames: [primaryKeyName],
             relation: '1',
           }
         ]
@@ -224,12 +225,12 @@
             endpoints: [
               {
                 tableName: table.name,
-                fieldName: field.name,
+                fieldNames: [field.name],
                 relation: '1',
               },
               {
                 tableName: refWithTable.name,
-                fieldName: 'id',
+                fieldNames: ['id'],
                 relation: '1',
               }
             ]
