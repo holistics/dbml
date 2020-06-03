@@ -14,7 +14,9 @@ Table "orders" {
   "id" int [pk, increment]
   "user_id" int [unique, not null]
   "status" orders_status_enum
-  "created_at" varchar(255)
+  "created_at" varchar(255) [note: 'When order created'] 
+
+  Note: 'This is a note in table "orders"'
 }
 
 Table "order_items" {
@@ -37,6 +39,8 @@ Indexes {
   (merchant_id, status) [name: "product_status"]
   id [type: hash, unique, name: "products_index_1"]
 }
+
+  Note: 'This is a note in table "products"'
 }
 
 Table "users" {
@@ -47,6 +51,8 @@ Table "users" {
   "date_of_birth" varchar(255)
   "created_at" varchar(255)
   "country_code" int
+
+  Note: 'This is a note in table "users"'
 }
 
 Table "merchants" {
