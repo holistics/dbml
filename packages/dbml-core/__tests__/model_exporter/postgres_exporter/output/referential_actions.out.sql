@@ -1,27 +1,29 @@
 CREATE TABLE "orders" (
   "id" SERIAL PRIMARY KEY,
-  "user_id" int NOT NULL,
-  "created_at" datetime DEFAULT (now())
+  "user_id" int UNIQUE NOT NULL,
+  "status" orders_status_enum,
+  "created_at" varchar(255)
 );
 
 CREATE TABLE "order_items" (
-  "id" SERIAL PRIMARY KEY,
-  "order_id" int NOT NULL,
-  "product_id" int DEFAULT null,
+  "order_id" int,
+  "product_id" int,
+  "product_name" varchar(255),
   "quantity" int DEFAULT 1
 );
 
 CREATE TABLE "products" (
-  "id" SERIAL PRIMARY KEY,
-  "name" varchar,
+  "id" int,
+  "name" varchar(255),
   "price" decimal(10,4),
-  "created_at" datetime DEFAULT (now())
+  "created_at" datetime DEFAULT (now()),
+  PRIMARY KEY ("id", "name")
 );
 
 CREATE TABLE "users" (
   "id" SERIAL PRIMARY KEY,
-  "name" varchar,
-  "email" varchar UNIQUE,
+  "name" varchar(255),
+  "email" varchar(255) UNIQUE,
   "date_of_birth" datetime,
   "created_at" datetime DEFAULT (now()),
   "country_code" int NOT NULL
@@ -29,14 +31,15 @@ CREATE TABLE "users" (
 
 CREATE TABLE "countries" (
   "code" int PRIMARY KEY,
-  "name" varchar,
-  "continent_name" varchar
+  "name" varchar(255),
+  "continent_name" varchar(255)
 );
 
 ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE RESTRICT;
 
 ALTER TABLE "order_items" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "order_items" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id") ON DELETE SET NULL;
+ALTER TABLE "order_items" ADD FOREIGN KEY ("product_id", "product_name") REFERENCES "products" ("id", "name") ON DELETE SET NULL;
 
 ALTER TABLE "users" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code") ON DELETE NO ACTION;
+

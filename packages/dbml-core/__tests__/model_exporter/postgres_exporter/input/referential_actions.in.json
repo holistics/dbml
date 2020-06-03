@@ -6,8 +6,7 @@
         {
           "name": "id",
           "type": {
-            "type_name": "int",
-            "args": null
+            "type_name": "int"
           },
           "pk": true,
           "increment": true
@@ -15,88 +14,74 @@
         {
           "name": "user_id",
           "type": {
-            "type_name": "int",
-            "args": null
+            "type_name": "int"
           },
+          "unique": true,
           "not_null": true
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "orders_status_enum"
+          }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "datetime",
-            "args": null
-          },
-          "dbdefault": {
-            "value": "now()",
-            "type": "expression"
+            "type_name": "varchar(255)",
+            "args": "255"
           }
         }
-      ],
-      "indexes": []
+      ]
     },
     {
       "name": "order_items",
       "fields": [
         {
-          "name": "id",
-          "type": {
-            "type_name": "int",
-            "args": null
-          },
-          "pk": true,
-          "increment": true
-        },
-        {
           "name": "order_id",
           "type": {
-            "type_name": "int",
-            "args": null
-          },
-          "not_null": true
+            "type_name": "int"
+          }
         },
         {
           "name": "product_id",
           "type": {
-            "type_name": "int",
-            "args": null
-          },
-          "dbdefault": {
-            "value": "null",
-            "type": "boolean"
+            "type_name": "int"
+          }
+        },
+        {
+          "name": "product_name",
+          "type": {
+            "type_name": "varchar(255)",
+            "args": "255"
           }
         },
         {
           "name": "quantity",
           "type": {
-            "type_name": "int",
-            "args": null
+            "type_name": "int"
           },
           "dbdefault": {
-            "value": 1,
-            "type": "number"
+            "type": "number",
+            "value": 1
           }
         }
-      ],
-      "indexes": []
+      ]
     },
-
     {
       "name": "products",
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "int",
-            "args": null
-          },
-          "pk": true,
-          "increment": true
+            "type_name": "int"
+          }
         },
         {
           "name": "name",
           "type": {
-            "type_name": "varchar",
-            "args": null
+            "type_name": "varchar(255)",
+            "args": "255"
           }
         },
         {
@@ -109,8 +94,7 @@
         {
           "name": "created_at",
           "type": {
-            "type_name": "datetime",
-            "args": null
+            "type_name": "datetime"
           },
           "dbdefault": {
             "value": "now()",
@@ -118,7 +102,21 @@
           }
         }
       ],
-      "indexes": []
+      "indexes": [
+        {
+          "columns": [
+            {
+              "value": "id",
+              "type": "column"
+            },
+            {
+              "value": "name",
+              "type": "column"
+            }
+          ],
+          "pk": true
+        }
+      ]
     },
     {
       "name": "users",
@@ -126,8 +124,7 @@
         {
           "name": "id",
           "type": {
-            "type_name": "int",
-            "args": null
+            "type_name": "int"
           },
           "pk": true,
           "increment": true
@@ -135,30 +132,28 @@
         {
           "name": "name",
           "type": {
-            "type_name": "varchar",
-            "args": null
+            "type_name": "varchar(255)",
+            "args": "255"
           }
         },
         {
           "name": "email",
           "type": {
-            "type_name": "varchar",
-            "args": null
+            "type_name": "varchar(255)",
+            "args": "255"
           },
           "unique": true
         },
         {
           "name": "date_of_birth",
           "type": {
-            "type_name": "datetime",
-            "args": null
+            "type_name": "datetime"
           }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "datetime",
-            "args": null
+            "type_name": "datetime"
           },
           "dbdefault": {
             "value": "now()",
@@ -168,13 +163,11 @@
         {
           "name": "country_code",
           "type": {
-            "type_name": "int",
-            "args": null
+            "type_name": "int"
           },
           "not_null": true
         }
-      ],
-      "indexes": []
+      ]
     },
     {
       "name": "countries",
@@ -182,94 +175,105 @@
         {
           "name": "code",
           "type": {
-            "type_name": "int",
-            "args": null
+            "type_name": "int"
           },
           "pk": true
         },
         {
           "name": "name",
           "type": {
-            "type_name": "varchar",
-            "args": null
+            "type_name": "varchar(255)",
+            "args": "255"
           }
         },
         {
           "name": "continent_name",
           "type": {
-            "type_name": "varchar",
-            "args": null
+            "type_name": "varchar(255)",
+            "args": "255"
           }
         }
-      ],
-      "indexes": []
+      ]
     }
   ],
   "refs": [
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "users",
-          "fieldName": "id",
+          "fieldNames": [
+            "id"
+          ],
           "relation": "1"
         },
         {
           "tableName": "orders",
-          "fieldName": "user_id",
+          "fieldNames": [
+            "user_id"
+          ],
           "relation": "*"
         }
       ],
       "onDelete": "restrict"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "orders",
-          "fieldName": "id",
+          "fieldNames": [
+            "id"
+          ],
           "relation": "1"
         },
         {
           "tableName": "order_items",
-          "fieldName": "order_id",
+          "fieldNames": [
+            "order_id"
+          ],
           "relation": "*"
         }
       ],
       "onDelete": "cascade"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "products",
-          "fieldName": "id",
+          "fieldNames": [
+            "id",
+            "name"
+          ],
           "relation": "1"
         },
         {
           "tableName": "order_items",
-          "fieldName": "product_id",
+          "fieldNames": [
+            "product_id",
+            "product_name"
+          ],
           "relation": "*"
         }
       ],
       "onDelete": "set null"
     },
     {
-      "name": null,
       "endpoints": [
         {
           "tableName": "countries",
-          "fieldName": "code",
+          "fieldNames": [
+            "code"
+          ],
           "relation": "1"
         },
         {
           "tableName": "users",
-          "fieldName": "country_code",
+          "fieldNames": [
+            "country_code"
+          ],
           "relation": "*"
         }
       ],
       "onDelete": "no action"
     }
-  ],
-  "enums": []
+  ]
 }

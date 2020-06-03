@@ -48,7 +48,7 @@ TableSyntax
 			const endpoints = [
 				{
 					tableName: name,
-					fieldName: field.name,
+					fieldNames: [field.name],
 					relation: "*", //set by default
 				},
 				ref.endpoint,
@@ -115,7 +115,7 @@ TableBody = _ lines:Line* _ {
 					
 	// Set inline_ref for fields
 	fks.map(key => {
-		const field = fields.find(f => f.name === key.endpoints[0].fieldName);
+		const field = fields.find(f => f.name === key.endpoints[0].fieldNames[0]);
 		if(!field.inline_ref) {
 			field.inline_ref = [];
 		}
@@ -149,33 +149,29 @@ FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _
 	fkActions:FKAction*
 {
 	const name = constraint ? constraint[2] : null;
-	const arr = [];
-	fields.forEach((field, index) => {
-		const fkObj = {
-			name: name,
-			endpoints: [
-				{
-					tableName: null,
-					fieldName: field,
-					relation: "*",
-				},
-				{
-					tableName: table2,
-					fieldName: fields2[index],
-					relation: "1",
-				}
-			],
-		};
-		fkActions.forEach(fkAction => {
-			if (fkAction.type === 'delete') {
-				fkObj.onDelete = fkAction.action;
-				return;
+	const fkObj = {
+		name: name,
+		endpoints: [
+			{
+				tableName: null,
+				fieldNames: fields,
+				relation: "*",
+			},
+			{
+				tableName: table2,
+				fieldNames: fields2,
+				relation: "1",
 			}
-			fkObj.onUpdate = fkAction.action;
-		});
-		arr.push(fkObj);
-	})
-  return arr
+		],
+	};
+	fkActions.forEach(fkAction => {
+		if (fkAction.type === 'delete') {
+			fkObj.onDelete = fkAction.action;
+			return;
+		}
+		fkObj.onUpdate = fkAction.action;
+	});
+  	return fkObj;
 }
 
 FKAction
@@ -252,6 +248,7 @@ FieldSetting "field setting"
     / _ "GENERATED_ALWAYS"i? _ "AS"i _ "(" expression ")"
     / _ "VIRTUAL"i _
     / _ "STORED"i 
+	/ _ ("CHARACTER"i _ "SET"i/"CHARSET"i) _ name _
     ) { return "not_supported" }
 	/ _ v:Default {return {type: "default", value: v} }
 	/ _ v:Comment { return {type: "comment", value: v }}

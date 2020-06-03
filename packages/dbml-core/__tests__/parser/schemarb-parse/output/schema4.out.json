@@ -161,12 +161,12 @@
             {
                "tableName": "active_storage_attachments",
                "relation": "1",
-               "fieldName": "blob_id"
+               "fieldNames": ["blob_id"]
             },
             {
                "tableName": "active_storage_blobs",
                "relation": "1",
-               "fieldName": "id"
+               "fieldNames": ["id"]
             }
          ]
       }
