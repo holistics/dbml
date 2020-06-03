@@ -1,20 +1,20 @@
-Enum "orders_status_enum" {
+Enum "orders_status" {
   "created"
   "running"
   "done"
   "failure"
 }
 
-Enum "products_status_enum" {
+Enum "product status" {
   "Out of Stock"
   "In Stock"
 }
 
 Table "orders" {
   "id" int [pk, increment]
-  "user_id" int [unique, not null]
-  "status" orders_status_enum
-  "created_at" varchar(255) [note: 'When order created'] 
+  "user_id" bigint [unique, not null]
+  "status" orders_status
+  "created_at" varchar [note: 'When order created'] 
 
   Note: 'This is a note in table "orders"'
 }
@@ -27,29 +27,29 @@ Table "order_items" {
 
 Table "products" {
   "id" int
-  "name" varchar(255)
+  "name" varchar
   "merchant_id" int [not null]
   "price" int
-  "status" products_status_enum
+  "status" "product status"
   "created_at" datetime [default: `now()`]
 
         
 Indexes {
   (id, name) [pk]
   (merchant_id, status) [name: "product_status"]
-  id [type: hash, unique, name: "products_index_1"]
+  id [type: hash, unique]
 }
 
   Note: 'This is a note in table "products"'
 }
 
 Table "users" {
-  "id" int [pk]
-  "full_name" varchar(255)
-  "email" varchar(255) [unique]
-  "gender" varchar(255)
-  "date_of_birth" varchar(255)
-  "created_at" varchar(255)
+  "id" bigint [pk, increment]
+  "full_name" varchar
+  "email" varchar [unique]
+  "gender" varchar
+  "date_of_birth" varchar
+  "created_at" varchar
   "country_code" int
 
   Note: 'This is a note in table "users"'
@@ -57,16 +57,16 @@ Table "users" {
 
 Table "merchants" {
   "id" int [pk]
-  "merchant_name" varchar(255)
+  "merchant_name" varchar
   "country_code" int
-  "created_at" varchar(255)
+  "created_at" varchar
   "admin_id" int
 }
 
 Table "countries" {
   "code" int [pk]
-  "name" varchar(255)
-  "continent_name" varchar(255)
+  "name" varchar
+  "continent_name" varchar
 }
 
 Ref:"orders"."id" < "order_items"."order_id"
