@@ -2,7 +2,7 @@ CREATE TABLE `orders` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `user_id` int UNIQUE NOT NULL,
   `status` ENUM ('created', 'running', 'done', 'failure'),
-  `created_at` varchar(255)
+  `created_at` varchar(255) COMMENT 'When order created'
 );
 
 CREATE TABLE `order_items` (
