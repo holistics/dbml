@@ -210,14 +210,20 @@ class PostgresExporter {
   static exportComments (comments, model) {
     const commentArr = comments.map((comment) => {
       let line = 'COMMENT ON';
-
-      if (comment.type === 'column') {
-        const field = model.fields[comment.fieldId];
-        const table = model.tables[field.tableId];
-        const schema = model.schemas[table.schemaId];
-
-        line += ` COLUMN ${shouldPrintSchema(schema, model)
-          ? `"${schema.name}".` : ''}"${table.name}"."${field.name}" IS '${field.note}'`;
+      const table = model.tables[comment.tableId];
+      const schema = model.schemas[table.schemaId];  
+      switch (comment.type) {
+        case 'table': {    
+          line += ` TABLE ${shouldPrintSchema(schema, model)
+            ? `"${schema.name}".` : ''}"${table.name}" IS '${table.note}'`;
+          break; 
+        }
+        case 'column': {
+          const field = model.fields[comment.fieldId]; 
+          line += ` COLUMN ${shouldPrintSchema(schema, model)
+            ? `"${schema.name}".` : ''}"${table.name}"."${field.name}" IS '${field.note}'`;
+          break; 
+        }
       }
 
       line += ';\n';
@@ -265,10 +271,11 @@ class PostgresExporter {
 
       indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
       comments.push(...(_.flatten(tableIds.map((tableId) => {
-        const { fieldIds } = model.tables[tableId];
-        return fieldIds
+        const { fieldIds, note } = model.tables[tableId];
+        const fieldObjects = fieldIds
           .filter((fieldId) => model.fields[fieldId].note)
-          .map((fieldId) => ({ type: 'column', fieldId }));
+          .map((fieldId) => ({ type: 'column', fieldId, tableId }));
+        return note ? [{type: 'table', tableId}].concat(fieldObjects) : fieldObjects;
       }))));
     });
 

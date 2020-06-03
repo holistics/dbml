@@ -2,7 +2,7 @@ CREATE TABLE `orders` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `user_id` int UNIQUE NOT NULL,
   `status` ENUM ('created', 'running', 'done', 'failure'),
-  `created_at` varchar(255)
+  `created_at` varchar(255) COMMENT 'When order created'
 );
 
 CREATE TABLE `order_items` (
@@ -60,3 +60,9 @@ ALTER TABLE `merchants` ADD FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`);
 CREATE INDEX `product_status` ON `products` (`merchant_id`, `status`);
 
 CREATE UNIQUE INDEX `products_index_1` ON `products` (`id`) USING HASH;
+
+ALTER TABLE `orders` COMMENT = "This is a note in table 'orders'";
+
+ALTER TABLE `products` COMMENT = "This is a note in table 'products'";
+
+ALTER TABLE `users` COMMENT = "This is a note in table 'users'";

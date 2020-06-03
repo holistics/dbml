@@ -197,11 +197,25 @@ class MySQLExporter {
     return indexArr.length ? indexArr.join('\n') : '';
   }
 
+  static exportComments (comments, model) {
+    const commentArr = comments.map((comment) => {
+      let line = '';
+      if (comment.type === 'table') {
+        const table = model.tables[comment.tableId];
+        line += `ALTER TABLE \`${table.name}\` COMMENT = "${table.note.replace(/"/g, "'")}"`;
+      }
+      line += ';\n';
+      return line;
+    });
+    return commentArr.length ? commentArr.join('\n') : '';
+  }
+
   static export (model) {
     let res = '';
     let hasBlockAbove = false;
     const database = model.database['1'];
     const indexIds = [];
+    const comments = [];
 
     database.schemaIds.forEach((schemaId) => {
       const schema = model.schemas[schemaId];
@@ -226,6 +240,10 @@ class MySQLExporter {
       }
 
       indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
+      comments.push(...(_.flatten(tableIds.map((tableId) => {
+        const { note } = model.tables[tableId];
+        return note ? [{type: 'table', tableId}] : [];
+      }))));
     });
 
     if (!_.isEmpty(indexIds)) {
@@ -234,6 +252,11 @@ class MySQLExporter {
       hasBlockAbove = true;
     }
 
+    if (!_.isEmpty(comments)) {
+      if (hasBlockAbove) res += '\n';
+      res += MySQLExporter.exportComments(comments, model);
+      hasBlockAbove = true;
+    }
     return res;
   }
 }
