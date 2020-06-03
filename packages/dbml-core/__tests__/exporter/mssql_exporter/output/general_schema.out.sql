@@ -74,3 +74,32 @@ GO
 
 CREATE UNIQUE INDEX [products_index_1] ON [products] ("id")
 GO
+
+EXEC sp_addextendedproperty
+@name = N'Table_Description',
+@value = 'This is a note in table "orders"',
+@level0type = N'Schema', @level0name = 'dbo',
+@level1type = N'Table',  @level1name = 'orders';
+GO
+
+EXEC sp_addextendedproperty
+@name = N'Column_Description',
+@value = 'When order created',
+@level0type = N'Schema', @level0name = 'dbo',
+@level1type = N'Table',  @level1name = 'orders',
+@level2type = N'Column', @level2name = 'created_at';
+GO
+
+EXEC sp_addextendedproperty
+@name = N'Table_Description',
+@value = 'This is a note in table "products"',
+@level0type = N'Schema', @level0name = 'dbo',
+@level1type = N'Table',  @level1name = 'products';
+GO
+
+EXEC sp_addextendedproperty
+@name = N'Table_Description',
+@value = 'This is a note in table "users"',
+@level0type = N'Schema', @level0name = 'dbo',
+@level1type = N'Table',  @level1name = 'users';
+GO

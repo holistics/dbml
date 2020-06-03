@@ -194,8 +194,8 @@ class MySQLExporter {
     const commentArr = comments.map((comment) => {
       let line = '';
       if (comment.type === 'table') {
-      const table = model.tables[comment.tableId];
-      line += `ALTER TABLE \`${table.name}\` COMMENT = "${table.note}"`;
+        const table = model.tables[comment.tableId];
+        line += `ALTER TABLE \`${table.name}\` COMMENT = "${table.note}"`;
       }
       line += ';\n';
       return line;
