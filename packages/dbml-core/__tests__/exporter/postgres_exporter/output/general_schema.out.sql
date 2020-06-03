@@ -72,3 +72,11 @@ ALTER TABLE "merchants" ADD FOREIGN KEY ("admin_id") REFERENCES "users" ("id");
 CREATE INDEX "product_status" ON "products" ("merchant_id", "status");
 
 CREATE UNIQUE INDEX ON "products" USING HASH ("id");
+
+COMMENT ON TABLE "orders" IS 'This is a note in table "orders"';
+
+COMMENT ON COLUMN "orders"."created_at" IS 'When order created';
+
+COMMENT ON TABLE "products" IS 'This is a note in table "products"';
+
+COMMENT ON TABLE "users" IS 'This is a note in table "users"';
