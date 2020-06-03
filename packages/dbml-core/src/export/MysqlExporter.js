@@ -195,7 +195,7 @@ class MySQLExporter {
       let line = '';
       if (comment.type === 'table') {
         const table = model.tables[comment.tableId];
-        line += `ALTER TABLE \`${table.name}\` COMMENT = "${table.note}"`;
+        line += `ALTER TABLE \`${table.name}\` COMMENT = '${table.note}'`;
       }
       line += ';\n';
       return line;
