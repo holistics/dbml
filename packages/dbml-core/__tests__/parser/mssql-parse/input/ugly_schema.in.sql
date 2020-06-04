@@ -3,7 +3,9 @@
 
 ENABLE something;
 
-
+/*==============================================================*/
+/* MULTILINE-COMMENT                                            */
+/*==============================================================*/
 GO
 CREATE TABLE [schema].[orders] AS FileTable (
   [id] int PRIMARY KEY CLUSTERED ON filegroup WITH FILLFACTOR = [fill]
@@ -31,6 +33,9 @@ TABLE [order_items] (
   INDEX [index_quantity] CLUSTERED ([product_id]) ON [something] FILESTREAM_ON [filestream],
   PERIOD FOR SYSTEM_TIME (SysStartTime, SysEndTime)
 );
+/*==============================================================*/
+/* MULTILINE-COMMENT                                            */
+/*==============================================================*/
 GO
 DROP something;
 GO
