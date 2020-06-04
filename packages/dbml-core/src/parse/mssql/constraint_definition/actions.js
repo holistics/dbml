@@ -47,7 +47,7 @@ function makeTableConstraint (constraintName, option) {
     value: {
       // prop ordering important for tableConstraintIndex
       ...option.value,
-      name: constraintName,
+      name: (option.type === 'indexes' && option.value.pk) ? null : constraintName,
     },
   };
 }
