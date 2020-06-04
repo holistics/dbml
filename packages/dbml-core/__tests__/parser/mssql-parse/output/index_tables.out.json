@@ -60,7 +60,7 @@
       ],
       "indexes": [
         {
-          "type": "btree",
+          
           "pk": true,
           "columns": [
             {
@@ -75,7 +75,7 @@
         },
         {
           "name": "users_index_0",
-          "type": "btree",
+          
           "unique": true,
           "columns": [
             {
@@ -86,7 +86,7 @@
         },
         {
           "name": "User Name",
-          "type": "btree",
+          
           "columns": [
             {
               "value": "full_name",
@@ -96,7 +96,7 @@
         },
         {
           "name": "users_index_2",
-          "type": "btree",
+          
           "columns": [
             {
               "value": "email",

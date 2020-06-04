@@ -16,8 +16,10 @@ CREATE TABLE [schema].[orders] AS FileTable (
         DATA_COMPRESSION = NONE,
         REMOTE_DATA_ARCHIVE = OFF (MIGRATION_STATE = PAUSED)
     );
-
-CREATE 
+/*==============================================================*/
+/* MULTILINE-COMMENT                                            */
+/*==============================================================*/
+CREATE -- SINGLE LINE COMMENT
 TABLE [order_items] (
   [order_id] int ENCRYPTED WITH (COLUMN_ENCRYPTION_KEY = [key]),
   [product_id] int CONSTRAINT [con_name] CHECK NOT FOR REPLICATION (1 > 2),

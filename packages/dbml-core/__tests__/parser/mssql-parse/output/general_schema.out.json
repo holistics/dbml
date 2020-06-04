@@ -115,7 +115,7 @@
       "indexes": [
         {
           "name": "product_status",
-          "type": "btree",
+          
           "columns": [
             {
               "value": "merchant_id",
@@ -129,7 +129,7 @@
         },
         {
           "name": "products_index_1",
-          "type": "btree",
+          
           "unique": true,
           "columns": [
             {
