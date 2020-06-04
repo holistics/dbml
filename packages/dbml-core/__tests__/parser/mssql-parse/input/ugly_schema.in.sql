@@ -25,7 +25,7 @@ CREATE -- SINGLE LINE COMMENT
 TABLE [order_items] (
   [order_id] int ENCRYPTED WITH (COLUMN_ENCRYPTION_KEY = [key]),
   [product_id] int CONSTRAINT [con_name] CHECK NOT FOR REPLICATION (1 > 2),
-  [quantity] int DEFAULT (1) INDEX [index] CLUSTERED 
+  [quantity] int DEFAULT (0) INDEX [index] CLUSTERED 
    WITH (PAD_INDEX = ON, DATA_COMPRESSION = ROW ON PARTITIONS ([par1],[par2])) ON default FILESTREAM_ON [filestream],
   [computed] AS FUNC() PERSISTED UNIQUE,
   [set] XML COLUMN_SET FOR ALL_SPARSE_COLUMNS,
