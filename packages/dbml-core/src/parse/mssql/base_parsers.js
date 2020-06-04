@@ -8,13 +8,12 @@ const pIgnore = P((input, i) => {
   let isEnclosed = false;
   let encloseChar = '';
   while (j < input.length && (isEnclosed || !input.slice(j, j + 2).match(/GO|;/i))) {
-    if (isEnclosed && input[j].match(/\]|'|"|END/i) && input[j] === encloseChar) {
+    if (isEnclosed && input[j].match(/\]|'|"/i) && input[j] === encloseChar) {
       isEnclosed = false;
-    } else if (input[j].match(/\[|"|'|BEGIN/i)) {
+    } else if (!isEnclosed && input[j].match(/\[|"|'/i)) {
       isEnclosed = true;
       encloseChar = input[j];
       if (input[j] === '[') encloseChar = ']';
-      if (input[j].match(/BEGIN/i)) encloseChar = 'END';
     }
     if (!input[j].match(/\s/)) j += 1;
     while (j < input.length && input[j].match(/\s/)) {
