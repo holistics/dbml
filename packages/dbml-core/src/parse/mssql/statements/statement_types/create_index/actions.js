@@ -10,7 +10,6 @@ function makeIndex (_create, isUnique, _clustered, _index, indexName, _on, table
     type: 'indexes',
     value: {
       name: indexName,
-      type: 'btree',
       unique: isUnique ? true : null,
       tableName: tableName[tableName.length - 1],
       columns,

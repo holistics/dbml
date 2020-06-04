@@ -32,8 +32,8 @@ Table "products" {
   "created_at" datetime [default: `now()`]
 
 Indexes {
-  (merchant_id, status) [type: btree, name: "product_status"]
-  id [type: btree, unique, name: "products_index_1"]
+  (merchant_id, status) [name: "product_status"]
+  id [unique, name: "products_index_1"]
 }
 }
 

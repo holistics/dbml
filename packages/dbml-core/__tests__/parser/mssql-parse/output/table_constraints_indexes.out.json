@@ -64,7 +64,7 @@
       ],
       "indexes": [
         {
-          "type": "btree",
+          
           "name": "unique_continent",
           "unique": true,
           "columns": [
@@ -127,7 +127,7 @@
       ],
       "indexes": [
         {
-          "type": "btree",
+          
           "name": "unique_email_name",
           "unique": true,
           "columns": [

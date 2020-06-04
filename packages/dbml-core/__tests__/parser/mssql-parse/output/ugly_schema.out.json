@@ -65,7 +65,7 @@
       ],
       "indexes": [
         {
-          "type": "btree",
+          
           "name": "index",
           "columns": [
             {
@@ -75,7 +75,7 @@
           ]
         },
         {
-          "type": "btree",
+          
           "name": "index_quantity",
           "columns": [
             {
@@ -86,7 +86,7 @@
         },
         {
           "name": "products_id",
-          "type": "btree",
+          
           "unique": true,
           "columns": [
             {

@@ -11,7 +11,6 @@ function makeIndex (columnNames, isUnique, isPk, indexName = null) {
   return {
     type: 'indexes',
     value: {
-      type: 'btree',
       name: indexName,
       unique: isUnique ? true : null,
       pk: isPk ? true : null,
@@ -24,7 +23,6 @@ function makeColumnIndex (_keyword, indexName) {
   return {
     type: 'indexes',
     value: {
-      type: 'btree',
       name: indexName,
       columns: [
       ],
