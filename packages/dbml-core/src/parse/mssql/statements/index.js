@@ -28,6 +28,7 @@ const Lang = P.createLanguage({
     KP.KeywordAdd,
     KP.KeywordClose,
     KP.KeywordSet,
+    KP.KeywordIf,
   ),
 
   IgnoredDDLSyntax: (r) => P.alt(
