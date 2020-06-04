@@ -3,6 +3,7 @@ import mysqlParser from './mysqlParser';
 import postgresParser from './postgresParser';
 import dbmlParser from './dbmlParser';
 import schemarbParser from './schemarbParser';
+import mssqlParser from './mssqlParser';
 
 class Parser {
   static parseJSONToDatabase (rawDatabase) {
@@ -26,6 +27,10 @@ class Parser {
     return schemarbParser.parse(str);
   }
 
+  static parseMSSQLToJSON (str) {
+    return mssqlParser.parseWithPegError(str);
+  }
+
   static parse (str, format) {
     let rawDatabase = {};
     switch (format) {
@@ -43,6 +48,10 @@ class Parser {
 
       case 'schemarb':
         rawDatabase = Parser.parseSchemaRbToJSON(str);
+        break;
+
+      case 'mssql':
+        rawDatabase = Parser.parseMSSQLToJSON(str);
         break;
 
       case 'json':
