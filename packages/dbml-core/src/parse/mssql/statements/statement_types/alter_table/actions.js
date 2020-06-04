@@ -5,17 +5,30 @@ function handleRef (tableName, result) {
   endpointWithNoTableName.tableName = _.last(tableName);
 }
 
-function handleAlterTableResult (_keyword, tableName, result) {
-  if (!result) return null;
-  switch (result.type) {
-    case 'refs':
-      handleRef(tableName, result);
-      break;
+function addTableName (tableName, result) {
+  result.value.tableName = _.last(tableName);
+}
 
-    default:
-      break;
-  }
-  return result;
+function handleAlterTableResult (_keyword, tableName, results) {
+  if (!results) return null;
+  // eslint-disable-next-line consistent-return
+  results.forEach((result) => {
+    if (result) {
+      switch (result.type) {
+        case 'refs':
+          handleRef(tableName, result);
+          break;
+        case 'indexes':
+        case 'dbdefault':
+        case 'enums':
+          addTableName(tableName, result);
+          break;
+        default:
+          break;
+      }
+    }
+  });
+  return results;
 }
 
 module.exports = {

@@ -35,6 +35,7 @@ function makeConstraintCheckEnum (fieldName, _ununsed, values) {
     value: {
       name: `${fieldName}_enum`,
       values: valuesProp,
+      fieldName, // for alter table add enum
     },
   };
 }
@@ -44,8 +45,9 @@ function makeTableConstraint (constraintName, option) {
   return {
     type: option.type,
     value: {
-      name: constraintName,
+      // prop ordering important for tableConstraintIndex
       ...option.value,
+      name: constraintName,
     },
   };
 }
