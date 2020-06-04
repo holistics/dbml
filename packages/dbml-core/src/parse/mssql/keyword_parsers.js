@@ -92,6 +92,7 @@ exports.KeywordReceive = keyword(/RECEIVE/i);
 exports.KeywordSend = keyword(/SEND/i);
 exports.KeywordRename = keyword(/RENAME/i);
 exports.KeywordDelete = keyword(/DELETE/i);
+exports.KeywordIf = keyword(/IF/i);
 
 exports.LogicalOpIn = keyword(/IN/i);
 exports.LogicalOpAnd = keyword(/AND/i);

@@ -3,8 +3,30 @@ const { makeList, streamline } = require('./utils');
 const KP = require('./keyword_parsers');
 const wss = require('./whitespaces');
 
+const pIgnore = P((input, i) => {
+  let j = i;
+  let isEnclosed = false;
+  let encloseChar = '';
+  while (j < input.length && (isEnclosed || !input.slice(j, j + 2).match(/GO|;/i))) {
+    if (isEnclosed && input[j].match(/\]|'|"|END/i) && input[j] === encloseChar) {
+      isEnclosed = false;
+    } else if (input[j].match(/\[|"|'|BEGIN/i)) {
+      isEnclosed = true;
+      encloseChar = input[j];
+      if (input[j] === '[') encloseChar = ']';
+      if (input[j].match(/BEGIN/i)) encloseChar = 'END';
+    }
+    if (!input[j].match(/\s/)) j += 1;
+    while (j < input.length && input[j].match(/\s/)) {
+      j += 1;
+    }
+  }
+  if (input.slice(j, j + 2).match(/GO/i)) j -= 1;
+  return P.makeSuccess(j + 1, '');
+});
+
 const Lang = P.createLanguage({
-  pIgnore: () => P.regex(/[^;]+/),
+  pIgnore: () => pIgnore,
   pColumnNames: (r) => makeList(P.seq(r.pIdentifier, r.pKeywordAscOrDesc.fallback(null)).map(value => value[0])).desc('list of column names'),
 
   pDotDelimitedName: (r) => P.sepBy1(r.pIdentifier, P.string('.')).desc('dot delimited identifier'),
