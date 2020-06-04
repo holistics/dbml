@@ -105,17 +105,16 @@
           "type": {
             "type_name": "datetime"
           },
+          "name": "created_at",
           "dbdefault": {
             "type": "expression",
             "value": "now()"
-          },
-          "name": "created_at"
+          }
         }
       ],
       "indexes": [
         {
           "name": "product_status",
-          
           "columns": [
             {
               "value": "merchant_id",
@@ -129,7 +128,6 @@
         },
         {
           "name": "products_index_1",
-          
           "unique": true,
           "columns": [
             {
@@ -201,7 +199,6 @@
           "type": {
             "type_name": "int"
           },
-          "pk": true,
           "name": "id"
         },
         {
@@ -229,6 +226,17 @@
             "type_name": "int"
           },
           "name": "admin_id"
+        }
+      ],
+      "indexes": [
+        {
+          "pk": true,
+          "columns": [
+            {
+              "value": "id",
+              "type": "column"
+            }
+          ]
         }
       ]
     },

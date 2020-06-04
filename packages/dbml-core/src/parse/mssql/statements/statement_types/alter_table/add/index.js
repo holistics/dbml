@@ -9,7 +9,7 @@ const { pConstraintCheck, pConstExpr, pConstraintName } = require('../../../../c
 const { pColumnsDefinition } = require('../../../../column_definition');
 
 const Lang = P.createLanguage({
-  AddAction: (r) => P.seq(KP.KeywordAdd, r.AddOption).map(value => value[1]),
+  AddAction: (r) => P.seq(KP.KeywordAdd, r.AddOption.sepBy1(KP.Comma)).map(value => value[1]),
   AddOption: (r) => P.alt(r.AddConstraint, pColumnsDefinition.result(null), r.IgnoredAddSystemTimeOption.result(null)),
 
   IgnoredAddSystemTimeOption: () => P.alt(pIdentifier, P.regexp(/[(),]/)).many(),
@@ -18,21 +18,25 @@ const Lang = P.createLanguage({
     r.AddConstraintOption,
     A.makeTableConstraint,
   ).thru(makeNode()),
-  AddConstraintOption: (r) => P.alt(pTableConstraintFK, r.IgnoredAddConstraintOption),
-
-  IgnoredAddConstraintOption: (r) => P.alt(
+  AddConstraintOption: (r) => P.alt(
+    pTableConstraintFK,
     pTableConstraintIndex,
     pConstraintCheck,
     r.AddConstraintDefault,
+    r.IgnoredAddConstraintOption.result(null),
+  ),
+
+  IgnoredAddConstraintOption: (r) => P.alt(
     r.AddConstraintConnection,
   ),
 
-  AddConstraintDefault: () => P.seq(
+  AddConstraintDefault: () => P.seqMap(
     KP.KeywordDefault,
     pConstExpr,
     KP.KeywordFor,
     pIdentifier,
     KP.KeywordWithValues.fallback(null),
+    A.makeDefault,
   ),
 
   AddConstraintConnection: () => P.seq(
