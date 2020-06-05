@@ -109,3 +109,6 @@ DBML is created and maintained by [Holistics](https://holistics.io?utm_source=db
 * [VSCode Plugin for DBML by duynvu](https://marketplace.visualstudio.com/items?itemName=duynvu.dbml-language)
 * [Python parser for DBML by Vanderhoof](https://github.com/Vanderhoof/PyDBML)
 * [FloorPlan: Android's Room to DBML by julioz](https://github.com/julioz/FloorPlan)
+* [Go parser for DBML by duythinht](https://github.com/duythinht/dbml-go)
+* [DbmlForDjango: Converter between Django models.py and DBML](https://github.com/hamedsj/DbmlForDjango)
+* [parseServerSchema2dbml: Converter between ParseServer MongoDB \_SCHEMA collection and DBML by stepanic](https://github.com/stepanic/parse-server-SCHEMA-to-DBML)
