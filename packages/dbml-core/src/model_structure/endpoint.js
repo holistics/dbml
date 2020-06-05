@@ -74,9 +74,10 @@ class Endpoint extends Element {
       if (!field) {
         this.error(`Can't find field ${shouldPrintSchema(table.schema)
           ? `"${table.schema.name}".` : ''}"${fieldName}" in table "${this.tableName}"`);
+      } else {
+        this.fields.push(field);
+        field.pushEndpoint(this);
       }
-      this.fields.push(field);
-      field.pushEndpoint(this);
     });
   }
 
