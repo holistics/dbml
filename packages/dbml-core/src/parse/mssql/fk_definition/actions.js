@@ -41,9 +41,19 @@ function makeTableEndpoint (columnNames) {
 function makeTableConstraintFK (_keyword1, endpoint1, _keyword2, tableName, endpoint2, fkOptions) {
   const value = {};
 
+  if (!endpoint2) {
+    // eslint-disable-next-line no-param-reassign
+    endpoint2 = {
+      type: 'endpoint',
+      value: {},
+    };
+    endpoint2.value.fieldNames = endpoint1.value.fieldNames;
+  }
+
   endpoint1.value.relation = '*';
   endpoint2.value.relation = '1';
   endpoint2.value.tableName = _.last(tableName);
+
 
   value.endpoints = [endpoint1.value, endpoint2.value];
   setOption(value, fkOptions);

@@ -6,7 +6,7 @@ CREATE TABLE [products] (
 );
 
 CREATE TABLE [countries] (
-  [code] int PRIMARY KEY,
+  [country_code] int PRIMARY KEY,
   [name] varchar(255),
   [continent_name] varchar(255),
   INDEX [unique_continent] UNIQUE NONCLUSTERED ([continent_name])
@@ -19,7 +19,7 @@ CREATE TABLE [users] (
   [date_of_birth] datetime,
   [created_at] datetime DEFAULT (now()),
   [country_code] int NOT NULL,
-  FOREIGN KEY ([country_code]) REFERENCES [countries] ([code]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  FOREIGN KEY ([country_code]) REFERENCES [countries] ON DELETE NO ACTION ON UPDATE NO ACTION,
   INDEX [unique_email_name] UNIQUE CLUSTERED ([email],[name])
 );
 
