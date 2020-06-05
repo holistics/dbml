@@ -192,6 +192,10 @@ There are 3 types of relationships: one-to-one, one-to-many, and many-to-one
 - `>`: many-to-one. E.g: `posts.user_id > users.id`
 - `-`: one-to-one. E.g: `users.id - user_infos.user_id`
 
+**Composite foreign keys:**
+        
+    Ref: merchant_periods.(merchant_id, country_code) > merchants.(id, country_code)
+
 In DBML, there are 3 syntaxes to define relationships:
 
     //Long form
