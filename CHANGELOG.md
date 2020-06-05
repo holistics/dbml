@@ -1,3 +1,31 @@
+## Unreleased (2020-06-05)
+
+#### :memo: Documentation
+* [#101](https://github.com/holistics/dbml/pull/101) Update homepage ([@phuongduyphan](https://github.com/phuongduyphan))
+* [#92](https://github.com/holistics/dbml/pull/92) Add PyDBML to dbml homepage ([@phuongduyphan](https://github.com/phuongduyphan))
+* [#91](https://github.com/holistics/dbml/pull/91) Add FloorPlan to community contributions ([@julioz](https://github.com/julioz))
+* [#89](https://github.com/holistics/dbml/pull/89) Add PyDBML to Comunity Contributions section of README ([@Vanderhoof](https://github.com/Vanderhoof))
+* [#86](https://github.com/holistics/dbml/pull/86) fixes contributing setup section : yarn must be present to run 'lerna bootstrap' ([@sporniket](https://github.com/sporniket))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#98](https://github.com/holistics/dbml/pull/98) Add mssql parser ([@phanbaominh](https://github.com/phanbaominh))
+  * [#99](https://github.com/holistics/dbml/pull/99) Support exporting table's note ([@khanhthuymainguyen](https://github.com/khanhthuymainguyen))
+  * [#95](https://github.com/holistics/dbml/pull/95) Support field-level charset in MySQL parser ([@Orclyx](https://github.com/Orclyx))
+  * [#90](https://github.com/holistics/dbml/pull/90) Support composite foreign keys ([@phanbaominh](https://github.com/phanbaominh))
+
+#### Committers: 10
+- David SPORN ([@sporniket](https://github.com/sporniket))
+- Hamid ([@hamedsj](https://github.com/hamedsj))
+- Júlio Zynger ([@julioz](https://github.com/julioz))
+- Khanh Thuy Mai Nguyen ([@khanhthuymainguyen](https://github.com/khanhthuymainguyen))
+- Matija Stepanic ([@stepanic](https://github.com/stepanic))
+- Phan Bao Minh ([@phanbaominh](https://github.com/phanbaominh))
+- Phuong Duy Phan ([@phuongduyphan](https://github.com/phuongduyphan))
+- Thinh Tran ([@duythinht](https://github.com/duythinht))
+- [@Orclyx](https://github.com/Orclyx)
+- [@Vanderhoof](https://github.com/Vanderhoof)
+
 ## v2.0.1 (2020-04-16)
 
 #### :bug: Bug Fix
