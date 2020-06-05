@@ -1,7 +1,7 @@
 CREATE TABLE [orders] (
   [id] int PRIMARY KEY IDENTITY(1, 1),
   [user_id] int UNIQUE NOT NULL 
-    CONSTRAINT fk_order_user FOREIGN KEY REFERENCES [users] ([id]) 
+    CONSTRAINT fk_order_user FOREIGN KEY REFERENCES [users] 
     ON DELETE NO ACTION,
   [status] orders_status_enum,
   [created_at] varchar(255)
@@ -17,7 +17,7 @@ CREATE TABLE [order_items] (
 GO
 
 CREATE TABLE [users] (
-  [id] int PRIMARY KEY IDENTITY(1, 1),
+  [user_id] int PRIMARY KEY IDENTITY(1, 1),
   [name] varchar(255),
   [email] varchar(255) UNIQUE,
   [date_of_birth] datetime,
