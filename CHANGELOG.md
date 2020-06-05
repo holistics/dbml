@@ -2,6 +2,7 @@
 
 #### :memo: Documentation
 * [#101](https://github.com/holistics/dbml/pull/101) Update homepage ([@phuongduyphan](https://github.com/phuongduyphan))
+* [#93](https://github.com/holistics/dbml/pull/93) Add golang parser to community contributes ([@duythinht](https://github.com/duythinht))
 * [#92](https://github.com/holistics/dbml/pull/92) Add PyDBML to dbml homepage ([@phuongduyphan](https://github.com/phuongduyphan))
 * [#91](https://github.com/holistics/dbml/pull/91) Add FloorPlan to community contributions ([@julioz](https://github.com/julioz))
 * [#89](https://github.com/holistics/dbml/pull/89) Add PyDBML to Comunity Contributions section of README ([@Vanderhoof](https://github.com/Vanderhoof))
