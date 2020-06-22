@@ -1,6 +1,6 @@
 # @dbml/cli
 
-See our website [@dbml/cli](https://www.dbml-lang.org/cli/) for more information
+See our website [@dbml/cli](https://www.dbml.org/cli/) for more information
 
 ## Installation
 ```shell
