@@ -45,7 +45,7 @@
             "type_name": "int"
           },
           "pk": true,
-          "name": "code"
+          "name": "country_code"
         },
         {
           "type": {
@@ -226,7 +226,7 @@
         },
         {
           "fieldNames": [
-            "code"
+            "country_code"
           ],
           "relation": "1",
           "tableName": "countries"

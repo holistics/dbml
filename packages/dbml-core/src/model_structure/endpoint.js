@@ -71,17 +71,13 @@ class Endpoint extends Element {
   setFields (fieldNames, table) {
     fieldNames.forEach(fieldName => {
       const field = table.findField(fieldName);
-      this.setField(field, table);
+      if (!field) {
+        this.error(`Can't find field ${shouldPrintSchema(table.schema)
+          ? `"${table.schema.name}".` : ''}"${fieldName}" in table "${this.tableName}"`);
+      }
+      this.fields.push(field);
+      field.pushEndpoint(this);
     });
-  }
-
-  setField (field, table) {
-    if (!field) {
-      this.error(`Can't find field ${shouldPrintSchema(table.schema)
-        ? `"${table.schema.name}".` : ''}"${field.name}" in table "${this.tableName}"`);
-    }
-    this.fields.push(field);
-    field.pushEndpoint(this);
   }
 
   normalize (model) {

@@ -22,7 +22,7 @@
               "endpoint": {
                 "tableName": "users",
                 "fieldNames": [
-                  "id"
+                  "user_id"
                 ],
                 "relation": "1"
               },
@@ -113,7 +113,7 @@
           },
           "pk": true,
           "increment": true,
-          "name": "id"
+          "name": "user_id"
         },
         {
           "type": {
@@ -221,7 +221,7 @@
         {
           "tableName": "users",
           "fieldNames": [
-            "id"
+            "user_id"
           ],
           "relation": "1"
         }
