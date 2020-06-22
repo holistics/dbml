@@ -13,6 +13,9 @@ function createRefFromInlineRef (linesRefs, inlineRefs, fieldName, tableName) {
     fieldNames: [fieldName],
     relation: '*',
   });
+  if (!inlineRef.endpoint.fieldNames) {
+    inlineRef.endpoint.fieldNames = newRef.endpoints[0].fieldNames;
+  }
   newRef.endpoints.push(inlineRef.endpoint);
 
   linesRefs.push(newRef);

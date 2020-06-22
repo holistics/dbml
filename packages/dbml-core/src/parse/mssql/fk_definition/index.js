@@ -10,7 +10,7 @@ const Lang = P.createLanguage({
     r.TableEndpoint,
     KP.KeywordReferences,
     pDotDelimitedName,
-    r.TableEndpoint,
+    r.TableEndpoint.fallback(null),
     r.FKOptions.fallback(null),
     A.makeTableConstraintFK,
   ),
