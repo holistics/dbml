@@ -92,7 +92,7 @@ GO
 
 EXEC sp_addextendedproperty
 @name = N'Table_Description',
-@value = 'This is a note in table "products"',
+@value = 'This is a note in table \'products\'',
 @level0type = N'Schema', @level0name = 'dbo',
 @level1type = N'Table',  @level1name = 'products';
 GO
