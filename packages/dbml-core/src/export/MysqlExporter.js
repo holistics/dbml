@@ -42,7 +42,7 @@ class MySQLExporter {
         }
       }
       if (field.note) {
-        line += ` COMMENT '${field.note}'`;
+        line += ` COMMENT '${field.note.replace(/'/g, "\\'")}'`;
       }
 
       return line;
