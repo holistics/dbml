@@ -211,19 +211,21 @@ class PostgresExporter {
     const commentArr = comments.map((comment) => {
       let line = 'COMMENT ON';
       const table = model.tables[comment.tableId];
-      const schema = model.schemas[table.schemaId];  
+      const schema = model.schemas[table.schemaId];
       switch (comment.type) {
-        case 'table': {    
+        case 'table': {
           line += ` TABLE ${shouldPrintSchema(schema, model)
-            ? `"${schema.name}".` : ''}"${table.name}" IS '${table.note}'`;
-          break; 
+            ? `"${schema.name}".` : ''}"${table.name}" IS '${table.note.replace(/'/g, "\"")}'`;
+          break;
         }
         case 'column': {
-          const field = model.fields[comment.fieldId]; 
+          const field = model.fields[comment.fieldId];
           line += ` COLUMN ${shouldPrintSchema(schema, model)
-            ? `"${schema.name}".` : ''}"${table.name}"."${field.name}" IS '${field.note}'`;
-          break; 
+            ? `"${schema.name}".` : ''}"${table.name}"."${field.name}" IS '${field.note.replace(/'/g, "\"")}'`;
+          break;
         }
+        default:
+          break;
       }
 
       line += ';\n';

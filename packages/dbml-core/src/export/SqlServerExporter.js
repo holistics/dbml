@@ -197,23 +197,25 @@ class SqlServerExporter {
       let line = '';
       line = 'EXEC sp_addextendedproperty\n';
 
-      switch (comment.type) { 
+      switch (comment.type) {
         case 'table': {
           line += `@name = N\'Table_Description\',\n`;
-          line += `@value = '${table.note}',\n`; 
+          line += `@value = '${table.note.replace(/'/g, "\"")}',\n`;
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
-          line += `@level1type = N'Table',  @level1name = '${table.name}';\n`; 
-          break; 
+          line += `@level1type = N'Table',  @level1name = '${table.name}';\n`;
+          break;
         }
         case 'column': {
           const field = model.fields[comment.fieldId];
           line += `@name = N\'Column_Description\',\n`;
-          line += `@value = '${field.note}',\n`; 
+          line += `@value = '${field.note.replace(/'/g, "\"")}',\n`;
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
-          line += `@level1type = N'Table',  @level1name = '${table.name}',\n`; 
+          line += `@level1type = N'Table',  @level1name = '${table.name}',\n`;
           line += `@level2type = N'Column', @level2name = '${field.name}';\n`;
           break;
         }
+        default:
+          break;
       }
 
       line += 'GO\n';
