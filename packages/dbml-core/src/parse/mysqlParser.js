@@ -649,8 +649,8 @@ function peg$parse(input, options) {
       peg$c283 = function(factors) {
           	return _.flattenDeep(factors).join("");
           },
-      peg$c284 = /^[',.a-z0-9_+-`]/i,
-      peg$c285 = peg$classExpectation(["'", ",", ".", ["a", "z"], ["0", "9"], "_", ["+", "`"]], false, true),
+      peg$c284 = /^[',.a-z0-9_+-`%]/i,
+      peg$c285 = peg$classExpectation(["'", ",", ".", ["a", "z"], ["0", "9"], "_", ["+", "`"], "%"], false, true),
       peg$c286 = /^['.a-z0-9_+\-]/i,
       peg$c287 = peg$classExpectation(["'", ".", ["a", "z"], ["0", "9"], "_", "+", "-"], false, true),
       peg$c288 = peg$otherExpectation("letter, number or underscore"),
