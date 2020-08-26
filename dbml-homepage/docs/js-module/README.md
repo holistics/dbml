@@ -79,10 +79,9 @@ const mysql = exporter.export(dbml, 'mysql');
 
 ```javascript
 const { Parser } = require('@dbml/core');
-const parser = new Parser();
 ```
 
-##### parser.parse( str, format )
+##### Parser.parse( str, format )
 * **Arguments:**  
   * ```{string} str```
   * ```{'mysql'|'postgres'|'dbml'} format```
@@ -99,10 +98,9 @@ const { Parser } = require('@dbml/core');
 // get DBML file content
 const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 
-const parser = new Parser();
 
 // parse DBML to Schema object
-const schema = parser.parse(dbml, 'dbml');
+const schema = Parser.parse(dbml, 'dbml');
 ```
 
 #### Class: SchemaExporter
