@@ -4,8 +4,8 @@
 
 A core package that is responsible for parsing and converting between different formats
 
-* Parse DBML and SQL to `Schema` Object
-* Export SQL and DBML from `Schema` Object
+* Parse DBML and SQL to `Database` object
+* Export SQL and DBML from `Database` object
 * Convert DBML to SQL and SQL to DBML
 
 ### Installation
@@ -26,7 +26,7 @@ const { importer } = require('@dbml/core');
 
 * **Arguments:**  
   * ```{string} str```
-  * ```{'mysql'|'postgres'} format```
+  * ```{'mysql'|'postgres'|'dbml'|'schemarb'|'mssql'|'json'} format```
 
 * **Returns:** 
   * ```{string} DBML```
@@ -55,7 +55,7 @@ const { exporter } = require('@dbml/core');
 
 * **Arguments:**  
   * ```{string} str```
-  * ```{'mysql'|'postgres'} format```
+  * ```{'mysql'|'postgres'|'dbml'|'schemarb'|'mssql'|'json'} format```
 
 * **Returns:** 
   * ```{string} SQL```
@@ -79,18 +79,17 @@ const mysql = exporter.export(dbml, 'mysql');
 
 ```javascript
 const { Parser } = require('@dbml/core');
-const parser = new Parser();
 ```
 
-##### parser.parse( str, format )
+##### Parser.parse( str, format )
 * **Arguments:**  
   * ```{string} str```
-  * ```{'mysql'|'postgres'|'dbml'} format```
+  * ```{'mysql'|'postgres'|'dbml'|'schemarb'|'mssql'|'json'} format```
 
-* **Returns:** ```Schema``` Object
+* **Returns:** ```Database``` object
 
 * **Usage:**  
-Parse specified format to ```Schema``` Object
+Parse specified format to ```Database``` object
 
 ```javascript
 const fs = require('fs');
@@ -99,42 +98,39 @@ const { Parser } = require('@dbml/core');
 // get DBML file content
 const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 
-const parser = new Parser();
-
-// parse DBML to Schema object
-const schema = parser.parse(dbml, 'dbml');
+// parse DBML to Database object
+const database = Parser.parse(dbml, 'dbml');
 ```
 
-#### Class: SchemaExporter
+#### Class: ModelExporter
 
 ```javascript
-const { SchemaExporter } = require('@dbml/core');
-const schemaExporter = new SchemaExporter(schema);
+const { ModelExporter } = require('@dbml/core');
 ```
 
-##### new SchemaExporter( schema )
+##### ModelExporter.export( model, format, isNormalized = true )
 
 * **Arguments:**  
-  * ```{Object} schema```
-
-* **Usage:**  
-Create a new SchemaExporter instance with a `Schema` Object
-
-##### schemaExporter.export( format )
-
-* **Arguments:**  
-  * ```{'mysql'|'postgres'|'dbml'} format```
+  * ```{model} Database```
+  * ```{'mysql'|'postgres'|'dbml'|'schemarb'|'mssql'|'json'} format```
+  * ```{boolean} isNormalized```
 
 * **Returns:** specified format string
 
 * **Usage:**  
-Export ```Schema``` Object to specified format
+Export ```Database``` object to specified format
 
 ```javascript
-const { SchemaExporter } = require('@dbml/core');
+const { ModelExporter } = require('@dbml/core');
 
-const schemaExporter = new SchemaExporter(schema);
+// get DBML file content
+const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 
-// Export Schema object to PostgreSQL
-const postgreSQL = schemaExporter.export('postgres');
+// parse DBML to Database object
+const database = Parser.parse(dbml, 'dbml');
+
+// Export Database object to PostgreSQL
+const postgreSQL = ModelExporter.export(database, 'postgres', false);
+// or
+const postgreSQL = ModelExporter.export(database.normalize(), 'postgres');
 ```
