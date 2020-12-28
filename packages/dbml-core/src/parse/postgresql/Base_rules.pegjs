@@ -47,6 +47,13 @@ data_type "VALID TYPE" = c1:"CHARACTER"i _ c2:"VARYING"i _ args:("("expression")
     args
   }
 }
+/ "time"i _ number:("(" _ numeric_constant _ ")" _)? (("without"i/"with"i) _ "time"i _ "zone"i)? {
+  const args = number ? number[2] : null;
+  return {
+    type_name: args !== null ? `time(${args})`: `time`,
+    args
+  }
+}
 / c:type_name { return c }
 / double_quote c:[^\"\n]+ double_quote { 
   return { 

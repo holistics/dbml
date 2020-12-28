@@ -14,13 +14,16 @@ CREATE TABLE "orders" (
   "id" SERIAL PRIMARY KEY,
   "user_id" int UNIQUE NOT NULL,
   "status" orders_status,
-  "created_at" varchar
+  "created_at" varchar,
+  "modified_at" timestamp(2)
 );
 
 CREATE TABLE "order_items" (
   "order_id" int,
   "product_id" int,
-  "quantity" int DEFAULT 1
+  "quantity" int DEFAULT 1,
+  "created_at" timestamp with time zone,
+  "modified_at" time with time zone
 );
 
 CREATE TABLE "products" (
@@ -30,6 +33,7 @@ CREATE TABLE "products" (
   "price" int,
   "status" "product status",
   "created_at" datetime DEFAULT (now()),
+  "modified_at" timestamp without time zone,
   PRIMARY KEY ("id", "name")
 );
 
@@ -40,6 +44,7 @@ CREATE TABLE "users" (
   "gender" varchar,
   "date_of_birth" varchar,
   "created_at" varchar,
+  "modified_at" time(2),
   "country_code" int
 );
 
@@ -48,6 +53,7 @@ CREATE TABLE "merchants" (
   "merchant_name" varchar,
   "country_code" int,
   "created_at" varchar,
+  "modified_at" time without time zone,
   "admin_id" int
 );
 
