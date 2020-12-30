@@ -15,12 +15,15 @@ Table "orders" {
   "user_id" int [unique, not null]
   "status" orders_status
   "created_at" varchar
+  "modified_at" timestamp(2)
 }
 
 Table "order_items" {
   "order_id" int
   "product_id" int
   "quantity" int [default: 1]
+  "created_at" timestamp
+  "modified_at" time
 }
 
 Table "products" {
@@ -30,6 +33,7 @@ Table "products" {
   "price" int
   "status" "product status"
   "created_at" datetime [default: `now()`]
+  "modified_at" timestamp
 
 Indexes {
   (id, name) [pk]
@@ -45,6 +49,7 @@ Table "users" {
   "gender" varchar
   "date_of_birth" varchar
   "created_at" varchar
+  "modified_at" time(2)
   "country_code" int
 }
 
@@ -53,6 +58,7 @@ Table "merchants" {
   "merchant_name" varchar
   "country_code" int
   "created_at" varchar
+  "modified_at" time
   "admin_id" int
 }
 
