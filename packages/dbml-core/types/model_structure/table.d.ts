@@ -6,23 +6,23 @@ import DbState from './dbState';
 import TableGroup from './tableGroup';
 import { NormalizedDatabase } from './database';
 interface RawTable {
-    name: String;
-    alias: String;
-    note: String;
+    name: string;
+    alias: string;
+    note: string;
     fields: Field[];
     indexes: Index[];
     schema: Schema;
     token: Token;
-    headerColor: String;
+    headerColor: string;
 }
 declare class Table extends Element {
-    name: String;
-    alias: String;
-    note: String;
+    name: string;
+    alias: string;
+    note: string;
     fields: Field[];
     indexes: Index[];
     schema: Schema;
-    headerColor: String;
+    headerColor: string;
     dbState: DbState;
     id: number;
     group: TableGroup;
@@ -38,12 +38,12 @@ declare class Table extends Element {
     checkSameId(table: any): boolean;
     export(): {
         fields: {
-            name: String;
+            name: string;
             type: any;
             unique: boolean;
             pk: boolean;
             not_null: boolean;
-            note: String;
+            note: string;
             dbdefault: any;
             increment: boolean;
         }[];
@@ -52,25 +52,25 @@ declare class Table extends Element {
                 type: any;
                 value: any;
             }[];
-            name: String;
+            name: string;
             type: any;
             unique: boolean;
-            pk: String;
-            note: String;
+            pk: string;
+            note: string;
         }[];
-        name: String;
-        alias: String;
-        note: String;
-        headerColor: String;
+        name: string;
+        alias: string;
+        note: string;
+        headerColor: string;
     };
     exportChild(): {
         fields: {
-            name: String;
+            name: string;
             type: any;
             unique: boolean;
             pk: boolean;
             not_null: boolean;
-            note: String;
+            note: string;
             dbdefault: any;
             increment: boolean;
         }[];
@@ -79,11 +79,11 @@ declare class Table extends Element {
                 type: any;
                 value: any;
             }[];
-            name: String;
+            name: string;
             type: any;
             unique: boolean;
-            pk: String;
-            note: String;
+            pk: string;
+            note: string;
         }[];
     };
     exportChildIds(): {
@@ -95,20 +95,20 @@ declare class Table extends Element {
         groupId: number;
     };
     shallowExport(): {
-        name: String;
-        alias: String;
-        note: String;
-        headerColor: String;
+        name: string;
+        alias: string;
+        note: string;
+        headerColor: string;
     };
     normalize(model: NormalizedDatabase): void;
 }
 export interface NormalizedTable {
     [id: number]: {
         id: number;
-        name: String;
-        alias: String;
-        note: String;
-        headerColor: String;
+        name: string;
+        alias: string;
+        note: string;
+        headerColor: string;
         fieldIds: number[];
         indexIds: number[];
         schemaId: number;

@@ -13,7 +13,7 @@ export interface Token {
 declare class Element {
     token: Token;
     id: number;
-    selection: String;
+    selection: string;
     constructor(token: Token);
     bind(selection: any): void;
     error(message: string): void;

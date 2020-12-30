@@ -7,9 +7,9 @@ interface RawIndex {
     columns: IndexColumn;
     type: any;
     unique: boolean;
-    pk: String;
-    name: String;
-    note: String;
+    pk: string;
+    name: string;
+    note: string;
     table: Table;
     token: Token;
 }
@@ -17,9 +17,9 @@ declare class Index extends Element {
     columns: IndexColumn[];
     type: any;
     unique: boolean;
-    pk: String;
-    name: String;
-    note: String;
+    pk: string;
+    name: string;
+    note: string;
     table: Table;
     dbState: DbState;
     constructor({ columns, type, unique, pk, token, name, note, table }: RawIndex);
@@ -32,11 +32,11 @@ declare class Index extends Element {
             type: any;
             value: any;
         }[];
-        name: String;
+        name: string;
         type: any;
         unique: boolean;
-        pk: String;
-        note: String;
+        pk: string;
+        note: string;
     };
     exportChild(): {
         columns: {
@@ -51,22 +51,22 @@ declare class Index extends Element {
         tableId: number;
     };
     shallowExport(): {
-        name: String;
+        name: string;
         type: any;
         unique: boolean;
-        pk: String;
-        note: String;
+        pk: string;
+        note: string;
     };
     normalize(model: NormalizedDatabase): void;
 }
 export interface NormalizedIndex {
     [_id: number]: {
         id: number;
-        name: String;
+        name: string;
         type: any;
         unique: boolean;
-        pk: String;
-        note: String;
+        pk: string;
+        note: string;
         columnIds: number[];
         tableId: number;
     };

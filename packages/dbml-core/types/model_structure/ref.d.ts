@@ -4,7 +4,7 @@ import Schema from './schema';
 import DbState from './dbState';
 import Database, { NormalizedDatabase } from './database';
 interface RawRef {
-    name: String;
+    name: string;
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
@@ -12,7 +12,7 @@ interface RawRef {
     schema: Schema;
 }
 declare class Ref extends Element {
-    name: String;
+    name: string;
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
@@ -26,25 +26,25 @@ declare class Ref extends Element {
     equals(ref: any): any;
     export(): {
         endpoints: {
-            schemaName: String;
-            tableName: String;
-            fieldNames: String[];
+            schemaName: string;
+            tableName: string;
+            fieldNames: string[];
             relation: any;
         }[];
-        name: String;
+        name: string;
         onDelete: any;
         onUpdate: any;
     };
     shallowExport(): {
-        name: String;
+        name: string;
         onDelete: any;
         onUpdate: any;
     };
     exportChild(): {
         endpoints: {
-            schemaName: String;
-            tableName: String;
-            fieldNames: String[];
+            schemaName: string;
+            tableName: string;
+            fieldNames: string[];
             relation: any;
         }[];
     };
