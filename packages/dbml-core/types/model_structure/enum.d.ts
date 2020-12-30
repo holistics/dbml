@@ -5,17 +5,17 @@ import EnumValue from './enumValue';
 import Field from './field';
 import Schema from './schema';
 interface RawEnum {
-    name: String;
+    name: string;
     token: Token;
     values: EnumValue[];
-    note: String;
+    note: string;
     schema: Schema;
 }
 declare class Enum extends Element {
-    name: String;
+    name: string;
     token: Token;
     values: EnumValue[];
-    note: String;
+    note: string;
     schema: Schema;
     fields: Field[];
     dbState: DbState;
@@ -29,16 +29,16 @@ declare class Enum extends Element {
     checkField(field: any): void;
     export(): {
         values: {
-            name: String;
-            note: String;
+            name: string;
+            note: string;
         }[];
-        name: String;
-        note: String;
+        name: string;
+        note: string;
     };
     exportChild(): {
         values: {
-            name: String;
-            note: String;
+            name: string;
+            note: string;
         }[];
     };
     exportChildIds(): {
@@ -49,16 +49,16 @@ declare class Enum extends Element {
         schemaId: number;
     };
     shallowExport(): {
-        name: String;
-        note: String;
+        name: string;
+        note: string;
     };
     normalize(model: NormalizedDatabase): void;
 }
 export interface NormalizedEnum {
     [_id: number]: {
         id: number;
-        name: String;
-        note: String;
+        name: string;
+        note: string;
         valueIds: number[];
         fieldIds: number[];
         schemaId: number;

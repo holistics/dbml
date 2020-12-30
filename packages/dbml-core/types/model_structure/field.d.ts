@@ -5,25 +5,25 @@ import Endpoint from './endpoint';
 import Enum from './enum';
 import Table from './table';
 interface RawField {
-    name: String;
+    name: string;
     type: any;
     unique: boolean;
     pk: boolean;
     token: Token;
     not_null: boolean;
-    note: String;
+    note: string;
     dbdefault: any;
     increment: boolean;
     table: Table;
 }
 declare class Field extends Element {
-    name: String;
+    name: string;
     type: any;
     unique: boolean;
     pk: boolean;
     dbState: DbState;
     not_null: boolean;
-    note: String;
+    note: string;
     dbdefault: any;
     increment: boolean;
     table: Table;
@@ -33,12 +33,12 @@ declare class Field extends Element {
     generateId(): void;
     pushEndpoint(endpoint: any): void;
     export(): {
-        name: String;
+        name: string;
         type: any;
         unique: boolean;
         pk: boolean;
         not_null: boolean;
-        note: String;
+        note: string;
         dbdefault: any;
         increment: boolean;
     };
@@ -50,12 +50,12 @@ declare class Field extends Element {
         endpointIds: number[];
     };
     shallowExport(): {
-        name: String;
+        name: string;
         type: any;
         unique: boolean;
         pk: boolean;
         not_null: boolean;
-        note: String;
+        note: string;
         dbdefault: any;
         increment: boolean;
     };
@@ -64,12 +64,12 @@ declare class Field extends Element {
 export interface NormalizedField {
     [_id: number]: {
         id: number;
-        name: String;
+        name: string;
         type: any;
         unique: boolean;
         pk: boolean;
         not_null: boolean;
-        note: String;
+        note: string;
         dbdefault: any;
         increment: boolean;
     };

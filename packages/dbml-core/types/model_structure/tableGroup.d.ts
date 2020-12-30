@@ -4,7 +4,7 @@ import Element from './element';
 import Schema from './schema';
 import Table from './table';
 declare class TableGroup extends Element {
-    name: String;
+    name: string;
     tables: Table[];
     schema: Schema;
     dbState: DbState;
@@ -21,15 +21,15 @@ declare class TableGroup extends Element {
     checkTable(table: any): void;
     export(): {
         tables: {
-            tableName: String;
-            schemaName: String;
+            tableName: string;
+            schemaName: string;
         }[];
-        name: String;
+        name: string;
     };
     exportChild(): {
         tables: {
-            tableName: String;
-            schemaName: String;
+            tableName: string;
+            schemaName: string;
         }[];
     };
     exportChildIds(): {
@@ -39,14 +39,14 @@ declare class TableGroup extends Element {
         schemaId: number;
     };
     shallowExport(): {
-        name: String;
+        name: string;
     };
     normalize(model: NormalizedDatabase): void;
 }
 export interface NormalizedTableGroup {
     [_id: number]: {
         id: number;
-        name: String;
+        name: string;
         tableIds: number[];
         schemaId: number;
     };

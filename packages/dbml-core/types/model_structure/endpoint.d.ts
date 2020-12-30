@@ -5,9 +5,9 @@ import DbState from './dbState';
 import { NormalizedDatabase } from './database';
 declare class Endpoint extends Element {
     relation: any;
-    schemaName: String;
-    tableName: String;
-    fieldNames: String[];
+    schemaName: string;
+    tableName: string;
+    fieldNames: string[];
     fields: Field[];
     ref: Ref;
     dbState: DbState;
@@ -23,9 +23,9 @@ declare class Endpoint extends Element {
     equals(endpoint: any): boolean;
     compareFields(endpoint: any): boolean;
     export(): {
-        schemaName: String;
-        tableName: String;
-        fieldNames: String[];
+        schemaName: string;
+        tableName: string;
+        fieldNames: string[];
         relation: any;
     };
     exportParentIds(): {
@@ -33,9 +33,9 @@ declare class Endpoint extends Element {
         fieldIds: number[];
     };
     shallowExport(): {
-        schemaName: String;
-        tableName: String;
-        fieldNames: String[];
+        schemaName: string;
+        tableName: string;
+        fieldNames: string[];
         relation: any;
     };
     setFields(fieldNames: any, table: any): void;
@@ -44,9 +44,9 @@ declare class Endpoint extends Element {
 export interface NormalizedEndpoint {
     [_id: number]: {
         id: number;
-        schemaName: String;
-        tableName: String;
-        fieldNames: String[];
+        schemaName: string;
+        tableName: string;
+        fieldNames: string[];
         relation: any;
         refId: number;
         fieldIds: number[];

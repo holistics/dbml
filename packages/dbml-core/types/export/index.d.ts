@@ -1,4 +1,4 @@
-declare function _export(str: String, format: 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql'): string;
+declare function _export(str: string, format: 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql'): string;
 declare const _default: {
     export: typeof _export;
 };

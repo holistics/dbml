@@ -6,9 +6,9 @@ import Ref from './ref';
 import Database, { NormalizedDatabase } from './database';
 import DbState from './dbState';
 export interface RawSchema {
-    name: String;
-    alias?: String;
-    note?: String;
+    name: string;
+    alias?: string;
+    note?: string;
     tables?: Table[];
     refs?: Ref[];
     enums?: Enum[];
@@ -17,9 +17,9 @@ export interface RawSchema {
     database: Database;
 }
 declare class Schema extends Element {
-    name: String;
-    alias: String;
-    note: String;
+    name: string;
+    alias: string;
+    note: string;
     tables: Table[];
     refs: Ref[];
     enums: Enum[];
@@ -31,7 +31,7 @@ declare class Schema extends Element {
     processTables(rawTables: any): void;
     pushTable(table: any): void;
     checkTable(table: any): void;
-    findTable(tableName: String): Table;
+    findTable(tableName: string): Table;
     processEnums(rawEnums: any): void;
     pushEnum(_enum: any): void;
     checkEnum(_enum: any): void;
@@ -46,12 +46,12 @@ declare class Schema extends Element {
     export(): {
         tables: {
             fields: {
-                name: String;
+                name: string;
                 type: any;
                 unique: boolean;
                 pk: boolean;
                 not_null: boolean;
-                note: String;
+                note: string;
                 dbdefault: any;
                 increment: boolean;
             }[];
@@ -60,56 +60,56 @@ declare class Schema extends Element {
                     type: any;
                     value: any;
                 }[];
-                name: String;
+                name: string;
                 type: any;
                 unique: boolean;
-                pk: String;
-                note: String;
+                pk: string;
+                note: string;
             }[];
-            name: String;
-            alias: String;
-            note: String;
-            headerColor: String;
+            name: string;
+            alias: string;
+            note: string;
+            headerColor: string;
         }[];
         enums: {
             values: {
-                name: String;
-                note: String;
+                name: string;
+                note: string;
             }[];
-            name: String;
-            note: String;
+            name: string;
+            note: string;
         }[];
         tableGroups: {
             tables: {
-                tableName: String;
-                schemaName: String;
+                tableName: string;
+                schemaName: string;
             }[];
-            name: String;
+            name: string;
         }[];
         refs: {
             endpoints: {
-                schemaName: String;
-                tableName: String;
-                fieldNames: String[];
+                schemaName: string;
+                tableName: string;
+                fieldNames: string[];
                 relation: any;
             }[];
-            name: String;
+            name: string;
             onDelete: any;
             onUpdate: any;
         }[];
-        name: String;
-        note: String;
-        alias: String;
+        name: string;
+        note: string;
+        alias: string;
     };
     exportChild(): {
         tables: {
             fields: {
-                name: String;
+                name: string;
                 type: any;
                 unique: boolean;
                 pk: boolean;
                 not_null: boolean;
-                note: String;
+                note: string;
                 dbdefault: any;
                 increment: boolean;
             }[];
@@ -118,40 +118,40 @@ declare class Schema extends Element {
                     type: any;
                     value: any;
                 }[];
-                name: String;
+                name: string;
                 type: any;
                 unique: boolean;
-                pk: String;
-                note: String;
+                pk: string;
+                note: string;
             }[];
-            name: String;
-            alias: String;
-            note: String;
-            headerColor: String;
+            name: string;
+            alias: string;
+            note: string;
+            headerColor: string;
         }[];
         enums: {
             values: {
-                name: String;
-                note: String;
+                name: string;
+                note: string;
             }[];
-            name: String;
-            note: String;
+            name: string;
+            note: string;
         }[];
         tableGroups: {
             tables: {
-                tableName: String;
-                schemaName: String;
+                tableName: string;
+                schemaName: string;
             }[];
-            name: String;
+            name: string;
         }[];
         refs: {
             endpoints: {
-                schemaName: String;
-                tableName: String;
-                fieldNames: String[];
+                schemaName: string;
+                tableName: string;
+                fieldNames: string[];
                 relation: any;
             }[];
-            name: String;
+            name: string;
             onDelete: any;
             onUpdate: any;
         }[];
@@ -166,18 +166,18 @@ declare class Schema extends Element {
         databaseId: number;
     };
     shallowExport(): {
-        name: String;
-        note: String;
-        alias: String;
+        name: string;
+        note: string;
+        alias: string;
     };
     normalize(model: NormalizedDatabase): void;
 }
 export interface NormalizedSchema {
     [_id: number]: {
         id: number;
-        name: String;
-        note: String;
-        alias: String;
+        name: string;
+        note: string;
+        alias: string;
         tableIds: number[];
         enumIds: number[];
         tableGroupIds: number[];

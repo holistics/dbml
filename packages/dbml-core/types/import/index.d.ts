@@ -1,4 +1,4 @@
-declare function _import(str: String, format: 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql'): string;
+declare function _import(str: string, format: 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql'): string;
 declare const _default: {
     import: typeof _import;
 };
