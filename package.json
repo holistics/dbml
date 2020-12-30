@@ -1,6 +1,7 @@
 {
   "name": "root",
   "private": true,
+  "types": "./packages/dbml-core/types/index.d.ts",
   "scripts": {
     "test": "jest"
   },
