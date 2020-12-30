@@ -1,4 +1,29 @@
-## Unreleased (2020-06-05)
+## v2.2.0 (2020-12-30)
+
+#### :memo: Documentation
+* `dbml-cli`, `dbml-core`
+  * [#108](https://github.com/holistics/dbml/pull/108) Update readme and bump version ([@khanh-tran-quoc](https://github.com/khanh-tran-quoc))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#111](https://github.com/holistics/dbml/pull/111) Fix export table note ([@khanhtmn](https://github.com/khanhtmn))
+  * [#102](https://github.com/holistics/dbml/pull/102) Fix endpoint error handling and support for implicit foreign key reference for mssql ([@phanbaominh](https://github.com/phanbaominh))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#150](https://github.com/holistics/dbml/pull/150) Support parse time data type. ([@t-duc](https://github.com/t-duc))
+  * [#131](https://github.com/holistics/dbml/pull/131) [Enhancement]support symbol for mysql importer ([@khoahuynhdev](https://github.com/khoahuynhdev))
+  * [#102](https://github.com/holistics/dbml/pull/102) Fix endpoint error handling and support for implicit foreign key reference for mssql ([@phanbaominh](https://github.com/phanbaominh))
+
+#### Committers: 5
+- Duc ([@t-duc](https://github.com/t-duc))
+- Khanh Thuy Mai Nguyen ([@khanhtmn](https://github.com/khanhtmn))
+- Khoa Huỳnh ([@khoahuynhdev](https://github.com/khoahuynhdev))
+- Phan Bao Minh ([@phanbaominh](https://github.com/phanbaominh))
+- [@khanh-tran-quoc](https://github.com/khanh-tran-quoc)
+
+
+## v2.1.0 (2020-06-05)
 
 #### :memo: Documentation
 * [#101](https://github.com/holistics/dbml/pull/101) Update homepage ([@phuongduyphan](https://github.com/phuongduyphan))
@@ -11,20 +36,20 @@
 #### :rocket: New Feature
 * `dbml-core`
   * [#98](https://github.com/holistics/dbml/pull/98) Add mssql parser ([@phanbaominh](https://github.com/phanbaominh))
-  * [#99](https://github.com/holistics/dbml/pull/99) Support exporting table's note ([@khanhthuymainguyen](https://github.com/khanhthuymainguyen))
+  * [#99](https://github.com/holistics/dbml/pull/99) Support exporting table's note ([@khanhtmn](https://github.com/khanhtmn))
   * [#95](https://github.com/holistics/dbml/pull/95) Support field-level charset in MySQL parser ([@Orclyx](https://github.com/Orclyx))
   * [#90](https://github.com/holistics/dbml/pull/90) Support composite foreign keys ([@phanbaominh](https://github.com/phanbaominh))
 
 #### Committers: 10
+- Ben Young ([@Orclyx](https://github.com/Orclyx))
 - David SPORN ([@sporniket](https://github.com/sporniket))
 - Hamid ([@hamedsj](https://github.com/hamedsj))
 - Júlio Zynger ([@julioz](https://github.com/julioz))
-- Khanh Thuy Mai Nguyen ([@khanhthuymainguyen](https://github.com/khanhthuymainguyen))
+- Khanh Thuy Mai Nguyen ([@khanhtmn](https://github.com/khanhtmn))
 - Matija Stepanic ([@stepanic](https://github.com/stepanic))
 - Phan Bao Minh ([@phanbaominh](https://github.com/phanbaominh))
 - Phuong Duy Phan ([@phuongduyphan](https://github.com/phuongduyphan))
 - Thinh Tran ([@duythinht](https://github.com/duythinht))
-- [@Orclyx](https://github.com/Orclyx)
 - [@Vanderhoof](https://github.com/Vanderhoof)
 
 ## v2.0.1 (2020-04-16)
