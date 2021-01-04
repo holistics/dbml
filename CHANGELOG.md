@@ -1,3 +1,12 @@
+## v2.3.0 (2021-01-04)
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#151](https://github.com/holistics/dbml/pull/151) Add dbml-core type definitions ([@JacobHearst](https://github.com/JacobHearst))
+
+#### Committers: 1
+- Jacob Hearst ([@JacobHearst](https://github.com/JacobHearst))
+
 ## v2.2.0 (2020-12-30)
 
 #### :memo: Documentation
