@@ -15,8 +15,10 @@
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "lib",
+    "types"
   ],
+  "types": "./types/index.d.ts",
   "main": "lib/index.js",
   "publishConfig": {
     "access": "public"
