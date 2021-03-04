@@ -147,7 +147,7 @@ Indexes allow users to quickly locate and access the data. Users can define sing
 
       indexes {
           (id, country) [pk] // composite primary key
-          created_at [note: 'Date']
+          created_at [name: 'created_at_index', note: 'Date']
           booking_date
           (country, booking_date) [unique]
           booking_date [type: hash]
@@ -159,7 +159,7 @@ Indexes allow users to quickly locate and access the data. Users can define sing
     
 There are 3 types of index definitions:
 
-- Index with single field (with index name): `CREATE INDEX on users (created_at)`
+- Index with single field (with index name): `CREATE INDEX created_at_index on users (created_at)`
 - Index with multiple fields (composite index): `CREATE INDEX on users (created_at, country)`
 - Index with an expression: `CREATE INDEX ON films ( first_name + last_name )`
 - (bonus) Composite index with expression: `CREATE INDEX ON users ( country, (lower(name)) )`
