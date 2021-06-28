@@ -626,7 +626,9 @@ __ = (comment/whitespace)+
 
 endline "endline" = sp* newline
 tab = "\t"
-comment "comment" = "//" [^\n]*
+single_line_comment = "//" [^\n]*
+multi_lime_comment = "/*" (!"*/" .)* "*/"
+comment "comment" = single_line_comment / multi_lime_comment
 newline "newline" = "\r\n" / "\n"
 whitespace "whitespace" = [ \t\r\n\r]
 whitespace_quote "whitespace" = [ \t\r\n\r\"]
