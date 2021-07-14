@@ -32,29 +32,35 @@ digits = d:digit+ { return d.join('') }
 digit = [0-9]
 
 // type
-data_type "VALID TYPE" = c1:"CHARACTER"i _ c2:"VARYING"i _ args:("("expression")")? {
+data_type "VALID TYPE" = c1:"CHARACTER"i _ c2:"VARYING"i _ args:("("expression")")? dimensions:(array_extension)? {
   let c = `${c1} ${c2}`;
   c = args ? c + '(' + args[1] + ')' : c;
   return {
-    type_name: c,
+    type_name: c + (dimensions ? dimensions.map((dimension) => '[' + dimension + ']').join('') : ''),
     args: args ? args[1] : null
   }
 }
-/ "timestamp"i _ number:("(" _ numeric_constant _ ")" _)? (("without"i/"with"i) _ "time"i _ "zone"i)? {
+/ "timestamp"i _ number:("(" _ numeric_constant _ ")" _)? (("without"i/"with"i) _ "time"i _ "zone"i)? dimensions:(array_extension)? {
   const args = number ? number[2] : null;
   return {
-    type_name: args !== null ? `timestamp(${args})`: `timestamp`,
+    type_name: (args !== null ? `timestamp(${args})`: `timestamp`) + (dimensions ? dimensions.map((dimension) => '[' + dimension + ']').join('') : ''),
     args
   }
 }
-/ "time"i _ number:("(" _ numeric_constant _ ")" _)? (("without"i/"with"i) _ "time"i _ "zone"i)? {
+/ "time"i _ number:("(" _ numeric_constant _ ")" _)? (("without"i/"with"i) _ "time"i _ "zone"i)? dimensions:(array_extension)? {
   const args = number ? number[2] : null;
   return {
-    type_name: args !== null ? `time(${args})`: `time`,
+    type_name: (args !== null ? `time(${args})`: `time`) + (dimensions ? dimensions.map((dimension) => '[' + dimension + ']').join('') : ''),
     args
   }
 }
-/ c:type_name { return c }
+/ c:type_name dimensions:(array_extension)? {
+	  const args = c.args;
+    return {
+      type_name: c.type_name + (dimensions ? dimensions.map((dimension) => '[' + dimension + ']').join('') : ''),
+      args
+    };
+	}
 / double_quote c:[^\"\n]+ double_quote { 
   return { 
     type_name: c.join(""),
@@ -73,6 +79,14 @@ type_name = c:(character)+ _ args:("(" expression ")")? {
 		args
 	}
 }
+//https://www.postgresql.org/docs/13/arrays.html
+array_extension = _ "array"i  singledimenson:(_ "[" _ expression _ "]")? {
+    return [singledimenson ? singledimenson[3] : ''];
+	} 
+	/ _ multidimenson:("[" _ expression _ "]")+ {
+    // this will parse into Array(Array('[' + <expression> + ']'))
+    return multidimenson.map((dimension) => dimension[2]);
+  }
 
 // Default
 default_expr = val:string_constant { return { value: val, type: 'string' }}
