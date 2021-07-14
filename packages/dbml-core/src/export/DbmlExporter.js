@@ -6,6 +6,10 @@ class DbmlExporter {
     return /\s/g.test(str);
   }
 
+  static hasSquareBracket (str) {
+    return /\[|\]/.test(str);
+  }
+
   static isExpression (str) {
     return /\s*(\*|\+|-|\([A-Za-z0-9_]+\)|\(\))/g.test(str);
   }
@@ -30,7 +34,7 @@ class DbmlExporter {
     const lines = table.fieldIds.map((fieldId) => {
       const field = model.fields[fieldId];
 
-      let line = `"${field.name}" ${DbmlExporter.hasWhiteSpace(field.type.type_name)
+      let line = `"${field.name}" ${DbmlExporter.hasWhiteSpace(field.type.type_name) || DbmlExporter.hasSquareBracket(field.type.type_name)
         ? `"${field.type.type_name}"` : field.type.type_name}`;
 
       const constraints = [];
