@@ -84,7 +84,7 @@ array_extension = _ "array"i  singledimenson:(_ "[" _ expression _ "]")? {
     return [singledimenson ? singledimenson[3] : ''];
 	} 
 	/ _ multidimenson:("[" _ expression _ "]")+ {
-    // this will parse into Array(Array('[' + <expression> + ']'))
+    // this will parse into Array(Array('[', _ , expression , _ ']'))
     return multidimenson.map((dimension) => dimension[2]);
   }
 

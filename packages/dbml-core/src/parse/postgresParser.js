@@ -613,7 +613,7 @@ function peg$parse(input, options) {
           return [singledimenson ? singledimenson[3] : ''];
       	},
       peg$c304 = function(multidimenson) {
-          // this will parse into Array(Array('[' + <expression> + ']'))
+          // this will parse into Array(Array('[', _ , expression , _ ']'))
           return multidimenson.map((dimension) => dimension[2]);
         },
       peg$c305 = function(val) { return { value: val, type: 'string' }},
