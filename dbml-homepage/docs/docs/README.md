@@ -117,6 +117,8 @@ The list of column settings you can use:
 - `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below
 - `increment`: mark the column as auto-increment
 
+**Note:** You can use a workaround for un-supported settings by adding the setting name into the column type name, such as `id “bigint unsigned” [pk]`
+
 ### Default Value
 You can set default value as:
 

@@ -119,6 +119,106 @@
         }
       ],
       "indexes": []
+    },
+    {
+      "name": "foo",
+      "fields": [
+          {
+            "name": "bar",
+            "type": {
+              "type_name": "text[]"
+            }
+          },
+          {
+            "name": "bar2",
+            "type": {
+              "type_name": "int[1]"
+            }
+          },
+          {
+            "name": "bar3",
+            "type": {
+              "type_name": "int[2][3]"
+            }
+          },
+          {
+            "name": "bar4",
+            "type": {
+              "type_name": "int[]"
+            }
+          },
+          {
+            "name": "bar5",
+            "type": {
+              "type_name": "int[2]"
+            }
+          },
+          {
+            "name": "bar6",
+            "type": {
+              "type_name": "text[8]"
+            }
+          },
+          {
+            "name": "bar7",
+            "type": {
+              "type_name": "text[100]"
+            }
+          },
+          {
+            "name": "bar8",
+            "type": {
+              "args": "2",
+              "type_name": "time(2)[]"
+            }
+          },
+          {
+            "name": "bar9",
+            "type": {
+              "args": "1",
+              "type_name": "time(1)[1]"
+            }
+          },
+          {
+            "name": "bar10",
+            "type": {
+              "args": "1",
+              "type_name": "time(1)[]"
+            }
+          },
+          {
+          "name": "bar11",
+          "type": {
+            "type_name": "time[5]"
+          }
+        },
+        {
+          "name": "bar12",
+          "type": {
+            "args": "2",
+            "type_name": "timestamp(2)[10][2][5]"
+          }
+        },
+        {
+          "name": "bar13",
+          "type": {
+            "type_name": "character varying[]"
+          }
+        },
+        {
+          "name": "bar14",
+          "type": {
+            "args": "25",
+            "type_name": "character varying(25)[][2][]"
+          }
+        },
+        {
+          "name": "bar15",
+          "type": {
+            "type_name": "character varying[76]"
+          }
+        }
+      ]
     }
   ],
   "refs": [
