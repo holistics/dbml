@@ -68,7 +68,6 @@ exports.KeywordNoCheck = keyword(/NOCHECK/i);
 exports.KeywordDrop = keyword(/DROP/i);
 exports.KeywordAlterColumn = keyword(/ALTER COLUMN/i);
 exports.KeywordGo = keyword(/GO/i);
-exports.KeywordDrop = keyword(/DROP/i);
 exports.KeywordBulkInsert = keyword(/BULK INSERT/i);
 exports.KeywordInsert = keyword(/INSERT/i);
 exports.KeywordUpdate = keyword(/UPDATE/i);

@@ -61,3 +61,21 @@ CREATE TABLE "cities_ab"
     PARTITION OF "cities" (
     CONSTRAINT "city_id_nonzero" CHECK (city_id != 0)
 ) FOR VALUES IN ('a', 'b');
+
+CREATE TABLE "foo" (
+  "bar" text[],
+  "bar2" int [ 1 ],
+  "bar3" int[2][3 ],
+  "bar4" int array,
+  "bar5" int ARRAY [2],
+  "bar6" text ARRAY[8],
+  "bar7" text ARRAY[ 100 ],
+  "bar8" time(2) with time zone [],
+  "bar9" time(1) [1],
+  "bar10" time(1) aRRay,
+  "bar11" time aRray [5],
+  "bar12" timestamp(2) without time zone[10][2][5],
+  "bar13" character varying[],
+  "bar14" character varying(25) [][2][],
+  "bar15" character varying array [76]
+);

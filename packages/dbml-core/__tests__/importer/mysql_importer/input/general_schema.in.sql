@@ -45,6 +45,49 @@ CREATE TABLE `countries` (
   `continent_name` varchar(255)
 );
 
+CREATE TABLE `composite_service_item` (
+  `composite_service_item_id` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
+  `ticket_item_id` int(11) NOT NULL,
+  `discount` decimal(10,0) NOT NULL,
+  `original_price` decimal(10,0) NOT NULL,
+  `patient_price` decimal(10,0) NOT NULL,
+  `insurance_price` decimal(10,0) NOT NULL,
+  PRIMARY KEY  (`composite_service_item_id`),
+  KEY `ticket_item_id` (`ticket_item_id`),
+  KEY `service_id` (`service_id`),
+  KEY `service_id, ticket_item_id` USING HASH (`service_id`,`ticket_item_id`),
+  KEY `composite_service_item_id` USING BTREE    (`composite_service_item_id`),
+  KEY `test test test key` USING HASH(`service_id`,`patient_price`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `Countries` (
+  `Id` int NOT NULL,
+  `Name` varchar(32) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `States` (
+  `Id` int NOT NULL,
+  `CountryId` int NOT NULL,
+  `Name` varchar(32) NOT NULL,
+  PRIMARY KEY (`Id`,`CountryId`),
+  KEY `IX_States_CountryId` (`CountryId`),
+  CONSTRAINT `FK_States_Countries_CountryId` FOREIGN KEY (`CountryId`) REFERENCES `Countries` (`Id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `Cities` (
+  `Id` int NOT NULL,
+  `CountryId` int NOT NULL,
+  `StateId` int NOT NULL,
+  `Name` varchar(32) NOT NULL,
+  PRIMARY KEY (`Id`,`StateId`,`CountryId`),
+  KEY `IX_Cities_CountryId` (`CountryId`),
+  KEY `IX_Cities_StateId_CountryId` (`StateId`,`CountryId`),
+  CONSTRAINT `FK_Cities_Countries_CountryId` FOREIGN KEY (`CountryId`) REFERENCES `Countries` (`Id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_Cities_States_StateId_CountryId` FOREIGN KEY (`StateId`, `CountryId`) REFERENCES `States` (`Id`, `CountryId`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 ALTER TABLE `order_items` ADD FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
 
 ALTER TABLE `order_items` ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);

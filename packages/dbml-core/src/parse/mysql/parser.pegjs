@@ -42,24 +42,9 @@ TableSyntax
 {
 	const fields = body.fields;
 	const indexes = body.indexes;
-	// push inline_ref to refs
+	const bodyRefs = body.refs;
+
 	fields.forEach((field)=>{
-		(field.inline_ref || []).forEach(ref => {
-			const endpoints = [
-				{
-					tableName: name,
-					fieldNames: [field.name],
-					relation: "*", //set by default
-				},
-				ref.endpoint,
-			]
-			refs.push({
-				endpoints,
-				onUpdate: ref.onUpdate,
-				onDelete: ref.onDelete,
-			});
-		})
-		
 		// process enum: rename enum and push to array `enums`
 		if (field.type.type_name.toLowerCase() === 'enum') {
 			let enumValuesArr = field.type.args.split(/[\s\r\n\n]*,[\s\r\n\n]*/);
@@ -80,8 +65,14 @@ TableSyntax
 			enums.push(_enum);
 			field.type.type_name = _enum.name;
 		}
+    });
 
-    })
+	bodyRefs.forEach(ref => {
+		ref.endpoints[0].tableName = name;
+		ref.endpoints[0].relation = '*';
+		refs.push(ref);
+	});
+
     // return statement
     return indexes ? 
     	{name, fields, indexes} 
@@ -124,9 +115,9 @@ TableBody = _ lines:Line* _ {
 			onUpdate: key.onUpdate,
 			onDelete: key.onDelete,
 		});
-	})
+	});
 	
-	return {fields, indexes}
+	return {fields, indexes, refs: fks}
 }
 
 // Line: is create_definition in MySQL documents.
@@ -184,7 +175,7 @@ UniqueSyntax
 // IndexInLineSyntax: Support "[UNIQUE] (INDEX/KEY) `indexName`(`field` (ASC/DESC)?)"
 // "KEY is normally a synonym for INDEX".
 IndexInLineSyntax = _ unique:index_in_line
-	_ name:name? _ type1:index_type?
+	_ name:name? _ type1:index_type? _
 	"(" _ columns:IndexColumnValues _")" IndexOption? type2:index_type?
 {
 	const index = { columns };
