@@ -212,6 +212,69 @@
           "note": "less than 20"
         }
       ]
+    },
+    {
+      "name": "products_status2",
+      "token": {
+        "start": {
+          "offset": 196,
+          "line": 9,
+          "column": 1
+        },
+        "end": {
+          "offset": 321,
+          "line": 13,
+          "column": 2
+        }
+      },
+      "values": [
+        {
+          "name": "out_of_stock",
+          "token": {
+            "start": {
+              "offset": 221,
+              "line": 10,
+              "column": 3
+            },
+            "end": {
+              "offset": 234,
+              "line": 11,
+              "column": 1
+            }
+          }
+        },
+        {
+          "name": "in_stock",
+          "token": {
+            "start": {
+              "offset": 234,
+              "line": 11,
+              "column": 1
+            },
+            "end": {
+              "offset": 264,
+              "line": 12,
+              "column": 1
+            }
+          }
+        },
+        {
+          "name": "running_low",
+          "token": {
+            "start": {
+              "offset": 264,
+              "line": 12,
+              "column": 1
+            },
+            "end": {
+              "offset": 320,
+              "line": 13,
+              "column": 1
+            }
+          },
+          "note": "less than 20"
+        }
+      ]
     }
   ],
   "tableGroups": []
