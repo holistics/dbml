@@ -1,3 +1,19 @@
+## v2.3.1 (2021-07-26)
+
+#### :bug: Bug Fix        
+* `dbml-core`
+  * [#192](https://github.com/holistics/dbml/pull/192) Dbml core/support postgres array and fix mysql bugs ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#192](https://github.com/holistics/dbml/pull/192) Dbml core/support postgres array and fix mysql bugs ([@NQPhuc](https://github.com/NQPhuc))
+  * [#189](https://github.com/holistics/dbml/pull/189) Add multiline comment ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 3
+- Lucas Torri ([@lucastorri](https://github.com/lucastorri))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Thi Nguyen ([@TeaNguyen](https://github.com/TeaNguyen))
+
 ## v2.3.0 (2021-01-04)
 
 #### :rocket: New Feature
