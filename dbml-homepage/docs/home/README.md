@@ -34,7 +34,7 @@ _See the above dbml doc [visualized on dbdiagram](https://dbdiagram.io/d/5d5cb58
 
 For full DBML syntax documentation, refer to the [Docs](/docs/) section.
 
-DBML is not to be confused with Microsoft's DBML file extension (XML format).
+_Note: DBML is not to be confused with Microsoft's DBML file extension (XML format)._
 
 ## Benefits
 
@@ -59,14 +59,15 @@ Not quite. Despite its name (data "definition" language), DDL is designed mainly
 remove tables, not to define them. In other words, **DDL is imperative, while DBML is declarative**. This makes DBML
  so much easier to write, read and maintain.
 
-DDL is also database specific (Oracle, PostgreSQL, etc), while **DBML is database-agnostic** and designed for the high-level database design instead of low-level database creation.
+DDL is also database specific (Oracle, PostgreSQL, etc), while **DBML is database-agnostic** and designed for the high-level database construct instead of low-level database creation.
 
 ## What can I do now?
 
 DBML comes with:
-1. A free, simple database visualiser at [dbdiagram.io](https://dbdiagram.io)
-2. A command-line tool to help to convert SQL to DBML files and vice versa.
-3. An [open-source JS library](/js-module/) (NPM package) for you to programmatically convert between DBML and SQL DDL.
+1. A free database visualiser at [dbdiagram.io](https://dbdiagram.io)
+2. A free database documentation builder at [dbdocs.io](https://dbdocs.io)
+3. A command-line tool to help to convert SQL to DBML files and vice versa.
+4. An [open-source JS library](/js-module/) (NPM package) for you to programmatically convert between DBML and SQL DDL.
 
 ### dbdiagram
 
