@@ -1,4 +1,7 @@
 # CLI
+
+[![NPM](https://img.shields.io/npm/v/@dbml/cli)](https://www.npmjs.com/package/@dbml/cli)
+
 DBML comes with a built-in CLI which can be used to convert between different formats from
 the command line  
 
