@@ -2,6 +2,8 @@
 
 ## core
 
+[![NPM](https://img.shields.io/npm/v/@dbml/core)](https://www.npmjs.com/package/@dbml/core)
+
 A core package that is responsible for parsing and converting between different formats
 
 * Parse DBML and SQL to `Database` object
