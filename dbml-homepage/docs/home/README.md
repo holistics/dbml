@@ -39,12 +39,13 @@ _Note: DBML is not to be confused with Microsoft's DBML file extension (XML form
 ## Benefits
 
 DBML is born to solve the frustrations of developers working on large, complex software projects:
-* Do not get a big picture of entire project's database structure
-* Don't understand some tables and what their fields mean, and which feature are they related to;
-* Existing ER diagram or SQL DDL code is hard to read, and usually outdated.
+* Difficulty building up a mental "big picture" of an entire project's database structure
+* Trouble understanding tables and what their fields mean, and which feature are they related to;
+* The existing ER diagram and/or SQL DDL code is poorly written and hard to read (and usually outdated).
+
 
 Our recommended best practices is to have a `database.dbml` file in your root repository
-_(similar to other config files like `packages.json` or `README.md`)_ 
+_(similar to other config and/or boilerplate files, eg. `packages.json` or `README.md`)_ 
 
 ```
 .
@@ -55,11 +56,14 @@ _(similar to other config files like `packages.json` or `README.md`)_
 
 ## Is this similar to SQL DDL?
 
-Not quite. Despite its name (data "definition" language), DDL is designed mainly to help physically create, modify or
-remove tables, not to define them. In other words, **DDL is imperative, while DBML is declarative**. This makes DBML
- so much easier to write, read and maintain.
+Not quite. Despite its name (data "definition" language), DDL is designed mainly
+to help physically create, modify or remove tables, not to define them. In other
+words, **DDL is imperative, while DBML is declarative**. This makes DBML so much
+easier to write, read and maintain.
 
-DDL is also database specific (Oracle, PostgreSQL, etc), while **DBML is database-agnostic** and designed for the high-level database construct instead of low-level database creation.
+DDL is also database specific (Oracle, PostgreSQL, etc), while **DBML is
+database-agnostic** and designed for the high-level database architecting
+instead of low-level database creation.
 
 ## What can I do now?
 
