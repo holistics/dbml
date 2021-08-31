@@ -6,8 +6,14 @@ module.exports = {
       { text: 'Docs', link: '/docs/' },
       { text: 'CLI', link: '/cli/' },
       { text: 'JS Module', link: '/js-module/' },
+      {
+        text: 'dbx',
+        items: [
+          { text: 'dbdiagram',link: 'https://dbdiagram.io?utm_source=dbml' },
+          { text: 'dbdocs',link: 'https://dbdocs.io?utm_source=dbml' },
+        ]
+      },
       { text: 'Github',link: 'https://github.com/holistics/dbml'},
-      { text: 'Community', link: 'https://github.com/holistics/dbml/issues/'}
     ],
     sidebarDepth: 2,
     sidebar: {
