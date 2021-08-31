@@ -1,4 +1,14 @@
 # DBML - Database Markup Language
+<div style="display: flex; align-items: center;">
+  <p style="font-size: 12px;"> Open source </p>
+  <a 
+    href="https://github.com/holistics/dbml"
+    target="_blank"
+    style="margin-left: 10px;"
+  >
+    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/holistics/dbml?style=social">
+  </a>
+</div>
 
 ## Intro
 
@@ -74,6 +84,14 @@ DBML comes with:
 [dbdiagram.io](https://dbdiagram.io?utm_source=dbml) is a free tool to help you visualize database diagrams from DBML code. 
 
 ![img](https://i.imgur.com/8T1tIZp.gif)
+
+### dbdocs
+
+[dbdocs.io](https://dbdocs.io?utm_source=dbml) is a free tool to help you build database documents from DBML code. 
+
+<video width="100%" height="auto" controls autoplay muted loop>
+  <source src="https://cdn.holistics.io/dbdocs/dbdocs-tour.mp4" type="video/mp4">
+</video> 
 
 ### Command-line Tool (CLI)
 
