@@ -84,6 +84,6 @@ $ sql2dbml --mysql dump.sql -o mydatabase.dbml
 
 ```bash
 $ sql2dbml <path-to-sql-file>
-           [--mysql|--postgres |--mssql]
+           [--mysql|--postgres|--mssql]
            [-o|--out-file <output-filepath>]
 ```
