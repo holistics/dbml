@@ -53,7 +53,7 @@ $ dbml2sql schema.dbml -o schema.sql
 
 ```bash
 $ dbml2sql <path-to-dbml-file>
-           [--mysql|--postgres]
+           [--mysql|--postgres|--mssql]
            [-o|--out-file <output-filepath>]
 ```
 
@@ -84,6 +84,6 @@ $ sql2dbml --mysql dump.sql -o mydatabase.dbml
 
 ```bash
 $ sql2dbml <path-to-sql-file>
-           [--mysql|--postgres]
+           [--mysql|--postgres|--mssql]
            [-o|--out-file <output-filepath>]
 ```

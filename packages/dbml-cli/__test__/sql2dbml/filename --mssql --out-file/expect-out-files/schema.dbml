@@ -1,0 +1,25 @@
+Table "UserMaster" {
+  "UserMasterKey" BIGINT [not null, increment]
+}
+
+Table "CodeDef" {
+  "CdKey" BIGINT [not null, increment]
+  "Category" NVARCHAR(50) [not null]
+  "Description" NVARCHAR(100)
+  "Code" NVARCHAR(50) [not null]
+  "ParentCdKey" BIGINT
+  "UserMasterKeyAddedBy" BIGINT [not null]
+  "UserMasterKeyLastEditedBy" BIGINT
+  "AddedDtTm" DATETIMEOFFSET(7) [not null]
+  "LastEditedDtTm" DATETIMEOFFSET(7)
+  "EffectiveFromDtTm" DATETIMEOFFSET(7) [not null]
+  "EffectiveThruDtTm" DATETIMEOFFSET(7)
+
+Indexes {
+  CdKey [pk]
+}
+}
+
+Ref "fk__CodeDef__ParentCdKey__CodeDef__CdKey":"CodeDef"."CdKey" < "CodeDef"."ParentCdKey"
+
+Ref "fk__CodeDef__UserMasterKeyLastEditedBy__UserMaster_UserMasterKey":"UserMaster"."UserMasterKey" < "CodeDef"."UserMasterKeyLastEditedBy"

@@ -26,6 +26,7 @@ function sql2dbml (args) {
     .usage('[options] <files...>')
     .option('--mysql')
     .option('--postgres')
+    .option('--mssql')
     .option('-o, --out-file <pathspec>', 'compile all input files into a single files');
   // .option('-d, --out-dir <pathspec>', 'compile an input directory of sql files into an output directory');
 
