@@ -36,7 +36,7 @@ class Ref extends Element {
     rawEndpoints.forEach((endpoint) => {
       this.endpoints.push(new Endpoint({ ...endpoint, ref: this }));
       if (endpoint.schemaName === DEFAULT_SCHEMA_NAME) {
-        this.database.hasDefaultSchema = true;
+        this.schema.database.hasDefaultSchema = true;
       }
     });
 
