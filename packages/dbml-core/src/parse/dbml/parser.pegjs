@@ -605,11 +605,11 @@ schema_name "schema name" = name:name "." { return name }
 
 field_identifier = 
   schemaName:name "." tableName:name "." fieldNames:RefField { return { schemaName, tableName, fieldNames } } /
-  tableName:name "." fieldNames:RefField { return { schmaName: null, tableName, fieldNames } }
+  tableName:name "." fieldNames:RefField { return { schemaName: null, tableName, fieldNames } }
 
 inline_field_identifier = 
   schemaName:name "." tableName:name "." fieldName:name { return { schemaName, tableName, fieldName } } /
-  tableName:name "." fieldName:name { return { schmaName: null, tableName, fieldName } }
+  tableName:name "." fieldName:name { return { schemaName: null, tableName, fieldName } }
 
 type_name "valid name"
   = c:(type_character+) { return c.join("") }

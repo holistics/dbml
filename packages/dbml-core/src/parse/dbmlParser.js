@@ -677,9 +677,9 @@ function peg$parse(input, options) {
       peg$c163 = peg$literalExpectation(".", false),
       peg$c164 = function(name) { return name },
       peg$c165 = function(schemaName, tableName, fieldNames) { return { schemaName, tableName, fieldNames } },
-      peg$c166 = function(tableName, fieldNames) { return { schmaName: null, tableName, fieldNames } },
+      peg$c166 = function(tableName, fieldNames) { return { schemaName: null, tableName, fieldNames } },
       peg$c167 = function(schemaName, tableName, fieldName) { return { schemaName, tableName, fieldName } },
-      peg$c168 = function(tableName, fieldName) { return { schmaName: null, tableName, fieldName } },
+      peg$c168 = function(tableName, fieldName) { return { schemaName: null, tableName, fieldName } },
       peg$c169 = peg$otherExpectation("type"),
       peg$c170 = function(type_name, args) {
         args = args ? args[3] : null;
