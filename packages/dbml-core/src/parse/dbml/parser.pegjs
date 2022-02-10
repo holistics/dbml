@@ -122,23 +122,31 @@ ProjectField
     }
   }
 
-TableGroupSyntax = table_group sp+ name:name _ "{" _ body:table_group_body _ "}" {
+TableGroupSyntax = table_group sp+ schemaName:schema_name? name:name _ "{" _ body:table_group_body _ "}" {
   return {
     name: name,
+    schemaName,
     tables: body,
     token: location()
   }
 }
 
-table_group_body = tables:(name __)* {
+table_group_body = tables:(schema_name? name __)* {
   return tables.map(t => ({
-    name: t[0]
+    name: t[1],
+    schemaName: t[0]
   }));
 }
 
 // References
 RefSyntax
-  = r: (ref_long / ref_short) { return r; }
+  = r: (ref_long / ref_short) {
+    const schemaName = r.endpoints[0].schemaName;
+    return {
+      ...r,
+      schemaName,
+    }; 
+  }
 
 ref_long
   = ref name:(__ name)? _ "{" _ body:ref_body _ "}" {
@@ -163,17 +171,19 @@ ref_short
     }
 
 ref_body
-  = table1:name "." field1:RefField sp+ relation:relation sp+ table2:name "." field2:RefField sp* ref_settings:RefSettings? {
+  = field1:field_identifier sp+ relation:relation sp+ field2:field_identifier sp* ref_settings:RefSettings? {
     const endpoints = [
       {
-        tableName: table1,
-        fieldNames: field1,
+        schemaName: field1.schemaName,
+        tableName: field1.tableName,
+        fieldNames: field1.fieldNames,
         relation: relation === ">" ? "*" : "1",
         token: location()
       },
       {
-        tableName: table2,
-        fieldNames: field2,
+        schemaName: field2.schemaName,
+        tableName: field2.tableName,
+        fieldNames: field2.fieldNames,
         relation: relation === "<" ? "*" : "1",
         token: location()
       }
@@ -224,7 +234,7 @@ OnDelete
 
 // Tables
 TableSyntax
-  = table sp+ name:name alias:alias_def? sp* table_settings:TableSettings? _ "{" body:TableBody "}" {
+  = table sp+ schemaName:schema_name? name:name alias:alias_def? sp* table_settings:TableSettings? _ "{" body:TableBody "}" {
       let fields = body.fields || [];
       let indexes = body.indexes || [];
       // Handle list of partial inline_refs
@@ -234,12 +244,14 @@ TableSyntax
         (field.inline_refs || []).forEach((iref) => {
           const endpoints = [
           {
+            schemaName: iref.schemaName,
             tableName: iref.tableName,
             fieldNames: iref.fieldNames,
             relation: iref.relation === "<" ? "*" : "1",
             token: iref.token
           },
           {
+            schemaName: schemaName,
             tableName: name,
             fieldNames: [field.name],
             relation: iref.relation === ">" ? "*" : "1",
@@ -247,6 +259,7 @@ TableSyntax
           }];
 
           let ref = {
+            schemaName,
             name: null, // no name
             endpoints: endpoints,
             token: iref.token
@@ -257,6 +270,7 @@ TableSyntax
 
       let res = {
         name: name,
+        schemaName,
         alias: alias,
         fields: fields,
         token: location(),
@@ -323,9 +337,10 @@ TableElement
   }
 
 Field
-  = _ name:name sp+ type:type constrains:(sp+ constrain)* field_settings:(sp+ FieldSettings)? sp* comment? newline {
+  = _ name:name sp+ typeSchemaName:schema_name? type:type constrains:(sp+ constrain)* field_settings:(sp+ FieldSettings)? sp* comment? newline {
     const field = {
       name: name,
+      typeSchemaName,
       type: type,
       token: location(),
       inline_refs: []
@@ -338,9 +353,10 @@ Field
   }
 
 EnumSyntax
-  = enum sp+ name:name _ "{" body: EnumBody "}" {
+  = enum sp+ schemaName:schema_name? name:name _ "{" body: EnumBody "}" {
     return {
       name: name,
+      schemaName,
       token: location(),
       values: body.enum_values
     };
@@ -523,10 +539,11 @@ ObjectNote
 IndexType
   = "type:"i _ val:(btree/hash) { return val }
 RefInline
-  = "ref:" sp* relation:relation sp+ table2:name "." field2:name {
+  = "ref:" sp* relation:relation sp+ field:inline_field_identifier{
       return {
-        tableName: table2,
-        fieldNames: [field2],
+        schemaName: field.schemaName,
+        tableName: field.tableName,
+        fieldNames: [field.fieldName],
         relation: relation,
         token: location(),
       }
@@ -583,6 +600,16 @@ relation ">, - or <" = [>\-<]
 name "valid name"
   = c:(character+) { return c.join("") }
   / quote c:[^\"\n]+ quote { return c.join("") }
+
+schema_name "schema name" = name:name "." { return name }
+
+field_identifier = 
+  schemaName:name "." tableName:name "." fieldNames:RefField { return { schemaName, tableName, fieldNames } } /
+  tableName:name "." fieldNames:RefField { return { schmaName: null, tableName, fieldNames } }
+
+inline_field_identifier = 
+  schemaName:name "." tableName:name "." fieldName:name { return { schemaName, tableName, fieldName } } /
+  tableName:name "." fieldName:name { return { schmaName: null, tableName, fieldName } }
 
 type_name "valid name"
   = c:(type_character+) { return c.join("") }
