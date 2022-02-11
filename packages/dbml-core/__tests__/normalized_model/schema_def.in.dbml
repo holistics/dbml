@@ -1,14 +1,19 @@
 Table ecommerce.users {
   id int [pk]
   name varchar
-  js job_status
-  js2 public.job_status
-  g schemaB.gender
+  ejs job_status
+  ejs2 public.job_status
+  eg schemaB.gender
+  eg2 gender
 }
 
 Table public.users {
   id int [pk]
   name varchar
+  pjs job_status
+  pjs2 public.job_status
+  pg schemaB.gender
+  pg2 gender
 }
 
 Table products {
@@ -46,6 +51,11 @@ enum job_status {
 }
 
 enum schemaB.gender {
+    male
+    female
+}
+
+enum gender {
     male
     female
 }

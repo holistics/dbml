@@ -21,9 +21,9 @@ class Database extends Element {
 
     // The process order is important. Do not change !
     this.processSchemas(schemas);
+    this.processSchemaElements(enums, ENUM);
     this.processSchemaElements(tables, TABLE);
     this.processSchemaElements(refs, REF);
-    this.processSchemaElements(enums, ENUM);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
   }
 
@@ -106,6 +106,13 @@ class Database extends Element {
       this.error(`Schema ${rawTable.schemaName || DEFAULT_SCHEMA_NAME} don't exist`);
     }
     return schema.findTable(rawTable.name);
+  }
+
+  findEnum (schemaName, name) {
+    const schema = this.schemas.find(s => s.name === schemaName || s.alias === schemaName);
+    if (!schema) return null;
+    const _enum = schema.enums.find(e => e.name === name);
+    return _enum;
   }
 
   export () {
