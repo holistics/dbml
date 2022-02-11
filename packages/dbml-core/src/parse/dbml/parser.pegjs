@@ -340,8 +340,10 @@ Field
   = _ name:name sp+ typeSchemaName:schema_name? type:type constrains:(sp+ constrain)* field_settings:(sp+ FieldSettings)? sp* comment? newline {
     const field = {
       name: name,
-      typeSchemaName,
-      type: type,
+      type:  {
+        schemaName: typeSchemaName,
+        ...type,
+      },
       token: location(),
       inline_refs: []
     }

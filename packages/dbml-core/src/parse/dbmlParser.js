@@ -431,8 +431,10 @@ function peg$parse(input, options) {
       peg$c48 = function(name, typeSchemaName, type, constrains, field_settings) {
           const field = {
             name: name,
-            typeSchemaName,
-            type: type,
+            type:  {
+              schemaName: typeSchemaName,
+              ...type,
+            },
             token: location(),
             inline_refs: []
           }
