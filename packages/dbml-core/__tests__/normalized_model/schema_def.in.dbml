@@ -44,10 +44,10 @@ TableGroup tablegroup_name { // tablegroup is case-insensitive.
 }
 
 enum job_status {
-    created [note: 'Waiting to be processed']
-    running
-    done
-    failure
+    created2 [note: 'abcdef']
+    running2
+    done2
+    failure2
 }
 
 enum schemaB.gender {
@@ -56,6 +56,6 @@ enum schemaB.gender {
 }
 
 enum gender {
-    male
-    female
+    male2
+    female2
 }
