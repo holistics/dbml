@@ -348,23 +348,23 @@
   "enumValues": {
     "1": {
       "id": 1,
-      "name": "created",
-      "note": "Waiting to be processed",
+      "name": "created2",
+      "note": "abcdef",
       "enumId": 1
     },
     "2": {
       "id": 2,
-      "name": "running",
+      "name": "running2",
       "enumId": 1
     },
     "3": {
       "id": 3,
-      "name": "done",
+      "name": "done2",
       "enumId": 1
     },
     "4": {
       "id": 4,
-      "name": "failure",
+      "name": "failure2",
       "enumId": 1
     },
     "5": {
@@ -379,12 +379,12 @@
     },
     "7": {
       "id": 7,
-      "name": "male",
+      "name": "male2",
       "enumId": 3
     },
     "8": {
       "id": 8,
-      "name": "female",
+      "name": "female2",
       "enumId": 3
     }
   },

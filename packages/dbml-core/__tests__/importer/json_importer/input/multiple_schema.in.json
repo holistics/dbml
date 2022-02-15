@@ -1,0 +1,974 @@
+{
+    "schemas": [],
+    "tables": [
+      {
+        "name": "users",
+        "schemaName": "ecommerce",
+        "alias": null,
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "schemaName": null,
+              "type_name": "int",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 26,
+                "line": 2,
+                "column": 3
+              },
+              "end": {
+                "offset": 38,
+                "line": 3,
+                "column": 1
+              }
+            },
+            "inline_refs": [],
+            "pk": true
+          },
+          {
+            "name": "name",
+            "type": {
+              "schemaName": null,
+              "type_name": "varchar",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 38,
+                "line": 3,
+                "column": 1
+              },
+              "end": {
+                "offset": 53,
+                "line": 4,
+                "column": 1
+              }
+            },
+            "inline_refs": []
+          },
+          {
+            "name": "ejs",
+            "type": {
+              "schemaName": null,
+              "type_name": "job_status",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 53,
+                "line": 4,
+                "column": 1
+              },
+              "end": {
+                "offset": 70,
+                "line": 5,
+                "column": 1
+              }
+            },
+            "inline_refs": []
+          },
+          {
+            "name": "ejs2",
+            "type": {
+              "schemaName": "public",
+              "type_name": "job_status",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 70,
+                "line": 5,
+                "column": 1
+              },
+              "end": {
+                "offset": 95,
+                "line": 6,
+                "column": 1
+              }
+            },
+            "inline_refs": []
+          },
+          {
+            "name": "eg",
+            "type": {
+              "schemaName": "schemaB",
+              "type_name": "gender",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 95,
+                "line": 6,
+                "column": 1
+              },
+              "end": {
+                "offset": 115,
+                "line": 7,
+                "column": 1
+              }
+            },
+            "inline_refs": []
+          },
+          {
+            "name": "eg2",
+            "type": {
+              "schemaName": null,
+              "type_name": "gender",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 115,
+                "line": 7,
+                "column": 1
+              },
+              "end": {
+                "offset": 128,
+                "line": 8,
+                "column": 1
+              }
+            },
+            "inline_refs": []
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 0,
+            "line": 1,
+            "column": 1
+          },
+          "end": {
+            "offset": 129,
+            "line": 8,
+            "column": 2
+          }
+        },
+        "indexes": []
+      },
+      {
+        "name": "users",
+        "schemaName": "public",
+        "alias": null,
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "schemaName": null,
+              "type_name": "int",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 154,
+                "line": 11,
+                "column": 3
+              },
+              "end": {
+                "offset": 166,
+                "line": 12,
+                "column": 1
+              }
+            },
+            "inline_refs": [],
+            "pk": true
+          },
+          {
+            "name": "name",
+            "type": {
+              "schemaName": null,
+              "type_name": "varchar",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 166,
+                "line": 12,
+                "column": 1
+              },
+              "end": {
+                "offset": 181,
+                "line": 13,
+                "column": 1
+              }
+            },
+            "inline_refs": []
+          },
+          {
+            "name": "pjs",
+            "type": {
+              "schemaName": null,
+              "type_name": "job_status",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 181,
+                "line": 13,
+                "column": 1
+              },
+              "end": {
+                "offset": 198,
+                "line": 14,
+                "column": 1
+              }
+            },
+            "inline_refs": []
+          },
+          {
+            "name": "pjs2",
+            "type": {
+              "schemaName": "public",
+              "type_name": "job_status",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 198,
+                "line": 14,
+                "column": 1
+              },
+              "end": {
+                "offset": 223,
+                "line": 15,
+                "column": 1
+              }
+            },
+            "inline_refs": []
+          },
+          {
+            "name": "pg",
+            "type": {
+              "schemaName": "schemaB",
+              "type_name": "gender",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 223,
+                "line": 15,
+                "column": 1
+              },
+              "end": {
+                "offset": 243,
+                "line": 16,
+                "column": 1
+              }
+            },
+            "inline_refs": []
+          },
+          {
+            "name": "pg2",
+            "type": {
+              "schemaName": null,
+              "type_name": "gender",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 243,
+                "line": 16,
+                "column": 1
+              },
+              "end": {
+                "offset": 256,
+                "line": 17,
+                "column": 1
+              }
+            },
+            "inline_refs": []
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 131,
+            "line": 10,
+            "column": 1
+          },
+          "end": {
+            "offset": 257,
+            "line": 17,
+            "column": 2
+          }
+        },
+        "indexes": []
+      },
+      {
+        "name": "products",
+        "schemaName": null,
+        "alias": null,
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "schemaName": null,
+              "type_name": "int",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 278,
+                "line": 20,
+                "column": 3
+              },
+              "end": {
+                "offset": 290,
+                "line": 21,
+                "column": 1
+              }
+            },
+            "inline_refs": [],
+            "pk": true
+          },
+          {
+            "name": "name",
+            "type": {
+              "schemaName": null,
+              "type_name": "varchar",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 290,
+                "line": 21,
+                "column": 1
+              },
+              "end": {
+                "offset": 305,
+                "line": 22,
+                "column": 1
+              }
+            },
+            "inline_refs": []
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 259,
+            "line": 19,
+            "column": 1
+          },
+          "end": {
+            "offset": 306,
+            "line": 22,
+            "column": 2
+          }
+        },
+        "indexes": []
+      },
+      {
+        "name": "products",
+        "schemaName": "schemaA",
+        "alias": null,
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "schemaName": null,
+              "type_name": "int",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 335,
+                "line": 25,
+                "column": 3
+              },
+              "end": {
+                "offset": 347,
+                "line": 26,
+                "column": 1
+              }
+            },
+            "inline_refs": [],
+            "pk": true
+          },
+          {
+            "name": "name",
+            "type": {
+              "schemaName": null,
+              "type_name": "varchar",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 347,
+                "line": 26,
+                "column": 1
+              },
+              "end": {
+                "offset": 390,
+                "line": 27,
+                "column": 1
+              }
+            },
+            "inline_refs": [
+              {
+                "schemaName": "ecommerce",
+                "tableName": "users",
+                "fieldNames": [
+                  "id"
+                ],
+                "relation": ">",
+                "token": {
+                  "start": {
+                    "offset": 363,
+                    "line": 26,
+                    "column": 17
+                  },
+                  "end": {
+                    "offset": 388,
+                    "line": 26,
+                    "column": 42
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 308,
+            "line": 24,
+            "column": 1
+          },
+          "end": {
+            "offset": 391,
+            "line": 27,
+            "column": 2
+          }
+        },
+        "indexes": []
+      },
+      {
+        "name": "locations",
+        "schemaName": "schemaA",
+        "alias": null,
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "schemaName": null,
+              "type_name": "int",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 421,
+                "line": 30,
+                "column": 3
+              },
+              "end": {
+                "offset": 433,
+                "line": 31,
+                "column": 1
+              }
+            },
+            "inline_refs": [],
+            "pk": true
+          },
+          {
+            "name": "name",
+            "type": {
+              "schemaName": null,
+              "type_name": "varchar",
+              "args": null
+            },
+            "token": {
+              "start": {
+                "offset": 433,
+                "line": 31,
+                "column": 1
+              },
+              "end": {
+                "offset": 466,
+                "line": 32,
+                "column": 1
+              }
+            },
+            "inline_refs": [
+              {
+                "schemaName": null,
+                "tableName": "users",
+                "fieldNames": [
+                  "id"
+                ],
+                "relation": ">",
+                "token": {
+                  "start": {
+                    "offset": 449,
+                    "line": 31,
+                    "column": 17
+                  },
+                  "end": {
+                    "offset": 464,
+                    "line": 31,
+                    "column": 32
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 393,
+            "line": 29,
+            "column": 1
+          },
+          "end": {
+            "offset": 467,
+            "line": 32,
+            "column": 2
+          }
+        },
+        "indexes": []
+      }
+    ],
+    "refs": [
+      {
+        "schemaName": "schemaA",
+        "name": null,
+        "endpoints": [
+          {
+            "schemaName": "ecommerce",
+            "tableName": "users",
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "token": {
+              "start": {
+                "offset": 363,
+                "line": 26,
+                "column": 17
+              },
+              "end": {
+                "offset": 388,
+                "line": 26,
+                "column": 42
+              }
+            }
+          },
+          {
+            "schemaName": "schemaA",
+            "tableName": "products",
+            "fieldNames": [
+              "name"
+            ],
+            "relation": "*",
+            "token": {
+              "start": {
+                "offset": 363,
+                "line": 26,
+                "column": 17
+              },
+              "end": {
+                "offset": 388,
+                "line": 26,
+                "column": 42
+              }
+            }
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 363,
+            "line": 26,
+            "column": 17
+          },
+          "end": {
+            "offset": 388,
+            "line": 26,
+            "column": 42
+          }
+        }
+      },
+      {
+        "schemaName": "schemaA",
+        "name": null,
+        "endpoints": [
+          {
+            "schemaName": null,
+            "tableName": "users",
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "token": {
+              "start": {
+                "offset": 449,
+                "line": 31,
+                "column": 17
+              },
+              "end": {
+                "offset": 464,
+                "line": 31,
+                "column": 32
+              }
+            }
+          },
+          {
+            "schemaName": "schemaA",
+            "tableName": "locations",
+            "fieldNames": [
+              "name"
+            ],
+            "relation": "*",
+            "token": {
+              "start": {
+                "offset": 449,
+                "line": 31,
+                "column": 17
+              },
+              "end": {
+                "offset": 464,
+                "line": 31,
+                "column": 32
+              }
+            }
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 449,
+            "line": 31,
+            "column": 17
+          },
+          "end": {
+            "offset": 464,
+            "line": 31,
+            "column": 32
+          }
+        }
+      },
+      {
+        "name": null,
+        "endpoints": [
+          {
+            "schemaName": "public",
+            "tableName": "users",
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "token": {
+              "start": {
+                "offset": 474,
+                "line": 34,
+                "column": 6
+              },
+              "end": {
+                "offset": 510,
+                "line": 34,
+                "column": 42
+              }
+            }
+          },
+          {
+            "schemaName": "ecommerce",
+            "tableName": "users",
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "*",
+            "token": {
+              "start": {
+                "offset": 474,
+                "line": 34,
+                "column": 6
+              },
+              "end": {
+                "offset": 510,
+                "line": 34,
+                "column": 42
+              }
+            }
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 469,
+            "line": 34,
+            "column": 1
+          },
+          "end": {
+            "offset": 510,
+            "line": 34,
+            "column": 42
+          }
+        },
+        "schemaName": "public"
+      },
+      {
+        "name": "name_optional",
+        "endpoints": [
+          {
+            "schemaName": null,
+            "tableName": "users",
+            "fieldNames": [
+              "name"
+            ],
+            "relation": "1",
+            "token": {
+              "start": {
+                "offset": 534,
+                "line": 37,
+                "column": 3
+              },
+              "end": {
+                "offset": 565,
+                "line": 37,
+                "column": 34
+              }
+            }
+          },
+          {
+            "schemaName": "ecommerce",
+            "tableName": "users",
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "*",
+            "token": {
+              "start": {
+                "offset": 534,
+                "line": 37,
+                "column": 3
+              },
+              "end": {
+                "offset": 565,
+                "line": 37,
+                "column": 34
+              }
+            }
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 512,
+            "line": 36,
+            "column": 1
+          },
+          "end": {
+            "offset": 567,
+            "line": 38,
+            "column": 2
+          }
+        },
+        "schemaName": null
+      }
+    ],
+    "enums": [
+      {
+        "name": "job_status",
+        "schemaName": null,
+        "token": {
+          "start": {
+            "offset": 681,
+            "line": 46,
+            "column": 1
+          },
+          "end": {
+            "offset": 766,
+            "line": 51,
+            "column": 2
+          }
+        },
+        "values": [
+          {
+            "name": "created2",
+            "token": {
+              "start": {
+                "offset": 703,
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "offset": 729,
+                "line": 48,
+                "column": 1
+              }
+            },
+            "note": "abcdef"
+          },
+          {
+            "name": "running2",
+            "token": {
+              "start": {
+                "offset": 729,
+                "line": 48,
+                "column": 1
+              },
+              "end": {
+                "offset": 742,
+                "line": 49,
+                "column": 1
+              }
+            }
+          },
+          {
+            "name": "done2",
+            "token": {
+              "start": {
+                "offset": 742,
+                "line": 49,
+                "column": 1
+              },
+              "end": {
+                "offset": 752,
+                "line": 50,
+                "column": 1
+              }
+            }
+          },
+          {
+            "name": "failure2",
+            "token": {
+              "start": {
+                "offset": 752,
+                "line": 50,
+                "column": 1
+              },
+              "end": {
+                "offset": 765,
+                "line": 51,
+                "column": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "gender",
+        "schemaName": "schemaB",
+        "token": {
+          "start": {
+            "offset": 768,
+            "line": 53,
+            "column": 1
+          },
+          "end": {
+            "offset": 811,
+            "line": 56,
+            "column": 2
+          }
+        },
+        "values": [
+          {
+            "name": "male",
+            "token": {
+              "start": {
+                "offset": 794,
+                "line": 54,
+                "column": 5
+              },
+              "end": {
+                "offset": 799,
+                "line": 55,
+                "column": 1
+              }
+            }
+          },
+          {
+            "name": "female",
+            "token": {
+              "start": {
+                "offset": 799,
+                "line": 55,
+                "column": 1
+              },
+              "end": {
+                "offset": 810,
+                "line": 56,
+                "column": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "gender",
+        "schemaName": null,
+        "token": {
+          "start": {
+            "offset": 813,
+            "line": 58,
+            "column": 1
+          },
+          "end": {
+            "offset": 850,
+            "line": 61,
+            "column": 2
+          }
+        },
+        "values": [
+          {
+            "name": "male2",
+            "token": {
+              "start": {
+                "offset": 831,
+                "line": 59,
+                "column": 5
+              },
+              "end": {
+                "offset": 837,
+                "line": 60,
+                "column": 1
+              }
+            }
+          },
+          {
+            "name": "female2",
+            "token": {
+              "start": {
+                "offset": 837,
+                "line": 60,
+                "column": 1
+              },
+              "end": {
+                "offset": 849,
+                "line": 61,
+                "column": 1
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "tableGroups": [
+      {
+        "name": "tablegroup_name",
+        "schemaName": null,
+        "tables": [
+          {
+            "name": "products",
+            "schemaName": "public"
+          },
+          {
+            "name": "users",
+            "schemaName": null
+          },
+          {
+            "name": "users",
+            "schemaName": "ecommerce"
+          }
+        ],
+        "token": {
+          "start": {
+            "offset": 569,
+            "line": 40,
+            "column": 1
+          },
+          "end": {
+            "offset": 679,
+            "line": 44,
+            "column": 2
+          }
+        }
+      }
+    ],
+    "project": {}
+  }

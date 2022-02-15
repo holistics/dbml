@@ -1,0 +1,63 @@
+Enum "public"."job_status" {
+  "created2" [note: 'abcdef']
+  "running2"
+  "done2"
+  "failure2"
+}
+
+Enum "public"."gender" {
+  "male2"
+  "female2"
+}
+
+Table "public"."users" {
+  "id" int [pk]
+  "name" varchar
+  "pjs" job_status
+  "pjs2" job_status
+  "pg" gender
+  "pg2" gender
+}
+
+Table "public"."products" {
+  "id" int [pk]
+  "name" varchar
+}
+
+TableGroup "public"."tablegroup_name" {
+  "public"."products"
+  "public"."users"
+  "ecommerce"."users"
+}
+
+Ref:"public"."users"."id" < "ecommerce"."users"."id"
+
+Ref "public"."name_optional":"public"."users"."name" < "ecommerce"."users"."id"
+
+Enum "schemaB"."gender" {
+  "male"
+  "female"
+}
+
+Table "ecommerce"."users" {
+  "id" int [pk]
+  "name" varchar
+  "ejs" job_status
+  "ejs2" job_status
+  "eg" gender
+  "eg2" gender
+}
+
+Table "schemaA"."products" {
+  "id" int [pk]
+  "name" varchar
+}
+
+Table "schemaA"."locations" {
+  "id" int [pk]
+  "name" varchar
+}
+
+Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
+
+Ref:"public"."users"."id" < "schemaA"."locations"."name"
