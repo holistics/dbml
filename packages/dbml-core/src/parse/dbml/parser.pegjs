@@ -736,10 +736,10 @@ BooleanLiteral = boolean: ('true'i/'false'i/'null'i) {
     value: boolean
   };
 }
-NumberLiteral = number:(float / integer) {
+NumberLiteral = minus:"-"? number:(float / integer) {
   return {
     type: 'number',
-    value: number
+    value: minus ? -number : number
   };
 }
 float
