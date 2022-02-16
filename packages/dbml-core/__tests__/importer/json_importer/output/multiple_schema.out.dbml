@@ -1,16 +1,16 @@
-Enum "public"."job_status" {
+Enum "job_status" {
   "created2" [note: 'abcdef']
   "running2"
   "done2"
   "failure2"
 }
 
-Enum "public"."gender" {
+Enum "gender" {
   "male2"
   "female2"
 }
 
-Table "public"."users" {
+Table "users" {
   "id" int [pk]
   "name" varchar
   "pjs" job_status
@@ -19,20 +19,20 @@ Table "public"."users" {
   "pg2" gender
 }
 
-Table "public"."products" {
+Table "products" {
   "id" int [pk]
   "name" varchar
 }
 
-TableGroup "public"."tablegroup_name" {
-  "public"."products"
-  "public"."users"
+TableGroup "tablegroup_name" {
+  "products"
+  "users"
   "ecommerce"."users"
 }
 
-Ref:"public"."users"."id" < "ecommerce"."users"."id"
+Ref:"users"."id" < "ecommerce"."users"."id"
 
-Ref "public"."name_optional":"public"."users"."name" < "ecommerce"."users"."id"
+Ref "name_optional":"users"."name" < "ecommerce"."users"."id"
 
 Enum "schemaB"."gender" {
   "male"
@@ -60,4 +60,4 @@ Table "schemaA"."locations" {
 
 Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
 
-Ref:"public"."users"."id" < "schemaA"."locations"."name"
+Ref:"users"."id" < "schemaA"."locations"."name"
