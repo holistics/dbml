@@ -55,7 +55,7 @@ class Database extends Element {
       if (element.schemaName) {
         schema = this.findOrCreateSchema(element.schemaName);
         if (element.schemaName === DEFAULT_SCHEMA_NAME) {
-          this.hasDefaultSchema = true;
+          // this.hasDefaultSchema = true;
         }
       } else {
         schema = this.findOrCreateSchema(DEFAULT_SCHEMA_NAME);
