@@ -57,18 +57,6 @@ CREATE TABLE "countries" (
   "continent_name" varchar
 );
 
-ALTER TABLE "order_items" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
-
-ALTER TABLE "order_items" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
-
-ALTER TABLE "users" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code");
-
-ALTER TABLE "merchants" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code");
-
-ALTER TABLE "products" ADD FOREIGN KEY ("merchant_id") REFERENCES "merchants" ("id");
-
-ALTER TABLE "merchants" ADD FOREIGN KEY ("admin_id") REFERENCES "users" ("id");
-
 CREATE INDEX "product_status" ON "products" ("merchant_id", "status");
 
 CREATE UNIQUE INDEX ON "products" USING HASH ("id");
@@ -80,3 +68,15 @@ COMMENT ON COLUMN "orders"."created_at" IS 'When order created';
 COMMENT ON TABLE "products" IS 'This is a note in table "products"';
 
 COMMENT ON TABLE "users" IS 'This is a note in table "users"';
+
+ALTER TABLE "order_items" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
+
+ALTER TABLE "order_items" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
+
+ALTER TABLE "users" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code");
+
+ALTER TABLE "merchants" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code");
+
+ALTER TABLE "products" ADD FOREIGN KEY ("merchant_id") REFERENCES "merchants" ("id");
+
+ALTER TABLE "merchants" ADD FOREIGN KEY ("admin_id") REFERENCES "users" ("id");
