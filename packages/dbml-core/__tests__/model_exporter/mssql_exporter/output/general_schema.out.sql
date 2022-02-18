@@ -50,6 +50,12 @@ CREATE TABLE [countries] (
 )
 GO
 
+CREATE INDEX [product_status] ON [products] ("merchant_id", "status")
+GO
+
+CREATE UNIQUE INDEX [products_index_1] ON [products] ("id")
+GO
+
 ALTER TABLE [order_items] ADD FOREIGN KEY ([order_id]) REFERENCES [orders] ([id])
 GO
 
@@ -66,10 +72,4 @@ ALTER TABLE [products] ADD FOREIGN KEY ([merchant_id]) REFERENCES [merchants] ([
 GO
 
 ALTER TABLE [merchants] ADD FOREIGN KEY ([admin_id]) REFERENCES [users] ([id])
-GO
-
-CREATE INDEX [product_status] ON [products] ("merchant_id", "status")
-GO
-
-CREATE UNIQUE INDEX [products_index_1] ON [products] ("id")
 GO
