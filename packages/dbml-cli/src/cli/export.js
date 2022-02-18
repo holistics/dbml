@@ -34,7 +34,7 @@ export default async function exportHandler (program) {
       generate(inputPaths, (dbml) => exporter.export(dbml, format),
         new OutputFilePlugin(resolvePaths(opts.outFile), header));
 
-      console.log(`  ${chalk.green(figures.tick)} Generated SQL dump file (${config[format].name}): ${path.basename(opts.outFile)}`);
+      console.log(`  ${chalk.green(figures.main.tick)} Generated SQL dump file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
   } catch (err) {
     logger.error(err);

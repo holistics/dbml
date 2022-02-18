@@ -28,7 +28,7 @@ export default async function importHandler (program) {
       generate(inputPaths, (sql) => importer.import(sql, format),
         new OutputFilePlugin(resolvePaths(opts.outFile)));
 
-      console.log(`  ${chalk.green(figures.tick)} Generated DBML file from SQL file (${config[format].name}): ${path.basename(opts.outFile)}`);
+      console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from SQL file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
   } catch (err) {
     logger.error(err);
