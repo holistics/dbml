@@ -51,4 +51,3 @@ GO
 
 ALTER TABLE [users] ADD FOREIGN KEY ([country_code]) REFERENCES [countries] ([code]) ON DELETE NO ACTION
 GO
-
