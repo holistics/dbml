@@ -9,7 +9,15 @@ import { DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF } from './config';
 import DbState from './dbState';
 
 class Database extends Element {
-  constructor ({ schemas = [], tables = [], enums = [], refs = [], tableGroups = [], project = {} }) {
+  constructor ({
+    schemas = [],
+    tables = [],
+    enums = [],
+    refs = [],
+    tableGroups = [],
+    project = {},
+    aliases = [],
+  }) {
     super();
     this.dbState = new DbState();
     this.generateId();
@@ -18,6 +26,7 @@ class Database extends Element {
     this.note = project.note;
     this.databaseType = project.database_type;
     this.name = project.name;
+    this.aliases = aliases;
 
     // The process order is important. Do not change !
     this.processSchemas(schemas);
@@ -100,12 +109,31 @@ class Database extends Element {
     return schema;
   }
 
-  findTable (rawTable) {
-    const schema = this.findOrCreateSchema(rawTable.schemaName || DEFAULT_SCHEMA_NAME);
-    if (!schema) {
-      this.error(`Schema ${rawTable.schemaName || DEFAULT_SCHEMA_NAME} don't exist`);
+  findTableAlias (alias) {
+    const sym = this.aliases.find(a => a.name === alias);
+    if (!sym || sym.kind !== 'table') return null;
+
+    const schemaName = sym.value.schemaName || DEFAULT_SCHEMA_NAME;
+    const schema = this.schemas.find(s => s.name === schemaName);
+    if (!schema) return null;
+
+    const { tableName } = sym.value;
+    const table = schema.tables.find(t => t.name === tableName);
+    return table;
+  }
+
+  findTable (schemaName, tableName) {
+    let table = null;
+    if (!schemaName) {
+      table = this.findTableAlias(tableName);
+      if (table) return table;
     }
-    return schema.findTable(rawTable.name);
+
+    const schema = this.findOrCreateSchema(schemaName || DEFAULT_SCHEMA_NAME);
+    if (!schema) {
+      this.error(`Schema ${schemaName || DEFAULT_SCHEMA_NAME} don't exist`);
+    }
+    return schema.findTable(tableName);
   }
 
   findEnum (schemaName, name) {

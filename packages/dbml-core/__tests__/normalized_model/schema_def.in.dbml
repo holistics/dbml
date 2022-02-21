@@ -21,7 +21,7 @@ Table products {
   name varchar
 }
 
-Table schemaA.products {
+Table schemaA.products as A {
   id int [pk]
   name varchar [ref: > "ecommerce".users.id]
 }
@@ -41,6 +41,7 @@ TableGroup tablegroup_name { // tablegroup is case-insensitive.
   public.products 
   users
   ecommerce.users
+  A
 }
 
 enum job_status {

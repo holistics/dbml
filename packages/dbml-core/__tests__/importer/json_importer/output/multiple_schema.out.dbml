@@ -28,6 +28,7 @@ TableGroup "tablegroup_name" {
   "products"
   "users"
   "ecommerce"."users"
+  "schemaA"."products"
 }
 
 Ref:"users"."id" < "ecommerce"."users"."id"
