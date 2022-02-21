@@ -1,5 +1,5 @@
 Enum "job_status" {
-  "created2" [note: 'abcdef']
+  "created2"
   "running2"
   "done2"
   "failure2"
@@ -22,17 +22,19 @@ Table "users" {
 Table "products" {
   "id" int [pk]
   "name" varchar
-}
 
-TableGroup "tablegroup_name" {
-  "products"
-  "users"
-  "ecommerce"."users"
+Indexes {
+  id [type: hash, unique]
+}
 }
 
 Ref:"users"."id" < "ecommerce"."users"."id"
 
-Ref "name_optional":"users"."name" < "ecommerce"."users"."id"
+Ref:"users"."name" < "ecommerce"."users"."id"
+
+Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
+
+Ref:"users"."id" < "schemaA"."locations"."name"
 
 Enum "schemaB"."gender" {
   "male"
@@ -51,13 +53,13 @@ Table "ecommerce"."users" {
 Table "schemaA"."products" {
   "id" int [pk]
   "name" varchar
+
+Indexes {
+  (id, name) [name: "product_status"]
+}
 }
 
 Table "schemaA"."locations" {
   "id" int [pk]
   "name" varchar
 }
-
-Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
-
-Ref:"users"."id" < "schemaA"."locations"."name"

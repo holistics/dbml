@@ -11,7 +11,8 @@ alter_table_action = _ ALTER __ TABLE (__ IF_EXISTS)? (__ ONLY)? __ name:table_n
 			switch(type.toLowerCase()) {
 				case "fk":
 					t_value.forEach(({ endpoints }) => {
-						endpoints[0].tableName = name
+						endpoints[0].tableName = name.name;
+						endpoints[0].schemaName = name.schemaName;
 					})
 			}
 		})

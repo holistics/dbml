@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { shouldPrintSchema } from './utils';
+import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
 class DbmlExporter {
   static hasWhiteSpace (str) {
@@ -34,7 +35,12 @@ class DbmlExporter {
     const lines = table.fieldIds.map((fieldId) => {
       const field = model.fields[fieldId];
 
-      let line = `"${field.name}" ${DbmlExporter.hasWhiteSpace(field.type.type_name) || DbmlExporter.hasSquareBracket(field.type.type_name)
+      let schemaName = '';
+      if (field.type.schemaName && field.type.schemaName !== DEFAULT_SCHEMA_NAME) {
+        schemaName = DbmlExporter.hasWhiteSpace(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
+      }
+
+      let line = `"${field.name}" ${schemaName}${DbmlExporter.hasWhiteSpace(field.type.type_name) || DbmlExporter.hasSquareBracket(field.type.type_name)
         ? `"${field.type.type_name}"` : field.type.type_name}`;
 
       const constraints = [];

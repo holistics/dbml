@@ -7,7 +7,7 @@ create_table_partition_of =
 	(__ ON __ COMMIT __ (PRESERVE __ ROWS/ DELETE __ ROWS/ DROP))?
 	(__ TABLESPACE __ tablespace_name:identifier)?
 	_ semicolon _ {
-		const table = { name: table_name, parent_table: parent_table}
+		const table = { name: table_name.name, schemaName: table_name.schemaName, parent_table: parent_table}
 		return {
 			syntax_name: "create_table_partition_of",
 			value: table

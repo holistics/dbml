@@ -1,8 +1,27 @@
 // Base rules:
 // collumn_name, table_name
 column_name "valid column name" = identifier
-table_name "valid table name"
-  = ((identifier _ "." _)*)? name:identifier { return name }
+
+path_name = names:(identifier _ "." _)* {
+  let dbName = null;
+  let schemaName = null;
+  if (names && names.length > 0) {
+    if (names.length === 1) schemaName = names[0][0];
+    else {
+      dbName = names[0][0];
+      schemaName = names[1][0];
+    }
+  }
+  return { dbName, schemaName }
+}
+
+table_name "valid table name" = pathName:path_name? name:identifier {
+  return { ...pathName, name }
+}
+
+enum_name "valid enum name" = pathName:path_name? name:identifier {
+  return { ...pathName, name }
+}
 
 // string constant
 string_constant "string" = "'" c:char_inside_single_quote+ "'" {
@@ -58,6 +77,7 @@ data_type "VALID TYPE" = c1:"CHARACTER"i _ c2:"VARYING"i _ args:("("expression")
 	  const args = c.args;
     return {
       type_name: c.type_name + (dimensions ? dimensions.map((dimension) => '[' + dimension + ']').join('') : ''),
+      schemaName: c.schemaName,
       args
     };
 	}
@@ -67,7 +87,7 @@ data_type "VALID TYPE" = c1:"CHARACTER"i _ c2:"VARYING"i _ args:("("expression")
     args: null
   } 
 }
-type_name = c:(character)+ _ args:("(" expression ")")? {
+type_name = pathName:path_name? c:(character)+ _ args:("(" expression ")")? {
 	let type_name = c.join("");
 	args = args ? args[1] : null;
 	if (type_name.toLowerCase() !== 'enum') {
@@ -75,6 +95,7 @@ type_name = c:(character)+ _ args:("(" expression ")")? {
 	}
 
 	return {
+    ...pathName,
 		type_name,
 		args
 	}
