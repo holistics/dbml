@@ -1,4 +1,14 @@
 {
+  "aliases": [
+    {
+      "name": "U",
+      "kind": "table",
+      "value": {
+        "tableName": "user",
+        "schemaName": null
+      }
+    }
+  ],
   "schemas": [],
   "tables": [
     {

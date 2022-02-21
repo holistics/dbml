@@ -1306,6 +1306,16 @@
       }
     }
   ],
+  "aliases": [
+    {
+      "name": "U",
+      "kind": "table",
+      "value": {
+        "tableName": "users",
+        "schemaName": null
+      }
+    }
+  ],
   "project": {
     "name": "ecommerce",
     "tables": [],

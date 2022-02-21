@@ -5,6 +5,7 @@
     refs: [],
     enums: [],
     tableGroups: [],
+    aliases: [],
     project: {},
   };
   let projectCnt = 0;
@@ -267,6 +268,18 @@ TableSyntax
           data.refs.push(ref);
         })
       });
+
+      if (alias) {
+        if (data.aliases.find(a => a.name === alias)) error(`Alias "${alias}" is already defined`);
+        data.aliases.push({
+          name: alias,
+          kind: 'table',
+          value: {
+            tableName: name,
+            schemaName: schemaName,
+          }
+        })
+      }
 
       let res = {
         name: name,

@@ -164,7 +164,8 @@
       "tableIds": [
         3,
         2,
-        1
+        1,
+        4
       ],
       "schemaId": 1
     }
@@ -217,14 +218,14 @@
     "4": {
       "id": 4,
       "name": "products",
-      "alias": null,
+      "alias": "A",
       "fieldIds": [
         15,
         16
       ],
       "indexIds": [],
       "schemaId": 4,
-      "groupId": null
+      "groupId": 1
     },
     "5": {
       "id": 5,

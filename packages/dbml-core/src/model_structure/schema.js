@@ -48,7 +48,7 @@ class Schema extends Element {
   }
 
   findTable (tableName) {
-    return this.tables.find(t => t.name === tableName || t.alias === tableName);
+    return this.tables.find(t => t.name === tableName);
   }
 
   processEnums (rawEnums) {
