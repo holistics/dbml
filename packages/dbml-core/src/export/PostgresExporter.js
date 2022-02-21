@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { hasWhiteSpace, shouldPrintSchema } from './utils';
+import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
 class PostgresExporter {
   static exportEnums (enumIds, model) {
@@ -31,10 +32,13 @@ class PostgresExporter {
       if (field.increment) {
         const typeSerial = field.type.type_name === 'bigint' ? 'BIGSERIAL' : 'SERIAL';
         line = `"${field.name}" ${typeSerial}`;
-      } else if (hasWhiteSpace(field.type.type_name)) {
-        line = `"${field.name}" "${field.type.type_name}"`;
       } else {
-        line = `"${field.name}" ${field.type.type_name}`;
+        let schemaName = '';
+        if (field.type.schemaName && field.type.schemaName !== DEFAULT_SCHEMA_NAME) {
+          schemaName = hasWhiteSpace(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
+        }
+        const typeName = hasWhiteSpace(field.type.type_name) ? `"${field.type.type_name}"` : field.type.type_name;
+        line = `"${field.name}" ${schemaName}${typeName}`;
       }
 
       if (field.unique) {

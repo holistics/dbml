@@ -54,6 +54,12 @@ CREATE TABLE "schemaA"."locations" (
   "name" varchar
 );
 
+CREATE INDEX "product_status" ON "schemaA"."products" ("id", "name");
+
+CREATE UNIQUE INDEX ON "products" USING HASH ("id");
+
+COMMENT ON TABLE "schemaA"."locations" IS 'This is a note in table "locations"';
+
 ALTER TABLE "ecommerce"."users" ADD FOREIGN KEY ("id") REFERENCES "users" ("id");
 
 ALTER TABLE "ecommerce"."users" ADD CONSTRAINT "name_optional" FOREIGN KEY ("id") REFERENCES "users" ("name");

@@ -7,7 +7,7 @@ create_table_normal =
 	(__ ON __ COMMIT __ (PRESERVE __ ROWS/ DELETE __ ROWS/ DROP))?
 	(__ TABLESPACE __ tablespace_name:identifier)?
 	_ semicolon _ {
-		const table = { name: table_name, fields: [], indexes: [] }
+		const table = { name: table_name.name, schemaName: table_name.schemaName, fields: [], indexes: [] }
 		// process table_properties
 		table_properties.forEach(({ table_property_name, value }) => {
 			switch(table_property_name.toLowerCase()) {
@@ -156,7 +156,8 @@ column_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 				type: "fk",
 				value: {
 					endpoint: {
-						tableName: reftable,
+						tableName: reftable.name,
+            schemaName: reftable.schemaName,
 						fieldNames: refcolumn ? [refcolumn] : null,
 						relation: "1"
 					},
@@ -192,7 +193,8 @@ table_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 						relation: "*",
 					},
 					{
-						tableName: reftable,
+						tableName: reftable.name,
+            schemaName: reftable.schemaName,
 						fieldNames: refcolumn,// ? refcolumn[key] : null,
 						relation: "1",
 					},
