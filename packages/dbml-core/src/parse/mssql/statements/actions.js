@@ -1,7 +1,12 @@
 const _ = require('lodash');
 
-function findTable (ast, tableName) {
-  return ast.tables.find(_table => _table.name === tableName);
+function findTable (ast, tableName, schemaName) {
+  const realSchemaName = schemaName || 'public';
+  const table = ast.tables.find(t => {
+    const targetSchemaName = t.schemaName || 'public';
+    return targetSchemaName === realSchemaName && t.name === tableName;
+  });
+  return table;
 }
 
 function findField (table, fieldName) {
@@ -9,7 +14,7 @@ function findField (table, fieldName) {
 }
 
 function handleIndexes (index, ast) {
-  const table = findTable(ast, index.tableName);
+  const table = findTable(ast, index.tableName, index.schemaName);
   table.indexes.push(index);
   index.tableName = null;
 }
@@ -30,7 +35,7 @@ function handleTable (table, ast) {
 }
 
 function handleDefaults (dbdefault, ast) {
-  const table = findTable(ast, dbdefault.tableName);
+  const table = findTable(ast, dbdefault.tableName, dbdefault.schemaName);
   const field = findField(table, dbdefault.fieldName);
   dbdefault.fieldName = null;
   dbdefault.tableName = null;
@@ -38,7 +43,7 @@ function handleDefaults (dbdefault, ast) {
 }
 
 function handleEnums (_enum, ast) {
-  const table = findTable(ast, _enum.tableName);
+  const table = findTable(ast, _enum.tableName, _enum.schemaName);
   const field = findField(table, _enum.fieldName);
   _enum.name = `${_enum.tableName}_${_enum.fieldName}_enum`;
   _enum.fieldName = null;

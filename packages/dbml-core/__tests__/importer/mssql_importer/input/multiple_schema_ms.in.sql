@@ -35,15 +35,22 @@ GO
 
 CREATE TABLE [schemaA].[products] (
   [id] int PRIMARY KEY,
-  [name] nvarchar(255)
+  [name] nvarchar(255),
+  [created_at] varchar(255),
+  [lid] int FOREIGN KEY REFERENCES [schemaA].[locations]([id]),
+  [lid2] int,
+  CONSTRAINT FK_1
+    FOREIGN KEY (lid2)
+    REFERENCES schemaA.locations (id),
+  INDEX [unique_lid_lid2] UNIQUE CLUSTERED ([lid],[lid2])
 )
 GO
 
 CREATE TABLE [schemaA].[locations] (
   [id] int PRIMARY KEY,
   [name] nvarchar(255)
+
 )
-GO
 
 ALTER TABLE [ecommerce].[users] ADD FOREIGN KEY ([id]) REFERENCES [users] ([id])
 GO
@@ -55,4 +62,10 @@ ALTER TABLE [schemaA].[products] ADD FOREIGN KEY ([name]) REFERENCES [ecommerce]
 GO
 
 ALTER TABLE [schemaA].[locations] ADD FOREIGN KEY ([name]) REFERENCES [users] ([id])
+GO
+
+CREATE INDEX [idx_1] ON [ecommerce].[users] ("name", "ejs")
+GO
+
+ALTER TABLE [schemaA].[products] ADD DEFAULT now() FOR [created_at] WITH VALUES
 GO

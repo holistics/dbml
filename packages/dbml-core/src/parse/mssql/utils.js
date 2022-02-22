@@ -1,4 +1,5 @@
 const P = require('parsimmon');
+const _ = require('lodash');
 const {
   LParen, RParen, Comma,
 } = require('./keyword_parsers');
@@ -38,4 +39,12 @@ exports.streamline = function (type) {
       };
     });
   };
+};
+
+exports.getFullTableName = (nameList) => {
+  let schemaName = null;
+  if (nameList.length > 1) {
+    schemaName = nameList[nameList.length - 2];
+  }
+  return { name: _.last(nameList), schemaName };
 };

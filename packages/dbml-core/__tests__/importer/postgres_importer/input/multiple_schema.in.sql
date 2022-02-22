@@ -46,7 +46,9 @@ CREATE TABLE "ecommerce"."users" (
 
 CREATE TABLE "schemaA"."products" (
   "id" int PRIMARY KEY,
-  "name" varchar
+  "name" varchar,
+  "lid" int,
+  CONSTRAINT fk_1 FOREIGN KEY(lid) REFERENCES "schemaA"."locations"(id)
 );
 
 CREATE TABLE "schemaA"."locations" (

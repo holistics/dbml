@@ -234,7 +234,7 @@ class SqlServerExporter {
       const { tableIds, refIds } = schema;
 
       if (shouldPrintSchema(schema, model)) {
-        prevStatements.schemas.push(`CREATE SCHEMA [${schema.name}];\nGO\n`);
+        prevStatements.schemas.push(`CREATE SCHEMA [${schema.name}]\nGO\n`);
       }
 
       if (!_.isEmpty(tableIds)) {
