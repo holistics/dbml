@@ -1,0 +1,68 @@
+Enum "job_status" {
+  "created2"
+  "running2"
+  "done2"
+  "failure2"
+}
+
+Enum "gender" {
+  "male2"
+  "female2"
+}
+
+Table "users" {
+  "id" int [pk]
+  "name" varchar
+  "pjs" job_status
+  "pjs2" job_status
+  "pg" schemaB.gender
+  "pg2" gender
+}
+
+Table "products" {
+  "id" int [pk]
+  "name" varchar
+
+Indexes {
+  id [type: hash, unique]
+}
+}
+
+Ref:"schemaA"."locations"."id" < "schemaA"."products"."lid"
+
+Ref:"users"."id" < "ecommerce"."users"."id"
+
+Ref:"users"."name" < "ecommerce"."users"."id"
+
+Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
+
+Ref:"users"."id" < "schemaA"."locations"."name"
+
+Enum "schemaB"."gender" {
+  "male"
+  "female"
+}
+
+Table "ecommerce"."users" {
+  "id" int [pk]
+  "name" varchar
+  "ejs" job_status
+  "ejs2" job_status
+  "eg" schemaB.gender
+  "eg2" gender
+}
+
+Table "schemaA"."products" {
+  "id" int [pk]
+  "name" varchar
+  "lid" int
+
+Indexes {
+  (id, name) [name: "product_status"]
+}
+}
+
+Table "schemaA"."locations" {
+  "id" int [pk]
+  "name" varchar
+}

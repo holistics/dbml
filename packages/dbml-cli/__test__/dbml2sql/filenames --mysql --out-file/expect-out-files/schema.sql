@@ -84,13 +84,13 @@ CREATE TABLE `customer` (
   `last_update` timestamp
 );
 
+CREATE INDEX `customer_index_0` ON `customer` (`id`, `first_name`) USING BTREE;
+
 ALTER TABLE `city` ADD FOREIGN KEY (`country_id`) REFERENCES `country` (`id`);
 
 ALTER TABLE `address` ADD FOREIGN KEY (`city_id`) REFERENCES `city` (`id`);
 
 ALTER TABLE `customer` ADD FOREIGN KEY (`address_id`) REFERENCES `address` (`id`);
-
-CREATE INDEX `customer_index_0` ON `customer` (`id`, `first_name`) USING BTREE;
 CREATE TABLE `category` (
   `id` int PRIMARY KEY,
   `name` varchar(255),

@@ -1,0 +1,103 @@
+Enum "users_pjs_enum" {
+  "created2"
+  "running2"
+  "done2"
+  "failure2"
+}
+
+Enum "users_pjs2_enum" {
+  "created2"
+  "running2"
+  "done2"
+  "failure2"
+}
+
+Enum "users_pg_enum" {
+  "male"
+  "female"
+}
+
+Enum "users_pg2_enum" {
+  "male2"
+  "female2"
+}
+
+Enum "ecommerce_users_ejs_enum" {
+  "created2"
+  "running2"
+  "done2"
+  "failure2"
+}
+
+Enum "ecommerce_users_ejs2_enum" {
+  "created2"
+  "running2"
+  "done2"
+  "failure2"
+}
+
+Enum "ecommerce_users_eg_enum" {
+  "male"
+  "female"
+}
+
+Enum "ecommerce_users_eg2_enum" {
+  "male2"
+  "female2"
+}
+
+Table "users" {
+  "id" int [pk]
+  "name" nvarchar(255)
+  "pjs" users_pjs_enum [not null]
+  "pjs2" users_pjs2_enum [not null]
+  "pg" users_pg_enum [not null]
+  "pg2" users_pg2_enum [not null]
+}
+
+Table "products" {
+  "id" int [pk]
+  "name" nvarchar(255)
+}
+
+Ref:"schemaA"."locations"."id" < "schemaA"."products"."lid"
+
+Ref "FK_1":"schemaA"."locations"."id" < "schemaA"."products"."lid2"
+
+Ref:"users"."id" < "ecommerce"."users"."id"
+
+Ref "name_optional":"users"."name" < "ecommerce"."users"."id"
+
+Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
+
+Ref:"users"."id" < "schemaA"."locations"."name"
+
+Table "ecommerce"."users" {
+  "id" int [pk]
+  "name" nvarchar(255)
+  "ejs" ecommerce_users_ejs_enum [not null]
+  "ejs2" ecommerce_users_ejs2_enum [not null]
+  "eg" ecommerce_users_eg_enum [not null]
+  "eg2" ecommerce_users_eg2_enum [not null]
+
+Indexes {
+  (name, ejs) [name: "idx_1"]
+}
+}
+
+Table "schemaA"."products" {
+  "id" int [pk]
+  "name" nvarchar(255)
+  "created_at" varchar(255) [default: `now()`]
+  "lid" int
+  "lid2" int
+
+Indexes {
+  (lid, lid2) [unique, name: "unique_lid_lid2"]
+}
+}
+
+Table "schemaA"."locations" {
+  "id" int [pk]
+  "name" nvarchar(255)
+}
