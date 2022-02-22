@@ -15,7 +15,7 @@ path_name = names:(identifier _ "." _)* {
   return { dbName, schemaName }
 }
 
-table_name "valid table name" = pathName:path_name? name:identifier {
+table_name "valid table name" = pathName:path_name name:identifier {
   return { ...pathName, name }
 }
 
