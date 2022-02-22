@@ -28,6 +28,8 @@ Indexes {
 }
 }
 
+Ref:"schemaA"."locations"."id" < "schemaA"."products"."lid"
+
 Ref:"users"."id" < "ecommerce"."users"."id"
 
 Ref:"users"."name" < "ecommerce"."users"."id"
@@ -53,6 +55,7 @@ Table "ecommerce"."users" {
 Table "schemaA"."products" {
   "id" int [pk]
   "name" varchar
+  "lid" int
 
 Indexes {
   (id, name) [name: "product_status"]

@@ -29,7 +29,9 @@ CREATE TABLE `ecommerce`.`users` (
 
 CREATE TABLE `schemaA`.`products` (
   `id` int PRIMARY KEY,
-  `name` varchar(255)
+  `name` varchar(255),
+  `lid` int,
+  CONSTRAINT `FK_1` FOREIGN KEY (`lid`) REFERENCES `schemaA`.`locations` (`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE `schemaA`.`locations` (
