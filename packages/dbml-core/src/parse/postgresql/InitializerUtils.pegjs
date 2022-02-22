@@ -14,4 +14,14 @@
     });
     return arrAfterTrim.join(', ');
   }
+
+  // TODO: support configurable default schema name other than 'public'
+  const findTable = (schemaName, tableName) => {
+    const realSchemaName = schemaName || 'public';
+    const table = tables.find(table => {
+      const targetSchemaName = table.schemaName || 'public';
+      return targetSchemaName === realSchemaName && table.name === tableName;
+    });
+    return table;
+  };
 }

@@ -4,7 +4,7 @@
     {
       "name": "users",
       "schemaName": "ecommerce",
-      "alias": null,
+      "alias": "EU",
       "fields": [
         {
           "name": "id",
@@ -15,12 +15,12 @@
           },
           "token": {
             "start": {
-              "offset": 30,
+              "offset": 36,
               "line": 2,
               "column": 3
             },
             "end": {
-              "offset": 42,
+              "offset": 48,
               "line": 3,
               "column": 1
             }
@@ -37,12 +37,12 @@
           },
           "token": {
             "start": {
-              "offset": 42,
+              "offset": 48,
               "line": 3,
               "column": 1
             },
             "end": {
-              "offset": 57,
+              "offset": 63,
               "line": 4,
               "column": 1
             }
@@ -58,12 +58,12 @@
           },
           "token": {
             "start": {
-              "offset": 57,
+              "offset": 63,
               "line": 4,
               "column": 1
             },
             "end": {
-              "offset": 74,
+              "offset": 80,
               "line": 5,
               "column": 1
             }
@@ -79,12 +79,12 @@
           },
           "token": {
             "start": {
-              "offset": 74,
+              "offset": 80,
               "line": 5,
               "column": 1
             },
             "end": {
-              "offset": 99,
+              "offset": 105,
               "line": 6,
               "column": 1
             }
@@ -100,12 +100,12 @@
           },
           "token": {
             "start": {
-              "offset": 99,
+              "offset": 105,
               "line": 6,
               "column": 1
             },
             "end": {
-              "offset": 119,
+              "offset": 125,
               "line": 7,
               "column": 1
             }
@@ -121,12 +121,12 @@
           },
           "token": {
             "start": {
-              "offset": 119,
+              "offset": 125,
               "line": 7,
               "column": 1
             },
             "end": {
-              "offset": 132,
+              "offset": 138,
               "line": 8,
               "column": 1
             }
@@ -141,7 +141,7 @@
           "column": 1
         },
         "end": {
-          "offset": 133,
+          "offset": 139,
           "line": 8,
           "column": 2
         }
@@ -162,12 +162,12 @@
           },
           "token": {
             "start": {
-              "offset": 158,
+              "offset": 164,
               "line": 11,
               "column": 3
             },
             "end": {
-              "offset": 170,
+              "offset": 176,
               "line": 12,
               "column": 1
             }
@@ -184,12 +184,12 @@
           },
           "token": {
             "start": {
-              "offset": 170,
+              "offset": 176,
               "line": 12,
               "column": 1
             },
             "end": {
-              "offset": 185,
+              "offset": 191,
               "line": 13,
               "column": 1
             }
@@ -205,12 +205,12 @@
           },
           "token": {
             "start": {
-              "offset": 185,
+              "offset": 191,
               "line": 13,
               "column": 1
             },
             "end": {
-              "offset": 202,
+              "offset": 208,
               "line": 14,
               "column": 1
             }
@@ -226,12 +226,12 @@
           },
           "token": {
             "start": {
-              "offset": 202,
+              "offset": 208,
               "line": 14,
               "column": 1
             },
             "end": {
-              "offset": 227,
+              "offset": 233,
               "line": 15,
               "column": 1
             }
@@ -247,12 +247,12 @@
           },
           "token": {
             "start": {
-              "offset": 227,
+              "offset": 233,
               "line": 15,
               "column": 1
             },
             "end": {
-              "offset": 247,
+              "offset": 253,
               "line": 16,
               "column": 1
             }
@@ -268,12 +268,12 @@
           },
           "token": {
             "start": {
-              "offset": 247,
+              "offset": 253,
               "line": 16,
               "column": 1
             },
             "end": {
-              "offset": 260,
+              "offset": 266,
               "line": 17,
               "column": 1
             }
@@ -283,12 +283,12 @@
       ],
       "token": {
         "start": {
-          "offset": 135,
+          "offset": 141,
           "line": 10,
           "column": 1
         },
         "end": {
-          "offset": 261,
+          "offset": 267,
           "line": 17,
           "column": 2
         }
@@ -309,12 +309,12 @@
           },
           "token": {
             "start": {
-              "offset": 282,
+              "offset": 288,
               "line": 20,
               "column": 3
             },
             "end": {
-              "offset": 294,
+              "offset": 300,
               "line": 21,
               "column": 1
             }
@@ -331,12 +331,12 @@
           },
           "token": {
             "start": {
-              "offset": 294,
+              "offset": 300,
               "line": 21,
               "column": 1
             },
             "end": {
-              "offset": 309,
+              "offset": 315,
               "line": 22,
               "column": 1
             }
@@ -346,12 +346,12 @@
       ],
       "token": {
         "start": {
-          "offset": 263,
+          "offset": 269,
           "line": 19,
           "column": 1
         },
         "end": {
-          "offset": 310,
+          "offset": 316,
           "line": 22,
           "column": 2
         }
@@ -372,12 +372,12 @@
           },
           "token": {
             "start": {
-              "offset": 344,
+              "offset": 350,
               "line": 25,
               "column": 3
             },
             "end": {
-              "offset": 356,
+              "offset": 362,
               "line": 26,
               "column": 1
             }
@@ -394,34 +394,34 @@
           },
           "token": {
             "start": {
-              "offset": 356,
+              "offset": 362,
               "line": 26,
               "column": 1
             },
             "end": {
-              "offset": 401,
+              "offset": 392,
               "line": 27,
               "column": 1
             }
           },
           "inline_refs": [
             {
-              "schemaName": "ecommerce",
-              "tableName": "users",
+              "schemaName": null,
+              "tableName": "EU",
               "fieldNames": [
                 "id"
               ],
               "relation": ">",
               "token": {
                 "start": {
-                  "offset": 372,
+                  "offset": 378,
                   "line": 26,
                   "column": 17
                 },
                 "end": {
-                  "offset": 399,
+                  "offset": 390,
                   "line": 26,
-                  "column": 44
+                  "column": 29
                 }
               }
             }
@@ -430,12 +430,12 @@
       ],
       "token": {
         "start": {
-          "offset": 312,
+          "offset": 318,
           "line": 24,
           "column": 1
         },
         "end": {
-          "offset": 402,
+          "offset": 393,
           "line": 27,
           "column": 2
         }
@@ -456,12 +456,12 @@
           },
           "token": {
             "start": {
-              "offset": 432,
+              "offset": 423,
               "line": 30,
               "column": 3
             },
             "end": {
-              "offset": 444,
+              "offset": 435,
               "line": 31,
               "column": 1
             }
@@ -478,12 +478,12 @@
           },
           "token": {
             "start": {
-              "offset": 444,
+              "offset": 435,
               "line": 31,
               "column": 1
             },
             "end": {
-              "offset": 477,
+              "offset": 468,
               "line": 32,
               "column": 1
             }
@@ -498,12 +498,12 @@
               "relation": ">",
               "token": {
                 "start": {
-                  "offset": 460,
+                  "offset": 451,
                   "line": 31,
                   "column": 17
                 },
                 "end": {
-                  "offset": 475,
+                  "offset": 466,
                   "line": 31,
                   "column": 32
                 }
@@ -514,12 +514,12 @@
       ],
       "token": {
         "start": {
-          "offset": 404,
+          "offset": 395,
           "line": 29,
           "column": 1
         },
         "end": {
-          "offset": 478,
+          "offset": 469,
           "line": 32,
           "column": 2
         }
@@ -533,22 +533,22 @@
       "name": null,
       "endpoints": [
         {
-          "schemaName": "ecommerce",
-          "tableName": "users",
+          "schemaName": null,
+          "tableName": "EU",
           "fieldNames": [
             "id"
           ],
           "relation": "1",
           "token": {
             "start": {
-              "offset": 372,
+              "offset": 378,
               "line": 26,
               "column": 17
             },
             "end": {
-              "offset": 399,
+              "offset": 390,
               "line": 26,
-              "column": 44
+              "column": 29
             }
           }
         },
@@ -561,28 +561,28 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 372,
+              "offset": 378,
               "line": 26,
               "column": 17
             },
             "end": {
-              "offset": 399,
+              "offset": 390,
               "line": 26,
-              "column": 44
+              "column": 29
             }
           }
         }
       ],
       "token": {
         "start": {
-          "offset": 372,
+          "offset": 378,
           "line": 26,
           "column": 17
         },
         "end": {
-          "offset": 399,
+          "offset": 390,
           "line": 26,
-          "column": 44
+          "column": 29
         }
       }
     },
@@ -599,12 +599,12 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 460,
+              "offset": 451,
               "line": 31,
               "column": 17
             },
             "end": {
-              "offset": 475,
+              "offset": 466,
               "line": 31,
               "column": 32
             }
@@ -619,12 +619,12 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 460,
+              "offset": 451,
               "line": 31,
               "column": 17
             },
             "end": {
-              "offset": 475,
+              "offset": 466,
               "line": 31,
               "column": 32
             }
@@ -633,12 +633,12 @@
       ],
       "token": {
         "start": {
-          "offset": 460,
+          "offset": 451,
           "line": 31,
           "column": 17
         },
         "end": {
-          "offset": 475,
+          "offset": 466,
           "line": 31,
           "column": 32
         }
@@ -656,48 +656,48 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 485,
+              "offset": 476,
               "line": 34,
               "column": 6
             },
             "end": {
-              "offset": 525,
+              "offset": 501,
               "line": 34,
-              "column": 46
+              "column": 31
             }
           }
         },
         {
-          "schemaName": "ecommerce",
-          "tableName": "users",
+          "schemaName": null,
+          "tableName": "EU",
           "fieldNames": [
             "id"
           ],
           "relation": "*",
           "token": {
             "start": {
-              "offset": 485,
+              "offset": 476,
               "line": 34,
               "column": 6
             },
             "end": {
-              "offset": 525,
+              "offset": 501,
               "line": 34,
-              "column": 46
+              "column": 31
             }
           }
         }
       ],
       "token": {
         "start": {
-          "offset": 480,
+          "offset": 471,
           "line": 34,
           "column": 1
         },
         "end": {
-          "offset": 525,
+          "offset": 501,
           "line": 34,
-          "column": 46
+          "column": 31
         }
       },
       "schemaName": "public"
@@ -714,12 +714,12 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 549,
+              "offset": 525,
               "line": 37,
               "column": 3
             },
             "end": {
-              "offset": 580,
+              "offset": 556,
               "line": 37,
               "column": 34
             }
@@ -734,12 +734,12 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 549,
+              "offset": 525,
               "line": 37,
               "column": 3
             },
             "end": {
-              "offset": 580,
+              "offset": 556,
               "line": 37,
               "column": 34
             }
@@ -748,12 +748,12 @@
       ],
       "token": {
         "start": {
-          "offset": 527,
+          "offset": 503,
           "line": 36,
           "column": 1
         },
         "end": {
-          "offset": 582,
+          "offset": 558,
           "line": 38,
           "column": 2
         }
@@ -767,12 +767,12 @@
       "schemaName": null,
       "token": {
         "start": {
-          "offset": 700,
+          "offset": 676,
           "line": 47,
           "column": 1
         },
         "end": {
-          "offset": 785,
+          "offset": 761,
           "line": 52,
           "column": 2
         }
@@ -782,12 +782,12 @@
           "name": "created2",
           "token": {
             "start": {
-              "offset": 722,
+              "offset": 698,
               "line": 48,
               "column": 5
             },
             "end": {
-              "offset": 748,
+              "offset": 724,
               "line": 49,
               "column": 1
             }
@@ -798,12 +798,12 @@
           "name": "running2",
           "token": {
             "start": {
-              "offset": 748,
+              "offset": 724,
               "line": 49,
               "column": 1
             },
             "end": {
-              "offset": 761,
+              "offset": 737,
               "line": 50,
               "column": 1
             }
@@ -813,12 +813,12 @@
           "name": "done2",
           "token": {
             "start": {
-              "offset": 761,
+              "offset": 737,
               "line": 50,
               "column": 1
             },
             "end": {
-              "offset": 771,
+              "offset": 747,
               "line": 51,
               "column": 1
             }
@@ -828,12 +828,12 @@
           "name": "failure2",
           "token": {
             "start": {
-              "offset": 771,
+              "offset": 747,
               "line": 51,
               "column": 1
             },
             "end": {
-              "offset": 784,
+              "offset": 760,
               "line": 52,
               "column": 1
             }
@@ -846,12 +846,12 @@
       "schemaName": "schemaB",
       "token": {
         "start": {
-          "offset": 787,
+          "offset": 763,
           "line": 54,
           "column": 1
         },
         "end": {
-          "offset": 830,
+          "offset": 806,
           "line": 57,
           "column": 2
         }
@@ -861,12 +861,12 @@
           "name": "male",
           "token": {
             "start": {
-              "offset": 813,
+              "offset": 789,
               "line": 55,
               "column": 5
             },
             "end": {
-              "offset": 818,
+              "offset": 794,
               "line": 56,
               "column": 1
             }
@@ -876,12 +876,12 @@
           "name": "female",
           "token": {
             "start": {
-              "offset": 818,
+              "offset": 794,
               "line": 56,
               "column": 1
             },
             "end": {
-              "offset": 829,
+              "offset": 805,
               "line": 57,
               "column": 1
             }
@@ -894,12 +894,12 @@
       "schemaName": null,
       "token": {
         "start": {
-          "offset": 832,
+          "offset": 808,
           "line": 59,
           "column": 1
         },
         "end": {
-          "offset": 869,
+          "offset": 845,
           "line": 62,
           "column": 2
         }
@@ -909,12 +909,12 @@
           "name": "male2",
           "token": {
             "start": {
-              "offset": 850,
+              "offset": 826,
               "line": 60,
               "column": 5
             },
             "end": {
-              "offset": 856,
+              "offset": 832,
               "line": 61,
               "column": 1
             }
@@ -924,12 +924,12 @@
           "name": "female2",
           "token": {
             "start": {
-              "offset": 856,
+              "offset": 832,
               "line": 61,
               "column": 1
             },
             "end": {
-              "offset": 868,
+              "offset": 844,
               "line": 62,
               "column": 1
             }
@@ -962,12 +962,12 @@
       ],
       "token": {
         "start": {
-          "offset": 584,
+          "offset": 560,
           "line": 40,
           "column": 1
         },
         "end": {
-          "offset": 698,
+          "offset": 674,
           "line": 45,
           "column": 2
         }
@@ -975,6 +975,14 @@
     }
   ],
   "aliases": [
+    {
+      "name": "EU",
+      "kind": "table",
+      "value": {
+        "tableName": "users",
+        "schemaName": "ecommerce"
+      }
+    },
     {
       "name": "A",
       "kind": "table",

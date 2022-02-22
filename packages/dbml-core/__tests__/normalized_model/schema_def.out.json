@@ -174,7 +174,7 @@
     "1": {
       "id": 1,
       "name": "users",
-      "alias": null,
+      "alias": "EU",
       "fieldIds": [
         1,
         2,
@@ -243,8 +243,8 @@
   "endpoints": {
     "1": {
       "id": 1,
-      "schemaName": "ecommerce",
-      "tableName": "users",
+      "schemaName": null,
+      "tableName": "EU",
       "fieldNames": [
         "id"
       ],
@@ -308,8 +308,8 @@
     },
     "6": {
       "id": 6,
-      "schemaName": "ecommerce",
-      "tableName": "users",
+      "schemaName": null,
+      "tableName": "EU",
       "fieldNames": [
         "id"
       ],

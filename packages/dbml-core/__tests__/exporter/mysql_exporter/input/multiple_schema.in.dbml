@@ -1,4 +1,4 @@
-Table "ecommerce"."users" {
+Table "ecommerce"."users" as EU {
   id int [pk]
   name varchar
   ejs job_status
@@ -21,9 +21,9 @@ Table products {
   name varchar
 }
 
-Table schemaA.products {
+Table schemaA.products as A {
   id int [pk]
-  name varchar [ref: > "ecommerce".users.id]
+  name varchar [ref: > EU.id]
 }
 
 Table schemaA.locations {
@@ -31,7 +31,7 @@ Table schemaA.locations {
   name varchar [ref: > users.id]
 }
 
-Ref: "public".users.id < ecommerce."users".id
+Ref: "public".users.id < EU.id
 
 Ref name_optional {
   users.name < ecommerce.users.id
@@ -41,6 +41,7 @@ TableGroup tablegroup_name { // tablegroup is case-insensitive.
   public.products 
   users
   ecommerce.users
+  A
 }
 
 enum job_status {

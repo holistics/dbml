@@ -71,12 +71,7 @@ parser = commands:command* {
 			case "create_index":
 				const { table_name } = value;
 				delete value.table_name; // remove table_name from column
-        // TODO: support configurable default schema name other than 'public'
-        const schemaName = table_name.schemaName || 'public';
-				const table_index = tables.find(table => {
-          const targetSchemaName = table.schemaName || 'public';
-          return targetSchemaName === schemaName && table.name === table_name.name;
-        });
+        const table_index = findTable(table_name.schemaName, table_name.name);
 				if (table_index.indexes) {
 					table_index.indexes.push(value);
 				} else {

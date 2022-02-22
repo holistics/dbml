@@ -210,12 +210,7 @@ function peg$parse(input, options) {
       			case "create_index":
       				const { table_name } = value;
       				delete value.table_name; // remove table_name from column
-              // TODO: support configurable default schema name other than 'public'
-              const schemaName = table_name.schemaName || 'public';
-      				const table_index = tables.find(table => {
-                const targetSchemaName = table.schemaName || 'public';
-                return targetSchemaName === schemaName && table.name === table_name.name;
-              });
+              const table_index = findTable(table_name.schemaName, table_name.name);
       				if (table_index.indexes) {
       					table_index.indexes.push(value);
       				} else {
@@ -3451,9 +3446,6 @@ function peg$parse(input, options) {
     peg$silentFails++;
     s0 = peg$currPos;
     s1 = peg$parsepath_name();
-    if (s1 === peg$FAILED) {
-      s1 = null;
-    }
     if (s1 !== peg$FAILED) {
       s2 = peg$parseidentifier();
       if (s2 !== peg$FAILED) {
@@ -14868,6 +14860,16 @@ function peg$parse(input, options) {
       });
       return arrAfterTrim.join(', ');
     }
+
+    // TODO: support configurable default schema name other than 'public'
+    const findTable = (schemaName, tableName) => {
+      const realSchemaName = schemaName || 'public';
+      const table = tables.find(table => {
+        const targetSchemaName = table.schemaName || 'public';
+        return targetSchemaName === realSchemaName && table.name === tableName;
+      });
+      return table;
+    };
 
 
 
