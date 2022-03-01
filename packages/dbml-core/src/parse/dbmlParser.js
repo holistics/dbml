@@ -3246,9 +3246,15 @@ function peg$parse(input, options) {
                   if (s1 !== peg$FAILED) {
                     s2 = peg$parseRefInline();
                     if (s2 !== peg$FAILED) {
-                      peg$savedPos = s0;
-                      s1 = peg$c70(s2);
-                      s0 = s1;
+                      s3 = peg$parse_();
+                      if (s3 !== peg$FAILED) {
+                        peg$savedPos = s0;
+                        s1 = peg$c70(s2);
+                        s0 = s1;
+                      } else {
+                        peg$currPos = s0;
+                        s0 = peg$FAILED;
+                      }
                     } else {
                       peg$currPos = s0;
                       s0 = peg$FAILED;
