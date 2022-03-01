@@ -28,7 +28,7 @@ Table schemaA.products as A {
 
 Table schemaA.locations {
   id int [pk]
-  name varchar [ref: > users.id]
+  name varchar [ref: > users.id ]
 }
 
 Ref: "public".users.id < EU.id

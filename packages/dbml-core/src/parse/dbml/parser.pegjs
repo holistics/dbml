@@ -468,7 +468,7 @@ FieldSetting
   / _ a:"unique"i _ { return a }
   / _ a:"increment" _ { return a }
   / _ v:ObjectNote _ { return { type: 'note', value: v } }
-  / _ v:RefInline { return { type: 'ref_inline', value: v } }
+  / _ v:RefInline _ { return { type: 'ref_inline', value: v } }
   / _ v:Default _ {return {type: 'default', value: v} }
 
 Indexes
