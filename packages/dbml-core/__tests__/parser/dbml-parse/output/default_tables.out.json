@@ -261,7 +261,11 @@
                  }
               },
               "inline_refs": [],
-              "not_null": true
+              "not_null": true,
+              "dbdefault": {
+                  "type": "number",
+                  "value": -1
+               }
            },
            {
               "name": "price",
@@ -284,7 +288,7 @@
               "inline_refs": [],
               "dbdefault": {
                  "type": "number",
-                 "value": 123.12
+                 "value": -123.12
               }
            },
            {

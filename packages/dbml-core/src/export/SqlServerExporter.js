@@ -104,7 +104,7 @@ class SqlServerExporter {
       return tableStr;
     });
 
-    return tableStrs.length ? tableStrs.join('\n') : '';
+    return tableStrs;
   }
 
   static buildFieldName (fieldIds, model) {
@@ -151,7 +151,7 @@ class SqlServerExporter {
       return line;
     });
 
-    return strArr.length ? strArr.join('\n') : '';
+    return strArr;
   }
 
   static exportIndexes (indexIds, model) {
@@ -187,7 +187,7 @@ class SqlServerExporter {
       return line;
     });
 
-    return indexArr.length ? indexArr.join('\n') : '';
+    return indexArr;
   }
 
   static exportComments (comments, model) {
@@ -223,61 +223,62 @@ class SqlServerExporter {
       return line;
     });
 
-    return commentArr.length ? commentArr.join('\n') : '';
+    return commentArr;
   }
 
   static export (model) {
-    let res = '';
-    let hasBlockAbove = false;
     const database = model.database['1'];
-    const indexIds = [];
-    const comments = [];
 
-    database.schemaIds.forEach((schemaId) => {
+    const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
       const { tableIds, refIds } = schema;
 
       if (shouldPrintSchema(schema, model)) {
-        if (hasBlockAbove) res += '\n';
-        res += `CREATE SCHEMA [${schema.name}];\nGO\n`;
-        hasBlockAbove = true;
+        prevStatements.schemas.push(`CREATE SCHEMA [${schema.name}]\nGO\n`);
       }
 
       if (!_.isEmpty(tableIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += SqlServerExporter.exportTables(tableIds, model);
-        hasBlockAbove = true;
+        prevStatements.tables.push(...SqlServerExporter.exportTables(tableIds, model));
+      }
+
+      const indexIds = _.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
+      if (!_.isEmpty(indexIds)) {
+        prevStatements.indexes.push(...SqlServerExporter.exportIndexes(indexIds, model));
+      }
+
+      const commentNodes = _.flatten(tableIds.map((tableId) => {
+        const { fieldIds, note } = model.tables[tableId];
+        const fieldObjects = fieldIds
+          .filter((fieldId) => model.fields[fieldId].note)
+          .map((fieldId) => ({ type: 'column', fieldId, tableId }));
+        return note ? [{ type: 'table', tableId }].concat(fieldObjects) : fieldObjects;
+      }));
+      if (!_.isEmpty(commentNodes)) {
+        prevStatements.comments.push(...SqlServerExporter.exportComments(commentNodes, model));
       }
 
       if (!_.isEmpty(refIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += SqlServerExporter.exportRefs(refIds, model);
-        hasBlockAbove = true;
+        prevStatements.refs.push(...SqlServerExporter.exportRefs(refIds, model));
       }
 
-      /////////PUSH COMMENTS OF TABLE & COLUMN/////////
-      // console.log(JSON.stringify(tableIds, null, 2));
-      indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
-      comments.push(...(_.flatten(tableIds.map((tableId) => {
-        const { fieldIds, note } = model.tables[tableId];
-        const fieldObject = fieldIds
-          .filter((fieldId) => model.fields[fieldId].note)
-          .map((fieldId) => ({ type: 'column', fieldId, tableId }));
-        return note ? [{type: 'table', tableId}].concat(fieldObject) : fieldObject;
-      }))));
+      return prevStatements;
+    }, {
+      schemas: [],
+      enums: [],
+      tables: [],
+      indexes: [],
+      comments: [],
+      refs: [],
     });
 
-    if (!_.isEmpty(indexIds)) {
-      if (hasBlockAbove) res += '\n';
-      res += SqlServerExporter.exportIndexes(indexIds, model);
-      hasBlockAbove = true;
-    }
-
-    if (!_.isEmpty(comments)) {
-      if (hasBlockAbove) res += '\n';
-      res += SqlServerExporter.exportComments(comments, model);
-      hasBlockAbove = true;
-    }
+    const res = _.concat(
+      statements.schemas,
+      statements.enums,
+      statements.tables,
+      statements.indexes,
+      statements.comments,
+      statements.refs,
+    ).join('\n');
 
     return res;
   }

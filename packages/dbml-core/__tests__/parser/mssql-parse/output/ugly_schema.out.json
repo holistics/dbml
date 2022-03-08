@@ -20,7 +20,7 @@
         },
         {
           "type": {
-            "type_name": "orders_status_enum",
+            "type_name": "schema_orders_status_enum",
             "args": "'created', 'running', 'done', 'failure'"
           },
           "not_null": true,
@@ -120,7 +120,7 @@
   ],
   "enums": [
     {
-      "name": "orders_status_enum",
+      "name": "schema_orders_status_enum",
       "values": [
         {
           "name": "created"

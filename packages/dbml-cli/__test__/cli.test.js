@@ -19,7 +19,7 @@ describe('@dbml/cli', () => {
       fs.mkdirSync(path.join(dirName, './out-files'));
     }
 
-    const { stdout } = await exec(`${process.execPath} ${args.join(' ')}`);
+    const { stdout } = await exec(`node ${args.join(' ')}`);
     const expectStdout = fs.readFileSync(path.join(dirName, './stdout.txt'), 'utf-8');
     const actualStdout = stripAnsi(stdout);
 
@@ -40,10 +40,12 @@ describe('@dbml/cli', () => {
 
   /* eslint-disable */
   test.each(scanDirNames(__dirname, 'dbml2sql'))('dbml2sql/%s', async (dirName) => {
+    jest.setTimeout(10000);
     await runTest(path.join(__dirname, 'dbml2sql', dirName), 'dbml2sql_bin.js');
   });
 
   test.each(scanDirNames(__dirname, 'sql2dbml'))('sql2dbml/%s', async (dirName) => {
+    jest.setTimeout(10000);
     await runTest(path.join(__dirname, 'sql2dbml', dirName), 'sql2dbml_bin.js');
   });
   /* eslint-enable */

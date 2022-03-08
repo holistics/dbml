@@ -19,7 +19,7 @@ class TableGroup extends Element {
 
   processTables (rawTables) {
     rawTables.forEach((rawTable) => {
-      const table = this.schema.database.findTable(rawTable);
+      const table = this.schema.database.findTable(rawTable.schemaName, rawTable.name);
       if (!table) {
         this.error(`Table ${rawTable.schemaName ? `"${rawTable.schemaName}".` : ''}${rawTable.name} don't exist`);
       }

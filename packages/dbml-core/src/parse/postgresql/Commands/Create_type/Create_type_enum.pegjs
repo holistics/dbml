@@ -1,12 +1,12 @@
 create_type_enum = 
-	_ CREATE __ TYPE __ name:identifier __ AS __ ENUM _
+	_ CREATE __ TYPE __ enumName:enum_name __ AS __ ENUM _
 	"(" _ labels:labels _ ")" 
 	_ semicolon _ {
 		const values = labels.map(name => ({ name }))
 		return {
 			syntax_name: "create_type_enum",
 			value: {
-				name,
+				...enumName,
 				values,
 			}
 		}

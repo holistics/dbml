@@ -45,6 +45,16 @@ CREATE TABLE `countries` (
   `continent_name` varchar(255)
 );
 
+CREATE INDEX `product_status` ON `products` (`merchant_id`, `status`);
+
+CREATE UNIQUE INDEX `products_index_1` ON `products` (`id`) USING HASH;
+
+ALTER TABLE `orders` COMMENT = 'This is a note in table "orders"';
+
+ALTER TABLE `products` COMMENT = 'This is a note in table \'products\'';
+
+ALTER TABLE `users` COMMENT = 'This is a note in table "users"';
+
 ALTER TABLE `order_items` ADD FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
 
 ALTER TABLE `order_items` ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
@@ -56,13 +66,3 @@ ALTER TABLE `merchants` ADD FOREIGN KEY (`country_code`) REFERENCES `countries` 
 ALTER TABLE `products` ADD FOREIGN KEY (`merchant_id`) REFERENCES `merchants` (`id`);
 
 ALTER TABLE `merchants` ADD FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`);
-
-CREATE INDEX `product_status` ON `products` (`merchant_id`, `status`);
-
-CREATE UNIQUE INDEX `products_index_1` ON `products` (`id`) USING HASH;
-
-ALTER TABLE `orders` COMMENT = 'This is a note in table "orders"';
-
-ALTER TABLE `products` COMMENT = 'This is a note in table \'products\'';
-
-ALTER TABLE `users` COMMENT = 'This is a note in table "users"';
