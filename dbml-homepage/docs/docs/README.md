@@ -56,10 +56,11 @@ You can give overall description of the project.
 
 ## Table Definition
     
-    Table table_name {
+    Table schema_name.table_name {
         column_name column_type [column_settings]
     }
-    
+
+- (Optional) title of database schema is listed as `schema_name`. If ommited, `schema_name` will default to `public`
 - title of database table is listed as `table_name`
 - name of the column is listed as `column_name`
 - type of the data in the column listed as `column_type`
@@ -178,8 +179,9 @@ Relationships are used to define foreign key constraints between tables.
 
     Table posts {
         id integer [primary key]
-        user_id integer [ref: > users.id] // many-to-one
+        user_id integer [ref: > schema_name.users.id] // many-to-one
     }
+    // if schema_name is ommited, it'll default to public
 
     // or this
     Table users {
@@ -196,23 +198,25 @@ There are 3 types of relationships: one-to-one, one-to-many, and many-to-one
 
 **Composite foreign keys:**
         
-    Ref: merchant_periods.(merchant_id, country_code) > merchants.(id, country_code)
+    Ref: schema_name.merchant_periods.(merchant_id, country_code) > schema_name.merchants.(id, country_code)
 
 In DBML, there are 3 syntaxes to define relationships:
 
     //Long form
     Ref name_optional {
-      table1.column1 < table2.column2
+      schema1.table1.column1 < schema2.table2.column2
     }
 
     //Short form:
-    Ref name_optional: table1.column1 < table2.column2
+    Ref name_optional: schema1.table1.column1 < schema2.table2.column2
     
     // Inline form
     Table posts {
         id integer
         user_id integer [ref: > users.id]
     }
+
+Note: if schema name is ommited, it'll default to `public`
 
 ### Relationship settings 
     Ref: products.merchant_id > merchants.id [delete: cascade, update: no action]
@@ -232,6 +236,18 @@ You can comment in your code using `//`, so it is easier for you to review the c
 Example,
 
     // order_items refer to items from that order
+
+## Multi-lines Comments
+You can also put comment spanning multiple lines in your code by putting inside `/*` and `*/`.
+
+Example,
+
+    /*
+        This is a
+        Multi-lines
+        comment
+    */
+
 
 ## Note Definition
 Note allows users to give description for a particular DBML element.
@@ -310,7 +326,7 @@ Multiline string will be defined between triple single quote `'''`
 `Enum` allows users to define different values of a particular column.
 When hovering over the column in the canvas, the enum values will be displayed.
 
-    enum job_status {
+    enum schema_name.job_status {
         created [note: 'Waiting to be processed']
         running
         done
@@ -319,8 +335,9 @@ When hovering over the column in the canvas, the enum values will be displayed.
 
     Table jobs {
         id integer
-        status job_status
+        status schema_name.job_status
     } 
+Note: if schema_name is ommited, it'll default to public
 
 ## TableGroup
 `TableGroup` allows users to group the related or associated tables together.
@@ -336,6 +353,19 @@ When hovering over the column in the canvas, the enum values will be displayed.
         merchants
         countries
     } 
+
+## Schema Definition
+There's no schema definition syntax. Instead, a new schema will be defined as long as it contain any table or enum.
+
+For example, the following code with define a new schema `schemaA` along with a table `user` placed inside `schemaA`
+
+    Table "schemaA"."user" {
+        ...
+    }
+
+### Public schema
+
+By default, any table, references or enum definition that ommit `schema_name` will be consider belong to `public` schema.
 
 ## Syntax Consistency
 
