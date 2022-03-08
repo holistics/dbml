@@ -20,8 +20,8 @@ class Schema extends Element {
     this.dbState = this.database.dbState;
     this.generateId();
 
-    this.processTables(tables);
     this.processEnums(enums);
+    this.processTables(tables);
     this.processRefs(refs);
     this.processTableGroups(tableGroups);
   }
@@ -48,7 +48,7 @@ class Schema extends Element {
   }
 
   findTable (tableName) {
-    return this.tables.find(t => t.name === tableName || t.alias === tableName);
+    return this.tables.find(t => t.name === tableName);
   }
 
   processEnums (rawEnums) {
@@ -60,7 +60,6 @@ class Schema extends Element {
   pushEnum (_enum) {
     this.checkEnum(_enum);
     this.enums.push(_enum);
-    this.bindEnumToField(_enum);
   }
 
   checkEnum (_enum) {
@@ -68,19 +67,6 @@ class Schema extends Element {
       _enum.error(`Enum ${shouldPrintSchema(this)
         ? `"${this.name}".` : ''}"${_enum.name}" existed`);
     }
-  }
-
-  bindEnumToField (_enum) {
-    this.database.schemas.forEach((schema) => {
-      schema.tables.forEach((table) => {
-        table.fields.forEach((field) => {
-          if (_enum.name === field.type.type_name && (field.type.schemaName || DEFAULT_SCHEMA_NAME) === schema.name) {
-            field._enum = _enum;
-            _enum.pushField(field);
-          }
-        });
-      });
-    });
   }
 
   processRefs (rawRefs) {

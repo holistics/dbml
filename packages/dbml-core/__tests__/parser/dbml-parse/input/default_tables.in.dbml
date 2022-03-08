@@ -14,8 +14,8 @@ Table order_items {
 Table products {
   id int [pk]
   name varchar [default: null]
-  merchant_id int [not null]
-  price float [default: 123.12]
+  merchant_id int [not null, default: -1]
+  price float [default: -123.12]
   stock boolean [default: true]
   expiration date [default:`current_date + interval 1 year`]
 }

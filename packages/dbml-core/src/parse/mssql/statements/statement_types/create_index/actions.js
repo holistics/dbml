@@ -1,4 +1,7 @@
+const { getFullTableName } = require('../../../utils');
+
 function makeIndex (_create, isUnique, _clustered, _index, indexName, _on, tableName, columnNames) {
+  const fullTableName = getFullTableName(tableName);
   const columns = [];
   columnNames.forEach(columnName => {
     columns.push({
@@ -6,12 +9,14 @@ function makeIndex (_create, isUnique, _clustered, _index, indexName, _on, table
       type: 'column',
     });
   });
+
   return {
     type: 'indexes',
     value: {
       name: indexName,
       unique: isUnique ? true : null,
-      tableName: tableName[tableName.length - 1],
+      tableName: fullTableName.name,
+      schemaName: fullTableName.schemaName,
       columns,
     },
   };

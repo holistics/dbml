@@ -107,7 +107,7 @@ class MySQLExporter {
       return tableStr;
     });
 
-    return tableStrs.length ? tableStrs.join('\n') : '';
+    return tableStrs;
   }
 
   static buildFieldName (fieldIds, model) {
@@ -154,7 +154,7 @@ class MySQLExporter {
       return line;
     });
 
-    return strArr.length ? strArr.join('\n') : '';
+    return strArr;
   }
 
   static exportIndexes (indexIds, model) {
@@ -194,7 +194,7 @@ class MySQLExporter {
       return line;
     });
 
-    return indexArr.length ? indexArr.join('\n') : '';
+    return indexArr;
   }
 
   static exportComments (comments, model) {
@@ -207,56 +207,60 @@ class MySQLExporter {
       line += ';\n';
       return line;
     });
-    return commentArr.length ? commentArr.join('\n') : '';
+    return commentArr;
   }
 
   static export (model) {
-    let res = '';
-    let hasBlockAbove = false;
     const database = model.database['1'];
-    const indexIds = [];
-    const comments = [];
 
-    database.schemaIds.forEach((schemaId) => {
+    const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
       const { tableIds, refIds } = schema;
 
       if (shouldPrintSchema(schema, model)) {
-        if (hasBlockAbove) res += '\n';
-        res += `CREATE DATABASE \`${schema.name}\`;\n`;
-        hasBlockAbove = true;
+        prevStatements.schemas.push(`CREATE SCHEMA \`${schema.name}\`;\n`);
       }
 
       if (!_.isEmpty(tableIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += MySQLExporter.exportTables(tableIds, model);
-        hasBlockAbove = true;
+        prevStatements.tables.push(...MySQLExporter.exportTables(tableIds, model));
+      }
+
+      const indexIds = _.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
+      if (!_.isEmpty(indexIds)) {
+        prevStatements.indexes.push(...MySQLExporter.exportIndexes(indexIds, model));
+      }
+
+      const commentNodes = _.flatten(tableIds.map((tableId) => {
+        const { note } = model.tables[tableId];
+        return note ? [{ type: 'table', tableId }] : [];
+      }));
+      if (!_.isEmpty(commentNodes)) {
+        prevStatements.comments.push(...MySQLExporter.exportComments(commentNodes, model));
       }
 
       if (!_.isEmpty(refIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += MySQLExporter.exportRefs(refIds, model);
-        hasBlockAbove = true;
+        prevStatements.refs.push(...MySQLExporter.exportRefs(refIds, model));
       }
 
-      indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
-      comments.push(...(_.flatten(tableIds.map((tableId) => {
-        const { note } = model.tables[tableId];
-        return note ? [{type: 'table', tableId}] : [];
-      }))));
+      return prevStatements;
+    }, {
+      schemas: [],
+      enums: [],
+      tables: [],
+      indexes: [],
+      comments: [],
+      refs: [],
     });
 
-    if (!_.isEmpty(indexIds)) {
-      if (hasBlockAbove) res += '\n';
-      res += MySQLExporter.exportIndexes(indexIds, model);
-      hasBlockAbove = true;
-    }
+    const res = _.concat(
+      statements.schemas,
+      statements.enums,
+      statements.tables,
+      statements.indexes,
+      statements.comments,
+      statements.refs,
+    ).join('\n');
 
-    if (!_.isEmpty(comments)) {
-      if (hasBlockAbove) res += '\n';
-      res += MySQLExporter.exportComments(comments, model);
-      hasBlockAbove = true;
-    }
     return res;
   }
 }

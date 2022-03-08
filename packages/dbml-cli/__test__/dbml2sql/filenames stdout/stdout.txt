@@ -85,13 +85,13 @@ CREATE TABLE "customer" (
   "last_update" timestamp
 );
 
+CREATE INDEX ON "customer" USING BTREE ("id", "first_name");
+
 ALTER TABLE "city" ADD FOREIGN KEY ("country_id") REFERENCES "country" ("id");
 
 ALTER TABLE "address" ADD FOREIGN KEY ("city_id") REFERENCES "city" ("id");
 
 ALTER TABLE "customer" ADD FOREIGN KEY ("address_id") REFERENCES "address" ("id");
-
-CREATE INDEX ON "customer" USING BTREE ("id", "first_name");
 
 CREATE TABLE "category" (
   "id" int PRIMARY KEY,

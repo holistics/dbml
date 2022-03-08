@@ -1,8 +1,10 @@
 const _ = require('lodash');
+const { getFullTableName } = require('../utils');
 
 function makeEndPoint (tableName, columnName, relation) {
   return {
-    tableName: tableName[tableName.length - 1],
+    tableName: tableName.name,
+    schemaName: tableName.schemaName,
     fieldNames: columnName,
     relation,
   };
@@ -21,7 +23,9 @@ function setOption (value, fkOptions) {
 
 function makeColumnConstraintFK (_unused, tableName, columnName, fkOptions) {
   const value = {};
-  value.endpoint = makeEndPoint(tableName, columnName, '1');
+  const fullTableName = getFullTableName(tableName);
+
+  value.endpoint = makeEndPoint(fullTableName, columnName, '1');
   setOption(value, fkOptions);
   return {
     type: 'inline_refs',
@@ -40,6 +44,7 @@ function makeTableEndpoint (columnNames) {
 
 function makeTableConstraintFK (_keyword1, endpoint1, _keyword2, tableName, endpoint2, fkOptions) {
   const value = {};
+  const fullTableName = getFullTableName(tableName);
 
   if (!endpoint2) {
     // eslint-disable-next-line no-param-reassign
@@ -52,7 +57,8 @@ function makeTableConstraintFK (_keyword1, endpoint1, _keyword2, tableName, endp
 
   endpoint1.value.relation = '*';
   endpoint2.value.relation = '1';
-  endpoint2.value.tableName = _.last(tableName);
+  endpoint2.value.tableName = fullTableName.name;
+  endpoint2.value.schemaName = fullTableName.schemaName;
 
 
   value.endpoints = [endpoint1.value, endpoint2.value];

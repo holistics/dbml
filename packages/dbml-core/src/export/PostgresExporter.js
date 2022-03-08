@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { hasWhiteSpace, shouldPrintSchema } from './utils';
+import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
 class PostgresExporter {
   static exportEnums (enumIds, model) {
@@ -18,7 +19,7 @@ class PostgresExporter {
       return line;
     });
 
-    return enumArr.length ? enumArr.join('\n') : '';
+    return enumArr;
   }
 
   static getFieldLines (tableId, model) {
@@ -31,10 +32,13 @@ class PostgresExporter {
       if (field.increment) {
         const typeSerial = field.type.type_name === 'bigint' ? 'BIGSERIAL' : 'SERIAL';
         line = `"${field.name}" ${typeSerial}`;
-      } else if (hasWhiteSpace(field.type.type_name)) {
-        line = `"${field.name}" "${field.type.type_name}"`;
       } else {
-        line = `"${field.name}" ${field.type.type_name}`;
+        let schemaName = '';
+        if (field.type.schemaName && field.type.schemaName !== DEFAULT_SCHEMA_NAME) {
+          schemaName = hasWhiteSpace(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
+        }
+        const typeName = hasWhiteSpace(field.type.type_name) ? `"${field.type.type_name}"` : field.type.type_name;
+        line = `"${field.name}" ${schemaName}${typeName}`;
       }
 
       if (field.unique) {
@@ -118,7 +122,7 @@ class PostgresExporter {
       return tableStr;
     });
 
-    return tableStrs.length ? tableStrs.join('\n') : '';
+    return tableStrs;
   }
 
   static buildFieldName (fieldIds, model) {
@@ -161,7 +165,7 @@ class PostgresExporter {
       return line;
     });
 
-    return strArr.length ? strArr.join('\n') : '';
+    return strArr;
   }
 
   static exportIndexes (indexIds, model) {
@@ -204,7 +208,7 @@ class PostgresExporter {
       return line;
     });
 
-    return indexArr.length ? indexArr.join('\n') : '';
+    return indexArr;
   }
 
   static exportComments (comments, model) {
@@ -233,65 +237,66 @@ class PostgresExporter {
       return line;
     });
 
-    return commentArr.length ? commentArr.join('\n') : '';
+    return commentArr;
   }
 
   static export (model) {
-    let res = '';
-    let hasBlockAbove = false;
     const database = model.database['1'];
-    const indexIds = [];
-    const comments = [];
 
-    database.schemaIds.forEach((schemaId) => {
+    const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
       const { tableIds, enumIds, refIds } = schema;
 
       if (shouldPrintSchema(schema, model)) {
-        if (hasBlockAbove) res += '\n';
-        res += `CREATE SCHEMA "${schema.name}";\n`;
-        hasBlockAbove = true;
+        prevStatements.schemas.push(`CREATE SCHEMA "${schema.name}";\n`);
       }
 
       if (!_.isEmpty(enumIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += PostgresExporter.exportEnums(enumIds, model);
-        hasBlockAbove = true;
+        prevStatements.enums.push(...PostgresExporter.exportEnums(enumIds, model));
       }
 
       if (!_.isEmpty(tableIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += PostgresExporter.exportTables(tableIds, model);
-        hasBlockAbove = true;
+        prevStatements.tables.push(...PostgresExporter.exportTables(tableIds, model));
       }
 
-      if (!_.isEmpty(refIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += PostgresExporter.exportRefs(refIds, model);
-        hasBlockAbove = true;
+      const indexIds = _.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
+      if (!_.isEmpty(indexIds)) {
+        prevStatements.indexes.push(...PostgresExporter.exportIndexes(indexIds, model));
       }
 
-      indexIds.push(...(_.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds))));
-      comments.push(...(_.flatten(tableIds.map((tableId) => {
+      const commentNodes = _.flatten(tableIds.map((tableId) => {
         const { fieldIds, note } = model.tables[tableId];
         const fieldObjects = fieldIds
           .filter((fieldId) => model.fields[fieldId].note)
           .map((fieldId) => ({ type: 'column', fieldId, tableId }));
-        return note ? [{type: 'table', tableId}].concat(fieldObjects) : fieldObjects;
-      }))));
+        return note ? [{ type: 'table', tableId }].concat(fieldObjects) : fieldObjects;
+      }));
+      if (!_.isEmpty(commentNodes)) {
+        prevStatements.comments.push(...PostgresExporter.exportComments(commentNodes, model));
+      }
+
+      if (!_.isEmpty(refIds)) {
+        prevStatements.refs.push(...PostgresExporter.exportRefs(refIds, model));
+      }
+
+      return prevStatements;
+    }, {
+      schemas: [],
+      enums: [],
+      tables: [],
+      indexes: [],
+      comments: [],
+      refs: [],
     });
 
-    if (!_.isEmpty(indexIds)) {
-      if (hasBlockAbove) res += '\n';
-      res += PostgresExporter.exportIndexes(indexIds, model);
-      hasBlockAbove = true;
-    }
-
-    if (!_.isEmpty(comments)) {
-      if (hasBlockAbove) res += '\n';
-      res += PostgresExporter.exportComments(comments, model);
-      hasBlockAbove = true;
-    }
+    const res = _.concat(
+      statements.schemas,
+      statements.enums,
+      statements.tables,
+      statements.indexes,
+      statements.comments,
+      statements.refs,
+    ).join('\n');
 
     return res;
   }

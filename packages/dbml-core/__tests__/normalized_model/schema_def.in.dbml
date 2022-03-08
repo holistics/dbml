@@ -1,0 +1,62 @@
+Table "ecommerce"."users" as EU {
+  id int [pk]
+  name varchar
+  ejs job_status
+  ejs2 public.job_status
+  eg schemaB.gender
+  eg2 gender
+}
+
+Table public.users {
+  id int [pk]
+  name varchar
+  pjs job_status
+  pjs2 public.job_status
+  pg schemaB.gender
+  pg2 gender
+}
+
+Table products {
+  id int [pk]
+  name varchar
+}
+
+Table schemaA.products as A {
+  id int [pk]
+  name varchar [ref: > EU.id]
+}
+
+Table schemaA.locations {
+  id int [pk]
+  name varchar [ref: > users.id ]
+}
+
+Ref: "public".users.id < EU.id
+
+Ref name_optional {
+  users.name < ecommerce.users.id
+}
+
+TableGroup tablegroup_name { // tablegroup is case-insensitive.
+  public.products 
+  users
+  ecommerce.users
+  A
+}
+
+enum job_status {
+    created2 [note: 'abcdef']
+    running2
+    done2
+    failure2
+}
+
+enum schemaB.gender {
+    male
+    female
+}
+
+enum gender {
+    male2
+    female2
+}

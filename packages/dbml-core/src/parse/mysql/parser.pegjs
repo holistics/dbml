@@ -4,6 +4,15 @@
 	const refs = [];
 	const enums = [];
 
+  // TODO: support configurable default schema name other than 'public'
+  const findTable = (schemaName, tableName) => {
+    const realSchemaName = schemaName || 'public';
+    const table = tables.find(table => {
+      const targetSchemaName = table.schemaName || 'public';
+      return targetSchemaName === realSchemaName && table.name === tableName;
+    });
+    return table;
+  };
   // intput:
   // ` 
   //      'created'
@@ -35,9 +44,9 @@ Expr =
 // 				TableSyntax: support "CREATE TABLE" syntax.
 // Try to support as mush as possible syntax in MySQL offical documents.
 // https://dev.mysql.com/doc/refman/8.0/en/create-table.html
-// Return: table object: {name, fields, [,indexes]}
+// Return: table object: {name, schemaName, fields, [,indexes]}
 TableSyntax 
-	= create_table (__ if_not_exist)? __ name:table_name _ 
+	= create_table (__ if_not_exist)? __ table_name:table_name _ 
     "(" _ body:TableBody _ ")" _ TableOptions? _ semicolon endline?
 {
 	const fields = body.fields;
@@ -59,7 +68,8 @@ TableSyntax
 			});
 
 			const _enum = {
-				name: `${name}_${field.name}_enum`,
+				name: `${table_name.schemaName 
+				? `${table_name.schemaName}_` : ''}${table_name.name}_${field.name}_enum`,
 				values
 			};
 			enums.push(_enum);
@@ -68,15 +78,16 @@ TableSyntax
     });
 
 	bodyRefs.forEach(ref => {
-		ref.endpoints[0].tableName = name;
+		ref.endpoints[0].tableName = table_name.name;
+		ref.endpoints[0].schemaName = table_name.schemaName;
 		ref.endpoints[0].relation = '*';
 		refs.push(ref);
 	});
 
     // return statement
     return indexes ? 
-    	{name, fields, indexes} 
-      : {name, fields}
+    	{...table_name, fields, indexes} 
+      : {...table_name, fields}
 }
 
 // TableBody: this is the part between parenthesis.
@@ -149,7 +160,8 @@ FKSyntax = _ constraint:("CONSTRAINT"i _ name)? _ foreign_key _
 				relation: "*",
 			},
 			{
-				tableName: table2,
+				tableName: table2.name,
+				schemaName: table2.schemaName,
 				fieldNames: fields2,
 				relation: "1",
 			}
@@ -295,16 +307,19 @@ CheckConstraintSyntax = _ ("CONSTRAINT"i name _)? "CHECK"i _ expression _ ("NOT"
 // 			AlterSyntax: support "ALTER TABLE" syntax
 // We will support ADD_COLUMN, ADD_FOREIGN_KEY, ADD_INDEX
 // https://dev.mysql.com/doc/refman/8.0/en/alter-table.html
-AlterSyntax = alter_table _ table:name _ 
+AlterSyntax = alter_table _ table:table_name _ 
 	options:(AddOptions/ChangeOptions/DropOptions) _
   semicolon
 {
 	const fks = _.flatten(options.filter(o => o.type === "add_fk").map(o => o.fks));
-	fks.forEach(fk => {fk.endpoints[0].tableName = table});
+	fks.forEach(fk => {
+		fk.endpoints[0].tableName = table.name;
+		fk.endpoints[0].schemaName = table.schemaName;
+	});
 	refs.push(...fks)
 
 	const pks = _.flatten(options.filter(o => o.type === "add_pk").map(o => o.pks));
-	const tableAlter = tables.find((t) => t.name === table);
+	const tableAlter = findTable(table.schemaName, table.name);
 	
 	const index = {
 		columns: pks.map(field => ({
@@ -341,7 +356,7 @@ DropOptions = "DROP"i [^;]
 
 // 			IndexSyntax: support "CREATE INDEX" syntax
 IndexSyntax = constraint:create_index _ indexName:name _
-	"ON"i _ tableName:name _ indexType:index_type? _
+	"ON"i _ tableName:table_name _ indexType:index_type? _
 	columns: IndexColumn _
 	option:IndexOption? semicolon
 {
@@ -358,7 +373,8 @@ IndexSyntax = constraint:create_index _ indexName:name _
 	if(type) 
 		index.type = type;
 
-	const table = tables.find(table => table.name === tableName);
+	const table = findTable(tableName.schemaName, tableName.name);
+
 	if(table.indexes) {
 		table.indexes.push(index);
 	} else {
@@ -458,8 +474,24 @@ index_type "index type" = "USING"i _ type:("BTREE"i/"HASH"i) { return type.toUpp
 name "valid name"
   = c:(character)+ { return c.join("") }
   / quote c:[^`]+ quote { return c.join("") }
-table_name "valid table name"
-  = (name _ "." _)* name:name { return name }
+
+path_name = names:(name _ "." _)* {
+  let dbName = null;
+  let schemaName = null;
+  if (names && names.length > 0) {
+    if (names.length === 1) schemaName = names[0][0];
+    else {
+      dbName = names[0][0];
+      schemaName = names[1][0];
+    }
+  }
+  return { dbName, schemaName }
+}
+
+table_name "valid table name" = pathName:path_name name:name {
+  return { ...pathName, name }
+}
+
 type "type" = c:type_name { return c }
 	/  c:name { return { type_name: c } }
 type_name = type_name:name _ args:("(" _ expression _ ")")? {

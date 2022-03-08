@@ -1,0 +1,8 @@
+{
+  "args": [
+    "./in-files/multiple_schema.in.sql",
+    "--mssql",
+    "-o",
+    "./out-files/multiple_schema.out.dbml"
+  ]
+}
