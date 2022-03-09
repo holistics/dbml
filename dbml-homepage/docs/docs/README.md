@@ -4,6 +4,8 @@ DBML (database markup language) is a simple, readable DSL language designed to d
 outlines the full syntax documentations of DBML.
 
 - [Project Definition](#project-definition)
+- [Schema Definition](#schema-definition)
+  - [Public Schema](#public-schema)
 - [Table Definition](#table-definition)
   - [Table Alias](#table-alias)
   - [Table Notes](#table-notes)
@@ -54,13 +56,32 @@ You can give overall description of the project.
       Note: 'Description of the project'
     }
 
+## Schema Definition
+A new schema will be defined as long as it contains any table or enum.
+
+For example, the following code will define a new schema `core` along with a table `user` placed inside it
+
+    Table core.user {
+        ...
+    }
+
+### Public Schema
+
+By default, any **table**, **relationship**, or **enum** definition that omits `schema_name` will be considered to belong to the `public` schema.
+
 ## Table Definition
     
+    // table belonged to default "public" schema
+    Table table_name {
+        column_name column_type [column_settings]
+    }
+
+    // table belonged to a schema
     Table schema_name.table_name {
         column_name column_type [column_settings]
     }
 
-- (Optional) title of database schema is listed as `schema_name`. If ommited, `schema_name` will default to `public`
+- (Optional) title of database schema is listed as `schema_name`. If omitted, `schema_name` will default to `public`
 - title of database table is listed as `table_name`
 - name of the column is listed as `column_name`
 - type of the data in the column listed as `column_type`
@@ -175,13 +196,12 @@ There are 3 types of index definitions:
 - `pk`: primary key 
 
 ## Relationships & Foreign Key Definitions
-Relationships are used to define foreign key constraints between tables.
+Relationships are used to define foreign key constraints between tables across schemas.
 
     Table posts {
         id integer [primary key]
-        user_id integer [ref: > schema_name.users.id] // many-to-one
+        user_id integer [ref: > users.id] // many-to-one
     }
-    // if schema_name is ommited, it'll default to public
 
     // or this
     Table users {
@@ -196,10 +216,6 @@ There are 3 types of relationships: one-to-one, one-to-many, and many-to-one
 - `>`: many-to-one. E.g: `posts.user_id > users.id`
 - `-`: one-to-one. E.g: `users.id - user_infos.user_id`
 
-**Composite foreign keys:**
-        
-    Ref: schema_name.merchant_periods.(merchant_id, country_code) > schema_name.merchants.(id, country_code)
-
 In DBML, there are 3 syntaxes to define relationships:
 
     //Long form
@@ -211,13 +227,30 @@ In DBML, there are 3 syntaxes to define relationships:
     Ref name_optional: schema1.table1.column1 < schema2.table2.column2
     
     // Inline form
-    Table posts {
+    Table schema2.table2 {
         id integer
-        user_id integer [ref: > users.id]
+        column2 integer [ref: > schema1.table1.column1]
     }
 
-Note: if schema name is ommited, it'll default to `public`
+**Note:** if `schema_name` prefix is omitted, it'll default to `public` schema 
 
+**Composite foreign keys:**
+        
+    Ref: merchant_periods.(merchant_id, country_code) > merchants.(id, country_code)
+
+**Cross-schema relationship:**
+
+    Table core.users {
+        id integer [pk]
+    }
+
+    Table blogging.posts {
+        id integer [pk]
+        user_id integer [ref: > core.users.id]
+    }
+
+    // or this
+    Ref: blogging.posts.user_id > core.users.id
 ### Relationship settings 
     Ref: products.merchant_id > merchants.id [delete: cascade, update: no action]
 
@@ -231,13 +264,17 @@ Define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
 For many-to-many relationship, we don't have a syntax for it as we believe it should be represented as 2 many-to-one relationships. For more information, please refer to [https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/](https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/)
 
 ## Comments
+
+**Single-line Comments**
+
 You can comment in your code using `//`, so it is easier for you to review the code later.
 
 Example,
 
     // order_items refer to items from that order
 
-## Multi-lines Comments
+**Multi-line Comments**
+
 You can also put comment spanning multiple lines in your code by putting inside `/*` and `*/`.
 
 Example,
@@ -326,18 +363,25 @@ Multiline string will be defined between triple single quote `'''`
 `Enum` allows users to define different values of a particular column.
 When hovering over the column in the canvas, the enum values will be displayed.
 
-    enum schema_name.job_status {
+    // enum belonged to default "public" schema
+    enum job_status {
         created [note: 'Waiting to be processed']
         running
         done
         failure
     }
 
+    // enum belonged to a schema
+    enum v2.job_status {
+        ...
+    }
+
     Table jobs {
         id integer
-        status schema_name.job_status
+        status job_status
+        status_v2 v2.job_status
     } 
-Note: if schema_name is ommited, it'll default to public
+**Note:** if `schema_name` prefix is omitted, it'll default to `public` schema
 
 ## TableGroup
 `TableGroup` allows users to group the related or associated tables together.
@@ -353,19 +397,6 @@ Note: if schema_name is ommited, it'll default to public
         merchants
         countries
     } 
-
-## Schema Definition
-There's no schema definition syntax. Instead, a new schema will be defined as long as it contain any table or enum.
-
-For example, the following code with define a new schema `schemaA` along with a table `user` placed inside `schemaA`
-
-    Table "schemaA"."user" {
-        ...
-    }
-
-### Public schema
-
-By default, any table, references or enum definition that ommit `schema_name` will be consider belong to `public` schema.
 
 ## Syntax Consistency
 
