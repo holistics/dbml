@@ -1,3 +1,28 @@
+## v2.4 (2022-03-08)
+
+#### :memo: Documentation
+* [#226](https://github.com/holistics/dbml/pull/226) Update README.md ([@noakesey](https://github.com/noakesey))
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-core`
+  * [#240](https://github.com/holistics/dbml/pull/240) Support multiple schemas ([@NQPhuc](https://github.com/NQPhuc))
+* `dbml-cli`
+  * [#209](https://github.com/holistics/dbml/pull/209) Add --mssql option for sql2dbml CLI ([@NQPhuc](https://github.com/NQPhuc))      
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#240](https://github.com/holistics/dbml/pull/240) Support multiple schemas ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`
+  * [#240](https://github.com/holistics/dbml/pull/240) Support multiple schemas ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 4
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Paul Noakes ([@noakesey](https://github.com/noakesey))
+- Thi Nguyen ([@TeaNguyen](https://github.com/TeaNguyen))
+
 ## v2.3.1 (2021-07-26)
 
 #### :bug: Bug Fix
