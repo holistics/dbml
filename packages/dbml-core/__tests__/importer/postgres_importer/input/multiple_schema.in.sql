@@ -62,6 +62,10 @@ CREATE UNIQUE INDEX ON "products" USING HASH ("id");
 
 COMMENT ON TABLE "schemaA"."locations" IS 'This is a note in table "locations"';
 
+COMMENT ON TABLE "schemaA"."products" IS 'This is a note in table "products"';
+
+COMMENT ON TABLE "schemaA"."products" IS NULL;
+
 ALTER TABLE "ecommerce"."users" ADD FOREIGN KEY ("id") REFERENCES "users" ("id");
 
 ALTER TABLE "ecommerce"."users" ADD CONSTRAINT "name_optional" FOREIGN KEY ("id") REFERENCES "users" ("name");

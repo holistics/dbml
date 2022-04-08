@@ -104,18 +104,33 @@ parser = commands:command* {
 				break;
 			case "comment":
 				switch(syntax_name.toLowerCase()) {
-					case "column":
-						const table_comment = tables.find(table => table.name === value.relation_name);
-						const field_comment = table_comment.fields.find(field => field.name === value.column_name);
-						field_comment.note = value.text;
+					case "column": {
+						const foundTable = tables.find(table => table.name === value.relation_name);
+						if (foundTable) {
+							const foundField = foundTable.fields.find(field => field.name === value.column_name);
+							if (foundField) {
+								if (value.text) foundField.note = value.text; // assign or override note
+								else if (foundField.note) delete foundField.note; // remove current note
+							}
+						}
 						break;
+					}
+					case "table":	{
+						const { schemaName, name: tableName } = value.table_name;
+						const foundTable = tables.find(table => table.schemaName === schemaName && table.name === tableName);
+						if (foundTable) {
+							if (value.text) foundTable.note = value.text; // assign or override note
+							else if (foundTable.note) delete foundTable.note; // remove current note
+						}
+						break;
+					}
 				}
 				break;
 			case "ignore_commands":
 				break;
 		}
 	})
-	// console.log({tables, refs, enums, indexes});
+
 	return {tables, refs, enums};
 }
 
