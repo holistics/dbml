@@ -151,7 +151,7 @@ function peg$parse(input, options) {
       peg$c3 = peg$literalExpectation("(", false),
       peg$c4 = ")",
       peg$c5 = peg$literalExpectation(")", false),
-      peg$c6 = function(table_name, body) {
+      peg$c6 = function(table_name, body, options) {
       	const fields = body.fields;
       	const indexes = body.indexes;
       	const bodyRefs = body.refs;
@@ -171,7 +171,7 @@ function peg$parse(input, options) {
       			});
 
       			const _enum = {
-      				name: `${table_name.schemaName 
+      				name: `${table_name.schemaName
       				? `${table_name.schemaName}_` : ''}${table_name.name}_${field.name}_enum`,
       				values
       			};
@@ -187,10 +187,18 @@ function peg$parse(input, options) {
       		refs.push(ref);
       	});
 
-          // return statement
-          return indexes ? 
-          	{...table_name, fields, indexes} 
-            : {...table_name, fields}
+        let res = {...table_name, fields};
+
+      	if (options && options.comment) {
+      		// convert CREATE TABLE ... COMMENT '...' to Table notes
+      		const note = options.comment;
+      		res = { ...res, note }
+      	}
+      	if (indexes) {
+      		res = { ...res, indexes }
+      	}
+      	// return statement
+      	return res;
       },
       peg$c7 = function(lines) {
       	// classify lines into pk, fk, unique, index and fields
@@ -956,7 +964,7 @@ function peg$parse(input, options) {
                                 }
                                 if (s15 !== peg$FAILED) {
                                   peg$savedPos = s0;
-                                  s1 = peg$c6(s4, s8);
+                                  s1 = peg$c6(s4, s8, s12);
                                   s0 = s1;
                                 } else {
                                   peg$currPos = s0;

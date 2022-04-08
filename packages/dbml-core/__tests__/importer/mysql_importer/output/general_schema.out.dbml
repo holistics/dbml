@@ -36,6 +36,7 @@ Indexes {
   (merchant_id, status) [name: "product_status"]
   id [type: hash, unique, name: "products_index_1"]
 }
+  Note: 'Notes about products table'
 }
 
 Table "users" {
@@ -46,6 +47,7 @@ Table "users" {
   "date_of_birth" varchar(255)
   "created_at" varchar(255)
   "country_code" int
+  Note: 'User basic information'
 }
 
 Table "merchants" {
