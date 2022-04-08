@@ -65,4 +65,5 @@ Indexes {
 Table "schemaA"."locations" {
   "id" int [pk]
   "name" varchar
+  Note: 'This is a note in table "locations"'
 }

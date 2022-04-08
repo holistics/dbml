@@ -3,7 +3,7 @@ comment = _ COMMENT __ ON __ comment_option:comment_option __ IS __ text:(string
   if (text.toLowerCase() !== "null") {
     comment_option.value.text = text;
   } else {
-    comment_option.value.syntax_name = "remove_comment";
+    comment_option.value.text = null; // null means remove note
   }
 
   return {
