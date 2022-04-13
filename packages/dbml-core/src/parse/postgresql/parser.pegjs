@@ -2,6 +2,7 @@
 	const tables = [];
 	const refs = [];
 	const enums = [];
+	const warnings = [];
 }
 
 parser = commands:command* {
