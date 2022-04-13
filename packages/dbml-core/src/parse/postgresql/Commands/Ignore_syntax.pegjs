@@ -8,6 +8,7 @@ ignore_syntax = _ value:(
   / CREATE __ SEQUENCE [^;]* { return { syntax_name: "create_sequence" } }
   / CREATE __ SCHEMA [^;]* { return { syntax_name: "create_schema" } }
   / CREATE __ VIEW [^;]* { return { syntax_name: "create_view" } }
+  / ALTER __ (!(TABLE / semicolon) .)* { return { syntax_name: "alter_not_table" } }
   / __ { return { syntax_name: "comment_and_space" } }
 ) semicolon _ {
   return {

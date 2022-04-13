@@ -1,11 +1,50 @@
-alter_table = alter_table_action:alter_table_action {
+alter_table = alter_sub_syntax:(
+	alter_table_action /
+	alter_table_rename /
+	alter_table_set_schema /
+	alter_table_set_tablespace /
+	alter_table_attach /
+	alter_table_detach 
+) {
 	return {
 		command_name: "alter_table",
-		value: alter_table_action
+		value: alter_sub_syntax
 	}
 }
 
-alter_table_action = _ ALTER __ TABLE (__ IF_EXISTS)? (__ ONLY)? __ name:table_name __
+alter_table_rename = _ ALTER __ TABLE (__ IF_EXISTS)? (__ ONLY)? __ table_name (_ "*")? __ RENAME (!semicolon .)* _ semicolon _ {
+	return {
+		syntax_name: "alter_table_rename",
+	}
+}
+
+alter_table_set_schema = _ ALTER __ TABLE (__ IF_EXISTS)? __ table_name __ SET __ SCHEMA (!semicolon .)* _ semicolon _ {
+	return {
+		syntax_name: "alter_table_set_schema",
+	}
+}
+
+alter_table_set_tablespace = _ ALTER __ TABLE __ ALL __ IN __ TABLESPACE __ table_name
+	(__ OWNED __ BY __ identifier (_ comma _ identifier)*)? __ SET __ TABLESPACE
+	(!semicolon .)* _ semicolon _ {
+	return {
+		syntax_name: "alter_set_tablespace",
+	}
+}
+
+alter_table_attach = _ ALTER __ TABLE (__ IF_EXISTS)? __ table_name __ ATTACH __ PARTITION (!semicolon .)* _ semicolon _ {
+	return {
+		syntax_name: "alter_table_attach",
+	}
+}
+
+alter_table_detach = _ ALTER __ TABLE (__ IF_EXISTS)? __ table_name __ DETACH __ PARTITION (!semicolon .)* _ semicolon _ {
+	return {
+		syntax_name: "alter_table_detach",
+	}
+}
+
+alter_table_action = _ ALTER __ TABLE (__ IF_EXISTS)? (__ ONLY)? __ name:table_name (_ "*")? __
 	actions:actions _ semicolon _ {
 		actions.forEach(({ type, t_value}) => {
 			switch(type.toLowerCase()) {
