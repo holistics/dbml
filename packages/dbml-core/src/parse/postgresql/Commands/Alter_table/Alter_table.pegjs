@@ -118,6 +118,11 @@ action = ADD __ table_constraint:table_constraint (__ NOT __ VALID)? { // reuse 
 			value: value.toLowerCase()
 		}
 	}
+	/ (!semicolon .)* {
+		return {
+			type: "unknown",
+		}
+	}
 
 
 set_attribute_options = first:set_attribute_option rest:(_ comma _ set_attribute_option)* {

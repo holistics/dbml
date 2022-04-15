@@ -11,8 +11,16 @@ ignore_syntax = _ value:(
   / ALTER __ (!(TABLE / semicolon) .)* { return { syntax_name: "alter_not_table" } }
   / __ { return { syntax_name: "comment_and_space" } }
 ) semicolon _ {
+  const loc = location();
+  const t = text();
   return {
     command_name: "ignore_syntax",
-    value
+    value,
+    warning: {
+      type: 'ignore',
+      location: loc,
+      text: t,
+      message: `ignoring "${t}" at line: ${loc.start.line}`,
+    },
   }
 }
