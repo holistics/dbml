@@ -114,7 +114,7 @@ parser = commands:command* {
 				}
 				break;
 			case "ignore_syntax":
-				warnings.push(warning);
+				// warnings.push(warning);
 				break;
 		}
 	})
