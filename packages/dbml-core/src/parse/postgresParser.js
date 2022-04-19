@@ -252,7 +252,7 @@ function peg$parse(input, options) {
       				}
       				break;
       			case "ignore_syntax":
-      				warnings.push(warning);
+      				// warnings.push(warning);
       				break;
       		}
       	})
@@ -1396,7 +1396,6 @@ function peg$parse(input, options) {
   }
 
   function peg$buildStructuredError(expected, found, location) {
-    console.log(location);
     return new peg$SyntaxError(
       peg$SyntaxError.buildMessage(expected, found),
       expected,
