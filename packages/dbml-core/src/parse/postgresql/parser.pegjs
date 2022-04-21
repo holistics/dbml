@@ -105,23 +105,18 @@ parser = commands:command* {
 			case "comment":
 				switch(syntax_name.toLowerCase()) {
 					case "column": {
-						const foundTable = tables.find(table => table.name === value.relation_name);
+						const { schemaName, tableName, columnName } = value;
+						const foundTable = tables.find(table => table.schemaName === schemaName && table.name === tableName);
 						if (foundTable) {
-							const foundField = foundTable.fields.find(field => field.name === value.column_name);
-							if (foundField) {
-								if (value.text) foundField.note = value.text; // assign or override note
-								else if (foundField.note) delete foundField.note; // remove current note
-							}
+							const foundField = foundTable.fields.find(field => field.name === columnName);
+							if (foundField) foundField.note = value.text;
 						}
 						break;
 					}
 					case "table":	{
 						const { schemaName, name: tableName } = value.table_name;
 						const foundTable = tables.find(table => table.schemaName === schemaName && table.name === tableName);
-						if (foundTable) {
-							if (value.text) foundTable.note = value.text; // assign or override note
-							else if (foundTable.note) delete foundTable.note; // remove current note
-						}
+						if (foundTable) foundTable.note = value.text;
 						break;
 					}
 				}

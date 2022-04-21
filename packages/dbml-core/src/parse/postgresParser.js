@@ -244,23 +244,18 @@ function peg$parse(input, options) {
       			case "comment":
       				switch(syntax_name.toLowerCase()) {
       					case "column": {
-      						const foundTable = tables.find(table => table.name === value.relation_name);
+      						const { schemaName, tableName, columnName } = value;
+      						const foundTable = tables.find(table => table.schemaName === schemaName && table.name === tableName);
       						if (foundTable) {
-      							const foundField = foundTable.fields.find(field => field.name === value.column_name);
-      							if (foundField) {
-      								if (value.text) foundField.note = value.text; // assign or override note
-      								else if (foundField.note) delete foundField.note; // remove current note
-      							}
+      							const foundField = foundTable.fields.find(field => field.name === columnName);
+      							if (foundField) foundField.note = value.text;
       						}
       						break;
       					}
       					case "table":	{
       						const { schemaName, name: tableName } = value.table_name;
       						const foundTable = tables.find(table => table.schemaName === schemaName && table.name === tableName);
-      						if (foundTable) {
-      							if (value.text) foundTable.note = value.text; // assign or override note
-      							else if (foundTable.note) delete foundTable.note; // remove current note
-      						}
+      						if (foundTable) foundTable.note = value.text;
       						break;
       					}
       				}
@@ -1181,21 +1176,33 @@ function peg$parse(input, options) {
       peg$c496 = function(comment_option, text) {
         if (text.toLowerCase() !== "null") {
           comment_option.value.text = text;
-        } else {
-          comment_option.value.text = null; // null means remove note
-        }
+        } else comment_option.value.text = null;
 
         return {
           command_name: "comment",
           value: comment_option
         }
       },
-      peg$c497 = function(relation_name, column_name) {
+      peg$c497 = function(path, column_name) {
+          let dbName = null, schemaName = null, tableName;
+          if (path.length === 1) {
+            tableName = path[0][0];
+          } else if (path.length === 2) {
+            schemaName = path[0][0];
+            tableName = path[1][0];
+          }
+          else {
+            dbName = path[0][0];
+            schemaName = path[1][0];
+            tableName = path[2][0];
+          }
           return {
             syntax_name: "column",
             value: {
-              relation_name: relation_name,
-              column_name
+              dbName,
+              schemaName,
+              tableName,
+              columnName: column_name
             }
           }
         },
@@ -14332,32 +14339,69 @@ function peg$parse(input, options) {
   }
 
   function peg$parsecomment_option() {
-    var s0, s1, s2, s3, s4, s5;
+    var s0, s1, s2, s3, s4, s5, s6;
 
     s0 = peg$currPos;
     s1 = peg$parseCOLUMN();
     if (s1 !== peg$FAILED) {
       s2 = peg$parse__();
       if (s2 !== peg$FAILED) {
-        s3 = peg$parseidentifier();
-        if (s3 !== peg$FAILED) {
+        s3 = [];
+        s4 = peg$currPos;
+        s5 = peg$parseidentifier();
+        if (s5 !== peg$FAILED) {
           if (input.charCodeAt(peg$currPos) === 46) {
-            s4 = peg$c244;
+            s6 = peg$c244;
             peg$currPos++;
           } else {
-            s4 = peg$FAILED;
+            s6 = peg$FAILED;
             if (peg$silentFails === 0) { peg$fail(peg$c245); }
           }
-          if (s4 !== peg$FAILED) {
-            s5 = peg$parsecolumn_name();
+          if (s6 !== peg$FAILED) {
+            s5 = [s5, s6];
+            s4 = s5;
+          } else {
+            peg$currPos = s4;
+            s4 = peg$FAILED;
+          }
+        } else {
+          peg$currPos = s4;
+          s4 = peg$FAILED;
+        }
+        if (s4 !== peg$FAILED) {
+          while (s4 !== peg$FAILED) {
+            s3.push(s4);
+            s4 = peg$currPos;
+            s5 = peg$parseidentifier();
             if (s5 !== peg$FAILED) {
-              peg$savedPos = s0;
-              s1 = peg$c497(s3, s5);
-              s0 = s1;
+              if (input.charCodeAt(peg$currPos) === 46) {
+                s6 = peg$c244;
+                peg$currPos++;
+              } else {
+                s6 = peg$FAILED;
+                if (peg$silentFails === 0) { peg$fail(peg$c245); }
+              }
+              if (s6 !== peg$FAILED) {
+                s5 = [s5, s6];
+                s4 = s5;
+              } else {
+                peg$currPos = s4;
+                s4 = peg$FAILED;
+              }
             } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
+              peg$currPos = s4;
+              s4 = peg$FAILED;
             }
+          }
+        } else {
+          s3 = peg$FAILED;
+        }
+        if (s3 !== peg$FAILED) {
+          s4 = peg$parsecolumn_name();
+          if (s4 !== peg$FAILED) {
+            peg$savedPos = s0;
+            s1 = peg$c497(s3, s4);
+            s0 = s1;
           } else {
             peg$currPos = s0;
             s0 = peg$FAILED;
