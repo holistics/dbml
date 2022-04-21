@@ -64,6 +64,10 @@ COMMENT ON TABLE "schemaA"."locations" IS 'This is a note in table "locations"';
 
 COMMENT ON TABLE "schemaA"."products" IS 'This is a note in table "products"';
 
+COMMENT ON COLUMN "schemaA"."products"."name" IS 'Product name of schemaA';
+
+COMMENT ON COLUMN "products"."name" IS 'Product name of public schema';
+
 COMMENT ON TABLE "schemaA"."products" IS NULL;
 
 ALTER TABLE "ecommerce"."users" ADD FOREIGN KEY ("id") REFERENCES "users" ("id");

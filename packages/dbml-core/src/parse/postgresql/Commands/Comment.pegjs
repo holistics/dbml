@@ -2,9 +2,7 @@ comment = _ COMMENT __ ON __ comment_option:comment_option __ IS __ text:(string
   _ semicolon _ {
   if (text.toLowerCase() !== "null") {
     comment_option.value.text = text;
-  } else {
-    comment_option.value.text = null; // null means remove note
-  }
+  } else comment_option.value.text = null;
 
   return {
     command_name: "comment",
@@ -13,12 +11,26 @@ comment = _ COMMENT __ ON __ comment_option:comment_option __ IS __ text:(string
 }
 
 comment_option = (
-  COLUMN __ relation_name:identifier "." column_name:column_name {
+  COLUMN __ path:(identifier '.')+ column_name:column_name {
+    let dbName = null, schemaName = null, tableName;
+    if (path.length === 1) {
+      tableName = path[0][0];
+    } else if (path.length === 2) {
+      schemaName = path[0][0];
+      tableName = path[1][0];
+    }
+    else {
+      dbName = path[0][0];
+      schemaName = path[1][0];
+      tableName = path[2][0];
+    }
     return {
       syntax_name: "column",
       value: {
-        relation_name: relation_name,
-        column_name
+        dbName,
+        schemaName,
+        tableName,
+        columnName: column_name
       }
     }
   }
