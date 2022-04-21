@@ -15,6 +15,7 @@ const Lang = P.createLanguage({
     S.pCreateIndex,
     S.pCreateTable,
     S.pAlterTable,
+    S.pCommentSyntax,
     r.IgnoredStatementTypes,
   ),
 

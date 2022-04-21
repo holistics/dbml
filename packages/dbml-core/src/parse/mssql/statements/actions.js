@@ -52,6 +52,28 @@ function handleEnums (_enum, ast) {
   field.type.args = _enum.values.map(value => `'${value.name}'`).join(', ');
 }
 
+function handleComment (_comment, ast) {
+  if (_comment.type === 'table') handleTableNote(_comment, ast);
+  else if (_comment.type === 'column') handleFieldNote(_comment, ast);
+}
+
+function handleTableNote (_comment, ast) {
+  let schemaName = _comment.schemaName;
+  if (schemaName === 'dbo') schemaName = null; // treat dbo as public schema
+  const foundTable = findTable(ast, _comment.tableName, schemaName);
+  if (foundTable) foundTable.note = _comment.note;
+}
+
+function handleFieldNote (_comment, ast) {
+  let schemaName = _comment.schemaName;
+  if (schemaName === 'dbo') schemaName = null; // treat dbo as public schema
+  const foundTable = findTable(ast, _comment.tableName, schemaName);
+  if (foundTable) {
+    const field = findField(foundTable, _comment.columnName);
+    if (field) field.note = _comment.note;
+  }
+}
+
 function handleStatement (_statements) {
   const ast = {
     tables: [],
@@ -75,6 +97,9 @@ function handleStatement (_statements) {
         break;
       case 'enums':
         handleEnums(statement.value, ast);
+        break;
+      case 'comment':
+        handleComment(statement.value, ast);
         break;
       default:
         break;

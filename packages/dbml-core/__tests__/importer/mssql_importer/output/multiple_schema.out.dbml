@@ -57,7 +57,7 @@ Table "users" {
 
 Table "products" {
   "id" int [pk]
-  "name" nvarchar(255)
+  "name" nvarchar(255) [note: 'Product name']
 }
 
 Ref:"schemaA"."locations"."id" < "schemaA"."products"."lid"
@@ -83,6 +83,7 @@ Table "ecommerce"."users" {
 Indexes {
   (name, ejs) [name: "idx_1"]
 }
+  Note: 'Note on table users of schema ecommerce'
 }
 
 Table "schemaA"."products" {
@@ -100,4 +101,5 @@ Indexes {
 Table "schemaA"."locations" {
   "id" int [pk]
   "name" nvarchar(255)
+  Note: 'This is a note in table "schemaA"."locations"'
 }
