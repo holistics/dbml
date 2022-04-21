@@ -187,3 +187,6 @@ ALTER USER name RENAME TO new_name;
 ALTER USER MAPPING FOR bob SERVER foo OPTIONS (SET password 'public');
 
 ALTER VIEW foo RENAME TO bar;
+
+ALTER TABLE organization_units OWNER TO "user";
+ALTER TABLE table_name ADD COLUMN valid BOOLEAN;
