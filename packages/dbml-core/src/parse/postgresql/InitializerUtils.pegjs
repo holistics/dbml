@@ -1,8 +1,8 @@
 {
   // intput:
-  // ` 
+  // `
   //      'created'
-  //                   ,            
+  //                   ,
   //         'pending',          'done'
   //  `
   //  => `'created', 'pending', 'done'`
@@ -24,4 +24,6 @@
     });
     return table;
   };
+
+  const findField = (table, fieldName) => table.fields.find(field => field.name === fieldName);
 }
