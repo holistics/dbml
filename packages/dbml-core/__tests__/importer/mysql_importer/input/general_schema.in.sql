@@ -15,7 +15,7 @@ CREATE TABLE `products` (
   `id` int,
   `name` varchar(255),
   `merchant_id` int NOT NULL,
-  `price` int,
+  `price` int COMMENT 'Products price field',
   `status` ENUM ('Out of Stock', 'In Stock'),
   `created_at` datetime DEFAULT (now()),
   PRIMARY KEY (`id`, `price`)
