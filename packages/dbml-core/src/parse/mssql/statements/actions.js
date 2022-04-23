@@ -52,25 +52,25 @@ function handleEnums (_enum, ast) {
   field.type.args = _enum.values.map(value => `'${value.name}'`).join(', ');
 }
 
-function handleComment (_comment, ast) {
-  if (_comment.type === 'table') handleTableNote(_comment, ast);
-  else if (_comment.type === 'column') handleFieldNote(_comment, ast);
+function handleComment (comment, ast) {
+  if (comment.type === 'table') handleTableNote(comment, ast);
+  else if (comment.type === 'column') handleFieldNote(comment, ast);
 }
 
-function handleTableNote (_comment, ast) {
-  let schemaName = _comment.schemaName;
-  if (schemaName === 'dbo') schemaName = null; // treat dbo as public schema
-  const foundTable = findTable(ast, _comment.tableName, schemaName);
-  if (foundTable) foundTable.note = _comment.note;
+function handleTableNote (comment, ast) {
+  let { schemaName } = comment;
+  if (schemaName === 'dbo') schemaName = null; // treat `dbo` as public schema
+  const foundTable = findTable(ast, comment.tableName, schemaName);
+  if (foundTable) foundTable.note = comment.note;
 }
 
-function handleFieldNote (_comment, ast) {
-  let schemaName = _comment.schemaName;
-  if (schemaName === 'dbo') schemaName = null; // treat dbo as public schema
-  const foundTable = findTable(ast, _comment.tableName, schemaName);
+function handleFieldNote (comment, ast) {
+  let { schemaName } = comment;
+  if (schemaName === 'dbo') schemaName = null; // treat `dbo` as public schema
+  const foundTable = findTable(ast, comment.tableName, schemaName);
   if (foundTable) {
-    const field = findField(foundTable, _comment.columnName);
-    if (field) field.note = _comment.note;
+    const foundField = findField(foundTable, comment.columnName);
+    if (foundField) foundField.note = comment.note;
   }
 }
 

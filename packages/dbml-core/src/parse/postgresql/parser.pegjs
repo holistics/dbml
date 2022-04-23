@@ -106,16 +106,16 @@ parser = commands:command* {
 				switch(syntax_name.toLowerCase()) {
 					case "column": {
 						const { schemaName, tableName, columnName } = value;
-						const foundTable = tables.find(table => table.schemaName === schemaName && table.name === tableName);
+						const foundTable = findTable(schemaName, tableName);
 						if (foundTable) {
-							const foundField = foundTable.fields.find(field => field.name === columnName);
+							const foundField = findField(foundTable, columnName);
 							if (foundField) foundField.note = value.text;
 						}
 						break;
 					}
 					case "table":	{
 						const { schemaName, name: tableName } = value.table_name;
-						const foundTable = tables.find(table => table.schemaName === schemaName && table.name === tableName);
+						const foundTable = findTable(schemaName, tableName);
 						if (foundTable) foundTable.note = value.text;
 						break;
 					}
