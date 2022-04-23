@@ -27,7 +27,7 @@ Table "products" {
   "id" int
   "name" varchar(255)
   "merchant_id" int [not null]
-  "price" int
+  "price" int [note: 'Products price field']
   "status" products_status_enum
   "created_at" datetime [default: `now()`]
 

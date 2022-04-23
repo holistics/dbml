@@ -189,14 +189,8 @@ function peg$parse(input, options) {
 
         let res = {...table_name, fields};
 
-      	if (options && options.comment) {
-      		// convert CREATE TABLE ... COMMENT '...' to Table notes
-      		const note = options.comment;
-      		res = { ...res, note }
-      	}
-      	if (indexes) {
-      		res = { ...res, indexes }
-      	}
+      	if (options && options.comment) res.note = options.comment;
+      	if (indexes) res.indexes = indexes;
       	// return statement
       	return res;
       },
