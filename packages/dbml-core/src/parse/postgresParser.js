@@ -245,16 +245,16 @@ function peg$parse(input, options) {
       				switch(syntax_name.toLowerCase()) {
       					case "column": {
       						const { schemaName, tableName, columnName } = value;
-      						const foundTable = tables.find(table => table.schemaName === schemaName && table.name === tableName);
+      						const foundTable = findTable(schemaName, tableName);
       						if (foundTable) {
-      							const foundField = foundTable.fields.find(field => field.name === columnName);
+      							const foundField = findField(foundTable, columnName);
       							if (foundField) foundField.note = value.text;
       						}
       						break;
       					}
       					case "table":	{
       						const { schemaName, name: tableName } = value.table_name;
-      						const foundTable = tables.find(table => table.schemaName === schemaName && table.name === tableName);
+      						const foundTable = findTable(schemaName, tableName);
       						if (foundTable) foundTable.note = value.text;
       						break;
       					}
@@ -14905,9 +14905,9 @@ function peg$parse(input, options) {
 
 
     // intput:
-    // ` 
+    // `
     //      'created'
-    //                   ,            
+    //                   ,
     //         'pending',          'done'
     //  `
     //  => `'created', 'pending', 'done'`
@@ -14929,6 +14929,8 @@ function peg$parse(input, options) {
       });
       return table;
     };
+
+    const findField = (table, fieldName) => table.fields.find(field => field.name === fieldName);
 
 
 
