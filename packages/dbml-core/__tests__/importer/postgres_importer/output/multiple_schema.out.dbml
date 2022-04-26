@@ -21,7 +21,7 @@ Table "users" {
 
 Table "products" {
   "id" int [pk]
-  "name" varchar
+  "name" varchar [note: 'Product name of public schema']
 
 Indexes {
   id [type: hash, unique]
@@ -54,7 +54,7 @@ Table "ecommerce"."users" {
 
 Table "schemaA"."products" {
   "id" int [pk]
-  "name" varchar
+  "name" varchar [note: 'Product name of schemaA']
   "lid" int
 
 Indexes {
@@ -65,4 +65,5 @@ Indexes {
 Table "schemaA"."locations" {
   "id" int [pk]
   "name" varchar
+  Note: 'This is a note in table "locations"'
 }

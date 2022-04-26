@@ -157,9 +157,6 @@ class DbmlExporter {
     if (table.headerColor) {
       settingStr += `headerColor: ${table.headerColor}${settingSep}`;
     }
-    if (table.note) {
-      settingStr += `note: '${table.note}'${settingSep}`;
-    }
     if (settingStr.endsWith(', ')) {
       settingStr = settingStr.replace(/,\s$/, '');
     }
@@ -178,10 +175,11 @@ class DbmlExporter {
       if (!_.isEmpty(tableContent.indexContents)) {
         indexStr = `\nIndexes {\n${tableContent.indexContents.map(indexLine => `  ${indexLine}`).join('\n')}\n}`;
       }
+      const tableNote = table.note ? `  Note: '${table.note}'\n` : '';
 
       const tableStr = `Table ${shouldPrintSchema(schema, model)
         ? `"${schema.name}".` : ''}"${table.name}"${tableSettingStr} {\n${
-        tableContent.fieldContents.map(line => `  ${line}`).join('\n')}\n${indexStr ? `${indexStr}\n` : ''}}\n`;
+        tableContent.fieldContents.map(line => `  ${line}`).join('\n')}\n${indexStr ? `${indexStr}\n` : ''}${tableNote}}\n`;
 
       return tableStr;
     });
