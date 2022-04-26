@@ -2,10 +2,12 @@
 	const tables = [];
 	const refs = [];
 	const enums = [];
+	const warnings = [];
 }
 
 parser = commands:command* {
-	commands.forEach(({ command_name, value: { syntax_name, value } }) => {
+	commands.forEach((cmd) => {
+		const { command_name, value: { syntax_name, value }, warning } = cmd;
 		switch(command_name.toLowerCase()){
 			case "create_table":
 				const table = value;
@@ -121,7 +123,8 @@ parser = commands:command* {
 					}
 				}
 				break;
-			case "ignore_commands":
+			case "ignore_syntax":
+				// warnings.push(warning);
 				break;
 		}
 	})
