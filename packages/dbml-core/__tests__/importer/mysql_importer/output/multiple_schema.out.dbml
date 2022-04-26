@@ -57,7 +57,7 @@ Table "users" {
 
 Table "products" {
   "id" int [pk]
-  "name" varchar(255)
+  "name" varchar(255) [note: 'Product name']
 }
 
 Ref "FK_1":"schemaA"."locations"."id" < "schemaA"."products"."lid" [delete: cascade]
@@ -81,7 +81,7 @@ Table "ecommerce"."users" {
 
 Table "schemaA"."products" {
   "id" int [pk]
-  "name" varchar(255)
+  "name" varchar(255) [note: 'Sample field comment on multiples schema']
   "lid" int
 }
 
