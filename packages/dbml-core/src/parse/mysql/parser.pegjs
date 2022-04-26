@@ -418,6 +418,7 @@ IgnoreSyntax
 	/ BeginSyntax
 	/ CommitSyntax
 	/ RollbackSyntax
+	/ "ALTER"i _ (comment / !(semicolon) .)*
 	) semicolon newline?
 
 // InsertSyntax: "INSERTO INTO" syntax
