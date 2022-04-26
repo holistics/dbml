@@ -14,7 +14,8 @@ Table "orders" {
   "id" int [pk, increment]
   "user_id" int [unique, not null]
   "status" orders_status_enum [not null]
-  "created_at" varchar(255)
+  "created_at" varchar(255) [note: 'When order created']
+  Note: 'This is a note in table "orders"'
 }
 
 Table "order_items" {

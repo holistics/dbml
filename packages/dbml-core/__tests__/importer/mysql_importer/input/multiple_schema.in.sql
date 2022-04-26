@@ -15,7 +15,7 @@ CREATE TABLE `users` (
 
 CREATE TABLE `products` (
   `id` int PRIMARY KEY,
-  `name` varchar(255)
+  `name` varchar(255) COMMENT 'Product name'
 );
 
 CREATE TABLE `ecommerce`.`users` (
@@ -29,7 +29,7 @@ CREATE TABLE `ecommerce`.`users` (
 
 CREATE TABLE `schemaA`.`products` (
   `id` int PRIMARY KEY,
-  `name` varchar(255),
+  `name` varchar(255) COMMENT 'Sample field comment on multiples schema',
   `lid` int,
   CONSTRAINT `FK_1` FOREIGN KEY (`lid`) REFERENCES `schemaA`.`locations` (`id`) ON DELETE CASCADE
 );

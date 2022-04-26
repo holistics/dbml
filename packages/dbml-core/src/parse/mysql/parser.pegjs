@@ -34,20 +34,20 @@ Rule = (Expr)* {
   return {tables, refs, enums};
 }
 
-Expr = 
+Expr =
 	t:TableSyntax { tables.push(t) }
 	/AlterSyntax
 	/IndexSyntax
 	/IgnoreSyntax
 	/__
-    
+
 // 				TableSyntax: support "CREATE TABLE" syntax.
 // Try to support as mush as possible syntax in MySQL offical documents.
 // https://dev.mysql.com/doc/refman/8.0/en/create-table.html
 // Return: table object: {name, schemaName, fields, [,indexes]}
-TableSyntax 
-	= create_table (__ if_not_exist)? __ table_name:table_name _ 
-    "(" _ body:TableBody _ ")" _ TableOptions? _ semicolon endline?
+TableSyntax
+	= create_table (__ if_not_exist)? __ table_name:table_name _
+    "(" _ body:TableBody _ ")" _ options:TableOptions? _ semicolon endline?
 {
 	const fields = body.fields;
 	const indexes = body.indexes;
@@ -68,7 +68,7 @@ TableSyntax
 			});
 
 			const _enum = {
-				name: `${table_name.schemaName 
+				name: `${table_name.schemaName
 				? `${table_name.schemaName}_` : ''}${table_name.name}_${field.name}_enum`,
 				values
 			};
@@ -84,10 +84,12 @@ TableSyntax
 		refs.push(ref);
 	});
 
-    // return statement
-    return indexes ? 
-    	{...table_name, fields, indexes} 
-      : {...table_name, fields}
+  let res = {...table_name, fields};
+
+	if (options && options.comment) res.note = options.comment;
+	if (indexes) res.indexes = indexes;
+	// return statement
+	return res;
 }
 
 // TableBody: this is the part between parenthesis.

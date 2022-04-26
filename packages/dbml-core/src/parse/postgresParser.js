@@ -243,18 +243,28 @@ function peg$parse(input, options) {
       				break;
       			case "comment":
       				switch(syntax_name.toLowerCase()) {
-      					case "column":
-      						const table_comment = tables.find(table => table.name === value.relation_name);
-      						const field_comment = table_comment.fields.find(field => field.name === value.column_name);
-      						field_comment.note = value.text;
+      					case "column": {
+      						const { schemaName, tableName, columnName } = value;
+      						const foundTable = findTable(schemaName, tableName);
+      						if (foundTable) {
+      							const foundField = findField(foundTable, columnName);
+      							if (foundField) foundField.note = value.text;
+      						}
       						break;
+      					}
+      					case "table":	{
+      						const { schemaName, name: tableName } = value.table_name;
+      						const foundTable = findTable(schemaName, tableName);
+      						if (foundTable) foundTable.note = value.text;
+      						break;
+      					}
       				}
       				break;
       			case "ignore_commands":
       				break;
       		}
       	})
-      	// console.log({tables, refs, enums, indexes});
+
       	return {tables, refs, enums};
       },
       peg$c1 = "create",
@@ -1166,21 +1176,33 @@ function peg$parse(input, options) {
       peg$c496 = function(comment_option, text) {
         if (text.toLowerCase() !== "null") {
           comment_option.value.text = text;
-        } else {
-          comment_option.value.syntax_name = "remove_comment";
-        }
+        } else comment_option.value.text = null;
 
         return {
           command_name: "comment",
           value: comment_option
         }
       },
-      peg$c497 = function(relation_name, column_name) {
+      peg$c497 = function(path, column_name) {
+          let dbName = null, schemaName = null, tableName;
+          if (path.length === 1) {
+            tableName = path[0][0];
+          } else if (path.length === 2) {
+            schemaName = path[0][0];
+            tableName = path[1][0];
+          }
+          else {
+            dbName = path[0][0];
+            schemaName = path[1][0];
+            tableName = path[2][0];
+          }
           return {
             syntax_name: "column",
             value: {
-              relation_name: relation_name,
-              column_name
+              dbName,
+              schemaName,
+              tableName,
+              columnName: column_name
             }
           }
         },
@@ -14317,32 +14339,69 @@ function peg$parse(input, options) {
   }
 
   function peg$parsecomment_option() {
-    var s0, s1, s2, s3, s4, s5;
+    var s0, s1, s2, s3, s4, s5, s6;
 
     s0 = peg$currPos;
     s1 = peg$parseCOLUMN();
     if (s1 !== peg$FAILED) {
       s2 = peg$parse__();
       if (s2 !== peg$FAILED) {
-        s3 = peg$parseidentifier();
-        if (s3 !== peg$FAILED) {
+        s3 = [];
+        s4 = peg$currPos;
+        s5 = peg$parseidentifier();
+        if (s5 !== peg$FAILED) {
           if (input.charCodeAt(peg$currPos) === 46) {
-            s4 = peg$c244;
+            s6 = peg$c244;
             peg$currPos++;
           } else {
-            s4 = peg$FAILED;
+            s6 = peg$FAILED;
             if (peg$silentFails === 0) { peg$fail(peg$c245); }
           }
-          if (s4 !== peg$FAILED) {
-            s5 = peg$parsecolumn_name();
+          if (s6 !== peg$FAILED) {
+            s5 = [s5, s6];
+            s4 = s5;
+          } else {
+            peg$currPos = s4;
+            s4 = peg$FAILED;
+          }
+        } else {
+          peg$currPos = s4;
+          s4 = peg$FAILED;
+        }
+        if (s4 !== peg$FAILED) {
+          while (s4 !== peg$FAILED) {
+            s3.push(s4);
+            s4 = peg$currPos;
+            s5 = peg$parseidentifier();
             if (s5 !== peg$FAILED) {
-              peg$savedPos = s0;
-              s1 = peg$c497(s3, s5);
-              s0 = s1;
+              if (input.charCodeAt(peg$currPos) === 46) {
+                s6 = peg$c244;
+                peg$currPos++;
+              } else {
+                s6 = peg$FAILED;
+                if (peg$silentFails === 0) { peg$fail(peg$c245); }
+              }
+              if (s6 !== peg$FAILED) {
+                s5 = [s5, s6];
+                s4 = s5;
+              } else {
+                peg$currPos = s4;
+                s4 = peg$FAILED;
+              }
             } else {
-              peg$currPos = s0;
-              s0 = peg$FAILED;
+              peg$currPos = s4;
+              s4 = peg$FAILED;
             }
+          }
+        } else {
+          s3 = peg$FAILED;
+        }
+        if (s3 !== peg$FAILED) {
+          s4 = peg$parsecolumn_name();
+          if (s4 !== peg$FAILED) {
+            peg$savedPos = s0;
+            s1 = peg$c497(s3, s4);
+            s0 = s1;
           } else {
             peg$currPos = s0;
             s0 = peg$FAILED;
@@ -14846,9 +14905,9 @@ function peg$parse(input, options) {
 
 
     // intput:
-    // ` 
+    // `
     //      'created'
-    //                   ,            
+    //                   ,
     //         'pending',          'done'
     //  `
     //  => `'created', 'pending', 'done'`
@@ -14870,6 +14929,8 @@ function peg$parse(input, options) {
       });
       return table;
     };
+
+    const findField = (table, fieldName) => table.fields.find(field => field.name === fieldName);
 
 
 

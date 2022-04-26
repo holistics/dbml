@@ -57,7 +57,8 @@ Table "users" {
 
 Table "products" {
   "id" int [pk]
-  "name" varchar(255)
+  "name" varchar(255) [note: 'Product name']
+  Note: 'Notes about products table'
 }
 
 Ref "FK_1":"schemaA"."locations"."id" < "schemaA"."products"."lid" [delete: cascade]
@@ -77,6 +78,7 @@ Table "ecommerce"."users" {
   "ejs2" ecommerce_users_ejs2_enum
   "eg" ecommerce_users_eg_enum
   "eg2" ecommerce_users_eg2_enum
+  Note: 'Table users of schema ecommerce'
 }
 
 Table "schemaA"."products" {
