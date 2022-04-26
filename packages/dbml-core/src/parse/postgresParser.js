@@ -1225,10 +1225,7 @@ function peg$parse(input, options) {
           value: comment_option
         }
       },
-<<<<<<< HEAD
-      peg$c513 = function(relation_name, column_name) {
-=======
-      peg$c497 = function(path, column_name) {
+      peg$c513 = function(path, column_name) {
           let dbName = null, schemaName = null, tableName;
           if (path.length === 1) {
             tableName = path[0][0];
@@ -1241,7 +1238,6 @@ function peg$parse(input, options) {
             schemaName = path[1][0];
             tableName = path[2][0];
           }
->>>>>>> master
           return {
             syntax_name: "column",
             value: {
@@ -15682,19 +15678,11 @@ function peg$parse(input, options) {
         s5 = peg$parseidentifier();
         if (s5 !== peg$FAILED) {
           if (input.charCodeAt(peg$currPos) === 46) {
-<<<<<<< HEAD
-            s4 = peg$c252;
-            peg$currPos++;
-          } else {
-            s4 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c253); }
-=======
-            s6 = peg$c244;
+            s6 = peg$c252;
             peg$currPos++;
           } else {
             s6 = peg$FAILED;
-            if (peg$silentFails === 0) { peg$fail(peg$c245); }
->>>>>>> master
+            if (peg$silentFails === 0) { peg$fail(peg$c253); }
           }
           if (s6 !== peg$FAILED) {
             s5 = [s5, s6];
@@ -15713,17 +15701,12 @@ function peg$parse(input, options) {
             s4 = peg$currPos;
             s5 = peg$parseidentifier();
             if (s5 !== peg$FAILED) {
-<<<<<<< HEAD
-              peg$savedPos = s0;
-              s1 = peg$c513(s3, s5);
-              s0 = s1;
-=======
               if (input.charCodeAt(peg$currPos) === 46) {
-                s6 = peg$c244;
+                s6 = peg$c252;
                 peg$currPos++;
               } else {
                 s6 = peg$FAILED;
-                if (peg$silentFails === 0) { peg$fail(peg$c245); }
+                if (peg$silentFails === 0) { peg$fail(peg$c253); }
               }
               if (s6 !== peg$FAILED) {
                 s5 = [s5, s6];
@@ -15732,7 +15715,6 @@ function peg$parse(input, options) {
                 peg$currPos = s4;
                 s4 = peg$FAILED;
               }
->>>>>>> master
             } else {
               peg$currPos = s4;
               s4 = peg$FAILED;
@@ -15745,7 +15727,7 @@ function peg$parse(input, options) {
           s4 = peg$parsecolumn_name();
           if (s4 !== peg$FAILED) {
             peg$savedPos = s0;
-            s1 = peg$c497(s3, s4);
+            s1 = peg$c513(s3, s4);
             s0 = s1;
           } else {
             peg$currPos = s0;
