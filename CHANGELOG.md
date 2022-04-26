@@ -1,3 +1,19 @@
+## V2.4.1 (2022-04-26)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-core`
+  * [#256](https://github.com/holistics/dbml/pull/256) Ignore unsupported Posgrest ALTER commands ([@NQPhuc](https://github.com/NQPhuc))
+* `dbml-core`
+  * [#257](https://github.com/holistics/dbml/pull/257) Ignore unsupported Mysql ALTER commands  ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#252](https://github.com/holistics/dbml/pull/252) Support import comment for MySQL, PostgreSQL and MSSQL ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
 ## v2.4 (2022-03-08)
 
 #### :memo: Documentation
