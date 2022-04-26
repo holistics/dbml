@@ -96,3 +96,9 @@ ALTER TABLE "merchants" ADD FOREIGN KEY ("admin_id") REFERENCES "users" ("id");
 CREATE INDEX "product_status" ON "products" ("merchant_id", "status");
 
 CREATE UNIQUE INDEX ON "products" USING HASH ("id");
+
+COMMENT ON TABLE "users" IS 'User data';
+
+COMMENT ON TABLE "users" IS 'Store user data';
+
+COMMENT ON TABLE "products" IS 'Products table comment';

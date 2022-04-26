@@ -17,11 +17,12 @@ Table "users" {
   "pjs2" job_status
   "pg" schemaB.gender
   "pg2" gender
+  Note: 'Sample note on table users'
 }
 
 Table "products" {
   "id" int [pk]
-  "name" varchar
+  "name" varchar [note: 'Product name of table products in public schema']
 
 Indexes {
   id [type: hash, unique]
@@ -54,7 +55,7 @@ Table "ecommerce"."users" {
 
 Table "schemaA"."products" {
   "id" int [pk]
-  "name" varchar
+  "name" varchar [note: 'Product name of schemaA']
   "lid" int
 
 Indexes {
@@ -65,4 +66,5 @@ Indexes {
 Table "schemaA"."locations" {
   "id" int [pk]
   "name" varchar
+  Note: 'This is a note in table "locations"'
 }

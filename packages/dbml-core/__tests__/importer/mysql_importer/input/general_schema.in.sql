@@ -15,11 +15,11 @@ CREATE TABLE `products` (
   `id` int,
   `name` varchar(255),
   `merchant_id` int NOT NULL,
-  `price` int,
+  `price` int COMMENT 'Products price field',
   `status` ENUM ('Out of Stock', 'In Stock'),
   `created_at` datetime DEFAULT (now()),
   PRIMARY KEY (`id`, `price`)
-);
+) COMMENT = 'Notes about products table';
 
 CREATE TABLE `users` (
   `id` int PRIMARY KEY,
@@ -29,7 +29,7 @@ CREATE TABLE `users` (
   `date_of_birth` varchar(255),
   `created_at` varchar(255),
   `country_code` int
-);
+) COMMENT = 'User basic information';
 
 CREATE TABLE `merchants` (
   `id` int PRIMARY KEY,
