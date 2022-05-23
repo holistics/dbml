@@ -221,7 +221,7 @@ class PostgresExporter {
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
       const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'postgres');
 
-      if (refOneIndex === -1) {
+      if (refOneIndex === -1) { // many to many relationship
         const keyTable1 = this.buildFieldKeyTableFirst(refEndpoint.fieldIds, model, 'postgres');
         const keyTable2 = this.buildFieldKeyTableSecond(foreignEndpoint.fieldIds, model, keyTable1);
 
