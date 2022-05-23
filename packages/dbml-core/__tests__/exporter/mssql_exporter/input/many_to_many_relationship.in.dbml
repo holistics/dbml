@@ -1,0 +1,14 @@
+Table "schemaA"."authors" {
+  "id" int [pk]
+  "name" varchar
+  "dob" date [pk]
+  "gender" varchar
+}
+
+Table "schemaB"."books" {
+  "id" int [pk]
+  "release_date" date [pk]
+  "title" varchar
+}
+
+ref:  "schemaA"."authors".("id","dob") <>  "schemaB"."books".("id","release_date")
