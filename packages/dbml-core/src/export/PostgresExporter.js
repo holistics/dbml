@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { keys } from 'lodash';
 import { hasWhiteSpace, shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
@@ -130,38 +130,139 @@ class PostgresExporter {
     return `(${fieldNames})`;
   }
 
+  static buildFieldKeyTableFirst (fieldIds, model) {
+    const keyFields = new Map();
+    fieldIds.map(fieldId => keyFields.set(`${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`, model.fields[fieldId].type.type_name));
+    return keyFields;
+  }
+
+  static buildFieldKeyTableSencond (fieldIds, model, keyTableFirst) {
+    const keyFields = new Map();
+    fieldIds.map((fieldId) => {
+      let key = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`;
+      let count = 1;
+      while (true) {
+        if (!keyTableFirst.has(key)) {
+          break;
+        }
+        key = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}(${count})`;
+        count += 1;
+      }
+      keyFields.set(key, model.fields[fieldId].type.type_name);
+    });
+    return keyFields;
+  }
+
+  static buildTableManyToMany (keyTable1, keyTable2, tableName) {
+    let line = `CREATE TABLE ${tableName} (\n`;
+    const key1s = [...keyTable1.keys()].join('", "');
+    const key2s = [...keyTable2.keys()].join('", "');
+    keyTable1.forEach((value, key) => {
+      line += `\t"${key}" ${value} NOT NULL,\n`;
+    });
+    keyTable2.forEach((value, key) => {
+      line += `\t"${key}" ${value} NOT NULL,\n`;
+    });
+    line += `\tCONSTRAINT PK_${tableName} PRIMARY KEY ("`;
+    line += `${key1s}", "`;
+    line += `${key2s}`;
+    line += '") \n';
+    line += '); \n \n';
+    return line;
+  }
+
+  static buildForeignKeyManyToMany (keyTable, keyForeign, nameTable, nameForeign) {
+    const key = [...keyTable.keys()].join('", "');
+    const line = `ALTER TABLE ${nameTable} ADD FOREIGN KEY ("${key}") REFERENCES "${nameForeign}" ${keyForeign}; \n \n`;
+    return line;
+  }
+
+  static buildIndexManytoMany (keyTable, tableName, tableName2) {
+    const key = [...keyTable.keys()].join('", "');
+    let line = `CREATE UNIQUE INDEX idx_${tableName}_${tableName2} ON "${tableName}" (`;
+    line += `"${key}"`;
+    line += '); \n \n';
+    return line;
+  }
+
+  static buildCreateFieldNameTable (fieldIds, model, tableName) {
+    const fieldNames = fieldIds.map(fieldId => `"${tableName}${model.fields[fieldId].name}" NOT NULL`).join('\n, ');
+    return `(${fieldNames})`;
+  }
+
+  static buildNewTableName (tableFirst, tableSecond, tables) {
+    let newTableName = `${tableFirst}_${tableSecond}`;
+    let count = 1;
+    while (true) {
+      if (Object.values(tables).findIndex(table => table.name === newTableName) === -1) {
+        break;
+      }
+      newTableName = `${tableFirst}_${tableSecond}(${count})`;
+      count += 1;
+    }
+    return newTableName;
+  }
+
   static exportRefs (refIds, model) {
     const strArr = refIds.map((refId) => {
+      let line = '';
       const ref = model.refs[refId];
       const refEndpointIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
-      const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
-      const refEndpointId = ref.endpointIds[refEndpointIndex];
-      const foreignEndpoint = model.endpoints[foreignEndpointId];
-      const refEndpoint = model.endpoints[refEndpointId];
+      if (refEndpointIndex === -1) {
+        const refEndointIdFirst = ref.endpointIds[0];
+        const refEndointIdSecond = ref.endpointIds[1];
+        const refEndpointFirst = model.endpoints[refEndointIdFirst];
+        const refEndpointSecond = model.endpoints[refEndointIdSecond];
 
-      const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
-      const refEndpointTable = model.tables[refEndpointField.tableId];
-      const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model, 'postgres');
+        const refEndpointFieldFirst = model.fields[refEndpointFirst.fieldIds[0]];
+        const refEndpointFieldSencond = model.fields[refEndpointSecond.fieldIds[0]];
 
-      const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
-      const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
-      const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-      const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'postgres');
+        const refEndpointTableFirst = model.tables[refEndpointFieldFirst.tableId];
+        const refEndpointTableSecond = model.tables[refEndpointFieldSencond.tableId];
 
-      let line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
-        ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}" ADD `;
-      if (ref.name) { line += `CONSTRAINT "${ref.name}" `; }
-      line += `FOREIGN KEY ${foreignEndpointFieldName} REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
-        ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTable.name}" ${refEndpointFieldName}`;
-      if (ref.onDelete) {
-        line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
+        const refEndpointSchemaFirst = model.schemas[refEndpointTableFirst.schemaId];
+        const refEndpointSchemaSecond = model.schemas[refEndpointTableSecond.schemaId];
+
+        const keyTable1 = this.buildFieldKeyTableFirst(refEndpointFirst.fieldIds, model, 'postgres');
+        const keyTable2 = this.buildFieldKeyTableSencond(refEndpointSecond.fieldIds, model, keyTable1);
+
+        const refEndpointFieldNameFirst = this.buildFieldName(refEndpointFirst.fieldIds, model, 'postgres');
+        const refEndpointFieldNameSecond = this.buildFieldName(refEndpointSecond.fieldIds, model, 'postgres');
+        const newTableName = this.buildNewTableName(refEndpointTableFirst.name, refEndpointTableSecond.name, model.tables);
+        line += this.buildTableManyToMany(keyTable1, keyTable2, newTableName);
+        line += this.buildIndexManytoMany(keyTable1, newTableName, refEndpointTableFirst.name);
+        line += this.buildIndexManytoMany(keyTable2, newTableName, refEndpointTableSecond.name);
+        line += this.buildForeignKeyManyToMany(keyTable1, refEndpointFieldNameFirst, newTableName, refEndpointTableFirst.name);
+        line += this.buildForeignKeyManyToMany(keyTable2, refEndpointFieldNameSecond, newTableName, refEndpointTableSecond.name);
+      } else {
+        const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
+        const refEndpointId = ref.endpointIds[refEndpointIndex];
+        const foreignEndpoint = model.endpoints[foreignEndpointId];
+        const refEndpoint = model.endpoints[refEndpointId];
+
+        const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
+        const refEndpointTable = model.tables[refEndpointField.tableId];
+        const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
+        const refEndpointFieldName = this.buildFieldName(refEndpoint.fieldIds, model, 'postgres');
+
+        const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
+        const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
+        const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
+        const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'postgres');
+
+        line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
+          ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}" ADD `;
+        if (ref.name) { line += `CONSTRAINT "${ref.name}" `; }
+        line += `FOREIGN KEY ${foreignEndpointFieldName} REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
+          ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTable.name}" ${refEndpointFieldName}`;
+        if (ref.onDelete) {
+          line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
+        }
+        if (ref.onUpdate) {
+          line += ` ON UPDATE ${ref.onUpdate.toUpperCase()}`;
+        }
+        line += ';\n';
       }
-      if (ref.onUpdate) {
-        line += ` ON UPDATE ${ref.onUpdate.toUpperCase()}`;
-      }
-      line += ';\n';
-
       return line;
     });
 
@@ -219,13 +320,13 @@ class PostgresExporter {
       switch (comment.type) {
         case 'table': {
           line += ` TABLE ${shouldPrintSchema(schema, model)
-            ? `"${schema.name}".` : ''}"${table.name}" IS '${table.note.replace(/'/g, "\"")}'`;
+            ? `"${schema.name}".` : ''}"${table.name}" IS '${table.note.replace(/'/g, '"')}'`;
           break;
         }
         case 'column': {
           const field = model.fields[comment.fieldId];
           line += ` COLUMN ${shouldPrintSchema(schema, model)
-            ? `"${schema.name}".` : ''}"${table.name}"."${field.name}" IS '${field.note.replace(/'/g, "\"")}'`;
+            ? `"${schema.name}".` : ''}"${table.name}"."${field.name}" IS '${field.note.replace(/'/g, '"')}'`;
           break;
         }
         default:
