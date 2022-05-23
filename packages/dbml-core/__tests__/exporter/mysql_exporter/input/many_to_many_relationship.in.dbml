@@ -1,0 +1,14 @@
+Table "authors" {
+  "id" int [pk]
+  "name" varchar
+  "dob" date
+  "gender" varchar
+}
+
+Table "books" {
+  "id" int [pk]
+  "release_date" date
+  "title" varchar
+}
+
+ref:  "authors"."id" <> "books"."id"
