@@ -130,14 +130,14 @@ class SqlServerExporter {
     return keyFields;
   }
 
-  static buildTableManyToMany (keyTable1, keyTable2, tableName) {
+  static buildTableManyToMany (keyTableFirst, keyTableSecond, tableName) {
     let line = `CREATE TABLE [${tableName}] (\n`;
-    const key1s = [...keyTable1.keys()].join('], [');
-    const key2s = [...keyTable2.keys()].join('], [');
-    keyTable1.forEach((value, key) => {
+    const key1s = [...keyTableFirst.keys()].join('], [');
+    const key2s = [...keyTableSecond.keys()].join('], [');
+    keyTableFirst.forEach((value, key) => {
       line += `  [${key}] ${value} NOT NULL,\n`;
     });
-    keyTable2.forEach((value, key) => {
+    keyTableSecond.forEach((value, key) => {
       line += `  [${key}] ${value} NOT NULL,\n`;
     });
     line += `  CONSTRAINT PK_${tableName} PRIMARY KEY ([${key1s}], [${key2s}])\n`;
@@ -199,23 +199,21 @@ class SqlServerExporter {
       const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'mssql');
 
       if (refOneIndex === -1) { // many to many relationship
-        console.log('here');
-        const keyTable1 = this.buildFieldKeyTableFirst(refEndpoint.fieldIds, model, 'mssql');
-        const keyTable2 = this.buildFieldKeyTableSecond(foreignEndpoint.fieldIds, model, keyTable1);
-        console.log(keyTable1, keyTable2);
+        const keyTableFirst = this.buildFieldKeyTableFirst(refEndpoint.fieldIds, model, 'mssql');
+        const keyTableSecond = this.buildFieldKeyTableSecond(foreignEndpoint.fieldIds, model, keyTableFirst);
+
         const nameNewTable = this.buildNameNewTable(refEndpointTable.name, foreignEndpointTable.name, model.tables);
-        line += this.buildTableManyToMany(keyTable1, keyTable2, nameNewTable);
+        line += this.buildTableManyToMany(keyTableFirst, keyTableSecond, nameNewTable);
 
-        if (keyTable1.size > 1) {
-          line += this.buildIndexManytoMany(keyTable1, nameNewTable, refEndpointTable.name);
+        if (keyTableFirst.size > 1) {
+          line += this.buildIndexManytoMany(keyTableFirst, nameNewTable, refEndpointTable.name);
         }
 
-        if (keyTable2.size > 1) {
-          line += this.buildIndexManytoMany(keyTable2, nameNewTable, foreignEndpointTable.name);
+        if (keyTableSecond.size > 1) {
+          line += this.buildIndexManytoMany(keyTableSecond, nameNewTable, foreignEndpointTable.name);
         }
-        line += this.buildForeignKeyManyToMany(keyTable1, refEndpointFieldName, nameNewTable, refEndpointTable.name, refEndpointSchema, model);
-        line += this.buildForeignKeyManyToMany(keyTable2, foreignEndpointFieldName, nameNewTable, foreignEndpointTable.name, foreignEndpointSchema, model);
-        console.log(line);
+        line += this.buildForeignKeyManyToMany(keyTableFirst, refEndpointFieldName, nameNewTable, refEndpointTable.name, refEndpointSchema, model);
+        line += this.buildForeignKeyManyToMany(keyTableSecond, foreignEndpointFieldName, nameNewTable, foreignEndpointTable.name, foreignEndpointSchema, model);
       } else {
         line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
           ? `[${foreignEndpointSchema.name}].` : ''}[${foreignEndpointTable.name}] ADD `;
@@ -365,7 +363,6 @@ class SqlServerExporter {
       statements.comments,
       statements.refs,
     ).join('\n');
-    console.log(res);
     return res;
   }
 }
