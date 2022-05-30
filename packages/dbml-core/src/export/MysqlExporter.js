@@ -124,13 +124,13 @@ class MySQLExporter {
   static buildJunctionFields2 (fieldIds, model, firstTableKey) {
     const mapFieldKeys = new Map();
     fieldIds.map((fieldId) => {
-      let key = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`;
+      let fieldName = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`;
       let count = 1;
-      while (firstTableKey.has(key)) {
-        key = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}(${count})`;
+      while (firstTableKey.has(fieldName)) {
+        fieldName = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}(${count})`;
         count += 1;
       }
-      mapFieldKeys.set(key, model.fields[fieldId].type.type_name);
+      mapFieldKeys.set(fieldName, model.fields[fieldId].type.type_name);
     });
     return mapFieldKeys;
   }
