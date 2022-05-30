@@ -619,7 +619,7 @@ set_null "set null" = "set null"i
 set_default "set default" = "set default"i
 
 // Commonly used tokens
-relation ">, - or <" = '<>' / '>' / '<' / '-'
+relation "<>, >, - or <" = '<>' / '>' / '<' / '-'
 name "valid name"
   = c:(character+) { return c.join("") }
   / quote c:[^\"\n]+ quote { return c.join("") }

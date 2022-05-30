@@ -1,14 +1,36 @@
-Table "schemaA"."authors" {
-  "id" int [pk]
-  "name" varchar
-  "dob" date [pk]
-  "gender" varchar
+table "A"."a" {
+  "AB" integer [pk]
+  "BA" integer [pk]
 }
 
-Table "schemaB"."books" {
-  "id" int [pk]
-  "release_date" date [pk]
-  "title" varchar
+table "B"."b" {
+  "BC" integer [pk]
+  "CB" integer [pk]
 }
 
-ref:  "schemaA"."authors".("id","dob") <>  "schemaB"."books".("id","release_date")
+table "C"."c" {
+  "CD" integer [pk, ref: <> "D"."d"."DE"]
+  "DC" integer
+}
+
+table "D"."d" {
+  "DE" integer [pk]
+  "ED" integer
+}
+
+table "E"."e" {
+  "EF" integer [pk]
+  "FE" integer [pk]
+  "DE" integer 
+  "ED" integer 
+}
+
+table "G"."g" {
+  "GH" integer [pk]
+  "HG" integer [pk]
+  "EH" integer 
+  "HE" integer 
+}
+
+ref:  "A"."a".("AB","BA") <>  "B"."b".("BC","CB")
+ref:  "E"."e".("EF","FE") <>  "G"."g".("GH","HG")

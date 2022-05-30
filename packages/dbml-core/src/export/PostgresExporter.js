@@ -1,4 +1,4 @@
-import _, { keys } from 'lodash';
+import _ from 'lodash';
 import { hasWhiteSpace, shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
@@ -130,77 +130,75 @@ class PostgresExporter {
     return `(${fieldNames})`;
   }
 
-  static buildFieldKeyTableFirst (fieldIds, model) {
-    const keyFields = new Map();
-    fieldIds.map(fieldId => keyFields.set(`${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`, model.fields[fieldId].type.type_name));
-    return keyFields;
+  static buildJunctionFields1 (fieldIds, model) {
+    const mapFieldKeys = new Map();
+    fieldIds.map(fieldId => mapFieldKeys.set(`${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`, model.fields[fieldId].type.type_name));
+    return mapFieldKeys;
   }
 
-  static buildFieldKeyTableSecond (fieldIds, model, keyTableFirst) {
-    const keyFields = new Map();
+  static buildJunctionFields2 (fieldIds, model, firstTableKey) {
+    const mapFieldKeys = new Map();
     fieldIds.map((fieldId) => {
       let key = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`;
       let count = 1;
-      while (true) {
-        if (!keyTableFirst.has(key)) {
-          break;
-        }
+      while (firstTableKey.has(key)) {
         key = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}(${count})`;
         count += 1;
       }
-      keyFields.set(key, model.fields[fieldId].type.type_name);
+      mapFieldKeys.set(key, model.fields[fieldId].type.type_name);
     });
-    return keyFields;
+    return mapFieldKeys;
   }
 
-  static buildTableManyToMany (keyTableFirst, keyTableSecond, tableName) {
+  static buildTableManyToMany (firstTableKey, secondTableKey, tableName) {
     let line = `CREATE TABLE "${tableName}" (\n`;
-    const key1s = [...keyTableFirst.keys()].join('", "');
-    const key2s = [...keyTableSecond.keys()].join('", "');
-    keyTableFirst.forEach((value, key) => {
+    const key1s = [...firstTableKey.keys()].join('", "');
+    const key2s = [...secondTableKey.keys()].join('", "');
+    firstTableKey.forEach((value, key) => {
       line += `  "${key}" ${value} NOT NULL,\n`;
     });
-    keyTableSecond.forEach((value, key) => {
+    secondTableKey.forEach((value, key) => {
       line += `  "${key}" ${value} NOT NULL,\n`;
     });
-    line += `  CONSTRAINT PK_${tableName} PRIMARY KEY ("${key1s}", "${key2s}")\n`;
+    line += `  PRIMARY KEY ("${key1s}", "${key2s}")\n`;
     line += ');\n\n';
     return line;
   }
 
-  static buildForeignKeyManyToMany (keyTable, keyForeign, nameTable, nameForeign, schema, model) {
-    const key = [...keyTable.keys()].join('", "');
-    const line = `ALTER TABLE "${nameTable}" ADD FOREIGN KEY ("${key}") REFERENCES ${shouldPrintSchema(schema, model)
-      ? `"${schema.name}".` : ''}"${nameForeign}" ${keyForeign};\n\n`;
+  static buildForeignKeyManyToMany (mapFieldKeys, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, schema, model) {
+    const refEndpointFields = [...mapFieldKeys.keys()].join('", "');
+    const line = `ALTER TABLE "${refEndpointTableName}" ADD FOREIGN KEY ("${refEndpointFields}") REFERENCES ${shouldPrintSchema(schema, model)
+      ? `"${schema.name}".` : ''}"${foreignEndpointTableName}" ${foreignEndpointFields};\n\n`;
     return line;
   }
 
-  static buildIndexManytoMany (keyTable, nameNewTable, nameTableRef) {
-    const key = [...keyTable.keys()].join('", "');
-    let line = `CREATE INDEX idx_${nameNewTable}_${nameTableRef} ON "${nameNewTable}" (`;
-    line += `"${key}");\n\n`;
-    return line;
-  }
-
-  static buildCreateFieldNameTable (fieldIds, model, tableName) {
-    const fieldNames = fieldIds.map(fieldId => `"${tableName}${model.fields[fieldId].name}" NOT NULL`).join('\n, ');
-    return `(${fieldNames})`;
-  }
-
-  static buildNameNewTable (tableFirst, tableSecond, tables) {
-    let nameNewTable = `${tableFirst}_${tableSecond}`;
+  static buildIndexManytoMany (keyTable, newTableName, nameTableRef, indexes, setIndexNewTableName) {
+    let indexNewTableName = `${newTableName}_${nameTableRef}`;
     let count = 1;
-    while (true) {
-      if (Object.values(tables).findIndex((table) => table.name === nameNewTable) === -1) {
-        break;
-      }
-      nameNewTable = `${tableFirst}_${tableSecond}(${count})`;
+    while ((Object.values(indexes).findIndex((index) => index.name === indexNewTableName) !== -1) || setIndexNewTableName.has(indexNewTableName)) {
+      indexNewTableName = `${newTableName}_${nameTableRef}(${count})`;
       count += 1;
     }
+    const indexFields = [...keyTable.keys()].join('", "');
+    let line = `CREATE INDEX "idx_${indexNewTableName}" ON "${newTableName}" (`;
+    line += `"${indexFields}");\n\n`;
+    return line;
+  }
+
+  static buildNewTableName (firstTable, secondTable, tables, setNewTableName) {
+    let nameNewTable = `${firstTable}_${secondTable}`;
+    let count = 1;
+    while ((Object.values(tables).findIndex((table) => table.name === nameNewTable) !== -1) || setNewTableName.has(nameNewTable)) {
+      nameNewTable = `${firstTable}_${secondTable}(${count})`;
+      count += 1;
+    }
+    setNewTableName.add(nameNewTable);
     return nameNewTable;
   }
 
   static exportRefs (refIds, model) {
+    let setNewTableName = new Set();
+    let setIndexNewTableName = new Set();
     const strArr = refIds.map((refId) => {
       let line = '';
       const ref = model.refs[refId];
@@ -222,21 +220,21 @@ class PostgresExporter {
       const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'postgres');
 
       if (refOneIndex === -1) { // many to many relationship
-        const keyTableFirst = this.buildFieldKeyTableFirst(refEndpoint.fieldIds, model, 'postgres');
-        const keyTableSecond = this.buildFieldKeyTableSecond(foreignEndpoint.fieldIds, model, keyTableFirst);
+        const firstTableKey = this.buildJunctionFields1(refEndpoint.fieldIds, model, 'postgres');
+        const secondTableKey = this.buildJunctionFields2(foreignEndpoint.fieldIds, model, firstTableKey);
 
-        const nameNewTable = this.buildNameNewTable(refEndpointTable.name, foreignEndpointTable.name, model.tables);
-        line += this.buildTableManyToMany(keyTableFirst, keyTableSecond, nameNewTable);
+        const nameNewTable = this.buildNewTableName(refEndpointTable.name, foreignEndpointTable.name, model.tables, setNewTableName);
+        line += this.buildTableManyToMany(firstTableKey, secondTableKey, nameNewTable);
 
-        if (keyTableFirst.size > 1) {
-          line += this.buildIndexManytoMany(keyTableFirst, nameNewTable, refEndpointTable.name);
+        if (firstTableKey.size > 1) {
+          line += this.buildIndexManytoMany(firstTableKey, nameNewTable, refEndpointTable.name, model.tables, setIndexNewTableName);
         }
 
-        if (keyTableSecond.size > 1) {
-          line += this.buildIndexManytoMany(keyTableSecond, nameNewTable, foreignEndpointTable.name);
+        if (secondTableKey.size > 1) {
+          line += this.buildIndexManytoMany(secondTableKey, nameNewTable, foreignEndpointTable.name, model.tables, setIndexNewTableName);
         }
-        line += this.buildForeignKeyManyToMany(keyTableFirst, refEndpointFieldName, nameNewTable, refEndpointTable.name, refEndpointSchema, model);
-        line += this.buildForeignKeyManyToMany(keyTableSecond, foreignEndpointFieldName, nameNewTable, foreignEndpointTable.name, foreignEndpointSchema, model);
+        line += this.buildForeignKeyManyToMany(firstTableKey, refEndpointFieldName, nameNewTable, refEndpointTable.name, refEndpointSchema, model);
+        line += this.buildForeignKeyManyToMany(secondTableKey, foreignEndpointFieldName, nameNewTable, foreignEndpointTable.name, foreignEndpointSchema, model);
       } else {
         line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
           ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}" ADD `;
