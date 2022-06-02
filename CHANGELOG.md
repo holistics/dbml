@@ -1,3 +1,13 @@
+## v2.4.2 (2022-06-02)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#262](https://github.com/holistics/dbml/pull/262) Support many to many relationship ([@baolequoc](https://github.com/baolequoc))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- [@baolequoc](https://github.com/baolequoc)
+
 ## v2.4.1 (2022-04-26)
 
 #### :bug: Bug Fix
