@@ -262,7 +262,13 @@ Define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
     
 ### Many-to-many relationship
 
-For many-to-many relationship, we don't have a syntax for it as we believe it should be represented as 2 many-to-one relationships. For more information, please refer to [https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/](https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/)
+There're two ways to represent many-to-many relationship:
+* Using a single many-to-many relationship (`<>`).
+
+* Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/](https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/)
+
+Beside presentation aspect, the main differece between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
+
 
 ## Comments
 
