@@ -703,10 +703,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@dbml/core@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@dbml/core/-/core-2.4.0.tgz#227eb357e8aa6642c336d8a4a88ad26c52e5f729"
-  integrity sha512-tAkvqBBA8s6rblYN4NdZ9KVvoRhsdda/vzxrM945TBwsgQb47FQgKcVBO2XO6dIH4AN5IAAQib1defYh6BLl6A==
+"@dbml/core@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@dbml/core/-/core-2.4.1.tgz#9dc3f59978e2bb5bc5e073ee08194c1c7264ac06"
+  integrity sha512-+xZ37nIJW3zxDpcyPZ5B1rbhKU9NxtrkJvNe9ksjX4Til4jMBOYYaUIoZ3u5uLc4KIutVocfh3PjtpH7mChBfg==
   dependencies:
     lodash "^4.17.15"
     parsimmon "^1.13.0"
