@@ -210,11 +210,12 @@ Relationships are used to define foreign key constraints between tables across s
 
     // The space after '<' is optional
     
-There are 3 types of relationships: one-to-one, one-to-many, and many-to-one
+There are 4 types of relationships: one-to-one, one-to-many, many-to-one and many-to-many
 
 - `<`: one-to-many. E.g: `users.id < posts.user_id`
 - `>`: many-to-one. E.g: `posts.user_id > users.id`
 - `-`: one-to-one. E.g: `users.id - user_infos.user_id`
+- `<>`: many-to-many. E.g: `authors.id <> books.id`
 
 In DBML, there are 3 syntaxes to define relationships:
 
