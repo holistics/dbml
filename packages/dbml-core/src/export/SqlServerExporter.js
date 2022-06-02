@@ -178,7 +178,7 @@ class SqlServerExporter {
         const firstTableFieldsMap = buildJunctionFields1(refEndpoint.fieldIds, model);
         const secondTableFieldsMap = buildJunctionFields2(foreignEndpoint.fieldIds, model, firstTableFieldsMap);
 
-        const newTableName = buildNewTableName(refEndpointTable.name, foreignEndpointTable.name, model.tables, usedTableNames);
+        const newTableName = buildNewTableName(refEndpointTable.name, foreignEndpointTable.name, usedTableNames);
         line += this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, newTableName);
 
         if (firstTableFieldsMap.size > 1) {

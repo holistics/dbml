@@ -29,7 +29,7 @@ export function buildJunctionFields2 (fieldIds, model, firstTableFieldsMap) {
   return fieldsMap;
 }
 
-export function buildNewTableName (firstTable, secondTable, tables, usedTableNames) {
+export function buildNewTableName (firstTable, secondTable, usedTableNames) {
   let newTableName = `${firstTable}_${secondTable}`;
   let count = 1;
   while (usedTableNames.has(newTableName)) {
