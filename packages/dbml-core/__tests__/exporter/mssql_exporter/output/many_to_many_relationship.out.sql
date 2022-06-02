@@ -60,6 +60,23 @@ CREATE TABLE [G].[g] (
 )
 GO
 
+CREATE TABLE [t1] (
+  [a] int,
+  [b] int
+)
+GO
+
+CREATE TABLE [t2] (
+  [a] int,
+  [b] int
+)
+GO
+
+CREATE TABLE [t1_t2] (
+  [a] int
+)
+GO
+
 CREATE TABLE [a_b] (
   [a_AB] integer NOT NULL,
   [a_BA] integer NOT NULL,
@@ -115,5 +132,33 @@ ALTER TABLE [e_g] ADD FOREIGN KEY ([e_EF], [e_FE]) REFERENCES [E].[e] ([EF], [FE
 GO
 
 ALTER TABLE [e_g] ADD FOREIGN KEY ([g_GH], [g_HG]) REFERENCES [G].[g] ([GH], [HG]);
+GO
+
+
+CREATE TABLE [t1_t2(1)] (
+  [t1_a] int NOT NULL,
+  [t2_a] int NOT NULL,
+  PRIMARY KEY ([t1_a], [t2_a])
+);
+GO
+
+ALTER TABLE [t1_t2(1)] ADD FOREIGN KEY ([t1_a]) REFERENCES [t1] ([a]);
+GO
+
+ALTER TABLE [t1_t2(1)] ADD FOREIGN KEY ([t2_a]) REFERENCES [t2] ([a]);
+GO
+
+
+CREATE TABLE [t1_t2(2)] (
+  [t1_b] int NOT NULL,
+  [t2_b] int NOT NULL,
+  PRIMARY KEY ([t1_b], [t2_b])
+);
+GO
+
+ALTER TABLE [t1_t2(2)] ADD FOREIGN KEY ([t1_b]) REFERENCES [t1] ([b]);
+GO
+
+ALTER TABLE [t1_t2(2)] ADD FOREIGN KEY ([t2_b]) REFERENCES [t2] ([b]);
 GO
 

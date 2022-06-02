@@ -1,5 +1,10 @@
 import _ from 'lodash';
-import { shouldPrintSchema } from './utils';
+import {
+  shouldPrintSchema,
+  buildJunctionFields1,
+  buildJunctionFields2,
+  buildNewTableName,
+} from './utils';
 
 class MySQLExporter {
   static getFieldLines (tableId, model) {
@@ -115,64 +120,44 @@ class MySQLExporter {
     return `(${fieldNames})`;
   }
 
-  static buildJunctionFields1 (fieldIds, model) {
-    const mapFieldKeys = new Map();
-    fieldIds.map(fieldId => mapFieldKeys.set(`${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`, model.fields[fieldId].type.type_name));
-    return mapFieldKeys;
-  }
-
-  static buildJunctionFields2 (fieldIds, model, firstTableKey) {
-    const mapFieldKeys = new Map();
-    fieldIds.map((fieldId) => {
-      let fieldName = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`;
-      let count = 1;
-      while (firstTableKey.has(fieldName)) {
-        fieldName = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}(${count})`;
-        count += 1;
-      }
-      mapFieldKeys.set(fieldName, model.fields[fieldId].type.type_name);
-    });
-    return mapFieldKeys;
-  }
-
-  static buildTableManyToMany (firstTableKey, secondTableKey, tableName) {
+  static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName) {
     let line = `CREATE TABLE \`${tableName}\` (\n`;
-    const key1s = [...firstTableKey.keys()].join('`, `');
-    const key2s = [...secondTableKey.keys()].join('`, `');
-    firstTableKey.forEach((value, key) => {
-      line += `  \`${key}\` ${value} NOT NULL,\n`;
+    const key1s = [...firstTableFieldsMap.keys()].join('`, `');
+    const key2s = [...secondTableFieldsMap.keys()].join('`, `');
+    firstTableFieldsMap.forEach((fieldType, fieldName) => {
+      line += `  \`${fieldName}\` ${fieldType} NOT NULL,\n`;
     });
-    secondTableKey.forEach((value, key) => {
-      line += `  \`${key}\` ${value} NOT NULL,\n`;
+    secondTableFieldsMap.forEach((fieldType, fieldName) => {
+      line += `  \`${fieldName}\` ${fieldType} NOT NULL,\n`;
     });
     line += `  PRIMARY KEY (\`${key1s}\`, \`${key2s}\`)\n`;
     line += ');\n\n';
     return line;
   }
 
-  static buildForeignKeyManyToMany (mapFieldKeys, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, schema, model) {
-    const refEndpointFields = [...mapFieldKeys.keys()].join('`, `');
+  static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, schema, model) {
+    const refEndpointFields = [...fieldsMap.keys()].join('`, `');
     const line = `ALTER TABLE \`${refEndpointTableName}\` ADD FOREIGN KEY (\`${refEndpointFields}\`) REFERENCES ${shouldPrintSchema(schema, model)
       ? `\`${schema.name}\`.` : ''}\`${foreignEndpointTableName}\` ${foreignEndpointFields};\n\n`;
     return line;
   }
 
-  static buildIndexManytoMany (keyTable, newTableName, nameTableRef, indexes, setIndexNewTableName) {
-    let indexNewTableName = `${newTableName}_${nameTableRef}`;
+  static buildIndexManytoMany (fieldsMap, newTableName, tableRefName, usedIndexNames) {
+    let newIndexName = `${newTableName}_${tableRefName}`;
     let count = 1;
-    while ((Object.values(indexes).findIndex((index) => index.name === indexNewTableName) !== -1) || setIndexNewTableName.has(indexNewTableName)) {
-      indexNewTableName = `${newTableName}_${nameTableRef}(${count})`;
+    while (usedIndexNames.has(newIndexName)) {
+      newIndexName = `${newTableName}_${tableRefName}(${count})`;
       count += 1;
     }
-    const indexFields = [...keyTable.keys()].join('`, `');
-    let line = `CREATE INDEX \`idx_${indexNewTableName}\` ON \`${newTableName}\` (`;
+    usedIndexNames.add(newIndexName);
+    const indexFields = [...fieldsMap.keys()].join('`, `');
+    let line = `CREATE INDEX \`idx_${newIndexName}\` ON \`${newTableName}\` (`;
     line += `\`${indexFields}\`);\n\n`;
     return line;
   }
 
-  static exportRefs (refIds, model) {
-    let setNewTableName = new Set();
-    let setIndexNewTableName = new Set();
+
+  static exportRefs (refIds, model, usedTableNames, usedIndexNames) {
     const strArr = refIds.map((refId) => {
       let line = '';
       const ref = model.refs[refId];
@@ -194,21 +179,21 @@ class MySQLExporter {
       const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'mysql');
 
       if (refOneIndex === -1) {
-        const firstTableKey = this.buildJunctionFields1(refEndpoint.fieldIds, model, 'mysql');
-        const secondTableKey = this.buildJunctionFields2(foreignEndpoint.fieldIds, model, firstTableKey);
+        const firstTableFieldsMap = buildJunctionFields1(refEndpoint.fieldIds, model);
+        const secondTableFieldsMap = buildJunctionFields2(foreignEndpoint.fieldIds, model, firstTableFieldsMap);
 
-        const nameNewTable = this.buildNewTableName(refEndpointTable.name, foreignEndpointTable.name, model.tables, setNewTableName);
-        line += this.buildTableManyToMany(firstTableKey, secondTableKey, nameNewTable);
+        const newTableName = buildNewTableName(refEndpointTable.name, foreignEndpointTable.name, model.tables, usedTableNames);
+        line += this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, newTableName);
 
-        if (firstTableKey.size > 1) {
-          line += this.buildIndexManytoMany(firstTableKey, nameNewTable, refEndpointTable.name, model.tables, setIndexNewTableName);
+        if (firstTableFieldsMap.size > 1) {
+          line += this.buildIndexManytoMany(firstTableFieldsMap, newTableName, refEndpointTable.name, usedIndexNames);
         }
 
-        if (secondTableKey.size > 1) {
-          line += this.buildIndexManytoMany(secondTableKey, nameNewTable, foreignEndpointTable.name, model.tables, setIndexNewTableName);
+        if (secondTableFieldsMap.size > 1) {
+          line += this.buildIndexManytoMany(secondTableFieldsMap, newTableName, foreignEndpointTable.name, usedIndexNames);
         }
-        line += this.buildForeignKeyManyToMany(firstTableKey, refEndpointFieldName, nameNewTable, refEndpointTable.name, refEndpointSchema, model);
-        line += this.buildForeignKeyManyToMany(secondTableKey, foreignEndpointFieldName, nameNewTable, foreignEndpointTable.name, foreignEndpointSchema, model);
+        line += this.buildForeignKeyManyToMany(firstTableFieldsMap, refEndpointFieldName, newTableName, refEndpointTable.name, refEndpointSchema, model);
+        line += this.buildForeignKeyManyToMany(secondTableFieldsMap, foreignEndpointFieldName, newTableName, foreignEndpointTable.name, foreignEndpointSchema, model);
       } else {
         line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
           ? `\`${foreignEndpointSchema.name}\`.` : ''}\`${foreignEndpointTable.name}\` ADD `;
@@ -229,17 +214,6 @@ class MySQLExporter {
     });
 
     return strArr;
-  }
-
-  static buildNewTableName (firstTable, secondTable, tables, setNewTableName) {
-    let nameNewTable = `${firstTable}_${secondTable}`;
-    let count = 1;
-    while ((Object.values(tables).findIndex((table) => table.name === nameNewTable) !== -1) || setNewTableName.has(nameNewTable)) {
-      nameNewTable = `${firstTable}_${secondTable}(${count})`;
-      count += 1;
-    }
-    setNewTableName.add(nameNewTable);
-    return nameNewTable;
   }
 
   static exportIndexes (indexIds, model) {
@@ -298,6 +272,9 @@ class MySQLExporter {
   static export (model) {
     const database = model.database['1'];
 
+    const usedTableNames = new Set(Object.values(model.tables).map(table => table.name));
+    const usedIndexNames = new Set(Object.values(model.indexes).map(index => index.name));
+
     const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
       const { tableIds, refIds } = schema;
@@ -324,7 +301,7 @@ class MySQLExporter {
       }
 
       if (!_.isEmpty(refIds)) {
-        prevStatements.refs.push(...MySQLExporter.exportRefs(refIds, model));
+        prevStatements.refs.push(...MySQLExporter.exportRefs(refIds, model, usedTableNames, usedIndexNames));
       }
 
       return prevStatements;
@@ -345,7 +322,6 @@ class MySQLExporter {
       statements.comments,
       statements.refs,
     ).join('\n');
-
     return res;
   }
 }
