@@ -9,6 +9,12 @@
     project: {},
   };
   let projectCnt = 0;
+  function getRelations(operator) {
+    if(operator === '<>') return ['*','*'];
+    if(operator === '>') return ['*','1'];
+    if(operator === '<') return ['1','*'];
+    if(operator === '-') return ['1','1'];
+  }
 }
 
 rules
@@ -173,19 +179,20 @@ ref_short
 
 ref_body
   = field1:field_identifier sp+ relation:relation sp+ field2:field_identifier sp* ref_settings:RefSettings? {
+    const rel = getRelations(relation);
     const endpoints = [
       {
         schemaName: field1.schemaName,
         tableName: field1.tableName,
         fieldNames: field1.fieldNames,
-        relation: relation === ">" ? "*" : "1",
+        relation: rel[0],
         token: location()
       },
       {
         schemaName: field2.schemaName,
         tableName: field2.tableName,
         fieldNames: field2.fieldNames,
-        relation: relation === "<" ? "*" : "1",
+        relation: rel[1],
         token: location()
       }
     ];
@@ -243,19 +250,20 @@ TableSyntax
 
       fields.forEach((field) => {
         (field.inline_refs || []).forEach((iref) => {
+          const rel = getRelations(iref.relation);
           const endpoints = [
           {
             schemaName: iref.schemaName,
             tableName: iref.tableName,
             fieldNames: iref.fieldNames,
-            relation: iref.relation === "<" ? "*" : "1",
+            relation: rel[1],
             token: iref.token
           },
           {
             schemaName: schemaName,
             tableName: name,
             fieldNames: [field.name],
-            relation: iref.relation === ">" ? "*" : "1",
+            relation: rel[0],
             token: iref.token
           }];
 
@@ -611,7 +619,7 @@ set_null "set null" = "set null"i
 set_default "set default" = "set default"i
 
 // Commonly used tokens
-relation ">, - or <" = [>\-<]
+relation "<>, >, - or <" = '<>' / '>' / '<' / '-'
 name "valid name"
   = c:(character+) { return c.join("") }
   / quote c:[^\"\n]+ quote { return c.join("") }

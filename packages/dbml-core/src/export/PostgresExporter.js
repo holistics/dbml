@@ -1,5 +1,11 @@
 import _ from 'lodash';
-import { hasWhiteSpace, shouldPrintSchema } from './utils';
+import {
+  hasWhiteSpace,
+  shouldPrintSchema,
+  buildJunctionFields1,
+  buildJunctionFields2,
+  buildNewTableName,
+} from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
 class PostgresExporter {
@@ -130,10 +136,48 @@ class PostgresExporter {
     return `(${fieldNames})`;
   }
 
-  static exportRefs (refIds, model) {
+  static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName) {
+    let line = `CREATE TABLE "${tableName}" (\n`;
+    const key1s = [...firstTableFieldsMap.keys()].join('", "');
+    const key2s = [...secondTableFieldsMap.keys()].join('", "');
+    firstTableFieldsMap.forEach((fieldType, fieldName) => {
+      line += `  "${fieldName}" ${fieldType} NOT NULL,\n`;
+    });
+    secondTableFieldsMap.forEach((fieldType, fieldName) => {
+      line += `  "${fieldName}" ${fieldType} NOT NULL,\n`;
+    });
+    line += `  PRIMARY KEY ("${key1s}", "${key2s}")\n`;
+    line += ');\n\n';
+    return line;
+  }
+
+  static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, schema, model) {
+    const refEndpointFields = [...fieldsMap.keys()].join('", "');
+    const line = `ALTER TABLE "${refEndpointTableName}" ADD FOREIGN KEY ("${refEndpointFields}") REFERENCES ${shouldPrintSchema(schema, model)
+      ? `"${schema.name}".` : ''}"${foreignEndpointTableName}" ${foreignEndpointFields};\n\n`;
+    return line;
+  }
+
+  static buildIndexManytoMany (fieldsMap, newTableName, tableRefName, usedIndexNames) {
+    let newIndexName = `${newTableName}_${tableRefName}`;
+    let count = 1;
+    while (usedIndexNames.has(newIndexName)) {
+      newIndexName = `${newTableName}_${tableRefName}(${count})`;
+      count += 1;
+    }
+    usedIndexNames.add(newIndexName);
+    const indexFields = [...fieldsMap.keys()].join('", "');
+    let line = `CREATE INDEX "idx_${newIndexName}" ON "${newTableName}" (`;
+    line += `"${indexFields}");\n\n`;
+    return line;
+  }
+
+  static exportRefs (refIds, model, usedTableNames, usedIndexNames) {
     const strArr = refIds.map((refId) => {
+      let line = '';
       const ref = model.refs[refId];
-      const refEndpointIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const refOneIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const refEndpointIndex = refOneIndex === -1 ? 0 : refOneIndex;
       const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
       const refEndpointId = ref.endpointIds[refEndpointIndex];
       const foreignEndpoint = model.endpoints[foreignEndpointId];
@@ -149,19 +193,36 @@ class PostgresExporter {
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
       const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'postgres');
 
-      let line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
-        ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}" ADD `;
-      if (ref.name) { line += `CONSTRAINT "${ref.name}" `; }
-      line += `FOREIGN KEY ${foreignEndpointFieldName} REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
-        ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTable.name}" ${refEndpointFieldName}`;
-      if (ref.onDelete) {
-        line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
-      }
-      if (ref.onUpdate) {
-        line += ` ON UPDATE ${ref.onUpdate.toUpperCase()}`;
-      }
-      line += ';\n';
+      if (refOneIndex === -1) { // many to many relationship
+        const firstTableFieldsMap = buildJunctionFields1(refEndpoint.fieldIds, model);
+        const secondTableFieldsMap = buildJunctionFields2(foreignEndpoint.fieldIds, model, firstTableFieldsMap);
 
+        const newTableName = buildNewTableName(refEndpointTable.name, foreignEndpointTable.name, usedTableNames);
+        line += this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, newTableName);
+
+        if (firstTableFieldsMap.size > 1) {
+          line += this.buildIndexManytoMany(firstTableFieldsMap, newTableName, refEndpointTable.name, usedIndexNames);
+        }
+
+        if (secondTableFieldsMap.size > 1) {
+          line += this.buildIndexManytoMany(secondTableFieldsMap, newTableName, foreignEndpointTable.name, usedIndexNames);
+        }
+        line += this.buildForeignKeyManyToMany(firstTableFieldsMap, refEndpointFieldName, newTableName, refEndpointTable.name, refEndpointSchema, model);
+        line += this.buildForeignKeyManyToMany(secondTableFieldsMap, foreignEndpointFieldName, newTableName, foreignEndpointTable.name, foreignEndpointSchema, model);
+      } else {
+        line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
+          ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}" ADD `;
+        if (ref.name) { line += `CONSTRAINT "${ref.name}" `; }
+        line += `FOREIGN KEY ${foreignEndpointFieldName} REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
+          ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTable.name}" ${refEndpointFieldName}`;
+        if (ref.onDelete) {
+          line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
+        }
+        if (ref.onUpdate) {
+          line += ` ON UPDATE ${ref.onUpdate.toUpperCase()}`;
+        }
+        line += ';\n';
+      }
       return line;
     });
 
@@ -243,6 +304,9 @@ class PostgresExporter {
   static export (model) {
     const database = model.database['1'];
 
+    const usedTableNames = new Set(Object.values(model.tables).map(table => table.name));
+    const usedIndexNames = new Set(Object.values(model.indexes).map(index => index.name));
+
     const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
       const { tableIds, enumIds, refIds } = schema;
@@ -276,7 +340,7 @@ class PostgresExporter {
       }
 
       if (!_.isEmpty(refIds)) {
-        prevStatements.refs.push(...PostgresExporter.exportRefs(refIds, model));
+        prevStatements.refs.push(...PostgresExporter.exportRefs(refIds, model, usedTableNames, usedIndexNames));
       }
 
       return prevStatements;
@@ -297,7 +361,6 @@ class PostgresExporter {
       statements.comments,
       statements.refs,
     ).join('\n');
-
     return res;
   }
 }
