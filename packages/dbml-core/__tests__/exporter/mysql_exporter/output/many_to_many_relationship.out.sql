@@ -48,6 +48,20 @@ CREATE TABLE `G`.`g` (
   PRIMARY KEY (`GH`, `HG`)
 );
 
+CREATE TABLE `t1` (
+  `a` int,
+  `b` int
+);
+
+CREATE TABLE `t2` (
+  `a` int,
+  `b` int
+);
+
+CREATE TABLE `t1_t2` (
+  `a` int
+);
+
 CREATE TABLE `a_b` (
   `a_AB` integer NOT NULL,
   `a_BA` integer NOT NULL,
@@ -91,4 +105,26 @@ CREATE INDEX `idx_e_g_g` ON `e_g` (`g_GH`, `g_HG`);
 ALTER TABLE `e_g` ADD FOREIGN KEY (`e_EF`, `e_FE`) REFERENCES `E`.`e` (`EF`, `FE`);
 
 ALTER TABLE `e_g` ADD FOREIGN KEY (`g_GH`, `g_HG`) REFERENCES `G`.`g` (`GH`, `HG`);
+
+
+CREATE TABLE `t1_t2(1)` (
+  `t1_a` int NOT NULL,
+  `t2_a` int NOT NULL,
+  PRIMARY KEY (`t1_a`, `t2_a`)
+);
+
+ALTER TABLE `t1_t2(1)` ADD FOREIGN KEY (`t1_a`) REFERENCES `t1` (`a`);
+
+ALTER TABLE `t1_t2(1)` ADD FOREIGN KEY (`t2_a`) REFERENCES `t2` (`a`);
+
+
+CREATE TABLE `t1_t2(2)` (
+  `t1_b` int NOT NULL,
+  `t2_b` int NOT NULL,
+  PRIMARY KEY (`t1_b`, `t2_b`)
+);
+
+ALTER TABLE `t1_t2(2)` ADD FOREIGN KEY (`t1_b`) REFERENCES `t1` (`b`);
+
+ALTER TABLE `t1_t2(2)` ADD FOREIGN KEY (`t2_b`) REFERENCES `t2` (`b`);
 

@@ -34,3 +34,21 @@ table "G"."g" {
 
 ref:  "A"."a".("AB","BA") <>  "B"."b".("BC","CB")
 ref:  "E"."e".("EF","FE") <>  "G"."g".("GH","HG")
+
+
+table t1 {
+  a int
+  b int
+}
+
+table t2 {
+  a int
+  b int
+}
+
+table t1_t2 {
+  a int
+}
+
+ref: t1.a <> t2.a
+ref: t1.b <> t2.b
