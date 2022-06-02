@@ -259,6 +259,15 @@ In DBML, there are 3 syntaxes to define relationships:
 Define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
 
 *Relationship settings are not supported for inline form ref.*
+    
+### Many-to-many relationship
+
+There're two ways to represent many-to-many relationship:
+* Using a single many-to-many relationship (`<>`).
+
+* Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/](https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/)
+
+Beside presentation aspect, the main differece between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
 
 
 ## Comments
