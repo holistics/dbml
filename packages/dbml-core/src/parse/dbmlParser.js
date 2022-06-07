@@ -681,7 +681,7 @@ function peg$parse(input, options) {
       peg$c151 = peg$otherExpectation("set default"),
       peg$c152 = "set default",
       peg$c153 = peg$literalExpectation("set default", true),
-      peg$c154 = peg$otherExpectation(">, - or <"),
+      peg$c154 = peg$otherExpectation("<>, >, - or <"),
       peg$c155 = "<>",
       peg$c156 = peg$literalExpectation("<>", false),
       peg$c157 = ">",
