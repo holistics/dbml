@@ -78,18 +78,12 @@ CREATE TABLE [t1_t2] (
 GO
 
 CREATE TABLE [a_b] (
-  [a_AB] integer NOT NULL,
-  [a_BA] integer NOT NULL,
-  [b_BC] integer NOT NULL,
-  [b_CB] integer NOT NULL,
+  [a_AB] integer,
+  [a_BA] integer,
+  [b_BC] integer,
+  [b_CB] integer,
   PRIMARY KEY ([a_AB], [a_BA], [b_BC], [b_CB])
 );
-GO
-
-CREATE INDEX [idx_a_b_a] ON [a_b] ("a_AB", "a_BA");
-GO
-
-CREATE INDEX [idx_a_b_b] ON [a_b] ("b_BC", "b_CB");
 GO
 
 ALTER TABLE [a_b] ADD FOREIGN KEY ([a_AB], [a_BA]) REFERENCES [A].[a] ([AB], [BA]);
@@ -100,8 +94,8 @@ GO
 
 
 CREATE TABLE [d_c] (
-  [d_DE] integer NOT NULL,
-  [c_CD] integer NOT NULL,
+  [d_DE] integer,
+  [c_CD] integer,
   PRIMARY KEY ([d_DE], [c_CD])
 );
 GO
@@ -114,18 +108,12 @@ GO
 
 
 CREATE TABLE [e_g] (
-  [e_EF] integer NOT NULL,
-  [e_FE] integer NOT NULL,
-  [g_GH] integer NOT NULL,
-  [g_HG] integer NOT NULL,
+  [e_EF] integer,
+  [e_FE] integer,
+  [g_GH] integer,
+  [g_HG] integer,
   PRIMARY KEY ([e_EF], [e_FE], [g_GH], [g_HG])
 );
-GO
-
-CREATE INDEX [idx_e_g_e] ON [e_g] ("e_EF", "e_FE");
-GO
-
-CREATE INDEX [idx_e_g_g] ON [e_g] ("g_GH", "g_HG");
 GO
 
 ALTER TABLE [e_g] ADD FOREIGN KEY ([e_EF], [e_FE]) REFERENCES [E].[e] ([EF], [FE]);
@@ -136,8 +124,8 @@ GO
 
 
 CREATE TABLE [t1_t2(1)] (
-  [t1_a] int NOT NULL,
-  [t2_a] int NOT NULL,
+  [t1_a] int,
+  [t2_a] int,
   PRIMARY KEY ([t1_a], [t2_a])
 );
 GO
@@ -150,8 +138,8 @@ GO
 
 
 CREATE TABLE [t1_t2(2)] (
-  [t1_b] int NOT NULL,
-  [t2_b] int NOT NULL,
+  [t1_b] int,
+  [t2_b] int,
   PRIMARY KEY ([t1_b], [t2_b])
 );
 GO
