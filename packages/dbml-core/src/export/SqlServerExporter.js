@@ -117,10 +117,10 @@ class SqlServerExporter {
     const key1s = [...firstTableFieldsMap.keys()].join('], [');
     const key2s = [...secondTableFieldsMap.keys()].join('], [');
     firstTableFieldsMap.forEach((fieldType, fieldName) => {
-      line += `  [${fieldName}] ${fieldType} NOT NULL,\n`;
+      line += `  [${fieldName}] ${fieldType},\n`;
     });
     secondTableFieldsMap.forEach((fieldType, fieldName) => {
-      line += `  [${fieldName}] ${fieldType} NOT NULL,\n`;
+      line += `  [${fieldName}] ${fieldType},\n`;
     });
     line += `  PRIMARY KEY ([${key1s}], [${key2s}])\n`;
     line += ');\nGO\n\n';
@@ -134,26 +134,12 @@ class SqlServerExporter {
     return line;
   }
 
-  static buildIndexManytoMany (fieldsMap, newTableName, tableRefName, usedIndexNames) {
-    let newIndexName = `${newTableName}_${tableRefName}`;
-    let count = 1;
-    while (usedIndexNames.has(newIndexName)) {
-      newIndexName = `${newTableName}_${tableRefName}(${count})`;
-      count += 1;
-    }
-    usedIndexNames.add(newIndexName);
-    const indexFields = [...fieldsMap.keys()].join('", "');
-    let line = `CREATE INDEX [idx_${newIndexName}] ON [${newTableName}] (`;
-    line += `"${indexFields}");\nGO\n\n`;
-    return line;
-  }
-
   static buildFieldName (fieldIds, model) {
     const fieldNames = fieldIds.map(fieldId => `[${model.fields[fieldId].name}]`).join(', ');
     return `(${fieldNames})`;
   }
 
-  static exportRefs (refIds, model, usedTableNames, usedIndexNames) {
+  static exportRefs (refIds, model, usedTableNames) {
     const strArr = refIds.map((refId) => {
       let line = '';
       const ref = model.refs[refId];
@@ -181,13 +167,6 @@ class SqlServerExporter {
         const newTableName = buildNewTableName(refEndpointTable.name, foreignEndpointTable.name, usedTableNames);
         line += this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, newTableName);
 
-        if (firstTableFieldsMap.size > 1) {
-          line += this.buildIndexManytoMany(firstTableFieldsMap, newTableName, refEndpointTable.name, usedIndexNames);
-        }
-
-        if (secondTableFieldsMap.size > 1) {
-          line += this.buildIndexManytoMany(secondTableFieldsMap, newTableName, foreignEndpointTable.name, usedIndexNames);
-        }
         line += this.buildForeignKeyManyToMany(firstTableFieldsMap, refEndpointFieldName, newTableName, refEndpointTable.name, refEndpointSchema, model);
         line += this.buildForeignKeyManyToMany(secondTableFieldsMap, foreignEndpointFieldName, newTableName, foreignEndpointTable.name, foreignEndpointSchema, model);
       } else {
@@ -290,7 +269,6 @@ class SqlServerExporter {
     const database = model.database['1'];
 
     const usedTableNames = new Set(Object.values(model.tables).map(table => table.name));
-    const usedIndexNames = new Set(Object.values(model.indexes).map(index => index.name));
 
     const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
@@ -321,7 +299,7 @@ class SqlServerExporter {
       }
 
       if (!_.isEmpty(refIds)) {
-        prevStatements.refs.push(...SqlServerExporter.exportRefs(refIds, model, usedTableNames, usedIndexNames));
+        prevStatements.refs.push(...SqlServerExporter.exportRefs(refIds, model, usedTableNames));
       }
 
       return prevStatements;
