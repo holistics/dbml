@@ -8,4 +8,7 @@ export default {
   mssql: {
     name: 'SQL Server',
   },
+  aml: {
+    name: 'AML studio',
+  }
 };

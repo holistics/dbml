@@ -1,6 +1,6 @@
 import program from 'commander';
 import importHandler from './import';
-import exportHandler from './export';
+import { exportHandler, amlExportHandler } from './export';
 import projectInfo from '../../package.json';
 
 function dbml2sql (args) {
@@ -33,9 +33,21 @@ function sql2dbml (args) {
   program.parse(args);
 
   importHandler(program);
+};
+
+function dbml2aml (args) {
+  program.version(projectInfo.version);
+  program
+    .usage('[options] <files...>')
+    .option('-o, --out-dir <pathspec>', 'compile an input files into an output directory')
+    .option('-ds, --data-source <pathspec>', 'specify datasource name, default is same name as project name');
+
+  program.parse(args);
+  amlExportHandler(program);
 }
 
 export {
   dbml2sql,
   sql2dbml,
+  dbml2aml,
 };

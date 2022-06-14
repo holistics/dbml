@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 class OutputFilePlugin {
   constructor (filePath, header) {
@@ -17,6 +18,12 @@ class OutputFilePlugin {
   write (content) {
     if (!this.isWrite) this.start();
     this.stream.write(content);
+  }
+
+  writeDir (content) {
+    const dir = path.dirname(this.filePath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    this.write(content);
   }
 }
 
