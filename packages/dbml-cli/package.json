@@ -1,6 +1,6 @@
 {
   "name": "@dbml/cli",
-  "version": "2.4.2",
+  "version": "2.4.2-aml",
   "description": "",
   "main": "lib/index.js",
   "license": "Apache-2.0",
@@ -13,6 +13,7 @@
     "access": "public"
   },
   "bin": {
+    "dbml2aml": "bin/dbml2aml.js",
     "dbml2sql": "bin/dbml2sql.js",
     "sql2dbml": "bin/sql2dbml.js"
   },
@@ -25,7 +26,7 @@
   ],
   "dependencies": {
     "@babel/cli": "^7.5.5",
-    "@dbml/core": "^2.4.2",
+    "@dbml/core": "2.4.2-aml",
     "bluebird": "^3.5.5",
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
