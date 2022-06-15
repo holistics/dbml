@@ -3,7 +3,7 @@ import MysqlExporter from './MysqlExporter';
 import PostgresExporter from './PostgresExporter';
 import JsonExporter from './JsonExporter';
 import SqlServerExporter from './SqlServerExporter';
-import AmlExporter from './AmlExporter/Index';
+import AmlExporter from './AmlExporter';
 
 class ModelExporter {
   static export (model = {}, format, isNormalized = true) {

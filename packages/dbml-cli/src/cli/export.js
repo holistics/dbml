@@ -46,19 +46,16 @@ export async function amlExportHandler (program) {
   try {
     const inputPaths = resolvePaths(program.args);
     validateInputFilePaths(inputPaths, validateFilePlugin);
-    console.log(inputPaths);
+
     const dbml = fs.readFileSync(inputPaths[0], 'utf-8');
 
     const options = program.opts();
 
-    console.log('inputPaths:', inputPaths);
-
     const outDir = options.outDir ? resolvePaths(options.outDir) : process.cwd();
-    console.log('outDir:', outDir);
 
-    const exportOptions = { 
-      dataSource: options.dataSource
-    }
+    const exportOptions = {
+      dataSource: options.dataSource,
+    };
 
     const header = [
       '// AML dump generated using DBML (dbml.org)\n',
@@ -73,8 +70,7 @@ export async function amlExportHandler (program) {
 
     if (datasets) {
       datasets.map((file) => {
-        const outFilePath = path.resolve(outDir, 'datasets', file.name);
-        console.log('here', outFilePath);
+        const outFilePath = path.resolve(outDir, file.name);
         const writer = new OutputFilePlugin(outFilePath, header);
         writer.writeDir(file.content);
         console.log(`  ${chalk.green(figures.main.tick)} Generated AML dataset files: ${path.basename(outFilePath)}`);
@@ -83,7 +79,7 @@ export async function amlExportHandler (program) {
 
     if (models) {
       models.map((file) => {
-        const outFilePath = path.resolve(outDir, 'models', file.name);
+        const outFilePath = path.resolve(outDir, file.name);
         const writer = new OutputFilePlugin(outFilePath, header);
         writer.writeDir(file.content);
         console.log(`  ${chalk.green(figures.main.tick)} Generated AML model files: ${path.basename(outFilePath)}`);
@@ -92,7 +88,7 @@ export async function amlExportHandler (program) {
 
     if (relationships) {
       relationships.map((file) => {
-        const outFilePath = path.resolve(outDir, 'relationships', file.name);
+        const outFilePath = path.resolve(outDir, file.name);
         const writer = new OutputFilePlugin(outFilePath, header);
         writer.writeDir(file.content);
         console.log(`  ${chalk.green(figures.main.tick)} Generated AML relationship files: ${path.basename(outFilePath)}`);
