@@ -39,3 +39,4 @@ export function buildNewTableName (firstTable, secondTable, usedTableNames) {
   usedTableNames.add(newTableName);
   return newTableName;
 }
+
