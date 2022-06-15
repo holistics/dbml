@@ -1,15 +1,16 @@
 import { hasWhiteSpace } from '../utils';
 import { DEFAULT_SCHEMA_NAME } from '../../model_structure/config';
+
 const TYPE = new Map();
-TYPE.set('int','number');
-TYPE.set('integer','number');
-TYPE.set('number','number');
-TYPE.set('date','date');
-TYPE.set('datetime','datetime');
-TYPE.set('timestamp','datetime');
-TYPE.set('truefalse','truefalse');
-TYPE.set('bool','truefalse');
-TYPE.set('boolean','truefalse');
+TYPE.set('int', 'number');
+TYPE.set('integer', 'number');
+TYPE.set('number', 'number');
+TYPE.set('date', 'date');
+TYPE.set('datetime', 'datetime');
+TYPE.set('timestamp', 'datetime');
+TYPE.set('truefalse', 'truefalse');
+TYPE.set('bool', 'truefalse');
+TYPE.set('boolean', 'truefalse');
 
 
 export function getFieldLines (tableId, model) {

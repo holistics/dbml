@@ -1,5 +1,5 @@
 import { shouldPrintSchema } from '../utils';
-import { getFieldLines } from './exportField';
+import { getFieldLines } from './field';
 
 
 export function getTableContentArr (tableIds, model) {
