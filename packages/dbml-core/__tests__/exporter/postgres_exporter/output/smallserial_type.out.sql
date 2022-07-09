@@ -1,23 +1,23 @@
 CREATE TABLE "user" (
-  "id" SERIAL PRIMARY KEY,
+  "id" BIGSERIAL PRIMARY KEY,
   "name" int,
   "address" varcharacter
 );
 
 CREATE TABLE "user1" (
-  "id" BIGSERIAL PRIMARY KEY,
-  "name" int,
-  "address" varcharacter
-);
-
-CREATE TABLE "user2" (
   "id" SMALLSERIAL PRIMARY KEY,
   "name" int,
   "address" varcharacter
 );
 
-CREATE TABLE "user3" (
+CREATE TABLE "user2" (
   "id" BIGSERIAL PRIMARY KEY,
+  "name" int,
+  "address" varcharacter
+);
+
+CREATE TABLE "user3" (
+  "id" SMALLSERIAL PRIMARY KEY,
   "name" int,
   "address" varcharacter
 );
