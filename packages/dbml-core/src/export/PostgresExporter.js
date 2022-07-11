@@ -38,7 +38,7 @@ class PostgresExporter {
       if (field.increment) {
         let typeSerial = 'SERIAL';
         if (field.type.type_name.toLowerCase() === 'bigint') typeSerial = 'BIGSERIAL';
-        if (field.type.type_name.toLowerCase() === 'smallserial') typeSerial = 'SMALLSERIAL';
+        else if (field.type.type_name.toLowerCase() === 'smallserial') typeSerial = 'SMALLSERIAL';
         line = `"${field.name}" ${typeSerial}`;
       } else {
         let schemaName = '';
