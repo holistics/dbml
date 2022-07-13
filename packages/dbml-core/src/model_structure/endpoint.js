@@ -68,7 +68,23 @@ class Endpoint extends Element {
     };
   }
 
-  setFields (fieldNames, table) {
+  setFields(fieldNames, table) {
+    if (!fieldNames) {
+      fieldNames = [];
+      const fieldHasPK = table.fields.find(field => field.pk);
+      if (fieldHasPK) {
+        fieldNames.push(fieldHasPK.name);
+      }
+      else {
+        const indexHasPK = table.indexes.find(index => index.pk);
+        if (indexHasPK) {
+          fieldNames = indexHasPK.columns.map(column => column.value);
+        }
+        else {
+          this.error(`Can't find primary or composite key in table ${shouldPrintSchema(table.schema) ? `"${table.schema.name}".` : ''}"${this.tableName}"`);
+        }
+      }
+    }
     fieldNames.forEach(fieldName => {
       const field = table.findField(fieldName);
       if (!field) {
