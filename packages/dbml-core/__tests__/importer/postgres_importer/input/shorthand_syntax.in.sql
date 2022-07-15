@@ -6,7 +6,7 @@ CREATE TABLE "booking_reference" (
 );
 
 CREATE TABLE "br_flight" (
-  "reference_id" NVARCHAR(10) NOT NULL ,
+  "reference_id" NVARCHAR(10) NOT NULL,
   "cust_id" NUMBER(10)NOT NULL,
   "flight_id" NVARCHAR (10) NOT NULL,
   PRIMARY KEY ("reference_id", "flight_id")
@@ -20,7 +20,10 @@ CREATE TABLE "users" (
   "date_of_birth" varchar,
   "created_at" varchar,
   "modified_at" time(2),
-  "country_code" int
+  "country_code" int,
+  CONSTRAINT "fk_country_code"
+    FOREIGN KEY ("country_code")
+      REFERENCES "countries"
 );
 
 CREATE TABLE "countries" (
@@ -29,6 +32,4 @@ CREATE TABLE "countries" (
   "continent_name" varchar
 );
 
-ALTER TABLE "br_flight" ADD CONSTRAINT fk_composite FOREIGN KEY ("reference_id", "cust_id") REFERENCES "booking_reference";
-
-ALTER TABLE "users" ADD CONSTRAINT fk_country_code FOREIGN KEY ("country_code") REFERENCES "countries";
+ALTER TABLE "br_flight" ADD CONSTRAINT "fk_composite" FOREIGN KEY ("reference_id", "cust_id") REFERENCES "booking_reference";

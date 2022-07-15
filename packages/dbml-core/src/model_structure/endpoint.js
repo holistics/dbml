@@ -68,28 +68,26 @@ class Endpoint extends Element {
     };
   }
 
-  setFields(fieldNames, table) {
-    if (!fieldNames) {
-      fieldNames = [];
+  setFields (fieldNames, table) {
+    let newFieldNames = (fieldNames && fieldNames.length) ? [...fieldNames] : [];
+    if (!newFieldNames.length) {
       const fieldHasPK = table.fields.find(field => field.pk);
       if (fieldHasPK) {
-        fieldNames.push(fieldHasPK.name);
-      }
-      else {
+        newFieldNames.push(fieldHasPK.name);
+      } else {
         const indexHasPK = table.indexes.find(index => index.pk);
         if (indexHasPK) {
-          fieldNames = indexHasPK.columns.map(column => column.value);
-        }
-        else {
-          this.error(`Can't find primary or composite key in table ${shouldPrintSchema(table.schema) ? `"${table.schema.name}".` : ''}"${this.tableName}"`);
+          newFieldNames = indexHasPK.columns.map(column => column.value);
+        } else {
+          this.error(`Can't find primary or composite key in table ${shouldPrintSchema(table.schema) ? `"${table.schema.name}".` : ''}"${table.name}"`);
         }
       }
     }
-    fieldNames.forEach(fieldName => {
+    newFieldNames.forEach(fieldName => {
       const field = table.findField(fieldName);
       if (!field) {
         this.error(`Can't find field ${shouldPrintSchema(table.schema)
-          ? `"${table.schema.name}".` : ''}"${fieldName}" in table "${this.tableName}"`);
+          ? `"${table.schema.name}".` : ''}"${fieldName}" in table "${table.name}"`);
       }
       this.fields.push(field);
       field.pushEndpoint(this);

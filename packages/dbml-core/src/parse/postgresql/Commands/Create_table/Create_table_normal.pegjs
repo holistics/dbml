@@ -1,4 +1,4 @@
-create_table_normal = 
+create_table_normal =
 	_ CREATE __ ( ( GLOBAL __ / LOCAL __ )? ( TEMPORARY / TEMP ) __ / UNLOGGED __)? TABLE (__ IF_NOT_EXISTS)? __ table_name:table_name _ "(" _
 	table_properties:table_properties _ ")"
 	(__ INHERITS _ "(" _ parent_tables:table_names _ ")")?
@@ -56,6 +56,7 @@ create_table_normal =
 									field.inline_refs = [];
 								}
 								field.inline_refs.push({
+									name: ref.name,
 									endpoint: ref.endpoints[1],
 									onDelete: ref.onDelete,
 									onUpdate: ref.onUpdate
@@ -78,7 +79,7 @@ table_properties = first:table_property rest: (_ comma _ table_property)* {
 	return [first, ...rest.map(r => r[3])];
 }
 
-table_property = 
+table_property =
 	table_constraint:table_constraint {
 		return {
 			table_property_name: "table_constraint",
@@ -93,7 +94,7 @@ table_property =
 	}
 	/ column_name:column_name __ data_type:data_type (__ COLLATE __ collation:identifier)? column_constraints:(_ column_constraint)* {
 		const column = { name: column_name , type: data_type};
-		
+
 		// process type (if type === "serial")
 		if (column.type.type_name.toLowerCase() === "serial") {
 			column.type.type_name = "int";
@@ -132,7 +133,7 @@ table_property =
 	}
 
 // return { type, value}
-column_constraint = (CONSTRAINT __ constraint_name:identifier __)? 
+column_constraint = constraint_name:(CONSTRAINT __ constraint_name:identifier __ { return constraint_name })?
 	column_constraint:( NOT __ NULL { return { type: "not_null" , value: true } }
 	/ NULL { return { type: "not_null" , value: false } }
 	/ CHECK _ "("_ expression _")" (__ NO __ INHERIT)? { return { type: "not_supported" } }
@@ -155,6 +156,7 @@ column_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 			return {
 				type: "fk",
 				value: {
+					name: constraint_name,
 					endpoint: {
 						tableName: reftable.name,
             schemaName: reftable.schemaName,
@@ -170,7 +172,7 @@ column_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 	}
 
 // return { type, t_value }
-table_constraint = (CONSTRAINT __ constraint_name:identifier __)?
+table_constraint = constraint_name:(CONSTRAINT __ constraint_name:identifier __ { return constraint_name })?
 	table_constraint: ( CHECK _ "("_ expression _")" (__ NO __ INHERIT)? { return { type:"not_supported" } }
 	/ UNIQUE _ "(" _ column_names:column_names _ ")" (__ index_parameters)? { return { type: "unique", t_value: column_names } }
 	/ PRIMARY_KEY _ "("_ column_names:column_names _ ")" (__ index_parameters)? { return { type: "pk", t_value: column_names } }
@@ -186,6 +188,7 @@ table_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 				//throw Error(`Line ${location().start.line}: ${column_name} do not have referenced column.`)
 			//}
 			const v = {
+				name: constraint_name,
 				endpoints: [
 					{
 						tableName: null,
@@ -210,7 +213,7 @@ table_constraint = (CONSTRAINT __ constraint_name:identifier __)?
 			value.push(v);
 			return {
 				type: "fk",
-				t_value: value 
+				t_value: value
 			}
 		}
 	) (__  DEFERRABLE /__ NOT __ DEFERRABLE)? (__ INITIALLY __ DEFERRED /__ INITIALLY __ IMMEDIATE)? {
