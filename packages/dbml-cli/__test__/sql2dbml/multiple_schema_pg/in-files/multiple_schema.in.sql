@@ -55,7 +55,7 @@ CREATE TABLE "schemaA"."products" (
   "id" int PRIMARY KEY,
   "name" varchar,
   "lid" int,
-  CONSTRAINT fk_1 FOREIGN KEY(lid) REFERENCES "schemaA"."locations"(id)
+  CONSTRAINT "fk_1" FOREIGN KEY(lid) REFERENCES "schemaA"."locations"(id)
 );
 
 CREATE TABLE "schemaA"."locations" (
@@ -97,6 +97,6 @@ ALTER TABLE "schemaA"."products" ADD FOREIGN KEY ("name") REFERENCES "ecommerce"
 
 ALTER TABLE "schemaA"."locations" ADD FOREIGN KEY ("name") REFERENCES "users" ("id");
 
-ALTER TABLE "br_flight" ADD CONSTRAINT fk_composite FOREIGN KEY ("reference_id", "cust_id") REFERENCES "booking_reference";
+ALTER TABLE "br_flight" ADD CONSTRAINT "fk_composite" FOREIGN KEY ("reference_id", "cust_id") REFERENCES "booking_reference";
 
-ALTER TABLE "users" ADD CONSTRAINT fk_country_code FOREIGN KEY ("country_code") REFERENCES "countries";
+ALTER TABLE "users" ADD CONSTRAINT "fk_country_code" FOREIGN KEY ("country_code") REFERENCES "countries";

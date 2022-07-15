@@ -56,19 +56,19 @@ Indexes {
 }
 }
 
-Ref:"schemaA"."locations"."id" < "schemaA"."products"."lid"
+Ref "fk_1":"schemaA"."locations"."id" < "schemaA"."products"."lid"
 
 Ref:"users"."id" < "ecommerce"."users"."id"
 
-Ref:"users"."name" < "ecommerce"."users"."id"
+Ref "name_optional":"users"."name" < "ecommerce"."users"."id"
 
 Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
 
 Ref:"users"."id" < "schemaA"."locations"."name"
 
-Ref:"booking_reference".("reference_id", "cust_id") < "br_flight".("reference_id", "cust_id")
+Ref "fk_composite":"booking_reference".("reference_id", "cust_id") < "br_flight".("reference_id", "cust_id")
 
-Ref:"countries"."code" < "users"."country_code"
+Ref "fk_country_code":"countries"."code" < "users"."country_code"
 
 Enum "schemaB"."gender" {
   "male"

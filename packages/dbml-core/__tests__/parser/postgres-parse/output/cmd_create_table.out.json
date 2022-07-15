@@ -94,6 +94,7 @@
           },
           "inline_refs": [
             {
+              "name": "c_time_constraint",
               "endpoint": {
                 "tableName": "a",
                 "fieldNames": [
@@ -251,7 +252,8 @@
           ],
           "relation": "1"
         }
-      ]
+      ],
+      "name": "c_time_constraint"
     }
   ],
   "enums": []
