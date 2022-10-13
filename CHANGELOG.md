@@ -1,3 +1,20 @@
+## v2.4.3 (2022-10-13)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#273](https://github.com/holistics/dbml/pull/273) Support SMALLSERIAL type for export postgresSQL ([@baolequoc](https://github.com/baolequoc))
+* `dbml-core`
+  * [#274](https://github.com/holistics/dbml/pull/274) Support shorthand foreign key references  ([@nguyenalter](https://github.com/nguyenalter))
+* `dbml-core`
+  * [#283](https://github.com/holistics/dbml/pull/283) Support schema name for the junction table of many-to-many relationship  ([@baolequoc](https://github.com/baolequoc))
+* `dbml-core`
+  * [#291](https://github.com/holistics/dbml/pull/291) Support timestamptz and timetz type for import postgresSQL  ([@baolequoc](https://github.com/baolequoc))
+#### Committers: 2
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- [@baolequoc](https://github.com/baolequoc)
+
+
+
 ## v2.4.2 (2022-06-02)
 
 #### :rocket: New Feature
