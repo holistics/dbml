@@ -10,6 +10,12 @@ CREATE SCHEMA `E`;
 
 CREATE SCHEMA `G`;
 
+CREATE SCHEMA `schema`;
+
+CREATE SCHEMA `schema1`;
+
+CREATE SCHEMA `schema2`;
+
 CREATE TABLE `A`.`a` (
   `AB` integer,
   `BA` integer,
@@ -49,20 +55,48 @@ CREATE TABLE `G`.`g` (
 );
 
 CREATE TABLE `t1` (
-  `a` int,
-  `b` int
+  `a` int PRIMARY KEY,
+  `b` int UNIQUE
 );
 
 CREATE TABLE `t2` (
-  `a` int,
-  `b` int
+  `a` int PRIMARY KEY,
+  `b` int UNIQUE
 );
 
 CREATE TABLE `t1_t2` (
   `a` int
 );
 
-CREATE TABLE `a_b` (
+CREATE TABLE `schema`.`image` (
+  `id` integer PRIMARY KEY,
+  `url` varchar(255)
+);
+
+CREATE TABLE `schema`.`content_item` (
+  `id` integer PRIMARY KEY,
+  `heading` varchar(255),
+  `description` varchar(255)
+);
+
+CREATE TABLE `schema`.`footer_item` (
+  `id` integer PRIMARY KEY,
+  `left` varchar(255),
+  `centre` varchar(255),
+  `right` varchar(255)
+);
+
+CREATE TABLE `schema1`.`customers` (
+  `id` integer PRIMARY KEY,
+  `full_name` varchar(255)
+);
+
+CREATE TABLE `schema2`.`orders` (
+  `id` integer PRIMARY KEY,
+  `total_price` integer
+);
+
+CREATE TABLE `A`.`a_b` (
   `a_AB` integer,
   `a_BA` integer,
   `b_BC` integer,
@@ -70,23 +104,23 @@ CREATE TABLE `a_b` (
   PRIMARY KEY (`a_AB`, `a_BA`, `b_BC`, `b_CB`)
 );
 
-ALTER TABLE `a_b` ADD FOREIGN KEY (`a_AB`, `a_BA`) REFERENCES `A`.`a` (`AB`, `BA`);
+ALTER TABLE `A`.`a_b` ADD FOREIGN KEY (`a_AB`, `a_BA`) REFERENCES `A`.`a` (`AB`, `BA`);
 
-ALTER TABLE `a_b` ADD FOREIGN KEY (`b_BC`, `b_CB`) REFERENCES `B`.`b` (`BC`, `CB`);
+ALTER TABLE `A`.`a_b` ADD FOREIGN KEY (`b_BC`, `b_CB`) REFERENCES `B`.`b` (`BC`, `CB`);
 
 
-CREATE TABLE `d_c` (
+CREATE TABLE `D`.`d_c` (
   `d_DE` integer,
   `c_CD` integer,
   PRIMARY KEY (`d_DE`, `c_CD`)
 );
 
-ALTER TABLE `d_c` ADD FOREIGN KEY (`d_DE`) REFERENCES `D`.`d` (`DE`);
+ALTER TABLE `D`.`d_c` ADD FOREIGN KEY (`d_DE`) REFERENCES `D`.`d` (`DE`);
 
-ALTER TABLE `d_c` ADD FOREIGN KEY (`c_CD`) REFERENCES `C`.`c` (`CD`);
+ALTER TABLE `D`.`d_c` ADD FOREIGN KEY (`c_CD`) REFERENCES `C`.`c` (`CD`);
 
 
-CREATE TABLE `e_g` (
+CREATE TABLE `E`.`e_g` (
   `e_EF` integer,
   `e_FE` integer,
   `g_GH` integer,
@@ -94,9 +128,9 @@ CREATE TABLE `e_g` (
   PRIMARY KEY (`e_EF`, `e_FE`, `g_GH`, `g_HG`)
 );
 
-ALTER TABLE `e_g` ADD FOREIGN KEY (`e_EF`, `e_FE`) REFERENCES `E`.`e` (`EF`, `FE`);
+ALTER TABLE `E`.`e_g` ADD FOREIGN KEY (`e_EF`, `e_FE`) REFERENCES `E`.`e` (`EF`, `FE`);
 
-ALTER TABLE `e_g` ADD FOREIGN KEY (`g_GH`, `g_HG`) REFERENCES `G`.`g` (`GH`, `HG`);
+ALTER TABLE `E`.`e_g` ADD FOREIGN KEY (`g_GH`, `g_HG`) REFERENCES `G`.`g` (`GH`, `HG`);
 
 
 CREATE TABLE `t1_t2(1)` (
@@ -119,4 +153,26 @@ CREATE TABLE `t1_t2(2)` (
 ALTER TABLE `t1_t2(2)` ADD FOREIGN KEY (`t1_b`) REFERENCES `t1` (`b`);
 
 ALTER TABLE `t1_t2(2)` ADD FOREIGN KEY (`t2_b`) REFERENCES `t2` (`b`);
+
+
+CREATE TABLE `schema`.`image_content_item` (
+  `image_id` integer,
+  `content_item_id` integer,
+  PRIMARY KEY (`image_id`, `content_item_id`)
+);
+
+ALTER TABLE `schema`.`image_content_item` ADD FOREIGN KEY (`image_id`) REFERENCES `schema`.`image` (`id`);
+
+ALTER TABLE `schema`.`image_content_item` ADD FOREIGN KEY (`content_item_id`) REFERENCES `schema`.`content_item` (`id`);
+
+
+CREATE TABLE `schema1`.`customers_orders` (
+  `customers_id` integer,
+  `orders_id` integer,
+  PRIMARY KEY (`customers_id`, `orders_id`)
+);
+
+ALTER TABLE `schema1`.`customers_orders` ADD FOREIGN KEY (`customers_id`) REFERENCES `schema1`.`customers` (`id`);
+
+ALTER TABLE `schema1`.`customers_orders` ADD FOREIGN KEY (`orders_id`) REFERENCES `schema2`.`orders` (`id`);
 

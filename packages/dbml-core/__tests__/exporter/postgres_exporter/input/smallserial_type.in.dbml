@@ -1,0 +1,29 @@
+Table user {
+  id BIGINT [pk, increment]
+  name int 
+  address varcharacter
+}
+
+Table user1 {
+  id SMALLSERIAL [pk, increment]
+  name int 
+  address varcharacter
+}
+
+Table user2 {
+  id BIGINt [pk, increment]
+  name int 
+  address varcharacter
+}
+
+Table user3 {
+  id smallSERIAL [pk, increment]
+  name int 
+  address varcharacter
+}
+
+Table user4 {
+  id serial [pk, increment]
+  name int 
+  address varcharacter
+}

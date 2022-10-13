@@ -112,8 +112,9 @@ class SqlServerExporter {
     return tableStrs;
   }
 
-  static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName) {
-    let line = `CREATE TABLE [${tableName}] (\n`;
+  static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName, refEndpointSchema, model) {
+    let line = `CREATE TABLE ${shouldPrintSchema(refEndpointSchema, model)
+      ? `[${refEndpointSchema.name}].` : ''}[${tableName}] (\n`;
     const key1s = [...firstTableFieldsMap.keys()].join('], [');
     const key2s = [...secondTableFieldsMap.keys()].join('], [');
     firstTableFieldsMap.forEach((fieldType, fieldName) => {
@@ -127,10 +128,11 @@ class SqlServerExporter {
     return line;
   }
 
-  static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, schema, model) {
+  static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, refEndpointSchema, foreignEndpointSchema, model) {
     const refEndpointFields = [...fieldsMap.keys()].join('], [');
-    const line = `ALTER TABLE [${refEndpointTableName}] ADD FOREIGN KEY ([${refEndpointFields}]) REFERENCES ${shouldPrintSchema(schema, model)
-      ? `[${schema.name}].` : ''}[${foreignEndpointTableName}] ${foreignEndpointFields};\nGO\n\n`;
+    const line = `ALTER TABLE ${shouldPrintSchema(refEndpointSchema, model)
+      ? `[${refEndpointSchema.name}].` : ''}[${refEndpointTableName}] ADD FOREIGN KEY ([${refEndpointFields}]) REFERENCES ${shouldPrintSchema(foreignEndpointSchema, model)
+      ? `[${foreignEndpointSchema.name}].` : ''}[${foreignEndpointTableName}] ${foreignEndpointFields};\nGO\n\n`;
     return line;
   }
 
@@ -165,10 +167,10 @@ class SqlServerExporter {
         const secondTableFieldsMap = buildJunctionFields2(foreignEndpoint.fieldIds, model, firstTableFieldsMap);
 
         const newTableName = buildNewTableName(refEndpointTable.name, foreignEndpointTable.name, usedTableNames);
-        line += this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, newTableName);
+        line += this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, newTableName, refEndpointSchema, model);
 
-        line += this.buildForeignKeyManyToMany(firstTableFieldsMap, refEndpointFieldName, newTableName, refEndpointTable.name, refEndpointSchema, model);
-        line += this.buildForeignKeyManyToMany(secondTableFieldsMap, foreignEndpointFieldName, newTableName, foreignEndpointTable.name, foreignEndpointSchema, model);
+        line += this.buildForeignKeyManyToMany(firstTableFieldsMap, refEndpointFieldName, newTableName, refEndpointTable.name, refEndpointSchema, refEndpointSchema, model);
+        line += this.buildForeignKeyManyToMany(secondTableFieldsMap, foreignEndpointFieldName, newTableName, foreignEndpointTable.name, refEndpointSchema, foreignEndpointSchema, model);
       } else {
         line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
           ? `[${foreignEndpointSchema.name}].` : ''}[${foreignEndpointTable.name}] ADD `;

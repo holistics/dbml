@@ -225,9 +225,6 @@
           "tableName": "users"
         },
         {
-          "fieldNames": [
-            "country_code"
-          ],
           "relation": "1",
           "tableName": "countries"
         }
