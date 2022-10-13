@@ -10,7 +10,6 @@ describe('@dbml/core - importer', () => {
     const input = require(`./${testDir}/input/${fileName}.in.${fileExtension}`);
     const output = require(`./${testDir}/output/${fileName}.out.dbml`);
     const res = importer.import(input, format);
-
     expect(res).toBe(output);
     /* eslint-enable */
   };

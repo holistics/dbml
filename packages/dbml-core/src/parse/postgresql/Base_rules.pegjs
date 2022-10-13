@@ -59,6 +59,13 @@ data_type "VALID TYPE" = c1:"CHARACTER"i _ c2:"VARYING"i _ args:("("expression")
     args: args ? args[1] : null
   }
 }
+/ "timestamptz"i _ number:("(" _ numeric_constant _ ")" _)? dimensions:(array_extension)? {
+    const args = number ? number[2] : null;
+    return {
+      type_name: (args !== null ? `timestamptz(${args})`: `timestamptz`) + (dimensions ? dimensions.map((dimension) => '[' + dimension + ']').join('') : ''),
+      args
+    }
+  }
 / "timestamp"i _ number:("(" _ numeric_constant _ ")" _)? (("without"i/"with"i) _ "time"i _ "zone"i)? dimensions:(array_extension)? {
   const args = number ? number[2] : null;
   return {
@@ -66,6 +73,13 @@ data_type "VALID TYPE" = c1:"CHARACTER"i _ c2:"VARYING"i _ args:("("expression")
     args
   }
 }
+/ "timetz"i _ number:("(" _ numeric_constant _ ")" _)? dimensions:(array_extension)? {
+    const args = number ? number[2] : null;
+    return {
+      type_name: (args !== null ? `timetz(${args})`: `timetz`) + (dimensions ? dimensions.map((dimension) => '[' + dimension + ']').join('') : ''),
+      args
+    }
+  }
 / "time"i _ number:("(" _ numeric_constant _ ")" _)? (("without"i/"with"i) _ "time"i _ "zone"i)? dimensions:(array_extension)? {
   const args = number ? number[2] : null;
   return {
