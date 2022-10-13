@@ -22,6 +22,7 @@ parser = commands:command* {
 							if (field.inline_refs) {
 								refs.push(...field.inline_refs.map(ref => {
 									return {
+										name: ref.name,
 										endpoints: [
 											{
 												tableName: table.name,

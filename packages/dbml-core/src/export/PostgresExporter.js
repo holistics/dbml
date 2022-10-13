@@ -36,7 +36,9 @@ class PostgresExporter {
 
       let line = '';
       if (field.increment) {
-        const typeSerial = field.type.type_name === 'bigint' ? 'BIGSERIAL' : 'SERIAL';
+        let typeSerial = 'SERIAL';
+        if (field.type.type_name.toLowerCase() === 'bigint') typeSerial = 'BIGSERIAL';
+        else if (field.type.type_name.toLowerCase() === 'smallserial') typeSerial = 'SMALLSERIAL';
         line = `"${field.name}" ${typeSerial}`;
       } else {
         let schemaName = '';
@@ -136,8 +138,9 @@ class PostgresExporter {
     return `(${fieldNames})`;
   }
 
-  static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName) {
-    let line = `CREATE TABLE "${tableName}" (\n`;
+  static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName, refEndpointSchema, model) {
+    let line = `CREATE TABLE ${shouldPrintSchema(refEndpointSchema, model)
+      ? `"${refEndpointSchema.name}".` : ''}"${tableName}" (\n`;
     const key1s = [...firstTableFieldsMap.keys()].join('", "');
     const key2s = [...secondTableFieldsMap.keys()].join('", "');
     firstTableFieldsMap.forEach((fieldType, fieldName) => {
@@ -151,10 +154,11 @@ class PostgresExporter {
     return line;
   }
 
-  static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, schema, model) {
+  static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, refEndpointSchema, foreignEndpointSchema, model) {
     const refEndpointFields = [...fieldsMap.keys()].join('", "');
-    const line = `ALTER TABLE "${refEndpointTableName}" ADD FOREIGN KEY ("${refEndpointFields}") REFERENCES ${shouldPrintSchema(schema, model)
-      ? `"${schema.name}".` : ''}"${foreignEndpointTableName}" ${foreignEndpointFields};\n\n`;
+    const line = `ALTER TABLE ${shouldPrintSchema(refEndpointSchema, model)
+      ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTableName}" ADD FOREIGN KEY ("${refEndpointFields}") REFERENCES ${shouldPrintSchema(foreignEndpointSchema, model)
+      ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTableName}" ${foreignEndpointFields};\n\n`;
     return line;
   }
 
@@ -184,10 +188,10 @@ class PostgresExporter {
         const secondTableFieldsMap = buildJunctionFields2(foreignEndpoint.fieldIds, model, firstTableFieldsMap);
 
         const newTableName = buildNewTableName(refEndpointTable.name, foreignEndpointTable.name, usedTableNames);
-        line += this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, newTableName);
+        line += this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, newTableName, refEndpointSchema, model);
 
-        line += this.buildForeignKeyManyToMany(firstTableFieldsMap, refEndpointFieldName, newTableName, refEndpointTable.name, refEndpointSchema, model);
-        line += this.buildForeignKeyManyToMany(secondTableFieldsMap, foreignEndpointFieldName, newTableName, foreignEndpointTable.name, foreignEndpointSchema, model);
+        line += this.buildForeignKeyManyToMany(firstTableFieldsMap, refEndpointFieldName, newTableName, refEndpointTable.name, refEndpointSchema, refEndpointSchema, model);
+        line += this.buildForeignKeyManyToMany(secondTableFieldsMap, foreignEndpointFieldName, newTableName, foreignEndpointTable.name,refEndpointSchema, foreignEndpointSchema, model);
       } else {
         line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
           ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}" ADD `;
