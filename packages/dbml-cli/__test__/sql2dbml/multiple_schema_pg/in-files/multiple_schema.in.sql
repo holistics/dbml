@@ -27,7 +27,14 @@ CREATE TABLE "users" (
   "pjs" job_status,
   "pjs2" job_status,
   "pg" schemaB.gender,
-  "pg2" gender
+  "pg2" gender,
+  "country_code" int
+);
+
+CREATE TABLE "countries" (
+  "code" int PRIMARY KEY,
+  "name" varchar,
+  "continent_name" varchar
 );
 
 CREATE TABLE "products" (
@@ -48,12 +55,26 @@ CREATE TABLE "schemaA"."products" (
   "id" int PRIMARY KEY,
   "name" varchar,
   "lid" int,
-  CONSTRAINT fk_1 FOREIGN KEY(lid) REFERENCES "schemaA"."locations"(id)
+  CONSTRAINT "fk_1" FOREIGN KEY(lid) REFERENCES "schemaA"."locations"(id)
 );
 
 CREATE TABLE "schemaA"."locations" (
   "id" int PRIMARY KEY,
   "name" varchar
+);
+
+CREATE TABLE "booking_reference" (
+  "reference_id" NVARCHAR(10) NOT NULL,
+  "cust_id" NUMBER(10) NOT NULL,
+  "status" NVARCHAR (1) NOT NULL,
+  PRIMARY KEY ("reference_id", "cust_id")
+);
+
+CREATE TABLE "br_flight" (
+  "reference_id" NVARCHAR(10) NOT NULL ,
+  "cust_id" NUMBER(10)NOT NULL,
+  "flight_id" NVARCHAR (10) NOT NULL,
+  PRIMARY KEY ("reference_id", "flight_id")
 );
 
 CREATE INDEX "product_status" ON "schemaA"."products" ("id", "name");
@@ -75,3 +96,7 @@ ALTER TABLE "ecommerce"."users" ADD CONSTRAINT "name_optional" FOREIGN KEY ("id"
 ALTER TABLE "schemaA"."products" ADD FOREIGN KEY ("name") REFERENCES "ecommerce"."users" ("id");
 
 ALTER TABLE "schemaA"."locations" ADD FOREIGN KEY ("name") REFERENCES "users" ("id");
+
+ALTER TABLE "br_flight" ADD CONSTRAINT "fk_composite" FOREIGN KEY ("reference_id", "cust_id") REFERENCES "booking_reference";
+
+ALTER TABLE "users" ADD CONSTRAINT "fk_country_code" FOREIGN KEY ("country_code") REFERENCES "countries";

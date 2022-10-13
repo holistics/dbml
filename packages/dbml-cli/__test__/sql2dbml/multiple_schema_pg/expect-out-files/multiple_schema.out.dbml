@@ -17,7 +17,14 @@ Table "users" {
   "pjs2" job_status
   "pg" schemaB.gender
   "pg2" gender
+  "country_code" int
   Note: 'Sample note on table users'
+}
+
+Table "countries" {
+  "code" int [pk]
+  "name" varchar
+  "continent_name" varchar
 }
 
 Table "products" {
@@ -29,15 +36,39 @@ Indexes {
 }
 }
 
-Ref:"schemaA"."locations"."id" < "schemaA"."products"."lid"
+Table "booking_reference" {
+  "reference_id" NVARCHAR(10) [not null]
+  "cust_id" NUMBER(10) [not null]
+  "status" NVARCHAR(1) [not null]
+
+Indexes {
+  (reference_id, cust_id) [pk]
+}
+}
+
+Table "br_flight" {
+  "reference_id" NVARCHAR(10) [not null]
+  "cust_id" NUMBER(10) [not null]
+  "flight_id" NVARCHAR(10) [not null]
+
+Indexes {
+  (reference_id, flight_id) [pk]
+}
+}
+
+Ref "fk_1":"schemaA"."locations"."id" < "schemaA"."products"."lid"
 
 Ref:"users"."id" < "ecommerce"."users"."id"
 
-Ref:"users"."name" < "ecommerce"."users"."id"
+Ref "name_optional":"users"."name" < "ecommerce"."users"."id"
 
 Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
 
 Ref:"users"."id" < "schemaA"."locations"."name"
+
+Ref "fk_composite":"booking_reference".("reference_id", "cust_id") < "br_flight".("reference_id", "cust_id")
+
+Ref "fk_country_code":"countries"."code" < "users"."country_code"
 
 Enum "schemaB"."gender" {
   "male"

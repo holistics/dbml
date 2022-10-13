@@ -69,11 +69,25 @@ class Endpoint extends Element {
   }
 
   setFields (fieldNames, table) {
-    fieldNames.forEach(fieldName => {
+    let newFieldNames = (fieldNames && fieldNames.length) ? [...fieldNames] : [];
+    if (!newFieldNames.length) {
+      const fieldHasPK = table.fields.find(field => field.pk);
+      if (fieldHasPK) {
+        newFieldNames.push(fieldHasPK.name);
+      } else {
+        const indexHasPK = table.indexes.find(index => index.pk);
+        if (indexHasPK) {
+          newFieldNames = indexHasPK.columns.map(column => column.value);
+        } else {
+          this.error(`Can't find primary or composite key in table ${shouldPrintSchema(table.schema) ? `"${table.schema.name}".` : ''}"${table.name}"`);
+        }
+      }
+    }
+    newFieldNames.forEach(fieldName => {
       const field = table.findField(fieldName);
       if (!field) {
         this.error(`Can't find field ${shouldPrintSchema(table.schema)
-          ? `"${table.schema.name}".` : ''}"${fieldName}" in table "${this.tableName}"`);
+          ? `"${table.schema.name}".` : ''}"${fieldName}" in table "${table.name}"`);
       }
       this.fields.push(field);
       field.pushEndpoint(this);
