@@ -1,0 +1,4 @@
+Table "test_new" {
+  "id" int [pk, increment]
+  "payload" text
+}
