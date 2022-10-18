@@ -266,13 +266,13 @@ class PostgresExporter {
       switch (comment.type) {
         case 'table': {
           line += ` TABLE ${shouldPrintSchema(schema, model)
-            ? `"${schema.name}".` : ''}"${table.name}" IS '${table.note.replace(/'/g, '"')}'`;
+            ? `"${schema.name}".` : ''}"${table.name}" IS '${table.note.replace(/'/g, "\"")}'`;
           break;
         }
         case 'column': {
           const field = model.fields[comment.fieldId];
           line += ` COLUMN ${shouldPrintSchema(schema, model)
-            ? `"${schema.name}".` : ''}"${table.name}"."${field.name}" IS '${field.note.replace(/'/g, '"')}'`;
+            ? `"${schema.name}".` : ''}"${table.name}"."${field.name}" IS '${field.note.replace(/'/g, "\"")}'`;
           break;
         }
         default:
