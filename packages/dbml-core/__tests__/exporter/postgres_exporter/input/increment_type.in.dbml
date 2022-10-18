@@ -34,11 +34,6 @@ Table "table7" {
 }
 
 Table "table8" {
-  "id" int [pk, increment]
-  "name" varchar
-}
-
-Table "table9" {
-  "id" Intdsfsd [pk]
+  "id" intaaaa [pk, increment]
   "name" varchar
 }
