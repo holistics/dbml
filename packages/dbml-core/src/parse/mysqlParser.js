@@ -278,7 +278,7 @@ function peg$parse(input, options) {
       peg$c26 = "key",
       peg$c27 = peg$literalExpectation("KEY", true),
       peg$c28 = function(name) { return name },
-      peg$c29 = function(unique, name, type1, columns, type2) {
+      peg$c29 = function(unique, name, type1, columns, type2, type3) {
       	const index = { columns };
       	if(name) {
       		index.name = name;
@@ -286,9 +286,9 @@ function peg$parse(input, options) {
       	if(unique) {
       		index.unique = true;
       	}
-      	const type = type2 || type1;
-      	if(type)
-      		index.type = type;
+      	if(type1) index.type = type1;
+      	else if(type2 && type2[1] && type2[1].type === 'index_type' && type2[1].value ) index.type = type2[1].value;
+      	else if(type3) index.type = type3;
       	return index;
       },
       peg$c30 = "index",
@@ -2001,7 +2001,7 @@ function peg$parse(input, options) {
                               }
                               if (s14 !== peg$FAILED) {
                                 peg$savedPos = s0;
-                                s1 = peg$c29(s2, s4, s6, s10, s14);
+                                s1 = peg$c29(s2, s4, s6, s10, s13, s14);
                                 s0 = s1;
                               } else {
                                 peg$currPos = s0;
