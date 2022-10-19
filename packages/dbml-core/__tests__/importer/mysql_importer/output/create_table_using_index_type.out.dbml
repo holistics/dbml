@@ -4,7 +4,7 @@ Table "bad_faith_users" {
   "created" int(11) [default: NULL]
 
 Indexes {
-  user_id [name: "user_id"]
+  user_id [type: btree, name: "user_id"]
 }
 }
 
@@ -34,7 +34,7 @@ Table "booking" {
   "Created_at" varchar(255) [not null, default: ""]
 
 Indexes {
-  user_id_two [name: "venue"]
-  user_id_one [name: "user_id_one"]
+  user_id_two [type: btree, name: "venue"]
+  user_id_one [type: hash, name: "user_id_one"]
 }
 }
