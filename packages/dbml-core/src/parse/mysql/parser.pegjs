@@ -190,7 +190,7 @@ UniqueSyntax
 // "KEY is normally a synonym for INDEX".
 IndexInLineSyntax = _ unique:index_in_line
 	_ name:name? _ type1:index_type? _
-	"(" _ columns:IndexColumnValues _")" _ IndexOption? type2:index_type?
+	"(" _ columns:IndexColumnValues _")" (_ IndexOption)? type2:(_ index_type)?
 {
 	const index = { columns };
 	if(name) {
