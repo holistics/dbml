@@ -232,6 +232,9 @@ FieldSettings = fieldSettingsArray:FieldSetting*
 			fieldSettings.dbdefault = field.value;
 		else if(field.type === "comment")
 			fieldSettings.note = field.value;
+		else if(field.type === "update") {
+			console.log(field);
+		}
 		else if (field !== "not_supported") {
 			fieldSettings[field] = true;
 		}
@@ -257,6 +260,7 @@ FieldSetting "field setting"
     ) { return "not_supported" }
 	/ _ v:Default {return {type: "default", value: v} }
 	/ _ v:Comment { return {type: "comment", value: v }}
+	/ _ "ON"i _ "UPDATE"i _ type
 
 // Default: Support "DEFAULT (value|expr)" syntax
 Default
