@@ -104,7 +104,9 @@ class Database extends Element {
     if (!schema) {
       schema = new Schema({
         name: schemaName,
-        note: schemaName === DEFAULT_SCHEMA_NAME ? `Default ${_.capitalize(DEFAULT_SCHEMA_NAME)} Schema` : '',
+        note: {
+          value: schemaName === DEFAULT_SCHEMA_NAME ? `Default ${_.capitalize(DEFAULT_SCHEMA_NAME)} Schema` : null,
+        },
         database: this,
       });
 
@@ -158,6 +160,7 @@ class Database extends Element {
     return {
       hasDefaultSchema: this.hasDefaultSchema,
       note: this.note,
+      noteToken: this.noteToken,
       databaseType: this.databaseType,
       name: this.name,
     };

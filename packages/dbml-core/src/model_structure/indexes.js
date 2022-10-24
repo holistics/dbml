@@ -75,6 +75,7 @@ class Index extends Element {
       unique: this.unique,
       pk: this.pk,
       note: this.note,
+      noteToken: this.noteToken,
     };
   }
 

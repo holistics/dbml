@@ -15,10 +15,8 @@ class Field extends Element {
     this.unique = unique;
     this.pk = pk;
     this.not_null = not_null;
-    if (note) {
-      this.note = note.value;
-      this.noteToken = note.token;
-    }
+    this.note = note ? note.value : null;
+    this.noteToken = note ? note.token : null;
     this.dbdefault = dbdefault;
     this.increment = increment;
     this.endpoints = [];
@@ -82,6 +80,7 @@ class Field extends Element {
       pk: this.pk,
       not_null: this.not_null,
       note: this.note,
+      noteToken: this.noteToken,
       dbdefault: this.dbdefault,
       increment: this.increment,
     };
