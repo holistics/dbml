@@ -3,11 +3,13 @@
   "tables": [
     {
       "name": "orders",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -30,6 +32,7 @@
         {
           "name": "user_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -52,6 +55,7 @@
         {
           "name": "status",
           "type": {
+            "schemaName": null,
             "type_name": "orders_status",
             "args": null
           },
@@ -72,6 +76,7 @@
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -107,11 +112,13 @@
     },
     {
       "name": "order_items",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "order_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -132,6 +139,7 @@
         {
           "name": "product_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -152,6 +160,7 @@
         {
           "name": "quantity",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -190,11 +199,13 @@
     },
     {
       "name": "products",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -216,6 +227,7 @@
         {
           "name": "name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -236,6 +248,7 @@
         {
           "name": "merchant_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -257,6 +270,7 @@
         {
           "name": "price",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -277,6 +291,7 @@
         {
           "name": "status",
           "type": {
+            "schemaName": null,
             "type_name": "product status",
             "args": null
           },
@@ -297,6 +312,7 @@
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "datetime",
             "args": null
           },
@@ -383,11 +399,13 @@
     },
     {
       "name": "users",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -409,6 +427,7 @@
         {
           "name": "full_name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -429,6 +448,7 @@
         {
           "name": "email",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -450,6 +470,7 @@
         {
           "name": "gender",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -470,6 +491,7 @@
         {
           "name": "date_of_birth",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -490,6 +512,7 @@
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -510,6 +533,7 @@
         {
           "name": "country_code",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -544,11 +568,13 @@
     },
     {
       "name": "merchants",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -570,6 +596,7 @@
         {
           "name": "merchant_name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -590,6 +617,7 @@
         {
           "name": "country_code",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -610,6 +638,7 @@
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -630,6 +659,7 @@
         {
           "name": "admin_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -664,11 +694,13 @@
     },
     {
       "name": "countries",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "code",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -690,6 +722,7 @@
         {
           "name": "name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -710,6 +743,7 @@
         {
           "name": "continent_name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -748,6 +782,7 @@
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "orders",
           "fieldNames": [
             "id"
@@ -767,6 +802,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "order_items",
           "fieldNames": [
             "order_id"
@@ -797,12 +833,14 @@
           "line": 86,
           "column": 45
         }
-      }
+      },
+      "schemaName": null
     },
     {
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "products",
           "fieldNames": [
             "id"
@@ -822,6 +860,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "order_items",
           "fieldNames": [
             "product_id"
@@ -852,12 +891,14 @@
           "line": 88,
           "column": 49
         }
-      }
+      },
+      "schemaName": null
     },
     {
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "countries",
           "fieldNames": [
             "code"
@@ -877,6 +918,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "users",
           "fieldNames": [
             "country_code"
@@ -907,12 +949,14 @@
           "line": 90,
           "column": 48
         }
-      }
+      },
+      "schemaName": null
     },
     {
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "countries",
           "fieldNames": [
             "code"
@@ -932,6 +976,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "merchants",
           "fieldNames": [
             "country_code"
@@ -962,12 +1007,14 @@
           "line": 92,
           "column": 52
         }
-      }
+      },
+      "schemaName": null
     },
     {
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "merchants",
           "fieldNames": [
             "id"
@@ -987,6 +1034,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "products",
           "fieldNames": [
             "merchant_id"
@@ -1017,12 +1065,14 @@
           "line": 94,
           "column": 48
         }
-      }
+      },
+      "schemaName": null
     },
     {
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "users",
           "fieldNames": [
             "id"
@@ -1042,6 +1092,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "merchants",
           "fieldNames": [
             "admin_id"
@@ -1072,12 +1123,14 @@
           "line": 96,
           "column": 42
         }
-      }
+      },
+      "schemaName": null
     }
   ],
   "enums": [
     {
       "name": "orders_status",
+      "schemaName": null,
       "token": {
         "start": {
           "offset": 150,
@@ -1155,6 +1208,7 @@
     },
     {
       "name": "product status",
+      "schemaName": null,
       "token": {
         "start": {
           "offset": 221,
@@ -1204,12 +1258,15 @@
   "tableGroups": [
     {
       "name": "g1",
+      "schemaName": null,
       "tables": [
         {
-          "name": "users"
+          "name": "users",
+          "schemaName": null
         },
         {
-          "name": "merchants"
+          "name": "merchants",
+          "schemaName": null
         }
       ],
       "token": {
@@ -1227,12 +1284,15 @@
     },
     {
       "name": "g2",
+      "schemaName": null,
       "tables": [
         {
-          "name": "countries"
+          "name": "countries",
+          "schemaName": null
         },
         {
-          "name": "orders"
+          "name": "orders",
+          "schemaName": null
         }
       ],
       "token": {
@@ -1249,13 +1309,28 @@
       }
     }
   ],
+  "aliases": [],
   "project": {
     "name": "ecommerce",
     "tables": [],
     "refs": [],
     "enums": [],
     "tableGroups": [],
-    "note": "# Introduction\nThis is an ecommerce project\n\n# Description\n...",
+    "note": {
+      "value": "# Introduction\nThis is an ecommerce project\n\n# Description\n...",
+      "token": {
+        "start": {
+          "offset": 22,
+          "line": 2,
+          "column": 3
+        },
+        "end": {
+          "offset": 116,
+          "line": 8,
+          "column": 6
+        }
+      }
+    },
     "database_type": "PostgreSQL"
   }
 }

@@ -3,11 +3,16 @@ import EnumValue from './enumValue';
 import { shouldPrintSchema } from './utils';
 
 class Enum extends Element {
-  constructor ({ name, token, values, note, schema } = {}) {
+  constructor ({
+    name, token, values, note, schema,
+  } = {}) {
     super(token);
     if (!name) { this.error('Enum must have a name'); }
     this.name = name;
-    this.note = note;
+    if (note) {
+      this.note = note.value;
+      this.noteToken = note.token;
+    }
     this.values = [];
     this.fields = [];
     this.schema = schema;

@@ -1,24 +1,27 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "orders",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
           "token": {
             "start": {
-              "offset": 18,
-              "line": 3,
+              "offset": 117,
+              "line": 15,
               "column": 3
             },
             "end": {
-              "offset": 45,
-              "line": 4,
+              "offset": 144,
+              "line": 16,
               "column": 1
             }
           },
@@ -28,18 +31,19 @@
         {
           "name": "user_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
           "token": {
             "start": {
-              "offset": 45,
-              "line": 4,
+              "offset": 144,
+              "line": 16,
               "column": 1
             },
             "end": {
-              "offset": 78,
-              "line": 5,
+              "offset": 177,
+              "line": 17,
               "column": 1
             }
           },
@@ -50,55 +54,85 @@
         {
           "name": "status",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
           "token": {
             "start": {
-              "offset": 78,
-              "line": 5,
+              "offset": 177,
+              "line": 17,
               "column": 1
             },
             "end": {
-              "offset": 124,
-              "line": 6,
+              "offset": 223,
+              "line": 18,
               "column": 1
             }
           },
           "inline_refs": [],
-          "note": "Status of an order"
+          "note": {
+            "value": "Status of an order",
+            "token": {
+              "start": {
+                "offset": 195,
+                "line": 17,
+                "column": 19
+              },
+              "end": {
+                "offset": 221,
+                "line": 17,
+                "column": 45
+              }
+            }
+          }
         },
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
           "token": {
             "start": {
-              "offset": 124,
-              "line": 6,
+              "offset": 223,
+              "line": 18,
               "column": 1
             },
             "end": {
-              "offset": 193,
-              "line": 7,
+              "offset": 292,
+              "line": 19,
               "column": 1
             }
           },
           "inline_refs": [],
-          "note": "When order created"
+          "note": {
+            "value": "When order created",
+            "token": {
+              "start": {
+                "offset": 245,
+                "line": 18,
+                "column": 23
+              },
+              "end": {
+                "offset": 271,
+                "line": 18,
+                "column": 49
+              }
+            }
+          }
         }
       ],
       "token": {
         "start": {
-          "offset": 1,
-          "line": 2,
+          "offset": 93,
+          "line": 14,
           "column": 1
         },
         "end": {
-          "offset": 194,
-          "line": 7,
+          "offset": 439,
+          "line": 29,
           "column": 2
         }
       },
@@ -112,14 +146,14 @@
           ],
           "token": {
             "start": {
-              "offset": 223,
-              "line": 8,
+              "offset": 372,
+              "line": 24,
               "column": 5
             },
             "end": {
-              "offset": 226,
-              "line": 8,
-              "column": 8
+              "offset": 387,
+              "line": 24,
+              "column": 20
             }
           },
           "type": "hash"
@@ -133,13 +167,13 @@
           ],
           "token": {
             "start": {
-              "offset": 237,
-              "line": 9,
+              "offset": 399,
+              "line": 25,
               "column": 5
             },
             "end": {
-              "offset": 248,
-              "line": 9,
+              "offset": 410,
+              "line": 25,
               "column": 16
             }
           }
@@ -151,15 +185,16 @@
   "enums": [
     {
       "name": "products_status",
+      "schemaName": null,
       "token": {
         "start": {
-          "offset": 196,
-          "line": 9,
+          "offset": 456,
+          "line": 33,
           "column": 1
         },
         "end": {
-          "offset": 321,
-          "line": 13,
+          "offset": 607,
+          "line": 38,
           "column": 2
         }
       },
@@ -168,13 +203,13 @@
           "name": "out_of_stock",
           "token": {
             "start": {
-              "offset": 221,
-              "line": 10,
+              "offset": 487,
+              "line": 34,
               "column": 3
             },
             "end": {
-              "offset": 234,
-              "line": 11,
+              "offset": 511,
+              "line": 35,
               "column": 1
             }
           }
@@ -183,47 +218,76 @@
           "name": "in_stock",
           "token": {
             "start": {
-              "offset": 234,
-              "line": 11,
+              "offset": 511,
+              "line": 35,
               "column": 1
             },
             "end": {
-              "offset": 264,
-              "line": 12,
+              "offset": 541,
+              "line": 36,
               "column": 1
             }
           },
-          "note": "In stock"
+          "note": {
+            "value": "In stock",
+            "token": {
+              "start": {
+                "offset": 523,
+                "line": 35,
+                "column": 13
+              },
+              "end": {
+                "offset": 539,
+                "line": 35,
+                "column": 29
+              }
+            }
+          }
         },
         {
           "name": "running_low",
           "token": {
             "start": {
-              "offset": 264,
-              "line": 12,
+              "offset": 541,
+              "line": 36,
               "column": 1
             },
             "end": {
-              "offset": 320,
-              "line": 13,
+              "offset": 597,
+              "line": 37,
               "column": 1
             }
           },
-          "note": "less than 20"
+          "note": {
+            "value": "less than 20",
+            "token": {
+              "start": {
+                "offset": 556,
+                "line": 36,
+                "column": 16
+              },
+              "end": {
+                "offset": 576,
+                "line": 36,
+                "column": 36
+              }
+            }
+          }
         }
       ]
     },
     {
       "name": "products_status2",
+      "schemaName": null,
       "token": {
         "start": {
-          "offset": 196,
-          "line": 9,
+          "offset": 615,
+          "line": 40,
           "column": 1
         },
         "end": {
-          "offset": 321,
-          "line": 13,
+          "offset": 920,
+          "line": 56,
           "column": 2
         }
       },
@@ -232,13 +296,13 @@
           "name": "out_of_stock",
           "token": {
             "start": {
-              "offset": 221,
-              "line": 10,
+              "offset": 699,
+              "line": 46,
               "column": 3
             },
             "end": {
-              "offset": 234,
-              "line": 11,
+              "offset": 723,
+              "line": 47,
               "column": 1
             }
           }
@@ -247,13 +311,13 @@
           "name": "in_stock",
           "token": {
             "start": {
-              "offset": 234,
-              "line": 11,
+              "offset": 723,
+              "line": 47,
               "column": 1
             },
             "end": {
-              "offset": 264,
-              "line": 12,
+              "offset": 769,
+              "line": 48,
               "column": 1
             }
           }
@@ -262,20 +326,36 @@
           "name": "running_low",
           "token": {
             "start": {
-              "offset": 264,
-              "line": 12,
+              "offset": 769,
+              "line": 48,
               "column": 1
             },
             "end": {
-              "offset": 320,
-              "line": 13,
+              "offset": 863,
+              "line": 53,
               "column": 1
             }
           },
-          "note": "less than 20"
+          "note": {
+            "value": "less than 20",
+            "token": {
+              "start": {
+                "offset": 820,
+                "line": 52,
+                "column": 16
+              },
+              "end": {
+                "offset": 840,
+                "line": 52,
+                "column": 36
+              }
+            }
+          }
         }
       ]
     }
   ],
-  "tableGroups": []
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
 }

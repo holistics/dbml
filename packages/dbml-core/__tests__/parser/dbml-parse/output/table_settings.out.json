@@ -3,11 +3,13 @@
   "tables": [
     {
       "name": "user",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -29,6 +31,7 @@
         {
           "name": "name",
           "type": {
+            "schemaName": null,
             "type_name": "string",
             "args": null
           },
@@ -64,11 +67,13 @@
     },
     {
       "name": "country",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -90,6 +95,7 @@
         {
           "name": "name",
           "type": {
+            "schemaName": null,
             "type_name": "string",
             "args": null
           },
@@ -122,15 +128,31 @@
         }
       },
       "indexes": [],
-      "note": "name is required"
+      "note": {
+        "value": "name is required",
+        "token": {
+          "start": {
+            "offset": 87,
+            "line": 6,
+            "column": 18
+          },
+          "end": {
+            "offset": 111,
+            "line": 6,
+            "column": 42
+          }
+        }
+      }
     },
     {
       "name": "product",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -152,6 +174,7 @@
         {
           "name": "name",
           "type": {
+            "schemaName": null,
             "type_name": "string",
             "args": null
           },
@@ -172,6 +195,7 @@
         {
           "name": "price",
           "type": {
+            "schemaName": null,
             "type_name": "decimal",
             "args": null
           },
@@ -205,15 +229,31 @@
       },
       "indexes": [],
       "headerColor": "#17DACC",
-      "note": "product must have price"
+      "note": {
+        "value": "product must have price",
+        "token": {
+          "start": {
+            "offset": 200,
+            "line": 11,
+            "column": 40
+          },
+          "end": {
+            "offset": 231,
+            "line": 11,
+            "column": 71
+          }
+        }
+      }
     },
     {
       "name": "merchant",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -235,6 +275,7 @@
         {
           "name": "user_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -255,6 +296,7 @@
         {
           "name": "product_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -275,6 +317,7 @@
         {
           "name": "address",
           "type": {
+            "schemaName": null,
             "type_name": "string",
             "args": null
           },
@@ -307,7 +350,21 @@
       },
       "indexes": [],
       "headerColor": "#08DAFF",
-      "note": "merchants sell a lot"
+      "note": {
+        "value": "merchants sell a lot",
+        "token": {
+          "start": {
+            "offset": 339,
+            "line": 17,
+            "column": 41
+          },
+          "end": {
+            "offset": 367,
+            "line": 17,
+            "column": 69
+          }
+        }
+      }
     }
   ],
   "refs": [
@@ -315,6 +372,7 @@
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "user",
           "fieldNames": [
             "id"
@@ -334,6 +392,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "merchant",
           "fieldNames": [
             "user_id"
@@ -364,12 +423,14 @@
           "line": 24,
           "column": 39
         }
-      }
+      },
+      "schemaName": null
     },
     {
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "product",
           "fieldNames": [
             "id"
@@ -389,6 +450,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "merchant",
           "fieldNames": [
             "product_id"
@@ -419,10 +481,12 @@
           "line": 26,
           "column": 45
         }
-      }
+      },
+      "schemaName": null
     }
   ],
   "enums": [],
   "tableGroups": [],
+  "aliases": [],
   "project": {}
 }

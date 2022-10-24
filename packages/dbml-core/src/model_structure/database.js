@@ -5,7 +5,9 @@ import Enum from './enum';
 import TableGroup from './tableGroup';
 import Table from './table';
 import Element from './element';
-import { DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF } from './config';
+import {
+  DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF,
+} from './config';
 import DbState from './dbState';
 
 class Database extends Element {
@@ -23,7 +25,10 @@ class Database extends Element {
     this.generateId();
     this.hasDefaultSchema = false;
     this.schemas = [];
-    this.note = project.note;
+    if (project.note) {
+      this.note = project.note.value;
+      this.noteToken = project.note.token;
+    }
     this.databaseType = project.database_type;
     this.name = project.name;
     this.aliases = aliases;

@@ -1,24 +1,27 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "sal_emp",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "name",
           "type": {
+            "schemaName": null,
             "type_name": "text",
             "args": null
           },
           "token": {
             "start": {
-              "offset": 19,
-              "line": 3,
+              "offset": 18,
+              "line": 2,
               "column": 3
             },
             "end": {
-              "offset": 29,
-              "line": 4,
+              "offset": 28,
+              "line": 3,
               "column": 1
             }
           },
@@ -27,18 +30,19 @@
         {
           "name": "pay_by_quarter",
           "type": {
+            "schemaName": null,
             "type_name": "int[]",
             "args": null
           },
           "token": {
             "start": {
-              "offset": 29,
-              "line": 4,
+              "offset": 28,
+              "line": 3,
               "column": 1
             },
             "end": {
-              "offset": 63,
-              "line": 5,
+              "offset": 62,
+              "line": 4,
               "column": 1
             }
           },
@@ -48,18 +52,19 @@
         {
           "name": "schedule",
           "type": {
+            "schemaName": null,
             "type_name": "text[][]",
             "args": null
           },
           "token": {
             "start": {
-              "offset": 63,
-              "line": 5,
+              "offset": 62,
+              "line": 4,
               "column": 1
             },
             "end": {
-              "offset": 90,
-              "line": 6,
+              "offset": 89,
+              "line": 5,
               "column": 1
             }
           },
@@ -69,38 +74,39 @@
       ],
       "token": {
         "start": {
-          "offset": 1,
-          "line": 2,
+          "offset": 0,
+          "line": 1,
           "column": 1
         },
         "end": {
-          "offset": 91,
-          "line": 6,
+          "offset": 90,
+          "line": 5,
           "column": 2
         }
       },
-      "indexes": [],
-      "headerColor": null
+      "indexes": []
     },
     {
       "name": "tictactoe",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "squares",
           "type": {
+            "schemaName": null,
             "type_name": "integer[3][3]",
             "args": null
           },
           "token": {
             "start": {
-              "offset": 113,
-              "line": 9,
+              "offset": 112,
+              "line": 8,
               "column": 3
             },
             "end": {
-              "offset": 135,
-              "line": 10,
+              "offset": 134,
+              "line": 9,
               "column": 1
             }
           },
@@ -109,21 +115,22 @@
       ],
       "token": {
         "start": {
-          "offset": 93,
-          "line": 8,
+          "offset": 92,
+          "line": 7,
           "column": 1
         },
         "end": {
-          "offset": 136,
-          "line": 10,
+          "offset": 135,
+          "line": 9,
           "column": 2
         }
       },
-      "indexes": [],
-      "headerColor": null
+      "indexes": []
     }
   ],
   "refs": [],
   "enums": [],
-  "tableGroups": []
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
 }

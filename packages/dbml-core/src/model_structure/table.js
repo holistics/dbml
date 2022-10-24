@@ -5,11 +5,16 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
 
 class Table extends Element {
-  constructor ({ name, alias, note, fields = [], indexes = [], schema = {}, token, headerColor } = {}) {
+  constructor ({
+    name, alias, note, fields = [], indexes = [], schema = {}, token, headerColor,
+  } = {}) {
     super(token);
     this.name = name;
     this.alias = alias;
-    this.note = note;
+    if (note) {
+      this.note = note.value;
+      this.noteToken = note.token;
+    }
     this.headerColor = headerColor;
     this.fields = [];
     this.indexes = [];
