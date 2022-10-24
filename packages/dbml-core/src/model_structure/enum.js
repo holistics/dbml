@@ -9,10 +9,8 @@ class Enum extends Element {
     super(token);
     if (!name) { this.error('Enum must have a name'); }
     this.name = name;
-    if (note) {
-      this.note = note.value;
-      this.noteToken = note.token;
-    }
+    this.note = note ? note.value : null;
+    this.noteToken = note ? note.token : null;
     this.values = [];
     this.fields = [];
     this.schema = schema;
