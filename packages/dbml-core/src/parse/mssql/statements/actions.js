@@ -52,16 +52,11 @@ function handleEnums (_enum, ast) {
   field.type.args = _enum.values.map(value => `'${value.name}'`).join(', ');
 }
 
-function handleComment (comment, ast) {
-  if (comment.type === 'table') handleTableNote(comment, ast);
-  else if (comment.type === 'column') handleFieldNote(comment, ast);
-}
-
 function handleTableNote (comment, ast) {
   let { schemaName } = comment;
   if (schemaName === 'dbo') schemaName = null; // treat `dbo` as public schema
   const foundTable = findTable(ast, comment.tableName, schemaName);
-  if (foundTable) foundTable.note = comment.note;
+  if (foundTable) foundTable.note = comment.note ? { value: comment.note } : null;
 }
 
 function handleFieldNote (comment, ast) {
@@ -70,8 +65,13 @@ function handleFieldNote (comment, ast) {
   const foundTable = findTable(ast, comment.tableName, schemaName);
   if (foundTable) {
     const foundField = findField(foundTable, comment.columnName);
-    if (foundField) foundField.note = comment.note;
+    if (foundField) foundField.note = comment.note ? { value: comment.note } : null;
   }
+}
+
+function handleComment (comment, ast) {
+  if (comment.type === 'table') handleTableNote(comment, ast);
+  else if (comment.type === 'column') handleFieldNote(comment, ast);
 }
 
 function handleStatement (_statements) {
