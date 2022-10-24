@@ -3,11 +3,13 @@
   "tables": [
     {
       "name": "users",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -28,6 +30,7 @@
         {
           "name": "name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -48,6 +51,7 @@
         {
           "name": "gender",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -68,6 +72,7 @@
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "datetime",
             "args": null
           },
@@ -209,11 +214,26 @@
           "pk": true
         }
       ],
-      "note": "# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax"
+      "note": {
+        "value": "# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax",
+        "token": {
+          "start": {
+            "offset": 227,
+            "line": 19,
+            "column": 3
+          },
+          "end": {
+            "offset": 405,
+            "line": 28,
+            "column": 4
+          }
+        }
+      }
     }
   ],
   "refs": [],
   "enums": [],
   "tableGroups": [],
+  "aliases": [],
   "project": {}
 }

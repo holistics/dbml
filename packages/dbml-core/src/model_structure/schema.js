@@ -7,14 +7,19 @@ import TableGroup from './tableGroup';
 import Ref from './ref';
 
 class Schema extends Element {
-  constructor ({ name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {} } = {}) {
+  constructor ({
+    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {},
+  } = {}) {
     super(token);
     this.tables = [];
     this.enums = [];
     this.tableGroups = [];
     this.refs = [];
     this.name = name;
-    this.note = note;
+    if (note) {
+      this.note = note.value;
+      this.noteToken = note.token;
+    }
     this.alias = alias;
     this.database = database;
     this.dbState = this.database.dbState;

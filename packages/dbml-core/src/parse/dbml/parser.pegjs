@@ -556,9 +556,19 @@ IndexName
   = "name:"i _ val:StringLiteral { return val.value }
 ObjectNoteElement
   = note: ObjectNote { return note }
-  / "note"i _ "{" _ val:StringLiteral _ "}" { return val.value }
+  / "note"i _ "{" _ val:StringLiteral _ "}" {
+    return {
+      value: val.value,
+      token: location(),
+    }
+  }
 ObjectNote
-  = "note:"i _ val:StringLiteral { return val.value }
+  = "note:"i _ val:StringLiteral {
+    return {
+      value: val.value,
+      token: location(),
+    }
+  }
 IndexType
   = "type:"i _ val:(btree/hash) { return val }
 RefInline

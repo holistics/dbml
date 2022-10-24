@@ -2,8 +2,10 @@ import Element from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
 
 class Field extends Element {
-  constructor ({ name, type, unique, pk, token, not_null, note, dbdefault,
-    increment, table = {} } = {}) {
+  constructor ({
+    name, type, unique, pk, token, not_null, note, dbdefault,
+    increment, table = {},
+  } = {}) {
     super(token);
     if (!name) { this.error('Field must have a name'); }
     if (!type) { this.error('Field must have a type'); }
@@ -13,7 +15,10 @@ class Field extends Element {
     this.unique = unique;
     this.pk = pk;
     this.not_null = not_null;
-    this.note = note;
+    if (note) {
+      this.note = note.value;
+      this.noteToken = note.token;
+    }
     this.dbdefault = dbdefault;
     this.increment = increment;
     this.endpoints = [];
