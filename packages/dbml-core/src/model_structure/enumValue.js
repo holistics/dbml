@@ -36,6 +36,7 @@ class EnumValue extends Element {
     return {
       name: this.name,
       note: this.note,
+      noteToken: this.noteToken,
     };
   }
 

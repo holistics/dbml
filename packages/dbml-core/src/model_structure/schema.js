@@ -150,6 +150,7 @@ class Schema extends Element {
     return {
       name: this.name,
       note: this.note,
+      noteToken: this.noteToken,
       alias: this.alias,
     };
   }
