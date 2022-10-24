@@ -7,10 +7,8 @@ class EnumValue extends Element {
     super(token);
     if (!name) { this.error('Enum value must have a name'); }
     this.name = name;
-    if (note) {
-      this.note = note.value;
-      this.noteToken = note.token;
-    }
+    this.note = note ? note.value : null;
+    this.noteToken = note ? note.token : null;
     this._enum = _enum;
     this.dbState = this._enum.dbState;
     this.generateId();

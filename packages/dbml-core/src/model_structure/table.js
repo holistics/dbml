@@ -11,10 +11,8 @@ class Table extends Element {
     super(token);
     this.name = name;
     this.alias = alias;
-    if (note) {
-      this.note = note.value;
-      this.noteToken = note.token;
-    }
+    this.note = note ? note.value : null;
+    this.noteToken = note ? note.token : null;
     this.headerColor = headerColor;
     this.fields = [];
     this.indexes = [];

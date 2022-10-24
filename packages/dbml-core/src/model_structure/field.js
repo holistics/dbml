@@ -3,7 +3,7 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 
 class Field extends Element {
   constructor ({
-    name, type, unique, pk, token, not_null, note, dbdefault,
+    name, type, unique, pk, token, not_null: notNull, note, dbdefault,
     increment, table = {},
   } = {}) {
     super(token);
@@ -14,7 +14,7 @@ class Field extends Element {
     this.type = type;
     this.unique = unique;
     this.pk = pk;
-    this.not_null = not_null;
+    this.not_null = notNull;
     this.note = note ? note.value : null;
     this.noteToken = note ? note.token : null;
     this.dbdefault = dbdefault;

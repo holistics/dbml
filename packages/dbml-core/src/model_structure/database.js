@@ -25,10 +25,8 @@ class Database extends Element {
     this.generateId();
     this.hasDefaultSchema = false;
     this.schemas = [];
-    if (project.note) {
-      this.note = project.note.value;
-      this.noteToken = project.note.token;
-    }
+    this.note = project.note ? project.note.value : null;
+    this.noteToken = project.note ? project.note.token : null;
     this.databaseType = project.database_type;
     this.name = project.name;
     this.aliases = aliases;
