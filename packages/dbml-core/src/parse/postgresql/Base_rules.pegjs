@@ -59,25 +59,7 @@ data_type "VALID TYPE" = c1:"CHARACTER"i _ c2:"VARYING"i _ args:("("expression")
     args: args ? args[1] : null
   }
 }
-/ c1:"INT"i _ c2:"GENERATED"i _ c3:"BY"i _ c4:"DEFAULT"i _ c5:"AS"i _ c6:"IDENTITY"i {
-    return {
-      type_name: `${c1} ${c2} ${c3} ${c4} ${c5} ${c6}`.toLowerCase(),
-      args: null
-    }
-  }
-/ c1:"INTEGER"i _ c2:"GENERATED"i _ c3:"BY"i _ c4:"DEFAULT"i _ c5:"AS"i _ c6:"IDENTITY"i {
-    return {
-      type_name: `${c1} ${c2} ${c3} ${c4} ${c5} ${c6}`.toLowerCase(),
-      args: null
-    }
-  }
-/ c1:"SMALLINT"i _ c2:"GENERATED"i _ c3:"BY"i _ c4:"DEFAULT"i _ c5:"AS"i _ c6:"IDENTITY"i {
-    return {
-      type_name: `${c1} ${c2} ${c3} ${c4} ${c5} ${c6}`.toLowerCase(),
-      args: null
-    }
-  }
-/ c1:"BIGINT"i _ c2:"GENERATED"i _ c3:"BY"i _ c4:"DEFAULT"i _ c5:"AS"i _ c6:"IDENTITY"i {
+/ c1:("INTEGER"i/"INT"i/"SMALLINT"i/"BIGINT"i) _ c2:"GENERATED"i _ c3:"BY"i _ c4:"DEFAULT"i _ c5:"AS"i _ c6:"IDENTITY"i {
     return {
       type_name: `${c1} ${c2} ${c3} ${c4} ${c5} ${c6}`.toLowerCase(),
       args: null
