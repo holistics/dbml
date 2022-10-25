@@ -1,11 +1,11 @@
 import { NormalizedDatabase } from './database';
 import DbState from './dbState';
-import Element, { Token } from './element';
+import Element, { Token, RawNote } from './element';
 import Enum from './enum';
 interface RawEnumValue {
     name: string;
     token: Token;
-    note: string;
+    note: RawNote;
     _enum: Enum;
 }
 declare class EnumValue extends Element {

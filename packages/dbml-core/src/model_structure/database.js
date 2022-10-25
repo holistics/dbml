@@ -26,7 +26,6 @@ class Database extends Element {
     this.hasDefaultSchema = false;
     this.schemas = [];
     this.note = project.note ? project.note.value : null;
-    this.noteToken = project.note ? project.note.token : null;
     this.databaseType = project.database_type;
     this.name = project.name;
     this.aliases = aliases;
@@ -158,7 +157,6 @@ class Database extends Element {
     return {
       hasDefaultSchema: this.hasDefaultSchema,
       note: this.note,
-      noteToken: this.noteToken,
       databaseType: this.databaseType,
       name: this.name,
     };

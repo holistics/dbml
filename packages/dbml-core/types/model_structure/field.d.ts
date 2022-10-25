@@ -1,6 +1,6 @@
 import { NormalizedDatabase } from './database';
 import DbState from './dbState';
-import Element, { Token } from './element';
+import Element, { Token, RawNote } from './element';
 import Endpoint from './endpoint';
 import Enum from './enum';
 import Table from './table';
@@ -11,7 +11,7 @@ interface RawField {
     pk: boolean;
     token: Token;
     not_null: boolean;
-    note: string;
+    note: RawNote;
     dbdefault: any;
     increment: boolean;
     table: Table;

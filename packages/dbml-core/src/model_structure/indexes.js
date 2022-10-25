@@ -10,7 +10,6 @@ class Index extends Element {
     this.type = type;
     this.unique = unique;
     this.note = note ? note.value : null;
-    this.noteToken = note ? note.token : null;
     this.pk = pk;
     this.columns = [];
     this.table = table;
@@ -73,7 +72,6 @@ class Index extends Element {
       unique: this.unique,
       pk: this.pk,
       note: this.note,
-      noteToken: this.noteToken,
     };
   }
 

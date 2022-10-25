@@ -1,6 +1,6 @@
 import { NormalizedDatabase } from './database';
 import DbState from './dbState';
-import Element, { Token } from './element';
+import Element, { Token, RawNote } from './element';
 import EnumValue from './enumValue';
 import Field from './field';
 import Schema from './schema';
@@ -8,7 +8,7 @@ interface RawEnum {
     name: string;
     token: Token;
     values: EnumValue[];
-    note: string;
+    note: RawNote;
     schema: Schema;
 }
 declare class Enum extends Element {
