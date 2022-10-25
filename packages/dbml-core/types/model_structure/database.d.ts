@@ -3,7 +3,7 @@ import Ref, { NormalizedRef } from './ref';
 import Enum, { NormalizedEnum } from './enum';
 import TableGroup, { NormalizedTableGroup } from './tableGroup';
 import Table, { NormalizedTable } from './table';
-import Element from './element';
+import Element, { RawNote } from './element';
 import DbState from './dbState';
 import { NormalizedEndpoint } from './endpoint';
 import { NormalizedEnumValue } from './enumValue';
@@ -11,7 +11,7 @@ import { NormalizedField } from './field';
 import { NormalizedIndexColumn } from './indexColumn';
 import { NormalizedIndex } from './indexes';
 export interface Project {
-    note: string;
+    note: RawNote;
     database_type: string;
     name: string;
 }

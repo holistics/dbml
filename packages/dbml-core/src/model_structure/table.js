@@ -12,7 +12,6 @@ class Table extends Element {
     this.name = name;
     this.alias = alias;
     this.note = note ? note.value : null;
-    this.noteToken = note ? note.token : null;
     this.headerColor = headerColor;
     this.fields = [];
     this.indexes = [];
@@ -115,7 +114,6 @@ class Table extends Element {
       name: this.name,
       alias: this.alias,
       note: this.note,
-      noteToken: this.noteToken,
       headerColor: this.headerColor,
     };
   }

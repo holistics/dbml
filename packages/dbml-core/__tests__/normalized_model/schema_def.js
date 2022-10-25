@@ -1,10 +1,6 @@
-import _ from 'lodash';
-import Database from '../../src/model_structure/database';
 import dbml from './schema_def.in.dbml';
 import expectedNormalizeModel from './schema_def.out.json';
 import Parser from '../../src/parse/Parser';
-import { DEFAULT_SCHEMA_NAME } from '../../src/model_structure/config';
-import fs from 'fs';
 
 describe('@dbml/core - model_structure', () => {
   let database;
@@ -24,7 +20,8 @@ describe('@dbml/core - model_structure', () => {
   describe('multiple_schema', () => {
     describe('normalized_structure', () => {
       test('normalized database - contains all properties', (done) => {
-        expect(normalizedModel).toEqual(expectedNormalizeModel);
+        // eslint-disable-next-line no-undef
+        isEqualExcludeTokenEmpty(normalizedModel, expectedNormalizeModel);
         done();
       });
     });

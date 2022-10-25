@@ -1,4 +1,4 @@
-import Element, { Token } from './element';
+import Element, { RawNote, Token } from './element';
 import Field from './field';
 import Index from './indexes';
 import Schema from './schema';
@@ -8,7 +8,7 @@ import { NormalizedDatabase } from './database';
 interface RawTable {
     name: string;
     alias: string;
-    note: string;
+    note: RawNote;
     fields: Field[];
     indexes: Index[];
     schema: Schema;

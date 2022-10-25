@@ -16,7 +16,6 @@ class Schema extends Element {
     this.refs = [];
     this.name = name;
     this.note = note ? note.value : null;
-    this.noteToken = note ? note.token : null;
     this.alias = alias;
     this.database = database;
     this.dbState = this.database.dbState;
@@ -147,7 +146,6 @@ class Schema extends Element {
     return {
       name: this.name,
       note: this.note,
-      noteToken: this.noteToken,
       alias: this.alias,
     };
   }
