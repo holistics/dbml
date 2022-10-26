@@ -16,6 +16,7 @@ declare class Enum extends Element {
     token: Token;
     values: EnumValue[];
     note: string;
+    noteToken: Token;
     schema: Schema;
     fields: Field[];
     dbState: DbState;

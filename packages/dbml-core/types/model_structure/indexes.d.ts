@@ -20,6 +20,7 @@ declare class Index extends Element {
     pk: string;
     name: string;
     note: string;
+    noteToken: Token;
     table: Table;
     dbState: DbState;
     constructor({ columns, type, unique, pk, token, name, note, table }: RawIndex);

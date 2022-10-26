@@ -20,6 +20,7 @@ declare class Schema extends Element {
     name: string;
     alias: string;
     note: string;
+    noteToken: Token;
     tables: Table[];
     refs: Ref[];
     enums: Enum[];

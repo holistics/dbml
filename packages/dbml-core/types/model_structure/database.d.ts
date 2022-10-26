@@ -3,7 +3,7 @@ import Ref, { NormalizedRef } from './ref';
 import Enum, { NormalizedEnum } from './enum';
 import TableGroup, { NormalizedTableGroup } from './tableGroup';
 import Table, { NormalizedTable } from './table';
-import Element, { RawNote } from './element';
+import Element, { RawNote, Token } from './element';
 import DbState from './dbState';
 import { NormalizedEndpoint } from './endpoint';
 import { NormalizedEnumValue } from './enumValue';
@@ -28,6 +28,7 @@ declare class Database extends Element {
     hasDefaultSchema: boolean;
     schemas: Schema[];
     note: string;
+    noteToken: Token;
     databaseType: string;
     name: string;
     id: number;

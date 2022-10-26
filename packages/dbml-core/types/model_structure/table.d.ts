@@ -19,6 +19,7 @@ declare class Table extends Element {
     name: string;
     alias: string;
     note: string;
+    noteToken: Token;
     fields: Field[];
     indexes: Index[];
     schema: Schema;
