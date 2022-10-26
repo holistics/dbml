@@ -10,6 +10,7 @@ class Index extends Element {
     this.type = type;
     this.unique = unique;
     this.note = note ? note.value : null;
+    this.noteToken = note ? note.token : null;
     this.pk = pk;
     this.columns = [];
     this.table = table;

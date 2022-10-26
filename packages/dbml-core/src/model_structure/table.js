@@ -12,6 +12,7 @@ class Table extends Element {
     this.name = name;
     this.alias = alias;
     this.note = note ? note.value : null;
+    this.noteToken = note ? note.token : null;
     this.headerColor = headerColor;
     this.fields = [];
     this.indexes = [];

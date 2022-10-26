@@ -16,6 +16,7 @@ class Field extends Element {
     this.pk = pk;
     this.not_null = notNull;
     this.note = note ? note.value : null;
+    this.noteToken = note ? note.token : null;
     this.dbdefault = dbdefault;
     this.increment = increment;
     this.endpoints = [];

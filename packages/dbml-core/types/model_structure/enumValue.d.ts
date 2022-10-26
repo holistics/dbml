@@ -11,6 +11,7 @@ interface RawEnumValue {
 declare class EnumValue extends Element {
     name: string;
     note: string;
+    noteToken: Token;
     _enum: Enum;
     dbState: DbState;
     constructor({ name, token, note, _enum }: RawEnumValue);

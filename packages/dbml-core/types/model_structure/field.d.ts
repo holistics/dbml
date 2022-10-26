@@ -24,6 +24,7 @@ declare class Field extends Element {
     dbState: DbState;
     not_null: boolean;
     note: string;
+    noteToken: Token;
     dbdefault: any;
     increment: boolean;
     table: Table;
@@ -72,6 +73,9 @@ export interface NormalizedField {
         note: string;
         dbdefault: any;
         increment: boolean;
+        tableId: number;
+        endpointIds: number[];
+        enumId: number;
     };
 }
 export default Field;
