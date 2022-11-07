@@ -319,9 +319,6 @@ function peg$parse(input, options) {
       			fieldSettings.dbdefault = field.value;
       		else if(field.type === "comment")
       			fieldSettings.note = field.value;
-      		else if(field.type === "update") {
-      			console.log(field);
-      		}
       		else if (field !== "not_supported") {
       			fieldSettings[field] = true;
       		}
@@ -2982,7 +2979,8 @@ function peg$parse(input, options) {
                               if (s5 !== peg$FAILED) {
                                 s6 = peg$parsetype();
                                 if (s6 !== peg$FAILED) {
-                                  s1 = [s1, s2, s3, s4, s5, s6];
+                                  peg$savedPos = s0;
+                                  s1 = peg$c79();
                                   s0 = s1;
                                 } else {
                                   peg$currPos = s0;
