@@ -34,3 +34,31 @@ CREATE TABLE `booking` (
   KEY `venue` (`user_id_two`) USING BTREE,
   KEY `user_id_one` (`user_id_one`) USING HASH,
 ) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `test0` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `gid` USING BTREE (`gid`) USING HASH
+) ENGINE = MEMORY;
+
+CREATE TABLE `test1` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `gid` (`gid`) USING HASH
+) ENGINE = MEMORY;
+
+CREATE TABLE `test2` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `gid` USING BTREE (`gid`)
+) ENGINE = MEMORY;
+
+CREATE TABLE `test3` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `gid` USING HASH (`gid`) USING BTREE
+) ENGINE = MEMORY;
