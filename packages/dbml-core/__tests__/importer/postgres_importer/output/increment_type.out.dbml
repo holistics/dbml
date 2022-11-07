@@ -39,6 +39,6 @@ Table "table8" {
 }
 
 Table "table9" {
-  "id" Intdsfsd [pk]
+  "id" intdsfsd [pk, increment]
   "name" varchar
 }

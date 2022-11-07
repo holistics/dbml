@@ -59,12 +59,6 @@ data_type "VALID TYPE" = c1:"CHARACTER"i _ c2:"VARYING"i _ args:("("expression")
     args: args ? args[1] : null
   }
 }
-/ c1:("INTEGER"i/"INT"i/"SMALLINT"i/"BIGINT"i) _ c2:"GENERATED"i _ c3:"BY"i _ c4:"DEFAULT"i _ c5:"AS"i _ c6:"IDENTITY"i {
-    return {
-      type_name: `${c1} ${c2} ${c3} ${c4} ${c5} ${c6}`.toLowerCase(),
-      args: null
-    }
-  }
 / "timestamptz"i _ number:("(" _ numeric_constant _ ")" _)? dimensions:(array_extension)? {
     const args = number ? number[2] : null;
     return {
@@ -107,6 +101,7 @@ data_type "VALID TYPE" = c1:"CHARACTER"i _ c2:"VARYING"i _ args:("("expression")
     args: null
   } 
 }
+
 type_name = pathName:path_name? c:(character)+ _ args:("(" expression ")")? {
 	let type_name = c.join("");
 	args = args ? args[1] : null;
