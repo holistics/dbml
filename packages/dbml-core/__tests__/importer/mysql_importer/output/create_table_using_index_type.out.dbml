@@ -38,3 +38,39 @@ Indexes {
   user_id_one [type: hash, name: "user_id_one"]
 }
 }
+
+Table "test0" {
+  "id" int(11) [pk, not null, increment]
+  "gid" int(11) [default: NULL]
+
+Indexes {
+  gid [type: hash, name: "gid"]
+}
+}
+
+Table "test1" {
+  "id" int(11) [pk, not null, increment]
+  "gid" int(11) [default: NULL]
+
+Indexes {
+  gid [type: hash, name: "gid"]
+}
+}
+
+Table "test2" {
+  "id" int(11) [pk, not null, increment]
+  "gid" int(11) [default: NULL]
+
+Indexes {
+  gid [type: btree, name: "gid"]
+}
+}
+
+Table "test3" {
+  "id" int(11) [pk, not null, increment]
+  "gid" int(11) [default: NULL]
+
+Indexes {
+  gid [type: btree, name: "gid"]
+}
+}
