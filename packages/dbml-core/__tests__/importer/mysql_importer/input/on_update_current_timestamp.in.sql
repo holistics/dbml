@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS `authorization_records` (
+`id` INT  AUTO_INCREMENT NOT NULL,
+`project_name` VARCHAR(100) NOT NULL,
+`updated_date`  DATETIME  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+`created_date`  DATETIME  DEFAULT CURRENT_TIMESTAMP NOT NULL,
+PRIMARY KEY (`id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table DemoTable737 (
+   StudentId int NOT NULL AUTO_INCREMENT PRIMARY KEY ON UPDATE CURRENT_TIMESTAMP,
+   StudentName varchar(100),
+   StudentAdmissiondate datetime
+);

@@ -256,6 +256,7 @@ FieldSetting "field setting"
     ) { return "not_supported" }
 	/ _ v:Default {return {type: "default", value: v} }
 	/ _ v:Comment { return {type: "comment", value: v }}
+	/ _ "ON"i _ "UPDATE"i _ type { return "not_supported" }
 
 // Default: Support "DEFAULT (value|expr)" syntax
 Default
