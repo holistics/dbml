@@ -8,6 +8,7 @@
 
 #### Committers: 1
 - [@baolequoc](https://github.com/baolequoc)
+
 ## v2.4.3 (2022-10-13)
 
 #### :bug: Bug Fix
