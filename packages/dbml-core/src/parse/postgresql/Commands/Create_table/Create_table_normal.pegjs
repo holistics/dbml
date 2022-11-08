@@ -94,13 +94,12 @@ table_property =
 	}
 	/ column_name:column_name __ data_type:data_type (__ COLLATE __ collation:identifier)? column_constraints:(_ column_constraint)* {
 		const column = { name: column_name , type: data_type};
-
-		// process type (if type === "serial")
-		if (column.type.type_name.toLowerCase() === "serial") {
-			column.type.type_name = "int";
+		const columnTypeName = column.type.type_name.toLowerCase();
+		const serialIncrementType = new Set(['serial', 'smallserial', 'bigserial']);
+		// process type for increment
+		if (serialIncrementType.has(columnTypeName)) {
 			column.increment = true;
 		}
-
 		// map from grammar to right object
 		column_constraints = column_constraints.map(c => c[1]);
 		// process column_constraints
@@ -108,6 +107,9 @@ table_property =
 			switch(type.toLowerCase()) {
 				case "not_null":
 					column.not_null = value;
+					break;
+				case "increment":
+					column.increment = true;
 					break;
 				case "dbdefault":
 					column.dbdefault = value;
@@ -138,7 +140,7 @@ column_constraint = constraint_name:(CONSTRAINT __ constraint_name:identifier __
 	/ NULL { return { type: "not_null" , value: false } }
 	/ CHECK _ "("_ expression _")" (__ NO __ INHERIT)? { return { type: "not_supported" } }
 	/ DEFAULT __ default_expr:default_expr { return { type: "dbdefault", value: default_expr } }
-	/ GENERATED __ (ALWAYS/ BY __ DEFAULT) __ AS __ IDENTITY { return { type: "not_supported" } } // (_ "("_ sequence_options _ ")")? { return { type: "not_supported" } }
+	/ GENERATED __ (ALWAYS/ BY __ DEFAULT) __ AS __ IDENTITY { return { type: "increment" } } // (_ "("_ sequence_options _ ")")? { return { type: "not_supported" } }
 	/ UNIQUE (__ index_parameters)? { return { type: "unique" } }
 	/ PRIMARY_KEY (__ index_parameters)? { return { type: "pk" } }
 	/ REFERENCES __ reftable:table_name refcolumn:(_ "(" _ refcolumn:column_name _ ")" {return refcolumn})? (__ MATCH __ FULL/__ MATCH __ PARTIAL/__ MATCH __ SIMPLE)?

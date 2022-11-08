@@ -6,7 +6,7 @@
         {
           "name": "id",
           "type": {
-            "type_name": "int",
+            "type_name": "SERIAL",
             "args": null
           },
           "increment": true,
@@ -134,7 +134,7 @@
         {
           "name": "id",
           "type": {
-            "type_name": "int",
+            "type_name": "SERIAL",
             "args": null
           },
           "increment": true,
