@@ -286,9 +286,8 @@ function peg$parse(input, options) {
       	if(unique) {
       		index.unique = true;
       	}
-      	const type = type2 || type1;
-      	if(type)
-      		index.type = type;
+      	if(type2 && type2[1] && type2[1].type === 'index_type' && type2[1].value ) index.type = type2[1].value;
+      	else if(type1) index.type = type1;
       	return index;
       },
       peg$c30 = "index",
@@ -1917,7 +1916,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseIndexInLineSyntax() {
-    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14;
+    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15;
 
     s0 = peg$currPos;
     s1 = peg$parse_();
@@ -1962,23 +1961,28 @@ function peg$parse(input, options) {
                             if (peg$silentFails === 0) { peg$fail(peg$c5); }
                           }
                           if (s12 !== peg$FAILED) {
-                            s13 = peg$parseIndexOption();
+                            s13 = peg$currPos;
+                            s14 = peg$parse_();
+                            if (s14 !== peg$FAILED) {
+                              s15 = peg$parseIndexOption();
+                              if (s15 !== peg$FAILED) {
+                                s14 = [s14, s15];
+                                s13 = s14;
+                              } else {
+                                peg$currPos = s13;
+                                s13 = peg$FAILED;
+                              }
+                            } else {
+                              peg$currPos = s13;
+                              s13 = peg$FAILED;
+                            }
                             if (s13 === peg$FAILED) {
                               s13 = null;
                             }
                             if (s13 !== peg$FAILED) {
-                              s14 = peg$parseindex_type();
-                              if (s14 === peg$FAILED) {
-                                s14 = null;
-                              }
-                              if (s14 !== peg$FAILED) {
-                                peg$savedPos = s0;
-                                s1 = peg$c29(s2, s4, s6, s10, s14);
-                                s0 = s1;
-                              } else {
-                                peg$currPos = s0;
-                                s0 = peg$FAILED;
-                              }
+                              peg$savedPos = s0;
+                              s1 = peg$c29(s2, s4, s6, s10, s13);
+                              s0 = s1;
                             } else {
                               peg$currPos = s0;
                               s0 = peg$FAILED;
