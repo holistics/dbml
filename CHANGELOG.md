@@ -1,3 +1,14 @@
+## v2.4.4 (2022-11-08)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#297](https://github.com/holistics/dbml/pull/297) Ignore on update current timestamp in mysql ([@baolequoc](https://github.com/baolequoc))
+  * [#295](https://github.com/holistics/dbml/pull/295) Update type when setting increment ([@baolequoc](https://github.com/baolequoc))
+  * [#296](https://github.com/holistics/dbml/pull/296) Fix missing space when creating index ([@baolequoc](https://github.com/baolequoc))
+
+#### Committers: 1
+- [@baolequoc](https://github.com/baolequoc)
+
 ## v2.4.3 (2022-10-13)
 
 #### :bug: Bug Fix
