@@ -98,7 +98,6 @@ table_property =
 		const serialIncrementType = new Set(['serial', 'smallserial', 'bigserial']);
 		// process type for increment
 		if (serialIncrementType.has(columnTypeName)) {
-			column.type.type_name = columnTypeName;
 			column.increment = true;
 		}
 		// map from grammar to right object
@@ -110,7 +109,6 @@ table_property =
 					column.not_null = value;
 					break;
 				case "increment":
-					column.type.type_name = columnTypeName;
 					column.increment = true;
 					break;
 				case "dbdefault":
