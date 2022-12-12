@@ -82,7 +82,7 @@ class Schema extends Element {
 
   checkRef (ref) {
     if (this.refs.some(r => r.equals(ref))) {
-      ref.error('Reference with same endpoints duplicated');
+      ref.error(`Reference ${ref.name} has duplicated endpoint`);
     }
   }
 
