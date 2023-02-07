@@ -1,3 +1,16 @@
+## v2.5.0 (2023-02-07)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#300](https://github.com/holistics/dbml/pull/300) Add token for note ([@nguyenalter](https://github.com/nguyenalter))
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`
+  * [#300](https://github.com/holistics/dbml/pull/300) Add token for note ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 1
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
 ## v2.4.4 (2022-11-08)
 
 #### :bug: Bug Fix
