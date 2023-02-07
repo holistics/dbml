@@ -132,7 +132,9 @@
         }
       },
       "indexes": [],
-      "note": "name is required"
+      "note": {
+        "value": "name is required"
+      }
     },
     {
       "name": "product",
@@ -215,7 +217,9 @@
       },
       "indexes": [],
       "headerColor": "#17DACC",
-      "note": "product must have price"
+      "note": {
+        "value": "product must have price"
+      }
     },
     {
       "name": "merchant",
@@ -263,7 +267,9 @@
           "inline_refs": [
             {
               "tableName": "U",
-             "fieldNames": ["id"],
+              "fieldNames": [
+                "id"
+              ],
               "relation": ">",
               "token": {
                 "start": {
@@ -301,7 +307,9 @@
           "inline_refs": [
             {
               "tableName": "product",
-             "fieldNames": ["id"],
+              "fieldNames": [
+                "id"
+              ],
               "relation": ">",
               "token": {
                 "start": {
@@ -353,7 +361,9 @@
       },
       "indexes": [],
       "headerColor": "#08DAFF",
-      "note": "merchants sell a lot"
+      "note": {
+        "value": "merchants sell a lot"
+      }
     }
   ],
   "refs": [
@@ -362,7 +372,9 @@
       "endpoints": [
         {
           "tableName": "U",
-         "fieldNames": ["id"],
+          "fieldNames": [
+            "id"
+          ],
           "relation": "1",
           "token": {
             "start": {
@@ -379,7 +391,9 @@
         },
         {
           "tableName": "merchant",
-         "fieldNames": ["user_id"],
+          "fieldNames": [
+            "user_id"
+          ],
           "relation": "*",
           "token": {
             "start": {
@@ -413,7 +427,9 @@
       "endpoints": [
         {
           "tableName": "product",
-         "fieldNames": ["id"],
+          "fieldNames": [
+            "id"
+          ],
           "relation": "1",
           "token": {
             "start": {
@@ -430,7 +446,9 @@
         },
         {
           "tableName": "merchant",
-          "fieldNames": ["product_id"],
+          "fieldNames": [
+            "product_id"
+          ],
           "relation": "*",
           "token": {
             "start": {

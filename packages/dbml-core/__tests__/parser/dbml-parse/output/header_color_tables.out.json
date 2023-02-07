@@ -1,12 +1,15 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "orders",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -27,6 +30,7 @@
         {
           "name": "user_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -47,6 +51,7 @@
         {
           "name": "status",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -67,6 +72,7 @@
         {
           "name": "create_at",
           "type": {
+            "schemaName": null,
             "type_name": "date_time",
             "args": null
           },
@@ -97,10 +103,13 @@
           "column": 2
         }
       },
-      "indexes": null,
+      "indexes": [],
       "headerColor": "#0065AB"
     }
   ],
   "refs": [],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
 }

@@ -1,5 +1,5 @@
 import Table from './table';
-import Element, { Token } from './element';
+import Element, { RawNote, Token } from './element';
 import Enum from './enum';
 import TableGroup from './tableGroup';
 import Ref from './ref';
@@ -8,7 +8,7 @@ import DbState from './dbState';
 export interface RawSchema {
     name: string;
     alias?: string;
-    note?: string;
+    note?: RawNote;
     tables?: Table[];
     refs?: Ref[];
     enums?: Enum[];
@@ -20,6 +20,7 @@ declare class Schema extends Element {
     name: string;
     alias: string;
     note: string;
+    noteToken: Token;
     tables: Table[];
     refs: Ref[];
     enums: Enum[];

@@ -1,20 +1,22 @@
 import Table from './table';
 import Element from './element';
 import Enum from './enum';
-import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
 import TableGroup from './tableGroup';
 import Ref from './ref';
 
 class Schema extends Element {
-  constructor ({ name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {} } = {}) {
+  constructor ({
+    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {},
+  } = {}) {
     super(token);
     this.tables = [];
     this.enums = [];
     this.tableGroups = [];
     this.refs = [];
     this.name = name;
-    this.note = note;
+    this.note = note ? note.value : null;
+    this.noteToken = note ? note.token : null;
     this.alias = alias;
     this.database = database;
     this.dbState = this.database.dbState;

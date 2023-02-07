@@ -2,12 +2,15 @@ import Element from './element';
 import IndexColumn from './indexColumn';
 
 class Index extends Element {
-  constructor ({ columns, type, unique, pk, token, name, note, table = {} } = {}) {
+  constructor ({
+    columns, type, unique, pk, token, name, note, table = {},
+  } = {}) {
     super(token);
     this.name = name;
     this.type = type;
     this.unique = unique;
-    this.note = note;
+    this.note = note ? note.value : null;
+    this.noteToken = note ? note.token : null;
     this.pk = pk;
     this.columns = [];
     this.table = table;

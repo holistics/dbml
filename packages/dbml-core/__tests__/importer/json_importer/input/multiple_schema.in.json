@@ -792,7 +792,9 @@
               "column": 1
             }
           },
-          "note": "abcdef"
+          "note": {
+            "value": "abcdef"
+          }
         },
         {
           "name": "running2",

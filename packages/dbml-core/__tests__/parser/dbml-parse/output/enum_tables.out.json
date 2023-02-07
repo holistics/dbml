@@ -1,12 +1,15 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "jobs",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "integer",
             "args": null
           },
@@ -28,6 +31,7 @@
         {
           "name": "status",
           "type": {
+            "schemaName": null,
             "type_name": "job_status",
             "args": null
           },
@@ -44,7 +48,21 @@
             }
           },
           "inline_refs": [],
-          "note": "This is a column note"
+          "note": {
+            "value": "This is a column note",
+            "token": {
+              "start": {
+                "offset": 252,
+                "line": 11,
+                "column": 22
+              },
+              "end": {
+                "offset": 281,
+                "line": 11,
+                "column": 51
+              }
+            }
+          }
         }
       ],
       "token": {
@@ -63,11 +81,13 @@
     },
     {
       "name": "orders",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -90,6 +110,7 @@
         {
           "name": "status",
           "type": {
+            "schemaName": null,
             "type_name": "order status",
             "args": null
           },
@@ -110,6 +131,7 @@
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -147,6 +169,7 @@
   "enums": [
     {
       "name": "job_status",
+      "schemaName": null,
       "token": {
         "start": {
           "offset": 0,
@@ -174,7 +197,21 @@
               "column": 1
             }
           },
-          "note": "Job created and pending"
+          "note": {
+            "value": "Job created and pending",
+            "token": {
+              "start": {
+                "offset": 29,
+                "line": 2,
+                "column": 12
+              },
+              "end": {
+                "offset": 60,
+                "line": 2,
+                "column": 43
+              }
+            }
+          }
         },
         {
           "name": "running",
@@ -190,7 +227,21 @@
               "column": 1
             }
           },
-          "note": "Waiting for warehouse to process"
+          "note": {
+            "value": "Waiting for warehouse to process",
+            "token": {
+              "start": {
+                "offset": 73,
+                "line": 3,
+                "column": 12
+              },
+              "end": {
+                "offset": 113,
+                "line": 3,
+                "column": 52
+              }
+            }
+          }
         },
         {
           "name": "done",
@@ -236,12 +287,27 @@
               "column": 1
             }
           },
-          "note": "Enum label that has white spaces"
+          "note": {
+            "value": "Enum label that has white spaces",
+            "token": {
+              "start": {
+                "offset": 155,
+                "line": 6,
+                "column": 25
+              },
+              "end": {
+                "offset": 195,
+                "line": 6,
+                "column": 65
+              }
+            }
+          }
         }
       ]
     },
     {
       "name": "order status",
+      "schemaName": null,
       "token": {
         "start": {
           "offset": 286,
@@ -269,7 +335,21 @@
               "column": 1
             }
           },
-          "note": "Order created"
+          "note": {
+            "value": "Order created",
+            "token": {
+              "start": {
+                "offset": 319,
+                "line": 15,
+                "column": 12
+              },
+              "end": {
+                "offset": 340,
+                "line": 15,
+                "column": 33
+              }
+            }
+          }
         },
         {
           "name": "pending",
@@ -318,5 +398,8 @@
         }
       ]
     }
-  ]
+  ],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
 }

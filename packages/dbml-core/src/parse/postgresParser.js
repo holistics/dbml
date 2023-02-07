@@ -250,14 +250,14 @@ function peg$parse(input, options) {
       						const foundTable = findTable(schemaName, tableName);
       						if (foundTable) {
       							const foundField = findField(foundTable, columnName);
-      							if (foundField) foundField.note = value.text;
+      							if (foundField) foundField.note = value.text ? { value: value.text } : null;
       						}
       						break;
       					}
       					case "table":	{
       						const { schemaName, name: tableName } = value.table_name;
       						const foundTable = findTable(schemaName, tableName);
-      						if (foundTable) foundTable.note = value.text;
+      						if (foundTable) foundTable.note = value.text ? { value: value.text } : null;
       						break;
       					}
       				}

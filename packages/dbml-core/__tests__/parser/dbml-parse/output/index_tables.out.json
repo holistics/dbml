@@ -1,12 +1,15 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "users",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -28,6 +31,7 @@
         {
           "name": "full_name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -48,6 +52,7 @@
         {
           "name": "email",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -69,6 +74,7 @@
         {
           "name": "gender",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -89,6 +95,7 @@
         {
           "name": "date_of_birth",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -109,6 +116,7 @@
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -129,6 +137,7 @@
         {
           "name": "country_code",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -149,6 +158,7 @@
         {
           "name": "active",
           "type": {
+            "schemaName": null,
             "type_name": "boolean",
             "args": null
           },
@@ -175,7 +185,7 @@
           "column": 1
         },
         "end": {
-          "offset": 410,
+          "offset": 430,
           "line": 20,
           "column": 2
         }
@@ -190,18 +200,32 @@
           ],
           "token": {
             "start": {
-              "offset": 207,
+              "offset": 211,
               "line": 12,
-              "column": 1
+              "column": 5
             },
             "end": {
-              "offset": 224,
+              "offset": 244,
               "line": 12,
-              "column": 18
+              "column": 38
             }
           },
           "unique": true,
-          "note": "index note"
+          "note": {
+            "value": "index note",
+            "token": {
+              "start": {
+                "offset": 225,
+                "line": 12,
+                "column": 19
+              },
+              "end": {
+                "offset": 243,
+                "line": 12,
+                "column": 37
+              }
+            }
+          }
         },
         {
           "columns": [
@@ -212,12 +236,12 @@
           ],
           "token": {
             "start": {
-              "offset": 225,
+              "offset": 249,
               "line": 13,
-              "column": 1
+              "column": 5
             },
             "end": {
-              "offset": 258,
+              "offset": 278,
               "line": 13,
               "column": 34
             }
@@ -237,12 +261,12 @@
           ],
           "token": {
             "start": {
-              "offset": 259,
+              "offset": 283,
               "line": 14,
-              "column": 1
+              "column": 5
             },
             "end": {
-              "offset": 294,
+              "offset": 314,
               "line": 14,
               "column": 36
             }
@@ -258,12 +282,12 @@
           ],
           "token": {
             "start": {
-              "offset": 295,
+              "offset": 319,
               "line": 15,
-              "column": 1
+              "column": 5
             },
             "end": {
-              "offset": 306,
+              "offset": 326,
               "line": 15,
               "column": 12
             }
@@ -282,12 +306,12 @@
           ],
           "token": {
             "start": {
-              "offset": 307,
+              "offset": 331,
               "line": 16,
-              "column": 1
+              "column": 5
             },
             "end": {
-              "offset": 339,
+              "offset": 359,
               "line": 16,
               "column": 33
             }
@@ -306,12 +330,12 @@
           ],
           "token": {
             "start": {
-              "offset": 340,
+              "offset": 364,
               "line": 17,
-              "column": 1
+              "column": 5
             },
             "end": {
-              "offset": 374,
+              "offset": 394,
               "line": 17,
               "column": 35
             }
@@ -326,12 +350,12 @@
           ],
           "token": {
             "start": {
-              "offset": 375,
+              "offset": 399,
               "line": 18,
-              "column": 1
+              "column": 5
             },
             "end": {
-              "offset": 404,
+              "offset": 424,
               "line": 18,
               "column": 30
             }
@@ -341,5 +365,8 @@
     }
   ],
   "refs": [],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
 }

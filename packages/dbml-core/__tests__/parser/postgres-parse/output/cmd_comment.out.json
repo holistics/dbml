@@ -9,7 +9,9 @@
             "type_name": "varchar",
             "args": null
           },
-          "note": "Employee ID number"
+          "note": {
+            "value": "Employee ID number"
+          }
         }
       ],
       "indexes": []
