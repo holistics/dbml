@@ -101,6 +101,7 @@ data_type "VALID TYPE" = c1:"CHARACTER"i _ c2:"VARYING"i _ args:("("expression")
     args: null
   } 
 }
+
 type_name = pathName:path_name? c:(character)+ _ args:("(" expression ")")? {
 	let type_name = c.join("");
 	args = args ? args[1] : null;

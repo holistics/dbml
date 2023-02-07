@@ -190,7 +190,7 @@ UniqueSyntax
 // "KEY is normally a synonym for INDEX".
 IndexInLineSyntax = _ unique:index_in_line
 	_ name:name? _ type1:index_type? _
-	"(" _ columns:IndexColumnValues _")" IndexOption? type2:index_type?
+	"(" _ columns:IndexColumnValues _")" type2:(_ IndexOption)?
 {
 	const index = { columns };
 	if(name) {
@@ -199,9 +199,8 @@ IndexInLineSyntax = _ unique:index_in_line
 	if(unique) {
 		index.unique = true;
 	}
-	const type = type2 || type1;
-	if(type)
-		index.type = type;
+	if(type2 && type2[1] && type2[1].type === 'index_type' && type2[1].value ) index.type = type2[1].value;
+	else if(type1) index.type = type1;
 	return index;
 }
 index_in_line // keyword
@@ -257,6 +256,7 @@ FieldSetting "field setting"
     ) { return "not_supported" }
 	/ _ v:Default {return {type: "default", value: v} }
 	/ _ v:Comment { return {type: "comment", value: v }}
+	/ _ "ON"i _ "UPDATE"i _ type { return "not_supported" }
 
 // Default: Support "DEFAULT (value|expr)" syntax
 Default
