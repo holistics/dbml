@@ -1,48 +1,66 @@
 {
+  "schemas": [],
   "tables": [
-     {
-        "name": "users",
-        "alias": null,
-        "fields": [
-           {
-              "name": "id",
-              "type": {
-                 "type_name": "int",
-                 "args": null
-              },
-              "token": {
-                 "start": {
-                    "offset": 16,
-                    "line": 2,
-                    "column": 3
-                 },
-                 "end": {
-                    "offset": 196,
-                    "line": 9,
-                    "column": 1
-                 }
-              },
-              "inline_refs": [],
-              "note": "# Objective\n  * Support writing long string that can 'span' over multiple lines\n  * Support writing markdown for DBML Note\n\n# Syntax"
-           }
-        ],
-        "token": {
-           "start": {
-              "offset": 0,
-              "line": 1,
+    {
+      "name": "users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 16,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 196,
+              "line": 12,
               "column": 1
-           },
-           "end": {
-              "offset": 197,
-              "line": 9,
-              "column": 2
-           }
+            }
+          },
+          "inline_refs": [],
+          "note": {
+            "value": "# Objective\n  * Support writing long string that can 'span' over multiple lines\n  * Support writing markdown for DBML Note\n\n# Syntax",
+            "token": {
+              "start": {
+                "offset": 24,
+                "line": 2,
+                "column": 11
+              },
+              "end": {
+                "offset": 194,
+                "line": 11,
+                "column": 6
+              }
+            }
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         },
-        "indexes": [],
-        "headerColor": null
-     }
+        "end": {
+          "offset": 197,
+          "line": 12,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
   ],
   "refs": [],
   "enums": [],
-  "tableGroups": []
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
 }

@@ -11,7 +11,7 @@ Enum "product status" {
 }
 
 Table "orders" {
-  "id" int [pk, increment]
+  "id" SERIAL [pk, increment]
   "user_id" int [unique, not null]
   "status" orders_status
   "created_at" varchar

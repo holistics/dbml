@@ -10,6 +10,12 @@ export interface Token {
         offset: number;
     };
 }
+
+export interface RawNote {
+    value: string;
+    token: Token;
+}
+
 declare class Element {
     token: Token;
     id: number;

@@ -14,7 +14,9 @@
             "value": 123,
             "type": "number"
           },
-          "note": "just a comment"
+          "note": {
+            "value": "just a comment"
+          }
         },
         {
           "name": "name",
@@ -26,7 +28,9 @@
             "value": "Tea",
             "type": "string"
           },
-          "note": "name length <= 255"
+          "note": {
+            "value": "name length <= 255"
+          }
         },
         {
           "name": "merchant_id",

@@ -1,21 +1,15 @@
 {
-  "aliases": [
-    {
-      "kind": "table",
-      "name": "U",
-      "value": {
-        "tableName": "users"
-      }
-    }
-  ],
+  "schemas": [],
   "tables": [
     {
       "name": "users",
+      "schemaName": null,
       "alias": "U",
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -36,6 +30,7 @@
         {
           "name": "full_name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -56,6 +51,7 @@
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "timestamp",
             "args": null
           },
@@ -76,6 +72,7 @@
         {
           "name": "country_code",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -110,11 +107,13 @@
     },
     {
       "name": "merchants",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -135,6 +134,7 @@
         {
           "name": "merchant_name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -155,6 +155,7 @@
         {
           "name": "country_code",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -175,6 +176,7 @@
         {
           "name": "created at",
           "type": {
+            "schemaName": null,
             "type_name": "varchar",
             "args": null
           },
@@ -195,6 +197,7 @@
         {
           "name": "admin_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -212,8 +215,11 @@
           },
           "inline_refs": [
             {
+              "schemaName": null,
               "tableName": "U",
-              "fieldNames": ["id"],
+              "fieldNames": [
+                "id"
+              ],
               "relation": ">",
               "token": {
                 "start": {
@@ -248,11 +254,15 @@
   ],
   "refs": [
     {
+      "schemaName": null,
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "U",
-          "fieldNames": ["id"],
+          "fieldNames": [
+            "id"
+          ],
           "relation": "1",
           "token": {
             "start": {
@@ -268,8 +278,11 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "merchants",
-          "fieldNames": ["admin_id"],
+          "fieldNames": [
+            "admin_id"
+          ],
           "relation": "*",
           "token": {
             "start": {
@@ -303,12 +316,15 @@
   "tableGroups": [
     {
       "name": "g1",
+      "schemaName": null,
       "tables": [
         {
-          "name": "users"
+          "name": "users",
+          "schemaName": null
         },
         {
-          "name": "merchants"
+          "name": "merchants",
+          "schemaName": null
         }
       ],
       "token": {
@@ -324,5 +340,16 @@
         }
       }
     }
-  ]
+  ],
+  "aliases": [
+    {
+      "name": "U",
+      "kind": "table",
+      "value": {
+        "tableName": "users",
+        "schemaName": null
+      }
+    }
+  ],
+  "project": {}
 }

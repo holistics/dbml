@@ -2,7 +2,9 @@
   "tables": [
     {
       "name": "tipo_cliente",
-      "note": "Para identificar si es colegio, corporación u otro tipo",
+      "note": {
+        "value": "Para identificar si es colegio, corporación u otro tipo"
+      },
       "fields": [
         {
           "name": "id",
@@ -33,7 +35,9 @@
     },
     {
       "name": "permiso_funcion",
-      "note": "Funciones/Categorías globales. Se separan por tipo de cliente.",
+      "note": {
+        "value": "Funciones/Categorías globales. Se separan por tipo de cliente."
+      },
       "fields": [
         {
           "name": "uuid",
@@ -316,7 +320,9 @@
     },
     {
       "name": "permiso_perfil_funcion_cliente",
-      "note": "Son las funciones de los perfiles por cliente",
+      "note": {
+        "value": "Son las funciones de los perfiles por cliente"
+      },
       "fields": [
         {
           "name": "uuid",
@@ -456,7 +462,9 @@
     },
     {
       "name": "permiso_funcion_perfil_global",
-      "note": "Son las funciones de los perfiles iniciales para cada cliente. Cada cliente nuevo tendrá al menos dicha configuración desde esta tabla",
+      "note": {
+        "value": "Son las funciones de los perfiles iniciales para cada cliente. Cada cliente nuevo tendrá al menos dicha configuración desde esta tabla"
+      },
       "fields": [
         {
           "name": "uuid",
@@ -541,7 +549,9 @@
     },
     {
       "name": "permiso_usuario_cliente_funcion",
-      "note": "Son las funciones que el usuario tiene por cliente",
+      "note": {
+        "value": "Son las funciones que el usuario tiene por cliente"
+      },
       "fields": [
         {
           "name": "uuid",
@@ -679,7 +689,9 @@
     },
     {
       "name": "permiso_perfil_tipo_usuario",
-      "note": "Es la tabla que permite agregar permisos por tipos de usuarios.",
+      "note": {
+        "value": "Es la tabla que permite agregar permisos por tipos de usuarios."
+      },
       "fields": [
         {
           "name": "uuid",
@@ -730,7 +742,9 @@
     },
     {
       "name": "permiso_usuario_cliente_perfil",
-      "note": "Son los perfiles del usuario según el cliente",
+      "note": {
+        "value": "Son los perfiles del usuario según el cliente"
+      },
       "fields": [
         {
           "name": "uuid",

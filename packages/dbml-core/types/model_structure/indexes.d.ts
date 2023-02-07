@@ -1,6 +1,6 @@
 import { NormalizedDatabase } from './database';
 import DbState from './dbState';
-import Element, { Token } from './element';
+import Element, { RawNote, Token } from './element';
 import IndexColumn from './indexColumn';
 import Table from './table';
 interface RawIndex {
@@ -9,7 +9,7 @@ interface RawIndex {
     unique: boolean;
     pk: string;
     name: string;
-    note: string;
+    note: RawNote;
     table: Table;
     token: Token;
 }
@@ -20,6 +20,7 @@ declare class Index extends Element {
     pk: string;
     name: string;
     note: string;
+    noteToken: Token;
     table: Table;
     dbState: DbState;
     constructor({ columns, type, unique, pk, token, name, note, table }: RawIndex);

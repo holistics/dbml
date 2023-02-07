@@ -189,7 +189,7 @@ function peg$parse(input, options) {
 
         let res = {...table_name, fields};
 
-      	if (options && options.comment) res.note = options.comment;
+      	if (options && options.comment) res.note = { value: options.comment };
       	if (indexes) res.indexes = indexes;
       	// return statement
       	return res;
@@ -312,12 +312,12 @@ function peg$parse(input, options) {
       peg$c41 = function(fieldSettingsArray) {
       	const fieldSettings = {};
       	fieldSettingsArray.forEach(field => {
-      		if(field === "null")
+      		if (field === "null")
       			fieldSettings["not_null"] = false;
-      		else if(field.type === "default")
+      		else if (field.type === "default" && field.value)
       			fieldSettings.dbdefault = field.value;
-      		else if(field.type === "comment")
-      			fieldSettings.note = field.value;
+      		else if (field.type === "comment" && field.value)
+      			fieldSettings.note = { value: field.value };
       		else if (field !== "not_supported") {
       			fieldSettings[field] = true;
       		}

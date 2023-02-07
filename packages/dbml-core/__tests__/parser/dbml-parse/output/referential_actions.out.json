@@ -3,11 +3,13 @@
   "tables": [
     {
       "name": "orders",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -30,6 +32,7 @@
         {
           "name": "user_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -52,6 +55,7 @@
         {
           "name": "status",
           "type": {
+            "schemaName": null,
             "type_name": "orders_status_enum",
             "args": null
           },
@@ -72,6 +76,7 @@
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "varchar(255)",
             "args": "255"
           },
@@ -106,11 +111,13 @@
     },
     {
       "name": "order_items",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "order_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -131,6 +138,7 @@
         {
           "name": "product_id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -151,6 +159,7 @@
         {
           "name": "product_name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar(255)",
             "args": "255"
           },
@@ -171,6 +180,7 @@
         {
           "name": "quantity",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -209,11 +219,13 @@
     },
     {
       "name": "products",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -234,6 +246,7 @@
         {
           "name": "name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar(255)",
             "args": "255"
           },
@@ -254,6 +267,7 @@
         {
           "name": "price",
           "type": {
+            "schemaName": null,
             "type_name": "decimal(10,4)",
             "args": "10,4"
           },
@@ -274,6 +288,7 @@
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "datetime",
             "args": null
           },
@@ -338,11 +353,13 @@
     },
     {
       "name": "users",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -365,6 +382,7 @@
         {
           "name": "name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar(255)",
             "args": "255"
           },
@@ -385,6 +403,7 @@
         {
           "name": "email",
           "type": {
+            "schemaName": null,
             "type_name": "varchar(255)",
             "args": "255"
           },
@@ -406,6 +425,7 @@
         {
           "name": "date_of_birth",
           "type": {
+            "schemaName": null,
             "type_name": "datetime",
             "args": null
           },
@@ -426,6 +446,7 @@
         {
           "name": "created_at",
           "type": {
+            "schemaName": null,
             "type_name": "datetime",
             "args": null
           },
@@ -450,6 +471,7 @@
         {
           "name": "country_code",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -485,11 +507,13 @@
     },
     {
       "name": "countries",
+      "schemaName": null,
       "alias": null,
       "fields": [
         {
           "name": "code",
           "type": {
+            "schemaName": null,
             "type_name": "int",
             "args": null
           },
@@ -511,6 +535,7 @@
         {
           "name": "name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar(255)",
             "args": "255"
           },
@@ -531,6 +556,7 @@
         {
           "name": "continent_name",
           "type": {
+            "schemaName": null,
             "type_name": "varchar(255)",
             "args": "255"
           },
@@ -569,6 +595,7 @@
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "users",
           "fieldNames": [
             "id"
@@ -588,6 +615,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "orders",
           "fieldNames": [
             "user_id"
@@ -619,12 +647,14 @@
           "column": 57
         }
       },
-      "onDelete": "restrict"
+      "onDelete": "restrict",
+      "schemaName": null
     },
     {
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "orders",
           "fieldNames": [
             "id"
@@ -644,6 +674,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "order_items",
           "fieldNames": [
             "order_id"
@@ -675,12 +706,14 @@
           "column": 63
         }
       },
-      "onDelete": "cascade"
+      "onDelete": "cascade",
+      "schemaName": null
     },
     {
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "products",
           "fieldNames": [
             "id",
@@ -701,6 +734,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "order_items",
           "fieldNames": [
             "product_id",
@@ -733,12 +767,14 @@
           "column": 96
         }
       },
-      "onDelete": "set null"
+      "onDelete": "set null",
+      "schemaName": null
     },
     {
       "name": null,
       "endpoints": [
         {
+          "schemaName": null,
           "tableName": "countries",
           "fieldNames": [
             "code"
@@ -758,6 +794,7 @@
           }
         },
         {
+          "schemaName": null,
           "tableName": "users",
           "fieldNames": [
             "country_code"
@@ -789,10 +826,12 @@
           "column": 68
         }
       },
-      "onDelete": "no action"
+      "onDelete": "no action",
+      "schemaName": null
     }
   ],
   "enums": [],
   "tableGroups": [],
+  "aliases": [],
   "project": {}
 }
