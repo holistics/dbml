@@ -84,7 +84,13 @@ class Schema extends Element {
 
   checkRef (ref) {
     if (this.refs.some(r => r.equals(ref))) {
-      ref.error('Reference with same endpoints duplicated');
+      const endpoint1 = ref.endpoints[0];
+      const fieldList1 = endpoint1.fieldNames.map(JSON.stringify).join(', ');
+      const endpoint2 = ref.endpoints[1];
+      const fieldList2 = endpoint2.fieldNames.map(JSON.stringify).join(', ');
+      const ref1 = `"${endpoint1.schemaName ? `${endpoint1.schemaName}"."` : ''}${endpoint1.tableName}"(${fieldList1})`;
+      const ref2 = `"${endpoint2.schemaName ? `${endpoint2.schemaName}"."` : ''}${endpoint2.tableName}"(${fieldList2})`;
+      ref.error(`Reference with the same endpoints already exists: ${ref1} references ${ref2}`);
     }
   }
 
