@@ -6,7 +6,7 @@ on:
     branches: [ master ]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
@@ -19,9 +19,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
-    - name: Install dependencies
+    - name: Install root dependencies
+      run: yarn
+    - name: Install packages dependencies
       run: yarn bootstrap
     - name: Build all packages
       run: yarn build
-    - name: Run tests
+    - name: Run unit tests
       run: yarn test
