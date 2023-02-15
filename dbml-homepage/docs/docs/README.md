@@ -115,9 +115,14 @@ Settings are all defined within square brackets: `[setting1: value1, setting2: v
 
 Each setting item can take in 2 forms: `Key: Value` or `keyword`, similar to that of Python function parameters.
 
-- `headercolor: <color_code>`: change the table header color (coming soon)
+- `headercolor: <color_code>`: change the table header color.
 
-    Example, `[headercolor: #3498db]`
+Example,
+
+    Table users [headercolor: #3498DB] {
+        id integer [primary key]
+        username varchar(255) [not null, unique]
+    }
 
 ## Column Definition
 
