@@ -1,0 +1,30 @@
+name: CI
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    types: [opened, synchronize]
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+    - name: Install root dependencies
+      run: yarn install --frozen-lockfile
+    - name: Install packages dependencies
+      run: yarn bootstrap
+    - name: Build all packages
+      run: yarn build
+    - name: Run unit tests
+      run: yarn test

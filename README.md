@@ -1,8 +1,14 @@
 # DBML - Database Markup Language
 
-[![Build Status](https://travis-ci.org/holistics/dbml.svg?branch=master)](https://travis-ci.org/holistics/dbml)
+<div align="center">
 
+[![Build Status](https://img.shields.io/github/actions/workflow/status/holistics/dbml/test.yml?label=CI&logo=github&style=flat-square)](https://github.com/holistics/dbml/actions/workflows/test.yml)
+[![npm @dbml/core](https://img.shields.io/npm/v/@dbml/core?style=flat-square&label=npm%20@dbml/core)](https://www.npmjs.org/package/@dbml/core)
+[![npm @dbml/core downloads](https://img.shields.io/npm/dm/@dbml/core.svg?style=flat-square)](https://npm-stat.com/charts.html?package=@dbml/core)
+[![npm @dbml/cli](https://img.shields.io/npm/v/@dbml/cli?style=flat-square&label=npm%20@dbml/cli)](https://www.npmjs.org/package/@dbml/cli)
+[![npm @dbml/cli downloads](https://img.shields.io/npm/dm/@dbml/cli.svg?style=flat-square)](https://npm-stat.com/charts.html?package=@dbml/cli)
 
+</div>
 DBML (database markup language) is a simple, readable DSL language designed to define database structures.
 
 For more information, please check out [DBML homepage](https://dbml.org)
