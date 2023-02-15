@@ -2,7 +2,9 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "test": "jest"
+    "test": "npx lerna run test",
+    "build": "npx lerna run build",
+    "bootstrap": "npx lerna bootstrap"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
