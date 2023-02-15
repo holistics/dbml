@@ -1,4 +1,4 @@
-name: Unit tests CI
+name: CI
 on:
   push:
     branches: [ master ]
