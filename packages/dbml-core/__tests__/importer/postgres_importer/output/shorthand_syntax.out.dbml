@@ -1,4 +1,4 @@
-Table "booking_reference" {
+Table "booking_referenc" {
   "reference_id" NVARCHAR(10) [not null]
   "cust_id" NUMBER(10) [not null]
   "status" NVARCHAR(1) [not null]
