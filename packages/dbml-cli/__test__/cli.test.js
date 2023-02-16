@@ -23,7 +23,8 @@ describe('@dbml/cli', () => {
     const expectStdout = fs.readFileSync(path.join(dirName, './stdout.txt'), 'utf-8');
     const actualStdout = stripAnsi(stdout);
 
-    if (path.basename(dirName) === 'syntax-error') {
+    // folder name contains `syntax-error`
+    if (path.basename(dirName).includes('syntax-error')) {
       expect(actualStdout).toContain(expectStdout);
     } else {
       expect(actualStdout).toBe(expectStdout);
