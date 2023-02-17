@@ -1,3 +1,20 @@
+## v2.5.1 (2023-02-17)
+#### Dependabot security fixes
+- #330, #236, #258, #293, #317, #318, #319, #310, #314, #234, #211
+#### :running_woman: Performance
+* [#328](https://github.com/holistics/dbml/pull/328) Init CI test ([@nguyenalter](https://github.com/nguyenalter))
+
+#### :memo: Documentation
+* [#329](https://github.com/holistics/dbml/pull/329) Update dbml syntax docs ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :house_with_garden: Internal
+* `dbml-cli`, `dbml-core`
+  * [#327](https://github.com/holistics/dbml/pull/327) Improve duplicate endpoints error message ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 2
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v2.5.0 (2023-02-07)
 
 #### :rocket: New Feature
