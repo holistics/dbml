@@ -1,3 +1,20 @@
+## v2.5.1 (2023-02-17)
+#### :robot: Dependabot security fixes
+- [#330](https://github.com/holistics/dbml/pull/330), [#319](https://github.com/holistics/dbml/pull/319), [#318](https://github.com/holistics/dbml/pull/318), [#317](https://github.com/holistics/dbml/pull/317), [#314](https://github.com/holistics/dbml/pull/314), [#310](https://github.com/holistics/dbml/pull/310), [#293](https://github.com/holistics/dbml/pull/293), [#258](https://github.com/holistics/dbml/pull/258), [#236](https://github.com/holistics/dbml/pull/236), [#234](https://github.com/holistics/dbml/pull/234), [#211](https://github.com/holistics/dbml/pull/211)
+#### :running_woman: Performance
+* [#328](https://github.com/holistics/dbml/pull/328) Init CI test ([@nguyenalter](https://github.com/nguyenalter))
+
+#### :memo: Documentation
+* [#329](https://github.com/holistics/dbml/pull/329) Update dbml syntax docs ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :house_with_garden: Internal
+* `dbml-cli`, `dbml-core`
+  * [#327](https://github.com/holistics/dbml/pull/327) Improve duplicate endpoints error message ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 2
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v2.5.0 (2023-02-07)
 
 #### :rocket: New Feature
