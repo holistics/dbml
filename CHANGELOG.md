@@ -1,5 +1,5 @@
 ## v2.5.1 (2023-02-17)
-#### Dependabot security fixes
+#### :robot: Dependabot security fixes
 - [#330](https://github.com/holistics/dbml/pull/330), [#236](https://github.com/holistics/dbml/pull/236), [#258](https://github.com/holistics/dbml/pull/258), [#293](https://github.com/holistics/dbml/pull/293), [#317](https://github.com/holistics/dbml/pull/317), [#318](https://github.com/holistics/dbml/pull/318), [#319](https://github.com/holistics/dbml/pull/319), [#310](https://github.com/holistics/dbml/pull/310), [#314](https://github.com/holistics/dbml/pull/314), [#234](https://github.com/holistics/dbml/pull/234), [#211](https://github.com/holistics/dbml/pull/211)
 #### :running_woman: Performance
 * [#328](https://github.com/holistics/dbml/pull/328) Init CI test ([@nguyenalter](https://github.com/nguyenalter))
