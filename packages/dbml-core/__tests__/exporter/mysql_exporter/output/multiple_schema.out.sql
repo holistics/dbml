@@ -37,6 +37,10 @@ CREATE TABLE `schemaA`.`locations` (
   `name` varchar(255)
 );
 
+ALTER TABLE `products` COMMENT = 'This table contains products';
+
+ALTER TABLE `schemaA`.`products` COMMENT = 'This table also contains products';
+
 ALTER TABLE `ecommerce`.`users` ADD FOREIGN KEY (`id`) REFERENCES `users` (`id`);
 
 ALTER TABLE `ecommerce`.`users` ADD CONSTRAINT `name_optional` FOREIGN KEY (`id`) REFERENCES `users` (`name`);
