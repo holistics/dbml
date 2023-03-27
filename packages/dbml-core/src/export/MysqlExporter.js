@@ -241,7 +241,10 @@ class MySQLExporter {
       let line = '';
       if (comment.type === 'table') {
         const table = model.tables[comment.tableId];
-        line += `ALTER TABLE \`${table.name}\` COMMENT = '${table.note.replace(/'/g, "\\'")}'`;
+        const schema = model.schemas[table.schemaId];
+
+        line += `ALTER TABLE ${shouldPrintSchema(schema, model)
+          ? `\`${schema.name}\`.` : ''}\`${table.name}\` COMMENT = '${table.note.replace(/'/g, "\\'")}'`;
       }
       line += ';\n';
       return line;

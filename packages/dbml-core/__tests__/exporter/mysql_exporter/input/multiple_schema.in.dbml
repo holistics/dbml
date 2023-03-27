@@ -19,11 +19,13 @@ Table public.users {
 Table products {
   id int [pk]
   name varchar
+  note: 'This table contains products'
 }
 
 Table schemaA.products as A {
   id int [pk]
   name varchar [ref: > EU.id]
+  note: 'This table also contains products'
 }
 
 Table schemaA.locations {
