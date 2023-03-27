@@ -1,3 +1,13 @@
+## v2.5.2 (2023-03-27)
+#### :robot: Dependabot security fixes
+- [#339](https://github.com/holistics/dbml/pull/339), [#334](https://github.com/holistics/dbml/pull/334), [#202](https://github.com/holistics/dbml/pull/202)
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#342](https://github.com/holistics/dbml/pull/342) Rendering schema name for table comments ([@mhueck](https://github.com/mhueck))
+
+#### Committers: 1
+- Markus Hueck ([@mhueck](https://github.com/mhueck))
+
 ## v2.5.1 (2023-02-17)
 #### :robot: Dependabot security fixes
 - [#330](https://github.com/holistics/dbml/pull/330), [#319](https://github.com/holistics/dbml/pull/319), [#318](https://github.com/holistics/dbml/pull/318), [#317](https://github.com/holistics/dbml/pull/317), [#314](https://github.com/holistics/dbml/pull/314), [#310](https://github.com/holistics/dbml/pull/310), [#293](https://github.com/holistics/dbml/pull/293), [#258](https://github.com/holistics/dbml/pull/258), [#236](https://github.com/holistics/dbml/pull/236), [#234](https://github.com/holistics/dbml/pull/234), [#211](https://github.com/holistics/dbml/pull/211)
