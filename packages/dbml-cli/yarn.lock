@@ -703,10 +703,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@dbml/core@^2.5.1":
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/@dbml/core/-/core-2.5.1.tgz#53d34904229079de29835d1d6425c847baa6cf96"
-  integrity sha512-MdOXGyRrcaGjNz3qg2zwpTmCuwkOA68QHNaJLQgI63yaynNTLmyhAsjbM+ZRZV88a4dQvhXWYxxnsCST6b4ilQ==
+"@dbml/core@^2.5.2":
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/@dbml/core/-/core-2.5.2.tgz#081db637a113030b6448dc3f2852e6505f22f504"
+  integrity sha512-YyfVaXSlS/nZqsdw0dBC3TaT+lxdCw5RfK2GyV6nsJfuQJ6fuDNnv+ukOmZRBXZcRku+YF88TGO3+hgq0A3rxw==
   dependencies:
     lodash "^4.17.15"
     parsimmon "^1.13.0"
@@ -3319,9 +3319,9 @@ lodash.unescape@4.0.1:
   integrity sha1-vyJJiGzlFM2hEvrpIYzcBlIR/Jw=
 
 lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 logform@^2.1.1:
   version "2.1.2"
