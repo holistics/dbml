@@ -22,9 +22,7 @@ jobs:
         cache: 'yarn'
     - name: Install root dependencies
       run: yarn install --frozen-lockfile
-    - name: Install packages dependencies
+    - name: Install dependencies and build packages
       run: yarn bootstrap
-    - name: Build all packages
-      run: yarn build
     - name: Run unit tests
       run: yarn test
