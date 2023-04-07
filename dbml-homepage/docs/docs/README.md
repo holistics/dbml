@@ -160,7 +160,7 @@ Example,
         id integer [primary key]
         username varchar(255) [not null, unique]
         full_name varchar(255) [not null]
-        gender varchar(1) [default: 'm']
+        source varchar(255) [default: 'direct']
         created_at timestamp [default: `now()`]
         rating integer [default: 10]
     }
