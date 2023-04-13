@@ -1,8 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
-// eslint-disable-next-line
-const expect = require('expect');
 
 global.scanTestNames = (dirname, subpath) => {
   const dirFilepath = path.join(dirname, subpath);
