@@ -40,11 +40,10 @@
     "@babel/core": "^7.5.5",
     "@babel/node": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
-    "babel-jest": "^24.8.0",
+    "@glen/jest-raw-loader": "^2.0.0",
+    "babel-jest": "^29.5.0",
     "bluebird": "^3.5.5",
-    "expect": "^24.8.0",
-    "jest": "^24.8.0",
-    "jest-raw-loader": "^1.0.1",
+    "jest": "^29.5.0",
     "pegjs-require-import": "0.0.6"
   },
   "jest": {
@@ -53,7 +52,7 @@
     ],
     "transform": {
       "^.+\\.js$": "babel-jest",
-      "\\.(?!json$)[^.]*$": "jest-raw-loader"
+      "\\.(?!json$)[^.]*$": "@glen/jest-raw-loader"
     }
   },
   "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556"
