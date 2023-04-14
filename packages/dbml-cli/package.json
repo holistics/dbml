@@ -24,7 +24,7 @@
     "dbml-cli"
   ],
   "dependencies": {
-    "@babel/cli": "^7.5.5",
+    "@babel/cli": "^7.21.0",
     "@dbml/core": "^2.5.2",
     "bluebird": "^3.5.5",
     "chalk": "^2.4.2",
@@ -37,11 +37,11 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/node": "^7.5.5",
-    "@babel/plugin-transform-runtime": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/runtime": "^7.5.5",
+    "@babel/core": "^7.21.4",
+    "@babel/node": "^7.20.7",
+    "@babel/plugin-transform-runtime": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
+    "@babel/runtime": "^7.21.0",
     "babel-jest": "^29.5.0",
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "13.2.0",
