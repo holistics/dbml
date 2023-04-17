@@ -1,3 +1,52 @@
+## v2.5.3 (2023-04-17)
+
+#### :running_woman: Performance
+* [#349](https://github.com/holistics/dbml/pull/349) Remove redundant build step ([@nguyenalter](https://github.com/nguyenalter))
+
+#### :house_with_garden: Internal
+* Other
+  * [#374](https://github.com/holistics/dbml/pull/374) Internal: add dependencies update label ([@nguyenalter](https://github.com/nguyenalter))
+* `dbml-cli`
+  * [#348](https://github.com/holistics/dbml/pull/348) Remove package lock files ([@nguyenalter](https://github.com/nguyenalter))
+
+#### :robot: Dependencies Update
+* `dbml-cli`
+  * [#372](https://github.com/holistics/dbml/pull/372) Bump ansi-regex from 4.1.0 to 4.1.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#371](https://github.com/holistics/dbml/pull/371) Bump glob-parent from 5.1.0 to 5.1.2 in /packages/dbml-cli ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#370](https://github.com/holistics/dbml/pull/370) Bump kind-of from 6.0.2 to 6.0.3 in /packages/dbml-cli ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#369](https://github.com/holistics/dbml/pull/369) Bump eslint to 6.8.0 and mkdirp to 0.5.6 ([@nguyenalter](https://github.com/nguyenalter))
+  * [#363](https://github.com/holistics/dbml/pull/363) Bump ini from 1.3.5 to 1.3.8 in /packages/dbml-cli ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#362](https://github.com/holistics/dbml/pull/362) Bump acorn from 5.7.3 to 5.7.4 in /packages/dbml-cli ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#361](https://github.com/holistics/dbml/pull/361) Bump tar from 4.4.13 to 4.4.19 in /packages/dbml-cli ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#360](https://github.com/holistics/dbml/pull/360) Bump async from 2.6.3 to 2.6.4 in /packages/dbml-cli ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#358](https://github.com/holistics/dbml/pull/358) Bump tmpl from 1.0.4 to 1.0.5 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#359](https://github.com/holistics/dbml/pull/359) Bump minimatch from 3.0.4 to 3.1.2 in /packages/dbml-cli ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#357](https://github.com/holistics/dbml/pull/357) Bump y18n from 4.0.0 to 4.0.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#350](https://github.com/holistics/dbml/pull/350) Bump handlebars from 4.3.4 to 4.7.7 in /packages/dbml-cli ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#177](https://github.com/holistics/dbml/pull/177) Bump lodash from 4.17.15 to 4.17.21 in /packages/dbml-cli ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#346](https://github.com/holistics/dbml/pull/346) Bump json5 from 2.1.0 to 2.2.3 in /packages/dbml-cli ([@dependabot[bot]](https://github.com/apps/dependabot))
+* `dbml-cli`, `dbml-core`
+  * [#368](https://github.com/holistics/dbml/pull/368) Bump babel packages to the latest version ([@nguyenalter](https://github.com/nguyenalter))
+  * [#365](https://github.com/holistics/dbml/pull/365) Bump jest and babel-jest to v29.5.0 ([@nguyenalter](https://github.com/nguyenalter))
+* Other
+  * [#367](https://github.com/holistics/dbml/pull/367) Bump lodash to v4.17.21 ([@nguyenalter](https://github.com/nguyenalter))
+  * [#356](https://github.com/holistics/dbml/pull/356) Bump minimatch from 3.0.4 to 3.1.2 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#364](https://github.com/holistics/dbml/pull/364) Bump ini from 1.3.5 to 1.3.8 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#243](https://github.com/holistics/dbml/pull/243) Bump url-parse from 1.4.7 to 1.5.10 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#313](https://github.com/holistics/dbml/pull/313) Bump qs from 6.5.2 to 6.5.3 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#207](https://github.com/holistics/dbml/pull/207) Bump tar from 4.4.13 to 4.4.19 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#179](https://github.com/holistics/dbml/pull/179) Bump lodash from 4.17.15 to 4.17.21 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#347](https://github.com/holistics/dbml/pull/347) Bump prismjs from 1.17.1 to 1.29.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#275](https://github.com/holistics/dbml/pull/275) Bump terser from 4.3.9 to 4.8.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#325](https://github.com/holistics/dbml/pull/325) Bump http-cache-semantics, lerna and lerna-changelog ([@dependabot[bot]](https://github.com/apps/dependabot))
+* `dbml-core`
+  * [#178](https://github.com/holistics/dbml/pull/178) Bump lodash from 4.17.15 to 4.17.21 in /packages/dbml-core ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#355](https://github.com/holistics/dbml/pull/355) Bump y18n from 4.0.0 to 4.0.3 in /packages/dbml-core ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#354](https://github.com/holistics/dbml/pull/354) Bump minimatch from 3.0.4 to 3.1.2 in /packages/dbml-core ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 1
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
 ## v2.5.2 (2023-03-27)
 #### :robot: Dependabot security fixes
 - [#339](https://github.com/holistics/dbml/pull/339), [#334](https://github.com/holistics/dbml/pull/334), [#202](https://github.com/holistics/dbml/pull/202)
