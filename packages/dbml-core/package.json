@@ -36,10 +36,10 @@
     "pluralize": "^8.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.5.5",
-    "@babel/node": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.4",
+    "@babel/node": "^7.20.7",
+    "@babel/preset-env": "^7.21.4",
     "@glen/jest-raw-loader": "^2.0.0",
     "babel-jest": "^29.5.0",
     "bluebird": "^3.5.5",
