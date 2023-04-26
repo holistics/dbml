@@ -13,6 +13,9 @@
     "build": "vuepress build docs",
     "deploy": "sh deploy.sh"
   },
+  "resolutions": {
+    "vuepress/**/loader-utils": "^1.4.2"
+  },
   "devDependencies": {
     "@vuepress/plugin-back-to-top": "^1.0.0",
     "@vuepress/plugin-medium-zoom": "^1.0.0",
