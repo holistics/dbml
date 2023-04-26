@@ -14,7 +14,8 @@
     "deploy": "sh deploy.sh"
   },
   "resolutions": {
-    "vuepress/**/loader-utils": "^1.4.2"
+    "vuepress/**/loader-utils": "^1.4.2",
+    "vuepress/**/selfsigned": "^2.1.1"
   },
   "devDependencies": {
     "@vuepress/plugin-back-to-top": "^1.0.0",
