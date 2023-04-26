@@ -1029,10 +1029,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@dbml/core@^2.5.2":
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/@dbml/core/-/core-2.5.2.tgz#081db637a113030b6448dc3f2852e6505f22f504"
-  integrity sha512-YyfVaXSlS/nZqsdw0dBC3TaT+lxdCw5RfK2GyV6nsJfuQJ6fuDNnv+ukOmZRBXZcRku+YF88TGO3+hgq0A3rxw==
+"@dbml/core@^2.5.3":
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/@dbml/core/-/core-2.5.3.tgz#590b66e6a56b4b129048409afcc5b8b5fbaa2914"
+  integrity sha512-0Y344Ld1eWRu0ypSj0sIoukzszOQa0lLABsagaYGWv7KT1FpqJGu3rh+EV5J1++PK89P/V8dEue6DtCLAqP+JQ==
   dependencies:
     lodash "^4.17.15"
     parsimmon "^1.13.0"
@@ -1784,9 +1784,9 @@ color-name@^1.0.0, color-name@~1.1.4:
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
 color-string@^1.5.2:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/color-string/-/color-string-1.5.3.tgz#c9bbc5f01b58b5492f3d6857459cb6590ce204cc"
-  integrity sha512-dC2C5qeWoYkxki5UAXapdjqO672AM4vZuPGRQfO8b5HKuKGBbKWpITyDYN7TOFKvRW7kOgAn3746clDBMDJyQw==
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/color-string/-/color-string-1.9.1.tgz#4467f9146f036f855b764dfb5bf8582bf342c7a4"
+  integrity sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==
   dependencies:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
