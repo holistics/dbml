@@ -16,7 +16,8 @@
   "resolutions": {
     "vuepress/**/loader-utils": "^1.4.2",
     "vuepress/**/selfsigned": "^2.1.1",
-    "vuepress/**/glob-parent": "^5.1.2"
+    "vuepress/**/glob-parent": "^5.1.2",
+    "vuepress/**/optimize-css-assets-webpack-plugin": "^6.0.1"
   },
   "devDependencies": {
     "@vuepress/theme-default": "^1.9.9",
