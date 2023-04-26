@@ -15,7 +15,8 @@
   },
   "resolutions": {
     "vuepress/**/loader-utils": "^1.4.2",
-    "vuepress/**/selfsigned": "^2.1.1"
+    "vuepress/**/selfsigned": "^2.1.1",
+    "vuepress/**/glob-parent": "^5.1.2"
   },
   "devDependencies": {
     "@vuepress/theme-default": "^1.9.9",
