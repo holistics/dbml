@@ -11,7 +11,7 @@ cd docs/.vuepress/dist
 
 # if you are deploying to a custom domain
 # echo 'www.dbml.org' > CNAME
-echo 'www.dbml.dbdiagram.io' > CNAME
+echo 'https://dbml.dbdiagram.io' > CNAME
 
 cp "home/index.html" "./"
 
