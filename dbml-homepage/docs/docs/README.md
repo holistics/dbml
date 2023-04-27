@@ -27,7 +27,6 @@ outlines the full syntax documentations of DBML.
 - [Enum Definition](#enum-definition)
 - [TableGroup](#tablegroup)
 - [Syntax Consistency](#syntax-consistency)
-- [Community Contributions](#community-contributions)
 
 ##### Take a look at an example below:
 
