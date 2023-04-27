@@ -1,6 +1,6 @@
 # @dbml/core
 
-See our website [@dbml/core](https://www.dbml.org/js-module/#core) for more information
+See our website [@dbml/core](https://dbml.dbdiagram.io/js-module/#core) for more information
 
 ## Installation
 ```shell
