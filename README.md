@@ -11,7 +11,7 @@
 </div>
 DBML (database markup language) is a simple, readable DSL language designed to define database structures.
 
-For more information, please check out [DBML homepage](https://dbml.org)
+For more information, please check out [DBML homepage](https://dbml.dbdiagram.io)
 
 ## Benefits
 
