@@ -1029,10 +1029,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@dbml/core@^2.5.2":
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/@dbml/core/-/core-2.5.2.tgz#081db637a113030b6448dc3f2852e6505f22f504"
-  integrity sha512-YyfVaXSlS/nZqsdw0dBC3TaT+lxdCw5RfK2GyV6nsJfuQJ6fuDNnv+ukOmZRBXZcRku+YF88TGO3+hgq0A3rxw==
+"@dbml/core@^2.5.3":
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/@dbml/core/-/core-2.5.3.tgz#590b66e6a56b4b129048409afcc5b8b5fbaa2914"
+  integrity sha512-0Y344Ld1eWRu0ypSj0sIoukzszOQa0lLABsagaYGWv7KT1FpqJGu3rh+EV5J1++PK89P/V8dEue6DtCLAqP+JQ==
   dependencies:
     lodash "^4.17.15"
     parsimmon "^1.13.0"
@@ -2484,9 +2484,9 @@ homedir-polyfill@^1.0.1:
     parse-passwd "^1.0.0"
 
 hosted-git-info@^2.1.4:
-  version "2.8.4"
-  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.4.tgz#44119abaf4bc64692a16ace34700fed9c03e2546"
-  integrity sha512-pzXIvANXEFrc5oFFXRMkbLPQ2rXRoDERwDLyrcUxGhaZhgP54BBSl9Oheh7Vv0T090cszWBxPjkQQ5Sq1PbBRQ==
+  version "2.8.9"
+  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.9.tgz#dffc0bf9a21c02209090f2aa69429e1414daf3f9"
+  integrity sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==
 
 html-escaper@^2.0.0:
   version "2.0.2"
