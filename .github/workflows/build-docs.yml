@@ -24,6 +24,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
+    - name: Open docs directory
+      run: cd dbml-homepage
     - name: Install dependencies
       run: yarn install --frozen-lockfile
     - name: Build docs page
