@@ -1,13 +1,13 @@
-name: CI
+name: build docs
 on:
   push:
     branches: [ master ]
-    paths-ignore:
+    paths:
       - 'dbml-homepage/**'
   pull_request:
     branches: [ master ]
     types: [opened, synchronize]
-    paths-ignore:
+    paths:
       - 'dbml-homepage/**'
 jobs:
   build:
@@ -24,9 +24,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
-    - name: Install root dependencies
+    - name: Install dependencies
       run: yarn install --frozen-lockfile
-    - name: Install dependencies and build packages
-      run: yarn bootstrap
-    - name: Run unit tests
-      run: yarn test
+    - name: Build docs page
+      run: yarn build
