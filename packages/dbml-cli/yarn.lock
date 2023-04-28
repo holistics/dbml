@@ -1029,10 +1029,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@dbml/core@^2.5.2":
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/@dbml/core/-/core-2.5.2.tgz#081db637a113030b6448dc3f2852e6505f22f504"
-  integrity sha512-YyfVaXSlS/nZqsdw0dBC3TaT+lxdCw5RfK2GyV6nsJfuQJ6fuDNnv+ukOmZRBXZcRku+YF88TGO3+hgq0A3rxw==
+"@dbml/core@^2.5.3":
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/@dbml/core/-/core-2.5.3.tgz#590b66e6a56b4b129048409afcc5b8b5fbaa2914"
+  integrity sha512-0Y344Ld1eWRu0ypSj0sIoukzszOQa0lLABsagaYGWv7KT1FpqJGu3rh+EV5J1++PK89P/V8dEue6DtCLAqP+JQ==
   dependencies:
     lodash "^4.17.15"
     parsimmon "^1.13.0"
@@ -3562,12 +3562,7 @@ path-key@^3.0.0, path-key@^3.1.0:
   resolved "https://registry.yarnpkg.com/path-key/-/path-key-3.1.1.tgz#581f6ade658cbba65a0d3380de7753295054f375"
   integrity sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==
 
-path-parse@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
-  integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
-
-path-parse@^1.0.7:
+path-parse@^1.0.6, path-parse@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.7.tgz#fbc114b60ca42b30d9daf5858e4bd68bbedb6735"
   integrity sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==
