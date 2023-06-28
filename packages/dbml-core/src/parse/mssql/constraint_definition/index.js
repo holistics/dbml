@@ -62,7 +62,7 @@ const Lang = P.createLanguage({
 
   ConstExpr: () => P.seq(
     KP.LParen.fallback(null),
-    P.alt(pFunction, pConst, KP.KeywordNull.thru(streamline('boolean'))),
+    P.alt(pFunction, P.seq(KP.LParen.fallback(null), pConst, KP.RParen.fallback(null)), KP.KeywordNull.thru(streamline('boolean'))),
     KP.RParen.fallback(null),
   ).map(value => value[1]),
   ConstraintName: () => P.seq(KP.KeywordConstraint, pIdentifier).map(value => value[1]),
