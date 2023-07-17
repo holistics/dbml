@@ -28,8 +28,8 @@ DBML is structured as monorepo project. We uses [yarn](https://yarnpkg.com/) and
 
     $ git clone <https://github.com/holistics/dbml.git>
     $ cd dbml
-    $ lerna bootstrap
-    $ lerna run build
+    $ yarn install
+    $ yarn build
 
 ### Running tests
 
