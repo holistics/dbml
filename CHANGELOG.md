@@ -1,3 +1,59 @@
+## v2.5.4 (2023-07-18)
+
+#### :memo: Documentation
+* `dbml-cli`, `dbml-core`
+  * [#397](https://github.com/holistics/dbml/pull/397) Update dbml domain ([@nguyenalter](https://github.com/nguyenalter))
+* Other
+  * [#396](https://github.com/holistics/dbml/pull/396) Update new domain for dbml homepage ([@TeaNguyen](https://github.com/TeaNguyen))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#406](https://github.com/holistics/dbml/pull/406) Fix default values for MS-SQL parser ([@bobzomer](https://github.com/bobzomer))
+
+#### :house_with_garden: Internal
+* [#398](https://github.com/holistics/dbml/pull/398) Add missing step in build-docs workflow ([@nguyenalter](https://github.com/nguyenalter))
+* [#366](https://github.com/holistics/dbml/pull/366) Add build-docs workflow ([@nguyenalter](https://github.com/nguyenalter))
+
+#### :robot: Dependencies Update
+* `dbml-cli`, `dbml-core`
+  * [#411](https://github.com/holistics/dbml/pull/411) Upgrade lerna to v7 ([@nguyenalter](https://github.com/nguyenalter))
+* `dbml-cli`
+  * [#410](https://github.com/holistics/dbml/pull/410) Fix vulnerable deps ([@nguyenalter](https://github.com/nguyenalter))
+  * [#400](https://github.com/holistics/dbml/pull/400) Bump hosted-git-info from 2.8.4 to 2.8.9 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#392](https://github.com/holistics/dbml/pull/392) Bump path-parse from 1.0.6 to 1.0.7 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* Other
+  * [#409](https://github.com/holistics/dbml/pull/409) Bump semver from 5.7.1 to 5.7.2 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#399](https://github.com/holistics/dbml/pull/399) Bump browserslist from 4.7.1 to 4.21.5 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#235](https://github.com/holistics/dbml/pull/235) Bump ajv from 6.10.2 to 6.12.6 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#382](https://github.com/holistics/dbml/pull/382) Bump postcss from 7.0.18 to 7.0.39 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#394](https://github.com/holistics/dbml/pull/394) Fix nth-check security issues in /dbml-homepage ([@nguyenalter](https://github.com/nguyenalter))
+  * [#393](https://github.com/holistics/dbml/pull/393) Force glob-parent to 5.1.2 in /dbml-homepage ([@nguyenalter](https://github.com/nguyenalter))
+  * [#389](https://github.com/holistics/dbml/pull/389) Bump vuepress to 1.9.9 in /dbml-homepage  ([@nguyenalter](https://github.com/nguyenalter))
+  * [#390](https://github.com/holistics/dbml/pull/390) Force selfsigned to 2.1.1, bump postcss-svgo to 4.0.3 in /dbml-homepage ([@nguyenalter](https://github.com/nguyenalter))
+  * [#387](https://github.com/holistics/dbml/pull/387) Force loader-utils to 1.4.2 and bump json5 ([@nguyenalter](https://github.com/nguyenalter))
+  * [#386](https://github.com/holistics/dbml/pull/386) Bump express, kind-of, vue and webpack plugins in /dbml-homepage ([@nguyenalter](https://github.com/nguyenalter))
+  * [#385](https://github.com/holistics/dbml/pull/385) Bump dot-prop from 4.2.0 to 4.2.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#383](https://github.com/holistics/dbml/pull/383) Bump webpack-dev-server from 3.9.0 to 3.11.3 in /dbml-homepage ([@nguyenalter](https://github.com/nguyenalter))
+  * [#379](https://github.com/holistics/dbml/pull/379) Bump ansi-regex, jsprim, loader-utils and minimist in /dbml-homepage ([@nguyenalter](https://github.com/nguyenalter))
+  * [#381](https://github.com/holistics/dbml/pull/381) Bump y18n from 4.0.0 to 4.0.3 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#380](https://github.com/holistics/dbml/pull/380) Bump acorn from 6.3.0 to 6.4.2 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#103](https://github.com/holistics/dbml/pull/103) Bump websocket-extensions from 0.1.3 to 0.1.4 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#132](https://github.com/holistics/dbml/pull/132) Bump http-proxy from 1.18.0 to 1.18.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#162](https://github.com/holistics/dbml/pull/162) Bump elliptic from 6.5.1 to 6.5.4 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#184](https://github.com/holistics/dbml/pull/184) Bump dns-packet from 1.3.1 to 1.3.4 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#378](https://github.com/holistics/dbml/pull/378) Bump ini from 1.3.5 to 1.3.8 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#170](https://github.com/holistics/dbml/pull/170) Bump ssri from 6.0.1 to 6.0.2 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#267](https://github.com/holistics/dbml/pull/267) Bump async from 2.6.3 to 2.6.4 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#309](https://github.com/holistics/dbml/pull/309) Bump decode-uri-component from 0.2.0 to 0.2.2 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* `dbml-core`
+  * [#408](https://github.com/holistics/dbml/pull/408) Bump semver from 5.7.1 to 5.7.2 in /packages/dbml-core ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 4
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Thi Nguyen ([@TeaNguyen](https://github.com/TeaNguyen))
+- [@bobzomer](https://github.com/bobzomer)
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v2.5.3 (2023-04-17)
 
 #### :running_woman: Performance
