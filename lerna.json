@@ -1,18 +1,5 @@
 {
-  "packages": [
-    "packages/*"
-  ],
   "version": "2.5.3",
   "npmClient": "yarn",
-  "changelog": {
-    "labels": {
-      "PR: Performance :running_woman:": ":running_woman: Performance",
-      "PR: Docs :memo:": ":memo: Documentation",
-      "PR: Bug Fix :bug:": ":bug: Bug Fix",
-      "PR: New Feature :rocket:": ":rocket: New Feature",
-      "PR: Breaking Change :boom:": ":boom: Breaking Change",
-      "PR: Internal :house_with_garden:": ":house_with_garden: Internal",
-      "PR: Dependencies Update :robot:": ":robot: Dependencies Update"
-    }
-  }
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }
