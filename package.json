@@ -1,10 +1,12 @@
 {
   "name": "root",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "test": "npx lerna run test",
-    "build": "npx lerna run build",
-    "bootstrap": "npx lerna bootstrap"
+    "build": "npx lerna run build"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
@@ -17,7 +19,7 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jest": "^27.2.3",
     "jest": "^29.5.0",
-    "lerna": "^6.6.1",
+    "lerna": "^7.1.4",
     "lerna-changelog": "^2.2.0"
   },
   "license": "Apache-2.0",
@@ -40,5 +42,16 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5"
+  },
+  "changelog": {
+    "labels": {
+      "PR: Performance :running_woman:": ":running_woman: Performance",
+      "PR: Docs :memo:": ":memo: Documentation",
+      "PR: Bug Fix :bug:": ":bug: Bug Fix",
+      "PR: New Feature :rocket:": ":rocket: New Feature",
+      "PR: Breaking Change :boom:": ":boom: Breaking Change",
+      "PR: Internal :house_with_garden:": ":house_with_garden: Internal",
+      "PR: Dependencies Update :robot:": ":robot: Dependencies Update"
+    }
   }
 }
