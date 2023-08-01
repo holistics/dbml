@@ -1,0 +1,175 @@
+{
+  "value": [
+    {
+      "kind": "<number>",
+      "offset": 0,
+      "value": "1",
+      "length": 1,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "offset": 1,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<number>",
+      "offset": 2,
+      "value": "2",
+      "length": 1,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "offset": 3,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<single-line-comment>",
+          "offset": 4,
+          "value": " whole number\r",
+          "length": 16,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<newline>",
+          "offset": 20,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<number>",
+      "offset": 21,
+      "value": "2.33",
+      "length": 4,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "offset": 25,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<number>",
+      "offset": 26,
+      "value": "2.8",
+      "length": 3,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "offset": 29,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<single-line-comment>",
+          "offset": 30,
+          "value": " floating-point number\r",
+          "length": 25,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<newline>",
+          "offset": 55,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<eof>",
+      "offset": 97,
+      "length": 0,
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 57,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<space>",
+          "offset": 62,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<space>",
+          "offset": 69,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<space>",
+          "offset": 79,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<single-line-comment>",
+          "offset": 80,
+          "value": " invalid number",
+          "length": 17,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ],
+      "trailingTrivia": []
+    }
+  ],
+  "errors": [
+    {
+      "code": 1002,
+      "diagnostic": "Invalid number",
+      "start": 58,
+      "end": 62,
+      "name": "ParsingError"
+    },
+    {
+      "code": 1002,
+      "diagnostic": "Invalid number",
+      "start": 63,
+      "end": 69,
+      "name": "ParsingError"
+    },
+    {
+      "code": 1002,
+      "diagnostic": "Invalid number",
+      "start": 70,
+      "end": 79,
+      "name": "ParsingError"
+    }
+  ]
+}

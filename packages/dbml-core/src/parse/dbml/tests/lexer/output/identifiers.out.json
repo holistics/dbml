@@ -1,0 +1,147 @@
+{
+  "value": [
+    {
+      "kind": "<identifier>",
+      "offset": 0,
+      "value": "Table",
+      "length": 5,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "offset": 5,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<identifier>",
+      "offset": 6,
+      "value": "TableGroup",
+      "length": 10,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 17,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<identifier>",
+      "offset": 18,
+      "value": "as",
+      "length": 2,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 21,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<identifier>",
+      "offset": 22,
+      "value": "indexes",
+      "length": 7,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "offset": 29,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<identifier>",
+      "offset": 30,
+      "value": "Note",
+      "length": 4,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 35,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<identifier>",
+      "offset": 36,
+      "value": "_ab",
+      "length": 3,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 40,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<eof>",
+      "offset": 67,
+      "length": 0,
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 42,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<space>",
+          "offset": 45,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<single-line-comment>",
+          "offset": 46,
+          "value": " invalid identifier",
+          "length": 21,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ],
+      "trailingTrivia": []
+    }
+  ],
+  "errors": [
+    {
+      "code": 1002,
+      "diagnostic": "Invalid number",
+      "start": 43,
+      "end": 45,
+      "name": "ParsingError"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "value": [
+    {
+      "kind": "<color>",
+      "offset": 0,
+      "value": "#1234",
+      "length": 5,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "offset": 5,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<newline>",
+          "offset": 7,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<color>",
+      "offset": 8,
+      "value": "#12acbd",
+      "length": 7,
+      "leadingTrivia": [],
+      "trailingTrivia": []
+    },
+    {
+      "kind": "<eof>",
+      "offset": 15,
+      "length": 0,
+      "leadingTrivia": [],
+      "trailingTrivia": []
+    }
+  ],
+  "errors": []
+}

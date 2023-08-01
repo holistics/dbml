@@ -1,0 +1,196 @@
+{
+  "value": [
+    {
+      "kind": "<variable>",
+      "offset": 0,
+      "value": "This is a quoted string",
+      "length": 25,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 26,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<variable>",
+      "offset": 70,
+      "value": "This is a quoted string \nwith a newline\n",
+      "length": 3,
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 28,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 74,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<string>",
+      "offset": 77,
+      "value": "This is a string literal",
+      "length": 26,
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 76,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 104,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<string>",
+      "offset": 149,
+      "value": "This is a string literal \nwith a newline\n",
+      "length": 3,
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 106,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 153,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<string>",
+      "offset": 233,
+      "value": "This is a multiline string\r\n",
+      "length": 34,
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 155,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<newline>",
+          "offset": 191,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<newline>",
+          "offset": 193,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<newline>",
+          "offset": 230,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<newline>",
+          "offset": 232,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 268,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<eof>",
+      "offset": 312,
+      "length": 0,
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 270,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ],
+      "trailingTrivia": []
+    }
+  ],
+  "errors": [
+    {
+      "code": 1002,
+      "diagnostic": "Unclosed quoted variable",
+      "start": 156,
+      "end": 191,
+      "name": "ParsingError"
+    },
+    {
+      "code": 1002,
+      "diagnostic": "Unclosed single-line string literal",
+      "start": 194,
+      "end": 230,
+      "name": "ParsingError"
+    },
+    {
+      "code": 1002,
+      "diagnostic": "Unclosed multiline string literal",
+      "start": 271,
+      "end": 312,
+      "name": "ParsingError"
+    }
+  ]
+}

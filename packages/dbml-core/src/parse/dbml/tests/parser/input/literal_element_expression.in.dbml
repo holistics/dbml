@@ -1,0 +1,12 @@
+Test LiteralElementExpression {
+    indexes [note: 'this is an index element'] {
+        (`id * 2`, id) [primary key],
+        name [unique],
+    }
+
+    Note {
+        '''
+            this is a note
+        '''
+    }
+}

@@ -1,0 +1,169 @@
+{
+  "value": [
+    {
+      "kind": "<function-expression>",
+      "offset": 0,
+      "value": "id * 2",
+      "length": 8,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "offset": 8,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<function-expression>",
+      "offset": 9,
+      "value": "id",
+      "length": 4,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "offset": 13,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<newline>",
+          "offset": 15,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<identifier>",
+      "offset": 25,
+      "value": "id",
+      "length": 2,
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 17,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<newline>",
+          "offset": 20,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<space>",
+          "offset": 21,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<space>",
+          "offset": 22,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<space>",
+          "offset": 23,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
+        {
+          "kind": "<space>",
+          "offset": 24,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "offset": 27,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<asterisk>",
+      "offset": 28,
+      "value": "*",
+      "length": 1,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "offset": 29,
+          "value": " ",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<number>",
+      "offset": 30,
+      "value": "3",
+      "length": 1,
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 32,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        }
+      ]
+    },
+    {
+      "kind": "<eof>",
+      "offset": 34,
+      "length": 0,
+      "leadingTrivia": [],
+      "trailingTrivia": []
+    }
+  ],
+  "errors": [
+    {
+      "code": 1002,
+      "diagnostic": "Unclosed function expression",
+      "start": 18,
+      "end": 20,
+      "name": "ParsingError"
+    },
+    {
+      "code": 1002,
+      "diagnostic": "Unclosed function expression",
+      "start": 33,
+      "end": 34,
+      "name": "ParsingError"
+    }
+  ]
+}
