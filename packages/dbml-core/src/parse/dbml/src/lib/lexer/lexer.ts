@@ -180,16 +180,23 @@ export default class Lexer {
     for (const token of this.tokens) {
       if (isTriviaToken(token)) {
         triviaList.push(token);
+        // If a newline token is encountered
         if (token.kind === SyntaxTokenKind.NEWLINE) {
+          // If there are any non-trivias in the line,
+          // then `triviaList` belongs to its `trailingTrivia`
           if (lastNonTrivia) {
             lastNonTrivia.trailingTrivia = triviaList;
             startOfLine = true;
             lastNonTrivia = undefined;
+            // Clear the trivia list
             triviaList = [];
           }
+          // Otherwise, the line is empty, the `triviaList` is kept to the next line
         }
         continue;
       }
+      // If at start of line and the first non-trivia is encountered,
+      // then `triviaList` belongs to that non-trivia as `leadingTrivia`
       if (startOfLine) {
         token.leadingTrivia = triviaList;
         newTokenList.push(token);
