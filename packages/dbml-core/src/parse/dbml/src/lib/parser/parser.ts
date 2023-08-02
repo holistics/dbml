@@ -359,7 +359,7 @@ export default class Parser {
 
       if (token.kind === SyntaxTokenKind.LPAREN) {
         const { left } = postfixBindingPower(token);
-        if (left as number < mbp) {
+        if ((left as number) < mbp) {
           break;
         }
         if (
@@ -491,10 +491,7 @@ export default class Parser {
     }
     while (!this.isAtEnd()) {
       const token = this.peek()!;
-      if (
-        token.kind === SyntaxTokenKind.RBRACE ||
-        this.isAtStartOfLine(this.previous(), token)
-      ) {
+      if (token.kind === SyntaxTokenKind.RBRACE || this.isAtStartOfLine(this.previous(), token)) {
         break;
       }
       this.invalid.push(token);
@@ -634,10 +631,7 @@ export default class Parser {
   synchronizeList = () => {
     while (!this.isAtEnd()) {
       const token = this.peek()!;
-      if (
-        token.kind === SyntaxTokenKind.COMMA ||
-        token.kind === SyntaxTokenKind.RBRACKET
-      ) {
+      if (token.kind === SyntaxTokenKind.COMMA || token.kind === SyntaxTokenKind.RBRACKET) {
         break;
       }
       this.invalid.push(token);

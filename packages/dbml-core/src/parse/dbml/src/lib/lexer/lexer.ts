@@ -1,9 +1,7 @@
 import { ParsingError, ParsingErrorCode } from '../errors';
 import Result from '../result';
 import { isAlpha, isAlphaNumeric, isDigit } from '../utils';
-import {
- SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
-} from './tokens';
+import { SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken } from './tokens';
 
 export default class Lexer {
   private start: number = 0;
