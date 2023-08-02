@@ -43,11 +43,6 @@ export default class Lexer {
     return this.text[this.current + lookahead];
   }
 
-  private skip(step: number = 1) {
-    this.current += step;
-    this.start = this.current;
-  }
-
   private addToken(kind: SyntaxTokenKind) {
     this.tokens.push(
       SyntaxToken.create(
@@ -215,136 +210,108 @@ export default class Lexer {
     return this.peek(0) === "'" && this.peek(1) === "'" && this.peek(2) === "'";
   }
 
-  singleLineStringLiteral() {
-    this.skip();
+  // Check if the sequence ahead matches the passed-in sequence
+  checkSequenceAhead(sequence: string): boolean {
+    for (let i = 0; i < sequence.length; ++i) {
+      if (sequence[i] !== this.peek(i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // Extract a string-like token between `openSequence` and `closeSequence`
+  // For example, for string-literal, `openSequence` and `closeSequence` could be "'''"
+  // `invalidChar` is a list of not-allowed-to-appear characters in the string
+  // `allowEndingEof` indicates whether the string could end with `eof`
+  // `isRawString` indicates whether there can be escaped sequences 
+  extractString(
+    openSequence: string,
+    closeSequence: string,
+    invalidChar: string[],
+    allowEndingEof: boolean,
+    isRawString: boolean,
+    stringKind: SyntaxTokenKind,
+  ) {
+    if (!this.checkSequenceAhead(openSequence)) {
+      return;
+    }
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const _ of openSequence) {
+      this.advance();
+    }
+
     let string = '';
-    while (!this.isAtEnd() && !(this.peek() === '\n') && !(this.peek() === "'")) {
-      if (this.peek() === '\\') {
+
+    while (
+      !this.isAtEnd() &&
+      !invalidChar.includes(this.peek()!) &&
+      !this.checkSequenceAhead(closeSequence)
+    ) {
+      if (this.peek() === '\\' && !isRawString) {
         string += this.escapedString();
       } else {
         string += this.advance();
       }
     }
 
-    if (this.isAtEnd() || this.peek() === '\n') {
+    if (this.isAtEnd() && !allowEndingEof) {
       this.errors.push(
         new ParsingError(
           ParsingErrorCode.INVALID,
-          'Unclosed single-line string literal',
-          this.start - 1,
+          'Eof reached while parsing',
+          this.start,
           this.current,
         ),
       );
-    } else {
-      this.tokens.push(
-        SyntaxToken.create(
-          SyntaxTokenKind.STRING_LITERAL,
-          this.start - 1,
-          this.current - this.start + 2,
-          string,
+
+      return;
+    }
+
+    if (!this.isAtEnd() && invalidChar.includes(this.peek()!)) {
+      this.errors.push(
+        new ParsingError(
+          ParsingErrorCode.INVALID,
+          `Invalid ${this.peek() === '\n' ? 'newline' : 'character'} encountered while parsing`,
+          this.start,
+          this.current,
         ),
       );
+
+      return;
+    }
+
+    this.tokens.push(
+      SyntaxToken.create(
+        stringKind,
+        this.start,
+        string.length + openSequence.length + closeSequence.length,
+        string,
+      ),
+    );
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const _ of closeSequence) {
       this.advance();
     }
+  }
+
+  singleLineStringLiteral() {
+    this.extractString("'", "'", ['\n'], false, false, SyntaxTokenKind.STRING_LITERAL);
   }
 
   multilineStringLiteral() {
-    this.skip(3);
-    let string = '';
-    while (!this.isAtEnd() && !this.checkTripleQuote()) {
-      if (this.peek() === '\\') {
-        string += this.escapedString();
-      } else {
-        string += this.advance();
-      }
-    }
-
-    if (this.isAtEnd()) {
-      this.errors.push(
-        new ParsingError(
-          ParsingErrorCode.INVALID,
-          'Unclosed multiline string literal',
-          this.start - 3,
-          this.current,
-        ),
-      );
-    } else {
-      this.tokens.push(
-        SyntaxToken.create(
-          SyntaxTokenKind.STRING_LITERAL,
-          this.start - 3,
-          this.current - this.start + 6,
-          string,
-        ),
-      );
-      this.skip(3);
-    }
+    this.extractString("'''", "'''", [], false, false, SyntaxTokenKind.STRING_LITERAL);
   }
 
   functionExpression() {
-    this.skip();
-    let string = '';
-    while (!this.isAtEnd() && !(this.peek() === '\n') && !(this.peek() === '`')) {
-      if (this.peek() === '\\') {
-        string += this.escapedString();
-      } else {
-        string += this.advance();
-      }
-    }
-
-    if (this.isAtEnd() || this.peek() === '\n') {
-      this.errors.push(
-        new ParsingError(
-          ParsingErrorCode.INVALID,
-          'Unclosed function expression',
-          this.start - 1,
-          this.current,
-        ),
-      );
-    } else {
-      this.tokens.push(
-        SyntaxToken.create(
-          SyntaxTokenKind.FUNCTION_EXPRESSION,
-          this.start - 1,
-          this.current - this.start + 2,
-          string,
-        ),
-      );
-      this.advance();
-    }
+    this.extractString('`', '`', ['\n'], false, false, SyntaxTokenKind.FUNCTION_EXPRESSION);
   }
 
   quotedVariable() {
-    this.skip();
-    let string = '';
-    while (!this.isAtEnd() && !(this.peek() === '\n') && !(this.peek() === '"')) {
-      if (this.peek() === '\\') {
-        string += this.escapedString();
-      } else {
-        string += this.advance();
-      }
-    }
-
-    if (this.isAtEnd() || this.peek() === '\n') {
-      this.errors.push(
-        new ParsingError(
-          ParsingErrorCode.INVALID,
-          'Unclosed quoted variable',
-          this.start - 1,
-          this.current,
-        ),
-      );
-    } else {
-      this.tokens.push(
-        SyntaxToken.create(
-          SyntaxTokenKind.QUOTED_STRING,
-          this.start - 1,
-          this.current - this.start + 2,
-          string,
-        ),
-      );
-      this.advance();
-    }
+    this.extractString('"', '"', ['\n'], false, false, SyntaxTokenKind.QUOTED_STRING);
   }
 
   identifier() {
@@ -419,49 +386,15 @@ export default class Lexer {
   }
 
   singleLineComment() {
-    this.skip(2);
-    while (!this.isAtEnd() && this.peek() !== '\n') {
-      this.advance();
-    }
-    this.tokens.push(
-      SyntaxToken.create(
-        SyntaxTokenKind.SINGLE_LINE_COMMENT,
-        this.start - 2,
-        this.current - this.start + 2,
-        this.text.substring(this.start, this.current),
-      ),
-    );
+    this.extractString('//', '\n', [], true, true, SyntaxTokenKind.SINGLE_LINE_COMMENT);
   }
 
   multilineComment() {
-    this.skip(2);
-    while (!this.isAtEnd() && (this.peek() !== '*' || this.peek(1) !== '/')) {
-      this.advance();
-    }
-    if (this.isAtEnd()) {
-      this.tokens.push(
-        SyntaxToken.create(
-          SyntaxTokenKind.INVALID,
-          this.start - 2,
-          this.current - this.start + 2,
-          this.text.substring(this.start, this.current),
-        ),
-      );
-    } else {
-      this.tokens.push(
-        SyntaxToken.create(
-          SyntaxTokenKind.MULTILINE_COMMENT,
-          this.start - 2,
-          this.current - this.start + 4,
-          this.text.substring(this.start, this.current),
-        ),
-      );
-      this.skip(2);
-    }
+    this.extractString('/*', '*/', [], false, true, SyntaxTokenKind.MULTILINE_COMMENT);
   }
 
   escapedString(): string {
-    this.skip();
+    this.advance();
     let char = '';
     switch (this.peek()) {
       case 't':
