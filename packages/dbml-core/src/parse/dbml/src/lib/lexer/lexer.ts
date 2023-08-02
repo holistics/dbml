@@ -225,7 +225,7 @@ export default class Lexer {
   // For example, for string-literal, `openSequence` and `closeSequence` could be "'''"
   // `invalidChar` is a list of not-allowed-to-appear characters in the string
   // `allowEndingEof` indicates whether the string could end with `eof`
-  // `isRawString` indicates whether there can be escaped sequences 
+  // `isRawString` indicates whether there can be escaped sequences
   extractString(
     openSequence: string,
     closeSequence: string,
@@ -442,12 +442,12 @@ export default class Lexer {
         for (let i = 0; i <= 3; i += 1) {
           if (this.peek() && isAlphaNumeric(this.peek()!)) {
             hex += this.advance();
-            char = String.fromCharCode(parseInt(hex, 16));
           } else {
-            char = `\\u${hex}`;
+            return `\\u${hex}`;
           }
         }
-        break;
+
+        return String.fromCharCode(parseInt(hex, 16));
       }
       default:
         char = `\\${this.peek()}`;
