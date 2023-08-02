@@ -15,7 +15,7 @@ export enum SyntaxTokenKind {
   LANGLE = '<langle>',
   RANGLE = '<rangle>',
 
-  DOT = '<dot>',
+  OP = '<OP>',
   EOF = '<eof>',
   NUMERIC_LITERAL = '<number>',
   STRING_LITERAL = '<string>',
@@ -25,20 +25,6 @@ export enum SyntaxTokenKind {
   QUOTED_STRING = '<variable>',
   IDENTIFIER = '<identifier>',
 
-  ASTERISK = '<asterisk>',
-  CROSS = '<cross>',
-  MINUS = '<minus>',
-  BACKSLASH = '<backslash>',
-  FORWARDSLASH = '<forwardslash>',
-  PERCENT = '<percent>',
-  EXCLAMATION = '<exclamation>',
-  EQUAL = '<equal>',
-  DOUBLE_EQUAL = '<double-equal>',
-  NOT_EQUAL = '<not-equal>',
-  LT = '<lt>',
-  LE = '<le>',
-  GT = '<gt>',
-  GE = '<ge>',
   SEMICOLON = '<semicolon>',
   COLON = '<colon>',
 
@@ -66,31 +52,32 @@ export function isTriviaToken(token: SyntaxToken): boolean {
   }
 }
 
-export function isOpToken(token?: SyntaxToken): boolean {
-  if (!token) {
+export function isOp(c?: string): boolean {
+  if (!c) {
     return false;
   }
 
-  switch (token.kind) {
-    case SyntaxTokenKind.CROSS:
-    case SyntaxTokenKind.ASTERISK:
-    case SyntaxTokenKind.MINUS:
-    case SyntaxTokenKind.FORWARDSLASH:
-    case SyntaxTokenKind.PERCENT:
-    case SyntaxTokenKind.LT:
-    case SyntaxTokenKind.LE:
-    case SyntaxTokenKind.GT:
-    case SyntaxTokenKind.GE:
-    case SyntaxTokenKind.EQUAL:
-    case SyntaxTokenKind.DOUBLE_EQUAL:
-    case SyntaxTokenKind.NOT_EQUAL:
-    case SyntaxTokenKind.EXCLAMATION:
-    case SyntaxTokenKind.DOT:
-    case SyntaxTokenKind.LPAREN:
+  switch (c) {
+    case '+':
+    case '-':
+    case '*':
+    case '/':
+    case '%':
+    case '<':
+    case '>':
+    case '=':
+    case '!':
+    case '.':
+    case '&':
+    case '|':
       return true;
     default:
       return false;
   }
+}
+
+export function isOpToken(token?: SyntaxToken): boolean {
+  return token !== undefined && token.kind === SyntaxTokenKind.OP;
 }
 
 export class SyntaxToken {

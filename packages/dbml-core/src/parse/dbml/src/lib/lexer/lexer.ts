@@ -1,7 +1,9 @@
 import { ParsingError, ParsingErrorCode } from '../errors';
 import Result from '../result';
 import { isAlpha, isAlphaNumeric, isDigit } from '../utils';
-import { SyntaxToken, SyntaxTokenKind, isTriviaToken } from './tokens';
+import {
+ SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
+} from './tokens';
 
 export default class Lexer {
   private start: number = 0;
@@ -46,10 +48,6 @@ export default class Lexer {
     this.start = this.current;
   }
 
-  private closeGap() {
-    this.start = this.current;
-  }
-
   private addToken(kind: SyntaxTokenKind) {
     this.tokens.push(
       SyntaxToken.create(
@@ -85,36 +83,6 @@ export default class Lexer {
           this.advance();
           this.addToken(SyntaxTokenKind.COMMA);
           break;
-        case '.':
-          this.advance();
-          this.addToken(SyntaxTokenKind.DOT);
-          break;
-        case '/':
-          if (this.peek(1) === '/') {
-            this.singleLineComment();
-          } else if (this.peek(1) === '*') {
-            this.multilineComment();
-          } else {
-            this.advance();
-            this.addToken(SyntaxTokenKind.FORWARDSLASH);
-          }
-          break;
-        case '%':
-          this.advance();
-          this.addToken(SyntaxTokenKind.PERCENT);
-          break;
-        case '*':
-          this.advance();
-          this.addToken(SyntaxTokenKind.ASTERISK);
-          break;
-        case '+':
-          this.advance();
-          this.addToken(SyntaxTokenKind.CROSS);
-          break;
-        case '-':
-          this.advance();
-          this.addToken(SyntaxTokenKind.MINUS);
-          break;
         case '(':
           this.advance();
           this.addToken(SyntaxTokenKind.LPAREN);
@@ -147,42 +115,6 @@ export default class Lexer {
           this.advance();
           this.addToken(SyntaxTokenKind.COLON);
           break;
-        case '<':
-          this.advance();
-          if (this.peek() !== '=') {
-            this.addToken(SyntaxTokenKind.LT);
-          } else {
-            this.advance();
-            this.addToken(SyntaxTokenKind.LE);
-          }
-          break;
-        case '>':
-          this.advance();
-          if (this.peek() !== '=') {
-            this.addToken(SyntaxTokenKind.GT);
-          } else {
-            this.advance();
-            this.addToken(SyntaxTokenKind.GE);
-          }
-          break;
-        case '=':
-          this.advance();
-          if (this.peek() !== '=') {
-            this.addToken(SyntaxTokenKind.EQUAL);
-          } else {
-            this.advance();
-            this.addToken(SyntaxTokenKind.DOUBLE_EQUAL);
-          }
-          break;
-        case '!':
-          this.advance();
-          if (this.peek() !== '=') {
-            this.addToken(SyntaxTokenKind.EXCLAMATION);
-          } else {
-            this.advance();
-            this.addToken(SyntaxTokenKind.NOT_EQUAL);
-          }
-          break;
         case "'":
           if (this.checkTripleQuote()) {
             this.multilineStringLiteral();
@@ -199,27 +131,40 @@ export default class Lexer {
         case '#':
           this.colorLiteral();
           break;
+        case '/':
+          if (this.peek(1) === '/') {
+            this.singleLineComment();
+          } else if (this.peek(1) === '*') {
+            this.multilineComment();
+          } else {
+            this.operator();
+          }
+          break;
         default:
+          if (isOp(c)) {
+            this.operator();
+            break;
+          }
           if (isAlpha(c)) {
             this.identifier();
             break;
-          } else if (isDigit(c)) {
+          }
+          if (isDigit(c)) {
             this.numericLiteral();
             break;
-          } else {
-            this.advance();
-            this.errors.push(
-              new ParsingError(
-                ParsingErrorCode.EXPECTED_THINGS,
-                `Unexpected token ${c}`,
-                this.start,
-                this.current - 1,
-              ),
-            );
-            break;
           }
+          this.advance();
+          this.errors.push(
+            new ParsingError(
+              ParsingErrorCode.EXPECTED_THINGS,
+              `Unexpected token ${c}`,
+              this.start,
+              this.current - 1,
+            ),
+          );
+          break;
       }
-      this.closeGap();
+      this.start = this.current;
     }
     this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, 0));
     this.gatherTrivia();
@@ -410,6 +355,17 @@ export default class Lexer {
       c = this.peek();
     }
     this.addToken(SyntaxTokenKind.IDENTIFIER);
+  }
+
+  operator() {
+    if (!isOp(this.peek())) {
+      return;
+    }
+
+    while (isOp(this.peek())) {
+      this.advance();
+    }
+    this.addToken(SyntaxTokenKind.OP);
   }
 
   numericLiteral() {
