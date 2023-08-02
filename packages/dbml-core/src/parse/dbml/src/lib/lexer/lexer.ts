@@ -1,7 +1,9 @@
 import { ParsingError, ParsingErrorCode } from '../errors';
 import Result from '../result';
 import { isAlpha, isAlphaNumeric, isDigit } from '../utils';
-import { SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken } from './tokens';
+import {
+ SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
+} from './tokens';
 
 export default class Lexer {
   private start: number = 0;
@@ -59,6 +61,14 @@ export default class Lexer {
 
   lex(): Result<SyntaxToken[]> {
     this.init();
+    this.scanTokens();
+    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, 0));
+    this.gatherTrivia();
+
+    return new Result(this.tokens, this.errors);
+  }
+
+  scanTokens() {
     while (!this.isAtEnd()) {
       const c: string = this.peek()!;
       switch (c) {
@@ -164,10 +174,6 @@ export default class Lexer {
       }
       this.start = this.current;
     }
-    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, 0));
-    this.gatherTrivia();
-
-    return new Result(this.tokens, this.errors);
   }
 
   gatherTrivia() {

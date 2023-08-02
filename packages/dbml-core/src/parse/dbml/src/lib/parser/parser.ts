@@ -486,9 +486,8 @@ export default class Parser {
     // ex: `** 1 + 2` -> The following loop would terminate without consuming the invalid token.
     if (this.peek()?.kind === SyntaxTokenKind.RBRACE) {
       return;
-    } else {
-      this.advance();
     }
+    this.advance();
     while (!this.isAtEnd()) {
       const token = this.peek()!;
       if (token.kind === SyntaxTokenKind.RBRACE || this.isAtStartOfLine(this.previous(), token)) {
