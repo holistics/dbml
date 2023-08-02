@@ -2,22 +2,14 @@
   "value": [
     {
       "kind": "<eof>",
-      "offset": 150,
+      "offset": 151,
       "length": 0,
       "leadingTrivia": [
         {
           "kind": "<single-line-comment>",
           "offset": 0,
           "value": " This is a single-line comment\r",
-          "length": 33,
-          "leadingTrivia": [],
-          "trailingTrivia": []
-        },
-        {
-          "kind": "<newline>",
-          "offset": 33,
-          "value": "\n",
-          "length": 1,
+          "length": 34,
           "leadingTrivia": [],
           "trailingTrivia": []
         },
@@ -57,15 +49,7 @@
           "kind": "<single-line-comment>",
           "offset": 84,
           "value": " This is\r",
-          "length": 11,
-          "leadingTrivia": [],
-          "trailingTrivia": []
-        },
-        {
-          "kind": "<newline>",
-          "offset": 95,
-          "value": "\n",
-          "length": 1,
+          "length": 12,
           "leadingTrivia": [],
           "trailingTrivia": []
         },
@@ -73,15 +57,7 @@
           "kind": "<single-line-comment>",
           "offset": 96,
           "value": " a\r",
-          "length": 5,
-          "leadingTrivia": [],
-          "trailingTrivia": []
-        },
-        {
-          "kind": "<newline>",
-          "offset": 101,
-          "value": "\n",
-          "length": 1,
+          "length": 6,
           "leadingTrivia": [],
           "trailingTrivia": []
         },
@@ -89,15 +65,7 @@
           "kind": "<single-line-comment>",
           "offset": 102,
           "value": " bunch\r",
-          "length": 9,
-          "leadingTrivia": [],
-          "trailingTrivia": []
-        },
-        {
-          "kind": "<newline>",
-          "offset": 111,
-          "value": "\n",
-          "length": 1,
+          "length": 10,
           "leadingTrivia": [],
           "trailingTrivia": []
         },
@@ -105,15 +73,7 @@
           "kind": "<single-line-comment>",
           "offset": 112,
           "value": " of\r",
-          "length": 6,
-          "leadingTrivia": [],
-          "trailingTrivia": []
-        },
-        {
-          "kind": "<newline>",
-          "offset": 118,
-          "value": "\n",
-          "length": 1,
+          "length": 7,
           "leadingTrivia": [],
           "trailingTrivia": []
         },
@@ -121,15 +81,7 @@
           "kind": "<single-line-comment>",
           "offset": 119,
           "value": " single\r",
-          "length": 10,
-          "leadingTrivia": [],
-          "trailingTrivia": []
-        },
-        {
-          "kind": "<newline>",
-          "offset": 129,
-          "value": "\n",
-          "length": 1,
+          "length": 11,
           "leadingTrivia": [],
           "trailingTrivia": []
         },
@@ -137,15 +89,7 @@
           "kind": "<single-line-comment>",
           "offset": 130,
           "value": " line\r",
-          "length": 8,
-          "leadingTrivia": [],
-          "trailingTrivia": []
-        },
-        {
-          "kind": "<newline>",
-          "offset": 138,
-          "value": "\n",
-          "length": 1,
+          "length": 9,
           "leadingTrivia": [],
           "trailingTrivia": []
         },
@@ -153,7 +97,7 @@
           "kind": "<single-line-comment>",
           "offset": 139,
           "value": " comments",
-          "length": 11,
+          "length": 12,
           "leadingTrivia": [],
           "trailingTrivia": []
         }

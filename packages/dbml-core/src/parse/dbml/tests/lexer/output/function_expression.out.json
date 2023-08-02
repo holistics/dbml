@@ -109,7 +109,7 @@
       ]
     },
     {
-      "kind": "<asterisk>",
+      "kind": "<OP>",
       "offset": 28,
       "value": "*",
       "length": 1,
@@ -153,14 +153,14 @@
   "errors": [
     {
       "code": 1002,
-      "diagnostic": "Unclosed function expression",
+      "diagnostic": "Invalid newline encountered while parsing",
       "start": 18,
       "end": 20,
       "name": "ParsingError"
     },
     {
       "code": 1002,
-      "diagnostic": "Unclosed function expression",
+      "diagnostic": "Eof reached while parsing",
       "start": 33,
       "end": 34,
       "name": "ParsingError"

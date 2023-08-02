@@ -19,9 +19,9 @@
     },
     {
       "kind": "<variable>",
-      "offset": 70,
+      "offset": 29,
       "value": "This is a quoted string \nwith a newline\n",
-      "length": 3,
+      "length": 42,
       "leadingTrivia": [
         {
           "kind": "<newline>",
@@ -71,9 +71,9 @@
     },
     {
       "kind": "<string>",
-      "offset": 149,
+      "offset": 107,
       "value": "This is a string literal \nwith a newline\n",
-      "length": 3,
+      "length": 43,
       "leadingTrivia": [
         {
           "kind": "<newline>",
@@ -173,21 +173,21 @@
   "errors": [
     {
       "code": 1002,
-      "diagnostic": "Unclosed quoted variable",
+      "diagnostic": "Invalid newline encountered while parsing",
       "start": 156,
       "end": 191,
       "name": "ParsingError"
     },
     {
       "code": 1002,
-      "diagnostic": "Unclosed single-line string literal",
+      "diagnostic": "Invalid newline encountered while parsing",
       "start": 194,
       "end": 230,
       "name": "ParsingError"
     },
     {
       "code": 1002,
-      "diagnostic": "Unclosed multiline string literal",
+      "diagnostic": "Eof reached while parsing",
       "start": 271,
       "end": 312,
       "name": "ParsingError"

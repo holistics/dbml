@@ -36,15 +36,7 @@
           "kind": "<single-line-comment>",
           "offset": 4,
           "value": " whole number\r",
-          "length": 16,
-          "leadingTrivia": [],
-          "trailingTrivia": []
-        },
-        {
-          "kind": "<newline>",
-          "offset": 20,
-          "value": "\n",
-          "length": 1,
+          "length": 17,
           "leadingTrivia": [],
           "trailingTrivia": []
         }
@@ -86,13 +78,13 @@
           "kind": "<single-line-comment>",
           "offset": 30,
           "value": " floating-point number\r",
-          "length": 25,
+          "length": 26,
           "leadingTrivia": [],
           "trailingTrivia": []
         },
         {
           "kind": "<newline>",
-          "offset": 55,
+          "offset": 57,
           "value": "\n",
           "length": 1,
           "leadingTrivia": [],
@@ -102,17 +94,9 @@
     },
     {
       "kind": "<eof>",
-      "offset": 97,
+      "offset": 98,
       "length": 0,
       "leadingTrivia": [
-        {
-          "kind": "<newline>",
-          "offset": 57,
-          "value": "\n",
-          "length": 1,
-          "leadingTrivia": [],
-          "trailingTrivia": []
-        },
         {
           "kind": "<space>",
           "offset": 62,
@@ -141,7 +125,7 @@
           "kind": "<single-line-comment>",
           "offset": 80,
           "value": " invalid number",
-          "length": 17,
+          "length": 18,
           "leadingTrivia": [],
           "trailingTrivia": []
         }
