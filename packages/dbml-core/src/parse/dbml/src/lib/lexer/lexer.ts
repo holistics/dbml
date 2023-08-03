@@ -54,7 +54,7 @@ export default class Lexer {
     );
   }
 
-  lex(): Result<SyntaxToken[]> {
+  lex(): Result<SyntaxToken[], ParsingError> {
     this.init();
     this.scanTokens();
     this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, 0));

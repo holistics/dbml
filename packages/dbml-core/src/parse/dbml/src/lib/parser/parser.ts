@@ -105,7 +105,7 @@ export default class Parser {
     }
   }
 
-  parse(): Result<SyntaxNode & { kind: SyntaxNodeKind.PROGRAM }> {
+  parse(): Result<SyntaxNode & { kind: SyntaxNodeKind.PROGRAM }, ParsingError> {
     const body: ElementDeclarationNode[] = [];
 
     this.init();

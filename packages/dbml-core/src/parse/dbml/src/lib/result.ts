@@ -1,11 +1,9 @@
-import { ParsingError } from './errors';
-
-export default class Result<T> {
+export default class Result<T, E> {
   private value?: T;
 
-  private errors: ParsingError[];
+  private errors: E[];
 
-  constructor(value?: T, errors?: ParsingError[]) {
+  constructor(value?: T, errors?: E[]) {
     this.value = value;
     this.errors = errors === undefined ? [] : errors;
   }
@@ -18,17 +16,17 @@ export default class Result<T> {
     return this.value;
   }
 
-  diag(): ParsingError[] {
+  diag(): E[] {
     return this.errors;
   }
 
-  chain<U>(fn: (_: T) => Result<U>): Result<U> {
+  chain<U>(fn: (_: T) => Result<U, E>): Result<U, E> {
     if (this.value === undefined) {
-      return new Result<U>(undefined, this.errors);
+      return new Result<U, E>(undefined, this.errors);
     }
     const res = fn(this.value);
     const errors = [...this.errors, ...res.errors];
 
-    return new Result<U>(res.value, errors);
+    return new Result<U, E>(res.value, errors);
   }
 }
