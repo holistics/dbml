@@ -27,6 +27,6 @@ jobs:
           cat rd.json
       - name: Run reviewdog
         env:
-          REVIEWDOG_TOKEN: "d09883b0b227a78e"
+          REVIEWDOG_TOKEN: "85803241cd4f8ea7"
         run: |
-          cat rd.json | reviewdog -f=rdjson -reporter=github-pr-review
+          cat rd.json | reviewdog -f=rdjson -reporter=github-pr-check
