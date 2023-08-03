@@ -2,7 +2,7 @@ name: Bearer PR Check
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
@@ -22,63 +22,6 @@ jobs:
       - uses: reviewdog/action-setup@v1
         with:
           reviewdog_version: latest
-      - name: write test
-        run: |
-          echo "{
-            "source": {
-              "name": "Bearer",
-              "url": "https://docs.bearer.com/"
-            },
-            "diagnostics": [
-              {
-                "message": "WASP XSS explained",
-                "location": {
-                  "path": "computedStyleToInline.js",
-                  "range": {
-                    "start": {
-                      "line": 21,
-                      "column": 7
-                    },
-                    "end": {
-                      "line": 21,
-                      "column": 47
-                    }
-                  }
-                },
-                "severity": "ERROR",
-                "suggestions": [],
-                "code": {
-                  "value": "inserthtml",
-                  "url": ""
-                }
-              },
-              {
-                "message": "u use HTML sanitization library before insertinnit",
-                "location": {
-                  "path": "",
-                  "range": {
-                    "start": {
-                      "line": 140,
-                      "column": 3
-                    },
-                    "end": {
-                      "line": 140,
-                      "column": 35
-                    }
-                  }
-                },
-                "severity": "ERROR",
-                "suggestions": [],
-                "code": {
-                  "value": "",
-                  "url": ""
-                }
-              }
-            ]
-          }" > rd.json
-      - name: print out
-        run: |
-          cat rd.json
       - name: Run reviewdog
         env:
           REVIEWDOG_TOKEN: "85803241cd4f8ea7"
