@@ -1,3 +1,4 @@
+// Used to hold the result of a computation and any errors along the way
 export default class Result<T, E> {
   private value?: T;
 
