@@ -24,7 +24,58 @@ jobs:
           reviewdog_version: latest
       - name: write test
         run: |
-          echo "{"source":{"name":"Bearer","url":"https://docs.bearer.com/"},"diagnostics":[{"message":"\n# Dangerous dynamic HTML insert detected.\n## Description\nThere are XSS vulnerabilities when dynamically inserting HTML that contains unsanitized data.\n\n## Remediations\nMake sure you use HTML sanitization library before inserting html\n\n```javascript\nimport sanitizeHtml from 'sanitize-html';\n\nconst html = `\u003cstrong\u003e${user.Input}\u003c/strong\u003e`;\ndocument.body.innerHTML = sanitizeHtml(html)\n```\n\n## Resources\n- [OWASP XSS explained](https://owasp.org/www-community/attacks/xss/)\n","location":{"path":"src/binding/monacoBinding.js","range":{"start":{"line":192,"column":7},"end":{"line":192,"column":35}}},"severity":"ERROR","suggestions":[],"code":{"value":"javascript_lang_dangerous_insert_html","url":"https://docs.bearer.com/reference/rules/javascript_lang_dangerous_insert_html"}},{"message":"\n# Dangerous dynamic HTML insert detected.\n## Description\nThere are XSS vulnerabilities when dynamically inserting HTML that contains unsanitized data.\n\n## Remediations\nMake sure you use HTML sanitization library before inserting html\n\n```javascript\nimport sanitizeHtml from 'sanitize-html';\n\nconst html = `\u003cstrong\u003e${user.Input}\u003c/strong\u003e`;\ndocument.body.innerHTML = sanitizeHtml(html)\n```\n\n## Resources\n- [OWASP XSS explained](https://owasp.org/www-community/attacks/xss/)\n","location":{"path":"src/binding/monacoBinding.js","range":{"start":{"line":195,"column":7},"end":{"line":195,"column":35}}},"severity":"ERROR","suggestions":[],"code":{"value":"javascript_lang_dangerous_insert_html","url":"https://docs.bearer.com/reference/rules/javascript_lang_dangerous_insert_html"}},{"message":"\n# Dangerous dynamic HTML insert detected.\n## Description\nThere are XSS vulnerabilities when dynamically inserting HTML that contains unsanitized data.\n\n## Remediations\nMake sure you use HTML sanitization library before inserting html\n\n```javascript\nimport sanitizeHtml from 'sanitize-html';\n\nconst html = `\u003cstrong\u003e${user.Input}\u003c/strong\u003e`;\ndocument.body.innerHTML = sanitizeHtml(html)\n```\n\n## Resources\n- [OWASP XSS explained](https://owasp.org/www-community/attacks/xss/)\n","location":{"path":"src/utils/export/computedStyleToInline.js","range":{"start":{"line":21,"column":7},"end":{"line":21,"column":47}}},"severity":"ERROR","suggestions":[],"code":{"value":"javascript_lang_dangerous_insert_html","url":"https://docs.bearer.com/reference/rules/javascript_lang_dangerous_insert_html"}},{"message":"\n# Dangerous dynamic HTML insert detected.\n## Description\nThere are XSS vulnerabilities when dynamically inserting HTML that contains unsanitized data.\n\n## Remediations\nMake sure you use HTML sanitization library before inserting html\n\n```javascript\nimport sanitizeHtml from 'sanitize-html';\n\nconst html = `\u003cstrong\u003e${user.Input}\u003c/strong\u003e`;\ndocument.body.innerHTML = sanitizeHtml(html)\n```\n\n## Resources\n- [OWASP XSS explained](https://owasp.org/www-community/attacks/xss/)\n","location":{"path":"src/utils/export/pdf.js","range":{"start":{"line":140,"column":3},"end":{"line":140,"column":35}}},"severity":"ERROR","suggestions":[],"code":{"value":"javascript_lang_dangerous_insert_html","url":"https://docs.bearer.com/reference/rules/javascript_lang_dangerous_insert_html"}}]}" > rd.json
+          echo "{
+            "source": {
+              "name": "Bearer",
+              "url": "https://docs.bearer.com/"
+            },
+            "diagnostics": [
+              {
+                "message": "WASP XSS explained",
+                "location": {
+                  "path": "computedStyleToInline.js",
+                  "range": {
+                    "start": {
+                      "line": 21,
+                      "column": 7
+                    },
+                    "end": {
+                      "line": 21,
+                      "column": 47
+                    }
+                  }
+                },
+                "severity": "ERROR",
+                "suggestions": [],
+                "code": {
+                  "value": "inserthtml",
+                  "url": ""
+                }
+              },
+              {
+                "message": "u use HTML sanitization library before insertinnit",
+                "location": {
+                  "path": "",
+                  "range": {
+                    "start": {
+                      "line": 140,
+                      "column": 3
+                    },
+                    "end": {
+                      "line": 140,
+                      "column": 35
+                    }
+                  }
+                },
+                "severity": "ERROR",
+                "suggestions": [],
+                "code": {
+                  "value": "",
+                  "url": ""
+                }
+              }
+            ]
+          }" > rd.json
       - name: print out
         run: |
           cat rd.json
