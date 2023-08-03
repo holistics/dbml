@@ -1,0 +1,32 @@
+name: Bearer PR Check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  rule_check:
+    runs-on: ubuntu-22.04
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Report
+        id: report
+        uses: bearer/bearer-action@v2
+        with:
+          format: rdjson
+          output: rd.json
+      - uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+      - name: print out
+        run: |
+          cat rd.json
+      - name: Run reviewdog
+        env:
+          REVIEWDOG_TOKEN: "d09883b0b227a78e"
+        run: |
+          cat rd.json | reviewdog -f=rdjson -reporter=github-pr-review
