@@ -15,7 +15,7 @@ export enum SyntaxTokenKind {
   LANGLE = '<langle>',
   RANGLE = '<rangle>',
 
-  OP = '<OP>',
+  OP = '<op>',
   EOF = '<eof>',
   NUMERIC_LITERAL = '<number>',
   STRING_LITERAL = '<string>',
