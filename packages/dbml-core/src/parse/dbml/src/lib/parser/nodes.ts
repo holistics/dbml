@@ -197,8 +197,6 @@ export type NormalFormExpressionNode =
   | PrefixExpressionNode
   | InfixExpressionNode
   | PostfixExpressionNode
-  | LiteralElementExpressionNode
-  | FunctionApplicationNode
   | BlockExpressionNode
   | ListExpressionNode
   | TupleExpressionNode
