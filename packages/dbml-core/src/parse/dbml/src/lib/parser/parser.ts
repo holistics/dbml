@@ -53,15 +53,22 @@ export default class Parser {
     this.errors = [];
     this.invalid = [];
     this.contextStack = new ParsingContextStack();
+    if (this.tokens[this.tokens.length - 1].kind !== SyntaxTokenKind.EOF) {
+      throw new Error('Expected EOF at the end of token stream');
+    }
   }
 
   private advance(): SyntaxToken {
+    if (this.isAtEnd()) {
+      return this.tokens[this.tokens.length - 1]; // The EOF
+    }
+
     return this.tokens[this.current++];
   }
 
-  private peek(lookahead: number = 0): SyntaxToken | undefined {
+  private peek(lookahead: number = 0): SyntaxToken {
     if (lookahead + this.current >= this.tokens.length) {
-      return undefined;
+      return this.tokens[this.tokens.length - 1]; // The EOF
     }
 
     return this.tokens[this.current + lookahead];
@@ -78,9 +85,6 @@ export default class Parser {
 
   private check(...kind: SyntaxTokenKind[]): boolean {
     const currentToken = this.peek();
-    if (!currentToken) {
-      return false;
-    }
 
     return kind.includes(currentToken.kind);
   }
@@ -91,7 +95,7 @@ export default class Parser {
 
   private consume(message: string, ...kind: SyntaxTokenKind[]) {
     if (!this.match(...kind)) {
-      const invalidToken = this.peek()!;
+      const invalidToken = this.peek();
       const error = new ParsingError(
         ParsingErrorCode.EXPECTED_THINGS,
         message,
@@ -120,7 +124,7 @@ export default class Parser {
         if (!(this.isAtEnd())) {
           this.invalid.push(this.advance());
         } else {
-          const eof = this.peek()!;
+          const eof = this.peek();
           this.invalid.push(eof);
           this.errors.push(
             this.generateTokenError(eof, ParsingErrorCode.INVALID, 'Unexpected EOF'),
@@ -143,8 +147,8 @@ export default class Parser {
     let alias: NormalFormExpressionNode | undefined;
 
     if (
-      this.peek()?.kind !== SyntaxTokenKind.COLON &&
-      this.peek()?.kind !== SyntaxTokenKind.LBRACE
+      this.peek().kind !== SyntaxTokenKind.COLON &&
+      this.peek().kind !== SyntaxTokenKind.LBRACE
     ) {
       try {
         name = this.normalFormExpression();
@@ -157,7 +161,7 @@ export default class Parser {
       }
 
       const nextWord = this.peek();
-      if (nextWord?.kind === SyntaxTokenKind.IDENTIFIER && nextWord?.value === 'as') {
+      if (nextWord.kind === SyntaxTokenKind.IDENTIFIER && nextWord.value === 'as') {
         as = this.advance();
         try {
           alias = this.normalFormExpression();
@@ -180,7 +184,7 @@ export default class Parser {
     let bodyOpenColon: SyntaxToken | undefined;
 
     if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
-      const token = this.peek()!;
+      const token = this.peek();
       this.invalid.push(token);
       this.errors.push(
         this.generateTokenError(token, ParsingErrorCode.EXPECTED_THINGS, 'Expect { or :'),
@@ -210,7 +214,7 @@ export default class Parser {
 
   synchronizeElementDeclarationName = () => {
     while (!this.isAtEnd()) {
-      const token = this.peek()!;
+      const token = this.peek();
       if (
         (token.kind === SyntaxTokenKind.IDENTIFIER && token.value === 'as') ||
         token.kind === SyntaxTokenKind.LBRACE ||
@@ -225,7 +229,7 @@ export default class Parser {
 
   synchronizeElementDeclarationAlias = () => {
     while (!this.isAtEnd()) {
-      const token = this.peek()!;
+      const token = this.peek();
       if (token.kind === SyntaxTokenKind.LBRACE || token.kind === SyntaxTokenKind.COLON) {
         break;
       }
@@ -236,7 +240,7 @@ export default class Parser {
 
   synchronizeElementDeclarationBody = () => {
     while (!this.isAtEnd()) {
-      const token = this.peek()!;
+      const token = this.peek();
       if (
         token.kind === SyntaxTokenKind.RBRACE ||
         token.kind === SyntaxTokenKind.COLON ||
@@ -333,7 +337,7 @@ export default class Parser {
     let leftExpression: NormalFormExpressionNode | undefined;
 
     if (isOpToken(this.peek())) {
-      const prefixOp = this.peek()!;
+      const prefixOp = this.peek();
       const opPrefixPower = prefixBindingPower(prefixOp);
 
       if (opPrefixPower.right === null) {
@@ -355,7 +359,7 @@ export default class Parser {
     }
 
     while (!this.isAtEnd()) {
-      const token = this.peek()!;
+      const token = this.peek();
 
       if (token.kind === SyntaxTokenKind.LPAREN) {
         const { left } = postfixBindingPower(token);
@@ -443,7 +447,7 @@ export default class Parser {
       return this.tupleExpression();
     }
 
-    const token = this.peek()!;
+    const token = this.peek();
     const error = this.generateTokenError(
       token,
       ParsingErrorCode.UNEXPECTED_THINGS,
@@ -484,12 +488,12 @@ export default class Parser {
   synchronizeBlock = () => {
     // This check is necessary to avoid the violating token being at the end of the line
     // ex: `** 1 + 2` -> The following loop would terminate without consuming the invalid token.
-    if (this.peek()?.kind === SyntaxTokenKind.RBRACE) {
+    if (this.peek().kind === SyntaxTokenKind.RBRACE) {
       return;
     }
     this.advance();
     while (!this.isAtEnd()) {
-      const token = this.peek()!;
+      const token = this.peek();
       if (token.kind === SyntaxTokenKind.RBRACE || this.isAtStartOfLine(this.previous(), token)) {
         break;
       }
@@ -515,7 +519,7 @@ export default class Parser {
         expression: new VariableNode({ variable: this.previous() }),
       });
     }
-    const token = this.peek()!;
+    const token = this.peek();
     const error = this.generateTokenError(
       token,
       ParsingErrorCode.EXPECTED_THINGS,
@@ -576,7 +580,7 @@ export default class Parser {
 
   synchronizeTuple = () => {
     while (!this.isAtEnd()) {
-      const token = this.peek()!;
+      const token = this.peek();
       if (
         token.kind === SyntaxTokenKind.RPAREN ||
         this.isAtStartOfLine(this.previous(), token) ||
@@ -629,7 +633,7 @@ export default class Parser {
 
   synchronizeList = () => {
     while (!this.isAtEnd()) {
-      const token = this.peek()!;
+      const token = this.peek();
       if (token.kind === SyntaxTokenKind.COMMA || token.kind === SyntaxTokenKind.RBRACKET) {
         break;
       }
@@ -647,7 +651,7 @@ export default class Parser {
       this.check(SyntaxTokenKind.COLON) ||
       (closing && separator && this.check(closing, separator))
     ) {
-      const token = this.peek()!;
+      const token = this.peek();
       this.invalid.push(token);
       this.errors.push(
         this.generateTokenError(
@@ -705,7 +709,7 @@ export default class Parser {
 
   synchronizeAttributeName = () => {
     while (!this.isAtEnd()) {
-      const token = this.peek()!;
+      const token = this.peek();
       if (
         token.kind === SyntaxTokenKind.COMMA ||
         token.kind === SyntaxTokenKind.RBRACKET ||
@@ -720,7 +724,7 @@ export default class Parser {
 
   synchronizeAttributeValue = () => {
     while (!this.isAtEnd()) {
-      const token = this.peek()!;
+      const token = this.peek();
       if (token.kind === SyntaxTokenKind.COMMA || token.kind === SyntaxTokenKind.RBRACKET) {
         break;
       }
@@ -731,13 +735,13 @@ export default class Parser {
 
   private canBeField() {
     return (
-      this.peek()?.kind === SyntaxTokenKind.IDENTIFIER &&
-      this.peek(1)?.kind === SyntaxTokenKind.COLON
+      this.peek().kind === SyntaxTokenKind.IDENTIFIER &&
+      this.peek(1).kind === SyntaxTokenKind.COLON
     );
   }
 
   private isAtEndOfLine(token: SyntaxToken): boolean {
-    return this.hasTrailingNewLines(token) || this.peek()?.kind === SyntaxTokenKind.EOF;
+    return this.hasTrailingNewLines(token) || this.peek().kind === SyntaxTokenKind.EOF;
   }
 
   private hasTrailingNewLines(token: SyntaxToken): boolean {
