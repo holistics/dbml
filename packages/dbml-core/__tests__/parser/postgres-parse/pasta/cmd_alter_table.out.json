@@ -1,0 +1,31 @@
+{
+  "schemas": [],
+  "tables": [],
+  "refs": [
+    {
+      "endpoints": [
+        {
+          "tableName": "distributors",
+          "fieldNames": [
+            "address"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "addresses",
+          "fieldNames": [
+            "address"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null,
+      "name": "distfk"
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
+}
