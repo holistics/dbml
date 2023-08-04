@@ -18,7 +18,7 @@ CREATE TABLE "products" (
   "status" varchar DEFAULT NULL,
   "created_at" varchar DEFAULT (now()),
   "stock" boolean DEFAULT true,
-  "expiration" date DEFAULT (current_date + interval 1 year)
+  "expiration" date DEFAULT (current_date + interval '1 year')
 );
 
 
@@ -32,6 +32,6 @@ CREATE INDEX ON "users" ((now()));
 
 CREATE INDEX ON "users" ("active", ((lower(full_name))));
 
-CREATE INDEX ON "users" (((getdate()), (upper(gender))));
+CREATE INDEX ON "users" ((getdate()),(upper(gender)));
 
 CREATE INDEX ON "users" ((reverse(country_code)));

@@ -1,4 +1,9 @@
 /*
+Original: https://github.com/antlr/grammars-v4/blob/master/sql/postgresql/PostgreSQLLexer.g4
+Last updated: 2023-08-04
+*/
+
+/*
 based on
 https://github.com/tunnelvisionlabs/antlr4-grammar-postgresql/blob/master/src/com/tunnelvisionlabs/postgresql/PostgreSqlLexer.g4
 */

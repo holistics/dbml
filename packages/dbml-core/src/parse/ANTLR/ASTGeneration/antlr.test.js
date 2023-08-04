@@ -7,9 +7,14 @@ CREATE TYPE "product status" AS ENUM (
   'In Stock'
 );
 
+CREATE TYPE s.e AS ENUM (
+  'a',
+  'b'
+);
+
 CREATE TABLE schemaB.artist(
   artistid    INTEGER PRIMARY KEY,
-  artistname  TEXT UNIQUE NOT NULL,
+  artistname  s.e UNIQUE NOT NULL,
   "cust_id" NUMBER(10) NOT NULL,
   "status" NVARCHAR (1) NOT NULL,
   CONSTRAINT "column_name" CHECK (("options" = ANY (ARRAY['OPTION1', 'OPTION2'])))

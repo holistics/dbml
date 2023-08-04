@@ -5,3 +5,6 @@ export default class PostgreSQLParserBase extends antlr4.Parser {
     super(input);
   }
 }
+
+export function ParseRoutineBody () {
+}

@@ -13,10 +13,18 @@ const TABLE_CONSTRAINT_KIND = {
   FIELD: 'field',
   INDEX: 'index',
   FK: 'fk',
+  UNIQUE: 'unique',
 }
 
 const COMMENT_OBJECT_TYPE = {
   TABLE: 'table',
+}
+
+// legacy - for compatibility with model_structure
+const CONSTRAINT_TYPE = {
+  COLUMN: 'column',
+  STRING: 'string',
+  EXPRESSION: 'expression',
 }
 
 const findTable = (tables, schemaName, tableName) => {
@@ -73,7 +81,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const { tableName, schemaName } = indexStmt.pathName;
 
       const table = findTable(this.data.tables, schemaName, tableName);
-
+      if (!table) return;
       return table.indexes.push(indexStmt.index);
     }
 
@@ -106,12 +114,15 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     const tableName = _.last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
+    if (!ctx.opttableelementlist()) return;
+
     const tableElements = ctx.opttableelementlist().accept(this).filter(e => e);
 
     const [fieldsData, indexes, tableRefs] = tableElements.reduce((acc, ele) => {
       if (ele.kind === TABLE_CONSTRAINT_KIND.FIELD) acc[0].push(ele.value);
       else if (ele.kind === TABLE_CONSTRAINT_KIND.INDEX) acc[1].push(ele.value);
       else if (ele.kind === TABLE_CONSTRAINT_KIND.FK) acc[2].push(ele.value);
+      else if (ele.kind === TABLE_CONSTRAINT_KIND.UNIQUE) acc[1].push(ele.value);
       return acc;
     }, [[], [], []]);
 
@@ -128,7 +139,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       tableRef.endpoints[0].tableName = tableName;
       tableRef.endpoints[0].schemaName = schemaName;
       return tableRef;
-    }))
+    }));
 
     return new Table({
       name: tableName,
@@ -218,6 +229,16 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
         }
       }
     }
+
+    if (ctx.UNIQUE()) {
+      return {
+        kind: TABLE_CONSTRAINT_KIND.UNIQUE,
+        value: new Index({
+          unique: true,
+          columns: ctx.columnlist().accept(this),
+        }),
+      }
+    }
   }
 
   // OPEN_PAREN columnlist CLOSE_PAREN |
@@ -233,9 +254,9 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   // colid
   visitColumnElem (ctx) {
     return {
-        value: ctx.colid().accept(this),
-        type: 'column', // TODO typing
-      }
+      value: ctx.colid().accept(this),
+      type: CONSTRAINT_TYPE.COLUMN,
+    };
   }
 
   // colid typename create_generic_options colquallist
@@ -370,6 +391,10 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   // check PostgresSQLParser.g4 line 3640
   visitC_expr_expr (ctx) {
     if (ctx.aexprconst()) return ctx.aexprconst().accept(this);
+    if (ctx.a_expr()) return {
+      value: ctx.a_expr().getText(),
+      type: 'expression'
+    }
     return {
       value: ctx.getText(),
       type: 'expression',
@@ -397,7 +422,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       type: 'string',
     }
 
-    if (ctx.TRUE_P() || ctx.FALSE_P() | ctx.NULL_P()) return {
+    if (ctx.TRUE_P() || ctx.FALSE_P() || ctx.NULL_P()) return {
       value: ctx.getText(),
       type: 'boolean',
     }
@@ -593,7 +618,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   // (builtin_function_name | type_function_name | LEFT | RIGHT) attrs? opt_type_modifiers
   visitGenerictype (ctx) {
     if (ctx.attrs()) {
-      const names = [ctx.getText(), ...ctx.attrs().accept(this)];
+      const names = [ctx.getChild(0).getText(), ...ctx.attrs().accept(this)];
       const enumName = _.last(names);
       const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
@@ -710,8 +735,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     if (ctx.colid()) {
       return {
         value: ctx.colid().accept(this),
-        type: 'column', // TODO typing
+        type: CONSTRAINT_TYPE.STRING,
       }
+    }
+    return {
+      value: ctx.getText(),
+      type: CONSTRAINT_TYPE.EXPRESSION,
     }
   }
 
@@ -820,6 +849,8 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
       const table = findTable(this.data.tables, schemaName, tableName);
       const field = table.fields.find((field) => field.name === fieldName);
+
+      if (!field) return;
 
       const note = ctx.comment_text().accept(this);
       field.note = { value: note };
