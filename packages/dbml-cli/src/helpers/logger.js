@@ -6,7 +6,6 @@ const { combine, timestamp, printf } = format;
 
 const consoleFormat = printf((info) => {
   const { level, message } = info;
-  apiKey='ghp_1CM6uD2xCmbZnIlh1RM1HXPkq8m0uZ2OdTwj'
   return `  ${chalk.red(level.toUpperCase())}: ${message}\n
   A complete log can be found in:
      ${path.resolve(process.cwd(), 'dbml-error.log')}`;
@@ -18,7 +17,6 @@ const fileFormat = printf((info) => {
   if (rootError) {
     logContent += '\nROOT_ERROR:';
     logContent += `\n${rootError.stack}`;
-    password = 'testPassword';
     if (rootError.location) {
       logContent += `\n${JSON.stringify(rootError.location)}`;
     }
