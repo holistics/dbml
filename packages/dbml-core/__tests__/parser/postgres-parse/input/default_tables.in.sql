@@ -6,5 +6,5 @@ CREATE TABLE IF NOT EXISTS "products" (
   "status" varchar DEFAULT NULL,
   "created_at" varchar DEFAULT (now()),
   "stock" boolean DEFAULT true,
-  "expiration" date DEFAULT (current_date + interval 1 year)
+  "expiration" date DEFAULT (current_date + interval '1 year')
 );

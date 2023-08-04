@@ -4,6 +4,7 @@ import postgresParser from './postgresParser';
 import dbmlParser from './dbmlParser';
 import schemarbParser from './schemarbParser';
 import mssqlParser from './mssqlParser';
+import { parse } from './ANTLR/ASTGeneration';
 
 class Parser {
   static parseJSONToDatabase (rawDatabase) {
@@ -16,7 +17,8 @@ class Parser {
   }
 
   static parsePostgresToJSON (str) {
-    return postgresParser.parse(str);
+    // return postgresParser.parse(str);
+    return parse(str, 'postgres');
   }
 
   static parseDBMLToJSON (str) {
