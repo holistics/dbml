@@ -110,14 +110,14 @@ export default class Parser {
 
     this.init();
 
-    while (this.peek() && this.peek()?.kind !== SyntaxTokenKind.EOF) {
+    while (!this.isAtEnd()) {
       try {
         body.push(this.elementDeclaration());
       } catch (e) {
         if (!(e instanceof ParsingError)) {
           throw e;
         }
-        if (!(this.peek()?.kind === SyntaxTokenKind.EOF)) {
+        if (!(this.isAtEnd())) {
           this.invalid.push(this.advance());
         } else {
           const eof = this.peek()!;
