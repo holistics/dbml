@@ -73,8 +73,7 @@
         {
           "name": "index",
           "type": {
-            "type_name": "CHARACTER VARYING(255)",
-            "args": "255"
+            "type_name": "CHARACTER VARYING(255)"
           },
           "unique": true
         },
