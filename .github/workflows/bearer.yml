@@ -24,6 +24,6 @@ jobs:
           reviewdog_version: latest
       - name: Run reviewdog
         env:
-          REVIEWDOG_TOKEN: "${{ secrets.REVIEWDOG_TOKEN }}"
+          REVIEWDOG_TOKEN: ${{ secrets.REVIEWDOG_TOKEN }}
         run: |
           cat rd.json | reviewdog -f=rdjson -reporter=github-pr-check
