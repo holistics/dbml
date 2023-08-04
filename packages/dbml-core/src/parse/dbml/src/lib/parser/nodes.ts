@@ -189,6 +189,9 @@ export class AttributeNode implements SyntaxNode {
   }
 }
 
+// A normal form expression is the regular expression we encounter in most programming languages
+// ex. 1 + 2, 1 * 2, (1 / 3) - 4, a.b
+// Function application and literal element expressions are not considered one
 export type NormalFormExpressionNode =
   | PrefixExpressionNode
   | InfixExpressionNode
