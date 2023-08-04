@@ -79,11 +79,7 @@ export class ElementDeclarationNode implements SyntaxNode {
 
   bodyOpenColon?: SyntaxToken;
 
-  bodyOpenBrace?: SyntaxToken;
-
   body: ExpressionNode | BlockExpressionNode;
-
-  bodyCloseBrace?: SyntaxToken;
 
   constructor({
     type,
