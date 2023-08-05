@@ -1146,25 +1146,7 @@
       "leadingTrivia": [],
       "trailingTrivia": []
     },
-    "invalid": [
-      {
-        "kind": "<rparen>",
-        "offset": 74,
-        "value": ")",
-        "length": 1,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          {
-            "kind": "<newline>",
-            "offset": 76,
-            "value": "\n",
-            "length": 1,
-            "leadingTrivia": [],
-            "trailingTrivia": []
-          }
-        ]
-      }
-    ]
+    "invalid": []
   },
   "errors": [
     {
