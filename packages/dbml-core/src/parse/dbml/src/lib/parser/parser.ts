@@ -150,7 +150,8 @@ export default class Parser {
 
       if (
         this.peek().kind !== SyntaxTokenKind.COLON &&
-        this.peek().kind !== SyntaxTokenKind.LBRACE
+        this.peek().kind !== SyntaxTokenKind.LBRACE &&
+        this.peek().kind !== SyntaxTokenKind.LBRACKET
       ) {
         synchronizationPoint(
           // eslint-disable-next-line no-return-assign
