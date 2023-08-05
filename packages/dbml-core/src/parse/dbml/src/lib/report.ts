@@ -1,5 +1,5 @@
 // Used to hold the result of a computation and any errors along the way
-export default class Result<T, E> {
+export default class Report<T, E> {
   private value?: T;
 
   private errors: E[];
@@ -17,17 +17,17 @@ export default class Result<T, E> {
     return this.value;
   }
 
-  diag(): E[] {
+  reportErrors(): E[] {
     return this.errors;
   }
 
-  chain<U>(fn: (_: T) => Result<U, E>): Result<U, E> {
+  chain<U>(fn: (_: T) => Report<U, E>): Report<U, E> {
     if (this.value === undefined) {
-      return new Result<U, E>(undefined, this.errors);
+      return new Report<U, E>(undefined, this.errors);
     }
     const res = fn(this.value);
     const errors = [...this.errors, ...res.errors];
 
-    return new Result<U, E>(res.value, errors);
+    return new Report<U, E>(res.value, errors);
   }
 }

@@ -1,6 +1,6 @@
 import { ParsingError, ParsingErrorCode } from '../errors';
 import { SyntaxToken, SyntaxTokenKind, isOpToken } from '../lexer/tokens';
-import Result from '../result';
+import Report from '../report';
 import { ParsingContext, ParsingContextStack } from './contextStack';
 import {
   AttributeNode,
@@ -98,7 +98,7 @@ export default class Parser {
     }
   }
 
-  parse(): Result<SyntaxNode & { kind: SyntaxNodeKind.PROGRAM }, ParsingError> {
+  parse(): Report<SyntaxNode & { kind: SyntaxNodeKind.PROGRAM }, ParsingError> {
     const body: ElementDeclarationNode[] = [];
 
     this.init();
@@ -122,7 +122,7 @@ export default class Parser {
     const eof = this.advance();
     const program = new ProgramNode({ body, eof, invalid: this.invalid });
 
-    return new Result(program, this.errors);
+    return new Report(program, this.errors);
   }
 
   private elementDeclaration = this.contextStack.withContextDo(
@@ -270,10 +270,10 @@ export default class Parser {
     while (!this.isAtEnd() && !this.hasTrailingNewLines(previousToken)) {
       if (!this.hasTrailingSpaces(previousToken)) {
         this.logError(
-            previousComponent,
-            ParsingErrorCode.EXPECTED_THINGS,
-            'Expect a following space',
-          );
+          previousComponent,
+          ParsingErrorCode.EXPECTED_THINGS,
+          'Expect a following space',
+        );
       }
       previousComponent = this.normalFormExpression();
       args.push(previousComponent);
@@ -629,11 +629,7 @@ export default class Parser {
 
     if (this.check(SyntaxTokenKind.COLON) || checkClosingAndSeparator()) {
       const token = this.peek();
-      this.logError(
-          token,
-          ParsingErrorCode.INVALID,
-          'Expect a non-empty attribute name',
-        );
+      this.logError(token, ParsingErrorCode.INVALID, 'Expect a non-empty attribute name');
     }
 
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON) && !checkClosingAndSeparator()) {

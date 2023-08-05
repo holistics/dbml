@@ -1,5 +1,5 @@
 import { ParsingError, ParsingErrorCode } from '../errors';
-import Result from '../result';
+import Report from '../report';
 import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '../utils';
 import {
  SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
@@ -54,13 +54,13 @@ export default class Lexer {
     );
   }
 
-  lex(): Result<SyntaxToken[], ParsingError> {
+  lex(): Report<SyntaxToken[], ParsingError> {
     this.init();
     this.scanTokens();
     this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, 0));
     this.gatherTrivia();
 
-    return new Result(this.tokens, this.errors);
+    return new Report(this.tokens, this.errors);
   }
 
   scanTokens() {
