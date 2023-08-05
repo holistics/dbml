@@ -341,8 +341,10 @@ export default class Parser {
           ParsingErrorCode.UNEXPECTED_THINGS,
           `Unexpected prefix ${prefixOp.value} in an expression`,
         );
-        this.invalid.push(prefixOp);
         this.errors.push(error);
+        // Do not push the token into `this.invalid`
+        // as the error is thrown and going to be caught
+        // The error handler will push onto the `invalid` stack
         throw error;
       }
 
