@@ -121,7 +121,7 @@ export default class Parser {
         if (!(e instanceof ParsingError)) {
           throw e;
         }
-        if (!(this.isAtEnd())) {
+        if (!this.isAtEnd()) {
           this.invalid.push(this.advance());
         } else {
           const eof = this.peek();
@@ -155,7 +155,7 @@ export default class Parser {
       ) {
         synchronizationPoint(
           // eslint-disable-next-line no-return-assign
-          () => name = this.normalFormExpression(),
+          () => (name = this.normalFormExpression()),
           this.synchronizeElementDeclarationName,
         );
 
@@ -164,7 +164,7 @@ export default class Parser {
           as = this.advance();
           synchronizationPoint(
             // eslint-disable-next-line no-return-assign
-            () => alias = this.normalFormExpression(),
+            () => (alias = this.normalFormExpression()),
             this.synchronizeElementDeclarationAlias,
           );
         }
@@ -204,8 +204,8 @@ export default class Parser {
         bodyOpenColon,
         body,
       });
-  },
-);
+    },
+  );
 
   synchronizeElementDeclarationName = () => {
     while (!this.isAtEnd()) {
@@ -213,7 +213,8 @@ export default class Parser {
       if (
         (token.kind === SyntaxTokenKind.IDENTIFIER && token.value === 'as') ||
         token.kind === SyntaxTokenKind.LBRACE ||
-        token.kind === SyntaxTokenKind.COLON
+        token.kind === SyntaxTokenKind.COLON ||
+        token.kind === SyntaxTokenKind.LBRACKET
       ) {
         break;
       }
@@ -225,7 +226,11 @@ export default class Parser {
   synchronizeElementDeclarationAlias = () => {
     while (!this.isAtEnd()) {
       const token = this.peek();
-      if (token.kind === SyntaxTokenKind.LBRACE || token.kind === SyntaxTokenKind.COLON) {
+      if (
+        token.kind === SyntaxTokenKind.LBRACE ||
+        token.kind === SyntaxTokenKind.COLON ||
+        token.kind === SyntaxTokenKind.LBRACKET
+      ) {
         break;
       }
       this.invalid.push(token);
@@ -732,8 +737,7 @@ export default class Parser {
 
   private canBeField() {
     return (
-      this.peek().kind === SyntaxTokenKind.IDENTIFIER &&
-      this.peek(1).kind === SyntaxTokenKind.COLON
+      this.peek().kind === SyntaxTokenKind.IDENTIFIER && this.peek(1).kind === SyntaxTokenKind.COLON
     );
   }
 
