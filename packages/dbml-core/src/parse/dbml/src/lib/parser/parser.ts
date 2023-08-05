@@ -313,6 +313,7 @@ export default class Parser {
     return expression;
   }
 
+  // Pratt's parsing algorithm
   private expression_bp(mbp: number): NormalFormExpressionNode {
     let leftExpression: NormalFormExpressionNode | undefined;
 
@@ -344,6 +345,10 @@ export default class Parser {
           break;
         }
         if (
+          // When '(' is encountered,
+          // consider it part of another expression if
+          // it's at the start of a new line
+          // and we're currently not having unmatched '(' or '['
           this.isAtStartOfLine(this.previous(), token) &&
           !this.contextStack.isWithinGroupExpressionContext() &&
           !this.contextStack.isWithinListExpressionContext()
@@ -389,6 +394,10 @@ export default class Parser {
     return leftExpression;
   }
 
+  // Extract an operand to be used in an expression
+  // e.g (1 + 2) in (1 + 2) * 3
+  // e.g [1, 2, 3, 4]
+  // e.g { ... }
   private extractOperand():
     | PrimaryExpressionNode
     | ListExpressionNode
