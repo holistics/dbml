@@ -1,6 +1,6 @@
 import { ParsingError, ParsingErrorCode } from '../errors';
 import Result from '../result';
-import { isAlpha, isAlphaNumeric, isDigit } from '../utils';
+import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '../utils';
 import {
  SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from './tokens';
@@ -148,7 +148,7 @@ export default class Lexer {
             this.operator();
             break;
           }
-          if (isAlpha(c)) {
+          if (isAlphaOrUnderscore(c)) {
             this.identifier();
             break;
           }
@@ -323,7 +323,7 @@ export default class Lexer {
 
   identifier() {
     const first = this.peek();
-    if (!first || !isAlpha(first)) {
+    if (!first || !isAlphaOrUnderscore(first)) {
       return;
     }
     this.advance();
@@ -365,7 +365,7 @@ export default class Lexer {
       c = this.peek();
     }
 
-    if (c && (isAlpha(c) || c === '.')) {
+    if (c && (isAlphaOrUnderscore(c) || c === '.')) {
       while (c && (isAlphaNumeric(c) || c === '.')) {
         this.advance();
         c = this.peek();

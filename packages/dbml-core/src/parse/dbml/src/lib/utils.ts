@@ -1,4 +1,4 @@
-export function isAlpha(char: string): boolean {
+export function isAlphaOrUnderscore(char: string): boolean {
   const [c] = char;
 
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c === '_';
