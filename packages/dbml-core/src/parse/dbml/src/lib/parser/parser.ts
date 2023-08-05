@@ -94,17 +94,7 @@ export default class Parser {
 
   private consume(message: string, ...kind: SyntaxTokenKind[]) {
     if (!this.match(...kind)) {
-      const invalidToken = this.peek();
-      const error = new ParsingError(
-        ParsingErrorCode.EXPECTED_THINGS,
-        message,
-        invalidToken.offset,
-        invalidToken.offset + invalidToken.length,
-        invalidToken,
-      );
-      this.invalid.push(invalidToken);
-      this.errors.push(error);
-      throw error;
+      this.logAndThrowError(this.peek(), ParsingErrorCode.EXPECTED_THINGS, message);
     }
   }
 
@@ -120,14 +110,11 @@ export default class Parser {
         if (!(e instanceof ParsingError)) {
           throw e;
         }
-        if (!this.isAtEnd()) {
+        const invalidToken = this.peek();
+        if (invalidToken.kind !== SyntaxTokenKind.EOF) {
           this.invalid.push(this.advance());
         } else {
-          const eof = this.peek();
-          this.invalid.push(eof);
-          this.errors.push(
-            this.generateTokenError(eof, ParsingErrorCode.INVALID, 'Unexpected EOF'),
-          );
+          this.logError(invalidToken, ParsingErrorCode.INVALID, 'Unexpected EOF');
         }
       }
     }
@@ -178,10 +165,7 @@ export default class Parser {
       let bodyOpenColon: SyntaxToken | undefined;
 
       if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
-        const token = this.peek();
-        this.errors.push(
-          this.generateTokenError(token, ParsingErrorCode.EXPECTED_THINGS, 'Expect { or :'),
-        );
+        this.logError(this.advance(), ParsingErrorCode.EXPECTED_THINGS, 'Expect { or :');
         while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
           this.invalid.push(this.advance());
         }
@@ -285,14 +269,11 @@ export default class Parser {
 
     while (!this.isAtEnd() && !this.hasTrailingNewLines(previousToken)) {
       if (!this.hasTrailingSpaces(previousToken)) {
-        this.invalid.push(previousComponent);
-        this.errors.push(
-          this.generateNodeError(
+        this.logError(
             previousComponent,
             ParsingErrorCode.EXPECTED_THINGS,
             'Expect a following space',
-          ),
-        );
+          );
       }
       previousComponent = this.normalFormExpression();
       args.push(previousComponent);
@@ -340,16 +321,11 @@ export default class Parser {
       const opPrefixPower = prefixBindingPower(prefixOp);
 
       if (opPrefixPower.right === null) {
-        const error = this.generateTokenError(
+        this.logAndThrowError(
           prefixOp,
           ParsingErrorCode.UNEXPECTED_THINGS,
           `Unexpected prefix ${prefixOp.value} in an expression`,
         );
-        this.errors.push(error);
-        // Do not push the token into `this.invalid`
-        // as the error is thrown and going to be caught
-        // The error handler will push onto the `invalid` stack
-        throw error;
       }
 
       this.advance();
@@ -448,15 +424,12 @@ export default class Parser {
       return this.tupleExpression();
     }
 
-    const token = this.peek();
-    const error = this.generateTokenError(
-      token,
+    // The error is thrown here to communicate failure of operand extraction to `expression_bp`
+    this.logAndThrowError(
+      this.peek(),
       ParsingErrorCode.UNEXPECTED_THINGS,
-      `Invalid start of operand "${token.value}"`,
+      `Invalid start of operand "${this.peek().value}"`,
     );
-    this.invalid.push(token);
-    this.errors.push(error);
-    throw error;
   }
 
   private functionExpression(): FunctionExpressionNode {
@@ -520,15 +493,16 @@ export default class Parser {
         expression: new VariableNode({ variable: this.previous() }),
       });
     }
-    const token = this.peek();
-    const error = this.generateTokenError(
-      token,
+
+    // The error is thrown here because this method is considered a "low-level one",
+    // it should not resolve the error on its own
+    // and should forward the error to higher-level ones which has more context information
+    // to handle the error properly
+    this.logAndThrowError(
+      this.peek(),
       ParsingErrorCode.EXPECTED_THINGS,
       'Expect a variable or literal',
     );
-    this.invalid.push(token);
-    this.errors.push(error);
-    throw error;
   }
 
   private tupleExpression = this.contextStack.withContextDo(
@@ -581,10 +555,7 @@ export default class Parser {
   synchronizeTuple = () => {
     while (!this.isAtEnd()) {
       const token = this.peek();
-      if (
-        token.kind === SyntaxTokenKind.RPAREN ||
-        token.kind === SyntaxTokenKind.COMMA
-      ) {
+      if (token.kind === SyntaxTokenKind.RPAREN || token.kind === SyntaxTokenKind.COMMA) {
         break;
       }
       this.invalid.push(token);
@@ -647,26 +618,16 @@ export default class Parser {
     let value: NormalFormExpressionNode | undefined;
     const checkClosingAndSeparator = () => closing && separator && this.check(closing, separator);
 
-    if (
-      this.check(SyntaxTokenKind.COLON) ||
-      checkClosingAndSeparator()
-    ) {
+    if (this.check(SyntaxTokenKind.COLON) || checkClosingAndSeparator()) {
       const token = this.peek();
-      this.invalid.push(token);
-      this.errors.push(
-        this.generateTokenError(
+      this.logError(
           token,
           ParsingErrorCode.INVALID,
           'Expect a non-empty attribute name',
-        ),
-      );
+        );
     }
 
-    while (
-      !this.isAtEnd() &&
-      !this.check(SyntaxTokenKind.COLON) &&
-      !checkClosingAndSeparator()
-    ) {
+    while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON) && !checkClosingAndSeparator()) {
       try {
         this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
         name.push(this.previous());
@@ -758,6 +719,32 @@ export default class Parser {
 
   private hasTrailingSpaces(token: SyntaxToken): boolean {
     return token.trailingTrivia.find(({ kind }) => kind === SyntaxTokenKind.SPACE) !== undefined;
+  }
+
+  // This method is expected to called when the error is resolved
+  private logError(tokenOrNode: SyntaxToken | SyntaxNode, code: ParsingErrorCode, message: string) {
+    this.invalid.push(tokenOrNode);
+    if (tokenOrNode instanceof SyntaxToken) {
+      this.errors.push(this.generateTokenError(tokenOrNode, code, message));
+    } else {
+      this.errors.push(this.generateNodeError(tokenOrNode, code, message));
+    }
+  }
+
+  // This method does not push to `this.invalid`
+  // as the error is rethrown and only where the error is handled
+  // and synchronized would that token be pushed onto `this.invalid`
+  private logAndThrowError(
+    tokenOrNode: SyntaxToken | SyntaxNode,
+    code: ParsingErrorCode,
+    message: string,
+  ): never {
+    const e =
+      tokenOrNode instanceof SyntaxToken ?
+        this.generateTokenError(tokenOrNode, code, message) :
+        this.generateNodeError(tokenOrNode, code, message);
+    this.errors.push(e);
+    throw e;
   }
 
   private generateTokenError(
