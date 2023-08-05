@@ -645,10 +645,11 @@ export default class Parser {
     const name: SyntaxToken[] = [];
     let valueOpenColon: SyntaxToken | undefined;
     let value: NormalFormExpressionNode | undefined;
+    const checkClosingAndSeparator = () => closing && separator && this.check(closing, separator);
 
     if (
       this.check(SyntaxTokenKind.COLON) ||
-      (closing && separator && this.check(closing, separator))
+      checkClosingAndSeparator()
     ) {
       const token = this.peek();
       this.invalid.push(token);
@@ -664,23 +665,13 @@ export default class Parser {
     while (
       !this.isAtEnd() &&
       !this.check(SyntaxTokenKind.COLON) &&
-      (!closing || !separator || !this.check(closing, separator))
+      !checkClosingAndSeparator()
     ) {
       try {
         this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
         name.push(this.previous());
       } catch (e) {
-        if (
-          !(e instanceof ParsingError) ||
-          !(e.value instanceof SyntaxToken) ||
-          (e.value.kind !== SyntaxTokenKind.STRING_LITERAL &&
-            e.value.kind !== SyntaxTokenKind.NUMERIC_LITERAL &&
-            e.value.kind !== SyntaxTokenKind.FUNCTION_EXPRESSION &&
-            e.value.kind !== SyntaxTokenKind.QUOTED_STRING)
-        ) {
-          throw e;
-        }
-        this.synchronizeAttributeName();
+        this.tryRecoverFromInvalidTokenInAttribute(e, this.synchronizeAttributeName);
       }
     }
 
@@ -689,21 +680,33 @@ export default class Parser {
       try {
         value = this.normalFormExpression();
       } catch (e) {
-        if (
-          !(e instanceof ParsingError) ||
-          !(e.value instanceof SyntaxToken) ||
-          (e.value.kind !== SyntaxTokenKind.STRING_LITERAL &&
-            e.value.kind !== SyntaxTokenKind.NUMERIC_LITERAL &&
-            e.value.kind !== SyntaxTokenKind.FUNCTION_EXPRESSION &&
-            e.value.kind !== SyntaxTokenKind.QUOTED_STRING)
-        ) {
-          throw e;
-        }
-        this.synchronizeAttributeValue();
+        this.tryRecoverFromInvalidTokenInAttribute(e, this.synchronizeAttributeValue);
       }
     }
 
     return new AttributeNode({ name, valueOpenColon, value });
+  }
+
+  // Throw on an unrecoverable invalid token
+  // or synchronize on a recoverable one
+  // when parsing attribute names or attribute values
+  tryRecoverFromInvalidTokenInAttribute(e: unknown, recoverCallback: () => void): void {
+    if (
+      e instanceof ParsingError &&
+      e.value instanceof SyntaxToken &&
+      // These types of invalid tokens are tolerable in attribute names & values
+      // e.g ["name": 123], [123: 123] -> invalid attribute name, but tolerable
+      // e.g ["name": 123 "abc"] -> invalid attribute value but tolerable, ignore the following ones
+      // e.g [[abc]: [123]] -> Invalid and intolerable, rethrow the error to the upper methods
+      (e.value.kind === SyntaxTokenKind.STRING_LITERAL ||
+        e.value.kind === SyntaxTokenKind.NUMERIC_LITERAL ||
+        e.value.kind === SyntaxTokenKind.FUNCTION_EXPRESSION ||
+        e.value.kind === SyntaxTokenKind.QUOTED_STRING)
+    ) {
+      recoverCallback();
+    } else {
+      throw e;
+    }
   }
 
   synchronizeAttributeName = () => {
