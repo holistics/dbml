@@ -139,78 +139,73 @@ export default class Parser {
     return new Result(program, this.errors);
   }
 
-  private elementDeclaration(): ElementDeclarationNode {
-    this.consume('Expect identifier', SyntaxTokenKind.IDENTIFIER);
-    const type = this.previous();
-    let name: NormalFormExpressionNode | undefined;
-    let as: SyntaxToken | undefined;
-    let alias: NormalFormExpressionNode | undefined;
+  private elementDeclaration = this.contextStack.withContextDo(
+    undefined,
+    (synchronizationPoint) => {
+      this.consume('Expect identifier', SyntaxTokenKind.IDENTIFIER);
+      const type = this.previous();
+      let name: NormalFormExpressionNode | undefined;
+      let as: SyntaxToken | undefined;
+      let alias: NormalFormExpressionNode | undefined;
 
-    if (
-      this.peek().kind !== SyntaxTokenKind.COLON &&
-      this.peek().kind !== SyntaxTokenKind.LBRACE
-    ) {
-      try {
-        name = this.normalFormExpression();
-      } catch (e) {
-        if (e instanceof ParsingError) {
-          this.synchronizeElementDeclarationName();
-        } else {
-          throw e;
+      if (
+        this.peek().kind !== SyntaxTokenKind.COLON &&
+        this.peek().kind !== SyntaxTokenKind.LBRACE
+      ) {
+        synchronizationPoint(
+          // eslint-disable-next-line no-return-assign
+          () => name = this.normalFormExpression(),
+          this.synchronizeElementDeclarationName,
+        );
+
+        const nextWord = this.peek();
+        if (nextWord.kind === SyntaxTokenKind.IDENTIFIER && nextWord.value === 'as') {
+          as = this.advance();
+          synchronizationPoint(
+            // eslint-disable-next-line no-return-assign
+            () => alias = this.normalFormExpression(),
+            this.synchronizeElementDeclarationAlias,
+          );
         }
       }
 
-      const nextWord = this.peek();
-      if (nextWord.kind === SyntaxTokenKind.IDENTIFIER && nextWord.value === 'as') {
-        as = this.advance();
-        try {
-          alias = this.normalFormExpression();
-        } catch (e) {
-          if (e instanceof ParsingError) {
-            this.synchronizeElementDeclarationAlias();
-          } else {
-            throw e;
-          }
+      let attributeList: ListExpressionNode | undefined;
+      if (this.check(SyntaxTokenKind.LBRACKET)) {
+        attributeList = this.listExpression();
+      }
+
+      let body: ExpressionNode | BlockExpressionNode | undefined;
+      let bodyOpenColon: SyntaxToken | undefined;
+
+      if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
+        const token = this.peek();
+        this.invalid.push(token);
+        this.errors.push(
+          this.generateTokenError(token, ParsingErrorCode.EXPECTED_THINGS, 'Expect { or :'),
+        );
+        while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
+          this.advance();
         }
       }
-    }
 
-    let attributeList: ListExpressionNode | undefined;
-    if (this.check(SyntaxTokenKind.LBRACKET)) {
-      attributeList = this.listExpression();
-    }
-
-    let body: ExpressionNode | BlockExpressionNode | undefined;
-    let bodyOpenColon: SyntaxToken | undefined;
-
-    if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
-      const token = this.peek();
-      this.invalid.push(token);
-      this.errors.push(
-        this.generateTokenError(token, ParsingErrorCode.EXPECTED_THINGS, 'Expect { or :'),
-      );
-      while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
-        this.advance();
+      if (this.match(SyntaxTokenKind.COLON)) {
+        bodyOpenColon = this.previous();
+        body = this.normalFormExpression();
+      } else {
+        body = this.blockExpression();
       }
-    }
 
-    if (this.match(SyntaxTokenKind.COLON)) {
-      bodyOpenColon = this.previous();
-      body = this.normalFormExpression();
-    } else {
-      body = this.blockExpression();
-    }
-
-    return new ElementDeclarationNode({
-      type,
-      name,
-      as,
-      alias,
-      attributeList,
-      bodyOpenColon,
-      body,
-    });
-  }
+      return new ElementDeclarationNode({
+        type,
+        name,
+        as,
+        alias,
+        attributeList,
+        bodyOpenColon,
+        body,
+      });
+  },
+);
 
   synchronizeElementDeclarationName = () => {
     while (!this.isAtEnd()) {
