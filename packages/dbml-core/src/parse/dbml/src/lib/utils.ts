@@ -11,5 +11,5 @@ export function isDigit(char: string): boolean {
 }
 
 export function isAlphaNumeric(char: string): boolean {
-  return isAlpha(char) || isDigit(char);
+  return isAlphaOrUnderscore(char) || isDigit(char);
 }
