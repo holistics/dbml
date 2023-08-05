@@ -1,7 +1,7 @@
 {
   "value": [
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 0,
       "value": "+",
       "length": 1,
@@ -18,7 +18,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 2,
       "value": "-",
       "length": 1,
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 4,
       "value": "*",
       "length": 1,
@@ -52,7 +52,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 6,
       "value": "/",
       "length": 1,
@@ -69,7 +69,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 9,
       "value": "!",
       "length": 1,
@@ -86,7 +86,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 12,
       "value": "=",
       "length": 1,
@@ -103,7 +103,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 15,
       "value": "==",
       "length": 2,
@@ -120,7 +120,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 18,
       "value": "!=",
       "length": 2,
@@ -137,7 +137,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 21,
       "value": ">",
       "length": 1,
@@ -154,7 +154,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 23,
       "value": "<",
       "length": 1,
@@ -171,7 +171,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 25,
       "value": "<=",
       "length": 2,
@@ -188,7 +188,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 28,
       "value": ">=",
       "length": 2,
@@ -314,7 +314,7 @@
       ]
     },
     {
-      "kind": "<OP>",
+      "kind": "<op>",
       "offset": 47,
       "value": ".",
       "length": 1,
