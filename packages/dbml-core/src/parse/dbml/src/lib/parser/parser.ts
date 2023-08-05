@@ -180,12 +180,11 @@ export default class Parser {
 
       if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
         const token = this.peek();
-        this.invalid.push(token);
         this.errors.push(
           this.generateTokenError(token, ParsingErrorCode.EXPECTED_THINGS, 'Expect { or :'),
         );
         while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
-          this.advance();
+          this.invalid.push(this.advance());
         }
       }
 
