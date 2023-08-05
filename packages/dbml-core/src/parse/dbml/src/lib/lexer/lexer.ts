@@ -176,40 +176,35 @@ export default class Lexer {
     let triviaList: SyntaxToken[] = [];
     let lastNonTrivia: SyntaxToken | undefined;
     const newTokenList: SyntaxToken[] = [];
+
     // eslint-disable-next-line no-restricted-syntax
     for (const token of this.tokens) {
       if (isTriviaToken(token)) {
         triviaList.push(token);
-        // If a newline token is encountered
-        if (token.kind === SyntaxTokenKind.NEWLINE) {
-          // If there are any non-trivias in the line,
-          // then `triviaList` belongs to its `trailingTrivia`
-          if (lastNonTrivia) {
-            lastNonTrivia.trailingTrivia = triviaList;
-            startOfLine = true;
-            lastNonTrivia = undefined;
-            // Clear the trivia list
-            triviaList = [];
-          }
-          // Otherwise, the line is empty, the `triviaList` is kept to the next line
+        // If a newline token is encountered and there are any non-trivias in the line,
+        // then `triviaList` belongs to its `trailingTrivia`
+        if (token.kind === SyntaxTokenKind.NEWLINE && lastNonTrivia) {
+          lastNonTrivia.trailingTrivia = triviaList;
+          startOfLine = true;
+          lastNonTrivia = undefined;
+          triviaList = [];
         }
-        continue;
-      }
-      // If at start of line and the first non-trivia is encountered,
-      // then `triviaList` belongs to that non-trivia as `leadingTrivia`
-      if (startOfLine) {
-        token.leadingTrivia = triviaList;
+      } else {
+        // The first non-trivia is encountered
+
+        // If at start of line
+        // then `triviaList` belongs to that non-trivia as `leadingTrivia`
+        // eslint-disable-next-line no-unused-expressions
+        startOfLine ?
+          (token.leadingTrivia = triviaList) :
+          (lastNonTrivia!.trailingTrivia = triviaList);
         newTokenList.push(token);
         triviaList = [];
         lastNonTrivia = token;
         startOfLine = false;
-      } else {
-        lastNonTrivia!.trailingTrivia = triviaList;
-        newTokenList.push(token);
-        triviaList = [];
-        lastNonTrivia = token;
       }
     }
+
     this.tokens = newTokenList;
   }
 
