@@ -541,8 +541,6 @@ export default class Parser {
       this.consume('Expect (', SyntaxTokenKind.LPAREN);
       const tupleOpenParen = this.previous();
 
-      this.contextStack.push(ParsingContext.GroupExpression);
-
       if (!this.isAtEnd() && !this.check(SyntaxTokenKind.RPAREN)) {
         elementList.push(this.normalFormExpression());
       }
@@ -560,8 +558,6 @@ export default class Parser {
       );
 
       const tupleCloseParen = this.previous();
-
-      this.contextStack.pop();
 
       if (elementList.length === 1) {
         return new GroupExpressionNode({
