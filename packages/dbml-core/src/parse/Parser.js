@@ -1,6 +1,5 @@
 import Database from '../model_structure/database';
 import mysqlParser from './mysqlParser';
-import postgresParser from './postgresParser';
 import dbmlParser from './dbmlParser';
 import schemarbParser from './schemarbParser';
 import mssqlParser from './mssqlParser';
@@ -17,7 +16,6 @@ class Parser {
   }
 
   static parsePostgresToJSON (str) {
-    // return postgresParser.parse(str);
     return parse(str, 'postgres');
   }
 

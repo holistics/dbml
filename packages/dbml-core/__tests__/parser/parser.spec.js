@@ -1,6 +1,4 @@
 import Parser from '../../src/parse/Parser';
-import fs from 'fs';
-import path from 'path';
 
 describe('@dbml/core', () => {
   describe('parser', () => {
