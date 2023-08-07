@@ -3,8 +3,6 @@ import _ from 'lodash';
 import PostgreSQLParserVisitor from '../parsers/postgresql/PostgreSQLParserVisitor';
 import { Enum, Field, Index, Table } from './AST';
 
-/** @typedef {import('antlr4').ParserRuleContext} ParserRuleContext */
-
 const COMMAND_KIND = {
   REF: 'ref',
 }

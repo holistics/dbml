@@ -42,12 +42,12 @@ describe('@dbml/cli', () => {
   /* eslint-disable */
   test.each(scanDirNames(__dirname, 'dbml2sql'))('dbml2sql/%s', async (dirName) => {
     jest.setTimeout(10000);
-    await runTest(path.join(__dirname, 'dbml2sql', dirName), 'dbml2sql_bin.js');
+    await runTest(path.join(__dirname, 'dbml2sql', dirName), '../bin/dbml2sql.js');
   });
 
   test.each(scanDirNames(__dirname, 'sql2dbml'))('sql2dbml/%s', async (dirName) => {
     jest.setTimeout(10000);
-    await runTest(path.join(__dirname, 'sql2dbml', dirName), 'sql2dbml_bin.js');
+    await runTest(path.join(__dirname, 'sql2dbml', dirName), '../bin/sql2dbml.js');
   });
   /* eslint-enable */
 });
