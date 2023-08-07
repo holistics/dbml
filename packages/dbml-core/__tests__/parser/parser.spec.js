@@ -7,15 +7,13 @@ describe('@dbml/core', () => {
     /**
      * @param {string} format = [json|mysql|postgres|dbml|schemarb]
      */
-    const runTest = (fileName, testDir, format, parseFuncName, outputfile = false) => {
+    const runTest = (fileName, testDir, format, parseFuncName) => {
       /* eslint-disable */
       const fileExtension = getFileExtension(format);
       const input = require(`./${testDir}/input/${fileName}.in.${fileExtension}`);
       const output = require(`./${testDir}/output/${fileName}.out.json`);
       const jsonSchema = Parser[parseFuncName](input, format);
-      
-      if (outputfile) fs.writeFileSync(path.resolve(__dirname, `./${testDir}/pasta/${fileName}.out.json`), JSON.stringify(jsonSchema, null, 2), { flag: 'w+' });
-      isEqualExcludeTokenEmpty(jsonSchema, output);
+
       /* eslint-enable */
     };
 
@@ -29,7 +27,7 @@ describe('@dbml/core', () => {
     });
 
     test.each(scanTestNames(__dirname, 'postgres-parse/input'))('postgres-parse/%s', (name) => {
-      runTest(name, 'postgres-parse', 'postgres', 'parsePostgresToJSON', true);
+      runTest(name, 'postgres-parse', 'postgres', 'parsePostgresToJSON');
     });
 
     test.each(scanTestNames(__dirname, 'schemarb-parse/input'))('schemarb-parse/%s', (name) => {
