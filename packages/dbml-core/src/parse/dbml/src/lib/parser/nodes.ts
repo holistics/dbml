@@ -9,13 +9,11 @@ export interface SyntaxNode {
 export enum SyntaxNodeKind {
   PROGRAM = '<program>',
   ELEMENT_DECLARATION = '<element-declaration>',
-  FIELD_DECLARATION = '<field-declaration>',
   ATTRIBUTE = '<attribute>',
 
   LITERAL = '<literal>',
   VARIABLE = '<variable>',
   INVALID_EXPRESSION = '<invalid-expression>',
-  LITERAL_ELEMENT_EXPRESSION = '<literal-element-expression>',
   PREFIX_EXPRESSION = '<prefix-expression>',
   INFIX_EXPRESSION = '<infix-expression>',
   POSTFIX_EXPRESSION = '<postfix-expression>',
@@ -110,45 +108,6 @@ export class ElementDeclarationNode implements SyntaxNode {
   }
 }
 
-export class FieldDeclarationNode implements SyntaxNode {
-  kind: SyntaxNodeKind.FIELD_DECLARATION = SyntaxNodeKind.FIELD_DECLARATION;
-
-  start: Readonly<number>;
-
-  end: Readonly<number>;
-
-  name: SyntaxToken;
-
-  valueOpenColon: SyntaxToken;
-
-  value: NormalFormExpressionNode;
-
-  attributeList?: ListExpressionNode;
-
-  constructor({
-    name,
-    valueOpenColon,
-    value,
-    attributeList,
-  }: {
-    name: SyntaxToken;
-    valueOpenColon: SyntaxToken;
-    value: NormalFormExpressionNode;
-    attributeList?: ListExpressionNode;
-  }) {
-    this.start = name.offset;
-    if (attributeList) {
-      this.end = attributeList.end;
-    } else {
-      this.end = value.end;
-    }
-    this.name = name;
-    this.valueOpenColon = valueOpenColon;
-    this.value = value;
-    this.attributeList = attributeList;
-  }
-}
-
 export class AttributeNode implements SyntaxNode {
   kind: SyntaxNodeKind.ATTRIBUTE = SyntaxNodeKind.ATTRIBUTE;
 
@@ -205,7 +164,7 @@ export type NormalFormExpressionNode =
   | AccessExpressionNode;
 
 export type ExpressionNode =
-  | LiteralElementExpressionNode
+  | ElementDeclarationNode
   | NormalFormExpressionNode
   | FunctionApplicationNode;
 
@@ -236,36 +195,6 @@ export class AccessExpressionNode implements SyntaxNode {
     this.container = container;
     this.containee = containee;
     this.dot = dot;
-  }
-}
-
-export class LiteralElementExpressionNode implements SyntaxNode {
-  kind: SyntaxNodeKind.LITERAL_ELEMENT_EXPRESSION = SyntaxNodeKind.LITERAL_ELEMENT_EXPRESSION;
-
-  start: Readonly<number>;
-
-  end: Readonly<number>;
-
-  type: ExpressionNode;
-
-  attributeList?: ListExpressionNode;
-
-  body: BlockExpressionNode;
-
-  constructor({
-    type,
-    attributeList,
-    body,
-  }: {
-    type: ExpressionNode;
-    attributeList?: ListExpressionNode;
-    body: BlockExpressionNode;
-  }) {
-    this.start = type.start;
-    this.end = body.end;
-    this.type = type;
-    this.attributeList = attributeList;
-    this.body = body;
   }
 }
 
@@ -385,7 +314,7 @@ export class BlockExpressionNode implements SyntaxNode {
 
   blockOpenBrace: SyntaxToken;
 
-  body: (ExpressionNode | FieldDeclarationNode)[];
+  body: ExpressionNode[];
 
   blockCloseBrace: SyntaxToken;
 
@@ -395,7 +324,7 @@ export class BlockExpressionNode implements SyntaxNode {
     blockCloseBrace,
   }: {
     blockOpenBrace: SyntaxToken;
-    body: (ExpressionNode | FieldDeclarationNode)[];
+    body: ExpressionNode[];
     blockCloseBrace: SyntaxToken;
   }) {
     this.start = blockOpenBrace.offset;

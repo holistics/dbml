@@ -8,13 +8,11 @@ import {
   CallExpressionNode,
   ElementDeclarationNode,
   ExpressionNode,
-  FieldDeclarationNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
   GroupExpressionNode,
   InfixExpressionNode,
   ListExpressionNode,
-  LiteralElementExpressionNode,
   LiteralNode,
   NormalFormExpressionNode,
   PostfixExpressionNode,
@@ -236,21 +234,21 @@ export default class Parser {
     }
   };
 
-  private fieldDeclaration(): FieldDeclarationNode {
+  private fieldDeclaration(): ElementDeclarationNode {
     this.consume('Expect identifier', SyntaxTokenKind.IDENTIFIER);
-    const name = this.previous();
+    const type = this.previous();
     this.consume('Expect :', SyntaxTokenKind.COLON);
-    const valueOpenColon = this.previous();
-    const value = this.normalFormExpression();
+    const bodyOpenColon = this.previous();
+    const body = this.normalFormExpression();
     let attributeList: ListExpressionNode | undefined;
     if (this.check(SyntaxTokenKind.LBRACKET)) {
       attributeList = this.listExpression();
     }
 
-    return new FieldDeclarationNode({
-      name,
-      valueOpenColon,
-      value,
+    return new ElementDeclarationNode({
+      type,
+      bodyOpenColon,
+      body,
       attributeList,
     });
   }
@@ -288,20 +286,26 @@ export default class Parser {
   private tryInterpretAsLiteralElement(
     callee: ExpressionNode,
     args: ExpressionNode[],
-  ): LiteralElementExpressionNode | undefined {
+  ): ElementDeclarationNode | undefined {
+    if (
+      !(callee instanceof PrimaryExpressionNode) ||
+      !(callee.expression instanceof VariableNode)
+    ) {
+      return undefined;
+    }
     if (
       args.length === 2 &&
       args[0] instanceof ListExpressionNode &&
       args[1] instanceof BlockExpressionNode
     ) {
-      return new LiteralElementExpressionNode({
-        type: callee,
+      return new ElementDeclarationNode({
+        type: callee.expression.variable,
         attributeList: args[0],
         body: args[1],
       });
     }
     if (args.length === 1 && args[0] instanceof BlockExpressionNode) {
-      return new LiteralElementExpressionNode({ type: callee, body: args[0] });
+      return new ElementDeclarationNode({ type: callee.expression.variable, body: args[0] });
     }
 
     return undefined;
@@ -450,7 +454,7 @@ export default class Parser {
   private blockExpression = this.contextStack.withContextDo(
     ParsingContext.BlockExpression,
     (synchronizationPoint) => {
-      const body: (ExpressionNode | FieldDeclarationNode)[] = [];
+      const body: ExpressionNode[] = [];
 
       this.consume('Expect {', SyntaxTokenKind.LBRACE);
       const blockOpenBrace = this.previous();
@@ -745,9 +749,9 @@ export default class Parser {
     message: string,
   ): never {
     const e =
-      tokenOrNode instanceof SyntaxToken ?
-        this.generateTokenError(tokenOrNode, code, message) :
-        this.generateNodeError(tokenOrNode, code, message);
+      tokenOrNode instanceof SyntaxToken
+        ? this.generateTokenError(tokenOrNode, code, message)
+        : this.generateNodeError(tokenOrNode, code, message);
     this.errors.push(e);
     throw e;
   }
