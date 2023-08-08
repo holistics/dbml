@@ -168,43 +168,12 @@ export type NormalFormExpressionNode =
   | TupleExpressionNode
   | CallExpressionNode
   | PrimaryExpressionNode
-  | FunctionExpressionNode
-  | AccessExpressionNode;
+  | FunctionExpressionNode;
 
 export type ExpressionNode =
   | ElementDeclarationNode
   | NormalFormExpressionNode
   | FunctionApplicationNode;
-
-export class AccessExpressionNode implements SyntaxNode {
-  kind: SyntaxNodeKind.ACCESS_EXPRESSION = SyntaxNodeKind.ACCESS_EXPRESSION;
-
-  start: Readonly<number>;
-
-  end: Readonly<number>;
-
-  container: NormalFormExpressionNode;
-
-  dot: SyntaxToken;
-
-  containee: NormalFormExpressionNode;
-
-  constructor({
-    container,
-    dot,
-    containee,
-  }: {
-    container: NormalFormExpressionNode;
-    dot: SyntaxToken;
-    containee: NormalFormExpressionNode;
-  }) {
-    this.start = container.start;
-    this.end = containee.end;
-    this.container = container;
-    this.containee = containee;
-    this.dot = dot;
-  }
-}
 
 export class PrefixExpressionNode implements SyntaxNode {
   kind: SyntaxNodeKind.PREFIX_EXPRESSION = SyntaxNodeKind.PREFIX_EXPRESSION;
