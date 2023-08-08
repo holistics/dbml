@@ -137,12 +137,14 @@ export default class Parser {
         this.peek().kind !== SyntaxTokenKind.LBRACE &&
         this.peek().kind !== SyntaxTokenKind.LBRACKET
       ) {
+        // Parsing for element name, any normal expressions are accepted
         synchronizationPoint(
           // eslint-disable-next-line no-return-assign
           () => (name = this.normalFormExpression()),
           this.synchronizeElementDeclarationName,
         );
 
+        // Parsing for potential aliases
         const nextWord = this.peek();
         if (nextWord.kind === SyntaxTokenKind.IDENTIFIER && nextWord.value === 'as') {
           as = this.advance();
@@ -155,6 +157,8 @@ export default class Parser {
       }
 
       let attributeList: ListExpressionNode | undefined;
+      // Parsing attribute list for complex element declarations
+      // e.g Table Users [headercolor: #abc] { }
       if (this.check(SyntaxTokenKind.LBRACKET)) {
         attributeList = this.listExpression();
       }
@@ -162,6 +166,7 @@ export default class Parser {
       let body: ExpressionNode | BlockExpressionNode | undefined;
       let bodyOpenColon: SyntaxToken | undefined;
 
+      // Discard tokens until { or : is met
       if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
         this.logError(this.advance(), ParsingErrorCode.EXPECTED_THINGS, 'Expect { or :');
         while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
@@ -172,6 +177,20 @@ export default class Parser {
       if (this.match(SyntaxTokenKind.COLON)) {
         bodyOpenColon = this.previous();
         body = this.normalFormExpression();
+        // For simple element declarations,
+        // the attribute list should follow the element value instead
+        // e.g Ref users_id__product__uid: users.id < products.id [update: no action]
+        if (attributeList) {
+          this.logError(
+            attributeList,
+            ParsingErrorCode.UNEXPECTED_THINGS,
+            'This attribute list should follow the element value',
+          );
+        }
+        // Recheck for attribute list anyways
+        if (this.check(SyntaxTokenKind.LBRACKET)) {
+          attributeList = this.listExpression();
+        }
       } else {
         body = this.blockExpression();
       }
@@ -234,6 +253,13 @@ export default class Parser {
     }
   };
 
+  // For parsing nested element declarations with simple body
+  // e.g
+  // ```
+  //  Table Users {
+  //    Note: 'This is a note'  // fieldDeclaration() handles this
+  //  }
+  // ```
   private fieldDeclaration(): ElementDeclarationNode {
     this.consume('Expect identifier', SyntaxTokenKind.IDENTIFIER);
     const type = this.previous();
