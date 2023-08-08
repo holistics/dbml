@@ -181,8 +181,6 @@
                   "elementList": [
                     {
                       "kind": "<attribute>",
-                      "start": 39,
-                      "end": 41,
                       "name": [
                         {
                           "kind": "<identifier>",
@@ -192,12 +190,12 @@
                           "leadingTrivia": [],
                           "trailingTrivia": []
                         }
-                      ]
+                      ],
+                      "start": 39,
+                      "end": 42
                     },
                     {
                       "kind": "<attribute>",
-                      "start": 44,
-                      "end": 54,
                       "name": [
                         {
                           "kind": "<identifier>",
@@ -208,23 +206,6 @@
                           "trailingTrivia": []
                         }
                       ],
-                      "valueOpenColon": {
-                        "kind": "<colon>",
-                        "offset": 47,
-                        "value": ":",
-                        "length": 1,
-                        "leadingTrivia": [],
-                        "trailingTrivia": [
-                          {
-                            "kind": "<space>",
-                            "offset": 48,
-                            "value": " ",
-                            "length": 1,
-                            "leadingTrivia": [],
-                            "trailingTrivia": []
-                          }
-                        ]
-                      },
                       "value": {
                         "kind": "<primary-expression>",
                         "start": 49,
@@ -242,12 +223,29 @@
                             "trailingTrivia": []
                           }
                         }
-                      }
+                      },
+                      "valueOpenColon": {
+                        "kind": "<colon>",
+                        "offset": 47,
+                        "value": ":",
+                        "length": 1,
+                        "leadingTrivia": [],
+                        "trailingTrivia": [
+                          {
+                            "kind": "<space>",
+                            "offset": 48,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ]
+                      },
+                      "start": 44,
+                      "end": 54
                     },
                     {
                       "kind": "<attribute>",
-                      "start": 73,
-                      "end": 87,
                       "name": [
                         {
                           "kind": "<identifier>",
@@ -387,23 +385,6 @@
                           "trailingTrivia": []
                         }
                       ],
-                      "valueOpenColon": {
-                        "kind": "<colon>",
-                        "offset": 78,
-                        "value": ":",
-                        "length": 1,
-                        "leadingTrivia": [],
-                        "trailingTrivia": [
-                          {
-                            "kind": "<space>",
-                            "offset": 79,
-                            "value": " ",
-                            "length": 1,
-                            "leadingTrivia": [],
-                            "trailingTrivia": []
-                          }
-                        ]
-                      },
                       "value": {
                         "kind": "<primary-expression>",
                         "start": 80,
@@ -421,12 +402,29 @@
                             "trailingTrivia": []
                           }
                         }
-                      }
+                      },
+                      "valueOpenColon": {
+                        "kind": "<colon>",
+                        "offset": 78,
+                        "value": ":",
+                        "length": 1,
+                        "leadingTrivia": [],
+                        "trailingTrivia": [
+                          {
+                            "kind": "<space>",
+                            "offset": 79,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ]
+                      },
+                      "start": 73,
+                      "end": 87
                     },
                     {
                       "kind": "<attribute>",
-                      "start": 89,
-                      "end": 117,
                       "name": [
                         {
                           "kind": "<identifier>",
@@ -590,30 +588,13 @@
                           ],
                           "trailingTrivia": []
                         }
-                      ]
+                      ],
+                      "start": 89,
+                      "end": 118
                     },
                     {
                       "kind": "<attribute>",
-                      "start": -1,
-                      "end": -1,
                       "name": [],
-                      "valueOpenColon": {
-                        "kind": "<colon>",
-                        "offset": 120,
-                        "value": ":",
-                        "length": 1,
-                        "leadingTrivia": [],
-                        "trailingTrivia": [
-                          {
-                            "kind": "<space>",
-                            "offset": 121,
-                            "value": " ",
-                            "length": 1,
-                            "leadingTrivia": [],
-                            "trailingTrivia": []
-                          }
-                        ]
-                      },
                       "value": {
                         "kind": "<primary-expression>",
                         "start": 122,
@@ -640,7 +621,26 @@
                             ]
                           }
                         }
-                      }
+                      },
+                      "valueOpenColon": {
+                        "kind": "<colon>",
+                        "offset": 120,
+                        "value": ":",
+                        "length": 1,
+                        "leadingTrivia": [],
+                        "trailingTrivia": [
+                          {
+                            "kind": "<space>",
+                            "offset": 121,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ]
+                      },
+                      "start": 120,
+                      "end": 141
                     }
                   ],
                   "commaList": [

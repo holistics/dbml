@@ -181,8 +181,6 @@
                   "elementList": [
                     {
                       "kind": "<attribute>",
-                      "start": 44,
-                      "end": 54,
                       "name": [
                         {
                           "kind": "<identifier>",
@@ -209,7 +207,9 @@
                           "leadingTrivia": [],
                           "trailingTrivia": []
                         }
-                      ]
+                      ],
+                      "start": 44,
+                      "end": 55
                     }
                   ],
                   "commaList": [],
@@ -396,8 +396,6 @@
                   "elementList": [
                     {
                       "kind": "<attribute>",
-                      "start": 79,
-                      "end": 84,
                       "name": [
                         {
                           "kind": "<identifier>",
@@ -407,7 +405,9 @@
                           "leadingTrivia": [],
                           "trailingTrivia": []
                         }
-                      ]
+                      ],
+                      "start": 79,
+                      "end": 85
                     }
                   ],
                   "commaList": [],
