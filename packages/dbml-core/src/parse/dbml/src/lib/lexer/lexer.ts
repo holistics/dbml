@@ -1,7 +1,9 @@
 import { ParsingError, ParsingErrorCode } from '../errors';
 import Report from '../report';
 import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '../utils';
-import { SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken } from './tokens';
+import {
+ SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
+} from './tokens';
 
 export default class Lexer {
   private start: number = 0;
@@ -193,9 +195,9 @@ export default class Lexer {
         // If at start of line
         // then `triviaList` belongs to that non-trivia as `leadingTrivia`
         // eslint-disable-next-line no-unused-expressions
-        startOfLine
-          ? (token.leadingTrivia = triviaList)
-          : (lastNonTrivia!.trailingTrivia = triviaList);
+        startOfLine ?
+          (token.leadingTrivia = triviaList) :
+          (lastNonTrivia!.trailingTrivia = triviaList);
         newTokenList.push(token);
         triviaList = [];
         lastNonTrivia = token;

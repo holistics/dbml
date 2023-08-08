@@ -749,9 +749,9 @@ export default class Parser {
     message: string,
   ): never {
     const e =
-      tokenOrNode instanceof SyntaxToken
-        ? this.generateTokenError(tokenOrNode, code, message)
-        : this.generateNodeError(tokenOrNode, code, message);
+      tokenOrNode instanceof SyntaxToken ?
+        this.generateTokenError(tokenOrNode, code, message) :
+        this.generateNodeError(tokenOrNode, code, message);
     this.errors.push(e);
     throw e;
   }
