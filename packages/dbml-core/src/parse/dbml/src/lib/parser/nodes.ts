@@ -1,3 +1,4 @@
+import { findEnd } from '../utils';
 import { SyntaxToken } from '../lexer/tokens';
 
 export interface SyntaxNode {
@@ -119,7 +120,7 @@ export class AttributeNode implements SyntaxNode {
 
   valueOpenColon?: SyntaxToken;
 
-  value?: NormalFormExpressionNode;
+  value?: NormalFormExpressionNode | SyntaxToken[];
 
   constructor({
     name,
@@ -128,23 +129,30 @@ export class AttributeNode implements SyntaxNode {
   }: {
     name: SyntaxToken[];
     valueOpenColon?: SyntaxToken;
-    value?: NormalFormExpressionNode;
+    value?: NormalFormExpressionNode | SyntaxToken[];
   }) {
-    if (name.length === 0) {
-      this.start = -1;
-      this.end = -1;
-    } else {
-      this.start = name[0].offset;
-      if (value) {
-        this.end = value.end;
-      } else {
-        const lastName = name[name.length - 1];
-        this.end = lastName.offset + lastName.length - 1;
-      }
-    }
     this.name = name;
-    this.valueOpenColon = valueOpenColon;
     this.value = value;
+    this.valueOpenColon = valueOpenColon;
+
+    if (this.name.length === 0) {
+      this.start = this.valueOpenColon ? this.valueOpenColon.offset : -1;
+    } else {
+      this.start = this.name[0].offset;
+    }
+
+    if (!this.valueOpenColon) {
+      this.end = this.name.length === 0 ? -1 : findEnd(this.name[this.name.length - 1]);
+    } else if (!this.value) {
+      this.end = findEnd(this.valueOpenColon);
+    } else if (!Array.isArray(this.value)) {
+      this.end = this.value.end;
+    } else {
+      this.end =
+        this.value.length === 0 ?
+          findEnd(this.valueOpenColon) :
+          findEnd(this.value[this.value.length - 1]);
+    }
   }
 }
 

@@ -625,36 +625,65 @@ export default class Parser {
     }
   };
 
-  private attribute(closing?: SyntaxTokenKind, separator?: SyntaxTokenKind): AttributeNode {
-    const name: SyntaxToken[] = [];
+  private attribute(
+    closing: SyntaxTokenKind = SyntaxTokenKind.RBRACKET,
+    separator: SyntaxTokenKind = SyntaxTokenKind.COMMA,
+  ): AttributeNode {
     let valueOpenColon: SyntaxToken | undefined;
-    let value: NormalFormExpressionNode | undefined;
-    const checkClosingAndSeparator = () => closing && separator && this.check(closing, separator);
+    let value: NormalFormExpressionNode | SyntaxToken[] | undefined;
 
-    if (this.check(SyntaxTokenKind.COLON) || checkClosingAndSeparator()) {
+    if (this.check(SyntaxTokenKind.COLON, closing, separator)) {
       const token = this.peek();
       this.logError(token, ParsingErrorCode.INVALID, 'Expect a non-empty attribute name');
     }
 
-    while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON) && !checkClosingAndSeparator()) {
+    const name = this.attributeIdentifierStream(closing, separator);
+
+    if (this.match(SyntaxTokenKind.COLON)) {
+      valueOpenColon = this.previous();
+      value = this.attributeValue(closing, separator);
+    }
+
+    return new AttributeNode({ name, valueOpenColon, value });
+  }
+
+  // Extract a stream of identifiers in the context of parsing attributes
+  // e.g [primary key] -> id stream ["primary", "key"]
+  // e.g [update: no action] -> id stream ["no", "action"]
+  private attributeIdentifierStream(
+    closing: SyntaxTokenKind,
+    separator: SyntaxTokenKind,
+  ): SyntaxToken[] {
+    const stream: SyntaxToken[] = [];
+    while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON, closing, separator)) {
       try {
         this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
-        name.push(this.previous());
+        stream.push(this.previous());
       } catch (e) {
         this.tryRecoverFromInvalidTokenInAttribute(e, this.synchronizeAttributeName);
       }
     }
 
-    if (this.match(SyntaxTokenKind.COLON)) {
-      valueOpenColon = this.previous();
-      try {
-        value = this.normalFormExpression();
-      } catch (e) {
-        this.tryRecoverFromInvalidTokenInAttribute(e, this.synchronizeAttributeValue);
-      }
-    }
+    return stream;
+  }
 
-    return new AttributeNode({ name, valueOpenColon, value });
+  private attributeValue(
+    closing: SyntaxTokenKind,
+    separator: SyntaxTokenKind,
+  ): NormalFormExpressionNode | SyntaxToken[] | undefined {
+    if (
+      this.peek().kind === SyntaxTokenKind.IDENTIFIER &&
+      this.peek(1).kind === SyntaxTokenKind.IDENTIFIER
+    ) {
+      return this.attributeIdentifierStream(closing, separator);
+    }
+    try {
+      return this.normalFormExpression();
+    } catch (e) {
+      this.tryRecoverFromInvalidTokenInAttribute(e, this.synchronizeAttributeValue);
+
+      return undefined;
+    }
   }
 
   // Throw on an unrecoverable invalid token
