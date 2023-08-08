@@ -83,7 +83,7 @@ export function isOpToken(token?: SyntaxToken): boolean {
 export class SyntaxToken {
   kind: SyntaxTokenKind;
 
-  value?: unknown;
+  value: string;
 
   leadingTrivia: SyntaxToken[];
 
@@ -93,7 +93,7 @@ export class SyntaxToken {
 
   length: number;
 
-  protected constructor(kind: SyntaxTokenKind, offset: number, length: number, value?: unknown) {
+  protected constructor(kind: SyntaxTokenKind, offset: number, length: number, value: string) {
     this.kind = kind;
     this.offset = offset;
     this.value = value;
@@ -102,7 +102,7 @@ export class SyntaxToken {
     this.trailingTrivia = [];
   }
 
-  static create(kind: SyntaxTokenKind, offset: number, length: number, value?: unknown) {
+  static create(kind: SyntaxTokenKind, offset: number, length: number, value: string) {
     return new SyntaxToken(kind, offset, length, value);
   }
 }

@@ -57,7 +57,7 @@ export default class Lexer {
   lex(): Report<SyntaxToken[], ParsingError> {
     this.init();
     this.scanTokens();
-    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, 0));
+    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, 0, ''));
     this.gatherTrivia();
 
     return new Report(this.tokens, this.errors);
