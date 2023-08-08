@@ -1,3 +1,4 @@
+import { extractIdentifierFromNode, isIdentifierNode } from '../utils';
 import { ParsingError, ParsingErrorCode } from '../errors';
 import { SyntaxToken, SyntaxTokenKind, isOpToken } from '../lexer/tokens';
 import Report from '../report';
@@ -96,7 +97,7 @@ export default class Parser {
     }
   }
 
-  parse(): Report<SyntaxNode & { kind: SyntaxNodeKind.PROGRAM }, ParsingError> {
+  parse(): Report<ProgramNode, ParsingError> {
     const body: ElementDeclarationNode[] = [];
 
     this.init();
@@ -280,15 +281,15 @@ export default class Parser {
   }
 
   private expression(): ExpressionNode {
-    const args: ExpressionNode[] = [];
+    const args: NormalFormExpressionNode[] = [];
 
-    const callee: ExpressionNode = this.normalFormExpression();
+    const callee: NormalFormExpressionNode = this.normalFormExpression();
 
     if (this.hasTrailingNewLines(this.previous())) {
       return callee;
     }
 
-    let previousComponent: ExpressionNode = callee;
+    let previousComponent: NormalFormExpressionNode = callee;
     let previousToken = this.previous();
 
     while (!this.isAtEnd() && !this.hasTrailingNewLines(previousToken)) {
@@ -311,30 +312,49 @@ export default class Parser {
 
   private tryInterpretAsLiteralElement(
     callee: ExpressionNode,
-    args: ExpressionNode[],
+    args: NormalFormExpressionNode[],
   ): ElementDeclarationNode | undefined {
-    if (
-      !(callee instanceof PrimaryExpressionNode) ||
-      !(callee.expression instanceof VariableNode)
-    ) {
+    if (!isIdentifierNode(callee) || args.length === 0) {
       return undefined;
     }
-    if (
-      args.length === 2 &&
-      args[0] instanceof ListExpressionNode &&
-      args[1] instanceof BlockExpressionNode
-    ) {
-      return new ElementDeclarationNode({
-        type: callee.expression.variable,
-        attributeList: args[0],
-        body: args[1],
-      });
-    }
-    if (args.length === 1 && args[0] instanceof BlockExpressionNode) {
-      return new ElementDeclarationNode({ type: callee.expression.variable, body: args[0] });
+
+    const type = extractIdentifierFromNode(callee)!;
+
+    let attributeList: ListExpressionNode | undefined;
+    let alias: NormalFormExpressionNode | undefined;
+    let as: SyntaxToken | undefined;
+    let name: NormalFormExpressionNode | undefined;
+
+    const cpArgs = [...args];
+
+    const body = cpArgs.pop();
+    if (!(body instanceof BlockExpressionNode)) {
+      return undefined;
     }
 
-    return undefined;
+    if (cpArgs[cpArgs.length - 1] instanceof ListExpressionNode) {
+      attributeList = cpArgs.pop() as ListExpressionNode;
+    }
+
+    const maybeAlias = cpArgs.pop();
+    const maybeAs = cpArgs[cpArgs.length - 1];
+    if (extractIdentifierFromNode(maybeAs)?.value === 'as') {
+      alias = maybeAlias;
+      as = extractIdentifierFromNode(cpArgs.pop());
+    } else {
+      name = maybeAlias;
+    }
+
+    return cpArgs.length === 0 ?
+      new ElementDeclarationNode({
+          type,
+          name,
+          as,
+          alias,
+          attributeList,
+          body,
+        }) :
+      undefined;
   }
 
   private normalFormExpression(): NormalFormExpressionNode {
@@ -850,7 +870,7 @@ const infixBindingPowerMap: {
 function infixBindingPower(
   token: SyntaxToken,
 ): { left: null; right: null } | { left: number; right: number } {
-  const power = infixBindingPowerMap[token.value as string];
+  const power = infixBindingPowerMap[token.value];
 
   return power || { left: null, right: null };
 }
@@ -867,7 +887,7 @@ const prefixBindingPowerMap: {
 };
 
 function prefixBindingPower(token: SyntaxToken): { left: null; right: null | number } {
-  const power = prefixBindingPowerMap[token.value as string];
+  const power = prefixBindingPowerMap[token.value];
 
   return power || { left: null, right: null };
 }
@@ -879,7 +899,7 @@ const postfixBindingPowerMap: {
 };
 
 function postfixBindingPower(token: SyntaxToken): { left: null | number; right: null } {
-  const power = postfixBindingPowerMap[token.value as string];
+  const power = postfixBindingPowerMap[token.value];
 
   return power || { left: null, right: null };
 }
