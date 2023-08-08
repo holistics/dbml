@@ -157,14 +157,14 @@
       "diagnostic": "Invalid newline encountered while parsing",
       "start": 18,
       "end": 20,
-      "name": "ParsingError"
+      "name": "CompileError"
     },
     {
       "code": 1002,
       "diagnostic": "Eof reached while parsing",
       "start": 33,
       "end": 34,
-      "name": "ParsingError"
+      "name": "CompileError"
     }
   ]
 }

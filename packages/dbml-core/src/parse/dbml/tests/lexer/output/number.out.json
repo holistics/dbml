@@ -140,21 +140,21 @@
       "diagnostic": "Invalid number",
       "start": 58,
       "end": 62,
-      "name": "ParsingError"
+      "name": "CompileError"
     },
     {
       "code": 1002,
       "diagnostic": "Invalid number",
       "start": 63,
       "end": 69,
-      "name": "ParsingError"
+      "name": "CompileError"
     },
     {
       "code": 1002,
       "diagnostic": "Invalid number",
       "start": 70,
       "end": 79,
-      "name": "ParsingError"
+      "name": "CompileError"
     }
   ]
 }

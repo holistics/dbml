@@ -177,21 +177,21 @@
       "diagnostic": "Invalid newline encountered while parsing",
       "start": 156,
       "end": 191,
-      "name": "ParsingError"
+      "name": "CompileError"
     },
     {
       "code": 1002,
       "diagnostic": "Invalid newline encountered while parsing",
       "start": 194,
       "end": 230,
-      "name": "ParsingError"
+      "name": "CompileError"
     },
     {
       "code": 1002,
       "diagnostic": "Eof reached while parsing",
       "start": 271,
       "end": 312,
-      "name": "ParsingError"
+      "name": "CompileError"
     }
   ]
 }

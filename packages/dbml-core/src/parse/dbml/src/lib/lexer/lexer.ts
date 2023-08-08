@@ -1,4 +1,4 @@
-import { ParsingError, ParsingErrorCode } from '../errors';
+import { CompileError, CompileErrorCode } from '../errors';
 import Report from '../report';
 import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '../utils';
 import {
@@ -14,7 +14,7 @@ export default class Lexer {
 
   private tokens: SyntaxToken[] = []; // list of lexed tokens, not including invalid tokens
 
-  private errors: ParsingError[] = []; // list of errors during lexing
+  private errors: CompileError[] = []; // list of errors during lexing
 
   constructor(text: string) {
     this.text = text;
@@ -54,7 +54,7 @@ export default class Lexer {
     );
   }
 
-  lex(): Report<SyntaxToken[], ParsingError> {
+  lex(): Report<SyntaxToken[], CompileError> {
     this.init();
     this.scanTokens();
     this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, 0, ''));
@@ -158,8 +158,8 @@ export default class Lexer {
           }
           this.advance();
           this.errors.push(
-            new ParsingError(
-              ParsingErrorCode.EXPECTED_THINGS,
+            new CompileError(
+              CompileErrorCode.EXPECTED_THINGS,
               `Unexpected token ${c}`,
               this.start,
               this.current - 1,
@@ -261,8 +261,8 @@ export default class Lexer {
 
     if (this.isAtEnd() && !allowEndingEof) {
       this.errors.push(
-        new ParsingError(
-          ParsingErrorCode.INVALID,
+        new CompileError(
+          CompileErrorCode.INVALID,
           'Eof reached while parsing',
           this.start,
           this.current,
@@ -274,8 +274,8 @@ export default class Lexer {
 
     if (!this.isAtEnd() && invalidChar.includes(this.peek()!)) {
       this.errors.push(
-        new ParsingError(
-          ParsingErrorCode.INVALID,
+        new CompileError(
+          CompileErrorCode.INVALID,
           `Invalid ${this.peek() === '\n' ? 'newline' : 'character'} encountered while parsing`,
           this.start,
           this.current,
@@ -366,7 +366,7 @@ export default class Lexer {
         c = this.peek();
       }
       this.errors.push(
-        new ParsingError(ParsingErrorCode.INVALID, 'Invalid number', this.start, this.current),
+        new CompileError(CompileErrorCode.INVALID, 'Invalid number', this.start, this.current),
       );
     } else {
       this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);

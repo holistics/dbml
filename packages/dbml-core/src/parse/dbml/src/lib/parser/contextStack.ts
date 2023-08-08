@@ -1,4 +1,4 @@
-import { ParsingError } from '../errors';
+import { CompileError } from '../errors';
 import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 
 // Represent a message indicating how many context jumps should be taken
@@ -103,7 +103,7 @@ export class ParsingContextStack {
         return res;
       } catch (e) {
         // Rethrow if the exception is not ContextJumpMessage
-        // The exception could be a ParsingError
+        // The exception could be a CompileError
         // which may be intended or an indication that a function forgets to
         // guard some parsing code with `synchronizationPoint`
         if (!(e instanceof ContextJumpMessage)) {
@@ -152,7 +152,7 @@ export class ParsingContextStack {
   }
 
   // Call the passed-in callback that potentially throws
-  // If the callback indeed throws a ParsingError,
+  // If the callback indeed throws a CompileError,
   // find the context capable of handling the invalid token
   // If the current context is the one capable,
   // call the passed-in synchronization callback
@@ -164,7 +164,7 @@ export class ParsingContextStack {
     try {
       mayThrow();
     } catch (e) {
-      if (e instanceof ParsingError && e.value instanceof SyntaxToken) {
+      if (e instanceof CompileError && e.value instanceof SyntaxToken) {
         this.goToHandlerContext(e.value);
         synchronizationCallback();
       } else if (e instanceof ContextJumpMessage && e.offset === 0) {

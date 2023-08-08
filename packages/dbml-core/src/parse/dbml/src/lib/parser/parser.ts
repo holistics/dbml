@@ -1,5 +1,5 @@
 import { extractIdentifierFromNode, isIdentifierNode } from '../utils';
-import { ParsingError, ParsingErrorCode } from '../errors';
+import { CompileError, CompileErrorCode } from '../errors';
 import { SyntaxToken, SyntaxTokenKind, isOpToken } from '../lexer/tokens';
 import Report from '../report';
 import { ParsingContext, ParsingContextStack } from './contextStack';
@@ -31,7 +31,7 @@ export default class Parser {
 
   private current: number = 0;
 
-  private errors: ParsingError[] = [];
+  private errors: CompileError[] = [];
 
   private invalid: (SyntaxToken | SyntaxNode)[] = [];
 
@@ -93,11 +93,11 @@ export default class Parser {
 
   private consume(message: string, ...kind: SyntaxTokenKind[]) {
     if (!this.match(...kind)) {
-      this.logAndThrowError(this.peek(), ParsingErrorCode.EXPECTED_THINGS, message);
+      this.logAndThrowError(this.peek(), CompileErrorCode.EXPECTED_THINGS, message);
     }
   }
 
-  parse(): Report<ProgramNode, ParsingError> {
+  parse(): Report<ProgramNode, CompileError> {
     const body: ElementDeclarationNode[] = [];
 
     this.init();
@@ -106,14 +106,14 @@ export default class Parser {
       try {
         body.push(this.elementDeclaration());
       } catch (e) {
-        if (!(e instanceof ParsingError)) {
+        if (!(e instanceof CompileError)) {
           throw e;
         }
         const invalidToken = this.peek();
         if (invalidToken.kind !== SyntaxTokenKind.EOF) {
           this.invalid.push(this.advance());
         } else {
-          this.logError(invalidToken, ParsingErrorCode.INVALID, 'Unexpected EOF');
+          this.logError(invalidToken, CompileErrorCode.INVALID, 'Unexpected EOF');
         }
       }
     }
@@ -169,7 +169,7 @@ export default class Parser {
 
       // Discard tokens until { or : is met
       if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
-        this.logError(this.advance(), ParsingErrorCode.EXPECTED_THINGS, 'Expect { or :');
+        this.logError(this.advance(), CompileErrorCode.EXPECTED_THINGS, 'Expect { or :');
         while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
           this.invalid.push(this.advance());
         }
@@ -184,7 +184,7 @@ export default class Parser {
         if (attributeList) {
           this.logError(
             attributeList,
-            ParsingErrorCode.UNEXPECTED_THINGS,
+            CompileErrorCode.UNEXPECTED_THINGS,
             'This attribute list should follow the element value',
           );
         }
@@ -296,7 +296,7 @@ export default class Parser {
       if (!this.hasTrailingSpaces(previousToken)) {
         this.logError(
           previousComponent,
-          ParsingErrorCode.EXPECTED_THINGS,
+          CompileErrorCode.EXPECTED_THINGS,
           'Expect a following space',
         );
       }
@@ -374,7 +374,7 @@ export default class Parser {
       if (opPrefixPower.right === null) {
         this.logAndThrowError(
           prefixOp,
-          ParsingErrorCode.UNEXPECTED_THINGS,
+          CompileErrorCode.UNEXPECTED_THINGS,
           `Unexpected prefix ${prefixOp.value} in an expression`,
         );
       }
@@ -486,7 +486,7 @@ export default class Parser {
     // The error is thrown here to communicate failure of operand extraction to `expression_bp`
     this.logAndThrowError(
       this.peek(),
-      ParsingErrorCode.UNEXPECTED_THINGS,
+      CompileErrorCode.UNEXPECTED_THINGS,
       `Invalid start of operand "${this.peek().value}"`,
     );
   }
@@ -559,7 +559,7 @@ export default class Parser {
     // to handle the error properly
     this.logAndThrowError(
       this.peek(),
-      ParsingErrorCode.EXPECTED_THINGS,
+      CompileErrorCode.EXPECTED_THINGS,
       'Expect a variable or literal',
     );
   }
@@ -680,7 +680,7 @@ export default class Parser {
 
     if (this.check(SyntaxTokenKind.COLON, closing, separator)) {
       const token = this.peek();
-      this.logError(token, ParsingErrorCode.INVALID, 'Expect a non-empty attribute name');
+      this.logError(token, CompileErrorCode.INVALID, 'Expect a non-empty attribute name');
     }
 
     const name = this.attributeIdentifierStream(closing, separator);
@@ -737,7 +737,7 @@ export default class Parser {
   // when parsing attribute names or attribute values
   tryRecoverFromInvalidTokenInAttribute(e: unknown, recoverCallback: () => void): void {
     if (
-      e instanceof ParsingError &&
+      e instanceof CompileError &&
       e.value instanceof SyntaxToken &&
       // These types of invalid tokens are tolerable in attribute names & values
       // e.g ["name": 123], [123: 123] -> invalid attribute name, but tolerable
@@ -806,7 +806,7 @@ export default class Parser {
   }
 
   // This method is expected to called when the error is resolved
-  private logError(tokenOrNode: SyntaxToken | SyntaxNode, code: ParsingErrorCode, message: string) {
+  private logError(tokenOrNode: SyntaxToken | SyntaxNode, code: CompileErrorCode, message: string) {
     this.invalid.push(tokenOrNode);
     if (tokenOrNode instanceof SyntaxToken) {
       this.errors.push(this.generateTokenError(tokenOrNode, code, message));
@@ -820,7 +820,7 @@ export default class Parser {
   // and synchronized would that token be pushed onto `this.invalid`
   private logAndThrowError(
     tokenOrNode: SyntaxToken | SyntaxNode,
-    code: ParsingErrorCode,
+    code: CompileErrorCode,
     message: string,
   ): never {
     const e =
@@ -833,18 +833,18 @@ export default class Parser {
 
   private generateTokenError(
     token: SyntaxToken,
-    code: ParsingErrorCode,
+    code: CompileErrorCode,
     message: string,
-  ): ParsingError {
-    return new ParsingError(code, message, token.offset, token.offset + token.length, token);
+  ): CompileError {
+    return new CompileError(code, message, token.offset, token.offset + token.length, token);
   }
 
   private generateNodeError(
     node: SyntaxNode,
-    code: ParsingErrorCode,
+    code: CompileErrorCode,
     message: string,
-  ): ParsingError {
-    return new ParsingError(code, message, node.start, node.end, node);
+  ): CompileError {
+    return new CompileError(code, message, node.start, node.end, node);
   }
 }
 

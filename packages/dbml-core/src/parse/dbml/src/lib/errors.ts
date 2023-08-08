@@ -1,11 +1,11 @@
-export enum ParsingErrorCode {
+export enum CompileErrorCode {
   EXPECTED_THINGS = 1000,
   UNEXPECTED_THINGS,
   INVALID,
 }
 
-export class ParsingError extends Error {
-  code: Readonly<ParsingErrorCode>;
+export class CompileError extends Error {
+  code: Readonly<CompileErrorCode>;
 
   diagnostic: Readonly<string>;
 
@@ -23,6 +23,6 @@ export class ParsingError extends Error {
     this.end = end;
     this.value = value;
     this.name = this.constructor.name;
-    Object.setPrototypeOf(this, ParsingError.prototype);
+    Object.setPrototypeOf(this, CompileError.prototype);
   }
 }
