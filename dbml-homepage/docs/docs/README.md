@@ -394,6 +394,15 @@ When hovering over the column in the canvas, the enum values will be displayed.
     } 
 **Note:** if `schema_name` prefix is omitted, it'll default to `public` schema
 
+If your enum values contain spaces or other special characters you can use double quotes.
+
+    enum grade {
+        "A+"
+        "A"
+        "A-"
+        "Not Yet Set"
+    }
+
 ## TableGroup
 `TableGroup` allows users to group the related or associated tables together.
 
