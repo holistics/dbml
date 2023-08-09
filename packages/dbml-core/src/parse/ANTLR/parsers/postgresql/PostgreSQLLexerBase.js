@@ -9,7 +9,7 @@ export default class PostgreSQLLexerBase extends antlr4.Lexer {
 }
 
 // helper functions required by the generated grammar
-// To avoid error, we decleare their signature and import them in the generated PostgreSQLLexer.js
+// To avoid error, we declare their signature and import them in the generated PostgreSQLLexer.js
 export function checkLA () {
 }
 
