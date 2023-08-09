@@ -9,6 +9,6 @@ export default class PostgreSQLParserBase extends antlr4.Parser {
 }
 
 // helper function required by the generated grammar
-// To avoid error, we decleare their signature and import them in the generated PostgreSQLParser.js
+// To avoid error, we declare their signature and import them in the generated PostgreSQLParser.js
 export function ParseRoutineBody () {
 }
