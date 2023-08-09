@@ -59,6 +59,12 @@ export function isQuotedStringNode(value?: unknown): boolean {
   );
 }
 
+export function isPrimaryVariableNode(
+  value?: unknown,
+): value is PrimaryExpressionNode & { expression: VariableNode } {
+  return value instanceof PrimaryExpressionNode && value.expression instanceof VariableNode;
+}
+
 export function isIdentifierNode(value?: unknown): boolean {
   return (
     value instanceof PrimaryExpressionNode &&

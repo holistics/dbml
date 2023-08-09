@@ -173,14 +173,14 @@
   ],
   "errors": [
     {
-      "code": 1002,
+      "code": 1003,
       "diagnostic": "Invalid newline encountered while parsing",
       "start": 156,
       "end": 191,
       "name": "CompileError"
     },
     {
-      "code": 1002,
+      "code": 1003,
       "diagnostic": "Invalid newline encountered while parsing",
       "start": 194,
       "end": 230,

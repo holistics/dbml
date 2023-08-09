@@ -159,7 +159,7 @@ export default class Lexer {
           this.advance();
           this.errors.push(
             new CompileError(
-              CompileErrorCode.EXPECTED_THINGS,
+              CompileErrorCode.UNKNOWN_SYMBOL,
               `Unexpected token ${c}`,
               this.start,
               this.current - 1,
@@ -262,7 +262,7 @@ export default class Lexer {
     if (this.isAtEnd() && !allowEndingEof) {
       this.errors.push(
         new CompileError(
-          CompileErrorCode.INVALID,
+          CompileErrorCode.UNEXPECTED_EOF,
           'Eof reached while parsing',
           this.start,
           this.current,
@@ -275,7 +275,9 @@ export default class Lexer {
     if (!this.isAtEnd() && invalidChar.includes(this.peek()!)) {
       this.errors.push(
         new CompileError(
-          CompileErrorCode.INVALID,
+          this.peek() === '\n' ?
+            CompileErrorCode.UNEXPECTED_NEWLINE :
+            CompileErrorCode.UNEXPECTED_SYMBOL,
           `Invalid ${this.peek() === '\n' ? 'newline' : 'character'} encountered while parsing`,
           this.start,
           this.current,
@@ -366,7 +368,12 @@ export default class Lexer {
         c = this.peek();
       }
       this.errors.push(
-        new CompileError(CompileErrorCode.INVALID, 'Invalid number', this.start, this.current),
+        new CompileError(
+          CompileErrorCode.UNKNOWN_TOKEN,
+          'Invalid number',
+          this.start,
+          this.current,
+        ),
       );
     } else {
       this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);

@@ -93,7 +93,7 @@ export default class Parser {
 
   private consume(message: string, ...kind: SyntaxTokenKind[]) {
     if (!this.match(...kind)) {
-      this.logAndThrowError(this.peek(), CompileErrorCode.EXPECTED_THINGS, message);
+      this.logAndThrowError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, message);
     }
   }
 
@@ -113,7 +113,7 @@ export default class Parser {
         if (invalidToken.kind !== SyntaxTokenKind.EOF) {
           this.invalid.push(this.advance());
         } else {
-          this.logError(invalidToken, CompileErrorCode.INVALID, 'Unexpected EOF');
+          this.logError(invalidToken, CompileErrorCode.UNEXPECTED_EOF, 'Unexpected EOF');
         }
       }
     }
@@ -169,7 +169,7 @@ export default class Parser {
 
       // Discard tokens until { or : is met
       if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
-        this.logError(this.advance(), CompileErrorCode.EXPECTED_THINGS, 'Expect { or :');
+        this.logError(this.advance(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect { or :');
         while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE)) {
           this.invalid.push(this.advance());
         }
@@ -184,7 +184,7 @@ export default class Parser {
         if (attributeList) {
           this.logError(
             attributeList,
-            CompileErrorCode.UNEXPECTED_THINGS,
+            CompileErrorCode.MISPLACED_LIST_NODE,
             'This attribute list should follow the element value',
           );
         }
@@ -296,7 +296,7 @@ export default class Parser {
       if (!this.hasTrailingSpaces(previousToken)) {
         this.logError(
           previousComponent,
-          CompileErrorCode.EXPECTED_THINGS,
+          CompileErrorCode.MISSING_SPACES,
           'Expect a following space',
         );
       }
@@ -374,7 +374,7 @@ export default class Parser {
       if (opPrefixPower.right === null) {
         this.logAndThrowError(
           prefixOp,
-          CompileErrorCode.UNEXPECTED_THINGS,
+          CompileErrorCode.UNKNOWN_PREFIX_OP,
           `Unexpected prefix ${prefixOp.value} in an expression`,
         );
       }
@@ -486,7 +486,7 @@ export default class Parser {
     // The error is thrown here to communicate failure of operand extraction to `expression_bp`
     this.logAndThrowError(
       this.peek(),
-      CompileErrorCode.UNEXPECTED_THINGS,
+      CompileErrorCode.INVALID_OPERAND,
       `Invalid start of operand "${this.peek().value}"`,
     );
   }
@@ -559,7 +559,7 @@ export default class Parser {
     // to handle the error properly
     this.logAndThrowError(
       this.peek(),
-      CompileErrorCode.EXPECTED_THINGS,
+      CompileErrorCode.UNEXPECTED_TOKEN,
       'Expect a variable or literal',
     );
   }
@@ -680,7 +680,11 @@ export default class Parser {
 
     if (this.check(SyntaxTokenKind.COLON, closing, separator)) {
       const token = this.peek();
-      this.logError(token, CompileErrorCode.INVALID, 'Expect a non-empty attribute name');
+      this.logError(
+        token,
+        CompileErrorCode.EMPTY_ATTRIBUTE_NAME,
+        'Expect a non-empty attribute name',
+      );
     }
 
     const name = this.attributeIdentifierStream(closing, separator);
