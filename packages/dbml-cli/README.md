@@ -8,4 +8,7 @@ npm install -g @dbml/cli
 
 # or if you're using yarn
 yarn global add @dbml/cli
+
+# or use with npx 
+npx -p @dbml/cli dbml2sql schema.dbml -o schema.sql
 ```
