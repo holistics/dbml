@@ -1,8 +1,12 @@
 import { SyntaxToken, SyntaxTokenKind } from './lexer/tokens';
 import {
+  BlockExpressionNode,
+  ElementDeclarationNode,
   ExpressionNode,
   InfixExpressionNode,
+  ListExpressionNode,
   LiteralNode,
+  NormalFormExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
   VariableNode,
@@ -71,4 +75,52 @@ export function isIdentifierNode(value?: unknown): boolean {
     value.expression instanceof VariableNode &&
     value.expression.variable.kind === SyntaxTokenKind.IDENTIFIER
   );
+}
+
+export function tryInterpretAsLiteralElement(
+  callee: ExpressionNode,
+  args: NormalFormExpressionNode[],
+): ElementDeclarationNode | undefined {
+  if (!isIdentifierNode(callee) || args.length === 0) {
+    return undefined;
+  }
+
+  const type = extractIdentifierFromNode(callee)!;
+
+  let attributeList: ListExpressionNode | undefined;
+  let alias: NormalFormExpressionNode | undefined;
+  let as: SyntaxToken | undefined;
+  let name: NormalFormExpressionNode | undefined;
+
+  const cpArgs = [...args];
+
+  const body = cpArgs.pop();
+  if (!(body instanceof BlockExpressionNode)) {
+    return undefined;
+  }
+
+  if (cpArgs[cpArgs.length - 1] instanceof ListExpressionNode) {
+    attributeList = cpArgs.pop() as ListExpressionNode;
+  }
+
+  const maybeAlias = cpArgs.pop();
+  const maybeAs = cpArgs[cpArgs.length - 1];
+  if (extractIdentifierFromNode(maybeAs)?.value === 'as') {
+    alias = maybeAlias;
+    as = extractIdentifierFromNode(cpArgs.pop());
+    name = cpArgs.pop();
+  } else {
+    name = maybeAlias;
+  }
+
+  return cpArgs.length === 0 ?
+    new ElementDeclarationNode({
+        type,
+        name,
+        as,
+        alias,
+        attributeList,
+        body,
+      }) :
+    undefined;
 }
