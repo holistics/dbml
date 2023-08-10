@@ -396,6 +396,12 @@ export default class Lexer {
 
   singleLineComment() {
     this.extractString('//', '\n', [], true, true, SyntaxTokenKind.SINGLE_LINE_COMMENT);
+    if (!this.isAtEnd()) {
+      // The comment ends with a newline,
+      // the newline were consumed by the above function call
+      // backoff to preserve the newline
+      --this.current;
+    }
   }
 
   multilineComment() {

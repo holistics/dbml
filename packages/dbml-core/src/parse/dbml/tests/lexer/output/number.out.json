@@ -39,6 +39,14 @@
           "length": 17,
           "leadingTrivia": [],
           "trailingTrivia": []
+        },
+        {
+          "kind": "<newline>",
+          "offset": 20,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
         }
       ]
     },
@@ -84,7 +92,7 @@
         },
         {
           "kind": "<newline>",
-          "offset": 57,
+          "offset": 55,
           "value": "\n",
           "length": 1,
           "leadingTrivia": [],
@@ -98,6 +106,14 @@
       "value": "",
       "length": 0,
       "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "offset": 57,
+          "value": "\n",
+          "length": 1,
+          "leadingTrivia": [],
+          "trailingTrivia": []
+        },
         {
           "kind": "<space>",
           "offset": 62,
