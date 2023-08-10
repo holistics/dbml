@@ -8,7 +8,7 @@ The following is a set of guidelines for contributing to DBML and its packages, 
 
 - [PEG.js](https://pegjs.org/): DBML uses PEG.js library to parse different database languages and structure them as plain Javascript object.
 - Check out the `parse` folder in `@dbml/core` source code to learn more about how to structure and import different grammars from multiple PEG.js files.
-- When you ready to jump to the source code, look for issues tagged with [help wanted](https://github.com/holistics/dbml/labels/help%20wanted) label to get list of current issues you can make a contribution to or create a new issue for suggesting enhancement.
+- When you're ready to jump to the source code, look for issues tagged with [help wanted](https://github.com/holistics/dbml/labels/help%20wanted) label to get list of current issues you can make a contribution to or create a new issue for suggesting enhancement.
 - Check out DBML [website](https://www.dbml-lang.org/home/) for more documentation on DBML syntax.
 
 ## Developing
