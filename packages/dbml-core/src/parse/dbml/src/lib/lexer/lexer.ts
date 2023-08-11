@@ -20,13 +20,6 @@ export default class Lexer {
     this.text = text;
   }
 
-  private init() {
-    this.start = 0;
-    this.current = 0;
-    this.tokens = [];
-    this.errors = [];
-  }
-
   private isAtEnd(): boolean {
     return this.current >= this.text.length;
   }
@@ -43,6 +36,31 @@ export default class Lexer {
     return this.text[this.current + lookahead];
   }
 
+  // Check if the sequence ahead matches `sequence`
+  check(sequence: string): boolean {
+    for (let i = 0; i < sequence.length; i += 1) {
+      if (sequence[i] !== this.peek(i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // If the sequence ahead matches `sequence`, move `current` past `sequence`
+  match(sequence: string): boolean {
+    if (!this.check(sequence)) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const _ of sequence) {
+      this.advance();
+    }
+
+    return true;
+  }
+
   private addToken(kind: SyntaxTokenKind) {
     this.tokens.push(
       SyntaxToken.create(
@@ -55,7 +73,6 @@ export default class Lexer {
   }
 
   lex(): Report<SyntaxToken[], CompileError> {
-    this.init();
     this.scanTokens();
     this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, 0, ''));
     this.gatherTrivia();
@@ -65,61 +82,48 @@ export default class Lexer {
 
   scanTokens() {
     while (!this.isAtEnd()) {
-      const c: string = this.peek()!;
+      const c = this.advance();
       switch (c) {
         case ' ':
-          this.advance();
           this.addToken(SyntaxTokenKind.SPACE);
           break;
         case '\r':
-          this.advance();
           break;
         case '\n':
-          this.advance();
           this.addToken(SyntaxTokenKind.NEWLINE);
           break;
         case '\t':
-          this.advance();
           this.addToken(SyntaxTokenKind.TAB);
           break;
         case ',':
-          this.advance();
           this.addToken(SyntaxTokenKind.COMMA);
           break;
         case '(':
-          this.advance();
           this.addToken(SyntaxTokenKind.LPAREN);
           break;
         case ')':
-          this.advance();
           this.addToken(SyntaxTokenKind.RPAREN);
           break;
         case '[':
-          this.advance();
           this.addToken(SyntaxTokenKind.LBRACKET);
           break;
         case ']':
-          this.advance();
           this.addToken(SyntaxTokenKind.RBRACKET);
           break;
         case '{':
-          this.advance();
           this.addToken(SyntaxTokenKind.LBRACE);
           break;
         case '}':
-          this.advance();
           this.addToken(SyntaxTokenKind.RBRACE);
           break;
         case ';':
-          this.advance();
           this.addToken(SyntaxTokenKind.SEMICOLON);
           break;
         case ':':
-          this.advance();
           this.addToken(SyntaxTokenKind.COLON);
           break;
         case "'":
-          if (this.checkTripleQuote()) {
+          if (this.match("''")) {
             this.multilineStringLiteral();
           } else {
             this.singleLineStringLiteral();
@@ -135,9 +139,9 @@ export default class Lexer {
           this.colorLiteral();
           break;
         case '/':
-          if (this.peek(1) === '/') {
+          if (this.match('/')) {
             this.singleLineComment();
-          } else if (this.peek(1) === '*') {
+          } else if (this.match('*')) {
             this.multilineComment();
           } else {
             this.operator();
@@ -156,13 +160,12 @@ export default class Lexer {
             this.numericLiteral();
             break;
           }
-          this.advance();
           this.errors.push(
             new CompileError(
               CompileErrorCode.UNKNOWN_SYMBOL,
               `Unexpected token ${c}`,
               this.start,
-              this.current - 1,
+              this.current,
             ),
           );
           break;
@@ -208,58 +211,27 @@ export default class Lexer {
     this.tokens = newTokenList;
   }
 
-  checkTripleQuote() {
-    return this.peek(0) === "'" && this.peek(1) === "'" && this.peek(2) === "'";
-  }
-
-  // Check if the sequence ahead matches the passed-in sequence
-  checkSequenceAhead(sequence: string): boolean {
-    for (let i = 0; i < sequence.length; ++i) {
-      if (sequence[i] !== this.peek(i)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  // Extract a string-like token between `openSequence` and `closeSequence`
-  // For example, for string-literal, `openSequence` and `closeSequence` could be "'''"
-  // `invalidChar` is a list of not-allowed-to-appear characters in the string
-  // `allowEndingEof` indicates whether the string could end with `eof`
-  // `isRawString` indicates whether there can be escaped sequences
-  extractString(
-    openSequence: string,
-    closeSequence: string,
-    invalidChar: string[],
-    allowEndingEof: boolean,
-    isRawString: boolean,
-    stringKind: SyntaxTokenKind,
+  // Consuming characters until the `stopSequence` is encountered
+  consumeUntil(
+    tokenKind: SyntaxTokenKind,
+    stopSequence: string,
+    {
+      allowNewline, // Whether newline is allowed
+      allowEof, // Whether EOF is allowed
+      raw, // Whether to interpret '\' as a backlash
+    }: { allowNewline: boolean; allowEof: boolean; raw: boolean },
   ) {
-    if (!this.checkSequenceAhead(openSequence)) {
-      return;
-    }
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const _ of openSequence) {
-      this.advance();
-    }
-
     let string = '';
 
-    while (
-      !this.isAtEnd() &&
-      !invalidChar.includes(this.peek()!) &&
-      !this.checkSequenceAhead(closeSequence)
-    ) {
-      if (this.peek() === '\\' && !isRawString) {
+    while (!this.isAtEnd() && (allowNewline || !this.check('\n')) && !this.check(stopSequence)) {
+      if (this.peek() === '\\' && raw) {
         string += this.escapedString();
       } else {
         string += this.advance();
       }
     }
 
-    if (this.isAtEnd() && !allowEndingEof) {
+    if (this.isAtEnd() && !allowEof) {
       this.errors.push(
         new CompileError(
           CompileErrorCode.UNEXPECTED_EOF,
@@ -272,13 +244,11 @@ export default class Lexer {
       return;
     }
 
-    if (!this.isAtEnd() && invalidChar.includes(this.peek()!)) {
+    if (this.check('\n') && !allowNewline) {
       this.errors.push(
         new CompileError(
-          this.peek() === '\n' ?
-            CompileErrorCode.UNEXPECTED_NEWLINE :
-            CompileErrorCode.UNEXPECTED_SYMBOL,
-          `Invalid ${this.peek() === '\n' ? 'newline' : 'character'} encountered while parsing`,
+          CompileErrorCode.UNEXPECTED_NEWLINE,
+          'Invalid newline encountered while parsing',
           this.start,
           this.current,
         ),
@@ -289,54 +259,75 @@ export default class Lexer {
 
     this.tokens.push(
       SyntaxToken.create(
-        stringKind,
+        tokenKind,
         this.start,
-        string.length + openSequence.length + closeSequence.length,
+        this.current - this.start + stopSequence.length,
         string,
       ),
     );
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const _ of closeSequence) {
-      this.advance();
-    }
   }
 
   singleLineStringLiteral() {
-    this.extractString("'", "'", ['\n'], false, false, SyntaxTokenKind.STRING_LITERAL);
+    this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, "'", {
+      allowNewline: false,
+      allowEof: false,
+      raw: false,
+    });
+    this.match("'");
   }
 
   multilineStringLiteral() {
-    this.extractString("'''", "'''", [], false, false, SyntaxTokenKind.STRING_LITERAL);
+    this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, "'''", {
+      allowNewline: true,
+      allowEof: false,
+      raw: false,
+    });
+    this.match("'''");
   }
 
   functionExpression() {
-    this.extractString('`', '`', ['\n'], false, false, SyntaxTokenKind.FUNCTION_EXPRESSION);
+    this.consumeUntil(SyntaxTokenKind.FUNCTION_EXPRESSION, '`', {
+      allowNewline: false,
+      allowEof: false,
+      raw: true,
+    });
+    this.match('`');
   }
 
   quotedVariable() {
-    this.extractString('"', '"', ['\n'], false, false, SyntaxTokenKind.QUOTED_STRING);
+    this.consumeUntil(SyntaxTokenKind.QUOTED_STRING, '"', {
+      allowNewline: false,
+      allowEof: false,
+      raw: false,
+    });
+    this.match('"');
+  }
+
+  singleLineComment() {
+    this.consumeUntil(SyntaxTokenKind.SINGLE_LINE_COMMENT, '\n', {
+      allowNewline: true,
+      allowEof: true,
+      raw: true,
+    });
+  }
+
+  multilineComment() {
+    this.consumeUntil(SyntaxTokenKind.MULTILINE_COMMENT, '*/', {
+      allowNewline: true,
+      allowEof: false,
+      raw: true,
+    });
+    this.match('*/');
   }
 
   identifier() {
-    const first = this.peek();
-    if (!first || !isAlphaOrUnderscore(first)) {
-      return;
-    }
-    this.advance();
-    let c = this.peek();
-    while (c && isAlphaNumeric(c)) {
+    while (!this.isAtEnd() && isAlphaNumeric(this.peek()!)) {
       this.advance();
-      c = this.peek();
     }
     this.addToken(SyntaxTokenKind.IDENTIFIER);
   }
 
   operator() {
-    if (!isOp(this.peek())) {
-      return;
-    }
-
     while (isOp(this.peek())) {
       this.advance();
     }
@@ -344,132 +335,81 @@ export default class Lexer {
   }
 
   numericLiteral() {
-    let isFloat = false;
-    const first = this.peek();
-    if (!first || !isDigit(first)) {
-      return;
-    }
-    this.advance();
-    let c = this.peek();
-    while (c && (isDigit(c) || c === '.')) {
-      if (c === '.') {
-        if (isFloat) {
-          break;
-        }
-        isFloat = true;
+    let nDots = 0;
+    while (!this.isAtEnd()) {
+      const isDot = this.check('.');
+      nDots += isDot ? 1 : 0;
+      if (nDots > 1) {
+        break;
       }
+
+      if (!isDot && !isAlphaNumeric(this.peek()!)) {
+        // the only way to return without errors
+        return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
+      }
+
+      if (!isDot && !isDigit(this.peek()!)) {
+        break;
+      }
+
       this.advance();
-      c = this.peek();
+    }
+    // if control reaches here, an invalid number has been encountered
+    // consume all alphanumeric characters or . of the invalid number
+    while (!this.isAtEnd() && (this.check('.') || isAlphaNumeric(this.peek()!))) {
+      this.advance();
     }
 
-    if (c && (isAlphaOrUnderscore(c) || c === '.')) {
-      while (c && (isAlphaNumeric(c) || c === '.')) {
-        this.advance();
-        c = this.peek();
-      }
-      this.errors.push(
-        new CompileError(
-          CompileErrorCode.UNKNOWN_TOKEN,
-          'Invalid number',
-          this.start,
-          this.current,
-        ),
-      );
-    } else {
-      this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
-    }
+    this.errors.push(
+      new CompileError(CompileErrorCode.UNKNOWN_TOKEN, 'Invalid number', this.start, this.current),
+    );
   }
 
   colorLiteral() {
-    const first = this.peek();
-    if (first !== '#') {
-      return;
-    }
-    this.advance();
-    let c = this.peek();
-    while (c && isAlphaNumeric(c)) {
+    while (!this.isAtEnd() && isAlphaNumeric(this.peek()!)) {
       this.advance();
-      c = this.peek();
     }
     this.addToken(SyntaxTokenKind.COLOR_LITERAL);
   }
 
-  singleLineComment() {
-    this.extractString('//', '\n', [], true, true, SyntaxTokenKind.SINGLE_LINE_COMMENT);
-    if (!this.isAtEnd()) {
-      // The comment ends with a newline,
-      // the newline were consumed by the above function call
-      // backoff to preserve the newline
-      --this.current;
-    }
-  }
-
-  multilineComment() {
-    this.extractString('/*', '*/', [], false, true, SyntaxTokenKind.MULTILINE_COMMENT);
-  }
-
   escapedString(): string {
-    this.advance();
-    let char = '';
-    switch (this.peek()) {
+    if (this.isAtEnd()) {
+      return '\\';
+    }
+    switch (this.advance()) {
       case 't':
-        char = '\t';
-        this.advance();
-        break;
+        return '\t';
       case 'n':
-        char = '\n';
-        this.advance();
-        break;
+        return '\n';
       case '\\':
-        char = '\\';
-        this.advance();
-        break;
+        return '\\';
       case 'r':
-        char = '\r';
-        this.advance();
-        break;
+        return '\r';
       case "'":
-        char = "'";
-        this.advance();
-        break;
+        return "'";
       case '"':
-        char = '"';
-        this.advance();
-        break;
+        return '"';
       case '0':
-        char = '\0';
-        this.advance();
-        break;
+        return '\0';
       case 'b':
-        char = '\b';
-        this.advance();
-        break;
+        return '\b';
       case 'v':
-        char = '\v';
-        this.advance();
-        break;
+        return '\v';
       case 'f':
-        char = 'f';
-        this.advance();
-        break;
+        return '\f';
       case 'u': {
         let hex = '';
         for (let i = 0; i <= 3; i += 1) {
-          if (this.peek() && isAlphaNumeric(this.peek()!)) {
-            hex += this.advance();
-          } else {
+          if (this.isAtEnd() || !isAlphaNumeric(this.peek()!)) {
             return `\\u${hex}`;
           }
+          hex += this.advance();
         }
 
         return String.fromCharCode(parseInt(hex, 16));
       }
       default:
-        char = `\\${this.peek()}`;
-        this.advance();
-        break;
+        return `\\${this.tokens[this.current - 1]}`;
     }
-
-    return char;
   }
 }
