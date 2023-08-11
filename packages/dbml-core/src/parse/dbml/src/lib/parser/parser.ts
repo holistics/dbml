@@ -161,7 +161,7 @@ export default class Parser {
     });
   });
 
-  elementDeclarationName(synchronizeHook: SynchronizeHook): NormalFormExpressionNode | undefined {
+  private elementDeclarationName(synchronizeHook: SynchronizeHook): NormalFormExpressionNode | undefined {
     let name: NormalFormExpressionNode | undefined;
     if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
       synchronizeHook(
@@ -174,7 +174,7 @@ export default class Parser {
     return name;
   }
 
-  synchronizeElementDeclarationName = () => {
+  private synchronizeElementDeclarationName = () => {
     while (!this.isAtEnd()) {
       const token = this.peek();
       if (
@@ -188,7 +188,7 @@ export default class Parser {
     }
   };
 
-  elementDeclarationAlias(synchronizeHook: SynchronizeHook): {
+  private elementDeclarationAlias(synchronizeHook: SynchronizeHook): {
     as?: SyntaxToken;
     alias?: NormalFormExpressionNode;
   } {
@@ -209,7 +209,7 @@ export default class Parser {
     return { as, alias };
   }
 
-  synchronizeElementDeclarationAlias = () => {
+  private synchronizeElementDeclarationAlias = () => {
     while (!this.isAtEnd()) {
       const token = this.peek();
       if (this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
@@ -220,7 +220,7 @@ export default class Parser {
     }
   };
 
-  elementDeclarationBody(): { bodyOpenColon?: SyntaxToken; body: ExpressionNode } {
+  private elementDeclarationBody(): { bodyOpenColon?: SyntaxToken; body: ExpressionNode } {
     let body: ExpressionNode | BlockExpressionNode | undefined;
     let bodyOpenColon: SyntaxToken | undefined;
 
