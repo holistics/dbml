@@ -74,6 +74,8 @@ export enum CompileErrorCode {
 
   INVALID_CUSTOM_CONTEXT,
   INVALID_CUSTOM_ELEMENT_VALUE,
+
+  BINDING_ERROR = 4000,
 }
 
 export class CompileError extends Error {

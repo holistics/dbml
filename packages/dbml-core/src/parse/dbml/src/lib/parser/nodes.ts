@@ -1,10 +1,12 @@
 import { findEnd } from '../utils';
 import { SyntaxToken } from '../lexer/tokens';
+import { NodeSymbol } from '../analyzer/symbol/symbols';
 
 export interface SyntaxNode {
   kind: SyntaxNodeKind;
   start: number;
   end: number;
+  symbol?: NodeSymbol;
 }
 
 export enum SyntaxNodeKind {
@@ -41,6 +43,8 @@ export class ProgramNode implements SyntaxNode {
   eof: SyntaxToken;
 
   invalid: (SyntaxToken | SyntaxNode)[];
+
+  symbol?: NodeSymbol;
 
   constructor({
     body,
@@ -79,6 +83,10 @@ export class ElementDeclarationNode implements SyntaxNode {
   bodyOpenColon?: SyntaxToken;
 
   body: ExpressionNode | BlockExpressionNode;
+
+  symbol?: NodeSymbol;
+
+  parentElement?: ElementDeclarationNode;
 
   constructor({
     type,
@@ -121,6 +129,8 @@ export class AttributeNode implements SyntaxNode {
   valueOpenColon?: SyntaxToken;
 
   value?: NormalFormExpressionNode | SyntaxToken[];
+
+  symbol?: NodeSymbol;
 
   constructor({
     name,
@@ -186,6 +196,8 @@ export class PrefixExpressionNode implements SyntaxNode {
 
   expression: NormalFormExpressionNode;
 
+  symbol?: NodeSymbol;
+
   constructor({ op, expression }: { op: SyntaxToken; expression: NormalFormExpressionNode }) {
     this.start = op.offset;
     this.end = expression.end;
@@ -206,6 +218,8 @@ export class InfixExpressionNode implements SyntaxNode {
   leftExpression: NormalFormExpressionNode;
 
   rightExpression: NormalFormExpressionNode;
+
+  symbol?: NodeSymbol;
 
   constructor({
     op,
@@ -235,6 +249,8 @@ export class PostfixExpressionNode implements SyntaxNode {
 
   expression: NormalFormExpressionNode;
 
+  symbol?: NodeSymbol;
+
   constructor({ op, expression }: { op: SyntaxToken; expression: NormalFormExpressionNode }) {
     this.start = expression.start;
     this.end = op.offset + 1;
@@ -251,6 +267,8 @@ export class FunctionExpressionNode implements SyntaxNode {
   end: Readonly<number>;
 
   value: SyntaxToken;
+
+  symbol?: NodeSymbol;
 
   constructor({ value }: { value: SyntaxToken }) {
     this.start = value.offset;
@@ -269,6 +287,8 @@ export class FunctionApplicationNode implements SyntaxNode {
   callee: ExpressionNode;
 
   args: ExpressionNode[];
+
+  symbol?: NodeSymbol;
 
   constructor({ callee, args }: { callee: ExpressionNode; args: ExpressionNode[] }) {
     this.start = callee.start;
@@ -294,6 +314,8 @@ export class BlockExpressionNode implements SyntaxNode {
   body: ExpressionNode[];
 
   blockCloseBrace: SyntaxToken;
+
+  symbol?: NodeSymbol;
 
   constructor({
     blockOpenBrace,
@@ -326,6 +348,8 @@ export class ListExpressionNode implements SyntaxNode {
   commaList: SyntaxToken[];
 
   listCloseBracket: SyntaxToken;
+
+  symbol?: NodeSymbol;
 
   constructor({
     listOpenBracket,
@@ -363,6 +387,8 @@ export class TupleExpressionNode implements SyntaxNode {
 
   tupleCloseParen: SyntaxToken;
 
+  symbol?: NodeSymbol;
+
   constructor({
     tupleOpenParen,
     elementList,
@@ -385,6 +411,8 @@ export class TupleExpressionNode implements SyntaxNode {
 
 export class GroupExpressionNode extends TupleExpressionNode {
   kind: SyntaxNodeKind.GROUP_EXPRESSION = SyntaxNodeKind.GROUP_EXPRESSION;
+
+  symbol?: NodeSymbol;
 
   constructor({
     groupOpenParen,
@@ -415,6 +443,8 @@ export class CallExpressionNode implements SyntaxNode {
 
   argumentList: TupleExpressionNode;
 
+  symbol?: NodeSymbol;
+
   constructor({
     callee,
     argumentList,
@@ -438,6 +468,8 @@ export class LiteralNode implements SyntaxNode {
 
   literal: SyntaxToken;
 
+  symbol?: NodeSymbol;
+
   constructor({ literal }: { literal: SyntaxToken }) {
     this.start = literal.offset;
     this.end = literal.offset + literal.length;
@@ -454,6 +486,8 @@ export class VariableNode implements SyntaxNode {
 
   variable: SyntaxToken;
 
+  symbol?: NodeSymbol;
+
   constructor({ variable }: { variable: SyntaxToken }) {
     this.start = variable.offset;
     this.end = variable.offset + variable.length;
@@ -469,6 +503,8 @@ export class PrimaryExpressionNode implements SyntaxNode {
   end: Readonly<number>;
 
   expression: LiteralNode | VariableNode;
+
+  symbol?: NodeSymbol;
 
   constructor({ expression }: { expression: LiteralNode | VariableNode }) {
     this.start = expression.start;
