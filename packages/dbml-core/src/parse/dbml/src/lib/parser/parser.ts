@@ -124,7 +124,7 @@ export default class Parser {
     return body;
   });
 
-  private synchronizeProgram() {
+  private synchronizeProgram = () => {
     const invalidToken = this.peek();
     if (invalidToken.kind !== SyntaxTokenKind.EOF) {
       this.invalid.push(this.advance());
@@ -161,7 +161,9 @@ export default class Parser {
     });
   });
 
-  private elementDeclarationName(synchronizeHook: SynchronizeHook): NormalFormExpressionNode | undefined {
+  private elementDeclarationName(
+    synchronizeHook: SynchronizeHook,
+  ): NormalFormExpressionNode | undefined {
     let name: NormalFormExpressionNode | undefined;
     if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
       synchronizeHook(
