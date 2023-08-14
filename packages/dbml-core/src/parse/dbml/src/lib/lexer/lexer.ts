@@ -224,7 +224,7 @@ export default class Lexer {
     let string = '';
 
     while (!this.isAtEnd() && (allowNewline || !this.check('\n')) && !this.check(stopSequence)) {
-      if (this.peek() === '\\' && raw) {
+      if (this.peek() === '\\' && !raw) {
         string += this.escapedString();
       } else {
         string += this.advance();
