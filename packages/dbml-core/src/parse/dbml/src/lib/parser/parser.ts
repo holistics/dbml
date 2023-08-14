@@ -141,13 +141,9 @@ export default class Parser {
 
     const name = this.elementDeclarationName(synchronizeHook);
     const { as, alias } = this.elementDeclarationAlias(synchronizeHook);
-
-    // Parsing attribute list for complex element declarations
-    // e.g Table Users [headercolor: #abc] { }
     const attributeList = this.check(SyntaxTokenKind.LBRACKET) ? this.listExpression() : undefined;
 
     this.discardUntil('Expect { or :', SyntaxTokenKind.LBRACE, SyntaxTokenKind.COLON);
-
     const { bodyOpenColon, body } = this.elementDeclarationBody();
 
     return new ElementDeclarationNode({
