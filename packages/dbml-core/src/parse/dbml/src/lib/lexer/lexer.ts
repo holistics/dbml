@@ -225,6 +225,7 @@ export default class Lexer {
 
     while (!this.isAtEnd() && (allowNewline || !this.check('\n')) && !this.check(stopSequence)) {
       if (this.peek() === '\\' && !raw) {
+        this.advance();
         string += this.escapedString();
       } else {
         string += this.advance();
