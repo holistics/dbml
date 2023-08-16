@@ -739,8 +739,8 @@ export default class Parser {
       } catch (e) {
         if (
           e instanceof CompileError &&
-          e.token &&
-          ignoredInvalidTokenKinds.includes(e.token.kind)
+          e.isTokenError() &&
+          ignoredInvalidTokenKinds.includes(e.nodeOrToken.kind)
         ) {
           synchronizeCallback();
         } else {
@@ -770,54 +770,19 @@ export default class Parser {
   }
 
   // This method is expected to called when the error is resolved
-  private logError(tokenOrNode: SyntaxToken | SyntaxNode, code: CompileErrorCode, message: string) {
-    const e =
-      tokenOrNode instanceof SyntaxToken ?
-        new CompileError(
-            code,
-            message,
-            tokenOrNode.offset,
-            tokenOrNode.offset + tokenOrNode.length,
-            tokenOrNode,
-            undefined,
-          ) :
-        new CompileError(
-            code,
-            message,
-            tokenOrNode.start,
-            tokenOrNode.end,
-            undefined,
-            tokenOrNode,
-          );
-    this.errors.push(e);
+  private logError(nodeOrToken: SyntaxToken | SyntaxNode, code: CompileErrorCode, message: string) {
+    this.errors.push(new CompileError(code, message, nodeOrToken));
   }
 
   // This method does not push to `this.invalid`
   // as the error is rethrown and only where the error is handled
   // and synchronized would that token be pushed onto `this.invalid`
   private logAndThrowError(
-    tokenOrNode: SyntaxToken | SyntaxNode,
+    nodeOrToken: SyntaxToken | SyntaxNode,
     code: CompileErrorCode,
     message: string,
   ): never {
-    const e =
-      tokenOrNode instanceof SyntaxToken ?
-        new CompileError(
-            code,
-            message,
-            tokenOrNode.offset,
-            tokenOrNode.offset + tokenOrNode.length,
-            tokenOrNode,
-            undefined,
-          ) :
-        new CompileError(
-            code,
-            message,
-            tokenOrNode.start,
-            tokenOrNode.end,
-            undefined,
-            tokenOrNode,
-          );
+    const e = new CompileError(code, message, nodeOrToken);
     this.errors.push(e);
     throw e;
   }

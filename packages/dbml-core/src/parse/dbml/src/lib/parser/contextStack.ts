@@ -168,8 +168,8 @@ export class ParsingContextStack {
     try {
       mayThrow();
     } catch (e) {
-      if (e instanceof CompileError && e.token) {
-        this.goToHandlerContext(e.token);
+      if (e instanceof CompileError && e.isTokenError()) {
+        this.goToHandlerContext(e.nodeOrToken);
         synchronizationCallback();
       } else if (e instanceof ContextJumpMessage && e.offset === 0) {
         synchronizationCallback();
