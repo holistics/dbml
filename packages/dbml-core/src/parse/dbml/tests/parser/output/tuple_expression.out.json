@@ -1155,7 +1155,7 @@
       "diagnostic": "Invalid start of operand \")\"",
       "start": 74,
       "end": 75,
-      "value": {
+      "token": {
         "kind": "<rparen>",
         "offset": 74,
         "value": ")",

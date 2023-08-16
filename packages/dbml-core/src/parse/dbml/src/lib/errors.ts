@@ -1,3 +1,6 @@
+import { SyntaxToken } from './lexer/tokens';
+import { SyntaxNode } from './parser/nodes';
+
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,
 
@@ -87,15 +90,25 @@ export class CompileError extends Error {
 
   end: Readonly<number>;
 
-  value: unknown;
+  token?: SyntaxToken; // The token that causes the error
 
-  constructor(code: number, message: string, start: number, end: number, value?: unknown) {
+  node?: SyntaxNode; // The node that causes the error
+
+  constructor(
+    code: number,
+    message: string,
+    start: number,
+    end: number,
+    token?: SyntaxToken,
+    node?: SyntaxNode,
+  ) {
     super(message);
     this.code = code;
     this.diagnostic = message;
     this.start = start;
     this.end = end;
-    this.value = value;
+    this.token = token;
+    this.node = node;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileError.prototype);
   }

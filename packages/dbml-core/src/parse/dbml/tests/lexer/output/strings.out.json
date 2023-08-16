@@ -20,7 +20,7 @@
     {
       "kind": "<variable>",
       "offset": 29,
-      "value": "This is a quoted string \\nwith a newline\\n",
+      "value": "This is a quoted string \nwith a newline\n",
       "length": 44,
       "leadingTrivia": [
         {
@@ -72,7 +72,7 @@
     {
       "kind": "<string>",
       "offset": 107,
-      "value": "This is a string literal \\nwith a newline\\n",
+      "value": "This is a string literal \nwith a newline\n",
       "length": 45,
       "leadingTrivia": [
         {

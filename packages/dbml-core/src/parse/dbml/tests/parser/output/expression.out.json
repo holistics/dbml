@@ -3856,7 +3856,7 @@
       "diagnostic": "Unexpected prefix ** in an expression",
       "start": 23,
       "end": 25,
-      "value": {
+      "token": {
         "kind": "<op>",
         "offset": 23,
         "value": "**",
