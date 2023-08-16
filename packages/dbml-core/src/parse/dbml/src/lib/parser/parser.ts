@@ -168,7 +168,7 @@ export default class Parser {
     if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
       this.contextStack.synchronizeHook(
         // eslint-disable-next-line no-return-assign
-        () => (name = this.normalFormExpression()),
+        () => (name = this.normalExpression()),
         this.synchronizeElementDeclarationName,
       );
     }
@@ -202,7 +202,7 @@ export default class Parser {
       if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
         this.contextStack.synchronizeHook(
           // eslint-disable-next-line no-return-assign
-          () => (alias = this.normalFormExpression()),
+          () => (alias = this.normalExpression()),
           this.synchronizeElementDeclarationAlias,
         );
       }
@@ -265,7 +265,7 @@ export default class Parser {
   private expression(): ExpressionNode {
     // Since function application expression is the most generic form
     // by default, we'll interpret any expression as a function application
-    const callee: NormalExpressionNode = this.normalFormExpression();
+    const callee: NormalExpressionNode = this.normalExpression();
     const args: NormalExpressionNode[] = [];
 
     // If there are newlines after the callee, then it's a simple expression
@@ -288,7 +288,7 @@ export default class Parser {
         this.pushInvalid(prevNode);
         this.logError(prevNode, CompileErrorCode.MISSING_SPACES, 'Expect a following space');
       }
-      prevNode = this.normalFormExpression();
+      prevNode = this.normalExpression();
       args.push(prevNode);
     }
 
@@ -299,7 +299,7 @@ export default class Parser {
     );
   }
 
-  private normalFormExpression(): NormalExpressionNode {
+  private normalExpression(): NormalExpressionNode {
     return this.expression_bp(0);
   }
 
@@ -533,7 +533,7 @@ export default class Parser {
 
     if (!this.isAtEnd() && !this.check(SyntaxTokenKind.RPAREN)) {
       this.contextStack.synchronizeHook(
-        () => elementList.push(this.normalFormExpression()),
+        () => elementList.push(this.normalExpression()),
         this.synchronizeTuple,
       );
     }
@@ -542,7 +542,7 @@ export default class Parser {
       this.contextStack.synchronizeHook(() => {
         this.consume('Expect ,', SyntaxTokenKind.COMMA);
         commaList.push(this.previous());
-        elementList.push(this.normalFormExpression());
+        elementList.push(this.normalExpression());
       }, this.synchronizeTuple);
     }
 
@@ -707,7 +707,7 @@ export default class Parser {
     }
 
     try {
-      return this.normalFormExpression();
+      return this.normalExpression();
     } catch (e) {
       if (!(e instanceof CompileError)) {
         throw e;
