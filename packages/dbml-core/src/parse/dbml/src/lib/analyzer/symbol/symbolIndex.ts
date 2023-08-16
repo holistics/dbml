@@ -17,7 +17,7 @@ export function createEnumSymbolId(key: string): NodeSymbolId {
   return `Enum:${key}`;
 }
 
-export function createEnumElementSymbolId(key: string): NodeSymbolId {
+export function createEnumFieldSymbolId(key: string): NodeSymbolId {
   return `Enum field:${key}`;
 }
 
@@ -25,7 +25,7 @@ export function createTableGroupSymbolId(key: string): NodeSymbolId {
   return `TableGroup:${key}`;
 }
 
-export function TableGroupElementSymbolId(key: string): NodeSymbolId {
+export function TableGroupFieldSymbolId(key: string): NodeSymbolId {
   return `Tablegroup field:${key}`;
 }
 
