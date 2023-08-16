@@ -422,9 +422,7 @@
     {
       "code": 1008,
       "diagnostic": "Unexpected prefix ** in an expression",
-      "start": 29,
-      "end": 31,
-      "token": {
+      "nodeOrToken": {
         "kind": "<op>",
         "offset": 29,
         "value": "**",

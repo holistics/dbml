@@ -140,8 +140,14 @@
     {
       "code": 1004,
       "diagnostic": "Invalid number",
-      "start": 43,
-      "end": 45,
+      "nodeOrToken": {
+        "kind": "<number>",
+        "offset": 43,
+        "value": "3a",
+        "length": 2,
+        "leadingTrivia": [],
+        "trailingTrivia": []
+      },
       "name": "CompileError"
     }
   ]

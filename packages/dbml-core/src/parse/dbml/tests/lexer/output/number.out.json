@@ -154,22 +154,40 @@
     {
       "code": 1004,
       "diagnostic": "Invalid number",
-      "start": 58,
-      "end": 62,
+      "nodeOrToken": {
+        "kind": "<number>",
+        "offset": 58,
+        "value": "8.6a",
+        "length": 4,
+        "leadingTrivia": [],
+        "trailingTrivia": []
+      },
       "name": "CompileError"
     },
     {
       "code": 1004,
       "diagnostic": "Invalid number",
-      "start": 63,
-      "end": 69,
+      "nodeOrToken": {
+        "kind": "<number>",
+        "offset": 63,
+        "value": "24.10b",
+        "length": 6,
+        "leadingTrivia": [],
+        "trailingTrivia": []
+      },
       "name": "CompileError"
     },
     {
       "code": 1004,
       "diagnostic": "Invalid number",
-      "start": 70,
-      "end": 79,
+      "nodeOrToken": {
+        "kind": "<number>",
+        "offset": 70,
+        "value": "1.2.3.4.5",
+        "length": 9,
+        "leadingTrivia": [],
+        "trailingTrivia": []
+      },
       "name": "CompileError"
     }
   ]

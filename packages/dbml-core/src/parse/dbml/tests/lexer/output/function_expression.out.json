@@ -155,15 +155,27 @@
     {
       "code": 1003,
       "diagnostic": "Invalid newline encountered while parsing",
-      "start": 18,
-      "end": 20,
+      "nodeOrToken": {
+        "kind": "<string>",
+        "offset": 18,
+        "value": "`\r",
+        "length": 2,
+        "leadingTrivia": [],
+        "trailingTrivia": []
+      },
       "name": "CompileError"
     },
     {
       "code": 1002,
       "diagnostic": "Eof reached while parsing",
-      "start": 33,
-      "end": 34,
+      "nodeOrToken": {
+        "kind": "<string>",
+        "offset": 33,
+        "value": "`",
+        "length": 1,
+        "leadingTrivia": [],
+        "trailingTrivia": []
+      },
       "name": "CompileError"
     }
   ]

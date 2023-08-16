@@ -1,4 +1,4 @@
-import { findEnd } from '../utils';
+import { findEnd, last } from '../utils';
 import { SyntaxToken } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
 
@@ -13,10 +13,14 @@ export enum SyntaxNodeKind {
   PROGRAM = '<program>',
   ELEMENT_DECLARATION = '<element-declaration>',
   ATTRIBUTE = '<attribute>',
+  // A node that represents a contiguous stream of identifiers
+  // Attribute name or value may use this
+  // e.g [primary key] -> 'primary' 'key'
+  // e.g [update: no action] -> 'no' 'action'
+  IDENTIFIER_STREAM = '<identifer-stream>',
 
   LITERAL = '<literal>',
   VARIABLE = '<variable>',
-  INVALID_EXPRESSION = '<invalid-expression>',
   PREFIX_EXPRESSION = '<prefix-expression>',
   INFIX_EXPRESSION = '<infix-expression>',
   POSTFIX_EXPRESSION = '<postfix-expression>',
@@ -117,6 +121,24 @@ export class ElementDeclarationNode implements SyntaxNode {
   }
 }
 
+export class IdentiferStreamNode implements SyntaxNode {
+  kind: SyntaxNodeKind.IDENTIFIER_STREAM = SyntaxNodeKind.IDENTIFIER_STREAM;
+
+  start: Readonly<number>;
+
+  end: Readonly<number>;
+
+  identifiers: SyntaxToken[];
+
+  constructor({ identifiers }: { identifiers: SyntaxToken[] }) {
+    if (identifiers.length === 0) {
+      throw new Error("An IdentifierStreamNode shouldn't be created with zero tokens");
+    }
+    this.identifiers = identifiers;
+    this.start = this.identifiers[0].offset;
+    this.end = findEnd(last(identifiers)!);
+  }
+}
 export class AttributeNode implements SyntaxNode {
   kind: SyntaxNodeKind.ATTRIBUTE = SyntaxNodeKind.ATTRIBUTE;
 
@@ -124,11 +146,11 @@ export class AttributeNode implements SyntaxNode {
 
   end: Readonly<number>;
 
-  name: SyntaxToken[];
+  name: IdentiferStreamNode;
 
   valueOpenColon?: SyntaxToken;
 
-  value?: NormalExpressionNode | SyntaxToken[];
+  value?: NormalExpressionNode | IdentiferStreamNode;
 
   symbol?: NodeSymbol;
 
@@ -137,32 +159,18 @@ export class AttributeNode implements SyntaxNode {
     valueOpenColon,
     value,
   }: {
-    name: SyntaxToken[];
+    name: IdentiferStreamNode;
     valueOpenColon?: SyntaxToken;
-    value?: NormalExpressionNode | SyntaxToken[];
+    value?: NormalExpressionNode | IdentiferStreamNode;
   }) {
     this.name = name;
     this.value = value;
     this.valueOpenColon = valueOpenColon;
-
-    if (this.name.length === 0) {
-      this.start = this.valueOpenColon ? this.valueOpenColon.offset : -1;
-    } else {
-      this.start = this.name[0].offset;
+    this.start = this.name.start;
+    if (valueOpenColon && !value) {
+      throw new Error("An AttributeNode shouldn't be created with a colon but no value");
     }
-
-    if (!this.valueOpenColon) {
-      this.end = this.name.length === 0 ? -1 : findEnd(this.name[this.name.length - 1]);
-    } else if (!this.value) {
-      this.end = findEnd(this.valueOpenColon);
-    } else if (!Array.isArray(this.value)) {
-      this.end = this.value.end;
-    } else {
-      this.end =
-        this.value.length === 0 ?
-          findEnd(this.valueOpenColon) :
-          findEnd(this.value[this.value.length - 1]);
-    }
+    this.end = valueOpenColon ? value!.end : name.end;
   }
 }
 

@@ -175,22 +175,40 @@
     {
       "code": 1003,
       "diagnostic": "Invalid newline encountered while parsing",
-      "start": 156,
-      "end": 191,
+      "nodeOrToken": {
+        "kind": "<string>",
+        "offset": 156,
+        "value": "\"This is an unclosed quoted string\r",
+        "length": 35,
+        "leadingTrivia": [],
+        "trailingTrivia": []
+      },
       "name": "CompileError"
     },
     {
       "code": 1003,
       "diagnostic": "Invalid newline encountered while parsing",
-      "start": 194,
-      "end": 230,
+      "nodeOrToken": {
+        "kind": "<string>",
+        "offset": 194,
+        "value": "'This is an unclosed string literal\r",
+        "length": 36,
+        "leadingTrivia": [],
+        "trailingTrivia": []
+      },
       "name": "CompileError"
     },
     {
       "code": 1002,
       "diagnostic": "Eof reached while parsing",
-      "start": 271,
-      "end": 312,
+      "nodeOrToken": {
+        "kind": "<string>",
+        "offset": 271,
+        "value": "'''This is an unclosed multiline string\r\n",
+        "length": 41,
+        "leadingTrivia": [],
+        "trailingTrivia": []
+      },
       "name": "CompileError"
     }
   ]

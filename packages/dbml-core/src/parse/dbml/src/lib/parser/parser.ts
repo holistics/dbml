@@ -1,4 +1,4 @@
-import { convertFuncAppToElem, isAsKeyword } from './utils';
+import { canBuildAttributeNode, convertFuncAppToElem, isAsKeyword } from './utils';
 import { CompileError, CompileErrorCode } from '../errors';
 import { SyntaxToken, SyntaxTokenKind, isOpToken } from '../lexer/tokens';
 import Report from '../report';
@@ -13,6 +13,7 @@ import {
   FunctionApplicationNode,
   FunctionExpressionNode,
   GroupExpressionNode,
+  IdentiferStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
@@ -94,10 +95,10 @@ export default class Parser {
   // If any tokens are discarded, the error message is logged
   private discardUntil(message: string, ...kind: SyntaxTokenKind[]): boolean {
     if (!this.check(...kind)) {
-      this.invalid.push(this.peek());
+      this.pushInvalid(this.peek());
       this.logError(this.advance(), CompileErrorCode.UNEXPECTED_TOKEN, message);
       while (!this.isAtEnd() && !this.check(...kind)) {
-        this.invalid.push(this.advance());
+        this.pushInvalid(this.advance());
       }
 
       return false;
@@ -131,8 +132,9 @@ export default class Parser {
   private synchronizeProgram = () => {
     const invalidToken = this.peek();
     if (invalidToken.kind !== SyntaxTokenKind.EOF) {
-      this.invalid.push(this.advance());
+      this.pushInvalid(this.advance());
     } else {
+      this.pushInvalid(this.peek());
       this.logError(invalidToken, CompileErrorCode.UNEXPECTED_EOF, 'Unexpected EOF');
     }
   };
@@ -183,7 +185,7 @@ export default class Parser {
       ) {
         break;
       }
-      this.invalid.push(token);
+      this.pushInvalid(token);
       this.advance();
     }
   };
@@ -215,7 +217,7 @@ export default class Parser {
       if (this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
         break;
       }
-      this.invalid.push(token);
+      this.pushInvalid(token);
       this.advance();
     }
   };
@@ -283,6 +285,7 @@ export default class Parser {
 
     while (!this.isAtEnd() && !this.hasTrailingNewLines(this.previous())) {
       if (!this.hasTrailingSpaces(this.previous())) {
+        this.pushInvalid(prevNode);
         this.logError(prevNode, CompileErrorCode.MISSING_SPACES, 'Expect a following space');
       }
       prevNode = this.normalFormExpression();
@@ -480,7 +483,7 @@ export default class Parser {
       if (this.check(SyntaxTokenKind.RBRACE) || this.isAtStartOfLine(this.previous(), token)) {
         break;
       }
-      this.invalid.push(token);
+      this.pushInvalid(token);
       this.advance();
     }
   };
@@ -572,7 +575,7 @@ export default class Parser {
       if (this.check(SyntaxTokenKind.RPAREN, SyntaxTokenKind.COMMA)) {
         break;
       }
-      this.invalid.push(token);
+      this.pushInvalid(token);
       this.advance();
     }
   };
@@ -624,17 +627,15 @@ export default class Parser {
       if (this.check(SyntaxTokenKind.COMMA, SyntaxTokenKind.RBRACKET)) {
         break;
       }
-      this.invalid.push(token);
+      this.pushInvalid(token);
       this.advance();
     }
   };
 
   private attribute(): AttributeNode | undefined {
-    let valueOpenColon: SyntaxToken | undefined;
-    let value: NormalExpressionNode | SyntaxToken[] | undefined;
-
     if (this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.RBRACKET, SyntaxTokenKind.COMMA)) {
       const token = this.peek();
+      this.pushInvalid(token);
       this.logError(
         token,
         CompileErrorCode.EMPTY_ATTRIBUTE_NAME,
@@ -650,22 +651,27 @@ export default class Parser {
     ];
     const name = this.attributeName(ignoredInvalidTokenKinds);
 
+    let valueOpenColon: SyntaxToken | undefined;
+    let value: NormalExpressionNode | IdentiferStreamNode | undefined;
     if (this.match(SyntaxTokenKind.COLON)) {
       valueOpenColon = this.previous();
       value = this.attributeValue(ignoredInvalidTokenKinds);
     }
 
-    const attribute = new AttributeNode({ name, valueOpenColon, value });
-    if (name.length === 0) {
-      this.invalid.push(attribute);
+    if (!canBuildAttributeNode(name, valueOpenColon, value)) {
+      this.pushInvalid(name);
+      this.pushInvalid(valueOpenColon);
+      this.pushInvalid(value);
 
       return undefined;
     }
 
-    return attribute;
+    return new AttributeNode({ name, valueOpenColon, value });
   }
 
-  private attributeName(ignoredInvalidTokenKinds: SyntaxTokenKind[]): SyntaxToken[] {
+  private attributeName(
+    ignoredInvalidTokenKinds: SyntaxTokenKind[],
+  ): IdentiferStreamNode | undefined {
     return this.extractIdentifierStream(
       SyntaxTokenKind.RBRACKET,
       SyntaxTokenKind.COMMA,
@@ -680,14 +686,14 @@ export default class Parser {
       if (this.check(SyntaxTokenKind.COMMA, SyntaxTokenKind.RBRACKET, SyntaxTokenKind.COLON)) {
         break;
       }
-      this.invalid.push(token);
+      this.pushInvalid(token);
       this.advance();
     }
   };
 
   private attributeValue(
     ignoredInvalidTokenKinds: SyntaxTokenKind[],
-  ): NormalExpressionNode | SyntaxToken[] | undefined {
+  ): NormalExpressionNode | IdentiferStreamNode | undefined {
     if (
       this.peek().kind === SyntaxTokenKind.IDENTIFIER &&
       this.peek(1).kind === SyntaxTokenKind.IDENTIFIER
@@ -717,7 +723,7 @@ export default class Parser {
       if (this.check(SyntaxTokenKind.COMMA, SyntaxTokenKind.RBRACKET)) {
         break;
       }
-      this.invalid.push(token);
+      this.pushInvalid(token);
       this.advance();
     }
   };
@@ -729,12 +735,12 @@ export default class Parser {
     separator: SyntaxTokenKind,
     ignoredInvalidTokenKinds: SyntaxTokenKind[],
     synchronizeCallback: () => void,
-  ): SyntaxToken[] {
-    const stream: SyntaxToken[] = [];
+  ): IdentiferStreamNode | undefined {
+    const identifiers: SyntaxToken[] = [];
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.COLON, closing, separator)) {
       try {
         this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
-        stream.push(this.previous());
+        identifiers.push(this.previous());
       } catch (e) {
         if (
           e instanceof CompileError &&
@@ -748,7 +754,7 @@ export default class Parser {
       }
     }
 
-    return stream;
+    return identifiers.length === 0 ? undefined : new IdentiferStreamNode({ identifiers });
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -768,14 +774,10 @@ export default class Parser {
     return token.trailingTrivia.find(({ kind }) => kind === SyntaxTokenKind.SPACE) !== undefined;
   }
 
-  // This method is expected to called when the error is resolved
   private logError(nodeOrToken: SyntaxToken | SyntaxNode, code: CompileErrorCode, message: string) {
     this.errors.push(new CompileError(code, message, nodeOrToken));
   }
 
-  // This method does not push to `this.invalid`
-  // as the error is rethrown and only where the error is handled
-  // and synchronized would that token be pushed onto `this.invalid`
   private logAndThrowError(
     nodeOrToken: SyntaxToken | SyntaxNode,
     code: CompileErrorCode,
@@ -784,6 +786,12 @@ export default class Parser {
     const e = new CompileError(code, message, nodeOrToken);
     this.errors.push(e);
     throw e;
+  }
+
+  private pushInvalid(nodeOrToken?: SyntaxToken | SyntaxNode) {
+    if (nodeOrToken) {
+      this.invalid.push(nodeOrToken);
+    }
   }
 }
 

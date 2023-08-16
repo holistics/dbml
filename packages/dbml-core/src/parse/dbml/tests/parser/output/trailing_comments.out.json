@@ -610,16 +610,21 @@
                         "elementList": [
                           {
                             "kind": "<attribute>",
-                            "name": [
-                              {
-                                "kind": "<identifier>",
-                                "offset": 132,
-                                "value": "pk",
-                                "length": 2,
-                                "leadingTrivia": [],
-                                "trailingTrivia": []
-                              }
-                            ],
+                            "name": {
+                              "kind": "<identifer-stream>",
+                              "identifiers": [
+                                {
+                                  "kind": "<identifier>",
+                                  "offset": 132,
+                                  "value": "pk",
+                                  "length": 2,
+                                  "leadingTrivia": [],
+                                  "trailingTrivia": []
+                                }
+                              ],
+                              "start": 132,
+                              "end": 134
+                            },
                             "start": 132,
                             "end": 134
                           }
@@ -757,16 +762,21 @@
                         "elementList": [
                           {
                             "kind": "<attribute>",
-                            "name": [
-                              {
-                                "kind": "<identifier>",
-                                "offset": 180,
-                                "value": "name",
-                                "length": 4,
-                                "leadingTrivia": [],
-                                "trailingTrivia": []
-                              }
-                            ],
+                            "name": {
+                              "kind": "<identifer-stream>",
+                              "identifiers": [
+                                {
+                                  "kind": "<identifier>",
+                                  "offset": 180,
+                                  "value": "name",
+                                  "length": 4,
+                                  "leadingTrivia": [],
+                                  "trailingTrivia": []
+                                }
+                              ],
+                              "start": 180,
+                              "end": 184
+                            },
                             "value": {
                               "kind": "<primary-expression>",
                               "start": 186,
@@ -807,16 +817,21 @@
                           },
                           {
                             "kind": "<attribute>",
-                            "name": [
-                              {
-                                "kind": "<identifier>",
-                                "offset": 206,
-                                "value": "note",
-                                "length": 4,
-                                "leadingTrivia": [],
-                                "trailingTrivia": []
-                              }
-                            ],
+                            "name": {
+                              "kind": "<identifer-stream>",
+                              "identifiers": [
+                                {
+                                  "kind": "<identifier>",
+                                  "offset": 206,
+                                  "value": "note",
+                                  "length": 4,
+                                  "leadingTrivia": [],
+                                  "trailingTrivia": []
+                                }
+                              ],
+                              "start": 206,
+                              "end": 210
+                            },
                             "value": {
                               "kind": "<primary-expression>",
                               "start": 212,
@@ -1127,16 +1142,21 @@
                         "elementList": [
                           {
                             "kind": "<attribute>",
-                            "name": [
-                              {
-                                "kind": "<identifier>",
-                                "offset": 272,
-                                "value": "unique",
-                                "length": 6,
-                                "leadingTrivia": [],
-                                "trailingTrivia": []
-                              }
-                            ],
+                            "name": {
+                              "kind": "<identifer-stream>",
+                              "identifiers": [
+                                {
+                                  "kind": "<identifier>",
+                                  "offset": 272,
+                                  "value": "unique",
+                                  "length": 6,
+                                  "leadingTrivia": [],
+                                  "trailingTrivia": []
+                                }
+                              ],
+                              "start": 272,
+                              "end": 278
+                            },
                             "start": 272,
                             "end": 278
                           }
@@ -1258,16 +1278,21 @@
                         "elementList": [
                           {
                             "kind": "<attribute>",
-                            "name": [
-                              {
-                                "kind": "<identifier>",
-                                "offset": 301,
-                                "value": "type",
-                                "length": 4,
-                                "leadingTrivia": [],
-                                "trailingTrivia": []
-                              }
-                            ],
+                            "name": {
+                              "kind": "<identifer-stream>",
+                              "identifiers": [
+                                {
+                                  "kind": "<identifier>",
+                                  "offset": 301,
+                                  "value": "type",
+                                  "length": 4,
+                                  "leadingTrivia": [],
+                                  "trailingTrivia": []
+                                }
+                              ],
+                              "start": 301,
+                              "end": 305
+                            },
                             "value": {
                               "kind": "<primary-expression>",
                               "start": 307,

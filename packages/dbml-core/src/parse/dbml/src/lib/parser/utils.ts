@@ -5,6 +5,7 @@ import {
   BlockExpressionNode,
   ElementDeclarationNode,
   ExpressionNode,
+  IdentiferStreamNode,
   ListExpressionNode,
   NormalExpressionNode,
 } from './nodes';
@@ -71,4 +72,25 @@ export function isAsKeyword(
   token: SyntaxToken,
 ): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER; value: 'as' } {
   return token.kind === SyntaxTokenKind.IDENTIFIER && token.value === 'as';
+}
+
+// Check if an attribute components are valid to build an AttributeNode
+export function canBuildAttributeNode(
+  name: IdentiferStreamNode | undefined,
+  colon: SyntaxToken | undefined,
+  value: NormalExpressionNode | IdentiferStreamNode | undefined,
+): name is IdentiferStreamNode {
+  if (!name) {
+    return false;
+  }
+
+  if (colon && !value) {
+    return false;
+  }
+
+  if (!colon && value) {
+    return false;
+  }
+
+  return true;
 }

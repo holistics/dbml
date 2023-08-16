@@ -181,33 +181,38 @@
                   "elementList": [
                     {
                       "kind": "<attribute>",
-                      "name": [
-                        {
-                          "kind": "<identifier>",
-                          "offset": 44,
-                          "value": "primary",
-                          "length": 7,
-                          "leadingTrivia": [],
-                          "trailingTrivia": [
-                            {
-                              "kind": "<space>",
-                              "offset": 51,
-                              "value": " ",
-                              "length": 1,
-                              "leadingTrivia": [],
-                              "trailingTrivia": []
-                            }
-                          ]
-                        },
-                        {
-                          "kind": "<identifier>",
-                          "offset": 52,
-                          "value": "key",
-                          "length": 3,
-                          "leadingTrivia": [],
-                          "trailingTrivia": []
-                        }
-                      ],
+                      "name": {
+                        "kind": "<identifer-stream>",
+                        "identifiers": [
+                          {
+                            "kind": "<identifier>",
+                            "offset": 44,
+                            "value": "primary",
+                            "length": 7,
+                            "leadingTrivia": [],
+                            "trailingTrivia": [
+                              {
+                                "kind": "<space>",
+                                "offset": 51,
+                                "value": " ",
+                                "length": 1,
+                                "leadingTrivia": [],
+                                "trailingTrivia": []
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "<identifier>",
+                            "offset": 52,
+                            "value": "key",
+                            "length": 3,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ],
+                        "start": 44,
+                        "end": 55
+                      },
                       "start": 44,
                       "end": 55
                     }
@@ -396,16 +401,21 @@
                   "elementList": [
                     {
                       "kind": "<attribute>",
-                      "name": [
-                        {
-                          "kind": "<identifier>",
-                          "offset": 79,
-                          "value": "unique",
-                          "length": 6,
-                          "leadingTrivia": [],
-                          "trailingTrivia": []
-                        }
-                      ],
+                      "name": {
+                        "kind": "<identifer-stream>",
+                        "identifiers": [
+                          {
+                            "kind": "<identifier>",
+                            "offset": 79,
+                            "value": "unique",
+                            "length": 6,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ],
+                        "start": 79,
+                        "end": 85
+                      },
                       "start": 79,
                       "end": 85
                     }
