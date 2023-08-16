@@ -44,7 +44,7 @@ export function findEnd(token: SyntaxToken): number {
 
 // Return a variable node if it's nested inside a primary expression
 export function extractVariableNode(value?: unknown): Option<SyntaxToken> {
-  if (isExpressionAnIdentifierNode(value)) {
+  if (isExpressionAVariableNode(value)) {
     return new Some(value.expression.variable);
   }
 

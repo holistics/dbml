@@ -16,7 +16,7 @@ import {
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
-  NormalFormExpressionNode,
+  NormalExpressionNode,
   PostfixExpressionNode,
   PrefixExpressionNode,
   PrimaryExpressionNode,
@@ -131,7 +131,7 @@ export default class Parser {
     } else {
       this.logError(invalidToken, CompileErrorCode.UNEXPECTED_EOF, 'Unexpected EOF');
     }
-  }
+  };
 
   /* Parsing and synchronizing top-level ElementDeclarationNode */
 
@@ -159,8 +159,8 @@ export default class Parser {
 
   private elementDeclarationName(
     synchronizeHook: SynchronizeHook,
-  ): NormalFormExpressionNode | undefined {
-    let name: NormalFormExpressionNode | undefined;
+  ): NormalExpressionNode | undefined {
+    let name: NormalExpressionNode | undefined;
     if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
       synchronizeHook(
         // eslint-disable-next-line no-return-assign
@@ -188,10 +188,10 @@ export default class Parser {
 
   private elementDeclarationAlias(synchronizeHook: SynchronizeHook): {
     as?: SyntaxToken;
-    alias?: NormalFormExpressionNode;
+    alias?: NormalExpressionNode;
   } {
     let as: SyntaxToken | undefined;
-    let alias: NormalFormExpressionNode | undefined;
+    let alias: NormalExpressionNode | undefined;
 
     if (isAsKeyword(this.peek())) {
       as = this.advance();
@@ -256,13 +256,13 @@ export default class Parser {
     });
   }
 
-  /* Parsing any ExpressionNode, including non-NormalFormExpression */
+  /* Parsing any ExpressionNode, including non-NormalExpression */
 
   private expression(): ExpressionNode {
     // Since function application expression is the most generic form
     // by default, we'll interpret any expression as a function application
-    const callee: NormalFormExpressionNode = this.normalFormExpression();
-    const args: NormalFormExpressionNode[] = [];
+    const callee: NormalExpressionNode = this.normalFormExpression();
+    const args: NormalExpressionNode[] = [];
 
     // If there are newlines after the callee, then it's a simple expression
     // such as a PrefixExpression, InfixExpression, ...
@@ -294,13 +294,13 @@ export default class Parser {
     );
   }
 
-  private normalFormExpression(): NormalFormExpressionNode {
+  private normalFormExpression(): NormalExpressionNode {
     return this.expression_bp(0);
   }
 
   // Pratt's parsing algorithm
-  private expression_bp(mbp: number): NormalFormExpressionNode {
-    let leftExpression: NormalFormExpressionNode | undefined;
+  private expression_bp(mbp: number): NormalExpressionNode {
+    let leftExpression: NormalExpressionNode | undefined;
 
     if (isOpToken(this.peek())) {
       const prefixOp = this.peek();
@@ -522,7 +522,7 @@ export default class Parser {
   private tupleExpression = this.contextStack.withContextDo(
     ParsingContext.GroupExpression,
     (synchronizeHook) => {
-      const elementList: NormalFormExpressionNode[] = [];
+      const elementList: NormalExpressionNode[] = [];
       const commaList: SyntaxToken[] = [];
 
       this.consume('Expect (', SyntaxTokenKind.LPAREN);
@@ -632,7 +632,7 @@ export default class Parser {
 
   private attribute(): AttributeNode | undefined {
     let valueOpenColon: SyntaxToken | undefined;
-    let value: NormalFormExpressionNode | SyntaxToken[] | undefined;
+    let value: NormalExpressionNode | SyntaxToken[] | undefined;
 
     if (this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.RBRACKET, SyntaxTokenKind.COMMA)) {
       const token = this.peek();
@@ -688,7 +688,7 @@ export default class Parser {
 
   private attributeValue(
     ignoredInvalidTokenKinds: SyntaxTokenKind[],
-  ): NormalFormExpressionNode | SyntaxToken[] | undefined {
+  ): NormalExpressionNode | SyntaxToken[] | undefined {
     if (
       this.peek().kind === SyntaxTokenKind.IDENTIFIER &&
       this.peek(1).kind === SyntaxTokenKind.IDENTIFIER
@@ -739,8 +739,8 @@ export default class Parser {
       } catch (e) {
         if (
           e instanceof CompileError &&
-          e.value instanceof SyntaxToken &&
-          ignoredInvalidTokenKinds.includes(e.value.kind)
+          e.token &&
+          ignoredInvalidTokenKinds.includes(e.token.kind)
         ) {
           synchronizeCallback();
         } else {
@@ -779,8 +779,16 @@ export default class Parser {
             tokenOrNode.offset,
             tokenOrNode.offset + tokenOrNode.length,
             tokenOrNode,
+            undefined,
           ) :
-        new CompileError(code, message, tokenOrNode.start, tokenOrNode.end, tokenOrNode);
+        new CompileError(
+            code,
+            message,
+            tokenOrNode.start,
+            tokenOrNode.end,
+            undefined,
+            tokenOrNode,
+          );
     this.errors.push(e);
   }
 
@@ -800,8 +808,16 @@ export default class Parser {
             tokenOrNode.offset,
             tokenOrNode.offset + tokenOrNode.length,
             tokenOrNode,
+            undefined,
           ) :
-        new CompileError(code, message, tokenOrNode.start, tokenOrNode.end, tokenOrNode);
+        new CompileError(
+            code,
+            message,
+            tokenOrNode.start,
+            tokenOrNode.end,
+            undefined,
+            tokenOrNode,
+          );
     this.errors.push(e);
     throw e;
   }

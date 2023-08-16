@@ -6,13 +6,13 @@ import {
   ElementDeclarationNode,
   ExpressionNode,
   ListExpressionNode,
-  NormalFormExpressionNode,
+  NormalExpressionNode,
 } from './nodes';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem(
   callee: ExpressionNode,
-  args: NormalFormExpressionNode[],
+  args: NormalExpressionNode[],
 ): Option<ElementDeclarationNode> {
   if (!isExpressionAnIdentifierNode(callee) || args.length === 0) {
     return new None();

@@ -72,11 +72,11 @@ export class ElementDeclarationNode implements SyntaxNode {
 
   type: SyntaxToken;
 
-  name?: NormalFormExpressionNode;
+  name?: NormalExpressionNode;
 
   as?: SyntaxToken;
 
-  alias?: NormalFormExpressionNode;
+  alias?: NormalExpressionNode;
 
   attributeList?: ListExpressionNode;
 
@@ -98,9 +98,9 @@ export class ElementDeclarationNode implements SyntaxNode {
     body,
   }: {
     type: SyntaxToken;
-    name?: NormalFormExpressionNode;
+    name?: NormalExpressionNode;
     as?: SyntaxToken;
-    alias?: NormalFormExpressionNode;
+    alias?: NormalExpressionNode;
     attributeList?: ListExpressionNode;
     bodyOpenColon?: SyntaxToken;
     body: BlockExpressionNode | ExpressionNode;
@@ -128,7 +128,7 @@ export class AttributeNode implements SyntaxNode {
 
   valueOpenColon?: SyntaxToken;
 
-  value?: NormalFormExpressionNode | SyntaxToken[];
+  value?: NormalExpressionNode | SyntaxToken[];
 
   symbol?: NodeSymbol;
 
@@ -139,7 +139,7 @@ export class AttributeNode implements SyntaxNode {
   }: {
     name: SyntaxToken[];
     valueOpenColon?: SyntaxToken;
-    value?: NormalFormExpressionNode | SyntaxToken[];
+    value?: NormalExpressionNode | SyntaxToken[];
   }) {
     this.name = name;
     this.value = value;
@@ -169,7 +169,7 @@ export class AttributeNode implements SyntaxNode {
 // A normal form expression is the regular expression we encounter in most programming languages
 // ex. 1 + 2, 1 * 2, (1 / 3) - 4, a.b
 // Function application and literal element expressions are not considered one
-export type NormalFormExpressionNode =
+export type NormalExpressionNode =
   | PrefixExpressionNode
   | InfixExpressionNode
   | PostfixExpressionNode
@@ -182,7 +182,7 @@ export type NormalFormExpressionNode =
 
 export type ExpressionNode =
   | ElementDeclarationNode
-  | NormalFormExpressionNode
+  | NormalExpressionNode
   | FunctionApplicationNode;
 
 export class PrefixExpressionNode implements SyntaxNode {
@@ -194,11 +194,11 @@ export class PrefixExpressionNode implements SyntaxNode {
 
   op: SyntaxToken;
 
-  expression: NormalFormExpressionNode;
+  expression: NormalExpressionNode;
 
   symbol?: NodeSymbol;
 
-  constructor({ op, expression }: { op: SyntaxToken; expression: NormalFormExpressionNode }) {
+  constructor({ op, expression }: { op: SyntaxToken; expression: NormalExpressionNode }) {
     this.start = op.offset;
     this.end = expression.end;
     this.op = op;
@@ -215,9 +215,9 @@ export class InfixExpressionNode implements SyntaxNode {
 
   op: SyntaxToken;
 
-  leftExpression: NormalFormExpressionNode;
+  leftExpression: NormalExpressionNode;
 
-  rightExpression: NormalFormExpressionNode;
+  rightExpression: NormalExpressionNode;
 
   symbol?: NodeSymbol;
 
@@ -227,8 +227,8 @@ export class InfixExpressionNode implements SyntaxNode {
     rightExpression,
   }: {
     op: SyntaxToken;
-    leftExpression: NormalFormExpressionNode;
-    rightExpression: NormalFormExpressionNode;
+    leftExpression: NormalExpressionNode;
+    rightExpression: NormalExpressionNode;
   }) {
     this.start = leftExpression.start;
     this.end = rightExpression.end;
@@ -247,11 +247,11 @@ export class PostfixExpressionNode implements SyntaxNode {
 
   op: SyntaxToken;
 
-  expression: NormalFormExpressionNode;
+  expression: NormalExpressionNode;
 
   symbol?: NodeSymbol;
 
-  constructor({ op, expression }: { op: SyntaxToken; expression: NormalFormExpressionNode }) {
+  constructor({ op, expression }: { op: SyntaxToken; expression: NormalExpressionNode }) {
     this.start = expression.start;
     this.end = op.offset + 1;
     this.op = op;
@@ -381,7 +381,7 @@ export class TupleExpressionNode implements SyntaxNode {
 
   tupleOpenParen: SyntaxToken;
 
-  elementList: NormalFormExpressionNode[];
+  elementList: NormalExpressionNode[];
 
   commaList: SyntaxToken[];
 
@@ -396,7 +396,7 @@ export class TupleExpressionNode implements SyntaxNode {
     tupleCloseParen,
   }: {
     tupleOpenParen: SyntaxToken;
-    elementList: NormalFormExpressionNode[];
+    elementList: NormalExpressionNode[];
     commaList: SyntaxToken[];
     tupleCloseParen: SyntaxToken;
   }) {
@@ -420,7 +420,7 @@ export class GroupExpressionNode extends TupleExpressionNode {
     groupCloseParen,
   }: {
     groupOpenParen: SyntaxToken;
-    expression: NormalFormExpressionNode;
+    expression: NormalExpressionNode;
     groupCloseParen: SyntaxToken;
   }) {
     super({
@@ -439,7 +439,7 @@ export class CallExpressionNode implements SyntaxNode {
 
   end: Readonly<number>;
 
-  callee: NormalFormExpressionNode;
+  callee: NormalExpressionNode;
 
   argumentList: TupleExpressionNode;
 
@@ -449,7 +449,7 @@ export class CallExpressionNode implements SyntaxNode {
     callee,
     argumentList,
   }: {
-    callee: NormalFormExpressionNode;
+    callee: NormalExpressionNode;
     argumentList: TupleExpressionNode;
   }) {
     this.start = callee.start;
