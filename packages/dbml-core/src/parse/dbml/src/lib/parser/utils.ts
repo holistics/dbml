@@ -78,7 +78,7 @@ export function isAsKeyword(
 export function canBuildAttributeNode(
   name: IdentiferStreamNode | undefined,
   colon: SyntaxToken | undefined,
-  value: NormalExpressionNode | IdentiferStreamNode | undefined,
+  value: ExpressionNode | IdentiferStreamNode | undefined,
 ): name is IdentiferStreamNode {
   if (!name) {
     return false;

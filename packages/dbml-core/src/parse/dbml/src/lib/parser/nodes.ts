@@ -1,3 +1,4 @@
+import { CompileError } from 'lib/errors';
 import { findEnd, last } from '../utils';
 import { SyntaxToken } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
@@ -18,6 +19,7 @@ export enum SyntaxNodeKind {
   // e.g [primary key] -> 'primary' 'key'
   // e.g [update: no action] -> 'no' 'action'
   IDENTIFIER_STREAM = '<identifer-stream>',
+  PARTIAL_EXPRESSION = '<partial-expression>',
 
   LITERAL = '<literal>',
   VARIABLE = '<variable>',
@@ -148,7 +150,7 @@ export class AttributeNode implements SyntaxNode {
 
   name: IdentiferStreamNode;
 
-  valueOpenColon?: SyntaxToken;
+  colon?: SyntaxToken;
 
   value?: NormalExpressionNode | IdentiferStreamNode;
 
@@ -156,21 +158,21 @@ export class AttributeNode implements SyntaxNode {
 
   constructor({
     name,
-    valueOpenColon,
+    colon,
     value,
   }: {
     name: IdentiferStreamNode;
-    valueOpenColon?: SyntaxToken;
+    colon?: SyntaxToken;
     value?: NormalExpressionNode | IdentiferStreamNode;
   }) {
     this.name = name;
     this.value = value;
-    this.valueOpenColon = valueOpenColon;
+    this.colon = colon;
     this.start = this.name.start;
-    if (valueOpenColon && !value) {
+    if (colon && !value) {
       throw new Error("An AttributeNode shouldn't be created with a colon but no value");
     }
-    this.end = valueOpenColon ? value!.end : name.end;
+    this.end = colon ? value!.end : name.end;
   }
 }
 
