@@ -38,7 +38,6 @@ function canHandle(context: ParsingContext, token: SyntaxToken): boolean {
   return false;
 }
 
-export type SynchronizeHook = (mayThrow: () => void, synchronizationCallback: () => void) => void;
 export class ParsingContextStack {
   private stack: ParsingContext[] = [];
 
@@ -87,22 +86,15 @@ export class ParsingContextStack {
   // Call the passed in callback
   // with the guarantee that the passed in context will be pushed and popped properly
   // even in cases of exceptions
-  // The callback is also passed the `synchronizeHook` callback
+  // The callback can call the `synchronizeHook` method
   // so that the callback can specify at which point to perform synchronization
   // in case of parsing errors
-  withContextDo<T>(
-    context: ParsingContext | undefined,
-    callback: (synchronizeHook: SynchronizeHook) => T,
-  ): () => T {
+  withContextDo<T>(context: ParsingContext, callback: () => T): () => T {
     return () => {
-      // The context could be `undefined`
-      // This is useful for parsing nodes that do not add any relevant contexts
-      if (context !== undefined) {
-        this.push(context);
-      }
+      this.push(context);
 
       try {
-        const res = callback(this.synchronizeHook);
+        const res = callback();
 
         return res;
       } catch (e) {
@@ -112,14 +104,12 @@ export class ParsingContextStack {
         if (!(e instanceof ContextJumpMessage)) {
           throw e;
         }
+
         // If a ContextJumpMessage was thrown, rethrow a new ContextJumpMessage
         // with offset minused by 1
-
         return e.goToOuterContext() as any;
       } finally {
-        if (context !== undefined) {
-          this.pop();
-        }
+        this.pop();
       }
     };
   }

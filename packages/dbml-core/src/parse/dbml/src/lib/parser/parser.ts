@@ -2,7 +2,7 @@ import { convertFuncAppToElem, isAsKeyword } from './utils';
 import { CompileError, CompileErrorCode } from '../errors';
 import { SyntaxToken, SyntaxTokenKind, isOpToken } from '../lexer/tokens';
 import Report from '../report';
-import { ParsingContext, ParsingContextStack, SynchronizeHook } from './contextStack';
+import { ParsingContext, ParsingContextStack } from './contextStack';
 import { last } from '../utils';
 import {
   AttributeNode,
@@ -116,14 +116,17 @@ export default class Parser {
 
   /* Parsing and synchronizing ProgramNode */
 
-  private program = this.contextStack.withContextDo(undefined, (synchronizeHook) => {
+  private program() {
     const body: ElementDeclarationNode[] = [];
     while (!this.isAtEnd()) {
-      synchronizeHook(() => body.push(this.elementDeclaration()), this.synchronizeProgram);
+      this.contextStack.synchronizeHook(
+        () => body.push(this.elementDeclaration()),
+        this.synchronizeProgram,
+      );
     }
 
     return body;
-  });
+  }
 
   private synchronizeProgram = () => {
     const invalidToken = this.peek();
@@ -136,12 +139,12 @@ export default class Parser {
 
   /* Parsing and synchronizing top-level ElementDeclarationNode */
 
-  private elementDeclaration = this.contextStack.withContextDo(undefined, (synchronizeHook) => {
+  private elementDeclaration() {
     this.consume('Expect identifier', SyntaxTokenKind.IDENTIFIER);
     const type = this.previous();
 
-    const name = this.elementDeclarationName(synchronizeHook);
-    const { as, alias } = this.elementDeclarationAlias(synchronizeHook);
+    const name = this.elementDeclarationName();
+    const { as, alias } = this.elementDeclarationAlias();
     const attributeList = this.check(SyntaxTokenKind.LBRACKET) ? this.listExpression() : undefined;
 
     this.discardUntil('Expect { or :', SyntaxTokenKind.LBRACE, SyntaxTokenKind.COLON);
@@ -156,14 +159,12 @@ export default class Parser {
       bodyColon,
       body,
     });
-  });
+  }
 
-  private elementDeclarationName(
-    synchronizeHook: SynchronizeHook,
-  ): NormalExpressionNode | undefined {
+  private elementDeclarationName(): NormalExpressionNode | undefined {
     let name: NormalExpressionNode | undefined;
     if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
-      synchronizeHook(
+      this.contextStack.synchronizeHook(
         // eslint-disable-next-line no-return-assign
         () => (name = this.normalFormExpression()),
         this.synchronizeElementDeclarationName,
@@ -187,7 +188,7 @@ export default class Parser {
     }
   };
 
-  private elementDeclarationAlias(synchronizeHook: SynchronizeHook): {
+  private elementDeclarationAlias(): {
     as?: SyntaxToken;
     alias?: NormalExpressionNode;
   } {
@@ -197,7 +198,7 @@ export default class Parser {
     if (isAsKeyword(this.peek())) {
       as = this.advance();
       if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
-        synchronizeHook(
+        this.contextStack.synchronizeHook(
           // eslint-disable-next-line no-return-assign
           () => (alias = this.normalFormExpression()),
           this.synchronizeElementDeclarationAlias,
@@ -434,26 +435,26 @@ export default class Parser {
 
   /* Parsing and synchronizing BlockExpression */
 
-  private blockExpression = this.contextStack.withContextDo(
-    ParsingContext.BlockExpression,
-    (synchronizeHook) => {
-      const body: ExpressionNode[] = [];
+  private blockExpression = this.contextStack.withContextDo(ParsingContext.BlockExpression, () => {
+    const body: ExpressionNode[] = [];
 
-      this.consume('Expect {', SyntaxTokenKind.LBRACE);
-      const blockOpenBrace = this.previous();
-      while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
-        if (this.canBeField()) {
-          body.push(this.fieldDeclaration());
-        } else {
-          synchronizeHook(() => body.push(this.expression()), this.synchronizeBlock);
-        }
+    this.consume('Expect {', SyntaxTokenKind.LBRACE);
+    const blockOpenBrace = this.previous();
+    while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
+      if (this.canBeField()) {
+        body.push(this.fieldDeclaration());
+      } else {
+        this.contextStack.synchronizeHook(
+          () => body.push(this.expression()),
+          this.synchronizeBlock,
+        );
       }
-      this.consume('Expect }', SyntaxTokenKind.RBRACE);
-      const blockCloseBrace = this.previous();
+    }
+    this.consume('Expect }', SyntaxTokenKind.RBRACE);
+    const blockCloseBrace = this.previous();
 
-      return new BlockExpressionNode({ blockOpenBrace, body, blockCloseBrace });
-    },
-  );
+    return new BlockExpressionNode({ blockOpenBrace, body, blockCloseBrace });
+  });
 
   private canBeField(): boolean {
     return (
@@ -520,50 +521,50 @@ export default class Parser {
 
   /* Parsing and synchronizing TupleExpression */
 
-  private tupleExpression = this.contextStack.withContextDo(
-    ParsingContext.GroupExpression,
-    (synchronizeHook) => {
-      const elementList: NormalExpressionNode[] = [];
-      const commaList: SyntaxToken[] = [];
+  private tupleExpression = this.contextStack.withContextDo(ParsingContext.GroupExpression, () => {
+    const elementList: NormalExpressionNode[] = [];
+    const commaList: SyntaxToken[] = [];
 
-      this.consume('Expect (', SyntaxTokenKind.LPAREN);
-      const tupleOpenParen = this.previous();
+    this.consume('Expect (', SyntaxTokenKind.LPAREN);
+    const tupleOpenParen = this.previous();
 
-      if (!this.isAtEnd() && !this.check(SyntaxTokenKind.RPAREN)) {
-        synchronizeHook(() => elementList.push(this.normalFormExpression()), this.synchronizeTuple);
-      }
-
-      while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RPAREN)) {
-        synchronizeHook(() => {
-          this.consume('Expect ,', SyntaxTokenKind.COMMA);
-          commaList.push(this.previous());
-          elementList.push(this.normalFormExpression());
-        }, this.synchronizeTuple);
-      }
-
-      synchronizeHook(
-        () => this.consume('Expect )', SyntaxTokenKind.RPAREN),
+    if (!this.isAtEnd() && !this.check(SyntaxTokenKind.RPAREN)) {
+      this.contextStack.synchronizeHook(
+        () => elementList.push(this.normalFormExpression()),
         this.synchronizeTuple,
       );
+    }
 
-      const tupleCloseParen = this.previous();
+    while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RPAREN)) {
+      this.contextStack.synchronizeHook(() => {
+        this.consume('Expect ,', SyntaxTokenKind.COMMA);
+        commaList.push(this.previous());
+        elementList.push(this.normalFormExpression());
+      }, this.synchronizeTuple);
+    }
 
-      if (elementList.length === 1) {
-        return new GroupExpressionNode({
-          groupOpenParen: tupleOpenParen,
-          expression: elementList[0],
-          groupCloseParen: tupleCloseParen,
-        });
-      }
+    this.contextStack.synchronizeHook(
+      () => this.consume('Expect )', SyntaxTokenKind.RPAREN),
+      this.synchronizeTuple,
+    );
 
-      return new TupleExpressionNode({
-        tupleOpenParen,
-        elementList,
-        commaList,
-        tupleCloseParen,
+    const tupleCloseParen = this.previous();
+
+    if (elementList.length === 1) {
+      return new GroupExpressionNode({
+        groupOpenParen: tupleOpenParen,
+        expression: elementList[0],
+        groupCloseParen: tupleCloseParen,
       });
-    },
-  );
+    }
+
+    return new TupleExpressionNode({
+      tupleOpenParen,
+      elementList,
+      commaList,
+      tupleCloseParen,
+    });
+  });
 
   private synchronizeTuple = () => {
     while (!this.isAtEnd()) {
@@ -578,47 +579,44 @@ export default class Parser {
 
   /* Parsing and synchronizing ListExpression */
 
-  private listExpression = this.contextStack.withContextDo(
-    ParsingContext.ListExpression,
-    (synchronizeHook) => {
-      this.consume('Expect a [', SyntaxTokenKind.LBRACKET);
-      const listOpenBracket = this.previous();
+  private listExpression = this.contextStack.withContextDo(ParsingContext.ListExpression, () => {
+    this.consume('Expect a [', SyntaxTokenKind.LBRACKET);
+    const listOpenBracket = this.previous();
 
-      const elementList: AttributeNode[] = [];
-      const commaList: SyntaxToken[] = [];
+    const elementList: AttributeNode[] = [];
+    const commaList: SyntaxToken[] = [];
 
-      if (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACKET)) {
+    if (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACKET)) {
+      const attribute = this.attribute();
+      if (attribute) {
+        elementList.push(attribute);
+      }
+    }
+
+    while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACKET)) {
+      this.contextStack.synchronizeHook(() => {
+        this.consume('Expect a ,', SyntaxTokenKind.COMMA);
+        commaList.push(this.previous());
         const attribute = this.attribute();
         if (attribute) {
           elementList.push(attribute);
         }
-      }
+      }, this.synchronizeList);
+    }
 
-      while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACKET)) {
-        synchronizeHook(() => {
-          this.consume('Expect a ,', SyntaxTokenKind.COMMA);
-          commaList.push(this.previous());
-          const attribute = this.attribute();
-          if (attribute) {
-            elementList.push(attribute);
-          }
-        }, this.synchronizeList);
-      }
+    this.contextStack.synchronizeHook(
+      () => this.consume('Expect a ]', SyntaxTokenKind.RBRACKET),
+      this.synchronizeList,
+    );
+    const listCloseBracket = this.previous();
 
-      synchronizeHook(
-        () => this.consume('Expect a ]', SyntaxTokenKind.RBRACKET),
-        this.synchronizeList,
-      );
-      const listCloseBracket = this.previous();
-
-      return new ListExpressionNode({
-        listOpenBracket,
-        elementList,
-        commaList,
-        listCloseBracket,
-      });
-    },
-  );
+    return new ListExpressionNode({
+      listOpenBracket,
+      elementList,
+      commaList,
+      listCloseBracket,
+    });
+  });
 
   private synchronizeList = () => {
     while (!this.isAtEnd()) {
