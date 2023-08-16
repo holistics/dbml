@@ -94,6 +94,7 @@ export default class Parser {
   // If any tokens are discarded, the error message is logged
   private discardUntil(message: string, ...kind: SyntaxTokenKind[]): boolean {
     if (!this.check(...kind)) {
+      this.invalid.push(this.peek());
       this.logError(this.advance(), CompileErrorCode.UNEXPECTED_TOKEN, message);
       while (!this.isAtEnd() && !this.check(...kind)) {
         this.invalid.push(this.advance());
