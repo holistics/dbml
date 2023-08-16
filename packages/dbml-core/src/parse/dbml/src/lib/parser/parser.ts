@@ -144,7 +144,7 @@ export default class Parser {
     const attributeList = this.check(SyntaxTokenKind.LBRACKET) ? this.listExpression() : undefined;
 
     this.discardUntil('Expect { or :', SyntaxTokenKind.LBRACE, SyntaxTokenKind.COLON);
-    const { bodyOpenColon, body } = this.elementDeclarationBody();
+    const { bodyColon, body } = this.elementDeclarationBody();
 
     return new ElementDeclarationNode({
       type,
@@ -152,7 +152,7 @@ export default class Parser {
       as,
       alias,
       attributeList,
-      bodyOpenColon,
+      bodyColon,
       body,
     });
   });
@@ -218,19 +218,19 @@ export default class Parser {
     }
   };
 
-  private elementDeclarationBody(): { bodyOpenColon?: SyntaxToken; body: ExpressionNode } {
+  private elementDeclarationBody(): { bodyColon?: SyntaxToken; body: ExpressionNode } {
     let body: ExpressionNode | BlockExpressionNode | undefined;
-    let bodyOpenColon: SyntaxToken | undefined;
+    let bodyColon: SyntaxToken | undefined;
 
     if (this.match(SyntaxTokenKind.COLON)) {
-      bodyOpenColon = this.previous();
+      bodyColon = this.previous();
       body = this.expression();
     } else {
       body = this.blockExpression();
     }
 
     return {
-      bodyOpenColon,
+      bodyColon,
       body,
     };
   }
@@ -246,12 +246,12 @@ export default class Parser {
     this.consume('Expect identifier', SyntaxTokenKind.IDENTIFIER);
     const type = this.previous();
     this.consume('Expect :', SyntaxTokenKind.COLON);
-    const bodyOpenColon = this.previous();
+    const bodyColon = this.previous();
     const body = this.expression();
 
     return new ElementDeclarationNode({
       type,
-      bodyOpenColon,
+      bodyColon,
       body,
     });
   }

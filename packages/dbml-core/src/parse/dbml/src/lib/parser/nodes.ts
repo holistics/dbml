@@ -80,7 +80,7 @@ export class ElementDeclarationNode implements SyntaxNode {
 
   attributeList?: ListExpressionNode;
 
-  bodyOpenColon?: SyntaxToken;
+  bodyColon?: SyntaxToken;
 
   body: ExpressionNode | BlockExpressionNode;
 
@@ -94,7 +94,7 @@ export class ElementDeclarationNode implements SyntaxNode {
     as,
     alias,
     attributeList,
-    bodyOpenColon,
+    bodyColon,
     body,
   }: {
     type: SyntaxToken;
@@ -102,7 +102,7 @@ export class ElementDeclarationNode implements SyntaxNode {
     as?: SyntaxToken;
     alias?: NormalExpressionNode;
     attributeList?: ListExpressionNode;
-    bodyOpenColon?: SyntaxToken;
+    bodyColon?: SyntaxToken;
     body: BlockExpressionNode | ExpressionNode;
   }) {
     this.start = type.offset;
@@ -112,7 +112,7 @@ export class ElementDeclarationNode implements SyntaxNode {
     this.as = as;
     this.alias = alias;
     this.attributeList = attributeList;
-    this.bodyOpenColon = bodyOpenColon;
+    this.bodyColon = bodyColon;
     this.body = body;
   }
 }
