@@ -19,6 +19,7 @@ jobs:
         with:
           format: rdjson
           output: rd.json
+          diff: true
           config-file: 'bearer.yml'
       - uses: reviewdog/action-setup@v1
         with:
