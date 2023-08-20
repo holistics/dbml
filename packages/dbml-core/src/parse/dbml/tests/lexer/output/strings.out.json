@@ -200,7 +200,7 @@
     },
     {
       "code": 1002,
-      "diagnostic": "Eof reached while parsing",
+      "diagnostic": "EOF reached while parsing",
       "nodeOrToken": {
         "kind": "<string>",
         "offset": 271,

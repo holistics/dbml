@@ -1147,7 +1147,16 @@
       "leadingTrivia": [],
       "trailingTrivia": []
     },
-    "invalid": []
+    "invalid": [
+      {
+        "kind": "<comma>",
+        "offset": 73,
+        "value": ",",
+        "length": 1,
+        "leadingTrivia": [],
+        "trailingTrivia": []
+      }
+    ]
   },
   "errors": [
     {

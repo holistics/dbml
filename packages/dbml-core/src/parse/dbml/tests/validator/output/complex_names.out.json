@@ -1,0 +1,1256 @@
+{
+  "value": {
+    "kind": "<program>",
+    "start": 0,
+    "end": 203,
+    "body": [
+      {
+        "kind": "<element-declaration>",
+        "start": 0,
+        "end": 203,
+        "type": {
+          "kind": "<identifier>",
+          "offset": 0,
+          "value": "Project",
+          "length": 7,
+          "leadingTrivia": [],
+          "trailingTrivia": [
+            {
+              "kind": "<space>",
+              "offset": 7,
+              "value": " ",
+              "length": 1,
+              "leadingTrivia": [],
+              "trailingTrivia": []
+            }
+          ]
+        },
+        "body": {
+          "kind": "<block-expression>",
+          "start": 8,
+          "end": 203,
+          "blockOpenBrace": {
+            "kind": "<lbrace>",
+            "offset": 8,
+            "value": "{",
+            "length": 1,
+            "leadingTrivia": [],
+            "trailingTrivia": [
+              {
+                "kind": "<newline>",
+                "offset": 10,
+                "value": "\n",
+                "length": 1,
+                "leadingTrivia": [],
+                "trailingTrivia": []
+              }
+            ]
+          },
+          "body": [
+            {
+              "kind": "<element-declaration>",
+              "start": 15,
+              "end": 109,
+              "type": {
+                "kind": "<identifier>",
+                "offset": 15,
+                "value": "Table",
+                "length": 5,
+                "leadingTrivia": [
+                  {
+                    "kind": "<space>",
+                    "offset": 11,
+                    "value": " ",
+                    "length": 1,
+                    "leadingTrivia": [],
+                    "trailingTrivia": []
+                  },
+                  {
+                    "kind": "<space>",
+                    "offset": 12,
+                    "value": " ",
+                    "length": 1,
+                    "leadingTrivia": [],
+                    "trailingTrivia": []
+                  },
+                  {
+                    "kind": "<space>",
+                    "offset": 13,
+                    "value": " ",
+                    "length": 1,
+                    "leadingTrivia": [],
+                    "trailingTrivia": []
+                  },
+                  {
+                    "kind": "<space>",
+                    "offset": 14,
+                    "value": " ",
+                    "length": 1,
+                    "leadingTrivia": [],
+                    "trailingTrivia": []
+                  }
+                ],
+                "trailingTrivia": [
+                  {
+                    "kind": "<space>",
+                    "offset": 20,
+                    "value": " ",
+                    "length": 1,
+                    "leadingTrivia": [],
+                    "trailingTrivia": []
+                  }
+                ]
+              },
+              "name": {
+                "kind": "<infix-expression>",
+                "start": 21,
+                "end": 29,
+                "op": {
+                  "kind": "<op>",
+                  "offset": 23,
+                  "value": ".",
+                  "length": 1,
+                  "leadingTrivia": [],
+                  "trailingTrivia": []
+                },
+                "leftExpression": {
+                  "kind": "<primary-expression>",
+                  "start": 21,
+                  "end": 23,
+                  "expression": {
+                    "kind": "<variable>",
+                    "start": 21,
+                    "end": 23,
+                    "variable": {
+                      "kind": "<identifier>",
+                      "offset": 21,
+                      "value": "v1",
+                      "length": 2,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    }
+                  }
+                },
+                "rightExpression": {
+                  "kind": "<primary-expression>",
+                  "start": 24,
+                  "end": 29,
+                  "expression": {
+                    "kind": "<variable>",
+                    "start": 24,
+                    "end": 29,
+                    "variable": {
+                      "kind": "<identifier>",
+                      "offset": 24,
+                      "value": "Users",
+                      "length": 5,
+                      "leadingTrivia": [],
+                      "trailingTrivia": [
+                        {
+                          "kind": "<space>",
+                          "offset": 29,
+                          "value": " ",
+                          "length": 1,
+                          "leadingTrivia": [],
+                          "trailingTrivia": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "body": {
+                "kind": "<block-expression>",
+                "start": 30,
+                "end": 109,
+                "blockOpenBrace": {
+                  "kind": "<lbrace>",
+                  "offset": 30,
+                  "value": "{",
+                  "length": 1,
+                  "leadingTrivia": [],
+                  "trailingTrivia": [
+                    {
+                      "kind": "<newline>",
+                      "offset": 32,
+                      "value": "\n",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    }
+                  ]
+                },
+                "body": [
+                  {
+                    "kind": "<function-application>",
+                    "start": 41,
+                    "end": 51,
+                    "callee": {
+                      "kind": "<primary-expression>",
+                      "start": 41,
+                      "end": 43,
+                      "expression": {
+                        "kind": "<variable>",
+                        "start": 41,
+                        "end": 43,
+                        "variable": {
+                          "kind": "<identifier>",
+                          "offset": 41,
+                          "value": "id",
+                          "length": 2,
+                          "leadingTrivia": [
+                            {
+                              "kind": "<space>",
+                              "offset": 33,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 34,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 35,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 36,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 37,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 38,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 39,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 40,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            }
+                          ],
+                          "trailingTrivia": [
+                            {
+                              "kind": "<space>",
+                              "offset": 43,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "args": [
+                      {
+                        "kind": "<primary-expression>",
+                        "start": 44,
+                        "end": 51,
+                        "expression": {
+                          "kind": "<variable>",
+                          "start": 44,
+                          "end": 51,
+                          "variable": {
+                            "kind": "<identifier>",
+                            "offset": 44,
+                            "value": "integer",
+                            "length": 7,
+                            "leadingTrivia": [],
+                            "trailingTrivia": [
+                              {
+                                "kind": "<newline>",
+                                "offset": 52,
+                                "value": "\n",
+                                "length": 1,
+                                "leadingTrivia": [],
+                                "trailingTrivia": []
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "<function-application>",
+                    "start": 61,
+                    "end": 102,
+                    "callee": {
+                      "kind": "<primary-expression>",
+                      "start": 61,
+                      "end": 67,
+                      "expression": {
+                        "kind": "<variable>",
+                        "start": 61,
+                        "end": 67,
+                        "variable": {
+                          "kind": "<identifier>",
+                          "offset": 61,
+                          "value": "status",
+                          "length": 6,
+                          "leadingTrivia": [
+                            {
+                              "kind": "<space>",
+                              "offset": 53,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 54,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 55,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 56,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 57,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 58,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 59,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            },
+                            {
+                              "kind": "<space>",
+                              "offset": 60,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            }
+                          ],
+                          "trailingTrivia": [
+                            {
+                              "kind": "<space>",
+                              "offset": 67,
+                              "value": " ",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "args": [
+                      {
+                        "kind": "<infix-expression>",
+                        "start": 68,
+                        "end": 77,
+                        "op": {
+                          "kind": "<op>",
+                          "offset": 70,
+                          "value": ".",
+                          "length": 1,
+                          "leadingTrivia": [],
+                          "trailingTrivia": []
+                        },
+                        "leftExpression": {
+                          "kind": "<primary-expression>",
+                          "start": 68,
+                          "end": 70,
+                          "expression": {
+                            "kind": "<variable>",
+                            "start": 68,
+                            "end": 70,
+                            "variable": {
+                              "kind": "<identifier>",
+                              "offset": 68,
+                              "value": "v2",
+                              "length": 2,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            }
+                          }
+                        },
+                        "rightExpression": {
+                          "kind": "<primary-expression>",
+                          "start": 71,
+                          "end": 77,
+                          "expression": {
+                            "kind": "<variable>",
+                            "start": 71,
+                            "end": 77,
+                            "variable": {
+                              "kind": "<identifier>",
+                              "offset": 71,
+                              "value": "Status",
+                              "length": 6,
+                              "leadingTrivia": [],
+                              "trailingTrivia": [
+                                {
+                                  "kind": "<space>",
+                                  "offset": 77,
+                                  "value": " ",
+                                  "length": 1,
+                                  "leadingTrivia": [],
+                                  "trailingTrivia": []
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "kind": "<list-expression>",
+                        "start": 78,
+                        "end": 102,
+                        "listOpenBracket": {
+                          "kind": "<lbracket>",
+                          "offset": 78,
+                          "value": "[",
+                          "length": 1,
+                          "leadingTrivia": [],
+                          "trailingTrivia": []
+                        },
+                        "elementList": [
+                          {
+                            "kind": "<attribute>",
+                            "name": {
+                              "kind": "<identifer-stream>",
+                              "identifiers": [
+                                {
+                                  "kind": "<identifier>",
+                                  "offset": 79,
+                                  "value": "default",
+                                  "length": 7,
+                                  "leadingTrivia": [],
+                                  "trailingTrivia": []
+                                }
+                              ],
+                              "start": 79,
+                              "end": 86
+                            },
+                            "value": {
+                              "kind": "<infix-expression>",
+                              "start": 88,
+                              "end": 101,
+                              "op": {
+                                "kind": "<op>",
+                                "offset": 97,
+                                "value": ".",
+                                "length": 1,
+                                "leadingTrivia": [],
+                                "trailingTrivia": []
+                              },
+                              "leftExpression": {
+                                "kind": "<infix-expression>",
+                                "start": 88,
+                                "end": 97,
+                                "op": {
+                                  "kind": "<op>",
+                                  "offset": 90,
+                                  "value": ".",
+                                  "length": 1,
+                                  "leadingTrivia": [],
+                                  "trailingTrivia": []
+                                },
+                                "leftExpression": {
+                                  "kind": "<primary-expression>",
+                                  "start": 88,
+                                  "end": 90,
+                                  "expression": {
+                                    "kind": "<variable>",
+                                    "start": 88,
+                                    "end": 90,
+                                    "variable": {
+                                      "kind": "<identifier>",
+                                      "offset": 88,
+                                      "value": "v2",
+                                      "length": 2,
+                                      "leadingTrivia": [],
+                                      "trailingTrivia": []
+                                    }
+                                  }
+                                },
+                                "rightExpression": {
+                                  "kind": "<primary-expression>",
+                                  "start": 91,
+                                  "end": 97,
+                                  "expression": {
+                                    "kind": "<variable>",
+                                    "start": 91,
+                                    "end": 97,
+                                    "variable": {
+                                      "kind": "<identifier>",
+                                      "offset": 91,
+                                      "value": "Status",
+                                      "length": 6,
+                                      "leadingTrivia": [],
+                                      "trailingTrivia": []
+                                    }
+                                  }
+                                }
+                              },
+                              "rightExpression": {
+                                "kind": "<primary-expression>",
+                                "start": 98,
+                                "end": 101,
+                                "expression": {
+                                  "kind": "<variable>",
+                                  "start": 98,
+                                  "end": 101,
+                                  "variable": {
+                                    "kind": "<identifier>",
+                                    "offset": 98,
+                                    "value": "new",
+                                    "length": 3,
+                                    "leadingTrivia": [],
+                                    "trailingTrivia": []
+                                  }
+                                }
+                              }
+                            },
+                            "colon": {
+                              "kind": "<colon>",
+                              "offset": 86,
+                              "value": ":",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": [
+                                {
+                                  "kind": "<space>",
+                                  "offset": 87,
+                                  "value": " ",
+                                  "length": 1,
+                                  "leadingTrivia": [],
+                                  "trailingTrivia": []
+                                }
+                              ]
+                            },
+                            "start": 79,
+                            "end": 101
+                          }
+                        ],
+                        "commaList": [],
+                        "listCloseBracket": {
+                          "kind": "<rbracket>",
+                          "offset": 101,
+                          "value": "]",
+                          "length": 1,
+                          "leadingTrivia": [],
+                          "trailingTrivia": [
+                            {
+                              "kind": "<newline>",
+                              "offset": 103,
+                              "value": "\n",
+                              "length": 1,
+                              "leadingTrivia": [],
+                              "trailingTrivia": []
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "blockCloseBrace": {
+                  "kind": "<rbrace>",
+                  "offset": 108,
+                  "value": "}",
+                  "length": 1,
+                  "leadingTrivia": [
+                    {
+                      "kind": "<space>",
+                      "offset": 104,
+                      "value": " ",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    },
+                    {
+                      "kind": "<space>",
+                      "offset": 105,
+                      "value": " ",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    },
+                    {
+                      "kind": "<space>",
+                      "offset": 106,
+                      "value": " ",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    },
+                    {
+                      "kind": "<space>",
+                      "offset": 107,
+                      "value": " ",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    }
+                  ],
+                  "trailingTrivia": [
+                    {
+                      "kind": "<newline>",
+                      "offset": 110,
+                      "value": "\n",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "kind": "<element-declaration>",
+              "start": 117,
+              "end": 200,
+              "type": {
+                "kind": "<identifier>",
+                "offset": 117,
+                "value": "Enum",
+                "length": 4,
+                "leadingTrivia": [
+                  {
+                    "kind": "<newline>",
+                    "offset": 112,
+                    "value": "\n",
+                    "length": 1,
+                    "leadingTrivia": [],
+                    "trailingTrivia": []
+                  },
+                  {
+                    "kind": "<space>",
+                    "offset": 113,
+                    "value": " ",
+                    "length": 1,
+                    "leadingTrivia": [],
+                    "trailingTrivia": []
+                  },
+                  {
+                    "kind": "<space>",
+                    "offset": 114,
+                    "value": " ",
+                    "length": 1,
+                    "leadingTrivia": [],
+                    "trailingTrivia": []
+                  },
+                  {
+                    "kind": "<space>",
+                    "offset": 115,
+                    "value": " ",
+                    "length": 1,
+                    "leadingTrivia": [],
+                    "trailingTrivia": []
+                  },
+                  {
+                    "kind": "<space>",
+                    "offset": 116,
+                    "value": " ",
+                    "length": 1,
+                    "leadingTrivia": [],
+                    "trailingTrivia": []
+                  }
+                ],
+                "trailingTrivia": [
+                  {
+                    "kind": "<space>",
+                    "offset": 121,
+                    "value": " ",
+                    "length": 1,
+                    "leadingTrivia": [],
+                    "trailingTrivia": []
+                  }
+                ]
+              },
+              "name": {
+                "kind": "<infix-expression>",
+                "start": 122,
+                "end": 131,
+                "op": {
+                  "kind": "<op>",
+                  "offset": 124,
+                  "value": ".",
+                  "length": 1,
+                  "leadingTrivia": [],
+                  "trailingTrivia": []
+                },
+                "leftExpression": {
+                  "kind": "<primary-expression>",
+                  "start": 122,
+                  "end": 124,
+                  "expression": {
+                    "kind": "<variable>",
+                    "start": 122,
+                    "end": 124,
+                    "variable": {
+                      "kind": "<identifier>",
+                      "offset": 122,
+                      "value": "v2",
+                      "length": 2,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    }
+                  }
+                },
+                "rightExpression": {
+                  "kind": "<primary-expression>",
+                  "start": 125,
+                  "end": 131,
+                  "expression": {
+                    "kind": "<variable>",
+                    "start": 125,
+                    "end": 131,
+                    "variable": {
+                      "kind": "<identifier>",
+                      "offset": 125,
+                      "value": "Status",
+                      "length": 6,
+                      "leadingTrivia": [],
+                      "trailingTrivia": [
+                        {
+                          "kind": "<space>",
+                          "offset": 131,
+                          "value": " ",
+                          "length": 1,
+                          "leadingTrivia": [],
+                          "trailingTrivia": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "body": {
+                "kind": "<block-expression>",
+                "start": 132,
+                "end": 200,
+                "blockOpenBrace": {
+                  "kind": "<lbrace>",
+                  "offset": 132,
+                  "value": "{",
+                  "length": 1,
+                  "leadingTrivia": [],
+                  "trailingTrivia": [
+                    {
+                      "kind": "<newline>",
+                      "offset": 134,
+                      "value": "\n",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    }
+                  ]
+                },
+                "body": [
+                  {
+                    "kind": "<primary-expression>",
+                    "start": 143,
+                    "end": 146,
+                    "expression": {
+                      "kind": "<variable>",
+                      "start": 143,
+                      "end": 146,
+                      "variable": {
+                        "kind": "<identifier>",
+                        "offset": 143,
+                        "value": "new",
+                        "length": 3,
+                        "leadingTrivia": [
+                          {
+                            "kind": "<space>",
+                            "offset": 135,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 136,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 137,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 138,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 139,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 140,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 141,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 142,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ],
+                        "trailingTrivia": [
+                          {
+                            "kind": "<newline>",
+                            "offset": 147,
+                            "value": "\n",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "kind": "<primary-expression>",
+                    "start": 156,
+                    "end": 161,
+                    "expression": {
+                      "kind": "<variable>",
+                      "start": 156,
+                      "end": 161,
+                      "variable": {
+                        "kind": "<identifier>",
+                        "offset": 156,
+                        "value": "churn",
+                        "length": 5,
+                        "leadingTrivia": [
+                          {
+                            "kind": "<space>",
+                            "offset": 148,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 149,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 150,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 151,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 152,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 153,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 154,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 155,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ],
+                        "trailingTrivia": [
+                          {
+                            "kind": "<newline>",
+                            "offset": 162,
+                            "value": "\n",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "kind": "<primary-expression>",
+                    "start": 171,
+                    "end": 177,
+                    "expression": {
+                      "kind": "<variable>",
+                      "start": 171,
+                      "end": 177,
+                      "variable": {
+                        "kind": "<identifier>",
+                        "offset": 171,
+                        "value": "active",
+                        "length": 6,
+                        "leadingTrivia": [
+                          {
+                            "kind": "<space>",
+                            "offset": 163,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 164,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 165,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 166,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 167,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 168,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 169,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 170,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ],
+                        "trailingTrivia": [
+                          {
+                            "kind": "<newline>",
+                            "offset": 178,
+                            "value": "\n",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "kind": "<primary-expression>",
+                    "start": 187,
+                    "end": 193,
+                    "expression": {
+                      "kind": "<variable>",
+                      "start": 187,
+                      "end": 193,
+                      "variable": {
+                        "kind": "<identifier>",
+                        "offset": 187,
+                        "value": "tenant",
+                        "length": 6,
+                        "leadingTrivia": [
+                          {
+                            "kind": "<space>",
+                            "offset": 179,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 180,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 181,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 182,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 183,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 184,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 185,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          },
+                          {
+                            "kind": "<space>",
+                            "offset": 186,
+                            "value": " ",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ],
+                        "trailingTrivia": [
+                          {
+                            "kind": "<newline>",
+                            "offset": 194,
+                            "value": "\n",
+                            "length": 1,
+                            "leadingTrivia": [],
+                            "trailingTrivia": []
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "blockCloseBrace": {
+                  "kind": "<rbrace>",
+                  "offset": 199,
+                  "value": "}",
+                  "length": 1,
+                  "leadingTrivia": [
+                    {
+                      "kind": "<space>",
+                      "offset": 195,
+                      "value": " ",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    },
+                    {
+                      "kind": "<space>",
+                      "offset": 196,
+                      "value": " ",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    },
+                    {
+                      "kind": "<space>",
+                      "offset": 197,
+                      "value": " ",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    },
+                    {
+                      "kind": "<space>",
+                      "offset": 198,
+                      "value": " ",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    }
+                  ],
+                  "trailingTrivia": [
+                    {
+                      "kind": "<newline>",
+                      "offset": 201,
+                      "value": "\n",
+                      "length": 1,
+                      "leadingTrivia": [],
+                      "trailingTrivia": []
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "blockCloseBrace": {
+            "kind": "<rbrace>",
+            "offset": 202,
+            "value": "}",
+            "length": 1,
+            "leadingTrivia": [],
+            "trailingTrivia": []
+          }
+        }
+      }
+    ],
+    "eof": {
+      "kind": "<eof>",
+      "offset": 203,
+      "value": "",
+      "length": 0,
+      "leadingTrivia": [],
+      "trailingTrivia": []
+    },
+    "invalid": []
+  },
+  "errors": []
+}

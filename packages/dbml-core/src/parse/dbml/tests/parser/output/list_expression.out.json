@@ -234,7 +234,7 @@
                           }
                         }
                       },
-                      "valueOpenColon": {
+                      "colon": {
                         "kind": "<colon>",
                         "offset": 47,
                         "value": ":",
@@ -418,7 +418,7 @@
                           }
                         }
                       },
-                      "valueOpenColon": {
+                      "colon": {
                         "kind": "<colon>",
                         "offset": 78,
                         "value": ":",
@@ -724,23 +724,6 @@
       "trailingTrivia": []
     },
     "invalid": [
-      {
-        "kind": "<colon>",
-        "offset": 120,
-        "value": ":",
-        "length": 1,
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          {
-            "kind": "<space>",
-            "offset": 121,
-            "value": " ",
-            "length": 1,
-            "leadingTrivia": [],
-            "trailingTrivia": []
-          }
-        ]
-      },
       {
         "kind": "<colon>",
         "offset": 120,

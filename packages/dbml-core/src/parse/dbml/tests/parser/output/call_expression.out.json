@@ -317,6 +317,73 @@
     "invalid": [
       {
         "kind": "<number>",
+        "offset": 27,
+        "value": "1",
+        "length": 1,
+        "leadingTrivia": [
+          {
+            "kind": "<space>",
+            "offset": 23,
+            "value": " ",
+            "length": 1,
+            "leadingTrivia": [],
+            "trailingTrivia": []
+          },
+          {
+            "kind": "<space>",
+            "offset": 24,
+            "value": " ",
+            "length": 1,
+            "leadingTrivia": [],
+            "trailingTrivia": []
+          },
+          {
+            "kind": "<space>",
+            "offset": 25,
+            "value": " ",
+            "length": 1,
+            "leadingTrivia": [],
+            "trailingTrivia": []
+          },
+          {
+            "kind": "<space>",
+            "offset": 26,
+            "value": " ",
+            "length": 1,
+            "leadingTrivia": [],
+            "trailingTrivia": []
+          }
+        ],
+        "trailingTrivia": [
+          {
+            "kind": "<space>",
+            "offset": 28,
+            "value": " ",
+            "length": 1,
+            "leadingTrivia": [],
+            "trailingTrivia": []
+          }
+        ]
+      },
+      {
+        "kind": "<op>",
+        "offset": 29,
+        "value": "**",
+        "length": 2,
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          {
+            "kind": "<space>",
+            "offset": 31,
+            "value": " ",
+            "length": 1,
+            "leadingTrivia": [],
+            "trailingTrivia": []
+          }
+        ]
+      },
+      {
+        "kind": "<number>",
         "offset": 32,
         "value": "2",
         "length": 1,
@@ -421,7 +488,7 @@
   "errors": [
     {
       "code": 1008,
-      "diagnostic": "Unexpected prefix ** in an expression",
+      "diagnostic": "Unexpected prefix '**' in an expression",
       "nodeOrToken": {
         "kind": "<op>",
         "offset": 29,
