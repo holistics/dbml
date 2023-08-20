@@ -1,4 +1,3 @@
-import { CompileError } from 'lib/errors';
 import { findEnd, last } from '../utils';
 import { SyntaxToken } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
@@ -92,7 +91,7 @@ export class ElementDeclarationNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
-  parentElement?: ElementDeclarationNode;
+  parentElement?: ElementDeclarationNode | ProgramNode;
 
   constructor({
     type,

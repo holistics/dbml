@@ -1,26 +1,19 @@
 import { CompileError, CompileErrorCode } from '../../errors';
-import { ElementDeclarationNode, ProgramNode, SyntaxNode } from '../../parser/nodes';
-import { SchemaSymbol } from '../symbol/symbols';
-import { UnresolvedName, UnresolvedQualifiedName, UnresolvedUnqualifiedName } from '../types';
+import { ProgramNode, SyntaxNode } from '../../parser/nodes';
+import { UnresolvedName } from '../types';
 import Report from '../../report';
 import { destructureId } from '../symbol/symbolIndex';
+import { findSymbol } from '../utils';
 
 export default class Binder {
   private ast: ProgramNode;
-
-  private publicSchemaSymbol: SchemaSymbol;
 
   private unresolvedNames: UnresolvedName[];
 
   private errors: CompileError[];
 
-  constructor(
-    ast: ProgramNode,
-    publicSchemaSymbol: SchemaSymbol,
-    unresolvedNames: UnresolvedName[],
-  ) {
+  constructor(ast: ProgramNode, unresolvedNames: UnresolvedName[]) {
     this.ast = ast;
-    this.publicSchemaSymbol = publicSchemaSymbol;
     this.unresolvedNames = unresolvedNames;
     this.errors = [];
   }
@@ -34,76 +27,51 @@ export default class Binder {
     return new Report(this.ast, this.errors);
   }
 
-  private resolveName(name: UnresolvedName) {
-    return name.qualifiers ? this.resolveQualifiedName(name) : this.resolveUnqualifiedName(name);
-  }
+  private resolveName({ ids, ownerElement, referrer }: UnresolvedName) {
+    if (ids.length === 0) {
+      throw new Error('Unreachable - An unresolved name must have at least one name component');
+    }
+    const [accessId, ...remainingIds] = ids;
+    const accessSymbol = findSymbol(accessId, ownerElement);
+    if (accessSymbol === undefined) {
+      const { type, name } = destructureId(accessId);
+      this.logError(referrer, `Can not find ${type} '${name}'`);
 
-  private resolveQualifiedName({ id, qualifiers, referrer }: UnresolvedQualifiedName) {
-    let { symbolTable } = this.publicSchemaSymbol;
-    let curtype = '';
-    const accessedName = [];
+      return;
+    }
 
+    if (remainingIds.length === 0) {
+      return;
+    }
+
+    const elementId = remainingIds.pop()!;
+
+    let { type: prevType, name: prevName } = destructureId(accessId);
+    let prevScope = accessSymbol.symbolTable!;
     // eslint-disable-next-line no-restricted-syntax
-    for (const qualifier of qualifiers) {
-      const symbol = symbolTable.get(qualifier);
-      const { name, type } = destructureId(qualifier);
+    for (const qualifierId of remainingIds) {
+      const { type: curType, name: curName } = destructureId(qualifierId);
+      const curSymbol = prevScope.get(qualifierId);
 
-      if (!symbol) {
-        this.logError(
-          referrer,
-          `There's no ${type} "${name}" in ${curtype} "${accessedName.join('.')}"`,
-        );
+      if (!curSymbol) {
+        this.logError(referrer, `${prevType} '${prevName}' does not have ${curType} '${curName}'`);
 
         return;
       }
 
-      curtype = type;
-      accessedName.push(name);
-
-      if (!symbol.symbolTable) {
-        throw new Error('Unreachable - A symbol returned by a qualifier must have a symbol table');
+      if (!curSymbol.symbolTable) {
+        throw new Error('Unreachable - a symbol accessed by a qualifier must have a symbol table');
       }
 
-      symbolTable = symbol.symbolTable;
+      prevType = curType;
+      prevName = curName;
+      prevScope = curSymbol.symbolTable;
     }
 
-    const { name, type } = destructureId(id);
-    if (!symbolTable.has(id)) {
-      this.logError(
-        referrer,
-        `There's no ${type} "${name}" in ${curtype} "${accessedName.join('.')}"`,
-      );
-
-      return;
+    if (!prevScope.has(elementId)) {
+      const { type, name } = destructureId(elementId);
+      this.logError(referrer, `${prevType} '${prevName}' does not have ${type} '${name}'`);
     }
-
-    // eslint-disable-next-line no-param-reassign
-    referrer.symbol = symbolTable.get(id);
-  }
-
-  private resolveUnqualifiedName({ id, ownerElement, referrer }: UnresolvedUnqualifiedName) {
-    let curElement: ElementDeclarationNode | undefined = ownerElement;
-    while (curElement && !curElement?.symbol?.symbolTable) {
-      curElement = curElement.parentElement;
-    }
-
-    if (!curElement) {
-      throw new Error("Unreachable - Couldn't find a symbol table for an unqualified name");
-    }
-
-    const { symbolTable } = curElement.symbol as any;
-    const { name, type } = destructureId(id);
-    if (!symbolTable.has(id)) {
-      this.logError(
-        referrer,
-        `There's no ${type} ${name} in the enclosing ${curElement.symbol!.kind}`,
-      );
-
-      return;
-    }
-
-    // eslint-disable-next-line no-param-reassign
-    referrer.symbol = symbolTable.get(id);
   }
 
   protected logError(node: SyntaxNode, message: string) {

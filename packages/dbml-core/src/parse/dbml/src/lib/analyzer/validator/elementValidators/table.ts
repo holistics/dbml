@@ -136,8 +136,7 @@ function registerEnumTypeIfComplexVariable(
   const schemaIdStack = fragments.map(createSchemaSymbolId);
 
   unresolvedNames.push({
-    id: enumId,
-    qualifiers: schemaIdStack,
+    ids: [...schemaIdStack, enumId],
     ownerElement,
     referrer: node,
   });
@@ -252,8 +251,7 @@ function registerEnumValueIfComplexVar(
   const schemaId = fragments.map(createSchemaSymbolId);
 
   unresolvedNames.push({
-    id: enumFieldId,
-    qualifiers: [...schemaId, enumId],
+    ids: [...schemaId, enumId, enumFieldId],
     ownerElement,
     referrer: value as SyntaxNode,
   });

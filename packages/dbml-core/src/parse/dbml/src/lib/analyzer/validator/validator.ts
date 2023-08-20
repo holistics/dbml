@@ -5,7 +5,6 @@ import { ContextStack } from './validatorContext';
 import { SchemaSymbol } from '../symbol/symbols';
 import { pickValidator } from './utils';
 import { ElementKind } from './types';
-import { createSchemaSymbolId } from '../symbol/symbolIndex';
 import SymbolTable from '../symbol/symbolTable';
 import { UnresolvedName } from '../types';
 
@@ -32,17 +31,14 @@ export default class Validator {
     this.kindsLocallyFound = new Set();
     this.unresolvedNames = [];
 
-    this.publicSchemaSymbol.symbolTable.set(
-      createSchemaSymbolId('public'),
-      this.publicSchemaSymbol,
-    );
+    this.ast.symbol = this.publicSchemaSymbol;
+    this.ast.symbol.declaration = this.ast;
   }
 
-  validate(): Report<
-    { program: ProgramNode; schema: SchemaSymbol; unresolvedNames: UnresolvedName[] },
-    CompileError
-  > {
+  validate(): Report<{ program: ProgramNode; unresolvedNames: UnresolvedName[] }, CompileError> {
     this.ast.body.forEach((element) => {
+      // eslint-disable-next-line no-param-reassign
+      element.parentElement = this.ast;
       const Val = pickValidator(element);
       const validatorObject = new Val(
         element,

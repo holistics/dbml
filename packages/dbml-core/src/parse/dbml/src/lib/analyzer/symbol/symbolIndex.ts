@@ -37,3 +37,9 @@ export function destructureId(id: NodeSymbolId): { name: string; type: string } 
     type,
   };
 }
+
+export function isPublicSchemaId(id: NodeSymbolId): boolean {
+  const { type, name } = destructureId(id);
+
+  return type === 'Schema' && name === 'public';
+}

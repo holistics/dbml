@@ -165,7 +165,7 @@ export default class Lexer {
           this.errors.push(
             new CompileError(
               CompileErrorCode.UNKNOWN_SYMBOL,
-              `Unexpected token ${c}`,
+              `Unexpected token '${c}'`,
               this.createToken(SyntaxTokenKind.INVALID),
             ),
           );
@@ -237,7 +237,7 @@ export default class Lexer {
       this.errors.push(
         new CompileError(
           CompileErrorCode.UNEXPECTED_EOF,
-          'Eof reached while parsing',
+          'EOF reached while parsing',
           this.createToken(SyntaxTokenKind.STRING_LITERAL),
         ),
       );

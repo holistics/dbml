@@ -81,10 +81,9 @@ function registerTableName(
   const fragments = destructureComplexVariable(node).unwrap();
   const tableId = createTableSymbolId(fragments.pop()!);
   const schemaIdStack = fragments.map(createSchemaSymbolId);
-
+  const qualifiers = schemaIdStack.length === 0 ? [createSchemaSymbolId('public')] : schemaIdStack;
   unresolvedNames.push({
-    id: tableId,
-    qualifiers: schemaIdStack.length === 0 ? [createSchemaSymbolId('public')] : schemaIdStack,
+    ids: [...qualifiers, tableId],
     referrer: node,
     ownerElement,
   });

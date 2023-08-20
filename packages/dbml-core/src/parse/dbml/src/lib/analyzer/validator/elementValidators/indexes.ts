@@ -99,7 +99,7 @@ export function registerIndexForResolution(
 
   columnIds.forEach((id) =>
     unresolvedNames.push({
-      id,
+      ids: [id],
       ownerElement,
       referrer: node,
     }));

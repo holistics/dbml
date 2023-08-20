@@ -165,14 +165,18 @@ export default class Parser {
   /* Parsing and synchronizing top-level ElementDeclarationNode */
 
   private elementDeclaration() {
-    this.consume('Expect identifier', SyntaxTokenKind.IDENTIFIER);
+    this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
     const type = this.previous();
 
     const name = this.elementDeclarationName();
     const { as, alias } = this.elementDeclarationAlias();
     const attributeList = this.check(SyntaxTokenKind.LBRACKET) ? this.listExpression() : undefined;
 
-    this.discardUntil('Expect { or :', SyntaxTokenKind.LBRACE, SyntaxTokenKind.COLON);
+    this.discardUntil(
+      "Expect an opening brace '{' or a colon ':'",
+      SyntaxTokenKind.LBRACE,
+      SyntaxTokenKind.COLON,
+    );
     const { bodyColon, body } = this.elementDeclarationBody();
 
     return new ElementDeclarationNode({
@@ -270,9 +274,9 @@ export default class Parser {
   //    Note: 'This is a note'  // fieldDeclaration() handles this
   //  }
   private fieldDeclaration(): ElementDeclarationNode {
-    this.consume('Expect identifier', SyntaxTokenKind.IDENTIFIER);
+    this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
     const type = this.previous();
-    this.consume('Expect :', SyntaxTokenKind.COLON);
+    this.consume("Expect a colon ':'", SyntaxTokenKind.COLON);
     const bodyColon = this.previous();
     const body = this.expression();
 
@@ -354,7 +358,7 @@ export default class Parser {
         this.logAndThrowError(
           prefixOp,
           CompileErrorCode.UNKNOWN_PREFIX_OP,
-          `Unexpected prefix ${prefixOp.value} in an expression`,
+          `Unexpected prefix '${prefixOp.value}' in an expression`,
         );
       }
 
@@ -480,7 +484,7 @@ export default class Parser {
   private blockExpression = this.contextStack.withContextDo(ParsingContext.BlockExpression, () => {
     const body: ExpressionNode[] = [];
 
-    this.consume('Expect {', SyntaxTokenKind.LBRACE);
+    this.consume("Expect an opening brace '{'", SyntaxTokenKind.LBRACE);
     const blockOpenBrace = this.previous();
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
       if (this.canBeField()) {
@@ -489,7 +493,7 @@ export default class Parser {
         this.mayFlushAndSynchronize(() => body.push(this.expression()), this.synchronizeBlock);
       }
     }
-    this.consume('Expect }', SyntaxTokenKind.RBRACE);
+    this.consume("Expect a closing brace '}'", SyntaxTokenKind.RBRACE);
     const blockCloseBrace = this.previous();
 
     return new BlockExpressionNode({ blockOpenBrace, body, blockCloseBrace });
@@ -564,7 +568,7 @@ export default class Parser {
     const elementList: NormalExpressionNode[] = [];
     const commaList: SyntaxToken[] = [];
 
-    this.consume('Expect (', SyntaxTokenKind.LPAREN);
+    this.consume("Expect an opening parenthese '('", SyntaxTokenKind.LPAREN);
     const tupleOpenParen = this.previous();
 
     if (!this.isAtEnd() && !this.check(SyntaxTokenKind.RPAREN)) {
@@ -576,14 +580,14 @@ export default class Parser {
 
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RPAREN)) {
       this.mayFlushAndSynchronize(() => {
-        this.consume('Expect ,', SyntaxTokenKind.COMMA);
+        this.consume("Expect a comma ','", SyntaxTokenKind.COMMA);
         commaList.push(this.previous());
         elementList.push(this.normalExpression());
       }, this.synchronizeTuple);
     }
 
     this.mayFlushAndSynchronize(
-      () => this.consume('Expect )', SyntaxTokenKind.RPAREN),
+      () => this.consume("Expect a closing parenthese ')'", SyntaxTokenKind.RPAREN),
       this.synchronizeTuple,
     );
 
@@ -619,7 +623,7 @@ export default class Parser {
   /* Parsing and synchronizing ListExpression */
 
   private listExpression = this.contextStack.withContextDo(ParsingContext.ListExpression, () => {
-    this.consume('Expect a [', SyntaxTokenKind.LBRACKET);
+    this.consume("Expect a closing bracket '['", SyntaxTokenKind.LBRACKET);
     const listOpenBracket = this.previous();
 
     const elementList: AttributeNode[] = [];
@@ -634,7 +638,7 @@ export default class Parser {
 
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACKET)) {
       this.mayFlushAndSynchronize(() => {
-        this.consume('Expect a ,', SyntaxTokenKind.COMMA);
+        this.consume("Expect a comma ','", SyntaxTokenKind.COMMA);
         commaList.push(this.previous());
         const attribute = this.attribute();
         if (attribute) {
@@ -644,7 +648,7 @@ export default class Parser {
     }
 
     this.mayFlushAndSynchronize(
-      () => this.consume('Expect a ]', SyntaxTokenKind.RBRACKET),
+      () => this.consume("Expect a closing bracket ']'", SyntaxTokenKind.RBRACKET),
       this.synchronizeList,
     );
     const listCloseBracket = this.previous();
@@ -752,8 +756,18 @@ export default class Parser {
       !this.isAtEnd() &&
       !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.COMMA, SyntaxTokenKind.RBRACKET)
     ) {
-      this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
-      identifiers.push(this.previous());
+      if (
+        this.match(
+          SyntaxTokenKind.QUOTED_STRING,
+          SyntaxTokenKind.STRING_LITERAL,
+          SyntaxTokenKind.NUMERIC_LITERAL,
+        )
+      ) {
+        this.logError(this.previous(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect an identifier');
+      } else {
+        this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
+        identifiers.push(this.previous());
+      }
     }
 
     return identifiers.length === 0 ? undefined : new IdentiferStreamNode({ identifiers });

@@ -19,7 +19,7 @@ export function registerRelationshipOperand(
   const columnId = createColumnSymbolId(fragments.pop()!);
   if (fragments.length === 0) {
     unresolvedNames.push({
-      id: columnId,
+      ids: [columnId],
       ownerElement,
       referrer: node,
     });
@@ -31,8 +31,7 @@ export function registerRelationshipOperand(
   const schemaIdStack = fragments.map(createSchemaSymbolId);
 
   unresolvedNames.push({
-    id: columnId,
-    qualifiers: [...schemaIdStack, tableId],
+    ids: [...schemaIdStack, tableId, columnId],
     ownerElement,
     referrer: node,
   });
