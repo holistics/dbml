@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-constructor */
 import antlr4 from 'antlr4';
 
 // original (C#): https://github.com/antlr/grammars-v4/blob/master/sql/postgresql/CSharp/PostgreSQLLexerBase.cs
