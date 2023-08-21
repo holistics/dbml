@@ -18,6 +18,8 @@ export function parse (input, format) {
     const parseTree = parser.root();
 
     database = parseTree.accept(new PostgresASTGen());
+  } else {
+    throw new Error(`Format not supported: ${format}`);
   }
 
   return database;
