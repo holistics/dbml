@@ -487,6 +487,11 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   visitColid (ctx) {
     return ctx.getChild(0).accept(this);
   }
+
+  // check PostgresSQLParser.g4 line 4187
+  visitUnreserved_keyword (ctx) {
+    return ctx.getText();
+  }
   
   /*
    Identifier opt_uescape
@@ -510,6 +515,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const qId = ctx.UnicodeQuotedIdentifier().getText();
       return qId.slice(1, qId.length - 1);
     }
+
+    if (ctx.plsql_unreserved_keyword()) {
+      return ctx.plsql_unreserved_keyword().accept(this);
+    }
+
+    return ctx.getChild(0).getText();
   }
 
   visitUnreserved_keyword (ctx) {
