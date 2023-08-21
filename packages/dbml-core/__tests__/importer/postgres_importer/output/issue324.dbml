@@ -1,0 +1,10 @@
+Table "accounts" {
+  "id" integer [not null, increment]
+  "domain" "character varying(100)"
+  "name" "character varying(100)"
+  "slug" "character varying(10)"
+
+Indexes {
+  id [pk, name: "accounts_pkey"]
+}
+}
