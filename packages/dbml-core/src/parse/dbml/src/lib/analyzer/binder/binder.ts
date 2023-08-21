@@ -71,7 +71,14 @@ export default class Binder {
     if (!prevScope.has(elementId)) {
       const { type, name } = destructureId(elementId);
       this.logError(referrer, `${prevType} '${prevName}' does not have ${type} '${name}'`);
+
+      return;
     }
+
+    const elementSymbol = prevScope.get(elementId)!;
+    elementSymbol.references.push(referrer);
+    // eslint-disable-next-line no-param-reassign
+    referrer.referee = elementSymbol;
   }
 
   protected logError(node: SyntaxNode, message: string) {

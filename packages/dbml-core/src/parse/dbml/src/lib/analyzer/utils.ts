@@ -13,9 +13,7 @@ import {
   VariableNode,
 } from '../parser/nodes';
 import { isRelationshipOp } from './validator/utils';
-import { SyntaxToken } from '../lexer/tokens';
-import { NodeSymbolId, destructureId, isPublicSchemaId } from './symbol/symbolIndex';
-import SymbolTable from './symbol/symbolTable';
+import { NodeSymbolId, isPublicSchemaId } from './symbol/symbolIndex';
 import { NodeSymbol } from './symbol/symbols';
 
 export function destructureMemberAccessExpression(node: SyntaxNode): Option<SyntaxNode[]> {

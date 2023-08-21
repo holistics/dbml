@@ -7,6 +7,7 @@ export interface SyntaxNode {
   start: number;
   end: number;
   symbol?: NodeSymbol;
+  referee?: NodeSymbol; // The symbol that this syntax node refers to
 }
 
 export enum SyntaxNodeKind {
@@ -18,7 +19,6 @@ export enum SyntaxNodeKind {
   // e.g [primary key] -> 'primary' 'key'
   // e.g [update: no action] -> 'no' 'action'
   IDENTIFIER_STREAM = '<identifer-stream>',
-  PARTIAL_EXPRESSION = '<partial-expression>',
 
   LITERAL = '<literal>',
   VARIABLE = '<variable>',
@@ -33,7 +33,6 @@ export enum SyntaxNodeKind {
   CALL_EXPRESSION = '<call-expression>',
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
-  ACCESS_EXPRESSION = '<access-expression>',
 }
 
 export class ProgramNode implements SyntaxNode {
@@ -47,24 +46,13 @@ export class ProgramNode implements SyntaxNode {
 
   eof: SyntaxToken;
 
-  invalid: (SyntaxToken | SyntaxNode)[];
-
   symbol?: NodeSymbol;
 
-  constructor({
-    body,
-    eof,
-    invalid,
-  }: {
-    body: ElementDeclarationNode[];
-    eof: SyntaxToken;
-    invalid?: (SyntaxToken | SyntaxNode)[];
-  }) {
+  constructor({ body, eof }: { body: ElementDeclarationNode[]; eof: SyntaxToken }) {
     this.start = 0;
     this.end = eof.offset;
     this.body = body;
     this.eof = eof;
-    this.invalid = invalid || [];
   }
 }
 

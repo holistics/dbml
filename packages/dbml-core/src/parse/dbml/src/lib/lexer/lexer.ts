@@ -162,6 +162,7 @@ export default class Lexer {
             this.numericLiteral();
             break;
           }
+          this.addToken(SyntaxTokenKind.INVALID);
           this.errors.push(
             new CompileError(
               CompileErrorCode.UNKNOWN_SYMBOL,
@@ -234,23 +235,23 @@ export default class Lexer {
     }
 
     if (this.isAtEnd() && !allowEof) {
+      const token = this.createToken(SyntaxTokenKind.INVALID);
+      this.tokens.push(token);
       this.errors.push(
-        new CompileError(
-          CompileErrorCode.UNEXPECTED_EOF,
-          'EOF reached while parsing',
-          this.createToken(SyntaxTokenKind.STRING_LITERAL),
-        ),
+        new CompileError(CompileErrorCode.UNEXPECTED_EOF, 'EOF reached while parsing', token),
       );
 
       return;
     }
 
     if (this.check('\n') && !allowNewline) {
+      const token = this.createToken(SyntaxTokenKind.INVALID);
+      this.tokens.push(token);
       this.errors.push(
         new CompileError(
           CompileErrorCode.UNEXPECTED_NEWLINE,
           'Invalid newline encountered while parsing',
-          this.createToken(SyntaxTokenKind.STRING_LITERAL),
+          token,
         ),
       );
 
@@ -360,13 +361,9 @@ export default class Lexer {
       this.advance();
     }
 
-    this.errors.push(
-      new CompileError(
-        CompileErrorCode.UNKNOWN_TOKEN,
-        'Invalid number',
-        this.createToken(SyntaxTokenKind.NUMERIC_LITERAL),
-      ),
-    );
+    const token = this.createToken(SyntaxTokenKind.INVALID);
+    this.tokens.push(token);
+    this.errors.push(new CompileError(CompileErrorCode.UNKNOWN_TOKEN, 'Invalid number', token));
   }
 
   colorLiteral() {
