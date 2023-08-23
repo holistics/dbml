@@ -4,6 +4,7 @@ import antlr4 from 'antlr4';
 import PostgreSQLLexer from '../parsers/postgresql/PostgreSQLLexer';
 import PostgreSQLParser from '../parsers/postgresql/PostgreSQLParser';
 import PostgresASTGen from './PostgresASTGen';
+import ParserErrorListener from './ParserErrorListener';
 
 export function parse (input, format) {
   const chars = new antlr4.InputStream(input);
@@ -14,6 +15,8 @@ export function parse (input, format) {
     const tokens = new antlr4.CommonTokenStream(lexer);
     const parser = new PostgreSQLParser(tokens);
     parser.buildParseTrees = true;
+    parser.removeErrorListeners();
+    parser.addErrorListener(new ParserErrorListener());
 
     const parseTree = parser.root();
 
