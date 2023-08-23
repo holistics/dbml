@@ -1,3 +1,5 @@
+import { Position } from '../types';
+
 export enum SyntaxTokenKind {
   INVALID = '<invalid>',
 
@@ -90,20 +92,32 @@ export class SyntaxToken {
 
   trailingTrivia: SyntaxToken[];
 
-  offset: number;
+  startPos: Readonly<Position>;
 
-  length: number;
+  start: Readonly<number>;
 
-  protected constructor(kind: SyntaxTokenKind, offset: number, length: number, value: string) {
+  endPos: Readonly<Position>;
+
+  end: Readonly<number>;
+
+  protected constructor(
+    kind: SyntaxTokenKind,
+    startPos: Position,
+    endPos: Position,
+    value: string,
+  ) {
     this.kind = kind;
-    this.offset = offset;
+    this.startPos = startPos;
+    this.endPos = endPos;
     this.value = value;
-    this.length = length;
     this.leadingTrivia = [];
     this.trailingTrivia = [];
+
+    this.start = startPos.offset;
+    this.end = endPos.offset;
   }
 
-  static create(kind: SyntaxTokenKind, offset: number, length: number, value: string) {
-    return new SyntaxToken(kind, offset, length, value);
+  static create(kind: SyntaxTokenKind, startPos: Position, endPos: Position, value: string) {
+    return new SyntaxToken(kind, startPos, endPos, value);
   }
 }

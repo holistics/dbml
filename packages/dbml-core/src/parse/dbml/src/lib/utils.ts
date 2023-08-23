@@ -37,11 +37,6 @@ export function isAlphaNumeric(char: string): boolean {
   return isAlphaOrUnderscore(char) || isDigit(char);
 }
 
-// Find a token ending position
-export function findEnd(token: SyntaxToken): number {
-  return token.offset + token.length;
-}
-
 // Return a variable node if it's nested inside a primary expression
 export function extractVariableNode(value?: unknown): Option<SyntaxToken> {
   if (isExpressionAVariableNode(value)) {

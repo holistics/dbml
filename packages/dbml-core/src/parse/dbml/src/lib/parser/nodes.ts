@@ -1,6 +1,7 @@
-import { findEnd, last } from '../utils';
+import { last } from '../utils';
 import { SyntaxToken } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
+import { Position } from '../types';
 
 export type SyntaxNodeId = number;
 export class SyntaxNodeIdGenerator {
@@ -54,7 +55,11 @@ export class ProgramNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.PROGRAM = SyntaxNodeKind.PROGRAM;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -69,10 +74,17 @@ export class ProgramNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = 0;
-    this.end = eof.offset;
+    this.startPos = {
+      offset: 0,
+      line: 0,
+      column: 0,
+    };
+    this.endPos = eof.endPos;
     this.body = body;
     this.eof = eof;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -81,7 +93,11 @@ export class ElementDeclarationNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.ELEMENT_DECLARATION = SyntaxNodeKind.ELEMENT_DECLARATION;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -124,8 +140,8 @@ export class ElementDeclarationNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = type.offset;
-    this.end = body.end;
+    this.startPos = type.startPos;
+    this.endPos = body.endPos;
     this.type = type;
     this.name = name;
     this.as = as;
@@ -133,6 +149,9 @@ export class ElementDeclarationNode implements SyntaxNode {
     this.attributeList = attributeList;
     this.bodyColon = bodyColon;
     this.body = body;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -141,7 +160,11 @@ export class IdentiferStreamNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.IDENTIFIER_STREAM = SyntaxNodeKind.IDENTIFIER_STREAM;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -156,8 +179,11 @@ export class IdentiferStreamNode implements SyntaxNode {
       throw new Error("An IdentifierStreamNode shouldn't be created with zero tokens");
     }
     this.identifiers = identifiers;
-    this.start = this.identifiers[0].offset;
-    this.end = findEnd(last(identifiers)!);
+    this.startPos = this.identifiers[0].startPos;
+    this.endPos = last(identifiers)!.endPos;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -166,7 +192,11 @@ export class AttributeNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.ATTRIBUTE = SyntaxNodeKind.ATTRIBUTE;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -194,11 +224,14 @@ export class AttributeNode implements SyntaxNode {
     this.name = name;
     this.value = value;
     this.colon = colon;
-    this.start = this.name.start;
+    this.startPos = this.name.startPos;
     if (colon && !value) {
       throw new Error("An AttributeNode shouldn't be created with a colon but no value");
     }
-    this.end = colon ? value!.end : name.end;
+    this.endPos = colon ? value!.endPos : name.endPos;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -226,7 +259,11 @@ export class PrefixExpressionNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.PREFIX_EXPRESSION = SyntaxNodeKind.PREFIX_EXPRESSION;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -241,10 +278,13 @@ export class PrefixExpressionNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = op.offset;
-    this.end = expression.end;
+    this.startPos = op.startPos;
+    this.endPos = expression.endPos;
     this.op = op;
     this.expression = expression;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -253,7 +293,11 @@ export class InfixExpressionNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.INFIX_EXPRESSION = SyntaxNodeKind.INFIX_EXPRESSION;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -278,11 +322,14 @@ export class InfixExpressionNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = leftExpression.start;
-    this.end = rightExpression.end;
+    this.startPos = leftExpression.startPos;
+    this.endPos = rightExpression.endPos;
     this.op = op;
     this.leftExpression = leftExpression;
     this.rightExpression = rightExpression;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -291,7 +338,11 @@ export class PostfixExpressionNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.POSTFIX_EXPRESSION = SyntaxNodeKind.POSTFIX_EXPRESSION;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -306,10 +357,13 @@ export class PostfixExpressionNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = expression.start;
-    this.end = op.offset + 1;
+    this.startPos = expression.startPos;
+    this.endPos = op.endPos;
     this.op = op;
     this.expression = expression;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -318,7 +372,11 @@ export class FunctionExpressionNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.FUNCTION_EXPRESSION = SyntaxNodeKind.FUNCTION_EXPRESSION;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -331,9 +389,12 @@ export class FunctionExpressionNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = value.offset;
-    this.end = value.offset + value.length;
+    this.startPos = value.startPos;
+    this.endPos = value.endPos;
     this.value = value;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -342,7 +403,11 @@ export class FunctionApplicationNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.FUNCTION_APPLICATION = SyntaxNodeKind.FUNCTION_APPLICATION;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -357,14 +422,17 @@ export class FunctionApplicationNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = callee.start;
+    this.startPos = callee.startPos;
     if (args.length === 0) {
-      this.end = callee.end;
+      this.endPos = callee.endPos;
     } else {
-      this.end = args[args.length - 1].end;
+      this.endPos = last(args)!.endPos;
     }
     this.callee = callee;
     this.args = args;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -373,7 +441,11 @@ export class BlockExpressionNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.BLOCK_EXPRESSION = SyntaxNodeKind.BLOCK_EXPRESSION;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -398,11 +470,14 @@ export class BlockExpressionNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = blockOpenBrace.offset;
-    this.end = blockCloseBrace.offset + 1;
+    this.startPos = blockOpenBrace.startPos;
+    this.endPos = blockCloseBrace.endPos;
     this.blockOpenBrace = blockOpenBrace;
     this.body = body;
     this.blockCloseBrace = blockCloseBrace;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -411,7 +486,11 @@ export class ListExpressionNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.LIST_EXPRESSION = SyntaxNodeKind.LIST_EXPRESSION;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -440,12 +519,15 @@ export class ListExpressionNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = listOpenBracket.offset;
-    this.end = listCloseBracket.offset + 1;
+    this.startPos = listOpenBracket.startPos;
+    this.endPos = listCloseBracket.endPos;
     this.listOpenBracket = listOpenBracket;
     this.elementList = elementList;
     this.commaList = commaList;
     this.listCloseBracket = listCloseBracket;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -455,7 +537,11 @@ export class TupleExpressionNode implements SyntaxNode {
   kind: SyntaxNodeKind.TUPLE_EXPRESSION | SyntaxNodeKind.GROUP_EXPRESSION =
     SyntaxNodeKind.TUPLE_EXPRESSION;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -484,12 +570,15 @@ export class TupleExpressionNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = tupleOpenParen.offset;
-    this.end = tupleCloseParen.offset + 1;
+    this.startPos = tupleOpenParen.startPos;
+    this.endPos = tupleCloseParen.endPos;
     this.tupleOpenParen = tupleOpenParen;
     this.elementList = elementList;
     this.commaList = commaList;
     this.tupleCloseParen = tupleCloseParen;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -527,7 +616,11 @@ export class CallExpressionNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.CALL_EXPRESSION = SyntaxNodeKind.CALL_EXPRESSION;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -548,10 +641,13 @@ export class CallExpressionNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = callee.start;
-    this.end = argumentList.end;
+    this.startPos = callee.startPos;
+    this.endPos = argumentList.endPos;
     this.callee = callee;
     this.argumentList = argumentList;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -560,7 +656,11 @@ export class LiteralNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.LITERAL = SyntaxNodeKind.LITERAL;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -573,9 +673,12 @@ export class LiteralNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = literal.offset;
-    this.end = literal.offset + literal.length;
+    this.startPos = literal.startPos;
+    this.endPos = literal.endPos;
     this.literal = literal;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -584,7 +687,11 @@ export class VariableNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.VARIABLE = SyntaxNodeKind.VARIABLE;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -597,9 +704,12 @@ export class VariableNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = variable.offset;
-    this.end = variable.offset + variable.length;
+    this.startPos = variable.startPos;
+    this.endPos = variable.endPos;
     this.variable = variable;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }
 
@@ -608,7 +718,11 @@ export class PrimaryExpressionNode implements SyntaxNode {
 
   kind: SyntaxNodeKind.PRIMARY_EXPRESSION = SyntaxNodeKind.PRIMARY_EXPRESSION;
 
+  startPos: Readonly<Position>;
+
   start: Readonly<number>;
+
+  endPos: Readonly<Position>;
 
   end: Readonly<number>;
 
@@ -621,8 +735,11 @@ export class PrimaryExpressionNode implements SyntaxNode {
     id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
   ) {
     this.id = id;
-    this.start = expression.start;
-    this.end = expression.end;
+    this.startPos = expression.startPos;
+    this.endPos = expression.endPos;
     this.expression = expression;
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
   }
 }

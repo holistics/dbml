@@ -1,6 +1,5 @@
 import { SyntaxToken } from './lexer/tokens';
 import { SyntaxNode } from './parser/nodes';
-import { findEnd } from './utils';
 
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,
@@ -87,27 +86,21 @@ export class CompileError extends Error {
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: SyntaxNode | SyntaxToken; // The node or token that causes the error
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The node or token that causes the error
+
+  start: Readonly<number>;
+
+  end: Readonly<number>;
 
   constructor(code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
     this.diagnostic = message;
     this.nodeOrToken = nodeOrToken;
+    this.start = nodeOrToken.start;
+    this.end = nodeOrToken.end;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileError.prototype);
-  }
-
-  get start(): number {
-    return this.nodeOrToken instanceof SyntaxToken ?
-      findEnd(this.nodeOrToken) :
-      this.nodeOrToken.end;
-  }
-
-  get end(): number {
-    return this.nodeOrToken instanceof SyntaxToken ?
-      this.nodeOrToken.offset :
-      this.nodeOrToken.start;
   }
 
   isTokenError(): this is CompileError & { nodeOrToken: SyntaxToken } {

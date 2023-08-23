@@ -4,11 +4,20 @@ import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '../utils';
 import {
  SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from './tokens';
+import { Position } from '../types';
 
 export default class Lexer {
-  private start: number = 0;
+  private start: Position = {
+    offset: 0,
+    line: 0,
+    column: 0,
+  };
 
-  private current: number = 0;
+  private current: Position = {
+    offset: 0,
+    line: 0,
+    column: 0,
+  };
 
   private text: string;
 
@@ -21,19 +30,27 @@ export default class Lexer {
   }
 
   private isAtEnd(): boolean {
-    return this.current >= this.text.length;
+    return this.current.offset >= this.text.length;
   }
 
   private advance(): string {
-    return this.text[this.current++];
+    const c = this.peek();
+    this.current = { ...this.current };
+    if (c === '\n') {
+      this.current.line += 1;
+      this.current.column = 0;
+    }
+    this.current.offset += 1;
+
+    return c!;
   }
 
   private peek(lookahead: number = 0): string | undefined {
-    if (this.current + lookahead >= this.text.length) {
+    if (this.current.offset + lookahead >= this.text.length) {
       return undefined;
     }
 
-    return this.text[this.current + lookahead];
+    return this.text[this.current.offset + lookahead];
   }
 
   // Check if the sequence ahead matches `sequence`
@@ -69,14 +86,14 @@ export default class Lexer {
     return SyntaxToken.create(
       kind,
       this.start,
-      this.current - this.start,
-      this.text.substring(this.start, this.current),
+      this.current,
+      this.text.substring(this.start.offset, this.current.offset),
     );
   }
 
   lex(): Report<SyntaxToken[], CompileError> {
     this.scanTokens();
-    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, 0, ''));
+    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, this.current, ''));
     this.gatherTrivia();
 
     return new Report(this.tokens, this.errors);
@@ -172,7 +189,7 @@ export default class Lexer {
           );
           break;
       }
-      this.start = this.current;
+      this.start = { ...this.current };
     }
   }
 
@@ -258,14 +275,8 @@ export default class Lexer {
       return;
     }
 
-    this.tokens.push(
-      SyntaxToken.create(
-        tokenKind,
-        this.start,
-        this.current - this.start + stopSequence.length,
-        string,
-      ),
-    );
+    this.match(stopSequence);
+    this.tokens.push(SyntaxToken.create(tokenKind, this.start, this.current, string));
   }
 
   singleLineStringLiteral() {
@@ -274,7 +285,6 @@ export default class Lexer {
       allowEof: false,
       raw: false,
     });
-    this.match("'");
   }
 
   multilineStringLiteral() {
@@ -283,7 +293,6 @@ export default class Lexer {
       allowEof: false,
       raw: false,
     });
-    this.match("'''");
   }
 
   functionExpression() {
@@ -292,7 +301,6 @@ export default class Lexer {
       allowEof: false,
       raw: true,
     });
-    this.match('`');
   }
 
   quotedVariable() {
@@ -301,7 +309,6 @@ export default class Lexer {
       allowEof: false,
       raw: false,
     });
-    this.match('"');
   }
 
   singleLineComment() {
@@ -318,7 +325,6 @@ export default class Lexer {
       allowEof: false,
       raw: true,
     });
-    this.match('*/');
   }
 
   identifier() {
@@ -410,7 +416,7 @@ export default class Lexer {
         return String.fromCharCode(parseInt(hex, 16));
       }
       default:
-        return `\\${this.tokens[this.current - 1]}`;
+        return `\\${this.tokens[this.current.offset - 1]}`;
     }
   }
 }
