@@ -138,3 +138,12 @@ create table if not exists table2 (
     field2 text,
     foreign key (field, field2) references table1(field, field2)
 );
+
+-- issue 222
+CREATE TABLE test_table (
+	"name" varchar NOT NULL,
+	id varchar NULL,
+	linked_name varchar NOT NULL,
+	CONSTRAINT test_table_pk PRIMARY KEY ("name", id),
+	CONSTRAINT test_table_fk FOREIGN KEY (linked_name,id) REFERENCES test_table("name",id)
+);

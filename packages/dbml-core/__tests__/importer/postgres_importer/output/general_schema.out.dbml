@@ -128,6 +128,16 @@ Table "table2" {
   "field2" text
 }
 
+Table "test_table" {
+  "name" varchar [not null]
+  "id" varchar
+  "linked_name" varchar [not null]
+
+Indexes {
+  (name, id) [pk, name: "test_table_pk"]
+}
+}
+
 Ref:"orders"."id" < "order_items"."order_id"
 
 Ref:"products"."id" < "order_items"."product_id"
@@ -141,3 +151,5 @@ Ref:"merchants"."id" < "products"."merchant_id"
 Ref:"users"."id" < "merchants"."admin_id"
 
 Ref:"table1".("field", "field2") < "table2".("field", "field2")
+
+Ref "test_table_fk":"test_table".("name", "id") < "test_table".("linked_name", "id")
