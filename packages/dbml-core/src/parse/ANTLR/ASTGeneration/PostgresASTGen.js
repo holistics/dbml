@@ -560,9 +560,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
    | reserved_keyword
    */
   visitCollabel (ctx) {
-    if (ctx.identifier()) {
-      return ctx.identifier().accept(this);
-    }
+    return ctx.getChild(0).accept(this);
+  }
+
+  // check PostgresSQLParser.g4 line 4567
+  visitReserved_keyword (ctx) {
+    return ctx.getText();
   }
 
   // SETOF? simpletypename (opt_array_bounds | ARRAY (OPEN_BRACKET iconst CLOSE_BRACKET)?)

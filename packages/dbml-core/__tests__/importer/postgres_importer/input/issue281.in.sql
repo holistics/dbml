@@ -1,1 +1,0 @@
-CREATE TABLE public.tests ( id bigint NOT NULL, type character varying DEFAULT 'testing'::character varying );
