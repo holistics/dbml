@@ -124,3 +124,17 @@ CREATE TABLE public.users2 (
     password_changed_at timestamp with time zone DEFAULT '0001-01-01 00:00:00+00'::timestamp with time zone NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+-- issue 248
+create table table1 (
+    field text not null,
+    field2 text not null,
+    primary key(field, field2)
+);
+
+create table if not exists table2 (
+    id int generated always as identity primary key,
+    field text,
+    field2 text,
+    foreign key (field, field2) references table1(field, field2)
+);
