@@ -149,6 +149,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
   // tableelementlist
   visitOpttableelementlist (ctx) {
+    if (!ctx.tableelementlist()) return [];
     return ctx.tableelementlist().accept(this);
   }
 
