@@ -1,8 +1,8 @@
 import { ElementDeclarationNode, NormalExpressionNode } from '../../../parser/nodes';
 import {
-  createColumnSymbolId,
-  createSchemaSymbolId,
-  createTableSymbolId,
+  createColumnSymbolIndex,
+  createSchemaSymbolIndex,
+  createTableSymbolIndex,
 } from '../../symbol/symbolIndex';
 import { UnresolvedName } from '../../types';
 import { destructureComplexVariable } from '../../utils';
@@ -16,7 +16,7 @@ export function registerRelationshipOperand(
 ) {
   const fragments = destructureComplexVariable(node).unwrap();
 
-  const columnId = createColumnSymbolId(fragments.pop()!);
+  const columnId = createColumnSymbolIndex(fragments.pop()!);
   if (fragments.length === 0) {
     unresolvedNames.push({
       ids: [columnId],
@@ -27,8 +27,8 @@ export function registerRelationshipOperand(
     return;
   }
 
-  const tableId = createTableSymbolId(fragments.pop()!);
-  const schemaIdStack = fragments.map(createSchemaSymbolId);
+  const tableId = createTableSymbolIndex(fragments.pop()!);
+  const schemaIdStack = fragments.map(createSchemaSymbolIndex);
 
   unresolvedNames.push({
     ids: [...schemaIdStack, tableId, columnId],

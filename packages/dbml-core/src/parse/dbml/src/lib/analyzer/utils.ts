@@ -13,7 +13,7 @@ import {
   VariableNode,
 } from '../parser/nodes';
 import { isRelationshipOp } from './validator/utils';
-import { NodeSymbolId, isPublicSchemaId } from './symbol/symbolIndex';
+import { NodeSymbolIndex, isPublicSchemaIndex } from './symbol/symbolIndex';
 import { NodeSymbol } from './symbol/symbols';
 
 export function destructureMemberAccessExpression(node: SyntaxNode): Option<SyntaxNode[]> {
@@ -157,11 +157,11 @@ export function extractIndexName(
 // find the closest outer scope that contains `id`
 // and return the symbol corresponding to `id` in that scope
 export function findSymbol(
-  id: NodeSymbolId,
+  id: NodeSymbolIndex,
   startElement: ElementDeclarationNode,
 ): NodeSymbol | undefined {
   let curElement: ElementDeclarationNode | ProgramNode | undefined = startElement;
-  const isPublicSchema = isPublicSchemaId(id);
+  const isPublicSchema = isPublicSchemaIndex(id);
 
   while (curElement) {
     if (curElement.symbol?.symbolTable?.has(id)) {

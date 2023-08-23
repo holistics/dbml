@@ -32,12 +32,11 @@ import {
 } from './_preset_configs';
 import { SchemaSymbol } from '../../symbol/symbols';
 import {
-  createEnumFieldSymbolId,
-  createEnumSymbolId,
-  createSchemaSymbolId,
+  createEnumFieldSymbolIndex,
+  createEnumSymbolIndex,
+  createSchemaSymbolIndex,
 } from '../../symbol/symbolIndex';
 import { registerRelationshipOperand } from './utils';
-import { SyntaxToken } from '../../../lexer/tokens';
 
 export default class TableValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.TABLE;
@@ -132,8 +131,8 @@ function registerEnumTypeIfComplexVariable(
   }
 
   const fragments = destructureComplexVariable(node).unwrap();
-  const enumId = createEnumSymbolId(fragments.pop()!);
-  const schemaIdStack = fragments.map(createSchemaSymbolId);
+  const enumId = createEnumSymbolIndex(fragments.pop()!);
+  const schemaIdStack = fragments.map(createSchemaSymbolIndex);
 
   unresolvedNames.push({
     ids: [...schemaIdStack, enumId],
@@ -246,9 +245,9 @@ function registerEnumValueIfComplexVar(
   }
 
   const fragments = destructureComplexVariable(value as SyntaxNode).unwrap();
-  const enumFieldId = createEnumFieldSymbolId(fragments.pop()!);
-  const enumId = createEnumSymbolId(fragments.pop()!);
-  const schemaId = fragments.map(createSchemaSymbolId);
+  const enumFieldId = createEnumFieldSymbolIndex(fragments.pop()!);
+  const enumId = createEnumSymbolIndex(fragments.pop()!);
+  const schemaId = fragments.map(createSchemaSymbolIndex);
 
   unresolvedNames.push({
     ids: [...schemaId, enumId, enumFieldId],

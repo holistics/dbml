@@ -2,7 +2,7 @@ import { CompileError, CompileErrorCode } from '../../errors';
 import { ProgramNode, SyntaxNode } from '../../parser/nodes';
 import { UnresolvedName } from '../types';
 import Report from '../../report';
-import { destructureId } from '../symbol/symbolIndex';
+import { destructureIndex } from '../symbol/symbolIndex';
 import { findSymbol } from '../utils';
 
 export default class Binder {
@@ -34,7 +34,7 @@ export default class Binder {
     const [accessId, ...remainingIds] = ids;
     const accessSymbol = findSymbol(accessId, ownerElement);
     if (accessSymbol === undefined) {
-      const { type, name } = destructureId(accessId);
+      const { type, name } = destructureIndex(accessId);
       this.logError(referrer, `Can not find ${type} '${name}'`);
 
       return;
@@ -46,11 +46,11 @@ export default class Binder {
 
     const elementId = remainingIds.pop()!;
 
-    let { type: prevType, name: prevName } = destructureId(accessId);
+    let { type: prevType, name: prevName } = destructureIndex(accessId);
     let prevScope = accessSymbol.symbolTable!;
     // eslint-disable-next-line no-restricted-syntax
     for (const qualifierId of remainingIds) {
-      const { type: curType, name: curName } = destructureId(qualifierId);
+      const { type: curType, name: curName } = destructureIndex(qualifierId);
       const curSymbol = prevScope.get(qualifierId);
 
       if (!curSymbol) {
@@ -69,7 +69,7 @@ export default class Binder {
     }
 
     if (!prevScope.has(elementId)) {
-      const { type, name } = destructureId(elementId);
+      const { type, name } = destructureIndex(elementId);
       this.logError(referrer, `${prevType} '${prevName}' does not have ${type} '${name}'`);
 
       return;

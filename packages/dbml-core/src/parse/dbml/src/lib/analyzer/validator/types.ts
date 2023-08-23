@@ -1,6 +1,5 @@
 import { ElementDeclarationNode, SyntaxNode } from '../../parser/nodes';
 import { CompileErrorCode } from '../../errors';
-import { SyntaxToken } from '../../lexer/tokens';
 import { None, Option, Some } from '../../option';
 import { ValidatorContext } from './validatorContext';
 import { UnresolvedName } from '../types';
