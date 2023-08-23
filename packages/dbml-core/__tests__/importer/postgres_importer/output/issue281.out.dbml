@@ -1,4 +1,0 @@
-Table "tests" {
-  "id" bigint [not null]
-  "type" "character varying" [default: `'testing'::charactervarying`]
-}

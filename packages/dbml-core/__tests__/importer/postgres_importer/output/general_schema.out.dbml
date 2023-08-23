@@ -88,6 +88,31 @@ Table "foo" {
   "bar15" "character varying[76]"
 }
 
+Table "accounts" {
+  "id" integer [not null, increment]
+  "domain" "character varying(100)"
+  "name" "character varying(100)"
+  "slug" "character varying(10)"
+
+Indexes {
+  id [pk, name: "accounts_pkey"]
+}
+}
+
+Table "tests" {
+  "id" bigint [not null]
+  "type" "character varying" [default: `'testing'::charactervarying`]
+}
+
+Table "users2" {
+  "username" "character varying" [not null]
+  "hashed_password" "character varying" [not null]
+  "full_name" "character varying" [not null]
+  "email" "character varying" [not null]
+  "password_changed_at" timestamp [not null, default: `'0001-01-01 00:00:00+00'::timestampwithtimezone`]
+  "created_at" timestamp [not null, default: `now()`]
+}
+
 Ref:"orders"."id" < "order_items"."order_id"
 
 Ref:"products"."id" < "order_items"."product_id"

@@ -102,3 +102,25 @@ COMMENT ON TABLE "users" IS 'User data';
 COMMENT ON TABLE "users" IS 'Store user data';
 
 COMMENT ON TABLE "products" IS 'Products table comment';
+
+-- issue 324
+CREATE TABLE "public"."accounts" (
+  "id" integer GENERATED ALWAYS AS IDENTITY NOT NULL,
+  "domain" character varying(100),
+  "name" character varying(100),
+  "slug" character varying(10),
+  CONSTRAINT "accounts_pkey" PRIMARY KEY ("id")
+) WITH (oids = false);
+
+-- issue 281
+CREATE TABLE public.tests ( id bigint NOT NULL, type character varying DEFAULT 'testing'::character varying );
+
+-- issue 427
+CREATE TABLE public.users2 (
+    username character varying NOT NULL,
+    hashed_password character varying NOT NULL,
+    full_name character varying NOT NULL,
+    email character varying NOT NULL,
+    password_changed_at timestamp with time zone DEFAULT '0001-01-01 00:00:00+00'::timestamp with time zone NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);

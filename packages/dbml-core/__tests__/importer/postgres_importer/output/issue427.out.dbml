@@ -1,8 +1,0 @@
-Table "users" {
-  "username" "character varying" [not null]
-  "hashed_password" "character varying" [not null]
-  "full_name" "character varying" [not null]
-  "email" "character varying" [not null]
-  "password_changed_at" timestamp [not null, default: `'0001-01-01 00:00:00+00'::timestampwithtimezone`]
-  "created_at" timestamp [not null, default: `now()`]
-}
