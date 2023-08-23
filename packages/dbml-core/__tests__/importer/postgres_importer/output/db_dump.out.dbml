@@ -1,7 +1,7 @@
 Table "humanresources"."department" {
   "departmentid" integer [not null, note: 'Primary key for Department records.']
-  "name" Name [not null, note: 'Name of the department.']
-  "groupname" Name [not null, note: 'Name of the group to which the department belongs.']
+  "name" public.Name [not null, note: 'Name of the department.']
+  "groupname" public.Name [not null, note: 'Name of the group to which the department belongs.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Lookup table containing the departments within the Adventure Works Cycles company.'
 }
@@ -15,10 +15,10 @@ Table "humanresources"."employee" {
   "maritalstatus" "character (1)" [not null, note: 'M = Married, S = Single']
   "gender" "character (1)" [not null, note: 'M = Male, F = Female']
   "hiredate" date [not null, note: 'Employee hired on this date.']
-  "salariedflag" Flag [not null, default: true, note: 'Job classification. 0 = Hourly, not exempt from collective bargaining. 1 = Salaried, exempt from collective bargaining.']
+  "salariedflag" public.Flag [not null, default: true, note: 'Job classification. 0 = Hourly, not exempt from collective bargaining. 1 = Salaried, exempt from collective bargaining.']
   "vacationhours" smallint [not null, default: 0, note: 'Number of available vacation hours.']
   "sickleavehours" smallint [not null, default: 0, note: 'Number of available sick leave hours.']
-  "currentflag" Flag [not null, default: true, note: '0 = Inactive, 1 = Active']
+  "currentflag" public.Flag [not null, default: true, note: '0 = Inactive, 1 = Active']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
   "organizationnode" "character varying" [default: `'/'::charactervarying`, note: 'Where the employee is located in corporate hierarchy.']
@@ -54,7 +54,7 @@ Table "humanresources"."jobcandidate" {
 
 Table "humanresources"."shift" {
   "shiftid" integer [not null, note: 'Primary key for Shift records.']
-  "name" Name [not null, note: 'Shift description.']
+  "name" public.Name [not null, note: 'Shift description.']
   "starttime" time [not null, note: 'Shift start time.']
   "endtime" time [not null, note: 'Shift end time.']
   "modifieddate" timestamp [not null, default: `now()`]
@@ -85,7 +85,7 @@ Table "person"."businessentityaddress" {
 
 Table "person"."countryregion" {
   "countryregioncode" "character varying(3)" [not null, note: 'ISO standard code for countries and regions.']
-  "name" Name [not null, note: 'Country or region name.']
+  "name" public.Name [not null, note: 'Country or region name.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Lookup table containing the ISO standard codes for countries and regions.'
 }
@@ -102,11 +102,11 @@ Table "person"."emailaddress" {
 Table "person"."person" {
   "businessentityid" integer [not null, note: 'Primary key for Person records.']
   "persontype" "character (2)" [not null, note: 'Primary type of person: SC = Store Contact, IN = Individual (retail) customer, SP = Sales person, EM = Employee (non-sales), VC = Vendor contact, GC = General contact']
-  "namestyle" NameStyle [not null, default: false, note: '0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.']
+  "namestyle" public.NameStyle [not null, default: false, note: '0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.']
   "title" "character varying(8)" [note: 'A courtesy title. For example, Mr. or Ms.']
-  "firstname" Name [not null, note: 'First name of the person.']
-  "middlename" Name [note: 'Middle name or middle initial of the person.']
-  "lastname" Name [not null, note: 'Last name of the person.']
+  "firstname" public.Name [not null, note: 'First name of the person.']
+  "middlename" public.Name [note: 'Middle name or middle initial of the person.']
+  "lastname" public.Name [not null, note: 'Last name of the person.']
   "suffix" "character varying(10)" [note: 'Surname suffix. For example, Sr. or Jr.']
   "emailpromotion" integer [not null, default: 0, note: '0 = Contact does not wish to receive e-mail promotions, 1 = Contact does wish to receive e-mail promotions from AdventureWorks, 2 = Contact does wish to receive e-mail promotions from AdventureWorks and selected partners.']
   "additionalcontactinfo" xml [note: 'Additional contact information about the person stored in xml format.']
@@ -118,7 +118,7 @@ Table "person"."person" {
 
 Table "person"."personphone" {
   "businessentityid" integer [not null, note: 'Business entity identification number. Foreign key to Person.BusinessEntityID.']
-  "phonenumber" Phone [not null, note: 'Telephone number identification number.']
+  "phonenumber" public.Phone [not null, note: 'Telephone number identification number.']
   "phonenumbertypeid" integer [not null, note: 'Kind of phone number. Foreign key to PhoneNumberType.PhoneNumberTypeID.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Telephone number and type of a person.'
@@ -126,7 +126,7 @@ Table "person"."personphone" {
 
 Table "person"."phonenumbertype" {
   "phonenumbertypeid" integer [not null, note: 'Primary key for telephone number type records.']
-  "name" Name [not null, note: 'Name of the telephone number type']
+  "name" public.Name [not null, note: 'Name of the telephone number type']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Type of phone number of a person.'
 }
@@ -135,8 +135,8 @@ Table "person"."stateprovince" {
   "stateprovinceid" integer [not null, note: 'Primary key for StateProvince records.']
   "stateprovincecode" "character (3)" [not null, note: 'ISO standard state or province code.']
   "countryregioncode" "character varying(3)" [not null, note: 'ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode.']
-  "isonlystateprovinceflag" Flag [not null, default: true, note: '0 = StateProvinceCode exists. 1 = StateProvinceCode unavailable, using CountryRegionCode.']
-  "name" Name [not null, note: 'State or province description.']
+  "isonlystateprovinceflag" public.Flag [not null, default: true, note: '0 = StateProvinceCode exists. 1 = StateProvinceCode unavailable, using CountryRegionCode.']
+  "name" public.Name [not null, note: 'State or province description.']
   "territoryid" integer [not null, note: 'ID of the territory in which the state or province is located. Foreign key to SalesTerritory.SalesTerritoryID.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
@@ -145,7 +145,7 @@ Table "person"."stateprovince" {
 
 Table "person"."addresstype" {
   "addresstypeid" integer [not null, note: 'Primary key for AddressType records.']
-  "name" Name [not null, note: 'Address type description. For example, Billing, Home, or Shipping.']
+  "name" public.Name [not null, note: 'Address type description. For example, Billing, Home, or Shipping.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Types of addresses stored in the Address table.'
@@ -169,7 +169,7 @@ Table "person"."businessentitycontact" {
 
 Table "person"."contacttype" {
   "contacttypeid" integer [not null, note: 'Primary key for ContactType records.']
-  "name" Name [not null, note: 'Contact type description.']
+  "name" public.Name [not null, note: 'Contact type description.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Lookup table containing the types of business entity contacts.'
 }
@@ -198,7 +198,7 @@ Table "production"."billofmaterials" {
 
 Table "production"."culture" {
   "cultureid" "character (6)" [not null, note: 'Primary key for Culture records.']
-  "name" Name [not null, note: 'Culture description.']
+  "name" public.Name [not null, note: 'Culture description.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Lookup table containing the languages in which some AdventureWorks data is stored.'
 }
@@ -206,7 +206,7 @@ Table "production"."culture" {
 Table "production"."document" {
   "title" "character varying(50)" [not null, note: 'Title of the document.']
   "owner" integer [not null, note: 'Employee who controls the document.  Foreign key to Employee.BusinessEntityID']
-  "folderflag" Flag [not null, default: false, note: '0 = This is a folder, 1 = This is a document.']
+  "folderflag" public.Flag [not null, default: false, note: '0 = This is a folder, 1 = This is a document.']
   "filename" "character varying(400)" [not null, note: 'File name of the document']
   "fileextension" "character varying(8)" [note: 'File extension indicating the document type. For example, .doc or .txt.']
   "revision" "character (5)" [not null, note: 'Revision number of the document.']
@@ -229,7 +229,7 @@ Table "production"."illustration" {
 
 Table "production"."location" {
   "locationid" integer [not null, note: 'Primary key for Location records.']
-  "name" Name [not null, note: 'Location description.']
+  "name" public.Name [not null, note: 'Location description.']
   "costrate" numeric [not null, default: 0.00, note: 'Standard hourly cost of the manufacturing location.']
   "availability" numeric(8,2) [not null, default: 0.00, note: 'Work capacity (in hours) of the manufacturing location.']
   "modifieddate" timestamp [not null, default: `now()`]
@@ -238,10 +238,10 @@ Table "production"."location" {
 
 Table "production"."product" {
   "productid" integer [not null, note: 'Primary key for Product records.']
-  "name" Name [not null, note: 'Name of the product.']
+  "name" public.Name [not null, note: 'Name of the product.']
   "productnumber" "character varying(25)" [not null, note: 'Unique product identification number.']
-  "makeflag" Flag [not null, default: true, note: '0 = Product is purchased, 1 = Product is manufactured in-house.']
-  "finishedgoodsflag" Flag [not null, default: true, note: '0 = Product is not a salable item. 1 = Product is salable.']
+  "makeflag" public.Flag [not null, default: true, note: '0 = Product is purchased, 1 = Product is manufactured in-house.']
+  "finishedgoodsflag" public.Flag [not null, default: true, note: '0 = Product is not a salable item. 1 = Product is salable.']
   "color" "character varying(15)" [note: 'Product color.']
   "safetystocklevel" smallint [not null, note: 'Minimum inventory quantity.']
   "reorderpoint" smallint [not null, note: 'Inventory level that triggers a purchase order or work order.']
@@ -267,7 +267,7 @@ Table "production"."product" {
 
 Table "production"."productcategory" {
   "productcategoryid" integer [not null, note: 'Primary key for ProductCategory records.']
-  "name" Name [not null, note: 'Category description.']
+  "name" public.Name [not null, note: 'Category description.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'High-level product categorization.'
@@ -319,7 +319,7 @@ Table "production"."productlistpricehistory" {
 
 Table "production"."productmodel" {
   "productmodelid" integer [not null, note: 'Primary key for ProductModel records.']
-  "name" Name [not null, note: 'Product model description.']
+  "name" public.Name [not null, note: 'Product model description.']
   "catalogdescription" xml [note: 'Detailed product catalog information in xml format.']
   "instructions" xml [note: 'Manufacturing instructions in xml format.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
@@ -355,7 +355,7 @@ Table "production"."productphoto" {
 Table "production"."productproductphoto" {
   "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
   "productphotoid" integer [not null, note: 'Product photo identification number. Foreign key to ProductPhoto.ProductPhotoID.']
-  "primary" Flag [not null, default: false, note: '0 = Photo is not the principal image. 1 = Photo is the principal image.']
+  "primary" public.Flag [not null, default: false, note: '0 = Photo is not the principal image. 1 = Photo is the principal image.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Cross-reference table mapping products and product photos.'
 }
@@ -363,7 +363,7 @@ Table "production"."productproductphoto" {
 Table "production"."productreview" {
   "productreviewid" integer [not null, note: 'Primary key for ProductReview records.']
   "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
-  "reviewername" Name [not null, note: 'Name of the reviewer.']
+  "reviewername" public.Name [not null, note: 'Name of the reviewer.']
   "reviewdate" timestamp [not null, default: `now()`, note: 'Date review was submitted.']
   "emailaddress" "character varying(50)" [not null, note: 'Reviewer''s e-mail address.']
   "rating" integer [not null, note: 'Product rating given by the reviewer. Scale is 1 to 5 with 5 as the highest rating.']
@@ -375,7 +375,7 @@ Table "production"."productreview" {
 Table "production"."productsubcategory" {
   "productsubcategoryid" integer [not null, note: 'Primary key for ProductSubcategory records.']
   "productcategoryid" integer [not null, note: 'Product category identification number. Foreign key to ProductCategory.ProductCategoryID.']
-  "name" Name [not null, note: 'Subcategory description.']
+  "name" public.Name [not null, note: 'Subcategory description.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Product subcategories. See ProductCategory table.'
@@ -383,7 +383,7 @@ Table "production"."productsubcategory" {
 
 Table "production"."scrapreason" {
   "scrapreasonid" integer [not null, note: 'Primary key for ScrapReason records.']
-  "name" Name [not null, note: 'Failure description.']
+  "name" public.Name [not null, note: 'Failure description.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Manufacturing failure reasons lookup table.'
 }
@@ -416,7 +416,7 @@ Table "production"."transactionhistoryarchive" {
 
 Table "production"."unitmeasure" {
   "unitmeasurecode" "character (3)" [not null, note: 'Primary key.']
-  "name" Name [not null, note: 'Unit of measure description.']
+  "name" public.Name [not null, note: 'Unit of measure description.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Unit of measure lookup table.'
 }
@@ -496,7 +496,7 @@ Table "purchasing"."productvendor" {
 
 Table "purchasing"."shipmethod" {
   "shipmethodid" integer [not null, note: 'Primary key for ShipMethod records.']
-  "name" Name [not null, note: 'Shipping company name.']
+  "name" public.Name [not null, note: 'Shipping company name.']
   "shipbase" numeric [not null, default: 0.00, note: 'Minimum shipping charge.']
   "shiprate" numeric [not null, default: 0.00, note: 'Shipping charge per pound.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
@@ -506,11 +506,11 @@ Table "purchasing"."shipmethod" {
 
 Table "purchasing"."vendor" {
   "businessentityid" integer [not null, note: 'Primary key for Vendor records.  Foreign key to BusinessEntity.BusinessEntityID']
-  "accountnumber" AccountNumber [not null, note: 'Vendor account (identification) number.']
-  "name" Name [not null, note: 'Company name.']
+  "accountnumber" public.AccountNumber [not null, note: 'Vendor account (identification) number.']
+  "name" public.Name [not null, note: 'Company name.']
   "creditrating" smallint [not null, note: '1 = Superior, 2 = Excellent, 3 = Above average, 4 = Average, 5 = Below average']
-  "preferredvendorstatus" Flag [not null, default: true, note: '0 = Do not use if another vendor is available. 1 = Preferred over other vendors supplying the same product.']
-  "activeflag" Flag [not null, default: true, note: '0 = Vendor no longer used. 1 = Vendor is actively used.']
+  "preferredvendorstatus" public.Flag [not null, default: true, note: '0 = Do not use if another vendor is available. 1 = Preferred over other vendors supplying the same product.']
+  "activeflag" public.Flag [not null, default: true, note: '0 = Vendor no longer used. 1 = Vendor is actively used.']
   "purchasingwebserviceurl" "character varying(1024)" [note: 'Vendor URL.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Companies from whom Adventure Works Cycles purchases parts or other goods.'
@@ -556,7 +556,7 @@ Table "sales"."countryregioncurrency" {
 
 Table "sales"."currency" {
   "currencycode" "character (3)" [not null, note: 'The ISO code for the Currency.']
-  "name" Name [not null, note: 'Currency name.']
+  "name" public.Name [not null, note: 'Currency name.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Lookup table containing standard ISO currencies.'
 }
@@ -570,7 +570,7 @@ Table "sales"."personcreditcard" {
 
 Table "sales"."store" {
   "businessentityid" integer [not null, note: 'Primary key. Foreign key to Customer.BusinessEntityID.']
-  "name" Name [not null, note: 'Name of the store.']
+  "name" public.Name [not null, note: 'Name of the store.']
   "salespersonid" integer [note: 'ID of the sales person assigned to the customer. Foreign key to SalesPerson.BusinessEntityID.']
   "demographics" xml [note: 'Demographic informationg about the store such as the number of employees, annual sales and store type.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
@@ -624,9 +624,9 @@ Table "sales"."salesorderheader" {
   "duedate" timestamp [not null, note: 'Date the order is due to the customer.']
   "shipdate" timestamp [note: 'Date the order was shipped to the customer.']
   "status" smallint [not null, default: 1, note: 'Order current status. 1 = In process; 2 = Approved; 3 = Backordered; 4 = Rejected; 5 = Shipped; 6 = Cancelled']
-  "onlineorderflag" Flag [not null, default: true, note: '0 = Order placed by sales person. 1 = Order placed online by customer.']
-  "purchaseordernumber" OrderNumber [note: 'Customer purchase order number reference.']
-  "accountnumber" AccountNumber [note: 'Financial accounting number reference.']
+  "onlineorderflag" public.Flag [not null, default: true, note: '0 = Order placed by sales person. 1 = Order placed online by customer.']
+  "purchaseordernumber" public.OrderNumber [note: 'Customer purchase order number reference.']
+  "accountnumber" public.AccountNumber [note: 'Financial accounting number reference.']
   "customerid" integer [not null, note: 'Customer identification number. Foreign key to Customer.BusinessEntityID.']
   "salespersonid" integer [note: 'Sales person who created the sales order. Foreign key to SalesPerson.BusinessEntityID.']
   "territoryid" integer [note: 'Territory in which the sale was made. Foreign key to SalesTerritory.SalesTerritoryID.']
@@ -685,15 +685,15 @@ Table "sales"."salespersonquotahistory" {
 
 Table "sales"."salesreason" {
   "salesreasonid" integer [not null, note: 'Primary key for SalesReason records.']
-  "name" Name [not null, note: 'Sales reason description.']
-  "reasontype" Name [not null, note: 'Category the sales reason belongs to.']
+  "name" public.Name [not null, note: 'Sales reason description.']
+  "reasontype" public.Name [not null, note: 'Category the sales reason belongs to.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Lookup table of customer purchase reasons.'
 }
 
 Table "sales"."salesterritory" {
   "territoryid" integer [not null, note: 'Primary key for SalesTerritory records.']
-  "name" Name [not null, note: 'Sales territory description']
+  "name" public.Name [not null, note: 'Sales territory description']
   "countryregioncode" "character varying(3)" [not null, note: 'ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode.']
   "group" "character varying(50)" [not null, note: 'Geographic area to which the sales territory belong.']
   "salesytd" numeric [not null, default: 0.00, note: 'Sales in the territory year to date.']
@@ -720,7 +720,7 @@ Table "sales"."salestaxrate" {
   "stateprovinceid" integer [not null, note: 'State, province, or country/region the sales tax applies to.']
   "taxtype" smallint [not null, note: '1 = Tax applied to retail transactions, 2 = Tax applied to wholesale transactions, 3 = Tax applied to all sales (retail and wholesale) transactions.']
   "taxrate" numeric [not null, default: 0.00, note: 'Tax rate amount.']
-  "name" Name [not null, note: 'Tax rate description.']
+  "name" public.Name [not null, note: 'Tax rate description.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Tax rate lookup table.'
