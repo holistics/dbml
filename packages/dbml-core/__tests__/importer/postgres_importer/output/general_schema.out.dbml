@@ -113,6 +113,21 @@ Table "users2" {
   "created_at" timestamp [not null, default: `now()`]
 }
 
+Table "table1" {
+  "field" text [not null]
+  "field2" text [not null]
+
+Indexes {
+  (field, field2) [pk]
+}
+}
+
+Table "table2" {
+  "id" int [pk, increment]
+  "field" text
+  "field2" text
+}
+
 Ref:"orders"."id" < "order_items"."order_id"
 
 Ref:"products"."id" < "order_items"."product_id"
@@ -124,3 +139,5 @@ Ref:"countries"."code" < "merchants"."country_code"
 Ref:"merchants"."id" < "products"."merchant_id"
 
 Ref:"users"."id" < "merchants"."admin_id"
+
+Ref:"table1".("field", "field2") < "table2".("field", "field2")
