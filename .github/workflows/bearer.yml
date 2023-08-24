@@ -5,13 +5,13 @@ on:
     branches:
       - master
 
+
 permissions:
   contents: read
 
 jobs:
   rule_check:
     runs-on: ubuntu-22.04
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v3
       - name: Run Report
@@ -26,6 +26,6 @@ jobs:
           reviewdog_version: latest
       - name: Run reviewdog
         env:
-          REVIEWDOG_TOKEN: ${{ secrets.REVIEWDOG_TOKEN }}
-        run:
-          cat rd.json | reviewdog -f=rdjson -reporter=github-pr-check -filter-mode=added -fail-on-error=false
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cat rd.json | reviewdog -f=rdjson -reporter=github-check -filter-mode=nofilter
