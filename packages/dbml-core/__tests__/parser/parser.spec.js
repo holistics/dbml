@@ -25,7 +25,7 @@ describe('@dbml/core', () => {
     });
 
     test.each(scanTestNames(__dirname, 'postgres-parse/input'))('postgres-parse/%s', (name) => {
-      runTest(name, 'postgres-parse', 'postgres', 'parsePostgresToJSON');
+      runTest(name, 'postgres-parse', 'postgres', 'parsePostgresToJSONv2');
     });
 
     test.each(scanTestNames(__dirname, 'schemarb-parse/input'))('schemarb-parse/%s', (name) => {

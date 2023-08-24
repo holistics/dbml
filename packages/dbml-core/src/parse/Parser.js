@@ -1,5 +1,6 @@
 import Database from '../model_structure/database';
 import mysqlParser from './mysqlParser';
+import postgresParser from './postgresParser';
 import dbmlParser from './dbmlParser';
 import schemarbParser from './schemarbParser';
 import mssqlParser from './mssqlParser';
@@ -15,8 +16,12 @@ class Parser {
     return mysqlParser.parse(str);
   }
 
-  static parsePostgresToJSON (str) {
+  static parsePostgresToJSONv2 (str) {
     return parse(str, 'postgres');
+  }
+
+  static parsePostgresToJSON (str) {
+    return postgresParser.parse(str);
   }
 
   static parseDBMLToJSON (str) {
@@ -39,6 +44,10 @@ class Parser {
         break;
 
       case 'postgres':
+        rawDatabase = Parser.parsePostgresToJSONv2(str);
+        break;
+
+      case 'postgresLegacy':
         rawDatabase = Parser.parsePostgresToJSON(str);
         break;
 
