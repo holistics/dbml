@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import _ from 'lodash';
+import { last, flatten } from 'lodash';
 import PostgreSQLParserVisitor from '../parsers/postgresql/PostgreSQLParserVisitor';
 import { Enum, Field, Index, Table } from './AST';
 
@@ -109,7 +109,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
    */
   visitCreatestmt (ctx) {
     const names = ctx.qualified_name(0).accept(this);
-    const tableName = _.last(names);
+    const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
     if (!ctx.opttableelementlist()) return;
@@ -124,7 +124,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       return acc;
     }, [[], [], []]);
 
-    this.data.refs.push(..._.flatten(
+    this.data.refs.push(...flatten(
       fieldsData.map(fieldData => fieldData.inline_refs.map(inlineRef => {
         inlineRef.endpoints[0].tableName = tableName;
         inlineRef.endpoints[0].schemaName = schemaName;
@@ -201,7 +201,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     if (ctx.FOREIGN()) {
       const names = ctx.qualified_name().accept(this);
-      const refTableName = _.last(names);
+      const refTableName = last(names);
       const refSchemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
       const firstFieldNames = ctx.columnlist().accept(this).map(c => c.value);
@@ -352,7 +352,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     if (ctx.REFERENCES()) {
       const names = ctx.qualified_name().accept(this);
-      const refTableName = _.last(names);
+      const refTableName = last(names);
       const refSchemaName = names.length > 1 ? names[names.length - 2] : undefined;
       const secondFieldNames = ctx.opt_column_list().accept(this)?.map(c => c.value);
 
@@ -460,11 +460,14 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
   // NO ACTION | RESTRICT | CASCADE | SET (NULL_P | DEFAULT)
   visitKey_action (ctx) {
-    let r = ctx.getChild(0).getText();
-    for (let i =  1; i < ctx.getChildCount(); i++) {
-      r += ` ${ctx.getChild(i).getText()}`;
-    };
-    return r;
+    // Generate n element integer array [0, 1, ..., n-1]
+    const childIndices = [...Array(ctx.getChildCount()).keys()];
+    const text = childIndices.reduce((acc, i) => {
+      acc += `${ctx.getChild(i).getText()} `;
+      return acc;
+    }, '');
+
+    return text.slice(0, text.length - 1); // remove the last whitespace
   }
 
   // colid indirection?
@@ -632,7 +635,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   visitGenerictype (ctx) {
     if (ctx.attrs()) {
       const names = [ctx.getChild(0).getText(), ...ctx.attrs().accept(this)];
-      const enumName = _.last(names);
+      const enumName = last(names);
       const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
       return {
@@ -663,11 +666,14 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   // | VARCHAR
   // | NATIONAL (CHARACTER | CHAR_P) opt_varying
   visitCharacter_c (ctx) {
-    let r = ctx.getChild(0).getText();
-    for (let i =  1; i < ctx.getChildCount(); i++) {
-      r += ` ${ctx.getChild(i).getText()}`;
-    }
-    return r;
+    // Generate n element integer array [0, 1, ..., n-1]
+    const childIndices = [...Array(ctx.getChildCount()).keys()];
+    const text = childIndices.reduce((acc, i) => {
+      acc += `${ctx.getChild(i).getText()} `;
+      return acc;
+    }, '');
+
+    return text.slice(0, text.length - 1); // remove the last whitespace
   }
 
   // identifier | unreserved_keyword | plsql_unreserved_keyword | type_func_name_keyword
@@ -693,7 +699,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   // | CREATE opt_unique INDEX opt_concurrently IF_P NOT EXISTS name ON relation_expr access_method_clause OPEN_PAREN index_params CLOSE_PAREN opt_include opt_reloptions opttablespace where_clause
   visitIndexstmt (ctx) {
     const names = ctx.relation_expr().accept(this);
-    const tableName = _.last(names);
+    const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
     if (ctx.opt_index_name()) {
@@ -776,7 +782,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   visitAltertablestmt (ctx) {
     if (ctx.TABLE() && ctx.relation_expr() && ctx.alter_table_cmds()) {
       const names = ctx.relation_expr().accept(this);
-      const tableName = _.last(names);
+      const tableName = last(names);
       const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
       const cmds = ctx.alter_table_cmds().accept(this);
@@ -843,7 +849,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       if (!objectType) return;
       if (objectType === COMMENT_OBJECT_TYPE.TABLE) {
         const names = ctx.any_name().accept(this);
-        const tableName = _.last(names);
+        const tableName = last(names);
         const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
         const table = findTable(this.data.tables, schemaName, tableName);
@@ -856,7 +862,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     if (ctx.COLUMN()) {
       const names = ctx.any_name().accept(this);
-      const fieldName = _.last(names);
+      const fieldName = last(names);
       const tableName = names.length > 1 ? names[names.length - 2] : undefined;
       const schemaName = names.length > 2 ? names[names.length - 3] : undefined;
 
@@ -927,7 +933,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   visitDefinestmt (ctx) {
     if (ctx.TYPE_P() && ctx.opt_enum_val_list()) {
       const names = ctx.any_name(0).accept(this);
-      const enumName = _.last(names);
+      const enumName = last(names);
       const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
       const values = ctx.opt_enum_val_list().accept(this).map(e => ({ name: e }));
