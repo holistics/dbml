@@ -1,6 +1,7 @@
 import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 import { None, Option, Some } from '../option';
 import { extractVariableNode, isExpressionAnIdentifierNode, last } from '../utils';
+import NodeFactory from './factory';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -27,6 +28,7 @@ import {
 export function convertFuncAppToElem(
   callee: ExpressionNode,
   args: NormalExpressionNode[],
+  factory: NodeFactory,
 ): Option<ElementDeclarationNode> {
   if (!isExpressionAnIdentifierNode(callee) || args.length === 0) {
     return new None();
@@ -45,7 +47,7 @@ export function convertFuncAppToElem(
 
   if (cpArgs.length === 3 && extractVariableNode(cpArgs[1]).unwrap().value === 'as') {
     return new Some(
-      new ElementDeclarationNode({
+      factory.create(ElementDeclarationNode, {
         type,
         name: cpArgs[0],
         as: extractVariableNode(cpArgs[1]).unwrap(),
@@ -58,7 +60,7 @@ export function convertFuncAppToElem(
 
   if (cpArgs.length === 1) {
     return new Some(
-      new ElementDeclarationNode({
+      factory.create(ElementDeclarationNode, {
         type,
         name: cpArgs[0],
         attributeList,
@@ -69,7 +71,7 @@ export function convertFuncAppToElem(
 
   if (cpArgs.length === 0) {
     return new Some(
-      new ElementDeclarationNode({
+      factory.create(ElementDeclarationNode, {
         type,
         attributeList,
         body,

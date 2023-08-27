@@ -39,6 +39,7 @@ import {
   createSubfieldSymbol,
   createSymbolFromContext,
 } from '../../symbol/utils';
+import SymbolFactory from '../../symbol/factory';
 
 export default abstract class ElementValidator {
   protected abstract elementKind: ElementKind;
@@ -58,6 +59,7 @@ export default abstract class ElementValidator {
   protected errors: CompileError[];
   protected kindsGloballyFound: Set<ElementKind>;
   protected kindsLocallyFound: Set<ElementKind>;
+  protected symbolFactory: SymbolFactory;
 
   constructor(
     declarationNode: ElementDeclarationNode,
@@ -67,6 +69,7 @@ export default abstract class ElementValidator {
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
+    symbolFactory: SymbolFactory,
   ) {
     this.declarationNode = declarationNode;
     this.publicSchemaSymbol = publicSchemaSymbol;
@@ -75,6 +78,7 @@ export default abstract class ElementValidator {
     this.errors = errors;
     this.kindsGloballyFound = kindsGloballyFound;
     this.kindsLocallyFound = kindsLocallyFound;
+    this.symbolFactory = symbolFactory;
   }
 
   validate(): boolean {
@@ -161,7 +165,11 @@ export default abstract class ElementValidator {
 
   private validateName(): boolean {
     // Default symbol in case one of the check fails which cause registerName to not be called
-    this.declarationNode.symbol = createSymbolFromContext(this.declarationNode, this.context.name);
+    this.declarationNode.symbol = createSymbolFromContext(
+      this.declarationNode,
+      this.context.name,
+      this.symbolFactory,
+    );
 
     return (
       (this.checkNameInValidForm() &&
@@ -329,12 +337,20 @@ export default abstract class ElementValidator {
       variables.shift();
     }
 
-    const registerSchema = registerSchemaStack(variables, this.publicSchemaSymbol.symbolTable);
+    const registerSchema = registerSchemaStack(
+      variables,
+      this.publicSchemaSymbol.symbolTable,
+      this.symbolFactory,
+    );
     if (!id) {
       throw new Error(`${this.elementKind} fails to create id to register in the symbol table`);
     }
 
-    const newSymbol = createSymbolFromContext(this.declarationNode, this.context.name);
+    const newSymbol = createSymbolFromContext(
+      this.declarationNode,
+      this.context.name,
+      this.symbolFactory,
+    );
     if (!newSymbol) {
       throw new Error(
         `${this.elementKind} fails to create a symbol to register in the symbol table`,
@@ -459,13 +475,13 @@ export default abstract class ElementValidator {
       return this.validateSubField(node.body);
     }
 
-    return this.validateSubField(new FunctionApplicationNode({ callee: node.body, args: [] }));
+    return this.validateSubField(node.body);
   }
 
   // Switch to the appropriate validator method based on the type of content
   // Either a nested element or a subfield
   protected validateEachOfComplexBody(
-    sub: SyntaxNode,
+    sub: ExpressionNode,
     kindsFoundInScope: Set<ElementKind>,
   ): boolean {
     if (sub instanceof ElementDeclarationNode) {
@@ -475,9 +491,7 @@ export default abstract class ElementValidator {
       return this.validateSubField(sub);
     }
 
-    return this.validateSubField(
-      new FunctionApplicationNode({ callee: sub as ExpressionNode, args: [] }),
-    );
+    return this.validateSubField(sub);
   }
 
   protected validateNestedElementDeclaration(
@@ -497,6 +511,7 @@ export default abstract class ElementValidator {
       this.errors,
       this.kindsGloballyFound,
       kindsFoundInScope,
+      this.symbolFactory,
     );
 
     return validatorObject.validate();
@@ -504,8 +519,8 @@ export default abstract class ElementValidator {
 
   /* Validate and register subfield according to config `this.subfield` */
 
-  protected validateSubField(sub: FunctionApplicationNode): boolean {
-    const args = [sub.callee, ...sub.args];
+  protected validateSubField(sub: ExpressionNode): boolean {
+    const args = sub instanceof FunctionApplicationNode ? [sub.callee, ...sub.args] : [sub];
     if (args.length === 0) {
       throw new Error('A function application node always has at least 1 callee');
     }
@@ -544,8 +559,10 @@ export default abstract class ElementValidator {
     }
 
     if (this.subfield.shouldRegister && !hasError) {
-      const entry = this.registerSubField(sub, args[0]).unwrap_or(undefined);
-      hasError = entry === undefined || hasError;
+      const symbol = this.registerSubField(sub, args[0]).unwrap_or(undefined);
+      hasError = symbol === undefined || hasError;
+      // eslint-disable-next-line no-param-reassign
+      sub.symbol = symbol;
     }
 
     return !hasError;
@@ -580,7 +597,7 @@ export default abstract class ElementValidator {
 
       return new None();
     }
-    const symbol = createSubfieldSymbol(declarationNode, this.context.name);
+    const symbol = createSubfieldSymbol(declarationNode, this.context.name, this.symbolFactory);
     if (!symbol) {
       throw new Error(
         `${this.elementKind} fails to create subfield symbol to register in the symbol table`,

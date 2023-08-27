@@ -29,9 +29,11 @@ import {
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
+  SyntaxNodeIdGenerator,
   TupleExpressionNode,
   VariableNode,
 } from './nodes';
+import NodeFactory from './factory';
 
 export default class Parser {
   private tokens: SyntaxToken[];
@@ -43,8 +45,11 @@ export default class Parser {
   // Keep track of which context we're parsing in
   private contextStack: ParsingContextStack = new ParsingContextStack();
 
-  constructor(tokens: SyntaxToken[]) {
+  private nodeFactory: NodeFactory;
+
+  constructor(tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
     this.tokens = tokens;
+    this.nodeFactory = new NodeFactory(nodeIdGenerator);
   }
 
   private isAtEnd(): boolean {
@@ -154,7 +159,7 @@ export default class Parser {
   parse(): Report<ProgramNode, CompileError> {
     const body = this.program();
     const eof = this.advance();
-    const program = new ProgramNode({ body, eof });
+    const program = this.nodeFactory.create(ProgramNode, { body, eof });
     this.gatherInvalid();
 
     return new Report(program, this.errors);
@@ -198,7 +203,7 @@ export default class Parser {
     );
     const { bodyColon, body } = this.elementDeclarationBody();
 
-    return new ElementDeclarationNode({
+    return this.nodeFactory.create(ElementDeclarationNode, {
       type,
       name,
       as,
@@ -299,7 +304,7 @@ export default class Parser {
     const bodyColon = this.previous();
     const body = this.expression();
 
-    return new ElementDeclarationNode({
+    return this.nodeFactory.create(ElementDeclarationNode, {
       type,
       bodyColon,
       body,
@@ -339,8 +344,8 @@ export default class Parser {
 
     // Try interpreting the function application as an element declaration expression
     // if fail, fall back to the generic function application
-    return convertFuncAppToElem(callee, args).unwrap_or(
-      new FunctionApplicationNode({ callee, args }),
+    return convertFuncAppToElem(callee, args, this.nodeFactory).unwrap_or(
+      this.nodeFactory.create(FunctionApplicationNode, { callee, args }),
     );
   }
 
@@ -382,7 +387,10 @@ export default class Parser {
 
       this.advance();
       const prefixExpression = this.expression_bp(opPrefixPower.right);
-      leftExpression = new PrefixExpressionNode({ op: prefixOp, expression: prefixExpression });
+      leftExpression = this.nodeFactory.create(PrefixExpressionNode, {
+        op: prefixOp,
+        expression: prefixExpression,
+      });
     } else {
       leftExpression = this.extractOperand();
     }
@@ -407,7 +415,7 @@ export default class Parser {
           break;
         }
         const argumentList = this.tupleExpression();
-        leftExpression = new CallExpressionNode({
+        leftExpression = this.nodeFactory.create(CallExpressionNode, {
           callee: leftExpression,
           argumentList,
         });
@@ -422,7 +430,10 @@ export default class Parser {
             break;
           }
           this.advance();
-          leftExpression = new PostfixExpressionNode({ expression: leftExpression!, op });
+          leftExpression = this.nodeFactory.create(PostfixExpressionNode, {
+            expression: leftExpression!,
+            op,
+          });
         } else {
           const opInfixPower = infixBindingPower(op);
           if (opInfixPower.left === null || opInfixPower.left <= mbp) {
@@ -430,7 +441,7 @@ export default class Parser {
           }
           this.advance();
           const rightExpression = this.expression_bp(opInfixPower.right);
-          leftExpression = new InfixExpressionNode({
+          leftExpression = this.nodeFactory.create(InfixExpressionNode, {
             leftExpression: leftExpression!,
             op,
             rightExpression,
@@ -494,7 +505,7 @@ export default class Parser {
   private functionExpression(): FunctionExpressionNode {
     this.consume('Expect a function expression', SyntaxTokenKind.FUNCTION_EXPRESSION);
 
-    return new FunctionExpressionNode({ value: this.previous() });
+    return this.nodeFactory.create(FunctionExpressionNode, { value: this.previous() });
   }
 
   /* Parsing and synchronizing BlockExpression */
@@ -514,7 +525,7 @@ export default class Parser {
     this.consume("Expect a closing brace '}'", SyntaxTokenKind.RBRACE);
     const blockCloseBrace = this.previous();
 
-    return new BlockExpressionNode({ blockOpenBrace, body, blockCloseBrace });
+    return this.nodeFactory.create(BlockExpressionNode, { blockOpenBrace, body, blockCloseBrace });
   });
 
   private canBeField(): boolean {
@@ -557,15 +568,15 @@ export default class Parser {
         SyntaxTokenKind.NUMERIC_LITERAL,
       )
     ) {
-      return new PrimaryExpressionNode({
-        expression: new LiteralNode({ literal: this.previous() }),
+      return this.nodeFactory.create(PrimaryExpressionNode, {
+        expression: this.nodeFactory.create(LiteralNode, { literal: this.previous() }),
       });
     }
 
     // Primary expression containing a nested VariableNode
     if (this.match(SyntaxTokenKind.QUOTED_STRING, SyntaxTokenKind.IDENTIFIER)) {
-      return new PrimaryExpressionNode({
-        expression: new VariableNode({ variable: this.previous() }),
+      return this.nodeFactory.create(PrimaryExpressionNode, {
+        expression: this.nodeFactory.create(VariableNode, { variable: this.previous() }),
       });
     }
 
@@ -609,14 +620,14 @@ export default class Parser {
     const tupleCloseParen = this.previous();
 
     if (elementList.length === 1) {
-      return new GroupExpressionNode({
+      return this.nodeFactory.create(GroupExpressionNode, {
         groupOpenParen: tupleOpenParen,
         expression: elementList[0],
         groupCloseParen: tupleCloseParen,
       });
     }
 
-    return new TupleExpressionNode({
+    return this.nodeFactory.create(TupleExpressionNode, {
       tupleOpenParen,
       elementList,
       commaList,
@@ -668,7 +679,7 @@ export default class Parser {
     );
     const listCloseBracket = this.previous();
 
-    return new ListExpressionNode({
+    return this.nodeFactory.create(ListExpressionNode, {
       listOpenBracket,
       elementList,
       commaList,
@@ -715,7 +726,7 @@ export default class Parser {
       return undefined;
     }
 
-    return new AttributeNode({ name, colon, value });
+    return this.nodeFactory.create(AttributeNode, { name, colon, value });
   }
 
   private attributeName(): IdentiferStreamNode | undefined {
@@ -785,7 +796,9 @@ export default class Parser {
       }
     }
 
-    return identifiers.length === 0 ? undefined : new IdentiferStreamNode({ identifiers });
+    return identifiers.length === 0 ?
+      undefined :
+      this.nodeFactory.create(IdentiferStreamNode, { identifiers });
   }
 
   // eslint-disable-next-line class-methods-use-this

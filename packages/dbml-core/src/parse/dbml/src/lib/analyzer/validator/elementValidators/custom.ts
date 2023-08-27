@@ -13,6 +13,7 @@ import {
   simpleBodyConfig,
 } from './_preset_configs';
 import { SchemaSymbol } from '../../symbol/symbols';
+import SymbolFactory from '../../symbol/factory';
 
 export default class CustomValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.CUSTOM;
@@ -54,6 +55,7 @@ export default class CustomValidator extends ElementValidator {
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
+    symbolFactory: SymbolFactory,
   ) {
     super(
       declarationNode,
@@ -63,6 +65,7 @@ export default class CustomValidator extends ElementValidator {
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
+      symbolFactory,
     );
   }
 }

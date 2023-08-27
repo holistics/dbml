@@ -1,3 +1,4 @@
+import SymbolFactory from 'lib/analyzer/symbol/factory';
 import { UnresolvedName } from '../../types';
 import { createColumnSymbolIndex } from '../../symbol/symbolIndex';
 import {
@@ -68,6 +69,7 @@ export default class IndexesValidator extends ElementValidator {
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
+    symbolFactory: SymbolFactory,
   ) {
     super(
       declarationNode,
@@ -77,6 +79,7 @@ export default class IndexesValidator extends ElementValidator {
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
+      symbolFactory,
     );
   }
 }

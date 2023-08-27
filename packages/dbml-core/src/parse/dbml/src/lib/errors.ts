@@ -79,6 +79,11 @@ export enum CompileErrorCode {
   INVALID_CUSTOM_ELEMENT_VALUE,
 
   BINDING_ERROR = 4000,
+
+  UNSUPPORTED = 5000,
+  CIRCULAR_REF,
+  SAME_ENDPOINT,
+  CONFLICTING_SETTING,
 }
 
 export class CompileError extends Error {

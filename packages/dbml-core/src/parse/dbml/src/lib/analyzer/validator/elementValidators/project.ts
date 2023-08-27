@@ -1,3 +1,4 @@
+import SymbolFactory from 'lib/analyzer/symbol/factory';
 import { UnresolvedName } from '../../types';
 import { ElementKind, createContextValidatorConfig, createSubFieldValidatorConfig } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
@@ -48,6 +49,7 @@ export default class ProjectValidator extends ElementValidator {
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
+    symbolFactory: SymbolFactory,
   ) {
     super(
       declarationNode,
@@ -57,6 +59,7 @@ export default class ProjectValidator extends ElementValidator {
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
+      symbolFactory,
     );
   }
 }

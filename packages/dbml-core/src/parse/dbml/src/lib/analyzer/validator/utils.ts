@@ -22,6 +22,7 @@ import TableGroupValidator from './elementValidators/tableGroup';
 import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
 import { SchemaSymbol } from '../symbol/symbols';
 import SymbolTable from '../symbol/symbolTable';
+import SymbolFactory from '../symbol/factory';
 
 // Pick a validator suitable for `element`
 export function pickValidator(element: ElementDeclarationNode) {
@@ -87,7 +88,11 @@ export function hasSimpleBody(
 
 // Register the `variables` array as a stack of schema, the following nested within the former
 // `initialSchema` is the schema in which the first variable of `variables` is nested within
-export function registerSchemaStack(variables: string[], initialSchema: SymbolTable): SymbolTable {
+export function registerSchemaStack(
+  variables: string[],
+  initialSchema: SymbolTable,
+  symbolFactory: SymbolFactory,
+): SymbolTable {
   let prevSchema = initialSchema;
   // eslint-disable-next-line no-restricted-syntax
   for (const curName of variables) {
@@ -96,7 +101,7 @@ export function registerSchemaStack(variables: string[], initialSchema: SymbolTa
 
     if (!prevSchema.has(curId)) {
       curSchema = new SymbolTable();
-      const curSymbol = new SchemaSymbol(curSchema);
+      const curSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: curSchema });
       prevSchema.set(curId, curSymbol);
     } else {
       curSchema = prevSchema.get(curId)?.symbolTable;
@@ -166,6 +171,16 @@ export function isValidDefaultValue(value?: SyntaxNode): boolean {
   const variables = destructureComplexVariable(value).unwrap_or(undefined);
 
   return variables !== undefined && variables.length > 0;
+}
+
+export function isExpressionANumber(value?: SyntaxNode): value is PrimaryExpressionNode & {
+  expression: LiteralNode & { literal: { kind: SyntaxTokenKind.NUMERIC_LITERAL } };
+} {
+  return (
+    value instanceof PrimaryExpressionNode &&
+    value.expression instanceof LiteralNode &&
+    value.expression.literal.kind === SyntaxTokenKind.NUMERIC_LITERAL
+  );
 }
 
 export function isUnaryRelationship(value?: SyntaxNode): boolean {

@@ -2,7 +2,8 @@ import Report from '../../report';
 import { CompileError } from '../../errors';
 import { ProgramNode } from '../../parser/nodes';
 import { ContextStack } from './validatorContext';
-import { SchemaSymbol } from '../symbol/symbols';
+import { NodeSymbolIdGenerator, SchemaSymbol } from '../symbol/symbols';
+import SymbolFactory from '../symbol/factory';
 import { pickValidator } from './utils';
 import { ElementKind } from './types';
 import SymbolTable from '../symbol/symbolTable';
@@ -22,11 +23,16 @@ export default class Validator {
 
   private errors: CompileError[];
 
-  constructor(ast: ProgramNode) {
+  private symbolFactory: SymbolFactory;
+
+  constructor(ast: ProgramNode, symbolFactory: SymbolFactory) {
     this.ast = ast;
     this.contextStack = new ContextStack();
     this.errors = [];
-    this.publicSchemaSymbol = new SchemaSymbol(new SymbolTable());
+    this.symbolFactory = symbolFactory;
+    this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
+      symbolTable: new SymbolTable(),
+    });
     this.kindsGloballyFound = new Set();
     this.kindsLocallyFound = new Set();
     this.unresolvedNames = [];
@@ -48,6 +54,7 @@ export default class Validator {
         this.errors,
         this.kindsGloballyFound,
         this.kindsLocallyFound,
+        this.symbolFactory,
       );
       validatorObject.validate();
     });

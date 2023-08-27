@@ -1,3 +1,4 @@
+import SymbolFactory from 'lib/analyzer/symbol/factory';
 import { UnresolvedName } from '../../types';
 import {
   ElementKind,
@@ -59,6 +60,7 @@ export default class EnumValidator extends ElementValidator {
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
+    symbolFactory: SymbolFactory,
   ) {
     super(
       declarationNode,
@@ -68,6 +70,7 @@ export default class EnumValidator extends ElementValidator {
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
+      symbolFactory,
     );
   }
 }

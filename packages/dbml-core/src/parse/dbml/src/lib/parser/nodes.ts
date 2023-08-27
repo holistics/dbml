@@ -5,13 +5,13 @@ import { Position } from '../types';
 
 export type SyntaxNodeId = number;
 export class SyntaxNodeIdGenerator {
-  private static id = 0;
+  private id = 0;
 
-  static reset() {
+  reset() {
     this.id = 0;
   }
 
-  static nextId(): SyntaxNodeId {
+  nextId(): SyntaxNodeId {
     return this.id++;
   }
 }
@@ -19,7 +19,9 @@ export class SyntaxNodeIdGenerator {
 export interface SyntaxNode {
   id: Readonly<SyntaxNodeId>;
   kind: SyntaxNodeKind;
+  startPos: Readonly<Position>;
   start: Readonly<number>;
+  endPos: Readonly<Position>;
   end: Readonly<number>;
   symbol?: NodeSymbol;
   referee?: NodeSymbol; // The symbol that this syntax node refers to
@@ -69,9 +71,11 @@ export class ProgramNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
+  referee?: NodeSymbol;
+
   constructor(
     { body, eof }: { body: ElementDeclarationNode[]; eof: SyntaxToken },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     this.id = id;
     this.startPos = {
@@ -119,6 +123,8 @@ export class ElementDeclarationNode implements SyntaxNode {
 
   parentElement?: ElementDeclarationNode | ProgramNode;
 
+  referee?: NodeSymbol;
+
   constructor(
     {
       type,
@@ -137,7 +143,7 @@ export class ElementDeclarationNode implements SyntaxNode {
       bodyColon?: SyntaxToken;
       body: BlockExpressionNode | ExpressionNode;
     },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     this.id = id;
     this.startPos = type.startPos;
@@ -170,10 +176,9 @@ export class IdentiferStreamNode implements SyntaxNode {
 
   identifiers: SyntaxToken[];
 
-  constructor(
-    { identifiers }: { identifiers: SyntaxToken[] },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
-  ) {
+  referee?: NodeSymbol;
+
+  constructor({ identifiers }: { identifiers: SyntaxToken[] }, id: SyntaxNodeId) {
     this.id = id;
     if (identifiers.length === 0) {
       throw new Error("An IdentifierStreamNode shouldn't be created with zero tokens");
@@ -208,6 +213,8 @@ export class AttributeNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
+  referee?: NodeSymbol;
+
   constructor(
     {
       name,
@@ -218,7 +225,7 @@ export class AttributeNode implements SyntaxNode {
       colon?: SyntaxToken;
       value?: NormalExpressionNode | IdentiferStreamNode;
     },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     this.id = id;
     this.name = name;
@@ -273,9 +280,11 @@ export class PrefixExpressionNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
+  referee?: NodeSymbol;
+
   constructor(
     { op, expression }: { op: SyntaxToken; expression: NormalExpressionNode },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     this.id = id;
     this.startPos = op.startPos;
@@ -309,6 +318,8 @@ export class InfixExpressionNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
+  referee?: NodeSymbol;
+
   constructor(
     {
       op,
@@ -319,7 +330,7 @@ export class InfixExpressionNode implements SyntaxNode {
       leftExpression: NormalExpressionNode;
       rightExpression: NormalExpressionNode;
     },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     this.id = id;
     this.startPos = leftExpression.startPos;
@@ -352,9 +363,11 @@ export class PostfixExpressionNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
+  referee?: NodeSymbol;
+
   constructor(
     { op, expression }: { op: SyntaxToken; expression: NormalExpressionNode },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     this.id = id;
     this.startPos = expression.startPos;
@@ -384,10 +397,9 @@ export class FunctionExpressionNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
-  constructor(
-    { value }: { value: SyntaxToken },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
-  ) {
+  referee?: NodeSymbol;
+
+  constructor({ value }: { value: SyntaxToken }, id: SyntaxNodeId) {
     this.id = id;
     this.startPos = value.startPos;
     this.endPos = value.endPos;
@@ -417,9 +429,11 @@ export class FunctionApplicationNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
+  referee?: NodeSymbol;
+
   constructor(
     { callee, args }: { callee: ExpressionNode; args: ExpressionNode[] },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     this.id = id;
     this.startPos = callee.startPos;
@@ -457,6 +471,8 @@ export class BlockExpressionNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
+  referee?: NodeSymbol;
+
   constructor(
     {
       blockOpenBrace,
@@ -467,7 +483,7 @@ export class BlockExpressionNode implements SyntaxNode {
       body: ExpressionNode[];
       blockCloseBrace: SyntaxToken;
     },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     this.id = id;
     this.startPos = blockOpenBrace.startPos;
@@ -504,6 +520,8 @@ export class ListExpressionNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
+  referee?: NodeSymbol;
+
   constructor(
     {
       listOpenBracket,
@@ -516,7 +534,7 @@ export class ListExpressionNode implements SyntaxNode {
       commaList: SyntaxToken[];
       listCloseBracket: SyntaxToken;
     },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     this.id = id;
     this.startPos = listOpenBracket.startPos;
@@ -555,6 +573,8 @@ export class TupleExpressionNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
+  referee?: NodeSymbol;
+
   constructor(
     {
       tupleOpenParen,
@@ -567,7 +587,7 @@ export class TupleExpressionNode implements SyntaxNode {
       commaList: SyntaxToken[];
       tupleCloseParen: SyntaxToken;
     },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     this.id = id;
     this.startPos = tupleOpenParen.startPos;
@@ -587,6 +607,8 @@ export class GroupExpressionNode extends TupleExpressionNode {
 
   symbol?: NodeSymbol;
 
+  referee?: NodeSymbol;
+
   constructor(
     {
       groupOpenParen,
@@ -597,7 +619,7 @@ export class GroupExpressionNode extends TupleExpressionNode {
       expression: NormalExpressionNode;
       groupCloseParen: SyntaxToken;
     },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     super(
       {
@@ -630,6 +652,8 @@ export class CallExpressionNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
+  referee?: NodeSymbol;
+
   constructor(
     {
       callee,
@@ -638,7 +662,7 @@ export class CallExpressionNode implements SyntaxNode {
       callee: NormalExpressionNode;
       argumentList: TupleExpressionNode;
     },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
+    id: SyntaxNodeId,
   ) {
     this.id = id;
     this.startPos = callee.startPos;
@@ -668,10 +692,9 @@ export class LiteralNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
-  constructor(
-    { literal }: { literal: SyntaxToken },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
-  ) {
+  referee?: NodeSymbol;
+
+  constructor({ literal }: { literal: SyntaxToken }, id: SyntaxNodeId) {
     this.id = id;
     this.startPos = literal.startPos;
     this.endPos = literal.endPos;
@@ -699,10 +722,9 @@ export class VariableNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
-  constructor(
-    { variable }: { variable: SyntaxToken },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
-  ) {
+  referee?: NodeSymbol;
+
+  constructor({ variable }: { variable: SyntaxToken }, id: SyntaxNodeId) {
     this.id = id;
     this.startPos = variable.startPos;
     this.endPos = variable.endPos;
@@ -730,10 +752,9 @@ export class PrimaryExpressionNode implements SyntaxNode {
 
   symbol?: NodeSymbol;
 
-  constructor(
-    { expression }: { expression: LiteralNode | VariableNode },
-    id: SyntaxNodeId = SyntaxNodeIdGenerator.nextId(),
-  ) {
+  referee?: NodeSymbol;
+
+  constructor({ expression }: { expression: LiteralNode | VariableNode }, id: SyntaxNodeId) {
     this.id = id;
     this.startPos = expression.startPos;
     this.endPos = expression.endPos;

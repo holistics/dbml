@@ -1,5 +1,6 @@
 import { SyntaxNode } from '../../parser/nodes';
 import { ValidatorContext } from '../validator/validatorContext';
+import SymbolFactory from './factory';
 import {
   NodeSymbolIndex,
   createColumnSymbolIndex,
@@ -54,14 +55,15 @@ export function createSubfieldId(
 export function createSymbolFromContext(
   declaration: SyntaxNode,
   context: ValidatorContext,
+  factory: SymbolFactory,
 ): NodeSymbol | undefined {
   switch (context) {
     case ValidatorContext.TableContext:
-      return new TableSymbol(new SymbolTable(), declaration);
+      return factory.create(TableSymbol, { symbolTable: new SymbolTable(), declaration });
     case ValidatorContext.EnumContext:
-      return new EnumSymbol(new SymbolTable(), declaration);
+      return factory.create(EnumSymbol, { symbolTable: new SymbolTable(), declaration });
     case ValidatorContext.TableGroupContext:
-      return new TableGroupSymbol(new SymbolTable(), declaration);
+      return factory.create(TableGroupSymbol, { symbolTable: new SymbolTable(), declaration });
     default:
       return undefined;
   }
@@ -70,14 +72,15 @@ export function createSymbolFromContext(
 export function createSubfieldSymbol(
   declaration: SyntaxNode,
   context: ValidatorContext,
+  factory: SymbolFactory,
 ): NodeSymbol | undefined {
   switch (context) {
     case ValidatorContext.TableContext:
-      return new ColumnSymbol(declaration);
+      return factory.create(ColumnSymbol, { declaration });
     case ValidatorContext.EnumContext:
-      return new EnumFieldSymbol(declaration);
+      return factory.create(EnumFieldSymbol, { declaration });
     case ValidatorContext.TableGroupContext:
-      return new TableGroupFieldSymbol(declaration);
+      return factory.create(TableGroupFieldSymbol, { declaration });
     default:
       return undefined;
   }

@@ -1,3 +1,4 @@
+import SymbolFactory from 'lib/analyzer/symbol/factory';
 import { UnresolvedName } from '../../types';
 import {
   ElementKind,
@@ -22,7 +23,11 @@ import { destructureComplexVariable } from '../../utils';
 import { ContextStack, ValidatorContext } from '../validatorContext';
 import ElementValidator from './elementValidator';
 import {
- isUnaryRelationship, isValidColor, isValidDefaultValue, isVoid,
+  isExpressionANumber,
+  isUnaryRelationship,
+  isValidColor,
+  isValidDefaultValue,
+  isVoid,
 } from '../utils';
 import {
   registerNameConfig,
@@ -104,6 +109,7 @@ export default class TableValidator extends ElementValidator {
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
+    symbolFactory: SymbolFactory,
   ) {
     super(
       declarationNode,
@@ -113,6 +119,7 @@ export default class TableValidator extends ElementValidator {
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
+      symbolFactory,
     );
   }
 }
@@ -152,7 +159,10 @@ function isValidColumnType(type: SyntaxNode): boolean {
     return false;
   }
 
-  while (type instanceof CallExpressionNode) {
+  if (type instanceof CallExpressionNode) {
+    if (!type.argumentList.elementList.every(isExpressionANumber)) {
+      return false;
+    }
     // eslint-disable-next-line no-param-reassign
     type = type.callee;
   }

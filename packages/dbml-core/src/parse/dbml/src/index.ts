@@ -1,7 +1,4 @@
-import Lexer from './lib/lexer/lexer';
-import Parser from './lib/parser/parser';
-import { ParsingError } from './lib/errors';
+import { serialize } from './lib/serialization/serialize';
+import Compiler from './compiler';
 
-export {
- Lexer, Parser, ParsingError,
-};
+export { serialize, Compiler };

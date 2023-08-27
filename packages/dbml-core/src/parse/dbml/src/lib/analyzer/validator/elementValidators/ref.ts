@@ -1,3 +1,5 @@
+import { SyntaxTokenKind } from '../../../lexer/tokens';
+import SymbolFactory from '../../symbol/factory';
 import { UnresolvedName } from '../../types';
 import { registerRelationshipOperand } from './utils';
 import {
@@ -13,8 +15,8 @@ import {
   InfixExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
-import { isExpressionAQuotedString } from '../../../utils';
-import { extractQuotedStringToken, extractStringFromIdentifierStream } from '../../utils';
+import { isExpressionAVariableNode } from '../../../utils';
+import { extractStringFromIdentifierStream } from '../../utils';
 import { ContextStack, ValidatorContext } from '../validatorContext';
 import ElementValidator from './elementValidator';
 import { isBinaryRelationship } from '../utils';
@@ -68,6 +70,7 @@ export default class RefValidator extends ElementValidator {
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
+    symbolFactory: SymbolFactory,
   ) {
     super(
       declarationNode,
@@ -77,6 +80,7 @@ export default class RefValidator extends ElementValidator {
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
+      symbolFactory,
     );
   }
 }
@@ -105,7 +109,13 @@ function registerBinaryRelationship(
 }
 
 function isValidPolicy(value?: SyntaxNode): boolean {
-  if (!Array.isArray(value) && !isExpressionAQuotedString(value)) {
+  if (
+    !(
+      isExpressionAVariableNode(value) &&
+      value.expression.variable.kind !== SyntaxTokenKind.QUOTED_STRING
+    ) &&
+    !(value instanceof IdentiferStreamNode)
+  ) {
     return false;
   }
 
@@ -113,7 +123,7 @@ function isValidPolicy(value?: SyntaxNode): boolean {
   if (value instanceof IdentiferStreamNode) {
     extractedString = extractStringFromIdentifierStream(value);
   } else {
-    extractedString = extractQuotedStringToken(value);
+    extractedString = value.expression.variable.value;
   }
 
   if (extractedString) {

@@ -25,4 +25,8 @@ export default class SymbolTable {
       defaultValue
     );
   }
+
+  entries(): IterableIterator<[NodeSymbolIndex, NodeSymbol]> {
+    return this.table.entries();
+  }
 }

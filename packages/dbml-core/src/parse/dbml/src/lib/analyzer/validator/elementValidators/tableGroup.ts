@@ -1,3 +1,4 @@
+import SymbolFactory from 'lib/analyzer/symbol/factory';
 import { UnresolvedName } from '../../types';
 import { destructureComplexVariable } from '../../utils';
 import { createSchemaSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
@@ -57,6 +58,7 @@ export default class TableGroupValidator extends ElementValidator {
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
+    symbolFactory: SymbolFactory,
   ) {
     super(
       declarationNode,
@@ -66,6 +68,7 @@ export default class TableGroupValidator extends ElementValidator {
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
+      symbolFactory,
     );
   }
 }
