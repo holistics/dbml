@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { last, flatten } from 'lodash';
-import PostgreSQLParserVisitor from '../parsers/postgresql/PostgreSQLParserVisitor';
-import { Enum, Field, Index, Table } from './AST';
+import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
+import { Enum, Field, Index, Table } from '../AST';
 
 const COMMAND_KIND = {
   REF: 'ref',
