@@ -3,7 +3,7 @@
 import antlr4 from 'antlr4';
 import PostgreSQLLexer from '../parsers/postgresql/PostgreSQLLexer';
 import PostgreSQLParser from '../parsers/postgresql/PostgreSQLParser';
-import PostgresASTGen from './PostgresASTGen';
+import PostgresASTGen from './postgres/PostgresASTGen';
 import ParserErrorListener from './ParserErrorListener';
 
 export function parse (input, format) {

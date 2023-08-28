@@ -5,7 +5,7 @@ import PostgreSQLParserVisitor from './PostgreSQLParserVisitor.js';
 
 
 
-import PostgreSQLParserBase, { ParseRoutineBody } from './PostgreSQLParserBase.js';
+import PostgreSQLParserBase, { ParseRoutineBody } from '../../ASTGeneration/postgres/PostgreSQLParserBase.js';
 
 const _localctx = null;
 
