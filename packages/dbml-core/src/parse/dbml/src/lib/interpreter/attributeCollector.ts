@@ -15,7 +15,7 @@ import { InlineRef } from './types';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import { extractTokenForInterpreter, processRelOperand } from './utils';
 
-export class AttributeMap {
+class AttributeMap {
   private map: Map<string, [AttributeNode]> = new Map();
 
   insert(name: string, attribute: AttributeNode) {
@@ -55,7 +55,7 @@ export class AttributeMap {
   }
 }
 
-export function collectAttribute(
+export default function collectAttribute(
   settingNode: ListExpressionNode | undefined,
   errors: CompileError[],
 ): AttributeCollector {
@@ -73,7 +73,7 @@ export function collectAttribute(
   return new AttributeCollector(attrMap, errors);
 }
 
-export default class AttributeCollector {
+class AttributeCollector {
   settingMap: AttributeMap;
   errors: CompileError[];
 

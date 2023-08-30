@@ -33,7 +33,7 @@ import {
   extractQuotedStringToken,
   extractVarNameFromPrimaryVariable,
 } from '../analyzer/utils';
-import { collectAttribute } from './attributeCollector';
+import collectAttribute from './attributeCollector';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import {
   convertRelationOpToCardinalities,
