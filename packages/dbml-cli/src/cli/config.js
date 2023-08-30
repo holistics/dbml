@@ -5,6 +5,9 @@ export default {
   postgres: {
     name: 'PostgreSQL',
   },
+  postgresLegacy: {
+    name: 'PostgreSQL',
+  },
   mssql: {
     name: 'SQL Server',
   },
