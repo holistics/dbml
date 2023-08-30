@@ -16,7 +16,7 @@ import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import { extractTokenForInterpreter, processRelOperand } from './utils';
 
 class AttributeMap {
-  private map: Map<string, [AttributeNode]> = new Map();
+  private map: Map<string, AttributeNode[]> = new Map();
 
   insert(name: string, attribute: AttributeNode) {
     const curEntry = this.map.get(name);
