@@ -352,8 +352,17 @@ export default class Lexer {
         break;
       }
 
-      if (!isDot && !isAlphaNumeric(this.peek()!)) {
-        // the only way to return without errors
+      // The first way to return a numeric literal without error:
+      // a digit is encountered as the last character
+      if (!isDot && this.current.offset === this.tokens.length - 1) {
+        this.advance();
+
+        return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
+      }
+
+      // The second way to return a numeric literal without error:
+      // a space character is encountered
+      if(!isDot && !isAlphaNumeric(this.peek()!)) {
         return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
       }
 
