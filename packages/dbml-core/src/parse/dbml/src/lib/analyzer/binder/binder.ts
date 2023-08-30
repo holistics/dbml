@@ -41,6 +41,10 @@ export default class Binder {
     }
 
     if (remainingIds.length === 0) {
+      accessSymbol.references.push(referrer);
+      // eslint-disable-next-line no-param-reassign
+      referrer.referee = accessSymbol;
+
       return;
     }
 
