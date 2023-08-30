@@ -39,6 +39,8 @@ export default class Lexer {
     if (c === '\n') {
       this.current.line += 1;
       this.current.column = 0;
+    } else {
+      this.current.column += 1;
     }
     this.current.offset += 1;
 
