@@ -27,6 +27,7 @@ import {
   noUniqueConfig,
 } from './_preset_configs';
 import { SchemaSymbol } from '../../symbol/symbols';
+import { transformToReturnCompileErrors } from './utils';
 
 export default class IndexesValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.INDEXES;
@@ -50,12 +51,17 @@ export default class IndexesValidator extends ElementValidator {
   protected subfield = createSubFieldValidatorConfig({
     argValidators: [
       {
-        validateArg: (node) => destructureIndex(node).unwrap_or(undefined) !== undefined,
-        errorCode: CompileErrorCode.INVALID_INDEX,
+        validateArg: transformToReturnCompileErrors(
+          (node) => destructureIndex(node).unwrap_or(undefined) !== undefined,
+          CompileErrorCode.INVALID_INDEX,
+          'This field must be a function expression, a column name or a tuple of such',
+        ),
         registerUnresolvedName: registerIndexForResolution,
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_INDEX,
+    invalidArgNumberErrorMessage:
+      'An Indexes field must be a function expression, a column name or a tuple of such',
     settingList: indexSettingList(),
     shouldRegister: false,
     duplicateErrorCode: undefined,

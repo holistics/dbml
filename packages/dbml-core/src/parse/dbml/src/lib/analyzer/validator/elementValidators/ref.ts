@@ -1,7 +1,7 @@
 import { SyntaxTokenKind } from '../../../lexer/tokens';
 import SymbolFactory from '../../symbol/factory';
 import { UnresolvedName } from '../../types';
-import { registerRelationshipOperand } from './utils';
+import { registerRelationshipOperand, transformToReturnCompileErrors } from './utils';
 import {
   ElementKind,
   createContextValidatorConfig,
@@ -51,12 +51,16 @@ export default class RefValidator extends ElementValidator {
   protected subfield = createSubFieldValidatorConfig({
     argValidators: [
       {
-        validateArg: isBinaryRelationship,
-        errorCode: CompileErrorCode.INVALID_REF_RELATIONSHIP,
+        validateArg: transformToReturnCompileErrors(
+          isBinaryRelationship,
+          CompileErrorCode.INVALID_REF_RELATIONSHIP,
+          'This field must be a valid binary relationship',
+        ),
         registerUnresolvedName: registerBinaryRelationship,
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_REF_FIELD,
+    invalidArgNumberErrorMessage: "A ref's field must be a single valid binary relationship",
     settingList: refFieldSettings(),
     shouldRegister: false,
     duplicateErrorCode: undefined,

@@ -16,6 +16,7 @@ import {
 } from './_preset_configs';
 import { SchemaSymbol } from '../../symbol/symbols';
 import { isValidName } from '../utils';
+import { transformToReturnCompileErrors } from './utils';
 
 export default class TableGroupValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.TABLEGROUP;
@@ -39,12 +40,16 @@ export default class TableGroupValidator extends ElementValidator {
   protected subfield = createSubFieldValidatorConfig({
     argValidators: [
       {
-        validateArg: isValidName,
-        errorCode: CompileErrorCode.INVALID_TABLEGROUP_ELEMENT_NAME,
+        validateArg: transformToReturnCompileErrors(
+          isValidName,
+          CompileErrorCode.INVALID_TABLEGROUP_ELEMENT_NAME,
+          'This field must be a valid table name',
+        ),
         registerUnresolvedName: registerTableName,
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_TABLEGROUP_FIELD,
+    invalidArgNumberErrorMessage: 'A TableGroup field must be a single valid table name',
     settingList: noSettingListConfig.doNotStopOnError(),
     shouldRegister: false,
     duplicateErrorCode: undefined,

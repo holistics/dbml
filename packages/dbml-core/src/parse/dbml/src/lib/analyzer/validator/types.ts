@@ -1,5 +1,5 @@
 import { ElementDeclarationNode, SyntaxNode } from '../../parser/nodes';
-import { CompileErrorCode } from '../../errors';
+import { CompileError, CompileErrorCode } from '../../errors';
 import { None, Option, Some } from '../../option';
 import { ValidatorContext } from './validatorContext';
 import { UnresolvedName } from '../types';
@@ -19,7 +19,7 @@ export enum ElementKind {
   PROJECT = 'Project',
   REF = 'Ref',
   TABLEGROUP = 'TableGroup',
-  CUSTOM = '<CUSTOM>',
+  CUSTOM = 'custom element',
 }
 
 // An object that can validate a certain setting
@@ -56,10 +56,10 @@ export interface SettingValidator {
 //
 export interface ArgumentValidator {
   // Validator whether the node is a valid argument
-  validateArg(node: SyntaxNode): boolean;
-
-  // Corresponding error code when the arg is invalid
-  errorCode: Readonly<CompileErrorCode>;
+  // `ith` is a number representing the order of the subfield in the element
+  //   This parameter can be useful in cases
+  //   for example, where the first subfield has a different semantics from the rests
+  validateArg(node: SyntaxNode, ith: number): CompileError[];
 
   // An optional callback that registers an argument for later name resolution
   registerUnresolvedName?(
@@ -208,6 +208,7 @@ export interface SubFieldValidatorConfig {
   // The list of validators for each argument
   argValidators: Readonly<ArgumentValidator[]>;
   invalidArgNumberErrorCode?: Readonly<CompileErrorCode>;
+  invalidArgNumberErrorMessage?: Readonly<string>;
 
   // The setting list configuration of the subfield
   settingList: Readonly<SettingListValidatorConfig>;
@@ -375,9 +376,13 @@ export function createBodyValidatorConfig(config: BodyValidatorConfig): BodyVali
 export function createSubFieldValidatorConfig(
   config: SubFieldValidatorConfig,
 ): SubFieldValidatorConfig {
-  if (config.argValidators.length > 0 && !config.invalidArgNumberErrorCode) {
+  if (
+    config.argValidators.length > 0 &&
+    (!config.invalidArgNumberErrorCode || !config.invalidArgNumberErrorMessage)
+  ) {
     throw new Error(
-      'Misconfiguration: If subfield accepts arguments, invalidArgNumberErrorCode must be present',
+      // eslint-disable-next-line
+      'Misconfiguration: If subfield accepts arguments, invalidArgNumberErrorCode and invalidArgNumberErrorMessage must be present',
     );
   }
 

@@ -40,6 +40,7 @@ import {
   createSymbolFromContext,
 } from '../../symbol/utils';
 import SymbolFactory from '../../symbol/factory';
+import { getSubfieldKind, isCustomElement } from './utils';
 
 export default abstract class ElementValidator {
   protected abstract elementKind: ElementKind;
@@ -114,7 +115,7 @@ export default abstract class ElementValidator {
       this.logError(
         this.declarationNode.type,
         this.unique.notLocallyErrorCode,
-        `A ${this.elementKind} has already been defined in this scope`,
+        `A(n) ${this.elementKind} has already been defined in this scope`,
       );
 
       return false;
@@ -134,7 +135,7 @@ export default abstract class ElementValidator {
       this.logError(
         this.declarationNode.type,
         this.unique.notGloballyErrorCode,
-        `A ${this.elementKind} has already been defined in this file`,
+        `A(n) ${this.elementKind} has already been defined in this file`,
       );
 
       return false;
@@ -152,7 +153,9 @@ export default abstract class ElementValidator {
       this.logError(
         this.declarationNode.type,
         this.context.errorCode,
-        `${this.elementKind} can not appear here`,
+        isCustomElement(this.elementKind) ?
+          'Unknown element type' :
+          `A(n) ${this.elementKind} can not appear here`,
       );
 
       return !this.context.stopOnError;
@@ -198,7 +201,7 @@ export default abstract class ElementValidator {
       this.logError(
         this.declarationNode.name,
         this.name.notAllowErrorCode,
-        `${this.elementKind} shouldn't have a name`,
+        `A(n) ${this.elementKind} shouldn't have a name`,
       );
 
       return false;
@@ -212,7 +215,7 @@ export default abstract class ElementValidator {
       this.logError(
         this.declarationNode.type,
         this.name.notOptionalErrorCode,
-        `${this.elementKind} must have a name`,
+        `A(n) ${this.elementKind} must have a name`,
       );
 
       return false;
@@ -227,7 +230,7 @@ export default abstract class ElementValidator {
       this.logError(
         name,
         this.name.complexErrorCode,
-        `${this.elementKind} must have a double-quoted string or an identifier name`,
+        `A(n) ${this.elementKind} must have a double-quoted string or an identifier name`,
       );
 
       return false;
@@ -278,7 +281,7 @@ export default abstract class ElementValidator {
       this.logError(
         alias,
         this.alias.notAllowErrorCode,
-        `${this.elementKind} shouldn't have an alias`,
+        `A(n) ${this.elementKind} shouldn't have an alias`,
       );
 
       return false;
@@ -294,7 +297,7 @@ export default abstract class ElementValidator {
       this.logError(
         this.declarationNode.type,
         this.alias.notOptionalErrorCode,
-        `${this.elementKind} must have an alias`,
+        `A(n) ${this.elementKind} must have an alias`,
       );
 
       return false;
@@ -361,7 +364,7 @@ export default abstract class ElementValidator {
       this.logError(
         nameNode,
         this.name.duplicateErrorCode,
-        `This ${this.elementKind} has a duplicated name`,
+        `${this.elementKind} "${name}" has been defined`,
       );
 
       return { registeredSymbol: defaultSymbol || newSymbol, ok: false };
@@ -401,7 +404,7 @@ export default abstract class ElementValidator {
       this.logError(
         attributeList,
         this.settingList.notAllowErrorCode,
-        `${this.elementKind} shouldn't have a setting list`,
+        `A(n) ${this.elementKind} shouldn't have a setting list`,
       );
 
       return false;
@@ -416,7 +419,7 @@ export default abstract class ElementValidator {
       this.logError(
         this.declarationNode.type,
         this.settingList.notOptionalErrorCode,
-        `${this.elementKind} must have a setting list`,
+        `A(n) ${this.elementKind} must have a setting list`,
       );
 
       return false;
@@ -435,7 +438,7 @@ export default abstract class ElementValidator {
       this.logError(
         node.body,
         this.body.complexErrorCode,
-        `${this.elementKind} should not have a complex body`,
+        `A(n) ${this.elementKind} should not have a complex body`,
       );
       hasError = true;
     }
@@ -444,7 +447,7 @@ export default abstract class ElementValidator {
       this.logError(
         node.body,
         this.body.simpleErrorCode,
-        `${this.elementKind} should not have a simple body`,
+        `A(n) ${this.elementKind} should not have a simple body`,
       );
       hasError = true;
     }
@@ -464,34 +467,30 @@ export default abstract class ElementValidator {
 
       const kindsFoundInScope = new Set<ElementKind>();
       let hasError = false;
-      node.body.body.forEach((sub) => {
-        hasError = this.validateEachOfComplexBody(sub, kindsFoundInScope) || hasError;
-      });
+      let ith = 0;
+      hasError =
+        !node.body.body
+          .map((sub) => {
+            if (sub instanceof ElementDeclarationNode) {
+              return this.validateNestedElementDeclaration(sub, kindsFoundInScope);
+            }
+            ith += 1;
+            if (sub instanceof FunctionApplicationNode) {
+              return this.validateSubField(sub, ith);
+            }
+
+            return this.validateSubField(sub, ith);
+          })
+          .every((v) => !!v === true) || hasError;
 
       return !hasError;
     }
 
     if (node.body instanceof FunctionApplicationNode) {
-      return this.validateSubField(node.body);
+      return this.validateSubField(node.body, 0);
     }
 
-    return this.validateSubField(node.body);
-  }
-
-  // Switch to the appropriate validator method based on the type of content
-  // Either a nested element or a subfield
-  protected validateEachOfComplexBody(
-    sub: ExpressionNode,
-    kindsFoundInScope: Set<ElementKind>,
-  ): boolean {
-    if (sub instanceof ElementDeclarationNode) {
-      return this.validateNestedElementDeclaration(sub, kindsFoundInScope);
-    }
-    if (sub instanceof FunctionApplicationNode) {
-      return this.validateSubField(sub);
-    }
-
-    return this.validateSubField(sub);
+    return this.validateSubField(node.body, 0);
   }
 
   protected validateNestedElementDeclaration(
@@ -519,7 +518,7 @@ export default abstract class ElementValidator {
 
   /* Validate and register subfield according to config `this.subfield` */
 
-  protected validateSubField(sub: ExpressionNode): boolean {
+  protected validateSubField(sub: ExpressionNode, ith: number): boolean {
     const args = sub instanceof FunctionApplicationNode ? [sub.callee, ...sub.args] : [sub];
     if (args.length === 0) {
       throw new Error('A function application node always has at least 1 callee');
@@ -535,7 +534,7 @@ export default abstract class ElementValidator {
       this.logError(
         sub,
         this.subfield.invalidArgNumberErrorCode,
-        `There must be ${this.subfield.argValidators.length} non-setting terms`,
+        this.subfield.invalidArgNumberErrorMessage!,
       );
 
       return false;
@@ -544,9 +543,9 @@ export default abstract class ElementValidator {
     let hasError = false;
 
     for (let i = 0; i < args.length; i += 1) {
-      const res = this.subfield.argValidators[i].validateArg(args[i]);
-      if (!res) {
-        this.logError(args[i], this.subfield.argValidators[i].errorCode, 'Invalid field value');
+      const errors = this.subfield.argValidators[i].validateArg(args[i], ith);
+      if (errors.length > 0) {
+        this.errors.push(...errors);
         hasError = true;
       } else {
         this.subfield.argValidators[i].registerUnresolvedName?.call(
@@ -592,7 +591,7 @@ export default abstract class ElementValidator {
       this.logError(
         nameNode,
         this.subfield.duplicateErrorCode,
-        `${this.elementKind} subfield's name is duplicated`,
+        `${this.elementKind} ${getSubfieldKind(this.elementKind)} "${name}" has been defined`,
       );
 
       return new None();
@@ -612,7 +611,7 @@ export default abstract class ElementValidator {
       this.logError(
         maybeSettingList,
         this.subfield.settingList.notOptionalErrorCode,
-        `A ${this.elementKind} subfield must have a settingList`,
+        `A(n) ${this.elementKind} ${getSubfieldKind(this.elementKind)} must have a setting list`,
       );
 
       return false;
@@ -622,7 +621,9 @@ export default abstract class ElementValidator {
       this.logError(
         maybeSettingList,
         this.subfield.settingList.notAllowErrorCode,
-        `A ${this.elementKind} subfield should not have a settingList`,
+        `A(n) ${this.elementKind} ${getSubfieldKind(
+          this.elementKind,
+        )}  should not have a setting list`,
       );
 
       return false;

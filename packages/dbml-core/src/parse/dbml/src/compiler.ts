@@ -6,7 +6,7 @@ import Lexer from './lib/lexer/lexer';
 import Parser from './lib/parser/parser';
 import Analyzer from './lib/analyzer/analyzer';
 import Interpreter from './lib/interpreter/interpreter';
-import Database from '../../../model_structure/database';
+import Database from './lib/model_structure/database';
 
 export default class Compiler {
   private nodeIdGenerator = new SyntaxNodeIdGenerator();

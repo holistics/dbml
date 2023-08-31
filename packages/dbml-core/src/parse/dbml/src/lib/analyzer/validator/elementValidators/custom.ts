@@ -14,6 +14,7 @@ import {
 } from './_preset_configs';
 import { SchemaSymbol } from '../../symbol/symbols';
 import SymbolFactory from '../../symbol/factory';
+import { transformToReturnCompileErrors } from './utils';
 
 export default class CustomValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.CUSTOM;
@@ -37,11 +38,15 @@ export default class CustomValidator extends ElementValidator {
   protected subfield = createSubFieldValidatorConfig({
     argValidators: [
       {
-        validateArg: isExpressionAQuotedString,
-        errorCode: CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE,
+        validateArg: transformToReturnCompileErrors(
+          isExpressionAQuotedString,
+          CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE,
+          'This field must be a string literal',
+        ),
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE,
+    invalidArgNumberErrorMessage: 'A custom element field must be a single string literal',
     settingList: noSettingListConfig.doNotStopOnError(),
     shouldRegister: false,
     duplicateErrorCode: undefined,

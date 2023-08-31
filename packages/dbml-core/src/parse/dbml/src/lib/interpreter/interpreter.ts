@@ -207,7 +207,10 @@ export default class Interpreter {
       dbdefault = collector.extractDefault();
       inlineRefs = collector.extractRef(tableName, schemaName);
       inlineRefs.forEach((ref) => {
-        if (!this.logIfCircularRefError(field.callee, field.symbol as ColumnSymbol, ref.referee)) {
+        if (!this.logIfSameEndpoint(ref.node, field.symbol as ColumnSymbol, ref.referee)) {
+          return;
+        }
+        if (!this.logIfCircularRefError(ref.node, field.symbol as ColumnSymbol, ref.referee)) {
           return;
         }
         _inlineRefs.push({
@@ -489,7 +492,9 @@ export default class Interpreter {
     };
   }
 
-  private note(element: ElementDeclarationNode): { value: string; token: TokenPosition } | undefined {
+  private note(
+    element: ElementDeclarationNode,
+  ): { value: string; token: TokenPosition } | undefined {
     const content =
       element.body instanceof BlockExpressionNode ?
         extractQuotedStringToken((element.body as BlockExpressionNode).body[0]) :
@@ -553,7 +558,9 @@ export default class Interpreter {
     };
   }
 
-  private extractElementName(nameNode: SyntaxNode): Option<{ schemaName: string | null; name: string }> {
+  private extractElementName(
+    nameNode: SyntaxNode,
+  ): Option<{ schemaName: string | null; name: string }> {
     const fragments = destructureComplexVariable(nameNode).unwrap();
     const name = fragments.pop()!;
     const schemaName = fragments.pop();

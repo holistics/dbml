@@ -2,7 +2,7 @@ import SymbolFactory from 'lib/analyzer/symbol/factory';
 import { UnresolvedName } from '../../types';
 import { ElementKind, createContextValidatorConfig, createSubFieldValidatorConfig } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { ElementDeclarationNode } from '../../../parser/nodes';
+import { ElementDeclarationNode, SyntaxNode } from '../../../parser/nodes';
 import { isExpressionAQuotedString } from '../../../utils';
 import { ContextStack, ValidatorContext } from '../validatorContext';
 import ElementValidator from './elementValidator';
@@ -37,11 +37,32 @@ export default class NoteValidator extends ElementValidator {
   protected subfield = createSubFieldValidatorConfig({
     argValidators: [
       {
-        validateArg: isExpressionAQuotedString,
-        errorCode: CompileErrorCode.INVALID_NOTE,
+        validateArg: (node: SyntaxNode, ith: number) => {
+          if (ith > 0) {
+            return [
+              new CompileError(
+                CompileErrorCode.NOTE_CONTENT_REDEFINED,
+                'Only one note content can be defined',
+                node,
+              ),
+            ];
+          }
+          if (isExpressionAQuotedString(node)) {
+            return [];
+          }
+
+          return [
+            new CompileError(
+              CompileErrorCode.INVALID_NOTE,
+              "A note's content must be doubly or singly quoted string",
+              node,
+            ),
+          ];
+        },
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_NOTE,
+    invalidArgNumberErrorMessage: 'A note content must be a doubly or singly quoted string',
     settingList: noSettingListConfig.doNotStopOnError(),
     shouldRegister: false,
     duplicateErrorCode: undefined,

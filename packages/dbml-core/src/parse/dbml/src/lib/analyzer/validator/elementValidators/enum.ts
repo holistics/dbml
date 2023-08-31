@@ -19,6 +19,7 @@ import {
   registerNameConfig,
 } from './_preset_configs';
 import { SchemaSymbol } from '../../symbol/symbols';
+import { transformToReturnCompileErrors } from './utils';
 
 export default class EnumValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.ENUM;
@@ -42,11 +43,15 @@ export default class EnumValidator extends ElementValidator {
   protected subfield = createSubFieldValidatorConfig({
     argValidators: [
       {
-        validateArg: isExpressionAVariableNode,
-        errorCode: CompileErrorCode.INVALID_ENUM_ELEMENT_NAME,
+        validateArg: transformToReturnCompileErrors(
+          isExpressionAVariableNode,
+          CompileErrorCode.INVALID_ENUM_ELEMENT_NAME,
+          'This field must be a simple variable',
+        ),
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_ENUM_ELEMENT,
+    invalidArgNumberErrorMessage: "An enum's field must be a simple variable",
     settingList: enumFieldSettingList(),
     shouldRegister: true,
     duplicateErrorCode: CompileErrorCode.DUPLICATE_ENUM_ELEMENT_NAME,

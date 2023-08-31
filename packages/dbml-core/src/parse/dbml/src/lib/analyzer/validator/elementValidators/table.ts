@@ -41,7 +41,7 @@ import {
   createEnumSymbolIndex,
   createSchemaSymbolIndex,
 } from '../../symbol/symbolIndex';
-import { registerRelationshipOperand } from './utils';
+import { registerRelationshipOperand, transformToReturnCompileErrors } from './utils';
 
 export default class TableValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.TABLE;
@@ -86,16 +86,23 @@ export default class TableValidator extends ElementValidator {
   protected subfield = createSubFieldValidatorConfig({
     argValidators: [
       {
-        validateArg: isExpressionAVariableNode,
-        errorCode: CompileErrorCode.INVALID_COLUMN_NAME,
+        validateArg: transformToReturnCompileErrors(
+          isExpressionAVariableNode,
+          CompileErrorCode.INVALID_COLUMN_NAME,
+          'This field must be a valid column name',
+        ),
       },
       {
-        validateArg: isValidColumnType,
-        errorCode: CompileErrorCode.INVALID_COLUMN_TYPE,
+        validateArg: transformToReturnCompileErrors(
+          isValidColumnType,
+          CompileErrorCode.INVALID_COLUMN_TYPE,
+          'This field must be a valid column type',
+        ),
         registerUnresolvedName: registerEnumTypeIfComplexVariable,
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_COLUMN,
+    invalidArgNumberErrorMessage: "A Table's column must have a name and a type",
     settingList: columnSettingList(),
     shouldRegister: true,
     duplicateErrorCode: CompileErrorCode.DUPLICATE_COLUMN_NAME,
