@@ -1,6 +1,6 @@
 import { CompileError } from './lib/errors';
 import { ProgramNode, SyntaxNodeIdGenerator } from './lib/parser/nodes';
-import { NodeSymbolIdGenerator } from './lib/analyzer/symbol/symbols';
+import { NodeSymbolIdGenerator } from './../../symbol/symbols';
 import Report from './lib/report';
 import Lexer from './lib/lexer/lexer';
 import Parser from './lib/parser/parser';

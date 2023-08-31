@@ -1,4 +1,4 @@
-import SymbolFactory from 'lib/analyzer/symbol/factory';
+import SymbolFactory from '../../symbol/factory';
 import { UnresolvedName } from '../../types';
 import { ElementKind, createContextValidatorConfig, createSubFieldValidatorConfig } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';

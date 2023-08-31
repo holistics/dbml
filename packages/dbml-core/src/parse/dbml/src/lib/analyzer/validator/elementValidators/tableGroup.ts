@@ -1,4 +1,4 @@
-import SymbolFactory from 'lib/analyzer/symbol/factory';
+import SymbolFactory from '../../symbol/factory';
 import { UnresolvedName } from '../../types';
 import { destructureComplexVariable } from '../../utils';
 import { createSchemaSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
