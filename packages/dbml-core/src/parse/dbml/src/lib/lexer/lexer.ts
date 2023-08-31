@@ -354,7 +354,7 @@ export default class Lexer {
 
       // The first way to return a numeric literal without error:
       // a digit is encountered as the last character
-      if (!isDot && this.current.offset === this.tokens.length - 1) {
+      if (!isDot && this.current.offset === this.text.length - 1) {
         this.advance();
 
         return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
