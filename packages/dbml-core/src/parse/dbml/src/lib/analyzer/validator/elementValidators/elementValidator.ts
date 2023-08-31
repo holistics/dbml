@@ -467,7 +467,7 @@ export default abstract class ElementValidator {
 
       const kindsFoundInScope = new Set<ElementKind>();
       let hasError = false;
-      let ith = 0;
+      let ith = -1;
       hasError =
         !node.body.body
           .map((sub) => {
