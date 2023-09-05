@@ -190,7 +190,7 @@ ALTER VIEW foo RENAME TO bar;
 ALTER TABLE organization_units OWNER TO "user";
 ALTER TABLE table_name ADD COLUMN valid BOOLEAN;
 
--- issue #345
+-- https://github.com/holistics/dbml/issues/345
 CREATE MATERIALIZED VIEW country_total_debt_2
 as
   select country_name,

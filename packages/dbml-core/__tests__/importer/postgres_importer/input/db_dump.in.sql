@@ -1,4 +1,4 @@
--- issue 277
+-- https://github.com/holistics/dbml/issues/277
 --
 -- PostgreSQL database dump
 --
