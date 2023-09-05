@@ -103,7 +103,7 @@ COMMENT ON TABLE "users" IS 'Store user data';
 
 COMMENT ON TABLE "products" IS 'Products table comment';
 
--- issue 324
+-- https://github.com/holistics/dbml/issues/324
 CREATE TABLE "public"."accounts" (
   "id" integer GENERATED ALWAYS AS IDENTITY NOT NULL,
   "domain" character varying(100),
@@ -112,10 +112,10 @@ CREATE TABLE "public"."accounts" (
   CONSTRAINT "accounts_pkey" PRIMARY KEY ("id")
 ) WITH (oids = false);
 
--- issue 281
+-- https://github.com/holistics/dbml/issues/281
 CREATE TABLE public.tests ( id bigint NOT NULL, type character varying DEFAULT 'testing'::character varying );
 
--- issue 427
+-- https://github.com/holistics/dbml/issues/427
 CREATE TABLE public.users2 (
     username character varying NOT NULL,
     hashed_password character varying NOT NULL,
@@ -125,7 +125,7 @@ CREATE TABLE public.users2 (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
--- issue 248
+-- https://github.com/holistics/dbml/issues/248
 create table table1 (
     field text not null,
     field2 text not null,
@@ -139,7 +139,7 @@ create table if not exists table2 (
     foreign key (field, field2) references table1(field, field2)
 );
 
--- issue 222
+-- https://github.com/holistics/dbml/issues/222
 CREATE TABLE test_table (
 	"name" varchar NOT NULL,
 	id varchar NULL,
