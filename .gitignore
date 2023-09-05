@@ -18,3 +18,4 @@ node_modules/
 *.sln
 *.swp
 packages/dbml-core/src/parse/mssql/manual_tests.js
+packages/dbml-core/benchmarks/*
