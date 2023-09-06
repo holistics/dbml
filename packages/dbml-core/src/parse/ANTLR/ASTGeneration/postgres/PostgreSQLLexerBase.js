@@ -6,7 +6,7 @@ export default class PostgreSQLLexerBase extends antlr4.Lexer {
 }
 
 // helper functions required by the generated grammar, these were called implicitly without the 'this.' keyword
-// In C#, these can be decleare as base classes's methods, this won't work is JS.
+// In C#, these can be decleare as base classes's methods, this won't work in JS.
 // To avoid error, we declare their signature and import them in the generated PostgreSQLLexer.js
 export function checkLA () {
 }
