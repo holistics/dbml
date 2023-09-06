@@ -1,3 +1,35 @@
+## v2.6.0 (2023-09-06)
+
+#### :memo: Documentation
+* [#426](https://github.com/holistics/dbml/pull/426) docs: Update the example of table users in README.md ([@huyphung1602](https://github.com/huyphung1602))
+* [#417](https://github.com/holistics/dbml/pull/417) Included enum example for names with spaces ([@jacobtread](https://github.com/jacobtread))
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-core`
+  * [#416](https://github.com/holistics/dbml/pull/416) Add antlr grammar and visitor for postgresql ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#416](https://github.com/holistics/dbml/pull/416) Add antlr grammar and visitor for postgresql ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`
+  * [#416](https://github.com/holistics/dbml/pull/416) Add antlr grammar and visitor for postgresql ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :house_with_garden: Internal
+* [#433](https://github.com/holistics/dbml/pull/433) change(bearer_workflows): only scan pr diff ([@vinh-hh](https://github.com/vinh-hh))
+* [#429](https://github.com/holistics/dbml/pull/429) update fail on error bearer scan ([@vinh-hh](https://github.com/vinh-hh))
+* [#428](https://github.com/holistics/dbml/pull/428) feat(github): add bearer scan ([@vinh-hh](https://github.com/vinh-hh))
+
+#### Committers: 7
+- Jacobtread ([@jacobtread](https://github.com/jacobtread))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Vinh Ho ([@vinh-hh](https://github.com/vinh-hh))
+- chrstfer ([@chrstfer](https://github.com/chrstfer))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+- shyam ([@xshyamx](https://github.com/xshyamx))
+
 ## v2.5.4 (2023-07-18)
 
 #### :memo: Documentation
