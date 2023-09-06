@@ -85,3 +85,30 @@ export function last<T>(array: T[]): T | undefined {
 
   return array[array.length - 1];
 }
+
+export function gatherIntoList(
+  ...maybeMembers: (SyntaxToken | SyntaxNode | undefined)[]
+): (SyntaxToken | SyntaxNode)[] {
+  return maybeMembers.filter((e) => e !== undefined) as (SyntaxNode | SyntaxToken)[];
+}
+
+export function alternateLists<T, S>(firstList: T[], secondList: S[]): (T | S)[] {
+  const res: (T | S)[] = [];
+  const minLength = Math.min(firstList.length, secondList.length);
+  for (let i = 0; i < minLength; i += 1) {
+    res.push(firstList[i], secondList[i]);
+  }
+  res.push(...firstList.slice(minLength), ...secondList.slice(minLength));
+
+  return res;
+}
+
+export function getTokenFullEnd(token: SyntaxToken): number {
+  return token.trailingTrivia.length === 0 ?
+    token.end :
+    getTokenFullEnd(last(token.trailingTrivia)!);
+}
+
+export function getTokenFullStart(token: SyntaxToken): number {
+  return token.leadingTrivia.length === 0 ? token.start : getTokenFullStart(token.leadingTrivia[0]);
+}
