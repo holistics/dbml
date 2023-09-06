@@ -193,3 +193,20 @@ function markInvalidNode(node: SyntaxNode) {
 export function isInvalidToken(token?: SyntaxToken): boolean {
   return token?.kind === SyntaxTokenKind.INVALID;
 }
+
+export function createDummySyntaxToken(kind: SyntaxTokenKind): SyntaxToken {
+  return SyntaxToken.create(
+    kind,
+    {
+      offset: NaN,
+      line: NaN,
+      column: NaN,
+    },
+    {
+      offset: NaN,
+      line: NaN,
+      column: NaN,
+    },
+    '',
+  );
+}

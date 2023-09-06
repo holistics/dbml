@@ -1,6 +1,7 @@
 import {
   canBuildAttributeNode,
   convertFuncAppToElem,
+  createDummySyntaxToken,
   isAsKeyword,
   isInvalidToken,
   markInvalid,
@@ -381,7 +382,7 @@ export default class Parser {
         this.logAndThrowError(
           prefixOp,
           CompileErrorCode.UNKNOWN_PREFIX_OP,
-          `Unexpected prefix '${prefixOp.value}' in an expression`,
+          `Unexpected '${prefixOp.value}' in an expression`,
         );
       }
 
@@ -719,11 +720,15 @@ export default class Parser {
     }
 
     if (!canBuildAttributeNode(name, colon, value)) {
-      markInvalid(name);
-      markInvalid(colon);
-      markInvalid(value);
-
-      return undefined;
+      return this.nodeFactory.create(AttributeNode, {
+        name:
+          name ||
+          this.nodeFactory.create(IdentiferStreamNode, {
+            identifiers: [createDummySyntaxToken(SyntaxTokenKind.IDENTIFIER)],
+          }),
+        colon,
+        value,
+      });
     }
 
     return this.nodeFactory.create(AttributeNode, { name, colon, value });

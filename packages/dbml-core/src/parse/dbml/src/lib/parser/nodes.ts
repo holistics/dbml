@@ -248,15 +248,12 @@ export class AttributeNode implements SyntaxNode {
     this.value = value;
     this.colon = colon;
     this.startPos = this.name.startPos;
-    if (colon && !value) {
-      throw new Error("An AttributeNode shouldn't be created with a colon but no value");
-    }
-    this.endPos = colon ? value!.endPos : name.endPos;
+    this.endPos = colon ? (value || colon).endPos : name.endPos;
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
     this.fullStart = this.name.fullStart;
-    this.fullEnd = colon ? value!.fullEnd : name.fullEnd;
+    this.fullEnd = colon ? value?.fullEnd || getTokenFullEnd(colon) : name.fullEnd;
   }
 }
 
