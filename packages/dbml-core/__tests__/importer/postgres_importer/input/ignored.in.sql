@@ -1,5 +1,5 @@
 /* ALTER TABLE: https://www.postgresql.org/docs/current/sql-altertable.html */
-ALTER TABLE IF EXISTS ONLY name*
+ALTER TABLE IF EXISTS ONLY name.*
     RENAME COLUMN column_name TO new_column_name;
 ALTER TABLE IF EXISTS name
     RENAME column_name TO new_column_name;
@@ -19,19 +19,19 @@ ALTER TABLE ALL IN TABLESPACE name OWNED BY role_name1, role_name2,role_name3,  
     SET TABLESPACE new_tablespace;
 
 ALTER TABLE IF EXISTS name
-    ATTACH PARTITION partition_name FOR VALUES partition_bound_spec;
+    ATTACH PARTITION partition_name FOR VALUES IN (1);
 ALTER TABLE name
     ATTACH PARTITION partition_name DEFAULT;
 
 ALTER TABLE IF EXISTS name
-    DETACH PARTITION /* comment goes here; */ partition_name CONCURRENTLY;
+    DETACH PARTITION /* comment goes here; */ partition_name;
 ALTER TABLE name
-    DETACH PARTITION partition_name FINALIZE;
+    DETACH PARTITION partition_name;
 
-ALTER TABLE IF EXISTS ONLY name*
-    ADD COLUMN IF NOT EXISTS column_name data_type COLLATE collation,
+ALTER TABLE IF EXISTS ONLY name.*
+    ADD COLUMN IF NOT EXISTS column_name data_type COLLATE collation_name,
     DROP COLUMN IF EXISTS column_name CASCADE,
-    ALTER COLUMN column_name SET DATA TYPE data_type COLLATE collation USING expression,
+    ALTER COLUMN column_name SET DATA TYPE data_type COLLATE collation_name USING expression,
     ALTER COLUMN column_name SET DEFAULT expression,
     ALTER COLUMN column_name DROP DEFAULT,
     ALTER COLUMN column_name SET NOT NULL,
@@ -40,11 +40,10 @@ ALTER TABLE IF EXISTS ONLY name*
     ALTER COLUMN column_name ADD GENERATED ALWAYS AS IDENTITY,
     ALTER COLUMN column_name SET GENERATED ALWAYS,
     ALTER COLUMN column_name DROP IDENTITY IF EXISTS,
-    ALTER COLUMN column_name SET STATISTICS integer,
+    ALTER COLUMN column_name SET STATISTICS 1,
     ALTER COLUMN column_name SET ( attribute_option = value, attr2 = val2 ),
     ALTER COLUMN column_name RESET ( attribute_option, attr2, attr3),
     ALTER COLUMN column_name SET STORAGE MAIN,
-    ALTER COLUMN column_name SET COMPRESSION compression_method,
     ALTER CONSTRAINT constraint_name,
     VALIDATE CONSTRAINT constraint_name,
     DROP CONSTRAINT IF EXISTS constraint_name CASCADE,
@@ -97,7 +96,7 @@ ALTER EXTENSION hstore UPDATE TO '2.0';
 
 ALTER FOREIGN DATA WRAPPER dbi OPTIONS (ADD foo '1', DROP 'bar');
 
-ALTER FOREIGN TABLE myschema.distributors OPTIONS (ADD opt1 'value', SET opt2 'value2', DROP opt3 'value3');
+ALTER FOREIGN TABLE myschema.distributors OPTIONS (ADD opt1 'value', SET opt2 'value2', DROP 'value3');
 
 ALTER FUNCTION sqrt(integer) OWNER TO joe;
 
@@ -190,3 +189,12 @@ ALTER VIEW foo RENAME TO bar;
 
 ALTER TABLE organization_units OWNER TO "user";
 ALTER TABLE table_name ADD COLUMN valid BOOLEAN;
+
+-- https://github.com/holistics/dbml/issues/345
+CREATE MATERIALIZED VIEW country_total_debt_2
+as
+  select country_name,
+  sum(debt) as total_debt
+  from international_debt
+  group by country_name order by country_name
+WITH NO DATA;

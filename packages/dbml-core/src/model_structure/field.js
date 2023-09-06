@@ -36,7 +36,9 @@ class Field extends Element {
     if (this.type.schemaName) {
       const _enum = this.table.schema.database.findEnum(typeSchemaName, typeName);
       if (!_enum) {
-        this.error(`Cannot find type ${typeSchemaName} in schema ${typeSchemaName}`);
+        // SQL allow definition of non-enum type to be used as column type, which we don't have equivalent dbml counterpart.
+        // So instead of throwing errors on those type, we can view the type as plain text for the purpose of importing to dbml.
+        this.type.type_name = `${typeSchemaName}.${typeName}`;
         return;
       }
       this._enum = _enum;

@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "users",
@@ -7,21 +8,21 @@
           "name": "id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "full_name",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "email",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           },
           "unique": true
         },
@@ -29,40 +30,41 @@
           "name": "gender",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "date_of_birth",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "country_code",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "active",
           "type": {
             "type_name": "boolean",
-            "args": null
+            "schemaName": null
           }
         }
       ],
       "indexes": [
         {
+          "pk": true,
           "columns": [
             {
               "value": "id",
@@ -76,28 +78,30 @@
               "value": "gender",
               "type": "column"
             }
-          ],
-          "pk": true
+          ]
         },
         {
+          "unique": true,
           "columns": [
             {
               "value": "id",
               "type": "string"
             }
-          ],
-          "unique": true
+          ]
         },
         {
+          "name": "User Name",
+          "unique": false,
           "columns": [
             {
               "value": "full_name",
               "type": "string"
             }
-          ],
-          "name": "User Name"
+          ]
         },
         {
+          "type": "HASH",
+          "unique": false,
           "columns": [
             {
               "value": "email",
@@ -107,10 +111,10 @@
               "value": "created_at",
               "type": "string"
             }
-          ],
-          "type": "HASH"
+          ]
         },
         {
+          "unique": false,
           "columns": [
             {
               "value": "(now())",
@@ -119,6 +123,7 @@
           ]
         },
         {
+          "unique": false,
           "columns": [
             {
               "value": "active",
@@ -131,14 +136,20 @@
           ]
         },
         {
+          "unique": false,
           "columns": [
             {
-              "value": "((getdate()), (upper(gender)))",
+              "value": "(getdate())",
+              "type": "expression"
+            },
+            {
+              "value": "(upper(gender))",
               "type": "expression"
             }
           ]
         },
         {
+          "unique": false,
           "columns": [
             {
               "value": "(reverse(country_code))",
@@ -155,19 +166,19 @@
           "name": "id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
-          "pk": true,
           "dbdefault": {
             "value": "123",
             "type": "number"
-          }
+          },
+          "pk": true
         },
         {
           "name": "name",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
             "value": "Tea",
@@ -178,7 +189,7 @@
           "name": "merchant_id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
           "not_null": true
         },
@@ -186,7 +197,7 @@
           "name": "price",
           "type": {
             "type_name": "float",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
             "value": "123.12",
@@ -197,7 +208,7 @@
           "name": "status",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
             "value": "NULL",
@@ -208,7 +219,7 @@
           "name": "created_at",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
             "value": "now()",
@@ -219,7 +230,7 @@
           "name": "stock",
           "type": {
             "type_name": "boolean",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
             "value": "true",
@@ -230,10 +241,10 @@
           "name": "expiration",
           "type": {
             "type_name": "date",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
-            "value": "current_date + interval 1 year",
+            "value": "current_date+interval'1 year'",
             "type": "expression"
           }
         }
@@ -242,5 +253,8 @@
     }
   ],
   "refs": [],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
 }

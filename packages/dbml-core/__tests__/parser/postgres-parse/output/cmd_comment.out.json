@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "my_table",
@@ -7,16 +8,22 @@
           "name": "my_column",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           },
           "note": {
             "value": "Employee ID number"
           }
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "note": {
+        "value": null
+      }
     }
   ],
   "refs": [],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
 }
