@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "a",
@@ -7,20 +8,20 @@
           "name": "id",
           "type": {
             "type_name": "integer",
-            "args": null
+            "schemaName": null
           },
-          "pk": true,
-          "unique": true,
           "dbdefault": {
             "value": "1",
             "type": "number"
-          }
+          },
+          "unique": true,
+          "pk": true
         },
         {
           "name": "name",
           "type": {
             "type_name": "varchar(255)",
-            "args": "255"
+            "schemaName": null
           },
           "not_null": false
         }
@@ -34,38 +35,46 @@
           "name": "id",
           "type": {
             "type_name": "uuid",
-            "args": null
-          },
-          "inline_refs": [
-            {
-              "endpoint": {
-                "tableName": "a",
-                "fieldNames": ["id"],
-                "relation": "1"
-              },
-              "onDelete": "no action"
-            }
-          ]
+            "schemaName": null
+          }
         },
         {
           "name": "name",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           },
-          "not_null": true,
-          "unique": true
+          "not_null": true
         },
         {
           "name": "email",
           "type": {
             "type_name": "varchar(55)",
-            "args": "55"
-          },
-          "pk": true
+            "schemaName": null
+          }
         }
       ],
-      "indexes": []
+      "indexes": [
+        {
+          "name": "b_pk",
+          "pk": true,
+          "columns": [
+            {
+              "value": "email",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "unique": true,
+          "columns": [
+            {
+              "value": "name",
+              "type": "column"
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "c",
@@ -74,7 +83,7 @@
           "name": "index",
           "type": {
             "type_name": "CHARACTER VARYING(255)",
-            "args": "255"
+            "schemaName": null
           },
           "unique": true
         },
@@ -82,7 +91,7 @@
           "name": "phone",
           "type": {
             "type_name": "SERIAL",
-            "args": null
+            "schemaName": null
           },
           "increment": true
         },
@@ -90,20 +99,8 @@
           "name": "time",
           "type": {
             "type_name": "timestamp",
-            "args": null
-          },
-          "inline_refs": [
-            {
-              "name": "c_time_constraint",
-              "endpoint": {
-                "tableName": "a",
-                "fieldNames": [
-                  "name"
-                ],
-                "relation": "1"
-              }
-            }
-          ]
+            "schemaName": null
+          }
         }
       ],
       "indexes": []
@@ -115,111 +112,126 @@
           "name": "c",
           "type": {
             "type_name": "circle",
-            "args": null
+            "schemaName": null
           }
         }
       ],
       "indexes": []
     },
+    null,
+    null,
+    null,
+    null,
     {
       "name": "foo",
       "fields": [
-          {
-            "name": "bar",
-            "type": {
-              "type_name": "text[]"
-            }
-          },
-          {
-            "name": "bar2",
-            "type": {
-              "type_name": "int[1]"
-            }
-          },
-          {
-            "name": "bar3",
-            "type": {
-              "type_name": "int[2][3]"
-            }
-          },
-          {
-            "name": "bar4",
-            "type": {
-              "type_name": "int[]"
-            }
-          },
-          {
-            "name": "bar5",
-            "type": {
-              "type_name": "int[2]"
-            }
-          },
-          {
-            "name": "bar6",
-            "type": {
-              "type_name": "text[8]"
-            }
-          },
-          {
-            "name": "bar7",
-            "type": {
-              "type_name": "text[100]"
-            }
-          },
-          {
-            "name": "bar8",
-            "type": {
-              "args": "2",
-              "type_name": "time(2)[]"
-            }
-          },
-          {
-            "name": "bar9",
-            "type": {
-              "args": "1",
-              "type_name": "time(1)[1]"
-            }
-          },
-          {
-            "name": "bar10",
-            "type": {
-              "args": "1",
-              "type_name": "time(1)[]"
-            }
-          },
-          {
+        {
+          "name": "bar",
+          "type": {
+            "type_name": "text[]",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "bar2",
+          "type": {
+            "type_name": "int[1]",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "bar3",
+          "type": {
+            "type_name": "int[2][3]",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "bar4",
+          "type": {
+            "type_name": "int[]",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "bar5",
+          "type": {
+            "type_name": "int[2]",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "bar6",
+          "type": {
+            "type_name": "text[8]",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "bar7",
+          "type": {
+            "type_name": "text[100]",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "bar8",
+          "type": {
+            "type_name": "time(2)[]",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "bar9",
+          "type": {
+            "type_name": "time(1)[1]",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "bar10",
+          "type": {
+            "type_name": "time(1)[]",
+            "schemaName": null
+          }
+        },
+        {
           "name": "bar11",
           "type": {
-            "type_name": "time[5]"
+            "type_name": "time[5]",
+            "schemaName": null
           }
         },
         {
           "name": "bar12",
           "type": {
-            "args": "2",
-            "type_name": "timestamp(2)[10][2][5]"
+            "type_name": "timestamp(2)[10][2][5]",
+            "schemaName": null
           }
         },
         {
           "name": "bar13",
           "type": {
-            "type_name": "character varying[]"
+            "type_name": "character varying[]",
+            "schemaName": null
           }
         },
         {
           "name": "bar14",
           "type": {
-            "args": "25",
-            "type_name": "character varying(25)[][2][]"
+            "type_name": "character varying(25)[][2][]",
+            "schemaName": null
           }
         },
         {
           "name": "bar15",
           "type": {
-            "type_name": "character varying[76]"
+            "type_name": "character varying[76]",
+            "schemaName": null
           }
         }
-      ]
+      ],
+      "indexes": []
     }
   ],
   "refs": [
@@ -227,22 +239,29 @@
       "endpoints": [
         {
           "tableName": "b",
-          "fieldNames": ["id"],
+          "fieldNames": [
+            "id"
+          ],
           "relation": "*"
         },
         {
           "tableName": "a",
-          "fieldNames": ["id"],
+          "fieldNames": [
+            "id"
+          ],
           "relation": "1"
         }
       ],
-      "onDelete": "no action"
+      "onDelete": "NO ACTION",
+      "onUpdate": null
     },
     {
       "endpoints": [
         {
           "tableName": "c",
-          "fieldNames": ["time"],
+          "fieldNames": [
+            "time"
+          ],
           "relation": "*"
         },
         {
@@ -253,8 +272,13 @@
           "relation": "1"
         }
       ],
+      "onDelete": null,
+      "onUpdate": null,
       "name": "c_time_constraint"
     }
   ],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
 }

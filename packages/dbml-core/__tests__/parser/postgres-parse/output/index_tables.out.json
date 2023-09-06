@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "users",
@@ -7,7 +8,7 @@
           "name": "id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
           "pk": true
         },
@@ -15,14 +16,14 @@
           "name": "full_name",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "email",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           },
           "unique": true
         },
@@ -30,58 +31,61 @@
           "name": "gender",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "date_of_birth",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "varchar",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "country_code",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "active",
           "type": {
             "type_name": "boolean",
-            "args": null
+            "schemaName": null
           }
         }
       ],
       "indexes": [
         {
+          "unique": true,
           "columns": [
             {
               "value": "id",
               "type": "string"
             }
-          ],
-          "unique": true
+          ]
         },
         {
+          "name": "User Name",
+          "unique": false,
           "columns": [
             {
               "value": "full_name",
               "type": "string"
             }
-          ],
-          "name": "User Name"
+          ]
         },
         {
+          "type": "HASH",
+          "unique": false,
           "columns": [
             {
               "value": "email",
@@ -91,10 +95,10 @@
               "value": "created_at",
               "type": "string"
             }
-          ],
-          "type": "HASH"
+          ]
         },
         {
+          "unique": false,
           "columns": [
             {
               "value": "now()",
@@ -103,6 +107,7 @@
           ]
         },
         {
+          "unique": false,
           "columns": [
             {
               "value": "active",
@@ -115,14 +120,20 @@
           ]
         },
         {
+          "unique": false,
           "columns": [
             {
-              "value": "(getdate()), (upper(gender))",
+              "value": "(getdate())",
+              "type": "expression"
+            },
+            {
+              "value": "(upper(gender))",
               "type": "expression"
             }
           ]
         },
         {
+          "unique": false,
           "columns": [
             {
               "value": "reverse(country_code)",
@@ -134,5 +145,8 @@
     }
   ],
   "refs": [],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
 }

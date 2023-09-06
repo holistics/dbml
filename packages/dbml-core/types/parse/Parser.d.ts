@@ -3,6 +3,7 @@ declare class Parser {
     static parseJSONToDatabase(rawDatabase: RawDatabase): Database;
     static parseMySQLToJSON(str: string): RawDatabase;
     static parsePostgresToJSON(str: string): RawDatabase;
+    static parsePostgresToJSONv2(str: string): RawDatabase;
     static parseDBMLToJSON(str: string): RawDatabase;
     static parseSchemaRbToJSON(str: string): RawDatabase;
     static parseMSSQLToJSON(str: string): RawDatabase;

@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "orders",
@@ -7,7 +8,7 @@
           "name": "id",
           "type": {
             "type_name": "SERIAL",
-            "args": null
+            "schemaName": null
           },
           "increment": true,
           "pk": true
@@ -16,23 +17,23 @@
           "name": "user_id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
-          "unique": true,
-          "not_null": true
+          "not_null": true,
+          "unique": true
         },
         {
           "name": "status",
           "type": {
             "type_name": "orders_status_enum",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "varchar(255)",
-            "args": "255"
+            "schemaName": null
           }
         }
       ],
@@ -45,28 +46,28 @@
           "name": "order_id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "product_id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "product_name",
           "type": {
             "type_name": "varchar(255)",
-            "args": "255"
+            "schemaName": null
           }
         },
         {
           "name": "quantity",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
             "value": "1",
@@ -83,28 +84,28 @@
           "name": "id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "name",
           "type": {
             "type_name": "varchar(255)",
-            "args": "255"
+            "schemaName": null
           }
         },
         {
           "name": "price",
           "type": {
-            "type_name": "decimal(10, 4)",
-            "args": "10, 4"
+            "type_name": "decimal(10,4)",
+            "schemaName": null
           }
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "datetime",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
             "value": "now()",
@@ -114,6 +115,7 @@
       ],
       "indexes": [
         {
+          "pk": true,
           "columns": [
             {
               "value": "id",
@@ -123,8 +125,7 @@
               "value": "name",
               "type": "column"
             }
-          ],
-          "pk": true
+          ]
         }
       ]
     },
@@ -135,7 +136,7 @@
           "name": "id",
           "type": {
             "type_name": "SERIAL",
-            "args": null
+            "schemaName": null
           },
           "increment": true,
           "pk": true
@@ -144,14 +145,14 @@
           "name": "name",
           "type": {
             "type_name": "varchar(255)",
-            "args": "255"
+            "schemaName": null
           }
         },
         {
           "name": "email",
           "type": {
             "type_name": "varchar(255)",
-            "args": "255"
+            "schemaName": null
           },
           "unique": true
         },
@@ -159,14 +160,14 @@
           "name": "date_of_birth",
           "type": {
             "type_name": "datetime",
-            "args": null
+            "schemaName": null
           }
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "datetime",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
             "value": "now()",
@@ -177,7 +178,7 @@
           "name": "country_code",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
           "not_null": true
         }
@@ -191,7 +192,7 @@
           "name": "code",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
           "pk": true
         },
@@ -199,14 +200,14 @@
           "name": "name",
           "type": {
             "type_name": "varchar(255)",
-            "args": "255"
+            "schemaName": null
           }
         },
         {
           "name": "continent_name",
           "type": {
             "type_name": "varchar(255)",
-            "args": "255"
+            "schemaName": null
           }
         }
       ],
@@ -231,7 +232,8 @@
           "relation": "1"
         }
       ],
-      "onDelete": "restrict"
+      "onDelete": "RESTRICT",
+      "onUpdate": null
     },
     {
       "endpoints": [
@@ -250,7 +252,8 @@
           "relation": "1"
         }
       ],
-      "onDelete": "cascade"
+      "onDelete": "CASCADE",
+      "onUpdate": null
     },
     {
       "endpoints": [
@@ -271,7 +274,8 @@
           "relation": "1"
         }
       ],
-      "onDelete": "set null"
+      "onDelete": "SET NULL",
+      "onUpdate": null
     },
     {
       "endpoints": [
@@ -290,8 +294,12 @@
           "relation": "1"
         }
       ],
-      "onDelete": "no action"
+      "onDelete": "NO ACTION",
+      "onUpdate": null
     }
   ],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
 }

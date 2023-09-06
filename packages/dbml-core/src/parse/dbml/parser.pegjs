@@ -532,8 +532,7 @@ CompositeIndex
 }
 
 IndexSettings
-  = "[" sp* pk sp* "]" { return { pk: true } }
-  / "[" first:IndexSetting rest:(Comma IndexSetting)* "]" {
+  = "[" first:IndexSetting rest:(Comma IndexSetting)* "]" {
     let arrSettings = [first].concat(rest.map(el => el[1]));
         let res = {};
     arrSettings.forEach((ele) => {
@@ -552,6 +551,7 @@ IndexSetting
   / _ v:IndexName _ { return { type: 'name', value: v } }
   / _ v:IndexType _ { return { type: 'type', value: v } }
   / _ v:ObjectNote _ { return { type: 'note', value: v } }
+  / _ pk _ { return { type: 'pk', value: true } }
 IndexName
   = "name:"i _ val:StringLiteral { return val.value }
 ObjectNoteElement

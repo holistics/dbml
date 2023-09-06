@@ -88,6 +88,56 @@ Table "foo" {
   "bar15" "character varying[76]"
 }
 
+Table "accounts" {
+  "id" integer [not null, increment]
+  "domain" "character varying(100)"
+  "name" "character varying(100)"
+  "slug" "character varying(10)"
+
+Indexes {
+  id [pk, name: "accounts_pkey"]
+}
+}
+
+Table "tests" {
+  "id" bigint [not null]
+  "type" "character varying" [default: `'testing'::charactervarying`]
+}
+
+Table "users2" {
+  "username" "character varying" [not null]
+  "hashed_password" "character varying" [not null]
+  "full_name" "character varying" [not null]
+  "email" "character varying" [not null]
+  "password_changed_at" timestamp [not null, default: `'0001-01-01 00:00:00+00'::timestampwithtimezone`]
+  "created_at" timestamp [not null, default: `now()`]
+}
+
+Table "table1" {
+  "field" text [not null]
+  "field2" text [not null]
+
+Indexes {
+  (field, field2) [pk]
+}
+}
+
+Table "table2" {
+  "id" int [pk, increment]
+  "field" text
+  "field2" text
+}
+
+Table "test_table" {
+  "name" varchar [not null]
+  "id" varchar
+  "linked_name" varchar [not null]
+
+Indexes {
+  (name, id) [pk, name: "test_table_pk"]
+}
+}
+
 Ref:"orders"."id" < "order_items"."order_id"
 
 Ref:"products"."id" < "order_items"."product_id"
@@ -99,3 +149,7 @@ Ref:"countries"."code" < "merchants"."country_code"
 Ref:"merchants"."id" < "products"."merchant_id"
 
 Ref:"users"."id" < "merchants"."admin_id"
+
+Ref:"table1".("field", "field2") < "table2".("field", "field2")
+
+Ref "test_table_fk":"test_table".("name", "id") < "test_table".("linked_name", "id")

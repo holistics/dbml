@@ -1,0 +1,17 @@
+{
+  "testEnvironment": "jest-bench/environment",
+  "testEnvironmentOptions": {
+    "testEnvironment": "jest-environment-node",
+    "testEnvironmentOptions": {
+    }
+  },
+  "reporters": ["default", "jest-bench/reporter"],
+  "testRegex": "(\\.bench)\\.(ts|tsx|js)$",
+  "transform": {
+    "^.+\\.js$": "babel-jest",
+    "\\.(?!sql$)[^.]*$": "@glen/jest-raw-loader"
+  },
+  "moduleNameMapper": {
+    "antlr4": "<rootDir>../../node_modules/antlr4/dist/antlr4.node.cjs"
+  }
+}

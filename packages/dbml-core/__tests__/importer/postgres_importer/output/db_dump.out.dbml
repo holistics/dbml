@@ -1,0 +1,907 @@
+Table "humanresources"."department" {
+  "departmentid" integer [not null, note: 'Primary key for Department records.']
+  "name" public.Name [not null, note: 'Name of the department.']
+  "groupname" public.Name [not null, note: 'Name of the group to which the department belongs.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Lookup table containing the departments within the Adventure Works Cycles company.'
+}
+
+Table "humanresources"."employee" {
+  "businessentityid" integer [not null, note: 'Primary key for Employee records.  Foreign key to BusinessEntity.BusinessEntityID.']
+  "nationalidnumber" "character varying(15)" [not null, note: 'Unique national identification number such as a social security number.']
+  "loginid" "character varying(256)" [not null, note: 'Network login.']
+  "jobtitle" "character varying(50)" [not null, note: 'Work title such as Buyer or Sales Representative.']
+  "birthdate" date [not null, note: 'Date of birth.']
+  "maritalstatus" "character (1)" [not null, note: 'M = Married, S = Single']
+  "gender" "character (1)" [not null, note: 'M = Male, F = Female']
+  "hiredate" date [not null, note: 'Employee hired on this date.']
+  "salariedflag" public.Flag [not null, default: true, note: 'Job classification. 0 = Hourly, not exempt from collective bargaining. 1 = Salaried, exempt from collective bargaining.']
+  "vacationhours" smallint [not null, default: 0, note: 'Number of available vacation hours.']
+  "sickleavehours" smallint [not null, default: 0, note: 'Number of available sick leave hours.']
+  "currentflag" public.Flag [not null, default: true, note: '0 = Inactive, 1 = Active']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  "organizationnode" "character varying" [default: `'/'::charactervarying`, note: 'Where the employee is located in corporate hierarchy.']
+  Note: 'Employee information such as salary, department, and title.'
+}
+
+Table "humanresources"."employeedepartmenthistory" {
+  "businessentityid" integer [not null, note: 'Employee identification number. Foreign key to Employee.BusinessEntityID.']
+  "departmentid" smallint [not null, note: 'Department in which the employee worked including currently. Foreign key to Department.DepartmentID.']
+  "shiftid" smallint [not null, note: 'Identifies which 8-hour shift the employee works. Foreign key to Shift.Shift.ID.']
+  "startdate" date [not null, note: 'Date the employee started work in the department.']
+  "enddate" date [note: 'Date the employee left the department. NULL = Current department.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Employee department transfers.'
+}
+
+Table "humanresources"."employeepayhistory" {
+  "businessentityid" integer [not null, note: 'Employee identification number. Foreign key to Employee.BusinessEntityID.']
+  "ratechangedate" timestamp [not null, note: 'Date the change in pay is effective']
+  "rate" numeric [not null, note: 'Salary hourly rate.']
+  "payfrequency" smallint [not null, note: '1 = Salary received monthly, 2 = Salary received biweekly']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Employee pay history.'
+}
+
+Table "humanresources"."jobcandidate" {
+  "jobcandidateid" integer [not null, note: 'Primary key for JobCandidate records.']
+  "businessentityid" integer [note: 'Employee identification number if applicant was hired. Foreign key to Employee.BusinessEntityID.']
+  "resume" xml [note: 'RÃ©sumÃ© in XML format.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'RÃ©sumÃ©s submitted to Human Resources by job applicants.'
+}
+
+Table "humanresources"."shift" {
+  "shiftid" integer [not null, note: 'Primary key for Shift records.']
+  "name" public.Name [not null, note: 'Shift description.']
+  "starttime" time [not null, note: 'Shift start time.']
+  "endtime" time [not null, note: 'Shift end time.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Work shift lookup table.'
+}
+
+Table "person"."address" {
+  "addressid" integer [not null, note: 'Primary key for Address records.']
+  "addressline1" "character varying(60)" [not null, note: 'First street address line.']
+  "addressline2" "character varying(60)" [note: 'Second street address line.']
+  "city" "character varying(30)" [not null, note: 'Name of the city.']
+  "stateprovinceid" integer [not null, note: 'Unique identification number for the state or province. Foreign key to StateProvince table.']
+  "postalcode" "character varying(15)" [not null, note: 'Postal code for the street address.']
+  "spatiallocation" "character varying(44)" [note: 'Latitude and longitude of this address.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Street address information for customers, employees, and vendors.'
+}
+
+Table "person"."businessentityaddress" {
+  "businessentityid" integer [not null, note: 'Primary key. Foreign key to BusinessEntity.BusinessEntityID.']
+  "addressid" integer [not null, note: 'Primary key. Foreign key to Address.AddressID.']
+  "addresstypeid" integer [not null, note: 'Primary key. Foreign key to AddressType.AddressTypeID.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Cross-reference table mapping customers, vendors, and employees to their addresses.'
+}
+
+Table "person"."countryregion" {
+  "countryregioncode" "character varying(3)" [not null, note: 'ISO standard code for countries and regions.']
+  "name" public.Name [not null, note: 'Country or region name.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Lookup table containing the ISO standard codes for countries and regions.'
+}
+
+Table "person"."emailaddress" {
+  "businessentityid" integer [not null, note: 'Primary key. Person associated with this email address.  Foreign key to Person.BusinessEntityID']
+  "emailaddressid" integer [not null, note: 'Primary key. ID of this email address.']
+  "emailaddress" "character varying(50)" [note: 'E-mail address for the person.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Where to send a person email.'
+}
+
+Table "person"."person" {
+  "businessentityid" integer [not null, note: 'Primary key for Person records.']
+  "persontype" "character (2)" [not null, note: 'Primary type of person: SC = Store Contact, IN = Individual (retail) customer, SP = Sales person, EM = Employee (non-sales), VC = Vendor contact, GC = General contact']
+  "namestyle" public.NameStyle [not null, default: false, note: '0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.']
+  "title" "character varying(8)" [note: 'A courtesy title. For example, Mr. or Ms.']
+  "firstname" public.Name [not null, note: 'First name of the person.']
+  "middlename" public.Name [note: 'Middle name or middle initial of the person.']
+  "lastname" public.Name [not null, note: 'Last name of the person.']
+  "suffix" "character varying(10)" [note: 'Surname suffix. For example, Sr. or Jr.']
+  "emailpromotion" integer [not null, default: 0, note: '0 = Contact does not wish to receive e-mail promotions, 1 = Contact does wish to receive e-mail promotions from AdventureWorks, 2 = Contact does wish to receive e-mail promotions from AdventureWorks and selected partners.']
+  "additionalcontactinfo" xml [note: 'Additional contact information about the person stored in xml format.']
+  "demographics" xml [note: 'Personal information such as hobbies, and income collected from online shoppers. Used for sales analysis.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Human beings involved with AdventureWorks: employees, customer contacts, and vendor contacts.'
+}
+
+Table "person"."personphone" {
+  "businessentityid" integer [not null, note: 'Business entity identification number. Foreign key to Person.BusinessEntityID.']
+  "phonenumber" public.Phone [not null, note: 'Telephone number identification number.']
+  "phonenumbertypeid" integer [not null, note: 'Kind of phone number. Foreign key to PhoneNumberType.PhoneNumberTypeID.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Telephone number and type of a person.'
+}
+
+Table "person"."phonenumbertype" {
+  "phonenumbertypeid" integer [not null, note: 'Primary key for telephone number type records.']
+  "name" public.Name [not null, note: 'Name of the telephone number type']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Type of phone number of a person.'
+}
+
+Table "person"."stateprovince" {
+  "stateprovinceid" integer [not null, note: 'Primary key for StateProvince records.']
+  "stateprovincecode" "character (3)" [not null, note: 'ISO standard state or province code.']
+  "countryregioncode" "character varying(3)" [not null, note: 'ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode.']
+  "isonlystateprovinceflag" public.Flag [not null, default: true, note: '0 = StateProvinceCode exists. 1 = StateProvinceCode unavailable, using CountryRegionCode.']
+  "name" public.Name [not null, note: 'State or province description.']
+  "territoryid" integer [not null, note: 'ID of the territory in which the state or province is located. Foreign key to SalesTerritory.SalesTerritoryID.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'State and province lookup table.'
+}
+
+Table "person"."addresstype" {
+  "addresstypeid" integer [not null, note: 'Primary key for AddressType records.']
+  "name" public.Name [not null, note: 'Address type description. For example, Billing, Home, or Shipping.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Types of addresses stored in the Address table.'
+}
+
+Table "person"."businessentity" {
+  "businessentityid" integer [not null, note: 'Primary key for all customers, vendors, and employees.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Source of the ID that connects vendors, customers, and employees with address and contact information.'
+}
+
+Table "person"."businessentitycontact" {
+  "businessentityid" integer [not null, note: 'Primary key. Foreign key to BusinessEntity.BusinessEntityID.']
+  "personid" integer [not null, note: 'Primary key. Foreign key to Person.BusinessEntityID.']
+  "contacttypeid" integer [not null, note: 'Primary key.  Foreign key to ContactType.ContactTypeID.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Cross-reference table mapping stores, vendors, and employees to people'
+}
+
+Table "person"."contacttype" {
+  "contacttypeid" integer [not null, note: 'Primary key for ContactType records.']
+  "name" public.Name [not null, note: 'Contact type description.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Lookup table containing the types of business entity contacts.'
+}
+
+Table "person"."password" {
+  "businessentityid" integer [not null]
+  "passwordhash" "character varying(128)" [not null, note: 'Password for the e-mail account.']
+  "passwordsalt" "character varying(10)" [not null, note: 'Random value concatenated with the password string before the password is hashed.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'One way hashed authentication information'
+}
+
+Table "production"."billofmaterials" {
+  "billofmaterialsid" integer [not null, note: 'Primary key for BillOfMaterials records.']
+  "productassemblyid" integer [note: 'Parent product identification number. Foreign key to Product.ProductID.']
+  "componentid" integer [not null, note: 'Component identification number. Foreign key to Product.ProductID.']
+  "startdate" timestamp [not null, default: `now()`, note: 'Date the component started being used in the assembly item.']
+  "enddate" timestamp [note: 'Date the component stopped being used in the assembly item.']
+  "unitmeasurecode" "character (3)" [not null, note: 'Standard code identifying the unit of measure for the quantity.']
+  "bomlevel" smallint [not null, note: 'Indicates the depth the component is from its parent (AssemblyID).']
+  "perassemblyqty" numeric(8,2) [not null, default: 1.00, note: 'Quantity of the component needed to create the assembly.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Items required to make bicycles and bicycle subassemblies. It identifies the heirarchical relationship between a parent product and its components.'
+}
+
+Table "production"."culture" {
+  "cultureid" "character (6)" [not null, note: 'Primary key for Culture records.']
+  "name" public.Name [not null, note: 'Culture description.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Lookup table containing the languages in which some AdventureWorks data is stored.'
+}
+
+Table "production"."document" {
+  "title" "character varying(50)" [not null, note: 'Title of the document.']
+  "owner" integer [not null, note: 'Employee who controls the document.  Foreign key to Employee.BusinessEntityID']
+  "folderflag" public.Flag [not null, default: false, note: '0 = This is a folder, 1 = This is a document.']
+  "filename" "character varying(400)" [not null, note: 'File name of the document']
+  "fileextension" "character varying(8)" [note: 'File extension indicating the document type. For example, .doc or .txt.']
+  "revision" "character (5)" [not null, note: 'Revision number of the document.']
+  "changenumber" integer [not null, default: 0, note: 'Engineering change approval number.']
+  "status" smallint [not null, note: '1 = Pending approval, 2 = Approved, 3 = Obsolete']
+  "documentsummary" text [note: 'Document abstract.']
+  "document" bytea [note: 'Complete document.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`, note: 'ROWGUIDCOL number uniquely identifying the record. Required for FileStream.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  "documentnode" "character varying" [not null, default: `'/'::charactervarying`, note: 'Primary key for Document records.']
+  Note: 'Product maintenance documents.'
+}
+
+Table "production"."illustration" {
+  "illustrationid" integer [not null, note: 'Primary key for Illustration records.']
+  "diagram" xml [note: 'Illustrations used in manufacturing instructions. Stored as XML.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Bicycle assembly diagrams.'
+}
+
+Table "production"."location" {
+  "locationid" integer [not null, note: 'Primary key for Location records.']
+  "name" public.Name [not null, note: 'Location description.']
+  "costrate" numeric [not null, default: 0.00, note: 'Standard hourly cost of the manufacturing location.']
+  "availability" numeric(8,2) [not null, default: 0.00, note: 'Work capacity (in hours) of the manufacturing location.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Product inventory and manufacturing locations.'
+}
+
+Table "production"."product" {
+  "productid" integer [not null, note: 'Primary key for Product records.']
+  "name" public.Name [not null, note: 'Name of the product.']
+  "productnumber" "character varying(25)" [not null, note: 'Unique product identification number.']
+  "makeflag" public.Flag [not null, default: true, note: '0 = Product is purchased, 1 = Product is manufactured in-house.']
+  "finishedgoodsflag" public.Flag [not null, default: true, note: '0 = Product is not a salable item. 1 = Product is salable.']
+  "color" "character varying(15)" [note: 'Product color.']
+  "safetystocklevel" smallint [not null, note: 'Minimum inventory quantity.']
+  "reorderpoint" smallint [not null, note: 'Inventory level that triggers a purchase order or work order.']
+  "standardcost" numeric [not null, note: 'Standard cost of the product.']
+  "listprice" numeric [not null, note: 'Selling price.']
+  "size" "character varying(5)" [note: 'Product size.']
+  "sizeunitmeasurecode" "character (3)" [note: 'Unit of measure for Size column.']
+  "weightunitmeasurecode" "character (3)" [note: 'Unit of measure for Weight column.']
+  "weight" numeric(8,2) [note: 'Product weight.']
+  "daystomanufacture" integer [not null, note: 'Number of days required to manufacture the product.']
+  "productline" "character (2)" [note: 'R = Road, M = Mountain, T = Touring, S = Standard']
+  "class" "character (2)" [note: 'H = High, M = Medium, L = Low']
+  "style" "character (2)" [note: 'W = Womens, M = Mens, U = Universal']
+  "productsubcategoryid" integer [note: 'Product is a member of this product subcategory. Foreign key to ProductSubCategory.ProductSubCategoryID.']
+  "productmodelid" integer [note: 'Product is a member of this product model. Foreign key to ProductModel.ProductModelID.']
+  "sellstartdate" timestamp [not null, note: 'Date the product was available for sale.']
+  "sellenddate" timestamp [note: 'Date the product was no longer available for sale.']
+  "discontinueddate" timestamp [note: 'Date the product was discontinued.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Products sold or used in the manfacturing of sold products.'
+}
+
+Table "production"."productcategory" {
+  "productcategoryid" integer [not null, note: 'Primary key for ProductCategory records.']
+  "name" public.Name [not null, note: 'Category description.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'High-level product categorization.'
+}
+
+Table "production"."productcosthistory" {
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID']
+  "startdate" timestamp [not null, note: 'Product cost start date.']
+  "enddate" timestamp [note: 'Product cost end date.']
+  "standardcost" numeric [not null, note: 'Standard cost of the product.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Changes in the cost of a product over time.'
+}
+
+Table "production"."productdescription" {
+  "productdescriptionid" integer [not null, note: 'Primary key for ProductDescription records.']
+  "description" "character varying(400)" [not null, note: 'Description of the product.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Product descriptions in several languages.'
+}
+
+Table "production"."productdocument" {
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  "documentnode" "character varying" [not null, default: `'/'::charactervarying`, note: 'Document identification number. Foreign key to Document.DocumentNode.']
+  Note: 'Cross-reference table mapping products to related product documents.'
+}
+
+Table "production"."productinventory" {
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "locationid" smallint [not null, note: 'Inventory location identification number. Foreign key to Location.LocationID.']
+  "shelf" "character varying(10)" [not null, note: 'Storage compartment within an inventory location.']
+  "bin" smallint [not null, note: 'Storage container on a shelf in an inventory location.']
+  "quantity" smallint [not null, default: 0, note: 'Quantity of products in the inventory location.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Product inventory information.'
+}
+
+Table "production"."productlistpricehistory" {
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID']
+  "startdate" timestamp [not null, note: 'List price start date.']
+  "enddate" timestamp [note: 'List price end date']
+  "listprice" numeric [not null, note: 'Product list price.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Changes in the list price of a product over time.'
+}
+
+Table "production"."productmodel" {
+  "productmodelid" integer [not null, note: 'Primary key for ProductModel records.']
+  "name" public.Name [not null, note: 'Product model description.']
+  "catalogdescription" xml [note: 'Detailed product catalog information in xml format.']
+  "instructions" xml [note: 'Manufacturing instructions in xml format.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Product model classification.'
+}
+
+Table "production"."productmodelillustration" {
+  "productmodelid" integer [not null, note: 'Primary key. Foreign key to ProductModel.ProductModelID.']
+  "illustrationid" integer [not null, note: 'Primary key. Foreign key to Illustration.IllustrationID.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Cross-reference table mapping product models and illustrations.'
+}
+
+Table "production"."productmodelproductdescriptionculture" {
+  "productmodelid" integer [not null, note: 'Primary key. Foreign key to ProductModel.ProductModelID.']
+  "productdescriptionid" integer [not null, note: 'Primary key. Foreign key to ProductDescription.ProductDescriptionID.']
+  "cultureid" "character (6)" [not null, note: 'Culture identification number. Foreign key to Culture.CultureID.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Cross-reference table mapping product descriptions and the language the description is written in.'
+}
+
+Table "production"."productphoto" {
+  "productphotoid" integer [not null, note: 'Primary key for ProductPhoto records.']
+  "thumbnailphoto" bytea [note: 'Small image of the product.']
+  "thumbnailphotofilename" "character varying(50)" [note: 'Small image file name.']
+  "largephoto" bytea [note: 'Large image of the product.']
+  "largephotofilename" "character varying(50)" [note: 'Large image file name.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Product images.'
+}
+
+Table "production"."productproductphoto" {
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "productphotoid" integer [not null, note: 'Product photo identification number. Foreign key to ProductPhoto.ProductPhotoID.']
+  "primary" public.Flag [not null, default: false, note: '0 = Photo is not the principal image. 1 = Photo is the principal image.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Cross-reference table mapping products and product photos.'
+}
+
+Table "production"."productreview" {
+  "productreviewid" integer [not null, note: 'Primary key for ProductReview records.']
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "reviewername" public.Name [not null, note: 'Name of the reviewer.']
+  "reviewdate" timestamp [not null, default: `now()`, note: 'Date review was submitted.']
+  "emailaddress" "character varying(50)" [not null, note: 'Reviewer''s e-mail address.']
+  "rating" integer [not null, note: 'Product rating given by the reviewer. Scale is 1 to 5 with 5 as the highest rating.']
+  "comments" "character varying(3850)" [note: 'Reviewer''s comments']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Customer reviews of products they have purchased.'
+}
+
+Table "production"."productsubcategory" {
+  "productsubcategoryid" integer [not null, note: 'Primary key for ProductSubcategory records.']
+  "productcategoryid" integer [not null, note: 'Product category identification number. Foreign key to ProductCategory.ProductCategoryID.']
+  "name" public.Name [not null, note: 'Subcategory description.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Product subcategories. See ProductCategory table.'
+}
+
+Table "production"."scrapreason" {
+  "scrapreasonid" integer [not null, note: 'Primary key for ScrapReason records.']
+  "name" public.Name [not null, note: 'Failure description.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Manufacturing failure reasons lookup table.'
+}
+
+Table "production"."transactionhistory" {
+  "transactionid" integer [not null, note: 'Primary key for TransactionHistory records.']
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "referenceorderid" integer [not null, note: 'Purchase order, sales order, or work order identification number.']
+  "referenceorderlineid" integer [not null, default: 0, note: 'Line number associated with the purchase order, sales order, or work order.']
+  "transactiondate" timestamp [not null, default: `now()`, note: 'Date and time of the transaction.']
+  "transactiontype" "character (1)" [not null, note: 'W = WorkOrder, S = SalesOrder, P = PurchaseOrder']
+  "quantity" integer [not null, note: 'Product quantity.']
+  "actualcost" numeric [not null, note: 'Product cost.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Record of each purchase order, sales order, or work order transaction year to date.'
+}
+
+Table "production"."transactionhistoryarchive" {
+  "transactionid" integer [not null, note: 'Primary key for TransactionHistoryArchive records.']
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "referenceorderid" integer [not null, note: 'Purchase order, sales order, or work order identification number.']
+  "referenceorderlineid" integer [not null, default: 0, note: 'Line number associated with the purchase order, sales order, or work order.']
+  "transactiondate" timestamp [not null, default: `now()`, note: 'Date and time of the transaction.']
+  "transactiontype" "character (1)" [not null, note: 'W = Work Order, S = Sales Order, P = Purchase Order']
+  "quantity" integer [not null, note: 'Product quantity.']
+  "actualcost" numeric [not null, note: 'Product cost.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Transactions for previous years.'
+}
+
+Table "production"."unitmeasure" {
+  "unitmeasurecode" "character (3)" [not null, note: 'Primary key.']
+  "name" public.Name [not null, note: 'Unit of measure description.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Unit of measure lookup table.'
+}
+
+Table "production"."workorder" {
+  "workorderid" integer [not null, note: 'Primary key for WorkOrder records.']
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "orderqty" integer [not null, note: 'Product quantity to build.']
+  "scrappedqty" smallint [not null, note: 'Quantity that failed inspection.']
+  "startdate" timestamp [not null, note: 'Work order start date.']
+  "enddate" timestamp [note: 'Work order end date.']
+  "duedate" timestamp [not null, note: 'Work order due date.']
+  "scrapreasonid" smallint [note: 'Reason for inspection failure.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Manufacturing work orders.'
+}
+
+Table "production"."workorderrouting" {
+  "workorderid" integer [not null, note: 'Primary key. Foreign key to WorkOrder.WorkOrderID.']
+  "productid" integer [not null, note: 'Primary key. Foreign key to Product.ProductID.']
+  "operationsequence" smallint [not null, note: 'Primary key. Indicates the manufacturing process sequence.']
+  "locationid" smallint [not null, note: 'Manufacturing location where the part is processed. Foreign key to Location.LocationID.']
+  "scheduledstartdate" timestamp [not null, note: 'Planned manufacturing start date.']
+  "scheduledenddate" timestamp [not null, note: 'Planned manufacturing end date.']
+  "actualstartdate" timestamp [note: 'Actual start date.']
+  "actualenddate" timestamp [note: 'Actual end date.']
+  "actualresourcehrs" numeric(9,4) [note: 'Number of manufacturing hours used.']
+  "plannedcost" numeric [not null, note: 'Estimated manufacturing cost.']
+  "actualcost" numeric [note: 'Actual manufacturing cost.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Work order details.'
+}
+
+Table "purchasing"."purchaseorderdetail" {
+  "purchaseorderid" integer [not null, note: 'Primary key. Foreign key to PurchaseOrderHeader.PurchaseOrderID.']
+  "purchaseorderdetailid" integer [not null, note: 'Primary key. One line number per purchased product.']
+  "duedate" timestamp [not null, note: 'Date the product is expected to be received.']
+  "orderqty" smallint [not null, note: 'Quantity ordered.']
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "unitprice" numeric [not null, note: 'Vendor''s selling price of a single product.']
+  "receivedqty" numeric(8,2) [not null, note: 'Quantity actually received from the vendor.']
+  "rejectedqty" numeric(8,2) [not null, note: 'Quantity rejected during inspection.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Individual products associated with a specific purchase order. See PurchaseOrderHeader.'
+}
+
+Table "purchasing"."purchaseorderheader" {
+  "purchaseorderid" integer [not null, note: 'Primary key.']
+  "revisionnumber" smallint [not null, default: 0, note: 'Incremental number to track changes to the purchase order over time.']
+  "status" smallint [not null, default: 1, note: 'Order current status. 1 = Pending; 2 = Approved; 3 = Rejected; 4 = Complete']
+  "employeeid" integer [not null, note: 'Employee who created the purchase order. Foreign key to Employee.BusinessEntityID.']
+  "vendorid" integer [not null, note: 'Vendor with whom the purchase order is placed. Foreign key to Vendor.BusinessEntityID.']
+  "shipmethodid" integer [not null, note: 'Shipping method. Foreign key to ShipMethod.ShipMethodID.']
+  "orderdate" timestamp [not null, default: `now()`, note: 'Purchase order creation date.']
+  "shipdate" timestamp [note: 'Estimated shipment date from the vendor.']
+  "subtotal" numeric [not null, default: 0.00, note: 'Purchase order subtotal. Computed as SUM(PurchaseOrderDetail.LineTotal)for the appropriate PurchaseOrderID.']
+  "taxamt" numeric [not null, default: 0.00, note: 'Tax amount.']
+  "freight" numeric [not null, default: 0.00, note: 'Shipping cost.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'General purchase order information. See PurchaseOrderDetail.'
+}
+
+Table "purchasing"."productvendor" {
+  "productid" integer [not null, note: 'Primary key. Foreign key to Product.ProductID.']
+  "businessentityid" integer [not null, note: 'Primary key. Foreign key to Vendor.BusinessEntityID.']
+  "averageleadtime" integer [not null, note: 'The average span of time (in days) between placing an order with the vendor and receiving the purchased product.']
+  "standardprice" numeric [not null, note: 'The vendor''s usual selling price.']
+  "lastreceiptcost" numeric [note: 'The selling price when last purchased.']
+  "lastreceiptdate" timestamp [note: 'Date the product was last received by the vendor.']
+  "minorderqty" integer [not null, note: 'The maximum quantity that should be ordered.']
+  "maxorderqty" integer [not null, note: 'The minimum quantity that should be ordered.']
+  "onorderqty" integer [note: 'The quantity currently on order.']
+  "unitmeasurecode" "character (3)" [not null, note: 'The product''s unit of measure.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Cross-reference table mapping vendors with the products they supply.'
+}
+
+Table "purchasing"."shipmethod" {
+  "shipmethodid" integer [not null, note: 'Primary key for ShipMethod records.']
+  "name" public.Name [not null, note: 'Shipping company name.']
+  "shipbase" numeric [not null, default: 0.00, note: 'Minimum shipping charge.']
+  "shiprate" numeric [not null, default: 0.00, note: 'Shipping charge per pound.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Shipping company lookup table.'
+}
+
+Table "purchasing"."vendor" {
+  "businessentityid" integer [not null, note: 'Primary key for Vendor records.  Foreign key to BusinessEntity.BusinessEntityID']
+  "accountnumber" public.AccountNumber [not null, note: 'Vendor account (identification) number.']
+  "name" public.Name [not null, note: 'Company name.']
+  "creditrating" smallint [not null, note: '1 = Superior, 2 = Excellent, 3 = Above average, 4 = Average, 5 = Below average']
+  "preferredvendorstatus" public.Flag [not null, default: true, note: '0 = Do not use if another vendor is available. 1 = Preferred over other vendors supplying the same product.']
+  "activeflag" public.Flag [not null, default: true, note: '0 = Vendor no longer used. 1 = Vendor is actively used.']
+  "purchasingwebserviceurl" "character varying(1024)" [note: 'Vendor URL.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Companies from whom Adventure Works Cycles purchases parts or other goods.'
+}
+
+Table "sales"."customer" {
+  "customerid" integer [not null, note: 'Primary key.']
+  "personid" integer [note: 'Foreign key to Person.BusinessEntityID']
+  "storeid" integer [note: 'Foreign key to Store.BusinessEntityID']
+  "territoryid" integer [note: 'ID of the territory in which the customer is located. Foreign key to SalesTerritory.SalesTerritoryID.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Current customer information. Also see the Person and Store tables.'
+}
+
+Table "sales"."creditcard" {
+  "creditcardid" integer [not null, note: 'Primary key for CreditCard records.']
+  "cardtype" "character varying(50)" [not null, note: 'Credit card name.']
+  "cardnumber" "character varying(25)" [not null, note: 'Credit card number.']
+  "expmonth" smallint [not null, note: 'Credit card expiration month.']
+  "expyear" smallint [not null, note: 'Credit card expiration year.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Customer credit card information.'
+}
+
+Table "sales"."currencyrate" {
+  "currencyrateid" integer [not null, note: 'Primary key for CurrencyRate records.']
+  "currencyratedate" timestamp [not null, note: 'Date and time the exchange rate was obtained.']
+  "fromcurrencycode" "character (3)" [not null, note: 'Exchange rate was converted from this currency code.']
+  "tocurrencycode" "character (3)" [not null, note: 'Exchange rate was converted to this currency code.']
+  "averagerate" numeric [not null, note: 'Average exchange rate for the day.']
+  "endofdayrate" numeric [not null, note: 'Final exchange rate for the day.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Currency exchange rates.'
+}
+
+Table "sales"."countryregioncurrency" {
+  "countryregioncode" "character varying(3)" [not null, note: 'ISO code for countries and regions. Foreign key to CountryRegion.CountryRegionCode.']
+  "currencycode" "character (3)" [not null, note: 'ISO standard currency code. Foreign key to Currency.CurrencyCode.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Cross-reference table mapping ISO currency codes to a country or region.'
+}
+
+Table "sales"."currency" {
+  "currencycode" "character (3)" [not null, note: 'The ISO code for the Currency.']
+  "name" public.Name [not null, note: 'Currency name.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Lookup table containing standard ISO currencies.'
+}
+
+Table "sales"."personcreditcard" {
+  "businessentityid" integer [not null, note: 'Business entity identification number. Foreign key to Person.BusinessEntityID.']
+  "creditcardid" integer [not null, note: 'Credit card identification number. Foreign key to CreditCard.CreditCardID.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Cross-reference table mapping people to their credit card information in the CreditCard table.'
+}
+
+Table "sales"."store" {
+  "businessentityid" integer [not null, note: 'Primary key. Foreign key to Customer.BusinessEntityID.']
+  "name" public.Name [not null, note: 'Name of the store.']
+  "salespersonid" integer [note: 'ID of the sales person assigned to the customer. Foreign key to SalesPerson.BusinessEntityID.']
+  "demographics" xml [note: 'Demographic informationg about the store such as the number of employees, annual sales and store type.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Customers (resellers) of Adventure Works products.'
+}
+
+Table "sales"."shoppingcartitem" {
+  "shoppingcartitemid" integer [not null, note: 'Primary key for ShoppingCartItem records.']
+  "shoppingcartid" "character varying(50)" [not null, note: 'Shopping cart identification number.']
+  "quantity" integer [not null, default: 1, note: 'Product quantity ordered.']
+  "productid" integer [not null, note: 'Product ordered. Foreign key to Product.ProductID.']
+  "datecreated" timestamp [not null, default: `now()`, note: 'Date the time the record was created.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Contains online customer orders until the order is submitted or cancelled.'
+}
+
+Table "sales"."specialoffer" {
+  "specialofferid" integer [not null, note: 'Primary key for SpecialOffer records.']
+  "description" "character varying(255)" [not null, note: 'Discount description.']
+  "discountpct" numeric [not null, default: 0.00, note: 'Discount precentage.']
+  "type" "character varying(50)" [not null, note: 'Discount type category.']
+  "category" "character varying(50)" [not null, note: 'Group the discount applies to such as Reseller or Customer.']
+  "startdate" timestamp [not null, note: 'Discount start date.']
+  "enddate" timestamp [not null, note: 'Discount end date.']
+  "minqty" integer [not null, default: 0, note: 'Minimum discount percent allowed.']
+  "maxqty" integer [note: 'Maximum discount percent allowed.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Sale discounts lookup table.'
+}
+
+Table "sales"."salesorderdetail" {
+  "salesorderid" integer [not null, note: 'Primary key. Foreign key to SalesOrderHeader.SalesOrderID.']
+  "salesorderdetailid" integer [not null, note: 'Primary key. One incremental unique number per product sold.']
+  "carriertrackingnumber" "character varying(25)" [note: 'Shipment tracking number supplied by the shipper.']
+  "orderqty" smallint [not null, note: 'Quantity ordered per product.']
+  "productid" integer [not null, note: 'Product sold to customer. Foreign key to Product.ProductID.']
+  "specialofferid" integer [not null, note: 'Promotional code. Foreign key to SpecialOffer.SpecialOfferID.']
+  "unitprice" numeric [not null, note: 'Selling price of a single product.']
+  "unitpricediscount" numeric [not null, default: 0.0, note: 'Discount amount.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Individual products associated with a specific sales order. See SalesOrderHeader.'
+}
+
+Table "sales"."salesorderheader" {
+  "salesorderid" integer [not null, note: 'Primary key.']
+  "revisionnumber" smallint [not null, default: 0, note: 'Incremental number to track changes to the sales order over time.']
+  "orderdate" timestamp [not null, default: `now()`, note: 'Dates the sales order was created.']
+  "duedate" timestamp [not null, note: 'Date the order is due to the customer.']
+  "shipdate" timestamp [note: 'Date the order was shipped to the customer.']
+  "status" smallint [not null, default: 1, note: 'Order current status. 1 = In process; 2 = Approved; 3 = Backordered; 4 = Rejected; 5 = Shipped; 6 = Cancelled']
+  "onlineorderflag" public.Flag [not null, default: true, note: '0 = Order placed by sales person. 1 = Order placed online by customer.']
+  "purchaseordernumber" public.OrderNumber [note: 'Customer purchase order number reference.']
+  "accountnumber" public.AccountNumber [note: 'Financial accounting number reference.']
+  "customerid" integer [not null, note: 'Customer identification number. Foreign key to Customer.BusinessEntityID.']
+  "salespersonid" integer [note: 'Sales person who created the sales order. Foreign key to SalesPerson.BusinessEntityID.']
+  "territoryid" integer [note: 'Territory in which the sale was made. Foreign key to SalesTerritory.SalesTerritoryID.']
+  "billtoaddressid" integer [not null, note: 'Customer billing address. Foreign key to Address.AddressID.']
+  "shiptoaddressid" integer [not null, note: 'Customer shipping address. Foreign key to Address.AddressID.']
+  "shipmethodid" integer [not null, note: 'Shipping method. Foreign key to ShipMethod.ShipMethodID.']
+  "creditcardid" integer [note: 'Credit card identification number. Foreign key to CreditCard.CreditCardID.']
+  "creditcardapprovalcode" "character varying(15)" [note: 'Approval code provided by the credit card company.']
+  "currencyrateid" integer [note: 'Currency exchange rate used. Foreign key to CurrencyRate.CurrencyRateID.']
+  "subtotal" numeric [not null, default: 0.00, note: 'Sales subtotal. Computed as SUM(SalesOrderDetail.LineTotal)for the appropriate SalesOrderID.']
+  "taxamt" numeric [not null, default: 0.00, note: 'Tax amount.']
+  "freight" numeric [not null, default: 0.00, note: 'Shipping cost.']
+  "totaldue" numeric [note: 'Total due from customer. Computed as Subtotal + TaxAmt + Freight.']
+  "comment" "character varying(128)" [note: 'Sales representative comments.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'General sales order information.'
+}
+
+Table "sales"."salesorderheadersalesreason" {
+  "salesorderid" integer [not null, note: 'Primary key. Foreign key to SalesOrderHeader.SalesOrderID.']
+  "salesreasonid" integer [not null, note: 'Primary key. Foreign key to SalesReason.SalesReasonID.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Cross-reference table mapping sales orders to sales reason codes.'
+}
+
+Table "sales"."specialofferproduct" {
+  "specialofferid" integer [not null, note: 'Primary key for SpecialOfferProduct records.']
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Cross-reference table mapping products to special offer discounts.'
+}
+
+Table "sales"."salesperson" {
+  "businessentityid" integer [not null, note: 'Primary key for SalesPerson records. Foreign key to Employee.BusinessEntityID']
+  "territoryid" integer [note: 'Territory currently assigned to. Foreign key to SalesTerritory.SalesTerritoryID.']
+  "salesquota" numeric [note: 'Projected yearly sales.']
+  "bonus" numeric [not null, default: 0.00, note: 'Bonus due if quota is met.']
+  "commissionpct" numeric [not null, default: 0.00, note: 'Commision percent received per sale.']
+  "salesytd" numeric [not null, default: 0.00, note: 'Sales total year to date.']
+  "saleslastyear" numeric [not null, default: 0.00, note: 'Sales total of previous year.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Sales representative current information.'
+}
+
+Table "sales"."salespersonquotahistory" {
+  "businessentityid" integer [not null, note: 'Sales person identification number. Foreign key to SalesPerson.BusinessEntityID.']
+  "quotadate" timestamp [not null, note: 'Sales quota date.']
+  "salesquota" numeric [not null, note: 'Sales quota amount.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Sales performance tracking.'
+}
+
+Table "sales"."salesreason" {
+  "salesreasonid" integer [not null, note: 'Primary key for SalesReason records.']
+  "name" public.Name [not null, note: 'Sales reason description.']
+  "reasontype" public.Name [not null, note: 'Category the sales reason belongs to.']
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Lookup table of customer purchase reasons.'
+}
+
+Table "sales"."salesterritory" {
+  "territoryid" integer [not null, note: 'Primary key for SalesTerritory records.']
+  "name" public.Name [not null, note: 'Sales territory description']
+  "countryregioncode" "character varying(3)" [not null, note: 'ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode.']
+  "group" "character varying(50)" [not null, note: 'Geographic area to which the sales territory belong.']
+  "salesytd" numeric [not null, default: 0.00, note: 'Sales in the territory year to date.']
+  "saleslastyear" numeric [not null, default: 0.00, note: 'Sales in the territory the previous year.']
+  "costytd" numeric [not null, default: 0.00, note: 'Business costs in the territory year to date.']
+  "costlastyear" numeric [not null, default: 0.00, note: 'Business costs in the territory the previous year.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Sales territory lookup table.'
+}
+
+Table "sales"."salesterritoryhistory" {
+  "businessentityid" integer [not null, note: 'Primary key. The sales rep.  Foreign key to SalesPerson.BusinessEntityID.']
+  "territoryid" integer [not null, note: 'Primary key. Territory identification number. Foreign key to SalesTerritory.SalesTerritoryID.']
+  "startdate" timestamp [not null, note: 'Primary key. Date the sales representive started work in the territory.']
+  "enddate" timestamp [note: 'Date the sales representative left work in the territory.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Sales representative transfers to other sales territories.'
+}
+
+Table "sales"."salestaxrate" {
+  "salestaxrateid" integer [not null, note: 'Primary key for SalesTaxRate records.']
+  "stateprovinceid" integer [not null, note: 'State, province, or country/region the sales tax applies to.']
+  "taxtype" smallint [not null, note: '1 = Tax applied to retail transactions, 2 = Tax applied to wholesale transactions, 3 = Tax applied to all sales (retail and wholesale) transactions.']
+  "taxrate" numeric [not null, default: 0.00, note: 'Tax rate amount.']
+  "name" public.Name [not null, note: 'Tax rate description.']
+  "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
+  "modifieddate" timestamp [not null, default: `now()`]
+  Note: 'Tax rate lookup table.'
+}
+
+Ref "FK_EmployeeDepartmentHistory_Department_DepartmentID":"humanresources"."department"."departmentid" < "humanresources"."employeedepartmenthistory"."departmentid"
+
+Ref "FK_EmployeeDepartmentHistory_Employee_BusinessEntityID":"humanresources"."employee"."businessentityid" < "humanresources"."employeedepartmenthistory"."businessentityid"
+
+Ref "FK_EmployeeDepartmentHistory_Shift_ShiftID":"humanresources"."shift"."shiftid" < "humanresources"."employeedepartmenthistory"."shiftid"
+
+Ref "FK_EmployeePayHistory_Employee_BusinessEntityID":"humanresources"."employee"."businessentityid" < "humanresources"."employeepayhistory"."businessentityid"
+
+Ref "FK_Employee_Person_BusinessEntityID":"person"."person"."businessentityid" < "humanresources"."employee"."businessentityid"
+
+Ref "FK_JobCandidate_Employee_BusinessEntityID":"humanresources"."employee"."businessentityid" < "humanresources"."jobcandidate"."businessentityid"
+
+Ref "FK_Address_StateProvince_StateProvinceID":"person"."stateprovince"."stateprovinceid" < "person"."address"."stateprovinceid"
+
+Ref "FK_BusinessEntityAddress_AddressType_AddressTypeID":"person"."addresstype"."addresstypeid" < "person"."businessentityaddress"."addresstypeid"
+
+Ref "FK_BusinessEntityAddress_Address_AddressID":"person"."address"."addressid" < "person"."businessentityaddress"."addressid"
+
+Ref "FK_BusinessEntityAddress_BusinessEntity_BusinessEntityID":"person"."businessentity"."businessentityid" < "person"."businessentityaddress"."businessentityid"
+
+Ref "FK_BusinessEntityContact_BusinessEntity_BusinessEntityID":"person"."businessentity"."businessentityid" < "person"."businessentitycontact"."businessentityid"
+
+Ref "FK_BusinessEntityContact_ContactType_ContactTypeID":"person"."contacttype"."contacttypeid" < "person"."businessentitycontact"."contacttypeid"
+
+Ref "FK_BusinessEntityContact_Person_PersonID":"person"."person"."businessentityid" < "person"."businessentitycontact"."personid"
+
+Ref "FK_EmailAddress_Person_BusinessEntityID":"person"."person"."businessentityid" < "person"."emailaddress"."businessentityid"
+
+Ref "FK_Password_Person_BusinessEntityID":"person"."person"."businessentityid" < "person"."password"."businessentityid"
+
+Ref "FK_PersonPhone_Person_BusinessEntityID":"person"."person"."businessentityid" < "person"."personphone"."businessentityid"
+
+Ref "FK_PersonPhone_PhoneNumberType_PhoneNumberTypeID":"person"."phonenumbertype"."phonenumbertypeid" < "person"."personphone"."phonenumbertypeid"
+
+Ref "FK_Person_BusinessEntity_BusinessEntityID":"person"."businessentity"."businessentityid" < "person"."person"."businessentityid"
+
+Ref "FK_StateProvince_CountryRegion_CountryRegionCode":"person"."countryregion"."countryregioncode" < "person"."stateprovince"."countryregioncode"
+
+Ref "FK_StateProvince_SalesTerritory_TerritoryID":"sales"."salesterritory"."territoryid" < "person"."stateprovince"."territoryid"
+
+Ref "FK_BillOfMaterials_Product_ComponentID":"production"."product"."productid" < "production"."billofmaterials"."componentid"
+
+Ref "FK_BillOfMaterials_Product_ProductAssemblyID":"production"."product"."productid" < "production"."billofmaterials"."productassemblyid"
+
+Ref "FK_BillOfMaterials_UnitMeasure_UnitMeasureCode":"production"."unitmeasure"."unitmeasurecode" < "production"."billofmaterials"."unitmeasurecode"
+
+Ref "FK_Document_Employee_Owner":"humanresources"."employee"."businessentityid" < "production"."document"."owner"
+
+Ref "FK_ProductCostHistory_Product_ProductID":"production"."product"."productid" < "production"."productcosthistory"."productid"
+
+Ref "FK_ProductDocument_Document_DocumentNode":"production"."document"."documentnode" < "production"."productdocument"."documentnode"
+
+Ref "FK_ProductDocument_Product_ProductID":"production"."product"."productid" < "production"."productdocument"."productid"
+
+Ref "FK_ProductInventory_Location_LocationID":"production"."location"."locationid" < "production"."productinventory"."locationid"
+
+Ref "FK_ProductInventory_Product_ProductID":"production"."product"."productid" < "production"."productinventory"."productid"
+
+Ref "FK_ProductListPriceHistory_Product_ProductID":"production"."product"."productid" < "production"."productlistpricehistory"."productid"
+
+Ref "FK_ProductModelIllustration_Illustration_IllustrationID":"production"."illustration"."illustrationid" < "production"."productmodelillustration"."illustrationid"
+
+Ref "FK_ProductModelIllustration_ProductModel_ProductModelID":"production"."productmodel"."productmodelid" < "production"."productmodelillustration"."productmodelid"
+
+Ref "FK_ProductModelProductDescriptionCulture_Culture_CultureID":"production"."culture"."cultureid" < "production"."productmodelproductdescriptionculture"."cultureid"
+
+Ref "FK_ProductModelProductDescriptionCulture_ProductDescription_Pro":"production"."productdescription"."productdescriptionid" < "production"."productmodelproductdescriptionculture"."productdescriptionid"
+
+Ref "FK_ProductModelProductDescriptionCulture_ProductModel_ProductMo":"production"."productmodel"."productmodelid" < "production"."productmodelproductdescriptionculture"."productmodelid"
+
+Ref "FK_ProductProductPhoto_ProductPhoto_ProductPhotoID":"production"."productphoto"."productphotoid" < "production"."productproductphoto"."productphotoid"
+
+Ref "FK_ProductProductPhoto_Product_ProductID":"production"."product"."productid" < "production"."productproductphoto"."productid"
+
+Ref "FK_ProductReview_Product_ProductID":"production"."product"."productid" < "production"."productreview"."productid"
+
+Ref "FK_ProductSubcategory_ProductCategory_ProductCategoryID":"production"."productcategory"."productcategoryid" < "production"."productsubcategory"."productcategoryid"
+
+Ref "FK_Product_ProductModel_ProductModelID":"production"."productmodel"."productmodelid" < "production"."product"."productmodelid"
+
+Ref "FK_Product_ProductSubcategory_ProductSubcategoryID":"production"."productsubcategory"."productsubcategoryid" < "production"."product"."productsubcategoryid"
+
+Ref "FK_Product_UnitMeasure_SizeUnitMeasureCode":"production"."unitmeasure"."unitmeasurecode" < "production"."product"."sizeunitmeasurecode"
+
+Ref "FK_Product_UnitMeasure_WeightUnitMeasureCode":"production"."unitmeasure"."unitmeasurecode" < "production"."product"."weightunitmeasurecode"
+
+Ref "FK_TransactionHistory_Product_ProductID":"production"."product"."productid" < "production"."transactionhistory"."productid"
+
+Ref "FK_WorkOrderRouting_Location_LocationID":"production"."location"."locationid" < "production"."workorderrouting"."locationid"
+
+Ref "FK_WorkOrderRouting_WorkOrder_WorkOrderID":"production"."workorder"."workorderid" < "production"."workorderrouting"."workorderid"
+
+Ref "FK_WorkOrder_Product_ProductID":"production"."product"."productid" < "production"."workorder"."productid"
+
+Ref "FK_WorkOrder_ScrapReason_ScrapReasonID":"production"."scrapreason"."scrapreasonid" < "production"."workorder"."scrapreasonid"
+
+Ref "FK_ProductVendor_Product_ProductID":"production"."product"."productid" < "purchasing"."productvendor"."productid"
+
+Ref "FK_ProductVendor_UnitMeasure_UnitMeasureCode":"production"."unitmeasure"."unitmeasurecode" < "purchasing"."productvendor"."unitmeasurecode"
+
+Ref "FK_ProductVendor_Vendor_BusinessEntityID":"purchasing"."vendor"."businessentityid" < "purchasing"."productvendor"."businessentityid"
+
+Ref "FK_PurchaseOrderDetail_Product_ProductID":"production"."product"."productid" < "purchasing"."purchaseorderdetail"."productid"
+
+Ref "FK_PurchaseOrderDetail_PurchaseOrderHeader_PurchaseOrderID":"purchasing"."purchaseorderheader"."purchaseorderid" < "purchasing"."purchaseorderdetail"."purchaseorderid"
+
+Ref "FK_PurchaseOrderHeader_Employee_EmployeeID":"humanresources"."employee"."businessentityid" < "purchasing"."purchaseorderheader"."employeeid"
+
+Ref "FK_PurchaseOrderHeader_ShipMethod_ShipMethodID":"purchasing"."shipmethod"."shipmethodid" < "purchasing"."purchaseorderheader"."shipmethodid"
+
+Ref "FK_PurchaseOrderHeader_Vendor_VendorID":"purchasing"."vendor"."businessentityid" < "purchasing"."purchaseorderheader"."vendorid"
+
+Ref "FK_Vendor_BusinessEntity_BusinessEntityID":"person"."businessentity"."businessentityid" < "purchasing"."vendor"."businessentityid"
+
+Ref "FK_CountryRegionCurrency_CountryRegion_CountryRegionCode":"person"."countryregion"."countryregioncode" < "sales"."countryregioncurrency"."countryregioncode"
+
+Ref "FK_CountryRegionCurrency_Currency_CurrencyCode":"sales"."currency"."currencycode" < "sales"."countryregioncurrency"."currencycode"
+
+Ref "FK_CurrencyRate_Currency_FromCurrencyCode":"sales"."currency"."currencycode" < "sales"."currencyrate"."fromcurrencycode"
+
+Ref "FK_CurrencyRate_Currency_ToCurrencyCode":"sales"."currency"."currencycode" < "sales"."currencyrate"."tocurrencycode"
+
+Ref "FK_Customer_Person_PersonID":"person"."person"."businessentityid" < "sales"."customer"."personid"
+
+Ref "FK_Customer_SalesTerritory_TerritoryID":"sales"."salesterritory"."territoryid" < "sales"."customer"."territoryid"
+
+Ref "FK_Customer_Store_StoreID":"sales"."store"."businessentityid" < "sales"."customer"."storeid"
+
+Ref "FK_PersonCreditCard_CreditCard_CreditCardID":"sales"."creditcard"."creditcardid" < "sales"."personcreditcard"."creditcardid"
+
+Ref "FK_PersonCreditCard_Person_BusinessEntityID":"person"."person"."businessentityid" < "sales"."personcreditcard"."businessentityid"
+
+Ref "FK_SalesOrderDetail_SalesOrderHeader_SalesOrderID":"sales"."salesorderheader"."salesorderid" < "sales"."salesorderdetail"."salesorderid" [delete: cascade]
+
+Ref "FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID":"sales"."specialofferproduct".("specialofferid", "productid") < "sales"."salesorderdetail".("specialofferid", "productid")
+
+Ref "FK_SalesOrderHeaderSalesReason_SalesOrderHeader_SalesOrderID":"sales"."salesorderheader"."salesorderid" < "sales"."salesorderheadersalesreason"."salesorderid" [delete: cascade]
+
+Ref "FK_SalesOrderHeaderSalesReason_SalesReason_SalesReasonID":"sales"."salesreason"."salesreasonid" < "sales"."salesorderheadersalesreason"."salesreasonid"
+
+Ref "FK_SalesOrderHeader_Address_BillToAddressID":"person"."address"."addressid" < "sales"."salesorderheader"."billtoaddressid"
+
+Ref "FK_SalesOrderHeader_Address_ShipToAddressID":"person"."address"."addressid" < "sales"."salesorderheader"."shiptoaddressid"
+
+Ref "FK_SalesOrderHeader_CreditCard_CreditCardID":"sales"."creditcard"."creditcardid" < "sales"."salesorderheader"."creditcardid"
+
+Ref "FK_SalesOrderHeader_CurrencyRate_CurrencyRateID":"sales"."currencyrate"."currencyrateid" < "sales"."salesorderheader"."currencyrateid"
+
+Ref "FK_SalesOrderHeader_Customer_CustomerID":"sales"."customer"."customerid" < "sales"."salesorderheader"."customerid"
+
+Ref "FK_SalesOrderHeader_SalesPerson_SalesPersonID":"sales"."salesperson"."businessentityid" < "sales"."salesorderheader"."salespersonid"
+
+Ref "FK_SalesOrderHeader_SalesTerritory_TerritoryID":"sales"."salesterritory"."territoryid" < "sales"."salesorderheader"."territoryid"
+
+Ref "FK_SalesOrderHeader_ShipMethod_ShipMethodID":"purchasing"."shipmethod"."shipmethodid" < "sales"."salesorderheader"."shipmethodid"
+
+Ref "FK_SalesPersonQuotaHistory_SalesPerson_BusinessEntityID":"sales"."salesperson"."businessentityid" < "sales"."salespersonquotahistory"."businessentityid"
+
+Ref "FK_SalesPerson_Employee_BusinessEntityID":"humanresources"."employee"."businessentityid" < "sales"."salesperson"."businessentityid"
+
+Ref "FK_SalesPerson_SalesTerritory_TerritoryID":"sales"."salesterritory"."territoryid" < "sales"."salesperson"."territoryid"
+
+Ref "FK_SalesTaxRate_StateProvince_StateProvinceID":"person"."stateprovince"."stateprovinceid" < "sales"."salestaxrate"."stateprovinceid"
+
+Ref "FK_SalesTerritoryHistory_SalesPerson_BusinessEntityID":"sales"."salesperson"."businessentityid" < "sales"."salesterritoryhistory"."businessentityid"
+
+Ref "FK_SalesTerritoryHistory_SalesTerritory_TerritoryID":"sales"."salesterritory"."territoryid" < "sales"."salesterritoryhistory"."territoryid"
+
+Ref "FK_SalesTerritory_CountryRegion_CountryRegionCode":"person"."countryregion"."countryregioncode" < "sales"."salesterritory"."countryregioncode"
+
+Ref "FK_ShoppingCartItem_Product_ProductID":"production"."product"."productid" < "sales"."shoppingcartitem"."productid"
+
+Ref "FK_SpecialOfferProduct_Product_ProductID":"production"."product"."productid" < "sales"."specialofferproduct"."productid"
+
+Ref "FK_SpecialOfferProduct_SpecialOffer_SpecialOfferID":"sales"."specialoffer"."specialofferid" < "sales"."specialofferproduct"."specialofferid"
+
+Ref "FK_Store_BusinessEntity_BusinessEntityID":"person"."businessentity"."businessentityid" < "sales"."store"."businessentityid"
+
+Ref "FK_Store_SalesPerson_SalesPersonID":"sales"."salesperson"."businessentityid" < "sales"."store"."salespersonid"
