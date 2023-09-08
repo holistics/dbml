@@ -53,12 +53,9 @@ $ dbml2sql schema.dbml -o schema.sql
 
 ```bash
 $ dbml2sql <path-to-dbml-file>
-           [--mysql|--postgres|--mssql|--postgres-legacy]
+           [--mysql|--postgres|--mssql]
            [-o|--out-file <output-filepath>]
 ```
-Note: The `--postgres-legacy` option import postgreSQL to dbml using the old parser. It's quicker but less accurate.
-
-
 ## Convert  a SQL file to DBML
 
 To convert SQL to DBML file:
@@ -86,6 +83,7 @@ $ sql2dbml --mysql dump.sql -o mydatabase.dbml
 
 ```bash
 $ sql2dbml <path-to-sql-file>
-           [--mysql|--postgres|--mssql]
+           [--mysql|--postgres|--mssql|--postgres-legacy]
            [-o|--out-file <output-filepath>]
 ```
+Note: The `--postgres-legacy` option import postgreSQL to dbml using the old parser. It's quicker but less accurate.
