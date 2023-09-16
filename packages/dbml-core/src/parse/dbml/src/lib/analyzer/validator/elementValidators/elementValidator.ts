@@ -33,7 +33,6 @@ import {
   registerSchemaStack,
 } from '../utils';
 import { NodeSymbol, SchemaSymbol } from '../../symbol/symbols';
-import SymbolTable from '../../symbol/symbolTable';
 import {
   createIdFromContext,
   createSubfieldId,

@@ -1,12 +1,12 @@
 import { SyntaxNode } from '../../parser/nodes';
 import { ValidatorContext } from '../validator/validatorContext';
 import {
-  NodeSymbolId,
-  createColumnSymbolId,
-  createEnumFieldSymbolId,
-  createEnumSymbolId,
-  createTableGroupSymbolId,
-  createTableSymbolId,
+  NodeSymbolIndex,
+  createColumnSymbolIndex,
+  createEnumFieldSymbolIndex,
+  createEnumSymbolIndex,
+  createTableGroupSymbolIndex,
+  createTableSymbolIndex,
 } from './symbolIndex';
 import SymbolTable from './symbolTable';
 import {
@@ -22,14 +22,14 @@ import {
 export function createIdFromContext(
   name: string,
   context: ValidatorContext,
-): NodeSymbolId | undefined {
+): NodeSymbolIndex | undefined {
   switch (context) {
     case ValidatorContext.TableContext:
-      return createTableSymbolId(name);
+      return createTableSymbolIndex(name);
     case ValidatorContext.EnumContext:
-      return createEnumSymbolId(name);
+      return createEnumSymbolIndex(name);
     case ValidatorContext.TableGroupContext:
-      return createTableGroupSymbolId(name);
+      return createTableGroupSymbolIndex(name);
     default:
       return undefined;
   }
@@ -38,14 +38,14 @@ export function createIdFromContext(
 export function createSubfieldId(
   name: string,
   context: ValidatorContext,
-): NodeSymbolId | undefined {
+): NodeSymbolIndex | undefined {
   switch (context) {
     case ValidatorContext.TableContext:
-      return createColumnSymbolId(name);
+      return createColumnSymbolIndex(name);
     case ValidatorContext.EnumContext:
-      return createEnumFieldSymbolId(name);
+      return createEnumFieldSymbolIndex(name);
     case ValidatorContext.TableGroupContext:
-      return createTableGroupSymbolId(name);
+      return createTableGroupSymbolIndex(name);
     default:
       return undefined;
   }

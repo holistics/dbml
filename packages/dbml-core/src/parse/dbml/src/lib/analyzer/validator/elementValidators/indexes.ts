@@ -1,5 +1,5 @@
 import { UnresolvedName } from '../../types';
-import { createColumnSymbolId } from '../../symbol/symbolIndex';
+import { createColumnSymbolIndex } from '../../symbol/symbolIndex';
 import {
   ElementKind,
   createContextValidatorConfig,
@@ -7,7 +7,6 @@ import {
   createSubFieldValidatorConfig,
 } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { SyntaxToken } from '../../../lexer/tokens';
 import {
   ElementDeclarationNode,
   PrimaryExpressionNode,
@@ -89,7 +88,7 @@ export function registerIndexForResolution(
 ) {
   const columnIds = destructureIndex(node)
     .unwrap_or(undefined)
-    ?.nonFunctional.map(createColumnSymbolId);
+    ?.nonFunctional.map(createColumnSymbolIndex);
 
   if (!columnIds) {
     throw new Error(

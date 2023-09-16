@@ -1,8 +1,8 @@
 import { ElementDeclarationNode, SyntaxNode } from '../parser/nodes';
-import { NodeSymbolId } from './symbol/symbolIndex';
+import { NodeSymbolIndex } from './symbol/symbolIndex';
 
 export interface UnresolvedName {
-  ids: NodeSymbolId[];
+  ids: NodeSymbolIndex[];
   ownerElement: ElementDeclarationNode;
   referrer: SyntaxNode;
 }

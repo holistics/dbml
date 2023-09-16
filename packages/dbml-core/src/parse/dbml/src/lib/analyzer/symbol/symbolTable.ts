@@ -1,24 +1,24 @@
-import { NodeSymbolId } from './symbolIndex';
+import { NodeSymbolIndex } from './symbolIndex';
 import { NodeSymbol } from './symbols';
 
 export default class SymbolTable {
-  private table: Map<NodeSymbolId, NodeSymbol>;
+  private table: Map<NodeSymbolIndex, NodeSymbol>;
 
   constructor() {
     this.table = new Map();
   }
 
-  has(id: NodeSymbolId): boolean {
+  has(id: NodeSymbolIndex): boolean {
     return this.table.has(id);
   }
 
-  set(id: NodeSymbolId, value: NodeSymbol) {
+  set(id: NodeSymbolIndex, value: NodeSymbol) {
     this.table.set(id, value);
   }
 
-  get(id: NodeSymbolId): NodeSymbol | undefined;
-  get(id: NodeSymbolId, defaultValue: NodeSymbol): NodeSymbol;
-  get(id: NodeSymbolId, defaultValue?: NodeSymbol): NodeSymbol | undefined {
+  get(id: NodeSymbolIndex): NodeSymbol | undefined;
+  get(id: NodeSymbolIndex, defaultValue: NodeSymbol): NodeSymbol;
+  get(id: NodeSymbolIndex, defaultValue?: NodeSymbol): NodeSymbol | undefined {
     return (
       this.table.get(id) ||
       (defaultValue !== undefined && this.set(id, defaultValue)) ||
