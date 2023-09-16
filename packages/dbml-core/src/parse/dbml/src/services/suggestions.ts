@@ -36,7 +36,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
   provideCompletionItems(model: TextModel, position: Position): CompletionList {
     const offset = getOffsetFromMonacoPosition(model, position);
 
-    const iter = TokenSourceIterator.fromOffset(this.compiler, offset);
+    let iter = TokenSourceIterator.fromOffset(this.compiler, offset);
 
     // Return `true` if `iter` is before any other non-trivial tokens
     // Happens when:
@@ -71,7 +71,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         case SyntaxTokenKind.STRING_LITERAL:
         case SyntaxTokenKind.NUMERIC_LITERAL:
           editedToken = containToken;
-          lastToken = iter.back().value().unwrap_or(undefined);
+          iter = iter.back();
+          lastToken = iter.value().unwrap_or(undefined);
           lineIter = lineIter.back();
           break;
         default:
@@ -93,7 +94,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           case '.':
             // We're editing a token after '.',
             // which can mean that we're looking for a member
-            return this.suggestMembers(model, offset);
+            return this.suggestMembers(model, offset, iter);
           case '<>':
           case '>':
           case '<':
@@ -476,7 +477,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
   private suggestOnColon(
     model: TextModel,
-    offset: number, // This offset is assumed to be after or right at the colon
+    offset: number,
     colon: SyntaxToken,
   ): CompletionList {
     const settingNameFragments: string[] = [];
@@ -556,35 +557,27 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
   private suggestMembers(
     model: TextModel,
-    offset: number, // The offset is assumed to be after or right at the dot
+    offset: number,
+    iterFromDot: TokenSourceIterator,
   ): CompletionList {
-    let iter = TokenSourceIterator.fromOffset(this.compiler, offset);
+    let curIter = iterFromDot;
     const nameStack: string[] = [];
-    let curToken = iter.value().unwrap_or(undefined);
+    let curToken = curIter.value().unwrap_or(undefined);
     if (!curToken) {
       return noSuggestions();
     }
 
-    const nextToken = iter.next().value().unwrap_or(undefined);
-    if (
-      hasTrailingNewLines(curToken) &&
-      nextToken &&
-      [SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING].includes(nextToken.kind)
-    ) {
-      return noSuggestions();
-    }
-
     while (isDot(curToken)) {
-      iter = iter.back();
-      curToken = iter.value().unwrap_or(undefined);
+      curIter = curIter.back();
+      curToken = curIter.value().unwrap_or(undefined);
       if (
         curToken?.kind === SyntaxTokenKind.IDENTIFIER ||
         curToken?.kind === SyntaxTokenKind.QUOTED_STRING
       ) {
         nameStack.push(curToken.value);
       }
-      iter = iter.back();
-      curToken = iter.value().unwrap_or(undefined);
+      curIter = curIter.back();
+      curToken = curIter.value().unwrap_or(undefined);
     }
 
     return {
