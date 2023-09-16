@@ -1,0 +1,25 @@
+Table public.A [headercolor: #123, note: 'This is a note'] {
+    id integer(255, 255) [primary key, pk, default: '123', unique, increment, not null]
+    referrer_id integer [ref: > A.id]
+
+    Note {
+        '''123'''
+    }
+
+    indexes {
+        (id, referrer_id, `id`) [unique, name: "as", type: hash]
+    }
+}
+
+Table v2.A as B {
+    id integer
+}
+
+Enum E {
+    new
+}
+
+
+TableGroup A {
+    v2.A
+}

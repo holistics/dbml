@@ -1,0 +1,197 @@
+{
+  "database": {
+    "1": {
+      "id": 1,
+      "hasDefaultSchema": false,
+      "note": null,
+      "schemaIds": [
+        1,
+        2
+      ]
+    }
+  },
+  "schemas": {
+    "1": {
+      "id": 1,
+      "name": "public",
+      "note": "Default Public Schema",
+      "tableIds": [
+        1
+      ],
+      "enumIds": [
+        1
+      ],
+      "tableGroupIds": [
+        1
+      ],
+      "refIds": [
+        1
+      ],
+      "databaseId": 1
+    },
+    "2": {
+      "id": 2,
+      "name": "v2",
+      "note": null,
+      "tableIds": [
+        2
+      ],
+      "enumIds": [],
+      "tableGroupIds": [],
+      "refIds": [],
+      "databaseId": 1
+    }
+  },
+  "refs": {
+    "1": {
+      "id": 1,
+      "name": null,
+      "endpointIds": [
+        1,
+        2
+      ],
+      "schemaId": 1
+    }
+  },
+  "enums": {
+    "1": {
+      "id": 1,
+      "name": "E",
+      "note": null,
+      "valueIds": [
+        1
+      ],
+      "fieldIds": [],
+      "schemaId": 1
+    }
+  },
+  "tableGroups": {
+    "1": {
+      "id": 1,
+      "name": "A",
+      "tableIds": [
+        2
+      ],
+      "schemaId": 1
+    }
+  },
+  "tables": {
+    "1": {
+      "id": 1,
+      "name": "A",
+      "alias": null,
+      "note": null,
+      "headerColor": "#123",
+      "fieldIds": [
+        1,
+        2
+      ],
+      "indexIds": [],
+      "schemaId": 1,
+      "groupId": null
+    },
+    "2": {
+      "id": 2,
+      "name": "A",
+      "alias": "B",
+      "note": null,
+      "fieldIds": [
+        3
+      ],
+      "indexIds": [],
+      "schemaId": 2,
+      "groupId": 1
+    }
+  },
+  "endpoints": {
+    "1": {
+      "id": 1,
+      "schemaName": "public",
+      "tableName": "A",
+      "fieldNames": [
+        "referrer_id"
+      ],
+      "relation": "*",
+      "refId": 1,
+      "fieldIds": [
+        2
+      ]
+    },
+    "2": {
+      "id": 2,
+      "schemaName": null,
+      "tableName": "A",
+      "fieldNames": [
+        "id"
+      ],
+      "relation": "1",
+      "refId": 1,
+      "fieldIds": [
+        1
+      ]
+    }
+  },
+  "enumValues": {
+    "1": {
+      "id": 1,
+      "name": "new",
+      "note": null,
+      "enumId": 1
+    }
+  },
+  "indexes": {},
+  "indexColumns": {},
+  "fields": {
+    "1": {
+      "id": 1,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "integer(255, 255)",
+        "args": "255, 255"
+      },
+      "unique": true,
+      "pk": true,
+      "not_null": true,
+      "note": null,
+      "dbdefault": {
+        "type": "string",
+        "value": "123"
+      },
+      "increment": true,
+      "endpointIds": [
+        2
+      ],
+      "tableId": 1,
+      "enumId": null
+    },
+    "2": {
+      "id": 2,
+      "name": "referrer_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "integer",
+        "args": null
+      },
+      "note": null,
+      "endpointIds": [
+        1
+      ],
+      "tableId": 1,
+      "enumId": null
+    },
+    "3": {
+      "id": 3,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "integer",
+        "args": null
+      },
+      "note": null,
+      "endpointIds": [],
+      "tableId": 2,
+      "enumId": null
+    }
+  }
+}

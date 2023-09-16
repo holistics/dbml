@@ -1,0 +1,21 @@
+Table Users {
+    id integer
+    status1 v2.status [default: v2.status.churn]
+    status2 public.status [default: public.status.churnn]
+    status3 public.statuss
+    status4 v2.statuss
+}
+
+Enum v2.status {
+    churn
+    new
+    active
+    tenant
+}
+
+Enum status {
+    churn
+    new
+    active
+    tenant
+}

@@ -2,4 +2,5 @@ Test ListExpression {
     id integer [one, two: 'two',
                 three: 'three', primary 
                 key, : 'invalid-attribute' ]
+    abc " gibberish type " [ref: empty. ]
 }
