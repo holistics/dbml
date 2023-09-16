@@ -1,8 +1,8 @@
-import { UnresolvedName } from '../../types';
+import { BindingRequest } from '../../types';
 import { ElementKind, createContextValidatorConfig, createSubFieldValidatorConfig } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { ElementDeclarationNode } from '../../../parser/nodes';
-import { isExpressionAQuotedString } from '../../../utils';
+import { isExpressionAQuotedString } from '../../../parser/utils';
 import { ContextStack, ValidatorContext } from '../validatorContext';
 import ElementValidator from './elementValidator';
 import {
@@ -56,7 +56,7 @@ export default class CustomValidator extends ElementValidator {
     declarationNode: ElementDeclarationNode,
     publicSchemaSymbol: SchemaSymbol,
     contextStack: ContextStack,
-    unresolvedNames: UnresolvedName[],
+    bindingRequests: BindingRequest[],
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
@@ -66,7 +66,7 @@ export default class CustomValidator extends ElementValidator {
       declarationNode,
       publicSchemaSymbol,
       contextStack,
-      unresolvedNames,
+      bindingRequests,
       errors,
       kindsGloballyFound,
       kindsLocallyFound,

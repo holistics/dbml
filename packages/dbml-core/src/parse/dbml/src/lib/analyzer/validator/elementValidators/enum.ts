@@ -1,5 +1,5 @@
 import SymbolFactory from '../../symbol/factory';
-import { UnresolvedName } from '../../types';
+import { BindingRequest } from '../../types';
 import {
   ElementKind,
   createContextValidatorConfig,
@@ -8,7 +8,7 @@ import {
 } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { ElementDeclarationNode } from '../../../parser/nodes';
-import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../utils';
+import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../parser/utils';
 import { ContextStack, ValidatorContext } from '../validatorContext';
 import ElementValidator from './elementValidator';
 import {
@@ -61,7 +61,7 @@ export default class EnumValidator extends ElementValidator {
     declarationNode: ElementDeclarationNode,
     publicSchemaSymbol: SchemaSymbol,
     contextStack: ContextStack,
-    unresolvedNames: UnresolvedName[],
+    bindingRequests: BindingRequest[],
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
@@ -71,7 +71,7 @@ export default class EnumValidator extends ElementValidator {
       declarationNode,
       publicSchemaSymbol,
       contextStack,
-      unresolvedNames,
+      bindingRequests,
       errors,
       kindsGloballyFound,
       kindsLocallyFound,

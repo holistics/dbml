@@ -5,8 +5,8 @@ import {
   createSchemaSymbolIndex,
   createTableSymbolIndex,
 } from '../../symbol/symbolIndex';
-import { UnresolvedName } from '../../types';
-import { destructureComplexVariable } from '../../utils';
+import { BindingRequest, createNonIgnorableBindingRequest } from '../../types';
+import { destructureMemberAccessExpression, extractVariableFromExpression } from '../../utils';
 import { ElementKind } from '../types';
 
 // Register a relationship operand for later resolution
@@ -14,29 +14,38 @@ import { ElementKind } from '../types';
 export function registerRelationshipOperand(
   node: NormalExpressionNode,
   ownerElement: ElementDeclarationNode,
-  unresolvedNames: UnresolvedName[],
+  bindingRequests: BindingRequest[],
 ) {
-  const fragments = destructureComplexVariable(node).unwrap();
-
-  const columnId = createColumnSymbolIndex(fragments.pop()!);
+  const fragments = destructureMemberAccessExpression(node).unwrap();
+  const column = fragments.pop()!;
+  const columnId = createColumnSymbolIndex(extractVariableFromExpression(column).unwrap());
   if (fragments.length === 0) {
-    unresolvedNames.push({
-      ids: [columnId],
-      ownerElement,
-      referrer: node,
-    });
+    bindingRequests.push(
+      createNonIgnorableBindingRequest({
+        subnames: [{ index: columnId, referrer: column }],
+        ownerElement,
+      }),
+    );
 
     return;
   }
+  const table = fragments.pop()!;
+  const tableId = createTableSymbolIndex(extractVariableFromExpression(table).unwrap());
+  const schemaStack = fragments.map((s) => ({
+    index: createSchemaSymbolIndex(extractVariableFromExpression(s).unwrap()),
+    referrer: s,
+  }));
 
-  const tableId = createTableSymbolIndex(fragments.pop()!);
-  const schemaIdStack = fragments.map(createSchemaSymbolIndex);
-
-  unresolvedNames.push({
-    ids: [...schemaIdStack, tableId, columnId],
-    ownerElement,
-    referrer: node,
-  });
+  bindingRequests.push(
+    createNonIgnorableBindingRequest({
+      subnames: [
+        ...schemaStack,
+        { referrer: table, index: tableId },
+        { referrer: column, index: columnId },
+      ],
+      ownerElement,
+    }),
+  );
 }
 
 export function isCustomElement(kind: ElementKind): kind is ElementKind.CUSTOM {

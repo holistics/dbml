@@ -19,8 +19,8 @@ export default class Analyzer {
   analyze(): Report<ProgramNode, CompileError> {
     const validator = new Validator(this.ast, this.symbolFactory);
 
-    return validator.validate().chain(({ program, unresolvedNames }) => {
-      const binder = new Binder(program, unresolvedNames);
+    return validator.validate().chain(({ program, bindingRequests }) => {
+      const binder = new Binder(program, bindingRequests);
 
       return binder.resolve();
     });

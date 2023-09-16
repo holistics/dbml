@@ -5,6 +5,7 @@ import {
  SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from './tokens';
 import { Position } from '../types';
+import { isInvalidToken } from '../parser/utils';
 
 export default class Lexer {
   private start: Position = {
@@ -72,31 +73,30 @@ export default class Lexer {
       return false;
     }
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const _ of sequence) {
-      this.advance();
-    }
+    sequence.split('').forEach(() => this.advance());
 
     return true;
   }
 
-  private addToken(kind: SyntaxTokenKind) {
-    this.tokens.push(this.createToken(kind));
+  private addToken(kind: SyntaxTokenKind, isInvalid: boolean = false) {
+    this.tokens.push(this.createToken(kind, isInvalid));
   }
 
-  private createToken(kind: SyntaxTokenKind): SyntaxToken {
+  private createToken(kind: SyntaxTokenKind, isInvalid: boolean = false): SyntaxToken {
     return SyntaxToken.create(
       kind,
       this.start,
       this.current,
       this.text.substring(this.start.offset, this.current.offset),
+      isInvalid,
     );
   }
 
   lex(): Report<SyntaxToken[], CompileError> {
     this.scanTokens();
-    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, this.current, ''));
+    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, this.current, '', false));
     this.gatherTrivia();
+    this.gatherInvalid();
 
     return new Report(this.tokens, this.errors);
   }
@@ -181,12 +181,12 @@ export default class Lexer {
             this.numericLiteral();
             break;
           }
-          this.addToken(SyntaxTokenKind.INVALID);
+          this.addToken(SyntaxTokenKind.OP, true);
           this.errors.push(
             new CompileError(
               CompileErrorCode.UNKNOWN_SYMBOL,
               `Unexpected token '${c}'`,
-              this.createToken(SyntaxTokenKind.INVALID),
+              this.createToken(SyntaxTokenKind.OP, true),
             ),
           );
           break;
@@ -232,6 +232,31 @@ export default class Lexer {
     this.tokens = newTokenList;
   }
 
+  gatherInvalid() {
+    let i;
+    const newTokenList: SyntaxToken[] = [];
+
+    const leadingInvalidList: SyntaxToken[] = [];
+    for (i = 0; i < this.tokens.length && isInvalidToken(this.tokens[i]); i += 1) {
+      leadingInvalidList.push(this.tokens[i]);
+    }
+
+    let prevValidToken = this.tokens[i];
+    prevValidToken.leadingInvalid = [...leadingInvalidList, ...prevValidToken.leadingInvalid];
+
+    for (; i < this.tokens.length; i += 1) {
+      const token = this.tokens[i];
+      if (token.isInvalid) {
+        prevValidToken.trailingInvalid.push(token);
+      } else {
+        prevValidToken = token;
+        newTokenList.push(token);
+      }
+    }
+
+    this.tokens = newTokenList;
+  }
+
   // Consuming characters until the `stopSequence` is encountered
   consumeUntil(
     tokenKind: SyntaxTokenKind,
@@ -254,7 +279,7 @@ export default class Lexer {
     }
 
     if (this.isAtEnd() && !allowEof) {
-      const token = this.createToken(SyntaxTokenKind.INVALID);
+      const token = this.createToken(tokenKind, true);
       this.tokens.push(token);
       this.errors.push(
         new CompileError(CompileErrorCode.UNEXPECTED_EOF, 'EOF reached while parsing', token),
@@ -264,7 +289,7 @@ export default class Lexer {
     }
 
     if (this.check('\n') && !allowNewline) {
-      const token = this.createToken(SyntaxTokenKind.INVALID);
+      const token = this.createToken(tokenKind, true);
       this.tokens.push(token);
       this.errors.push(
         new CompileError(
@@ -278,7 +303,7 @@ export default class Lexer {
     }
 
     this.match(stopSequence);
-    this.tokens.push(SyntaxToken.create(tokenKind, this.start, this.current, string));
+    this.tokens.push(SyntaxToken.create(tokenKind, this.start, this.current, string, false));
   }
 
   singleLineStringLiteral() {
@@ -354,7 +379,7 @@ export default class Lexer {
 
       // The first way to return a numeric literal without error:
       // a digit is encountered as the last character
-      if (!isDot && this.current.offset === this.tokens.length - 1) {
+      if (!isDot && this.current.offset === this.text.length - 1) {
         this.advance();
 
         return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
@@ -378,7 +403,7 @@ export default class Lexer {
       this.advance();
     }
 
-    const token = this.createToken(SyntaxTokenKind.INVALID);
+    const token = this.createToken(SyntaxTokenKind.NUMERIC_LITERAL, true);
     this.tokens.push(token);
     this.errors.push(new CompileError(CompileErrorCode.UNKNOWN_TOKEN, 'Invalid number', token));
   }

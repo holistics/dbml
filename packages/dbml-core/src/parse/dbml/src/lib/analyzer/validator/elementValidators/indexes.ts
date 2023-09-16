@@ -1,5 +1,5 @@
 import SymbolFactory from '../../symbol/factory';
-import { UnresolvedName } from '../../types';
+import { BindingRequest } from '../../types';
 import { createColumnSymbolIndex } from '../../symbol/symbolIndex';
 import {
   ElementKind,
@@ -14,8 +14,8 @@ import {
   SyntaxNode,
   VariableNode,
 } from '../../../parser/nodes';
-import { isExpressionAQuotedString } from '../../../utils';
-import { destructureIndex } from '../../utils';
+import { isExpressionAQuotedString } from '../../../parser/utils';
+import { destructureIndexNode, extractVarNameFromPrimaryVariable } from '../../utils';
 import { ContextStack, ValidatorContext } from '../validatorContext';
 import ElementValidator from './elementValidator';
 import { isVoid } from '../utils';
@@ -52,11 +52,11 @@ export default class IndexesValidator extends ElementValidator {
     argValidators: [
       {
         validateArg: transformToReturnCompileErrors(
-          (node) => destructureIndex(node).unwrap_or(undefined) !== undefined,
+          (node) => destructureIndexNode(node).unwrap_or(undefined) !== undefined,
           CompileErrorCode.INVALID_INDEX,
           'This field must be a function expression, a column name or a tuple of such',
         ),
-        registerUnresolvedName: registerIndexForResolution,
+        registerBindingRequest: registerIndexForResolution,
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_INDEX,
@@ -71,7 +71,7 @@ export default class IndexesValidator extends ElementValidator {
     declarationNode: ElementDeclarationNode,
     publicSchemaSymbol: SchemaSymbol,
     contextStack: ContextStack,
-    unresolvedNames: UnresolvedName[],
+    bindingRequests: BindingRequest[],
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
@@ -81,7 +81,7 @@ export default class IndexesValidator extends ElementValidator {
       declarationNode,
       publicSchemaSymbol,
       contextStack,
-      unresolvedNames,
+      bindingRequests,
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
@@ -93,23 +93,28 @@ export default class IndexesValidator extends ElementValidator {
 export function registerIndexForResolution(
   node: SyntaxNode,
   ownerElement: ElementDeclarationNode,
-  unresolvedNames: UnresolvedName[],
+  bindingRequests: BindingRequest[],
 ) {
-  const columnIds = destructureIndex(node)
-    .unwrap_or(undefined)
-    ?.nonFunctional.map(createColumnSymbolIndex);
+  const columnNodes = destructureIndexNode(node).unwrap_or(undefined)?.nonFunctional;
 
-  if (!columnIds) {
+  if (!columnNodes) {
     throw new Error(
       'Unreachable - Index should be validated before registerIndexForResolution is called',
     );
   }
 
-  columnIds.forEach((id) =>
-    unresolvedNames.push({
-      ids: [id],
-      ownerElement,
-      referrer: node,
+  columnNodes.forEach((colNode) =>
+    bindingRequests.push({
+      unresolvedName: {
+        subnames: [
+          {
+            referrer: colNode,
+            index: createColumnSymbolIndex(extractVarNameFromPrimaryVariable(colNode)),
+          },
+        ],
+        ownerElement,
+      },
+      ignoreError: false,
     }));
 }
 

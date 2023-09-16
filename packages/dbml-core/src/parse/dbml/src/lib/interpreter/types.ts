@@ -48,6 +48,7 @@ export interface Column {
   increment?: boolean;
   unique?: boolean;
   not_null?: boolean;
+  note?: string;
 }
 
 export interface Index {
@@ -77,6 +78,7 @@ export interface Ref {
   endpoints: RefEndpointPair;
   delete?: 'cascade' | 'no action' | 'restrict' | 'set default' | 'set null';
   update?: 'cascade' | 'no action' | 'restrict' | 'set default' | 'set null';
+  token: TokenPosition;
 }
 
 export type RefEndpointPair = [RefEndpoint, RefEndpoint];

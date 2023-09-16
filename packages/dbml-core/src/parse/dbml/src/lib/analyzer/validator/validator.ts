@@ -2,12 +2,12 @@ import Report from '../../report';
 import { CompileError } from '../../errors';
 import { ProgramNode } from '../../parser/nodes';
 import { ContextStack } from './validatorContext';
-import { NodeSymbolIdGenerator, SchemaSymbol } from '../symbol/symbols';
+import { SchemaSymbol } from '../symbol/symbols';
 import SymbolFactory from '../symbol/factory';
 import { pickValidator } from './utils';
 import { ElementKind } from './types';
 import SymbolTable from '../symbol/symbolTable';
-import { UnresolvedName } from '../types';
+import { BindingRequest } from '../types';
 
 export default class Validator {
   private ast: ProgramNode;
@@ -19,7 +19,7 @@ export default class Validator {
   private kindsGloballyFound: Set<ElementKind>;
   private kindsLocallyFound: Set<ElementKind>;
 
-  private unresolvedNames: UnresolvedName[];
+  private bindingRequests: BindingRequest[];
 
   private errors: CompileError[];
 
@@ -35,13 +35,13 @@ export default class Validator {
     });
     this.kindsGloballyFound = new Set();
     this.kindsLocallyFound = new Set();
-    this.unresolvedNames = [];
+    this.bindingRequests = [];
 
     this.ast.symbol = this.publicSchemaSymbol;
     this.ast.symbol.declaration = this.ast;
   }
 
-  validate(): Report<{ program: ProgramNode; unresolvedNames: UnresolvedName[] }, CompileError> {
+  validate(): Report<{ program: ProgramNode; bindingRequests: BindingRequest[] }, CompileError> {
     this.ast.body.forEach((element) => {
       // eslint-disable-next-line no-param-reassign
       element.parentElement = this.ast;
@@ -50,7 +50,7 @@ export default class Validator {
         element,
         this.publicSchemaSymbol,
         this.contextStack,
-        this.unresolvedNames,
+        this.bindingRequests,
         this.errors,
         this.kindsGloballyFound,
         this.kindsLocallyFound,
@@ -60,7 +60,7 @@ export default class Validator {
     });
 
     return new Report(
-      { program: this.ast, schema: this.publicSchemaSymbol, unresolvedNames: this.unresolvedNames },
+      { program: this.ast, schema: this.publicSchemaSymbol, bindingRequests: this.bindingRequests },
       this.errors,
     );
   }

@@ -6,6 +6,8 @@ import {
   createColumnSymbolIndex,
   createEnumFieldSymbolIndex,
   createEnumSymbolIndex,
+  createSchemaSymbolIndex,
+  createTableGroupFieldSymbolIndex,
   createTableGroupSymbolIndex,
   createTableSymbolIndex,
 } from './symbolIndex';
@@ -84,4 +86,16 @@ export function createSubfieldSymbol(
     default:
       return undefined;
   }
+}
+
+export function generatePossibleIndexes(name: string): NodeSymbolIndex[] {
+  return [
+    createSchemaSymbolIndex,
+    createTableSymbolIndex,
+    createEnumSymbolIndex,
+    createTableGroupSymbolIndex,
+    createColumnSymbolIndex,
+    createEnumFieldSymbolIndex,
+    createTableGroupFieldSymbolIndex,
+  ].map((f) => f(name));
 }

@@ -1,5 +1,6 @@
+import { None, Option, Some } from '../option';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
-import { destructureComplexVariable } from '../analyzer/utils';
+import { destructureComplexVariable, destructureMemberAccessExpression } from '../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../errors';
 import { SyntaxNode } from '../parser/nodes';
 import { RelationCardinality, TokenPosition } from './types';
@@ -88,4 +89,13 @@ export function extractTokenForInterpreter(node: SyntaxNode): TokenPosition {
     },
     end: { offset: node.endPos.offset, line: node.endPos.line + 1, column: node.endPos.column + 1 },
   };
+}
+
+export function getColumnSymbolOfRefOperand(ref: SyntaxNode): Option<ColumnSymbol> {
+  const colNode = destructureMemberAccessExpression(ref).unwrap_or(undefined)?.pop();
+  if (!(colNode?.referee instanceof ColumnSymbol)) {
+    return new None();
+  }
+
+  return new Some(colNode.referee);
 }

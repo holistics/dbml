@@ -1,6 +1,6 @@
 import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 import { None, Option, Some } from '../option';
-import { extractVariableNode, isExpressionAnIdentifierNode, last } from '../utils';
+import { alternateLists, gatherIntoList, last } from '../utils';
 import NodeFactory from './factory';
 import {
   AttributeNode,
@@ -19,6 +19,7 @@ import {
   PostfixExpressionNode,
   PrefixExpressionNode,
   PrimaryExpressionNode,
+  ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
@@ -127,7 +128,7 @@ function markInvalidToken(token: SyntaxToken) {
     return;
   }
   // eslint-disable-next-line no-param-reassign
-  token.kind = SyntaxTokenKind.INVALID;
+  token.isInvalid = true;
 }
 
 function markInvalidNode(node: SyntaxNode) {
@@ -191,7 +192,7 @@ function markInvalidNode(node: SyntaxNode) {
 }
 
 export function isInvalidToken(token?: SyntaxToken): boolean {
-  return token?.kind === SyntaxTokenKind.INVALID;
+  return !!token?.isInvalid;
 }
 
 export function createDummySyntaxToken(kind: SyntaxTokenKind): SyntaxToken {
@@ -208,5 +209,141 @@ export function createDummySyntaxToken(kind: SyntaxTokenKind): SyntaxToken {
       column: NaN,
     },
     '',
+    false,
   );
+}
+
+export function getMemberChain(node: SyntaxNode): Readonly<(SyntaxNode | SyntaxToken)[]> {
+  if (node instanceof ProgramNode) {
+    return [...node.body, node.eof];
+  }
+
+  if (node instanceof ElementDeclarationNode) {
+    return gatherIntoList(
+      node.type,
+      node.name,
+      node.as,
+      node.alias,
+      node.attributeList,
+      node.bodyColon,
+      node.body,
+    );
+  }
+
+  if (node instanceof AttributeNode) {
+    return gatherIntoList(node.name, node.colon, node.value);
+  }
+
+  if (node instanceof IdentiferStreamNode) {
+    return node.identifiers;
+  }
+
+  if (node instanceof LiteralNode) {
+    return [node.literal];
+  }
+
+  if (node instanceof VariableNode) {
+    return [node.variable];
+  }
+
+  if (node instanceof PrefixExpressionNode) {
+    return [node.op, node.expression];
+  }
+
+  if (node instanceof InfixExpressionNode) {
+    return [node.leftExpression, node.op, node.rightExpression];
+  }
+
+  if (node instanceof PostfixExpressionNode) {
+    return [node.expression, node.op];
+  }
+
+  if (node instanceof FunctionExpressionNode) {
+    return [node.value];
+  }
+
+  if (node instanceof FunctionApplicationNode) {
+    return [node.callee, ...node.args];
+  }
+
+  if (node instanceof BlockExpressionNode) {
+    return [node.blockOpenBrace, ...node.body, node.blockCloseBrace];
+  }
+
+  if (node instanceof ListExpressionNode) {
+    return [
+      node.listOpenBracket,
+      ...alternateLists(node.elementList, node.commaList),
+      node.listCloseBracket,
+    ];
+  }
+
+  if (node instanceof TupleExpressionNode) {
+    return [
+      node.tupleOpenParen,
+      ...alternateLists(node.elementList, node.commaList),
+      node.tupleCloseParen,
+    ];
+  }
+
+  if (node instanceof CallExpressionNode) {
+    return [node.callee, node.argumentList];
+  }
+
+  if (node instanceof PrimaryExpressionNode) {
+    return [node.expression];
+  }
+
+  if (node instanceof GroupExpressionNode) {
+    throw new Error('This case is already handled by TupleExpressionNode');
+  }
+
+  throw new Error('Unreachable - no other possible cases');
+}
+
+// Return a variable node if it's nested inside a primary expression
+export function extractVariableNode(value?: unknown): Option<SyntaxToken> {
+  if (isExpressionAVariableNode(value)) {
+    return new Some(value.expression.variable);
+  }
+
+  return new None();
+}
+
+// Return true if an expression node is a primary expression
+// with a nested quoted string (", ' or ''')
+export function isExpressionAQuotedString(value?: unknown): boolean {
+  return (
+    value instanceof PrimaryExpressionNode &&
+    ((value.expression instanceof VariableNode &&
+      value.expression.variable.kind === SyntaxTokenKind.QUOTED_STRING) ||
+      (value.expression instanceof LiteralNode &&
+        value.expression.literal.kind === SyntaxTokenKind.STRING_LITERAL))
+  );
+}
+
+// Return true if an expression node is a primary expression
+// with a variable node (identifier or a double-quoted string)
+export function isExpressionAVariableNode(
+  value?: unknown,
+): value is PrimaryExpressionNode & { expression: VariableNode } {
+  return value instanceof PrimaryExpressionNode && value.expression instanceof VariableNode;
+}
+
+// Return true if an expression node is a primary expression
+// with an identifier-like variable node
+export function isExpressionAnIdentifierNode(value?: unknown): value is PrimaryExpressionNode & {
+  expression: VariableNode & { variable: { kind: SyntaxTokenKind.IDENTIFIER } };
+} {
+  return (
+    value instanceof PrimaryExpressionNode &&
+    value.expression instanceof VariableNode &&
+    value.expression.variable.kind === SyntaxTokenKind.IDENTIFIER
+  );
+}
+
+export function isAccessExpression(
+  node: SyntaxNode,
+): node is InfixExpressionNode & { op: SyntaxToken & { value: '.' } } {
+  return node instanceof InfixExpressionNode && node.op.value === '.';
 }

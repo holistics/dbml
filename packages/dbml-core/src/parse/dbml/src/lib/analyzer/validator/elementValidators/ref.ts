@@ -1,6 +1,6 @@
 import { SyntaxTokenKind } from '../../../lexer/tokens';
 import SymbolFactory from '../../symbol/factory';
-import { UnresolvedName } from '../../types';
+import { BindingRequest } from '../../types';
 import { registerRelationshipOperand, transformToReturnCompileErrors } from './utils';
 import {
   ElementKind,
@@ -15,7 +15,6 @@ import {
   InfixExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
-import { isExpressionAVariableNode } from '../../../utils';
 import { extractStringFromIdentifierStream } from '../../utils';
 import { ContextStack, ValidatorContext } from '../validatorContext';
 import ElementValidator from './elementValidator';
@@ -28,6 +27,7 @@ import {
   optionalNameConfig,
 } from './_preset_configs';
 import { SchemaSymbol } from '../../symbol/symbols';
+import { isExpressionAVariableNode } from '../../../parser/utils';
 
 export default class RefValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.REF;
@@ -56,7 +56,7 @@ export default class RefValidator extends ElementValidator {
           CompileErrorCode.INVALID_REF_RELATIONSHIP,
           'This field must be a valid binary relationship',
         ),
-        registerUnresolvedName: registerBinaryRelationship,
+        registerBindingRequest: registerBinaryRelationship,
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_REF_FIELD,
@@ -70,7 +70,7 @@ export default class RefValidator extends ElementValidator {
     declarationNode: ElementDeclarationNode,
     publicSchemaSymbol: SchemaSymbol,
     contextStack: ContextStack,
-    unresolvedNames: UnresolvedName[],
+    bindingRequests: BindingRequest[],
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
@@ -80,7 +80,7 @@ export default class RefValidator extends ElementValidator {
       declarationNode,
       publicSchemaSymbol,
       contextStack,
-      unresolvedNames,
+      bindingRequests,
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
@@ -92,7 +92,7 @@ export default class RefValidator extends ElementValidator {
 function registerBinaryRelationship(
   node: SyntaxNode,
   ownerElement: ElementDeclarationNode,
-  unresolvedNames: UnresolvedName[],
+  bindingRequests: BindingRequest[],
 ) {
   if (!isBinaryRelationship(node)) {
     throw new Error(
@@ -103,12 +103,12 @@ function registerBinaryRelationship(
   registerRelationshipOperand(
     (node as InfixExpressionNode).leftExpression,
     ownerElement,
-    unresolvedNames,
+    bindingRequests,
   );
   registerRelationshipOperand(
     (node as InfixExpressionNode).rightExpression,
     ownerElement,
-    unresolvedNames,
+    bindingRequests,
   );
 }
 

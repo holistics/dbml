@@ -1,7 +1,8 @@
-import { getTokenFullEnd, getTokenFullStart, last } from '../utils';
+import { last } from '../utils';
 import { SyntaxToken } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
 import { Position } from '../types';
+import { getTokenFullEnd, getTokenFullStart } from '../lexer/utils';
 
 export type SyntaxNodeId = number;
 export class SyntaxNodeIdGenerator {
@@ -12,6 +13,7 @@ export class SyntaxNodeIdGenerator {
   }
 
   nextId(): SyntaxNodeId {
+    // eslint-disable-next-line no-plusplus
     return this.id++;
   }
 }

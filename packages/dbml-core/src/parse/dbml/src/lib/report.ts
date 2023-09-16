@@ -23,4 +23,8 @@ export default class Report<T, E> {
 
     return new Report<U, E>(res.value, errors);
   }
+
+  map<U>(fn: (_: T) => U): Report<U, E> {
+    return new Report<U, E>(fn(this.value), this.errors);
+  }
 }

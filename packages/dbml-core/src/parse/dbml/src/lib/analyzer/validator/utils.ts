@@ -9,7 +9,7 @@ import {
   SyntaxNode,
   VariableNode,
 } from '../../parser/nodes';
-import { isAccessExpression, isHexChar } from '../../utils';
+import { isHexChar } from '../../utils';
 import { destructureComplexVariable, isBinaryRelationship } from '../utils';
 import CustomValidator from './elementValidators/custom';
 import EnumValidator from './elementValidators/enum';
@@ -23,23 +23,46 @@ import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
 import { SchemaSymbol } from '../symbol/symbols';
 import SymbolTable from '../symbol/symbolTable';
 import SymbolFactory from '../symbol/factory';
+import { isAccessExpression } from '../../parser/utils';
+import { ElementKind } from './types';
 
 // Pick a validator suitable for `element`
-export function pickValidator(element: ElementDeclarationNode) {
-  switch (element.type.value.toLowerCase()) {
+export function toElementKind(str: string): ElementKind {
+  switch (str.toLowerCase()) {
     case 'enum':
-      return EnumValidator;
+      return ElementKind.ENUM;
     case 'table':
-      return TableValidator;
+      return ElementKind.TABLE;
     case 'tablegroup':
-      return TableGroupValidator;
+      return ElementKind.TABLEGROUP;
     case 'project':
-      return ProjectValidator;
+      return ElementKind.PROJECT;
     case 'ref':
-      return RefValidator;
+      return ElementKind.REF;
     case 'note':
-      return NoteValidator;
+      return ElementKind.NOTE;
     case 'indexes':
+      return ElementKind.INDEXES;
+    default:
+      return ElementKind.CUSTOM;
+  }
+}
+
+export function pickValidator(element: ElementDeclarationNode) {
+  switch (toElementKind(element.type.value)) {
+    case ElementKind.ENUM:
+      return EnumValidator;
+    case ElementKind.TABLE:
+      return TableValidator;
+    case ElementKind.TABLEGROUP:
+      return TableGroupValidator;
+    case ElementKind.PROJECT:
+      return ProjectValidator;
+    case ElementKind.REF:
+      return RefValidator;
+    case ElementKind.NOTE:
+      return NoteValidator;
+    case ElementKind.INDEXES:
       return IndexesValidator;
     default:
       return CustomValidator;
