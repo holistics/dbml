@@ -1,4 +1,4 @@
-import { TokenLogicalLineIterator } from '../iterator';
+import { TokenLogicalLineIterator } from 'iterator';
 import { SymbolKind } from '../lib/analyzer/symbol/symbolIndex';
 import { CompletionItemKind, Position, TextModel } from './types';
 import { ElementKind } from '../lib/analyzer/validator/types';

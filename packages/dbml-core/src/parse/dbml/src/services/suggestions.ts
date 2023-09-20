@@ -201,7 +201,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         curElement instanceof ElementDeclarationNode ? curElement.parentElement : undefined;
     }
 
-    return res;
+    return addQuoteIfContainSpace(res);
   }
 
   private suggestOnFirstTokenOfLogicalLine(model: TextModel, offset: number): CompletionList {
@@ -281,7 +281,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     const { symbolTable } = tableNode.symbol;
 
-    return {
+    return addQuoteIfContainSpace({
       suggestions: [...symbolTable.entries()].flatMap(([index]) => {
         const res = destructureIndex(index).unwrap_or(undefined);
         if (res === undefined) {
@@ -291,13 +291,13 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
         return {
           label: name,
-          insertText: name.search(' ') !== -1 ? `"${name}"` : name,
+          insertText: name,
           insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
           kind: pickCompletionItemKind(SymbolKind.Column),
           range: undefined as any,
         };
       }),
-    };
+    });
   }
 
   private suggestTopLevelTableNameInTableGroup(model: TextModel, offset: number): CompletionList {
@@ -306,7 +306,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       return noSuggestions();
     }
 
-    return {
+    return addQuoteIfContainSpace({
       suggestions: [...this.compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
         const res = destructureIndex(index).unwrap_or(undefined);
         if (res === undefined) {
@@ -319,13 +319,13 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
         return {
           label: name,
-          insertText: name.search(' ') ? `"${name}"` : name,
+          insertText: name,
           insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
           kind: pickCompletionItemKind(kind),
           range: undefined as any,
         };
       }),
-    };
+    });
   }
 
   private suggestOnComma(model: TextModel, offset: number, comma: SyntaxToken): CompletionList {
@@ -482,7 +482,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     const settingNameFragments: string[] = [];
     const ctx = this.compiler.context(offset).unwrap_or(undefined);
 
-    if (ctx?.subfield?.settingList) {
+    if (ctx?.subfield?.settingList || ctx?.element?.settingList) {
       let iter = TokenSourceIterator.fromOffset(this.compiler, offset);
       while (!iter.isOutOfBound()) {
         const token = iter.value().unwrap();
@@ -660,9 +660,20 @@ function noSuggestions(): CompletionList {
 
 function prependSpace(completionList: CompletionList): CompletionList {
   return {
+    ...completionList,
     suggestions: completionList.suggestions.map((s) => ({
       ...s,
       insertText: ` ${s.insertText}`,
+    })),
+  };
+}
+
+function addQuoteIfContainSpace(completionList: CompletionList): CompletionList {
+  return {
+    ...completionList,
+    suggestions: completionList.suggestions.map((s) => ({
+      ...s,
+      insertText: s.insertText.search(' ') !== -1 ? `"${s.insertText}"` : s.insertText,
     })),
   };
 }
