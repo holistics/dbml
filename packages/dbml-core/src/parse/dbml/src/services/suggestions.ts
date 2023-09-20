@@ -36,7 +36,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
   provideCompletionItems(model: TextModel, position: Position): CompletionList {
     const offset = getOffsetFromMonacoPosition(model, position);
 
-    const iter = TokenSourceIterator.fromOffset(this.compiler, offset);
+    let iter = TokenSourceIterator.fromOffset(this.compiler, offset);
 
     // Return `true` if `iter` is before any other non-trivial tokens
     // Happens when:
@@ -71,7 +71,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         case SyntaxTokenKind.STRING_LITERAL:
         case SyntaxTokenKind.NUMERIC_LITERAL:
           editedToken = containToken;
-          lastToken = iter.back().value().unwrap_or(undefined);
+          iter = iter.back();
+          lastToken = iter.value().unwrap_or(undefined);
           lineIter = lineIter.back();
           break;
         default:
@@ -93,13 +94,13 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           case '.':
             // We're editing a token after '.',
             // which can mean that we're looking for a member
-            return this.suggestMembers(model, offset);
+            return this.suggestMembers(model, offset, iter);
           case '<>':
           case '>':
           case '<':
           case '-':
             // We're editing a token after relationship operator
-            return this.suggestOnRelOp(model, offset, lastToken);
+            return this.suggestOnRelOp(model, offset, iter);
           default:
             return noSuggestions();
         }
@@ -107,9 +108,9 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         // We're editing an attribute name (after [)
         return this.suggestAttributeName(model, offset);
       case SyntaxTokenKind.COLON:
-        return this.suggestOnColon(model, offset, lastToken);
+        return this.suggestOnColon(model, offset, iter);
       case SyntaxTokenKind.COMMA:
-        return this.suggestOnComma(model, offset, lastToken);
+        return this.suggestOnComma(model, offset, iter);
       case SyntaxTokenKind.LPAREN:
         return this.suggestOnLParen(model, offset);
       default:
@@ -137,7 +138,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     return noSuggestions();
   }
 
-  private suggestOnRelOp(model: TextModel, offset: number, op: SyntaxToken): CompletionList {
+  private suggestOnRelOp(model: TextModel, offset: number, iterFromOp: TokenSourceIterator): CompletionList {
+    const op = iterFromOp.value().unwrap();
     const ctx = this.compiler.context(offset).unwrap_or(undefined);
     if (!ctx || !ctx.scope || !ctx.element?.node) {
       return noSuggestions();
@@ -328,13 +330,14 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     });
   }
 
-  private suggestOnComma(model: TextModel, offset: number, comma: SyntaxToken): CompletionList {
+  private suggestOnComma(model: TextModel, offset: number, iterFromComma: TokenSourceIterator): CompletionList {
+    const comma = iterFromComma.value().unwrap();
     const ctx = this.compiler.context(offset).unwrap_or(undefined);
     if (ctx?.scope?.kind === undefined) {
       return noSuggestions();
     }
 
-    if (ctx.subfield?.settingList) {
+    if (ctx.subfield?.settingList || ctx.element?.settingList) {
       const res = this.suggestAttributeName(model, offset);
 
       return !shouldAppendSpace(comma, offset) ? res : prependSpace(res);
@@ -476,17 +479,18 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
   private suggestOnColon(
     model: TextModel,
-    offset: number, // This offset is assumed to be after or right at the colon
-    colon: SyntaxToken,
+    offset: number,
+    iterFromColon: TokenSourceIterator,
   ): CompletionList {
     const settingNameFragments: string[] = [];
+    const colon = iterFromColon.value().unwrap();
     const ctx = this.compiler.context(offset).unwrap_or(undefined);
 
     if (ctx?.subfield?.settingList || ctx?.element?.settingList) {
-      let iter = TokenSourceIterator.fromOffset(this.compiler, offset);
+      let iter = iterFromColon.back();
       while (!iter.isOutOfBound()) {
-        const token = iter.value().unwrap();
-        if (token.kind !== SyntaxTokenKind.IDENTIFIER) {
+        const token = iter.value().unwrap_or(undefined);
+        if (token?.kind !== SyntaxTokenKind.IDENTIFIER) {
           break;
         }
         settingNameFragments.push(token.value);
@@ -556,35 +560,24 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
   private suggestMembers(
     model: TextModel,
-    offset: number, // The offset is assumed to be after or right at the dot
+    offset: number,
+    iterFromDot: TokenSourceIterator,
   ): CompletionList {
-    let iter = TokenSourceIterator.fromOffset(this.compiler, offset);
     const nameStack: string[] = [];
-    let curToken = iter.value().unwrap_or(undefined);
-    if (!curToken) {
-      return noSuggestions();
-    }
-
-    const nextToken = iter.next().value().unwrap_or(undefined);
-    if (
-      hasTrailingNewLines(curToken) &&
-      nextToken &&
-      [SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING].includes(nextToken.kind)
-    ) {
-      return noSuggestions();
-    }
+    let curIter = iterFromDot;
+    let curToken = iterFromDot.value().unwrap_or(undefined);
 
     while (isDot(curToken)) {
-      iter = iter.back();
-      curToken = iter.value().unwrap_or(undefined);
+      curIter = curIter.back();
+      curToken = curIter.value().unwrap_or(undefined);
       if (
         curToken?.kind === SyntaxTokenKind.IDENTIFIER ||
         curToken?.kind === SyntaxTokenKind.QUOTED_STRING
       ) {
         nameStack.push(curToken.value);
       }
-      iter = iter.back();
-      curToken = iter.value().unwrap_or(undefined);
+      curIter = curIter.back();
+      curToken = curIter.value().unwrap_or(undefined);
     }
 
     return {

@@ -141,7 +141,7 @@ export default class Parser {
 
   gatherInvalid() {
     let i;
-    const newTokenList: SyntaxToken[] = [];
+    const newTokenList = [];
     const leadingInvalidList: SyntaxToken[] = [];
     for (i = 0; i < this.tokens.length && isInvalidToken(this.tokens[i]); i += 1) {
       leadingInvalidList.push(this.tokens[i]);
