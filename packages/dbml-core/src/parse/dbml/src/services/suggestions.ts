@@ -291,7 +291,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
         return {
           label: name,
-          insertText: name.search(' ') ? `"${name}"` : name,
+          insertText: name.search(' ') !== -1 ? `"${name}"` : name,
           insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
           kind: pickCompletionItemKind(SymbolKind.Column),
           range: undefined as any,
