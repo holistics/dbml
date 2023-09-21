@@ -138,7 +138,11 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     return noSuggestions();
   }
 
-  private suggestOnRelOp(model: TextModel, offset: number, iterFromOp: TokenSourceIterator): CompletionList {
+  private suggestOnRelOp(
+    model: TextModel,
+    offset: number,
+    iterFromOp: TokenSourceIterator,
+  ): CompletionList {
     const op = iterFromOp.value().unwrap();
     const ctx = this.compiler.context(offset).unwrap_or(undefined);
     if (!ctx || !ctx.scope || !ctx.element?.node) {
@@ -330,7 +334,11 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     });
   }
 
-  private suggestOnComma(model: TextModel, offset: number, iterFromComma: TokenSourceIterator): CompletionList {
+  private suggestOnComma(
+    model: TextModel,
+    offset: number,
+    iterFromComma: TokenSourceIterator,
+  ): CompletionList {
     const comma = iterFromComma.value().unwrap();
     const ctx = this.compiler.context(offset).unwrap_or(undefined);
     if (ctx?.scope?.kind === undefined) {
@@ -545,7 +553,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         return {
           suggestions: ['btree', 'hash'].map((name) => ({
             label: name,
-            insertText: `'${name}'`,
+            insertText: `${name}`,
             kind: CompletionItemKind.Value,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             range: undefined as any,
@@ -574,7 +582,9 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         curToken?.kind === SyntaxTokenKind.IDENTIFIER ||
         curToken?.kind === SyntaxTokenKind.QUOTED_STRING
       ) {
-        nameStack.push(curToken.value);
+        nameStack.unshift(curToken.value);
+      } else {
+        return noSuggestions();
       }
       curIter = curIter.back();
       curToken = curIter.value().unwrap_or(undefined);
@@ -618,16 +628,60 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       suggestions: [
         ...[
           'int',
-          'integer',
+          'tinyint',
+          'smallint',
+          'mediumint',
+          'bigint',
           'bit',
           'bool',
-          'boolean',
+          'binary',
+          'varbinary',
           'logical',
           'char',
+          'nchar',
           'varchar',
+          'varchar2',
+          'nvarchar',
+          'nvarchar2',
+          'binary_float',
+          'binary_double',
           'float',
           'double',
+          'decimal',
+          'dec',
+          'real',
+          'money',
+          'smallmoney',
+          'enum',
+          'tinyblob',
+          'tinytext',
+          'blob',
+          'text',
+          'mediumblob',
+          'mediumtext',
+          'longblob',
+          'longtext',
+          'ntext',
+          'set',
+          'inet6',
+          'uuid',
+          'image',
+          'date',
+          'time',
+          'datetime',
+          'datetime2',
           'timestamp',
+          'year',
+          'smalldatetime',
+          'datetimeoffset',
+          'XML',
+          'sql_variant',
+          'uniqueidentifier',
+          'CURSOR',
+          'BFILE',
+          'CLOB',
+          'NCLOB',
+          'RAW',
         ].map((name) => ({
           label: name,
           insertText: name,
