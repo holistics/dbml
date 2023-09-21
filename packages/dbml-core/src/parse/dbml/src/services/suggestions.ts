@@ -1,14 +1,14 @@
-import { hasTrailingNewLines } from '../lib/lexer/utils';
+import * as monaco from 'monaco-editor-core';
 import Compiler, { ScopeKind } from '../compiler';
 import { SyntaxToken, SyntaxTokenKind } from '../lib/lexer/tokens';
 import { isOffsetWithinSpan } from '../lib/utils';
 import {
   CompletionList,
   TextModel,
-  CompletionItemKind,
   CompletionItemProvider,
-  CompletionItemInsertTextRule,
   Position,
+  CompletionItemKind,
+  CompletionItemInsertTextRule,
 } from './types';
 import { TableSymbol } from '../lib/analyzer/symbol/symbols';
 import { SymbolKind, destructureIndex } from '../lib/analyzer/symbol/symbolIndex';
@@ -23,6 +23,10 @@ import {
 import { ElementDeclarationNode, ProgramNode } from '../lib/parser/nodes';
 import { ElementKind } from '../lib/analyzer/validator/types';
 import { TokenSourceIterator, TokenLogicalLineIterator } from '../iterator';
+
+/* eslint-disable @typescript-eslint/no-redeclare,no-import-assign */
+const { CompletionItemKind, CompletionItemInsertTextRule } = monaco.languages;
+/* eslint-enable @typescript-eslint/no-redeclare,no-import-assign */
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
