@@ -89,7 +89,7 @@ class AttributeCollector {
   extractNote(): string | undefined {
     const note = this.settingMap.getValue('note');
 
-    return note === undefined ?
+    return note !== undefined ?
       extractQuotedStringToken(note as SyntaxNode | undefined) :
       undefined;
   }

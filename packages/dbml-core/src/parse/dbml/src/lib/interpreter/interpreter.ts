@@ -191,6 +191,7 @@ export default class Interpreter {
     let unique: boolean | undefined;
     let notNull: boolean | undefined;
     let note: string | undefined;
+    let noteToken: IdentiferStreamNode | undefined;
     let dbdefault:
       | {
           type: 'number' | 'string';
@@ -208,6 +209,7 @@ export default class Interpreter {
       notNull = collector.extractNotNull();
       dbdefault = collector.extractDefault();
       note = collector.extractNote();
+      noteToken = collector.settingMap.getNameNode('note') as IdentiferStreamNode | undefined;
       inlineRefs = collector.extractRef(tableName, schemaName);
       inlineRefs.forEach((ref) => {
         if (!this.logIfSameEndpoint(ref.node, field.symbol as ColumnSymbol, ref.referee)) {
@@ -241,7 +243,12 @@ export default class Interpreter {
       unique,
       not_null: notNull,
       inline_refs: _inlineRefs,
-      note,
+      note: note ?
+        {
+            value: note,
+            token: extractTokenForInterpreter(noteToken!),
+          } :
+        undefined,
     };
   }
 
