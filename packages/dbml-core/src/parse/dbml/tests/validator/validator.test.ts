@@ -1,4 +1,4 @@
-import { serialize } from '../../src';
+import { serialize } from '../../src/lib/serialization/serialize';
 import fs, { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
