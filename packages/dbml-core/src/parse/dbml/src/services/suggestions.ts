@@ -631,6 +631,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     return {
       suggestions: [
         ...[
+          'integer',
           'int',
           'tinyint',
           'smallint',
