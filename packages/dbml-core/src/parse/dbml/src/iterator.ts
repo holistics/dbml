@@ -1,7 +1,7 @@
-import { SyntaxNodeKind } from './lib/parser/nodes';
+import { SyntaxNode, SyntaxNodeKind } from './lib/parser/nodes';
 import Compiler from './compiler';
 import { SyntaxToken, SyntaxTokenKind } from './lib/lexer/tokens';
-import { hasTrailingNewLines } from './lib/lexer/utils';
+import { hasTrailingNewLines, isAtStartOfLine } from './lib/lexer/utils';
 import { None, Option, Some } from './lib/option';
 
 export class TokenIterator {
@@ -57,9 +57,13 @@ export class TokenLogicalLineIterator extends TokenIterator {
 
     let start: number | undefined;
     let end: number | undefined;
-    for (start = id - 1; start >= -1; start -= 1) {
-      if (start === -1 || isAtEndOfLogicalLine(compiler, flatStream[start])) {
-        start += 1;
+    for (start = id; start >= 1; start -= 1) {
+      const token = flatStream[start];
+      const prevToken = start === 0 ? undefined : flatStream[start - 1];
+      const containers = compiler.containers(token.start);
+      if (
+        isAtStartOfLogicalLine(containers, token, prevToken)
+      ) {
         break;
       }
     }
@@ -87,36 +91,53 @@ export class TokenSourceIterator extends TokenIterator {
 
 // A logical line is different from a physical line in that
 // a logical line can span multiple physical lines
-// e.g id integer [
-//  ...
-// ] <end-of-logical-line>
-function isAtEndOfLogicalLine(compiler: Compiler, token: SyntaxToken): boolean {
-  const containers = compiler.containers(token.start);
-  const isWithinNodeOfKind = (kinds: SyntaxNodeKind[]): boolean =>
-    containers.find((c) => kinds.includes(c.kind)) !== undefined;
+function isAtStartOfLogicalLine(
+  containers: readonly Readonly<SyntaxNode>[],
+  token: SyntaxToken,
+  prevToken?: SyntaxToken,
+): boolean {
+  if (!prevToken) {
+    return true;
+  }
 
-  return (
-    // There must be newlines after this token
-    hasTrailingNewLines(token) &&
-    // This token must not be of kinds that allow a logical line
-    // to span more than one physical lines
-    // e.g `.`, `,` are disallowed
-    ([
-      SyntaxTokenKind.QUOTED_STRING,
-      SyntaxTokenKind.STRING_LITERAL,
-      SyntaxTokenKind.NUMERIC_LITERAL,
-      SyntaxTokenKind.MULTILINE_COMMENT,
-      SyntaxTokenKind.SINGLE_LINE_COMMENT,
-      SyntaxTokenKind.COLOR_LITERAL,
-      SyntaxTokenKind.IDENTIFIER,
-      SyntaxTokenKind.LBRACE,
-      SyntaxTokenKind.RBRACE,
-    ].includes(token.kind) ||
-      // Or this token must not be within a context that can span multiple physical lines
-      // e.g [...] (...) are disallowed while { ... } is okay
-      (isWithinNodeOfKind([SyntaxNodeKind.LIST_EXPRESSION]) &&
-        token.kind === SyntaxTokenKind.RBRACKET) ||
-      (isWithinNodeOfKind([SyntaxNodeKind.GROUP_EXPRESSION, SyntaxNodeKind.TUPLE_EXPRESSION]) &&
-        token.kind === SyntaxTokenKind.RPAREN))
-  );
+  if (containers.some((node) => isInNewlineInsensitiveContext(node, prevToken))) {
+    return true;
+  }
+
+  let startRes = false;
+  if (isAtStartOfLine(prevToken, token)) {
+    startRes = !isPrecedingLineJoiningToken(token);
+  }
+
+  let endRes = false;
+  if (hasTrailingNewLines(prevToken)) {
+    endRes = !isFollowingLineJoiningToken(prevToken);
+  }
+
+  return startRes || endRes;
+}
+
+function isPrecedingLineJoiningToken(token: SyntaxToken): boolean {
+  return [SyntaxTokenKind.COLON, SyntaxTokenKind.OP, SyntaxTokenKind.COMMA].includes(token.kind);
+}
+
+function isFollowingLineJoiningToken(token: SyntaxToken): boolean {
+  return [
+    SyntaxTokenKind.COLON,
+    SyntaxTokenKind.LBRACKET,
+    SyntaxTokenKind.LPAREN,
+    SyntaxTokenKind.OP,
+  ].includes(token.kind);
+}
+
+function isInNewlineInsensitiveContext(containerNode: SyntaxNode, token: SyntaxToken): boolean {
+  switch (containerNode.kind) {
+    case SyntaxNodeKind.LIST_EXPRESSION:
+      return token.kind !== SyntaxTokenKind.RBRACKET;
+    case SyntaxNodeKind.TUPLE_EXPRESSION:
+    case SyntaxNodeKind.GROUP_EXPRESSION:
+      return token.kind !== SyntaxTokenKind.RPAREN;
+    default:
+      return false;
+  }
 }
