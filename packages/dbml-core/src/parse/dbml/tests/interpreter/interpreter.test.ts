@@ -40,7 +40,7 @@ describe('#interpreter', () => {
           res,
           (key, value) => (['symbol', 'references', 'referee'].includes(key) ? undefined : value),
           2,
-        )
+        );
       }
     }
 
