@@ -25,3 +25,9 @@ export function getTokenFullEnd(token: SyntaxToken): number {
 export function getTokenFullStart(token: SyntaxToken): number {
   return token.leadingTrivia.length === 0 ? token.start : getTokenFullStart(token.leadingTrivia[0]);
 }
+
+export function isComment(token: SyntaxToken): boolean {
+  return [SyntaxTokenKind.SINGLE_LINE_COMMENT, SyntaxTokenKind.MULTILINE_COMMENT].includes(
+    token.kind,
+  );
+}

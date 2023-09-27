@@ -27,6 +27,7 @@ import {
 import { ElementDeclarationNode, ProgramNode } from '../../lib/parser/nodes';
 import { ElementKind } from '../../lib/analyzer/validator/types';
 import { getOffsetFromMonacoPosition } from '../utils';
+import { isComment } from '../../lib/lexer/utils';
 
 /* eslint-disable @typescript-eslint/no-redeclare,no-import-assign */
 const { CompletionItemKind, CompletionItemInsertTextRule } = monaco.languages;
@@ -55,18 +56,36 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     // if no token is being edited, it's the last token before or contain offset
     let preNonEditedIter: TokenSourceIterator | undefined;
     let preNonEditedLineIter: TokenLogicalLineIterator | undefined;
+
+    // Check if we're inside a comment
+    if (
+      beforeOrContainToken?.trailingTrivia.find(
+        (token) => isComment(token) && isOffsetWithinSpan(offset, token),
+      ) ||
+      beforeOrContainToken?.leadingTrivia.find(
+        (token) => isComment(token) && isOffsetWithinSpan(offset, token),
+      ) ||
+      beforeOrContainIter
+        .next()
+        .value()
+        .unwrap_or(undefined)
+        ?.leadingTrivia.find((token) => isComment(token) && isOffsetWithinSpan(offset, token))
+    ) {
+      return noSuggestions();
+    }
+
     if (!beforeOrContainToken) {
-      return logicalLine.suggestTopLevel(this.compiler, model, offset, TokenLogicalLineIterator.fromOffset(this.compiler, -1));
+      return logicalLine.suggestTopLevel(
+        this.compiler,
+        model,
+        offset,
+        TokenLogicalLineIterator.fromOffset(this.compiler, -1),
+      );
     }
 
     if (isOffsetWithinSpan(offset, beforeOrContainToken)) {
       const containToken = beforeOrContainToken;
       switch (containToken.kind) {
-        // We're editing a comment
-        // No suggestions
-        case SyntaxTokenKind.SINGLE_LINE_COMMENT:
-        case SyntaxTokenKind.MULTILINE_COMMENT:
-          return noSuggestions();
         // We're editing `containToken` in these cases
         case SyntaxTokenKind.IDENTIFIER:
         case SyntaxTokenKind.FUNCTION_EXPRESSION:

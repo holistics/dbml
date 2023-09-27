@@ -26,7 +26,10 @@ import {
   optionalNameConfig,
 } from './_preset_configs';
 import { SchemaSymbol } from '../../symbol/symbols';
-import { extractStringFromIdentifierStream, isExpressionAVariableNode } from '../../../parser/utils';
+import {
+  extractStringFromIdentifierStream,
+  isExpressionAVariableNode,
+} from '../../../parser/utils';
 
 export default class RefValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.REF;

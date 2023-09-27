@@ -1,18 +1,16 @@
 import * as monaco from 'monaco-editor-core';
 import { SymbolKind } from '../../lib/analyzer/symbol/symbolIndex';
-import {
- CompletionItemKind, CompletionList, Position, TextModel,
-} from '../types';
+import { CompletionItemKind, CompletionList } from '../types';
 import { ElementKind } from '../../lib/analyzer/validator/types';
 import { SyntaxToken, SyntaxTokenKind } from '../../lib/lexer/tokens';
 import { toElementKind } from '../../lib/analyzer/validator/utils';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '../../lib/lexer/utils';
 import { SyntaxNode, SyntaxNodeKind } from '../../lib/parser/nodes';
 import { None, Option, Some } from '../../lib/option';
-import Compiler, { ScopeKind } from '../../compiler';
+import Compiler from '../../compiler';
 
 /* eslint-disable @typescript-eslint/no-redeclare,no-import-assign */
-const { CompletionItemKind, CompletionItemInsertTextRule } = monaco.languages;
+const { CompletionItemKind } = monaco.languages;
 /* eslint-enable @typescript-eslint/no-redeclare,no-import-assign */
 
 export function pickCompletionItemKind(symbolKind: SymbolKind): CompletionItemKind {
