@@ -2,7 +2,6 @@ import { None, Option, Some } from '../option';
 import {
   ElementDeclarationNode,
   FunctionExpressionNode,
-  IdentiferStreamNode,
   InfixExpressionNode,
   LiteralNode,
   PrimaryExpressionNode,
@@ -96,10 +95,6 @@ export function extractVarNameFromPrimaryVariable(
   node: PrimaryExpressionNode & { expression: VariableNode },
 ): string {
   return node.expression.variable.value;
-}
-
-export function extractStringFromIdentifierStream(stream: IdentiferStreamNode): string {
-  return stream.identifiers.map((identifier) => identifier.value).join(' ');
 }
 
 export function extractQuotedStringToken(value?: SyntaxNode): string | undefined {
