@@ -18,8 +18,8 @@ import {
   ListExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
-import { extractVariableNode } from '../../../parser/utils';
-import { destructureComplexVariable, extractStringFromIdentifierStream } from '../../utils';
+import { extractStringFromIdentifierStream, extractVariableNode } from '../../../parser/utils';
+import { destructureComplexVariable } from '../../utils';
 import { ContextStack, canBeNestedWithin } from '../validatorContext';
 import {
   hasComplexBody,
@@ -644,7 +644,11 @@ export default abstract class ElementValidator {
     let hasError = false;
     // eslint-disable-next-line no-restricted-syntax
     for (const setting of settingListNode.elementList) {
-      const name = extractStringFromIdentifierStream(setting.name).toLowerCase();
+      const name = extractStringFromIdentifierStream(setting.name).unwrap_or(undefined)?.toLowerCase();
+      if (!name) {
+        continue;
+      }
+
       const { value } = setting;
 
       if (!config.isValid(name, value).isOk()) {

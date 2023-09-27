@@ -347,3 +347,12 @@ export function isAccessExpression(
 ): node is InfixExpressionNode & { op: SyntaxToken & { value: '.' } } {
   return node instanceof InfixExpressionNode && node.op.value === '.';
 }
+
+export function extractStringFromIdentifierStream(stream: IdentiferStreamNode): Option<string> {
+  const name = stream.identifiers.map((identifier) => identifier.value).join(' ');
+  if (name === '') {
+    return new None();
+  }
+
+  return new Some(name);
+}

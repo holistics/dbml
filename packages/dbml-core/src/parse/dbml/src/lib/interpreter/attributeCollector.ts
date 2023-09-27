@@ -7,10 +7,10 @@ import {
   PrefixExpressionNode,
   SyntaxNode,
 } from '../parser/nodes';
-import { extractQuotedStringToken, extractStringFromIdentifierStream } from '../analyzer/utils';
+import { extractQuotedStringToken } from '../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../errors';
 import { isExpressionANumber } from '../analyzer/validator/utils';
-import { isExpressionAQuotedString } from '../parser/utils';
+import { extractStringFromIdentifierStream, isExpressionAQuotedString } from '../parser/utils';
 import { InlineRef } from './types';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import {
@@ -70,7 +70,7 @@ export default function collectAttribute(
   }
   // eslint-disable-next-line no-restricted-syntax
   for (const attribute of settingNode.elementList) {
-    const attrName = extractStringFromIdentifierStream(attribute.name).toLowerCase();
+    const attrName = extractStringFromIdentifierStream(attribute.name).unwrap_or('').toLowerCase();
     attrMap.insert(attrName, attribute);
   }
 
@@ -189,7 +189,7 @@ class AttributeCollector {
     }
 
     if (update instanceof IdentiferStreamNode) {
-      return extractStringFromIdentifierStream(update);
+      return extractStringFromIdentifierStream(update).unwrap_or('');
     }
 
     return (update as any).expression.variable.value;
@@ -203,7 +203,7 @@ class AttributeCollector {
     }
 
     if (del instanceof IdentiferStreamNode) {
-      return extractStringFromIdentifierStream(del);
+      return extractStringFromIdentifierStream(del).unwrap_or('');
     }
 
     return (del as any).expression.variable.value;
