@@ -43,7 +43,8 @@ const enum Query {
   Token_InvalidStream,
   Token_NonTrivial_BeforeOrContain,
   Token_NonTrivial_AfterOrContain,
-  Token_NonTrivial_FirstOfLine,
+  Token_NonTrivial_BeforeOrContainOnSameLine,
+  Token_NonTrivial_AfterOrContainOnSameLine,
   Token_FlatStream,
   Symbol_OfName,
   Symbol_Members,
@@ -225,7 +226,7 @@ export default class Compiler {
         },
       ),
       beforeOrContainOnSameLine: this.createQuery(
-        Query.Token_NonTrivial_FirstOfLine,
+        Query.Token_NonTrivial_BeforeOrContainOnSameLine,
         (offset: number): Option<number> => {
           const id = this.token.nonTrivial.beforeOrContain(offset).unwrap_or(-1);
           if (id === -1) {
@@ -237,6 +238,28 @@ export default class Compiler {
               ({ kind }) => kind === SyntaxTokenKind.NEWLINE,
             );
             if (!newline || newline.start > offset) {
+              return new Some(id);
+            }
+
+            return new None();
+          }
+
+          return new Some(id);
+        },
+      ),
+      afterOrContainOnSameLine: this.createQuery(
+        Query.Token_NonTrivial_AfterOrContainOnSameLine,
+        (offset: number): Option<number> => {
+          const id = this.token.nonTrivial.afterOrContain(offset).unwrap_or(-1);
+          if (id === -1) {
+            return new None();
+          }
+          const token = this.token.flatStream()[id];
+          if (!isOffsetWithinSpan(offset, token)) {
+            const newline = token.leadingTrivia.find(
+              ({ kind }) => kind === SyntaxTokenKind.NEWLINE,
+            );
+            if (!newline || newline.start < offset) {
               return new Some(id);
             }
 
