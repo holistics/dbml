@@ -15,7 +15,6 @@ import {
   InfixExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
-import { extractStringFromIdentifierStream } from '../../utils';
 import { ContextStack, ValidatorContext } from '../validatorContext';
 import ElementValidator from './elementValidator';
 import { isBinaryRelationship } from '../utils';
@@ -27,7 +26,7 @@ import {
   optionalNameConfig,
 } from './_preset_configs';
 import { SchemaSymbol } from '../../symbol/symbols';
-import { isExpressionAVariableNode } from '../../../parser/utils';
+import { extractStringFromIdentifierStream, isExpressionAVariableNode } from '../../../parser/utils';
 
 export default class RefValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.REF;
@@ -125,7 +124,7 @@ function isValidPolicy(value?: SyntaxNode): boolean {
 
   let extractedString: string | undefined;
   if (value instanceof IdentiferStreamNode) {
-    extractedString = extractStringFromIdentifierStream(value);
+    extractedString = extractStringFromIdentifierStream(value).unwrap_or('');
   } else {
     extractedString = value.expression.variable.value;
   }
