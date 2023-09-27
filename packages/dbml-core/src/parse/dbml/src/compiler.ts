@@ -29,7 +29,7 @@ import Parser from './lib/parser/parser';
 import Analyzer from './lib/analyzer/analyzer';
 import Interpreter from './lib/interpreter/interpreter';
 import Database from '../../../model_structure/database';
-import { SyntaxToken, SyntaxTokenKind, isTriviaToken } from './lib/lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from './lib/lexer/tokens';
 import { None, Option, Some } from './lib/option';
 import { getMemberChain, isInvalidToken } from './lib/parser/utils';
 
