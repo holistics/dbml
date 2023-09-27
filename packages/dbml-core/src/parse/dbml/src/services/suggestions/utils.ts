@@ -203,10 +203,7 @@ export class TokenLogicalLineIterator extends TokenIterator {
     const aId = compiler.token.nonTrivial.afterOrContainOnSameLine(offset).unwrap_or(-1);
     const bId = compiler.token.nonTrivial.beforeOrContainOnSameLine(offset).unwrap_or(-1);
     if (aId === -1 && bId === -1) {
-      return new TokenLogicalLineIterator(
-        [],
-        -1,
-      );
+      return new TokenLogicalLineIterator([], -1);
     }
     const id = aId !== -1 ? aId : bId;
     let start: number | undefined;
@@ -231,7 +228,7 @@ export class TokenLogicalLineIterator extends TokenIterator {
 
     return new TokenLogicalLineIterator(
       compiler.token.flatStream().slice(start, end),
-      aId !== -1 ? aId - start : -1,
+      bId !== -1 ? bId - start : -1,
     );
   }
 }

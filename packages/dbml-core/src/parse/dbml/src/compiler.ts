@@ -250,20 +250,24 @@ export default class Compiler {
       afterOrContainOnSameLine: this.createQuery(
         Query.Token_NonTrivial_AfterOrContainOnSameLine,
         (offset: number): Option<number> => {
-          const id = this.token.nonTrivial.afterOrContain(offset).unwrap_or(-1);
+          const id = this.token.nonTrivial.beforeOrContain(offset).unwrap_or(-1);
           if (id === -1) {
             return new None();
           }
           const token = this.token.flatStream()[id];
           if (!isOffsetWithinSpan(offset, token)) {
-            const newline = token.leadingTrivia.find(
-              ({ kind }) => kind === SyntaxTokenKind.NEWLINE,
-            );
-            if (!newline || newline.start < offset) {
-              return new Some(id);
+            const containerId = token.trailingTrivia.findIndex((t) =>
+              isOffsetWithinSpan(offset, t));
+            if (
+              containerId !== -1 &&
+              token.trailingTrivia
+                .slice(containerId + 1)
+                .find((t) => t.kind === SyntaxTokenKind.NEWLINE)
+            ) {
+              return new None();
             }
 
-            return new None();
+            return new Some(id + 1);
           }
 
           return new Some(id);
