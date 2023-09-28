@@ -265,7 +265,8 @@ export default class Lexer {
       allowNewline, // Whether newline is allowed
       allowEof, // Whether EOF is allowed
       raw, // Whether to interpret '\' as a backlash
-    }: { allowNewline: boolean; allowEof: boolean; raw: boolean },
+      consumeStopSequence = true,
+    }: { allowNewline: boolean; allowEof: boolean; raw: boolean, consumeStopSequence?: boolean },
   ) {
     let string = '';
 
@@ -302,7 +303,9 @@ export default class Lexer {
       return;
     }
 
-    this.match(stopSequence);
+    if (consumeStopSequence) {
+      this.match(stopSequence);
+    }
     this.tokens.push(SyntaxToken.create(tokenKind, this.start, this.current, string, false));
   }
 
@@ -343,6 +346,7 @@ export default class Lexer {
       allowNewline: true,
       allowEof: true,
       raw: true,
+      consumeStopSequence: false,
     });
   }
 
