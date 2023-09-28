@@ -264,6 +264,8 @@ export default class Parser {
           () => (alias = this.normalExpression()),
           this.synchronizeElementDeclarationAlias,
         );
+      } else {
+        this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect an alias');
       }
     }
 
