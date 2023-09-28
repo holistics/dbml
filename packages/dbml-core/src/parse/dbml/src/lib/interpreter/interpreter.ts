@@ -108,7 +108,7 @@ export default class Interpreter {
     if (alias) {
       this.db.aliases.push({
         name: alias,
-        kind: 'Table',
+        kind: 'table',
         value: {
           tableName: name,
           schemaName,

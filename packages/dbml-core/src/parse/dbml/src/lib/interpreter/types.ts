@@ -123,7 +123,7 @@ export interface TableGroupField {
 
 export interface Alias {
   name: string;
-  kind: string;
+  kind: 'table';
   value: {
     tableName: string;
     schemaName: string | null;
