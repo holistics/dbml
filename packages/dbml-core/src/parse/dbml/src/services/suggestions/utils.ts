@@ -5,7 +5,7 @@ import { ElementKind } from '../../lib/analyzer/validator/types';
 import { SyntaxToken, SyntaxTokenKind } from '../../lib/lexer/tokens';
 import { toElementKind } from '../../lib/analyzer/validator/utils';
 import { hasTrailingSpaces, isAtStartOfLine } from '../../lib/lexer/utils';
-import { SyntaxNode, SyntaxNodeKind } from '../../lib/parser/nodes';
+import { ListExpressionNode, SyntaxNode, SyntaxNodeKind, TupleExpressionNode } from '../../lib/parser/nodes';
 import { None, Option, Some } from '../../lib/option';
 import Compiler from '../../compiler';
 
@@ -141,18 +141,20 @@ export function isFollowingLineJoiningToken(token: SyntaxToken): boolean {
 }
 
 export function isInNewlineInsensitiveContext(
-  containerNode: SyntaxNode,
-  token: SyntaxToken,
+  containers: readonly Readonly<SyntaxNode>[],
 ): boolean {
-  switch (containerNode.kind) {
-    case SyntaxNodeKind.LIST_EXPRESSION:
-      return token.kind !== SyntaxTokenKind.RBRACKET;
-    case SyntaxNodeKind.TUPLE_EXPRESSION:
-    case SyntaxNodeKind.GROUP_EXPRESSION:
-      return token.kind !== SyntaxTokenKind.RPAREN;
-    default:
-      return false;
+  // eslint-disable-next-line no-restricted-syntax
+  for (const container of containers) {
+    switch (container.kind) {
+      case SyntaxNodeKind.LIST_EXPRESSION:
+      case SyntaxNodeKind.TUPLE_EXPRESSION:
+      case SyntaxNodeKind.GROUP_EXPRESSION:
+        return true;
+      default:
+    }
   }
+
+  return false;
 }
 
 export class TokenIterator {
@@ -211,8 +213,7 @@ export class TokenLogicalLineIterator extends TokenIterator {
     for (start = id; start >= 1; start -= 1) {
       const token = flatStream[start];
       const prevToken = flatStream[start - 1];
-      const containers = compiler.containers(token.start);
-      if (isAtStartOfLogicalLine(containers, token, prevToken)) {
+      if (isAtStartOfLogicalLine(compiler, token, prevToken)) {
         break;
       }
     }
@@ -220,15 +221,16 @@ export class TokenLogicalLineIterator extends TokenIterator {
     for (end = id + 1; end < flatStream.length; end += 1) {
       const token = flatStream[end];
       const prevToken = flatStream[end - 1];
-      const containers = compiler.containers(token.start);
-      if (isAtStartOfLogicalLine(containers, token, prevToken)) {
+      if (isAtStartOfLogicalLine(compiler, token, prevToken)) {
         break;
       }
     }
 
+    const beforeOrContainId = compiler.token.nonTrivial.beforeOrContain(offset).unwrap();
+
     return new TokenLogicalLineIterator(
       compiler.token.flatStream().slice(start, end),
-      bId !== -1 ? bId - start : -1,
+      beforeOrContainId >= start ? beforeOrContainId - start : -1,
     );
   }
 }
@@ -244,7 +246,7 @@ export class TokenSourceIterator extends TokenIterator {
 // A logical line is different from a physical line in that
 // a logical line can span multiple physical lines
 function isAtStartOfLogicalLine(
-  containers: readonly Readonly<SyntaxNode>[],
+  compiler: Compiler,
   token: SyntaxToken,
   prevToken?: SyntaxToken,
 ): boolean {
@@ -253,7 +255,8 @@ function isAtStartOfLogicalLine(
   }
 
   if (isAtStartOfLine(prevToken, token)) {
-    if (containers.some((node) => isInNewlineInsensitiveContext(node, prevToken))) {
+    const containers = compiler.containers(token.start);
+    if (isInNewlineInsensitiveContext(containers)) {
       return false;
     }
     if (!isPrecedingLineJoiningToken(token) || !isFollowingLineJoiningToken(prevToken)) {
