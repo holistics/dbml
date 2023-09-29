@@ -11,6 +11,7 @@ function dbml2sql (args) {
     .option('--mysql')
     .option('--postgres')
     .option('--mssql')
+    .option('--sqlite')
     .option('-o, --out-file <pathspec>', 'compile all input files into a single files');
   // .option('-d, --out-dir <pathspec>', 'compile an input directory of dbml files into an output directory');
 

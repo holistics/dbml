@@ -1,0 +1,57 @@
+Table "orders" {
+  "id" integer [pk, increment]
+  "user_id" integer [unique, not null]
+  "status" varchar
+  "created_at" varchar
+}
+
+Table "order_items" {
+  "order_id" integer
+  "product_id" integer
+  "quantity" integer [default: 1]
+}
+
+Table "products" {
+  "id" integer
+  "name" varchar
+  "merchant_id" integer [not null]
+  "price" integer
+  "status" varchar
+  "created_at" datetime [default: `now()`]
+}
+
+Table "users" {
+  "id" integer [pk, increment]
+  "full_name" varchar
+  "email" varchar [unique]
+  "gender" varchar
+  "date_of_birth" varchar
+  "created_at" varchar
+  "country_code" integer
+}
+
+Table "merchants" {
+  "id" integer [pk]
+  "merchant_name" varchar
+  "country_code" integer
+  "created_at" varchar
+  "admin_id" integer
+}
+
+Table "countries" {
+  "code" integer [pk]
+  "name" varchar
+  "continent_name" varchar
+}
+
+Ref:"orders"."id" < "order_items"."order_id"
+
+Ref:"products"."id" < "order_items"."product_id"
+
+Ref:"countries"."code" < "users"."country_code"
+
+Ref:"countries"."code" < "merchants"."country_code"
+
+Ref:"merchants"."id" < "products"."merchant_id"
+
+Ref:"users"."id" < "merchants"."admin_id"

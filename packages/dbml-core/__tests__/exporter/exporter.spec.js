@@ -27,5 +27,9 @@ describe('@dbml/core - exporter', () => {
   test.each(scanTestNames(__dirname, 'mssql_exporter/input'))('mssql_exporter/%s', (name) => {
     runTest(name, 'mssql_exporter', 'mssql');
   });
+
+  test.each(scanTestNames(__dirname, 'sqlite_exporter/input'))('sqlite_exporter/%s', (name) => {
+    runTest(name, 'sqlite_exporter', 'sqlite');
+  });
   /* eslint-enable */
 });
