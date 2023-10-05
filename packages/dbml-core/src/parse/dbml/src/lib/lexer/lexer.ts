@@ -266,7 +266,7 @@ export default class Lexer {
       allowEof, // Whether EOF is allowed
       raw, // Whether to interpret '\' as a backlash
       consumeStopSequence = true,
-    }: { allowNewline: boolean; allowEof: boolean; raw: boolean, consumeStopSequence?: boolean },
+    }: { allowNewline: boolean; allowEof: boolean; raw: boolean; consumeStopSequence?: boolean },
   ) {
     let string = '';
 
@@ -374,6 +374,9 @@ export default class Lexer {
 
   numericLiteral() {
     let nDots = 0;
+    if (this.isAtEnd()) {
+      return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
+    }
     while (!this.isAtEnd()) {
       const isDot = this.check('.');
       nDots += isDot ? 1 : 0;

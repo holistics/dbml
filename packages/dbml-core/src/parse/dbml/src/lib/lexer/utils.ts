@@ -1,4 +1,4 @@
-import { last } from '../utils';
+import _ from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from './tokens';
 
 export function hasTrailingNewLines(token: SyntaxToken): boolean {
@@ -19,7 +19,7 @@ export function hasTrailingSpaces(token: SyntaxToken): boolean {
 export function getTokenFullEnd(token: SyntaxToken): number {
   return token.trailingTrivia.length === 0 ?
     token.end :
-    getTokenFullEnd(last(token.trailingTrivia)!);
+    getTokenFullEnd(_.last(token.trailingTrivia)!);
 }
 
 export function getTokenFullStart(token: SyntaxToken): number {

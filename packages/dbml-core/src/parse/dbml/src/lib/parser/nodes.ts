@@ -1,4 +1,4 @@
-import { last } from '../utils';
+import _ from 'lodash';
 import { SyntaxToken } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
 import { Position } from '../types';
@@ -18,7 +18,7 @@ export class SyntaxNodeIdGenerator {
   }
 }
 
-export interface SyntaxNode {
+export class SyntaxNode {
   id: Readonly<SyntaxNodeId>;
   kind: SyntaxNodeKind;
   startPos: Readonly<Position>;
@@ -29,6 +29,54 @@ export interface SyntaxNode {
   fullEnd: Readonly<number>; // End offset with trivias counted
   symbol?: NodeSymbol;
   referee?: NodeSymbol; // The symbol that this syntax node refers to
+  owner?: SyntaxNode;
+
+  // args must be passed in order of appearance in the node
+  constructor(
+    id: SyntaxNodeId,
+    kind: SyntaxNodeKind,
+    args: Readonly<SyntaxToken | SyntaxNode | undefined>[],
+  ) {
+    this.id = id;
+    this.kind = kind;
+
+    const firstValid = args.find((sub) => sub !== undefined && !Number.isNaN(sub.start));
+    if (!firstValid) {
+      this.startPos = {
+        offset: NaN,
+        column: NaN,
+        line: NaN,
+      };
+      this.fullStart = NaN;
+    } else {
+      this.startPos = firstValid.startPos;
+      this.fullStart =
+        firstValid instanceof SyntaxToken ?
+          getTokenFullStart(firstValid) :
+          (firstValid as SyntaxNode).fullStart;
+    }
+
+    const lastValid = [...args]
+      .reverse()
+      .find((sub) => sub !== undefined && !Number.isNaN(sub.end));
+    if (!lastValid) {
+      this.endPos = {
+        offset: NaN,
+        column: NaN,
+        line: NaN,
+      };
+      this.fullEnd = NaN;
+    } else {
+      this.endPos = lastValid.endPos;
+      this.fullEnd =
+        lastValid instanceof SyntaxToken ?
+          getTokenFullEnd(lastValid) :
+          (lastValid as SyntaxNode).fullEnd;
+    }
+
+    this.start = this.startPos.offset;
+    this.end = this.endPos.offset;
+  }
 }
 
 export enum SyntaxNodeKind {
@@ -56,66 +104,23 @@ export enum SyntaxNodeKind {
   GROUP_EXPRESSION = '<group-expression>',
 }
 
-export class ProgramNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
-
-  kind: SyntaxNodeKind.PROGRAM = SyntaxNodeKind.PROGRAM;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
+export class ProgramNode extends SyntaxNode {
   body: ElementDeclarationNode[];
 
-  eof: SyntaxToken;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
+  eof?: SyntaxToken;
 
   constructor(
-    { body, eof }: { body: ElementDeclarationNode[]; eof: SyntaxToken },
+    { body = [], eof }: { body?: ElementDeclarationNode[]; eof?: SyntaxToken },
     id: SyntaxNodeId,
   ) {
-    this.id = id;
-    this.startPos = {
-      offset: 0,
-      line: 0,
-      column: 0,
-    };
-    this.endPos = eof.endPos;
+    super(id, SyntaxNodeKind.PROGRAM, [...body, eof]);
     this.body = body;
     this.eof = eof;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = 0;
-    this.fullEnd = eof.end;
   }
 }
 
-export class ElementDeclarationNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
-
-  kind: SyntaxNodeKind.ELEMENT_DECLARATION = SyntaxNodeKind.ELEMENT_DECLARATION;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  type: SyntaxToken;
+export class ElementDeclarationNode extends SyntaxNode {
+  type?: SyntaxToken;
 
   name?: NormalExpressionNode;
 
@@ -127,13 +132,8 @@ export class ElementDeclarationNode implements SyntaxNode {
 
   bodyColon?: SyntaxToken;
 
-  body: ExpressionNode | BlockExpressionNode;
-
-  symbol?: NodeSymbol;
-
-  parentElement?: ElementDeclarationNode | ProgramNode;
-
-  referee?: NodeSymbol;
+  // if simple body, `body` must be a FunctionApplicationNode or ElementDeclarationNode
+  body?: FunctionApplicationNode | ElementDeclarationNode | BlockExpressionNode;
 
   constructor(
     {
@@ -145,19 +145,33 @@ export class ElementDeclarationNode implements SyntaxNode {
       bodyColon,
       body,
     }: {
-      type: SyntaxToken;
+      type?: SyntaxToken;
       name?: NormalExpressionNode;
       as?: SyntaxToken;
       alias?: NormalExpressionNode;
       attributeList?: ListExpressionNode;
       bodyColon?: SyntaxToken;
-      body: BlockExpressionNode | ExpressionNode;
+      body?: BlockExpressionNode | FunctionApplicationNode | ElementDeclarationNode;
     },
     id: SyntaxNodeId,
   ) {
-    this.id = id;
-    this.startPos = type.startPos;
-    this.endPos = body.endPos;
+    super(id, SyntaxNodeKind.ELEMENT_DECLARATION, [
+      type,
+      name,
+      as,
+      alias,
+      attributeList,
+      bodyColon,
+      body,
+    ]);
+
+    if (
+      bodyColon &&
+      !(body instanceof FunctionApplicationNode || body instanceof ElementDeclarationNode)
+    ) {
+      throw new Error('If an element has a simple body, it must be a function application node');
+    }
+
     this.type = type;
     this.name = name;
     this.as = as;
@@ -165,73 +179,24 @@ export class ElementDeclarationNode implements SyntaxNode {
     this.attributeList = attributeList;
     this.bodyColon = bodyColon;
     this.body = body;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = getTokenFullStart(type);
-    this.fullEnd = body.fullEnd;
   }
 }
 
-export class IdentiferStreamNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
-
-  kind: SyntaxNodeKind.IDENTIFIER_STREAM = SyntaxNodeKind.IDENTIFIER_STREAM;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
+export class IdentiferStreamNode extends SyntaxNode {
   identifiers: SyntaxToken[];
 
-  referee?: NodeSymbol;
-
-  constructor({ identifiers }: { identifiers: SyntaxToken[] }, id: SyntaxNodeId) {
-    this.id = id;
-    if (identifiers.length === 0) {
-      throw new Error("An IdentifierStreamNode shouldn't be created with zero tokens");
-    }
+  constructor({ identifiers = [] }: { identifiers?: SyntaxToken[] }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.IDENTIFIER_STREAM, identifiers || []);
     this.identifiers = identifiers;
-    this.startPos = this.identifiers[0].startPos;
-    this.endPos = last(identifiers)!.endPos;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = getTokenFullStart(identifiers[0]);
-    this.fullEnd = getTokenFullEnd(last(identifiers)!);
   }
 }
 
-export class AttributeNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
-
-  kind: SyntaxNodeKind.ATTRIBUTE = SyntaxNodeKind.ATTRIBUTE;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  name: IdentiferStreamNode;
+export class AttributeNode extends SyntaxNode {
+  name?: IdentiferStreamNode;
 
   colon?: SyntaxToken;
 
   value?: NormalExpressionNode | IdentiferStreamNode;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
 
   constructor(
     {
@@ -239,23 +204,16 @@ export class AttributeNode implements SyntaxNode {
       colon,
       value,
     }: {
-      name: IdentiferStreamNode;
+      name?: IdentiferStreamNode;
       colon?: SyntaxToken;
       value?: NormalExpressionNode | IdentiferStreamNode;
     },
     id: SyntaxNodeId,
   ) {
-    this.id = id;
+    super(id, SyntaxNodeKind.ATTRIBUTE, [name, colon, value]);
     this.name = name;
     this.value = value;
     this.colon = colon;
-    this.startPos = this.name.startPos;
-    this.endPos = colon ? (value || colon).endPos : name.endPos;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = this.name.fullStart;
-    this.fullEnd = colon ? value?.fullEnd || getTokenFullEnd(colon) : name.fullEnd;
   }
 }
 
@@ -278,70 +236,27 @@ export type ExpressionNode =
   | NormalExpressionNode
   | FunctionApplicationNode;
 
-export class PrefixExpressionNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
+export class PrefixExpressionNode extends SyntaxNode {
+  op?: SyntaxToken;
 
-  kind: SyntaxNodeKind.PREFIX_EXPRESSION = SyntaxNodeKind.PREFIX_EXPRESSION;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  op: SyntaxToken;
-
-  expression: NormalExpressionNode;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
+  expression?: NormalExpressionNode;
 
   constructor(
-    { op, expression }: { op: SyntaxToken; expression: NormalExpressionNode },
+    { op, expression }: { op?: SyntaxToken; expression?: NormalExpressionNode },
     id: SyntaxNodeId,
   ) {
-    this.id = id;
-    this.startPos = op.startPos;
-    this.endPos = expression.endPos;
+    super(id, SyntaxNodeKind.PREFIX_EXPRESSION, [op, expression]);
     this.op = op;
     this.expression = expression;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = getTokenFullStart(op);
-    this.fullEnd = expression.fullEnd;
   }
 }
 
-export class InfixExpressionNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
+export class InfixExpressionNode extends SyntaxNode {
+  op?: SyntaxToken;
 
-  kind: SyntaxNodeKind.INFIX_EXPRESSION = SyntaxNodeKind.INFIX_EXPRESSION;
+  leftExpression?: NormalExpressionNode;
 
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  op: SyntaxToken;
-
-  leftExpression: NormalExpressionNode;
-
-  rightExpression: NormalExpressionNode;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
+  rightExpression?: NormalExpressionNode;
 
   constructor(
     {
@@ -349,483 +264,242 @@ export class InfixExpressionNode implements SyntaxNode {
       leftExpression,
       rightExpression,
     }: {
-      op: SyntaxToken;
-      leftExpression: NormalExpressionNode;
-      rightExpression: NormalExpressionNode;
+      op?: SyntaxToken;
+      leftExpression?: NormalExpressionNode;
+      rightExpression?: NormalExpressionNode;
     },
     id: SyntaxNodeId,
   ) {
-    this.id = id;
-    this.startPos = leftExpression.startPos;
-    this.endPos = rightExpression.endPos;
+    super(id, SyntaxNodeKind.INFIX_EXPRESSION, [leftExpression, op, rightExpression]);
     this.op = op;
     this.leftExpression = leftExpression;
     this.rightExpression = rightExpression;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = leftExpression.fullStart;
-    this.fullEnd = rightExpression.fullEnd;
   }
 }
 
-export class PostfixExpressionNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
+export class PostfixExpressionNode extends SyntaxNode {
+  op?: SyntaxToken;
 
-  kind: SyntaxNodeKind.POSTFIX_EXPRESSION = SyntaxNodeKind.POSTFIX_EXPRESSION;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  op: SyntaxToken;
-
-  expression: NormalExpressionNode;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
+  expression?: NormalExpressionNode;
 
   constructor(
-    { op, expression }: { op: SyntaxToken; expression: NormalExpressionNode },
+    { op, expression }: { op?: SyntaxToken; expression?: NormalExpressionNode },
     id: SyntaxNodeId,
   ) {
-    this.id = id;
-    this.startPos = expression.startPos;
-    this.endPos = op.endPos;
+    super(id, SyntaxNodeKind.POSTFIX_EXPRESSION, [expression, op]);
     this.op = op;
     this.expression = expression;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = expression.fullStart;
-    this.fullEnd = getTokenFullEnd(op);
   }
 }
 
-export class FunctionExpressionNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
+export class FunctionExpressionNode extends SyntaxNode {
+  value?: SyntaxToken;
 
-  kind: SyntaxNodeKind.FUNCTION_EXPRESSION = SyntaxNodeKind.FUNCTION_EXPRESSION;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  value: SyntaxToken;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
-
-  constructor({ value }: { value: SyntaxToken }, id: SyntaxNodeId) {
-    this.id = id;
-    this.startPos = value.startPos;
-    this.endPos = value.endPos;
+  constructor({ value }: { value?: SyntaxToken }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.FUNCTION_EXPRESSION, [value]);
     this.value = value;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = getTokenFullStart(value);
-    this.fullEnd = getTokenFullEnd(value);
   }
 }
 
-export class FunctionApplicationNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
-
-  kind: SyntaxNodeKind.FUNCTION_APPLICATION = SyntaxNodeKind.FUNCTION_APPLICATION;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  callee: ExpressionNode;
+export class FunctionApplicationNode extends SyntaxNode {
+  callee?: ExpressionNode;
 
   args: ExpressionNode[];
 
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
-
   constructor(
-    { callee, args }: { callee: ExpressionNode; args: ExpressionNode[] },
+    { callee, args = [] }: { callee?: ExpressionNode; args?: ExpressionNode[] },
     id: SyntaxNodeId,
   ) {
-    this.id = id;
-    this.startPos = callee.startPos;
-    if (args.length === 0) {
-      this.endPos = callee.endPos;
-    } else {
-      this.endPos = last(args)!.endPos;
-    }
+    super(id, SyntaxNodeKind.FUNCTION_APPLICATION, [callee, ...args]);
     this.callee = callee;
     this.args = args;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = callee.fullStart;
-    this.fullEnd = args.length === 0 ? callee.fullEnd : last(args)!.fullEnd;
   }
 }
 
-export class BlockExpressionNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
+export class BlockExpressionNode extends SyntaxNode {
+  blockOpenBrace?: SyntaxToken;
 
-  kind: SyntaxNodeKind.BLOCK_EXPRESSION = SyntaxNodeKind.BLOCK_EXPRESSION;
+  body: (ElementDeclarationNode | FunctionApplicationNode)[];
 
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  blockOpenBrace: SyntaxToken;
-
-  body: ExpressionNode[];
-
-  blockCloseBrace: SyntaxToken;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
+  blockCloseBrace?: SyntaxToken;
 
   constructor(
     {
       blockOpenBrace,
-      body,
+      body = [],
       blockCloseBrace,
     }: {
-      blockOpenBrace: SyntaxToken;
-      body: ExpressionNode[];
-      blockCloseBrace: SyntaxToken;
+      blockOpenBrace?: SyntaxToken;
+      body?: (ElementDeclarationNode | FunctionApplicationNode)[];
+      blockCloseBrace?: SyntaxToken;
     },
     id: SyntaxNodeId,
   ) {
-    this.id = id;
-    this.startPos = blockOpenBrace.startPos;
-    this.endPos = blockCloseBrace.endPos;
+    super(id, SyntaxNodeKind.BLOCK_EXPRESSION, [blockOpenBrace, ...body, blockCloseBrace]);
     this.blockOpenBrace = blockOpenBrace;
     this.body = body;
     this.blockCloseBrace = blockCloseBrace;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = getTokenFullStart(blockOpenBrace);
-    this.fullEnd = getTokenFullEnd(blockCloseBrace);
   }
 }
 
-export class ListExpressionNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
-
-  kind: SyntaxNodeKind.LIST_EXPRESSION = SyntaxNodeKind.LIST_EXPRESSION;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  listOpenBracket: SyntaxToken;
+export class ListExpressionNode extends SyntaxNode {
+  listOpenBracket?: SyntaxToken;
 
   elementList: AttributeNode[];
 
   commaList: SyntaxToken[];
 
-  listCloseBracket: SyntaxToken;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
+  listCloseBracket?: SyntaxToken;
 
   constructor(
     {
       listOpenBracket,
-      elementList,
-      commaList,
+      elementList = [],
+      commaList = [],
       listCloseBracket,
     }: {
-      listOpenBracket: SyntaxToken;
-      elementList: AttributeNode[];
-      commaList: SyntaxToken[];
-      listCloseBracket: SyntaxToken;
+      listOpenBracket?: SyntaxToken;
+      elementList?: AttributeNode[];
+      commaList?: SyntaxToken[];
+      listCloseBracket?: SyntaxToken;
     },
     id: SyntaxNodeId,
   ) {
-    this.id = id;
-    this.startPos = listOpenBracket.startPos;
-    this.endPos = listCloseBracket.endPos;
+    super(id, SyntaxNodeKind.LIST_EXPRESSION, [
+      listOpenBracket,
+      ...interleave(elementList, commaList),
+      listCloseBracket,
+    ]);
     this.listOpenBracket = listOpenBracket;
     this.elementList = elementList;
     this.commaList = commaList;
     this.listCloseBracket = listCloseBracket;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = getTokenFullStart(listOpenBracket);
-    this.fullEnd = getTokenFullEnd(listCloseBracket);
   }
 }
 
-export class TupleExpressionNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
-
-  kind: SyntaxNodeKind.TUPLE_EXPRESSION | SyntaxNodeKind.GROUP_EXPRESSION =
-    SyntaxNodeKind.TUPLE_EXPRESSION;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  tupleOpenParen: SyntaxToken;
+export class TupleExpressionNode extends SyntaxNode {
+  tupleOpenParen?: SyntaxToken;
 
   elementList: NormalExpressionNode[];
 
   commaList: SyntaxToken[];
 
-  tupleCloseParen: SyntaxToken;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
+  tupleCloseParen?: SyntaxToken;
 
   constructor(
     {
       tupleOpenParen,
-      elementList,
-      commaList,
+      elementList = [],
+      commaList = [],
       tupleCloseParen,
     }: {
-      tupleOpenParen: SyntaxToken;
-      elementList: NormalExpressionNode[];
-      commaList: SyntaxToken[];
-      tupleCloseParen: SyntaxToken;
+      tupleOpenParen?: SyntaxToken;
+      elementList?: NormalExpressionNode[];
+      commaList?: SyntaxToken[];
+      tupleCloseParen?: SyntaxToken;
     },
     id: SyntaxNodeId,
   ) {
-    this.id = id;
-    this.startPos = tupleOpenParen.startPos;
-    this.endPos = tupleCloseParen.endPos;
+    super(id, SyntaxNodeKind.TUPLE_EXPRESSION, [
+      tupleOpenParen,
+      ...interleave(elementList, commaList),
+      tupleCloseParen,
+    ]);
     this.tupleOpenParen = tupleOpenParen;
     this.elementList = elementList;
     this.commaList = commaList;
     this.tupleCloseParen = tupleCloseParen;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = getTokenFullStart(tupleOpenParen);
-    this.fullEnd = getTokenFullEnd(tupleCloseParen);
   }
 }
 
 export class GroupExpressionNode extends TupleExpressionNode {
-  kind: SyntaxNodeKind.GROUP_EXPRESSION = SyntaxNodeKind.GROUP_EXPRESSION;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
-
   constructor(
     {
       groupOpenParen,
       expression,
       groupCloseParen,
     }: {
-      groupOpenParen: SyntaxToken;
-      expression: NormalExpressionNode;
-      groupCloseParen: SyntaxToken;
+      groupOpenParen?: SyntaxToken;
+      expression?: NormalExpressionNode;
+      groupCloseParen?: SyntaxToken;
     },
     id: SyntaxNodeId,
   ) {
     super(
       {
         tupleOpenParen: groupOpenParen,
-        elementList: [expression],
+        elementList: expression && [expression],
         commaList: [],
         tupleCloseParen: groupCloseParen,
       },
       id,
     );
+    this.kind = SyntaxNodeKind.GROUP_EXPRESSION;
   }
 }
 
-export class CallExpressionNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
+export class CallExpressionNode extends SyntaxNode {
+  callee?: NormalExpressionNode;
 
-  kind: SyntaxNodeKind.CALL_EXPRESSION = SyntaxNodeKind.CALL_EXPRESSION;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  callee: NormalExpressionNode;
-
-  argumentList: TupleExpressionNode;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
+  argumentList?: TupleExpressionNode;
 
   constructor(
     {
       callee,
       argumentList,
     }: {
-      callee: NormalExpressionNode;
-      argumentList: TupleExpressionNode;
+      callee?: NormalExpressionNode;
+      argumentList?: TupleExpressionNode;
     },
     id: SyntaxNodeId,
   ) {
-    this.id = id;
-    this.startPos = callee.startPos;
-    this.endPos = argumentList.endPos;
+    super(id, SyntaxNodeKind.CALL_EXPRESSION, [callee, argumentList]);
     this.callee = callee;
     this.argumentList = argumentList;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = callee.fullStart;
-    this.fullEnd = argumentList.fullEnd;
   }
 }
 
-export class LiteralNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
+export class LiteralNode extends SyntaxNode {
+  literal?: SyntaxToken;
 
-  kind: SyntaxNodeKind.LITERAL = SyntaxNodeKind.LITERAL;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  literal: SyntaxToken;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
-
-  constructor({ literal }: { literal: SyntaxToken }, id: SyntaxNodeId) {
-    this.id = id;
-    this.startPos = literal.startPos;
-    this.endPos = literal.endPos;
+  constructor({ literal }: { literal?: SyntaxToken }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.LITERAL, [literal]);
     this.literal = literal;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = getTokenFullStart(literal);
-    this.fullEnd = getTokenFullEnd(literal);
   }
 }
 
-export class VariableNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
+export class VariableNode extends SyntaxNode {
+  variable?: SyntaxToken;
 
-  kind: SyntaxNodeKind.VARIABLE = SyntaxNodeKind.VARIABLE;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  variable: SyntaxToken;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
-
-  constructor({ variable }: { variable: SyntaxToken }, id: SyntaxNodeId) {
-    this.id = id;
-    this.startPos = variable.startPos;
-    this.endPos = variable.endPos;
+  constructor({ variable }: { variable?: SyntaxToken }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.VARIABLE, [variable]);
     this.variable = variable;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = getTokenFullStart(variable);
-    this.fullEnd = getTokenFullEnd(variable);
   }
 }
 
-export class PrimaryExpressionNode implements SyntaxNode {
-  id: Readonly<SyntaxNodeId>;
+export class PrimaryExpressionNode extends SyntaxNode {
+  expression?: LiteralNode | VariableNode;
 
-  kind: SyntaxNodeKind.PRIMARY_EXPRESSION = SyntaxNodeKind.PRIMARY_EXPRESSION;
-
-  startPos: Readonly<Position>;
-
-  start: Readonly<number>;
-  fullStart: Readonly<number>;
-
-  endPos: Readonly<Position>;
-
-  end: Readonly<number>;
-  fullEnd: Readonly<number>;
-
-  expression: LiteralNode | VariableNode;
-
-  symbol?: NodeSymbol;
-
-  referee?: NodeSymbol;
-
-  constructor({ expression }: { expression: LiteralNode | VariableNode }, id: SyntaxNodeId) {
-    this.id = id;
-    this.startPos = expression.startPos;
-    this.endPos = expression.endPos;
+  constructor({ expression }: { expression?: LiteralNode | VariableNode }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.PRIMARY_EXPRESSION, [expression]);
     this.expression = expression;
-
-    this.start = this.startPos.offset;
-    this.end = this.endPos.offset;
-    this.fullStart = expression.fullStart;
-    this.fullEnd = expression.fullEnd;
   }
+}
+
+function interleave(
+  arr1: (SyntaxNode | SyntaxToken)[] | undefined,
+  arr2: (SyntaxNode | SyntaxToken)[] | undefined,
+): (SyntaxNode | SyntaxToken)[] {
+  if (!arr1 || arr1.length === 0) {
+    return arr2 || [];
+  }
+  if (!arr2 || arr2.length === 0) {
+    return arr1 || [];
+  }
+  const [e1] = arr1;
+  const [e2] = arr2;
+
+  return (e1.start < e2.start ? _.flatten(_.zip(arr1, arr2)) : _.flatten(_.zip(arr2, arr1))).filter(
+    (e) => e !== null,
+  ) as (SyntaxNode | SyntaxToken)[];
 }
