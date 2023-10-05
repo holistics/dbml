@@ -52,7 +52,7 @@ class AttributeMap {
       return undefined;
     }
     if (entry.length >= 2) {
-      return entry.map((e) => e.name);
+      return entry.map((e) => e.name!);
     }
 
     return entry[0].name;
@@ -90,7 +90,7 @@ class AttributeCollector {
     const note = this.settingMap.getValue('note');
 
     return note !== undefined ?
-      extractQuotedStringToken(note as SyntaxNode | undefined) :
+      extractQuotedStringToken(note as SyntaxNode | undefined).unwrap() :
       undefined;
   }
 
@@ -114,7 +114,7 @@ class AttributeCollector {
     if (isExpressionAQuotedString(_deflt)) {
       return {
         type: 'string',
-        value: extractQuotedStringToken(_deflt as SyntaxNode)!,
+        value: extractQuotedStringToken(_deflt as SyntaxNode).unwrap(),
       };
     }
 
@@ -150,19 +150,19 @@ class AttributeCollector {
     // eslint-disable-next-line no-restricted-syntax
     for (const ref of refList) {
       const operand = (ref as PrefixExpressionNode).expression;
-      const maybeName = processRelOperand(operand, ownerTableName, ownerSchemaName);
+      const maybeName = processRelOperand(operand!, ownerTableName, ownerSchemaName);
       if (maybeName instanceof CompileError) {
         this.errors.push(maybeName);
       } else {
         const { columnName, tableName, schemaName } = maybeName;
-        const relation = (ref as PrefixExpressionNode).op.value as any;
+        const relation = (ref as PrefixExpressionNode).op!.value as any;
         res.push({
           schemaName,
           tableName,
           fieldNames: [columnName],
           relation,
           token: extractTokenForInterpreter(ref),
-          referee: getColumnSymbolOfRefOperand((ref as PrefixExpressionNode).expression).unwrap(),
+          referee: getColumnSymbolOfRefOperand((ref as PrefixExpressionNode).expression!).unwrap(),
           node: ref,
         });
       }
@@ -277,6 +277,6 @@ class AttributeCollector {
       return undefined;
     }
 
-    return extractQuotedStringToken(idxName as SyntaxNode);
+    return extractQuotedStringToken(idxName as SyntaxNode).unwrap();
   }
 }

@@ -40,6 +40,27 @@ export function createTableGroupFieldSymbolIndex(key: string): NodeSymbolIndex {
   return `${SymbolKind.TableGroupField}:${key}`;
 }
 
+export function createNodeSymbolIndex(key: string, symbolKind: SymbolKind): NodeSymbolIndex {
+  switch (symbolKind) {
+    case SymbolKind.Column:
+      return createColumnSymbolIndex(key);
+    case SymbolKind.Enum:
+      return createEnumSymbolIndex(key);
+    case SymbolKind.EnumField:
+      return createEnumFieldSymbolIndex(key);
+    case SymbolKind.Schema:
+      return createSchemaSymbolIndex(key);
+    case SymbolKind.Table:
+      return createTableSymbolIndex(key);
+    case SymbolKind.TableGroup:
+      return createTableGroupSymbolIndex(key);
+    case SymbolKind.TableGroupField:
+      return createTableGroupFieldSymbolIndex(key);
+    default:
+      throw new Error('Unreachable');
+  }
+}
+
 export function destructureIndex(id: NodeSymbolIndex): Option<{ name: string; kind: SymbolKind }> {
   const [kind, name] = id.split(':');
 

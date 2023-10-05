@@ -48,7 +48,7 @@ export function toElementKind(str: string): ElementKind {
   }
 }
 
-export function pickValidator(element: ElementDeclarationNode) {
+export function pickValidator(element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (toElementKind(element.type.value)) {
     case ElementKind.ENUM:
       return EnumValidator;
@@ -138,7 +138,7 @@ export function registerSchemaStack(
   return prevSchema;
 }
 
-export function isRelationshipOp(op: string): boolean {
+export function isRelationshipOp(op?: string): boolean {
   return op === '-' || op === '<>' || op === '>' || op === '<';
 }
 
@@ -146,7 +146,7 @@ export function isValidColor(value?: SyntaxNode): boolean {
   if (
     !(value instanceof PrimaryExpressionNode) ||
     !(value.expression instanceof LiteralNode) ||
-    !(value.expression.literal.kind === SyntaxTokenKind.COLOR_LITERAL)
+    !(value.expression.literal?.kind === SyntaxTokenKind.COLOR_LITERAL)
   ) {
     return false;
   }
@@ -202,16 +202,16 @@ export function isExpressionANumber(value?: SyntaxNode): value is PrimaryExpress
   return (
     value instanceof PrimaryExpressionNode &&
     value.expression instanceof LiteralNode &&
-    value.expression.literal.kind === SyntaxTokenKind.NUMERIC_LITERAL
+    value.expression.literal?.kind === SyntaxTokenKind.NUMERIC_LITERAL
   );
 }
 
-export function isUnaryRelationship(value?: SyntaxNode): boolean {
+export function isUnaryRelationship(value?: SyntaxNode): value is PrefixExpressionNode {
   if (!(value instanceof PrefixExpressionNode)) {
     return false;
   }
 
-  if (!isRelationshipOp(value.op.value)) {
+  if (!isRelationshipOp(value.op?.value)) {
     return false;
   }
 

@@ -40,7 +40,6 @@ import {
 } from '../../symbol/utils';
 import SymbolFactory from '../../symbol/factory';
 import { getSubfieldKind, isCustomElement } from './utils';
-import { BindingRequest } from '../../types';
 
 export default abstract class ElementValidator {
   protected abstract elementKind: ElementKind;
@@ -53,20 +52,18 @@ export default abstract class ElementValidator {
   protected abstract settingList: SettingListValidatorConfig;
   protected abstract subfield: SubFieldValidatorConfig;
 
-  protected declarationNode: ElementDeclarationNode;
+  protected declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   protected publicSchemaSymbol: SchemaSymbol;
   protected contextStack: ContextStack;
-  protected bindingRequests: BindingRequest[];
   protected errors: CompileError[];
   protected kindsGloballyFound: Set<ElementKind>;
   protected kindsLocallyFound: Set<ElementKind>;
   protected symbolFactory: SymbolFactory;
 
   constructor(
-    declarationNode: ElementDeclarationNode,
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
     publicSchemaSymbol: SchemaSymbol,
     contextStack: ContextStack,
-    bindingRequests: BindingRequest[],
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
@@ -75,7 +72,6 @@ export default abstract class ElementValidator {
     this.declarationNode = declarationNode;
     this.publicSchemaSymbol = publicSchemaSymbol;
     this.contextStack = contextStack;
-    this.bindingRequests = bindingRequests;
     this.errors = errors;
     this.kindsGloballyFound = kindsGloballyFound;
     this.kindsLocallyFound = kindsLocallyFound;
@@ -431,8 +427,12 @@ export default abstract class ElementValidator {
   /* Validate body format according to config `this.body` */
 
   private validateBodyForm(): boolean {
-    let hasError = false;
     const node = this.declarationNode;
+    if (!node.body) {
+      return false;
+    }
+
+    let hasError = false;
 
     if (!this.body.allowComplex && hasComplexBody(node)) {
       this.logError(
@@ -459,6 +459,9 @@ export default abstract class ElementValidator {
 
   protected validateBodyContent(): boolean {
     const node = this.declarationNode;
+    if (!node.body) {
+      return false;
+    }
 
     if (hasComplexBody(node)) {
       if (!this.body.allowComplex) {
@@ -472,25 +475,34 @@ export default abstract class ElementValidator {
         !node.body.body
           .map((sub) => {
             if (sub instanceof ElementDeclarationNode) {
-              return this.validateNestedElementDeclaration(sub, kindsFoundInScope);
+              return !sub.type || this.validateNestedElementDeclaration(sub, kindsFoundInScope);
             }
             ith += 1;
-            if (sub instanceof FunctionApplicationNode) {
-              return this.validateSubField(sub, ith);
-            }
 
-            return this.validateSubField(sub, ith);
+            return (
+              !sub.callee ||
+              this.validateSubField(sub as FunctionApplicationNode & { callee: SyntaxNode }, ith)
+            );
           })
           .every((v) => !!v === true) || hasError;
 
       return !hasError;
     }
 
-    if (node.body instanceof FunctionApplicationNode) {
-      return this.validateSubField(node.body, 0);
+    if (node.body instanceof FunctionApplicationNode && node.body.callee) {
+      return this.validateSubField(
+        node.body as FunctionApplicationNode & { callee: SyntaxNode },
+        0,
+      );
     }
 
-    return this.validateSubField(node.body, 0);
+    this.logError(
+      node.body,
+      CompileErrorCode.INVALID_ELEMENT_IN_SIMPLE_BODY,
+      "An element's simple body can not contain an element declaration",
+    );
+
+    return false;
   }
 
   protected validateNestedElementDeclaration(
@@ -498,15 +510,18 @@ export default abstract class ElementValidator {
     kindsFoundInScope: Set<ElementKind>,
   ): boolean {
     // eslint-disable-next-line no-param-reassign
-    sub.parentElement = this.declarationNode;
+    sub.owner = this.declarationNode;
+    if (!sub.type) {
+      return false;
+    }
+    const _sub = sub as ElementDeclarationNode & { type: SyntaxToken };
 
-    const Val = pickValidator(sub);
+    const Val = pickValidator(_sub);
 
     const validatorObject = new Val(
-      sub,
+      _sub,
       this.publicSchemaSymbol,
       this.contextStack,
-      this.bindingRequests,
       this.errors,
       this.kindsGloballyFound,
       kindsFoundInScope,
@@ -518,8 +533,14 @@ export default abstract class ElementValidator {
 
   /* Validate and register subfield according to config `this.subfield` */
 
-  protected validateSubField(sub: ExpressionNode, ith: number): boolean {
-    const args = sub instanceof FunctionApplicationNode ? [sub.callee, ...sub.args] : [sub];
+  protected validateSubField(
+    sub: FunctionApplicationNode & { callee: SyntaxNode },
+    ith: number,
+  ): boolean {
+    const _args = [sub.callee, ...sub.args];
+
+    const args = _args as ExpressionNode[];
+
     if (args.length === 0) {
       throw new Error('A function application node always has at least 1 callee');
     }
@@ -547,13 +568,6 @@ export default abstract class ElementValidator {
       if (errors.length > 0) {
         this.errors.push(...errors);
         hasError = true;
-      } else {
-        this.subfield.argValidators[i].registerBindingRequest?.call(
-          undefined,
-          args[i],
-          this.declarationNode,
-          this.bindingRequests,
-        );
       }
     }
 
@@ -647,11 +661,11 @@ export default abstract class ElementValidator {
       const name = extractStringFromIdentifierStream(setting.name)
         .unwrap_or(undefined)
         ?.toLowerCase();
-      if (!name) {
+      const { value } = setting;
+
+      if (name === undefined) {
         continue;
       }
-
-      const { value } = setting;
 
       if (!config.isValid(name, value).isOk()) {
         this.logError(setting, config.unknownErrorCode, 'Unknown setting');
@@ -661,11 +675,10 @@ export default abstract class ElementValidator {
         hasError = true;
       } else {
         settingListSet.add(name);
-        if (!config.isValid(name, value).unwrap()) {
+        const isValid = config.isValid(name, value).unwrap();
+        if (!isValid) {
           this.logError(setting, config.invalidErrorCode, 'Invalid value for this setting');
           hasError = true;
-        } else {
-          config.registerBindingRequest(name, value, this.declarationNode, this.bindingRequests);
         }
       }
     }

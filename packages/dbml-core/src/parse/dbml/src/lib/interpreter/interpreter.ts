@@ -69,7 +69,7 @@ export default class Interpreter {
 
   interpret(): Report<Database, CompileError> {
     this.ast.body.forEach((element) => {
-      switch (element.type.value.toLowerCase()) {
+      switch (element.type!.value.toLowerCase()) {
         case 'table':
           tryPush(this.table(element), this.db.tables);
           break;
@@ -104,7 +104,9 @@ export default class Interpreter {
       return undefined;
     }
     const { name, schemaName } = maybeName.unwrap();
-    const alias = element.alias ? extractVarNameFromPrimaryVariable(element.alias as any) : null;
+    const alias = element.alias ?
+      extractVarNameFromPrimaryVariable(element.alias as any).unwrap_or(null) :
+      null;
     if (alias) {
       this.db.aliases.push({
         name: alias,
@@ -126,7 +128,7 @@ export default class Interpreter {
       if (sub instanceof FunctionApplicationNode) {
         tryPush(this.column(sub, name, schemaName), fields);
       } else if (sub instanceof ElementDeclarationNode) {
-        switch (sub.type.value.toLowerCase()) {
+        switch (sub.type!.value.toLowerCase()) {
           case 'ref':
             this.db.refs.push(...this.ref(sub, name, schemaName));
             break;
@@ -174,10 +176,10 @@ export default class Interpreter {
     let typeNode = field.args[0];
     let typeArgs: string | null = null;
     if (typeNode instanceof CallExpressionNode) {
-      typeArgs = typeNode.argumentList.elementList
-        .map((e) => (e as any).expression.literal.value)
+      typeArgs = typeNode
+        .argumentList!.elementList.map((e) => (e as any).expression.literal.value)
         .join(', ');
-      typeNode = typeNode.callee;
+      typeNode = typeNode.callee!;
     }
 
     const maybeName = this.extractElementName(typeNode);
@@ -230,7 +232,7 @@ export default class Interpreter {
     }
 
     return {
-      name,
+      name: name.unwrap(),
       type: {
         schemaName: typeSchemaName,
         type_name: `${typeName}${typeArgs === null ? '' : `(${typeArgs})`}`,
@@ -266,7 +268,7 @@ export default class Interpreter {
         {
           schemaName,
           tableName,
-          fieldNames: [extractVarNameFromPrimaryVariable(columnNode.callee as any)],
+          fieldNames: [extractVarNameFromPrimaryVariable(columnNode.callee as any).unwrap()],
           relation: left,
           token: extractTokenForInterpreter(columnNode),
         },
@@ -301,7 +303,7 @@ export default class Interpreter {
 
     if (!(element.body instanceof BlockExpressionNode)) {
       const maybeRef = this.refField(
-        element.body,
+        element.body! as FunctionApplicationNode,
         schemaName,
         name,
         ownerTableName,
@@ -314,7 +316,13 @@ export default class Interpreter {
     const res: Ref[] = [];
     // eslint-disable-next-line no-restricted-syntax
     for (const field of element.body.body) {
-      const maybeRef = this.refField(field, schemaName, name, ownerTableName, ownerSchemaName);
+      const maybeRef = this.refField(
+        field as FunctionApplicationNode,
+        schemaName,
+        name,
+        ownerTableName,
+        ownerSchemaName,
+      );
       if (maybeRef) {
         res.push(maybeRef);
       }
@@ -324,25 +332,25 @@ export default class Interpreter {
   }
 
   private refField(
-    field: ExpressionNode,
+    field: FunctionApplicationNode,
     refSchemaName: string | null,
     refName: string | null,
     ownerTableName: string | null,
     ownerSchemaName: string | null,
   ): Ref | undefined {
-    const args = field instanceof FunctionApplicationNode ? [field.callee, ...field.args] : [field];
+    const args = [field.callee, ...field.args];
     const rel = args[0] as InfixExpressionNode;
-    const [leftCardinality, rightCardinality] = convertRelationOpToCardinalities(rel.op.value);
-    const leftReferee = getColumnSymbolOfRefOperand(rel.leftExpression).unwrap();
-    const rightReferee = getColumnSymbolOfRefOperand(rel.rightExpression).unwrap();
+    const [leftCardinality, rightCardinality] = convertRelationOpToCardinalities(rel.op!.value);
+    const leftReferee = getColumnSymbolOfRefOperand(rel.leftExpression!).unwrap();
+    const rightReferee = getColumnSymbolOfRefOperand(rel.rightExpression!).unwrap();
     if (!this.logIfSameEndpoint(rel, leftReferee, rightReferee)) {
       return undefined;
     }
     if (!this.logIfCircularRefError(rel, leftReferee, rightReferee)) {
       return undefined;
     }
-    const left = processRelOperand(rel.leftExpression, ownerTableName, ownerSchemaName);
-    const right = processRelOperand(rel.rightExpression, ownerTableName, ownerSchemaName);
+    const left = processRelOperand(rel.leftExpression!, ownerTableName, ownerSchemaName);
+    const right = processRelOperand(rel.rightExpression!, ownerTableName, ownerSchemaName);
     if (left instanceof CompileError) {
       this.errors.push(left);
     }
@@ -358,14 +366,14 @@ export default class Interpreter {
       tableName: left.tableName,
       fieldNames: [left.columnName],
       relation: leftCardinality,
-      token: extractTokenForInterpreter(rel.leftExpression),
+      token: extractTokenForInterpreter(rel.leftExpression!),
     };
     const rightEndpoint: RefEndpoint = {
       schemaName: right.schemaName,
       tableName: right.tableName,
       fieldNames: [right.columnName],
       relation: rightCardinality,
-      token: extractTokenForInterpreter(rel.rightExpression),
+      token: extractTokenForInterpreter(rel.rightExpression!),
     };
     let del: string | undefined;
     let update: string | undefined;
@@ -391,7 +399,9 @@ export default class Interpreter {
       return undefined;
     }
     const { name, schemaName } = maybeName.unwrap();
-    const values = (element.body as BlockExpressionNode).body.map((sub) => this.enumField(sub));
+    const values = (element.body as BlockExpressionNode).body.map((sub) =>
+      this.enumField(sub as FunctionApplicationNode),
+    );
 
     return {
       schemaName,
@@ -401,8 +411,8 @@ export default class Interpreter {
     };
   }
 
-  private enumField(field: ExpressionNode): EnumField {
-    const args = field instanceof FunctionApplicationNode ? [field.callee, ...field.args] : [field];
+  private enumField(field: FunctionApplicationNode): EnumField {
+    const args = [field.callee, ...field.args];
     let note: string | undefined;
     if (args.length === 2) {
       const collector = collectAttribute(args[1] as ListExpressionNode, this.errors);
@@ -410,7 +420,7 @@ export default class Interpreter {
     }
 
     return {
-      name: extractVarNameFromPrimaryVariable(args[0] as any),
+      name: extractVarNameFromPrimaryVariable(args[0] as any).unwrap(),
       token: extractTokenForInterpreter(field),
       note,
     };
@@ -418,7 +428,8 @@ export default class Interpreter {
 
   private project(element: ElementDeclarationNode): Project {
     const proj: Project = {
-      name: (element.name && extractVarNameFromPrimaryVariable(element.name as any)) || null,
+      name:
+        (element.name && extractVarNameFromPrimaryVariable(element.name as any))?.unwrap() || null,
       tables: [],
       refs: [],
       enums: [],
@@ -429,7 +440,7 @@ export default class Interpreter {
     (element.body as BlockExpressionNode).body.forEach((sub) => {
       // eslint-disable-next-line no-underscore-dangle
       const _sub = sub as ElementDeclarationNode;
-      const type = _sub.type.value.toLowerCase();
+      const type = _sub.type!.value.toLowerCase();
       switch (type) {
         case 'table':
           tryPush(this.table(_sub), proj.tables);
@@ -457,7 +468,7 @@ export default class Interpreter {
 
   // eslint-disable-next-line class-methods-use-this
   private custom(element: ElementDeclarationNode): string {
-    return extractQuotedStringToken(element.body)!;
+    return extractQuotedStringToken(element.body).unwrap();
   }
 
   private tableGroup(element: ElementDeclarationNode): TableGroup | undefined {
@@ -469,7 +480,7 @@ export default class Interpreter {
     const tables: TableGroupField[] = [];
     // eslint-disable-next-line no-restricted-syntax
     for (const field of (element.body as BlockExpressionNode).body) {
-      const maybeTableGroupField = this.tableGroupField(field);
+      const maybeTableGroupField = this.tableGroupField(field as FunctionApplicationNode);
       if (maybeTableGroupField) {
         tables.push(maybeTableGroupField);
       }
@@ -483,8 +494,8 @@ export default class Interpreter {
     };
   }
 
-  private tableGroupField(field: ExpressionNode): TableGroupField | undefined {
-    const maybeName = this.extractElementName(field);
+  private tableGroupField(field: FunctionApplicationNode): TableGroupField | undefined {
+    const maybeName = this.extractElementName(field.callee!);
     if (!maybeName.isOk()) {
       return undefined;
     }
@@ -502,11 +513,13 @@ export default class Interpreter {
   ): { value: string; token: TokenPosition } | undefined {
     const content =
       element.body instanceof BlockExpressionNode ?
-        extractQuotedStringToken((element.body as BlockExpressionNode).body[0]) :
-        extractQuotedStringToken(element.body);
+        extractQuotedStringToken(
+            ((element.body as BlockExpressionNode).body[0] as FunctionApplicationNode).callee,
+          ) :
+        extractQuotedStringToken((element.body as FunctionApplicationNode).callee);
 
     return {
-      value: content!,
+      value: content.unwrap(),
       token: extractTokenForInterpreter(element),
     };
   }
@@ -516,7 +529,7 @@ export default class Interpreter {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const sub of (element.body as BlockExpressionNode).body) {
-      const maybeIndexField = this.indexField(sub);
+      const maybeIndexField = this.indexField(sub as FunctionApplicationNode);
       if (maybeIndexField) {
         res.push(maybeIndexField);
       }
@@ -525,10 +538,10 @@ export default class Interpreter {
     return res;
   }
 
-  private indexField(field: ExpressionNode): Index {
-    const args = field instanceof FunctionApplicationNode ? [field.callee, ...field.args] : [field];
+  private indexField(field: FunctionApplicationNode): Index {
+    const args = [field.callee, ...field.args];
 
-    const { functional, nonFunctional } = destructureIndexNode(args[0]).unwrap();
+    const { functional, nonFunctional } = destructureIndexNode(args[0]!).unwrap();
     let pk: boolean | undefined;
     let unique: boolean | undefined;
     let name: string | undefined;
@@ -546,11 +559,11 @@ export default class Interpreter {
     return {
       columns: [
         ...functional.map((s) => ({
-          value: s.value.value,
+          value: s.value!.value,
           type: 'expression',
         })),
         ...nonFunctional.map((s) => ({
-          value: extractVarNameFromPrimaryVariable(s),
+          value: extractVarNameFromPrimaryVariable(s).unwrap(),
           type: 'column',
         })),
       ],

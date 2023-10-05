@@ -24,8 +24,7 @@ describe('#validator', () => {
       })
       .chain((ast) => {
         return new Validator(ast, new SymbolFactory(symbolIdGenerator)).validate();
-      })
-      .map(({ program }) => program);
+      });
     const output = serialize(report, true);
 
     it('should equal snapshot', () =>

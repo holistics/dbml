@@ -2,7 +2,7 @@ import { None, Option, Some } from '../option';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import { destructureComplexVariable, destructureMemberAccessExpression } from '../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../errors';
-import { SyntaxNode } from '../parser/nodes';
+import { PrimaryExpressionNode, SyntaxNode } from '../parser/nodes';
 import { RelationCardinality, TokenPosition } from './types';
 
 export function isCircular(
