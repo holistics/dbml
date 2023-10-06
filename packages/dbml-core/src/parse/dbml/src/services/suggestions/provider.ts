@@ -1,5 +1,12 @@
 import * as monaco from 'monaco-editor-core';
-import { extractStringFromIdentifierStream } from '../../lib/parser/utils';
+import {
+  destructureMemberAccessExpression,
+  extractVariableFromExpression,
+} from '../../lib/analyzer/utils';
+import {
+  extractStringFromIdentifierStream,
+  isExpressionAVariableNode,
+} from '../../lib/parser/utils';
 import Compiler, { ScopeKind } from '../../compiler';
 import { SyntaxToken, SyntaxTokenKind } from '../../lib/lexer/tokens';
 import { isOffsetWithinSpan } from '../../lib/utils';
@@ -27,7 +34,6 @@ import {
   InfixExpressionNode,
   ListExpressionNode,
   PrefixExpressionNode,
-  PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
@@ -185,7 +191,7 @@ function suggestNamesInScope(
           })),
       );
     }
-    curElement = curElement instanceof ElementDeclarationNode ? curElement.owner : undefined;
+    curElement = curElement instanceof ElementDeclarationNode ? curElement.parent : undefined;
   }
 
   return addQuoteIfContainSpace(res);
@@ -224,7 +230,7 @@ function suggestInAttribute(
     );
   }
 
-  if (container.name && isOffsetWithinSpan(offset, container.name)) {
+  if (container.name && container.name.start <= offset && container.name.end >= offset) {
     return suggestAttributeName(compiler, offset);
   }
 
@@ -365,36 +371,25 @@ function suggestMembers(
   offset: number,
   container: InfixExpressionNode & { op: SyntaxToken },
 ): CompletionList {
-  if (
-    container.leftExpression instanceof PrimaryExpressionNode &&
-    container.leftExpression.referee
-  ) {
-    return {
-      suggestions: compiler.symbol
-        .members(container.leftExpression.referee)
-        .map(({ kind, name }) => ({
-          label: name,
-          insertText: name,
-          kind: pickCompletionItemKind(kind),
-          range: undefined as any,
-        })),
-    };
-  }
-  const { leftExpression } = container;
-  if (leftExpression instanceof InfixExpressionNode && leftExpression.rightExpression?.referee) {
-    return {
-      suggestions: compiler.symbol
-        .members(leftExpression.rightExpression.referee)
-        .map(({ kind, name }) => ({
-          label: name,
-          insertText: name,
-          kind: pickCompletionItemKind(kind),
-          range: undefined as any,
-        })),
-    };
+  const fragments = destructureMemberAccessExpression(container).unwrap_or([]);
+  fragments.pop(); // The last fragment is not used in suggestions: v1.table.a<>
+  if (fragments.some((f) => !isExpressionAVariableNode(f))) {
+    return noSuggestions();
   }
 
-  return noSuggestions();
+  const nameStack = fragments.map((f) => extractVariableFromExpression(f).unwrap());
+
+  return {
+    suggestions: compiler.symbol
+      .ofName({ nameStack, owner: compiler.container.element(offset) })
+      .flatMap(({ symbol }) => compiler.symbol.members(symbol))
+      .map(({ kind, name }) => ({
+        label: name,
+        insertText: name,
+        kind: pickCompletionItemKind(kind),
+        range: undefined as any,
+      })),
+  };
 }
 
 function suggestInSubField(
@@ -417,8 +412,8 @@ function suggestInSubField(
       const suggestions = suggestInRefField(compiler, offset);
 
       return shouldPrependSpace(compiler.container.token(offset).token, offset) ?
-              prependSpace(suggestions) :
-              suggestions;
+        prependSpace(suggestions) :
+        suggestions;
     }
     case ScopeKind.TABLEGROUP:
       return suggestInTableGroupField(compiler);
@@ -644,7 +639,7 @@ function suggestColumnType(compiler: Compiler, offset: number): CompletionList {
 
 function suggestColumnNameInIndexes(compiler: Compiler, offset: number): CompletionList {
   const indexesNode = compiler.container.element(offset);
-  const tableNode = indexesNode.owner;
+  const tableNode = indexesNode.parent;
   if (!(tableNode?.symbol instanceof TableSymbol)) {
     return noSuggestions();
   }
