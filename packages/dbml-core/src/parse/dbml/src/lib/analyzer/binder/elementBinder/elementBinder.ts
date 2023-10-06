@@ -95,7 +95,7 @@ export default abstract class ElementBinder {
 
   private bindSubfield(sub: FunctionApplicationNode | ElementDeclarationNode) {
     if (sub instanceof ElementDeclarationNode) {
-      throw new Error("An element's subfield can not be an element declaration");
+      return;
     }
     const args = [sub.callee, ...sub.args];
     const maybeSettingList = _.last(args);
