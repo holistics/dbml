@@ -41,7 +41,7 @@ export default class Validator {
   validate(): Report<ProgramNode, CompileError> {
     this.ast.body.forEach((_element) => {
       // eslint-disable-next-line no-param-reassign
-      _element.owner = this.ast;
+      _element.parent = this.ast;
       if (_element.type === undefined) {
         return;
       }
