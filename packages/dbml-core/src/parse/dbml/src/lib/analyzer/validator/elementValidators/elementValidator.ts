@@ -510,7 +510,7 @@ export default abstract class ElementValidator {
     kindsFoundInScope: Set<ElementKind>,
   ): boolean {
     // eslint-disable-next-line no-param-reassign
-    sub.owner = this.declarationNode;
+    sub.parent = this.declarationNode;
     if (!sub.type) {
       return false;
     }

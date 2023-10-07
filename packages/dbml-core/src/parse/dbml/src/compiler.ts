@@ -6,22 +6,16 @@ import { isOffsetWithinSpan } from './lib/utils';
 import { CompileError } from './lib/errors';
 import {
   BlockExpressionNode,
-  CallExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  FunctionExpressionNode,
   IdentiferStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
-  LiteralNode,
-  PostfixExpressionNode,
   PrefixExpressionNode,
-  PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
   SyntaxNodeIdGenerator,
   TupleExpressionNode,
-  VariableNode,
 } from './lib/parser/nodes';
 import { NodeSymbol, NodeSymbolIdGenerator } from './lib/analyzer/symbol/symbols';
 import Report from './lib/report';
@@ -29,8 +23,8 @@ import Lexer from './lib/lexer/lexer';
 import Parser from './lib/parser/parser';
 import Analyzer from './lib/analyzer/analyzer';
 import Interpreter from './lib/interpreter/interpreter';
-import Database from '../../../model_structure/database';
-import { SyntaxToken } from './lib/lexer/tokens';
+import Database from './lib/model_structure/database';
+import { SyntaxToken, SyntaxTokenKind } from './lib/lexer/tokens';
 import { getMemberChain, isInvalidToken } from './lib/parser/utils';
 
 const enum Query {
@@ -76,20 +70,26 @@ export default class Compiler {
   private symbolIdGenerator = new NodeSymbolIdGenerator();
 
   private createQuery<V>(kind: Query, queryCallback: () => V): () => V;
-  private createQuery<V, U>(kind: Query, queryCallback: (arg: U) => V): (arg: U) => V;
-  private createQuery<V, U>(
+  private createQuery<V, U, K>(
+    kind: Query,
+    queryCallback: (arg: U) => V,
+    toKey?: (arg: U) => K,
+  ): (arg: U) => V;
+  private createQuery<V, U, K>(
     kind: Query,
     queryCallback: (arg: U | undefined) => V,
+    toKey?: (arg: U) => K,
   ): (arg: U | undefined) => V {
     return (arg: U | undefined): V => {
       const cacheEntry = this.cache[kind];
+      const key = arg && toKey ? toKey(arg) : arg;
       if (cacheEntry !== null) {
         if (!(cacheEntry instanceof Map)) {
           return cacheEntry;
         }
 
-        if (cacheEntry.has(arg)) {
-          return cacheEntry.get(arg)!;
+        if (cacheEntry.has(key)) {
+          return cacheEntry.get(key);
         }
       }
 
@@ -97,10 +97,10 @@ export default class Compiler {
 
       if (arg !== undefined) {
         if (cacheEntry instanceof Map) {
-          cacheEntry.set(arg, res);
+          cacheEntry.set(key, res);
         } else {
           this.cache[kind] = new Map();
-          this.cache[kind].set(arg, res);
+          this.cache[kind].set(key, res);
         }
       } else {
         this.cache[kind] = res;
@@ -194,6 +194,7 @@ export default class Compiler {
       (offset: number): readonly Readonly<SyntaxNode>[] => {
         const tokens = this.parse.tokens();
         let { index } = this.container.token(offset);
+        const { token } = this.container.token(offset);
         if (index === undefined) {
           return [this.parse.ast()];
         }
@@ -219,9 +220,14 @@ export default class Compiler {
           curNode = foundMem;
         }
 
+        if (token?.kind === SyntaxTokenKind.COLON) {
+          return res;
+        }
+
         while (res.length > 0) {
           let popOnce = false;
           const lastContainer = _.last(res)!;
+
           if (lastContainer instanceof FunctionApplicationNode) {
             const source = this.parse.source();
             for (let i = lastContainer.end; i < offset; i += 1) {
@@ -343,29 +349,52 @@ export default class Compiler {
   readonly symbol = {
     ofName: this.createQuery(
       Query.Symbol_OfName,
-      (
-        nameStack: string[],
-      ): readonly Readonly<{ symbol: NodeSymbol; kind: SymbolKind; name: string }>[] => {
-        const { symbolTable } = this.parse.ast().symbol!;
-        let currentPossibleSymbolTables: SymbolTable[] = [symbolTable!];
-        let currentPossibleSymbols: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
-        // eslint-disable-next-line no-restricted-syntax
-        for (const name of nameStack) {
-          currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) =>
-            generatePossibleIndexes(name).flatMap((index) => {
-              const symbol = st.get(index);
-              const res = destructureIndex(index).unwrap_or(undefined);
-
-              return !symbol || !res ? [] : { ...res, symbol };
-            }),
-          );
-          currentPossibleSymbolTables = currentPossibleSymbols.flatMap((e) =>
-            (e.symbol.symbolTable ? e.symbol.symbolTable : []),
-          );
+      ({
+        nameStack,
+        owner = this.parse.ast(),
+      }: {
+        nameStack: string[];
+        owner: ElementDeclarationNode | ProgramNode;
+      }): readonly Readonly<{ symbol: NodeSymbol; kind: SymbolKind; name: string }>[] => {
+        if (nameStack.length === 0) {
+          return [];
         }
 
-        return currentPossibleSymbols;
+        const res: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
+
+        for (
+          let currentOwner: ElementDeclarationNode | ProgramNode | undefined = owner;
+          currentOwner;
+          currentOwner =
+            currentOwner instanceof ElementDeclarationNode ? currentOwner.parent : undefined
+        ) {
+          if (!currentOwner.symbol?.symbolTable) {
+            continue;
+          }
+          const { symbolTable } = currentOwner.symbol;
+          let currentPossibleSymbolTables: SymbolTable[] = [symbolTable];
+          let currentPossibleSymbols: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
+          // eslint-disable-next-line no-restricted-syntax
+          for (const name of nameStack) {
+            currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) =>
+              generatePossibleIndexes(name).flatMap((index) => {
+                const symbol = st.get(index);
+                const desRes = destructureIndex(index).unwrap_or(undefined);
+
+                return !symbol || !desRes ? [] : { ...desRes, symbol };
+              }),
+            );
+            currentPossibleSymbolTables = currentPossibleSymbols.flatMap((e) =>
+              (e.symbol.symbolTable ? e.symbol.symbolTable : []),
+            );
+          }
+
+          res.push(...currentPossibleSymbols);
+        }
+
+        return res;
       },
+      ({ nameStack, owner }) => `${nameStack.join('.')}@${owner.id}`,
     ),
     members: this.createQuery(
       Query.Symbol_Members,

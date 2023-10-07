@@ -3,7 +3,6 @@ import {
   BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
-  ExpressionNode,
   FunctionApplicationNode,
   IdentiferStreamNode,
   InfixExpressionNode,
@@ -468,7 +467,7 @@ export default class Interpreter {
 
   // eslint-disable-next-line class-methods-use-this
   private custom(element: ElementDeclarationNode): string {
-    return extractQuotedStringToken(element.body).unwrap();
+    return extractQuotedStringToken(element.body).unwrap_or('');
   }
 
   private tableGroup(element: ElementDeclarationNode): TableGroup | undefined {

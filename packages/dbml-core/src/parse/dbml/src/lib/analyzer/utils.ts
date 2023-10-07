@@ -171,7 +171,7 @@ export function findSymbol(
       return undefined;
     }
 
-    curElement = curElement.owner;
+    curElement = curElement.parent;
   }
 
   return undefined;

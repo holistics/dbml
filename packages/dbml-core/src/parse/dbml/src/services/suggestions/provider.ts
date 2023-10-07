@@ -214,20 +214,23 @@ function suggestInAttribute(
   offset: number,
   container: AttributeNode,
 ): CompletionList {
-  if (
-    [SyntaxTokenKind.COMMA, SyntaxTokenKind.LBRACKET].includes(
-      compiler.container.token(offset).token?.kind as any,
-    )
-  ) {
-    return suggestAttributeName(compiler, offset);
+  const { token } = compiler.container.token(offset);
+  if ([SyntaxTokenKind.COMMA, SyntaxTokenKind.LBRACKET].includes(token?.kind as any)) {
+    const res = suggestAttributeName(compiler, offset);
+
+    return token?.kind === SyntaxTokenKind.COMMA && shouldPrependSpace(token, offset) ?
+      prependSpace(res) :
+      res;
   }
 
-  if (container.name && compiler.container.token(offset).token?.kind === SyntaxTokenKind.COLON) {
-    return suggestAttributeValue(
+  if (container.name && token?.kind === SyntaxTokenKind.COLON) {
+    const res = suggestAttributeValue(
       compiler,
       offset,
       extractStringFromIdentifierStream(container.name).unwrap(),
     );
+
+    return shouldPrependSpace(token, offset) ? prependSpace(res) : res;
   }
 
   if (container.name && container.name.start <= offset && container.name.end >= offset) {
@@ -411,7 +414,8 @@ function suggestInSubField(
     case ScopeKind.REF: {
       const suggestions = suggestInRefField(compiler, offset);
 
-      return shouldPrependSpace(compiler.container.token(offset).token, offset) ?
+      return compiler.container.token(offset).token?.kind === SyntaxTokenKind.COLON &&
+        shouldPrependSpace(compiler.container.token(offset).token, offset) ?
         prependSpace(suggestions) :
         suggestions;
     }

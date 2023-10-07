@@ -2,6 +2,7 @@ import { SyntaxToken, SyntaxTokenKind } from '../../lexer/tokens';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
+  FunctionExpressionNode,
   ListExpressionNode,
   LiteralNode,
   PrefixExpressionNode,
@@ -183,7 +184,14 @@ export function isVoid(value?: SyntaxNode): boolean {
 // Is the `value` a valid value for a column's `default` setting
 // It's a valid only if it's a literal or a complex variable (potentially an enum member)
 export function isValidDefaultValue(value?: SyntaxNode): boolean {
-  if (value instanceof PrimaryExpressionNode && value.expression instanceof LiteralNode) {
+  if (
+    value instanceof PrimaryExpressionNode &&
+    (value.expression instanceof LiteralNode || value.expression instanceof VariableNode)
+  ) {
+    return true;
+  }
+
+  if (value instanceof FunctionExpressionNode) {
     return true;
   }
 
