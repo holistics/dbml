@@ -1,17 +1,20 @@
 import { isAccessExpression, isExpressionAVariableNode, isExpressionAQuotedString } from '../utils';
 import { None, Option, Some } from '../option';
 import {
+  ElementDeclarationNode,
   FunctionExpressionNode,
   IdentiferStreamNode,
   InfixExpressionNode,
   LiteralNode,
   PrimaryExpressionNode,
+  ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
 } from '../parser/nodes';
 import { isRelationshipOp } from './validator/utils';
-import { SyntaxToken } from '../lexer/tokens';
+import { NodeSymbolIndex, isPublicSchemaIndex } from './symbol/symbolIndex';
+import { NodeSymbol } from './symbol/symbols';
 
 export function destructureMemberAccessExpression(node: SyntaxNode): Option<SyntaxNode[]> {
   if (node instanceof PrimaryExpressionNode || node instanceof TupleExpressionNode) {
@@ -148,4 +151,33 @@ export function extractIndexName(
   }
 
   return value.value.value;
+}
+
+// Starting from `startElement`
+// find the closest outer scope that contains `id`
+// and return the symbol corresponding to `id` in that scope
+export function findSymbol(
+  id: NodeSymbolIndex,
+  startElement: ElementDeclarationNode,
+): NodeSymbol | undefined {
+  let curElement: ElementDeclarationNode | ProgramNode | undefined = startElement;
+  const isPublicSchema = isPublicSchemaIndex(id);
+
+  while (curElement) {
+    if (curElement.symbol?.symbolTable?.has(id)) {
+      return curElement.symbol.symbolTable?.get(id);
+    }
+
+    if (curElement.symbol?.declaration instanceof ProgramNode && isPublicSchema) {
+      return curElement.symbol;
+    }
+
+    if (curElement instanceof ProgramNode) {
+      return undefined;
+    }
+
+    curElement = curElement.parentElement;
+  }
+
+  return undefined;
 }

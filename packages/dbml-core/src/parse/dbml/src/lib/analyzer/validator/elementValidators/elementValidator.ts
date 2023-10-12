@@ -33,7 +33,6 @@ import {
   registerSchemaStack,
 } from '../utils';
 import { NodeSymbol, SchemaSymbol } from '../../symbol/symbols';
-import SymbolTable from '../../symbol/symbolTable';
 import {
   createIdFromContext,
   createSubfieldId,
@@ -325,6 +324,11 @@ export default abstract class ElementValidator {
     }
 
     const id = createIdFromContext(name, this.context.name);
+
+    if (variables[0] === 'public') {
+      variables.shift();
+    }
+
     const registerSchema = registerSchemaStack(variables, this.publicSchemaSymbol.symbolTable);
     if (!id) {
       throw new Error(`${this.elementKind} fails to create id to register in the symbol table`);

@@ -46,6 +46,7 @@ export function isTriviaToken(token: SyntaxToken): boolean {
     case SyntaxTokenKind.TAB:
     case SyntaxTokenKind.SINGLE_LINE_COMMENT:
     case SyntaxTokenKind.MULTILINE_COMMENT:
+    case SyntaxTokenKind.INVALID:
       return true;
     default:
       return false;

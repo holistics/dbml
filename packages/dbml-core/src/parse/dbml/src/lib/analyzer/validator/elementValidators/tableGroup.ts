@@ -1,6 +1,6 @@
 import { UnresolvedName } from '../../types';
 import { destructureComplexVariable } from '../../utils';
-import { createSchemaSymbolId, createTableSymbolId } from '../../symbol/symbolIndex';
+import { createSchemaSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { ElementDeclarationNode, SyntaxNode } from '../../../parser/nodes';
 import { ContextStack, ValidatorContext } from '../validatorContext';
@@ -79,12 +79,12 @@ function registerTableName(
     throw new Error('Unreachable - Must be a valid name when registerTableName is called');
   }
   const fragments = destructureComplexVariable(node).unwrap();
-  const tableId = createTableSymbolId(fragments.pop()!);
-  const schemaIdStack = fragments.map(createSchemaSymbolId);
-
+  const tableId = createTableSymbolIndex(fragments.pop()!);
+  const schemaIdStack = fragments.map(createSchemaSymbolIndex);
+  const qualifiers =
+    schemaIdStack.length === 0 ? [createSchemaSymbolIndex('public')] : schemaIdStack;
   unresolvedNames.push({
-    id: tableId,
-    qualifiers: schemaIdStack.length === 0 ? [createSchemaSymbolId('public')] : schemaIdStack,
+    ids: [...qualifiers, tableId],
     referrer: node,
     ownerElement,
   });

@@ -1,28 +1,36 @@
 import SymbolTable from './symbolTable';
 import { SyntaxNode } from '../../parser/nodes';
 
-export enum SymbolKind {
-  SCHEMA = 'Schema',
-  TABLE = 'Table',
-  ENUM = 'Enum',
-  ENUM_MEMBER = 'Enum field',
-  COLUMN = 'Column',
-  TABLE_GROUP = 'TableGroup',
+export type NodeSymbolId = number;
+export class NodeSymbolIdGenerator {
+  private static id = 0;
+
+  static reset() {
+    this.id = 0;
+  }
+
+  static nextId(): NodeSymbolId {
+    return this.id++;
+  }
 }
 
 export interface NodeSymbol {
-  kind: SymbolKind;
+  id: NodeSymbolId;
   symbolTable?: SymbolTable;
   declaration?: SyntaxNode;
+  references: SyntaxNode[];
 }
 
 // A symbol for a schema, contains the schema's symbol table
 export class SchemaSymbol implements NodeSymbol {
-  kind: SymbolKind.SCHEMA = SymbolKind.SCHEMA;
+  id: NodeSymbolId;
 
   symbolTable: SymbolTable;
 
-  constructor(symbolTable: SymbolTable) {
+  references: SyntaxNode[] = [];
+
+  constructor(symbolTable: SymbolTable, id: NodeSymbolId = NodeSymbolIdGenerator.nextId()) {
+    this.id = id;
     this.symbolTable = symbolTable;
   }
 }
@@ -30,13 +38,20 @@ export class SchemaSymbol implements NodeSymbol {
 // A symbol for an enum, contains the enum's symbol table
 // which is used to hold all the enum field symbols of the enum
 export class EnumSymbol implements NodeSymbol {
-  kind: SymbolKind.ENUM = SymbolKind.ENUM;
+  id: NodeSymbolId;
 
   symbolTable: SymbolTable;
 
   declaration: SyntaxNode;
 
-  constructor(symbolTable: SymbolTable, declaration: SyntaxNode) {
+  references: SyntaxNode[] = [];
+
+  constructor(
+    symbolTable: SymbolTable,
+    declaration: SyntaxNode,
+    id: NodeSymbolId = NodeSymbolIdGenerator.nextId(),
+  ) {
+    this.id = id;
     this.symbolTable = symbolTable;
     this.declaration = declaration;
   }
@@ -44,11 +59,14 @@ export class EnumSymbol implements NodeSymbol {
 
 // A symbol for an enum field
 export class EnumFieldSymbol implements NodeSymbol {
-  kind: SymbolKind.ENUM_MEMBER = SymbolKind.ENUM_MEMBER;
+  id: NodeSymbolId;
 
   declaration: SyntaxNode;
 
-  constructor(declaration: SyntaxNode) {
+  references: SyntaxNode[] = [];
+
+  constructor(declaration: SyntaxNode, id: NodeSymbolId = NodeSymbolIdGenerator.nextId()) {
+    this.id = id;
     this.declaration = declaration;
   }
 }
@@ -56,13 +74,20 @@ export class EnumFieldSymbol implements NodeSymbol {
 // A symbol for a table, contains the table's symbol table
 // which is used to hold all the column symbols of the table
 export class TableSymbol implements NodeSymbol {
-  kind: SymbolKind.TABLE = SymbolKind.TABLE;
+  id: NodeSymbolId;
 
   symbolTable: SymbolTable;
 
   declaration: SyntaxNode;
 
-  constructor(symbolTable: SymbolTable, declaration: SyntaxNode) {
+  references: SyntaxNode[] = [];
+
+  constructor(
+    symbolTable: SymbolTable,
+    declaration: SyntaxNode,
+    id: NodeSymbolId = NodeSymbolIdGenerator.nextId(),
+  ) {
+    this.id = id;
     this.symbolTable = symbolTable;
     this.declaration = declaration;
   }
@@ -70,11 +95,14 @@ export class TableSymbol implements NodeSymbol {
 
 // A symbol for a column field
 export class ColumnSymbol implements NodeSymbol {
-  kind: SymbolKind.COLUMN = SymbolKind.COLUMN;
+  id: NodeSymbolId;
 
   declaration: SyntaxNode;
 
-  constructor(declaration: SyntaxNode) {
+  references: SyntaxNode[] = [];
+
+  constructor(declaration: SyntaxNode, id: NodeSymbolId = NodeSymbolIdGenerator.nextId()) {
+    this.id = id;
     this.declaration = declaration;
   }
 }
@@ -82,13 +110,20 @@ export class ColumnSymbol implements NodeSymbol {
 // A symbol for a tablegroup, contains the symbol table for the tablegroup
 // which is used to hold all the symbols of the table group fields
 export class TableGroupSymbol implements NodeSymbol {
-  kind: SymbolKind.TABLE_GROUP = SymbolKind.TABLE_GROUP;
+  id: NodeSymbolId;
 
   symbolTable: SymbolTable;
 
   declaration: SyntaxNode;
 
-  constructor(symbolTable: SymbolTable, declaration: SyntaxNode) {
+  references: SyntaxNode[] = [];
+
+  constructor(
+    symbolTable: SymbolTable,
+    declaration: SyntaxNode,
+    id: NodeSymbolId = NodeSymbolIdGenerator.nextId(),
+  ) {
+    this.id = id;
     this.symbolTable = symbolTable;
     this.declaration = declaration;
   }
@@ -96,11 +131,14 @@ export class TableGroupSymbol implements NodeSymbol {
 
 // A symbol for a tablegroup field
 export class TableGroupFieldSymbol implements NodeSymbol {
-  kind: SymbolKind.TABLE_GROUP = SymbolKind.TABLE_GROUP;
+  id: NodeSymbolId;
 
   declaration: SyntaxNode;
 
-  constructor(declaration: SyntaxNode) {
+  references: SyntaxNode[] = [];
+
+  constructor(declaration: SyntaxNode, id: NodeSymbolId = NodeSymbolIdGenerator.nextId()) {
+    this.id = id;
     this.declaration = declaration;
   }
 }

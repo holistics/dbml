@@ -7,7 +7,6 @@ import {
   createSubFieldValidatorConfig,
 } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { SyntaxToken } from '../../../lexer/tokens';
 import {
   ElementDeclarationNode,
   IdentiferStreamNode,

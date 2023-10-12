@@ -19,7 +19,7 @@ import ProjectValidator from './elementValidators/project';
 import RefValidator from './elementValidators/ref';
 import TableValidator from './elementValidators/table';
 import TableGroupValidator from './elementValidators/tableGroup';
-import { createSchemaSymbolId } from '../symbol/symbolIndex';
+import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
 import { SchemaSymbol } from '../symbol/symbols';
 import SymbolTable from '../symbol/symbolTable';
 
@@ -92,7 +92,7 @@ export function registerSchemaStack(variables: string[], initialSchema: SymbolTa
   // eslint-disable-next-line no-restricted-syntax
   for (const curName of variables) {
     let curSchema: SymbolTable | undefined;
-    const curId = createSchemaSymbolId(curName);
+    const curId = createSchemaSymbolIndex(curName);
 
     if (!prevSchema.has(curId)) {
       curSchema = new SymbolTable();
