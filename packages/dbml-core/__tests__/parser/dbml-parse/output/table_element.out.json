@@ -15,17 +15,18 @@
           },
           "token": {
             "start": {
-              "offset": 49,
+              "offset": 16,
               "line": 2,
               "column": 3
             },
             "end": {
-              "offset": 61,
-              "line": 3,
-              "column": 1
+              "offset": 27,
+              "line": 2,
+              "column": 14
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": true
         },
         {
           "name": "name",
@@ -36,17 +37,18 @@
           },
           "token": {
             "start": {
-              "offset": 61,
+              "offset": 30,
               "line": 3,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 81,
-              "line": 4,
-              "column": 1
+              "offset": 47,
+              "line": 3,
+              "column": 20
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": true
         },
         {
           "name": "gender",
@@ -57,14 +59,14 @@
           },
           "token": {
             "start": {
-              "offset": 81,
+              "offset": 50,
               "line": 4,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 98,
-              "line": 5,
-              "column": 1
+              "offset": 64,
+              "line": 4,
+              "column": 17
             }
           },
           "inline_refs": []
@@ -78,14 +80,14 @@
           },
           "token": {
             "start": {
-              "offset": 98,
+              "offset": 67,
               "line": 5,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 120,
-              "line": 6,
-              "column": 1
+              "offset": 86,
+              "line": 5,
+              "column": 22
             }
           },
           "inline_refs": []
@@ -98,8 +100,8 @@
           "column": 1
         },
         "end": {
-          "offset": 407,
-          "line": 29,
+          "offset": 352,
+          "line": 27,
           "column": 2
         }
       },
@@ -113,13 +115,13 @@
           ],
           "token": {
             "start": {
-              "offset": 159,
-              "line": 10,
+              "offset": 104,
+              "line": 8,
               "column": 5
             },
             "end": {
-              "offset": 161,
-              "line": 10,
+              "offset": 106,
+              "line": 8,
               "column": 7
             }
           }
@@ -137,13 +139,13 @@
           ],
           "token": {
             "start": {
-              "offset": 166,
-              "line": 11,
+              "offset": 111,
+              "line": 9,
               "column": 5
             },
             "end": {
-              "offset": 176,
-              "line": 11,
+              "offset": 121,
+              "line": 9,
               "column": 15
             }
           }
@@ -157,13 +159,13 @@
           ],
           "token": {
             "start": {
-              "offset": 198,
-              "line": 15,
+              "offset": 143,
+              "line": 13,
               "column": 5
             },
             "end": {
-              "offset": 204,
-              "line": 15,
+              "offset": 149,
+              "line": 13,
               "column": 11
             }
           }
@@ -177,54 +179,29 @@
           ],
           "token": {
             "start": {
-              "offset": 209,
-              "line": 16,
+              "offset": 154,
+              "line": 14,
               "column": 5
             },
             "end": {
-              "offset": 219,
-              "line": 16,
+              "offset": 164,
+              "line": 14,
               "column": 15
             }
           }
-        },
-        {
-          "columns": [
-            {
-              "value": "id",
-              "type": "column"
-            },
-            {
-              "value": "name",
-              "type": "column"
-            }
-          ],
-          "token": {
-            "start": {
-              "offset": 49,
-              "line": 2,
-              "column": 3
-            },
-            "end": {
-              "offset": 61,
-              "line": 3,
-              "column": 1
-            }
-          },
-          "pk": true
         }
       ],
       "note": {
-        "value": "# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax",
+        "value": "\n# Note\n\n## Objective\n* Support define element's note inside element body\n* Make writing long note easier with the new syntax\n\n",
         "token": {
           "start": {
-            "offset": 227,
-            "line": 19,
+            "offset": 172,
+            "line": 17,
             "column": 3
           },
           "end": {
-            "offset": 405,
-            "line": 28,
+            "offset": 350,
+            "line": 26,
             "column": 4
           }
         }

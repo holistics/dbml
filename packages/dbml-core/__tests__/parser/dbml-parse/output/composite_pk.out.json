@@ -2,7 +2,7 @@
   "schemas": [],
   "tables": [
     {
-      "name": "users",
+      "name": "user1",
       "schemaName": null,
       "alias": null,
       "fields": [
@@ -20,9 +20,9 @@
               "column": 3
             },
             "end": {
-              "offset": 37,
-              "line": 3,
-              "column": 1
+              "offset": 36,
+              "line": 2,
+              "column": 23
             }
           },
           "inline_refs": [],
@@ -37,14 +37,14 @@
           },
           "token": {
             "start": {
-              "offset": 37,
+              "offset": 39,
               "line": 3,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 57,
-              "line": 4,
-              "column": 1
+              "offset": 56,
+              "line": 3,
+              "column": 20
             }
           },
           "inline_refs": []
@@ -58,14 +58,14 @@
           },
           "token": {
             "start": {
-              "offset": 57,
+              "offset": 59,
               "line": 4,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 82,
-              "line": 5,
-              "column": 1
+              "offset": 81,
+              "line": 4,
+              "column": 25
             }
           },
           "inline_refs": [],
@@ -80,14 +80,14 @@
           },
           "token": {
             "start": {
-              "offset": 82,
+              "offset": 84,
               "line": 5,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 99,
-              "line": 6,
-              "column": 1
+              "offset": 98,
+              "line": 5,
+              "column": 17
             }
           },
           "inline_refs": []
@@ -101,14 +101,14 @@
           },
           "token": {
             "start": {
-              "offset": 99,
+              "offset": 101,
               "line": 6,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 123,
-              "line": 7,
-              "column": 1
+              "offset": 122,
+              "line": 6,
+              "column": 24
             }
           },
           "inline_refs": []
@@ -122,14 +122,14 @@
           },
           "token": {
             "start": {
-              "offset": 123,
+              "offset": 125,
               "line": 7,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 144,
-              "line": 8,
-              "column": 1
+              "offset": 143,
+              "line": 7,
+              "column": 21
             }
           },
           "inline_refs": []
@@ -143,14 +143,14 @@
           },
           "token": {
             "start": {
-              "offset": 144,
+              "offset": 146,
               "line": 8,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 164,
-              "line": 9,
-              "column": 1
+              "offset": 162,
+              "line": 8,
+              "column": 19
             }
           },
           "inline_refs": []
@@ -164,14 +164,14 @@
           },
           "token": {
             "start": {
-              "offset": 164,
+              "offset": 166,
               "line": 9,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 192,
-              "line": 10,
-              "column": 1
+              "offset": 191,
+              "line": 9,
+              "column": 28
             }
           },
           "inline_refs": [],
@@ -215,7 +215,7 @@
       ]
     },
     {
-      "name": "users",
+      "name": "user2",
       "schemaName": null,
       "alias": null,
       "fields": [
@@ -233,9 +233,9 @@
               "column": 3
             },
             "end": {
-              "offset": 263,
-              "line": 18,
-              "column": 1
+              "offset": 262,
+              "line": 17,
+              "column": 23
             }
           },
           "inline_refs": [],
@@ -250,14 +250,14 @@
           },
           "token": {
             "start": {
-              "offset": 263,
+              "offset": 265,
               "line": 18,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 283,
-              "line": 19,
-              "column": 1
+              "offset": 282,
+              "line": 18,
+              "column": 20
             }
           },
           "inline_refs": []
@@ -271,14 +271,14 @@
           },
           "token": {
             "start": {
-              "offset": 283,
+              "offset": 285,
               "line": 19,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 308,
-              "line": 20,
-              "column": 1
+              "offset": 307,
+              "line": 19,
+              "column": 25
             }
           },
           "inline_refs": [],
@@ -293,14 +293,14 @@
           },
           "token": {
             "start": {
-              "offset": 308,
+              "offset": 310,
               "line": 20,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 325,
-              "line": 21,
-              "column": 1
+              "offset": 324,
+              "line": 20,
+              "column": 17
             }
           },
           "inline_refs": []
@@ -314,14 +314,14 @@
           },
           "token": {
             "start": {
-              "offset": 325,
+              "offset": 327,
               "line": 21,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 349,
-              "line": 22,
-              "column": 1
+              "offset": 348,
+              "line": 21,
+              "column": 24
             }
           },
           "inline_refs": []
@@ -335,14 +335,14 @@
           },
           "token": {
             "start": {
-              "offset": 349,
+              "offset": 351,
               "line": 22,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 370,
-              "line": 23,
-              "column": 1
+              "offset": 369,
+              "line": 22,
+              "column": 21
             }
           },
           "inline_refs": []
@@ -356,14 +356,14 @@
           },
           "token": {
             "start": {
-              "offset": 370,
+              "offset": 372,
               "line": 23,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 390,
-              "line": 24,
-              "column": 1
+              "offset": 388,
+              "line": 23,
+              "column": 19
             }
           },
           "inline_refs": []
@@ -377,14 +377,14 @@
           },
           "token": {
             "start": {
-              "offset": 390,
+              "offset": 392,
               "line": 24,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 418,
-              "line": 25,
-              "column": 1
+              "offset": 417,
+              "line": 24,
+              "column": 28
             }
           },
           "inline_refs": [],
