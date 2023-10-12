@@ -1,7 +1,6 @@
-import { SyntaxTokenKind } from '../../../lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '../../../lexer/tokens';
 import SymbolFactory from '../../symbol/factory';
-import { BindingRequest } from '../../types';
-import { registerRelationshipOperand, transformToReturnCompileErrors } from './utils';
+import { transformToReturnCompileErrors } from './utils';
 import {
   ElementKind,
   createContextValidatorConfig,
@@ -9,12 +8,7 @@ import {
   createSubFieldValidatorConfig,
 } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import {
-  ElementDeclarationNode,
-  IdentiferStreamNode,
-  InfixExpressionNode,
-  SyntaxNode,
-} from '../../../parser/nodes';
+import { ElementDeclarationNode, IdentiferStreamNode, SyntaxNode } from '../../../parser/nodes';
 import { ContextStack, ValidatorContext } from '../validatorContext';
 import ElementValidator from './elementValidator';
 import { isBinaryRelationship } from '../utils';
@@ -58,7 +52,6 @@ export default class RefValidator extends ElementValidator {
           CompileErrorCode.INVALID_REF_RELATIONSHIP,
           'This field must be a valid binary relationship',
         ),
-        registerBindingRequest: registerBinaryRelationship,
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_REF_FIELD,
@@ -69,10 +62,9 @@ export default class RefValidator extends ElementValidator {
   });
 
   constructor(
-    declarationNode: ElementDeclarationNode,
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
     publicSchemaSymbol: SchemaSymbol,
     contextStack: ContextStack,
-    bindingRequests: BindingRequest[],
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
@@ -82,36 +74,12 @@ export default class RefValidator extends ElementValidator {
       declarationNode,
       publicSchemaSymbol,
       contextStack,
-      bindingRequests,
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
       symbolFactory,
     );
   }
-}
-
-function registerBinaryRelationship(
-  node: SyntaxNode,
-  ownerElement: ElementDeclarationNode,
-  bindingRequests: BindingRequest[],
-) {
-  if (!isBinaryRelationship(node)) {
-    throw new Error(
-      'Unreachable - Must be a binary relationship when registerRelationshipOperands is called',
-    );
-  }
-
-  registerRelationshipOperand(
-    (node as InfixExpressionNode).leftExpression,
-    ownerElement,
-    bindingRequests,
-  );
-  registerRelationshipOperand(
-    (node as InfixExpressionNode).rightExpression,
-    ownerElement,
-    bindingRequests,
-  );
 }
 
 function isValidPolicy(value?: SyntaxNode): boolean {

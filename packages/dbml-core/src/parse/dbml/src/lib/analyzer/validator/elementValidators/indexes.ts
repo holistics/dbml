@@ -1,6 +1,4 @@
 import SymbolFactory from '../../symbol/factory';
-import { BindingRequest } from '../../types';
-import { createColumnSymbolIndex } from '../../symbol/symbolIndex';
 import {
   ElementKind,
   createContextValidatorConfig,
@@ -15,7 +13,7 @@ import {
   VariableNode,
 } from '../../../parser/nodes';
 import { isExpressionAQuotedString } from '../../../parser/utils';
-import { destructureIndexNode, extractVarNameFromPrimaryVariable } from '../../utils';
+import { destructureIndexNode } from '../../utils';
 import { ContextStack, ValidatorContext } from '../validatorContext';
 import ElementValidator from './elementValidator';
 import { isVoid } from '../utils';
@@ -28,6 +26,7 @@ import {
 } from './_preset_configs';
 import { SchemaSymbol } from '../../symbol/symbols';
 import { transformToReturnCompileErrors } from './utils';
+import { SyntaxToken } from '../../../lexer/tokens';
 
 export default class IndexesValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.INDEXES;
@@ -56,7 +55,6 @@ export default class IndexesValidator extends ElementValidator {
           CompileErrorCode.INVALID_INDEX,
           'This field must be a function expression, a column name or a tuple of such',
         ),
-        registerBindingRequest: registerIndexForResolution,
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_INDEX,
@@ -68,10 +66,9 @@ export default class IndexesValidator extends ElementValidator {
   });
 
   constructor(
-    declarationNode: ElementDeclarationNode,
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
     publicSchemaSymbol: SchemaSymbol,
     contextStack: ContextStack,
-    bindingRequests: BindingRequest[],
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
@@ -81,7 +78,6 @@ export default class IndexesValidator extends ElementValidator {
       declarationNode,
       publicSchemaSymbol,
       contextStack,
-      bindingRequests,
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
@@ -90,40 +86,12 @@ export default class IndexesValidator extends ElementValidator {
   }
 }
 
-export function registerIndexForResolution(
-  node: SyntaxNode,
-  ownerElement: ElementDeclarationNode,
-  bindingRequests: BindingRequest[],
-) {
-  const columnNodes = destructureIndexNode(node).unwrap_or(undefined)?.nonFunctional;
-
-  if (!columnNodes) {
-    throw new Error(
-      'Unreachable - Index should be validated before registerIndexForResolution is called',
-    );
-  }
-
-  columnNodes.forEach((colNode) =>
-    bindingRequests.push({
-      unresolvedName: {
-        subnames: [
-          {
-            referrer: colNode,
-            index: createColumnSymbolIndex(extractVarNameFromPrimaryVariable(colNode)),
-          },
-        ],
-        ownerElement,
-      },
-      ignoreError: false,
-    }));
-}
-
 export function isValidIndexesType(value?: SyntaxNode): boolean {
   if (!(value instanceof PrimaryExpressionNode) || !(value.expression instanceof VariableNode)) {
     return false;
   }
 
-  const str = value.expression.variable.value;
+  const str = value.expression.variable?.value;
 
   return str === 'btree' || str === 'hash';
 }

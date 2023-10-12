@@ -1,9 +1,6 @@
 import SymbolFactory from '../../symbol/factory';
-import { BindingRequest, createNonIgnorableBindingRequest } from '../../types';
-import { destructureMemberAccessExpression, extractVariableFromExpression } from '../../utils';
-import { createSchemaSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { ElementDeclarationNode, SyntaxNode } from '../../../parser/nodes';
+import { ElementDeclarationNode } from '../../../parser/nodes';
 import { ContextStack, ValidatorContext } from '../validatorContext';
 import ElementValidator from './elementValidator';
 import { ElementKind, createContextValidatorConfig, createSubFieldValidatorConfig } from '../types';
@@ -17,6 +14,7 @@ import {
 import { SchemaSymbol } from '../../symbol/symbols';
 import { isValidName } from '../utils';
 import { transformToReturnCompileErrors } from './utils';
+import { SyntaxToken } from '../../../lexer/tokens';
 
 export default class TableGroupValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.TABLEGROUP;
@@ -45,7 +43,6 @@ export default class TableGroupValidator extends ElementValidator {
           CompileErrorCode.INVALID_TABLEGROUP_ELEMENT_NAME,
           'This field must be a valid table name',
         ),
-        registerBindingRequest: registerTableName,
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_TABLEGROUP_FIELD,
@@ -56,10 +53,9 @@ export default class TableGroupValidator extends ElementValidator {
   });
 
   constructor(
-    declarationNode: ElementDeclarationNode,
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
     publicSchemaSymbol: SchemaSymbol,
     contextStack: ContextStack,
-    bindingRequests: BindingRequest[],
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
@@ -69,34 +65,10 @@ export default class TableGroupValidator extends ElementValidator {
       declarationNode,
       publicSchemaSymbol,
       contextStack,
-      bindingRequests,
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
       symbolFactory,
     );
   }
-}
-
-function registerTableName(
-  node: SyntaxNode,
-  ownerElement: ElementDeclarationNode,
-  bindingRequests: BindingRequest[],
-) {
-  if (!isValidName(node)) {
-    throw new Error('Unreachable - Must be a valid name when registerTableName is called');
-  }
-  const fragments = destructureMemberAccessExpression(node).unwrap();
-  const table = fragments.pop()!;
-  const tableId = createTableSymbolIndex(extractVariableFromExpression(table).unwrap());
-  const schemaStack = fragments.map((s) => ({
-    index: createSchemaSymbolIndex(extractVariableFromExpression(s).unwrap()),
-    referrer: s,
-  }));
-  bindingRequests.push(
-    createNonIgnorableBindingRequest({
-      subnames: [...schemaStack, { index: tableId, referrer: table }],
-      ownerElement,
-    }),
-  );
 }

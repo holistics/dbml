@@ -1,4 +1,3 @@
-import { BindingRequest } from '../../types';
 import { ElementKind, createContextValidatorConfig, createSubFieldValidatorConfig } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { ElementDeclarationNode } from '../../../parser/nodes';
@@ -15,6 +14,7 @@ import {
 import { SchemaSymbol } from '../../symbol/symbols';
 import SymbolFactory from '../../symbol/factory';
 import { transformToReturnCompileErrors } from './utils';
+import { SyntaxToken } from '../../../lexer/tokens';
 
 export default class CustomValidator extends ElementValidator {
   protected elementKind: ElementKind = ElementKind.CUSTOM;
@@ -53,10 +53,9 @@ export default class CustomValidator extends ElementValidator {
   });
 
   constructor(
-    declarationNode: ElementDeclarationNode,
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
     publicSchemaSymbol: SchemaSymbol,
     contextStack: ContextStack,
-    bindingRequests: BindingRequest[],
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
@@ -66,7 +65,6 @@ export default class CustomValidator extends ElementValidator {
       declarationNode,
       publicSchemaSymbol,
       contextStack,
-      bindingRequests,
       errors,
       kindsGloballyFound,
       kindsLocallyFound,

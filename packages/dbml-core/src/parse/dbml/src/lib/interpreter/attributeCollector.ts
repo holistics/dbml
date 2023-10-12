@@ -1,11 +1,15 @@
 /* A utility module to ease the attribute processing in the main `interpreter` module */
 
+import { KEYWORDS_OF_DEFAULT_SETTING, NUMERIC_LITERAL_PREFIX } from '../../constants';
 import {
   AttributeNode,
+  FunctionExpressionNode,
   IdentiferStreamNode,
   ListExpressionNode,
   PrefixExpressionNode,
+  PrimaryExpressionNode,
   SyntaxNode,
+  VariableNode,
 } from '../parser/nodes';
 import { extractQuotedStringToken } from '../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../errors';
@@ -15,7 +19,8 @@ import { InlineRef } from './types';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import {
   extractTokenForInterpreter,
-  getColumnSymbolOfRefOperand,
+  getColumnSymbolsOfRefOperand,
+  normalizeNoteContent,
   processRelOperand,
 } from './utils';
 
@@ -46,16 +51,16 @@ class AttributeMap {
     return entry[0].value!;
   }
 
-  getNameNode(name: string): IdentiferStreamNode[] | IdentiferStreamNode | undefined {
+  getAttributeNode(name: string): AttributeNode | AttributeNode[] | undefined {
     const entry = this.map.get(name);
     if (entry === undefined) {
       return undefined;
     }
     if (entry.length >= 2) {
-      return entry.map((e) => e.name);
+      return entry;
     }
 
-    return entry[0].name;
+    return entry[0];
   }
 }
 
@@ -90,11 +95,13 @@ class AttributeCollector {
     const note = this.settingMap.getValue('note');
 
     return note !== undefined ?
-      extractQuotedStringToken(note as SyntaxNode | undefined) :
+      normalizeNoteContent(extractQuotedStringToken(note as SyntaxNode | undefined).unwrap()) :
       undefined;
   }
 
-  extractDefault(): { type: 'number' | 'string'; value: number | string } | undefined {
+  extractDefault():
+    | { type: 'number' | 'string' | 'expression' | 'boolean'; value: number | string }
+    | undefined {
     const deflt = this.settingMap.getValue('default');
 
     if (deflt === undefined) {
@@ -104,6 +111,17 @@ class AttributeCollector {
     // eslint-disable-next-line no-underscore-dangle
     const _deflt = deflt as SyntaxNode;
 
+    if (
+      _deflt instanceof PrimaryExpressionNode &&
+      _deflt.expression instanceof VariableNode &&
+      KEYWORDS_OF_DEFAULT_SETTING.includes(_deflt.expression.variable?.value as any)
+    ) {
+      return {
+        type: 'boolean',
+        value: _deflt.expression.variable!.value,
+      };
+    }
+
     if (isExpressionANumber(_deflt)) {
       return {
         type: 'number',
@@ -111,10 +129,29 @@ class AttributeCollector {
       };
     }
 
+    if (
+      _deflt instanceof PrefixExpressionNode &&
+      NUMERIC_LITERAL_PREFIX.includes(_deflt.op?.value as any) &&
+      isExpressionANumber(_deflt.expression)
+    ) {
+      return {
+        type: 'number',
+        value:
+          Number(_deflt.expression.expression.literal.value) * (_deflt.op?.value === '+' ? 1 : -1),
+      };
+    }
+
     if (isExpressionAQuotedString(_deflt)) {
       return {
+        value: extractQuotedStringToken(_deflt as SyntaxNode).unwrap(),
         type: 'string',
-        value: extractQuotedStringToken(_deflt as SyntaxNode)!,
+      };
+    }
+
+    if (_deflt instanceof FunctionExpressionNode) {
+      return {
+        value: _deflt.value!.value,
+        type: 'expression',
       };
     }
 
@@ -150,19 +187,21 @@ class AttributeCollector {
     // eslint-disable-next-line no-restricted-syntax
     for (const ref of refList) {
       const operand = (ref as PrefixExpressionNode).expression;
-      const maybeName = processRelOperand(operand, ownerTableName, ownerSchemaName);
+      const maybeName = processRelOperand(operand!, ownerTableName, ownerSchemaName);
       if (maybeName instanceof CompileError) {
         this.errors.push(maybeName);
       } else {
-        const { columnName, tableName, schemaName } = maybeName;
-        const relation = (ref as PrefixExpressionNode).op.value as any;
+        const { columnNames, tableName, schemaName } = maybeName;
+        const relation = (ref as PrefixExpressionNode).op!.value as any;
         res.push({
           schemaName,
           tableName,
-          fieldNames: [columnName],
+          fieldNames: columnNames,
           relation,
           token: extractTokenForInterpreter(ref),
-          referee: getColumnSymbolOfRefOperand((ref as PrefixExpressionNode).expression).unwrap(),
+          referee: getColumnSymbolsOfRefOperand(
+            (ref as PrefixExpressionNode).expression!,
+          ).unwrap()[0],
           node: ref,
         });
       }
@@ -260,7 +299,7 @@ class AttributeCollector {
         new CompileError(
           CompileErrorCode.CONFLICTING_SETTING,
           'null and not null can not be set at the same time',
-          this.settingMap.getNameNode('not null') as IdentiferStreamNode,
+          this.settingMap.getAttributeNode('not null') as AttributeNode,
         ),
       );
 
@@ -277,6 +316,6 @@ class AttributeCollector {
       return undefined;
     }
 
-    return extractQuotedStringToken(idxName as SyntaxNode);
+    return extractQuotedStringToken(idxName as SyntaxNode).unwrap();
   }
 }

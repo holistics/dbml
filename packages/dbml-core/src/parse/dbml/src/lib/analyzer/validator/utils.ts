@@ -2,11 +2,13 @@ import { SyntaxToken, SyntaxTokenKind } from '../../lexer/tokens';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
+  FunctionExpressionNode,
   ListExpressionNode,
   LiteralNode,
   PrefixExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
+  TupleExpressionNode,
   VariableNode,
 } from '../../parser/nodes';
 import { isHexChar } from '../../utils';
@@ -23,8 +25,9 @@ import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
 import { SchemaSymbol } from '../symbol/symbols';
 import SymbolTable from '../symbol/symbolTable';
 import SymbolFactory from '../symbol/factory';
-import { isAccessExpression } from '../../parser/utils';
+import { isAccessExpression, isExpressionAVariableNode } from '../../parser/utils';
 import { ElementKind } from './types';
+import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 
 // Pick a validator suitable for `element`
 export function toElementKind(str: string): ElementKind {
@@ -48,7 +51,7 @@ export function toElementKind(str: string): ElementKind {
   }
 }
 
-export function pickValidator(element: ElementDeclarationNode) {
+export function pickValidator(element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (toElementKind(element.type.value)) {
     case ElementKind.ENUM:
       return EnumValidator;
@@ -138,7 +141,7 @@ export function registerSchemaStack(
   return prevSchema;
 }
 
-export function isRelationshipOp(op: string): boolean {
+export function isRelationshipOp(op?: string): boolean {
   return op === '-' || op === '<>' || op === '>' || op === '<';
 }
 
@@ -146,7 +149,7 @@ export function isValidColor(value?: SyntaxNode): boolean {
   if (
     !(value instanceof PrimaryExpressionNode) ||
     !(value.expression instanceof LiteralNode) ||
-    !(value.expression.literal.kind === SyntaxTokenKind.COLOR_LITERAL)
+    !(value.expression.literal?.kind === SyntaxTokenKind.COLOR_LITERAL)
   ) {
     return false;
   }
@@ -183,7 +186,21 @@ export function isVoid(value?: SyntaxNode): boolean {
 // Is the `value` a valid value for a column's `default` setting
 // It's a valid only if it's a literal or a complex variable (potentially an enum member)
 export function isValidDefaultValue(value?: SyntaxNode): boolean {
-  if (value instanceof PrimaryExpressionNode && value.expression instanceof LiteralNode) {
+  if (
+    value instanceof PrimaryExpressionNode &&
+    (value.expression instanceof LiteralNode || value.expression instanceof VariableNode)
+  ) {
+    return true;
+  }
+  if (
+    value instanceof PrefixExpressionNode &&
+    NUMERIC_LITERAL_PREFIX.includes(value.op?.value as any) &&
+    isExpressionANumber(value.expression)
+  ) {
+    return true;
+  }
+
+  if (value instanceof FunctionExpressionNode) {
     return true;
   }
 
@@ -202,22 +219,28 @@ export function isExpressionANumber(value?: SyntaxNode): value is PrimaryExpress
   return (
     value instanceof PrimaryExpressionNode &&
     value.expression instanceof LiteralNode &&
-    value.expression.literal.kind === SyntaxTokenKind.NUMERIC_LITERAL
+    value.expression.literal?.kind === SyntaxTokenKind.NUMERIC_LITERAL
   );
 }
 
-export function isUnaryRelationship(value?: SyntaxNode): boolean {
+export function isUnaryRelationship(value?: SyntaxNode): value is PrefixExpressionNode {
   if (!(value instanceof PrefixExpressionNode)) {
     return false;
   }
 
-  if (!isRelationshipOp(value.op.value)) {
+  if (!isRelationshipOp(value.op?.value)) {
     return false;
   }
 
   const variables = destructureComplexVariable(value.expression).unwrap_or(undefined);
 
   return variables !== undefined && variables.length > 0;
+}
+
+export function isTupleOfVariables(value?: SyntaxNode): value is TupleExpressionNode & {
+  elementList: (PrimaryExpressionNode & { expression: VariableNode })[];
+} {
+  return value instanceof TupleExpressionNode && value.elementList.every(isExpressionAVariableNode);
 }
 
 export { isBinaryRelationship };
