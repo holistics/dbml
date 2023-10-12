@@ -1,0 +1,21 @@
+Table Users {
+    id integer [note: 'same endpoints', ref: > id]
+    country_id integer [note: 'circular refs', ref: > Country.id]
+
+    Ref {
+        country_id > Country.id
+        id > id
+    }
+}
+
+Table Country {
+    id integer [note: 'circular refs', ref: > Country.id]
+
+    Ref {
+        id > Users.country_id
+    }
+}
+
+Ref {
+    Users.country_id > Country.id
+}

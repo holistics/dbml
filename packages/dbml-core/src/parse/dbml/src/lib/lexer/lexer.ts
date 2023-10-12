@@ -4,11 +4,21 @@ import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '../utils';
 import {
  SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from './tokens';
+import { Position } from '../types';
+import { isInvalidToken } from '../parser/utils';
 
 export default class Lexer {
-  private start: number = 0;
+  private start: Position = {
+    offset: 0,
+    line: 0,
+    column: 0,
+  };
 
-  private current: number = 0;
+  private current: Position = {
+    offset: 0,
+    line: 0,
+    column: 0,
+  };
 
   private text: string;
 
@@ -21,19 +31,29 @@ export default class Lexer {
   }
 
   private isAtEnd(): boolean {
-    return this.current >= this.text.length;
+    return this.current.offset >= this.text.length;
   }
 
   private advance(): string {
-    return this.text[this.current++];
+    const c = this.peek();
+    this.current = { ...this.current };
+    if (c === '\n') {
+      this.current.line += 1;
+      this.current.column = 0;
+    } else {
+      this.current.column += 1;
+    }
+    this.current.offset += 1;
+
+    return c!;
   }
 
   private peek(lookahead: number = 0): string | undefined {
-    if (this.current + lookahead >= this.text.length) {
+    if (this.current.offset + lookahead >= this.text.length) {
       return undefined;
     }
 
-    return this.text[this.current + lookahead];
+    return this.text[this.current.offset + lookahead];
   }
 
   // Check if the sequence ahead matches `sequence`
@@ -53,31 +73,30 @@ export default class Lexer {
       return false;
     }
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const _ of sequence) {
-      this.advance();
-    }
+    sequence.split('').forEach(() => this.advance());
 
     return true;
   }
 
-  private addToken(kind: SyntaxTokenKind) {
-    this.tokens.push(this.createToken(kind));
+  private addToken(kind: SyntaxTokenKind, isInvalid: boolean = false) {
+    this.tokens.push(this.createToken(kind, isInvalid));
   }
 
-  private createToken(kind: SyntaxTokenKind): SyntaxToken {
+  private createToken(kind: SyntaxTokenKind, isInvalid: boolean = false): SyntaxToken {
     return SyntaxToken.create(
       kind,
       this.start,
-      this.current - this.start,
-      this.text.substring(this.start, this.current),
+      this.current,
+      this.text.substring(this.start.offset, this.current.offset),
+      isInvalid,
     );
   }
 
   lex(): Report<SyntaxToken[], CompileError> {
     this.scanTokens();
-    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, 0, ''));
+    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, this.current, '', false));
     this.gatherTrivia();
+    this.gatherInvalid();
 
     return new Report(this.tokens, this.errors);
   }
@@ -162,17 +181,17 @@ export default class Lexer {
             this.numericLiteral();
             break;
           }
-          this.addToken(SyntaxTokenKind.INVALID);
+          this.addToken(SyntaxTokenKind.OP, true);
           this.errors.push(
             new CompileError(
               CompileErrorCode.UNKNOWN_SYMBOL,
               `Unexpected token '${c}'`,
-              this.createToken(SyntaxTokenKind.INVALID),
+              this.createToken(SyntaxTokenKind.OP, true),
             ),
           );
           break;
       }
-      this.start = this.current;
+      this.start = { ...this.current };
     }
   }
 
@@ -213,6 +232,31 @@ export default class Lexer {
     this.tokens = newTokenList;
   }
 
+  gatherInvalid() {
+    let i;
+    const newTokenList: SyntaxToken[] = [];
+
+    const leadingInvalidList: SyntaxToken[] = [];
+    for (i = 0; i < this.tokens.length && isInvalidToken(this.tokens[i]); i += 1) {
+      leadingInvalidList.push(this.tokens[i]);
+    }
+
+    let prevValidToken = this.tokens[i];
+    prevValidToken.leadingInvalid = [...leadingInvalidList, ...prevValidToken.leadingInvalid];
+
+    for (; i < this.tokens.length; i += 1) {
+      const token = this.tokens[i];
+      if (token.isInvalid) {
+        prevValidToken.trailingInvalid.push(token);
+      } else {
+        prevValidToken = token;
+        newTokenList.push(token);
+      }
+    }
+
+    this.tokens = newTokenList;
+  }
+
   // Consuming characters until the `stopSequence` is encountered
   consumeUntil(
     tokenKind: SyntaxTokenKind,
@@ -221,7 +265,8 @@ export default class Lexer {
       allowNewline, // Whether newline is allowed
       allowEof, // Whether EOF is allowed
       raw, // Whether to interpret '\' as a backlash
-    }: { allowNewline: boolean; allowEof: boolean; raw: boolean },
+      consumeStopSequence = true,
+    }: { allowNewline: boolean; allowEof: boolean; raw: boolean; consumeStopSequence?: boolean },
   ) {
     let string = '';
 
@@ -235,7 +280,7 @@ export default class Lexer {
     }
 
     if (this.isAtEnd() && !allowEof) {
-      const token = this.createToken(SyntaxTokenKind.INVALID);
+      const token = this.createToken(tokenKind, true);
       this.tokens.push(token);
       this.errors.push(
         new CompileError(CompileErrorCode.UNEXPECTED_EOF, 'EOF reached while parsing', token),
@@ -245,7 +290,7 @@ export default class Lexer {
     }
 
     if (this.check('\n') && !allowNewline) {
-      const token = this.createToken(SyntaxTokenKind.INVALID);
+      const token = this.createToken(tokenKind, true);
       this.tokens.push(token);
       this.errors.push(
         new CompileError(
@@ -258,14 +303,10 @@ export default class Lexer {
       return;
     }
 
-    this.tokens.push(
-      SyntaxToken.create(
-        tokenKind,
-        this.start,
-        this.current - this.start + stopSequence.length,
-        string,
-      ),
-    );
+    if (consumeStopSequence) {
+      this.match(stopSequence);
+    }
+    this.tokens.push(SyntaxToken.create(tokenKind, this.start, this.current, string, false));
   }
 
   singleLineStringLiteral() {
@@ -274,7 +315,6 @@ export default class Lexer {
       allowEof: false,
       raw: false,
     });
-    this.match("'");
   }
 
   multilineStringLiteral() {
@@ -283,7 +323,6 @@ export default class Lexer {
       allowEof: false,
       raw: false,
     });
-    this.match("'''");
   }
 
   functionExpression() {
@@ -292,7 +331,6 @@ export default class Lexer {
       allowEof: false,
       raw: true,
     });
-    this.match('`');
   }
 
   quotedVariable() {
@@ -301,7 +339,6 @@ export default class Lexer {
       allowEof: false,
       raw: false,
     });
-    this.match('"');
   }
 
   singleLineComment() {
@@ -309,6 +346,7 @@ export default class Lexer {
       allowNewline: true,
       allowEof: true,
       raw: true,
+      consumeStopSequence: false,
     });
   }
 
@@ -318,7 +356,6 @@ export default class Lexer {
       allowEof: false,
       raw: true,
     });
-    this.match('*/');
   }
 
   identifier() {
@@ -337,6 +374,9 @@ export default class Lexer {
 
   numericLiteral() {
     let nDots = 0;
+    if (this.isAtEnd()) {
+      return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
+    }
     while (!this.isAtEnd()) {
       const isDot = this.check('.');
       nDots += isDot ? 1 : 0;
@@ -344,8 +384,17 @@ export default class Lexer {
         break;
       }
 
+      // The first way to return a numeric literal without error:
+      // a digit is encountered as the last character
+      if (!isDot && this.current.offset === this.text.length - 1) {
+        this.advance();
+
+        return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
+      }
+
+      // The second way to return a numeric literal without error:
+      // a non alpha-numeric and non-dot character is encountered
       if (!isDot && !isAlphaNumeric(this.peek()!)) {
-        // the only way to return without errors
         return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
       }
 
@@ -360,8 +409,7 @@ export default class Lexer {
     while (!this.isAtEnd() && (this.check('.') || isAlphaNumeric(this.peek()!))) {
       this.advance();
     }
-
-    const token = this.createToken(SyntaxTokenKind.INVALID);
+    const token = this.createToken(SyntaxTokenKind.NUMERIC_LITERAL, true);
     this.tokens.push(token);
     this.errors.push(new CompileError(CompileErrorCode.UNKNOWN_TOKEN, 'Invalid number', token));
   }
@@ -410,7 +458,7 @@ export default class Lexer {
         return String.fromCharCode(parseInt(hex, 16));
       }
       default:
-        return `\\${this.tokens[this.current - 1]}`;
+        return `\\${this.tokens[this.current.offset - 1]}`;
     }
   }
 }

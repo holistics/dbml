@@ -1,18 +1,6 @@
-import { SyntaxToken, SyntaxTokenKind } from './lexer/tokens';
-import { None, Option, Some } from './option';
-import {
-  InfixExpressionNode,
-  LiteralNode,
-  PrimaryExpressionNode,
-  SyntaxNode,
-  VariableNode,
-} from './parser/nodes';
-
-export function isAccessExpression(
-  node: SyntaxNode,
-): node is InfixExpressionNode & { op: SyntaxToken & { value: '.' } } {
-  return node instanceof InfixExpressionNode && node.op.value === '.';
-}
+import { SyntaxToken } from './lexer/tokens';
+import { SyntaxNode } from './parser/nodes';
+import { getTokenFullEnd, getTokenFullStart } from './lexer/utils';
 
 export function isAlphaOrUnderscore(char: string): boolean {
   const [c] = char;
@@ -37,56 +25,47 @@ export function isAlphaNumeric(char: string): boolean {
   return isAlphaOrUnderscore(char) || isDigit(char);
 }
 
-// Find a token ending position
-export function findEnd(token: SyntaxToken): number {
-  return token.offset + token.length;
+export function alternateLists<T, S>(firstList: T[], secondList: S[]): (T | S)[] {
+  const res: (T | S)[] = [];
+  const minLength = Math.min(firstList.length, secondList.length);
+  for (let i = 0; i < minLength; i += 1) {
+    res.push(firstList[i], secondList[i]);
+  }
+  res.push(...firstList.slice(minLength), ...secondList.slice(minLength));
+
+  return res;
 }
 
-// Return a variable node if it's nested inside a primary expression
-export function extractVariableNode(value?: unknown): Option<SyntaxToken> {
-  if (isExpressionAVariableNode(value)) {
-    return new Some(value.expression.variable);
+export function isOffsetWithinFullSpan(
+  offset: number,
+  nodeOrToken: SyntaxNode | SyntaxToken,
+): boolean {
+  if (nodeOrToken instanceof SyntaxToken) {
+    return offset >= getTokenFullStart(nodeOrToken) && offset < getTokenFullEnd(nodeOrToken);
   }
 
-  return new None();
+  return offset >= nodeOrToken.fullStart && offset < nodeOrToken.fullEnd;
 }
 
-// Return true if an expression node is a primary expression
-// with a nested quoted string (", ' or ''')
-export function isExpressionAQuotedString(value?: unknown): boolean {
-  return (
-    value instanceof PrimaryExpressionNode &&
-    ((value.expression instanceof VariableNode &&
-      value.expression.variable.kind === SyntaxTokenKind.QUOTED_STRING) ||
-      (value.expression instanceof LiteralNode &&
-        value.expression.literal.kind === SyntaxTokenKind.STRING_LITERAL))
-  );
+export function isOffsetWithinSpan(offset: number, nodeOrToken: SyntaxNode | SyntaxToken): boolean {
+  return offset >= nodeOrToken.start && offset < nodeOrToken.end;
 }
 
-// Return true if an expression node is a primary expression
-// with a variable node (identifier or a double-quoted string)
-export function isExpressionAVariableNode(
-  value?: unknown,
-): value is PrimaryExpressionNode & { expression: VariableNode } {
-  return value instanceof PrimaryExpressionNode && value.expression instanceof VariableNode;
-}
-
-// Return true if an expression node is a primary expression
-// with an identifier-like variable node
-export function isExpressionAnIdentifierNode(value?: unknown): value is PrimaryExpressionNode & {
-  expression: VariableNode & { variable: { kind: SyntaxTokenKind.IDENTIFIER } };
-} {
-  return (
-    value instanceof PrimaryExpressionNode &&
-    value.expression instanceof VariableNode &&
-    value.expression.variable.kind === SyntaxTokenKind.IDENTIFIER
-  );
-}
-
-export function last<T>(array: T[]): T | undefined {
-  if (array.length === 0) {
+export function returnIfIsOffsetWithinFullSpan(
+  offset: number,
+  node?: SyntaxNode,
+): SyntaxNode | undefined;
+export function returnIfIsOffsetWithinFullSpan(
+  offset: number,
+  token?: SyntaxToken,
+): SyntaxToken | undefined;
+export function returnIfIsOffsetWithinFullSpan(
+  offset: number,
+  nodeOrToken?: SyntaxNode | SyntaxToken,
+): SyntaxNode | SyntaxToken | undefined {
+  if (!nodeOrToken) {
     return undefined;
   }
 
-  return array[array.length - 1];
+  return isOffsetWithinFullSpan(offset, nodeOrToken) ? nodeOrToken : undefined;
 }

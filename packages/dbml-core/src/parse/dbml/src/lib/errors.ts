@@ -1,6 +1,5 @@
 import { SyntaxToken } from './lexer/tokens';
 import { SyntaxNode } from './parser/nodes';
-import { findEnd } from './utils';
 
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,
@@ -63,6 +62,7 @@ export enum CompileErrorCode {
   INVALID_NOTE_CONTEXT,
   INVALID_NOTE,
   NOTE_REDEFINED,
+  NOTE_CONTENT_REDEFINED,
 
   INVALID_INDEXES_CONTEXT,
   INVALID_INDEXES_FIELD,
@@ -79,7 +79,13 @@ export enum CompileErrorCode {
   INVALID_CUSTOM_CONTEXT,
   INVALID_CUSTOM_ELEMENT_VALUE,
 
+  INVALID_ELEMENT_IN_SIMPLE_BODY,
   BINDING_ERROR = 4000,
+
+  UNSUPPORTED = 5000,
+  CIRCULAR_REF,
+  SAME_ENDPOINT,
+  CONFLICTING_SETTING,
 }
 
 export class CompileError extends Error {
@@ -87,27 +93,21 @@ export class CompileError extends Error {
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: SyntaxNode | SyntaxToken; // The node or token that causes the error
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The node or token that causes the error
+
+  start: Readonly<number>;
+
+  end: Readonly<number>;
 
   constructor(code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
     this.diagnostic = message;
     this.nodeOrToken = nodeOrToken;
+    this.start = nodeOrToken.start;
+    this.end = nodeOrToken.end;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileError.prototype);
-  }
-
-  get start(): number {
-    return this.nodeOrToken instanceof SyntaxToken ?
-      findEnd(this.nodeOrToken) :
-      this.nodeOrToken.end;
-  }
-
-  get end(): number {
-    return this.nodeOrToken instanceof SyntaxToken ?
-      this.nodeOrToken.offset :
-      this.nodeOrToken.start;
   }
 
   isTokenError(): this is CompileError & { nodeOrToken: SyntaxToken } {

@@ -1,6 +1,6 @@
-export enum SyntaxTokenKind {
-  INVALID = '<invalid>',
+import { Position } from '../types';
 
+export enum SyntaxTokenKind {
   SPACE = '<space>',
   TAB = '<tab>',
   NEWLINE = '<newline>',
@@ -31,13 +31,6 @@ export enum SyntaxTokenKind {
   SINGLE_LINE_COMMENT = '<single-line-comment>',
   MULTILINE_COMMENT = '<multiline-comment>',
 }
-
-export type SyntaxTriviaTokenKind =
-  | SyntaxTokenKind.NEWLINE
-  | SyntaxTokenKind.SPACE
-  | SyntaxTokenKind.TAB
-  | SyntaxTokenKind.SINGLE_LINE_COMMENT
-  | SyntaxTokenKind.MULTILINE_COMMENT;
 
 export function isTriviaToken(token: SyntaxToken): boolean {
   switch (token.kind) {
@@ -90,20 +83,48 @@ export class SyntaxToken {
 
   trailingTrivia: SyntaxToken[];
 
-  offset: number;
+  leadingInvalid: SyntaxToken[];
 
-  length: number;
+  trailingInvalid: SyntaxToken[];
 
-  protected constructor(kind: SyntaxTokenKind, offset: number, length: number, value: string) {
+  startPos: Readonly<Position>;
+
+  start: Readonly<number>;
+
+  endPos: Readonly<Position>;
+
+  end: Readonly<number>;
+
+  isInvalid: boolean;
+
+  protected constructor(
+    kind: SyntaxTokenKind,
+    startPos: Position,
+    endPos: Position,
+    value: string,
+    isInvalid: boolean,
+  ) {
     this.kind = kind;
-    this.offset = offset;
+    this.startPos = startPos;
+    this.endPos = endPos;
     this.value = value;
-    this.length = length;
     this.leadingTrivia = [];
     this.trailingTrivia = [];
+    this.leadingInvalid = [];
+    this.trailingInvalid = [];
+    this.isInvalid = isInvalid;
+
+    this.start = startPos.offset;
+    this.end = endPos.offset;
   }
 
-  static create(kind: SyntaxTokenKind, offset: number, length: number, value: string) {
-    return new SyntaxToken(kind, offset, length, value);
+  static create(
+    kind: SyntaxTokenKind,
+    startPos: Position,
+    endPos: Position,
+    value: string,
+    isInvalid: boolean,
+  ) {
+    return new SyntaxToken(kind, startPos, endPos, value, isInvalid);
   }
 }
