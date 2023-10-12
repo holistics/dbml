@@ -20,8 +20,8 @@ export interface Table {
   schemaName: null | string;
   alias: string | null;
   fields: Column[];
-  indexes: Index[];
   token: TokenPosition;
+  indexes: Index[];
   headerColor?: string;
   note?: {
     value: string;
@@ -42,7 +42,7 @@ export interface Column {
   inline_refs: InlineRef[];
   pk?: boolean;
   dbdefault?: {
-    type: 'number' | 'string';
+    type: 'number' | 'string' | 'boolean' | 'expression';
     value: number | string;
   };
   increment?: boolean;
@@ -63,7 +63,10 @@ export interface Index {
   unique?: boolean;
   pk?: boolean;
   name?: string;
-  note?: string;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
   type?: string;
 }
 
@@ -79,8 +82,8 @@ export interface Ref {
   schemaName: string | null;
   name: string | null;
   endpoints: RefEndpointPair;
-  delete?: 'cascade' | 'no action' | 'restrict' | 'set default' | 'set null';
-  update?: 'cascade' | 'no action' | 'restrict' | 'set default' | 'set null';
+  onDelete?: 'cascade' | 'no action' | 'restrict' | 'set default' | 'set null';
+  onUpdate?: 'cascade' | 'no action' | 'restrict' | 'set default' | 'set null';
   token: TokenPosition;
 }
 
@@ -106,7 +109,10 @@ export interface Enum {
 export interface EnumField {
   name: string;
   token: TokenPosition;
-  note?: string;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
 }
 
 export interface TableGroup {
@@ -138,7 +144,10 @@ export type Project =
       refs: Ref[];
       enums: Enum[];
       tableGroups: TableGroup[];
-      note: string | null;
+      note?: {
+        value: string;
+        token: TokenPosition;
+      },
       [
         index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note'>
       ]: string;

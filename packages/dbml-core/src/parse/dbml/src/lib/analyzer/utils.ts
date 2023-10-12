@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { None, Option, Some } from '../option';
 import {
   ElementDeclarationNode,
@@ -9,7 +10,7 @@ import {
   TupleExpressionNode,
   VariableNode,
 } from '../parser/nodes';
-import { isRelationshipOp } from './validator/utils';
+import { isRelationshipOp, isTupleOfVariables } from './validator/utils';
 import { NodeSymbolIndex, isPublicSchemaIndex } from './symbol/symbolIndex';
 import { NodeSymbol } from './symbol/symbols';
 import {
@@ -61,6 +62,49 @@ export function destructureComplexVariable(node?: SyntaxNode): Option<string[]> 
   return new Some(variables);
 }
 
+export function destructureComplexTuple(
+  node?: SyntaxNode,
+): Option<{ variables: string[]; tupleElements?: string[] }> {
+  if (node === undefined) {
+    return new None();
+  }
+
+  const fragments = destructureMemberAccessExpression(node).unwrap_or(undefined);
+
+  if (!fragments || fragments.length === 0) {
+    return new None();
+  }
+
+  const variables: string[] = [];
+  let tupleElements: string[] | undefined;
+
+  if (!isExpressionAVariableNode(_.last(fragments))) {
+    const topFragment = fragments.pop()!;
+    if (isTupleOfVariables(topFragment)) {
+      tupleElements = topFragment.elementList.map((e) =>
+        extractVarNameFromPrimaryVariable(e as any).unwrap(),
+      );
+    } else {
+      return new None();
+    }
+  }
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const fragment of fragments) {
+    const variable = extractVariableFromExpression(fragment).unwrap_or(undefined);
+    if (!variable) {
+      return new None();
+    }
+
+    variables.push(variable);
+  }
+
+  return new Some({
+    variables,
+    tupleElements,
+  });
+}
+
 export function extractVariableFromExpression(node: SyntaxNode): Option<string> {
   if (!isExpressionAVariableNode(node)) {
     return new None();
@@ -74,9 +118,9 @@ export function destructureIndexNode(node: SyntaxNode): Option<{
   nonFunctional: (PrimaryExpressionNode & { expression: VariableNode })[];
 }> {
   if (isValidIndexName(node)) {
-    return node instanceof FunctionExpressionNode ?
-      new Some({ functional: [node], nonFunctional: [] }) :
-      new Some({ functional: [], nonFunctional: [node] });
+    return node instanceof FunctionExpressionNode
+      ? new Some({ functional: [node], nonFunctional: [] })
+      : new Some({ functional: [], nonFunctional: [node] });
   }
 
   if (node instanceof TupleExpressionNode && node.elementList.every(isValidIndexName)) {
@@ -121,8 +165,8 @@ export function isBinaryRelationship(value?: SyntaxNode): value is InfixExpressi
   }
 
   return (
-    destructureComplexVariable(value.leftExpression)
-      .and_then(() => destructureComplexVariable(value.rightExpression))
+    destructureComplexTuple(value.leftExpression)
+      .and_then(() => destructureComplexTuple(value.rightExpression))
       .unwrap_or(undefined) !== undefined
   );
 }
