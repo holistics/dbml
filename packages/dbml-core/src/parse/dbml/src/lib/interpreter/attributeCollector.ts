@@ -20,6 +20,7 @@ import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import {
   extractTokenForInterpreter,
   getColumnSymbolsOfRefOperand,
+  normalizeNoteContent,
   processRelOperand,
 } from './utils';
 
@@ -94,7 +95,7 @@ class AttributeCollector {
     const note = this.settingMap.getValue('note');
 
     return note !== undefined ?
-      extractQuotedStringToken(note as SyntaxNode | undefined).unwrap() :
+      normalizeNoteContent(extractQuotedStringToken(note as SyntaxNode | undefined).unwrap()) :
       undefined;
   }
 

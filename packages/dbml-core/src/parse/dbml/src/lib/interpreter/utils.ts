@@ -3,7 +3,6 @@ import { None, Option, Some } from '../option';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import {
   destructureComplexTuple,
-  destructureComplexVariable,
   destructureMemberAccessExpression,
 } from '../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../errors';
@@ -113,4 +112,8 @@ export function getColumnSymbolsOfRefOperand(ref: SyntaxNode): Option<ColumnSymb
   }
 
   return new Some([colNode.referee]);
+}
+
+export function normalizeNoteContent(content: string): string {
+  return content.split('\n').map((s) => s.trim()).join('\n');
 }

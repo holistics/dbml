@@ -40,6 +40,7 @@ import {
   getColumnSymbolsOfRefOperand,
   isCircular,
   isSameEndpoint,
+  normalizeNoteContent,
   processRelOperand,
 } from './utils';
 import { None, Option, Some } from '../option';
@@ -532,7 +533,7 @@ export default class Interpreter {
         extractQuotedStringToken((element.body as FunctionApplicationNode).callee);
 
     return {
-      value: content.unwrap(),
+      value: normalizeNoteContent(content.unwrap()),
       token: extractTokenForInterpreter(element),
     };
   }
