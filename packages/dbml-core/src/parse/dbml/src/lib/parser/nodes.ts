@@ -172,6 +172,27 @@ export class ElementDeclarationNode extends SyntaxNode {
       throw new Error('If an element has a simple body, it must be a function application node');
     }
 
+  parentElement?: ElementDeclarationNode | ProgramNode;
+
+  constructor({
+    type,
+    name,
+    as,
+    alias,
+    attributeList,
+    bodyColon,
+    body,
+  }: {
+    type: SyntaxToken;
+    name?: NormalExpressionNode;
+    as?: SyntaxToken;
+    alias?: NormalExpressionNode;
+    attributeList?: ListExpressionNode;
+    bodyColon?: SyntaxToken;
+    body: BlockExpressionNode | ExpressionNode;
+  }) {
+    this.start = type.offset;
+    this.end = body.end;
     this.type = type;
     this.name = name;
     this.as = as;

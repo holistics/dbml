@@ -233,8 +233,28 @@ export default class Parser {
       if (!this.canHandle(e) || !synchronizeCallback) {
         throw new PartialParsingError(e.token, constructPartial(e.partialNode), e.handlerContext);
       }
-
       synchronizeCallback();
+    }
+  }
+
+  gatherInvalid() {
+    let i;
+
+    const leadingInvalidList: SyntaxToken[] = [];
+    for (i = 0; i < this.tokens.length && isInvalidToken(this.tokens[i]); i += 1) {
+      leadingInvalidList.push(this.tokens[i]);
+    }
+
+    let prevValidToken = this.tokens[i];
+    prevValidToken.leadingTrivia = [...leadingInvalidList, ...prevValidToken.leadingTrivia];
+
+    for (i += 1; i < this.tokens.length; i += 1) {
+      const token = this.tokens[i];
+      if (token.kind === SyntaxTokenKind.INVALID) {
+        prevValidToken.trailingTrivia.push(token);
+      } else {
+        prevValidToken = token;
+      }
     }
   }
 
@@ -996,7 +1016,6 @@ export default class Parser {
       () => value as any,
       this.synchronizeAttributeValue,
     );
-
     return value as any;
   }
 

@@ -409,7 +409,6 @@ export default class Lexer {
     while (!this.isAtEnd() && (this.check('.') || isAlphaNumeric(this.peek()!))) {
       this.advance();
     }
-
     const token = this.createToken(SyntaxTokenKind.NUMERIC_LITERAL, true);
     this.tokens.push(token);
     this.errors.push(new CompileError(CompileErrorCode.UNKNOWN_TOKEN, 'Invalid number', token));
