@@ -7,13 +7,17 @@ import {
   PrefixExpressionNode,
   SyntaxNode,
 } from '../parser/nodes';
-import { extractQuotedStringToken, extractStringFromIdentifierStream } from '../analyzer/utils';
+import { extractQuotedStringToken } from '../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../errors';
 import { isExpressionANumber } from '../analyzer/validator/utils';
-import { isExpressionAQuotedString } from '../utils';
+import { extractStringFromIdentifierStream, isExpressionAQuotedString } from '../parser/utils';
 import { InlineRef } from './types';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
-import { extractTokenForInterpreter, processRelOperand } from './utils';
+import {
+  extractTokenForInterpreter,
+  getColumnSymbolOfRefOperand,
+  processRelOperand,
+} from './utils';
 
 class AttributeMap {
   private map: Map<string, AttributeNode[]> = new Map();
@@ -66,7 +70,7 @@ export default function collectAttribute(
   }
   // eslint-disable-next-line no-restricted-syntax
   for (const attribute of settingNode.elementList) {
-    const attrName = extractStringFromIdentifierStream(attribute.name).toLowerCase();
+    const attrName = extractStringFromIdentifierStream(attribute.name).unwrap_or('').toLowerCase();
     attrMap.insert(attrName, attribute);
   }
 
@@ -85,7 +89,7 @@ class AttributeCollector {
   extractNote(): string | undefined {
     const note = this.settingMap.getValue('note');
 
-    return note === undefined ?
+    return note !== undefined ?
       extractQuotedStringToken(note as SyntaxNode | undefined) :
       undefined;
   }
@@ -158,7 +162,7 @@ class AttributeCollector {
           fieldNames: [columnName],
           relation,
           token: extractTokenForInterpreter(ref),
-          referee: (ref as PrefixExpressionNode).expression.referee as ColumnSymbol,
+          referee: getColumnSymbolOfRefOperand((ref as PrefixExpressionNode).expression).unwrap(),
           node: ref,
         });
       }
@@ -185,7 +189,7 @@ class AttributeCollector {
     }
 
     if (update instanceof IdentiferStreamNode) {
-      return extractStringFromIdentifierStream(update);
+      return extractStringFromIdentifierStream(update).unwrap_or('');
     }
 
     return (update as any).expression.variable.value;
@@ -199,7 +203,7 @@ class AttributeCollector {
     }
 
     if (del instanceof IdentiferStreamNode) {
-      return extractStringFromIdentifierStream(del);
+      return extractStringFromIdentifierStream(del).unwrap_or('');
     }
 
     return (del as any).expression.variable.value;

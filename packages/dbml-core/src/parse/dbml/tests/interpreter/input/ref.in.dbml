@@ -1,0 +1,8 @@
+Table Users {
+    id integer
+    referrer_id integer
+
+    Ref {
+        id > referrer_id
+    }
+}

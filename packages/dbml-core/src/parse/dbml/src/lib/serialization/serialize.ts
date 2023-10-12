@@ -4,7 +4,7 @@ import Report from '../report';
 import { CompileError } from '../errors';
 
 export function serialize(
-  report: Report<ProgramNode, CompileError>,
+  report: Readonly<Report<ProgramNode, CompileError>>,
   pretty: boolean = false,
 ): string {
   return JSON.stringify(

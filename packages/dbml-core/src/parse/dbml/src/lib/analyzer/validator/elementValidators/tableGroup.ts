@@ -1,6 +1,6 @@
 import SymbolFactory from '../../symbol/factory';
-import { UnresolvedName } from '../../types';
-import { destructureComplexVariable } from '../../utils';
+import { BindingRequest, createNonIgnorableBindingRequest } from '../../types';
+import { destructureMemberAccessExpression, extractVariableFromExpression } from '../../utils';
 import { createSchemaSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { ElementDeclarationNode, SyntaxNode } from '../../../parser/nodes';
@@ -45,7 +45,7 @@ export default class TableGroupValidator extends ElementValidator {
           CompileErrorCode.INVALID_TABLEGROUP_ELEMENT_NAME,
           'This field must be a valid table name',
         ),
-        registerUnresolvedName: registerTableName,
+        registerBindingRequest: registerTableName,
       },
     ],
     invalidArgNumberErrorCode: CompileErrorCode.INVALID_TABLEGROUP_FIELD,
@@ -59,7 +59,7 @@ export default class TableGroupValidator extends ElementValidator {
     declarationNode: ElementDeclarationNode,
     publicSchemaSymbol: SchemaSymbol,
     contextStack: ContextStack,
-    unresolvedNames: UnresolvedName[],
+    bindingRequests: BindingRequest[],
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
@@ -69,7 +69,7 @@ export default class TableGroupValidator extends ElementValidator {
       declarationNode,
       publicSchemaSymbol,
       contextStack,
-      unresolvedNames,
+      bindingRequests,
       errors,
       kindsGloballyFound,
       kindsLocallyFound,
@@ -81,19 +81,22 @@ export default class TableGroupValidator extends ElementValidator {
 function registerTableName(
   node: SyntaxNode,
   ownerElement: ElementDeclarationNode,
-  unresolvedNames: UnresolvedName[],
+  bindingRequests: BindingRequest[],
 ) {
   if (!isValidName(node)) {
     throw new Error('Unreachable - Must be a valid name when registerTableName is called');
   }
-  const fragments = destructureComplexVariable(node).unwrap();
-  const tableId = createTableSymbolIndex(fragments.pop()!);
-  const schemaIdStack = fragments.map(createSchemaSymbolIndex);
-  const qualifiers =
-    schemaIdStack.length === 0 ? [createSchemaSymbolIndex('public')] : schemaIdStack;
-  unresolvedNames.push({
-    ids: [...qualifiers, tableId],
-    referrer: node,
-    ownerElement,
-  });
+  const fragments = destructureMemberAccessExpression(node).unwrap();
+  const table = fragments.pop()!;
+  const tableId = createTableSymbolIndex(extractVariableFromExpression(table).unwrap());
+  const schemaStack = fragments.map((s) => ({
+    index: createSchemaSymbolIndex(extractVariableFromExpression(s).unwrap()),
+    referrer: s,
+  }));
+  bindingRequests.push(
+    createNonIgnorableBindingRequest({
+      subnames: [...schemaStack, { index: tableId, referrer: table }],
+      ownerElement,
+    }),
+  );
 }

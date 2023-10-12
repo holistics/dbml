@@ -48,6 +48,10 @@ export interface Column {
   increment?: boolean;
   unique?: boolean;
   not_null?: boolean;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
 }
 
 export interface Index {
@@ -77,6 +81,7 @@ export interface Ref {
   endpoints: RefEndpointPair;
   delete?: 'cascade' | 'no action' | 'restrict' | 'set default' | 'set null';
   update?: 'cascade' | 'no action' | 'restrict' | 'set default' | 'set null';
+  token: TokenPosition;
 }
 
 export type RefEndpointPair = [RefEndpoint, RefEndpoint];
@@ -118,7 +123,7 @@ export interface TableGroupField {
 
 export interface Alias {
   name: string;
-  kind: string;
+  kind: 'table';
   value: {
     tableName: string;
     schemaName: string | null;

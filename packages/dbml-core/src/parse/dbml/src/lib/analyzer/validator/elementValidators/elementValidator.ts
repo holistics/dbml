@@ -1,4 +1,3 @@
-import { UnresolvedName } from '../../types';
 import {
   AliasValidatorConfig,
   BodyValidatorConfig,
@@ -19,8 +18,8 @@ import {
   ListExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
-import { extractVariableNode } from '../../../utils';
-import { destructureComplexVariable, extractStringFromIdentifierStream } from '../../utils';
+import { extractStringFromIdentifierStream, extractVariableNode } from '../../../parser/utils';
+import { destructureComplexVariable } from '../../utils';
 import { ContextStack, canBeNestedWithin } from '../validatorContext';
 import {
   hasComplexBody,
@@ -41,6 +40,7 @@ import {
 } from '../../symbol/utils';
 import SymbolFactory from '../../symbol/factory';
 import { getSubfieldKind, isCustomElement } from './utils';
+import { BindingRequest } from '../../types';
 
 export default abstract class ElementValidator {
   protected abstract elementKind: ElementKind;
@@ -56,7 +56,7 @@ export default abstract class ElementValidator {
   protected declarationNode: ElementDeclarationNode;
   protected publicSchemaSymbol: SchemaSymbol;
   protected contextStack: ContextStack;
-  protected unresolvedNames: UnresolvedName[];
+  protected bindingRequests: BindingRequest[];
   protected errors: CompileError[];
   protected kindsGloballyFound: Set<ElementKind>;
   protected kindsLocallyFound: Set<ElementKind>;
@@ -66,7 +66,7 @@ export default abstract class ElementValidator {
     declarationNode: ElementDeclarationNode,
     publicSchemaSymbol: SchemaSymbol,
     contextStack: ContextStack,
-    unresolvedNames: UnresolvedName[],
+    bindingRequests: BindingRequest[],
     errors: CompileError[],
     kindsGloballyFound: Set<ElementKind>,
     kindsLocallyFound: Set<ElementKind>,
@@ -75,7 +75,7 @@ export default abstract class ElementValidator {
     this.declarationNode = declarationNode;
     this.publicSchemaSymbol = publicSchemaSymbol;
     this.contextStack = contextStack;
-    this.unresolvedNames = unresolvedNames;
+    this.bindingRequests = bindingRequests;
     this.errors = errors;
     this.kindsGloballyFound = kindsGloballyFound;
     this.kindsLocallyFound = kindsLocallyFound;
@@ -506,7 +506,7 @@ export default abstract class ElementValidator {
       sub,
       this.publicSchemaSymbol,
       this.contextStack,
-      this.unresolvedNames,
+      this.bindingRequests,
       this.errors,
       this.kindsGloballyFound,
       kindsFoundInScope,
@@ -548,11 +548,11 @@ export default abstract class ElementValidator {
         this.errors.push(...errors);
         hasError = true;
       } else {
-        this.subfield.argValidators[i].registerUnresolvedName?.call(
+        this.subfield.argValidators[i].registerBindingRequest?.call(
           undefined,
           args[i],
           this.declarationNode,
-          this.unresolvedNames,
+          this.bindingRequests,
         );
       }
     }
@@ -644,7 +644,13 @@ export default abstract class ElementValidator {
     let hasError = false;
     // eslint-disable-next-line no-restricted-syntax
     for (const setting of settingListNode.elementList) {
-      const name = extractStringFromIdentifierStream(setting.name).toLowerCase();
+      const name = extractStringFromIdentifierStream(setting.name)
+        .unwrap_or(undefined)
+        ?.toLowerCase();
+      if (!name) {
+        continue;
+      }
+
       const { value } = setting;
 
       if (!config.isValid(name, value).isOk()) {
@@ -659,7 +665,7 @@ export default abstract class ElementValidator {
           this.logError(setting, config.invalidErrorCode, 'Invalid value for this setting');
           hasError = true;
         } else {
-          config.registerUnresolvedName(name, value, this.declarationNode, this.unresolvedNames);
+          config.registerBindingRequest(name, value, this.declarationNode, this.bindingRequests);
         }
       }
     }

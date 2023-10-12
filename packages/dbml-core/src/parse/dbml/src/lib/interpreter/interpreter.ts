@@ -29,7 +29,7 @@ import {
 import Report from '../report';
 import {
   destructureComplexVariable,
-  destructureIndex,
+  destructureIndexNode,
   extractQuotedStringToken,
   extractVarNameFromPrimaryVariable,
 } from '../analyzer/utils';
@@ -38,6 +38,7 @@ import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import {
   convertRelationOpToCardinalities,
   extractTokenForInterpreter,
+  getColumnSymbolOfRefOperand,
   isCircular,
   isSameEndpoint,
   processRelOperand,
@@ -107,7 +108,7 @@ export default class Interpreter {
     if (alias) {
       this.db.aliases.push({
         name: alias,
-        kind: 'Table',
+        kind: 'table',
         value: {
           tableName: name,
           schemaName,
@@ -189,6 +190,8 @@ export default class Interpreter {
     let increment: boolean | undefined;
     let unique: boolean | undefined;
     let notNull: boolean | undefined;
+    let note: string | undefined;
+    let noteToken: IdentiferStreamNode | undefined;
     let dbdefault:
       | {
           type: 'number' | 'string';
@@ -205,6 +208,8 @@ export default class Interpreter {
       unique = collector.extractUnique();
       notNull = collector.extractNotNull();
       dbdefault = collector.extractDefault();
+      note = collector.extractNote();
+      noteToken = collector.settingMap.getNameNode('note') as IdentiferStreamNode | undefined;
       inlineRefs = collector.extractRef(tableName, schemaName);
       inlineRefs.forEach((ref) => {
         if (!this.logIfSameEndpoint(ref.node, field.symbol as ColumnSymbol, ref.referee)) {
@@ -238,6 +243,12 @@ export default class Interpreter {
       unique,
       not_null: notNull,
       inline_refs: _inlineRefs,
+      note: note ?
+        {
+            value: note,
+            token: extractTokenForInterpreter(noteToken!),
+          } :
+        undefined,
     };
   }
 
@@ -267,6 +278,7 @@ export default class Interpreter {
           token: inlRef.token,
         },
       ],
+      token: inlRef.token,
     };
     this.db.refs.push(ref);
   }
@@ -321,22 +333,12 @@ export default class Interpreter {
     const args = field instanceof FunctionApplicationNode ? [field.callee, ...field.args] : [field];
     const rel = args[0] as InfixExpressionNode;
     const [leftCardinality, rightCardinality] = convertRelationOpToCardinalities(rel.op.value);
-    if (
-      !this.logIfSameEndpoint(
-        rel,
-        rel.leftExpression.referee as ColumnSymbol,
-        rel.rightExpression.referee as ColumnSymbol,
-      )
-    ) {
+    const leftReferee = getColumnSymbolOfRefOperand(rel.leftExpression).unwrap();
+    const rightReferee = getColumnSymbolOfRefOperand(rel.rightExpression).unwrap();
+    if (!this.logIfSameEndpoint(rel, leftReferee, rightReferee)) {
       return undefined;
     }
-    if (
-      !this.logIfCircularRefError(
-        rel,
-        rel.leftExpression.referee as ColumnSymbol,
-        rel.rightExpression.referee as ColumnSymbol,
-      )
-    ) {
+    if (!this.logIfCircularRefError(rel, leftReferee, rightReferee)) {
       return undefined;
     }
     const left = processRelOperand(rel.leftExpression, ownerTableName, ownerSchemaName);
@@ -379,6 +381,7 @@ export default class Interpreter {
       endpoints: [leftEndpoint, rightEndpoint],
       delete: del as any,
       update: update as any,
+      token: extractTokenForInterpreter(rel),
     };
   }
 
@@ -452,6 +455,7 @@ export default class Interpreter {
     return proj;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private custom(element: ElementDeclarationNode): string {
     return extractQuotedStringToken(element.body)!;
   }
@@ -492,6 +496,7 @@ export default class Interpreter {
     };
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private note(
     element: ElementDeclarationNode,
   ): { value: string; token: TokenPosition } | undefined {
@@ -523,7 +528,7 @@ export default class Interpreter {
   private indexField(field: ExpressionNode): Index {
     const args = field instanceof FunctionApplicationNode ? [field.callee, ...field.args] : [field];
 
-    const { functional, nonFunctional } = destructureIndex(args[0]).unwrap();
+    const { functional, nonFunctional } = destructureIndexNode(args[0]).unwrap();
     let pk: boolean | undefined;
     let unique: boolean | undefined;
     let name: string | undefined;
@@ -541,11 +546,11 @@ export default class Interpreter {
     return {
       columns: [
         ...functional.map((s) => ({
-          value: s,
+          value: s.value.value,
           type: 'expression',
         })),
         ...nonFunctional.map((s) => ({
-          value: s,
+          value: extractVarNameFromPrimaryVariable(s),
           type: 'column',
         })),
       ],

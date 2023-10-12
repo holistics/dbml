@@ -1,0 +1,25 @@
+Project P {
+    Table Users as U {
+        id integer [primary key, unique, not null]
+        name char(255) [not null]
+        age integer [null, default: 18]
+        status public.status
+        country_id integer [ref: > Country.id]
+    }
+
+    Enum Job {
+        programmer
+        docter
+        teacher
+    }
+}
+
+Table Country {
+    id integer
+}
+
+Enum status {
+    new
+    churn
+    active
+}

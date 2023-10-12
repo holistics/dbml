@@ -1,9 +1,7 @@
-import { isAccessExpression, isExpressionAVariableNode, isExpressionAQuotedString } from '../utils';
 import { None, Option, Some } from '../option';
 import {
   ElementDeclarationNode,
   FunctionExpressionNode,
-  IdentiferStreamNode,
   InfixExpressionNode,
   LiteralNode,
   PrimaryExpressionNode,
@@ -15,6 +13,11 @@ import {
 import { isRelationshipOp } from './validator/utils';
 import { NodeSymbolIndex, isPublicSchemaIndex } from './symbol/symbolIndex';
 import { NodeSymbol } from './symbol/symbols';
+import {
+  isAccessExpression,
+  isExpressionAQuotedString,
+  isExpressionAVariableNode,
+} from '../parser/utils';
 
 export function destructureMemberAccessExpression(node: SyntaxNode): Option<SyntaxNode[]> {
   if (node instanceof PrimaryExpressionNode || node instanceof TupleExpressionNode) {
@@ -66,24 +69,21 @@ export function extractVariableFromExpression(node: SyntaxNode): Option<string> 
   return new Some(node.expression.variable.value);
 }
 
-export function destructureIndex(
-  node: SyntaxNode,
-): Option<{ functional: string[]; nonFunctional: string[] }> {
+export function destructureIndexNode(node: SyntaxNode): Option<{
+  functional: FunctionExpressionNode[];
+  nonFunctional: (PrimaryExpressionNode & { expression: VariableNode })[];
+}> {
   if (isValidIndexName(node)) {
-    const indexName = extractIndexName(node);
-
     return node instanceof FunctionExpressionNode ?
-      new Some({ functional: [indexName], nonFunctional: [] }) :
-      new Some({ functional: [], nonFunctional: [indexName] });
+      new Some({ functional: [node], nonFunctional: [] }) :
+      new Some({ functional: [], nonFunctional: [node] });
   }
 
   if (node instanceof TupleExpressionNode && node.elementList.every(isValidIndexName)) {
-    const functionalIndexName = node.elementList
-      .filter((e) => e instanceof FunctionExpressionNode)
-      .map(extractIndexName);
-    const nonfunctionalIndexName = node.elementList
-      .filter(isExpressionAVariableNode)
-      .map(extractIndexName);
+    const functionalIndexName = node.elementList.filter(
+      (e) => e instanceof FunctionExpressionNode,
+    ) as FunctionExpressionNode[];
+    const nonfunctionalIndexName = node.elementList.filter(isExpressionAVariableNode);
 
     return new Some({ functional: functionalIndexName, nonFunctional: nonfunctionalIndexName });
   }
@@ -95,10 +95,6 @@ export function extractVarNameFromPrimaryVariable(
   node: PrimaryExpressionNode & { expression: VariableNode },
 ): string {
   return node.expression.variable.value;
-}
-
-export function extractStringFromIdentifierStream(stream: IdentiferStreamNode): string {
-  return stream.identifiers.map((identifier) => identifier.value).join(' ');
 }
 
 export function extractQuotedStringToken(value?: SyntaxNode): string | undefined {

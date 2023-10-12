@@ -2,6 +2,7 @@ import { last } from '../utils';
 import { SyntaxToken } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
 import { Position } from '../types';
+import { getTokenFullEnd, getTokenFullStart } from '../lexer/utils';
 
 export type SyntaxNodeId = number;
 export class SyntaxNodeIdGenerator {
@@ -12,6 +13,7 @@ export class SyntaxNodeIdGenerator {
   }
 
   nextId(): SyntaxNodeId {
+    // eslint-disable-next-line no-plusplus
     return this.id++;
   }
 }
@@ -21,8 +23,10 @@ export interface SyntaxNode {
   kind: SyntaxNodeKind;
   startPos: Readonly<Position>;
   start: Readonly<number>;
+  fullStart: Readonly<number>; // Start offset with trivias counted
   endPos: Readonly<Position>;
   end: Readonly<number>;
+  fullEnd: Readonly<number>; // End offset with trivias counted
   symbol?: NodeSymbol;
   referee?: NodeSymbol; // The symbol that this syntax node refers to
 }
@@ -60,10 +64,12 @@ export class ProgramNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   body: ElementDeclarationNode[];
 
@@ -89,6 +95,8 @@ export class ProgramNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = 0;
+    this.fullEnd = eof.end;
   }
 }
 
@@ -100,10 +108,12 @@ export class ElementDeclarationNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   type: SyntaxToken;
 
@@ -158,6 +168,8 @@ export class ElementDeclarationNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = getTokenFullStart(type);
+    this.fullEnd = body.fullEnd;
   }
 }
 
@@ -169,10 +181,12 @@ export class IdentiferStreamNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   identifiers: SyntaxToken[];
 
@@ -189,6 +203,8 @@ export class IdentiferStreamNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = getTokenFullStart(identifiers[0]);
+    this.fullEnd = getTokenFullEnd(last(identifiers)!);
   }
 }
 
@@ -200,10 +216,12 @@ export class AttributeNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   name: IdentiferStreamNode;
 
@@ -232,13 +250,12 @@ export class AttributeNode implements SyntaxNode {
     this.value = value;
     this.colon = colon;
     this.startPos = this.name.startPos;
-    if (colon && !value) {
-      throw new Error("An AttributeNode shouldn't be created with a colon but no value");
-    }
-    this.endPos = colon ? value!.endPos : name.endPos;
+    this.endPos = colon ? (value || colon).endPos : name.endPos;
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = this.name.fullStart;
+    this.fullEnd = colon ? value?.fullEnd || getTokenFullEnd(colon) : name.fullEnd;
   }
 }
 
@@ -269,10 +286,12 @@ export class PrefixExpressionNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   op: SyntaxToken;
 
@@ -294,6 +313,8 @@ export class PrefixExpressionNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = getTokenFullStart(op);
+    this.fullEnd = expression.fullEnd;
   }
 }
 
@@ -305,10 +326,12 @@ export class InfixExpressionNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   op: SyntaxToken;
 
@@ -341,6 +364,8 @@ export class InfixExpressionNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = leftExpression.fullStart;
+    this.fullEnd = rightExpression.fullEnd;
   }
 }
 
@@ -352,10 +377,12 @@ export class PostfixExpressionNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   op: SyntaxToken;
 
@@ -377,6 +404,8 @@ export class PostfixExpressionNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = expression.fullStart;
+    this.fullEnd = getTokenFullEnd(op);
   }
 }
 
@@ -388,10 +417,12 @@ export class FunctionExpressionNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   value: SyntaxToken;
 
@@ -407,6 +438,8 @@ export class FunctionExpressionNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = getTokenFullStart(value);
+    this.fullEnd = getTokenFullEnd(value);
   }
 }
 
@@ -418,10 +451,12 @@ export class FunctionApplicationNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   callee: ExpressionNode;
 
@@ -447,6 +482,8 @@ export class FunctionApplicationNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = callee.fullStart;
+    this.fullEnd = args.length === 0 ? callee.fullEnd : last(args)!.fullEnd;
   }
 }
 
@@ -458,10 +495,12 @@ export class BlockExpressionNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   blockOpenBrace: SyntaxToken;
 
@@ -494,6 +533,8 @@ export class BlockExpressionNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = getTokenFullStart(blockOpenBrace);
+    this.fullEnd = getTokenFullEnd(blockCloseBrace);
   }
 }
 
@@ -505,10 +546,12 @@ export class ListExpressionNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   listOpenBracket: SyntaxToken;
 
@@ -546,6 +589,8 @@ export class ListExpressionNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = getTokenFullStart(listOpenBracket);
+    this.fullEnd = getTokenFullEnd(listCloseBracket);
   }
 }
 
@@ -558,10 +603,12 @@ export class TupleExpressionNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   tupleOpenParen: SyntaxToken;
 
@@ -599,6 +646,8 @@ export class TupleExpressionNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = getTokenFullStart(tupleOpenParen);
+    this.fullEnd = getTokenFullEnd(tupleCloseParen);
   }
 }
 
@@ -641,10 +690,12 @@ export class CallExpressionNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   callee: NormalExpressionNode;
 
@@ -672,6 +723,8 @@ export class CallExpressionNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = callee.fullStart;
+    this.fullEnd = argumentList.fullEnd;
   }
 }
 
@@ -683,10 +736,12 @@ export class LiteralNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   literal: SyntaxToken;
 
@@ -702,6 +757,8 @@ export class LiteralNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = getTokenFullStart(literal);
+    this.fullEnd = getTokenFullEnd(literal);
   }
 }
 
@@ -713,10 +770,12 @@ export class VariableNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   variable: SyntaxToken;
 
@@ -732,6 +791,8 @@ export class VariableNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = getTokenFullStart(variable);
+    this.fullEnd = getTokenFullEnd(variable);
   }
 }
 
@@ -743,10 +804,12 @@ export class PrimaryExpressionNode implements SyntaxNode {
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
+  fullStart: Readonly<number>;
 
   endPos: Readonly<Position>;
 
   end: Readonly<number>;
+  fullEnd: Readonly<number>;
 
   expression: LiteralNode | VariableNode;
 
@@ -762,5 +825,7 @@ export class PrimaryExpressionNode implements SyntaxNode {
 
     this.start = this.startPos.offset;
     this.end = this.endPos.offset;
+    this.fullStart = expression.fullStart;
+    this.fullEnd = expression.fullEnd;
   }
 }

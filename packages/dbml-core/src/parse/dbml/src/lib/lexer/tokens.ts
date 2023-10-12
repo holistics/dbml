@@ -1,8 +1,6 @@
 import { Position } from '../types';
 
 export enum SyntaxTokenKind {
-  INVALID = '<invalid>',
-
   SPACE = '<space>',
   TAB = '<tab>',
   NEWLINE = '<newline>',
@@ -34,13 +32,6 @@ export enum SyntaxTokenKind {
   MULTILINE_COMMENT = '<multiline-comment>',
 }
 
-export type SyntaxTriviaTokenKind =
-  | SyntaxTokenKind.NEWLINE
-  | SyntaxTokenKind.SPACE
-  | SyntaxTokenKind.TAB
-  | SyntaxTokenKind.SINGLE_LINE_COMMENT
-  | SyntaxTokenKind.MULTILINE_COMMENT;
-
 export function isTriviaToken(token: SyntaxToken): boolean {
   switch (token.kind) {
     case SyntaxTokenKind.NEWLINE:
@@ -48,7 +39,6 @@ export function isTriviaToken(token: SyntaxToken): boolean {
     case SyntaxTokenKind.TAB:
     case SyntaxTokenKind.SINGLE_LINE_COMMENT:
     case SyntaxTokenKind.MULTILINE_COMMENT:
-    case SyntaxTokenKind.INVALID:
       return true;
     default:
       return false;
@@ -92,6 +82,10 @@ export class SyntaxToken {
 
   trailingTrivia: SyntaxToken[];
 
+  leadingInvalid: SyntaxToken[];
+
+  trailingInvalid: SyntaxToken[];
+
   startPos: Readonly<Position>;
 
   start: Readonly<number>;
@@ -100,11 +94,14 @@ export class SyntaxToken {
 
   end: Readonly<number>;
 
+  isInvalid: boolean;
+
   protected constructor(
     kind: SyntaxTokenKind,
     startPos: Position,
     endPos: Position,
     value: string,
+    isInvalid: boolean,
   ) {
     this.kind = kind;
     this.startPos = startPos;
@@ -112,12 +109,21 @@ export class SyntaxToken {
     this.value = value;
     this.leadingTrivia = [];
     this.trailingTrivia = [];
+    this.leadingInvalid = [];
+    this.trailingInvalid = [];
+    this.isInvalid = isInvalid;
 
     this.start = startPos.offset;
     this.end = endPos.offset;
   }
 
-  static create(kind: SyntaxTokenKind, startPos: Position, endPos: Position, value: string) {
-    return new SyntaxToken(kind, startPos, endPos, value);
+  static create(
+    kind: SyntaxTokenKind,
+    startPos: Position,
+    endPos: Position,
+    value: string,
+    isInvalid: boolean,
+  ) {
+    return new SyntaxToken(kind, startPos, endPos, value, isInvalid);
   }
 }

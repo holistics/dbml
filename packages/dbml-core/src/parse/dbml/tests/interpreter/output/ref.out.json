@@ -1,0 +1,122 @@
+{
+  "value": {
+    "database": {
+      "1": {
+        "id": 1,
+        "hasDefaultSchema": false,
+        "note": null,
+        "schemaIds": [
+          1
+        ]
+      }
+    },
+    "schemas": {
+      "1": {
+        "id": 1,
+        "name": "public",
+        "note": "Default Public Schema",
+        "tableIds": [
+          1
+        ],
+        "enumIds": [],
+        "tableGroupIds": [],
+        "refIds": [
+          1
+        ],
+        "databaseId": 1
+      }
+    },
+    "refs": {
+      "1": {
+        "id": 1,
+        "name": null,
+        "endpointIds": [
+          1,
+          2
+        ],
+        "schemaId": 1
+      }
+    },
+    "enums": {},
+    "tableGroups": {},
+    "tables": {
+      "1": {
+        "id": 1,
+        "name": "Users",
+        "alias": null,
+        "note": null,
+        "fieldIds": [
+          1,
+          2
+        ],
+        "indexIds": [],
+        "schemaId": 1,
+        "groupId": null
+      }
+    },
+    "endpoints": {
+      "1": {
+        "id": 1,
+        "schemaName": null,
+        "tableName": "Users",
+        "fieldNames": [
+          "id"
+        ],
+        "relation": "*",
+        "refId": 1,
+        "fieldIds": [
+          1
+        ]
+      },
+      "2": {
+        "id": 2,
+        "schemaName": null,
+        "tableName": "Users",
+        "fieldNames": [
+          "referrer_id"
+        ],
+        "relation": "1",
+        "refId": 1,
+        "fieldIds": [
+          2
+        ]
+      }
+    },
+    "enumValues": {},
+    "indexes": {},
+    "indexColumns": {},
+    "fields": {
+      "1": {
+        "id": 1,
+        "name": "id",
+        "type": {
+          "schemaName": null,
+          "type_name": "integer",
+          "args": null
+        },
+        "note": null,
+        "endpointIds": [
+          1
+        ],
+        "tableId": 1,
+        "enumId": null
+      },
+      "2": {
+        "id": 2,
+        "name": "referrer_id",
+        "type": {
+          "schemaName": null,
+          "type_name": "integer",
+          "args": null
+        },
+        "note": null,
+        "endpointIds": [
+          2
+        ],
+        "tableId": 1,
+        "enumId": null
+      }
+    }
+  },
+  "errors": []
+}

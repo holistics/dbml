@@ -2,7 +2,7 @@ import { ElementDeclarationNode, SyntaxNode } from '../../parser/nodes';
 import { CompileError, CompileErrorCode } from '../../errors';
 import { None, Option, Some } from '../../option';
 import { ValidatorContext } from './validatorContext';
-import { UnresolvedName } from '../types';
+import { BindingRequest } from '../types';
 
 // Each element has its own element kind
 // Except for custom elements, which all fall under one kind
@@ -37,10 +37,10 @@ export interface SettingValidator {
   isValid: (value?: SyntaxNode) => boolean;
 
   // An optional callback that registers the setting value for later name resolution
-  registerUnresolvedName?(
+  registerBindingRequest?(
     value: SyntaxNode | undefined,
     ownerElement: ElementDeclarationNode,
-    unresolvedNames: UnresolvedName[],
+    unresolvedNames: BindingRequest[],
   ): void;
 }
 
@@ -62,10 +62,10 @@ export interface ArgumentValidator {
   validateArg(node: SyntaxNode, ith: number): CompileError[];
 
   // An optional callback that registers an argument for later name resolution
-  registerUnresolvedName?(
+  registerBindingRequest?(
     node: SyntaxNode,
     ownerElement: ElementDeclarationNode,
-    unresolvedNames: UnresolvedName[],
+    unresolvedNames: BindingRequest[],
   ): void;
 }
 
@@ -173,11 +173,11 @@ export interface SettingListValidatorConfig {
   allowDuplicate(name: string): Option<boolean>;
 
   // A function that can register a value of a setting for later name resolution
-  registerUnresolvedName(
+  registerBindingRequest(
     settingName: string,
     value: SyntaxNode | undefined,
     ownerElement: ElementDeclarationNode,
-    unresolvedNames: UnresolvedName[],
+    unresolvedNames: BindingRequest[],
   ): void;
 }
 
@@ -207,8 +207,8 @@ export interface BodyValidatorConfig {
 export interface SubFieldValidatorConfig {
   // The list of validators for each argument
   argValidators: Readonly<ArgumentValidator[]>;
-  invalidArgNumberErrorCode?: Readonly<CompileErrorCode>;
-  invalidArgNumberErrorMessage?: Readonly<string>;
+  invalidArgNumberErrorCode: Readonly<CompileErrorCode>;
+  invalidArgNumberErrorMessage: Readonly<string>;
 
   // The setting list configuration of the subfield
   settingList: Readonly<SettingListValidatorConfig>;
@@ -341,20 +341,20 @@ export function createSettingListValidatorConfig(
       return new Some(validator.allowDuplicate);
     },
 
-    registerUnresolvedName(
+    registerBindingRequest(
       settingName: string,
       value: SyntaxNode | undefined,
       ownerElement: ElementDeclarationNode,
-      unresolvedNames: UnresolvedName[],
+      unresolvedNames: BindingRequest[],
     ): void {
       const validator = validatorMap[settingName];
       if (!validator) {
         throw new Error(
-          "Unreachable - registerUnresolvedName must be called after it's sure the setting's there",
+          "Unreachable - registerBindingRequest must be called after it's sure the setting's there",
         );
       }
 
-      validator.registerUnresolvedName?.call(undefined, value, ownerElement, unresolvedNames);
+      validator.registerBindingRequest?.call(undefined, value, ownerElement, unresolvedNames);
     },
   };
 }
@@ -376,16 +376,6 @@ export function createBodyValidatorConfig(config: BodyValidatorConfig): BodyVali
 export function createSubFieldValidatorConfig(
   config: SubFieldValidatorConfig,
 ): SubFieldValidatorConfig {
-  if (
-    config.argValidators.length > 0 &&
-    (!config.invalidArgNumberErrorCode || !config.invalidArgNumberErrorMessage)
-  ) {
-    throw new Error(
-      // eslint-disable-next-line
-      'Misconfiguration: If subfield accepts arguments, invalidArgNumberErrorCode and invalidArgNumberErrorMessage must be present',
-    );
-  }
-
   if (config.shouldRegister && !config.duplicateErrorCode) {
     throw new Error(
       'Misconfiguration: If subfield should be registered, duplicateErrorCode must be present',
