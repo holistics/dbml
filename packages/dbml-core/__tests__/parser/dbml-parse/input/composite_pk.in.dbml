@@ -1,4 +1,4 @@
-Table users {
+Table user1 {
   id int [primary key]
   full_name varchar
   email varchar [unique]
@@ -13,7 +13,7 @@ Table users {
   }
 }
 
-Table users {
+Table user2 {
   id int [primary key]
   full_name varchar
   email varchar [unique]
