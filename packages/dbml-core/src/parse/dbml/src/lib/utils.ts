@@ -25,20 +25,6 @@ export function isAlphaNumeric(char: string): boolean {
   return isAlphaOrUnderscore(char) || isDigit(char);
 }
 
-export function last<T>(array: readonly T[]): T | undefined {
-  if (array.length === 0) {
-    return undefined;
-  }
-
-  return array[array.length - 1];
-}
-
-export function gatherIntoList(
-  ...maybeMembers: (SyntaxToken | SyntaxNode | undefined)[]
-): (SyntaxToken | SyntaxNode)[] {
-  return maybeMembers.filter((e) => e !== undefined) as (SyntaxNode | SyntaxToken)[];
-}
-
 export function alternateLists<T, S>(firstList: T[], secondList: S[]): (T | S)[] {
   const res: (T | S)[] = [];
   const minLength = Math.min(firstList.length, secondList.length);

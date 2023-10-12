@@ -1,6 +1,7 @@
+import _ from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 import { None, Option, Some } from '../option';
-import { alternateLists, gatherIntoList, last } from '../utils';
+import { alternateLists } from '../utils';
 import NodeFactory from './factory';
 import {
   AttributeNode,
@@ -27,11 +28,11 @@ import {
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem(
-  callee: ExpressionNode,
+  callee: ExpressionNode | undefined,
   args: NormalExpressionNode[],
   factory: NodeFactory,
 ): Option<ElementDeclarationNode> {
-  if (!isExpressionAnIdentifierNode(callee) || args.length === 0) {
+  if (!callee || !isExpressionAnIdentifierNode(callee) || args.length === 0) {
     return new None();
   }
   const cpArgs = [...args];
@@ -44,7 +45,7 @@ export function convertFuncAppToElem(
   }
 
   const attributeList =
-    last(cpArgs) instanceof ListExpressionNode ? (cpArgs.pop() as ListExpressionNode) : undefined;
+    _.last(cpArgs) instanceof ListExpressionNode ? (cpArgs.pop() as ListExpressionNode) : undefined;
 
   if (cpArgs.length === 3 && extractVariableNode(cpArgs[1]).unwrap().value === 'as') {
     return new Some(
@@ -88,27 +89,6 @@ export function isAsKeyword(
   token: SyntaxToken,
 ): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER; value: 'as' } {
   return token.kind === SyntaxTokenKind.IDENTIFIER && token.value === 'as';
-}
-
-// Check if an attribute components are valid to build an AttributeNode
-export function canBuildAttributeNode(
-  name: IdentiferStreamNode | undefined,
-  colon: SyntaxToken | undefined,
-  value: ExpressionNode | IdentiferStreamNode | undefined,
-): name is IdentiferStreamNode {
-  if (!name) {
-    return false;
-  }
-
-  if (colon && !value) {
-    return false;
-  }
-
-  if (!colon && value) {
-    return false;
-  }
-
-  return true;
 }
 
 export function markInvalid(nodeOrToken?: SyntaxNode | SyntaxToken) {
@@ -195,31 +175,19 @@ export function isInvalidToken(token?: SyntaxToken): boolean {
   return !!token?.isInvalid;
 }
 
-export function createDummySyntaxToken(kind: SyntaxTokenKind): SyntaxToken {
-  return SyntaxToken.create(
-    kind,
-    {
-      offset: NaN,
-      line: NaN,
-      column: NaN,
-    },
-    {
-      offset: NaN,
-      line: NaN,
-      column: NaN,
-    },
-    '',
-    false,
-  );
+function filterUndefined(
+  ...args: (SyntaxNode | SyntaxToken | undefined)[]
+): (SyntaxNode | SyntaxToken)[] {
+  return args.filter((v) => v !== undefined) as (SyntaxNode | SyntaxToken)[];
 }
 
 export function getMemberChain(node: SyntaxNode): Readonly<(SyntaxNode | SyntaxToken)[]> {
   if (node instanceof ProgramNode) {
-    return [...node.body, node.eof];
+    return filterUndefined(...node.body, node.eof);
   }
 
   if (node instanceof ElementDeclarationNode) {
-    return gatherIntoList(
+    return filterUndefined(
       node.type,
       node.name,
       node.as,
@@ -231,7 +199,7 @@ export function getMemberChain(node: SyntaxNode): Readonly<(SyntaxNode | SyntaxT
   }
 
   if (node instanceof AttributeNode) {
-    return gatherIntoList(node.name, node.colon, node.value);
+    return filterUndefined(node.name, node.colon, node.value);
   }
 
   if (node instanceof IdentiferStreamNode) {
@@ -239,59 +207,59 @@ export function getMemberChain(node: SyntaxNode): Readonly<(SyntaxNode | SyntaxT
   }
 
   if (node instanceof LiteralNode) {
-    return [node.literal];
+    return node.literal ? [node.literal] : [];
   }
 
   if (node instanceof VariableNode) {
-    return [node.variable];
+    return filterUndefined(node.variable);
   }
 
   if (node instanceof PrefixExpressionNode) {
-    return [node.op, node.expression];
+    return filterUndefined(node.op, node.expression);
   }
 
   if (node instanceof InfixExpressionNode) {
-    return [node.leftExpression, node.op, node.rightExpression];
+    return filterUndefined(node.leftExpression, node.op, node.rightExpression);
   }
 
   if (node instanceof PostfixExpressionNode) {
-    return [node.expression, node.op];
+    return filterUndefined(node.expression, node.op);
   }
 
   if (node instanceof FunctionExpressionNode) {
-    return [node.value];
+    return filterUndefined(node.value);
   }
 
   if (node instanceof FunctionApplicationNode) {
-    return [node.callee, ...node.args];
+    return filterUndefined(node.callee, ...node.args);
   }
 
   if (node instanceof BlockExpressionNode) {
-    return [node.blockOpenBrace, ...node.body, node.blockCloseBrace];
+    return filterUndefined(node.blockOpenBrace, ...node.body, node.blockCloseBrace);
   }
 
   if (node instanceof ListExpressionNode) {
-    return [
+    return filterUndefined(
       node.listOpenBracket,
       ...alternateLists(node.elementList, node.commaList),
       node.listCloseBracket,
-    ];
+    );
   }
 
   if (node instanceof TupleExpressionNode) {
-    return [
+    return filterUndefined(
       node.tupleOpenParen,
       ...alternateLists(node.elementList, node.commaList),
       node.tupleCloseParen,
-    ];
+    );
   }
 
   if (node instanceof CallExpressionNode) {
-    return [node.callee, node.argumentList];
+    return filterUndefined(node.callee, node.argumentList);
   }
 
   if (node instanceof PrimaryExpressionNode) {
-    return [node.expression];
+    return filterUndefined(node.expression);
   }
 
   if (node instanceof GroupExpressionNode) {
@@ -312,13 +280,21 @@ export function extractVariableNode(value?: unknown): Option<SyntaxToken> {
 
 // Return true if an expression node is a primary expression
 // with a nested quoted string (", ' or ''')
-export function isExpressionAQuotedString(value?: unknown): boolean {
+export function isExpressionAQuotedString(value?: unknown): value is PrimaryExpressionNode &
+  (
+    | { expression: VariableNode & { variable: SyntaxToken } }
+    | {
+        expression: LiteralNode & {
+          literal: SyntaxToken & { kind: SyntaxTokenKind.STRING_LITERAL };
+        };
+      }
+  ) {
   return (
     value instanceof PrimaryExpressionNode &&
     ((value.expression instanceof VariableNode &&
-      value.expression.variable.kind === SyntaxTokenKind.QUOTED_STRING) ||
+      value.expression.variable instanceof SyntaxToken) ||
       (value.expression instanceof LiteralNode &&
-        value.expression.literal.kind === SyntaxTokenKind.STRING_LITERAL))
+        value.expression.literal?.kind === SyntaxTokenKind.STRING_LITERAL))
   );
 }
 
@@ -326,8 +302,12 @@ export function isExpressionAQuotedString(value?: unknown): boolean {
 // with a variable node (identifier or a double-quoted string)
 export function isExpressionAVariableNode(
   value?: unknown,
-): value is PrimaryExpressionNode & { expression: VariableNode } {
-  return value instanceof PrimaryExpressionNode && value.expression instanceof VariableNode;
+): value is PrimaryExpressionNode & { expression: VariableNode & { variable: SyntaxToken } } {
+  return (
+    value instanceof PrimaryExpressionNode &&
+    value.expression instanceof VariableNode &&
+    value.expression.variable instanceof SyntaxToken
+  );
 }
 
 // Return true if an expression node is a primary expression
@@ -338,21 +318,39 @@ export function isExpressionAnIdentifierNode(value?: unknown): value is PrimaryE
   return (
     value instanceof PrimaryExpressionNode &&
     value.expression instanceof VariableNode &&
-    value.expression.variable.kind === SyntaxTokenKind.IDENTIFIER
+    value.expression.variable?.kind === SyntaxTokenKind.IDENTIFIER
   );
 }
 
-export function isAccessExpression(
-  node: SyntaxNode,
-): node is InfixExpressionNode & { op: SyntaxToken & { value: '.' } } {
-  return node instanceof InfixExpressionNode && node.op.value === '.';
+export function isAccessExpression(node: SyntaxNode): node is InfixExpressionNode & {
+  leftExpression: SyntaxNode;
+  rightExpression: SyntaxNode;
+  op: SyntaxToken & { value: '.' };
+} {
+  return (
+    node instanceof InfixExpressionNode &&
+    node.leftExpression instanceof SyntaxNode &&
+    node.rightExpression instanceof SyntaxNode &&
+    node.op?.value === '.'
+  );
 }
 
-export function extractStringFromIdentifierStream(stream: IdentiferStreamNode): Option<string> {
+export function extractStringFromIdentifierStream(stream?: IdentiferStreamNode): Option<string> {
+  if (stream === undefined) {
+    return new None();
+  }
   const name = stream.identifiers.map((identifier) => identifier.value).join(' ');
   if (name === '') {
     return new None();
   }
 
   return new Some(name);
+}
+
+export function createDummyOperand(factory: NodeFactory): SyntaxNode {
+  return factory.create(FunctionExpressionNode, {});
+}
+
+export function isDummyOperand(node: SyntaxNode): boolean {
+  return node instanceof FunctionExpressionNode && node.value === undefined;
 }
