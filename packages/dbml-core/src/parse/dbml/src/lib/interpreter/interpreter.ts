@@ -1,10 +1,10 @@
 import { CompileError, CompileErrorCode } from '../errors';
 import {
+  AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  IdentiferStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   ProgramNode,
@@ -37,9 +37,10 @@ import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import {
   convertRelationOpToCardinalities,
   extractTokenForInterpreter,
-  getColumnSymbolOfRefOperand,
+  getColumnSymbolsOfRefOperand,
   isCircular,
   isSameEndpoint,
+  normalizeNoteContent,
   processRelOperand,
 } from './utils';
 import { None, Option, Some } from '../option';
@@ -119,8 +120,9 @@ export default class Interpreter {
 
     const collector = collectAttribute(element.attributeList, this.errors);
     const headerColor = collector.extractHeaderColor();
-    const note = collector.extractNote();
-    const noteToken = collector.settingMap.getNameNode('note') as IdentiferStreamNode | undefined;
+    const headerNote = collector.extractNote();
+    let bodyNote: { value: string; token: TokenPosition } | undefined;
+    const noteNode = collector.settingMap.getAttributeNode('note') as AttributeNode | undefined;
     const fields: Column[] = [];
     const indexes: Index[] = [];
     (element.body as BlockExpressionNode).body.forEach((sub) => {
@@ -132,17 +134,17 @@ export default class Interpreter {
             this.db.refs.push(...this.ref(sub, name, schemaName));
             break;
           case 'indexes':
-            this.indexes(sub);
+            indexes.push(...this.indexes(sub));
             break;
           case 'note':
-            if (note !== undefined) {
+            if (headerNote !== undefined) {
               this.logError(
                 sub,
                 CompileErrorCode.NOTE_REDEFINED,
                 'Note already appears as a setting of the table',
               );
             } else {
-              this.note(sub);
+              bodyNote = this.note(sub);
             }
             break;
         }
@@ -154,15 +156,16 @@ export default class Interpreter {
       schemaName,
       alias,
       fields,
-      indexes,
       token: extractTokenForInterpreter(element),
+      indexes,
       headerColor,
-      note: note ?
-        {
-            value: note,
-            token: extractTokenForInterpreter(noteToken!),
-          } :
-        undefined,
+      note:
+        headerNote === undefined ?
+          bodyNote :
+          {
+              value: headerNote,
+              token: extractTokenForInterpreter(noteNode!),
+            },
     };
   }
 
@@ -177,7 +180,7 @@ export default class Interpreter {
     if (typeNode instanceof CallExpressionNode) {
       typeArgs = typeNode
         .argumentList!.elementList.map((e) => (e as any).expression.literal.value)
-        .join(', ');
+        .join(',');
       typeNode = typeNode.callee!;
     }
 
@@ -192,10 +195,10 @@ export default class Interpreter {
     let unique: boolean | undefined;
     let notNull: boolean | undefined;
     let note: string | undefined;
-    let noteToken: IdentiferStreamNode | undefined;
+    let noteNode: AttributeNode | undefined;
     let dbdefault:
       | {
-          type: 'number' | 'string';
+          type: 'number' | 'string' | 'boolean' | 'expression';
           value: number | string;
         }
       | undefined;
@@ -210,19 +213,19 @@ export default class Interpreter {
       notNull = collector.extractNotNull();
       dbdefault = collector.extractDefault();
       note = collector.extractNote();
-      noteToken = collector.settingMap.getNameNode('note') as IdentiferStreamNode | undefined;
+      noteNode = collector.settingMap.getAttributeNode('note') as AttributeNode | undefined;
       inlineRefs = collector.extractRef(tableName, schemaName);
       inlineRefs.forEach((ref) => {
-        if (!this.logIfSameEndpoint(ref.node, field.symbol as ColumnSymbol, ref.referee)) {
+        if (!this.logIfSameEndpoint(ref.node, [field.symbol as ColumnSymbol], [ref.referee])) {
           return;
         }
-        if (!this.logIfCircularRefError(ref.node, field.symbol as ColumnSymbol, ref.referee)) {
+        if (!this.logIfCircularRefError(ref.node, [field.symbol as ColumnSymbol], [ref.referee])) {
           return;
         }
         _inlineRefs.push({
           schemaName: ref.schemaName,
-          fieldNames: ref.fieldNames,
           tableName: ref.tableName,
+          fieldNames: ref.fieldNames,
           relation: ref.relation,
           token: ref.token,
         });
@@ -238,18 +241,19 @@ export default class Interpreter {
         args: typeArgs,
       },
       token: extractTokenForInterpreter(field),
+      inline_refs: _inlineRefs,
       pk,
-      dbdefault,
-      increment,
       unique,
       not_null: notNull,
-      inline_refs: _inlineRefs,
-      note: note ?
-        {
-            value: note,
-            token: extractTokenForInterpreter(noteToken!),
-          } :
-        undefined,
+      dbdefault,
+      increment,
+      note:
+        note === undefined ?
+          undefined :
+          {
+              value: note,
+              token: extractTokenForInterpreter(noteNode!),
+            },
     };
   }
 
@@ -340,12 +344,15 @@ export default class Interpreter {
     const args = [field.callee, ...field.args];
     const rel = args[0] as InfixExpressionNode;
     const [leftCardinality, rightCardinality] = convertRelationOpToCardinalities(rel.op!.value);
-    const leftReferee = getColumnSymbolOfRefOperand(rel.leftExpression!).unwrap();
-    const rightReferee = getColumnSymbolOfRefOperand(rel.rightExpression!).unwrap();
-    if (!this.logIfSameEndpoint(rel, leftReferee, rightReferee)) {
+    const leftReferees = getColumnSymbolsOfRefOperand(rel.leftExpression!).unwrap();
+    const rightReferees = getColumnSymbolsOfRefOperand(rel.rightExpression!).unwrap();
+    if (!this.logIfUnequalFields(rel, leftReferees, rightReferees)) {
       return undefined;
     }
-    if (!this.logIfCircularRefError(rel, leftReferee, rightReferee)) {
+    if (!this.logIfSameEndpoint(rel, leftReferees, rightReferees)) {
+      return undefined;
+    }
+    if (!this.logIfCircularRefError(rel, leftReferees, rightReferees)) {
       return undefined;
     }
     const left = processRelOperand(rel.leftExpression!, ownerTableName, ownerSchemaName);
@@ -363,14 +370,14 @@ export default class Interpreter {
     const leftEndpoint: RefEndpoint = {
       schemaName: left.schemaName,
       tableName: left.tableName,
-      fieldNames: [left.columnName],
+      fieldNames: left.columnNames,
       relation: leftCardinality,
       token: extractTokenForInterpreter(rel.leftExpression!),
     };
     const rightEndpoint: RefEndpoint = {
       schemaName: right.schemaName,
       tableName: right.tableName,
-      fieldNames: [right.columnName],
+      fieldNames: right.columnNames,
       relation: rightCardinality,
       token: extractTokenForInterpreter(rel.rightExpression!),
     };
@@ -383,12 +390,12 @@ export default class Interpreter {
     }
 
     return {
-      schemaName: refSchemaName,
       name: refName,
       endpoints: [leftEndpoint, rightEndpoint],
-      delete: del as any,
-      update: update as any,
+      onDelete: del as any,
+      onUpdate: update as any,
       token: extractTokenForInterpreter(rel),
+      schemaName: refSchemaName,
     };
   }
 
@@ -403,25 +410,33 @@ export default class Interpreter {
     );
 
     return {
-      schemaName,
       name,
-      values,
+      schemaName,
       token: extractTokenForInterpreter(element),
+      values,
     };
   }
 
   private enumField(field: FunctionApplicationNode): EnumField {
     const args = [field.callee, ...field.args];
     let note: string | undefined;
+    let noteNode: AttributeNode | undefined;
     if (args.length === 2) {
       const collector = collectAttribute(args[1] as ListExpressionNode, this.errors);
       note = collector.extractNote();
+      noteNode = collector.settingMap.getAttributeNode('note') as AttributeNode | undefined;
     }
 
     return {
       name: extractVarNameFromPrimaryVariable(args[0] as any).unwrap(),
       token: extractTokenForInterpreter(field),
-      note,
+      note:
+        note === undefined ?
+          undefined :
+          {
+              value: note,
+              token: extractTokenForInterpreter(noteNode!),
+            },
     };
   }
 
@@ -433,7 +448,7 @@ export default class Interpreter {
       refs: [],
       enums: [],
       tableGroups: [],
-      note: null,
+      note: undefined,
     };
 
     (element.body as BlockExpressionNode).body.forEach((sub) => {
@@ -454,7 +469,7 @@ export default class Interpreter {
           tryPush(this.enum(_sub), proj.enums);
           break;
         case 'note':
-          proj.note = this.note(_sub)?.value || null;
+          proj.note = this.note(_sub);
           break;
         default:
           proj[type as any] = this.custom(_sub);
@@ -467,7 +482,7 @@ export default class Interpreter {
 
   // eslint-disable-next-line class-methods-use-this
   private custom(element: ElementDeclarationNode): string {
-    return extractQuotedStringToken(element.body).unwrap_or('');
+    return extractQuotedStringToken((element.body as FunctionApplicationNode).callee).unwrap_or('');
   }
 
   private tableGroup(element: ElementDeclarationNode): TableGroup | undefined {
@@ -486,8 +501,8 @@ export default class Interpreter {
     }
 
     return {
-      schemaName,
       name,
+      schemaName,
       tables,
       token: extractTokenForInterpreter(element),
     };
@@ -518,7 +533,7 @@ export default class Interpreter {
         extractQuotedStringToken((element.body as FunctionApplicationNode).callee);
 
     return {
-      value: content.unwrap(),
+      value: normalizeNoteContent(content.unwrap()),
       token: extractTokenForInterpreter(element),
     };
   }
@@ -545,6 +560,7 @@ export default class Interpreter {
     let unique: boolean | undefined;
     let name: string | undefined;
     let note: string | undefined;
+    let noteNode: AttributeNode | undefined;
     let type: string | undefined;
     if (args.length === 2) {
       const collector = collectAttribute(args[1] as ListExpressionNode, this.errors);
@@ -552,6 +568,7 @@ export default class Interpreter {
       unique = collector.extractUnique();
       name = collector.extractIdxName();
       note = collector.extractNote();
+      noteNode = collector.settingMap.getAttributeNode('note') as AttributeNode | undefined;
       type = collector.extractIndexType();
     }
 
@@ -567,11 +584,17 @@ export default class Interpreter {
         })),
       ],
       token: extractTokenForInterpreter(field),
+      type,
       pk,
       unique,
       name,
-      type,
-      note,
+      note:
+        note === undefined ?
+          undefined :
+          {
+              value: note,
+              token: extractTokenForInterpreter(noteNode!),
+            },
     };
   }
 
@@ -598,12 +621,26 @@ export default class Interpreter {
     });
   }
 
+  private logIfUnequalFields(
+    node: SyntaxNode,
+    firstColumnSymbols: ColumnSymbol[],
+    secondColumnSymbols: ColumnSymbol[],
+  ): boolean {
+    if (firstColumnSymbols.length !== secondColumnSymbols.length) {
+      this.logError(node, CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF, 'Two endpoints have unequal number of fields');
+
+      return false;
+    }
+
+    return true;
+  }
+
   private logIfSameEndpoint(
     node: SyntaxNode,
-    firstColumnSymbol: ColumnSymbol,
-    secondColumnSymbol: ColumnSymbol,
+    firstColumnSymbols: ColumnSymbol[],
+    secondColumnSymbols: ColumnSymbol[],
   ): boolean {
-    if (isSameEndpoint(firstColumnSymbol, secondColumnSymbol)) {
+    if (isSameEndpoint(firstColumnSymbols, secondColumnSymbols)) {
       this.logError(node, CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same');
 
       return false;
@@ -614,10 +651,10 @@ export default class Interpreter {
 
   private logIfCircularRefError(
     node: SyntaxNode,
-    firstColumnSymbol: ColumnSymbol,
-    secondColumnSymbol: ColumnSymbol,
+    firstColumnSymbols: ColumnSymbol[],
+    secondColumnSymbols: ColumnSymbol[],
   ): boolean {
-    if (isCircular(firstColumnSymbol, secondColumnSymbol, this.endpointPairSet)) {
+    if (isCircular(firstColumnSymbols, secondColumnSymbols, this.endpointPairSet)) {
       this.logError(
         node,
         CompileErrorCode.UNSUPPORTED,
