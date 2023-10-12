@@ -16,7 +16,7 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
     const { uri } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
 
-    const containers = [...this.compiler.containers(offset)];
+    const containers = [...this.compiler.container.stack(offset)];
     while (containers.length !== 0) {
       const node = containers.pop();
       if (

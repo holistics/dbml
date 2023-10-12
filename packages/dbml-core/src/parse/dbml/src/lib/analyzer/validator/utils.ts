@@ -192,6 +192,7 @@ export function isValidDefaultValue(value?: SyntaxNode): boolean {
   ) {
     return true;
   }
+
   if (
     value instanceof PrefixExpressionNode &&
     NUMERIC_LITERAL_PREFIX.includes(value.op?.value as any) &&

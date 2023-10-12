@@ -1,22 +1,17 @@
+import _ from 'lodash';
 import { SymbolKind, destructureIndex } from './lib/analyzer/symbol/symbolIndex';
 import { generatePossibleIndexes } from './lib/analyzer/symbol/utils';
 import SymbolTable from './lib/analyzer/symbol/symbolTable';
-import {
-  isOffsetWithinFullSpan,
-  isOffsetWithinSpan,
-  last,
-  returnIfIsOffsetWithinFullSpan,
-} from './lib/utils';
+import { isOffsetWithinSpan } from './lib/utils';
 import { CompileError } from './lib/errors';
 import {
-  AttributeNode,
+  BlockExpressionNode,
   ElementDeclarationNode,
-  ExpressionNode,
   FunctionApplicationNode,
-  FunctionExpressionNode,
   IdentiferStreamNode,
+  InfixExpressionNode,
   ListExpressionNode,
-  PrimaryExpressionNode,
+  PrefixExpressionNode,
   ProgramNode,
   SyntaxNode,
   SyntaxNodeIdGenerator,
@@ -28,9 +23,8 @@ import Lexer from './lib/lexer/lexer';
 import Parser from './lib/parser/parser';
 import Analyzer from './lib/analyzer/analyzer';
 import Interpreter from './lib/interpreter/interpreter';
-import Database from '../../../model_structure/database';
+import Database from './lib/model_structure/database';
 import { SyntaxToken, SyntaxTokenKind } from './lib/lexer/tokens';
-import { None, Option, Some } from './lib/option';
 import { getMemberChain, isInvalidToken } from './lib/parser/utils';
 
 const enum Query {
@@ -41,25 +35,22 @@ const enum Query {
   Parse_Tokens,
   Parse_PublicSymbolTable,
   Token_InvalidStream,
-  Token_NonTrivial_BeforeOrContain,
-  Token_NonTrivial_AfterOrContain,
-  Token_NonTrivial_BeforeOrContainOnSameLine,
-  Token_NonTrivial_AfterOrContainOnSameLine,
   Token_FlatStream,
   Symbol_OfName,
   Symbol_Members,
-  MembersOfName,
-  ScopeKindOfNode,
-  Containers,
-  Context,
-  Scope,
-  /* Not correspond to a query - all meaningful queries should be place above this */
+  Container_Stack,
+  Container_Token,
+  Container_Element,
+  Container_Context,
+  Container_Scope,
+  Container_Scope_Kind,
+  /* Not correspond to a query - all meaningful queries should be placed above this */
   TOTAL_QUERY_COUNT,
 }
 
 type Cache = Map<any, any> | any;
 
-export enum ScopeKind {
+export const enum ScopeKind {
   TABLE,
   ENUM,
   TABLEGROUP,
@@ -67,38 +58,9 @@ export enum ScopeKind {
   NOTE,
   REF,
   PROJECT,
+  CUSTOM,
   TOPLEVEL,
 }
-
-export type ContextInfo = Readonly<{
-  scope?: { kind: ScopeKind; symbolTable: SymbolTable | undefined };
-  element?: {
-    node: ElementDeclarationNode | ProgramNode;
-    type?: SyntaxToken;
-    name?: SyntaxNode;
-    as?: SyntaxToken;
-    alias?: SyntaxNode;
-    settingList?: {
-      node: SyntaxNode;
-      attribute?: SyntaxNode;
-      name?: SyntaxNode;
-      value?: SyntaxNode;
-    };
-    body?: SyntaxNode;
-  };
-
-  subfield?: {
-    node: SyntaxNode;
-    callee?: SyntaxNode;
-    arg?: SyntaxNode;
-    settingList?: {
-      node: SyntaxNode;
-      attribute?: SyntaxNode;
-      name?: SyntaxNode;
-      value?: SyntaxNode;
-    };
-  };
-}>;
 
 export default class Compiler {
   private source = '';
@@ -108,20 +70,26 @@ export default class Compiler {
   private symbolIdGenerator = new NodeSymbolIdGenerator();
 
   private createQuery<V>(kind: Query, queryCallback: () => V): () => V;
-  private createQuery<V, U>(kind: Query, queryCallback: (arg: U) => V): (arg: U) => V;
-  private createQuery<V, U>(
+  private createQuery<V, U, K>(
+    kind: Query,
+    queryCallback: (arg: U) => V,
+    toKey?: (arg: U) => K,
+  ): (arg: U) => V;
+  private createQuery<V, U, K>(
     kind: Query,
     queryCallback: (arg: U | undefined) => V,
+    toKey?: (arg: U) => K,
   ): (arg: U | undefined) => V {
     return (arg: U | undefined): V => {
       const cacheEntry = this.cache[kind];
+      const key = arg && toKey ? toKey(arg) : arg;
       if (cacheEntry !== null) {
         if (!(cacheEntry instanceof Map)) {
           return cacheEntry;
         }
 
-        if (cacheEntry.has(arg)) {
-          return cacheEntry.get(arg)!;
+        if (cacheEntry.has(key)) {
+          return cacheEntry.get(key);
         }
       }
 
@@ -129,10 +97,10 @@ export default class Compiler {
 
       if (arg !== undefined) {
         if (cacheEntry instanceof Map) {
-          cacheEntry.set(arg, res);
+          cacheEntry.set(key, res);
         } else {
           this.cache[kind] = new Map();
-          this.cache[kind].set(arg, res);
+          this.cache[kind].set(key, res);
         }
       } else {
         this.cache[kind] = res;
@@ -151,133 +119,20 @@ export default class Compiler {
 
   // A namespace for token-related queries
   readonly token = {
-    stream: () => this.parse.tokens(),
     invalidStream: this.createQuery(Query.Token_InvalidStream, (): readonly SyntaxToken[] =>
-      this.parse.tokens().filter(isInvalidToken)),
+      this.parse.tokens().filter(isInvalidToken),
+    ),
     // Valid + Invalid tokens (which are guarenteed to be non-trivials) are included in the stream
     flatStream: this.createQuery(Query.Token_FlatStream, (): readonly SyntaxToken[] =>
-      this.token
-        .stream()
-        .flatMap((token) => [...token.leadingInvalid, token, ...token.trailingInvalid])),
-    // A namespace for non-trivial token-related queries
-    nonTrivial: {
-      // Return the index in the flatStream of the last token before/containing the offset
-      beforeOrContain: this.createQuery(
-        Query.Token_NonTrivial_BeforeOrContain,
-        (offset: number): Option<number> => {
-          const id = this.token.flatStream().findIndex((token) => token.start > offset);
-          if (id === undefined) {
-            return new None();
-          }
-
-          if (id <= 0) {
-            return new None();
-          }
-
-          return new Some(id - 1);
-        },
-      ),
-      // Return the index in the flatStream of the first token after/containing the offset
-      afterOrContain: this.createQuery(
-        Query.Token_NonTrivial_AfterOrContain,
-        (offset: number): Option<number> => {
-          if (this.token.flatStream().length === 0) {
-            return new None();
-          }
-
-          const id = this.token.nonTrivial.beforeOrContain(offset).unwrap_or(-1);
-          if (id === -1) {
-            return new Some(0);
-          }
-          if (isOffsetWithinSpan(offset, this.token.flatStream()[id])) {
-            return new Some(id);
-          }
-
-          return id === this.token.flatStream().length ? new None() : new Some(id + 1);
-        },
-      ),
-      // Return the index in the flatStream of the last token before the offset
-      lastBefore: this.createQuery(
-        Query.Token_NonTrivial_BeforeOrContain,
-        (offset: number): Option<number> => {
-          const id = this.token.nonTrivial.afterOrContain(offset).unwrap_or(-1);
-
-          if (id === -1) {
-            const len = this.token.flatStream().length;
-
-            return len === 0 ? new None() : new Some(len - 1);
-          }
-
-          return id === 0 ? new None() : new Some(id - 1);
-        },
-      ),
-      // Return the index in the flatStream of the first token after the offset
-      firstAfter: this.createQuery(
-        Query.Token_NonTrivial_AfterOrContain,
-        (offset: number): Option<number> => {
-          const id = this.token.nonTrivial.beforeOrContain(offset).unwrap_or(-1);
-          const len = this.token.flatStream().length;
-
-          if (id === -1) {
-            return len === 0 ? new None() : new Some(0);
-          }
-
-          return id === len - 1 ? new None() : new Some(id);
-        },
-      ),
-      beforeOrContainOnSameLine: this.createQuery(
-        Query.Token_NonTrivial_BeforeOrContainOnSameLine,
-        (offset: number): Option<number> => {
-          const id = this.token.nonTrivial.beforeOrContain(offset).unwrap_or(-1);
-          if (id === -1) {
-            return new None();
-          }
-          const token = this.token.flatStream()[id];
-          if (!isOffsetWithinSpan(offset, token)) {
-            const newline = token.trailingTrivia.find(
-              ({ kind }) => kind === SyntaxTokenKind.NEWLINE,
-            );
-            if (!newline || newline.start > offset) {
-              return new Some(id);
-            }
-
-            return new None();
-          }
-
-          return new Some(id);
-        },
-      ),
-      afterOrContainOnSameLine: this.createQuery(
-        Query.Token_NonTrivial_AfterOrContainOnSameLine,
-        (offset: number): Option<number> => {
-          const id = this.token.nonTrivial.beforeOrContain(offset).unwrap_or(-1);
-          if (id === -1) {
-            return new None();
-          }
-          const token = this.token.flatStream()[id];
-          if (!isOffsetWithinSpan(offset, token)) {
-            const containerId = token.trailingTrivia.findIndex((t) =>
-              isOffsetWithinSpan(offset, t));
-            if (
-              containerId !== -1 &&
-              token.trailingTrivia
-                .slice(containerId + 1)
-                .find((t) => t.kind === SyntaxTokenKind.NEWLINE)
-            ) {
-              return new None();
-            }
-
-            return new Some(id + 1);
-          }
-
-          return new Some(id);
-        },
-      ),
-    },
+      this.parse
+        .tokens()
+        .flatMap((token) => [...token.leadingInvalid, token, ...token.trailingInvalid]),
+    ),
   };
 
   // A namespace for parsing-related utility
   readonly parse = {
+    source: () => this.source as Readonly<string>,
     _: this.createQuery(
       Query._Interpret,
       (): Report<
@@ -333,53 +188,213 @@ export default class Compiler {
     ),
   };
 
-  // Find the stack of nodes/tokens, with the latter being nested inside the former
-  // that contains `offset`
-  containers = this.createQuery(
-    Query.Containers,
-    (offset: number): readonly Readonly<SyntaxNode>[] => {
-      let curNode: Readonly<SyntaxNode> = this.parse.ast();
-      const res: SyntaxNode[] = [curNode];
-      // eslint-disable-next-line no-constant-condition
-      while (true) {
-        const memberChain = getMemberChain(curNode);
-        const foundMem = memberChain.find((mem) => isOffsetWithinSpan(offset, mem));
-        if (foundMem === undefined || foundMem instanceof SyntaxToken) {
-          break;
+  readonly container = {
+    stack: this.createQuery(
+      Query.Container_Stack,
+      (offset: number): readonly Readonly<SyntaxNode>[] => {
+        const tokens = this.parse.tokens();
+        let { index } = this.container.token(offset);
+        const { token } = this.container.token(offset);
+        if (index === undefined) {
+          return [this.parse.ast()];
         }
-        res.push(foundMem);
-        curNode = foundMem;
+        while (tokens[index].isInvalid && index >= 0) {
+          index -= 1;
+        }
+        if (index === -1) {
+          return [this.parse.ast()];
+        }
+
+        const searchOffset = tokens[index].start;
+
+        let curNode: Readonly<SyntaxNode> = this.parse.ast();
+        const res: SyntaxNode[] = [curNode];
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+          const memberChain = getMemberChain(curNode);
+          const foundMem = memberChain.find((mem) => isOffsetWithinSpan(searchOffset, mem));
+          if (foundMem === undefined || foundMem instanceof SyntaxToken) {
+            break;
+          }
+          res.push(foundMem);
+          curNode = foundMem;
+        }
+
+        if (token?.kind === SyntaxTokenKind.COLON) {
+          return res;
+        }
+
+        while (res.length > 0) {
+          let popOnce = false;
+          const lastContainer = _.last(res)!;
+
+          if (lastContainer instanceof FunctionApplicationNode) {
+            const source = this.parse.source();
+            for (let i = lastContainer.end; i < offset; i += 1) {
+              if (source[i] === '\n') {
+                res.pop();
+                popOnce = true;
+              }
+            }
+          } else if (
+            lastContainer instanceof PrefixExpressionNode ||
+            lastContainer instanceof InfixExpressionNode
+          ) {
+            if (this.container.token(offset).token !== lastContainer.op) {
+              res.pop();
+              popOnce = true;
+            }
+          } else if (
+            lastContainer instanceof ListExpressionNode ||
+            lastContainer instanceof TupleExpressionNode ||
+            lastContainer instanceof BlockExpressionNode
+          ) {
+            if (lastContainer.end <= offset) {
+              res.pop();
+              popOnce = true;
+            }
+          } else if (!(lastContainer instanceof IdentiferStreamNode)) {
+            if (lastContainer.end < offset) {
+              res.pop();
+              popOnce = true;
+            }
+          }
+
+          if (popOnce) {
+            const maybeElement = _.last(res);
+            if (maybeElement instanceof ElementDeclarationNode && maybeElement.end <= offset) {
+              res.pop();
+            }
+          }
+          if (!popOnce) {
+            break;
+          }
+        }
+
+        return res;
+      },
+    ),
+
+    token: this.createQuery(
+      Query.Container_Token,
+      (
+        offset: number,
+      ): { token: SyntaxToken; index: number } | { token: undefined; index: undefined } => {
+        const id = this.token.flatStream().findIndex((token) => token.start >= offset);
+        if (id === undefined) {
+          return { token: undefined, index: undefined };
+        }
+
+        if (id <= 0) {
+          return { token: undefined, index: undefined };
+        }
+
+        return {
+          token: this.token.flatStream()[id - 1],
+          index: id - 1,
+        };
+      },
+    ),
+
+    element: this.createQuery(
+      Query.Container_Element,
+      (offset: number): Readonly<ElementDeclarationNode | ProgramNode> => {
+        const containers = this.container.stack(offset);
+        for (let i = containers.length - 1; i >= 0; i -= 1) {
+          if (containers[i] instanceof ElementDeclarationNode) {
+            return containers[i];
+          }
+        }
+
+        return this.parse.ast();
+      },
+    ),
+
+    scope: this.createQuery(
+      Query.Container_Scope,
+      (offset: number): Readonly<SymbolTable> | undefined =>
+        this.container.element(offset)?.symbol?.symbolTable,
+    ),
+
+    scopeKind: this.createQuery(Query.Container_Scope_Kind, (offset: number): ScopeKind => {
+      const element = this.container.element(offset);
+      if (element instanceof ProgramNode) {
+        return ScopeKind.TOPLEVEL;
       }
 
-      return res;
-    },
-  );
+      switch (
+        (this.container.element(offset) as ElementDeclarationNode).type?.value.toLowerCase()
+      ) {
+        case 'table':
+          return ScopeKind.TABLE;
+        case 'enum':
+          return ScopeKind.ENUM;
+        case 'ref':
+          return ScopeKind.REF;
+        case 'tablegroup':
+          return ScopeKind.TABLEGROUP;
+        case 'indexes':
+          return ScopeKind.INDEXES;
+        case 'note':
+          return ScopeKind.NOTE;
+        case 'project':
+          return ScopeKind.PROJECT;
+        default:
+          return ScopeKind.CUSTOM;
+      }
+    }),
+  };
 
   // A namespace for symbol-related queries
   readonly symbol = {
     ofName: this.createQuery(
       Query.Symbol_OfName,
-      (
-        nameStack: string[],
-      ): readonly Readonly<{ symbol: NodeSymbol; kind: SymbolKind; name: string }>[] => {
-        const { symbolTable } = this.parse.ast().symbol!;
-        let currentPossibleSymbolTables: SymbolTable[] = [symbolTable!];
-        let currentPossibleSymbols: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
-        // eslint-disable-next-line no-restricted-syntax
-        for (const name of nameStack) {
-          currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) =>
-            generatePossibleIndexes(name).flatMap((index) => {
-              const symbol = st.get(index);
-              const res = destructureIndex(index).unwrap_or(undefined);
-
-              return !symbol || !res ? [] : { ...res, symbol };
-            }));
-          currentPossibleSymbolTables = currentPossibleSymbols.flatMap((e) =>
-            (e.symbol.symbolTable ? e.symbol.symbolTable : []));
+      ({
+        nameStack,
+        owner = this.parse.ast(),
+      }: {
+        nameStack: string[];
+        owner: ElementDeclarationNode | ProgramNode;
+      }): readonly Readonly<{ symbol: NodeSymbol; kind: SymbolKind; name: string }>[] => {
+        if (nameStack.length === 0) {
+          return [];
         }
 
-        return currentPossibleSymbols;
+        const res: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
+
+        for (
+          let currentOwner: ElementDeclarationNode | ProgramNode | undefined = owner;
+          currentOwner;
+          currentOwner =
+            currentOwner instanceof ElementDeclarationNode ? currentOwner.parent : undefined
+        ) {
+          if (!currentOwner.symbol?.symbolTable) {
+            continue;
+          }
+          const { symbolTable } = currentOwner.symbol;
+          let currentPossibleSymbolTables: SymbolTable[] = [symbolTable];
+          let currentPossibleSymbols: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
+          // eslint-disable-next-line no-restricted-syntax
+          for (const name of nameStack) {
+            currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) =>
+              generatePossibleIndexes(name).flatMap((index) => {
+                const symbol = st.get(index);
+                const desRes = destructureIndex(index).unwrap_or(undefined);
+
+                return !symbol || !desRes ? [] : { ...desRes, symbol };
+              }),
+            );
+            currentPossibleSymbolTables = currentPossibleSymbols.flatMap((e) =>
+              (e.symbol.symbolTable ? e.symbol.symbolTable : []),
+            );
+          }
+
+          res.push(...currentPossibleSymbols);
+        }
+
+        return res;
       },
+      ({ nameStack, owner }) => `${nameStack.join('.')}@${owner.id}`,
     ),
     members: this.createQuery(
       Query.Symbol_Members,
@@ -394,169 +409,4 @@ export default class Compiler {
           []),
     ),
   };
-
-  // Return all possible symbols corresponding to a stack of name
-  membersOfName = this.createQuery(
-    Query.MembersOfName,
-    (
-      nameStack: string[],
-    ): readonly Readonly<{ symbol: NodeSymbol; kind: SymbolKind; readonly name: string }>[] =>
-      this.symbol.ofName(nameStack).flatMap(({ symbol }) => this.symbol.members(symbol)),
-  );
-
-  // Return information about the enclosing scope at the point of `offset`
-  scope = this.createQuery(
-    Query.Scope,
-    (
-      offset: number,
-    ): Option<Readonly<{ kind: ScopeKind; symbolTable: SymbolTable | undefined }>> => {
-      const res = this.containers(offset);
-      if (res.length === 0) {
-        throw new Error('Unreachable - containers always contain at least the program node');
-      }
-      const containerStack = [...res];
-
-      while (last(containerStack)) {
-        const container = containerStack.pop()!;
-
-        if (container instanceof ElementDeclarationNode || container instanceof ProgramNode) {
-          const scopeKind = this.scopeKindOfNode(container).unwrap_or(undefined);
-
-          if (scopeKind !== undefined) {
-            return new Some({
-              kind: scopeKind,
-              symbolTable: container.symbol?.symbolTable,
-            });
-          }
-        }
-      }
-
-      return new None();
-    },
-  );
-
-  // Return the kind of the scope associated with a symbol
-  scopeKindOfNode = this.createQuery(
-    Query.ScopeKindOfNode,
-    (node: ElementDeclarationNode | ProgramNode): Option<Readonly<ScopeKind>> => {
-      if (node instanceof ProgramNode) {
-        return new Some(ScopeKind.TOPLEVEL);
-      }
-      switch (node.type.value.toLowerCase()) {
-        case 'table':
-          return new Some(ScopeKind.TABLE);
-        case 'tablegroup':
-          return new Some(ScopeKind.TABLEGROUP);
-        case 'enum':
-          return new Some(ScopeKind.ENUM);
-        case 'indexes':
-          return new Some(ScopeKind.INDEXES);
-        case 'note':
-          return new Some(ScopeKind.NOTE);
-        case 'ref':
-          return new Some(ScopeKind.REF);
-        case 'project':
-          return new Some(ScopeKind.PROJECT);
-        default:
-          break;
-      }
-
-      return new None();
-    },
-  );
-
-  context = this.createQuery(Query.Context, (offset: number): Option<Readonly<ContextInfo>> => {
-    const res = this.containers(offset);
-    if (res.length === 0) {
-      throw new Error('Unreachable - containers always contain at least the program node');
-    }
-    const containerStack = [...res];
-
-    let firstParent: ElementDeclarationNode | ProgramNode | undefined;
-    let firstSubfield:
-      | FunctionExpressionNode
-      | FunctionApplicationNode
-      | PrimaryExpressionNode
-      | TupleExpressionNode
-      | undefined;
-    let maybeSubfield:
-      | FunctionExpressionNode
-      | FunctionApplicationNode
-      | PrimaryExpressionNode
-      | TupleExpressionNode
-      | undefined;
-    let maybeAttribute: AttributeNode | undefined;
-    let maybeAttributeName: IdentiferStreamNode | undefined;
-    let maybeAttributeValue: ExpressionNode | undefined;
-    let maybeSettingList: ListExpressionNode | undefined;
-    while (last(containerStack)) {
-      const container = containerStack.pop()!;
-      if (
-        container instanceof FunctionApplicationNode ||
-        container instanceof FunctionExpressionNode ||
-        container instanceof PrimaryExpressionNode ||
-        container instanceof TupleExpressionNode
-      ) {
-        maybeSubfield = container;
-      }
-      if (container instanceof IdentiferStreamNode) {
-        maybeAttributeName ||= container;
-      }
-      if (container instanceof AttributeNode) {
-        maybeAttribute ||= container;
-        maybeAttributeValue ||= maybeSubfield;
-        maybeSubfield = undefined;
-      }
-      if (container instanceof ListExpressionNode) {
-        maybeSettingList ||= container;
-      }
-      if (container instanceof ElementDeclarationNode || container instanceof ProgramNode) {
-        firstParent = container;
-        firstSubfield = maybeSubfield;
-        break;
-      }
-    }
-
-    return firstParent instanceof ProgramNode ?
-      new Some({
-          scope: this.scope(offset).unwrap_or(undefined),
-          element: {
-            node: firstParent,
-          },
-        }) :
-      new Some({
-          scope: this.scope(offset).unwrap_or(undefined),
-          element: firstParent && {
-            node: firstParent,
-            type: returnIfIsOffsetWithinFullSpan(offset, firstParent.type),
-            name: returnIfIsOffsetWithinFullSpan(offset, firstParent.name),
-            as: returnIfIsOffsetWithinFullSpan(offset, firstParent.as),
-            alias: returnIfIsOffsetWithinFullSpan(offset, firstParent.alias),
-            settingList: returnIfIsOffsetWithinFullSpan(offset, firstParent.attributeList) && {
-              node: firstParent.attributeList!,
-              attribute: maybeAttribute,
-              name: returnIfIsOffsetWithinFullSpan(offset, maybeAttributeName),
-              value: returnIfIsOffsetWithinFullSpan(offset, maybeAttributeValue),
-            },
-            body: returnIfIsOffsetWithinFullSpan(offset, firstParent.body),
-          },
-          subfield: firstSubfield && {
-            node: firstSubfield,
-            callee:
-              firstSubfield instanceof FunctionApplicationNode ?
-                returnIfIsOffsetWithinFullSpan(offset, firstSubfield.callee) :
-                firstSubfield,
-            arg:
-              firstSubfield instanceof FunctionApplicationNode ?
-                firstSubfield.args.find((arg) => isOffsetWithinFullSpan(offset, arg)) :
-                undefined,
-            settingList: maybeSettingList && {
-              node: maybeSettingList,
-              attribute: maybeAttribute,
-              name: maybeAttributeName,
-              value: maybeAttributeValue,
-            },
-          },
-        });
-  });
 }
