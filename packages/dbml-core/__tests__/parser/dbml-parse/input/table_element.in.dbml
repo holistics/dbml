@@ -1,10 +1,8 @@
-Table users [note: 'note in table settings'] {
+Table users {
   id int [pk]
   name varchar [pk]
   gender varchar
   created_at datetime
-
-  Note: 'Short note'
 
   Indexes {
     id
