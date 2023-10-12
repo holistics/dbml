@@ -2,7 +2,6 @@ import { ElementDeclarationNode, SyntaxNode } from '../../parser/nodes';
 import { CompileError, CompileErrorCode } from '../../errors';
 import { None, Option, Some } from '../../option';
 import { ValidatorContext } from './validatorContext';
-import { BindingRequest } from '../types';
 
 // Each element has its own element kind
 // Except for custom elements, which all fall under one kind
@@ -35,13 +34,6 @@ export interface SettingValidator {
 
   // A callback that validates whether `value` is valid for the setting
   isValid: (value?: SyntaxNode) => boolean;
-
-  // An optional callback that registers the setting value for later name resolution
-  registerBindingRequest?(
-    value: SyntaxNode | undefined,
-    ownerElement: ElementDeclarationNode,
-    unresolvedNames: BindingRequest[],
-  ): void;
 }
 
 // An object that can validates a term in an element's subfield
@@ -60,13 +52,6 @@ export interface ArgumentValidator {
   //   This parameter can be useful in cases
   //   for example, where the first subfield has a different semantics from the rests
   validateArg(node: SyntaxNode, ith: number): CompileError[];
-
-  // An optional callback that registers an argument for later name resolution
-  registerBindingRequest?(
-    node: SyntaxNode,
-    ownerElement: ElementDeclarationNode,
-    unresolvedNames: BindingRequest[],
-  ): void;
 }
 
 // A configuration object
@@ -171,14 +156,6 @@ export interface SettingListValidatorConfig {
   // A function that determines whether a specific setting is allowed to be duplicated
   // Return value is similar to `isValid`
   allowDuplicate(name: string): Option<boolean>;
-
-  // A function that can register a value of a setting for later name resolution
-  registerBindingRequest(
-    settingName: string,
-    value: SyntaxNode | undefined,
-    ownerElement: ElementDeclarationNode,
-    unresolvedNames: BindingRequest[],
-  ): void;
 }
 
 // A configuration object
@@ -339,22 +316,6 @@ export function createSettingListValidatorConfig(
       }
 
       return new Some(validator.allowDuplicate);
-    },
-
-    registerBindingRequest(
-      settingName: string,
-      value: SyntaxNode | undefined,
-      ownerElement: ElementDeclarationNode,
-      unresolvedNames: BindingRequest[],
-    ): void {
-      const validator = validatorMap[settingName];
-      if (!validator) {
-        throw new Error(
-          "Unreachable - registerBindingRequest must be called after it's sure the setting's there",
-        );
-      }
-
-      validator.registerBindingRequest?.call(undefined, value, ownerElement, unresolvedNames);
     },
   };
 }

@@ -1,19 +1,26 @@
+import _ from 'lodash';
 import { None, Option, Some } from '../option';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
-import { destructureComplexVariable, destructureMemberAccessExpression } from '../analyzer/utils';
+import {
+  destructureComplexTuple,
+  destructureMemberAccessExpression,
+} from '../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../errors';
-import { SyntaxNode } from '../parser/nodes';
+import { SyntaxNode, TupleExpressionNode } from '../parser/nodes';
 import { RelationCardinality, TokenPosition } from './types';
 
 export function isCircular(
-  firstColumnSymbol: ColumnSymbol,
-  secondColumnSymbol: ColumnSymbol,
+  firstColumnSymbols: ColumnSymbol[],
+  secondColumnSymbols: ColumnSymbol[],
   endpointPairSet: Set<string>,
 ): boolean {
-  const firstId = firstColumnSymbol.id;
-  const secondId = secondColumnSymbol.id;
+  const firstIds = firstColumnSymbols.map((s) => s.id);
+  const secondIds = secondColumnSymbols.map((s) => s.id);
 
-  const endpointPairId = firstId < secondId ? `${firstId}_${secondId}` : `${secondId}_${firstId}`;
+  const endpointPairId =
+    firstIds[0] < secondIds[0] ?
+      `${firstIds.join(',')}_${secondIds.join(',')}` :
+      `${secondIds.join(',')}_${firstIds.join(',')}`;
   if (endpointPairSet.has(endpointPairId)) {
     return true;
   }
@@ -23,10 +30,10 @@ export function isCircular(
 }
 
 export function isSameEndpoint(
-  firstColumnSymbol: ColumnSymbol,
-  secondColumnSymbol: ColumnSymbol,
+  firstColumnSymbols: ColumnSymbol[],
+  secondColumnSymbols: ColumnSymbol[],
 ): boolean {
-  return firstColumnSymbol.id === secondColumnSymbol.id;
+  return _.zip(firstColumnSymbols, secondColumnSymbols).every(([f, s]) => f?.id === s?.id);
 }
 
 export function convertRelationOpToCardinalities(
@@ -51,16 +58,16 @@ export function processRelOperand(
   ownerSchemaName: string | null,
 ):
   | {
-      columnName: string;
+      columnNames: string[];
       tableName: string;
       schemaName: string | null;
     }
   | CompileError {
-  const fragments = destructureComplexVariable(operand).unwrap();
-  const columnName = fragments.pop()!;
-  const tableName = fragments.pop();
-  const schemaName = fragments.pop();
-  if (fragments.length > 0) {
+  const { tupleElements, variables } = destructureComplexTuple(operand).unwrap();
+  const columnNames = tupleElements || [variables.pop()!];
+  const tableName = variables.pop();
+  const schemaName = variables.pop();
+  if (variables.length > 0) {
     return new CompileError(
       CompileErrorCode.UNSUPPORTED,
       'Nested schemas are currently not allowed',
@@ -73,7 +80,7 @@ export function processRelOperand(
   }
 
   return {
-    columnName,
+    columnNames,
     // if tableName is undefined, the columnName must be relative to the owner
     tableName: tableName || (ownerTableName as string),
     schemaName: tableName ? schemaName || null : ownerSchemaName,
@@ -91,11 +98,22 @@ export function extractTokenForInterpreter(node: SyntaxNode): TokenPosition {
   };
 }
 
-export function getColumnSymbolOfRefOperand(ref: SyntaxNode): Option<ColumnSymbol> {
+export function getColumnSymbolsOfRefOperand(ref: SyntaxNode): Option<ColumnSymbol[]> {
   const colNode = destructureMemberAccessExpression(ref).unwrap_or(undefined)?.pop();
+  if (colNode instanceof TupleExpressionNode) {
+    if (!colNode.elementList.every((e) => !!e.referee)) {
+      return new None();
+    }
+
+    return new Some(colNode.elementList.map((e) => e.referee as ColumnSymbol));
+  }
   if (!(colNode?.referee instanceof ColumnSymbol)) {
     return new None();
   }
 
-  return new Some(colNode.referee);
+  return new Some([colNode.referee]);
+}
+
+export function normalizeNoteContent(content: string): string {
+  return content.split('\n').map((s) => s.trim()).join('\n');
 }

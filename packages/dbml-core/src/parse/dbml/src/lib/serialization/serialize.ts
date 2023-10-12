@@ -39,7 +39,7 @@ export function serialize(
 
       // If `value` is the parent element of the current SyntaxNode
       // just the id of the parent is enough
-      if (/* this instanceof SyntaxNode && */ key === 'parentElement') {
+      if (/* this instanceof SyntaxNode && */ key === 'parent') {
         return (value as SyntaxNode)?.id;
       }
 

@@ -29,7 +29,7 @@ export class SyntaxNode {
   fullEnd: Readonly<number>; // End offset with trivias counted
   symbol?: NodeSymbol;
   referee?: NodeSymbol; // The symbol that this syntax node refers to
-  owner?: SyntaxNode;
+  parent?: ElementDeclarationNode | ProgramNode; // The enclosing element/program
 
   // args must be passed in order of appearance in the node
   constructor(
