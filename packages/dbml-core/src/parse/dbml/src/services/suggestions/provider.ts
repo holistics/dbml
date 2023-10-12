@@ -1,4 +1,5 @@
 import * as monaco from 'monaco-editor-core';
+import _ from 'lodash';
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
@@ -202,6 +203,17 @@ function suggestInTuple(compiler: Compiler, offset: number): CompletionList {
   switch (scopeKind) {
     case ScopeKind.INDEXES:
       return suggestColumnNameInIndexes(compiler, offset);
+    case ScopeKind.REF: {
+      const containers = [...compiler.container.stack(offset)];
+      while (containers.length > 0) {
+        const container = containers.pop()!;
+        if (container instanceof InfixExpressionNode && container.op?.value === '.') {
+          return suggestMembers(compiler, offset, container as InfixExpressionNode & { op: { value: '.' } });
+        }
+      }
+    }
+
+      return suggestInRefField(compiler, offset);
     default:
       break;
   }
