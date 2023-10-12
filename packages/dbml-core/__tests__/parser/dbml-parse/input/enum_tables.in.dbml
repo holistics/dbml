@@ -19,7 +19,7 @@ Enum "order status" {
 }
 
 Table orders {
-  id int PK unique
+  id int [PK, unique]
   status "order status"
   created_at varchar
 }
