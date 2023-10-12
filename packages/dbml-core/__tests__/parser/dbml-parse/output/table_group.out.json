@@ -20,9 +20,9 @@
               "column": 3
             },
             "end": {
-              "offset": 28,
-              "line": 3,
-              "column": 1
+              "offset": 27,
+              "line": 2,
+              "column": 9
             }
           },
           "inline_refs": []
@@ -36,14 +36,14 @@
           },
           "token": {
             "start": {
-              "offset": 28,
+              "offset": 29,
               "line": 3,
-              "column": 1
+              "column": 2
             },
             "end": {
-              "offset": 47,
-              "line": 4,
-              "column": 1
+              "offset": 46,
+              "line": 3,
+              "column": 19
             }
           },
           "inline_refs": []
@@ -57,14 +57,14 @@
           },
           "token": {
             "start": {
-              "offset": 47,
+              "offset": 49,
               "line": 4,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 70,
-              "line": 5,
-              "column": 1
+              "offset": 69,
+              "line": 4,
+              "column": 23
             }
           },
           "inline_refs": []
@@ -78,14 +78,14 @@
           },
           "token": {
             "start": {
-              "offset": 70,
+              "offset": 72,
               "line": 5,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 89,
-              "line": 6,
-              "column": 1
+              "offset": 88,
+              "line": 5,
+              "column": 19
             }
           },
           "inline_refs": []
@@ -124,9 +124,9 @@
               "column": 3
             },
             "end": {
-              "offset": 120,
-              "line": 10,
-              "column": 1
+              "offset": 118,
+              "line": 9,
+              "column": 9
             }
           },
           "inline_refs": []
@@ -140,14 +140,14 @@
           },
           "token": {
             "start": {
-              "offset": 120,
+              "offset": 122,
               "line": 10,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 144,
-              "line": 11,
-              "column": 1
+              "offset": 143,
+              "line": 10,
+              "column": 24
             }
           },
           "inline_refs": []
@@ -161,14 +161,14 @@
           },
           "token": {
             "start": {
-              "offset": 144,
+              "offset": 145,
               "line": 11,
-              "column": 1
+              "column": 2
             },
             "end": {
-              "offset": 162,
-              "line": 12,
-              "column": 1
+              "offset": 161,
+              "line": 11,
+              "column": 18
             }
           },
           "inline_refs": []
@@ -182,14 +182,14 @@
           },
           "token": {
             "start": {
-              "offset": 162,
+              "offset": 164,
               "line": 12,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 185,
-              "line": 13,
-              "column": 1
+              "offset": 184,
+              "line": 12,
+              "column": 23
             }
           },
           "inline_refs": []
@@ -203,14 +203,14 @@
           },
           "token": {
             "start": {
-              "offset": 185,
+              "offset": 187,
               "line": 13,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 251,
-              "line": 14,
-              "column": 1
+              "offset": 213,
+              "line": 13,
+              "column": 29
             }
           },
           "inline_refs": [
@@ -223,9 +223,9 @@
               "relation": ">",
               "token": {
                 "start": {
-                  "offset": 201,
+                  "offset": 206,
                   "line": 13,
-                  "column": 17
+                  "column": 22
                 },
                 "end": {
                   "offset": 212,
@@ -259,26 +259,6 @@
       "endpoints": [
         {
           "schemaName": null,
-          "tableName": "U",
-          "fieldNames": [
-            "id"
-          ],
-          "relation": "1",
-          "token": {
-            "start": {
-              "offset": 201,
-              "line": 13,
-              "column": 17
-            },
-            "end": {
-              "offset": 212,
-              "line": 13,
-              "column": 28
-            }
-          }
-        },
-        {
-          "schemaName": null,
           "tableName": "merchants",
           "fieldNames": [
             "admin_id"
@@ -286,9 +266,29 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 201,
+              "offset": 187,
               "line": 13,
-              "column": 17
+              "column": 3
+            },
+            "end": {
+              "offset": 213,
+              "line": 13,
+              "column": 29
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "U",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 206,
+              "line": 13,
+              "column": 22
             },
             "end": {
               "offset": 212,
@@ -300,9 +300,9 @@
       ],
       "token": {
         "start": {
-          "offset": 201,
+          "offset": 206,
           "line": 13,
-          "column": 17
+          "column": 22
         },
         "end": {
           "offset": 212,
