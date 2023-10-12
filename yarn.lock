@@ -6105,6 +6105,11 @@ modify-values@^1.0.1:
   resolved "https://registry.yarnpkg.com/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
   integrity sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==
 
+monaco-editor-core@^0.44.0:
+  version "0.44.0"
+  resolved "https://registry.yarnpkg.com/monaco-editor-core/-/monaco-editor-core-0.44.0.tgz#c3a85e9889dd514b4d0b1b965c4c4c79eb956a04"
+  integrity sha512-gPhXfbi0RCnIRXMUzkvjRc8tUiD56lkuw7uRr2dUv00owYthFRlyot2R0ECFuA5F3YKei4OlFjALDahxIC/6Jg==
+
 ms@2.1.2, ms@^2.0.0, ms@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
