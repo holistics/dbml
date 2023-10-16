@@ -456,8 +456,8 @@ ListOfNames = first:name rest:(comma _ name)*
 
 // Comment Syntax: Support "COMMENT 'this is a comment'"
 Comment 
-	= "COMMENT" _ ("=" _)? comment: "'" c:[^']* "'" {return c.join('')}
-	/ "COMMENT" _ ("=" _)? comment: "\"" c:[^"]* "\"" {return c.join('')}
+	= "COMMENT"i _ ("=" _)? comment: "'" c:[^']* "'" {return c.join('')}
+	/ "COMMENT"i _ ("=" _)? comment: "\"" c:[^"]* "\"" {return c.join('')}
 // 			End of Useful Expression
 
 
