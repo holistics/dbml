@@ -1,3 +1,16 @@
+## v2.6.1 (2023-10-16)
+
+#### :memo: Documentation
+* [#437](https://github.com/holistics/dbml/pull/437) Update CLI documentation about postgres-legacy option ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#460](https://github.com/holistics/dbml/pull/460) Fix comment syntax in MySQL parser ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
 ## v2.6.0 (2023-09-06)
 
 #### :memo: Documentation
