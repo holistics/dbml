@@ -659,7 +659,7 @@ export default class Parser {
   /* Parsing FunctionExpression */
 
   private functionExpression(): FunctionExpressionNode {
-    const args: { value: SyntaxToken | undefined } = { value: undefined };
+    const args: { value?: SyntaxToken } = {};
     try {
       this.consume('Expect a function expression', SyntaxTokenKind.FUNCTION_EXPRESSION);
       args.value = this.previous();
@@ -682,10 +682,10 @@ export default class Parser {
 
   private blockExpression = this.contextStack.withContextDo(ParsingContext.BlockExpression, () => {
     const args: {
-      blockOpenBrace: SyntaxToken | undefined;
+      blockOpenBrace?: SyntaxToken;
       body: (ElementDeclarationNode | FunctionApplicationNode)[];
-      blockCloseBrace: SyntaxToken | undefined;
-    } = { body: [] } as any;
+      blockCloseBrace?: SyntaxToken;
+    } = { body: [] };
     const buildBlock = () => this.nodeFactory.create(BlockExpressionNode, args);
 
     try {
@@ -801,11 +801,11 @@ export default class Parser {
 
   private tupleExpression = this.contextStack.withContextDo(ParsingContext.GroupExpression, () => {
     const args: {
-      tupleOpenParen: SyntaxToken | undefined;
+      tupleOpenParen?: SyntaxToken;
       elementList: NormalExpressionNode[];
       commaList: SyntaxToken[];
-      tupleCloseParen: SyntaxToken | undefined;
-    } = { elementList: [], commaList: [] } as any;
+      tupleCloseParen?: SyntaxToken;
+    } = { elementList: [], commaList: [] };
     const buildGroup = () =>
       this.nodeFactory.create(GroupExpressionNode, {
         groupOpenParen: args.tupleOpenParen,
@@ -894,11 +894,11 @@ export default class Parser {
 
   private listExpression = this.contextStack.withContextDo(ParsingContext.ListExpression, () => {
     const args: {
-      listOpenBracket: SyntaxToken | undefined;
+      listOpenBracket?: SyntaxToken;
       elementList: AttributeNode[];
       commaList: SyntaxToken[];
-      listCloseBracket: SyntaxToken | undefined;
-    } = { elementList: [], commaList: [] } as any;
+      listCloseBracket?: SyntaxToken;
+    } = { elementList: [], commaList: [] };
     const buildList = () => this.nodeFactory.create(ListExpressionNode, args);
 
     try {
@@ -977,10 +977,10 @@ export default class Parser {
 
   private attribute(): AttributeNode {
     const args: {
-      name: IdentiferStreamNode | undefined;
-      colon: SyntaxToken | undefined;
-      value: NormalExpressionNode | IdentiferStreamNode | undefined;
-    } = {} as any;
+      name?: IdentiferStreamNode;
+      colon?: SyntaxToken;
+      value?: NormalExpressionNode | IdentiferStreamNode;
+    } = {};
 
     if (this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.RBRACKET, SyntaxTokenKind.COMMA)) {
       const token = this.peek();
