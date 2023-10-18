@@ -118,9 +118,9 @@ export function destructureIndexNode(node: SyntaxNode): Option<{
   nonFunctional: (PrimaryExpressionNode & { expression: VariableNode })[];
 }> {
   if (isValidIndexName(node)) {
-    return node instanceof FunctionExpressionNode
-      ? new Some({ functional: [node], nonFunctional: [] })
-      : new Some({ functional: [], nonFunctional: [node] });
+    return node instanceof FunctionExpressionNode ?
+      new Some({ functional: [node], nonFunctional: [] }) :
+      new Some({ functional: [], nonFunctional: [node] });
   }
 
   if (node instanceof TupleExpressionNode && node.elementList.every(isValidIndexName)) {
