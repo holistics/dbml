@@ -78,13 +78,13 @@ export class ParsingContextStack {
   }
 
   // Return the type of the handler context currently in the context stack to handle `token`
-  findHandlerContext(tokens: SyntaxToken[], curTokenId: number): ParsingContext | null {
+  findHandlerContext(tokens: SyntaxToken[], curTokenId: number): ParsingContext | undefined {
     if (
       this.numberOfNestedLBraces <= 0 &&
       this.numberOfNestedLBrackets <= 0 &&
       this.numberOfNestedLParens <= 0
     ) {
-      return null;
+      return undefined;
     }
 
     for (let tokenId = curTokenId; tokenId < tokens.length - 1; tokenId += 1) {
@@ -119,6 +119,6 @@ export class ParsingContextStack {
       }
     }
 
-    return null;
+    return undefined;
   }
 }
