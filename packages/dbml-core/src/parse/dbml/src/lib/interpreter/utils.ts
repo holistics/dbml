@@ -1,10 +1,7 @@
 import _ from 'lodash';
 import { None, Option, Some } from '../option';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
-import {
-  destructureComplexTuple,
-  destructureMemberAccessExpression,
-} from '../analyzer/utils';
+import { destructureComplexTuple, destructureMemberAccessExpression } from '../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../errors';
 import { SyntaxNode, TupleExpressionNode } from '../parser/nodes';
 import { RelationCardinality, TokenPosition } from './types';
@@ -115,5 +112,8 @@ export function getColumnSymbolsOfRefOperand(ref: SyntaxNode): Option<ColumnSymb
 }
 
 export function normalizeNoteContent(content: string): string {
-  return content.split('\n').map((s) => s.trim()).join('\n');
+  return content
+    .split('\n')
+    .map((s) => s.trim())
+    .join('\n');
 }

@@ -627,7 +627,11 @@ export default class Interpreter {
     secondColumnSymbols: ColumnSymbol[],
   ): boolean {
     if (firstColumnSymbols.length !== secondColumnSymbols.length) {
-      this.logError(node, CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF, 'Two endpoints have unequal number of fields');
+      this.logError(
+        node,
+        CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF,
+        'Two endpoints have unequal number of fields',
+      );
 
       return false;
     }
