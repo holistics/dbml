@@ -49,7 +49,7 @@ const { CompletionItemKind, CompletionItemInsertTextRule } = monaco.languages;
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
   // alphabetic characters implictily invoke the autocompletion provider
-  triggerCharacters = ['.', ':'];
+  triggerCharacters = ['.', ':', '[', '('];
 
   constructor(compiler: Compiler) {
     this.compiler = compiler;
@@ -203,15 +203,20 @@ function suggestInTuple(compiler: Compiler, offset: number): CompletionList {
   switch (scopeKind) {
     case ScopeKind.INDEXES:
       return suggestColumnNameInIndexes(compiler, offset);
-    case ScopeKind.REF: {
-      const containers = [...compiler.container.stack(offset)];
-      while (containers.length > 0) {
-        const container = containers.pop()!;
-        if (container instanceof InfixExpressionNode && container.op?.value === '.') {
-          return suggestMembers(compiler, offset, container as InfixExpressionNode & { op: { value: '.' } });
+    case ScopeKind.REF:
+      {
+        const containers = [...compiler.container.stack(offset)];
+        while (containers.length > 0) {
+          const container = containers.pop()!;
+          if (container instanceof InfixExpressionNode && container.op?.value === '.') {
+            return suggestMembers(
+              compiler,
+              offset,
+              container as InfixExpressionNode & { op: { value: '.' } },
+            );
+          }
         }
       }
-    }
 
       return suggestInRefField(compiler, offset);
     default:
