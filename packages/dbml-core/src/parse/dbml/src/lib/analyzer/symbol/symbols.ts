@@ -14,6 +14,8 @@ export class NodeSymbolIdGenerator {
   }
 }
 
+// A Symbol contains metadata about an entity (Enum, Table, etc.)
+// This does not include `name` as an entity may have multiple names (e.g alias)
 export interface NodeSymbol {
   id: NodeSymbolId;
   symbolTable?: SymbolTable;
