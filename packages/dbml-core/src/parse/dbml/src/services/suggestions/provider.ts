@@ -316,6 +316,18 @@ function suggestAttributeName(compiler: Compiler, offset: number): CompletionLis
           },
         ],
       };
+    case ScopeKind.ENUM:
+      return {
+        suggestions: [
+          {
+            label: 'note',
+            insertText: 'note: ',
+            kind: CompletionItemKind.Property,
+            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+            range: undefined as any,
+          },
+        ],
+      };
     case ScopeKind.INDEXES:
       return {
         suggestions: [
