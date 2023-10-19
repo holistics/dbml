@@ -244,12 +244,18 @@ export default class Compiler {
               res.pop();
               popOnce = true;
             }
-          } else if (
-            lastContainer instanceof ListExpressionNode ||
-            lastContainer instanceof TupleExpressionNode ||
-            lastContainer instanceof BlockExpressionNode
-          ) {
-            if (lastContainer.end <= offset) {
+          } else if (lastContainer instanceof ListExpressionNode) {
+            if (lastContainer.listCloseBracket && lastContainer.end <= offset) {
+              res.pop();
+              popOnce = true;
+            }
+          } else if (lastContainer instanceof TupleExpressionNode) {
+            if (lastContainer.tupleCloseParen && lastContainer.end <= offset) {
+              res.pop();
+              popOnce = true;
+            }
+          } else if (lastContainer instanceof BlockExpressionNode) {
+            if (lastContainer.blockCloseBrace && lastContainer.end <= offset) {
               res.pop();
               popOnce = true;
             }
