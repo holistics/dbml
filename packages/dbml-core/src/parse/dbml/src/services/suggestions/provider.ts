@@ -240,18 +240,18 @@ function suggestInAttribute(
       res;
   }
 
-  if (container.name && token?.kind === SyntaxTokenKind.COLON) {
+  if (container.name && container.name.start <= offset && container.name.end >= offset) {
+    return suggestAttributeName(compiler, offset);
+  }
+
+  if (container.name) {
     const res = suggestAttributeValue(
       compiler,
       offset,
       extractStringFromIdentifierStream(container.name).unwrap(),
     );
 
-    return shouldPrependSpace(token, offset) ? prependSpace(res) : res;
-  }
-
-  if (container.name && container.name.start <= offset && container.name.end >= offset) {
-    return suggestAttributeName(compiler, offset);
+    return (token?.kind === SyntaxTokenKind.COLON && shouldPrependSpace(token, offset)) ? prependSpace(res) : res;
   }
 
   return noSuggestions();
