@@ -353,6 +353,10 @@ export default class Compiler {
 
   // A namespace for symbol-related queries
   readonly symbol = {
+    // Given a stack of name and the current scope
+    // Try looking up the first name in the stack in the current scope
+    // If fail, try looking in the parent of the current scope and so on
+    // After the first name has been looked up, the remaing names are resolved as members
     ofName: this.createQuery(
       Query.Symbol_OfName,
       ({

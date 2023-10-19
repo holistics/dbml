@@ -88,6 +88,8 @@ export function createSubfieldSymbol(
   }
 }
 
+// Given `name`, generate indexes with `name` and all possible kind
+// e.g `Schema:name`, `Table:name`, etc.
 export function generatePossibleIndexes(name: string): NodeSymbolIndex[] {
   return [
     createSchemaSymbolIndex,
