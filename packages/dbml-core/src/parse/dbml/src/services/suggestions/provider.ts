@@ -49,7 +49,7 @@ const { CompletionItemKind, CompletionItemInsertTextRule } = monaco.languages;
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
   // alphabetic characters implictily invoke the autocompletion provider
-  triggerCharacters = ['.', ':', '[', '('];
+  triggerCharacters = ['.', ':', '[', '(', ','];
 
   constructor(compiler: Compiler) {
     this.compiler = compiler;
