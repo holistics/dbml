@@ -13,6 +13,9 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v3
+      - uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
       - name: Run Report
         id: report
         uses: bearer/bearer-action@v2
@@ -21,10 +24,8 @@ jobs:
           output: rd.json
           diff: true
           config-file: 'bearer.yml'
-      - uses: reviewdog/action-setup@v1
-        with:
-          reviewdog_version: latest
       - name: Run reviewdog
+        if: always()
         env:
           REVIEWDOG_TOKEN: ${{ secrets.REVIEWDOG_TOKEN }}
         run:
