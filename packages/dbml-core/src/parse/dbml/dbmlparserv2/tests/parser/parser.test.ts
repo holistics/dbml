@@ -16,7 +16,7 @@ describe('#parser', () => {
     const output = JSON.stringify(
       lexer.lex().chain((tokens) => {
         const parser = new Parser(tokens, nodeIdGenerator);
-        return parser.parse();
+        return parser.parse().map((_) => _.ast);
       }),
       null,
       2,

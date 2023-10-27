@@ -22,7 +22,7 @@ describe('#validator', () => {
       .chain((tokens) => {
         return new Parser(tokens, nodeIdGenerator).parse();
       })
-      .chain((ast) => {
+      .chain(({ ast }) => {
         return new Validator(ast, new SymbolFactory(symbolIdGenerator)).validate();
       });
     const output = serialize(report, true);

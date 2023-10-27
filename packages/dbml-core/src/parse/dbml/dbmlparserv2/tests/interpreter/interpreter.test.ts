@@ -8,7 +8,6 @@ import Lexer from '../../src/lib/lexer/lexer';
 import Parser from '../../src/lib/parser/parser';
 import Analyzer from '../../src/lib/analyzer/analyzer';
 import Interpreter from '../../src/lib/interpreter/interpreter';
-import Database from '../../src/lib/model_structure/database';
 
 describe('#interpreter', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
@@ -23,7 +22,7 @@ describe('#interpreter', () => {
       .chain((tokens) => {
         return new Parser(tokens, nodeIdGenerator).parse();
       })
-      .chain((ast) => {
+      .chain(({ ast }) => {
         return new Analyzer(ast, symbolIdGenerator).analyze();
       });
 
