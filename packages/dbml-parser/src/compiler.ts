@@ -23,9 +23,9 @@ import Lexer from './lib/lexer/lexer';
 import Parser from './lib/parser/parser';
 import Analyzer from './lib/analyzer/analyzer';
 import Interpreter from './lib/interpreter/interpreter';
-import Database from '../../../model_structure/database';
 import { SyntaxToken, SyntaxTokenKind } from './lib/lexer/tokens';
 import { getMemberChain, isInvalidToken } from './lib/parser/utils';
+import { Database } from './lib/interpreter/types';
 
 const enum Query {
   _Interpret,
@@ -160,7 +160,7 @@ export default class Compiler {
 
           return interpreter
             .interpret()
-            .map((interpretedRes) => ({ ast, tokens, rawDb: new Database(interpretedRes) }));
+            .map((interpretedRes) => ({ ast, tokens, rawDb: interpretedRes }));
         });
       },
     ),
