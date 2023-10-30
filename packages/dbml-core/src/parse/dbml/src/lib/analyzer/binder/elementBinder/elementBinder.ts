@@ -111,6 +111,7 @@ export default abstract class ElementBinder {
     }
   }
 
+  // Scan for variable node and member access expression in the node to bind
   private scanAndBind(node: SyntaxNode | undefined, rule: BinderRule & { shouldBind: true }) {
     if (!node) {
       return;
@@ -142,6 +143,9 @@ export default abstract class ElementBinder {
     // The other cases are not supported as practically they shouldn't arise
   }
 
+  // Bind the fragments of a member access expression
+  // which can be a simple expression like v1.User,
+  // or a complex tuple like v1.User.(id, name)
   private bindFragments(rawFragments: SyntaxNode[], rule: BinderRule & { shouldBind: true }) {
     if (rawFragments.length === 0) {
       return;
@@ -151,8 +155,13 @@ export default abstract class ElementBinder {
     const { remainingSubnamesSymbolKind } = rule;
 
     // Handle cases of binding an incomplete member access expression
+
+    // The first index of the first fragment that is not a variable
     const invalidIndex = rawFragments.findIndex((f) => !isExpressionAVariableNode(f));
+    
+    // If the fragments are of a complex tuple, the first non-variable fragment must be a tuple
     const isComplexTuple = invalidIndex !== -1 && isTupleOfVariables(rawFragments[invalidIndex]);
+    
     // In case of a complex tuple expression, both `tuple` and `tupleVarSymbolKind` will not be `undefined`
     const tuple = isComplexTuple ? (rawFragments[invalidIndex] as TupleExpressionNode) : undefined;
     const tupleVarSymbolKind = invalidIndex >= 0 ? topSubnamesSymbolKind.pop() : undefined;
@@ -207,6 +216,8 @@ export default abstract class ElementBinder {
       this.resolveIndexStack(subnameStack, rule.ignoreNameNotFound);
   }
 
+  // Looking up the indexes in the subname stack from the current declaration node
+  // Each time the index resolves to a symbol, the referrer's symbol is bound to it
   private resolveIndexStack(
     subnameStack: { index: NodeSymbolIndex; referrer: SyntaxNode }[],
     ignoreNameNotFound: boolean,
