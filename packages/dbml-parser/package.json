@@ -1,0 +1,44 @@
+{
+  "name": "@dbml/parser",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "Holistics <dev@holistics.io>",
+  "license": "Apache-2.0",
+  "homepage": "https://dbml.dbdiagram.io",
+  "repository": "https://github.com/holistics/dbml/tree/master/packages/dbml-core",
+  "keywords": [
+    "dbml",
+    "dbml-parser"
+  ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build-cjs": "tsc -p tsconfig.cjs.json",
+    "build-esm": "tsc -p tsconfig.esm.json",
+    "build": "npm run build-cjs && npm run build-esm",
+    "dev": "tsc --watch -p tsconfig.json",
+    "test": "vitest tests",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.200",
+    "@types/node": "^20.8.8",
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0",
+    "vite-dts": "^1.0.4",
+    "vitest": "^0.34.6"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "monaco-editor-core": "^0.44.0"
+  }
+}
