@@ -168,17 +168,16 @@ export default class Parser {
       }
     }
 
-    _.remove(this.tokens);
-    this.tokens.push(...tokens);
+    this.tokens = tokens;
   }
 
-  parse(): Report<ProgramNode, CompileError> {
+  parse(): Report<{ ast: ProgramNode, tokens: SyntaxToken[] } , CompileError> {
     const body = this.program();
     const eof = this.advance();
     const program = this.nodeFactory.create(ProgramNode, { body, eof });
     this.gatherInvalid();
 
-    return new Report(program, this.errors);
+    return new Report({ ast: program, tokens: this.tokens }, this.errors);
   }
 
   /* Parsing and synchronizing ProgramNode */

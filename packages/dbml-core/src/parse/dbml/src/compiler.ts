@@ -144,7 +144,7 @@ export default class Compiler {
           .chain((tokens) => {
             const parser = new Parser(tokens as SyntaxToken[], this.nodeIdGenerator);
 
-            return parser.parse().map((ast) => ({ ast, tokens }));
+            return parser.parse();
           })
           .chain(({ ast, tokens }) => {
             const analyzer = new Analyzer(ast, this.symbolIdGenerator);
