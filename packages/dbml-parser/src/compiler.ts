@@ -26,6 +26,7 @@ import Interpreter from './lib/interpreter/interpreter';
 import { SyntaxToken, SyntaxTokenKind } from './lib/lexer/tokens';
 import { getMemberChain, isInvalidToken } from './lib/parser/utils';
 import { Database } from './lib/interpreter/types';
+import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from './services/index';
 
 const enum Query {
   _Interpret,
@@ -419,4 +420,12 @@ export default class Compiler {
           []),
     ),
   };
+
+  initMonacoServices() {
+    return {
+      definitionProvider: new DBMLDefinitionProvider(this),
+      referenceProvider: new DBMLReferencesProvider(this),
+      autocompletionProvider: new DBMLCompletionItemProvider(this),
+    };
+  }
 }
