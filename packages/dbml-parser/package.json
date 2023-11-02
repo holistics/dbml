@@ -26,7 +26,8 @@
     "build-esm": "tsc -p tsconfig.esm.json",
     "build": "npm run build-cjs && npm run build-esm",
     "dev": "tsc --watch -p tsconfig.json",
-    "test": "vitest tests",
+    "test": "vitest run",
+    "test:watch": "vitest tests",
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
