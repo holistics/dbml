@@ -69,12 +69,12 @@ export function prependSpace(completionList: CompletionList): CompletionList {
   };
 }
 
-export function addQuoteIfContainSpace(completionList: CompletionList): CompletionList {
+export function addQuoteIfNeeded(completionList: CompletionList): CompletionList {
   return {
     ...completionList,
     suggestions: completionList.suggestions.map((s) => ({
       ...s,
-      insertText: s.insertText.search(' ') !== -1 ? `"${s.insertText}"` : s.insertText,
+      insertText: (s.insertText.search(/[^a-zA-Z\d_]/) !== -1 || s.insertText[0].match(/\d/)) ? `"${s.insertText}"` : s.insertText,
     })),
   };
 }
