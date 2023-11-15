@@ -15,7 +15,7 @@ describe('@dbml/core - model_exporter', () => {
     const input = require(`./${testDir}/input/${fileName}.in.json`);
     const output = require(`./${testDir}/output/${fileName}.out.${fileExtension}`);
     /* eslint-enable */
-    const database = Parser.parse(input, 'json');
+    const database = (new Parser()).parse(input, 'json');
     let res;
     if (format === 'json') {
       res = ExporterClass.export(database, false);
