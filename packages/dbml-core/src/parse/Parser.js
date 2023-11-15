@@ -33,10 +33,6 @@ class Parser {
     return dbmlParser.parse(str);
   }
 
-  static createDBMLv2Compiler () {
-    return new Compiler();
-  }
-
   static parseSchemaRbToJSON (str) {
     return schemarbParser.parse(str);
   }
