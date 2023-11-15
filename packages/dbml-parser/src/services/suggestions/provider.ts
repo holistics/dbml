@@ -78,6 +78,11 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       return noSuggestions();
     }
 
+    // Check if we're inside a string
+    if ([SyntaxTokenKind.STRING_LITERAL, SyntaxTokenKind.QUOTED_STRING].includes(bOcToken.kind) && isOffsetWithinSpan(offset, bOcToken)) {
+      return noSuggestions(); 
+    }
+
     const element = this.compiler.container.element(offset);
     if (
       this.compiler.container.scopeKind(offset) === ScopeKind.TOPLEVEL ||
@@ -699,11 +704,12 @@ function suggestColumnNameInIndexes(compiler: Compiler, offset: number): Complet
   });
 }
 
+// Return the index of the argument we're at in an element's subfield
 function findContainerArg(offset: number, node: FunctionApplicationNode): number {
   if (!node.callee) return -1;
   const args = [node.callee, ...node.args];
 
-  const containerArgId = args.findIndex((c) => c.start <= offset && offset <= c.end);
+  const containerArgId = args.findIndex((c) => offset <= c.end);
 
   return containerArgId === -1 ? args.length : containerArgId;
 }
