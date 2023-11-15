@@ -2,18 +2,23 @@
 
 import path from 'path';
 import { defineConfig } from 'vite';
-import dts from 'vite-dts';
 
 export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: '{{camelCase name}}',
-      fileName: (format) => `{{dashCase name}}.${format}.js`,
+      name: 'DbmlParser',
+      fileName: 'dbml-parser',
+      formats: ['cjs', 'es']
     },
+    rollupOptions: {
+      // make sure to externalize deps that shouldn't be bundled
+      // into your library
+      external: ['monaco-editor-core', 'lodash'],
+    }
   },
-  plugins: [dts()],
   test: {
     globals: true,
   },
 });
+

@@ -1,5 +1,4 @@
-import * as monaco from 'monaco-editor-core';
-import _ from 'lodash';
+import { languages } from 'monaco-editor-core';
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
@@ -42,9 +41,7 @@ import {
 import { getOffsetFromMonacoPosition } from '../utils';
 import { isComment } from '../../lib/lexer/utils';
 
-/* eslint-disable @typescript-eslint/no-redeclare,no-import-assign */
-const { CompletionItemKind, CompletionItemInsertTextRule } = monaco.languages;
-/* eslint-enable @typescript-eslint/no-redeclare,no-import-assign */
+const { CompletionItemKind, CompletionItemInsertTextRule } = languages;
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
