@@ -88,7 +88,7 @@ const { Parser } = require('@dbml/core');
 ##### Parser.parse( str, format )
 * **Arguments:**  
   * ```{string} str```
-  * ```{'mysql'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'json'} format```
+  * ```{'mysql'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'json'|'dbmlv2'} format```
 
 * **Returns:** ```Database``` object
 
@@ -105,7 +105,7 @@ const { Parser } = require('@dbml/core');
 const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 
 // parse DBML to Database object
-const database = Parser.parse(dbml, 'dbml');
+const database = (new Parser()).parse(dbml, 'dbml');
 ```
 
 #### Class: ModelExporter
@@ -133,7 +133,7 @@ const { ModelExporter } = require('@dbml/core');
 const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 
 // parse DBML to Database object
-const database = Parser.parse(dbml, 'dbml');
+const database = (new Parser()).parse(dbml, 'dbml');
 
 // Export Database object to PostgreSQL
 const postgreSQL = ModelExporter.export(database, 'postgres', false);
