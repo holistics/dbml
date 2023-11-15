@@ -61,11 +61,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     const flatStream = this.compiler.token.flatStream();
     // bOc: before-or-contain
     const { token: bOcToken, index: bOcTokenId } = this.compiler.container.token(offset);
-    if (bOcTokenId === undefined) {
-      return suggestTopLevelElementType();
-    }
     // abOc: after before-or-contain
-    const abOcToken = flatStream[bOcTokenId + 1];
+    const abOcToken = bOcTokenId === undefined ? flatStream[0] : flatStream[bOcTokenId + 1];
 
     // Check if we're inside a comment
     if (
@@ -76,6 +73,10 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       ].find((token) => isComment(token) && isOffsetWithinSpan(offset, token))
     ) {
       return noSuggestions();
+    } 
+
+    if (bOcTokenId === undefined) {
+      return suggestTopLevelElementType();
     }
 
     // Check if we're inside a string
