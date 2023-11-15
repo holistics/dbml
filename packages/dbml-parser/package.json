@@ -10,22 +10,20 @@
     "dbml",
     "dbml-parser"
   ],
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
+  "main": "./dist/dbml-parser.js",
+  "module": "./dist/dbml-parser.mjs",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "import": "./dist/dbml-parser.mjs",
+      "require": "./dist/dbml-parser.js"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build-cjs": "tsc -p tsconfig.cjs.json",
-    "build-esm": "tsc -p tsconfig.esm.json",
-    "build": "npm run build-cjs && npm run build-esm",
-    "dev": "tsc --watch -p tsconfig.json",
+    "build": "vite build",
+    "dev": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest tests",
     "coverage": "vitest run --coverage",
