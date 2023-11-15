@@ -525,6 +525,10 @@ export default class Interpreter {
   private note(
     element: ElementDeclarationNode,
   ): { value: string; token: TokenPosition } | undefined {
+    if (element.body instanceof BlockExpressionNode && element.body.body.length === 0) {
+      return undefined;
+    }
+
     const content =
       element.body instanceof BlockExpressionNode ?
         extractQuotedStringToken(
