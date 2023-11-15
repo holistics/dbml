@@ -1113,6 +1113,14 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
+"@dbml/parser@0.0.1-test-3":
+  version "0.0.1-test-3"
+  resolved "https://registry.yarnpkg.com/@dbml/parser/-/parser-0.0.1-test-3.tgz#bb71939f11744922dfc7f0f3fd4be5a220e462e3"
+  integrity sha512-WavbfA3qgI8HgTwR+8+DOK1xZY44clqdo2uiEvkhEagz/jPqbHphTtlHYakWMEg2OTnyClucRgHzwhDvD4Jx1Q==
+  dependencies:
+    lodash "^4.17.21"
+    monaco-editor-core "^0.44.0"
+
 "@esbuild/android-arm64@0.18.20":
   version "0.18.20"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.18.20.tgz#984b4f9c8d0377443cc2dfcef266d02244593622"
