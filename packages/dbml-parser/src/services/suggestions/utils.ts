@@ -1,10 +1,7 @@
-import { languages } from 'monaco-editor-core';
 import { SymbolKind } from '../../lib/analyzer/symbol/symbolIndex';
-import { CompletionItemKind, CompletionList } from '../types';
+import { CompletionItemKind, type CompletionList } from '../types';
 import { SyntaxToken, SyntaxTokenKind } from '../../lib/lexer/tokens';
 import { hasTrailingSpaces } from '../../lib/lexer/utils';
-
-const { CompletionItemKind } = languages;
 
 export function pickCompletionItemKind(symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {

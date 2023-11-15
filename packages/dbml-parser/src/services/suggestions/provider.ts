@@ -1,4 +1,3 @@
-import { languages } from 'monaco-editor-core';
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
@@ -11,10 +10,10 @@ import Compiler, { ScopeKind } from '../../compiler';
 import { SyntaxToken, SyntaxTokenKind } from '../../lib/lexer/tokens';
 import { isOffsetWithinSpan } from '../../lib/utils';
 import {
-  CompletionList,
-  TextModel,
-  CompletionItemProvider,
-  Position,
+  type CompletionList,
+  type TextModel,
+  type CompletionItemProvider,
+  type Position,
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '../types';
@@ -40,8 +39,6 @@ import {
 } from '../../lib/parser/nodes';
 import { getOffsetFromMonacoPosition } from '../utils';
 import { isComment } from '../../lib/lexer/utils';
-
-const { CompletionItemKind, CompletionItemInsertTextRule } = languages;
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
