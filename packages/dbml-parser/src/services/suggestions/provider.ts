@@ -24,7 +24,7 @@ import { SymbolKind, destructureIndex } from '../../lib/analyzer/symbol/symbolIn
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
-  addQuoteIfContainSpace,
+  addQuoteIfNeeded,
   noSuggestions,
   prependSpace,
 } from './utils';
@@ -202,7 +202,7 @@ function suggestNamesInScope(
     curElement = curElement instanceof ElementDeclarationNode ? curElement.parent : undefined;
   }
 
-  return addQuoteIfContainSpace(res);
+  return addQuoteIfNeeded(res);
 }
 
 function suggestInTuple(compiler: Compiler, offset: number): CompletionList {
@@ -418,7 +418,7 @@ function suggestMembers(
 
   const nameStack = fragments.map((f) => extractVariableFromExpression(f).unwrap());
 
-  return {
+  return addQuoteIfNeeded({
     suggestions: compiler.symbol
       .ofName({ nameStack, owner: compiler.container.element(offset) })
       .flatMap(({ symbol }) => compiler.symbol.members(symbol))
@@ -428,7 +428,7 @@ function suggestMembers(
         kind: pickCompletionItemKind(kind),
         range: undefined as any,
       })),
-  };
+  });
 }
 
 function suggestInSubField(
@@ -575,7 +575,7 @@ function suggestInRefField(compiler: Compiler, offset: number): CompletionList {
 }
 
 function suggestInTableGroupField(compiler: Compiler): CompletionList {
-  return addQuoteIfContainSpace({
+  return addQuoteIfNeeded({
     suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
       const res = destructureIndex(index).unwrap_or(undefined);
       if (res === undefined) {
@@ -686,7 +686,7 @@ function suggestColumnNameInIndexes(compiler: Compiler, offset: number): Complet
 
   const { symbolTable } = tableNode.symbol;
 
-  return addQuoteIfContainSpace({
+  return addQuoteIfNeeded({
     suggestions: [...symbolTable.entries()].flatMap(([index]) => {
       const res = destructureIndex(index).unwrap_or(undefined);
       if (res === undefined) {
