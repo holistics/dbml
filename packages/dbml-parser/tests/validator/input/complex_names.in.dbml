@@ -1,0 +1,13 @@
+Project {
+    Table v1.Users {
+        id integer
+        status v2.Status [default: v2.Status.new]
+    }
+
+    Enum v2.Status {
+        new
+        churn
+        active
+        tenant
+    }
+}
