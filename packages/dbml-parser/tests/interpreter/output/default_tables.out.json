@@ -1,0 +1,66 @@
+[
+  {
+    "code": 4000,
+    "diagnostic": "Can not find Enum field 'Completed'",
+    "nodeOrToken": {
+      "id": 30,
+      "kind": "<primary-expression>",
+      "startPos": {
+        "offset": 103,
+        "line": 3,
+        "column": 27
+      },
+      "fullStart": 103,
+      "endPos": {
+        "offset": 114,
+        "line": 3,
+        "column": 38
+      },
+      "fullEnd": 114,
+      "start": 103,
+      "end": 114,
+      "expression": {
+        "id": 29,
+        "kind": "<variable>",
+        "startPos": {
+          "offset": 103,
+          "line": 3,
+          "column": 27
+        },
+        "fullStart": 103,
+        "endPos": {
+          "offset": 114,
+          "line": 3,
+          "column": 38
+        },
+        "fullEnd": 114,
+        "start": 103,
+        "end": 114,
+        "variable": {
+          "kind": "<variable>",
+          "startPos": {
+            "offset": 103,
+            "line": 3,
+            "column": 27
+          },
+          "endPos": {
+            "offset": 114,
+            "line": 3,
+            "column": 38
+          },
+          "value": "Completed",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 103,
+          "end": 114
+        }
+      }
+    },
+    "start": 103,
+    "end": 114,
+    "name": "CompileError"
+  }
+]

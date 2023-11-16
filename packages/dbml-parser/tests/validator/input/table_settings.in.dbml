@@ -1,0 +1,20 @@
+Table Users [
+    headercolor: #123, 
+    note: 'This is a note',
+    note: 'This is a duplicate note'
+] {
+    id integer [primary key]    // pk
+    name string [not null]      /* not null */
+    age integer [default: 18, note: 'This is a note', note: 'This is another note']
+    /* -----
+       ----- */
+    status v2.status [default: v2.status.new]
+    dob char(255) [null]
+}
+
+Enum v2.status {
+    churn
+    new
+    active
+    tenant
+}

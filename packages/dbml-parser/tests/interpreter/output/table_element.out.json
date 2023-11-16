@@ -1,0 +1,116 @@
+[
+  {
+    "code": 3039,
+    "diagnostic": "A(n) Note has already been defined in this scope",
+    "nodeOrToken": {
+      "kind": "<identifier>",
+      "startPos": {
+        "offset": 227,
+        "line": 18,
+        "column": 2
+      },
+      "endPos": {
+        "offset": 231,
+        "line": 18,
+        "column": 6
+      },
+      "value": "Note",
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 224,
+            "line": 17,
+            "column": 0
+          },
+          "endPos": {
+            "offset": 225,
+            "line": 18,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 224,
+          "end": 225
+        },
+        {
+          "kind": "<space>",
+          "startPos": {
+            "offset": 225,
+            "line": 18,
+            "column": 0
+          },
+          "endPos": {
+            "offset": 226,
+            "line": 18,
+            "column": 1
+          },
+          "value": " ",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 225,
+          "end": 226
+        },
+        {
+          "kind": "<space>",
+          "startPos": {
+            "offset": 226,
+            "line": 18,
+            "column": 1
+          },
+          "endPos": {
+            "offset": 227,
+            "line": 18,
+            "column": 2
+          },
+          "value": " ",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 226,
+          "end": 227
+        }
+      ],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "startPos": {
+            "offset": 231,
+            "line": 18,
+            "column": 6
+          },
+          "endPos": {
+            "offset": 232,
+            "line": 18,
+            "column": 7
+          },
+          "value": " ",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 231,
+          "end": 232
+        }
+      ],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 227,
+      "end": 231
+    },
+    "start": 227,
+    "end": 231,
+    "name": "CompileError"
+  }
+]
