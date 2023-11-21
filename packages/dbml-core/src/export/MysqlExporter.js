@@ -47,7 +47,7 @@ class MySQLExporter {
         }
       }
       if (field.note) {
-        line += ` COMMENT '${field.note.replace(/'/g, "\\'")}'`;
+        line += ` COMMENT '${field.note.replace(/'/g, "''")}'`;
       }
 
       return line;
@@ -244,7 +244,7 @@ class MySQLExporter {
         const schema = model.schemas[table.schemaId];
 
         line += `ALTER TABLE ${shouldPrintSchema(schema, model)
-          ? `\`${schema.name}\`.` : ''}\`${table.name}\` COMMENT = '${table.note.replace(/'/g, "\\'")}'`;
+          ? `\`${schema.name}\`.` : ''}\`${table.name}\` COMMENT = '${table.note.replace(/'/g, "''")}'`;
       }
       line += ';\n';
       return line;
