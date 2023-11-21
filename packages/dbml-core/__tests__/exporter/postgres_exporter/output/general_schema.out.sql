@@ -65,7 +65,7 @@ COMMENT ON TABLE "orders" IS 'This is a note in table "orders"';
 
 COMMENT ON COLUMN "orders"."created_at" IS 'When order created';
 
-COMMENT ON TABLE "products" IS 'This is a note in table "products"';
+COMMENT ON TABLE "products" IS 'This is a note in table ''products''';
 
 COMMENT ON TABLE "users" IS 'This is a note in table "users"';
 
