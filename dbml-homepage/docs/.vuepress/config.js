@@ -9,8 +9,9 @@ module.exports = {
       {
         text: 'dbx',
         items: [
-          { text: 'dbdiagram',link: 'https://dbdiagram.io?utm_source=dbml' },
-          { text: 'dbdocs',link: 'https://dbdocs.io?utm_source=dbml' },
+          { text: 'dbdiagram - Database Diagram As Code',link: 'https://dbdiagram.io?utm_source=dbml' },
+          { text: 'dbdocs - Database Docs As Code',link: 'https://dbdocs.io?utm_source=dbml' },
+          { text: 'Holistics.io - BI Reporting As Code',link: 'https://www.holistics.io/?utm_source=dbml&utm_medium=topnav&utm_campaign=landing' },
         ]
       },
       { text: 'Github',link: 'https://github.com/holistics/dbml'},

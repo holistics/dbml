@@ -1,0 +1,130 @@
+Enum "orders_status_enum" {
+  "created"
+  "running"
+  "done"
+  "failure"
+}
+
+Enum "products_status_enum" {
+  "Out of Stock"
+  "In Stock"
+}
+
+Table "orders" {
+  "id" int [pk, increment]
+  "user_id" int [unique, not null]
+  "status" orders_status_enum
+  "created_at" varchar(255)
+}
+
+Table "order_items" {
+  "order_id" int
+  "product_id" int
+  "quantity" int [default: 1]
+}
+
+Table "products" {
+  "id" int
+  "name" varchar(255)
+  "merchant_id" int [not null]
+  "price" int [note: 'Products price field']
+  "status" products_status_enum
+  "created_at" datetime [default: `now()`]
+
+Indexes {
+  (id, price) [pk]
+  (merchant_id, status) [name: "product_status"]
+  id [type: hash, unique, name: "products_index_1"]
+}
+  Note: 'Notes about products table'
+}
+
+Table "users" {
+  "id" int [pk]
+  "full_name" varchar(255)
+  "email" varchar(255) [unique]
+  "gender" varchar(255)
+  "date_of_birth" varchar(255)
+  "created_at" varchar(255)
+  "country_code" int
+  Note: 'User basic information'
+}
+
+Table "merchants" {
+  "id" int [pk]
+  "merchant_name" varchar(255)
+  "country_code" int
+  "created_at" varchar(255)
+  "admin_id" int
+}
+
+Table "countries" {
+  "code" int [pk]
+  "name" varchar(255)
+  "continent_name" varchar(255)
+}
+
+Table "composite_service_item" {
+  "composite_service_item_id" int(11) [pk, not null]
+  "service_id" int(11) [not null]
+  "ticket_item_id" int(11) [not null]
+  "discount" decimal(10,0) [not null]
+  "original_price" decimal(10,0) [not null]
+  "patient_price" decimal(10,0) [not null]
+  "insurance_price" decimal(10,0) [not null]
+
+Indexes {
+  ticket_item_id [name: "ticket_item_id"]
+  service_id [name: "service_id"]
+  (service_id, ticket_item_id) [type: hash, name: "service_id, ticket_item_id"]
+  composite_service_item_id [type: btree, name: "composite_service_item_id"]
+  (service_id, patient_price) [type: hash, name: "test test test key"]
+}
+}
+
+Table "Countries" {
+  "Id" int [pk, not null]
+  "Name" varchar(32) [not null]
+}
+
+Table "States" {
+  "Id" int [not null]
+  "CountryId" int [not null]
+  "Name" varchar(32) [not null]
+
+Indexes {
+  CountryId [name: "IX_States_CountryId"]
+  (Id, CountryId) [pk]
+}
+}
+
+Table "Cities" {
+  "Id" int [not null]
+  "CountryId" int [not null]
+  "StateId" int [not null]
+  "Name" varchar(32) [not null]
+
+Indexes {
+  CountryId [name: "IX_Cities_CountryId"]
+  (StateId, CountryId) [name: "IX_Cities_StateId_CountryId"]
+  (Id, StateId, CountryId) [pk]
+}
+}
+
+Ref "FK_States_Countries_CountryId":"Countries"."Id" < "States"."CountryId" [delete: cascade]
+
+Ref "FK_Cities_Countries_CountryId":"Countries"."Id" < "Cities"."CountryId" [delete: cascade]
+
+Ref "FK_Cities_States_StateId_CountryId":"States".("Id", "CountryId") < "Cities".("StateId", "CountryId") [delete: cascade]
+
+Ref:"orders"."id" < "order_items"."order_id"
+
+Ref:"products"."id" < "order_items"."product_id"
+
+Ref:"countries"."code" < "users"."country_code"
+
+Ref:"countries"."code" < "merchants"."country_code"
+
+Ref:"merchants"."id" < "products"."merchant_id"
+
+Ref:"users"."id" < "merchants"."admin_id"
