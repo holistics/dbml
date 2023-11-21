@@ -125,9 +125,14 @@ export default class Interpreter {
     const noteNode = collector.settingMap.getAttributeNode('note') as AttributeNode | undefined;
     const fields: Column[] = [];
     const indexes: Index[] = [];
+    const pkColumns: Column[] = [];
     (element.body as BlockExpressionNode).body.forEach((sub) => {
       if (sub instanceof FunctionApplicationNode) {
-        tryPush(this.column(sub, name, schemaName), fields);
+        const column = this.column(sub, name, schemaName);
+        tryPush(column, fields);
+        if (column?.pk) {
+          pkColumns.push(column);
+        }
       } else if (sub instanceof ElementDeclarationNode) {
         switch (sub.type!.value.toLowerCase()) {
           case 'ref':
@@ -150,6 +155,21 @@ export default class Interpreter {
         }
       }
     });
+
+    // Handle cases where there are multiple primary columns
+    // all the pk field of the columns are reset to false
+    // and a new pk composite index is added
+    if (pkColumns.length >= 2) {
+      indexes.push({
+        columns: pkColumns.map(({ name }) => ({ value: name, type: 'column' })),
+        token: {
+          start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
+          end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
+        },
+        pk: true,
+      });
+      pkColumns.forEach((column) => column.pk = false);
+    }
 
     return {
       name,

@@ -10,7 +10,7 @@ describe('@dbml/core - exporter', () => {
     const input = require(`./${testDir}/input/${fileName}.in.dbml`);
     const output = require(`./${testDir}/output/${fileName}.out.${fileExtension}`);
     const res = exporter.export(input, format);
-
+    
     expect(res).toBe(output);
     /* eslint-enable */
   };
