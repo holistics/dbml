@@ -51,7 +51,7 @@ CREATE UNIQUE INDEX `products_index_1` ON `products` (`id`) USING HASH;
 
 ALTER TABLE `orders` COMMENT = 'This is a note in table "orders"';
 
-ALTER TABLE `products` COMMENT = 'This is a note in table \'products\'';
+ALTER TABLE `products` COMMENT = 'This is a note in table ''products''';
 
 ALTER TABLE `users` COMMENT = 'This is a note in table "users"';
 
