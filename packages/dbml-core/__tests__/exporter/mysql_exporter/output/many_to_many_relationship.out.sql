@@ -96,6 +96,17 @@ CREATE TABLE `schema2`.`orders` (
   `total_price` integer
 );
 
+CREATE TABLE `C`.`c_d` (
+  `c_CD` integer,
+  `d_DE` integer,
+  PRIMARY KEY (`c_CD`, `d_DE`)
+);
+
+ALTER TABLE `C`.`c_d` ADD FOREIGN KEY (`c_CD`) REFERENCES `C`.`c` (`CD`);
+
+ALTER TABLE `C`.`c_d` ADD FOREIGN KEY (`d_DE`) REFERENCES `D`.`d` (`DE`);
+
+
 CREATE TABLE `A`.`a_b` (
   `a_AB` integer,
   `a_BA` integer,
@@ -107,17 +118,6 @@ CREATE TABLE `A`.`a_b` (
 ALTER TABLE `A`.`a_b` ADD FOREIGN KEY (`a_AB`, `a_BA`) REFERENCES `A`.`a` (`AB`, `BA`);
 
 ALTER TABLE `A`.`a_b` ADD FOREIGN KEY (`b_BC`, `b_CB`) REFERENCES `B`.`b` (`BC`, `CB`);
-
-
-CREATE TABLE `D`.`d_c` (
-  `d_DE` integer,
-  `c_CD` integer,
-  PRIMARY KEY (`d_DE`, `c_CD`)
-);
-
-ALTER TABLE `D`.`d_c` ADD FOREIGN KEY (`d_DE`) REFERENCES `D`.`d` (`DE`);
-
-ALTER TABLE `D`.`d_c` ADD FOREIGN KEY (`c_CD`) REFERENCES `C`.`c` (`CD`);
 
 
 CREATE TABLE `E`.`e_g` (
