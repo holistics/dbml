@@ -41,7 +41,7 @@ class MySQLExporter {
         if (field.dbdefault.type === 'expression') {
           line += ` DEFAULT (${field.dbdefault.value})`;
         } else if (field.dbdefault.type === 'string') {
-          line += ` DEFAULT "${field.dbdefault.value}"`;
+          line += ` DEFAULT '${field.dbdefault.value}'`;
         } else {
           line += ` DEFAULT ${field.dbdefault.value}`;
         }
