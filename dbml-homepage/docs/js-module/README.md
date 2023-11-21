@@ -97,6 +97,8 @@ Parse specified format to ```Database``` object
 
 Note: The `postgresLegacy` option parse postgreSQL using the old parser. It's quicker but less accurate.
 
+Note: The `dbmlv2` option parse dbml using the new parser. It's quicker and more robust to errors/more user-friendly error messages.
+
 ```javascript
 const fs = require('fs');
 const { Parser } = require('@dbml/core');
