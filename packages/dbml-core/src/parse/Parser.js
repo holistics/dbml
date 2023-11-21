@@ -8,7 +8,7 @@ import mssqlParser from './mssqlParser';
 import { parse } from './ANTLR/ASTGeneration';
 
 class Parser {
-  constructor (DBMLCompiler = undefined) {
+  constructor (DBMLCompiler) {
     this.DBMLCompiler = DBMLCompiler || new Compiler();
   }
 
