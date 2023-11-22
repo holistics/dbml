@@ -65,12 +65,25 @@ class Parser {
 
         const errors = this.DBMLCompiler.parse.errors();
         if (errors.length > 0) {
-          throw errors;
+          throw errors.map((error) => ({
+            message: error.diagnostic,
+            location: {
+              start: {
+                line: error.nodeOrToken.startPos.line + 1,
+                column: error.nodeOrToken.startPos.column + 1,
+              },
+              end: {
+                line: error.nodeOrToken.endPos.line + 1,
+                column: error.nodeOrToken.endPos.column + 1,
+              },
+            },
+            code: error.code,
+          }));
         }
 
         rawDatabase = this.DBMLCompiler.parse.rawDb();
-      }
         break;
+      }
 
       case 'schemarb':
         rawDatabase = Parser.parseSchemaRbToJSON(str);
