@@ -1,3 +1,29 @@
+## v3.0.0 (2023-11-23)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#477](https://github.com/holistics/dbml/pull/477) Fix: Export note string and default value ([@nguyenalter](https://github.com/nguyenalter))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#458](https://github.com/holistics/dbml/pull/458) Alternative dbml parser ([@huy-dna](https://github.com/huy-dna))
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#458](https://github.com/holistics/dbml/pull/458) Alternative dbml parser ([@huy-dna](https://github.com/huy-dna))
+
+#### :robot: Dependencies Update
+* [#469](https://github.com/holistics/dbml/pull/469) Bump browserify-sign from 4.0.4 to 4.2.2 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#451](https://github.com/holistics/dbml/pull/451) Bump fsevents from 1.2.9 to 1.2.13 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#464](https://github.com/holistics/dbml/pull/464) Bump @babel/traverse from 7.21.4 to 7.23.2 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#463](https://github.com/holistics/dbml/pull/463) Bump @babel/traverse from 7.21.4 to 7.23.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 4
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Vinh Ho ([@vinh-hh](https://github.com/vinh-hh))
+- [@huy-dna](https://github.com/huy-dna)
+
 ## v2.6.1 (2023-10-16)
 
 #### :memo: Documentation
