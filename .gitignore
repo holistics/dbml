@@ -1,7 +1,7 @@
 .npmrc
 .DS_Store
 node_modules/
-/dist/
+dist/
 *.log
 *.cache
 *.package-lock.json

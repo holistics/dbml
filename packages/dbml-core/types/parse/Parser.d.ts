@@ -1,5 +1,7 @@
+import { Compiler } from '@dbml/parse';
 import Database, { RawDatabase } from '../model_structure/database';
 declare class Parser {
+    constructor(DBMLCompiler: Compiler?);
     static parseJSONToDatabase(rawDatabase: RawDatabase): Database;
     static parseMySQLToJSON(str: string): RawDatabase;
     static parsePostgresToJSON(str: string): RawDatabase;
@@ -7,6 +9,6 @@ declare class Parser {
     static parseDBMLToJSON(str: string): RawDatabase;
     static parseSchemaRbToJSON(str: string): RawDatabase;
     static parseMSSQLToJSON(str: string): RawDatabase;
-    static parse(str: string, format: 'mysql' | 'postgres' | 'dbml' | 'schemarb' | 'mssql' | 'json'): Database;
+    parse(str: string, format: 'mysql' | 'postgres' | 'dbml' | 'dbmlv2' | 'schemarb' | 'mssql' | 'json'): Database;
 }
 export default Parser;
