@@ -1,21 +1,21 @@
 {
-  "name": "@dbml/parser",
+  "name": "@dbml/parse",
   "version": "0.0.1",
   "description": "> TODO: description",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
   "homepage": "https://dbml.dbdiagram.io",
-  "repository": "https://github.com/holistics/dbml/tree/master/packages/dbml-parser",
+  "repository": "https://github.com/holistics/dbml/tree/master/packages/dbml-parse",
   "keywords": [
     "dbml",
-    "dbml-parser"
+    "dbml-parse"
   ],
-  "main": "./dist/dbml-parser.js",
-  "module": "./dist/dbml-parser.mjs",
+  "main": "./dist/dbml-parse.js",
+  "module": "./dist/dbml-parse.mjs",
   "exports": {
     ".": {
-      "import": "./dist/dbml-parser.mjs",
-      "require": "./dist/dbml-parser.js"
+      "import": "./dist/dbml-parse.mjs",
+      "require": "./dist/dbml-parse.js"
     }
   },
   "files": [

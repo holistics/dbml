@@ -1,4 +1,4 @@
-import { Compiler } from '@dbml/parser';
+import { Compiler } from '@dbml/parse';
 import Database, { RawDatabase } from '../model_structure/database';
 declare class Parser {
     constructor(DBMLCompiler: Compiler?);
