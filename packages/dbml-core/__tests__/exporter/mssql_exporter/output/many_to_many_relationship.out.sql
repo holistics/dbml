@@ -119,6 +119,20 @@ CREATE TABLE [schema2].[orders] (
 )
 GO
 
+CREATE TABLE [C].[c_d] (
+  [c_CD] integer,
+  [d_DE] integer,
+  PRIMARY KEY ([c_CD], [d_DE])
+);
+GO
+
+ALTER TABLE [C].[c_d] ADD FOREIGN KEY ([c_CD]) REFERENCES [C].[c] ([CD]);
+GO
+
+ALTER TABLE [C].[c_d] ADD FOREIGN KEY ([d_DE]) REFERENCES [D].[d] ([DE]);
+GO
+
+
 CREATE TABLE [A].[a_b] (
   [a_AB] integer,
   [a_BA] integer,
@@ -132,20 +146,6 @@ ALTER TABLE [A].[a_b] ADD FOREIGN KEY ([a_AB], [a_BA]) REFERENCES [A].[a] ([AB],
 GO
 
 ALTER TABLE [A].[a_b] ADD FOREIGN KEY ([b_BC], [b_CB]) REFERENCES [B].[b] ([BC], [CB]);
-GO
-
-
-CREATE TABLE [D].[d_c] (
-  [d_DE] integer,
-  [c_CD] integer,
-  PRIMARY KEY ([d_DE], [c_CD])
-);
-GO
-
-ALTER TABLE [D].[d_c] ADD FOREIGN KEY ([d_DE]) REFERENCES [D].[d] ([DE]);
-GO
-
-ALTER TABLE [D].[d_c] ADD FOREIGN KEY ([c_CD]) REFERENCES [C].[c] ([CD]);
 GO
 
 

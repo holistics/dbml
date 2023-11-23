@@ -88,7 +88,7 @@ const { Parser } = require('@dbml/core');
 ##### Parser.parse( str, format )
 * **Arguments:**  
   * ```{string} str```
-  * ```{'mysql'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'json'} format```
+  * ```{'mysql'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'json'|'dbmlv2'} format```
 
 * **Returns:** ```Database``` object
 
@@ -96,6 +96,8 @@ const { Parser } = require('@dbml/core');
 Parse specified format to ```Database``` object
 
 Note: The `postgresLegacy` option parse postgreSQL using the old parser. It's quicker but less accurate.
+
+Note: The `dbmlv2` option parse dbml using the new parser. It's quicker and more robust to errors/more user-friendly error messages.
 
 ```javascript
 const fs = require('fs');
@@ -105,7 +107,7 @@ const { Parser } = require('@dbml/core');
 const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 
 // parse DBML to Database object
-const database = Parser.parse(dbml, 'dbml');
+const database = (new Parser()).parse(dbml, 'dbml');
 ```
 
 #### Class: ModelExporter
@@ -133,7 +135,7 @@ const { ModelExporter } = require('@dbml/core');
 const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 
 // parse DBML to Database object
-const database = Parser.parse(dbml, 'dbml');
+const database = (new Parser()).parse(dbml, 'dbml');
 
 // Export Database object to PostgreSQL
 const postgreSQL = ModelExporter.export(database, 'postgres', false);

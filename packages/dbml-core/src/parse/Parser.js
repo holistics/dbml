@@ -1,3 +1,4 @@
+import { Compiler } from '@dbml/parse';
 import Database from '../model_structure/database';
 import mysqlParser from './mysqlParser';
 import postgresParser from './postgresParser';
@@ -7,6 +8,10 @@ import mssqlParser from './mssqlParser';
 import { parse } from './ANTLR/ASTGeneration';
 
 class Parser {
+  constructor (DBMLCompiler) {
+    this.DBMLCompiler = DBMLCompiler || new Compiler();
+  }
+
   static parseJSONToDatabase (rawDatabase) {
     const database = new Database(rawDatabase);
     return database;
@@ -36,7 +41,7 @@ class Parser {
     return mssqlParser.parseWithPegError(str);
   }
 
-  static parse (str, format) {
+  parse (str, format) {
     let rawDatabase = {};
     switch (format) {
       case 'mysql':
@@ -54,6 +59,31 @@ class Parser {
       case 'dbml':
         rawDatabase = Parser.parseDBMLToJSON(str);
         break;
+
+      case 'dbmlv2': {
+        this.DBMLCompiler.setSource(str);
+
+        const errors = this.DBMLCompiler.parse.errors();
+        if (errors.length > 0) {
+          throw errors.map((error) => ({
+            message: error.diagnostic,
+            location: {
+              start: {
+                line: error.nodeOrToken.startPos.line + 1,
+                column: error.nodeOrToken.startPos.column + 1,
+              },
+              end: {
+                line: error.nodeOrToken.endPos.line + 1,
+                column: error.nodeOrToken.endPos.column + 1,
+              },
+            },
+            code: error.code,
+          }));
+        }
+
+        rawDatabase = this.DBMLCompiler.parse.rawDb();
+        break;
+      }
 
       case 'schemarb':
         rawDatabase = Parser.parseSchemaRbToJSON(str);

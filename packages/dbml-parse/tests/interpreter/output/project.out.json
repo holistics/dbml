@@ -1,0 +1,1336 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "orders",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 317,
+              "line": 25,
+              "column": 3
+            },
+            "end": {
+              "offset": 341,
+              "line": 25,
+              "column": 27
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": true
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 344,
+              "line": 26,
+              "column": 3
+            },
+            "end": {
+              "offset": 376,
+              "line": 26,
+              "column": 35
+            }
+          },
+          "inline_refs": [],
+          "unique": true,
+          "not_null": true
+        },
+        {
+          "name": "status",
+          "type": {
+            "schemaName": null,
+            "type_name": "orders_status",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 379,
+              "line": 27,
+              "column": 3
+            },
+            "end": {
+              "offset": 401,
+              "line": 27,
+              "column": 25
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 404,
+              "line": 28,
+              "column": 3
+            },
+            "end": {
+              "offset": 424,
+              "line": 28,
+              "column": 23
+            }
+          },
+          "inline_refs": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 278,
+          "line": 24,
+          "column": 1
+        },
+        "end": {
+          "offset": 426,
+          "line": 29,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "headerColor": "#fff"
+    },
+    {
+      "name": "order_items",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 452,
+              "line": 32,
+              "column": 3
+            },
+            "end": {
+              "offset": 466,
+              "line": 32,
+              "column": 17
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "product_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 469,
+              "line": 33,
+              "column": 3
+            },
+            "end": {
+              "offset": 485,
+              "line": 33,
+              "column": 19
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 488,
+              "line": 34,
+              "column": 3
+            },
+            "end": {
+              "offset": 515,
+              "line": 34,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "dbdefault": {
+            "type": "number",
+            "value": 1
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 428,
+          "line": 31,
+          "column": 1
+        },
+        "end": {
+          "offset": 517,
+          "line": 35,
+          "column": 2
+        }
+      },
+      "indexes": []
+    },
+    {
+      "name": "products",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 540,
+              "line": 38,
+              "column": 3
+            },
+            "end": {
+              "offset": 553,
+              "line": 38,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 556,
+              "line": 39,
+              "column": 3
+            },
+            "end": {
+              "offset": 570,
+              "line": 39,
+              "column": 17
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "merchant_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 573,
+              "line": 40,
+              "column": 3
+            },
+            "end": {
+              "offset": 601,
+              "line": 40,
+              "column": 31
+            }
+          },
+          "inline_refs": [],
+          "not_null": true
+        },
+        {
+          "name": "price",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 604,
+              "line": 41,
+              "column": 3
+            },
+            "end": {
+              "offset": 615,
+              "line": 41,
+              "column": 14
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "schemaName": null,
+            "type_name": "product status",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 618,
+              "line": 42,
+              "column": 3
+            },
+            "end": {
+              "offset": 643,
+              "line": 42,
+              "column": 28
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "datetime",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 646,
+              "line": 43,
+              "column": 3
+            },
+            "end": {
+              "offset": 686,
+              "line": 43,
+              "column": 43
+            }
+          },
+          "inline_refs": [],
+          "dbdefault": {
+            "value": "now()",
+            "type": "expression"
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 519,
+          "line": 37,
+          "column": 1
+        },
+        "end": {
+          "offset": 785,
+          "line": 50,
+          "column": 2
+        }
+      },
+      "indexes": [
+        {
+          "columns": [
+            {
+              "value": "merchant_id",
+              "type": "column"
+            },
+            {
+              "value": "status",
+              "type": "column"
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 709,
+              "line": 47,
+              "column": 3
+            },
+            "end": {
+              "offset": 755,
+              "line": 47,
+              "column": 49
+            }
+          },
+          "name": "product_status"
+        },
+        {
+          "columns": [
+            {
+              "value": "id",
+              "type": "column"
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 758,
+              "line": 48,
+              "column": 3
+            },
+            "end": {
+              "offset": 781,
+              "line": 48,
+              "column": 26
+            }
+          },
+          "type": "hash",
+          "unique": true
+        }
+      ]
+    },
+    {
+      "name": "users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 805,
+              "line": 53,
+              "column": 3
+            },
+            "end": {
+              "offset": 818,
+              "line": 53,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": true
+        },
+        {
+          "name": "full_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 821,
+              "line": 54,
+              "column": 3
+            },
+            "end": {
+              "offset": 840,
+              "line": 54,
+              "column": 22
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 843,
+              "line": 55,
+              "column": 3
+            },
+            "end": {
+              "offset": 867,
+              "line": 55,
+              "column": 27
+            }
+          },
+          "inline_refs": [],
+          "unique": true
+        },
+        {
+          "name": "gender",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 870,
+              "line": 56,
+              "column": 3
+            },
+            "end": {
+              "offset": 886,
+              "line": 56,
+              "column": 19
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "date_of_birth",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 889,
+              "line": 57,
+              "column": 3
+            },
+            "end": {
+              "offset": 912,
+              "line": 57,
+              "column": 26
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 915,
+              "line": 58,
+              "column": 3
+            },
+            "end": {
+              "offset": 935,
+              "line": 58,
+              "column": 23
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "country_code",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 938,
+              "line": 59,
+              "column": 3
+            },
+            "end": {
+              "offset": 956,
+              "line": 59,
+              "column": 21
+            }
+          },
+          "inline_refs": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 787,
+          "line": 52,
+          "column": 1
+        },
+        "end": {
+          "offset": 958,
+          "line": 60,
+          "column": 2
+        }
+      },
+      "indexes": []
+    },
+    {
+      "name": "merchants",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1061,
+              "line": 73,
+              "column": 3
+            },
+            "end": {
+              "offset": 1074,
+              "line": 73,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": true
+        },
+        {
+          "name": "merchant_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1077,
+              "line": 74,
+              "column": 3
+            },
+            "end": {
+              "offset": 1100,
+              "line": 74,
+              "column": 26
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "country_code",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1103,
+              "line": 75,
+              "column": 3
+            },
+            "end": {
+              "offset": 1121,
+              "line": 75,
+              "column": 21
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1124,
+              "line": 76,
+              "column": 3
+            },
+            "end": {
+              "offset": 1144,
+              "line": 76,
+              "column": 23
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "admin_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1147,
+              "line": 77,
+              "column": 3
+            },
+            "end": {
+              "offset": 1161,
+              "line": 77,
+              "column": 17
+            }
+          },
+          "inline_refs": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1039,
+          "line": 72,
+          "column": 1
+        },
+        "end": {
+          "offset": 1163,
+          "line": 78,
+          "column": 2
+        }
+      },
+      "indexes": []
+    },
+    {
+      "name": "countries",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "code",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1187,
+              "line": 81,
+              "column": 3
+            },
+            "end": {
+              "offset": 1202,
+              "line": 81,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1205,
+              "line": 82,
+              "column": 3
+            },
+            "end": {
+              "offset": 1219,
+              "line": 82,
+              "column": 17
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "continent_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1222,
+              "line": 83,
+              "column": 3
+            },
+            "end": {
+              "offset": 1246,
+              "line": 83,
+              "column": 27
+            }
+          },
+          "inline_refs": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1165,
+          "line": 80,
+          "column": 1
+        },
+        "end": {
+          "offset": 1248,
+          "line": 84,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
+  ],
+  "refs": [
+    {
+      "name": null,
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "orders",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1254,
+              "line": 86,
+              "column": 5
+            },
+            "end": {
+              "offset": 1267,
+              "line": 86,
+              "column": 18
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "order_items",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 1270,
+              "line": 86,
+              "column": 21
+            },
+            "end": {
+              "offset": 1294,
+              "line": 86,
+              "column": 45
+            }
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1254,
+          "line": 86,
+          "column": 5
+        },
+        "end": {
+          "offset": 1294,
+          "line": 86,
+          "column": 45
+        }
+      },
+      "schemaName": null
+    },
+    {
+      "name": null,
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "products",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1300,
+              "line": 88,
+              "column": 5
+            },
+            "end": {
+              "offset": 1315,
+              "line": 88,
+              "column": 20
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "order_items",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 1318,
+              "line": 88,
+              "column": 23
+            },
+            "end": {
+              "offset": 1344,
+              "line": 88,
+              "column": 49
+            }
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1300,
+          "line": 88,
+          "column": 5
+        },
+        "end": {
+          "offset": 1344,
+          "line": 88,
+          "column": 49
+        }
+      },
+      "schemaName": null
+    },
+    {
+      "name": null,
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "countries",
+          "fieldNames": [
+            "code"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1350,
+              "line": 90,
+              "column": 5
+            },
+            "end": {
+              "offset": 1368,
+              "line": 90,
+              "column": 23
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "users",
+          "fieldNames": [
+            "country_code"
+          ],
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 1371,
+              "line": 90,
+              "column": 26
+            },
+            "end": {
+              "offset": 1393,
+              "line": 90,
+              "column": 48
+            }
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1350,
+          "line": 90,
+          "column": 5
+        },
+        "end": {
+          "offset": 1393,
+          "line": 90,
+          "column": 48
+        }
+      },
+      "schemaName": null
+    },
+    {
+      "name": null,
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "countries",
+          "fieldNames": [
+            "code"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1399,
+              "line": 92,
+              "column": 5
+            },
+            "end": {
+              "offset": 1417,
+              "line": 92,
+              "column": 23
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "merchants",
+          "fieldNames": [
+            "country_code"
+          ],
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 1420,
+              "line": 92,
+              "column": 26
+            },
+            "end": {
+              "offset": 1446,
+              "line": 92,
+              "column": 52
+            }
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1399,
+          "line": 92,
+          "column": 5
+        },
+        "end": {
+          "offset": 1446,
+          "line": 92,
+          "column": 52
+        }
+      },
+      "schemaName": null
+    },
+    {
+      "name": null,
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "merchants",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1452,
+              "line": 94,
+              "column": 5
+            },
+            "end": {
+              "offset": 1468,
+              "line": 94,
+              "column": 21
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "products",
+          "fieldNames": [
+            "merchant_id"
+          ],
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 1471,
+              "line": 94,
+              "column": 24
+            },
+            "end": {
+              "offset": 1495,
+              "line": 94,
+              "column": 48
+            }
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1452,
+          "line": 94,
+          "column": 5
+        },
+        "end": {
+          "offset": 1495,
+          "line": 94,
+          "column": 48
+        }
+      },
+      "schemaName": null
+    },
+    {
+      "name": null,
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "users",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1501,
+              "line": 96,
+              "column": 5
+            },
+            "end": {
+              "offset": 1513,
+              "line": 96,
+              "column": 17
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "merchants",
+          "fieldNames": [
+            "admin_id"
+          ],
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 1516,
+              "line": 96,
+              "column": 20
+            },
+            "end": {
+              "offset": 1538,
+              "line": 96,
+              "column": 42
+            }
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1501,
+          "line": 96,
+          "column": 5
+        },
+        "end": {
+          "offset": 1538,
+          "line": 96,
+          "column": 42
+        }
+      },
+      "schemaName": null
+    }
+  ],
+  "enums": [
+    {
+      "name": "orders_status",
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 150,
+          "line": 12,
+          "column": 1
+        },
+        "end": {
+          "offset": 219,
+          "line": 17,
+          "column": 2
+        }
+      },
+      "values": [
+        {
+          "name": "created",
+          "token": {
+            "start": {
+              "offset": 175,
+              "line": 13,
+              "column": 3
+            },
+            "end": {
+              "offset": 184,
+              "line": 13,
+              "column": 12
+            }
+          }
+        },
+        {
+          "name": "running",
+          "token": {
+            "start": {
+              "offset": 187,
+              "line": 14,
+              "column": 3
+            },
+            "end": {
+              "offset": 196,
+              "line": 14,
+              "column": 12
+            }
+          }
+        },
+        {
+          "name": "done",
+          "token": {
+            "start": {
+              "offset": 199,
+              "line": 15,
+              "column": 3
+            },
+            "end": {
+              "offset": 205,
+              "line": 15,
+              "column": 9
+            }
+          }
+        },
+        {
+          "name": "failure",
+          "token": {
+            "start": {
+              "offset": 208,
+              "line": 16,
+              "column": 3
+            },
+            "end": {
+              "offset": 217,
+              "line": 16,
+              "column": 12
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "product status",
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 221,
+          "line": 19,
+          "column": 1
+        },
+        "end": {
+          "offset": 276,
+          "line": 22,
+          "column": 2
+        }
+      },
+      "values": [
+        {
+          "name": "Out of Stock",
+          "token": {
+            "start": {
+              "offset": 247,
+              "line": 20,
+              "column": 3
+            },
+            "end": {
+              "offset": 261,
+              "line": 20,
+              "column": 17
+            }
+          }
+        },
+        {
+          "name": "In Stock",
+          "token": {
+            "start": {
+              "offset": 264,
+              "line": 21,
+              "column": 3
+            },
+            "end": {
+              "offset": 274,
+              "line": 21,
+              "column": 13
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "tableGroups": [
+    {
+      "name": "g1",
+      "schemaName": null,
+      "tables": [
+        {
+          "name": "users",
+          "schemaName": null
+        },
+        {
+          "name": "merchants",
+          "schemaName": null
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 960,
+          "line": 62,
+          "column": 1
+        },
+        "end": {
+          "offset": 997,
+          "line": 65,
+          "column": 2
+        }
+      }
+    },
+    {
+      "name": "g2",
+      "schemaName": null,
+      "tables": [
+        {
+          "name": "countries",
+          "schemaName": null
+        },
+        {
+          "name": "orders",
+          "schemaName": null
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 999,
+          "line": 67,
+          "column": 1
+        },
+        "end": {
+          "offset": 1037,
+          "line": 70,
+          "column": 2
+        }
+      }
+    }
+  ],
+  "aliases": [],
+  "project": {
+    "name": "ecommerce",
+    "tables": [],
+    "refs": [],
+    "enums": [],
+    "tableGroups": [],
+    "note": {
+      "value": "\n# Introduction\nThis is an ecommerce project\n\n# Description\n...\n",
+      "token": {
+        "start": {
+          "offset": 22,
+          "line": 2,
+          "column": 3
+        },
+        "end": {
+          "offset": 116,
+          "line": 8,
+          "column": 6
+        }
+      }
+    },
+    "database_type": "PostgreSQL"
+  }
+}

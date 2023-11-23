@@ -35,7 +35,8 @@
     "antlr4": "^4.13.1",
     "lodash": "^4.17.15",
     "parsimmon": "^1.13.0",
-    "pluralize": "^8.0.0"
+    "pluralize": "^8.0.0",
+    "@dbml/parse": "0.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.21.0",

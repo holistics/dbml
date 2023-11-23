@@ -1,0 +1,355 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "users",
+      "schemaName": null,
+      "alias": "U",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 21,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 9
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "full_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 29,
+              "line": 3,
+              "column": 2
+            },
+            "end": {
+              "offset": 46,
+              "line": 3,
+              "column": 19
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 49,
+              "line": 4,
+              "column": 3
+            },
+            "end": {
+              "offset": 69,
+              "line": 4,
+              "column": 23
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "country_code",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 72,
+              "line": 5,
+              "column": 3
+            },
+            "end": {
+              "offset": 88,
+              "line": 5,
+              "column": 19
+            }
+          },
+          "inline_refs": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 90,
+          "line": 6,
+          "column": 2
+        }
+      },
+      "indexes": []
+    },
+    {
+      "name": "merchants",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 9,
+              "column": 3
+            },
+            "end": {
+              "offset": 118,
+              "line": 9,
+              "column": 9
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "merchant_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 122,
+              "line": 10,
+              "column": 3
+            },
+            "end": {
+              "offset": 143,
+              "line": 10,
+              "column": 24
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "country_code",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 145,
+              "line": 11,
+              "column": 2
+            },
+            "end": {
+              "offset": 161,
+              "line": 11,
+              "column": 18
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "created at",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 164,
+              "line": 12,
+              "column": 3
+            },
+            "end": {
+              "offset": 184,
+              "line": 12,
+              "column": 23
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "admin_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 187,
+              "line": 13,
+              "column": 3
+            },
+            "end": {
+              "offset": 213,
+              "line": 13,
+              "column": 29
+            }
+          },
+          "inline_refs": [
+            {
+              "schemaName": null,
+              "tableName": "U",
+              "fieldNames": [
+                "id"
+              ],
+              "relation": ">",
+              "token": {
+                "start": {
+                  "offset": 206,
+                  "line": 13,
+                  "column": 22
+                },
+                "end": {
+                  "offset": 212,
+                  "line": 13,
+                  "column": 28
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 92,
+          "line": 8,
+          "column": 1
+        },
+        "end": {
+          "offset": 252,
+          "line": 14,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
+  ],
+  "refs": [
+    {
+      "schemaName": null,
+      "name": null,
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "merchants",
+          "fieldNames": [
+            "admin_id"
+          ],
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 187,
+              "line": 13,
+              "column": 3
+            },
+            "end": {
+              "offset": 213,
+              "line": 13,
+              "column": 29
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "U",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 206,
+              "line": 13,
+              "column": 22
+            },
+            "end": {
+              "offset": 212,
+              "line": 13,
+              "column": 28
+            }
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 206,
+          "line": 13,
+          "column": 22
+        },
+        "end": {
+          "offset": 212,
+          "line": 13,
+          "column": 28
+        }
+      }
+    }
+  ],
+  "enums": [],
+  "tableGroups": [
+    {
+      "name": "g1",
+      "schemaName": null,
+      "tables": [
+        {
+          "name": "users",
+          "schemaName": null
+        },
+        {
+          "name": "merchants",
+          "schemaName": null
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 254,
+          "line": 16,
+          "column": 1
+        },
+        "end": {
+          "offset": 291,
+          "line": 19,
+          "column": 2
+        }
+      }
+    }
+  ],
+  "aliases": [
+    {
+      "name": "U",
+      "kind": "table",
+      "value": {
+        "tableName": "users",
+        "schemaName": null
+      }
+    }
+  ],
+  "project": {}
+}

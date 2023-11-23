@@ -1,0 +1,18 @@
+Table bookings {
+  id integer
+  country varchar
+  booking_date date
+  created_at timestamp
+
+  indexes {
+      (id, country) [pk] // composite primary key
+      created_at [name: 'created_at_index', note: 'Date']
+      booking_date
+      (country, booking_date) [unique]
+      booking_date [type: hash]
+      (`id*2`)
+      (`id*3`,`getdate()`)
+      (`id*3`,id)
+  }
+}
+// End of program
