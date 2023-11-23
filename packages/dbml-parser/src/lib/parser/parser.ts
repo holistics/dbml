@@ -637,12 +637,19 @@ export default class Parser {
       return this.tupleExpression();
     }
 
-    // The error is thrown here to communicate failure of operand extraction to `expression_bp`
-    this.logError(
-      this.peek(),
-      CompileErrorCode.INVALID_OPERAND,
-      `Invalid start of operand "${this.peek().value}"`,
-    );
+    if (this.peek().kind === SyntaxTokenKind.EOF) {
+      this.logError(
+        this.peek(),
+        CompileErrorCode.UNEXPECTED_EOF,
+        `Unexpected EOF`,
+      );
+    } else {
+      this.logError(
+        this.peek(),
+        CompileErrorCode.INVALID_OPERAND,
+        `Invalid start of operand "${this.peek().value}"`,
+      );
+    }
 
     return createDummyOperand(this.nodeFactory);
   }

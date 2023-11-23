@@ -18,7 +18,7 @@ import {
   ListExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
-import { extractStringFromIdentifierStream, extractVariableNode } from '../../../parser/utils';
+import { extractStringFromIdentifierStream, extractVariableNode, isDummyOperand } from '../../../parser/utils';
 import { destructureComplexVariable } from '../../utils';
 import { ContextStack, canBeNestedWithin } from '../validatorContext';
 import {
@@ -183,6 +183,10 @@ export default abstract class ElementValidator {
 
   private checkNameInValidForm(): boolean {
     const { name } = this.declarationNode;
+    if (name && isDummyOperand(name)) {
+      return false;
+    }
+
     if (name && !isValidName(name)) {
       this.logError(name, CompileErrorCode.INVALID_NAME, 'Invalid element name');
 
