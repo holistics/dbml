@@ -8,7 +8,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'DbmlParser',
-      fileName: 'dbml-parser',
+      fileName: 'dbml-parse',
       formats: ['cjs', 'es']
     },
     rollupOptions: {

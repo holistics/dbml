@@ -1,4 +1,4 @@
-import { Compiler } from '@dbml/parser';
+import { Compiler } from '@dbml/parse';
 import Database from '../model_structure/database';
 import mysqlParser from './mysqlParser';
 import postgresParser from './postgresParser';
