@@ -150,7 +150,7 @@ You can set default value as:
 
 - number value starts blank: `default: 123` or `default: 123.456`
 - string value starts with single quotes: `default: 'some string value'`
-- expression value is wrapped with parenthesis: ``default: `now() - interval '5 days'` ``
+- expression value is wrapped with backticks: ``default: `now() - interval '5 days'` ``
 - boolean (true/false/null): `default: false` or `default: null`
 
 Example,
