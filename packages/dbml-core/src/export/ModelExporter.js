@@ -3,6 +3,7 @@ import MysqlExporter from './MysqlExporter';
 import PostgresExporter from './PostgresExporter';
 import JsonExporter from './JsonExporter';
 import SqlServerExporter from './SqlServerExporter';
+import SqliteExporter from './SqliteExporter';
 
 class ModelExporter {
   static export (model = {}, format, isNormalized = true) {
@@ -28,6 +29,10 @@ class ModelExporter {
 
       case 'mssql':
         res = SqlServerExporter.export(normalizedModel);
+        break;
+
+      case 'sqlite':
+        res = SqliteExporter.export(normalizedModel);
         break;
 
       default:

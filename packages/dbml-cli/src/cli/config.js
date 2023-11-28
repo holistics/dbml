@@ -11,4 +11,7 @@ export default {
   mssql: {
     name: 'SQL Server',
   },
+  sqlite: {
+    name: 'SQLite',
+  },
 };
