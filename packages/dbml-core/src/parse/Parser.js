@@ -17,6 +17,10 @@ class Parser {
     return database;
   }
 
+  static parseMySQLToJSONv2 (str) {
+    return parse(str, 'mysql');
+  }
+
   static parseMySQLToJSON (str) {
     return mysqlParser.parse(str);
   }
@@ -45,6 +49,10 @@ class Parser {
     let rawDatabase = {};
     switch (format) {
       case 'mysql':
+        rawDatabase = Parser.parseMySQLToJSONv2(str);
+        break;
+
+      case 'mysqlLegacy':
         rawDatabase = Parser.parseMySQLToJSON(str);
         break;
 
