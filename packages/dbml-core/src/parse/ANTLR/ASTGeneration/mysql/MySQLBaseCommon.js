@@ -13,3 +13,5 @@ const sqlMode = NoMode;
 export function isSqlModeActive (mode) {
   return (sqlMode & mode) !== 0;
 }
+
+export const serverVersion = 80000;
