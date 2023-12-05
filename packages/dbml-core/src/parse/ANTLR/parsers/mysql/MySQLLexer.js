@@ -31,6 +31,7 @@ import MySQLBaseLexer from '../../ASTGeneration/mysql/MySQLBaseLexer.js';
 import {
 	NoMode, AnsiQuotes, HighNotPrecedence, PipesAsConcat, IgnoreSpace, NoBackslashEscapes,
 	isSqlModeActive,
+	serverVersion,
 } from '../../ASTGeneration/mysql/MySQLBaseCommon.js';
 
 
@@ -4989,7 +4990,7 @@ MySQLLexer.prototype.action = function(localctx, ruleIndex, actionIndex) {
 MySQLLexer.prototype.LOGICAL_OR_OPERATOR_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 0:
-		 setType(isSqlModeActive(PipesAsConcat) ? CONCAT_PIPES_SYMBOL : LOGICAL_OR_OPERATOR); 
+		 this.setType(isSqlModeActive(PipesAsConcat) ? CONCAT_PIPES_SYMBOL : LOGICAL_OR_OPERATOR); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -4999,7 +5000,7 @@ MySQLLexer.prototype.LOGICAL_OR_OPERATOR_action = function(localctx , actionInde
 MySQLLexer.prototype.INT_NUMBER_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 1:
-		 setType(determineNumericType(getText())); 
+		 this.setType(determineNumericType(getText())); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5019,7 +5020,7 @@ MySQLLexer.prototype.DOT_IDENTIFIER_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.ADDDATE_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 3:
-		 setType(determineFunction(ADDDATE_SYMBOL)); 
+		 this.setType(determineFunction(ADDDATE_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5029,7 +5030,7 @@ MySQLLexer.prototype.ADDDATE_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.BIT_AND_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 4:
-		 setType(determineFunction(BIT_AND_SYMBOL)); 
+		 this.setType(determineFunction(BIT_AND_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5039,7 +5040,7 @@ MySQLLexer.prototype.BIT_AND_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.BIT_OR_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 5:
-		 setType(determineFunction(BIT_OR_SYMBOL)); 
+		 this.setType(determineFunction(BIT_OR_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5049,7 +5050,7 @@ MySQLLexer.prototype.BIT_OR_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.BIT_XOR_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 6:
-		 setType(determineFunction(BIT_XOR_SYMBOL)); 
+		 this.setType(determineFunction(BIT_XOR_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5059,7 +5060,7 @@ MySQLLexer.prototype.BIT_XOR_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.CAST_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 7:
-		 setType(determineFunction(CAST_SYMBOL)); 
+		 this.setType(determineFunction(CAST_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5069,7 +5070,7 @@ MySQLLexer.prototype.CAST_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.COUNT_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 8:
-		 setType(determineFunction(COUNT_SYMBOL)); 
+		 this.setType(determineFunction(COUNT_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5079,7 +5080,7 @@ MySQLLexer.prototype.COUNT_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.CURDATE_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 9:
-		 setType(determineFunction(CURDATE_SYMBOL)); 
+		 this.setType(determineFunction(CURDATE_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5089,7 +5090,7 @@ MySQLLexer.prototype.CURDATE_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.CURRENT_DATE_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 10:
-		 setType(determineFunction(CURDATE_SYMBOL)); 
+		 this.setType(determineFunction(CURDATE_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5099,7 +5100,7 @@ MySQLLexer.prototype.CURRENT_DATE_SYMBOL_action = function(localctx , actionInde
 MySQLLexer.prototype.CURRENT_TIME_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 11:
-		 setType(determineFunction(CURTIME_SYMBOL)); 
+		 this.setType(determineFunction(CURTIME_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5109,7 +5110,7 @@ MySQLLexer.prototype.CURRENT_TIME_SYMBOL_action = function(localctx , actionInde
 MySQLLexer.prototype.CURTIME_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 12:
-		 setType(determineFunction(CURTIME_SYMBOL)); 
+		 this.setType(determineFunction(CURTIME_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5119,7 +5120,7 @@ MySQLLexer.prototype.CURTIME_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.DATE_ADD_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 13:
-		 setType(determineFunction(DATE_ADD_SYMBOL)); 
+		 this.setType(determineFunction(DATE_ADD_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5129,7 +5130,7 @@ MySQLLexer.prototype.DATE_ADD_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.DATE_SUB_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 14:
-		 setType(determineFunction(DATE_SUB_SYMBOL)); 
+		 this.setType(determineFunction(DATE_SUB_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5139,7 +5140,7 @@ MySQLLexer.prototype.DATE_SUB_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.EXTRACT_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 15:
-		 setType(determineFunction(EXTRACT_SYMBOL)); 
+		 this.setType(determineFunction(EXTRACT_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5149,7 +5150,7 @@ MySQLLexer.prototype.EXTRACT_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.GROUP_CONCAT_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 16:
-		 setType(determineFunction(GROUP_CONCAT_SYMBOL)); 
+		 this.setType(determineFunction(GROUP_CONCAT_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5159,7 +5160,7 @@ MySQLLexer.prototype.GROUP_CONCAT_SYMBOL_action = function(localctx , actionInde
 MySQLLexer.prototype.MAX_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 17:
-		 setType(determineFunction(MAX_SYMBOL)); 
+		 this.setType(determineFunction(MAX_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5169,7 +5170,7 @@ MySQLLexer.prototype.MAX_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.MID_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 18:
-		 setType(determineFunction(SUBSTRING_SYMBOL)); 
+		 this.setType(determineFunction(SUBSTRING_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5179,7 +5180,7 @@ MySQLLexer.prototype.MID_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.MIN_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 19:
-		 setType(determineFunction(MIN_SYMBOL)); 
+		 this.setType(determineFunction(MIN_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5189,7 +5190,7 @@ MySQLLexer.prototype.MIN_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.NOT_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 20:
-		 setType(isSqlModeActive(HighNotPrecedence) ? NOT2_SYMBOL: MySQLLexer.NOT_SYMBOL); 
+		 this.setType(isSqlModeActive(HighNotPrecedence) ? NOT2_SYMBOL: MySQLLexer.NOT_SYMBOL); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5199,7 +5200,7 @@ MySQLLexer.prototype.NOT_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.NOW_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 21:
-		 setType(determineFunction(NOW_SYMBOL)); 
+		 this.setType(determineFunction(NOW_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5209,7 +5210,7 @@ MySQLLexer.prototype.NOW_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.POSITION_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 22:
-		 setType(determineFunction(POSITION_SYMBOL)); 
+		 this.setType(determineFunction(POSITION_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5219,7 +5220,7 @@ MySQLLexer.prototype.POSITION_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.SESSION_USER_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 23:
-		 setType(determineFunction(USER_SYMBOL)); 
+		 this.setType(determineFunction(USER_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5229,7 +5230,7 @@ MySQLLexer.prototype.SESSION_USER_SYMBOL_action = function(localctx , actionInde
 MySQLLexer.prototype.STDDEV_SAMP_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 24:
-		 setType(determineFunction(STDDEV_SAMP_SYMBOL)); 
+		 this.setType(determineFunction(STDDEV_SAMP_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5239,7 +5240,7 @@ MySQLLexer.prototype.STDDEV_SAMP_SYMBOL_action = function(localctx , actionIndex
 MySQLLexer.prototype.STDDEV_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 25:
-		 setType(determineFunction(STD_SYMBOL)); 
+		 this.setType(determineFunction(STD_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5249,7 +5250,7 @@ MySQLLexer.prototype.STDDEV_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.STDDEV_POP_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 26:
-		 setType(determineFunction(STD_SYMBOL)); 
+		 this.setType(determineFunction(STD_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5259,7 +5260,7 @@ MySQLLexer.prototype.STDDEV_POP_SYMBOL_action = function(localctx , actionIndex)
 MySQLLexer.prototype.STD_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 27:
-		 setType(determineFunction(STD_SYMBOL)); 
+		 this.setType(determineFunction(STD_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5269,7 +5270,7 @@ MySQLLexer.prototype.STD_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.SUBDATE_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 28:
-		 setType(determineFunction(SUBDATE_SYMBOL)); 
+		 this.setType(determineFunction(SUBDATE_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5279,7 +5280,7 @@ MySQLLexer.prototype.SUBDATE_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.SUBSTR_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 29:
-		 setType(determineFunction(SUBSTRING_SYMBOL)); 
+		 this.setType(determineFunction(SUBSTRING_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5289,7 +5290,7 @@ MySQLLexer.prototype.SUBSTR_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.SUBSTRING_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 30:
-		 setType(determineFunction(SUBSTRING_SYMBOL)); 
+		 this.setType(determineFunction(SUBSTRING_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5299,7 +5300,7 @@ MySQLLexer.prototype.SUBSTRING_SYMBOL_action = function(localctx , actionIndex) 
 MySQLLexer.prototype.SUM_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 31:
-		 setType(determineFunction(SUM_SYMBOL)); 
+		 this.setType(determineFunction(SUM_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5309,7 +5310,7 @@ MySQLLexer.prototype.SUM_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.SYSDATE_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 32:
-		 setType(determineFunction(SYSDATE_SYMBOL)); 
+		 this.setType(determineFunction(SYSDATE_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5319,7 +5320,7 @@ MySQLLexer.prototype.SYSDATE_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.SYSTEM_USER_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 33:
-		 setType(determineFunction(USER_SYMBOL)); 
+		 this.setType(determineFunction(USER_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5329,7 +5330,7 @@ MySQLLexer.prototype.SYSTEM_USER_SYMBOL_action = function(localctx , actionIndex
 MySQLLexer.prototype.TRIM_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 34:
-		 setType(determineFunction(TRIM_SYMBOL)); 
+		 this.setType(determineFunction(TRIM_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5339,7 +5340,7 @@ MySQLLexer.prototype.TRIM_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.VARIANCE_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 35:
-		 setType(determineFunction(VARIANCE_SYMBOL)); 
+		 this.setType(determineFunction(VARIANCE_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5349,7 +5350,7 @@ MySQLLexer.prototype.VARIANCE_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.VAR_POP_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 36:
-		 setType(determineFunction(VARIANCE_SYMBOL)); 
+		 this.setType(determineFunction(VARIANCE_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5359,7 +5360,7 @@ MySQLLexer.prototype.VAR_POP_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.VAR_SAMP_SYMBOL_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 37:
-		 setType(determineFunction(VAR_SAMP_SYMBOL)); 
+		 this.setType(determineFunction(VAR_SAMP_SYMBOL)); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
@@ -5369,7 +5370,7 @@ MySQLLexer.prototype.VAR_SAMP_SYMBOL_action = function(localctx , actionIndex) {
 MySQLLexer.prototype.UNDERSCORE_CHARSET_action = function(localctx , actionIndex) {
 	switch (actionIndex) {
 	case 38:
-		 setType(checkCharset(getText())); 
+		 this.setType(checkCharset(getText())); 
 		break;
 	default:
 		throw "No registered action for:" + actionIndex;
