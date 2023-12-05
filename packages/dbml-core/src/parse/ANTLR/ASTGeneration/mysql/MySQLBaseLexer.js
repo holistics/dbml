@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import antlr4 from 'antlr4';
 import MySQLLexer from '../parsers/mysql/MySQLLexer';
 
@@ -26,4 +25,10 @@ export function determineNumericType (text) {
 
   const length = text.length - 1;
   if (length < long_len) return MySQLLexer.INT_NUMBER;
+
+  const negative = 0;
+
+  if (text[0] === '+') {
+    
+  }
 }
