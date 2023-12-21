@@ -1,3883 +1,3715 @@
-// Generated from MySQLParser.g4 by ANTLR 4.13.1
+// Generated from ./MySqlParser.g4 by ANTLR 4.13.1
 // jshint ignore: start
 import antlr4 from 'antlr4';
 
-// This class defines a complete generic visitor for a parse tree produced by MySQLParser.
+// This class defines a complete generic visitor for a parse tree produced by MySqlParser.
 
-export default class MySQLParserVisitor extends antlr4.tree.ParseTreeVisitor {
+export default class MySqlParserVisitor extends antlr4.tree.ParseTreeVisitor {
 
-	// Visit a parse tree produced by MySQLParser#query.
-	visitQuery(ctx) {
+	// Visit a parse tree produced by MySqlParser#root.
+	visitRoot(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#simpleStatement.
-	visitSimpleStatement(ctx) {
+	// Visit a parse tree produced by MySqlParser#sqlStatements.
+	visitSqlStatements(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#alterStatement.
-	visitAlterStatement(ctx) {
+	// Visit a parse tree produced by MySqlParser#sqlStatement.
+	visitSqlStatement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#alterDatabase.
-	visitAlterDatabase(ctx) {
+	// Visit a parse tree produced by MySqlParser#emptyStatement_.
+	visitEmptyStatement_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#alterEvent.
-	visitAlterEvent(ctx) {
+	// Visit a parse tree produced by MySqlParser#ddlStatement.
+	visitDdlStatement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#alterLogfileGroup.
-	visitAlterLogfileGroup(ctx) {
+	// Visit a parse tree produced by MySqlParser#dmlStatement.
+	visitDmlStatement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#alterLogfileGroupOptions.
-	visitAlterLogfileGroupOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterLogfileGroupOption.
-	visitAlterLogfileGroupOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterServer.
-	visitAlterServer(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterTable.
-	visitAlterTable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterTableActions.
-	visitAlterTableActions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterCommandList.
-	visitAlterCommandList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterCommandsModifierList.
-	visitAlterCommandsModifierList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#standaloneAlterCommands.
-	visitStandaloneAlterCommands(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterPartition.
-	visitAlterPartition(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterList.
-	visitAlterList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterCommandsModifier.
-	visitAlterCommandsModifier(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterListItem.
-	visitAlterListItem(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#place.
-	visitPlace(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#restrict.
-	visitRestrict(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterOrderList.
-	visitAlterOrderList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterAlgorithmOption.
-	visitAlterAlgorithmOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterLockOption.
-	visitAlterLockOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#indexLockAndAlgorithm.
-	visitIndexLockAndAlgorithm(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#withValidation.
-	visitWithValidation(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#removePartitioning.
-	visitRemovePartitioning(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#allOrPartitionNameList.
-	visitAllOrPartitionNameList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterTablespace.
-	visitAlterTablespace(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterUndoTablespace.
-	visitAlterUndoTablespace(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#undoTableSpaceOptions.
-	visitUndoTableSpaceOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#undoTableSpaceOption.
-	visitUndoTableSpaceOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterTablespaceOptions.
-	visitAlterTablespaceOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterTablespaceOption.
-	visitAlterTablespaceOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#changeTablespaceOption.
-	visitChangeTablespaceOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterView.
-	visitAlterView(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#viewTail.
-	visitViewTail(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#viewSelect.
-	visitViewSelect(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#viewCheckOption.
-	visitViewCheckOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createStatement.
-	visitCreateStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createDatabase.
-	visitCreateDatabase(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createDatabaseOption.
-	visitCreateDatabaseOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createTable.
-	visitCreateTable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tableElementList.
-	visitTableElementList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tableElement.
-	visitTableElement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#duplicateAsQueryExpression.
-	visitDuplicateAsQueryExpression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#queryExpressionOrParens.
-	visitQueryExpressionOrParens(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createRoutine.
-	visitCreateRoutine(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createProcedure.
-	visitCreateProcedure(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createFunction.
-	visitCreateFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createUdf.
-	visitCreateUdf(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#routineCreateOption.
-	visitRoutineCreateOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#routineAlterOptions.
-	visitRoutineAlterOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#routineOption.
-	visitRoutineOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createIndex.
-	visitCreateIndex(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#indexNameAndType.
-	visitIndexNameAndType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createIndexTarget.
-	visitCreateIndexTarget(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createLogfileGroup.
-	visitCreateLogfileGroup(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#logfileGroupOptions.
-	visitLogfileGroupOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#logfileGroupOption.
-	visitLogfileGroupOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createServer.
-	visitCreateServer(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#serverOptions.
-	visitServerOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#serverOption.
-	visitServerOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createTablespace.
-	visitCreateTablespace(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createUndoTablespace.
-	visitCreateUndoTablespace(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsDataFileName.
-	visitTsDataFileName(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsDataFile.
-	visitTsDataFile(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tablespaceOptions.
-	visitTablespaceOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tablespaceOption.
-	visitTablespaceOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsOptionInitialSize.
-	visitTsOptionInitialSize(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsOptionUndoRedoBufferSize.
-	visitTsOptionUndoRedoBufferSize(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsOptionAutoextendSize.
-	visitTsOptionAutoextendSize(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsOptionMaxSize.
-	visitTsOptionMaxSize(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsOptionExtentSize.
-	visitTsOptionExtentSize(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsOptionNodegroup.
-	visitTsOptionNodegroup(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsOptionEngine.
-	visitTsOptionEngine(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsOptionWait.
-	visitTsOptionWait(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsOptionComment.
-	visitTsOptionComment(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsOptionFileblockSize.
-	visitTsOptionFileblockSize(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tsOptionEncryption.
-	visitTsOptionEncryption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createView.
-	visitCreateView(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#viewReplaceOrAlgorithm.
-	visitViewReplaceOrAlgorithm(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#viewAlgorithm.
-	visitViewAlgorithm(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#viewSuid.
-	visitViewSuid(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createTrigger.
-	visitCreateTrigger(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#triggerFollowsPrecedesClause.
-	visitTriggerFollowsPrecedesClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createEvent.
-	visitCreateEvent(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createRole.
-	visitCreateRole(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createSpatialReference.
-	visitCreateSpatialReference(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#srsAttribute.
-	visitSrsAttribute(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropStatement.
-	visitDropStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropDatabase.
-	visitDropDatabase(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropEvent.
-	visitDropEvent(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropFunction.
-	visitDropFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropProcedure.
-	visitDropProcedure(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropIndex.
-	visitDropIndex(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropLogfileGroup.
-	visitDropLogfileGroup(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropLogfileGroupOption.
-	visitDropLogfileGroupOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropServer.
-	visitDropServer(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropTable.
-	visitDropTable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropTableSpace.
-	visitDropTableSpace(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropTrigger.
-	visitDropTrigger(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropView.
-	visitDropView(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropRole.
-	visitDropRole(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropSpatialReference.
-	visitDropSpatialReference(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropUndoTablespace.
-	visitDropUndoTablespace(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#renameTableStatement.
-	visitRenameTableStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#renamePair.
-	visitRenamePair(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#truncateTableStatement.
-	visitTruncateTableStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#importStatement.
-	visitImportStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#callStatement.
-	visitCallStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#deleteStatement.
-	visitDeleteStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionDelete.
-	visitPartitionDelete(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#deleteStatementOption.
-	visitDeleteStatementOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#doStatement.
-	visitDoStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#handlerStatement.
-	visitHandlerStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#handlerReadOrScan.
-	visitHandlerReadOrScan(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#insertStatement.
-	visitInsertStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#insertLockOption.
-	visitInsertLockOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#insertFromConstructor.
-	visitInsertFromConstructor(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#fields.
-	visitFields(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#insertValues.
-	visitInsertValues(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#insertQueryExpression.
-	visitInsertQueryExpression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#valueList.
-	visitValueList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#values.
-	visitValues(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#valuesReference.
-	visitValuesReference(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#insertUpdateList.
-	visitInsertUpdateList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#loadStatement.
-	visitLoadStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dataOrXml.
-	visitDataOrXml(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#xmlRowsIdentifiedBy.
-	visitXmlRowsIdentifiedBy(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#loadDataFileTail.
-	visitLoadDataFileTail(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#loadDataFileTargetList.
-	visitLoadDataFileTargetList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#fieldOrVariableList.
-	visitFieldOrVariableList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#replaceStatement.
-	visitReplaceStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#selectStatement.
-	visitSelectStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#selectStatementWithInto.
-	visitSelectStatementWithInto(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#queryExpression.
-	visitQueryExpression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#queryExpressionBody.
-	visitQueryExpressionBody(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#queryExpressionParens.
-	visitQueryExpressionParens(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#queryPrimary.
-	visitQueryPrimary(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#querySpecification.
-	visitQuerySpecification(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#subquery.
-	visitSubquery(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#querySpecOption.
-	visitQuerySpecOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#limitClause.
-	visitLimitClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleLimitClause.
-	visitSimpleLimitClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#limitOptions.
-	visitLimitOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#limitOption.
-	visitLimitOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#intoClause.
-	visitIntoClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#procedureAnalyseClause.
-	visitProcedureAnalyseClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#havingClause.
-	visitHavingClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowClause.
-	visitWindowClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowDefinition.
-	visitWindowDefinition(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowSpec.
-	visitWindowSpec(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowSpecDetails.
-	visitWindowSpecDetails(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowFrameClause.
-	visitWindowFrameClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowFrameUnits.
-	visitWindowFrameUnits(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowFrameExtent.
-	visitWindowFrameExtent(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowFrameStart.
-	visitWindowFrameStart(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowFrameBetween.
-	visitWindowFrameBetween(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowFrameBound.
-	visitWindowFrameBound(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowFrameExclusion.
-	visitWindowFrameExclusion(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#withClause.
-	visitWithClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#commonTableExpression.
-	visitCommonTableExpression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#groupByClause.
-	visitGroupByClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#olapOption.
-	visitOlapOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#orderClause.
-	visitOrderClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#direction.
-	visitDirection(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#fromClause.
-	visitFromClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tableReferenceList.
-	visitTableReferenceList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tableValueConstructor.
-	visitTableValueConstructor(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#explicitTable.
-	visitExplicitTable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#rowValueExplicit.
-	visitRowValueExplicit(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#selectOption.
-	visitSelectOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#lockingClauseList.
-	visitLockingClauseList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#lockingClause.
-	visitLockingClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#lockStrengh.
-	visitLockStrengh(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#lockedRowAction.
-	visitLockedRowAction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#selectItemList.
-	visitSelectItemList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#selectItem.
-	visitSelectItem(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#selectAlias.
-	visitSelectAlias(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#whereClause.
-	visitWhereClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tableReference.
-	visitTableReference(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#escapedTableReference.
-	visitEscapedTableReference(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#joinedTable.
-	visitJoinedTable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#naturalJoinType.
-	visitNaturalJoinType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#innerJoinType.
-	visitInnerJoinType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#outerJoinType.
-	visitOuterJoinType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tableFactor.
-	visitTableFactor(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#singleTable.
-	visitSingleTable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#singleTableParens.
-	visitSingleTableParens(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#derivedTable.
-	visitDerivedTable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tableReferenceListParens.
-	visitTableReferenceListParens(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tableFunction.
-	visitTableFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#columnsClause.
-	visitColumnsClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#jtColumn.
-	visitJtColumn(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#onEmptyOrError.
-	visitOnEmptyOrError(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#onEmpty.
-	visitOnEmpty(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#onError.
-	visitOnError(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#jtOnResponse.
-	visitJtOnResponse(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#unionOption.
-	visitUnionOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tableAlias.
-	visitTableAlias(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#indexHintList.
-	visitIndexHintList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#indexHint.
-	visitIndexHint(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#indexHintType.
-	visitIndexHintType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#keyOrIndex.
-	visitKeyOrIndex(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#constraintKeyType.
-	visitConstraintKeyType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#indexHintClause.
-	visitIndexHintClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#indexList.
-	visitIndexList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#indexListElement.
-	visitIndexListElement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#updateStatement.
-	visitUpdateStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#transactionOrLockingStatement.
-	visitTransactionOrLockingStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#transactionStatement.
+	// Visit a parse tree produced by MySqlParser#transactionStatement.
 	visitTransactionStatement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#beginWork.
-	visitBeginWork(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#transactionCharacteristic.
-	visitTransactionCharacteristic(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#savepointStatement.
-	visitSavepointStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#lockStatement.
-	visitLockStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#lockItem.
-	visitLockItem(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#lockOption.
-	visitLockOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#xaStatement.
-	visitXaStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#xaConvert.
-	visitXaConvert(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#xid.
-	visitXid(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#replicationStatement.
+	// Visit a parse tree produced by MySqlParser#replicationStatement.
 	visitReplicationStatement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#resetOption.
-	visitResetOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#masterResetOptions.
-	visitMasterResetOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#replicationLoad.
-	visitReplicationLoad(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#changeMaster.
-	visitChangeMaster(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#changeMasterOptions.
-	visitChangeMasterOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#masterOption.
-	visitMasterOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#privilegeCheckDef.
-	visitPrivilegeCheckDef(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tablePrimaryKeyCheckDef.
-	visitTablePrimaryKeyCheckDef(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#masterTlsCiphersuitesDef.
-	visitMasterTlsCiphersuitesDef(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#masterFileDef.
-	visitMasterFileDef(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#serverIdList.
-	visitServerIdList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#changeReplication.
-	visitChangeReplication(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#filterDefinition.
-	visitFilterDefinition(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#filterDbList.
-	visitFilterDbList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#filterTableList.
-	visitFilterTableList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#filterStringList.
-	visitFilterStringList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#filterWildDbTableString.
-	visitFilterWildDbTableString(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#filterDbPairList.
-	visitFilterDbPairList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#slave.
-	visitSlave(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#slaveUntilOptions.
-	visitSlaveUntilOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#slaveConnectionOptions.
-	visitSlaveConnectionOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#slaveThreadOptions.
-	visitSlaveThreadOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#slaveThreadOption.
-	visitSlaveThreadOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#groupReplication.
-	visitGroupReplication(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#preparedStatement.
+	// Visit a parse tree produced by MySqlParser#preparedStatement.
 	visitPreparedStatement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#executeStatement.
-	visitExecuteStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#executeVarList.
-	visitExecuteVarList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#cloneStatement.
-	visitCloneStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dataDirSSL.
-	visitDataDirSSL(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#ssl.
-	visitSsl(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#accountManagementStatement.
-	visitAccountManagementStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterUser.
-	visitAlterUser(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterUserTail.
-	visitAlterUserTail(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#userFunction.
-	visitUserFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createUser.
-	visitCreateUser(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createUserTail.
-	visitCreateUserTail(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#defaultRoleClause.
-	visitDefaultRoleClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#requireClause.
-	visitRequireClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#connectOptions.
-	visitConnectOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#accountLockPasswordExpireOptions.
-	visitAccountLockPasswordExpireOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropUser.
-	visitDropUser(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#grant.
-	visitGrant(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#grantTargetList.
-	visitGrantTargetList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#grantOptions.
-	visitGrantOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#exceptRoleList.
-	visitExceptRoleList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#withRoles.
-	visitWithRoles(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#grantAs.
-	visitGrantAs(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#versionedRequireClause.
-	visitVersionedRequireClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#renameUser.
-	visitRenameUser(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#revoke.
-	visitRevoke(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#onTypeTo.
-	visitOnTypeTo(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#aclType.
-	visitAclType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#roleOrPrivilegesList.
-	visitRoleOrPrivilegesList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#roleOrPrivilege.
-	visitRoleOrPrivilege(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#grantIdentifier.
-	visitGrantIdentifier(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#requireList.
-	visitRequireList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#requireListElement.
-	visitRequireListElement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#grantOption.
-	visitGrantOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#setRole.
-	visitSetRole(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#roleList.
-	visitRoleList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#role.
-	visitRole(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tableAdministrationStatement.
-	visitTableAdministrationStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#histogram.
-	visitHistogram(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#checkOption.
-	visitCheckOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#repairType.
-	visitRepairType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#installUninstallStatment.
-	visitInstallUninstallStatment(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#setStatement.
-	visitSetStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#startOptionValueList.
-	visitStartOptionValueList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#transactionCharacteristics.
-	visitTransactionCharacteristics(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#transactionAccessMode.
-	visitTransactionAccessMode(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#isolationLevel.
-	visitIsolationLevel(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#optionValueListContinued.
-	visitOptionValueListContinued(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#optionValueNoOptionType.
-	visitOptionValueNoOptionType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#optionValue.
-	visitOptionValue(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#setSystemVariable.
-	visitSetSystemVariable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#startOptionValueListFollowingOptionType.
-	visitStartOptionValueListFollowingOptionType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#optionValueFollowingOptionType.
-	visitOptionValueFollowingOptionType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#setExprOrDefault.
-	visitSetExprOrDefault(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#showStatement.
-	visitShowStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#showCommandType.
-	visitShowCommandType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#nonBlocking.
-	visitNonBlocking(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#fromOrIn.
-	visitFromOrIn(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#inDb.
-	visitInDb(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#profileType.
-	visitProfileType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#otherAdministrativeStatement.
-	visitOtherAdministrativeStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#keyCacheListOrParts.
-	visitKeyCacheListOrParts(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#keyCacheList.
-	visitKeyCacheList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#assignToKeycache.
-	visitAssignToKeycache(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#assignToKeycachePartition.
-	visitAssignToKeycachePartition(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#cacheKeyList.
-	visitCacheKeyList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#keyUsageElement.
-	visitKeyUsageElement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#keyUsageList.
-	visitKeyUsageList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#flushOption.
-	visitFlushOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#logType.
-	visitLogType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#flushTables.
-	visitFlushTables(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#flushTablesOptions.
-	visitFlushTablesOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#preloadTail.
-	visitPreloadTail(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#preloadList.
-	visitPreloadList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#preloadKeys.
-	visitPreloadKeys(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#adminPartition.
-	visitAdminPartition(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#resourceGroupManagement.
-	visitResourceGroupManagement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createResourceGroup.
-	visitCreateResourceGroup(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#resourceGroupVcpuList.
-	visitResourceGroupVcpuList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#vcpuNumOrRange.
-	visitVcpuNumOrRange(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#resourceGroupPriority.
-	visitResourceGroupPriority(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#resourceGroupEnableDisable.
-	visitResourceGroupEnableDisable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#alterResourceGroup.
-	visitAlterResourceGroup(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#setResourceGroup.
-	visitSetResourceGroup(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#threadIdList.
-	visitThreadIdList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dropResourceGroup.
-	visitDropResourceGroup(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#utilityStatement.
-	visitUtilityStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#describeStatement.
-	visitDescribeStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#explainStatement.
-	visitExplainStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#explainableStatement.
-	visitExplainableStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#helpCommand.
-	visitHelpCommand(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#useCommand.
-	visitUseCommand(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#restartServer.
-	visitRestartServer(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#exprOr.
-	visitExprOr(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#exprNot.
-	visitExprNot(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#exprIs.
-	visitExprIs(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#exprAnd.
-	visitExprAnd(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#exprXor.
-	visitExprXor(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#primaryExprPredicate.
-	visitPrimaryExprPredicate(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#primaryExprCompare.
-	visitPrimaryExprCompare(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#primaryExprAllAny.
-	visitPrimaryExprAllAny(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#primaryExprIsNull.
-	visitPrimaryExprIsNull(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#compOp.
-	visitCompOp(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#predicate.
-	visitPredicate(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#predicateExprIn.
-	visitPredicateExprIn(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#predicateExprBetween.
-	visitPredicateExprBetween(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#predicateExprLike.
-	visitPredicateExprLike(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#predicateExprRegex.
-	visitPredicateExprRegex(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#bitExpr.
-	visitBitExpr(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprConvert.
-	visitSimpleExprConvert(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprVariable.
-	visitSimpleExprVariable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprCast.
-	visitSimpleExprCast(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprUnary.
-	visitSimpleExprUnary(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprOdbc.
-	visitSimpleExprOdbc(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprRuntimeFunction.
-	visitSimpleExprRuntimeFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprFunction.
-	visitSimpleExprFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprCollate.
-	visitSimpleExprCollate(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprMatch.
-	visitSimpleExprMatch(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprWindowingFunction.
-	visitSimpleExprWindowingFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprBinary.
-	visitSimpleExprBinary(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprColumnRef.
-	visitSimpleExprColumnRef(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprParamMarker.
-	visitSimpleExprParamMarker(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprSum.
-	visitSimpleExprSum(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprConvertUsing.
-	visitSimpleExprConvertUsing(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprSubQuery.
-	visitSimpleExprSubQuery(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprGroupingOperation.
-	visitSimpleExprGroupingOperation(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprNot.
-	visitSimpleExprNot(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprValues.
-	visitSimpleExprValues(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprDefault.
-	visitSimpleExprDefault(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprList.
-	visitSimpleExprList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprInterval.
-	visitSimpleExprInterval(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprCase.
-	visitSimpleExprCase(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprConcat.
-	visitSimpleExprConcat(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprLiteral.
-	visitSimpleExprLiteral(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#arrayCast.
-	visitArrayCast(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#jsonOperator.
-	visitJsonOperator(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#sumExpr.
-	visitSumExpr(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#groupingOperation.
-	visitGroupingOperation(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowFunctionCall.
-	visitWindowFunctionCall(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#windowingClause.
-	visitWindowingClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#leadLagInfo.
-	visitLeadLagInfo(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#nullTreatment.
-	visitNullTreatment(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#jsonFunction.
-	visitJsonFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#inSumExpr.
-	visitInSumExpr(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#identListArg.
-	visitIdentListArg(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#identList.
-	visitIdentList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#fulltextOptions.
-	visitFulltextOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#runtimeFunctionCall.
-	visitRuntimeFunctionCall(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#geometryFunction.
-	visitGeometryFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#timeFunctionParameters.
-	visitTimeFunctionParameters(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#fractionalPrecision.
-	visitFractionalPrecision(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#weightStringLevels.
-	visitWeightStringLevels(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#weightStringLevelListItem.
-	visitWeightStringLevelListItem(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dateTimeTtype.
-	visitDateTimeTtype(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#trimFunction.
-	visitTrimFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#substringFunction.
-	visitSubstringFunction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#functionCall.
-	visitFunctionCall(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#udfExprList.
-	visitUdfExprList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#udfExpr.
-	visitUdfExpr(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#variable.
-	visitVariable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#userVariable.
-	visitUserVariable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#systemVariable.
-	visitSystemVariable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#internalVariableName.
-	visitInternalVariableName(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#whenExpression.
-	visitWhenExpression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#thenExpression.
-	visitThenExpression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#elseExpression.
-	visitElseExpression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#castType.
-	visitCastType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#exprList.
-	visitExprList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#charset.
-	visitCharset(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#notRule.
-	visitNotRule(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#not2Rule.
-	visitNot2Rule(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#interval.
-	visitInterval(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#intervalTimeStamp.
-	visitIntervalTimeStamp(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#exprListWithParentheses.
-	visitExprListWithParentheses(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#exprWithParentheses.
-	visitExprWithParentheses(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#simpleExprWithParentheses.
-	visitSimpleExprWithParentheses(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#orderList.
-	visitOrderList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#orderExpression.
-	visitOrderExpression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#groupList.
-	visitGroupList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#groupingExpression.
-	visitGroupingExpression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#channel.
-	visitChannel(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#compoundStatement.
+	// Visit a parse tree produced by MySqlParser#compoundStatement.
 	visitCompoundStatement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#returnStatement.
-	visitReturnStatement(ctx) {
+	// Visit a parse tree produced by MySqlParser#administrationStatement.
+	visitAdministrationStatement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#ifStatement.
-	visitIfStatement(ctx) {
+	// Visit a parse tree produced by MySqlParser#utilityStatement.
+	visitUtilityStatement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#ifBody.
-	visitIfBody(ctx) {
+	// Visit a parse tree produced by MySqlParser#createDatabase.
+	visitCreateDatabase(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#thenStatement.
-	visitThenStatement(ctx) {
+	// Visit a parse tree produced by MySqlParser#createEvent.
+	visitCreateEvent(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#compoundStatementList.
-	visitCompoundStatementList(ctx) {
+	// Visit a parse tree produced by MySqlParser#createIndex.
+	visitCreateIndex(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#caseStatement.
-	visitCaseStatement(ctx) {
+	// Visit a parse tree produced by MySqlParser#createLogfileGroup.
+	visitCreateLogfileGroup(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#elseStatement.
-	visitElseStatement(ctx) {
+	// Visit a parse tree produced by MySqlParser#createProcedure.
+	visitCreateProcedure(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#labeledBlock.
-	visitLabeledBlock(ctx) {
+	// Visit a parse tree produced by MySqlParser#createFunction.
+	visitCreateFunction(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#unlabeledBlock.
-	visitUnlabeledBlock(ctx) {
+	// Visit a parse tree produced by MySqlParser#createRole.
+	visitCreateRole(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#label.
-	visitLabel(ctx) {
+	// Visit a parse tree produced by MySqlParser#createServer.
+	visitCreateServer(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#beginEndBlock.
-	visitBeginEndBlock(ctx) {
+	// Visit a parse tree produced by MySqlParser#copyCreateTable.
+	visitCopyCreateTable(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#labeledControl.
-	visitLabeledControl(ctx) {
+	// Visit a parse tree produced by MySqlParser#queryCreateTable.
+	visitQueryCreateTable(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#unlabeledControl.
-	visitUnlabeledControl(ctx) {
+	// Visit a parse tree produced by MySqlParser#columnCreateTable.
+	visitColumnCreateTable(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#loopBlock.
-	visitLoopBlock(ctx) {
+	// Visit a parse tree produced by MySqlParser#createTablespaceInnodb.
+	visitCreateTablespaceInnodb(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#whileDoBlock.
-	visitWhileDoBlock(ctx) {
+	// Visit a parse tree produced by MySqlParser#createTablespaceNdb.
+	visitCreateTablespaceNdb(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#repeatUntilBlock.
-	visitRepeatUntilBlock(ctx) {
+	// Visit a parse tree produced by MySqlParser#createTrigger.
+	visitCreateTrigger(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#spDeclarations.
-	visitSpDeclarations(ctx) {
+	// Visit a parse tree produced by MySqlParser#withClause.
+	visitWithClause(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#spDeclaration.
-	visitSpDeclaration(ctx) {
+	// Visit a parse tree produced by MySqlParser#commonTableExpressions.
+	visitCommonTableExpressions(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#variableDeclaration.
-	visitVariableDeclaration(ctx) {
+	// Visit a parse tree produced by MySqlParser#cteName.
+	visitCteName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#conditionDeclaration.
-	visitConditionDeclaration(ctx) {
+	// Visit a parse tree produced by MySqlParser#cteColumnName.
+	visitCteColumnName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#spCondition.
-	visitSpCondition(ctx) {
+	// Visit a parse tree produced by MySqlParser#createView.
+	visitCreateView(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#sqlstate.
-	visitSqlstate(ctx) {
+	// Visit a parse tree produced by MySqlParser#createDatabaseOption.
+	visitCreateDatabaseOption(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#handlerDeclaration.
-	visitHandlerDeclaration(ctx) {
+	// Visit a parse tree produced by MySqlParser#charSet.
+	visitCharSet(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#handlerCondition.
-	visitHandlerCondition(ctx) {
+	// Visit a parse tree produced by MySqlParser#currentUserExpression.
+	visitCurrentUserExpression(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#cursorDeclaration.
-	visitCursorDeclaration(ctx) {
+	// Visit a parse tree produced by MySqlParser#ownerStatement.
+	visitOwnerStatement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#iterateStatement.
-	visitIterateStatement(ctx) {
+	// Visit a parse tree produced by MySqlParser#preciseSchedule.
+	visitPreciseSchedule(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#leaveStatement.
-	visitLeaveStatement(ctx) {
+	// Visit a parse tree produced by MySqlParser#intervalSchedule.
+	visitIntervalSchedule(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#getDiagnostics.
-	visitGetDiagnostics(ctx) {
+	// Visit a parse tree produced by MySqlParser#timestampValue.
+	visitTimestampValue(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#signalAllowedExpr.
-	visitSignalAllowedExpr(ctx) {
+	// Visit a parse tree produced by MySqlParser#intervalExpr.
+	visitIntervalExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#statementInformationItem.
-	visitStatementInformationItem(ctx) {
+	// Visit a parse tree produced by MySqlParser#intervalType.
+	visitIntervalType(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#conditionInformationItem.
-	visitConditionInformationItem(ctx) {
+	// Visit a parse tree produced by MySqlParser#enableType.
+	visitEnableType(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#signalInformationItemName.
-	visitSignalInformationItemName(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#signalStatement.
-	visitSignalStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#resignalStatement.
-	visitResignalStatement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#signalInformationItem.
-	visitSignalInformationItem(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#cursorOpen.
-	visitCursorOpen(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#cursorClose.
-	visitCursorClose(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#cursorFetch.
-	visitCursorFetch(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#schedule.
-	visitSchedule(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#columnDefinition.
-	visitColumnDefinition(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#checkOrReferences.
-	visitCheckOrReferences(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#checkConstraint.
-	visitCheckConstraint(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#constraintEnforcement.
-	visitConstraintEnforcement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#tableConstraintDef.
-	visitTableConstraintDef(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#constraintName.
-	visitConstraintName(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#fieldDefinition.
-	visitFieldDefinition(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#columnAttribute.
-	visitColumnAttribute(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#columnFormat.
-	visitColumnFormat(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#storageMedia.
-	visitStorageMedia(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#gcolAttribute.
-	visitGcolAttribute(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#references.
-	visitReferences(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#deleteOption.
-	visitDeleteOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#keyList.
-	visitKeyList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#keyPart.
-	visitKeyPart(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#keyListWithExpression.
-	visitKeyListWithExpression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#keyPartOrExpression.
-	visitKeyPartOrExpression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#keyListVariants.
-	visitKeyListVariants(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#indexType.
+	// Visit a parse tree produced by MySqlParser#indexType.
 	visitIndexType(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#indexOption.
+	// Visit a parse tree produced by MySqlParser#indexOption.
 	visitIndexOption(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#commonIndexOption.
-	visitCommonIndexOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#visibility.
-	visitVisibility(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#indexTypeClause.
-	visitIndexTypeClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#fulltextIndexOption.
-	visitFulltextIndexOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#spatialIndexOption.
-	visitSpatialIndexOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dataTypeDefinition.
-	visitDataTypeDefinition(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#dataType.
-	visitDataType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#nchar.
-	visitNchar(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#realType.
-	visitRealType(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#fieldLength.
-	visitFieldLength(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#fieldOptions.
-	visitFieldOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#charsetWithOptBinary.
-	visitCharsetWithOptBinary(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#ascii.
-	visitAscii(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#unicode.
-	visitUnicode(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#wsNumCodepoints.
-	visitWsNumCodepoints(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#typeDatetimePrecision.
-	visitTypeDatetimePrecision(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#charsetName.
-	visitCharsetName(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#collationName.
-	visitCollationName(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createTableOptions.
-	visitCreateTableOptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createTableOptionsSpaceSeparated.
-	visitCreateTableOptionsSpaceSeparated(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#createTableOption.
-	visitCreateTableOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#ternaryOption.
-	visitTernaryOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#defaultCollation.
-	visitDefaultCollation(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#defaultEncryption.
-	visitDefaultEncryption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#defaultCharset.
-	visitDefaultCharset(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionClause.
-	visitPartitionClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionDefKey.
-	visitPartitionDefKey(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionDefHash.
-	visitPartitionDefHash(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionDefRangeList.
-	visitPartitionDefRangeList(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#subPartitions.
-	visitSubPartitions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionKeyAlgorithm.
-	visitPartitionKeyAlgorithm(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionDefinitions.
-	visitPartitionDefinitions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionDefinition.
-	visitPartitionDefinition(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionValuesIn.
-	visitPartitionValuesIn(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionOption.
-	visitPartitionOption(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#subpartitionDefinition.
-	visitSubpartitionDefinition(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionValueItemListParen.
-	visitPartitionValueItemListParen(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#partitionValueItem.
-	visitPartitionValueItem(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#definerClause.
-	visitDefinerClause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#ifExists.
-	visitIfExists(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#ifNotExists.
-	visitIfNotExists(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by MySQLParser#procedureParameter.
+	// Visit a parse tree produced by MySqlParser#procedureParameter.
 	visitProcedureParameter(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#functionParameter.
+	// Visit a parse tree produced by MySqlParser#functionParameter.
 	visitFunctionParameter(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#collate.
-	visitCollate(ctx) {
+	// Visit a parse tree produced by MySqlParser#routineComment.
+	visitRoutineComment(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#typeWithOptCollate.
-	visitTypeWithOptCollate(ctx) {
+	// Visit a parse tree produced by MySqlParser#routineLanguage.
+	visitRoutineLanguage(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#schemaIdentifierPair.
-	visitSchemaIdentifierPair(ctx) {
+	// Visit a parse tree produced by MySqlParser#routineBehavior.
+	visitRoutineBehavior(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#viewRefList.
-	visitViewRefList(ctx) {
+	// Visit a parse tree produced by MySqlParser#routineData.
+	visitRoutineData(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#updateList.
-	visitUpdateList(ctx) {
+	// Visit a parse tree produced by MySqlParser#routineSecurity.
+	visitRoutineSecurity(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#updateElement.
-	visitUpdateElement(ctx) {
+	// Visit a parse tree produced by MySqlParser#serverOption.
+	visitServerOption(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#charsetClause.
-	visitCharsetClause(ctx) {
+	// Visit a parse tree produced by MySqlParser#createDefinitions.
+	visitCreateDefinitions(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#fieldsClause.
-	visitFieldsClause(ctx) {
+	// Visit a parse tree produced by MySqlParser#columnDeclaration.
+	visitColumnDeclaration(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#fieldTerm.
-	visitFieldTerm(ctx) {
+	// Visit a parse tree produced by MySqlParser#constraintDeclaration.
+	visitConstraintDeclaration(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#linesClause.
-	visitLinesClause(ctx) {
+	// Visit a parse tree produced by MySqlParser#indexDeclaration.
+	visitIndexDeclaration(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#lineTerm.
-	visitLineTerm(ctx) {
+	// Visit a parse tree produced by MySqlParser#columnDefinition.
+	visitColumnDefinition(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#userList.
-	visitUserList(ctx) {
+	// Visit a parse tree produced by MySqlParser#nullColumnConstraint.
+	visitNullColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#createUserList.
-	visitCreateUserList(ctx) {
+	// Visit a parse tree produced by MySqlParser#defaultColumnConstraint.
+	visitDefaultColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#alterUserList.
-	visitAlterUserList(ctx) {
+	// Visit a parse tree produced by MySqlParser#visibilityColumnConstraint.
+	visitVisibilityColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#createUserEntry.
-	visitCreateUserEntry(ctx) {
+	// Visit a parse tree produced by MySqlParser#invisibilityColumnConstraint.
+	visitInvisibilityColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#alterUserEntry.
-	visitAlterUserEntry(ctx) {
+	// Visit a parse tree produced by MySqlParser#autoIncrementColumnConstraint.
+	visitAutoIncrementColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#retainCurrentPassword.
-	visitRetainCurrentPassword(ctx) {
+	// Visit a parse tree produced by MySqlParser#primaryKeyColumnConstraint.
+	visitPrimaryKeyColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#discardOldPassword.
-	visitDiscardOldPassword(ctx) {
+	// Visit a parse tree produced by MySqlParser#uniqueKeyColumnConstraint.
+	visitUniqueKeyColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#replacePassword.
-	visitReplacePassword(ctx) {
+	// Visit a parse tree produced by MySqlParser#commentColumnConstraint.
+	visitCommentColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#userIdentifierOrText.
-	visitUserIdentifierOrText(ctx) {
+	// Visit a parse tree produced by MySqlParser#formatColumnConstraint.
+	visitFormatColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#user.
-	visitUser(ctx) {
+	// Visit a parse tree produced by MySqlParser#storageColumnConstraint.
+	visitStorageColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#likeClause.
-	visitLikeClause(ctx) {
+	// Visit a parse tree produced by MySqlParser#referenceColumnConstraint.
+	visitReferenceColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#likeOrWhere.
-	visitLikeOrWhere(ctx) {
+	// Visit a parse tree produced by MySqlParser#collateColumnConstraint.
+	visitCollateColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#onlineOption.
-	visitOnlineOption(ctx) {
+	// Visit a parse tree produced by MySqlParser#generatedColumnConstraint.
+	visitGeneratedColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#noWriteToBinLog.
-	visitNoWriteToBinLog(ctx) {
+	// Visit a parse tree produced by MySqlParser#serialDefaultColumnConstraint.
+	visitSerialDefaultColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#usePartition.
-	visitUsePartition(ctx) {
+	// Visit a parse tree produced by MySqlParser#checkColumnConstraint.
+	visitCheckColumnConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#fieldIdentifier.
-	visitFieldIdentifier(ctx) {
+	// Visit a parse tree produced by MySqlParser#primaryKeyTableConstraint.
+	visitPrimaryKeyTableConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#columnName.
-	visitColumnName(ctx) {
+	// Visit a parse tree produced by MySqlParser#uniqueKeyTableConstraint.
+	visitUniqueKeyTableConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#columnInternalRef.
-	visitColumnInternalRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#foreignKeyTableConstraint.
+	visitForeignKeyTableConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#columnInternalRefList.
-	visitColumnInternalRefList(ctx) {
+	// Visit a parse tree produced by MySqlParser#checkTableConstraint.
+	visitCheckTableConstraint(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#columnRef.
-	visitColumnRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#referenceDefinition.
+	visitReferenceDefinition(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#insertIdentifier.
-	visitInsertIdentifier(ctx) {
+	// Visit a parse tree produced by MySqlParser#referenceAction.
+	visitReferenceAction(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#indexName.
-	visitIndexName(ctx) {
+	// Visit a parse tree produced by MySqlParser#referenceControlType.
+	visitReferenceControlType(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#indexRef.
-	visitIndexRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#simpleIndexDeclaration.
+	visitSimpleIndexDeclaration(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#tableWild.
-	visitTableWild(ctx) {
+	// Visit a parse tree produced by MySqlParser#specialIndexDeclaration.
+	visitSpecialIndexDeclaration(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#schemaName.
-	visitSchemaName(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionEngine.
+	visitTableOptionEngine(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#schemaRef.
-	visitSchemaRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionEngineAttribute.
+	visitTableOptionEngineAttribute(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#procedureName.
-	visitProcedureName(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionAutoextendSize.
+	visitTableOptionAutoextendSize(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#procedureRef.
-	visitProcedureRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionAutoIncrement.
+	visitTableOptionAutoIncrement(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#functionName.
-	visitFunctionName(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionAverage.
+	visitTableOptionAverage(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#functionRef.
-	visitFunctionRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionCharset.
+	visitTableOptionCharset(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#triggerName.
-	visitTriggerName(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionChecksum.
+	visitTableOptionChecksum(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#triggerRef.
-	visitTriggerRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionCollate.
+	visitTableOptionCollate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#viewName.
-	visitViewName(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionComment.
+	visitTableOptionComment(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#viewRef.
-	visitViewRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionCompression.
+	visitTableOptionCompression(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#tablespaceName.
-	visitTablespaceName(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionConnection.
+	visitTableOptionConnection(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#tablespaceRef.
-	visitTablespaceRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionDataDirectory.
+	visitTableOptionDataDirectory(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#logfileGroupName.
-	visitLogfileGroupName(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionDelay.
+	visitTableOptionDelay(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#logfileGroupRef.
-	visitLogfileGroupRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionEncryption.
+	visitTableOptionEncryption(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#eventName.
-	visitEventName(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionPageCompressed.
+	visitTableOptionPageCompressed(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#eventRef.
-	visitEventRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionPageCompressionLevel.
+	visitTableOptionPageCompressionLevel(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#udfName.
-	visitUdfName(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionEncryptionKeyId.
+	visitTableOptionEncryptionKeyId(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#serverName.
-	visitServerName(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionIndexDirectory.
+	visitTableOptionIndexDirectory(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#serverRef.
-	visitServerRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionInsertMethod.
+	visitTableOptionInsertMethod(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#engineRef.
-	visitEngineRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#tableOptionKeyBlockSize.
+	visitTableOptionKeyBlockSize(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#tableName.
+	// Visit a parse tree produced by MySqlParser#tableOptionMaxRows.
+	visitTableOptionMaxRows(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionMinRows.
+	visitTableOptionMinRows(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionPackKeys.
+	visitTableOptionPackKeys(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionPassword.
+	visitTableOptionPassword(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionRowFormat.
+	visitTableOptionRowFormat(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionStartTransaction.
+	visitTableOptionStartTransaction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionSecondaryEngineAttribute.
+	visitTableOptionSecondaryEngineAttribute(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionRecalculation.
+	visitTableOptionRecalculation(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionPersistent.
+	visitTableOptionPersistent(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionSamplePage.
+	visitTableOptionSamplePage(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionTablespace.
+	visitTableOptionTablespace(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionTableType.
+	visitTableOptionTableType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionTransactional.
+	visitTableOptionTransactional(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableOptionUnion.
+	visitTableOptionUnion(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableType.
+	visitTableType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tablespaceStorage.
+	visitTablespaceStorage(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionDefinitions.
+	visitPartitionDefinitions(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionFunctionHash.
+	visitPartitionFunctionHash(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionFunctionKey.
+	visitPartitionFunctionKey(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionFunctionRange.
+	visitPartitionFunctionRange(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionFunctionList.
+	visitPartitionFunctionList(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#subPartitionFunctionHash.
+	visitSubPartitionFunctionHash(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#subPartitionFunctionKey.
+	visitSubPartitionFunctionKey(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionComparison.
+	visitPartitionComparison(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionListAtom.
+	visitPartitionListAtom(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionListVector.
+	visitPartitionListVector(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionSimple.
+	visitPartitionSimple(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionDefinerAtom.
+	visitPartitionDefinerAtom(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionDefinerVector.
+	visitPartitionDefinerVector(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#subpartitionDefinition.
+	visitSubpartitionDefinition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionOptionEngine.
+	visitPartitionOptionEngine(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionOptionComment.
+	visitPartitionOptionComment(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionOptionDataDirectory.
+	visitPartitionOptionDataDirectory(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionOptionIndexDirectory.
+	visitPartitionOptionIndexDirectory(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionOptionMaxRows.
+	visitPartitionOptionMaxRows(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionOptionMinRows.
+	visitPartitionOptionMinRows(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionOptionTablespace.
+	visitPartitionOptionTablespace(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#partitionOptionNodeGroup.
+	visitPartitionOptionNodeGroup(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterSimpleDatabase.
+	visitAlterSimpleDatabase(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterUpgradeName.
+	visitAlterUpgradeName(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterEvent.
+	visitAlterEvent(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterFunction.
+	visitAlterFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterInstance.
+	visitAlterInstance(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterLogfileGroup.
+	visitAlterLogfileGroup(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterProcedure.
+	visitAlterProcedure(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterServer.
+	visitAlterServer(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterTable.
+	visitAlterTable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterTablespace.
+	visitAlterTablespace(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterView.
+	visitAlterView(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByTableOption.
+	visitAlterByTableOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAddColumn.
+	visitAlterByAddColumn(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAddColumns.
+	visitAlterByAddColumns(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAddIndex.
+	visitAlterByAddIndex(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAddPrimaryKey.
+	visitAlterByAddPrimaryKey(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAddUniqueKey.
+	visitAlterByAddUniqueKey(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAddSpecialIndex.
+	visitAlterByAddSpecialIndex(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAddForeignKey.
+	visitAlterByAddForeignKey(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAddCheckTableConstraint.
+	visitAlterByAddCheckTableConstraint(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAlterCheckTableConstraint.
+	visitAlterByAlterCheckTableConstraint(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterBySetAlgorithm.
+	visitAlterBySetAlgorithm(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByChangeDefault.
+	visitAlterByChangeDefault(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByChangeColumn.
+	visitAlterByChangeColumn(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByRenameColumn.
+	visitAlterByRenameColumn(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByLock.
+	visitAlterByLock(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByModifyColumn.
+	visitAlterByModifyColumn(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByDropColumn.
+	visitAlterByDropColumn(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByDropConstraintCheck.
+	visitAlterByDropConstraintCheck(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByDropPrimaryKey.
+	visitAlterByDropPrimaryKey(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByDropIndex.
+	visitAlterByDropIndex(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByRenameIndex.
+	visitAlterByRenameIndex(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAlterColumnDefault.
+	visitAlterByAlterColumnDefault(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAlterIndexVisibility.
+	visitAlterByAlterIndexVisibility(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByDropForeignKey.
+	visitAlterByDropForeignKey(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByDisableKeys.
+	visitAlterByDisableKeys(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByEnableKeys.
+	visitAlterByEnableKeys(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByRename.
+	visitAlterByRename(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByOrder.
+	visitAlterByOrder(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByConvertCharset.
+	visitAlterByConvertCharset(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByDefaultCharset.
+	visitAlterByDefaultCharset(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByDiscardTablespace.
+	visitAlterByDiscardTablespace(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByImportTablespace.
+	visitAlterByImportTablespace(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByForce.
+	visitAlterByForce(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByValidate.
+	visitAlterByValidate(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAddDefinitions.
+	visitAlterByAddDefinitions(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterPartition.
+	visitAlterPartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAddPartition.
+	visitAlterByAddPartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByDropPartition.
+	visitAlterByDropPartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByDiscardPartition.
+	visitAlterByDiscardPartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByImportPartition.
+	visitAlterByImportPartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByTruncatePartition.
+	visitAlterByTruncatePartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByCoalescePartition.
+	visitAlterByCoalescePartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByReorganizePartition.
+	visitAlterByReorganizePartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByExchangePartition.
+	visitAlterByExchangePartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByAnalyzePartition.
+	visitAlterByAnalyzePartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByCheckPartition.
+	visitAlterByCheckPartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByOptimizePartition.
+	visitAlterByOptimizePartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByRebuildPartition.
+	visitAlterByRebuildPartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByRepairPartition.
+	visitAlterByRepairPartition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByRemovePartitioning.
+	visitAlterByRemovePartitioning(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterByUpgradePartitioning.
+	visitAlterByUpgradePartitioning(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropDatabase.
+	visitDropDatabase(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropEvent.
+	visitDropEvent(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropIndex.
+	visitDropIndex(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropLogfileGroup.
+	visitDropLogfileGroup(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropProcedure.
+	visitDropProcedure(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropFunction.
+	visitDropFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropServer.
+	visitDropServer(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropTable.
+	visitDropTable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropTablespace.
+	visitDropTablespace(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropTrigger.
+	visitDropTrigger(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropView.
+	visitDropView(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropRole.
+	visitDropRole(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#setRole.
+	visitSetRole(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#renameTable.
+	visitRenameTable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#renameTableClause.
+	visitRenameTableClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#truncateTable.
+	visitTruncateTable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#callStatement.
+	visitCallStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#deleteStatement.
+	visitDeleteStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#doStatement.
+	visitDoStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#handlerStatement.
+	visitHandlerStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#insertStatement.
+	visitInsertStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#loadDataStatement.
+	visitLoadDataStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#loadXmlStatement.
+	visitLoadXmlStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#replaceStatement.
+	visitReplaceStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#simpleSelect.
+	visitSimpleSelect(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#parenthesisSelect.
+	visitParenthesisSelect(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#unionSelect.
+	visitUnionSelect(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#unionParenthesisSelect.
+	visitUnionParenthesisSelect(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#withLateralStatement.
+	visitWithLateralStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#updateStatement.
+	visitUpdateStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#valuesStatement.
+	visitValuesStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#insertStatementValue.
+	visitInsertStatementValue(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#updatedElement.
+	visitUpdatedElement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#assignmentField.
+	visitAssignmentField(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#lockClause.
+	visitLockClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#singleDeleteStatement.
+	visitSingleDeleteStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#multipleDeleteStatement.
+	visitMultipleDeleteStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#handlerOpenStatement.
+	visitHandlerOpenStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#handlerReadIndexStatement.
+	visitHandlerReadIndexStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#handlerReadStatement.
+	visitHandlerReadStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#handlerCloseStatement.
+	visitHandlerCloseStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#singleUpdateStatement.
+	visitSingleUpdateStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#multipleUpdateStatement.
+	visitMultipleUpdateStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#orderByClause.
+	visitOrderByClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#orderByExpression.
+	visitOrderByExpression(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableSources.
+	visitTableSources(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableSourceBase.
+	visitTableSourceBase(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableSourceNested.
+	visitTableSourceNested(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableJson.
+	visitTableJson(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#atomTableItem.
+	visitAtomTableItem(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#subqueryTableItem.
+	visitSubqueryTableItem(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableSourcesItem.
+	visitTableSourcesItem(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#indexHint.
+	visitIndexHint(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#indexHintType.
+	visitIndexHintType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#innerJoin.
+	visitInnerJoin(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#straightJoin.
+	visitStraightJoin(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#outerJoin.
+	visitOuterJoin(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#naturalJoin.
+	visitNaturalJoin(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#joinSpec.
+	visitJoinSpec(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#queryExpression.
+	visitQueryExpression(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#queryExpressionNointo.
+	visitQueryExpressionNointo(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#querySpecification.
+	visitQuerySpecification(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#querySpecificationNointo.
+	visitQuerySpecificationNointo(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#unionParenthesis.
+	visitUnionParenthesis(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#unionStatement.
+	visitUnionStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#lateralStatement.
+	visitLateralStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#jsonTable.
+	visitJsonTable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#jsonColumnList.
+	visitJsonColumnList(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#jsonColumn.
+	visitJsonColumn(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#jsonOnEmpty.
+	visitJsonOnEmpty(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#jsonOnError.
+	visitJsonOnError(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#selectSpec.
+	visitSelectSpec(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#selectElements.
+	visitSelectElements(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#selectStarElement.
+	visitSelectStarElement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#selectColumnElement.
+	visitSelectColumnElement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#selectFunctionElement.
+	visitSelectFunctionElement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#selectExpressionElement.
+	visitSelectExpressionElement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#selectIntoVariables.
+	visitSelectIntoVariables(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#selectIntoDumpFile.
+	visitSelectIntoDumpFile(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#selectIntoTextFile.
+	visitSelectIntoTextFile(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#selectFieldsInto.
+	visitSelectFieldsInto(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#selectLinesInto.
+	visitSelectLinesInto(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#fromClause.
+	visitFromClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#groupByClause.
+	visitGroupByClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#havingClause.
+	visitHavingClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#windowClause.
+	visitWindowClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#groupByItem.
+	visitGroupByItem(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#limitClause.
+	visitLimitClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#limitClauseAtom.
+	visitLimitClauseAtom(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#startTransaction.
+	visitStartTransaction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#beginWork.
+	visitBeginWork(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#commitWork.
+	visitCommitWork(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#rollbackWork.
+	visitRollbackWork(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#savepointStatement.
+	visitSavepointStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#rollbackStatement.
+	visitRollbackStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#releaseStatement.
+	visitReleaseStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#lockTables.
+	visitLockTables(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#unlockTables.
+	visitUnlockTables(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#setAutocommitStatement.
+	visitSetAutocommitStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#setTransactionStatement.
+	visitSetTransactionStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#transactionMode.
+	visitTransactionMode(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#lockTableElement.
+	visitLockTableElement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#lockAction.
+	visitLockAction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#transactionOption.
+	visitTransactionOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#transactionLevel.
+	visitTransactionLevel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#changeMaster.
+	visitChangeMaster(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#changeReplicationFilter.
+	visitChangeReplicationFilter(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#purgeBinaryLogs.
+	visitPurgeBinaryLogs(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#resetMaster.
+	visitResetMaster(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#resetSlave.
+	visitResetSlave(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#startSlave.
+	visitStartSlave(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#stopSlave.
+	visitStopSlave(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#startGroupReplication.
+	visitStartGroupReplication(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#stopGroupReplication.
+	visitStopGroupReplication(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#masterStringOption.
+	visitMasterStringOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#masterDecimalOption.
+	visitMasterDecimalOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#masterBoolOption.
+	visitMasterBoolOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#masterRealOption.
+	visitMasterRealOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#masterUidListOption.
+	visitMasterUidListOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#stringMasterOption.
+	visitStringMasterOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#decimalMasterOption.
+	visitDecimalMasterOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#boolMasterOption.
+	visitBoolMasterOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#channelOption.
+	visitChannelOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#doDbReplication.
+	visitDoDbReplication(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#ignoreDbReplication.
+	visitIgnoreDbReplication(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#doTableReplication.
+	visitDoTableReplication(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#ignoreTableReplication.
+	visitIgnoreTableReplication(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#wildDoTableReplication.
+	visitWildDoTableReplication(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#wildIgnoreTableReplication.
+	visitWildIgnoreTableReplication(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#rewriteDbReplication.
+	visitRewriteDbReplication(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tablePair.
+	visitTablePair(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#threadType.
+	visitThreadType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#gtidsUntilOption.
+	visitGtidsUntilOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#masterLogUntilOption.
+	visitMasterLogUntilOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#relayLogUntilOption.
+	visitRelayLogUntilOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#sqlGapsUntilOption.
+	visitSqlGapsUntilOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#userConnectionOption.
+	visitUserConnectionOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#passwordConnectionOption.
+	visitPasswordConnectionOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#defaultAuthConnectionOption.
+	visitDefaultAuthConnectionOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#pluginDirConnectionOption.
+	visitPluginDirConnectionOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#gtuidSet.
+	visitGtuidSet(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#xaStartTransaction.
+	visitXaStartTransaction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#xaEndTransaction.
+	visitXaEndTransaction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#xaPrepareStatement.
+	visitXaPrepareStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#xaCommitWork.
+	visitXaCommitWork(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#xaRollbackWork.
+	visitXaRollbackWork(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#xaRecoverWork.
+	visitXaRecoverWork(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#prepareStatement.
+	visitPrepareStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#executeStatement.
+	visitExecuteStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#deallocatePrepare.
+	visitDeallocatePrepare(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#routineBody.
+	visitRoutineBody(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#blockStatement.
+	visitBlockStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#caseStatement.
+	visitCaseStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#ifStatement.
+	visitIfStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#iterateStatement.
+	visitIterateStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#leaveStatement.
+	visitLeaveStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#loopStatement.
+	visitLoopStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#repeatStatement.
+	visitRepeatStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#returnStatement.
+	visitReturnStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#whileStatement.
+	visitWhileStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#CloseCursor.
+	visitCloseCursor(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#FetchCursor.
+	visitFetchCursor(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#OpenCursor.
+	visitOpenCursor(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#declareVariable.
+	visitDeclareVariable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#declareCondition.
+	visitDeclareCondition(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#declareCursor.
+	visitDeclareCursor(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#declareHandler.
+	visitDeclareHandler(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#handlerConditionCode.
+	visitHandlerConditionCode(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#handlerConditionState.
+	visitHandlerConditionState(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#handlerConditionName.
+	visitHandlerConditionName(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#handlerConditionWarning.
+	visitHandlerConditionWarning(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#handlerConditionNotfound.
+	visitHandlerConditionNotfound(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#handlerConditionException.
+	visitHandlerConditionException(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#procedureSqlStatement.
+	visitProcedureSqlStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#caseAlternative.
+	visitCaseAlternative(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#elifAlternative.
+	visitElifAlternative(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterUserMysqlV56.
+	visitAlterUserMysqlV56(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#alterUserMysqlV80.
+	visitAlterUserMysqlV80(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#createUserMysqlV56.
+	visitCreateUserMysqlV56(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#createUserMysqlV80.
+	visitCreateUserMysqlV80(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dropUser.
+	visitDropUser(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#grantStatement.
+	visitGrantStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#roleOption.
+	visitRoleOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#grantProxy.
+	visitGrantProxy(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#renameUser.
+	visitRenameUser(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#detailRevoke.
+	visitDetailRevoke(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#shortRevoke.
+	visitShortRevoke(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#roleRevoke.
+	visitRoleRevoke(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#revokeProxy.
+	visitRevokeProxy(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#setPasswordStatement.
+	visitSetPasswordStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#userSpecification.
+	visitUserSpecification(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#hashAuthOption.
+	visitHashAuthOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#randomAuthOption.
+	visitRandomAuthOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#stringAuthOption.
+	visitStringAuthOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#moduleAuthOption.
+	visitModuleAuthOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#simpleAuthOption.
+	visitSimpleAuthOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#authOptionClause.
+	visitAuthOptionClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#module.
+	visitModule(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#passwordModuleOption.
+	visitPasswordModuleOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tlsOption.
+	visitTlsOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#userResourceOption.
+	visitUserResourceOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#userPasswordOption.
+	visitUserPasswordOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#userLockOption.
+	visitUserLockOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#privelegeClause.
+	visitPrivelegeClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#privilege.
+	visitPrivilege(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#currentSchemaPriviLevel.
+	visitCurrentSchemaPriviLevel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#globalPrivLevel.
+	visitGlobalPrivLevel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#definiteSchemaPrivLevel.
+	visitDefiniteSchemaPrivLevel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#definiteFullTablePrivLevel.
+	visitDefiniteFullTablePrivLevel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#definiteFullTablePrivLevel2.
+	visitDefiniteFullTablePrivLevel2(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#definiteTablePrivLevel.
+	visitDefiniteTablePrivLevel(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#renameUserClause.
+	visitRenameUserClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#analyzeTable.
+	visitAnalyzeTable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#checkTable.
+	visitCheckTable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#checksumTable.
+	visitChecksumTable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#optimizeTable.
+	visitOptimizeTable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#repairTable.
+	visitRepairTable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#checkTableOption.
+	visitCheckTableOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#createUdfunction.
+	visitCreateUdfunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#installPlugin.
+	visitInstallPlugin(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#uninstallPlugin.
+	visitUninstallPlugin(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#setVariable.
+	visitSetVariable(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#setCharset.
+	visitSetCharset(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#setNames.
+	visitSetNames(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#setPassword.
+	visitSetPassword(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#setTransaction.
+	visitSetTransaction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#setAutocommit.
+	visitSetAutocommit(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#setNewValueInsideTrigger.
+	visitSetNewValueInsideTrigger(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showMasterLogs.
+	visitShowMasterLogs(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showLogEvents.
+	visitShowLogEvents(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showObjectFilter.
+	visitShowObjectFilter(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showColumns.
+	visitShowColumns(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showCreateDb.
+	visitShowCreateDb(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showCreateFullIdObject.
+	visitShowCreateFullIdObject(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showCreateUser.
+	visitShowCreateUser(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showEngine.
+	visitShowEngine(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showGlobalInfo.
+	visitShowGlobalInfo(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showErrors.
+	visitShowErrors(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showCountErrors.
+	visitShowCountErrors(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showSchemaFilter.
+	visitShowSchemaFilter(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showRoutine.
+	visitShowRoutine(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showGrants.
+	visitShowGrants(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showIndexes.
+	visitShowIndexes(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showOpenTables.
+	visitShowOpenTables(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showProfile.
+	visitShowProfile(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showSlaveStatus.
+	visitShowSlaveStatus(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#variableClause.
+	visitVariableClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showCommonEntity.
+	visitShowCommonEntity(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showFilter.
+	visitShowFilter(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showGlobalInfoClause.
+	visitShowGlobalInfoClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showSchemaEntity.
+	visitShowSchemaEntity(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#showProfileType.
+	visitShowProfileType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#binlogStatement.
+	visitBinlogStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#cacheIndexStatement.
+	visitCacheIndexStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#flushStatement.
+	visitFlushStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#killStatement.
+	visitKillStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#loadIndexIntoCache.
+	visitLoadIndexIntoCache(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#resetStatement.
+	visitResetStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#shutdownStatement.
+	visitShutdownStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableIndexes.
+	visitTableIndexes(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#simpleFlushOption.
+	visitSimpleFlushOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#channelFlushOption.
+	visitChannelFlushOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableFlushOption.
+	visitTableFlushOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#flushTableOption.
+	visitFlushTableOption(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#loadedTableIndexes.
+	visitLoadedTableIndexes(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#simpleDescribeStatement.
+	visitSimpleDescribeStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#fullDescribeStatement.
+	visitFullDescribeStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#helpStatement.
+	visitHelpStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#useStatement.
+	visitUseStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#signalStatement.
+	visitSignalStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#resignalStatement.
+	visitResignalStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#signalConditionInformation.
+	visitSignalConditionInformation(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#withStatement.
+	visitWithStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableStatement.
+	visitTableStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#diagnosticsStatement.
+	visitDiagnosticsStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#diagnosticsConditionInformationName.
+	visitDiagnosticsConditionInformationName(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#describeStatements.
+	visitDescribeStatements(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#describeConnection.
+	visitDescribeConnection(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#fullId.
+	visitFullId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tableName.
 	visitTableName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#filterTableRef.
-	visitFilterTableRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#roleName.
+	visitRoleName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#tableRefWithWildcard.
-	visitTableRefWithWildcard(ctx) {
+	// Visit a parse tree produced by MySqlParser#fullColumnName.
+	visitFullColumnName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#tableRef.
-	visitTableRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#indexColumnName.
+	visitIndexColumnName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#tableRefList.
-	visitTableRefList(ctx) {
+	// Visit a parse tree produced by MySqlParser#simpleUserName.
+	visitSimpleUserName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#tableAliasRefList.
-	visitTableAliasRefList(ctx) {
+	// Visit a parse tree produced by MySqlParser#hostName.
+	visitHostName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#parameterName.
-	visitParameterName(ctx) {
+	// Visit a parse tree produced by MySqlParser#userName.
+	visitUserName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#labelIdentifier.
-	visitLabelIdentifier(ctx) {
+	// Visit a parse tree produced by MySqlParser#mysqlVariable.
+	visitMysqlVariable(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#labelRef.
-	visitLabelRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#charsetName.
+	visitCharsetName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#roleIdentifier.
-	visitRoleIdentifier(ctx) {
+	// Visit a parse tree produced by MySqlParser#collationName.
+	visitCollationName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#roleRef.
-	visitRoleRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#engineName.
+	visitEngineName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#pluginRef.
-	visitPluginRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#engineNameBase.
+	visitEngineNameBase(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#componentRef.
-	visitComponentRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#uuidSet.
+	visitUuidSet(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#resourceGroupRef.
-	visitResourceGroupRef(ctx) {
+	// Visit a parse tree produced by MySqlParser#xid.
+	visitXid(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#windowName.
+	// Visit a parse tree produced by MySqlParser#xuidStringId.
+	visitXuidStringId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#authPlugin.
+	visitAuthPlugin(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#uid.
+	visitUid(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#simpleId.
+	visitSimpleId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dottedId.
+	visitDottedId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#decimalLiteral.
+	visitDecimalLiteral(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#fileSizeLiteral.
+	visitFileSizeLiteral(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#stringLiteral.
+	visitStringLiteral(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#booleanLiteral.
+	visitBooleanLiteral(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#hexadecimalLiteral.
+	visitHexadecimalLiteral(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#nullNotnull.
+	visitNullNotnull(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#constant.
+	visitConstant(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#stringDataType.
+	visitStringDataType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#nationalVaryingStringDataType.
+	visitNationalVaryingStringDataType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#nationalStringDataType.
+	visitNationalStringDataType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dimensionDataType.
+	visitDimensionDataType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#simpleDataType.
+	visitSimpleDataType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#collectionDataType.
+	visitCollectionDataType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#spatialDataType.
+	visitSpatialDataType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#longVarcharDataType.
+	visitLongVarcharDataType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#longVarbinaryDataType.
+	visitLongVarbinaryDataType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#collectionOptions.
+	visitCollectionOptions(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#convertedDataType.
+	visitConvertedDataType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#lengthOneDimension.
+	visitLengthOneDimension(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#lengthTwoDimension.
+	visitLengthTwoDimension(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#lengthTwoOptionalDimension.
+	visitLengthTwoOptionalDimension(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#uidList.
+	visitUidList(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#fullColumnNameList.
+	visitFullColumnNameList(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#tables.
+	visitTables(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#indexColumnNames.
+	visitIndexColumnNames(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#expressions.
+	visitExpressions(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#expressionsWithDefaults.
+	visitExpressionsWithDefaults(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#constants.
+	visitConstants(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#simpleStrings.
+	visitSimpleStrings(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#userVariables.
+	visitUserVariables(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#defaultValue.
+	visitDefaultValue(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#currentTimestamp.
+	visitCurrentTimestamp(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#expressionOrDefault.
+	visitExpressionOrDefault(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#ifExists.
+	visitIfExists(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#ifNotExists.
+	visitIfNotExists(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#orReplace.
+	visitOrReplace(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#waitNowaitClause.
+	visitWaitNowaitClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#specificFunctionCall.
+	visitSpecificFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#aggregateFunctionCall.
+	visitAggregateFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#nonAggregateFunctionCall.
+	visitNonAggregateFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#scalarFunctionCall.
+	visitScalarFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#udfFunctionCall.
+	visitUdfFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#passwordFunctionCall.
+	visitPasswordFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#simpleFunctionCall.
+	visitSimpleFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#currentUser.
+	visitCurrentUser(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dataTypeFunctionCall.
+	visitDataTypeFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#valuesFunctionCall.
+	visitValuesFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#caseExpressionFunctionCall.
+	visitCaseExpressionFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#caseFunctionCall.
+	visitCaseFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#charFunctionCall.
+	visitCharFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#positionFunctionCall.
+	visitPositionFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#substrFunctionCall.
+	visitSubstrFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#trimFunctionCall.
+	visitTrimFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#weightFunctionCall.
+	visitWeightFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#extractFunctionCall.
+	visitExtractFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#getFormatFunctionCall.
+	visitGetFormatFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#jsonValueFunctionCall.
+	visitJsonValueFunctionCall(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#caseFuncAlternative.
+	visitCaseFuncAlternative(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#levelWeightList.
+	visitLevelWeightList(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#levelWeightRange.
+	visitLevelWeightRange(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#levelInWeightListElement.
+	visitLevelInWeightListElement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#aggregateWindowedFunction.
+	visitAggregateWindowedFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#nonAggregateWindowedFunction.
+	visitNonAggregateWindowedFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#overClause.
+	visitOverClause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#windowSpec.
+	visitWindowSpec(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#windowName.
 	visitWindowName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#pureIdentifier.
-	visitPureIdentifier(ctx) {
+	// Visit a parse tree produced by MySqlParser#frameClause.
+	visitFrameClause(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#identifier.
-	visitIdentifier(ctx) {
+	// Visit a parse tree produced by MySqlParser#frameUnits.
+	visitFrameUnits(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#identifierList.
-	visitIdentifierList(ctx) {
+	// Visit a parse tree produced by MySqlParser#frameExtent.
+	visitFrameExtent(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#identifierListWithParentheses.
-	visitIdentifierListWithParentheses(ctx) {
+	// Visit a parse tree produced by MySqlParser#frameBetween.
+	visitFrameBetween(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#qualifiedIdentifier.
-	visitQualifiedIdentifier(ctx) {
+	// Visit a parse tree produced by MySqlParser#frameRange.
+	visitFrameRange(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#simpleIdentifier.
-	visitSimpleIdentifier(ctx) {
+	// Visit a parse tree produced by MySqlParser#partitionClause.
+	visitPartitionClause(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#dotIdentifier.
-	visitDotIdentifier(ctx) {
+	// Visit a parse tree produced by MySqlParser#scalarFunctionName.
+	visitScalarFunctionName(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#ulong_number.
-	visitUlong_number(ctx) {
+	// Visit a parse tree produced by MySqlParser#passwordFunctionClause.
+	visitPasswordFunctionClause(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#real_ulong_number.
-	visitReal_ulong_number(ctx) {
+	// Visit a parse tree produced by MySqlParser#functionArgs.
+	visitFunctionArgs(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#ulonglong_number.
-	visitUlonglong_number(ctx) {
+	// Visit a parse tree produced by MySqlParser#functionArg.
+	visitFunctionArg(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#real_ulonglong_number.
-	visitReal_ulonglong_number(ctx) {
+	// Visit a parse tree produced by MySqlParser#isExpression.
+	visitIsExpression(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#literal.
-	visitLiteral(ctx) {
+	// Visit a parse tree produced by MySqlParser#notExpression.
+	visitNotExpression(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#signedLiteral.
-	visitSignedLiteral(ctx) {
+	// Visit a parse tree produced by MySqlParser#logicalExpression.
+	visitLogicalExpression(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#stringList.
-	visitStringList(ctx) {
+	// Visit a parse tree produced by MySqlParser#predicateExpression.
+	visitPredicateExpression(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#textStringLiteral.
-	visitTextStringLiteral(ctx) {
+	// Visit a parse tree produced by MySqlParser#soundsLikePredicate.
+	visitSoundsLikePredicate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#textString.
-	visitTextString(ctx) {
+	// Visit a parse tree produced by MySqlParser#expressionAtomPredicate.
+	visitExpressionAtomPredicate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#textStringHash.
-	visitTextStringHash(ctx) {
+	// Visit a parse tree produced by MySqlParser#subqueryComparisonPredicate.
+	visitSubqueryComparisonPredicate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#textLiteral.
-	visitTextLiteral(ctx) {
+	// Visit a parse tree produced by MySqlParser#jsonMemberOfPredicate.
+	visitJsonMemberOfPredicate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#textStringNoLinebreak.
-	visitTextStringNoLinebreak(ctx) {
+	// Visit a parse tree produced by MySqlParser#binaryComparisonPredicate.
+	visitBinaryComparisonPredicate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#textStringLiteralList.
-	visitTextStringLiteralList(ctx) {
+	// Visit a parse tree produced by MySqlParser#inPredicate.
+	visitInPredicate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#numLiteral.
-	visitNumLiteral(ctx) {
+	// Visit a parse tree produced by MySqlParser#betweenPredicate.
+	visitBetweenPredicate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#boolLiteral.
-	visitBoolLiteral(ctx) {
+	// Visit a parse tree produced by MySqlParser#isNullPredicate.
+	visitIsNullPredicate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#nullLiteral.
-	visitNullLiteral(ctx) {
+	// Visit a parse tree produced by MySqlParser#likePredicate.
+	visitLikePredicate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#temporalLiteral.
-	visitTemporalLiteral(ctx) {
+	// Visit a parse tree produced by MySqlParser#regexpPredicate.
+	visitRegexpPredicate(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#floatOptions.
-	visitFloatOptions(ctx) {
+	// Visit a parse tree produced by MySqlParser#unaryExpressionAtom.
+	visitUnaryExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#standardFloatOptions.
-	visitStandardFloatOptions(ctx) {
+	// Visit a parse tree produced by MySqlParser#collateExpressionAtom.
+	visitCollateExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#precision.
-	visitPrecision(ctx) {
+	// Visit a parse tree produced by MySqlParser#variableAssignExpressionAtom.
+	visitVariableAssignExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#textOrIdentifier.
-	visitTextOrIdentifier(ctx) {
+	// Visit a parse tree produced by MySqlParser#mysqlVariableExpressionAtom.
+	visitMysqlVariableExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#lValueIdentifier.
-	visitLValueIdentifier(ctx) {
+	// Visit a parse tree produced by MySqlParser#nestedExpressionAtom.
+	visitNestedExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#roleIdentifierOrText.
-	visitRoleIdentifierOrText(ctx) {
+	// Visit a parse tree produced by MySqlParser#nestedRowExpressionAtom.
+	visitNestedRowExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#sizeNumber.
-	visitSizeNumber(ctx) {
+	// Visit a parse tree produced by MySqlParser#mathExpressionAtom.
+	visitMathExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#parentheses.
-	visitParentheses(ctx) {
+	// Visit a parse tree produced by MySqlParser#existsExpressionAtom.
+	visitExistsExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#equal.
-	visitEqual(ctx) {
+	// Visit a parse tree produced by MySqlParser#intervalExpressionAtom.
+	visitIntervalExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#optionType.
-	visitOptionType(ctx) {
+	// Visit a parse tree produced by MySqlParser#jsonExpressionAtom.
+	visitJsonExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#varIdentType.
-	visitVarIdentType(ctx) {
+	// Visit a parse tree produced by MySqlParser#subqueryExpressionAtom.
+	visitSubqueryExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#setVarIdentType.
-	visitSetVarIdentType(ctx) {
+	// Visit a parse tree produced by MySqlParser#constantExpressionAtom.
+	visitConstantExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#identifierKeyword.
-	visitIdentifierKeyword(ctx) {
+	// Visit a parse tree produced by MySqlParser#functionCallExpressionAtom.
+	visitFunctionCallExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#identifierKeywordsAmbiguous1RolesAndLabels.
-	visitIdentifierKeywordsAmbiguous1RolesAndLabels(ctx) {
+	// Visit a parse tree produced by MySqlParser#binaryExpressionAtom.
+	visitBinaryExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#identifierKeywordsAmbiguous2Labels.
-	visitIdentifierKeywordsAmbiguous2Labels(ctx) {
+	// Visit a parse tree produced by MySqlParser#fullColumnNameExpressionAtom.
+	visitFullColumnNameExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#labelKeyword.
-	visitLabelKeyword(ctx) {
+	// Visit a parse tree produced by MySqlParser#bitExpressionAtom.
+	visitBitExpressionAtom(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#identifierKeywordsAmbiguous3Roles.
-	visitIdentifierKeywordsAmbiguous3Roles(ctx) {
+	// Visit a parse tree produced by MySqlParser#unaryOperator.
+	visitUnaryOperator(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#identifierKeywordsUnambiguous.
-	visitIdentifierKeywordsUnambiguous(ctx) {
+	// Visit a parse tree produced by MySqlParser#comparisonOperator.
+	visitComparisonOperator(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#roleKeyword.
-	visitRoleKeyword(ctx) {
+	// Visit a parse tree produced by MySqlParser#logicalOperator.
+	visitLogicalOperator(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#lValueKeyword.
-	visitLValueKeyword(ctx) {
+	// Visit a parse tree produced by MySqlParser#bitOperator.
+	visitBitOperator(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#identifierKeywordsAmbiguous4SystemVariables.
-	visitIdentifierKeywordsAmbiguous4SystemVariables(ctx) {
+	// Visit a parse tree produced by MySqlParser#multOperator.
+	visitMultOperator(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#roleOrIdentifierKeyword.
-	visitRoleOrIdentifierKeyword(ctx) {
+	// Visit a parse tree produced by MySqlParser#addOperator.
+	visitAddOperator(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by MySQLParser#roleOrLabelKeyword.
-	visitRoleOrLabelKeyword(ctx) {
+	// Visit a parse tree produced by MySqlParser#jsonOperator.
+	visitJsonOperator(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#charsetNameBase.
+	visitCharsetNameBase(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#transactionLevelBase.
+	visitTransactionLevelBase(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#privilegesBase.
+	visitPrivilegesBase(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#intervalTypeBase.
+	visitIntervalTypeBase(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#dataTypeBase.
+	visitDataTypeBase(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#keywordsCanBeId.
+	visitKeywordsCanBeId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by MySqlParser#functionNameBase.
+	visitFunctionNameBase(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

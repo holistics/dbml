@@ -4,12 +4,12 @@ describe('@dbml/core - importer', () => {
   /**
    * @param {string} format = [json|mysql|postgres]
    */
-  const runTest = (fileName, testDir, format) => {
+  const runTest = (fileName, testDir, format, format2) => {
     /* eslint-disable */
     const fileExtension = getFileExtension(format);
     const input = require(`./${testDir}/input/${fileName}.in.${fileExtension}`);
     const output = require(`./${testDir}/output/${fileName}.out.dbml`);
-    const res = importer.import(input, format);
+    const res = importer.import(input, format2 || format);
     expect(res).toBe(output);
     /* eslint-enable */
   };
