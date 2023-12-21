@@ -37,7 +37,7 @@ export function parse (input, format) {
       parser.removeErrorListeners();
       parser.addErrorListener(new ParserErrorListener());
 
-      const parseTree = parser.query();
+      const parseTree = parser.root();
 
       database = parseTree.accept(new MySQLASTGen());
       break;
