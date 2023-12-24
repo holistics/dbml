@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import Element from './element';
 import Field from './field';
 import Index from './indexes';
@@ -11,7 +12,7 @@ class Table extends Element {
     super(token);
     this.name = name;
     this.alias = alias;
-    this.note = note ? note.value : null;
+    this.note = note ? get(note, 'value', note) : null;
     this.noteToken = note ? note.token : null;
     this.headerColor = headerColor;
     this.fields = [];

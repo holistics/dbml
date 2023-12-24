@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import Element from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
 
@@ -15,7 +16,7 @@ class Field extends Element {
     this.unique = unique;
     this.pk = pk;
     this.not_null = notNull;
-    this.note = note ? note.value : null;
+    this.note = note ? get(note, 'value', note) : null;
     this.noteToken = note ? note.token : null;
     this.dbdefault = dbdefault;
     this.increment = increment;
