@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import Element from './element';
 import EnumValue from './enumValue';
 import { shouldPrintSchema } from './utils';
@@ -9,7 +10,7 @@ class Enum extends Element {
     super(token);
     if (!name) { this.error('Enum must have a name'); }
     this.name = name;
-    this.note = note ? note.value : null;
+    this.note = note ? get(note, 'value', note) : null;
     this.noteToken = note ? note.token : null;
     this.values = [];
     this.fields = [];

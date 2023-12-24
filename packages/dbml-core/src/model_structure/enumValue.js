@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import Element from './element';
 
 class EnumValue extends Element {
@@ -7,7 +8,7 @@ class EnumValue extends Element {
     super(token);
     if (!name) { this.error('Enum value must have a name'); }
     this.name = name;
-    this.note = note ? note.value : null;
+    this.note = note ? get(note, 'value', note) : null;
     this.noteToken = note ? note.token : null;
     this._enum = _enum;
     this.dbState = this._enum.dbState;
