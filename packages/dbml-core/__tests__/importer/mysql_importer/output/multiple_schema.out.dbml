@@ -22,6 +22,70 @@ Enum "users_pg2_enum" {
   "female2"
 }
 
+Table "users" {
+  "id" int [pk]
+  "name" varchar(255)
+  "pjs" users_pjs_enum
+  "pjs2" users_pjs2_enum
+  "pg" users_pg_enum
+  "pg2" users_pg2_enum
+}
+
+Table "products" {
+  "id" int [pk]
+  "name" varchar(255) [note: 'Product name']
+}
+
+Table "orders" {
+  "id1" int
+  "id2" int
+  "pid" int
+  "name" varchar(255)
+  "name2" varchar(255)
+
+Indexes {
+  (id1, id2) [pk, type: hash, name: "CPK_1"]
+  (name, name2) [type: btree, unique, name: "I_UNIQUE_1"]
+  (id1, id2) [type: hash, name: "INDEX_2"]
+}
+  Note: 'this is table orders'
+}
+
+Table "orders2" {
+  "id1" int
+  "id2" int
+  "pid" int
+
+Indexes {
+  (id1, id2) [pk, name: "testCPK"]
+}
+}
+
+Table "orders4" {
+  "id1" int
+  "id2" int
+
+Indexes {
+  (id1, id2) [pk, name: "PK_orders4_id1_id2"]
+}
+}
+
+Ref "FK_1":"schemaA"."locations"."id" < "schemaA"."products"."lid" [delete: cascade]
+
+Ref:"schemaA"."products"."id" < "orders"."pid"
+
+Ref:"schemaA"."products"."id" < "orders2"."pid"
+
+Ref "CFK_1":"orders".("id1", "id2") < "orders2".("id1", "id2") [update: set null, delete: cascade]
+
+Ref:"users"."id" < "ecommerce"."users"."id"
+
+Ref "name_optional":"users"."name" < "ecommerce"."users"."id"
+
+Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
+
+Ref:"users"."id" < "schemaA"."locations"."name"
+
 Enum "ecommerce"."users_ejs_enum" {
   "created2"
   "running2"
@@ -46,30 +110,6 @@ Enum "ecommerce"."users_eg2_enum" {
   "female2"
 }
 
-Table "users" {
-  "id" int [pk]
-  "name" varchar(255)
-  "pjs" users_pjs_enum
-  "pjs2" users_pjs2_enum
-  "pg" users_pg_enum
-  "pg2" users_pg2_enum
-}
-
-Table "products" {
-  "id" int [pk]
-  "name" varchar(255) [note: 'Product name']
-}
-
-Ref "FK_1":"schemaA"."locations"."id" < "schemaA"."products"."lid" [delete: cascade]
-
-Ref:"users"."id" < "ecommerce"."users"."id"
-
-Ref:"users"."name" < "ecommerce"."users"."id"
-
-Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
-
-Ref:"users"."id" < "schemaA"."locations"."name"
-
 Table "ecommerce"."users" {
   "id" int [pk]
   "name" varchar(255)
@@ -88,4 +128,9 @@ Table "schemaA"."products" {
 Table "schemaA"."locations" {
   "id" int [pk]
   "name" varchar(255)
+}
+
+Table "schemaB"."orders3" {
+  "id1" int [pk]
+  "id2" int
 }

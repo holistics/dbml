@@ -32,7 +32,7 @@ CREATE TABLE `booking` (
   `Created_at` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `venue` (`user_id_two`) USING BTREE,
-  KEY `user_id_one` (`user_id_one`) USING HASH,
+  KEY `user_id_one` (`user_id_one`) USING HASH
 ) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `test0` (

@@ -43,16 +43,34 @@ CREATE TABLE `orders` (
   `id1` int,
   `id2` int,
   `pid` int REFERENCES `schemaA`.`products`(id),
-  CONSTRAINT `CPK_1` PRIMARY KEY testtest USING HASH (`id1`, id2) 
-);
+  `name` varchar(255),
+  `name2` varchar(255),
+  CONSTRAINT `CPK_1` PRIMARY KEY testtest USING HASH (`id1`, id2),
+  CONSTRAINT `I_UNIQUE_1` UNIQUE KEY testtest2 USING BTREE (name, `name2`),
+  KEY `INDEX_2` USING HASH (id1, id2)
+) COMMENT "this is table orders";
 
 CREATE TABLE `orders2` (
   `id1` int,
   `id2` int,
   `pid` int REFERENCES `schemaA`.`products`(id),
-  CONSTRAINT PRIMARY KEY testCPK (`id1`, id2) 
+  CONSTRAINT PRIMARY KEY testCPK (`id1`, id2),
+  CONSTRAINT `CFK_1` FOREIGN KEY (`id1`, id2) REFERENCES orders (id1, `id2`) ON UPDATE SET NULL ON DELETE CASCADE
 );
 
+CREATE TABLE schemaB.`orders3` (
+  id1 int,
+  id2 int
+);
+
+ALTER TABLE `schemaB`.orders3 ADD PRIMARY KEY (id1);
+
+CREATE TABLE `orders4` (
+  id1 int,
+  `id2` int
+);
+
+ALTER TABLE orders4 ADD CONSTRAINT `PK_orders4_id1_id2` PRIMARY KEY (id1, id2);
 
 ALTER TABLE `ecommerce`.`users` ADD FOREIGN KEY (`id`) REFERENCES `users` (`id`);
 

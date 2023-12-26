@@ -3,6 +3,7 @@ export const TABLE_CONSTRAINT_KIND = {
   INDEX: 'index',
   FK: 'fk',
   UNIQUE: 'unique',
+  PK: 'pk',
 };
 
 export const COLUMN_CONSTRAINT_KIND = {
