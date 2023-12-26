@@ -2,27 +2,14 @@
 import { last, flatten } from 'lodash';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
 import { Enum, Field, Index, Table } from '../AST';
+import { TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TYPE } from '../constants';
 
 const COMMAND_KIND = {
   REF: 'ref',
 }
 
-const TABLE_CONSTRAINT_KIND = {
-  FIELD: 'field',
-  INDEX: 'index',
-  FK: 'fk',
-  UNIQUE: 'unique',
-}
-
 const COMMENT_OBJECT_TYPE = {
   TABLE: 'table',
-}
-
-// legacy - for compatibility with model_structure
-const CONSTRAINT_TYPE = {
-  COLUMN: 'column',
-  STRING: 'string',
-  EXPRESSION: 'expression',
 }
 
 const findTable = (tables, schemaName, tableName) => {
@@ -265,22 +252,21 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     const contraints = ctx.colquallist().accept(this);
 
-    
     const serialIncrementType = new Set(['serial', 'smallserial', 'bigserial']);
     const columnTypeName = type.type_name.toLowerCase();
     if ((serialIncrementType.has(columnTypeName))) contraints.increment = true;
 
     return {
       kind: TABLE_CONSTRAINT_KIND.FIELD,
-      value: { 
+      value: {
         field: new Field({
           name,
           type,
           ...contraints,
         }),
         inline_refs: contraints.inline_refs,
-      }
-    }
+      },
+    };
   }
 
   // colconstraint*
@@ -290,7 +276,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const constraint = c.accept(this);
       if (!constraint) return;
 
-      if (constraint.kind === 'inline_ref') {
+      if (constraint.kind === COLUMN_CONSTRAINT_KIND.INLINE_REF) {
         r.inline_refs.push(constraint.value);
         return;
       }
@@ -325,29 +311,37 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
    */
   visitColconstraintelem (ctx) {
     if (ctx.NULL_P()) {
-      let not_null = false;
-      if (ctx.NOT()) not_null = true;
-      return { kind: 'not_null', value: not_null }
+      let notNull = false;
+      if (ctx.NOT()) notNull = true;
+      return { kind: COLUMN_CONSTRAINT_KIND.NOT_NULL, value: notNull };
     }
 
-    if (ctx.UNIQUE()) return {
-      kind: 'unique',
-      value: true,
+    if (ctx.UNIQUE()) {
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.UNIQUE,
+        value: true,
+      };
     }
 
-    if (ctx.PRIMARY()) return {
-      kind: 'pk',
-      value: true,
+    if (ctx.PRIMARY()) {
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.PK,
+        value: true,
+      };
     }
 
-    if (ctx.DEFAULT()) return {
-      kind: 'dbdefault',
-      value: ctx.b_expr().accept(this),
+    if (ctx.DEFAULT()) {
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.DEFAULT,
+        value: ctx.b_expr().accept(this),
+      };
     }
 
-    if (ctx.IDENTITY_P()) return {
-      kind: 'increment',
-      value: true,
+    if (ctx.IDENTITY_P()) {
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.INCREMENT,
+        value: true,
+      };
     }
 
     if (ctx.REFERENCES()) {
@@ -358,7 +352,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
       const actions = ctx.key_actions().accept(this);
       return {
-        kind: 'inline_ref',
+        kind: COLUMN_CONSTRAINT_KIND.INLINE_REF,
         value: {
           endpoints: [{
             tableName: null,
@@ -373,8 +367,8 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
           }],
           onDelete: actions.onDelete,
           onUpdate: actions.onUpdate,
-        }
-      }
+        },
+      };
     }
   }
 
@@ -383,7 +377,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     if (ctx.c_expr()) return ctx.c_expr().accept(this);
     return {
       value: ctx.getText(),
-      type: 'expression',
+      type: DATA_TYPE.EXPRESSION,
     }
   }
 
@@ -392,49 +386,55 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     if (ctx.aexprconst()) return ctx.aexprconst().accept(this);
     if (ctx.a_expr()) return {
       value: ctx.a_expr().getText(),
-      type: 'expression'
+      type: DATA_TYPE.EXPRESSION
     }
     return {
       value: ctx.getText(),
-      type: 'expression',
+      type: DATA_TYPE.EXPRESSION,
     }
   }
 
   visitC_expr_exists (ctx) {
     return {
       value: ctx.getText(),
-      type: 'expression',
+      type: DATA_TYPE.EXPRESSION,
     }
   }
 
   visitC_expr_case (ctx) {
     return {
       value: ctx.getText(),
-      type: 'expression',
+      type: DATA_TYPE.EXPRESSION,
     }
   }
 
   // iconst | fconst | sconst | bconst | xconst | func_name (sconst | OPEN_PAREN func_arg_list opt_sort_clause CLOSE_PAREN sconst) | consttypename sconst | constinterval (sconst opt_interval | OPEN_PAREN iconst CLOSE_PAREN sconst) | TRUE_P | FALSE_P | NULL_P
   visitAexprconst (ctx) {
-    if (ctx.sconst() && ctx.getChildCount() === 1) return {
-      value: ctx.sconst().accept(this),
-      type: 'string',
+    if (ctx.sconst() && ctx.getChildCount() === 1) {
+      return {
+        value: ctx.sconst().accept(this),
+        type: DATA_TYPE.STRING,
+      };
     }
 
-    if (ctx.TRUE_P() || ctx.FALSE_P() || ctx.NULL_P()) return {
-      value: ctx.getText(),
-      type: 'boolean',
+    if (ctx.TRUE_P() || ctx.FALSE_P() || ctx.NULL_P()) {
+      return {
+        value: ctx.getText(),
+        type: DATA_TYPE.BOOLEAN,
+      };
     }
 
-    if (ctx.iconst() || ctx.fconst) return {
-      value: ctx.getText(),
-      type: 'number',
+    if (ctx.iconst() || ctx.fconst) {
+      return {
+        value: ctx.getText(),
+        type: DATA_TYPE.NUMBER,
+      };
     }
 
     return {
       value: ctx.getText(),
-      type: 'expression',
-    }
+      type: DATA_TYPE.EXPRESSION,
+    };
   }
 
   // key_update | key_delete | key_update key_delete | key_delete key_update |

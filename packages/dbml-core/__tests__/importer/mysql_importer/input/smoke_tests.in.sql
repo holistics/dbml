@@ -4,7 +4,7 @@
 select _binary 'hello' as c1;
 create table t1(col1 binary(20));
 create table t2(col varchar(10) binary character set cp1251);
-create table t2(col varchar(10) binary character set binary);
+create table t3(col varchar(10) binary character set binary);
 #end
 #begin
 -- -- Keywords, which can be ID. Intersect that keywords and ID
