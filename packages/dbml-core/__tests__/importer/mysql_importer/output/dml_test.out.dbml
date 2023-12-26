@@ -1,0 +1,11 @@
+Table "t1" {
+  "col1" binary(20)
+}
+
+Table "t2" {
+  "col" varchar(10)
+}
+
+Table "t3" {
+  "col" varchar(10)
+}

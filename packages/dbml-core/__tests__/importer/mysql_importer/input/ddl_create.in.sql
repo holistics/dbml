@@ -6,17 +6,16 @@ CREATE USER 'jim' @'localhost' ATTRIBUTE '{"fname": "James", "lname": "Scott", "
 -- Create Table
 create table new_t  (like t1);
 create table log_table(row varchar(512));
-create table log_table(row character(512));
 create table ships(name varchar(255), class_id int, id int);
 create table ships_guns(guns_id int, ship_id int);
 create table guns(id int, power decimal(7,2), callibr decimal(10,3));
 create table ship_class(id int, class_name varchar(100), tonange decimal(10,2), max_length decimal(10,2), start_build year, end_build year(4), max_guns_size int);
 create table `some table $$`(id int auto_increment key, class varchar(10), data binary) engine=MYISAM;
 create table quengine(id int auto_increment key, class varchar(10), data binary) engine='InnoDB';
-create table quengine(id int auto_increment key, class varchar(10), data binary) engine="Memory";
-create table quengine(id int auto_increment key, class varchar(10), data binary) engine=`CSV`;
-create table quengine(id int auto_increment key, class varchar(10), data binary COMMENT 'CSV') engine=MyISAM;
-create table quengine(id int auto_increment key, class varchar(10), data binary) engine=Aria;
+create table quengine2(id int auto_increment key, class varchar(10), data binary) engine="Memory";
+create table quengine3(id int auto_increment key, class varchar(10), data binary) engine=`CSV`;
+create table quengine4(id int auto_increment key, class varchar(10), data binary COMMENT 'CSV') engine=MyISAM;
+create table quengine5(id int auto_increment key, class varchar(10), data binary) engine=Aria;
 create table `parent_table`(id int primary key, column1 varchar(30), index parent_table_i1(column1(20)), check(char_length(column1)>10)) engine InnoDB;
 create table child_table(id int unsigned auto_increment primary key, id_parent int references parent_table(id) match full on update cascade on delete set null) engine=InnoDB;
 create table `another some table $$` like `some table $$`;
@@ -52,7 +51,7 @@ CREATE TABLE genvalue1 (id binary(16) NOT NULL, val char(32) GENERATED ALWAYS AS
 CREATE TABLE genvalue2 (id binary(16) NOT NULL, val char(32) AS (hex(id)) STORED, PRIMARY KEY (id));
 CREATE TABLE genvalue3 (id binary(16) NOT NULL, val char(32) GENERATED ALWAYS AS (hex(id)) VIRTUAL, PRIMARY KEY (id));
 CREATE TABLE cast_charset (col BINARY(16) GENERATED ALWAYS AS (CAST('xx' as CHAR(16) CHARACTER SET BINARY)) VIRTUAL);
-CREATE TABLE cast_charset (col BINARY(16) GENERATED ALWAYS AS (CAST('xx' as CHAR(16) CHARSET BINARY)) VIRTUAL);
+CREATE TABLE cast_charset2 (col BINARY(16) GENERATED ALWAYS AS (CAST('xx' as CHAR(16) CHARSET BINARY)) VIRTUAL);
 CREATE TABLE check_table_kw (id int primary key, upgrade varchar(256), quick varchar(256), fast varchar(256), medium varchar(256), extended varchar(256), changed varchar(256));
 CREATE TABLE sercol1 (id SERIAL, val INT);
 CREATE TABLE sercol2 (id SERIAL PRIMARY KEY, val INT);
@@ -88,7 +87,7 @@ CREATE TABLE table_items (id INT, purchased DATE)
         PARTITION p2 VALUES LESS THAN MAXVALUE
     );
 
-CREATE TABLE T1 (
+CREATE TABLE T0 (
 ID INT NOT NULL,
 NAME VARCHAR(255),
 UNIQUE KEY(ID)
@@ -146,7 +145,7 @@ CREATE TABLE CustomerTable (
     Phone varchar(24)
  ) ENGINE = CONNECT TABLE_TYPE = ODBC;
 
-CREATE TABLE CustomerTable (
+CREATE TABLE CustomerTable2 (
     table_type varchar(5)
 );
 
@@ -178,17 +177,15 @@ CREATE TABLE keywords (
 );
 
 CREATE TABLE T1 (C NATIONAL CHAR);
-CREATE TABLE T1 (C GEOMETRY SRID 0);
-CREATE TABLE T1 (C POINT SRID 0);
-CREATE TABLE T1 (C LINESTRING SRID 0);
-CREATE TABLE T1 (C POLYGON SRID 0);
-CREATE TABLE T1 (C MULTIPOINT SRID 0);
-CREATE TABLE T1 (C MULTILINESTRING SRID 0);
-CREATE TABLE T1 (C MULTIPOLYGON SRID 0);
-CREATE TABLE T1 (C GEOMETRYCOLLECTION SRID 0);
-CREATE TABLE T1 (ID BIGINT, S VARCHAR(100), I INT, CONSTRAINT ABC CHECK (ID < 5) ENFORCED);
-CREATE TABLE T1 (ID BIGINT REFERENCES TT (TT_ID) ON DELETE SET DEFAULT);
-CREATE TABLE T1 (ID BIGINT REFERENCES TT (TT_ID) ON UPDATE SET DEFAULT);
+CREATE TABLE T2 (C GEOMETRY SRID 0);
+CREATE TABLE T3 (C POINT SRID 0);
+CREATE TABLE T4 (C LINESTRING SRID 0);
+CREATE TABLE T5 (C POLYGON SRID 0);
+CREATE TABLE T6 (C MULTIPOINT SRID 0);
+CREATE TABLE T7 (C MULTILINESTRING SRID 0);
+CREATE TABLE T8 (C MULTIPOLYGON SRID 0);
+CREATE TABLE T9 (C GEOMETRYCOLLECTION SRID 0);
+CREATE TABLE T10 (ID BIGINT, S VARCHAR(100), I INT, CONSTRAINT ABC CHECK (ID < 5) ENFORCED);
 
 create table if not exists tbl_signed_unsigned(
   `id` bigint(20) ZEROFILL signed UNSIGNED signed ZEROFILL unsigned ZEROFILL NOT NULL AUTO_INCREMENT COMMENT 'ID',

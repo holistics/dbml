@@ -93,8 +93,8 @@ Table "States" {
   "Name" varchar(32) [not null]
 
 Indexes {
-  CountryId [name: "IX_States_CountryId"]
   (Id, CountryId) [pk]
+  CountryId [name: "IX_States_CountryId"]
 }
 }
 
@@ -105,9 +105,9 @@ Table "Cities" {
   "Name" varchar(32) [not null]
 
 Indexes {
+  (Id, StateId, CountryId) [pk]
   CountryId [name: "IX_Cities_CountryId"]
   (StateId, CountryId) [name: "IX_Cities_StateId_CountryId"]
-  (Id, StateId, CountryId) [pk]
 }
 }
 
