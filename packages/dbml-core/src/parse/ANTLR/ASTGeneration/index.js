@@ -5,8 +5,8 @@ import PostgreSQLLexer from '../parsers/postgresql/PostgreSQLLexer';
 import PostgreSQLParser from '../parsers/postgresql/PostgreSQLParser';
 import PostgresASTGen from './postgres/PostgresASTGen';
 
-import MySQLLexer from '../parsers/mysql/MySQLLexer';
-import MySQLParser from '../parsers/mysql/MySQLParser';
+import MySQLLexer from '../parsers/mysql/MySqlLexer';
+import MySQLParser from '../parsers/mysql/MySqlParser';
 import MySQLASTGen from './mysql/MySQLASTGen';
 
 import ParserErrorListener from './ParserErrorListener';
