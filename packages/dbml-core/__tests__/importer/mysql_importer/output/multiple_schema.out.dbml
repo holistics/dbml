@@ -22,26 +22,26 @@ Enum "users_pg2_enum" {
   "female2"
 }
 
-Enum "ecommerce.users_ejs_enum" {
+Enum "ecommerce"."users_ejs_enum" {
   "created2"
   "running2"
   "done2"
   "failure2"
 }
 
-Enum "ecommerce.users_ejs2_enum" {
+Enum "ecommerce"."users_ejs2_enum" {
   "created2"
   "running2"
   "done2"
   "failure2"
 }
 
-Enum "ecommerce.users_eg_enum" {
+Enum "ecommerce"."users_eg_enum" {
   "male"
   "female"
 }
 
-Enum "ecommerce.users_eg2_enum" {
+Enum "ecommerce"."users_eg2_enum" {
   "male2"
   "female2"
 }

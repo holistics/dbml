@@ -39,6 +39,21 @@ CREATE TABLE `schemaA`.`locations` (
   `name` varchar(255)
 );
 
+CREATE TABLE `orders` (
+  `id1` int,
+  `id2` int,
+  `pid` int REFERENCES `schemaA`.`products`(id),
+  CONSTRAINT `CPK_1` PRIMARY KEY testtest USING HASH (`id1`, id2) 
+);
+
+CREATE TABLE `orders2` (
+  `id1` int,
+  `id2` int,
+  `pid` int REFERENCES `schemaA`.`products`(id),
+  CONSTRAINT PRIMARY KEY testCPK (`id1`, id2) 
+);
+
+
 ALTER TABLE `ecommerce`.`users` ADD FOREIGN KEY (`id`) REFERENCES `users` (`id`);
 
 ALTER TABLE `ecommerce`.`users` ADD CONSTRAINT `name_optional` FOREIGN KEY (`id`) REFERENCES `users` (`name`);
