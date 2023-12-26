@@ -6,7 +6,7 @@ export class Index {
    *  unique: boolean,
    *  pk: boolean,
    *  type: string,
-   *  columns: {value: string, type: string}[],
+   *  columns: {value: string, type: 'column' | 'string' | 'expression'}[],
    * }} param0
    */
   constructor ({ name, unique, pk, type, columns }) {
@@ -22,7 +22,7 @@ export class Index {
     /** @type {boolean} */
     this.pk = pk;
 
-    /** @type {{value: string, type: string}[]} */
+    /** @type {{value: string, type: 'column' | 'string' | 'expression'}[]} */
     this.columns = columns;
   }
 
