@@ -5,13 +5,13 @@ import { shouldPrintSchema } from './utils';
 
 class Enum extends Element {
   constructor ({
-    name, token, values, note, schema,
+    name, token, values, note, schema, noteToken = null,
   } = {}) {
     super(token);
     if (!name) { this.error('Enum must have a name'); }
     this.name = name;
     this.note = note ? get(note, 'value', note) : null;
-    this.noteToken = note ? note.token : null;
+    this.noteToken = note ? get(note, 'token', noteToken) : null;
     this.values = [];
     this.fields = [];
     this.schema = schema;
