@@ -22,30 +22,6 @@ Enum "users_pg2_enum" {
   "female2"
 }
 
-Enum "ecommerce_users_ejs_enum" {
-  "created2"
-  "running2"
-  "done2"
-  "failure2"
-}
-
-Enum "ecommerce_users_ejs2_enum" {
-  "created2"
-  "running2"
-  "done2"
-  "failure2"
-}
-
-Enum "ecommerce_users_eg_enum" {
-  "male"
-  "female"
-}
-
-Enum "ecommerce_users_eg2_enum" {
-  "male2"
-  "female2"
-}
-
 Table "users" {
   "id" int [pk]
   "name" varchar(255)
@@ -58,36 +34,103 @@ Table "users" {
 Table "products" {
   "id" int [pk]
   "name" varchar(255) [note: 'Product name']
-  Note: 'Notes about products table'
+}
+
+Table "orders" {
+  "id1" int
+  "id2" int
+  "pid" int
+  "name" varchar(255)
+  "name2" varchar(255)
+
+Indexes {
+  (id1, id2) [pk, type: hash, name: "CPK_1"]
+  (name, name2) [type: btree, unique, name: "I_UNIQUE_1"]
+  (id1, id2) [type: hash, name: "INDEX_2"]
+}
+  Note: 'this is table orders'
+}
+
+Table "orders2" {
+  "id1" int
+  "id2" int
+  "pid" int
+
+Indexes {
+  (id1, id2) [pk, name: "testCPK"]
+}
+}
+
+Table "orders4" {
+  "id1" int
+  "id2" int
+
+Indexes {
+  (id1, id2) [pk, name: "PK_orders4_id1_id2"]
+}
 }
 
 Ref "FK_1":"schemaA"."locations"."id" < "schemaA"."products"."lid" [delete: cascade]
 
+Ref:"schemaA"."products"."id" < "orders"."pid"
+
+Ref:"schemaA"."products"."id" < "orders2"."pid"
+
+Ref "CFK_1":"orders".("id1", "id2") < "orders2".("id1", "id2") [update: set null, delete: cascade]
+
 Ref:"users"."id" < "ecommerce"."users"."id"
 
-Ref:"users"."name" < "ecommerce"."users"."id"
+Ref "name_optional":"users"."name" < "ecommerce"."users"."id"
 
 Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
 
 Ref:"users"."id" < "schemaA"."locations"."name"
 
+Enum "ecommerce"."users_ejs_enum" {
+  "created2"
+  "running2"
+  "done2"
+  "failure2"
+}
+
+Enum "ecommerce"."users_ejs2_enum" {
+  "created2"
+  "running2"
+  "done2"
+  "failure2"
+}
+
+Enum "ecommerce"."users_eg_enum" {
+  "male"
+  "female"
+}
+
+Enum "ecommerce"."users_eg2_enum" {
+  "male2"
+  "female2"
+}
+
 Table "ecommerce"."users" {
   "id" int [pk]
   "name" varchar(255)
-  "ejs" ecommerce_users_ejs_enum
-  "ejs2" ecommerce_users_ejs2_enum
-  "eg" ecommerce_users_eg_enum
-  "eg2" ecommerce_users_eg2_enum
-  Note: 'Table users of schema ecommerce'
+  "ejs" ecommerce.users_ejs_enum
+  "ejs2" ecommerce.users_ejs2_enum
+  "eg" ecommerce.users_eg_enum
+  "eg2" ecommerce.users_eg2_enum
 }
 
 Table "schemaA"."products" {
   "id" int [pk]
-  "name" varchar(255)
+  "name" varchar(255) [note: 'Sample field comment on multiples schema']
   "lid" int
 }
 
 Table "schemaA"."locations" {
   "id" int [pk]
   "name" varchar(255)
+}
+
+Table "schemaB"."orders3" {
+  "id1" int [pk]
+  "id2" int
 }
