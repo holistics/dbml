@@ -8,7 +8,7 @@ import Ref from './ref';
 
 class Schema extends Element {
   constructor ({
-    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {},
+    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {}, noteToken = null,
   } = {}) {
     super(token);
     this.tables = [];
@@ -17,7 +17,7 @@ class Schema extends Element {
     this.refs = [];
     this.name = name;
     this.note = note ? get(note, 'value', note) : null;
-    this.noteToken = note ? note.token : null;
+    this.noteToken = note ? get(note, 'token', noteToken) : null;
     this.alias = alias;
     this.database = database;
     this.dbState = this.database.dbState;

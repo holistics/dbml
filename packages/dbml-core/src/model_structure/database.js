@@ -26,7 +26,7 @@ class Database extends Element {
     this.hasDefaultSchema = false;
     this.schemas = [];
     this.note = project.note ? get(project, 'note.value', project.note) : null;
-    this.noteToken = project.note ? project.note.token : null;
+    this.noteToken = project.note ? get(project, 'note.token', project.noteToken) : null;
     this.databaseType = project.database_type;
     this.name = project.name;
     this.aliases = aliases;

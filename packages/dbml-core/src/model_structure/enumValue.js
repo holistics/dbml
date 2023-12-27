@@ -3,13 +3,13 @@ import Element from './element';
 
 class EnumValue extends Element {
   constructor ({
-    name, token, note, _enum,
+    name, token, note, _enum, noteToken = null,
   } = {}) {
     super(token);
     if (!name) { this.error('Enum value must have a name'); }
     this.name = name;
     this.note = note ? get(note, 'value', note) : null;
-    this.noteToken = note ? note.token : null;
+    this.noteToken = note ? get(note, 'token', noteToken) : null;
     this._enum = _enum;
     this.dbState = this._enum.dbState;
     this.generateId();
