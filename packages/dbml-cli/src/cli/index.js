@@ -25,6 +25,7 @@ function sql2dbml (args) {
   program
     .usage('[options] <files...>')
     .option('--mysql')
+    .option('--mysql-legacy')
     .option('--postgres')
     .option('--postgres-legacy')
     .option('--mssql')
