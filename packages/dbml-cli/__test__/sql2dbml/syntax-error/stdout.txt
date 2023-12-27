@@ -1,3 +1,4 @@
-  ERROR: You have a syntax error at "business.sql" line 5 column 3. Expected ")" or fields but "`" found.
+  ERROR: 
+    You have a syntax error at "business.sql" line 6 column 2. no viable alternative at input 'CREATE TABLE `staff` (\n  `id` int PRIMARY KEY,\n  `first_name` varchar(255),\n  `last_name` varchar(255),\n  `address_id` int\n  `picture`'
 
-  A complete log can be found in:
+  A complete log can be found in

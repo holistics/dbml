@@ -31,6 +31,7 @@ export default async function importHandler (program) {
       console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from SQL file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
   } catch (err) {
+    if (err instanceof Array) return logger.error(`\n    ${err.map(({ message }) => message).join('\n    ')}`);
     logger.error(err);
   }
 }

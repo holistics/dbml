@@ -15,6 +15,8 @@ export function parse (input, format) {
   const chars = new antlr4.InputStream(input);
   let database = null;
 
+  const errorListener = new ParserErrorListener();
+
   switch (format) {
     case 'postgres': {
       const lexer = new PostgreSQLLexer(chars);
@@ -22,11 +24,13 @@ export function parse (input, format) {
       const parser = new PostgreSQLParser(tokens);
       parser.buildParseTrees = true;
       parser.removeErrorListeners();
-      parser.addErrorListener(new ParserErrorListener());
+      parser.addErrorListener(errorListener);
 
       const parseTree = parser.root();
 
       database = parseTree.accept(new PostgresASTGen());
+
+      if (errorListener.errors.length) throw errorListener.errors;
       break;
     }
     case 'mysql': {
@@ -35,11 +39,13 @@ export function parse (input, format) {
       const parser = new MySQLParser(tokens);
       parser.buildParseTrees = true;
       parser.removeErrorListeners();
-      parser.addErrorListener(new ParserErrorListener());
+      parser.addErrorListener(errorListener);
 
       const parseTree = parser.root();
 
       database = parseTree.accept(new MySQLASTGen());
+
+      if (errorListener.errors.length) throw errorListener.errors;
       break;
     }
     default:
