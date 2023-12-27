@@ -1,0 +1,50 @@
+Table "api_key_outer_auth" {
+  "id" bigint [pk, not null, increment]
+  "api_key_outer_id" bigint [not null]
+  "flag" varchar(255) [not null]
+  "created_at" datetime [default: NULL]
+
+Indexes {
+  (api_key_outer_id, flag) [type: btree, unique, name: "UQE_api_key_outer_auth_api_key_outer_auth_af"]
+  id [type: btree, name: "IDX_api_key_outer_auth_id"]
+  api_key_outer_id [type: btree, name: "IDX_api_key_outer_auth_api_key_outer_id"]
+  flag [type: btree, name: "IDX_api_key_outer_auth_flag"]
+  created_at [type: btree, name: "IDX_api_key_outer_auth_created_at"]
+}
+}
+
+Table "entity" {
+  "id" bigint [pk, not null, increment, note: 'The database table row id']
+  "dateCreated" timestamp [default: `now()`, note: 'Date / time created']
+  "dateEdited" timestamp [default: `now()`, note: 'Date / time last modified']
+  "createdBy" varchar(40) [not null, default: "", note: 'The person who created the record']
+  "editedBy" varchar(40) [not null, default: "", note: 'The person who last modified the record']
+  "constituentId" varchar(40) [not null, note: 'The globally unique identifier for this constituent']
+  "name" varchar(255) [not null]
+  "ein" varchar(16) [not null]
+
+Indexes {
+  id [unique, name: "id"]
+  constituentId [unique, name: "constituentId"]
+  ein [unique, name: "ein"]
+  constituentId [name: "entity_index_0"]
+  ein [name: "entity_index_1"]
+}
+}
+
+Table "entity2" {
+  "id" bigint [pk, not null, increment, note: 'The database table row id']
+  "dateCreated" timestamp [default: `now()`, note: 'Date / time created']
+  "dateEdited" timestamp [default: `now()`, note: 'Date / time last modified']
+  "createdBy" varchar(40) [not null, default: "", note: 'The person who created the record']
+  "editedBy" varchar(40) [not null, default: "", note: 'The person who last modified the record']
+  "constituentId" varchar(40) [not null, note: 'The globally unique identifier for this constituent']
+  "name" varchar(255) [not null, default: "hello"]
+  "ein" varchar(16) [not null]
+
+Indexes {
+  id [unique, name: "id"]
+  constituentId [unique, name: "constituentId"]
+  ein [unique, name: "ein"]
+}
+}

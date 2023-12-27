@@ -28,7 +28,7 @@ const { importer } = require('@dbml/core');
 
 * **Arguments:**  
   * ```{string} str```
-  * ```{'mysql'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'json'} format```
+  * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'json'} format```
 
 * **Returns:** 
   * ```{string} DBML```
@@ -36,7 +36,7 @@ const { importer } = require('@dbml/core');
 * **Usage:**  
 Generate DBML from SQL.
 
-Note: The `postgresLegacy` option import postgreSQL to dbml using the old parser. It's quicker but less accurate.
+Note: The `postgresLegacy` and `mysqlLegacy` options import postgreSQL/mySql to dbml using the old parsers. It's quicker but less accurate.
 
 ```javascript
 const fs = require('fs');
@@ -88,14 +88,14 @@ const { Parser } = require('@dbml/core');
 ##### Parser.parse( str, format )
 * **Arguments:**  
   * ```{string} str```
-  * ```{'mysql'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'json'|'dbmlv2'} format```
+  * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'json'|'dbmlv2'} format```
 
 * **Returns:** ```Database``` object
 
 * **Usage:**  
 Parse specified format to ```Database``` object
 
-Note: The `postgresLegacy` option parse postgreSQL using the old parser. It's quicker but less accurate.
+Note: The `postgresLegacy` and `mysqlLegacy` options import postgreSQL/mySql to dbml using the old parsers. It's quicker but less accurate.
 
 Note: The `dbmlv2` option parse dbml using the new parser. It's quicker and more robust to errors/more user-friendly error messages.
 
