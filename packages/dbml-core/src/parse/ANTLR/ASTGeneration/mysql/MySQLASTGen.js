@@ -857,7 +857,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   visitSpecialIndexDeclaration (ctx) {
     const name = ctx.uid()?.accept(this);
 
-    let type = ctx.indexType()?.accept(this);
+    let type = null;
     if (ctx.indexOption()?.length) {
       const indexOptions = ctx.indexOption().map(io => io.accept(this));
       const typeOption = indexOptions.find(io => io?.kind === INDEX_OPTION_KIND.TYPE);
