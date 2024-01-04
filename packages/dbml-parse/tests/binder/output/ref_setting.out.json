@@ -1005,8 +1005,7 @@
                                 "start": 59,
                                 "end": 61
                               }
-                            },
-                            "referee": 7
+                            }
                           },
                           "rightExpression": {
                             "id": 18,
@@ -1063,8 +1062,7 @@
                                 "start": 62,
                                 "end": 68
                               }
-                            },
-                            "referee": 8
+                            }
                           }
                         },
                         "rightExpression": {
@@ -1122,8 +1120,7 @@
                               "start": 69,
                               "end": 72
                             }
-                          },
-                          "referee": 10
+                          }
                         }
                       },
                       "colon": {
@@ -2922,64 +2919,6 @@
         "Schema:v2": {
           "references": [
             {
-              "id": 16,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 59,
-                "line": 2,
-                "column": 31
-              },
-              "fullStart": 59,
-              "endPos": {
-                "offset": 61,
-                "line": 2,
-                "column": 33
-              },
-              "fullEnd": 61,
-              "start": 59,
-              "end": 61,
-              "expression": {
-                "id": 15,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 59,
-                  "line": 2,
-                  "column": 31
-                },
-                "fullStart": 59,
-                "endPos": {
-                  "offset": 61,
-                  "line": 2,
-                  "column": 33
-                },
-                "fullEnd": 61,
-                "start": 59,
-                "end": 61,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 59,
-                    "line": 2,
-                    "column": 31
-                  },
-                  "endPos": {
-                    "offset": 61,
-                    "line": 2,
-                    "column": 33
-                  },
-                  "value": "v2",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 59,
-                  "end": 61
-                }
-              },
-              "referee": 7
-            },
-            {
               "id": 10,
               "kind": "<primary-expression>",
               "startPos": {
@@ -3042,64 +2981,6 @@
           "symbolTable": {
             "Enum:status": {
               "references": [
-                {
-                  "id": 18,
-                  "kind": "<primary-expression>",
-                  "startPos": {
-                    "offset": 62,
-                    "line": 2,
-                    "column": 34
-                  },
-                  "fullStart": 62,
-                  "endPos": {
-                    "offset": 68,
-                    "line": 2,
-                    "column": 40
-                  },
-                  "fullEnd": 68,
-                  "start": 62,
-                  "end": 68,
-                  "expression": {
-                    "id": 17,
-                    "kind": "<variable>",
-                    "startPos": {
-                      "offset": 62,
-                      "line": 2,
-                      "column": 34
-                    },
-                    "fullStart": 62,
-                    "endPos": {
-                      "offset": 68,
-                      "line": 2,
-                      "column": 40
-                    },
-                    "fullEnd": 68,
-                    "start": 62,
-                    "end": 68,
-                    "variable": {
-                      "kind": "<identifier>",
-                      "startPos": {
-                        "offset": 62,
-                        "line": 2,
-                        "column": 34
-                      },
-                      "endPos": {
-                        "offset": 68,
-                        "line": 2,
-                        "column": 40
-                      },
-                      "value": "status",
-                      "leadingTrivia": [],
-                      "trailingTrivia": [],
-                      "leadingInvalid": [],
-                      "trailingInvalid": [],
-                      "isInvalid": false,
-                      "start": 62,
-                      "end": 68
-                    }
-                  },
-                  "referee": 8
-                },
                 {
                   "id": 12,
                   "kind": "<primary-expression>",
@@ -3189,66 +3070,7 @@
                   "declaration": 46
                 },
                 "Enum field:new": {
-                  "references": [
-                    {
-                      "id": 21,
-                      "kind": "<primary-expression>",
-                      "startPos": {
-                        "offset": 69,
-                        "line": 2,
-                        "column": 41
-                      },
-                      "fullStart": 69,
-                      "endPos": {
-                        "offset": 72,
-                        "line": 2,
-                        "column": 44
-                      },
-                      "fullEnd": 72,
-                      "start": 69,
-                      "end": 72,
-                      "expression": {
-                        "id": 20,
-                        "kind": "<variable>",
-                        "startPos": {
-                          "offset": 69,
-                          "line": 2,
-                          "column": 41
-                        },
-                        "fullStart": 69,
-                        "endPos": {
-                          "offset": 72,
-                          "line": 2,
-                          "column": 44
-                        },
-                        "fullEnd": 72,
-                        "start": 69,
-                        "end": 72,
-                        "variable": {
-                          "kind": "<identifier>",
-                          "startPos": {
-                            "offset": 69,
-                            "line": 2,
-                            "column": 41
-                          },
-                          "endPos": {
-                            "offset": 72,
-                            "line": 2,
-                            "column": 44
-                          },
-                          "value": "new",
-                          "leadingTrivia": [],
-                          "trailingTrivia": [],
-                          "leadingInvalid": [],
-                          "trailingInvalid": [],
-                          "isInvalid": false,
-                          "start": 69,
-                          "end": 72
-                        }
-                      },
-                      "referee": 10
-                    }
-                  ],
+                  "references": [],
                   "id": 10,
                   "declaration": 54
                 }

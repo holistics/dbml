@@ -662,6 +662,9 @@ export default abstract class ElementValidator {
     let hasError = false;
     // eslint-disable-next-line no-restricted-syntax
     for (const setting of settingListNode.elementList) {
+      if (!setting) {
+        continue;
+      }
       const name = extractStringFromIdentifierStream(setting.name)
         .unwrap_or(undefined)
         ?.toLowerCase();

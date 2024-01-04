@@ -23,7 +23,7 @@ export default class TableBinder extends ElementBinder {
         ignoreNameNotFound: false,
       },
       default: {
-        shouldBind: true as const,
+        shouldBind: false as const,
         topSubnamesSymbolKind: [SymbolKind.Enum, SymbolKind.EnumField],
         remainingSubnamesSymbolKind: SymbolKind.Schema,
         ignoreNameNotFound: false,
