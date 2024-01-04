@@ -59,6 +59,7 @@ export default abstract class ElementBinder {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const attribute of settingList.elementList) {
+      if (!attribute) continue;
       const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined);
       if (!name) {
         continue;
@@ -120,7 +121,7 @@ export default abstract class ElementBinder {
     if (node instanceof PrimaryExpressionNode) {
       if (
         node.expression instanceof VariableNode &&
-        rule.keywords?.includes(node.expression.variable?.value as any)
+        rule.keywords?.includes(node.expression.variable?.value.toLowerCase() as any)
       ) {
         return;
       }

@@ -114,7 +114,7 @@ class AttributeCollector {
     if (
       _deflt instanceof PrimaryExpressionNode &&
       _deflt.expression instanceof VariableNode &&
-      KEYWORDS_OF_DEFAULT_SETTING.includes(_deflt.expression.variable?.value as any)
+      KEYWORDS_OF_DEFAULT_SETTING.includes(_deflt.expression.variable?.value.toLowerCase() as any)
     ) {
       return {
         type: 'boolean',
