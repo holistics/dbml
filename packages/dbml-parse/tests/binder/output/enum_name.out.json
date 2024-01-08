@@ -2328,7 +2328,7 @@
                 "line": 7,
                 "column": 15
               },
-              "fullEnd": 170,
+              "fullEnd": 168,
               "start": 157,
               "end": 168,
               "callee": {
@@ -2510,7 +2510,7 @@
                     "line": 7,
                     "column": 15
                   },
-                  "fullEnd": 170,
+                  "fullEnd": 168,
                   "start": 165,
                   "end": 168,
                   "op": {
@@ -2616,21 +2616,21 @@
                   },
                   "rightExpression": {
                     "id": 50,
-                    "kind": "<function-expression>",
+                    "kind": "<dummy>",
                     "startPos": {
-                      "offset": null,
-                      "column": null,
-                      "line": null
+                      "offset": 168,
+                      "line": 7,
+                      "column": 15
                     },
-                    "fullStart": null,
+                    "fullStart": 168,
                     "endPos": {
-                      "offset": null,
-                      "column": null,
-                      "line": null
+                      "offset": 168,
+                      "line": 7,
+                      "column": 15
                     },
-                    "fullEnd": null,
-                    "start": null,
-                    "end": null
+                    "fullEnd": 168,
+                    "start": 168,
+                    "end": 168
                   }
                 }
               ]
@@ -5566,7 +5566,7 @@
           "line": 7,
           "column": 15
         },
-        "fullEnd": 170,
+        "fullEnd": 168,
         "start": 165,
         "end": 168,
         "op": {
@@ -5672,21 +5672,21 @@
         },
         "rightExpression": {
           "id": 50,
-          "kind": "<function-expression>",
+          "kind": "<dummy>",
           "startPos": {
-            "offset": null,
-            "column": null,
-            "line": null
+            "offset": 168,
+            "line": 7,
+            "column": 15
           },
-          "fullStart": null,
+          "fullStart": 168,
           "endPos": {
-            "offset": null,
-            "column": null,
-            "line": null
+            "offset": 168,
+            "line": 7,
+            "column": 15
           },
-          "fullEnd": null,
-          "start": null,
-          "end": null
+          "fullEnd": 168,
+          "start": 168,
+          "end": 168
         }
       },
       "start": 165,

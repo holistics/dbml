@@ -638,14 +638,14 @@
       "onDelete": "restrict",
       "token": {
         "start": {
-          "offset": 715,
+          "offset": 711,
           "line": 41,
-          "column": 5
+          "column": 1
         },
         "end": {
-          "offset": 748,
+          "offset": 767,
           "line": 41,
-          "column": 38
+          "column": 57
         }
       },
       "schemaName": null
@@ -697,14 +697,14 @@
       "onDelete": "cascade",
       "token": {
         "start": {
-          "offset": 773,
+          "offset": 769,
           "line": 43,
-          "column": 5
+          "column": 1
         },
         "end": {
-          "offset": 813,
+          "offset": 831,
           "line": 43,
-          "column": 45
+          "column": 63
         }
       },
       "schemaName": null
@@ -758,14 +758,14 @@
       "onDelete": "set null",
       "token": {
         "start": {
-          "offset": 837,
+          "offset": 833,
           "line": 45,
-          "column": 5
+          "column": 1
         },
         "end": {
-          "offset": 909,
+          "offset": 928,
           "line": 45,
-          "column": 77
+          "column": 96
         }
       },
       "schemaName": null
@@ -817,14 +817,14 @@
       "onDelete": "no action",
       "token": {
         "start": {
-          "offset": 934,
+          "offset": 930,
           "line": 47,
-          "column": 5
+          "column": 1
         },
         "end": {
-          "offset": 977,
+          "offset": 997,
           "line": 47,
-          "column": 48
+          "column": 68
         }
       },
       "schemaName": null
