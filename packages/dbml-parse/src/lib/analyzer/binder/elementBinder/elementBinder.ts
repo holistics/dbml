@@ -59,7 +59,6 @@ export default abstract class ElementBinder {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const attribute of settingList.elementList) {
-      if (!attribute) continue;
       const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined);
       if (!name) {
         continue;

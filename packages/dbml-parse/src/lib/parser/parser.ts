@@ -944,7 +944,9 @@ export default class Parser {
         if (!(e instanceof PartialParsingError)) {
           throw e;
         }
-        args.elementList.push(e.partialNode);
+        if (e.partialNode instanceof SyntaxNode) {
+          args.elementList.push(e.partialNode);
+        }
         if (!this.canHandle(e)) {
           throw new PartialParsingError(e.token, buildList(), e.handlerContext);
         }
