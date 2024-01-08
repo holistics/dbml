@@ -1,5 +1,6 @@
 import { CompileError, CompileErrorCode } from '../errors';
 import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
@@ -199,9 +200,18 @@ export default class Interpreter {
     let typeArgs: string | null = null;
     if (typeNode instanceof CallExpressionNode) {
       typeArgs = typeNode
-        .argumentList!.elementList.map((e) => (e as any).expression.literal.value)
-        .join(',');
+          .argumentList!.elementList.map((e) => (e as any).expression.literal.value)
+          .join(',');
       typeNode = typeNode.callee!;
+    }
+    let typeIndexer: string = '';
+    while (typeNode instanceof ArrayNode) {
+      typeIndexer = `[${
+        typeNode
+          .indexer!.elementList.map((e) => (e.name as any).expression.literal.value)
+          .join(',')
+      }]${typeIndexer}`;
+      typeNode = typeNode.array!;
     }
 
     const maybeName = this.extractElementName(typeNode);
@@ -257,7 +267,7 @@ export default class Interpreter {
       name: name.unwrap(),
       type: {
         schemaName: typeSchemaName,
-        type_name: `${typeName}${typeArgs === null ? '' : `(${typeArgs})`}`,
+        type_name: `${typeName}${typeIndexer}${typeArgs === null ? '' : `(${typeArgs})`}`,
         args: typeArgs,
       },
       token: extractTokenForInterpreter(field),
