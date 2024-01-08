@@ -1226,21 +1226,21 @@
                   },
                   {
                     "id": 13,
-                    "kind": "<function-expression>",
+                    "kind": "<dummy>",
                     "startPos": {
-                      "offset": null,
-                      "column": null,
-                      "line": null
+                      "offset": 75,
+                      "line": 8,
+                      "column": 7
                     },
-                    "fullStart": null,
+                    "fullStart": 75,
                     "endPos": {
-                      "offset": null,
-                      "column": null,
-                      "line": null
+                      "offset": 75,
+                      "line": 8,
+                      "column": 7
                     },
-                    "fullEnd": null,
-                    "start": null,
-                    "end": null
+                    "fullEnd": 75,
+                    "start": 75,
+                    "end": 75
                   }
                 ],
                 "commaList": [

@@ -227,13 +227,13 @@
               },
               "fullStart": 23,
               "endPos": {
-                "offset": 28,
+                "offset": 31,
                 "line": 1,
-                "column": 5
+                "column": 8
               },
-              "fullEnd": 29,
+              "fullEnd": 31,
               "start": 27,
-              "end": 28,
+              "end": 31,
               "callee": {
                 "id": 3,
                 "kind": "<primary-expression>",
@@ -702,21 +702,21 @@
               "args": [
                 {
                   "id": 4,
-                  "kind": "<function-expression>",
+                  "kind": "<dummy>",
                   "startPos": {
-                    "offset": null,
-                    "column": null,
-                    "line": null
+                    "offset": 31,
+                    "line": 1,
+                    "column": 8
                   },
-                  "fullStart": null,
+                  "fullStart": 31,
                   "endPos": {
-                    "offset": null,
-                    "column": null,
-                    "line": null
+                    "offset": 31,
+                    "line": 1,
+                    "column": 8
                   },
-                  "fullEnd": null,
-                  "start": null,
-                  "end": null
+                  "fullEnd": 31,
+                  "start": 31,
+                  "end": 31
                 }
               ]
             },

@@ -1,73 +1,9 @@
 [
   {
-    "code": 1007,
-    "diagnostic": "Expect a following space",
-    "nodeOrToken": {
-      "id": 144,
-      "kind": "<primary-expression>",
-      "startPos": {
-        "offset": 554,
-        "line": 21,
-        "column": 8
-      },
-      "fullStart": 554,
-      "endPos": {
-        "offset": 560,
-        "line": 21,
-        "column": 14
-      },
-      "fullEnd": 560,
-      "start": 554,
-      "end": 560,
-      "expression": {
-        "id": 143,
-        "kind": "<variable>",
-        "startPos": {
-          "offset": 554,
-          "line": 21,
-          "column": 8
-        },
-        "fullStart": 554,
-        "endPos": {
-          "offset": 560,
-          "line": 21,
-          "column": 14
-        },
-        "fullEnd": 560,
-        "start": 554,
-        "end": 560,
-        "variable": {
-          "kind": "<identifier>",
-          "startPos": {
-            "offset": 554,
-            "line": 21,
-            "column": 8
-          },
-          "endPos": {
-            "offset": 560,
-            "line": 21,
-            "column": 14
-          },
-          "value": "string",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 554,
-          "end": 560
-        }
-      }
-    },
-    "start": 554,
-    "end": 560,
-    "name": "CompileError"
-  },
-  {
     "code": 3043,
     "diagnostic": "An Indexes field must be a function expression, a column name or a tuple of such",
     "nodeOrToken": {
-      "id": 167,
+      "id": 168,
       "kind": "<function-application>",
       "startPos": {
         "offset": 620,
@@ -84,7 +20,7 @@
       "start": 620,
       "end": 627,
       "callee": {
-        "id": 164,
+        "id": 165,
         "kind": "<primary-expression>",
         "startPos": {
           "offset": 620,
@@ -101,7 +37,7 @@
         "start": 620,
         "end": 622,
         "expression": {
-          "id": 163,
+          "id": 164,
           "kind": "<variable>",
           "startPos": {
             "offset": 620,
@@ -207,7 +143,7 @@
       },
       "args": [
         {
-          "id": 166,
+          "id": 167,
           "kind": "<primary-expression>",
           "startPos": {
             "offset": 623,
@@ -224,7 +160,7 @@
           "start": 623,
           "end": 627,
           "expression": {
-            "id": 165,
+            "id": 166,
             "kind": "<variable>",
             "startPos": {
               "offset": 623,

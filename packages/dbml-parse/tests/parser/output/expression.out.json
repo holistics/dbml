@@ -371,36 +371,36 @@
               "id": 3,
               "kind": "<function-application>",
               "startPos": {
-                "offset": null,
-                "column": null,
-                "line": null
+                "offset": 25,
+                "line": 1,
+                "column": 6
               },
-              "fullStart": null,
+              "fullStart": 25,
               "endPos": {
-                "offset": null,
-                "column": null,
-                "line": null
+                "offset": 25,
+                "line": 1,
+                "column": 6
               },
-              "fullEnd": null,
-              "start": null,
-              "end": null,
+              "fullEnd": 25,
+              "start": 25,
+              "end": 25,
               "callee": {
                 "id": 2,
-                "kind": "<function-expression>",
+                "kind": "<dummy>",
                 "startPos": {
-                  "offset": null,
-                  "column": null,
-                  "line": null
+                  "offset": 25,
+                  "line": 1,
+                  "column": 6
                 },
-                "fullStart": null,
+                "fullStart": 25,
                 "endPos": {
-                  "offset": null,
-                  "column": null,
-                  "line": null
+                  "offset": 25,
+                  "line": 1,
+                  "column": 6
                 },
-                "fullEnd": null,
-                "start": null,
-                "end": null
+                "fullEnd": 25,
+                "start": 25,
+                "end": 25
               },
               "args": []
             },
