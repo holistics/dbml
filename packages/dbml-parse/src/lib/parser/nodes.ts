@@ -1,4 +1,4 @@
-import _, { extend } from 'lodash';
+import _ from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
 import { Position } from '../types';
@@ -103,7 +103,7 @@ export enum SyntaxNodeKind {
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
   DUMMY = '<dummy>',
-  ARRAY_INDEX = '<array-index>'
+  ARRAY = '<array>',
 }
 
 export class ProgramNode extends SyntaxNode {
@@ -194,7 +194,7 @@ export class IdentiferStreamNode extends SyntaxNode {
 }
 
 export class AttributeNode extends SyntaxNode {
-  name?: IdentiferStreamNode;
+  name?: IdentiferStreamNode | PrimaryExpressionNode;
 
   colon?: SyntaxToken;
 
@@ -233,7 +233,7 @@ export type NormalExpressionNode =
   | PrimaryExpressionNode
   | FunctionExpressionNode
   | DummyNode
-  | ArrayIndexNode;
+  | ArrayNode;
 
 export type ExpressionNode =
   | ElementDeclarationNode
@@ -498,20 +498,14 @@ export class DummyNode extends SyntaxNode {
   }
 }
 
-export class ArrayIndexNode extends SyntaxNode {
-  expression?: NormalExpressionNode;
-  indexOpenBracket?: SyntaxToken;
-  elementList: SyntaxNode[];
-  commaList: SyntaxToken[];
-  indexCloseBracket?: SyntaxToken;
+export class ArrayNode extends SyntaxNode {
+  array?: NormalExpressionNode;
+  indexer?: ListExpressionNode;
 
-  constructor({ expression, indexOpenBracket, elementList = [], commaList = [], indexCloseBracket }: { expression?: NormalExpressionNode; indexOpenBracket?: SyntaxToken; elementList?: SyntaxNode[]; commaList?: SyntaxToken[]; indexCloseBracket?: SyntaxToken; }, id: SyntaxNodeId) {
-    super(id, SyntaxNodeKind.ARRAY_INDEX, [expression, indexOpenBracket, interleave(elementList, commaList), indexCloseBracket]);
-    this.expression = expression;
-    this.indexOpenBracket = indexOpenBracket;
-    this.elementList = elementList;
-    this.commaList = commaList;
-    this.indexCloseBracket = indexCloseBracket;
+  constructor({ expression, indexer }: { expression?: NormalExpressionNode; indexer: ListExpressionNode; }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.ARRAY, [expression, indexer]);
+    this.array = expression;
+    this.indexer = indexer;
   }
 }
 

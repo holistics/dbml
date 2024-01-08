@@ -9,6 +9,7 @@ import { SyntaxToken, SyntaxTokenKind, isOpToken } from '../lexer/tokens';
 import Report from '../report';
 import { ParsingContext, ParsingContextStack } from './contextStack';
 import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
@@ -503,6 +504,25 @@ export default class Parser {
           });
           throw new PartialParsingError(e.token, leftExpression, e.handlerContext);
         }
+      } else if (token.kind === SyntaxTokenKind.LBRACKET) {
+        if (hasTrailingSpaces(this.previous())) {
+          break;
+        }
+        try {
+          leftExpression = this.nodeFactory.create(ArrayNode, {
+            expression: leftExpression,
+            indexer: this.listExpression(),
+          });
+        } catch (e) {
+          if (!(e instanceof PartialParsingError)) {
+            throw e;
+          }
+          leftExpression = this.nodeFactory.create(ArrayNode, {
+            expression: leftExpression,
+            indexer: e.partialNode,
+          });
+          throw new PartialParsingError(e.token, leftExpression, e.handlerContext);
+        }
       } else if (!isOpToken(token)) {
         break;
       } else {
@@ -984,7 +1004,7 @@ export default class Parser {
 
   private attribute(): AttributeNode {
     const args: {
-      name?: IdentiferStreamNode;
+      name?: IdentiferStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
       value?: NormalExpressionNode | IdentiferStreamNode;
     } = {};
@@ -999,7 +1019,7 @@ export default class Parser {
       args.name = this.nodeFactory.create(IdentiferStreamNode, { identifiers: [] });
     } else {
       try {
-        args.name = this.extractIdentifierStream();
+        args.name = this.attributeName();
       } catch (e) {
         if (!(e instanceof PartialParsingError)) {
           throw e;
@@ -1041,7 +1061,7 @@ export default class Parser {
       value =
         this.peek().kind === SyntaxTokenKind.IDENTIFIER &&
         this.peek(1).kind === SyntaxTokenKind.IDENTIFIER ?
-          this.extractIdentifierStream() :
+          this.attributeName() :
           this.normalExpression();
     } catch (e) {
       if (!(e instanceof PartialParsingError) || !this.canHandle(e)) {
@@ -1065,35 +1085,29 @@ export default class Parser {
     }
   };
 
-  private extractIdentifierStream(): IdentiferStreamNode {
+  private attributeName(): IdentiferStreamNode | PrimaryExpressionNode {
     const identifiers: SyntaxToken[] = [];
+    
+    if (this.peek().kind !== SyntaxTokenKind.IDENTIFIER) {
+      return this.primaryExpression();
+    }
+
     while (
       !this.isAtEnd() &&
       !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.COMMA, SyntaxTokenKind.RBRACKET)
     ) {
-      if (
-        this.match(
-          SyntaxTokenKind.QUOTED_STRING,
-          SyntaxTokenKind.STRING_LITERAL,
-          SyntaxTokenKind.NUMERIC_LITERAL,
-        )
-      ) {
-        markInvalid(this.previous());
-        this.logError(this.previous(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect an identifier');
-      } else {
-        try {
-          this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
-          identifiers.push(this.previous());
-        } catch (e) {
-          if (!(e instanceof PartialParsingError)) {
-            throw e;
-          }
-          throw new PartialParsingError(
-            e.token,
-            this.nodeFactory.create(IdentiferStreamNode, { identifiers }),
-            e.handlerContext,
-          );
+      try {
+        this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
+        identifiers.push(this.previous());
+      } catch (e) {
+        if (!(e instanceof PartialParsingError)) {
+          throw e;
         }
+        throw new PartialParsingError(
+          e.token,
+          this.nodeFactory.create(IdentiferStreamNode, { identifiers }),
+          e.handlerContext,
+        );
       }
     }
 
