@@ -24,10 +24,6 @@ export default class TableBinder extends ElementBinder {
       },
       default: {
         shouldBind: false as const,
-        topSubnamesSymbolKind: [SymbolKind.Enum, SymbolKind.EnumField],
-        remainingSubnamesSymbolKind: SymbolKind.Schema,
-        ignoreNameNotFound: false,
-        keywords: KEYWORDS_OF_DEFAULT_SETTING,
       },
     },
   };
