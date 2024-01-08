@@ -184,9 +184,6 @@ export default abstract class ElementValidator {
 
   private checkNameInValidForm(): boolean {
     const { name } = this.declarationNode;
-    if (name) {
-      return false;
-    }
 
     if (name && !isValidName(name)) {
       this.logError(name, CompileErrorCode.INVALID_NAME, 'Invalid element name');
@@ -266,9 +263,6 @@ export default abstract class ElementValidator {
 
   private checkAliasInValidForm() {
     const { alias } = this.declarationNode;
-    if (alias) {
-      return false;
-    }
 
     if (alias && !isValidAlias(alias)) {
       this.logError(alias, CompileErrorCode.INVALID_ALIAS, 'Invalid element alias');
@@ -394,9 +388,6 @@ export default abstract class ElementValidator {
 
   private checkSettingListInValidForm(): boolean {
     const { attributeList } = this.declarationNode;
-    if (attributeList) {
-      return false;
-    }
 
     if (attributeList && !isValidSettingList(attributeList)) {
       this.logError(attributeList, CompileErrorCode.INVALID_SETTINGS, 'SettingList must be a list');
