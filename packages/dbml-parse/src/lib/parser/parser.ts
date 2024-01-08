@@ -1,9 +1,7 @@
 import _ from 'lodash';
 import {
   convertFuncAppToElem,
-  createDummyOperand,
   isAsKeyword,
-  isDummyOperand,
   markInvalid,
 } from './utils';
 import { CompileError, CompileErrorCode } from '../errors';
@@ -14,6 +12,7 @@ import {
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
+  DummyNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
@@ -569,7 +568,11 @@ export default class Parser {
           `Unexpected '${args.op.value}' in an expression`,
         );
 
-        this.throwDummyOperand(args.op);
+        throw new PartialParsingError(
+          args.op,
+          this.nodeFactory.create(DummyNode, { pre: args.op }),
+          this.contextStack.findHandlerContext(this.tokens, this.current),
+        );
       }
       this.advance();
 
@@ -590,8 +593,12 @@ export default class Parser {
       leftExpression = this.nodeFactory.create(PrefixExpressionNode, args);
     } else {
       leftExpression = this.extractOperand();
-      if (isDummyOperand(leftExpression)) {
-        this.throwDummyOperand(this.peek());
+      if (leftExpression instanceof DummyNode) {
+        throw new PartialParsingError(
+          this.peek(),
+          this.nodeFactory.create(DummyNode, { pre: this.peek() }),
+          this.contextStack.findHandlerContext(this.tokens, this.current),
+        );
       }
     }
 
@@ -651,15 +658,7 @@ export default class Parser {
       );
     }
 
-    return createDummyOperand(this.nodeFactory);
-  }
-
-  private throwDummyOperand(token: SyntaxToken): never {
-    throw new PartialParsingError(
-      token,
-      createDummyOperand(this.nodeFactory),
-      this.contextStack.findHandlerContext(this.tokens, this.current),
-    );
+    return this.nodeFactory.create(DummyNode, { pre: this.previous() });
   }
 
   /* Parsing FunctionExpression */

@@ -333,7 +333,10 @@ export default class Interpreter {
         ownerSchemaName,
       );
 
-      return maybeRef ? [maybeRef] : [];
+      return maybeRef ? [{
+        ...maybeRef,
+        token: extractTokenForInterpreter(element),
+      }] : [];
     }
 
     const res: Ref[] = [];

@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import { SyntaxToken } from '../lexer/tokens';
+import _, { extend } from 'lodash';
+import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
 import { Position } from '../types';
 import { getTokenFullEnd, getTokenFullStart } from '../lexer/utils';
@@ -102,6 +102,8 @@ export enum SyntaxNodeKind {
   CALL_EXPRESSION = '<call-expression>',
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
+  DUMMY = '<dummy>',
+  ARRAY_INDEX = '<array-index>'
 }
 
 export class ProgramNode extends SyntaxNode {
@@ -229,7 +231,9 @@ export type NormalExpressionNode =
   | TupleExpressionNode
   | CallExpressionNode
   | PrimaryExpressionNode
-  | FunctionExpressionNode;
+  | FunctionExpressionNode
+  | DummyNode
+  | ArrayIndexNode;
 
 export type ExpressionNode =
   | ElementDeclarationNode
@@ -486,6 +490,31 @@ export class PrimaryExpressionNode extends SyntaxNode {
   }
 }
 
+// A placeholder for missing operands
+export class DummyNode extends SyntaxNode {
+  constructor({ pre }: { pre: Readonly<SyntaxNode> | Readonly<SyntaxToken> }, id: SyntaxNodeId) {
+    const nextToken = SyntaxToken.create(SyntaxTokenKind.SPACE, pre.endPos, pre.endPos, ' ', false);
+    super(id, SyntaxNodeKind.DUMMY, [nextToken]);
+  }
+}
+
+export class ArrayIndexNode extends SyntaxNode {
+  expression?: NormalExpressionNode;
+  indexOpenBracket?: SyntaxToken;
+  elementList: SyntaxNode[];
+  commaList: SyntaxToken[];
+  indexCloseBracket?: SyntaxToken;
+
+  constructor({ expression, indexOpenBracket, elementList = [], commaList = [], indexCloseBracket }: { expression?: NormalExpressionNode; indexOpenBracket?: SyntaxToken; elementList?: SyntaxNode[]; commaList?: SyntaxToken[]; indexCloseBracket?: SyntaxToken; }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.ARRAY_INDEX, [expression, indexOpenBracket, interleave(elementList, commaList), indexCloseBracket]);
+    this.expression = expression;
+    this.indexOpenBracket = indexOpenBracket;
+    this.elementList = elementList;
+    this.commaList = commaList;
+    this.indexCloseBracket = indexCloseBracket;
+  }
+}
+
 function interleave(
   arr1: (SyntaxNode | SyntaxToken)[] | undefined,
   arr2: (SyntaxNode | SyntaxToken)[] | undefined,
@@ -503,3 +532,4 @@ function interleave(
     (e) => e !== null,
   ) as (SyntaxNode | SyntaxToken)[];
 }
+

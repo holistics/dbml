@@ -346,11 +346,3 @@ export function extractStringFromIdentifierStream(stream?: IdentiferStreamNode):
 
   return new Some(name);
 }
-
-export function createDummyOperand(factory: NodeFactory): SyntaxNode {
-  return factory.create(FunctionExpressionNode, {});
-}
-
-export function isDummyOperand(node: SyntaxNode): boolean {
-  return node instanceof FunctionExpressionNode && node.value === undefined;
-}
