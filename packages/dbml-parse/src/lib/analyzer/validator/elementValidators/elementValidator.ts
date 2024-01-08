@@ -12,13 +12,14 @@ import { CompileError, CompileErrorCode } from '../../../errors';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { None, Option, Some } from '../../../option';
 import {
+  DummyNode,
   ElementDeclarationNode,
   ExpressionNode,
   FunctionApplicationNode,
   ListExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
-import { extractStringFromIdentifierStream, extractVariableNode, isDummyOperand } from '../../../parser/utils';
+import { extractStringFromIdentifierStream, extractVariableNode } from '../../../parser/utils';
 import { destructureComplexVariable } from '../../utils';
 import { ContextStack, canBeNestedWithin } from '../validatorContext';
 import {
@@ -183,7 +184,7 @@ export default abstract class ElementValidator {
 
   private checkNameInValidForm(): boolean {
     const { name } = this.declarationNode;
-    if (name && isDummyOperand(name)) {
+    if (name) {
       return false;
     }
 
@@ -265,6 +266,10 @@ export default abstract class ElementValidator {
 
   private checkAliasInValidForm() {
     const { alias } = this.declarationNode;
+    if (alias) {
+      return false;
+    }
+
     if (alias && !isValidAlias(alias)) {
       this.logError(alias, CompileErrorCode.INVALID_ALIAS, 'Invalid element alias');
 
@@ -389,6 +394,10 @@ export default abstract class ElementValidator {
 
   private checkSettingListInValidForm(): boolean {
     const { attributeList } = this.declarationNode;
+    if (attributeList) {
+      return false;
+    }
+
     if (attributeList && !isValidSettingList(attributeList)) {
       this.logError(attributeList, CompileErrorCode.INVALID_SETTINGS, 'SettingList must be a list');
 
