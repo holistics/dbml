@@ -36,7 +36,7 @@ const { importer } = require('@dbml/core');
 * **Usage:**  
 Generate DBML from SQL.
 
-Note: The `postgresLegacy` and `mysqlLegacy` options import postgreSQL/mySql to dbml using the old parsers. It's quicker but less accurate.
+Note: The `postgresLegacy` and `mysqlLegacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
 
 ```javascript
 const fs = require('fs');
@@ -95,7 +95,7 @@ const { Parser } = require('@dbml/core');
 * **Usage:**  
 Parse specified format to ```Database``` object
 
-Note: The `postgresLegacy` and `mysqlLegacy` options import postgreSQL/mySql to dbml using the old parsers. It's quicker but less accurate.
+Note: The `postgresLegacy` and `mysqlLegacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
 
 Note: The `dbmlv2` option parse dbml using the new parser. It's quicker and more robust to errors/more user-friendly error messages.
 
