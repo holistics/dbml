@@ -34,7 +34,6 @@ Table "users" {
 Table "products" {
   "id" int [pk]
   "name" varchar(255) [note: 'Product name']
-  Note: 'Notes about products table'
 }
 
 Table "orders" {
@@ -118,7 +117,6 @@ Table "ecommerce"."users" {
   "ejs2" ecommerce.users_ejs2_enum
   "eg" ecommerce.users_eg_enum
   "eg2" ecommerce.users_eg2_enum
-  Note: 'Table users of schema ecommerce'
 }
 
 Table "schemaA"."products" {

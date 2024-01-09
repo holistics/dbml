@@ -16,7 +16,7 @@ CREATE TABLE `users` (
 CREATE TABLE `products` (
   `id` int PRIMARY KEY,
   `name` varchar(255) COMMENT 'Product name'
-) COMMENT = 'Notes about products table';
+);
 
 CREATE TABLE `ecommerce`.`users` (
   `id` int PRIMARY KEY,
@@ -25,7 +25,7 @@ CREATE TABLE `ecommerce`.`users` (
   `ejs2` ENUM ('created2', 'running2', 'done2', 'failure2'),
   `eg` ENUM ('male', 'female'),
   `eg2` ENUM ('male2', 'female2')
-)COMMENT = 'Table users of schema ecommerce';
+);
 
 CREATE TABLE `schemaA`.`products` (
   `id` int PRIMARY KEY,
