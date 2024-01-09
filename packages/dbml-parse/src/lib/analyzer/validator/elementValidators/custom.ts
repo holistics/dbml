@@ -1,74 +1,70 @@
-import { ElementKind, createContextValidatorConfig, createSubFieldValidatorConfig } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { ElementDeclarationNode } from '../../../parser/nodes';
-import { isExpressionAQuotedString } from '../../../parser/utils';
-import { ContextStack, ValidatorContext } from '../validatorContext';
-import ElementValidator from './elementValidator';
-import {
-  noAliasConfig,
-  noNameConfig,
-  noSettingListConfig,
-  noUniqueConfig,
-  simpleBodyConfig,
-} from './_preset_configs';
-import { SchemaSymbol } from '../../symbol/symbols';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode } from '../../../parser/nodes';
 import SymbolFactory from '../../symbol/factory';
-import { transformToReturnCompileErrors } from './utils';
 import { SyntaxToken } from '../../../lexer/tokens';
+import { ElementValidator } from '../types';
+import { isExpressionAQuotedString } from '../../../parser/utils';
+import SymbolTable from '../../../analyzer/symbol/symbolTable';
 
-export default class CustomValidator extends ElementValidator {
-  protected elementKind: ElementKind = ElementKind.CUSTOM;
+export default class CustomValidator implements ElementValidator {
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private containerSymbolTable: SymbolTable;
+  private symbolFactory: SymbolFactory;
 
-  protected context = createContextValidatorConfig({
-    name: ValidatorContext.CustomContext,
-    errorCode: CompileErrorCode.INVALID_CUSTOM_CONTEXT,
-    stopOnError: false,
-  });
+  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, containerSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    this.declarationNode = declarationNode;
+    this.containerSymbolTable = containerSymbolTable;
+    this.symbolFactory = symbolFactory;
+  }
 
-  protected unique = noUniqueConfig.doNotStopOnError();
+  validate(): CompileError[] {
+    return [...this.validateContext(), ...this.validateName(), ...this.validateAlias(), ...this.validateSettingList(), ...this.validateBody()];
+  }
 
-  protected name = noNameConfig.doNotStopOnError();
+  validateContext(): CompileError[] {
+    if (this.declarationNode.parent instanceof ProgramNode || this.declarationNode.parent?.type?.value.toLowerCase() === 'project') {
+      return [new CompileError(CompileErrorCode.INVALID_CUSTOM_CONTEXT, 'A custom element can only appear in a Project', this.declarationNode)];
+    }
+    return [];
+  }
 
-  protected alias = noAliasConfig.doNotStopOnError();
+  validateName(nameNode?: SyntaxNode): CompileError[] {
+    if (nameNode) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element should\'nt have a name', nameNode)];
+    }
 
-  protected settingList = noSettingListConfig.doNotStopOnError();
+    return [];
+  }
 
-  protected body = simpleBodyConfig.doNotStopOnError();
+  validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+    if (aliasNode) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element should\'nt have an alias', aliasNode)];
+    }
 
-  protected subfield = createSubFieldValidatorConfig({
-    argValidators: [
-      {
-        validateArg: transformToReturnCompileErrors(
-          isExpressionAQuotedString,
-          CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE,
-          'This field must be a string literal',
-        ),
-      },
-    ],
-    invalidArgNumberErrorCode: CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE,
-    invalidArgNumberErrorMessage: 'A custom element field must be a single string literal',
-    settingList: noSettingListConfig.doNotStopOnError(),
-    shouldRegister: false,
-    duplicateErrorCode: undefined,
-  });
+    return [];
+  }
 
-  constructor(
-    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
-    publicSchemaSymbol: SchemaSymbol,
-    contextStack: ContextStack,
-    errors: CompileError[],
-    kindsGloballyFound: Set<ElementKind>,
-    kindsLocallyFound: Set<ElementKind>,
-    symbolFactory: SymbolFactory,
-  ) {
-    super(
-      declarationNode,
-      publicSchemaSymbol,
-      contextStack,
-      errors,
-      kindsGloballyFound,
-      kindsLocallyFound,
-      symbolFactory,
-    );
+  validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+    if (settingList) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Custom element should\'nt have a setting list', settingList)];
+    }
+
+    return [];
+  }
+
+  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+    if (!body) {
+      return [];
+    }
+
+    if (body instanceof BlockExpressionNode) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_COMPLEX_BODY, 'A Custom element can only have an inline field', body)];
+    }
+
+    if (!isExpressionAQuotedString(body)) {
+      return [new CompileError(CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE, 'A Custom element value can only be a string', body)];
+    }
+
+    return [];
   }
 }

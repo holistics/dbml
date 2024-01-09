@@ -1,5 +1,6 @@
 import { SyntaxToken, SyntaxTokenKind } from '../../lexer/tokens';
 import {
+  AttributeNode,
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
@@ -25,47 +26,26 @@ import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
 import { SchemaSymbol } from '../symbol/symbols';
 import SymbolTable from '../symbol/symbolTable';
 import SymbolFactory from '../symbol/factory';
-import { isAccessExpression, isExpressionAVariableNode } from '../../parser/utils';
-import { ElementKind } from './types';
+import { extractStringFromIdentifierStream, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode } from '../../parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
-
-// Pick a validator suitable for `element`
-export function toElementKind(str: string): ElementKind {
-  switch (str.toLowerCase()) {
-    case 'enum':
-      return ElementKind.ENUM;
-    case 'table':
-      return ElementKind.TABLE;
-    case 'tablegroup':
-      return ElementKind.TABLEGROUP;
-    case 'project':
-      return ElementKind.PROJECT;
-    case 'ref':
-      return ElementKind.REF;
-    case 'note':
-      return ElementKind.NOTE;
-    case 'indexes':
-      return ElementKind.INDEXES;
-    default:
-      return ElementKind.CUSTOM;
-  }
-}
+import Report from '../../report';
+import { CompileError, CompileErrorCode } from '../../errors';
 
 export function pickValidator(element: ElementDeclarationNode & { type: SyntaxToken }) {
-  switch (toElementKind(element.type.value)) {
-    case ElementKind.ENUM:
+  switch (element.type.value.toLowerCase()) {
+    case 'enum':
       return EnumValidator;
-    case ElementKind.TABLE:
+    case 'table':
       return TableValidator;
-    case ElementKind.TABLEGROUP:
+    case 'tablegroup':
       return TableGroupValidator;
-    case ElementKind.PROJECT:
+    case 'project':
       return ProjectValidator;
-    case ElementKind.REF:
+    case 'ref':
       return RefValidator;
-    case ElementKind.NOTE:
+    case 'note':
       return NoteValidator;
-    case ElementKind.INDEXES:
+    case 'indexes':
       return IndexesValidator;
     default:
       return CustomValidator;
@@ -186,12 +166,18 @@ export function isVoid(value?: SyntaxNode): boolean {
 // Is the `value` a valid value for a column's `default` setting
 // It's a valid only if it's a literal or a complex variable (potentially an enum member)
 export function isValidDefaultValue(value?: SyntaxNode): boolean {
-  if (
-    value instanceof PrimaryExpressionNode &&
-    (value.expression instanceof LiteralNode || value.expression instanceof VariableNode)
-  ) {
+  if (isExpressionAQuotedString(value)) {
     return true;
   }
+
+  if (isExpressionANumber(value)) {
+    return true;
+  }
+
+  if (isExpressionAnIdentifierNode(value) && ['true', 'false', 'null'].includes(value.expression.variable.value)) {
+    return true;
+  }
+
   if (
     value instanceof PrefixExpressionNode &&
     NUMERIC_LITERAL_PREFIX.includes(value.op?.value as any) &&
@@ -204,13 +190,7 @@ export function isValidDefaultValue(value?: SyntaxNode): boolean {
     return true;
   }
 
-  if (!value || Array.isArray(value) || !isAccessExpression(value)) {
-    return false;
-  }
-
-  const variables = destructureComplexVariable(value).unwrap_or(undefined);
-
-  return variables !== undefined && variables.length > 0;
+  return false;
 }
 
 export function isExpressionANumber(value?: SyntaxNode): value is PrimaryExpressionNode & {
@@ -243,4 +223,30 @@ export function isTupleOfVariables(value?: SyntaxNode): value is TupleExpression
   return value instanceof TupleExpressionNode && value.elementList.every(isExpressionAVariableNode);
 }
 
-export { isBinaryRelationship };
+export function aggregateSettingList(settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }, CompileError> {
+  const map: { [index: string]: AttributeNode[]; } = {};
+  const errors: CompileError[] = [];
+  if (!settingList) {
+    return new Report({});
+  }
+  for (const attribute of settingList.elementList) {
+    if (!attribute.name || !attribute.value) {
+      continue;
+    }
+
+    if (attribute.name instanceof PrimaryExpressionNode) {
+      errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'A setting name must be a stream of identifiers', attribute.name));
+      continue;
+    }
+
+    const name = extractStringFromIdentifierStream(attribute.name).unwrap().toLowerCase();
+
+    if (map[name] === undefined) {
+      map[name] = [attribute]
+    } else {
+      map[name].push(attribute);
+    }
+  }
+
+  return new Report(map, errors);
+}

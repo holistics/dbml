@@ -29,7 +29,6 @@ export class SyntaxNode {
   fullEnd: Readonly<number>; // End offset with trivias counted
   symbol?: NodeSymbol;
   referee?: NodeSymbol; // The symbol that this syntax node refers to
-  parent?: ElementDeclarationNode | ProgramNode; // The enclosing element/program
 
   // args must be passed in order of appearance in the node
   constructor(
@@ -133,6 +132,8 @@ export class ElementDeclarationNode extends SyntaxNode {
   attributeList?: ListExpressionNode;
 
   bodyColon?: SyntaxToken;
+  
+  parent?: ElementDeclarationNode | ProgramNode; // The enclosing element/program
 
   // if simple body, `body` must be a FunctionApplicationNode or ElementDeclarationNode
   body?: FunctionApplicationNode | ElementDeclarationNode | BlockExpressionNode;

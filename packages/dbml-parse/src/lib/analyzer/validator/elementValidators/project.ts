@@ -1,64 +1,87 @@
 import SymbolFactory from '../../symbol/factory';
-import { ElementKind, createContextValidatorConfig, createSubFieldValidatorConfig } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { ElementDeclarationNode } from '../../../parser/nodes';
-import { ContextStack, ValidatorContext } from '../validatorContext';
-import ElementValidator from './elementValidator';
-import {
-  complexBodyConfig,
-  globallyUniqueConfig,
-  noAliasConfig,
-  noSettingListConfig,
-  optionalNameConfig,
-} from './_preset_configs';
-import { SchemaSymbol } from '../../symbol/symbols';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
+import { ElementValidator } from '../types';
+import { isSimpleName, pickValidator } from '../utils';
+import _ from 'lodash';
+import SymbolTable from '../../../analyzer/symbol/symbolTable';
 
-export default class ProjectValidator extends ElementValidator {
-  protected elementKind: ElementKind = ElementKind.PROJECT;
+export default class ProjectValidator implements ElementValidator {
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private containerSymbolTable: SymbolTable;
+  private symbolFactory: SymbolFactory;
 
-  protected context = createContextValidatorConfig({
-    name: ValidatorContext.ProjectContext,
-    errorCode: CompileErrorCode.INVALID_PROJECT_CONTEXT,
-    stopOnError: false,
-  });
+  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, containerSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    this.declarationNode = declarationNode;
+    this.containerSymbolTable = containerSymbolTable;
+    this.symbolFactory = symbolFactory;
+  }
 
-  protected unique = globallyUniqueConfig(CompileErrorCode.PROJECT_REDEFINED).doNotStopOnError();
+  validate(): CompileError[] {
+    return [...this.validateContext(), ...this.validateName(), ...this.validateAlias(), ...this.validateSettingList(), ...this.validateBody()];
+  }
 
-  protected name = optionalNameConfig.doNotStopOnError();
+  validateContext(): CompileError[] {
+    if (this.declarationNode.parent instanceof ElementDeclarationNode) {
+      return [new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'A Project can only appear top-level', this.declarationNode)];
+    }
 
-  protected alias = noAliasConfig.doNotStopOnError();
+    return [];
+  }
 
-  protected settingList = noSettingListConfig.doNotStopOnError();
+  validateName(nameNode?: SyntaxNode): CompileError[] {
+    if (!nameNode) {
+      return [];
+    }
 
-  protected body = complexBodyConfig.doNotStopOnError();
+    if (!isSimpleName(nameNode)) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Project\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
+    }
 
-  protected subfield = createSubFieldValidatorConfig({
-    argValidators: [],
-    invalidArgNumberErrorCode: CompileErrorCode.INVALID_PROJECT_FIELD,
-    invalidArgNumberErrorMessage: 'A Project cannot have a subfield',
-    settingList: noSettingListConfig.doNotStopOnError(),
-    shouldRegister: false,
-    duplicateErrorCode: undefined,
-  });
+    return [];
+  }
 
-  constructor(
-    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
-    publicSchemaSymbol: SchemaSymbol,
-    contextStack: ContextStack,
-    errors: CompileError[],
-    kindsGloballyFound: Set<ElementKind>,
-    kindsLocallyFound: Set<ElementKind>,
-    symbolFactory: SymbolFactory,
-  ) {
-    super(
-      declarationNode,
-      publicSchemaSymbol,
-      contextStack,
-      errors,
-      kindsGloballyFound,
-      kindsLocallyFound,
-      symbolFactory,
-    );
+  validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+    if (aliasNode) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Project should\'nt have an alias', aliasNode)];
+    }
+
+    return [];
+  }
+
+  validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+    if (settingList) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project should\'nt have a setting list', settingList)];
+    }
+
+    return [];
+  }
+
+  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+    if (!body) {
+      return [];
+    }
+    if (body instanceof FunctionApplicationNode) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Project\'s body must be a block', body)];
+    }
+
+    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)),
+      ...this.validateSubElements(subs as ElementDeclarationNode[])
+    ];
+  }
+
+  validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+    return subs.flatMap((sub) => {
+      sub.parent = this.declarationNode;
+      if (!sub.type) {
+        return [];
+      }
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.declarationNode.symbol!.symbolTable!, this.symbolFactory);
+      return validator.validate();
+    });
   }
 }
