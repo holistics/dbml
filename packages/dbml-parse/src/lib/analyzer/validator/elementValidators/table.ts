@@ -139,10 +139,11 @@ export default class TableValidator implements ElementValidator {
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments.isOk()) {
       const nameFragments = maybeNameFragments.unwrap();
-      const symbolTable = registerSchemaStack(nameFragments.slice(0, -1), this.publicSymbolTable, this.symbolFactory);
-      const tableId = createTableSymbolIndex(nameFragments.pop()!);
+      const tableName = nameFragments.pop()!;
+      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
+      const tableId = createTableSymbolIndex(tableName);
       if (symbolTable.has(tableId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, 'This Table name already exists', name!))
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${tableName}' already exists in schema '${nameFragments.join('.') || 'public'}'`, name!))
       }
       symbolTable.set(tableId, this.declarationNode.symbol!);
     }
@@ -150,7 +151,7 @@ export default class TableValidator implements ElementValidator {
     if (alias && isSimpleName(alias)) {
       const aliasId = createTableSymbolIndex(extractVarNameFromPrimaryVariable(alias as any).unwrap());
       if (this.publicSymbolTable.has(aliasId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, 'This Table name already exists', name!))
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${alias}' already exists`, name!))
       }
       this.publicSymbolTable.set(aliasId, this.declarationNode.symbol!)
     }
