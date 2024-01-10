@@ -248,7 +248,7 @@ export class TableInterpreter implements ElementInterpreter {
         index.pk = !!settingMap['pk']?.length;
         index.unique = !!settingMap['unique']?.length;
         index.name = extractQuotedStringToken(settingMap['name'][0]?.value).unwrap_or(undefined);
-        const noteNode = settingMap['note'][0];
+        const noteNode = settingMap['note']?.at(0);
         index.note = noteNode && {
           token: getTokenPosition(noteNode),
           value: extractQuotedStringToken(noteNode.value).unwrap(),

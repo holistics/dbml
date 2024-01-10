@@ -48,7 +48,7 @@ export class EnumInterpreter implements ElementInterpreter {
       enumField.name = extractVariableFromExpression(field.callee).unwrap();
 
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
-      const noteNode = settingMap['note'][0];
+      const noteNode = settingMap['note']?.at(0);
       enumField.note = noteNode && {
         token: getTokenPosition(noteNode),
         value: extractQuotedStringToken(noteNode.value).unwrap(),

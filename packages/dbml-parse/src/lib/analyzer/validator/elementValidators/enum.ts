@@ -131,7 +131,7 @@ export default class EnumValidator implements ElementValidator {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_ENUM_ELEMENT_SETTING, `note can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (isExpressionAQuotedString(attr.value)) {
+            if (!isExpressionAQuotedString(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_SETTING, `note must be a string`, attr));
             }
           });
