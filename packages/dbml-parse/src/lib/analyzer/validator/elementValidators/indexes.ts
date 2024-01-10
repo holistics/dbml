@@ -85,15 +85,14 @@ export default class IndexesValidator implements ElementValidator {
       }
 
       const errors: CompileError[] = [];
-      const maybeSettingList = _.last(field.args);
-      if (maybeSettingList instanceof ListExpressionNode) {
-        field.args.pop();
-        errors.push(...this.validateFieldSetting(maybeSettingList));
+      const args = [field.callee, ...field.args];
+      if (_.last(args) instanceof ListExpressionNode) {
+        errors.push(...this.validateFieldSetting(args.pop() as ListExpressionNode));
       }
 
-      [field.callee, ...field.args].forEach((sub) => {
+      args.forEach((sub) => {
         if (!destructureIndexNode(sub).isOk()) {
-          errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An inline index field must be an identifier or a quoted identifier', sub));
+          errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
         }
       });
 
