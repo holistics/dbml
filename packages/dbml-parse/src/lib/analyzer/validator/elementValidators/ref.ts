@@ -123,6 +123,7 @@ export default class RefValidator implements ElementValidator {
               errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `${name} can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
             }
           });
+          break;
         default:
           attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting ${name}`, attr)));
       }

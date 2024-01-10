@@ -119,6 +119,7 @@ export default class IndexesValidator implements ElementValidator {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `${name} must be a string`, attr));
             }
           });
+          break;
         case 'unique':
         case 'pk':
           if (attrs.length > 1) {
@@ -129,6 +130,7 @@ export default class IndexesValidator implements ElementValidator {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `${name} must not have a value`, attr));
             }
           });
+          break;
         case 'type':
           if (attrs.length > 1) {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `type can only appear once`, attr)));
@@ -138,6 +140,7 @@ export default class IndexesValidator implements ElementValidator {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `type must be "btree" or "hash"`, attr));
             }
           });
+          break;
         default:
           attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting ${name}`, attr)));
       }

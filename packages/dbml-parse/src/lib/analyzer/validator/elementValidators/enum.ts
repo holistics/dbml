@@ -135,6 +135,7 @@ export default class EnumValidator implements ElementValidator {
               errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_SETTING, `note must be a string`, attr));
             }
           });
+          break;
         default:
           attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_ENUM_ELEMENT_SETTING, `Unknown enum setting ${name}`, attr)));
       }
