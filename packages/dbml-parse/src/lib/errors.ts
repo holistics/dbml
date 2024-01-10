@@ -108,16 +108,13 @@ export class CompileError extends Error {
 
   end: Readonly<number>;
 
-  constructor(code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken | (SyntaxNode | SyntaxToken)[]) {
-    if (Array.isArray(nodeOrToken) && nodeOrToken.length === 0) {
-      throw new Error('An array subject must have non-zero length');
-    } 
+  constructor(code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
     this.diagnostic = message;
     this.nodeOrToken = nodeOrToken;
-    this.start = Array.isArray(nodeOrToken) ? nodeOrToken[0].start : nodeOrToken.start;
-    this.end = Array.isArray(nodeOrToken) ? _.last(nodeOrToken)!.end : nodeOrToken.end;
+    this.start = nodeOrToken.start;
+    this.end = nodeOrToken.end;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileError.prototype);
   }

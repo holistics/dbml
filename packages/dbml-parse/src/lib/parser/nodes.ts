@@ -153,7 +153,7 @@ export class ElementDeclarationNode extends SyntaxNode {
       alias?: NormalExpressionNode;
       attributeList?: ListExpressionNode;
       bodyColon?: SyntaxToken;
-      body?: BlockExpressionNode | FunctionApplicationNode | ElementDeclarationNode;
+      body?: BlockExpressionNode | FunctionApplicationNode;
     },
     id: SyntaxNodeId,
   ) {
@@ -206,7 +206,7 @@ export class AttributeNode extends SyntaxNode {
       colon,
       value,
     }: {
-      name?: IdentiferStreamNode;
+      name?: IdentiferStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
       value?: NormalExpressionNode | IdentiferStreamNode;
     },

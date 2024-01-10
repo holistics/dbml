@@ -220,7 +220,7 @@ export default class Parser {
       alias?: NormalExpressionNode;
       attributeList?: ListExpressionNode;
       bodyColon?: SyntaxToken;
-      body?: FunctionApplicationNode | BlockExpressionNode | ElementDeclarationNode;
+      body?: FunctionApplicationNode | BlockExpressionNode;
     } = {};
     const buildElement = () => this.nodeFactory.create(ElementDeclarationNode, args);
 
@@ -297,8 +297,9 @@ export default class Parser {
         if (expr instanceof ElementDeclarationNode) {
           markInvalid(expr);
           this.logError(expr, CompileErrorCode.UNEXPECTED_ELEMENT_DECLARATION, 'An element\'s simple body must not be an element declaration');
+        } else {
+          args.body = expr;
         }
-        args.body = expr;
       } else {
         args.body = this.blockExpression();
       }
@@ -350,7 +351,7 @@ export default class Parser {
       type?: SyntaxToken;
       name?: NormalExpressionNode;
       bodyColon?: SyntaxToken;
-      body?: FunctionApplicationNode | ElementDeclarationNode;
+      body?: FunctionApplicationNode | BlockExpressionNode;
     } = {};
     const buildElement = () => this.nodeFactory.create(ElementDeclarationNode, args);
 
@@ -377,7 +378,12 @@ export default class Parser {
     }
 
     try {
-      args.body = this.expression();
+      const expr = this.expression();
+      if (expr instanceof ElementDeclarationNode) {
+        this.errors.push(new CompileError(CompileErrorCode.INVALID_ELEMENT_IN_SIMPLE_BODY, 'Simple body cannot be an element declaration', expr));
+      } else {
+        args.body = expr;
+      }
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
         throw e;
