@@ -1,39 +1,45 @@
 import _ from 'lodash';
 import { None, Option, Some } from '../option';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
-import { destructureComplexTuple, destructureMemberAccessExpression } from '../analyzer/utils';
-import { CompileError, CompileErrorCode } from '../errors';
-import { SyntaxNode, TupleExpressionNode } from '../parser/nodes';
-import { RelationCardinality, TokenPosition } from './types';
+import { destructureComplexTuple, destructureComplexVariable, destructureMemberAccessExpression } from '../analyzer/utils';
+import { LiteralNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode } from '../parser/nodes';
+import { RelationCardinality, Table, TokenPosition } from './types';
+import { SyntaxTokenKind } from '../lexer/tokens';
 
-export function isCircular(
-  firstColumnSymbols: ColumnSymbol[],
-  secondColumnSymbols: ColumnSymbol[],
-  endpointPairSet: Set<string>,
-): boolean {
-  const firstIds = firstColumnSymbols.map((s) => s.id);
-  const secondIds = secondColumnSymbols.map((s) => s.id);
+export function extractNamesFromRefOperand(operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
+  const { variables, tupleElements } = destructureComplexTuple(operand).unwrap();
 
-  const endpointPairId =
-    firstIds[0] < secondIds[0] ?
-      `${firstIds.join(',')}_${secondIds.join(',')}` :
-      `${secondIds.join(',')}_${firstIds.join(',')}`;
-  if (endpointPairSet.has(endpointPairId)) {
-    return true;
+  if (tupleElements) {
+    if (variables.length === 0) {
+      return {
+        schemaName: owner!.schemaName,
+        tableName: owner!.name,
+        fieldNames: tupleElements,
+      }
+    }
+    return {
+      tableName: variables.pop()!,
+      schemaName: variables.pop() || null,
+      fieldNames: tupleElements
+    };
   }
-  endpointPairSet.add(endpointPairId);
 
-  return false;
+  if (variables.length === 1) {
+    return {
+      schemaName: owner!.schemaName,
+      tableName: owner!.name,
+      fieldNames: [variables[0]],
+    }
+  }
+
+  return {
+    fieldNames: [variables.pop()!],
+    tableName: variables.pop()!,
+    schemaName: variables.pop() || null,
+  };
 }
 
-export function isSameEndpoint(
-  firstColumnSymbols: ColumnSymbol[],
-  secondColumnSymbols: ColumnSymbol[],
-): boolean {
-  return _.zip(firstColumnSymbols, secondColumnSymbols).every(([f, s]) => f?.id === s?.id);
-}
-
-export function convertRelationOpToCardinalities(
+export function getMultiplicities(
   op: string,
 ): [RelationCardinality, RelationCardinality] {
   switch (op) {
@@ -49,42 +55,7 @@ export function convertRelationOpToCardinalities(
   throw new Error('Invalid relation op');
 }
 
-export function processRelOperand(
-  operand: SyntaxNode,
-  ownerTableName: string | null,
-  ownerSchemaName: string | null,
-):
-  | {
-      columnNames: string[];
-      tableName: string;
-      schemaName: string | null;
-    }
-  | CompileError {
-  const { tupleElements, variables } = destructureComplexTuple(operand).unwrap();
-  const columnNames = tupleElements || [variables.pop()!];
-  const tableName = variables.pop();
-  const schemaName = variables.pop();
-  if (variables.length > 0) {
-    return new CompileError(
-      CompileErrorCode.UNSUPPORTED,
-      'Nested schemas are currently not allowed',
-      operand,
-    );
-  }
-
-  if (tableName === undefined && ownerTableName === null) {
-    throw new Error("A rel operand's table name must be defined");
-  }
-
-  return {
-    columnNames,
-    // if tableName is undefined, the columnName must be relative to the owner
-    tableName: tableName || (ownerTableName as string),
-    schemaName: tableName ? schemaName || null : ownerSchemaName,
-  };
-}
-
-export function extractTokenForInterpreter(node: SyntaxNode): TokenPosition {
+export function getTokenPosition(node: SyntaxNode): TokenPosition {
   return {
     start: {
       offset: node.startPos.offset,
@@ -95,20 +66,13 @@ export function extractTokenForInterpreter(node: SyntaxNode): TokenPosition {
   };
 }
 
-export function getColumnSymbolsOfRefOperand(ref: SyntaxNode): Option<ColumnSymbol[]> {
+export function getColumnSymbolsOfRefOperand(ref: SyntaxNode): ColumnSymbol[] {
   const colNode = destructureMemberAccessExpression(ref).unwrap_or(undefined)?.pop();
   if (colNode instanceof TupleExpressionNode) {
-    if (!colNode.elementList.every((e) => !!e.referee)) {
-      return new None();
-    }
-
-    return new Some(colNode.elementList.map((e) => e.referee as ColumnSymbol));
-  }
-  if (!(colNode?.referee instanceof ColumnSymbol)) {
-    return new None();
+    return colNode.elementList.map((e) => e.referee as ColumnSymbol);
   }
 
-  return new Some([colNode.referee]);
+  return [colNode!.referee as ColumnSymbol];
 }
 
 export function normalizeNoteContent(content: string): string {
@@ -116,4 +80,45 @@ export function normalizeNoteContent(content: string): string {
     .split('\n')
     .map((s) => s.trim())
     .join('\n');
+}
+
+export function extractElementName(nameNode: SyntaxNode): { schemaName: string[]; name: string } {
+  const fragments = destructureComplexVariable(nameNode).unwrap();
+  const name = fragments.pop()!;
+  return {
+    name,
+    schemaName: fragments,
+  };
+}
+
+export function extractColor(node: PrimaryExpressionNode & { expression: LiteralNode } & { literal: { kind: SyntaxTokenKind.COLOR_LITERAL }}): string {
+  return node.expression.literal!.value;
+}
+
+export function getRefId(sym1: ColumnSymbol, sym2: ColumnSymbol): string;
+export function getRefId(sym1: ColumnSymbol[], sym2: ColumnSymbol[]): string;
+export function getRefId(sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): string {
+  if (Array.isArray(sym1)) {
+    const firstIds = sym1.map(({ id }) => id).sort().join(',');  
+    const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort().join(',');  
+    return firstIds < secondIds ? `${firstIds}-${secondIds}` : `${firstIds}-${secondIds}`;
+  }
+
+  const firstId = sym1.id;
+  const secondId = (sym2 as ColumnSymbol).id;
+  return firstId < secondId ? `${firstId}-${secondId}` : `${firstId}-${secondId}`;
+}
+
+export function isSameEndpoint(sym1: ColumnSymbol, sym2: ColumnSymbol): boolean;
+export function isSameEndpoint(sym1: ColumnSymbol[], sym2: ColumnSymbol[]): boolean;
+export function isSameEndpoint(sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): boolean {
+  if (Array.isArray(sym1)) {
+    const firstIds = sym1.map(({ id }) => id).sort();  
+    const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort();
+    return _.zip(firstIds, secondIds).every(([first, second]) => first === second);
+  }
+
+  const firstId = sym1.id;
+  const secondId = (sym2 as ColumnSymbol).id;
+  return firstId === secondId;
 }
