@@ -2,7 +2,7 @@
   {
     "code": 3003,
     "diagnostic": "Table name 'users' already exists in schema 'public'",
-    "subject": {
+    "nodeOrToken": {
       "id": 65,
       "kind": "<primary-expression>",
       "startPos": {

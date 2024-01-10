@@ -455,7 +455,7 @@
     {
       "code": 1004,
       "diagnostic": "Invalid number",
-      "subject": {
+      "nodeOrToken": {
         "kind": "<number>",
         "startPos": {
           "offset": 58,
@@ -527,7 +527,7 @@
     {
       "code": 1004,
       "diagnostic": "Invalid number",
-      "subject": {
+      "nodeOrToken": {
         "kind": "<number>",
         "startPos": {
           "offset": 63,
@@ -577,7 +577,7 @@
     {
       "code": 1004,
       "diagnostic": "Invalid number",
-      "subject": {
+      "nodeOrToken": {
         "kind": "<number>",
         "startPos": {
           "offset": 70,

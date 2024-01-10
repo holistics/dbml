@@ -678,7 +678,7 @@
     {
       "code": 3018,
       "diagnostic": "A Table must have at least one column",
-      "subject": {
+      "nodeOrToken": {
         "id": 3,
         "kind": "<element-declaration>",
         "startPos": {
@@ -954,7 +954,7 @@
     {
       "code": 3003,
       "diagnostic": "Table name 'AB' already exists in schema 'public'",
-      "subject": {
+      "nodeOrToken": {
         "id": 5,
         "kind": "<primary-expression>",
         "startPos": {
@@ -1040,7 +1040,7 @@
     {
       "code": 3018,
       "diagnostic": "A Table must have at least one column",
-      "subject": {
+      "nodeOrToken": {
         "id": 7,
         "kind": "<element-declaration>",
         "startPos": {

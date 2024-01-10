@@ -2708,7 +2708,7 @@
     {
       "code": 1010,
       "diagnostic": "Expect a non-empty attribute name",
-      "subject": {
+      "nodeOrToken": {
         "kind": "<colon>",
         "startPos": {
           "offset": 120,
@@ -2758,7 +2758,7 @@
     {
       "code": 1009,
       "diagnostic": "Invalid start of operand \"]\"",
-      "subject": {
+      "nodeOrToken": {
         "kind": "<rbracket>",
         "startPos": {
           "offset": 185,

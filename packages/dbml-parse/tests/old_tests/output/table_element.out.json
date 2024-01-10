@@ -2,7 +2,7 @@
   {
     "code": 3044,
     "diagnostic": "Duplicate notes are defined",
-    "subject": {
+    "nodeOrToken": {
       "id": 36,
       "kind": "<element-declaration>",
       "startPos": {
@@ -253,7 +253,7 @@
   {
     "code": 3044,
     "diagnostic": "Duplicate notes are defined",
-    "subject": {
+    "nodeOrToken": {
       "id": 68,
       "kind": "<element-declaration>",
       "startPos": {

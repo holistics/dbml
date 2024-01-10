@@ -2,7 +2,7 @@
   {
     "code": 1003,
     "diagnostic": "Invalid newline encountered while parsing",
-    "subject": {
+    "nodeOrToken": {
       "kind": "<string>",
       "startPos": {
         "offset": 176,
@@ -52,7 +52,7 @@
   {
     "code": 1005,
     "diagnostic": "Expect a comma ','",
-    "subject": {
+    "nodeOrToken": {
       "kind": "<identifier>",
       "startPos": {
         "offset": 142,
@@ -102,7 +102,7 @@
   {
     "code": 1005,
     "diagnostic": "Expect an identifier",
-    "subject": {
+    "nodeOrToken": {
       "kind": "<rparen>",
       "startPos": {
         "offset": 215,
@@ -152,7 +152,7 @@
   {
     "code": 1005,
     "diagnostic": "Expect an identifier",
-    "subject": {
+    "nodeOrToken": {
       "kind": "<rbrace>",
       "startPos": {
         "offset": 226,
@@ -202,7 +202,7 @@
   {
     "code": 3021,
     "diagnostic": "Unknown column setting diagram_id",
-    "subject": {
+    "nodeOrToken": {
       "id": 37,
       "kind": "<attribute>",
       "startPos": {
