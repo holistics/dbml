@@ -10,14 +10,13 @@ import {
   SyntaxNode,
   VariableNode,
 } from '../../../parser/nodes';
-import { isExpressionAQuotedString } from '../../../parser/utils';
+import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
 import { aggregateSettingList, isVoid, pickValidator } from '../utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
 import _ from 'lodash';
 import { destructureIndexNode } from '../../../analyzer/utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { IndexesSymbol } from '../../..//analyzer/symbol/symbols';
 
 export default class IndexesValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -114,7 +113,7 @@ export default class IndexesValidator implements ElementValidator {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `${name} can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (isExpressionAQuotedString(attr.value)) {
+            if (!isExpressionAQuotedString(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `${name} must be a string`, attr));
             }
           });
@@ -125,7 +124,7 @@ export default class IndexesValidator implements ElementValidator {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `${name} can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (isVoid(attr.value)) {
+            if (!isVoid(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `${name} must not have a value`, attr));
             }
           });
@@ -135,7 +134,7 @@ export default class IndexesValidator implements ElementValidator {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `type can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (isVoid(attr.value)) {
+            if (!isExpressionAVariableNode(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `type must be "btree" or "hash"`, attr));
             }
           });

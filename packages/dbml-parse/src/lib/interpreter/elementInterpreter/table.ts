@@ -1,7 +1,7 @@
 import { Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table } from '../types';
 import { ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode } from '../../parser/nodes';
-import { extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint } from '../utils';
-import { destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable } from '../../analyzer/utils';
+import { extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent } from '../utils';
+import { destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression } from '../../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../../errors';
 import { aggregateSettingList, isExpressionANumber } from '../../analyzer/validator/utils';
 import { isExpressionAQuotedString, isExpressionAnIdentifierNode } from '../../parser/utils';
@@ -19,11 +19,13 @@ export class TableInterpreter implements ElementInterpreter {
   constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.table = { alias: null, fields: [], indexes: [] };
+    this.table = { name: undefined, schemaName: undefined, alias: null, fields: [], token: undefined, indexes: [] };
     this.pkColumns = [];
   }
 
   interpret(): CompileError[] {
+    this.table.token = getTokenPosition(this.declarationNode);
+  
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
       ...this.interpretAlias(this.declarationNode.alias),
@@ -93,10 +95,10 @@ export class TableInterpreter implements ElementInterpreter {
     this.table.headerColor = settingMap['headercolor']?.length ? extractColor(settingMap['headercolor']?.at(0)?.value as any) : undefined;
     
     const [noteNode] = settingMap['note'] || [];
-    const noteValue = extractQuotedStringToken(noteNode).unwrap_or(undefined);
+    const noteValue = extractQuotedStringToken(noteNode?.value).unwrap_or(undefined);
     this.table.note = noteNode && {
+      value: normalizeNoteContent(noteValue!),
       token: getTokenPosition(noteNode),
-      value: noteValue!,
     };
 
     return [];
@@ -112,8 +114,8 @@ export class TableInterpreter implements ElementInterpreter {
       switch (sub.type?.value.toLowerCase()) {
         case 'note':
           this.table.note = {
+            value: normalizeNoteContent(extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? (sub.body.body[0] as FunctionApplicationNode).callee : sub.body!.callee).unwrap()),
             token: getTokenPosition(sub),
-            value: extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? sub.body.body[0] : sub.body!.callee).unwrap(),
           }
           return [];
         case 'indexes':
@@ -136,87 +138,86 @@ export class TableInterpreter implements ElementInterpreter {
     const column: Partial<Column> = {};
     
     column.name = extractVarNameFromPrimaryVariable(field.callee as any).unwrap();
-    
     column.type = processColumnType(field.args[0]);
+    column.token = getTokenPosition(field);
+    column.inline_refs = [];
     
     const settings = field.args.slice(1);
-    if (settings.length >= 1) {
-      if (_.last(settings) instanceof ListExpressionNode) {
-        const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
-        column.pk = !!settingMap['pk']?.length;
-        column.increment = !!settingMap['increment']?.length;
-        column.unique = !!settingMap['unique']?.length;
-        column.not_null = !!settingMap['not null']?.length;
-        column.dbdefault = processDefaultValue(settingMap['default']?.at(0)?.value);
-        const noteNode = settingMap['note']?.at(0);
-        column.note = noteNode && {
-          token: getTokenPosition(noteNode),
-          value: extractQuotedStringToken(noteNode.value).unwrap(),
+    if (_.last(settings) instanceof ListExpressionNode) {
+      const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
+      column.pk = !!settingMap['pk']?.length;
+      column.increment = !!settingMap['increment']?.length;
+      column.unique = !!settingMap['unique']?.length;
+      column.not_null = !!settingMap['not null']?.length && true;
+      column.dbdefault = processDefaultValue(settingMap['default']?.at(0)?.value);
+      const noteNode = settingMap['note']?.at(0);
+      column.note = noteNode && {
+        value: normalizeNoteContent(extractQuotedStringToken(noteNode.value).unwrap()),
+        token: getTokenPosition(noteNode),
+      }
+      const refs = settingMap['ref'] || [];
+      column.inline_refs = refs.flatMap((ref) => {
+        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
+        if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
+          errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
+          return [];
         }
-        const refs = settingMap['ref'] || [];
-        column.inline_refs = refs.flatMap((ref) => {
-          const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
-          if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
-            errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
-            return [];
-          }
 
-          const op = (ref.value as PrefixExpressionNode).op!;
-          const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression).unwrap();
-          
-          let inlineRef: InlineRef | undefined;
-          if (fragments.length === 1) {
-            const [column] = fragments;
+        const op = (ref.value as PrefixExpressionNode).op!;
+        const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression).unwrap();
+        
+        let inlineRef: InlineRef | undefined;
+        if (fragments.length === 1) {
+          const [column] = fragments;
 
-            inlineRef = {
-              schemaName: this.table.schemaName!,
-              tableName: this.table.name!,
-              fieldNames: [column],
-              relation: op.value as any,
-              token: getTokenPosition(ref),
-            };
-          } else if (fragments.length === 2) {
-            const [table, column] = fragments;
-            inlineRef = {
-              schemaName: this.table.schemaName!,
-              tableName: table,
-              fieldNames: [column],
-              relation: op.value as any,
-              token: getTokenPosition(ref),
-            };
-          } else if (fragments.length === 3) {
-            const [schema, table, column] = fragments;
-            inlineRef = {
-              schemaName: schema,
-              tableName: table,
-              fieldNames: [column],
-              relation: op.value as any,
-              token: getTokenPosition(ref),
-            };
-          } else {
-            errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref));
-            const column = fragments.pop()!;
-            const table = fragments.pop()!;
-            const schema = fragments.join('.');
-            inlineRef = {
-              schemaName: schema,
-              tableName: table,
-              fieldNames: [column],
-              relation: op.value as any,
-              token: getTokenPosition(ref),
-            };
-          }
+          inlineRef = {
+            schemaName: this.table.schemaName!,
+            tableName: this.table.name!,
+            fieldNames: [column],
+            relation: op.value as any,
+            token: getTokenPosition(ref),
+          };
+        } else if (fragments.length === 2) {
+          const [table, column] = fragments;
+          inlineRef = {
+            schemaName: this.table.schemaName!,
+            tableName: table,
+            fieldNames: [column],
+            relation: op.value as any,
+            token: getTokenPosition(ref),
+          };
+        } else if (fragments.length === 3) {
+          const [schema, table, column] = fragments;
+          inlineRef = {
+            schemaName: schema,
+            tableName: table,
+            fieldNames: [column],
+            relation: op.value as any,
+            token: getTokenPosition(ref),
+          };
+        } else {
+          errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref));
+          const column = fragments.pop()!;
+          const table = fragments.pop()!;
+          const schema = fragments.join('.');
+          inlineRef = {
+            schemaName: schema,
+            tableName: table,
+            fieldNames: [column],
+            relation: op.value as any,
+            token: getTokenPosition(ref),
+          };
+        }
 
-          const errs = this.registerInlineRefToEnv(field, referredSymbol, inlineRef, ref);
-          errors.push(...errs);
+        const errs = this.registerInlineRefToEnv(field, referredSymbol, inlineRef, ref);
+        errors.push(...errs);
 
-          return errs.length === 0 ? inlineRef : [];
-        })
-      } 
+        return errs.length === 0 ? inlineRef : [];
+      })
     }
 
-    column.pk ||= settings.some((setting) => extractQuotedStringToken(setting).unwrap().toLowerCase() === 'pk');
-    column.unique ||= settings.some((setting) => extractQuotedStringToken(setting).unwrap().toLowerCase() === 'unique');
+    column.pk ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'pk');
+    column.unique ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'unique');
 
     this.table.fields!.push(column as Column);
     if (column.pk) {
@@ -227,9 +228,10 @@ export class TableInterpreter implements ElementInterpreter {
 
   private interpretIndexes(indexes: ElementDeclarationNode): CompileError[] {
     this.table.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
-      const index: Partial<Index> = { columns: [] };
+      const index: Partial<Index> = { columns: [], };
 
       const indexField = _indexField as FunctionApplicationNode;
+      index.token = getTokenPosition(indexes);
       const args = [indexField.callee!, ...indexField.args];
       if (_.last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
@@ -238,10 +240,10 @@ export class TableInterpreter implements ElementInterpreter {
         index.name = extractQuotedStringToken(settingMap['name']?.at(0)?.value).unwrap_or(undefined);
         const noteNode = settingMap['note']?.at(0);
         index.note = noteNode && {
+          value: normalizeNoteContent(extractQuotedStringToken(noteNode.value).unwrap()),
           token: getTokenPosition(noteNode),
-          value: extractQuotedStringToken(noteNode.value).unwrap(),
         };
-        index.type = extractQuotedStringToken(settingMap['type']?.at(0)?.value).unwrap_or(undefined); 
+        index.type = extractVariableFromExpression(settingMap['type']?.at(0)?.value).unwrap_or(undefined); 
       }
 
       args.forEach((arg) => {
@@ -283,7 +285,7 @@ export class TableInterpreter implements ElementInterpreter {
         {
           schemaName: this.table.schemaName!,
           tableName: this.table.name!,
-          fieldNames: [extractQuotedStringToken(column.callee!).unwrap()],
+          fieldNames: [extractVariableFromExpression(column.callee!).unwrap()],
           token: getTokenPosition(column),
           relation: multiplicities[0],
         },
@@ -322,9 +324,9 @@ function processColumnType(typeNode: SyntaxNode): ColumnType {
   }
 
   return {
-    args: typeArgs,
     schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
-    type_name: typeName
+    type_name: `${typeName}${typeIndexer}`,
+    args: typeArgs,
   };
 }
 
@@ -339,8 +341,8 @@ function processDefaultValue(valueNode?: SyntaxNode):
 
   if (isExpressionAQuotedString(valueNode)) {
     return {
-      type: "string",
       value: extractQuotedStringToken(valueNode).unwrap(),
+      type: "string",
     };
   }
 
@@ -352,20 +354,11 @@ function processDefaultValue(valueNode?: SyntaxNode):
   }
 
   if (isExpressionAnIdentifierNode(valueNode)) {
-    const value = valueNode.expression.variable.value;
-    switch (value) {
-      case 'true':
-      case 'false':
-        return {
-          type: 'boolean',
-          value, 
-        };
-      case 'null':
-        return {
-          type: 'expression',
-          value
-        }
-    }
+    const value = valueNode.expression.variable.value.toLowerCase();
+    return {
+      value, 
+      type: 'boolean',
+    };
   }
 
   if (
@@ -375,15 +368,15 @@ function processDefaultValue(valueNode?: SyntaxNode):
   ) {
     const number = Number.parseInt(valueNode.expression.expression.literal.value, 10);
     return {
-      type: 'number',
       value: valueNode.op?.value === '-' ? 0 - number : number, 
+      type: 'number',
     };
   }
 
   if (valueNode instanceof FunctionExpressionNode) {
     return {
-      type: 'expression',
       value: valueNode.value?.value!,
+      type: 'expression',
     }
   }
 

@@ -6,7 +6,6 @@ import { ElementValidator } from '../types';
 import { isSimpleName, pickValidator } from '../utils';
 import _ from 'lodash';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { ProjectSymbol } from '../../..//analyzer/symbol/symbols';
 
 export default class ProjectValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };

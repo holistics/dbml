@@ -11,7 +11,6 @@ import { aggregateSettingList, isSimpleName, pickValidator } from '../utils';
 import _ from 'lodash';
 import { isBinaryRelationship, isEqualTupleOperands } from '../../../analyzer/utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { RefSymbol } from '../../..//analyzer/symbol/symbols';
 
 export default class RefValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };

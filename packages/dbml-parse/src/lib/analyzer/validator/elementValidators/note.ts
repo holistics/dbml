@@ -7,7 +7,6 @@ import { isExpressionAQuotedString } from '../../../parser/utils';
 import _ from 'lodash';
 import { pickValidator } from '../utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { NoteSymbol } from '../../..//analyzer/symbol/symbols';
 
 export default class NoteValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -25,8 +24,8 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode || this.declarationNode.parent?.type?.value.toLowerCase() !== 'table') {
-      return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'A Note can only appear inside a Table', this.declarationNode)];
+    if (this.declarationNode.parent instanceof ProgramNode || !(['table', 'project'] as (string | undefined)[]).includes(this.declarationNode.parent?.type?.value.toLowerCase())) {
+      return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'A Note can only appear inside a Table or a Project', this.declarationNode)];
     }
 
     return [];

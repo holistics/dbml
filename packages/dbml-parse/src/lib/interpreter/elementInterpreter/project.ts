@@ -2,7 +2,7 @@ import { extractQuotedStringToken } from "../../analyzer/utils";
 import { CompileError } from "../../errors";
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from "../../parser/nodes";
 import { ElementInterpreter, InterpreterDatabase, Project } from "../types";
-import { extractElementName, getTokenPosition } from "../utils";
+import { extractElementName, getTokenPosition, normalizeNoteContent } from "../utils";
 import { EnumInterpreter } from "./enum";
 import { RefInterpreter } from "./ref";
 import { TableInterpreter } from "./table";
@@ -16,10 +16,11 @@ export class ProjectInterpreter implements ElementInterpreter {
   constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
+    this.project = { enums: [], refs: [], tableGroups: [], tables: [] };
   }
 
   interpret(): CompileError[] {
-    const errors = [...this.interpretName(this.declarationNode.name), ...this.registerElement(), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
+    const errors = [...this.interpretName(this.declarationNode.name), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
     this.env.project.set(this.declarationNode, this.project as Project);
     return errors;
   }
@@ -35,8 +36,6 @@ export class ProjectInterpreter implements ElementInterpreter {
     
     return [];
   }
-
-  private registerElement()
 
   private interpretBody(body: BlockExpressionNode): CompileError[] {
     return body.body.flatMap((_sub) => {
@@ -64,8 +63,8 @@ export class ProjectInterpreter implements ElementInterpreter {
         }
         case 'note': {
           this.project.note = {
+            value: normalizeNoteContent(extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? (sub.body.body[0] as FunctionApplicationNode).callee : sub.body!.callee).unwrap()),
             token: getTokenPosition(sub),
-            value: extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? sub.body.body[0] : sub.body!.callee).unwrap(),
           }
           return [];
         }
