@@ -293,7 +293,12 @@ export default class Parser {
     try {
       if (this.match(SyntaxTokenKind.COLON)) {
         args.bodyColon = this.previous();
-        args.body = this.expression();
+        const expr = this.expression();
+        if (expr instanceof ElementDeclarationNode) {
+          markInvalid(expr);
+          this.logError(expr, CompileErrorCode.UNEXPECTED_ELEMENT_DECLARATION, 'An element\'s simple body must not be an element declaration');
+        }
+        args.body = expr;
       } else {
         args.body = this.blockExpression();
       }

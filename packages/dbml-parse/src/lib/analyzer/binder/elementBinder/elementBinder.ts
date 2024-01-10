@@ -80,7 +80,10 @@ export default abstract class ElementBinder {
     if (nodeBody instanceof BlockExpressionNode) {
       // eslint-disable-next-line no-restricted-syntax
       for (const sub of nodeBody.body) {
-        if (sub instanceof ElementDeclarationNode && sub.type) {
+        if (sub instanceof ElementDeclarationNode) {
+          if (!sub.type) {
+            continue;
+          }
           const Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
           const binder = new Binder(sub, this.errors);
           binder.bind();
@@ -93,10 +96,7 @@ export default abstract class ElementBinder {
     }
   }
 
-  private bindSubfield(sub: FunctionApplicationNode | ElementDeclarationNode) {
-    if (sub instanceof ElementDeclarationNode) {
-      return;
-    }
+  private bindSubfield(sub: FunctionApplicationNode) {
     const args = [sub.callee, ...sub.args];
     const maybeSettingList = _.last(args);
     if (maybeSettingList instanceof ListExpressionNode) {

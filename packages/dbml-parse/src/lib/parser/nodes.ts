@@ -135,8 +135,7 @@ export class ElementDeclarationNode extends SyntaxNode {
   
   parent?: ElementDeclarationNode | ProgramNode; // The enclosing element/program
 
-  // if simple body, `body` must be a FunctionApplicationNode or ElementDeclarationNode
-  body?: FunctionApplicationNode | ElementDeclarationNode | BlockExpressionNode;
+  body?: FunctionApplicationNode | BlockExpressionNode;
 
   constructor(
     {
