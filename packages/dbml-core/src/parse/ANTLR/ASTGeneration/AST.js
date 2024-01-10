@@ -1,5 +1,14 @@
 /* eslint-disable max-classes-per-file */
 export class Index {
+  /**
+   * @param {{
+   *  name: string,
+   *  unique: boolean,
+   *  pk: boolean,
+   *  type: string,
+   *  columns: {value: string, type: 'column' | 'string' | 'expression'}[],
+   * }} param0
+   */
   constructor ({ name, unique, pk, type, columns }) {
     /** @type {string} */
     this.name = name;
@@ -13,7 +22,7 @@ export class Index {
     /** @type {boolean} */
     this.pk = pk;
 
-    /** @type {{value: string, type: string}[]} */
+    /** @type {{value: string, type: 'column' | 'string' | 'expression'}[]} */
     this.columns = columns;
   }
 
@@ -32,6 +41,18 @@ export class Field {
   /** @type {boolean} */
   // fk;
 
+  /**
+   * @param {{
+   *  name: string,
+   *  type: {type_name: string, schemaName: string},
+   *  not_null: boolean,
+   *  increment: boolean,
+   *  dbdefault: {value: string, type: 'string' | 'number' | 'boolean' | 'expression'},
+   *  unique: boolean,
+   *  pk: boolean,
+   *  note: {value: string}
+   * }} param0
+   */
   constructor ({ name, type, not_null, increment, dbdefault, unique, pk, note }) {
     /** @type {string} */
     this.name = name;
@@ -45,7 +66,7 @@ export class Field {
     /** @type {boolean} */
     this.increment = increment;
 
-    /** @type {{value: string, type: 'string'}} */
+    /** @type {{value: string, type: 'string' | 'number' | 'boolean' | 'expression'}} */
     this.dbdefault = dbdefault;
 
     /** @type {boolean} */
@@ -54,7 +75,7 @@ export class Field {
     /** @type {boolean} */
     this.pk = pk;
 
-    /** @type {string} */
+    /** @type {{value: string}} */
     this.note = note;
   }
 
@@ -73,6 +94,15 @@ export class Field {
 }
 
 export class Table {
+  /**
+   * @param {{
+   *  name: string,
+   *  schemaName: string,
+   *  fields: Field[],
+   *  indexes: Index[],
+   *  note: {value: string}
+   * }} param0
+   */
   constructor ({ name, schemaName, fields, indexes, note }) {
     /** @type {string} */
     this.name = name;
@@ -80,13 +110,13 @@ export class Table {
     /** @type {string} */
     this.schemaName = schemaName;
 
-    /** @type {Array<Field>} */
+    /** @type {Field[]} */
     this.fields = fields || [];
 
-    /** @type {Array<Index>} */
+    /** @type {Index[]} */
     this.indexes = indexes || [];
 
-    /** @type {string} */
+    /** @type {{value: string}} */
     this.note = note;
   }
 
@@ -102,6 +132,14 @@ export class Table {
 }
 
 export class Endpoint {
+  /**
+   * @param {{
+   *  tableName: string,
+   *  schemaName: string,
+   *  fieldNames: string[],
+   *  relation: '*' | '1'
+   * }} param0
+   */
   constructor ({ tableName, schemaName, fieldNames, relation }) {
     /** @type {string} */
     this.tableName = tableName;
@@ -112,7 +150,7 @@ export class Endpoint {
     /** @type {string[]} */
     this.fieldNames = fieldNames;
 
-    /** @type {string} */
+    /** @type {'*' | '1'} */
     this.relation = relation;
   }
 
@@ -127,11 +165,19 @@ export class Endpoint {
 }
 
 export class Ref {
+  /**
+   * @param {{
+   *  name: string,
+   *  endpoints: Endpoint[],
+   *  onDelete: string,
+   *  onUpdate: string
+   * }} param0
+   */
   constructor ({ name, endpoints, onDelete, onUpdate }) {
     /** @type {string} */
     this.name = name;
 
-    /** @type {Array<Endpoint>} */
+    /** @type {Endpoint[]} */
     this.endpoints = endpoints || [];
 
     /** @type {string} */

@@ -2,6 +2,9 @@ export default {
   mysql: {
     name: 'MySQL',
   },
+  mysqlLegacy: {
+    name: 'MySQL',
+  },
   postgres: {
     name: 'PostgreSQL',
   },
