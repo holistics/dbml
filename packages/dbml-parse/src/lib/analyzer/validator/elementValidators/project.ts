@@ -23,7 +23,7 @@ export default class ProjectValidator implements ElementValidator {
     return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
   }
 
-  validateContext(): CompileError[] {
+  private validateContext(): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
       return [new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'A Project can only appear top-level', this.declarationNode)];
     }
@@ -31,7 +31,7 @@ export default class ProjectValidator implements ElementValidator {
     return [];
   }
 
-  validateName(nameNode?: SyntaxNode): CompileError[] {
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [];
     }
@@ -43,7 +43,7 @@ export default class ProjectValidator implements ElementValidator {
     return [];
   }
 
-  validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Project should\'nt have an alias', aliasNode)];
     }
@@ -51,7 +51,7 @@ export default class ProjectValidator implements ElementValidator {
     return [];
   }
 
-  validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project should\'nt have a setting list', settingList)];
     }
@@ -74,7 +74,7 @@ export default class ProjectValidator implements ElementValidator {
     ];
   }
 
-  validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {

@@ -34,7 +34,7 @@ export default class IndexesValidator implements ElementValidator {
     return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
   }
 
-  validateContext(): CompileError[] {
+  private validateContext(): CompileError[] {
     if (this.declarationNode.parent instanceof ProgramNode || this.declarationNode.parent?.type?.value.toLowerCase() !== 'table') {
       return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'An Indexes can only appear inside a Table', this.declarationNode)];
     }
@@ -42,7 +42,7 @@ export default class IndexesValidator implements ElementValidator {
     return [];
   }
 
-  validateName(nameNode?: SyntaxNode): CompileError[] {
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
     if (nameNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes should\'nt have a name', nameNode)];
     }
@@ -50,7 +50,7 @@ export default class IndexesValidator implements ElementValidator {
     return [];
   }
 
-  validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes should\'nt have an alias', aliasNode)];
     }
@@ -58,7 +58,7 @@ export default class IndexesValidator implements ElementValidator {
     return [];
   }
 
-  validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project should\'nt have a setting list', settingList)];
     }
@@ -66,19 +66,19 @@ export default class IndexesValidator implements ElementValidator {
     return [];
   }
 
-  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  private validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.validateFields([body]);
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'An Indexes must have a complex body', body)];
     }
 
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
   }
 
-  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
+  private validateFields(fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       if (!field.callee) {
         return [];
@@ -101,7 +101,7 @@ export default class IndexesValidator implements ElementValidator {
     })
   }
 
-  validateFieldSetting(settings: ListExpressionNode): CompileError[] {
+  private validateFieldSetting(settings: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settings);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -148,7 +148,7 @@ export default class IndexesValidator implements ElementValidator {
     return errors;
   }
 
-  validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {
