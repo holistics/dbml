@@ -15,7 +15,7 @@ ALTER TABLE t1 RENAME COLUMN a TO b,
                RENAME COLUMN b TO c,
                RENAME COLUMN c TO a;
 ALTER TABLE tbl_name DROP FOREIGN KEY fk_symbol;
-ALTER TABLE tbl_name CONVERT TO CHARACTER SET charset_name;
+ALTER TABLE tbl_name CONVERT TO CHARACTER SET utf8;
 
 /* other ALTER syntax */
 ALTER DATABASE mydb READ ONLY = 0 DEFAULT COLLATE utf8mb4_bin;
@@ -42,5 +42,3 @@ ALTER LOGFILE GROUP lg_3
 ALTER PROCEDURE proc_name COMMENT 'string';
 
 ALTER SERVER s OPTIONS (USER 'sally');
-
-ALTER TABLESPACE ts1 ENGINE_ATTRIBUTE='{"key":"value"}';
