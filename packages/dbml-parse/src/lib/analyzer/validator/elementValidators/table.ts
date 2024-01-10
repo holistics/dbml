@@ -170,8 +170,16 @@ export default class TableValidator implements ElementValidator {
     }
 
     return fields.flatMap((field) => {
-      const errors: CompileError[] = []
-      if (field.callee && !isExpressionAVariableNode(field.callee)) {
+      if (!field.callee) {
+        return [];
+      }
+
+      const errors: CompileError[] = [];
+      if (field.args.length === 0) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', field.callee!));
+      }
+  
+      if (!isExpressionAVariableNode(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
       }
 
@@ -229,7 +237,7 @@ export default class TableValidator implements ElementValidator {
     const settingMap: { [index: string]: AttributeNode[]; } & { pk?: (AttributeNode | PrimaryExpressionNode)[], unique?: (AttributeNode | PrimaryExpressionNode)[] } = aggReport.getValue();
 
     for (const part of parts) {
-      const name = extractVarNameFromPrimaryVariable(part as any).unwrap().toLowerCase();
+      const name = extractVarNameFromPrimaryVariable(part as any).unwrap_or('').toLowerCase();
       if (name !== 'pk' && name !== 'unique') {
         errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
         continue;
