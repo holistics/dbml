@@ -1,6 +1,6 @@
 import { destructureComplexVariable } from "../../analyzer/utils";
 import { CompileError, CompileErrorCode } from "../../errors";
-import { BlockExpressionNode, ElementDeclarationNode } from "../../parser/nodes";
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode } from "../../parser/nodes";
 import { ElementInterpreter, InterpreterDatabase, TableGroup } from "../types";
 import { extractElementName, getTokenPosition } from "../utils";
 
@@ -29,7 +29,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
     this.tableGroup.schemaName = schemaName[0] || null;
     
     this.tableGroup.tables = (this.declarationNode.body as BlockExpressionNode).body.map((field) => {
-      const fragments = destructureComplexVariable(field).unwrap();
+      const fragments = destructureComplexVariable((field as FunctionApplicationNode).callee).unwrap();
 
       if (fragments.length > 2) {
         errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', field));

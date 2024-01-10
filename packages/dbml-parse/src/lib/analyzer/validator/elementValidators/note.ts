@@ -76,7 +76,7 @@ export default class NoteValidator implements ElementValidator {
     if (fields.length > 1) {
       fields.slice(1).forEach((field) => errors.push(new CompileError(CompileErrorCode.NOTE_CONTENT_REDEFINED, 'A Note can only contain one string', field)));
     }
-    if (!isExpressionAQuotedString(fields[0])) {
+    if (!isExpressionAQuotedString(fields[0].callee)) {
       return [new CompileError(CompileErrorCode.INVALID_NOTE, 'A Note content must be a quoted string', fields[0])];
     }
     return [];
