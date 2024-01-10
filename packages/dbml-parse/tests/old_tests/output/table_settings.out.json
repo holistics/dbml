@@ -26,7 +26,10 @@
             }
           },
           "inline_refs": [],
-          "pk": true
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "name",
@@ -47,7 +50,9 @@
               "column": 16
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -90,7 +95,10 @@
             }
           },
           "inline_refs": [],
-          "pk": true
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "name",
@@ -112,6 +120,9 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
           "not_null": true
         }
       ],
@@ -169,7 +180,10 @@
             }
           },
           "inline_refs": [],
-          "pk": true
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "name",
@@ -190,7 +204,9 @@
               "column": 16
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "price",
@@ -212,6 +228,9 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
           "not_null": true
         }
       ],
@@ -270,7 +289,10 @@
             }
           },
           "inline_refs": [],
-          "pk": true
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "user_id",
@@ -291,7 +313,9 @@
               "column": 16
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "product_id",
@@ -312,7 +336,9 @@
               "column": 19
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "address",
@@ -333,7 +359,9 @@
               "column": 19
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -369,14 +397,27 @@
   ],
   "refs": [
     {
+      "token": {
+        "start": {
+          "offset": 444,
+          "line": 24,
+          "column": 1
+        },
+        "end": {
+          "offset": 482,
+          "line": 24,
+          "column": 39
+        }
+      },
       "name": null,
+      "schemaName": null,
       "endpoints": [
         {
-          "schemaName": null,
-          "tableName": "user",
           "fieldNames": [
             "id"
           ],
+          "tableName": "user",
+          "schemaName": null,
           "relation": "1",
           "token": {
             "start": {
@@ -392,11 +433,11 @@
           }
         },
         {
-          "schemaName": null,
-          "tableName": "merchant",
           "fieldNames": [
             "user_id"
           ],
+          "tableName": "merchant",
+          "schemaName": null,
           "relation": "*",
           "token": {
             "start": {
@@ -411,30 +452,30 @@
             }
           }
         }
-      ],
+      ]
+    },
+    {
       "token": {
         "start": {
-          "offset": 444,
-          "line": 24,
+          "offset": 484,
+          "line": 26,
           "column": 1
         },
         "end": {
-          "offset": 482,
-          "line": 24,
-          "column": 39
+          "offset": 528,
+          "line": 26,
+          "column": 45
         }
       },
-      "schemaName": null
-    },
-    {
       "name": null,
+      "schemaName": null,
       "endpoints": [
         {
-          "schemaName": null,
-          "tableName": "product",
           "fieldNames": [
             "id"
           ],
+          "tableName": "product",
+          "schemaName": null,
           "relation": "1",
           "token": {
             "start": {
@@ -450,11 +491,11 @@
           }
         },
         {
-          "schemaName": null,
-          "tableName": "merchant",
           "fieldNames": [
             "product_id"
           ],
+          "tableName": "merchant",
+          "schemaName": null,
           "relation": "*",
           "token": {
             "start": {
@@ -469,20 +510,7 @@
             }
           }
         }
-      ],
-      "token": {
-        "start": {
-          "offset": 484,
-          "line": 26,
-          "column": 1
-        },
-        "end": {
-          "offset": 528,
-          "line": 26,
-          "column": 45
-        }
-      },
-      "schemaName": null
+      ]
     }
   ],
   "enums": [],

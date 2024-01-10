@@ -27,6 +27,9 @@
           },
           "inline_refs": [],
           "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "note": {
             "value": "primary key field",
             "token": {
@@ -62,7 +65,9 @@
               "column": 24
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "created_at",
@@ -83,7 +88,9 @@
               "column": 21
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -139,7 +146,9 @@
               "column": 13
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "country",
@@ -160,7 +169,9 @@
               "column": 18
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "booking_date",
@@ -181,7 +192,9 @@
               "column": 20
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "created_at",
@@ -202,7 +215,9 @@
               "column": 23
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -231,17 +246,18 @@
           ],
           "token": {
             "start": {
-              "offset": 438,
-              "line": 29,
-              "column": 7
+              "offset": 422,
+              "line": 28,
+              "column": 3
             },
             "end": {
-              "offset": 456,
-              "line": 29,
-              "column": 25
+              "offset": 693,
+              "line": 37,
+              "column": 4
             }
           },
-          "pk": true
+          "pk": true,
+          "unique": false
         },
         {
           "columns": [
@@ -252,16 +268,18 @@
           ],
           "token": {
             "start": {
-              "offset": 488,
-              "line": 30,
-              "column": 7
+              "offset": 422,
+              "line": 28,
+              "column": 3
             },
             "end": {
-              "offset": 539,
-              "line": 30,
-              "column": 58
+              "offset": 693,
+              "line": 37,
+              "column": 4
             }
           },
+          "pk": false,
+          "unique": false,
           "name": "created_at_index",
           "note": {
             "value": "Date",
@@ -288,14 +306,14 @@
           ],
           "token": {
             "start": {
-              "offset": 546,
-              "line": 31,
-              "column": 7
+              "offset": 422,
+              "line": 28,
+              "column": 3
             },
             "end": {
-              "offset": 558,
-              "line": 31,
-              "column": 19
+              "offset": 693,
+              "line": 37,
+              "column": 4
             }
           }
         },
@@ -312,16 +330,17 @@
           ],
           "token": {
             "start": {
-              "offset": 565,
-              "line": 32,
-              "column": 7
+              "offset": 422,
+              "line": 28,
+              "column": 3
             },
             "end": {
-              "offset": 597,
-              "line": 32,
-              "column": 39
+              "offset": 693,
+              "line": 37,
+              "column": 4
             }
           },
+          "pk": false,
           "unique": true
         },
         {
@@ -333,16 +352,18 @@
           ],
           "token": {
             "start": {
-              "offset": 604,
-              "line": 33,
-              "column": 7
+              "offset": 422,
+              "line": 28,
+              "column": 3
             },
             "end": {
-              "offset": 629,
-              "line": 33,
-              "column": 32
+              "offset": 693,
+              "line": 37,
+              "column": 4
             }
           },
+          "pk": false,
+          "unique": false,
           "type": "hash"
         },
         {
@@ -354,14 +375,14 @@
           ],
           "token": {
             "start": {
-              "offset": 636,
-              "line": 34,
-              "column": 7
+              "offset": 422,
+              "line": 28,
+              "column": 3
             },
             "end": {
-              "offset": 644,
-              "line": 34,
-              "column": 15
+              "offset": 693,
+              "line": 37,
+              "column": 4
             }
           }
         },
@@ -378,14 +399,14 @@
           ],
           "token": {
             "start": {
-              "offset": 651,
-              "line": 35,
-              "column": 7
+              "offset": 422,
+              "line": 28,
+              "column": 3
             },
             "end": {
-              "offset": 671,
-              "line": 35,
-              "column": 27
+              "offset": 693,
+              "line": 37,
+              "column": 4
             }
           }
         },
@@ -402,14 +423,14 @@
           ],
           "token": {
             "start": {
-              "offset": 678,
-              "line": 36,
-              "column": 7
+              "offset": 422,
+              "line": 28,
+              "column": 3
             },
             "end": {
-              "offset": 689,
-              "line": 36,
-              "column": 18
+              "offset": 693,
+              "line": 37,
+              "column": 4
             }
           }
         }
@@ -419,23 +440,8 @@
   "refs": [],
   "enums": [
     {
-      "name": "order status",
-      "schemaName": null,
-      "token": {
-        "start": {
-          "offset": 90,
-          "line": 6,
-          "column": 1
-        },
-        "end": {
-          "offset": 182,
-          "line": 11,
-          "column": 2
-        }
-      },
       "values": [
         {
-          "name": "created",
           "token": {
             "start": {
               "offset": 114,
@@ -448,6 +454,7 @@
               "column": 34
             }
           },
+          "name": "created",
           "note": {
             "value": "Order created",
             "token": {
@@ -465,7 +472,6 @@
           }
         },
         {
-          "name": "pending",
           "token": {
             "start": {
               "offset": 148,
@@ -477,10 +483,10 @@
               "line": 8,
               "column": 10
             }
-          }
+          },
+          "name": "pending"
         },
         {
-          "name": "processing",
           "token": {
             "start": {
               "offset": 158,
@@ -492,10 +498,10 @@
               "line": 9,
               "column": 13
             }
-          }
+          },
+          "name": "processing"
         },
         {
-          "name": "completed",
           "token": {
             "start": {
               "offset": 171,
@@ -507,19 +513,34 @@
               "line": 10,
               "column": 12
             }
-          }
+          },
+          "name": "completed"
         }
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 90,
+          "line": 6,
+          "column": 1
+        },
+        "end": {
+          "offset": 182,
+          "line": 11,
+          "column": 2
+        }
+      },
+      "name": "order status",
+      "schemaName": null
     }
   ],
   "tableGroups": [],
   "aliases": [],
   "project": {
-    "name": "multi_notes",
-    "tables": [],
-    "refs": [],
     "enums": [],
+    "refs": [],
     "tableGroups": [],
+    "tables": [],
+    "name": "multi_notes",
     "note": {
       "value": "project multi_notes note",
       "token": {

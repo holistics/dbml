@@ -1432,7 +1432,7 @@
     {
       "code": 1008,
       "diagnostic": "Unexpected '**' in an expression",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<op>",
         "startPos": {
           "offset": 29,

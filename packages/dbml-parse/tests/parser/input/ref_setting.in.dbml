@@ -1,6 +1,6 @@
 Table Users {
 	id integer
-    status v2.status [default: "churn"]
+    status v2.status [default: v2.status.new]
     
     referrer integer [ref: -id]
 }

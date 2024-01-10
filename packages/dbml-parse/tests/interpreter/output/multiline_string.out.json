@@ -26,6 +26,10 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "note": {
             "value": "\n\n# Objective\n* Support writing long string that can \\undefined'span' over multiple lines\n* Support writing markdown for DBML Note\n\n# Syntax\n\n",
             "token": {

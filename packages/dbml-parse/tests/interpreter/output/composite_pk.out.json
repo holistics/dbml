@@ -1,8 +1,8 @@
 [
   {
     "code": 3003,
-    "diagnostic": "Table \"users\" has been defined",
-    "nodeOrToken": {
+    "diagnostic": "Table name 'users' already exists in schema 'public'",
+    "subject": {
       "id": 65,
       "kind": "<primary-expression>",
       "startPos": {

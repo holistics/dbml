@@ -26,7 +26,10 @@
             }
           },
           "inline_refs": [],
-          "pk": true
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "full_name",
@@ -47,7 +50,9 @@
               "column": 20
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "email",
@@ -69,7 +74,10 @@
             }
           },
           "inline_refs": [],
-          "unique": true
+          "pk": false,
+          "increment": false,
+          "unique": true,
+          "not_null": false
         },
         {
           "name": "gender",
@@ -90,7 +98,9 @@
               "column": 17
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "date_of_birth",
@@ -111,7 +121,9 @@
               "column": 24
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "created_at",
@@ -132,7 +144,9 @@
               "column": 21
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "country_code",
@@ -153,7 +167,9 @@
               "column": 19
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "active",
@@ -175,6 +191,9 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
           "not_null": true
         }
       ],
@@ -200,16 +219,17 @@
           ],
           "token": {
             "start": {
-              "offset": 211,
-              "line": 12,
-              "column": 5
+              "offset": 197,
+              "line": 11,
+              "column": 3
             },
             "end": {
-              "offset": 244,
-              "line": 12,
-              "column": 38
+              "offset": 428,
+              "line": 19,
+              "column": 4
             }
           },
+          "pk": false,
           "unique": true,
           "note": {
             "value": "index note",
@@ -236,16 +256,18 @@
           ],
           "token": {
             "start": {
-              "offset": 249,
-              "line": 13,
-              "column": 5
+              "offset": 197,
+              "line": 11,
+              "column": 3
             },
             "end": {
-              "offset": 278,
-              "line": 13,
-              "column": 34
+              "offset": 428,
+              "line": 19,
+              "column": 4
             }
           },
+          "pk": false,
+          "unique": false,
           "name": "User Name"
         },
         {
@@ -261,16 +283,18 @@
           ],
           "token": {
             "start": {
-              "offset": 283,
-              "line": 14,
-              "column": 5
+              "offset": 197,
+              "line": 11,
+              "column": 3
             },
             "end": {
-              "offset": 314,
-              "line": 14,
-              "column": 36
+              "offset": 428,
+              "line": 19,
+              "column": 4
             }
           },
+          "pk": false,
+          "unique": false,
           "type": "hash"
         },
         {
@@ -282,14 +306,14 @@
           ],
           "token": {
             "start": {
-              "offset": 319,
-              "line": 15,
-              "column": 5
+              "offset": 197,
+              "line": 11,
+              "column": 3
             },
             "end": {
-              "offset": 326,
-              "line": 15,
-              "column": 12
+              "offset": 428,
+              "line": 19,
+              "column": 4
             }
           }
         },
@@ -306,14 +330,14 @@
           ],
           "token": {
             "start": {
-              "offset": 331,
-              "line": 16,
-              "column": 5
+              "offset": 197,
+              "line": 11,
+              "column": 3
             },
             "end": {
-              "offset": 359,
-              "line": 16,
-              "column": 33
+              "offset": 428,
+              "line": 19,
+              "column": 4
             }
           }
         },
@@ -330,14 +354,14 @@
           ],
           "token": {
             "start": {
-              "offset": 364,
-              "line": 17,
-              "column": 5
+              "offset": 197,
+              "line": 11,
+              "column": 3
             },
             "end": {
-              "offset": 394,
-              "line": 17,
-              "column": 35
+              "offset": 428,
+              "line": 19,
+              "column": 4
             }
           }
         },
@@ -350,14 +374,14 @@
           ],
           "token": {
             "start": {
-              "offset": 399,
-              "line": 18,
-              "column": 5
+              "offset": 197,
+              "line": 11,
+              "column": 3
             },
             "end": {
-              "offset": 424,
-              "line": 18,
-              "column": 30
+              "offset": 428,
+              "line": 19,
+              "column": 4
             }
           }
         }
