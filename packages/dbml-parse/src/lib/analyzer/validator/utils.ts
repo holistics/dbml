@@ -4,6 +4,7 @@ import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
+  IdentiferStreamNode,
   ListExpressionNode,
   LiteralNode,
   PrefixExpressionNode,
@@ -156,11 +157,7 @@ export function isValidColor(value?: SyntaxNode): boolean {
 
 // Is the value non-existent
 export function isVoid(value?: SyntaxNode): boolean {
-  return (
-    value === undefined ||
-    (!Array.isArray(value) && value.end === -1 && value.start === -1) ||
-    (Array.isArray(value) && value.length === 0)
-  );
+  return value === undefined;
 }
 
 // Is the `value` a valid value for a column's `default` setting
@@ -174,7 +171,7 @@ export function isValidDefaultValue(value?: SyntaxNode): boolean {
     return true;
   }
 
-  if (isExpressionAnIdentifierNode(value) && ['true', 'false', 'null'].includes(value.expression.variable.value)) {
+  if (isExpressionAnIdentifierNode(value) && ['true', 'false', 'null'].includes(value.expression.variable.value.toLowerCase())) {
     return true;
   }
 
@@ -230,7 +227,7 @@ export function aggregateSettingList(settingList?: ListExpressionNode): Report<{
     return new Report({});
   }
   for (const attribute of settingList.elementList) {
-    if (!attribute.name || !attribute.value) {
+    if (!attribute.name) {
       continue;
     }
 
@@ -240,7 +237,6 @@ export function aggregateSettingList(settingList?: ListExpressionNode): Report<{
     }
 
     const name = extractStringFromIdentifierStream(attribute.name).unwrap().toLowerCase();
-
     if (map[name] === undefined) {
       map[name] = [attribute]
     } else {

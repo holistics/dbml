@@ -53,11 +53,11 @@ export default class Interpreter {
 function convertEnvToDb(env: InterpreterDatabase): Database {
   return {
     schemas: [],
-    aliases: env.aliases,
-    enums: Array.from(env.enums.values()),
-    project: Array.from(env.project.values())[0] || {},
-    refs: Array.from(env.ref.values()),
-    tableGroups: Array.from(env.tableGroups.values()),
     tables: Array.from(env.tables.values()),
+    refs: Array.from(env.ref.values()),
+    enums: Array.from(env.enums.values()),
+    tableGroups: Array.from(env.tableGroups.values()),
+    aliases: env.aliases,
+    project: Array.from(env.project.values())[0] || {},
   };
 }

@@ -70,8 +70,7 @@ export function getColumnSymbolsOfRefOperand(ref: SyntaxNode): ColumnSymbol[] {
   const colNode = destructureMemberAccessExpression(ref).unwrap_or(undefined)?.pop();
   if (colNode instanceof TupleExpressionNode) {
     return colNode.elementList.map((e) => e.referee as ColumnSymbol);
-  }
-
+  };
   return [colNode!.referee as ColumnSymbol];
 }
 
@@ -106,7 +105,7 @@ export function getRefId(sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol
 
   const firstId = sym1.id;
   const secondId = (sym2 as ColumnSymbol).id;
-  return firstId < secondId ? `${firstId}-${secondId}` : `${firstId}-${secondId}`;
+  return firstId < secondId ? `${firstId}-${secondId}` : `${secondId}-${firstId}`;
 }
 
 export function isSameEndpoint(sym1: ColumnSymbol, sym2: ColumnSymbol): boolean;

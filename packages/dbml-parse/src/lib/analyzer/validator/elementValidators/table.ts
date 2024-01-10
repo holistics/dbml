@@ -111,7 +111,7 @@ export default class TableValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, 'note can only appear once', attr)))
           }
           attrs.forEach((attr) => {
-            if (!isValidColor(attr.value)) {
+            if (!isExpressionAQuotedString(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, 'note must be a string literal', attr.value || attr.name!));
             }
           });

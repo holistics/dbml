@@ -22,7 +22,7 @@ export default class CustomValidator implements ElementValidator {
   }
 
   private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode || this.declarationNode.parent?.type?.value.toLowerCase() === 'project') {
+    if (this.declarationNode.parent instanceof ProgramNode || this.declarationNode.parent?.type?.value.toLowerCase() !== 'project') {
       return [new CompileError(CompileErrorCode.INVALID_CUSTOM_CONTEXT, 'A custom element can only appear in a Project', this.declarationNode)];
     }
     return [];
@@ -61,7 +61,7 @@ export default class CustomValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.UNEXPECTED_COMPLEX_BODY, 'A Custom element can only have an inline field', body)];
     }
 
-    if (!isExpressionAQuotedString(body)) {
+    if (!isExpressionAQuotedString(body.callee)) {
       return [new CompileError(CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE, 'A Custom element value can only be a string', body)];
     }
 

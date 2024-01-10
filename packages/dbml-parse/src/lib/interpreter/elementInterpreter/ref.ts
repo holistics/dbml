@@ -20,6 +20,7 @@ export class RefInterpreter implements ElementInterpreter {
   }
 
   interpret(): CompileError[] {
+    this.ref.token = getTokenPosition(this.declarationNode);
     const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body!)];
     this.env.ref.set(this.declarationNode, this.ref as Ref);
     return errors;
@@ -35,8 +36,6 @@ export class RefInterpreter implements ElementInterpreter {
     }
     this.ref.schemaName = fragments.join('.') || null;
 
-    errors.push(...this.interpretField(this.declarationNode.body as FunctionApplicationNode))
-    
     return errors;
   }
 
