@@ -86,4 +86,4 @@ $ sql2dbml <path-to-sql-file>
            [--mysql|--postgres|--mssql|--postgres-legacy|--mysql-legacy]
            [-o|--out-file <output-filepath>]
 ```
-Note: The `--postgres-legacy` and `----mysql-legacy` options import postgreSQL/mySql to dbml using the old parsers. It's quicker but less accurate.
+Note: The `--postgres-legacy` and `--mysql-legacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
