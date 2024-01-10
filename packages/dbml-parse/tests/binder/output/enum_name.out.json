@@ -5304,7 +5304,7 @@
     {
       "code": 1009,
       "diagnostic": "Invalid start of operand \"}\"",
-      "subject": {
+      "nodeOrToken": {
         "kind": "<rbrace>",
         "startPos": {
           "offset": 170,
@@ -5354,7 +5354,7 @@
     {
       "code": 3022,
       "diagnostic": "Invalid column type",
-      "subject": {
+      "nodeOrToken": {
         "id": 44,
         "kind": "<infix-expression>",
         "startPos": {
@@ -5564,7 +5564,7 @@
     {
       "code": 3022,
       "diagnostic": "Invalid column type",
-      "subject": {
+      "nodeOrToken": {
         "id": 51,
         "kind": "<infix-expression>",
         "startPos": {

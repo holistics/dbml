@@ -1729,7 +1729,7 @@
     {
       "code": 3018,
       "diagnostic": "A Table must have at least one column",
-      "subject": {
+      "nodeOrToken": {
         "id": 15,
         "kind": "<element-declaration>",
         "startPos": {
@@ -2855,7 +2855,7 @@
     {
       "code": 3044,
       "diagnostic": "Duplicate notes are defined",
-      "subject": {
+      "nodeOrToken": {
         "id": 5,
         "kind": "<element-declaration>",
         "startPos": {
@@ -3128,7 +3128,7 @@
     {
       "code": 3044,
       "diagnostic": "Duplicate notes are defined",
-      "subject": {
+      "nodeOrToken": {
         "id": 12,
         "kind": "<element-declaration>",
         "startPos": {
@@ -3740,7 +3740,7 @@
     {
       "code": 3042,
       "diagnostic": "A Note can only appear inside a Table or a Project",
-      "subject": {
+      "nodeOrToken": {
         "id": 20,
         "kind": "<element-declaration>",
         "startPos": {
@@ -4120,7 +4120,7 @@
     {
       "code": 3042,
       "diagnostic": "A Note can only appear inside a Table or a Project",
-      "subject": {
+      "nodeOrToken": {
         "id": 24,
         "kind": "<element-declaration>",
         "startPos": {

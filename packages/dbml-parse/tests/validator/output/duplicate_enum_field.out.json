@@ -840,7 +840,7 @@
     {
       "code": 3023,
       "diagnostic": "Duplicate enum field churn",
-      "subject": {
+      "nodeOrToken": {
         "id": 7,
         "kind": "<function-application>",
         "startPos": {
@@ -1031,7 +1031,7 @@
     {
       "code": 3023,
       "diagnostic": "Duplicate enum field churn",
-      "subject": {
+      "nodeOrToken": {
         "id": 4,
         "kind": "<function-application>",
         "startPos": {
@@ -1222,7 +1222,7 @@
     {
       "code": 3023,
       "diagnostic": "Duplicate enum field churn",
-      "subject": {
+      "nodeOrToken": {
         "id": 10,
         "kind": "<function-application>",
         "startPos": {
@@ -1413,7 +1413,7 @@
     {
       "code": 3023,
       "diagnostic": "Duplicate enum field churn",
-      "subject": {
+      "nodeOrToken": {
         "id": 4,
         "kind": "<function-application>",
         "startPos": {

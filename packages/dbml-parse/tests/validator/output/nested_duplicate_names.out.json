@@ -1811,7 +1811,7 @@
     {
       "code": 3010,
       "diagnostic": "Table must appear top-level",
-      "subject": {
+      "nodeOrToken": {
         "id": 7,
         "kind": "<element-declaration>",
         "startPos": {
@@ -2256,7 +2256,7 @@
     {
       "code": 3018,
       "diagnostic": "A Table must have at least one column",
-      "subject": {
+      "nodeOrToken": {
         "id": 7,
         "kind": "<element-declaration>",
         "startPos": {
@@ -2701,7 +2701,7 @@
     {
       "code": 3010,
       "diagnostic": "Table must appear top-level",
-      "subject": {
+      "nodeOrToken": {
         "id": 14,
         "kind": "<element-declaration>",
         "startPos": {
@@ -3167,7 +3167,7 @@
     {
       "code": 3003,
       "diagnostic": "Table name 'A' already exists in schema 'public'",
-      "subject": {
+      "nodeOrToken": {
         "id": 12,
         "kind": "<primary-expression>",
         "startPos": {
@@ -3253,7 +3253,7 @@
     {
       "code": 3018,
       "diagnostic": "A Table must have at least one column",
-      "subject": {
+      "nodeOrToken": {
         "id": 14,
         "kind": "<element-declaration>",
         "startPos": {
@@ -3719,7 +3719,7 @@
     {
       "code": 3010,
       "diagnostic": "Table must appear top-level",
-      "subject": {
+      "nodeOrToken": {
         "id": 21,
         "kind": "<element-declaration>",
         "startPos": {
@@ -4353,7 +4353,7 @@
     {
       "code": 3018,
       "diagnostic": "A Table must have at least one column",
-      "subject": {
+      "nodeOrToken": {
         "id": 21,
         "kind": "<element-declaration>",
         "startPos": {

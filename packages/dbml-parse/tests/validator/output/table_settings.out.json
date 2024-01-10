@@ -5947,7 +5947,7 @@
     {
       "code": 3012,
       "diagnostic": "note can only appear once",
-      "subject": {
+      "nodeOrToken": {
         "id": 9,
         "kind": "<attribute>",
         "startPos": {
@@ -6198,7 +6198,7 @@
     {
       "code": 3012,
       "diagnostic": "note can only appear once",
-      "subject": {
+      "nodeOrToken": {
         "id": 13,
         "kind": "<attribute>",
         "startPos": {
@@ -6471,7 +6471,7 @@
     {
       "code": 3024,
       "diagnostic": "note can only appear once",
-      "subject": {
+      "nodeOrToken": {
         "id": 42,
         "kind": "<attribute>",
         "startPos": {
@@ -6637,7 +6637,7 @@
     {
       "code": 3024,
       "diagnostic": "note can only appear once",
-      "subject": {
+      "nodeOrToken": {
         "id": 46,
         "kind": "<attribute>",
         "startPos": {
@@ -6803,7 +6803,7 @@
     {
       "code": 3011,
       "diagnostic": "default must be a string literal, number literal, function expression, true, false or null",
-      "subject": {
+      "nodeOrToken": {
         "id": 64,
         "kind": "<infix-expression>",
         "startPos": {

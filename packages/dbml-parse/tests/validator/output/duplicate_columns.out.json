@@ -1080,7 +1080,7 @@
     {
       "code": 3023,
       "diagnostic": "Duplicate column id",
-      "subject": {
+      "nodeOrToken": {
         "id": 11,
         "kind": "<function-application>",
         "startPos": {
@@ -1351,7 +1351,7 @@
     {
       "code": 3023,
       "diagnostic": "Duplicate column id",
-      "subject": {
+      "nodeOrToken": {
         "id": 6,
         "kind": "<function-application>",
         "startPos": {
@@ -1622,7 +1622,7 @@
     {
       "code": 3023,
       "diagnostic": "Duplicate column id",
-      "subject": {
+      "nodeOrToken": {
         "id": 16,
         "kind": "<function-application>",
         "startPos": {
@@ -1893,7 +1893,7 @@
     {
       "code": 3023,
       "diagnostic": "Duplicate column id",
-      "subject": {
+      "nodeOrToken": {
         "id": 6,
         "kind": "<function-application>",
         "startPos": {

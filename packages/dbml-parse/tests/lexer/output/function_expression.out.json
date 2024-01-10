@@ -435,7 +435,7 @@
     {
       "code": 1003,
       "diagnostic": "Invalid newline encountered while parsing",
-      "subject": {
+      "nodeOrToken": {
         "kind": "<function-expression>",
         "startPos": {
           "offset": 18,
@@ -507,7 +507,7 @@
     {
       "code": 1002,
       "diagnostic": "EOF reached while parsing",
-      "subject": {
+      "nodeOrToken": {
         "kind": "<function-expression>",
         "startPos": {
           "offset": 33,

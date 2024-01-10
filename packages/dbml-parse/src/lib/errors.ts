@@ -102,22 +102,22 @@ export class CompileError extends Error {
 
   diagnostic: Readonly<string>;
 
-  subject: Readonly<SyntaxNode | SyntaxToken | readonly (SyntaxNode | SyntaxToken)[]>; // The nodes or tokens that cause the error
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken | readonly (SyntaxNode | SyntaxToken)[]>; // The nodes or tokens that cause the error
 
   start: Readonly<number>;
 
   end: Readonly<number>;
 
-  constructor(code: number, message: string, subject: SyntaxNode | SyntaxToken | (SyntaxNode | SyntaxToken)[]) {
-    if (Array.isArray(subject) && subject.length === 0) {
+  constructor(code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken | (SyntaxNode | SyntaxToken)[]) {
+    if (Array.isArray(nodeOrToken) && nodeOrToken.length === 0) {
       throw new Error('An array subject must have non-zero length');
     } 
     super(message);
     this.code = code;
     this.diagnostic = message;
-    this.subject = subject;
-    this.start = Array.isArray(subject) ? subject[0].start : subject.start;
-    this.end = Array.isArray(subject) ? _.last(subject)!.end : subject.end;
+    this.nodeOrToken = nodeOrToken;
+    this.start = Array.isArray(nodeOrToken) ? nodeOrToken[0].start : nodeOrToken.start;
+    this.end = Array.isArray(nodeOrToken) ? _.last(nodeOrToken)!.end : nodeOrToken.end;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileError.prototype);
   }

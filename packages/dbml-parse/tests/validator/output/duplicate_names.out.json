@@ -2568,7 +2568,7 @@
     {
       "code": 3003,
       "diagnostic": "Table name 'Users' already exists in schema 'public'",
-      "subject": {
+      "nodeOrToken": {
         "id": 10,
         "kind": "<primary-expression>",
         "startPos": {
@@ -2654,7 +2654,7 @@
     {
       "code": 3003,
       "diagnostic": "TableGroup name 'Users' already exists in schema 'public'",
-      "subject": {
+      "nodeOrToken": {
         "id": 27,
         "kind": "<primary-expression>",
         "startPos": {
@@ -2740,7 +2740,7 @@
     {
       "code": 3033,
       "diagnostic": "An Enum must have at least one element",
-      "subject": {
+      "nodeOrToken": {
         "id": 33,
         "kind": "<element-declaration>",
         "startPos": {
@@ -3038,7 +3038,7 @@
     {
       "code": 3003,
       "diagnostic": "Enum name Users already exists in schema 'public'",
-      "subject": {
+      "nodeOrToken": {
         "id": 35,
         "kind": "<primary-expression>",
         "startPos": {
@@ -3124,7 +3124,7 @@
     {
       "code": 3033,
       "diagnostic": "An Enum must have at least one element",
-      "subject": {
+      "nodeOrToken": {
         "id": 37,
         "kind": "<element-declaration>",
         "startPos": {

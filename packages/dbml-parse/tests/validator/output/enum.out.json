@@ -1515,7 +1515,7 @@
     {
       "code": 3033,
       "diagnostic": "An Enum must have at least one element",
-      "subject": {
+      "nodeOrToken": {
         "id": 6,
         "kind": "<element-declaration>",
         "startPos": {
@@ -1887,7 +1887,7 @@
     {
       "code": 3002,
       "diagnostic": "An Enum must have a name",
-      "subject": {
+      "nodeOrToken": {
         "id": 23,
         "kind": "<element-declaration>",
         "startPos": {
@@ -2982,7 +2982,7 @@
     {
       "code": 3023,
       "diagnostic": "Duplicate enum field 1",
-      "subject": {
+      "nodeOrToken": {
         "id": 12,
         "kind": "<function-application>",
         "startPos": {
@@ -3173,7 +3173,7 @@
     {
       "code": 3023,
       "diagnostic": "Duplicate enum field 1",
-      "subject": {
+      "nodeOrToken": {
         "id": 9,
         "kind": "<function-application>",
         "startPos": {
@@ -3364,7 +3364,7 @@
     {
       "code": 3020,
       "diagnostic": "A column name must be an identifier or a quoted identifier",
-      "subject": {
+      "nodeOrToken": {
         "id": 14,
         "kind": "<primary-expression>",
         "startPos": {
