@@ -57,10 +57,11 @@ export default class TableGroupValidator implements ElementValidator {
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments.isOk()) {
       const nameFragments = maybeNameFragments.unwrap();
-      const symbolTable = registerSchemaStack(nameFragments.slice(0, -1), this.publicSymbolTable, this.symbolFactory);
-      const tableId = createTableGroupSymbolIndex(nameFragments.pop()!);
+      const tableGroupName = nameFragments.pop()!;
+      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
+      const tableId = createTableGroupSymbolIndex(tableGroupName);
       if (symbolTable.has(tableId)) {
-        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, 'This TableGroup name already exists', name!)];
+        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup name '${tableGroupName}' already exists in schema '${nameFragments.join('.') || 'public'}'`, name!)];
       }
       symbolTable.set(tableId, this.declarationNode.symbol!);
     }
