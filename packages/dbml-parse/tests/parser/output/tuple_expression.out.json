@@ -3248,7 +3248,7 @@
     {
       "code": 1009,
       "diagnostic": "Invalid start of operand \")\"",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<rparen>",
         "startPos": {
           "offset": 74,

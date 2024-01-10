@@ -27,6 +27,9 @@
           },
           "inline_refs": [],
           "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "dbdefault": {
             "type": "number",
             "value": 123
@@ -52,6 +55,8 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
           "unique": true,
           "not_null": true
         },
@@ -75,6 +80,10 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "dbdefault": {
             "value": "Completed",
             "type": "string"
@@ -100,6 +109,10 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "dbdefault": {
             "value": "now()",
             "type": "expression"
@@ -144,7 +157,9 @@
               "column": 15
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "product_id",
@@ -165,7 +180,9 @@
               "column": 17
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "quantity",
@@ -186,7 +203,9 @@
               "column": 15
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -228,7 +247,10 @@
             }
           },
           "inline_refs": [],
-          "pk": true
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "name",
@@ -250,9 +272,13 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "dbdefault": {
-            "type": "boolean",
-            "value": "null"
+            "value": "null",
+            "type": "boolean"
           }
         },
         {
@@ -275,10 +301,13 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
           "not_null": true,
           "dbdefault": {
-            "type": "number",
-            "value": -1
+            "value": -1,
+            "type": "number"
           }
         },
         {
@@ -301,9 +330,13 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "dbdefault": {
-            "type": "number",
-            "value": -123.12
+            "value": -123,
+            "type": "number"
           }
         },
         {
@@ -326,9 +359,13 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "dbdefault": {
-            "type": "boolean",
-            "value": "true"
+            "value": "true",
+            "type": "boolean"
           }
         },
         {
@@ -351,6 +388,10 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "dbdefault": {
             "value": "current_date + interval 1 year",
             "type": "expression"

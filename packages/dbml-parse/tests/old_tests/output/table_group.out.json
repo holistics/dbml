@@ -25,7 +25,9 @@
               "column": 9
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "full_name",
@@ -46,7 +48,9 @@
               "column": 19
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "created_at",
@@ -67,7 +71,9 @@
               "column": 23
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "country_code",
@@ -88,7 +94,9 @@
               "column": 19
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -129,7 +137,9 @@
               "column": 9
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "merchant_name",
@@ -150,7 +160,9 @@
               "column": 24
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "country_code",
@@ -171,7 +183,9 @@
               "column": 18
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "created at",
@@ -192,7 +206,9 @@
               "column": 23
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "admin_id",
@@ -223,9 +239,9 @@
               "relation": ">",
               "token": {
                 "start": {
-                  "offset": 206,
+                  "offset": 201,
                   "line": 13,
-                  "column": 22
+                  "column": 17
                 },
                 "end": {
                   "offset": 212,
@@ -234,7 +250,11 @@
                 }
               }
             }
-          ]
+          ],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         }
       ],
       "token": {
@@ -254,8 +274,20 @@
   ],
   "refs": [
     {
-      "schemaName": null,
       "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 201,
+          "line": 13,
+          "column": 17
+        },
+        "end": {
+          "offset": 212,
+          "line": 13,
+          "column": 28
+        }
+      },
       "endpoints": [
         {
           "schemaName": null,
@@ -263,7 +295,6 @@
           "fieldNames": [
             "admin_id"
           ],
-          "relation": "*",
           "token": {
             "start": {
               "offset": 187,
@@ -275,7 +306,8 @@
               "line": 13,
               "column": 29
             }
-          }
+          },
+          "relation": "*"
         },
         {
           "schemaName": null,
@@ -286,9 +318,9 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 206,
+              "offset": 201,
               "line": 13,
-              "column": 22
+              "column": 17
             },
             "end": {
               "offset": 212,
@@ -297,34 +329,20 @@
             }
           }
         }
-      ],
-      "token": {
-        "start": {
-          "offset": 206,
-          "line": 13,
-          "column": 22
-        },
-        "end": {
-          "offset": 212,
-          "line": 13,
-          "column": 28
-        }
-      }
+      ]
     }
   ],
   "enums": [],
   "tableGroups": [
     {
-      "name": "g1",
-      "schemaName": null,
       "tables": [
         {
           "name": "users",
-          "schemaName": null
+          "schemaName": ""
         },
         {
           "name": "merchants",
-          "schemaName": null
+          "schemaName": ""
         }
       ],
       "token": {
@@ -338,7 +356,9 @@
           "line": 19,
           "column": 2
         }
-      }
+      },
+      "name": "g1",
+      "schemaName": null
     }
   ],
   "aliases": [

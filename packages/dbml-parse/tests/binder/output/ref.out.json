@@ -479,7 +479,7 @@
                   }
                 }
               ],
-              "symbol": 3
+              "symbol": 2
             },
             {
               "id": 11,
@@ -743,7 +743,7 @@
                   }
                 }
               ],
-              "symbol": 4
+              "symbol": 3
             },
             {
               "id": 21,
@@ -1275,7 +1275,7 @@
                             "end": 73
                           }
                         },
-                        "referee": 3
+                        "referee": 2
                       },
                       "rightExpression": {
                         "id": 17,
@@ -1355,7 +1355,7 @@
                             "end": 87
                           }
                         },
-                        "referee": 4
+                        "referee": 3
                       }
                     },
                     "args": []
@@ -1516,7 +1516,7 @@
           }
         },
         "parent": 25,
-        "symbol": 2
+        "symbol": 1
       }
     ],
     "eof": {
@@ -1544,7 +1544,7 @@
       "symbolTable": {
         "Table:Users": {
           "references": [],
-          "id": 2,
+          "id": 1,
           "symbolTable": {
             "Column:id": {
               "references": [
@@ -1795,10 +1795,10 @@
                       "end": 73
                     }
                   },
-                  "referee": 3
+                  "referee": 2
                 }
               ],
-              "id": 3,
+              "id": 2,
               "declaration": 6
             },
             "Column:referrer_id": {
@@ -1881,10 +1881,10 @@
                       "end": 87
                     }
                   },
-                  "referee": 4
+                  "referee": 3
                 }
               ],
-              "id": 4,
+              "id": 3,
               "declaration": 11
             }
           },

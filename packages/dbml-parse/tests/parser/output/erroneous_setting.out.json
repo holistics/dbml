@@ -5585,7 +5585,7 @@
     {
       "code": 1003,
       "diagnostic": "Invalid newline encountered while parsing",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<string>",
         "startPos": {
           "offset": 176,
@@ -5635,7 +5635,7 @@
     {
       "code": 1005,
       "diagnostic": "Expect a comma ','",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<identifier>",
         "startPos": {
           "offset": 142,
@@ -5685,7 +5685,7 @@
     {
       "code": 1005,
       "diagnostic": "Expect an identifier",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<rparen>",
         "startPos": {
           "offset": 215,
@@ -5735,7 +5735,7 @@
     {
       "code": 1005,
       "diagnostic": "Expect an identifier",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<rbrace>",
         "startPos": {
           "offset": 226,

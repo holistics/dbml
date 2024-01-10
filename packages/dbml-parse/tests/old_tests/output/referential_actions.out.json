@@ -27,7 +27,9 @@
           },
           "inline_refs": [],
           "pk": true,
-          "increment": true
+          "increment": true,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "user_id",
@@ -49,6 +51,8 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
           "unique": true,
           "not_null": true
         },
@@ -71,13 +75,15 @@
               "column": 30
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "created_at",
           "type": {
             "schemaName": null,
-            "type_name": "varchar(255)",
+            "type_name": "varchar",
             "args": "255"
           },
           "token": {
@@ -92,7 +98,9 @@
               "column": 28
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -133,7 +141,9 @@
               "column": 17
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "product_id",
@@ -154,13 +164,15 @@
               "column": 19
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "product_name",
           "type": {
             "schemaName": null,
-            "type_name": "varchar(255)",
+            "type_name": "varchar",
             "args": "255"
           },
           "token": {
@@ -175,7 +187,9 @@
               "column": 30
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "quantity",
@@ -197,6 +211,10 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "dbdefault": {
             "type": "number",
             "value": 1
@@ -241,13 +259,15 @@
               "column": 11
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "name",
           "type": {
             "schemaName": null,
-            "type_name": "varchar(255)",
+            "type_name": "varchar",
             "args": "255"
           },
           "token": {
@@ -262,13 +282,15 @@
               "column": 22
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "price",
           "type": {
             "schemaName": null,
-            "type_name": "decimal(10,4)",
+            "type_name": "decimal",
             "args": "10,4"
           },
           "token": {
@@ -283,7 +305,9 @@
               "column": 24
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "created_at",
@@ -305,6 +329,10 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "dbdefault": {
             "value": "now()",
             "type": "expression"
@@ -337,17 +365,18 @@
           ],
           "token": {
             "start": {
-              "offset": 393,
-              "line": 22,
-              "column": 3
+              "offset": 381,
+              "line": 21,
+              "column": 1
             },
             "end": {
-              "offset": 408,
-              "line": 22,
-              "column": 18
+              "offset": 410,
+              "line": 23,
+              "column": 2
             }
           },
-          "pk": true
+          "pk": true,
+          "unique": false
         }
       ]
     },
@@ -377,13 +406,15 @@
           },
           "inline_refs": [],
           "pk": true,
-          "increment": true
+          "increment": true,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "name",
           "type": {
             "schemaName": null,
-            "type_name": "varchar(255)",
+            "type_name": "varchar",
             "args": "255"
           },
           "token": {
@@ -398,13 +429,15 @@
               "column": 22
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "email",
           "type": {
             "schemaName": null,
-            "type_name": "varchar(255)",
+            "type_name": "varchar",
             "args": "255"
           },
           "token": {
@@ -420,7 +453,10 @@
             }
           },
           "inline_refs": [],
-          "unique": true
+          "pk": false,
+          "increment": false,
+          "unique": true,
+          "not_null": false
         },
         {
           "name": "date_of_birth",
@@ -441,7 +477,9 @@
               "column": 27
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "created_at",
@@ -463,6 +501,10 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
           "dbdefault": {
             "value": "now()",
             "type": "expression"
@@ -488,6 +530,9 @@
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
           "not_null": true
         }
       ],
@@ -530,13 +575,16 @@
             }
           },
           "inline_refs": [],
-          "pk": true
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "name",
           "type": {
             "schemaName": null,
-            "type_name": "varchar(255)",
+            "type_name": "varchar",
             "args": "255"
           },
           "token": {
@@ -551,13 +599,15 @@
               "column": 22
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "continent_name",
           "type": {
             "schemaName": null,
-            "type_name": "varchar(255)",
+            "type_name": "varchar",
             "args": "255"
           },
           "token": {
@@ -572,7 +622,9 @@
               "column": 32
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -592,14 +644,28 @@
   ],
   "refs": [
     {
+      "token": {
+        "start": {
+          "offset": 711,
+          "line": 41,
+          "column": 1
+        },
+        "end": {
+          "offset": 767,
+          "line": 41,
+          "column": 57
+        }
+      },
       "name": null,
+      "schemaName": null,
+      "onDelete": "restrict",
       "endpoints": [
         {
-          "schemaName": null,
-          "tableName": "users",
           "fieldNames": [
             "id"
           ],
+          "tableName": "users",
+          "schemaName": null,
           "relation": "1",
           "token": {
             "start": {
@@ -615,11 +681,11 @@
           }
         },
         {
-          "schemaName": null,
-          "tableName": "orders",
           "fieldNames": [
             "user_id"
           ],
+          "tableName": "orders",
+          "schemaName": null,
           "relation": "*",
           "token": {
             "start": {
@@ -634,31 +700,31 @@
             }
           }
         }
-      ],
-      "onDelete": "restrict",
+      ]
+    },
+    {
       "token": {
         "start": {
-          "offset": 711,
-          "line": 41,
+          "offset": 769,
+          "line": 43,
           "column": 1
         },
         "end": {
-          "offset": 767,
-          "line": 41,
-          "column": 57
+          "offset": 831,
+          "line": 43,
+          "column": 63
         }
       },
-      "schemaName": null
-    },
-    {
       "name": null,
+      "schemaName": null,
+      "onDelete": "cascade",
       "endpoints": [
         {
-          "schemaName": null,
-          "tableName": "orders",
           "fieldNames": [
             "id"
           ],
+          "tableName": "orders",
+          "schemaName": null,
           "relation": "1",
           "token": {
             "start": {
@@ -674,11 +740,11 @@
           }
         },
         {
-          "schemaName": null,
-          "tableName": "order_items",
           "fieldNames": [
             "order_id"
           ],
+          "tableName": "order_items",
+          "schemaName": null,
           "relation": "*",
           "token": {
             "start": {
@@ -693,28 +759,27 @@
             }
           }
         }
-      ],
-      "onDelete": "cascade",
+      ]
+    },
+    {
       "token": {
         "start": {
-          "offset": 769,
-          "line": 43,
+          "offset": 833,
+          "line": 45,
           "column": 1
         },
         "end": {
-          "offset": 831,
-          "line": 43,
-          "column": 63
+          "offset": 928,
+          "line": 45,
+          "column": 96
         }
       },
-      "schemaName": null
-    },
-    {
       "name": null,
+      "schemaName": null,
       "endpoints": [
         {
-          "schemaName": null,
           "tableName": "products",
+          "schemaName": null,
           "fieldNames": [
             "id",
             "name"
@@ -734,8 +799,8 @@
           }
         },
         {
-          "schemaName": null,
           "tableName": "order_items",
+          "schemaName": null,
           "fieldNames": [
             "product_id",
             "product_name"
@@ -754,31 +819,30 @@
             }
           }
         }
-      ],
-      "onDelete": "set null",
+      ]
+    },
+    {
       "token": {
         "start": {
-          "offset": 833,
-          "line": 45,
+          "offset": 930,
+          "line": 47,
           "column": 1
         },
         "end": {
-          "offset": 928,
-          "line": 45,
-          "column": 96
+          "offset": 997,
+          "line": 47,
+          "column": 68
         }
       },
-      "schemaName": null
-    },
-    {
       "name": null,
+      "schemaName": null,
       "endpoints": [
         {
-          "schemaName": null,
-          "tableName": "countries",
           "fieldNames": [
             "code"
           ],
+          "tableName": "countries",
+          "schemaName": null,
           "relation": "1",
           "token": {
             "start": {
@@ -794,11 +858,11 @@
           }
         },
         {
-          "schemaName": null,
-          "tableName": "users",
           "fieldNames": [
             "country_code"
           ],
+          "tableName": "users",
+          "schemaName": null,
           "relation": "*",
           "token": {
             "start": {
@@ -813,21 +877,7 @@
             }
           }
         }
-      ],
-      "onDelete": "no action",
-      "token": {
-        "start": {
-          "offset": 930,
-          "line": 47,
-          "column": 1
-        },
-        "end": {
-          "offset": 997,
-          "line": 47,
-          "column": 68
-        }
-      },
-      "schemaName": null
+      ]
     }
   ],
   "enums": [],

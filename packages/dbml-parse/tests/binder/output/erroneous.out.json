@@ -806,7 +806,7 @@
                   }
                 }
               ],
-              "symbol": 4
+              "symbol": 2
             }
           ],
           "blockCloseBrace": {
@@ -854,7 +854,7 @@
           }
         },
         "parent": 100,
-        "symbol": 2
+        "symbol": 1
       },
       {
         "id": 41,
@@ -1298,7 +1298,7 @@
                   }
                 }
               ],
-              "symbol": 7
+              "symbol": 4
             },
             {
               "id": 27,
@@ -1520,7 +1520,7 @@
                   }
                 }
               ],
-              "symbol": 8
+              "symbol": 5
             },
             {
               "id": 39,
@@ -2690,7 +2690,7 @@
                   }
                 }
               ],
-              "symbol": 9
+              "symbol": 6
             }
           ],
           "blockCloseBrace": {
@@ -2825,7 +2825,7 @@
           }
         },
         "parent": 100,
-        "symbol": 6
+        "symbol": 3
       },
       {
         "id": 42,
@@ -3453,7 +3453,7 @@
                   }
                 }
               ],
-              "symbol": 12
+              "symbol": 8
             },
             {
               "id": 57,
@@ -3675,7 +3675,7 @@
                   }
                 }
               ],
-              "symbol": 13
+              "symbol": 9
             }
           ],
           "blockCloseBrace": {
@@ -3723,7 +3723,7 @@
           }
         },
         "parent": 100,
-        "symbol": 11
+        "symbol": 7
       },
       {
         "id": 73,
@@ -4456,7 +4456,7 @@
                   }
                 }
               ],
-              "symbol": 16
+              "symbol": 11
             }
           ],
           "blockCloseBrace": {
@@ -4504,7 +4504,7 @@
           }
         },
         "parent": 100,
-        "symbol": 15
+        "symbol": 10
       },
       {
         "id": 86,
@@ -4780,7 +4780,7 @@
                     "end": 358
                   }
                 },
-                "referee": 2
+                "referee": 1
               },
               "rightExpression": {
                 "id": 77,
@@ -4860,7 +4860,7 @@
                     "end": 363
                   }
                 },
-                "referee": 4
+                "referee": 2
               }
             },
             "rightExpression": {
@@ -4957,7 +4957,7 @@
                     "end": 388
                   }
                 },
-                "referee": 6
+                "referee": 3
               },
               "rightExpression": {
                 "id": 82,
@@ -5037,7 +5037,7 @@
                     "end": 398
                   }
                 },
-                "referee": 7
+                "referee": 4
               }
             }
           },
@@ -5319,7 +5319,7 @@
                     "end": 415
                   }
                 },
-                "referee": 15
+                "referee": 10
               },
               "rightExpression": {
                 "id": 90,
@@ -5399,7 +5399,7 @@
                     "end": 420
                   }
                 },
-                "referee": 16
+                "referee": 11
               }
             },
             "rightExpression": {
@@ -5496,7 +5496,7 @@
                     "end": 445
                   }
                 },
-                "referee": 6
+                "referee": 3
               },
               "rightExpression": {
                 "id": 95,
@@ -5554,7 +5554,7 @@
                     "end": 458
                   }
                 },
-                "referee": 8
+                "referee": 5
               }
             }
           },
@@ -5644,10 +5644,10 @@
                   "end": 358
                 }
               },
-              "referee": 2
+              "referee": 1
             }
           ],
-          "id": 2,
+          "id": 1,
           "symbolTable": {
             "Column:id": {
               "references": [
@@ -5729,10 +5729,10 @@
                       "end": 363
                     }
                   },
-                  "referee": 4
+                  "referee": 2
                 }
               ],
-              "id": 4,
+              "id": 2,
               "declaration": 13
             }
           },
@@ -5796,10 +5796,10 @@
                   "end": 358
                 }
               },
-              "referee": 2
+              "referee": 1
             }
           ],
-          "id": 2,
+          "id": 1,
           "symbolTable": {
             "Column:id": {
               "references": [
@@ -5881,10 +5881,10 @@
                       "end": 363
                     }
                   },
-                  "referee": 4
+                  "referee": 2
                 }
               ],
-              "id": 4,
+              "id": 2,
               "declaration": 13
             }
           },
@@ -5948,7 +5948,7 @@
                   "end": 388
                 }
               },
-              "referee": 6
+              "referee": 3
             },
             {
               "id": 93,
@@ -6006,10 +6006,10 @@
                   "end": 445
                 }
               },
-              "referee": 6
+              "referee": 3
             }
           ],
-          "id": 6,
+          "id": 3,
           "symbolTable": {
             "Column:user_id": {
               "references": [
@@ -6091,10 +6091,10 @@
                       "end": 398
                     }
                   },
-                  "referee": 7
+                  "referee": 4
                 }
               ],
-              "id": 7,
+              "id": 4,
               "declaration": 22
             },
             "Column:diagram_id": {
@@ -6155,15 +6155,15 @@
                       "end": 458
                     }
                   },
-                  "referee": 8
+                  "referee": 5
                 }
               ],
-              "id": 8,
+              "id": 5,
               "declaration": 27
             },
             "Column:role": {
               "references": [],
-              "id": 9,
+              "id": 6,
               "declaration": 39
             }
           },
@@ -6171,16 +6171,16 @@
         },
         "Table:permissions": {
           "references": [],
-          "id": 11,
+          "id": 7,
           "symbolTable": {
             "Column:bit": {
               "references": [],
-              "id": 12,
+              "id": 8,
               "declaration": 52
             },
             "Column:name": {
               "references": [],
-              "id": 13,
+              "id": 9,
               "declaration": 57
             }
           },
@@ -6244,10 +6244,10 @@
                   "end": 415
                 }
               },
-              "referee": 15
+              "referee": 10
             }
           ],
-          "id": 15,
+          "id": 10,
           "symbolTable": {
             "Column:id": {
               "references": [
@@ -6329,10 +6329,10 @@
                       "end": 420
                     }
                   },
-                  "referee": 16
+                  "referee": 11
                 }
               ],
-              "id": 16,
+              "id": 11,
               "declaration": 71
             }
           },
@@ -6347,7 +6347,7 @@
     {
       "code": 1003,
       "diagnostic": "Invalid newline encountered while parsing",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<string>",
         "startPos": {
           "offset": 176,
@@ -6397,7 +6397,7 @@
     {
       "code": 1005,
       "diagnostic": "Expect a comma ','",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<identifier>",
         "startPos": {
           "offset": 142,
@@ -6447,7 +6447,7 @@
     {
       "code": 1005,
       "diagnostic": "Expect an identifier",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<rparen>",
         "startPos": {
           "offset": 215,
@@ -6497,7 +6497,7 @@
     {
       "code": 1005,
       "diagnostic": "Expect an identifier",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<rbrace>",
         "startPos": {
           "offset": 226,
@@ -6545,9 +6545,9 @@
       "name": "CompileError"
     },
     {
-      "code": 3019,
-      "diagnostic": "Unknown setting",
-      "nodeOrToken": {
+      "code": 3021,
+      "diagnostic": "Unknown column setting diagram_id",
+      "subject": {
         "id": 37,
         "kind": "<attribute>",
         "startPos": {

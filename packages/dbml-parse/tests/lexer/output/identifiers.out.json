@@ -371,7 +371,7 @@
     {
       "code": 1004,
       "diagnostic": "Invalid number",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<number>",
         "startPos": {
           "offset": 43,

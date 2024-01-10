@@ -806,7 +806,7 @@
                   }
                 }
               ],
-              "symbol": 4
+              "symbol": 2
             }
           ],
           "blockCloseBrace": {
@@ -854,7 +854,7 @@
           }
         },
         "parent": 100,
-        "symbol": 2
+        "symbol": 1
       },
       {
         "id": 41,
@@ -1298,7 +1298,7 @@
                   }
                 }
               ],
-              "symbol": 7
+              "symbol": 4
             },
             {
               "id": 27,
@@ -1520,7 +1520,7 @@
                   }
                 }
               ],
-              "symbol": 8
+              "symbol": 5
             },
             {
               "id": 39,
@@ -2690,7 +2690,7 @@
                   }
                 }
               ],
-              "symbol": 9
+              "symbol": 6
             }
           ],
           "blockCloseBrace": {
@@ -2825,7 +2825,7 @@
           }
         },
         "parent": 100,
-        "symbol": 6
+        "symbol": 3
       },
       {
         "id": 42,
@@ -3453,7 +3453,7 @@
                   }
                 }
               ],
-              "symbol": 12
+              "symbol": 8
             },
             {
               "id": 57,
@@ -3675,7 +3675,7 @@
                   }
                 }
               ],
-              "symbol": 13
+              "symbol": 9
             }
           ],
           "blockCloseBrace": {
@@ -3723,7 +3723,7 @@
           }
         },
         "parent": 100,
-        "symbol": 11
+        "symbol": 7
       },
       {
         "id": 73,
@@ -4456,7 +4456,7 @@
                   }
                 }
               ],
-              "symbol": 16
+              "symbol": 11
             }
           ],
           "blockCloseBrace": {
@@ -4504,7 +4504,7 @@
           }
         },
         "parent": 100,
-        "symbol": 15
+        "symbol": 10
       },
       {
         "id": 86,
@@ -5580,11 +5580,11 @@
       "symbolTable": {
         "Table:users": {
           "references": [],
-          "id": 2,
+          "id": 1,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 4,
+              "id": 2,
               "declaration": 13
             }
           },
@@ -5592,11 +5592,11 @@
         },
         "Table:U": {
           "references": [],
-          "id": 2,
+          "id": 1,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 4,
+              "id": 2,
               "declaration": 13
             }
           },
@@ -5604,21 +5604,21 @@
         },
         "Table:user_role_in_diagram": {
           "references": [],
-          "id": 6,
+          "id": 3,
           "symbolTable": {
             "Column:user_id": {
               "references": [],
-              "id": 7,
+              "id": 4,
               "declaration": 22
             },
             "Column:diagram_id": {
               "references": [],
-              "id": 8,
+              "id": 5,
               "declaration": 27
             },
             "Column:role": {
               "references": [],
-              "id": 9,
+              "id": 6,
               "declaration": 39
             }
           },
@@ -5626,16 +5626,16 @@
         },
         "Table:permissions": {
           "references": [],
-          "id": 11,
+          "id": 7,
           "symbolTable": {
             "Column:bit": {
               "references": [],
-              "id": 12,
+              "id": 8,
               "declaration": 52
             },
             "Column:name": {
               "references": [],
-              "id": 13,
+              "id": 9,
               "declaration": 57
             }
           },
@@ -5643,11 +5643,11 @@
         },
         "Table:diagrams": {
           "references": [],
-          "id": 15,
+          "id": 10,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 16,
+              "id": 11,
               "declaration": 71
             }
           },
@@ -5662,7 +5662,7 @@
     {
       "code": 1003,
       "diagnostic": "Invalid newline encountered while parsing",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<string>",
         "startPos": {
           "offset": 176,
@@ -5712,7 +5712,7 @@
     {
       "code": 1005,
       "diagnostic": "Expect a comma ','",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<identifier>",
         "startPos": {
           "offset": 142,
@@ -5762,7 +5762,7 @@
     {
       "code": 1005,
       "diagnostic": "Expect an identifier",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<rparen>",
         "startPos": {
           "offset": 215,
@@ -5812,7 +5812,7 @@
     {
       "code": 1005,
       "diagnostic": "Expect an identifier",
-      "nodeOrToken": {
+      "subject": {
         "kind": "<rbrace>",
         "startPos": {
           "offset": 226,
@@ -5860,9 +5860,9 @@
       "name": "CompileError"
     },
     {
-      "code": 3019,
-      "diagnostic": "Unknown setting",
-      "nodeOrToken": {
+      "code": 3021,
+      "diagnostic": "Unknown column setting diagram_id",
+      "subject": {
         "id": 37,
         "kind": "<attribute>",
         "startPos": {
