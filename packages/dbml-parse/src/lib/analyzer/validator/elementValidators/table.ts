@@ -352,7 +352,7 @@ export default class TableValidator implements ElementValidator {
     });
     
     const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
-    if (notes.length > 0) {
+    if (notes.length > 1) {
       errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
       errors.push()
     }
