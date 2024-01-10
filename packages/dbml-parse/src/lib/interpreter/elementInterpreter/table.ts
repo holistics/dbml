@@ -209,8 +209,7 @@ export class TableInterpreter implements ElementInterpreter {
           };
         }
 
-        const errs = this.registerInlineRefToEnv(field, referredSymbol, inlineRef, ref);
-        errors.push(...errs);
+        errors.push(...this.registerInlineRefToEnv(field, referredSymbol, inlineRef, ref));
 
         return errs.length === 0 ? inlineRef : [];
       })
