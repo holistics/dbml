@@ -81,7 +81,7 @@ export default class RefValidator implements ElementValidator {
 
     const errors: CompileError[] = [];
     if (fields.length > 1) {
-      errors.push(new CompileError(CompileErrorCode.REF_REDEFINED, 'A Ref can only contain one binary relationship', fields.slice(1)));
+      errors.push(...fields.slice(1).map((field) => new CompileError(CompileErrorCode.REF_REDEFINED, 'A Ref can only contain one binary relationship', field)));
     }
 
     fields.forEach((field) => {
@@ -98,7 +98,7 @@ export default class RefValidator implements ElementValidator {
       }
 
       if (field.args.length > 1) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', field.args));
+        errors.push(...field.args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg)));
       }
     });
 
