@@ -58,14 +58,14 @@ export default class TableValidator implements ElementValidator {
     return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.registerElement(), ...this.validateBody(this.declarationNode.body)];
   }
 
-  validateContext(): CompileError[] {
+  private validateContext(): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
       return [new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level', this.declarationNode)];
     }
     return [];
   }
 
-  validateName(nameNode?: SyntaxNode): CompileError[] {
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', this.declarationNode)]
     }
@@ -76,7 +76,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (!aliasNode) {
       return [];
     }
@@ -88,7 +88,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -340,7 +340,7 @@ export default class TableValidator implements ElementValidator {
     return errors;
   }
 
-  validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
     const errors = subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {

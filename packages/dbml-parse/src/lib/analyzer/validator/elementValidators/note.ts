@@ -24,7 +24,7 @@ export default class NoteValidator implements ElementValidator {
     return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
   }
 
-  validateContext(): CompileError[] {
+  private validateContext(): CompileError[] {
     if (this.declarationNode.parent instanceof ProgramNode || this.declarationNode.parent?.type?.value.toLowerCase() !== 'table') {
       return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'A Note can only appear inside a Table', this.declarationNode)];
     }
@@ -32,7 +32,7 @@ export default class NoteValidator implements ElementValidator {
     return [];
   }
 
-  validateName(nameNode?: SyntaxNode): CompileError[] {
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
     if (nameNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note should\'nt have a name', nameNode)];
     }
@@ -40,7 +40,7 @@ export default class NoteValidator implements ElementValidator {
     return [];
   }
 
-  validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref should\'nt have an alias', aliasNode)];
     }
@@ -48,7 +48,7 @@ export default class NoteValidator implements ElementValidator {
     return [];
   }
 
-  validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project should\'nt have a setting list', settingList)];
     }
@@ -82,7 +82,7 @@ export default class NoteValidator implements ElementValidator {
     return [];
   }
 
-  validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {

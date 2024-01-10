@@ -28,14 +28,14 @@ export default class RefValidator implements ElementValidator {
     return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
   }
 
-  validateContext(): CompileError[] {
+  private validateContext(): CompileError[] {
     if (this.declarationNode.parent instanceof ProgramNode || this.declarationNode.parent!.type?.value.toLowerCase() === 'table') {
       return [];
     }
     return [new CompileError(CompileErrorCode.INVALID_REF_CONTEXT, 'A Ref must appear top-level or inside a table', this.declarationNode)];
   }
 
-  validateName(nameNode?: SyntaxNode): CompileError[] {
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [];
     }
@@ -47,7 +47,7 @@ export default class RefValidator implements ElementValidator {
     return [];
   }
 
-  validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref should\'nt have an alias', aliasNode)];
     }
@@ -55,7 +55,7 @@ export default class RefValidator implements ElementValidator {
     return [];
   }
 
-  validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref should\'nt have a setting list', settingList)]
     }
@@ -131,7 +131,7 @@ export default class RefValidator implements ElementValidator {
     return errors;
   }
 
-  validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {
