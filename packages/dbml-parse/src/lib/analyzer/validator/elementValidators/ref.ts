@@ -9,7 +9,7 @@ import {
 import { ElementValidator } from '../types';
 import { aggregateSettingList, isSimpleName, pickValidator } from '../utils';
 import _ from 'lodash';
-import { isBinaryRelationship } from '../../../analyzer/utils';
+import { isBinaryRelationship, isEqualTupleOperands } from '../../../analyzer/utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
 
 export default class RefValidator implements ElementValidator {
@@ -24,7 +24,7 @@ export default class RefValidator implements ElementValidator {
   }
 
   validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(), ...this.validateAlias(), ...this.validateSettingList(), ...this.validateBody()];
+    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
   }
 
   validateContext(): CompileError[] {
@@ -85,6 +85,10 @@ export default class RefValidator implements ElementValidator {
         errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field must be a binary relationship', field.callee));
       }
 
+      if (field.callee && !isEqualTupleOperands(field.callee)) {
+        errors.push(new CompileError(CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF, 'Unequal fields in ref endpoints', field.callee));
+      }
+
       if (_.last(field.args) instanceof ListExpressionNode) {
         this.validateFieldSettings(field.args.pop() as ListExpressionNode);
       }
@@ -98,9 +102,9 @@ export default class RefValidator implements ElementValidator {
   }
 
   validateFieldSettings(settings: ListExpressionNode): CompileError[] {
-    const aggRes = aggregateSettingList(settings);
-    const errors = aggRes.getErrors();
-    const settingMap = aggRes.getValue();
+    const aggReport = aggregateSettingList(settings);
+    const errors = aggReport.getErrors();
+    const settingMap = aggReport.getValue();
     for (const name in settingMap) {
       const attrs = settingMap[name];
       switch (name) {

@@ -56,7 +56,7 @@ export default class TableValidator implements ElementValidator {
   }
 
   validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(), ...this.validateAlias(), ...this.validateSettingList(), ...this.registerElement(), ...this.validateBody()];
+    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.registerElement(), ...this.validateBody(this.declarationNode.body)];
   }
 
   validateContext(): CompileError[] {
@@ -90,9 +90,9 @@ export default class TableValidator implements ElementValidator {
   }
 
   validateSettingList(settingList?: ListExpressionNode): CompileError[] {
-    const aggRes = aggregateSettingList(settingList);
-    const errors = aggRes.getErrors();
-    const settingMap = aggRes.getValue();
+    const aggReport = aggregateSettingList(settingList);
+    const errors = aggReport.getErrors();
+    const settingMap = aggReport.getValue();
 
     for (const name in settingMap) {
       const attrs = settingMap[name];
@@ -310,6 +310,15 @@ export default class TableValidator implements ElementValidator {
           attrs.forEach((attr) => {
             if (attr instanceof AttributeNode && !isVoid(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, 'unique must not have a value', attr.value || attr.name!));
+            }
+          });
+        case 'increment':
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'increment can only appear once', attr)))
+          }
+          attrs.forEach((attr) => {
+            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, 'increment must not have a value', attr.value || attr.name!));
             }
           });
         default:
