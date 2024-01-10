@@ -69,8 +69,8 @@ export class RefInterpreter implements ElementInterpreter {
 
     if (field.args[0]) {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
-      this.ref.onDelete = extractVariableFromExpression(settingMap['delete'][0]?.value).unwrap_or(undefined) as any;
-      this.ref.onDelete = extractVariableFromExpression(settingMap['delete'][0]?.value).unwrap_or(undefined) as any;
+      this.ref.onDelete = extractVariableFromExpression(settingMap['delete']?.at(0)?.value).unwrap_or(undefined) as any;
+      this.ref.onDelete = extractVariableFromExpression(settingMap['delete']?.at(0)?.value).unwrap_or(undefined) as any;
     }
     
     const multiplicities = getMultiplicities(op);

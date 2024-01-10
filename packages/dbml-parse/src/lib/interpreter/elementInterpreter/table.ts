@@ -90,7 +90,7 @@ export class TableInterpreter implements ElementInterpreter {
   private interpretSettingList(settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.table.headerColor = settingMap['headercolor']?.length ? extractColor(settingMap['headercolor'][0]?.value as any) : undefined;
+    this.table.headerColor = settingMap['headercolor']?.length ? extractColor(settingMap['headercolor']?.at(0)?.value as any) : undefined;
     
     const [noteNode] = settingMap['note'] || [];
     const noteValue = extractQuotedStringToken(noteNode).unwrap_or(undefined);
@@ -230,32 +230,35 @@ export class TableInterpreter implements ElementInterpreter {
       const index: Partial<Index> = { columns: [] };
 
       const indexField = _indexField as FunctionApplicationNode;
-
-      const { functional, nonFunctional } = destructureIndexNode(indexField.callee!).unwrap();
-      index.columns!.push(
-        ...functional.map((s) => ({
-          value: s.value!.value,
-          type: 'expression',
-        })),
-        ...nonFunctional.map((s) => ({
-          value: extractVarNameFromPrimaryVariable(s).unwrap(),
-          type: 'column',
-        })),
-      );
-
-      if (indexField.args[0] instanceof ListExpressionNode) {
-        const settingMap = aggregateSettingList(indexField.args[0] as ListExpressionNode).getValue();
+      const args = [indexField.callee!, ...indexField.args];
+      if (_.last(args) instanceof ListExpressionNode) {
+        const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
         index.pk = !!settingMap['pk']?.length;
         index.unique = !!settingMap['unique']?.length;
-        index.name = extractQuotedStringToken(settingMap['name'][0]?.value).unwrap_or(undefined);
+        index.name = extractQuotedStringToken(settingMap['name']?.at(0)?.value).unwrap_or(undefined);
         const noteNode = settingMap['note']?.at(0);
         index.note = noteNode && {
           token: getTokenPosition(noteNode),
           value: extractQuotedStringToken(noteNode.value).unwrap(),
         };
-        index.type = extractQuotedStringToken(settingMap['type'][0]?.value).unwrap_or(undefined); 
+        index.type = extractQuotedStringToken(settingMap['type']?.at(0)?.value).unwrap_or(undefined); 
       }
-        return index as Index;
+
+      args.forEach((arg) => {
+        const { functional, nonFunctional } = destructureIndexNode(arg).unwrap();
+        index.columns!.push(
+          ...functional.map((s) => ({
+            value: s.value!.value,
+            type: 'expression',
+          })),
+          ...nonFunctional.map((s) => ({
+            value: extractVarNameFromPrimaryVariable(s).unwrap(),
+            type: 'column',
+          })),
+        );
+      });
+       
+      return index as Index;
     }));
     
     return [];
