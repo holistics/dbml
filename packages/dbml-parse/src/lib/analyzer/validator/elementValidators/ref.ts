@@ -95,10 +95,10 @@ export default class RefValidator implements ElementValidator {
       }
 
       if (_.last(field.args) instanceof ListExpressionNode) {
-        this.validateFieldSettings(field.args.pop() as ListExpressionNode);
+        this.validateFieldSettings(_.last(field.args) as ListExpressionNode);
       }
 
-      if (field.args.length > 0) {
+      if (field.args.length > 1) {
         errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', field.args));
       }
     });
