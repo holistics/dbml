@@ -61,7 +61,7 @@ export default class EnumValidator implements ElementValidator {
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments.isOk()) {
       const nameFragments = maybeNameFragments.unwrap();
-      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
+      const symbolTable = registerSchemaStack(nameFragments.slice(0, -1), this.publicSymbolTable, this.symbolFactory);
       const enumId = createEnumSymbolIndex(nameFragments.pop()!);
       if (symbolTable.has(enumId)) {
         errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, 'This Enum name already exists', name!))
