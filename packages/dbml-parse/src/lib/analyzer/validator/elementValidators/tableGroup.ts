@@ -23,7 +23,7 @@ export default class TableGroupValidator implements ElementValidator {
   }
 
   validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(), ...this.validateAlias(), ...this.validateSettingList(), ...this.registerElement(), ...this.validateBody()];
+    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.registerElement(), ...this.validateBody(this.declarationNode.body)];
   }
 
   validateContext(): CompileError[] {

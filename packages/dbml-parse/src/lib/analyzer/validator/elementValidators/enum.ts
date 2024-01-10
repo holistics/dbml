@@ -23,7 +23,7 @@ export default class EnumValidator implements ElementValidator {
   }
 
   validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(), ...this.validateAlias(), ...this.validateSettingList(), ...this.registerElement(), ...this.validateBody()];
+    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.registerElement(), ...this.validateBody(this.declarationNode.body)];
   }
 
   validateContext(): CompileError[] {
@@ -118,9 +118,9 @@ export default class EnumValidator implements ElementValidator {
   }
 
   validateFieldSetting(settings: ListExpressionNode): CompileError[] {
-    const aggRes = aggregateSettingList(settings);
-    const errors = aggRes.getErrors();
-    const settingMap = aggRes.getValue();
+    const aggReport = aggregateSettingList(settings);
+    const errors = aggReport.getErrors();
+    const settingMap = aggReport.getValue();
 
     for (const name in settingMap) {
       const attrs = settingMap[name];

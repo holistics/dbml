@@ -105,7 +105,7 @@ export function destructureComplexTuple(
   });
 }
 
-export function extractVariableFromExpression(node: SyntaxNode): Option<string> {
+export function extractVariableFromExpression(node?: SyntaxNode): Option<string> {
   if (!isExpressionAVariableNode(node)) {
     return new None();
   }
@@ -136,9 +136,9 @@ export function destructureIndexNode(node: SyntaxNode): Option<{
 }
 
 export function extractVarNameFromPrimaryVariable(
-  node: PrimaryExpressionNode & { expression: VariableNode },
+  node?: PrimaryExpressionNode & { expression: VariableNode },
 ): Option<string> {
-  const value = node.expression.variable?.value;
+  const value = node?.expression.variable?.value;
 
   return value === undefined ? new None() : new Some(value);
 }
@@ -169,6 +169,24 @@ export function isBinaryRelationship(value?: SyntaxNode): value is InfixExpressi
       .and_then(() => destructureComplexTuple(value.rightExpression))
       .unwrap_or(undefined) !== undefined
   );
+}
+
+export function isEqualTupleOperands(value: InfixExpressionNode): value is InfixExpressionNode {
+  const leftRes = destructureComplexTuple(value.leftExpression)
+  const rightRes = destructureComplexTuple(value.rightExpression)
+  
+  if (!leftRes.isOk() || !rightRes.isOk()) {
+    return false;
+  }
+
+  const { tupleElements: leftTuple } = leftRes.unwrap();
+  const { tupleElements: rightTuple } = rightRes.unwrap();
+
+  if (leftTuple?.length !== rightTuple?.length) {
+    return false;
+  }
+
+  return true;
 }
 
 export function isValidIndexName(
