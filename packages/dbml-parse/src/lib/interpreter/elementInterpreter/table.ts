@@ -115,6 +115,7 @@ export class TableInterpreter implements ElementInterpreter {
             token: getTokenPosition(sub),
             value: extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? sub.body.body[0] : sub.body!.callee).unwrap(),
           }
+          return [];
         case 'indexes':
           return this.interpretIndexes(sub);
         case 'ref':
