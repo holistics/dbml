@@ -8,12 +8,12 @@ import SymbolTable from '../../../analyzer/symbol/symbolTable';
 
 export default class CustomValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
-  private containerSymbolTable: SymbolTable;
+  private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 
-  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, containerSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
-    this.containerSymbolTable = containerSymbolTable;
+    this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;
   }
 
