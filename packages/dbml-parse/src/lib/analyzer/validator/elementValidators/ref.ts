@@ -79,8 +79,12 @@ export default class RefValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.EMPTY_REF, 'A Ref must have at least one field', this.declarationNode)];
     }
 
-    return fields.flatMap((field) => {
-      const errors: CompileError[] = []
+    const errors: CompileError[] = [];
+    if (fields.length > 1) {
+      errors.push(new CompileError(CompileErrorCode.REF_REDEFINED, 'A Ref can only contain one binary relationship', fields.slice(1)));
+    }
+
+    fields.forEach((field) => {
       if (field.callee && !isBinaryRelationship(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field must be a binary relationship', field.callee));
       }
@@ -96,9 +100,9 @@ export default class RefValidator implements ElementValidator {
       if (field.args.length > 0) {
         errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', field.args));
       }
+    });
 
-      return errors;
-    })
+    return errors;
   }
 
   validateFieldSettings(settings: ListExpressionNode): CompileError[] {
