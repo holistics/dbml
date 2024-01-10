@@ -42,17 +42,16 @@ import _ from 'lodash';
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken};
   private symbolFactory: SymbolFactory;
-  private containerSymbolTable: SymbolTable;
+  private publicSymbolTable: SymbolTable;
 
   constructor(
     declarationNode: ElementDeclarationNode & { type: SyntaxToken },
-    containerSymbolTable: SymbolTable,
+    publicSymbolTable: SymbolTable,
     symbolFactory: SymbolFactory,
   ) {
     this.declarationNode = declarationNode;
     this.symbolFactory = symbolFactory;
-    this.containerSymbolTable = containerSymbolTable;
-    this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, { symbolTable: new SymbolTable(), declaration: this.declarationNode });
+    this.publicSymbolTable = publicSymbolTable;
   }
 
   validate(): CompileError[] {
@@ -75,7 +74,7 @@ export default class TableValidator implements ElementValidator {
     };
 
     return [];
-  } 
+  }
 
   validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (!aliasNode) {
@@ -133,13 +132,14 @@ export default class TableValidator implements ElementValidator {
 
   registerElement(): CompileError[] {
     const errors: CompileError[] = [];
-  
+    this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    
     const { name, alias } = this.declarationNode;
 
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments.isOk()) {
       const nameFragments = maybeNameFragments.unwrap();
-      const symbolTable = registerSchemaStack(nameFragments, this.containerSymbolTable, this.symbolFactory);
+      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableSymbolIndex(nameFragments.pop()!);
       if (symbolTable.has(tableId)) {
         errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, 'This Table name already exists', name!))
@@ -149,10 +149,10 @@ export default class TableValidator implements ElementValidator {
   
     if (alias && isSimpleName(alias)) {
       const aliasId = createTableSymbolIndex(extractVarNameFromPrimaryVariable(alias as any).unwrap());
-      if (this.containerSymbolTable.has(aliasId)) {
+      if (this.publicSymbolTable.has(aliasId)) {
         errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, 'This Table name already exists', name!))
       }
-      this.containerSymbolTable.set(aliasId, this.declarationNode.symbol!)
+      this.publicSymbolTable.set(aliasId, this.declarationNode.symbol!)
     }
 
     return errors;
@@ -335,7 +335,7 @@ export default class TableValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.declarationNode.symbol!.symbolTable!, this.symbolFactory);
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
       return validator.validate();
     });
     

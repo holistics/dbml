@@ -8,17 +8,17 @@ import SymbolFactory from '../../../analyzer/symbol/factory';
 import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex, createTableSymbolIndex } from '../../../analyzer/symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../../analyzer/utils';
 import _ from 'lodash';
-import { TableGroupFieldSymbol } from '../../../analyzer/symbol/symbols';
+import { TableGroupFieldSymbol, TableGroupSymbol } from '../../../analyzer/symbol/symbols';
 import { isExpressionAVariableNode } from '../../../parser/utils';
 
 export default class TableGroupValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
-  private containerSymbolTable: SymbolTable;
+  private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 
-  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, containerSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
-    this.containerSymbolTable = containerSymbolTable;
+    this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;
   }
 
@@ -53,11 +53,11 @@ export default class TableGroupValidator implements ElementValidator {
 
   registerElement(): CompileError[] {
     const { name } = this.declarationNode;
-
+    this.declarationNode.symbol = this.symbolFactory.create(TableGroupSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments.isOk()) {
       const nameFragments = maybeNameFragments.unwrap();
-      const symbolTable = registerSchemaStack(nameFragments, this.containerSymbolTable, this.symbolFactory);
+      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableGroupSymbolIndex(nameFragments.pop()!);
       if (symbolTable.has(tableId)) {
         return [new CompileError(CompileErrorCode.DUPLICATE_NAME, 'This TableGroup name already exists', name!)];
@@ -113,7 +113,7 @@ export default class TableGroupValidator implements ElementValidator {
         return [];
       }
       const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.declarationNode.symbol!.symbolTable!, this.symbolFactory);
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
       return validator.validate();
     });
   }
