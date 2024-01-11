@@ -180,7 +180,7 @@ export class TableInterpreter implements ElementInterpreter {
         } else if (fragments.length === 2) {
           const [table, column] = fragments;
           inlineRef = {
-            schemaName: this.table.schemaName!,
+            schemaName: null,
             tableName: table,
             fieldNames: [column],
             relation: op.value as any,
