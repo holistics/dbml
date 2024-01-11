@@ -236,7 +236,11 @@ export function aggregateSettingList(settingList?: ListExpressionNode): Report<{
       continue;
     }
 
-    const name = extractStringFromIdentifierStream(attribute.name).unwrap().toLowerCase();
+    const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined)?.toLowerCase();
+    if (!name) {
+      continue;
+    }
+
     if (map[name] === undefined) {
       map[name] = [attribute]
     } else {
