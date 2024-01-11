@@ -92,8 +92,8 @@ export default class TableGroupValidator implements ElementValidator {
   validateFields(fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       const errors: CompileError[] = []
-      if (field.callee && !isExpressionAVariableNode(field.callee)) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field must be an identifier or a quoted identifier', field.callee));
+      if (field.callee && !destructureComplexVariable(field.callee).isOk()) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field must be of the form <table> or <schema>.<table>', field.callee));
       }
 
       this.registerField(field);
