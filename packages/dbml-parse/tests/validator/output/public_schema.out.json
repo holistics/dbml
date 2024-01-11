@@ -761,21 +761,9 @@
       "symbolTable": {
         "Enum:status": {
           "references": [],
-          "id": 1,
+          "id": 2,
           "symbolTable": {},
-          "declaration": 3
-        },
-        "Schema:public": {
-          "references": [],
-          "id": 3,
-          "symbolTable": {
-            "Enum:status": {
-              "references": [],
-              "id": 2,
-              "symbolTable": {},
-              "declaration": 10
-            }
-          }
+          "declaration": 10
         }
       },
       "id": 0,
@@ -1057,6 +1045,188 @@
       },
       "start": 0,
       "end": 18,
+      "name": "CompileError"
+    },
+    {
+      "code": 3003,
+      "diagnostic": "Enum name status already exists in schema 'public'",
+      "nodeOrToken": {
+        "id": 8,
+        "kind": "<infix-expression>",
+        "startPos": {
+          "offset": 27,
+          "line": 4,
+          "column": 5
+        },
+        "fullStart": 27,
+        "endPos": {
+          "offset": 40,
+          "line": 4,
+          "column": 18
+        },
+        "fullEnd": 41,
+        "start": 27,
+        "end": 40,
+        "op": {
+          "kind": "<op>",
+          "startPos": {
+            "offset": 33,
+            "line": 4,
+            "column": 11
+          },
+          "endPos": {
+            "offset": 34,
+            "line": 4,
+            "column": 12
+          },
+          "value": ".",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 33,
+          "end": 34
+        },
+        "leftExpression": {
+          "id": 5,
+          "kind": "<primary-expression>",
+          "startPos": {
+            "offset": 27,
+            "line": 4,
+            "column": 5
+          },
+          "fullStart": 27,
+          "endPos": {
+            "offset": 33,
+            "line": 4,
+            "column": 11
+          },
+          "fullEnd": 33,
+          "start": 27,
+          "end": 33,
+          "expression": {
+            "id": 4,
+            "kind": "<variable>",
+            "startPos": {
+              "offset": 27,
+              "line": 4,
+              "column": 5
+            },
+            "fullStart": 27,
+            "endPos": {
+              "offset": 33,
+              "line": 4,
+              "column": 11
+            },
+            "fullEnd": 33,
+            "start": 27,
+            "end": 33,
+            "variable": {
+              "kind": "<identifier>",
+              "startPos": {
+                "offset": 27,
+                "line": 4,
+                "column": 5
+              },
+              "endPos": {
+                "offset": 33,
+                "line": 4,
+                "column": 11
+              },
+              "value": "public",
+              "leadingTrivia": [],
+              "trailingTrivia": [],
+              "leadingInvalid": [],
+              "trailingInvalid": [],
+              "isInvalid": false,
+              "start": 27,
+              "end": 33
+            }
+          }
+        },
+        "rightExpression": {
+          "id": 7,
+          "kind": "<primary-expression>",
+          "startPos": {
+            "offset": 34,
+            "line": 4,
+            "column": 12
+          },
+          "fullStart": 34,
+          "endPos": {
+            "offset": 40,
+            "line": 4,
+            "column": 18
+          },
+          "fullEnd": 41,
+          "start": 34,
+          "end": 40,
+          "expression": {
+            "id": 6,
+            "kind": "<variable>",
+            "startPos": {
+              "offset": 34,
+              "line": 4,
+              "column": 12
+            },
+            "fullStart": 34,
+            "endPos": {
+              "offset": 40,
+              "line": 4,
+              "column": 18
+            },
+            "fullEnd": 41,
+            "start": 34,
+            "end": 40,
+            "variable": {
+              "kind": "<identifier>",
+              "startPos": {
+                "offset": 34,
+                "line": 4,
+                "column": 12
+              },
+              "endPos": {
+                "offset": 40,
+                "line": 4,
+                "column": 18
+              },
+              "value": "status",
+              "leadingTrivia": [],
+              "trailingTrivia": [
+                {
+                  "kind": "<space>",
+                  "startPos": {
+                    "offset": 40,
+                    "line": 4,
+                    "column": 18
+                  },
+                  "endPos": {
+                    "offset": 41,
+                    "line": 4,
+                    "column": 19
+                  },
+                  "value": " ",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 40,
+                  "end": 41
+                }
+              ],
+              "leadingInvalid": [],
+              "trailingInvalid": [],
+              "isInvalid": false,
+              "start": 34,
+              "end": 40
+            }
+          }
+        }
+      },
+      "start": 27,
+      "end": 40,
       "name": "CompileError"
     },
     {
