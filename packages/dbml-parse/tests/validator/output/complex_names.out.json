@@ -5349,7 +5349,7 @@
     },
     {
       "code": 3011,
-      "diagnostic": "default must be a string literal, number literal, function expression, true, false or null",
+      "diagnostic": "'default' must be a string literal, number literal, function expression, true, false or null",
       "nodeOrToken": {
         "id": 27,
         "kind": "<infix-expression>",

@@ -8395,7 +8395,8 @@
                             "start": 623,
                             "end": 627
                           }
-                        }
+                        },
+                        "referee": 20
                       }
                     ]
                   }
@@ -8743,7 +8744,88 @@
               "declaration": 156
             },
             "Column:name": {
-              "references": [],
+              "references": [
+                {
+                  "id": 167,
+                  "kind": "<primary-expression>",
+                  "startPos": {
+                    "offset": 623,
+                    "line": 28,
+                    "column": 5
+                  },
+                  "fullStart": 623,
+                  "endPos": {
+                    "offset": 627,
+                    "line": 28,
+                    "column": 9
+                  },
+                  "fullEnd": 628,
+                  "start": 623,
+                  "end": 627,
+                  "expression": {
+                    "id": 166,
+                    "kind": "<variable>",
+                    "startPos": {
+                      "offset": 623,
+                      "line": 28,
+                      "column": 5
+                    },
+                    "fullStart": 623,
+                    "endPos": {
+                      "offset": 627,
+                      "line": 28,
+                      "column": 9
+                    },
+                    "fullEnd": 628,
+                    "start": 623,
+                    "end": 627,
+                    "variable": {
+                      "kind": "<identifier>",
+                      "startPos": {
+                        "offset": 623,
+                        "line": 28,
+                        "column": 5
+                      },
+                      "endPos": {
+                        "offset": 627,
+                        "line": 28,
+                        "column": 9
+                      },
+                      "value": "name",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [
+                        {
+                          "kind": "<newline>",
+                          "startPos": {
+                            "offset": 627,
+                            "line": 28,
+                            "column": 9
+                          },
+                          "endPos": {
+                            "offset": 628,
+                            "line": 29,
+                            "column": 0
+                          },
+                          "value": "\n",
+                          "leadingTrivia": [],
+                          "trailingTrivia": [],
+                          "leadingInvalid": [],
+                          "trailingInvalid": [],
+                          "isInvalid": false,
+                          "start": 627,
+                          "end": 628
+                        }
+                      ],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 623,
+                      "end": 627
+                    }
+                  },
+                  "referee": 20
+                }
+              ],
               "id": 20,
               "declaration": 161
             }

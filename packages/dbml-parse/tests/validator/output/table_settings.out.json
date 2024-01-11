@@ -5946,7 +5946,7 @@
   "errors": [
     {
       "code": 3012,
-      "diagnostic": "note can only appear once",
+      "diagnostic": "'note' can only appear once",
       "nodeOrToken": {
         "id": 9,
         "kind": "<attribute>",
@@ -6197,7 +6197,7 @@
     },
     {
       "code": 3012,
-      "diagnostic": "note can only appear once",
+      "diagnostic": "'note' can only appear once",
       "nodeOrToken": {
         "id": 13,
         "kind": "<attribute>",
@@ -6802,7 +6802,7 @@
     },
     {
       "code": 3011,
-      "diagnostic": "default must be a string literal, number literal, function expression, true, false or null",
+      "diagnostic": "'default' must be a string literal, number literal, function expression, true, false or null",
       "nodeOrToken": {
         "id": 64,
         "kind": "<infix-expression>",
