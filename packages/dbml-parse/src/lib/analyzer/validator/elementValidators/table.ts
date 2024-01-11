@@ -183,7 +183,7 @@ export default class TableValidator implements ElementValidator {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
       }
 
-      if (!isValidColumnType(field.args[0])) {
+      if (field.args[0] && !isValidColumnType(field.args[0])) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', field.args[0]));
       }
 
@@ -249,6 +249,12 @@ export default class TableValidator implements ElementValidator {
       }
     }
 
+    const pkAttrs = settingMap['pk'] || [];
+    const pkeyAttrs = settingMap['primary key'] || [];
+    if (pkAttrs.length > 1 && pkeyAttrs.length > 1) {
+      errors.push(...[...pkAttrs, ...pkeyAttrs].map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key or pk can only appear once', attr)));
+    }
+
     for (const name in settingMap) {
       const attrs = settingMap[name]; 
       switch (name) {
@@ -270,9 +276,8 @@ export default class TableValidator implements ElementValidator {
           });
           break;
         case 'primary key':
-          const pkAttrs = settingMap['pk'] || [];
-          if ([...attrs, ...pkAttrs].length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key or pk can only appear once', attr)))
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key can only appear once', attr)))
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
@@ -281,6 +286,9 @@ export default class TableValidator implements ElementValidator {
           });
           break;
         case 'pk':
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'pk can only appear once', attr)))
+          }
           attrs.forEach((attr) => {
             if (attr instanceof AttributeNode && !isVoid(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, 'pk must not have a value', attr.value || attr.name!));
