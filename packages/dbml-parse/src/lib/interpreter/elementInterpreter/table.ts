@@ -246,7 +246,21 @@ export class TableInterpreter implements ElementInterpreter {
         index.type = extractVariableFromExpression(settingMap['type']?.at(0)?.value).unwrap_or(undefined); 
       }
 
-      args.forEach((arg) => {
+      args.flatMap((arg) => {
+        // This is to deal with indexes fields such as
+        // (id, name) (age, weight)
+        // which is a call expression
+        if (!(arg instanceof CallExpressionNode)) {
+          return arg;
+        }
+        const fragments: SyntaxNode[] = [];
+        while (arg instanceof CallExpressionNode) {
+          fragments.push(arg.argumentList!);
+          arg = arg.callee!;
+        }
+        fragments.push(arg);
+        return fragments;
+      }).forEach((arg) => { 
         const { functional, nonFunctional } = destructureIndexNode(arg).unwrap();
         index.columns!.push(
           ...functional.map((s) => ({
