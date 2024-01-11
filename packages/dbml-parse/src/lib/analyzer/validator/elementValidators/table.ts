@@ -300,7 +300,7 @@ export default class TableValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'not null\' can only appear once', attr)))
           }
           const nullAttrs = settingMap['null'] || [];
-          if (attrs.length > 1 && nullAttrs.length > 1) {
+          if (attrs.length >= 1 && nullAttrs.length >= 1) {
             errors.push(...[...attrs, ...nullAttrs].map((attr) => new CompileError(CompileErrorCode.CONFLICTING_SETTING, '\'not null\' and \'null\' can not be set at the same time', attr)));
           }
           attrs.forEach((attr) => {
