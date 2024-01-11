@@ -94,13 +94,17 @@ export function hasSimpleBody(
 }
 
 // Register the `variables` array as a stack of schema, the following nested within the former
-// `initialSchema` is the schema in which the first variable of `variables` is nested within
 export function registerSchemaStack(
   variables: string[],
-  initialSchema: SymbolTable,
+  globalSchema: SymbolTable,
   symbolFactory: SymbolFactory,
 ): SymbolTable {
-  let prevSchema = initialSchema;
+  // public schema is already global schema 
+  if (variables[0] === 'public') {
+    variables = variables.slice(1);
+  }
+
+  let prevSchema = globalSchema;
   // eslint-disable-next-line no-restricted-syntax
   for (const curName of variables) {
     let curSchema: SymbolTable | undefined;
