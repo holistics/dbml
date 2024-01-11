@@ -83,7 +83,7 @@
           "name": "created_at",
           "type": {
             "schemaName": null,
-            "type_name": "varchar",
+            "type_name": "varchar(255)",
             "args": "255"
           },
           "token": {
@@ -172,7 +172,7 @@
           "name": "product_name",
           "type": {
             "schemaName": null,
-            "type_name": "varchar",
+            "type_name": "varchar(255)",
             "args": "255"
           },
           "token": {
@@ -267,7 +267,7 @@
           "name": "name",
           "type": {
             "schemaName": null,
-            "type_name": "varchar",
+            "type_name": "varchar(255)",
             "args": "255"
           },
           "token": {
@@ -290,7 +290,7 @@
           "name": "price",
           "type": {
             "schemaName": null,
-            "type_name": "decimal",
+            "type_name": "decimal(10,4)",
             "args": "10,4"
           },
           "token": {
@@ -414,7 +414,7 @@
           "name": "name",
           "type": {
             "schemaName": null,
-            "type_name": "varchar",
+            "type_name": "varchar(255)",
             "args": "255"
           },
           "token": {
@@ -437,7 +437,7 @@
           "name": "email",
           "type": {
             "schemaName": null,
-            "type_name": "varchar",
+            "type_name": "varchar(255)",
             "args": "255"
           },
           "token": {
@@ -584,7 +584,7 @@
           "name": "name",
           "type": {
             "schemaName": null,
-            "type_name": "varchar",
+            "type_name": "varchar(255)",
             "args": "255"
           },
           "token": {
@@ -607,7 +607,7 @@
           "name": "continent_name",
           "type": {
             "schemaName": null,
-            "type_name": "varchar",
+            "type_name": "varchar(255)",
             "args": "255"
           },
           "token": {
