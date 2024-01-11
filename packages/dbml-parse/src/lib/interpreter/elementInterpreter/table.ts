@@ -352,7 +352,7 @@ function processDefaultValue(valueNode?: SyntaxNode):
   if (!valueNode) {
     return undefined;
   }
-
+  
   if (isExpressionAQuotedString(valueNode)) {
     return {
       value: extractQuotedStringToken(valueNode).unwrap(),
@@ -361,9 +361,10 @@ function processDefaultValue(valueNode?: SyntaxNode):
   }
 
   if (isExpressionANumber(valueNode)) {
+    console.log(valueNode.expression.literal.value);
     return {
       type: "number",
-      value: Number.parseInt(valueNode.expression.literal.value, 10),
+      value: Number.parseFloat(valueNode.expression.literal.value),
     }
   }
 
@@ -380,7 +381,7 @@ function processDefaultValue(valueNode?: SyntaxNode):
     NUMERIC_LITERAL_PREFIX.includes(valueNode.op?.value as any) &&
     isExpressionANumber(valueNode.expression)
   ) {
-    const number = Number.parseInt(valueNode.expression.expression.literal.value, 10);
+    const number = Number.parseFloat(valueNode.expression.expression.literal.value);
     return {
       value: valueNode.op?.value === '-' ? 0 - number : number, 
       type: 'number',
