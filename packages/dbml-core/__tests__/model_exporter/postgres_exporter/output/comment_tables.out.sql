@@ -11,6 +11,8 @@ CREATE TABLE "orders" (
   "created_at" varchar
 );
 
+COMMENT ON TABLE "orders" IS 'User orders';
+
 COMMENT ON COLUMN "orders"."status" IS 'Status of an order';
 
 COMMENT ON COLUMN "orders"."created_at" IS 'When order created';
