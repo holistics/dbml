@@ -339,7 +339,7 @@ function processColumnType(typeNode: SyntaxNode): ColumnType {
 
   return {
     schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
-    type_name: `${typeName}${typeIndexer}`,
+    type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
     args: typeArgs,
   };
 }

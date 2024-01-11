@@ -60,7 +60,7 @@
           "name": "first_name",
           "type": {
             "schemaName": null,
-            "type_name": "VARCHAR",
+            "type_name": "VARCHAR(45)",
             "args": "45"
           },
           "token": {
@@ -85,7 +85,7 @@
           "name": "last_name",
           "type": {
             "schemaName": null,
-            "type_name": "VARCHAR",
+            "type_name": "VARCHAR(45)",
             "args": "45"
           },
           "token": {
@@ -114,7 +114,7 @@
           "name": "email",
           "type": {
             "schemaName": null,
-            "type_name": "VARCHAR",
+            "type_name": "VARCHAR(50)",
             "args": "50"
           },
           "token": {
