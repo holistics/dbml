@@ -2,6 +2,7 @@ import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
   BlockExpressionNode,
+  CallExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   ListExpressionNode,
@@ -90,7 +91,17 @@ export default class IndexesValidator implements ElementValidator {
       }
 
       args.forEach((sub) => {
-        if (!destructureIndexNode(sub).isOk()) {
+        // This is to deal with inline indexes field such as
+        // (id, name) (age, weight)
+        // which is parsed as a call expression
+        while (sub instanceof CallExpressionNode) {
+          if (sub.argumentList && !destructureIndexNode(sub.argumentList).isOk()) { 
+            errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList));
+          }
+          sub = sub.callee!;
+        }
+
+        if (!destructureIndexNode(sub).isOk()) { 
           errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
         }
       });
