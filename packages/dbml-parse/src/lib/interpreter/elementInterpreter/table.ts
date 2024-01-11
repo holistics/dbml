@@ -361,7 +361,6 @@ function processDefaultValue(valueNode?: SyntaxNode):
   }
 
   if (isExpressionANumber(valueNode)) {
-    console.log(valueNode.expression.literal.value);
     return {
       type: "number",
       value: Number.parseFloat(valueNode.expression.literal.value),
