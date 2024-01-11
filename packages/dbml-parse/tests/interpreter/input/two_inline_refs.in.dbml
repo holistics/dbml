@@ -1,0 +1,9 @@
+table payment {
+  id int [pk]
+  customer_id int
+  staff_id int [ref: > staff.id]
+  rental_id int [ref: > rental.id]
+  amount decimal
+  payment_date datetime
+  last_update timestamp
+}
