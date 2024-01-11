@@ -291,7 +291,7 @@ export class TableInterpreter implements ElementInterpreter {
 
     const multiplicities = getMultiplicities(inlineRef.relation);
     this.env.refIds[refId] = ref;
-    this.env.ref.set(this.declarationNode, {
+    this.env.ref.set(ref, {
       name: null,
       schemaName: null,
       token: inlineRef.token,
