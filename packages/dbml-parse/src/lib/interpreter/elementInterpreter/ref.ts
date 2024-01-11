@@ -61,7 +61,7 @@ export class RefInterpreter implements ElementInterpreter {
     const refId = getRefId(leftSymbols, rightSymbols);
     if (this.env.refIds[refId]) {
       return [
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', field),
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode),
         new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),  
       ];
     }
