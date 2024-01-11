@@ -98,26 +98,26 @@ export default class TableValidator implements ElementValidator {
       switch (name) {
         case 'headercolor':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, 'headercolor can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'headercolor\' can only appear once', attr)))
           }
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, 'headercolor must be a color literal', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'headercolor\' must be a color literal', attr.value || attr.name!));
             }
           });
           break;
         case 'note':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, 'note can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'note\' can only appear once', attr)))
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, 'note must be a string literal', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'note\' must be a string literal', attr.value || attr.name!));
             }
           });
           break;
         default:
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown ${name} setting`, attr)))
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown \'${name}\' setting`, attr)))
       }
     }
     return errors;
@@ -252,7 +252,7 @@ export default class TableValidator implements ElementValidator {
     const pkAttrs = settingMap['pk'] || [];
     const pkeyAttrs = settingMap['primary key'] || [];
     if (pkAttrs.length > 1 && pkeyAttrs.length > 1) {
-      errors.push(...[...pkAttrs, ...pkeyAttrs].map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key or pk can only appear once', attr)));
+      errors.push(...[...pkAttrs, ...pkeyAttrs].map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'Either one of \'primary key\' and \'pk\' can appear', attr)));
     }
 
     for (const name in settingMap) {
@@ -264,14 +264,14 @@ export default class TableValidator implements ElementValidator {
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, 'note must be a quoted string', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'note\' must be a quoted string', attr.value || attr.name!));
             }
           });
           break;
         case 'ref':
           attrs.forEach((attr) => {
             if (!isUnaryRelationship(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, 'ref must be a valid unary relationship', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'ref\' must be a valid unary relationship', attr.value || attr.name!));
             }
           });
           break;
@@ -281,76 +281,76 @@ export default class TableValidator implements ElementValidator {
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, 'primary key must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'primary key\' must not have a value', attr.value || attr.name!));
             }
           });
           break;
         case 'pk':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'pk can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'pk\' can only appear once', attr)))
           }
           attrs.forEach((attr) => {
             if (attr instanceof AttributeNode && !isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, 'pk must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'pk\' must not have a value', attr.value || attr.name!));
             }
           });
           break;
         case 'not null':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'not null can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'not null\' can only appear once', attr)))
           }
           const nullAttrs = settingMap['null'] || [];
           if (attrs.length > 1 && nullAttrs.length > 1) {
-            errors.push(...[...attrs, ...nullAttrs].map((attr) => new CompileError(CompileErrorCode.CONFLICTING_SETTING, 'not null and null can not be set at the same time', attr)));
+            errors.push(...[...attrs, ...nullAttrs].map((attr) => new CompileError(CompileErrorCode.CONFLICTING_SETTING, '\'not null\' and \'null\' can not be set at the same time', attr)));
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, 'not null must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'not null\' must not have a value', attr.value || attr.name!));
             }
           });
           break;
         case 'null':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'null can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'null\' can only appear once', attr)))
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, 'null must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'null\' must not have a value', attr.value || attr.name!));
             }
           });
           break;
         case 'unique':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'unique can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'unique\' can only appear once', attr)))
           }
           attrs.forEach((attr) => {
             if (attr instanceof AttributeNode && !isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, 'unique must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'unique\' must not have a value', attr.value || attr.name!));
             }
           });
           break;
         case 'increment':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'increment can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'increment\' can only appear once', attr)))
           }
           attrs.forEach((attr) => {
             if (attr instanceof AttributeNode && !isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, 'increment must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'increment\' must not have a value', attr.value || attr.name!));
             }
           });
           break;
         case 'default':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, 'default can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'default\' can only appear once', attr)))
           }
           attrs.forEach((attr) => {
             if (!isValidDefaultValue(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, 'default must be a string literal, number literal, function expression, true, false or null', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'default\' must be a string literal, number literal, function expression, true, false or null', attr.value || attr.name!));
             }
           })
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting ${name}`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting \'${name}\'`, attr)));
       }
     }
     return errors;
