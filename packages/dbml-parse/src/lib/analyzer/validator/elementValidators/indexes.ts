@@ -59,7 +59,7 @@ export default class IndexesValidator implements ElementValidator {
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project should\'nt have a setting list', settingList)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Indexes should\'nt have a setting list', settingList)];
     }
 
     return [];
@@ -110,37 +110,37 @@ export default class IndexesValidator implements ElementValidator {
         case 'note':
         case 'name':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `${name} can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `\'${name}\' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `${name} must be a string`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `\'${name}\' must be a string`, attr));
             }
           });
           break;
         case 'unique':
         case 'pk':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `${name} can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `\'${name}\' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `${name} must not have a value`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `\'${name}\' must not have a value`, attr));
             }
           });
           break;
         case 'type':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `type can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, '\'type\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAVariableNode(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `type must be "btree" or "hash"`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, '\'type\' must be "btree" or "hash"', attr));
             }
           });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting ${name}`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting \'${name}\'`, attr)));
       }
     }
     return errors;
