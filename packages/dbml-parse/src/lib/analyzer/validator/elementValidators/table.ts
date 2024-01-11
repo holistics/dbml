@@ -251,7 +251,7 @@ export default class TableValidator implements ElementValidator {
 
     const pkAttrs = settingMap['pk'] || [];
     const pkeyAttrs = settingMap['primary key'] || [];
-    if (pkAttrs.length > 1 && pkeyAttrs.length > 1) {
+    if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
       errors.push(...[...pkAttrs, ...pkeyAttrs].map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'Either one of \'primary key\' and \'pk\' can appear', attr)));
     }
 
