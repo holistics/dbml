@@ -9,6 +9,7 @@ import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import { ColumnSymbol } from '../../analyzer/symbol/symbols';
 import _ from 'lodash';
 import { RefInterpreter } from './ref';
+import Report from 'lib/report';
 
 export class TableInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -25,6 +26,7 @@ export class TableInterpreter implements ElementInterpreter {
 
   interpret(): CompileError[] {
     this.table.token = getTokenPosition(this.declarationNode);
+    this.env.tables.set(this.declarationNode, this.table as Table);
   
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
@@ -47,8 +49,6 @@ export class TableInterpreter implements ElementInterpreter {
       });
       this.pkColumns.forEach((column) => column.pk = false);
     }
-
-    this.env.tables.set(this.declarationNode, this.table as Table);
 
     return errors;
   }
@@ -138,7 +138,11 @@ export class TableInterpreter implements ElementInterpreter {
     const column: Partial<Column> = {};
     
     column.name = extractVarNameFromPrimaryVariable(field.callee as any).unwrap();
-    column.type = processColumnType(field.args[0]);
+
+    const typeReport = processColumnType(field.args[0]);
+    column.type = typeReport.getValue();
+    errors.push(...typeReport.getErrors());
+
     column.token = getTokenPosition(field);
     column.inline_refs = [];
     
@@ -314,7 +318,7 @@ export class TableInterpreter implements ElementInterpreter {
   }
 }
 
-function processColumnType(typeNode: SyntaxNode): ColumnType {
+function processColumnType(typeNode: SyntaxNode): Report<ColumnType, CompileError> {
   let typeArgs: string | null = null;
   if (typeNode instanceof CallExpressionNode) {
       typeArgs = typeNode
@@ -334,14 +338,21 @@ function processColumnType(typeNode: SyntaxNode): ColumnType {
 
   const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
   if (typeSchemaName.length > 1) {
-    throw [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)];
+    new Report(
+      {
+        schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
+        type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
+        args: typeArgs,
+      },
+      [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)]
+    );
   }
 
-  return {
+  return new Report({
     schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
     type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
     args: typeArgs,
-  };
+  });
 }
 
 function processDefaultValue(valueNode?: SyntaxNode):

@@ -20,8 +20,8 @@ export class ProjectInterpreter implements ElementInterpreter {
   }
 
   interpret(): CompileError[] {
-    const errors = [...this.interpretName(this.declarationNode.name), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
     this.env.project.set(this.declarationNode, this.project as Project);
+    const errors = [...this.interpretName(this.declarationNode.name), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
     return errors;
   }
 
