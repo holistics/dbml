@@ -9,7 +9,7 @@ import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import { ColumnSymbol } from '../../analyzer/symbol/symbols';
 import _ from 'lodash';
 import { RefInterpreter } from './ref';
-import Report from 'lib/report';
+import Report from '../../report';
 
 export class TableInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
