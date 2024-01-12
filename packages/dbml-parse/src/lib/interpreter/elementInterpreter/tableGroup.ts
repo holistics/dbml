@@ -18,6 +18,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
   interpret(): CompileError[] {
     const errors: CompileError[] = [];
     this.tableGroup.token = getTokenPosition(this.declarationNode);
+    this.env.tableGroups.set(this.declarationNode, this.tableGroup as TableGroup);
 
     const { name, schemaName } = extractElementName(this.declarationNode.name!);
     if (schemaName.length >= 2) {
@@ -40,8 +41,6 @@ export class TableGroupInterpreter implements ElementInterpreter {
         schemaName: fragments.join('.'),
       };
     });
-
-    this.env.tableGroups.set(this.declarationNode, this.tableGroup as TableGroup);
 
     return errors;
   }

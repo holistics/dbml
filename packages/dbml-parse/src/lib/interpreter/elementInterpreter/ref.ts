@@ -9,20 +9,20 @@ import { extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplici
 export class RefInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
-  private container: Table | undefined;
+  private container: Partial<Table> | undefined;
   private ref: Partial<Ref>;
 
   constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.container = this.env.tables.get(this.declarationNode);
+    this.container = this.declarationNode.parent instanceof ElementDeclarationNode ? this.env.tables.get(this.declarationNode.parent) : undefined;
     this.ref = { };
   }
 
   interpret(): CompileError[] {
     this.ref.token = getTokenPosition(this.declarationNode);
-    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body!)];
     this.env.ref.set(this.declarationNode, this.ref as Ref);
+    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body!)];
     return errors;
   }
 
@@ -76,12 +76,12 @@ export class RefInterpreter implements ElementInterpreter {
 
     this.ref.endpoints = [
       {
-        ...extractNamesFromRefOperand(leftExpression!, this.container),
+        ...extractNamesFromRefOperand(leftExpression!, this.container as Table | undefined),
         relation: multiplicities[0],
         token: getTokenPosition(leftExpression!),
       },
       {
-        ...extractNamesFromRefOperand(rightExpression!, this.container),
+        ...extractNamesFromRefOperand(rightExpression!, this.container as Table | undefined),
         relation: multiplicities[1],
         token: getTokenPosition(rightExpression!),
       },

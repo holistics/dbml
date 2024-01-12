@@ -18,8 +18,8 @@ export class EnumInterpreter implements ElementInterpreter {
  
   interpret(): CompileError[] {
     this.enum.token = getTokenPosition(this.declarationNode);
-    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
     this.env.enums.set(this.declarationNode, this.enum as Enum);
+    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
     return errors;
   }
 
