@@ -61,10 +61,15 @@ export default class CustomValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.UNEXPECTED_COMPLEX_BODY, 'A Custom element can only have an inline field', body)];
     }
 
+    const errors: CompileError[] = [];
+
     if (!isExpressionAQuotedString(body.callee)) {
-      return [new CompileError(CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE, 'A Custom element value can only be a string', body)];
+      errors.push(new CompileError(CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE, 'A Custom element value can only be a string', body));
+    }
+    if (body.args.length > 0) {
+      errors.push(...body.args.map((arg) => new CompileError(CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE, 'A Custom element value can only be a string', arg)));
     }
 
-    return [];
+    return errors;
   }
 }

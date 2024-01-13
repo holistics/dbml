@@ -108,7 +108,7 @@ export default class EnumValidator implements ElementValidator {
         errors.push(...this.validateFieldSetting(_.last(field.args) as ListExpressionNode));
       }
 
-      if (field.args.length > 1) {
+      if (field.args.length > 0) {
         errors.push(...field.args.map((arg) => new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT, 'An Enum must have only a field and optionally a setting list', arg)));
       }
 

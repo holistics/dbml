@@ -98,9 +98,8 @@ export default class TableGroupValidator implements ElementValidator {
 
       this.registerField(field);
 
-      const remains = field.args.slice(1);
-      if (remains.length > 0) {
-        errors.push(...remains.map((remain) => new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field should only have a single Table name', remain)));
+      if (field.args.length > 0) {
+        errors.push(...field.args.map((arg) => new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field should only have a single Table name', arg)));
       }
 
       return errors;
