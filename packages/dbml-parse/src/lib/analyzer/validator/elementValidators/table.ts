@@ -222,8 +222,8 @@ export default class TableValidator implements ElementValidator {
 
   // This is needed to support legacy inline settings
   validateFieldSetting(parts: ExpressionNode[]): CompileError[] {
-    if (!parts.slice(0, -2).every(isExpressionAnIdentifierNode) || !parts.slice(-2, -1).every((p) => isExpressionAVariableNode(p) || p instanceof ListExpressionNode)) {
-      return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must only contain a name, a type, optionally some inline settings and a setting list', part))];
+    if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
+      return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
     }
     
     if (parts.length === 0) {
