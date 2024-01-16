@@ -168,7 +168,7 @@ export class ElementDeclarationNode extends SyntaxNode {
     ]);
 
     if (
-      bodyColon &&
+      body && bodyColon &&
       !(body instanceof FunctionApplicationNode || body instanceof ElementDeclarationNode)
     ) {
       throw new Error('If an element has a simple body, it must be a function application node');
