@@ -170,10 +170,7 @@ export default class Compiler {
       (): Readonly<ProgramNode> => this.parse._().getValue().ast,
     ),
     errors: this.createQuery(Query.Parse_Errors, (): readonly Readonly<CompileError>[] => {
-      const errors = [...this.parse._().getErrors()];
-      errors.sort((e1, e2) => e1.start - e2.start);
-
-      return errors;
+      return this.parse._().getErrors();
     }),
     tokens: this.createQuery(
       Query.Parse_Tokens,
