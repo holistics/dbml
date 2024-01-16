@@ -49,7 +49,7 @@ export default class NoteValidator implements ElementValidator {
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project should\'nt have a setting list', settingList)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note should\'nt have a setting list', settingList)];
     }
 
     return [];
