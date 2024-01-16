@@ -30,7 +30,7 @@ export default class CustomValidator implements ElementValidator {
 
   private validateName(nameNode?: SyntaxNode): CompileError[] {
     if (nameNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element should\'nt have a name', nameNode)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element shouldn\'t have a name', nameNode)];
     }
 
     return [];
@@ -38,7 +38,7 @@ export default class CustomValidator implements ElementValidator {
 
   private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element should\'nt have an alias', aliasNode)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element shouldn\'t have an alias', aliasNode)];
     }
 
     return [];
@@ -46,7 +46,7 @@ export default class CustomValidator implements ElementValidator {
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Custom element should\'nt have a setting list', settingList)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Custom element shouldn\'t have a setting list', settingList)];
     }
 
     return [];

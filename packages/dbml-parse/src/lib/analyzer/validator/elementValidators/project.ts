@@ -44,7 +44,7 @@ export default class ProjectValidator implements ElementValidator {
 
   private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Project should\'nt have an alias', aliasNode)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Project shouldn\'t have an alias', aliasNode)];
     }
 
     return [];
@@ -52,7 +52,7 @@ export default class ProjectValidator implements ElementValidator {
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project should\'nt have a setting list', settingList)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project shouldn\'t have a setting list', settingList)];
     }
 
     return [];
