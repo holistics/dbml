@@ -45,7 +45,7 @@ export default class TableGroupValidator implements ElementValidator {
 
   private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A TableGroup should\'nt have an alias', aliasNode)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A TableGroup shouldn\'t have an alias', aliasNode)];
     }
 
     return [];
@@ -71,7 +71,7 @@ export default class TableGroupValidator implements ElementValidator {
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A TableGroup should\'nt have a setting list', settingList)]
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A TableGroup shouldn\'t have a setting list', settingList)]
     }
 
     return [];
