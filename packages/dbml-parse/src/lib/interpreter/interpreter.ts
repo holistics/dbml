@@ -7,7 +7,6 @@ import { TableGroupInterpreter } from './elementInterpreter/tableGroup';
 import { EnumInterpreter } from './elementInterpreter/enum';
 import { ProjectInterpreter } from './elementInterpreter/project';
 import Report from '../report';
-import { devNull } from 'os';
 
 // The interpreted format follows the old parser
 export default class Interpreter {

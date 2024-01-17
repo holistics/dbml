@@ -1,5 +1,6 @@
 import { SyntaxToken } from '../../lexer/tokens';
 import { ElementDeclarationNode } from '../../parser/nodes';
+import { ElementKind } from '../types';
 import CustomBinder from './elementBinder/custom';
 import EnumBinder from './elementBinder/enum';
 import IndexesBinder from './elementBinder/indexes';
@@ -10,20 +11,20 @@ import TableBinder from './elementBinder/table';
 import TableGroupBinder from './elementBinder/tableGroup';
 
 export function pickBinder(element: ElementDeclarationNode & { type: SyntaxToken }) {
-  switch (element.type.value.toLowerCase()) {
-    case 'enum':
+  switch (element.type.value.toLowerCase() as ElementKind) {
+    case ElementKind.Enum:
       return EnumBinder;
-    case 'table':
+    case ElementKind.Table:
       return TableBinder;
-    case 'tablegroup':
+    case ElementKind.TableGroup:
       return TableGroupBinder;
-    case 'project':
+    case ElementKind.Project:
       return ProjectBinder;
-    case 'ref':
+    case ElementKind.Ref:
       return RefBinder;
-    case 'note':
+    case ElementKind.Note:
       return NoteBinder;
-    case 'indexes':
+    case ElementKind.Indexes:
       return IndexesBinder;
     default:
       return CustomBinder;

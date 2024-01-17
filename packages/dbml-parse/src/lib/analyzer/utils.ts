@@ -19,6 +19,23 @@ import {
   isExpressionAVariableNode,
 } from '../parser/utils';
 import { SyntaxToken } from '../lexer/tokens';
+import { ElementKind } from './types';
+
+export function getElementKind(node?: ElementDeclarationNode): Option<ElementKind> {
+  const kind = node?.type?.value.toLowerCase(); 
+  switch (kind as ElementKind | undefined) {
+    case ElementKind.Enum:
+    case ElementKind.Table:
+    case ElementKind.Indexes:
+    case ElementKind.Note:
+    case ElementKind.Project:
+    case ElementKind.Ref:
+    case ElementKind.TableGroup:
+      return new Some(kind as ElementKind);
+    default:
+      return new None();
+  }
+}
 
 export function destructureMemberAccessExpression(node: SyntaxNode): Option<SyntaxNode[]> {
   if (!isAccessExpression(node)) {

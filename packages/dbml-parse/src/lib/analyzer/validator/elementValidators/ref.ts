@@ -9,8 +9,9 @@ import {
 import { ElementValidator } from '../types';
 import { aggregateSettingList, isSimpleName, pickValidator } from '../utils';
 import _ from 'lodash';
-import { isBinaryRelationship, isEqualTupleOperands } from '../../../analyzer/utils';
+import { getElementKind, isBinaryRelationship, isEqualTupleOperands } from '../../../analyzer/utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
+import { ElementKind } from '../../../analyzer/types';
 
 export default class RefValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -28,7 +29,7 @@ export default class RefValidator implements ElementValidator {
   }
 
   private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode || this.declarationNode.parent!.type?.value.toLowerCase() === 'table') {
+    if (this.declarationNode.parent instanceof ProgramNode || getElementKind(this.declarationNode.parent).unwrap_or(undefined) === ElementKind.Table) {
       return [];
     }
     return [new CompileError(CompileErrorCode.INVALID_REF_CONTEXT, 'A Ref must appear top-level or inside a table', this.declarationNode)];

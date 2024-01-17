@@ -6,6 +6,8 @@ import SymbolFactory from '../symbol/factory';
 import { pickValidator } from './utils';
 import SymbolTable from '../symbol/symbolTable';
 import { SyntaxToken } from '../../lexer/tokens';
+import { getElementKind } from '../utils';
+import { ElementKind } from '../types';
 
 export default class Validator {
   private ast: ProgramNode;
@@ -44,7 +46,7 @@ export default class Validator {
       errors.push(...validatorObject.validate());
     });
     
-    const projects = this.ast.body.filter((e) => e.type?.value.toLowerCase() === 'project');
+    const projects = this.ast.body.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);
     if (projects.length > 1) {
       projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
     }
