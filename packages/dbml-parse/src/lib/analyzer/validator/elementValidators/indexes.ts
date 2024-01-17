@@ -16,8 +16,9 @@ import { aggregateSettingList, isVoid, pickValidator } from '../utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
 import _ from 'lodash';
-import { destructureIndexNode } from '../../../analyzer/utils';
+import { destructureIndexNode, getElementKind } from '../../../analyzer/utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
+import { ElementKind } from '../../../analyzer/types';
 
 export default class IndexesValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -35,7 +36,7 @@ export default class IndexesValidator implements ElementValidator {
   }
 
   private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode || this.declarationNode.parent?.type?.value.toLowerCase() !== 'table') {
+    if (this.declarationNode.parent instanceof ProgramNode || getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Table) {
       return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'An Indexes can only appear inside a Table', this.declarationNode)];
     }
 
