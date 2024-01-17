@@ -27,26 +27,27 @@ import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
 import { SchemaSymbol } from '../symbol/symbols';
 import SymbolTable from '../symbol/symbolTable';
 import SymbolFactory from '../symbol/factory';
-import { extractStringFromIdentifierStream, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode } from '../../parser/utils';
+import { extractStringFromIdentifierStream, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode } from '../../parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import Report from '../../report';
 import { CompileError, CompileErrorCode } from '../../errors';
+import { ElementKind } from '../types';
 
 export function pickValidator(element: ElementDeclarationNode & { type: SyntaxToken }) {
-  switch (element.type.value.toLowerCase()) {
-    case 'enum':
+  switch (element.type.value.toLowerCase() as ElementKind) {
+    case ElementKind.Enum:
       return EnumValidator;
-    case 'table':
+    case ElementKind.Table:
       return TableValidator;
-    case 'tablegroup':
+    case ElementKind.TableGroup:
       return TableGroupValidator;
-    case 'project':
+    case ElementKind.Project:
       return ProjectValidator;
-    case 'ref':
+    case ElementKind.Ref:
       return RefValidator;
-    case 'note':
+    case ElementKind.Note:
       return NoteValidator;
-    case 'indexes':
+    case ElementKind.Indexes:
       return IndexesValidator;
     default:
       return CustomValidator;
