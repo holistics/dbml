@@ -5,6 +5,8 @@ import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
 import { isExpressionAQuotedString } from '../../../parser/utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
+import { getElementKind } from '../../../analyzer/utils';
+import { ElementKind } from '../../../analyzer/types';
 
 export default class CustomValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -22,7 +24,7 @@ export default class CustomValidator implements ElementValidator {
   }
 
   private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode || this.declarationNode.parent?.type?.value.toLowerCase() !== 'project') {
+    if (this.declarationNode.parent instanceof ProgramNode || getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Project) {
       return [new CompileError(CompileErrorCode.INVALID_CUSTOM_CONTEXT, 'A custom element can only appear in a Project', this.declarationNode)];
     }
     return [];

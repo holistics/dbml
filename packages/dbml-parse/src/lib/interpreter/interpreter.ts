@@ -7,6 +7,8 @@ import { TableGroupInterpreter } from './elementInterpreter/tableGroup';
 import { EnumInterpreter } from './elementInterpreter/enum';
 import { ProjectInterpreter } from './elementInterpreter/project';
 import Report from '../report';
+import { getElementKind } from '../analyzer/utils';
+import { ElementKind } from '../analyzer/types';
 
 // The interpreted format follows the old parser
 export default class Interpreter {
@@ -29,16 +31,16 @@ export default class Interpreter {
 
   interpret(): Report<Database, CompileError> {
     const errors = this.ast.body.flatMap((element) => {
-      switch (element.type!.value.toLowerCase()) {
-        case 'table':
+      switch (getElementKind(element).unwrap_or(undefined)) {
+        case ElementKind.Table:
           return (new TableInterpreter(element, this.env)).interpret();
-        case 'ref':
+        case ElementKind.Ref:
           return (new RefInterpreter(element, this.env)).interpret();
-        case 'tablegroup':
+        case ElementKind.TableGroup:
           return (new TableGroupInterpreter(element, this.env)).interpret();
-        case 'enum':
+        case ElementKind.Enum:
           return (new EnumInterpreter(element, this.env)).interpret();
-        case 'project':
+        case ElementKind.Project:
           return (new ProjectInterpreter(element, this.env)).interpret();
         default:
           return [];
