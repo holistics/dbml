@@ -21,6 +21,13 @@ const findTable = (tables, schemaName, tableName) => {
   return table;
 };
 
+const escapeStr = (str) => {
+  if (str) {
+    return str.replaceAll("''", "'");
+  }
+  return str;
+}
+
 export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
   constructor () {
@@ -856,7 +863,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
         if (!table) return;
 
         const note = ctx.comment_text().accept(this);
-        table.note = { value: note };
+        table.note = { value: escapeStr(note) };
       }
     }
 
@@ -872,7 +879,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       if (!field) return;
 
       const note = ctx.comment_text().accept(this);
-      field.note = { value: note };
+      field.note = { value: escapeStr(note) };
     }
   }
 
