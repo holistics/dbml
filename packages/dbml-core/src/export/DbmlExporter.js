@@ -78,7 +78,7 @@ class DbmlExporter {
         constraints.push(value);
       }
       if (field.note) {
-        constraints.push(`note: '${field.note}'`);
+        constraints.push(`note: '${field.note.replaceAll("'", "\\'")}'`);
       }
 
       if (constraints.length > 0) {
