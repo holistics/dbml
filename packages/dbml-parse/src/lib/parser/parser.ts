@@ -1,9 +1,7 @@
 import _ from 'lodash';
 import {
   convertFuncAppToElem,
-  createDummyOperand,
   isAsKeyword,
-  isDummyOperand,
   markInvalid,
 } from './utils';
 import { CompileError, CompileErrorCode } from '../errors';
@@ -11,9 +9,11 @@ import { SyntaxToken, SyntaxTokenKind, isOpToken } from '../lexer/tokens';
 import Report from '../report';
 import { ParsingContext, ParsingContextStack } from './contextStack';
 import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
+  DummyNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
@@ -220,7 +220,7 @@ export default class Parser {
       alias?: NormalExpressionNode;
       attributeList?: ListExpressionNode;
       bodyColon?: SyntaxToken;
-      body?: FunctionApplicationNode | BlockExpressionNode | ElementDeclarationNode;
+      body?: FunctionApplicationNode | BlockExpressionNode;
     } = {};
     const buildElement = () => this.nodeFactory.create(ElementDeclarationNode, args);
 
@@ -293,7 +293,13 @@ export default class Parser {
     try {
       if (this.match(SyntaxTokenKind.COLON)) {
         args.bodyColon = this.previous();
-        args.body = this.expression();
+        const expr = this.expression();
+        if (expr instanceof ElementDeclarationNode) {
+          markInvalid(expr);
+          this.logError(expr, CompileErrorCode.UNEXPECTED_ELEMENT_DECLARATION, 'An element\'s simple body must not be an element declaration');
+        } else {
+          args.body = expr;
+        }
       } else {
         args.body = this.blockExpression();
       }
@@ -345,7 +351,7 @@ export default class Parser {
       type?: SyntaxToken;
       name?: NormalExpressionNode;
       bodyColon?: SyntaxToken;
-      body?: FunctionApplicationNode | ElementDeclarationNode;
+      body?: FunctionApplicationNode | BlockExpressionNode;
     } = {};
     const buildElement = () => this.nodeFactory.create(ElementDeclarationNode, args);
 
@@ -372,7 +378,12 @@ export default class Parser {
     }
 
     try {
-      args.body = this.expression();
+      const expr = this.expression();
+      if (expr instanceof ElementDeclarationNode) {
+        this.errors.push(new CompileError(CompileErrorCode.INVALID_ELEMENT_IN_SIMPLE_BODY, 'Simple body cannot be an element declaration', expr));
+      } else {
+        args.body = expr;
+      }
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
         throw e;
@@ -504,6 +515,25 @@ export default class Parser {
           });
           throw new PartialParsingError(e.token, leftExpression, e.handlerContext);
         }
+      } else if (token.kind === SyntaxTokenKind.LBRACKET) {
+        if (hasTrailingSpaces(this.previous())) {
+          break;
+        }
+        try {
+          leftExpression = this.nodeFactory.create(ArrayNode, {
+            expression: leftExpression,
+            indexer: this.listExpression(),
+          });
+        } catch (e) {
+          if (!(e instanceof PartialParsingError)) {
+            throw e;
+          }
+          leftExpression = this.nodeFactory.create(ArrayNode, {
+            expression: leftExpression,
+            indexer: e.partialNode,
+          });
+          throw new PartialParsingError(e.token, leftExpression, e.handlerContext);
+        }
       } else if (!isOpToken(token)) {
         break;
       } else {
@@ -569,7 +599,11 @@ export default class Parser {
           `Unexpected '${args.op.value}' in an expression`,
         );
 
-        this.throwDummyOperand(args.op);
+        throw new PartialParsingError(
+          args.op,
+          this.nodeFactory.create(DummyNode, { pre: args.op }),
+          this.contextStack.findHandlerContext(this.tokens, this.current),
+        );
       }
       this.advance();
 
@@ -590,8 +624,12 @@ export default class Parser {
       leftExpression = this.nodeFactory.create(PrefixExpressionNode, args);
     } else {
       leftExpression = this.extractOperand();
-      if (isDummyOperand(leftExpression)) {
-        this.throwDummyOperand(this.peek());
+      if (leftExpression instanceof DummyNode) {
+        throw new PartialParsingError(
+          this.peek(),
+          this.nodeFactory.create(DummyNode, { pre: this.peek() }),
+          this.contextStack.findHandlerContext(this.tokens, this.current),
+        );
       }
     }
 
@@ -651,15 +689,7 @@ export default class Parser {
       );
     }
 
-    return createDummyOperand(this.nodeFactory);
-  }
-
-  private throwDummyOperand(token: SyntaxToken): never {
-    throw new PartialParsingError(
-      token,
-      createDummyOperand(this.nodeFactory),
-      this.contextStack.findHandlerContext(this.tokens, this.current),
-    );
+    return this.nodeFactory.create(DummyNode, { pre: this.previous() });
   }
 
   /* Parsing FunctionExpression */
@@ -945,7 +975,9 @@ export default class Parser {
         if (!(e instanceof PartialParsingError)) {
           throw e;
         }
-        args.elementList.push(e.partialNode);
+        if (e.partialNode instanceof SyntaxNode) {
+          args.elementList.push(e.partialNode);
+        }
         if (!this.canHandle(e)) {
           throw new PartialParsingError(e.token, buildList(), e.handlerContext);
         }
@@ -983,7 +1015,7 @@ export default class Parser {
 
   private attribute(): AttributeNode {
     const args: {
-      name?: IdentiferStreamNode;
+      name?: IdentiferStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
       value?: NormalExpressionNode | IdentiferStreamNode;
     } = {};
@@ -998,7 +1030,7 @@ export default class Parser {
       args.name = this.nodeFactory.create(IdentiferStreamNode, { identifiers: [] });
     } else {
       try {
-        args.name = this.extractIdentifierStream();
+        args.name = this.attributeName();
       } catch (e) {
         if (!(e instanceof PartialParsingError)) {
           throw e;
@@ -1040,7 +1072,7 @@ export default class Parser {
       value =
         this.peek().kind === SyntaxTokenKind.IDENTIFIER &&
         this.peek(1).kind === SyntaxTokenKind.IDENTIFIER ?
-          this.extractIdentifierStream() :
+          this.attributeName() :
           this.normalExpression();
     } catch (e) {
       if (!(e instanceof PartialParsingError) || !this.canHandle(e)) {
@@ -1064,35 +1096,29 @@ export default class Parser {
     }
   };
 
-  private extractIdentifierStream(): IdentiferStreamNode {
+  private attributeName(): IdentiferStreamNode | PrimaryExpressionNode {
     const identifiers: SyntaxToken[] = [];
+    
+    if (this.peek().kind !== SyntaxTokenKind.IDENTIFIER) {
+      return this.primaryExpression();
+    }
+
     while (
       !this.isAtEnd() &&
       !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.COMMA, SyntaxTokenKind.RBRACKET)
     ) {
-      if (
-        this.match(
-          SyntaxTokenKind.QUOTED_STRING,
-          SyntaxTokenKind.STRING_LITERAL,
-          SyntaxTokenKind.NUMERIC_LITERAL,
-        )
-      ) {
-        markInvalid(this.previous());
-        this.logError(this.previous(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect an identifier');
-      } else {
-        try {
-          this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
-          identifiers.push(this.previous());
-        } catch (e) {
-          if (!(e instanceof PartialParsingError)) {
-            throw e;
-          }
-          throw new PartialParsingError(
-            e.token,
-            this.nodeFactory.create(IdentiferStreamNode, { identifiers }),
-            e.handlerContext,
-          );
+      try {
+        this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
+        identifiers.push(this.previous());
+      } catch (e) {
+        if (!(e instanceof PartialParsingError)) {
+          throw e;
         }
+        throw new PartialParsingError(
+          e.token,
+          this.nodeFactory.create(IdentiferStreamNode, { identifiers }),
+          e.handlerContext,
+        );
       }
     }
 

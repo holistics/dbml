@@ -1,90 +1,100 @@
 import SymbolFactory from '../../symbol/factory';
-import { ElementKind, createContextValidatorConfig, createSubFieldValidatorConfig } from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { ElementDeclarationNode, SyntaxNode } from '../../../parser/nodes';
-import { isExpressionAQuotedString } from '../../../parser/utils';
-import { ContextStack, ValidatorContext } from '../validatorContext';
-import ElementValidator from './elementValidator';
-import {
-  anyBodyConfig,
-  locallyUniqueConfig,
-  noAliasConfig,
-  noNameConfig,
-  noSettingListConfig,
-} from './_preset_configs';
-import { SchemaSymbol } from '../../symbol/symbols';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode } from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
+import { ElementValidator } from '../types';
+import { isExpressionAQuotedString } from '../../../parser/utils';
+import _ from 'lodash';
+import { pickValidator } from '../utils';
+import SymbolTable from '../../../analyzer/symbol/symbolTable';
+import { ElementKind } from '../../../analyzer/types';
+import { getElementKind } from '../../../analyzer/utils';
 
-export default class NoteValidator extends ElementValidator {
-  protected elementKind: ElementKind = ElementKind.NOTE;
+export default class NoteValidator implements ElementValidator {
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private publicSymbolTable: SymbolTable;
+  private symbolFactory: SymbolFactory;
 
-  protected context = createContextValidatorConfig({
-    name: ValidatorContext.NoteContext,
-    errorCode: CompileErrorCode.INVALID_NOTE_CONTEXT,
-    stopOnError: false,
-  });
+  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    this.declarationNode = declarationNode;
+    this.publicSymbolTable = publicSymbolTable;
+    this.symbolFactory = symbolFactory;
+  }
 
-  protected unique = locallyUniqueConfig(CompileErrorCode.NOTE_REDEFINED).doNotStopOnError();
+  validate(): CompileError[] {
+    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
+  }
 
-  protected name = noNameConfig.doNotStopOnError();
+  private validateContext(): CompileError[] {
+    if (this.declarationNode.parent instanceof ProgramNode || !([ElementKind.Table, ElementKind.Project] as (ElementKind | undefined)[]).includes(getElementKind(this.declarationNode.parent).unwrap_or(undefined))) {
+      return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'A Note can only appear inside a Table or a Project', this.declarationNode)];
+    }
 
-  protected alias = noAliasConfig.doNotStopOnError();
+    return [];
+  }
 
-  protected settingList = noSettingListConfig.doNotStopOnError();
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
+    if (nameNode) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode)];
+    }
 
-  protected body = anyBodyConfig.doNotStopOnError();
+    return [];
+  }
 
-  protected subfield = createSubFieldValidatorConfig({
-    argValidators: [
-      {
-        validateArg: (node: SyntaxNode, ith: number) => {
-          if (ith > 0) {
-            return [
-              new CompileError(
-                CompileErrorCode.NOTE_CONTENT_REDEFINED,
-                'Only one note content can be defined',
-                node,
-              ),
-            ];
-          }
-          if (isExpressionAQuotedString(node)) {
-            return [];
-          }
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+    if (aliasNode) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
+    }
 
-          return [
-            new CompileError(
-              CompileErrorCode.INVALID_NOTE,
-              "A note's content must be doubly or singly quoted string",
-              node,
-            ),
-          ];
-        },
-      },
-    ],
-    invalidArgNumberErrorCode: CompileErrorCode.INVALID_NOTE,
-    invalidArgNumberErrorMessage: 'A note content must be a doubly or singly quoted string',
-    settingList: noSettingListConfig.doNotStopOnError(),
-    shouldRegister: false,
-    duplicateErrorCode: undefined,
-  });
+    return [];
+  }
 
-  constructor(
-    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
-    publicSchemaSymbol: SchemaSymbol,
-    contextStack: ContextStack,
-    errors: CompileError[],
-    kindsGloballyFound: Set<ElementKind>,
-    kindsLocallyFound: Set<ElementKind>,
-    symbolFactory: SymbolFactory,
-  ) {
-    super(
-      declarationNode,
-      publicSchemaSymbol,
-      contextStack,
-      errors,
-      kindsGloballyFound,
-      kindsLocallyFound,
-      symbolFactory,
-    );
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+    if (settingList) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList)];
+    }
+
+    return [];
+  }
+
+  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+    if (!body) {
+      return [];
+    }
+    if (body instanceof FunctionApplicationNode) {
+      return this.validateFields([body]);
+    }
+
+    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
+  }
+
+  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
+    const errors: CompileError[] = [];
+    if (fields.length === 0) {
+      return [new CompileError(CompileErrorCode.EMPTY_NOTE, 'A Note must have a content', this.declarationNode)];
+    }
+    if (fields.length > 1) {
+      fields.slice(1).forEach((field) => errors.push(new CompileError(CompileErrorCode.NOTE_CONTENT_REDEFINED, 'A Note can only contain one string', field)));
+    }
+    if (!isExpressionAQuotedString(fields[0].callee)) {
+      errors.push(new CompileError(CompileErrorCode.INVALID_NOTE, 'A Note content must be a quoted string', fields[0]));
+    }
+    if (fields[0].args.length > 0) {
+      errors.push(...fields[0].args.map((arg) => new CompileError(CompileErrorCode.INVALID_NOTE, 'A Note can only contain one quoted string', arg)));
+    }
+    return errors;
+  }
+
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+    return subs.flatMap((sub) => {
+      sub.parent = this.declarationNode;
+      if (!sub.type) {
+        return [];
+      }
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
+      return validator.validate();
+    });
   }
 }

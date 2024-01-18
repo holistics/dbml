@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { SyntaxToken } from './lexer/tokens';
 import { SyntaxNode } from './parser/nodes';
 
@@ -10,7 +11,7 @@ export enum CompileErrorCode {
 
   UNKNOWN_TOKEN,
   UNEXPECTED_TOKEN,
-  MISPLACED_LIST_NODE,
+  UNEXPECTED_ELEMENT_DECLARATION,
   MISSING_SPACES,
   UNKNOWN_PREFIX_OP,
   INVALID_OPERAND,
@@ -34,8 +35,10 @@ export enum CompileErrorCode {
   INVALID_TABLEGROUP_CONTEXT,
   INVALID_TABLEGROUP_ELEMENT_NAME,
   DUPLICATE_TABLEGROUP_ELEMENT_NAME,
+  DUPLICATE_TABLEGROUP_FIELD_NAME,
   INVALID_TABLEGROUP_FIELD,
 
+  EMPTY_TABLE,
   INVALID_COLUMN,
   INVALID_COLUMN_NAME,
   UNKNOWN_COLUMN_SETTING,
@@ -51,6 +54,7 @@ export enum CompileErrorCode {
   UNKNOWN_ENUM_ELEMENT_SETTING,
   DUPLICATE_ENUM_ELEMENT_SETTING,
   INVALID_ENUM_ELEMENT_SETTING,
+  EMPTY_ENUM,
 
   INVALID_REF_CONTEXT,
   UNKNOWN_REF_SETTING,
@@ -58,11 +62,14 @@ export enum CompileErrorCode {
   INVALID_REF_SETTING_VALUE,
   INVALID_REF_RELATIONSHIP,
   INVALID_REF_FIELD,
+  EMPTY_REF,
+  REF_REDEFINED,
 
   INVALID_NOTE_CONTEXT,
   INVALID_NOTE,
   NOTE_REDEFINED,
   NOTE_CONTENT_REDEFINED,
+  EMPTY_NOTE,
 
   INVALID_INDEXES_CONTEXT,
   INVALID_INDEXES_FIELD,
@@ -80,6 +87,7 @@ export enum CompileErrorCode {
   INVALID_CUSTOM_ELEMENT_VALUE,
 
   INVALID_ELEMENT_IN_SIMPLE_BODY,
+
   BINDING_ERROR = 4000,
 
   UNSUPPORTED = 5000,
@@ -94,7 +102,7 @@ export class CompileError extends Error {
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The node or token that causes the error
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken | readonly (SyntaxNode | SyntaxToken)[]>; // The nodes or tokens that cause the error
 
   start: Readonly<number>;
 
@@ -109,13 +117,5 @@ export class CompileError extends Error {
     this.end = nodeOrToken.end;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileError.prototype);
-  }
-
-  isTokenError(): this is CompileError & { nodeOrToken: SyntaxToken } {
-    return this.nodeOrToken instanceof SyntaxToken;
-  }
-
-  isNodeError(): this is CompileError & { nodeOrToken: SyntaxNode } {
-    return !(this.nodeOrToken instanceof SyntaxToken);
   }
 }

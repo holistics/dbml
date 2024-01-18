@@ -59,6 +59,10 @@ export default abstract class ElementBinder {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const attribute of settingList.elementList) {
+      if (attribute.name instanceof PrimaryExpressionNode) {
+        continue;
+      }
+
       const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined);
       if (!name) {
         continue;
@@ -80,7 +84,10 @@ export default abstract class ElementBinder {
     if (nodeBody instanceof BlockExpressionNode) {
       // eslint-disable-next-line no-restricted-syntax
       for (const sub of nodeBody.body) {
-        if (sub instanceof ElementDeclarationNode && sub.type) {
+        if (sub instanceof ElementDeclarationNode) {
+          if (!sub.type) {
+            continue;
+          }
           const Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
           const binder = new Binder(sub, this.errors);
           binder.bind();
@@ -93,10 +100,7 @@ export default abstract class ElementBinder {
     }
   }
 
-  private bindSubfield(sub: FunctionApplicationNode | ElementDeclarationNode) {
-    if (sub instanceof ElementDeclarationNode) {
-      return;
-    }
+  private bindSubfield(sub: FunctionApplicationNode) {
     const args = [sub.callee, ...sub.args];
     const maybeSettingList = _.last(args);
     if (maybeSettingList instanceof ListExpressionNode) {
@@ -120,7 +124,7 @@ export default abstract class ElementBinder {
     if (node instanceof PrimaryExpressionNode) {
       if (
         node.expression instanceof VariableNode &&
-        rule.keywords?.includes(node.expression.variable?.value as any)
+        rule.keywords?.includes(node.expression.variable?.value.toLowerCase() as any)
       ) {
         return;
       }

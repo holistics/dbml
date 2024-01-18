@@ -1,3 +1,5 @@
+// Similar to Rust Option: https://doc.rust-lang.org/std/option/enum.Option.html
+
 export type Option<T> = Some<T> | None<T>;
 
 export class Some<T> {

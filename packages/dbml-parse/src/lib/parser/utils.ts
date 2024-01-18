@@ -282,7 +282,7 @@ export function extractVariableNode(value?: unknown): Option<SyntaxToken> {
 // with a nested quoted string (", ' or ''')
 export function isExpressionAQuotedString(value?: unknown): value is PrimaryExpressionNode &
   (
-    | { expression: VariableNode & { variable: SyntaxToken } }
+    | { expression: VariableNode & { variable: SyntaxToken & { kind: SyntaxTokenKind.QUOTED_STRING } } }
     | {
         expression: LiteralNode & {
           literal: SyntaxToken & { kind: SyntaxTokenKind.STRING_LITERAL };
@@ -292,7 +292,8 @@ export function isExpressionAQuotedString(value?: unknown): value is PrimaryExpr
   return (
     value instanceof PrimaryExpressionNode &&
     ((value.expression instanceof VariableNode &&
-      value.expression.variable instanceof SyntaxToken) ||
+      value.expression.variable instanceof SyntaxToken &&
+      value.expression.variable.kind === SyntaxTokenKind.QUOTED_STRING) ||
       (value.expression instanceof LiteralNode &&
         value.expression.literal?.kind === SyntaxTokenKind.STRING_LITERAL))
   );
@@ -345,12 +346,4 @@ export function extractStringFromIdentifierStream(stream?: IdentiferStreamNode):
   }
 
   return new Some(name);
-}
-
-export function createDummyOperand(factory: NodeFactory): SyntaxNode {
-  return factory.create(FunctionExpressionNode, {});
-}
-
-export function isDummyOperand(node: SyntaxNode): boolean {
-  return node instanceof FunctionExpressionNode && node.value === undefined;
 }

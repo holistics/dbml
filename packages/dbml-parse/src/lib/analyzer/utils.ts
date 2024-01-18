@@ -19,6 +19,23 @@ import {
   isExpressionAVariableNode,
 } from '../parser/utils';
 import { SyntaxToken } from '../lexer/tokens';
+import { ElementKind } from './types';
+
+export function getElementKind(node?: ElementDeclarationNode): Option<ElementKind> {
+  const kind = node?.type?.value.toLowerCase(); 
+  switch (kind as ElementKind | undefined) {
+    case ElementKind.Enum:
+    case ElementKind.Table:
+    case ElementKind.Indexes:
+    case ElementKind.Note:
+    case ElementKind.Project:
+    case ElementKind.Ref:
+    case ElementKind.TableGroup:
+      return new Some(kind as ElementKind);
+    default:
+      return new None();
+  }
+}
 
 export function destructureMemberAccessExpression(node: SyntaxNode): Option<SyntaxNode[]> {
   if (!isAccessExpression(node)) {
@@ -105,7 +122,7 @@ export function destructureComplexTuple(
   });
 }
 
-export function extractVariableFromExpression(node: SyntaxNode): Option<string> {
+export function extractVariableFromExpression(node?: SyntaxNode): Option<string> {
   if (!isExpressionAVariableNode(node)) {
     return new None();
   }
@@ -136,9 +153,9 @@ export function destructureIndexNode(node: SyntaxNode): Option<{
 }
 
 export function extractVarNameFromPrimaryVariable(
-  node: PrimaryExpressionNode & { expression: VariableNode },
+  node?: PrimaryExpressionNode & { expression: VariableNode },
 ): Option<string> {
-  const value = node.expression.variable?.value;
+  const value = node?.expression.variable?.value;
 
   return value === undefined ? new None() : new Some(value);
 }
@@ -171,6 +188,24 @@ export function isBinaryRelationship(value?: SyntaxNode): value is InfixExpressi
   );
 }
 
+export function isEqualTupleOperands(value: InfixExpressionNode): value is InfixExpressionNode {
+  const leftRes = destructureComplexTuple(value.leftExpression)
+  const rightRes = destructureComplexTuple(value.rightExpression)
+  
+  if (!leftRes.isOk() || !rightRes.isOk()) {
+    return false;
+  }
+
+  const { tupleElements: leftTuple } = leftRes.unwrap();
+  const { tupleElements: rightTuple } = rightRes.unwrap();
+
+  if (leftTuple?.length !== rightTuple?.length) {
+    return false;
+  }
+
+  return true;
+}
+
 export function isValidIndexName(
   value?: SyntaxNode,
 ): value is (PrimaryExpressionNode & { expression: VariableNode }) | FunctionExpressionNode {
@@ -199,7 +234,7 @@ export function findSymbol(
   id: NodeSymbolIndex,
   startElement: ElementDeclarationNode,
 ): NodeSymbol | undefined {
-  let curElement: SyntaxNode | undefined = startElement;
+  let curElement: ElementDeclarationNode | ProgramNode | undefined = startElement;
   const isPublicSchema = isPublicSchemaIndex(id);
 
   while (curElement) {
