@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { get } from 'lodash';
 import Schema from './schema';
 import Ref from './ref';
 import Enum from './enum';
@@ -25,8 +25,8 @@ class Database extends Element {
     this.generateId();
     this.hasDefaultSchema = false;
     this.schemas = [];
-    this.note = project.note ? project.note.value : null;
-    this.noteToken = project.note ? project.note.token : null;
+    this.note = project.note ? get(project, 'note.value', project.note) : null;
+    this.noteToken = project.note ? get(project, 'note.token', project.noteToken) : null;
     this.databaseType = project.database_type;
     this.name = project.name;
     this.aliases = aliases;
