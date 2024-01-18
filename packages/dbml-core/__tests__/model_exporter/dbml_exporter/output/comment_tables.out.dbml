@@ -9,4 +9,5 @@ Table "orders" {
   "user_id" int [unique, not null]
   "status" varchar [note: 'Status of an order']
   "created_at" varchar [note: 'When order created']
+  Note: 'User orders'
 }

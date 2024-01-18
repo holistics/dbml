@@ -66,9 +66,7 @@
             }
           },
           "inline_refs": [],
-          "note": {
-            "value": "Status of an order"
-          }
+          "note": "Status of an order"
         },
         {
           "name": "created_at",
@@ -106,6 +104,7 @@
           "column": 2
         }
       },
+      "note": "User orders",
       "indexes": []
     }
   ],
@@ -155,9 +154,7 @@
               "column": 1
             }
           },
-          "note": {
-            "value": "In stock"
-          }
+          "note": "In stock"
         },
         {
           "name": "running_low",

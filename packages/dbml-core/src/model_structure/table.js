@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import Element from './element';
 import Field from './field';
 import Index from './indexes';
@@ -6,13 +7,13 @@ import { shouldPrintSchema } from './utils';
 
 class Table extends Element {
   constructor ({
-    name, alias, note, fields = [], indexes = [], schema = {}, token, headerColor,
+    name, alias, note, fields = [], indexes = [], schema = {}, token, headerColor, noteToken = null,
   } = {}) {
     super(token);
     this.name = name;
     this.alias = alias;
-    this.note = note ? note.value : null;
-    this.noteToken = note ? note.token : null;
+    this.note = note ? get(note, 'value', note) : null;
+    this.noteToken = note ? get(note, 'token', noteToken) : null;
     this.headerColor = headerColor;
     this.fields = [];
     this.indexes = [];
