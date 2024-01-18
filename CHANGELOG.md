@@ -1,3 +1,27 @@
+## v3.1.0 (2024-01-18)
+
+#### :memo: Documentation
+* [#479](https://github.com/holistics/dbml/pull/479) Update README ([@matthewjumpsoffbuildings](https://github.com/matthewjumpsoffbuildings))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#487](https://github.com/holistics/dbml/pull/487) fix: type of note field that is string doesn show ([@Mrxyy](https://github.com/Mrxyy))
+* `dbml-cli`, `dbml-parse`
+  * [#488](https://github.com/holistics/dbml/pull/488) Fix new DBML parser inconsistencies ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#486](https://github.com/holistics/dbml/pull/486) Add Mysql ANTLR4 parser ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`
+  * [#486](https://github.com/holistics/dbml/pull/486) Add Mysql ANTLR4 parser ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 3
+- Matthew ([@matthewjumpsoffbuildings](https://github.com/matthewjumpsoffbuildings))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- jaden ([@Mrxyy](https://github.com/Mrxyy))
+
 ## v3.0.0 (2023-11-23)
 
 #### :bug: Bug Fix
