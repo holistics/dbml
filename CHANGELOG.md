@@ -9,6 +9,14 @@
 * `dbml-cli`, `dbml-parse`
   * [#488](https://github.com/holistics/dbml/pull/488) Fix new DBML parser inconsistencies ([@NQPhuc](https://github.com/NQPhuc))
 
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#486](https://github.com/holistics/dbml/pull/486) Add Mysql ANTLR4 parser ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`
+  * [#486](https://github.com/holistics/dbml/pull/486) Add Mysql ANTLR4 parser ([@NQPhuc](https://github.com/NQPhuc))
+
 #### Committers: 3
 - Matthew ([@matthewjumpsoffbuildings](https://github.com/matthewjumpsoffbuildings))
 - NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
