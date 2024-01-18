@@ -1,0 +1,25 @@
+Table users as U {
+  id int [pk, increment]
+}
+
+Table user_role_in_diagram {
+  user_id int
+  diagram_id int
+  role int [note: 'Role = sum(user's available permissions bit value)']
+  Indexes {
+    (user_id, diagram_id) [pk]
+  }
+}
+
+Table permissions {
+  bit int [pk] 
+  name varchar
+}
+
+Table diagrams {
+  id int [pk, increment] // auto-increment
+}
+
+Ref: "users"."id" - "user_role_in_diagram"."user_id"
+
+Ref: "diagrams"."id" - "user_role_in_diagram"."diagram_id"

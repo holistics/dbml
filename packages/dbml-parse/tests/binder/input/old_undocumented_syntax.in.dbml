@@ -1,0 +1,31 @@
+Table "customer" {
+  "customer_id" SMALLINT [pk, not null, increment]
+  "store_id" TINYINT [not null]
+  "first_name" VARCHAR(45) [not null]
+  "last_name" VARCHAR(45) [not null, default: faLse]
+  "email" VARCHAR(50) [default: NULL]
+  "address_id" SMALLINT [not NULL]
+  "active" BOOLEAN [not null, default: TRUE]
+  "create_date" DATETIME [not null]
+  "last_update" TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+
+Table cities {
+  id integer [primary key]
+  name e [default: "hello"]
+  country_id integer
+  note: "sasasa"
+}
+
+Table country {
+	id integer
+	cities string[]
+}
+
+Table citites {
+	id integer
+	name string
+	indexes {
+		id name
+	}
+}

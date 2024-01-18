@@ -284,7 +284,7 @@
           }
         },
         "parent": 14,
-        "symbol": 2
+        "symbol": 1
       },
       {
         "id": 13,
@@ -688,9 +688,10 @@
                     "end": 51
                   }
                 },
-                "referee": 2
+                "referee": 1
               },
-              "args": []
+              "args": [],
+              "symbol": 3
             },
             {
               "id": 11,
@@ -873,7 +874,8 @@
                   }
                 }
               },
-              "args": []
+              "args": [],
+              "symbol": 4
             }
           ],
           "blockCloseBrace": {
@@ -899,7 +901,7 @@
           }
         },
         "parent": 14,
-        "symbol": 4
+        "symbol": 2
       }
     ],
     "eof": {
@@ -1090,17 +1092,28 @@
                   "end": 51
                 }
               },
-              "referee": 2
+              "referee": 1
             }
           ],
-          "id": 2,
+          "id": 1,
           "symbolTable": {},
           "declaration": 3
         },
         "TableGroup:Group": {
           "references": [],
-          "id": 4,
-          "symbolTable": {},
+          "id": 2,
+          "symbolTable": {
+            "TableGroup field:Users": {
+              "references": [],
+              "id": 3,
+              "declaration": 8
+            },
+            "TableGroup field:Products": {
+              "references": [],
+              "id": 4,
+              "declaration": 11
+            }
+          },
           "declaration": 13
         }
       },
@@ -1109,6 +1122,282 @@
     }
   },
   "errors": [
+    {
+      "code": 3018,
+      "diagnostic": "A Table must have at least one column",
+      "nodeOrToken": {
+        "id": 3,
+        "kind": "<element-declaration>",
+        "startPos": {
+          "offset": 0,
+          "line": 0,
+          "column": 0
+        },
+        "fullStart": 0,
+        "endPos": {
+          "offset": 18,
+          "line": 2,
+          "column": 1
+        },
+        "fullEnd": 20,
+        "start": 0,
+        "end": 18,
+        "type": {
+          "kind": "<identifier>",
+          "startPos": {
+            "offset": 0,
+            "line": 0,
+            "column": 0
+          },
+          "endPos": {
+            "offset": 5,
+            "line": 0,
+            "column": 5
+          },
+          "value": "Table",
+          "leadingTrivia": [],
+          "trailingTrivia": [
+            {
+              "kind": "<space>",
+              "startPos": {
+                "offset": 5,
+                "line": 0,
+                "column": 5
+              },
+              "endPos": {
+                "offset": 6,
+                "line": 0,
+                "column": 6
+              },
+              "value": " ",
+              "leadingTrivia": [],
+              "trailingTrivia": [],
+              "leadingInvalid": [],
+              "trailingInvalid": [],
+              "isInvalid": false,
+              "start": 5,
+              "end": 6
+            }
+          ],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 0,
+          "end": 5
+        },
+        "name": {
+          "id": 1,
+          "kind": "<primary-expression>",
+          "startPos": {
+            "offset": 6,
+            "line": 0,
+            "column": 6
+          },
+          "fullStart": 6,
+          "endPos": {
+            "offset": 11,
+            "line": 0,
+            "column": 11
+          },
+          "fullEnd": 12,
+          "start": 6,
+          "end": 11,
+          "expression": {
+            "id": 0,
+            "kind": "<variable>",
+            "startPos": {
+              "offset": 6,
+              "line": 0,
+              "column": 6
+            },
+            "fullStart": 6,
+            "endPos": {
+              "offset": 11,
+              "line": 0,
+              "column": 11
+            },
+            "fullEnd": 12,
+            "start": 6,
+            "end": 11,
+            "variable": {
+              "kind": "<identifier>",
+              "startPos": {
+                "offset": 6,
+                "line": 0,
+                "column": 6
+              },
+              "endPos": {
+                "offset": 11,
+                "line": 0,
+                "column": 11
+              },
+              "value": "Users",
+              "leadingTrivia": [],
+              "trailingTrivia": [
+                {
+                  "kind": "<space>",
+                  "startPos": {
+                    "offset": 11,
+                    "line": 0,
+                    "column": 11
+                  },
+                  "endPos": {
+                    "offset": 12,
+                    "line": 0,
+                    "column": 12
+                  },
+                  "value": " ",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 11,
+                  "end": 12
+                }
+              ],
+              "leadingInvalid": [],
+              "trailingInvalid": [],
+              "isInvalid": false,
+              "start": 6,
+              "end": 11
+            }
+          }
+        },
+        "body": {
+          "id": 2,
+          "kind": "<block-expression>",
+          "startPos": {
+            "offset": 12,
+            "line": 0,
+            "column": 12
+          },
+          "fullStart": 12,
+          "endPos": {
+            "offset": 18,
+            "line": 2,
+            "column": 1
+          },
+          "fullEnd": 20,
+          "start": 12,
+          "end": 18,
+          "blockOpenBrace": {
+            "kind": "<lbrace>",
+            "startPos": {
+              "offset": 12,
+              "line": 0,
+              "column": 12
+            },
+            "endPos": {
+              "offset": 13,
+              "line": 0,
+              "column": 13
+            },
+            "value": "{",
+            "leadingTrivia": [],
+            "trailingTrivia": [
+              {
+                "kind": "<newline>",
+                "startPos": {
+                  "offset": 14,
+                  "line": 0,
+                  "column": 14
+                },
+                "endPos": {
+                  "offset": 15,
+                  "line": 1,
+                  "column": 0
+                },
+                "value": "\n",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 14,
+                "end": 15
+              }
+            ],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 12,
+            "end": 13
+          },
+          "body": [],
+          "blockCloseBrace": {
+            "kind": "<rbrace>",
+            "startPos": {
+              "offset": 17,
+              "line": 2,
+              "column": 0
+            },
+            "endPos": {
+              "offset": 18,
+              "line": 2,
+              "column": 1
+            },
+            "value": "}",
+            "leadingTrivia": [
+              {
+                "kind": "<newline>",
+                "startPos": {
+                  "offset": 16,
+                  "line": 1,
+                  "column": 1
+                },
+                "endPos": {
+                  "offset": 17,
+                  "line": 2,
+                  "column": 0
+                },
+                "value": "\n",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 16,
+                "end": 17
+              }
+            ],
+            "trailingTrivia": [
+              {
+                "kind": "<newline>",
+                "startPos": {
+                  "offset": 19,
+                  "line": 2,
+                  "column": 2
+                },
+                "endPos": {
+                  "offset": 20,
+                  "line": 3,
+                  "column": 0
+                },
+                "value": "\n",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 19,
+                "end": 20
+              }
+            ],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 17,
+            "end": 18
+          }
+        },
+        "parent": 14,
+        "symbol": 1
+      },
+      "start": 0,
+      "end": 18,
+      "name": "CompileError"
+    },
     {
       "code": 4000,
       "diagnostic": "Can not find Table 'Products'",

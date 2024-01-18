@@ -1,84 +1,146 @@
 import { SyntaxToken, SyntaxTokenKind } from '../../../lexer/tokens';
 import SymbolFactory from '../../symbol/factory';
-import { transformToReturnCompileErrors } from './utils';
-import {
-  ElementKind,
-  createContextValidatorConfig,
-  createSettingListValidatorConfig,
-  createSubFieldValidatorConfig,
-} from '../types';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { ElementDeclarationNode, IdentiferStreamNode, SyntaxNode } from '../../../parser/nodes';
-import { ContextStack, ValidatorContext } from '../validatorContext';
-import ElementValidator from './elementValidator';
-import { isBinaryRelationship } from '../utils';
-import {
-  anyBodyConfig,
-  noAliasConfig,
-  noSettingListConfig,
-  noUniqueConfig,
-  optionalNameConfig,
-} from './_preset_configs';
-import { SchemaSymbol } from '../../symbol/symbols';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode } from '../../../parser/nodes';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
 } from '../../../parser/utils';
+import { ElementValidator } from '../types';
+import { aggregateSettingList, isSimpleName, pickValidator } from '../utils';
+import _ from 'lodash';
+import { getElementKind, isBinaryRelationship, isEqualTupleOperands } from '../../../analyzer/utils';
+import SymbolTable from '../../../analyzer/symbol/symbolTable';
+import { ElementKind } from '../../../analyzer/types';
 
-export default class RefValidator extends ElementValidator {
-  protected elementKind: ElementKind = ElementKind.REF;
+export default class RefValidator implements ElementValidator {
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private publicSymbolTable: SymbolTable;
+  private symbolFactory: SymbolFactory;
 
-  protected context = createContextValidatorConfig({
-    name: ValidatorContext.RefContext,
-    errorCode: CompileErrorCode.INVALID_REF_CONTEXT,
-    stopOnError: false,
-  });
+  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    this.declarationNode = declarationNode;
+    this.publicSymbolTable = publicSymbolTable;
+    this.symbolFactory = symbolFactory;
+  }
 
-  protected unique = noUniqueConfig.doNotStopOnError();
+  validate(): CompileError[] {
+    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
+  }
 
-  protected name = optionalNameConfig.doNotStopOnError();
+  private validateContext(): CompileError[] {
+    if (this.declarationNode.parent instanceof ProgramNode || getElementKind(this.declarationNode.parent).unwrap_or(undefined) === ElementKind.Table) {
+      return [];
+    }
+    return [new CompileError(CompileErrorCode.INVALID_REF_CONTEXT, 'A Ref must appear top-level or inside a table', this.declarationNode)];
+  }
 
-  protected alias = noAliasConfig.doNotStopOnError();
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
+    if (!nameNode) {
+      return [];
+    }
 
-  protected settingList = noSettingListConfig.doNotStopOnError();
+    if (!isSimpleName(nameNode)) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
+    }
 
-  protected body = anyBodyConfig.doNotStopOnError();
+    return [];
+  }
 
-  protected subfield = createSubFieldValidatorConfig({
-    argValidators: [
-      {
-        validateArg: transformToReturnCompileErrors(
-          isBinaryRelationship,
-          CompileErrorCode.INVALID_REF_RELATIONSHIP,
-          'This field must be a valid binary relationship',
-        ),
-      },
-    ],
-    invalidArgNumberErrorCode: CompileErrorCode.INVALID_REF_FIELD,
-    invalidArgNumberErrorMessage: "A ref's field must be a single valid binary relationship",
-    settingList: refFieldSettings(),
-    shouldRegister: false,
-    duplicateErrorCode: undefined,
-  });
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+    if (aliasNode) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
+    }
 
-  constructor(
-    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
-    publicSchemaSymbol: SchemaSymbol,
-    contextStack: ContextStack,
-    errors: CompileError[],
-    kindsGloballyFound: Set<ElementKind>,
-    kindsLocallyFound: Set<ElementKind>,
-    symbolFactory: SymbolFactory,
-  ) {
-    super(
-      declarationNode,
-      publicSchemaSymbol,
-      contextStack,
-      errors,
-      kindsGloballyFound,
-      kindsLocallyFound,
-      symbolFactory,
-    );
+    return [];
+  }
+
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+    if (settingList) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref shouldn\'t have a setting list', settingList)]
+    }
+
+    return [];
+  }
+
+  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+    if (!body) {
+      return [];
+    }
+    if (body instanceof FunctionApplicationNode) {
+      return this.validateFields([body]);
+    }
+
+    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
+  }
+
+  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
+    if (fields.length === 0) {
+      return [new CompileError(CompileErrorCode.EMPTY_REF, 'A Ref must have at least one field', this.declarationNode)];
+    }
+
+    const errors: CompileError[] = [];
+    if (fields.length > 1) {
+      errors.push(...fields.slice(1).map((field) => new CompileError(CompileErrorCode.REF_REDEFINED, 'A Ref can only contain one binary relationship', field)));
+    }
+
+    fields.forEach((field) => {
+      if (field.callee && !isBinaryRelationship(field.callee)) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field must be a binary relationship', field.callee));
+      }
+
+      if (field.callee && !isEqualTupleOperands(field.callee)) {
+        errors.push(new CompileError(CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF, 'Unequal fields in ref endpoints', field.callee));
+      }
+
+      if (_.last(field.args) instanceof ListExpressionNode) {
+        this.validateFieldSettings(_.last(field.args) as ListExpressionNode);
+      }
+
+      if (field.args.length > 1) {
+        errors.push(...field.args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg)));
+      }
+    });
+
+    return errors;
+  }
+
+  validateFieldSettings(settings: ListExpressionNode): CompileError[] {
+    const aggReport = aggregateSettingList(settings);
+    const errors = aggReport.getErrors();
+    const settingMap = aggReport.getValue();
+    for (const name in settingMap) {
+      const attrs = settingMap[name];
+      switch (name) {
+        case 'delete':
+        case 'update':
+          if (attrs.length > 1) {
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `\'${name}\' can only appear once`, attr)));
+          }
+          attrs.forEach((attr) => {
+            if (!isValidPolicy(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `\'${name}\' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
+            }
+          });
+          break;
+        default:
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting \'${name}\'`, attr)));
+      }
+    }
+    return errors;
+  }
+
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+    return subs.flatMap((sub) => {
+      sub.parent = this.declarationNode;
+      if (!sub.type) {
+        return [];
+      }
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
+      return validator.validate();
+    });
   }
 }
 
@@ -115,27 +177,3 @@ function isValidPolicy(value?: SyntaxNode): boolean {
 
   return false; // unreachable
 }
-
-const refFieldSettings = () =>
-  createSettingListValidatorConfig(
-    {
-      delete: {
-        allowDuplicate: false,
-        isValid: isValidPolicy,
-      },
-      update: {
-        allowDuplicate: false,
-        isValid: isValidPolicy,
-      },
-    },
-    {
-      optional: true,
-      notOptionalErrorCode: undefined,
-      allow: true,
-      notAllowErrorCode: undefined,
-      unknownErrorCode: CompileErrorCode.UNKNOWN_REF_SETTING,
-      duplicateErrorCode: CompileErrorCode.DUPLICATE_REF_SETTING,
-      invalidErrorCode: CompileErrorCode.INVALID_REF_SETTING_VALUE,
-      stopOnError: false,
-    },
-  );

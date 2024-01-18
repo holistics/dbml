@@ -2385,7 +2385,7 @@
                         "line": 4,
                         "column": 39
                       },
-                      "fullEnd": 185,
+                      "fullEnd": 184,
                       "start": 173,
                       "end": 184,
                       "name": {
@@ -2443,7 +2443,7 @@
                           "line": 4,
                           "column": 39
                         },
-                        "fullEnd": 185,
+                        "fullEnd": 184,
                         "start": 178,
                         "end": 184,
                         "op": {
@@ -2548,21 +2548,21 @@
                         },
                         "rightExpression": {
                           "id": 31,
-                          "kind": "<function-expression>",
+                          "kind": "<dummy>",
                           "startPos": {
-                            "offset": null,
-                            "column": null,
-                            "line": null
+                            "offset": 184,
+                            "line": 4,
+                            "column": 39
                           },
-                          "fullStart": null,
+                          "fullStart": 184,
                           "endPos": {
-                            "offset": null,
-                            "column": null,
-                            "line": null
+                            "offset": 184,
+                            "line": 4,
+                            "column": 39
                           },
-                          "fullEnd": null,
-                          "start": null,
-                          "end": null
+                          "fullEnd": 184,
+                          "start": 184,
+                          "end": 184
                         }
                       },
                       "colon": {

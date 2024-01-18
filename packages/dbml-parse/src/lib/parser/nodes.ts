@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { SyntaxToken } from '../lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
 import { Position } from '../types';
 import { getTokenFullEnd, getTokenFullStart } from '../lexer/utils';
@@ -29,7 +29,6 @@ export class SyntaxNode {
   fullEnd: Readonly<number>; // End offset with trivias counted
   symbol?: NodeSymbol;
   referee?: NodeSymbol; // The symbol that this syntax node refers to
-  parent?: ElementDeclarationNode | ProgramNode; // The enclosing element/program
 
   // args must be passed in order of appearance in the node
   constructor(
@@ -102,6 +101,8 @@ export enum SyntaxNodeKind {
   CALL_EXPRESSION = '<call-expression>',
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
+  DUMMY = '<dummy>',
+  ARRAY = '<array>',
 }
 
 export class ProgramNode extends SyntaxNode {
@@ -131,9 +132,10 @@ export class ElementDeclarationNode extends SyntaxNode {
   attributeList?: ListExpressionNode;
 
   bodyColon?: SyntaxToken;
+  
+  parent?: ElementDeclarationNode | ProgramNode; // The enclosing element/program
 
-  // if simple body, `body` must be a FunctionApplicationNode or ElementDeclarationNode
-  body?: FunctionApplicationNode | ElementDeclarationNode | BlockExpressionNode;
+  body?: FunctionApplicationNode | BlockExpressionNode;
 
   constructor(
     {
@@ -151,7 +153,7 @@ export class ElementDeclarationNode extends SyntaxNode {
       alias?: NormalExpressionNode;
       attributeList?: ListExpressionNode;
       bodyColon?: SyntaxToken;
-      body?: BlockExpressionNode | FunctionApplicationNode | ElementDeclarationNode;
+      body?: BlockExpressionNode | FunctionApplicationNode;
     },
     id: SyntaxNodeId,
   ) {
@@ -166,7 +168,7 @@ export class ElementDeclarationNode extends SyntaxNode {
     ]);
 
     if (
-      bodyColon &&
+      body && bodyColon &&
       !(body instanceof FunctionApplicationNode || body instanceof ElementDeclarationNode)
     ) {
       throw new Error('If an element has a simple body, it must be a function application node');
@@ -192,7 +194,7 @@ export class IdentiferStreamNode extends SyntaxNode {
 }
 
 export class AttributeNode extends SyntaxNode {
-  name?: IdentiferStreamNode;
+  name?: IdentiferStreamNode | PrimaryExpressionNode;
 
   colon?: SyntaxToken;
 
@@ -204,7 +206,7 @@ export class AttributeNode extends SyntaxNode {
       colon,
       value,
     }: {
-      name?: IdentiferStreamNode;
+      name?: IdentiferStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
       value?: NormalExpressionNode | IdentiferStreamNode;
     },
@@ -229,7 +231,9 @@ export type NormalExpressionNode =
   | TupleExpressionNode
   | CallExpressionNode
   | PrimaryExpressionNode
-  | FunctionExpressionNode;
+  | FunctionExpressionNode
+  | DummyNode
+  | ArrayNode;
 
 export type ExpressionNode =
   | ElementDeclarationNode
@@ -486,6 +490,25 @@ export class PrimaryExpressionNode extends SyntaxNode {
   }
 }
 
+// A placeholder for missing operands
+export class DummyNode extends SyntaxNode {
+  constructor({ pre }: { pre: Readonly<SyntaxNode> | Readonly<SyntaxToken> }, id: SyntaxNodeId) {
+    const nextToken = SyntaxToken.create(SyntaxTokenKind.SPACE, pre.endPos, pre.endPos, ' ', false);
+    super(id, SyntaxNodeKind.DUMMY, [nextToken]);
+  }
+}
+
+export class ArrayNode extends SyntaxNode {
+  array?: NormalExpressionNode;
+  indexer?: ListExpressionNode;
+
+  constructor({ expression, indexer }: { expression?: NormalExpressionNode; indexer: ListExpressionNode; }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.ARRAY, [expression, indexer]);
+    this.array = expression;
+    this.indexer = indexer;
+  }
+}
+
 function interleave(
   arr1: (SyntaxNode | SyntaxToken)[] | undefined,
   arr2: (SyntaxNode | SyntaxToken)[] | undefined,
@@ -503,3 +526,4 @@ function interleave(
     (e) => e !== null,
   ) as (SyntaxNode | SyntaxToken)[];
 }
+

@@ -479,7 +479,7 @@
                   }
                 }
               ],
-              "symbol": 3
+              "symbol": 2
             },
             {
               "id": 14,
@@ -757,7 +757,7 @@
                         "end": 45
                       }
                     },
-                    "referee": 9
+                    "referee": 10
                   },
                   "rightExpression": {
                     "id": 12,
@@ -837,11 +837,11 @@
                         "end": 52
                       }
                     },
-                    "referee": 10
+                    "referee": 9
                   }
                 }
               ],
-              "symbol": 4
+              "symbol": 3
             },
             {
               "id": 22,
@@ -1199,11 +1199,11 @@
                         "end": 79
                       }
                     },
-                    "referee": 16
+                    "referee": 15
                   }
                 }
               ],
-              "symbol": 5
+              "symbol": 4
             },
             {
               "id": 30,
@@ -1564,7 +1564,7 @@
                   }
                 }
               ],
-              "symbol": 6
+              "symbol": 5
             },
             {
               "id": 38,
@@ -1842,7 +1842,7 @@
                         "end": 123
                       }
                     },
-                    "referee": 9
+                    "referee": 10
                   },
                   "rightExpression": {
                     "id": 36,
@@ -1925,7 +1925,7 @@
                   }
                 }
               ],
-              "symbol": 7
+              "symbol": 6
             },
             {
               "id": 45,
@@ -2225,7 +2225,7 @@
                         "end": 147
                       }
                     },
-                    "referee": 9
+                    "referee": 10
                   },
                   "rightExpression": {
                     "id": 43,
@@ -2312,7 +2312,8 @@
                     }
                   }
                 }
-              ]
+              ],
+              "symbol": 7
             },
             {
               "id": 52,
@@ -2328,7 +2329,7 @@
                 "line": 7,
                 "column": 15
               },
-              "fullEnd": 170,
+              "fullEnd": 168,
               "start": 157,
               "end": 168,
               "callee": {
@@ -2510,7 +2511,7 @@
                     "line": 7,
                     "column": 15
                   },
-                  "fullEnd": 170,
+                  "fullEnd": 168,
                   "start": 165,
                   "end": 168,
                   "op": {
@@ -2612,28 +2613,29 @@
                         "end": 167
                       }
                     },
-                    "referee": 9
+                    "referee": 10
                   },
                   "rightExpression": {
                     "id": 50,
-                    "kind": "<function-expression>",
+                    "kind": "<dummy>",
                     "startPos": {
-                      "offset": null,
-                      "column": null,
-                      "line": null
+                      "offset": 168,
+                      "line": 7,
+                      "column": 15
                     },
-                    "fullStart": null,
+                    "fullStart": 168,
                     "endPos": {
-                      "offset": null,
-                      "column": null,
-                      "line": null
+                      "offset": 168,
+                      "line": 7,
+                      "column": 15
                     },
-                    "fullEnd": null,
-                    "start": null,
-                    "end": null
+                    "fullEnd": 168,
+                    "start": 168,
+                    "end": 168
                   }
                 }
-              ]
+              ],
+              "symbol": 8
             }
           ],
           "blockCloseBrace": {
@@ -2681,7 +2683,7 @@
           }
         },
         "parent": 90,
-        "symbol": 2
+        "symbol": 1
       },
       {
         "id": 73,
@@ -3783,7 +3785,7 @@
           }
         },
         "parent": 90,
-        "symbol": 10
+        "symbol": 9
       },
       {
         "id": 89,
@@ -4189,7 +4191,7 @@
                 }
               },
               "args": [],
-              "symbol": 17
+              "symbol": 16
             },
             {
               "id": 81,
@@ -4373,7 +4375,7 @@
                 }
               },
               "args": [],
-              "symbol": 18
+              "symbol": 17
             },
             {
               "id": 84,
@@ -4557,7 +4559,7 @@
                 }
               },
               "args": [],
-              "symbol": 19
+              "symbol": 18
             },
             {
               "id": 87,
@@ -4741,7 +4743,7 @@
                 }
               },
               "args": [],
-              "symbol": 20
+              "symbol": 19
             }
           ],
           "blockCloseBrace": {
@@ -4767,7 +4769,7 @@
           }
         },
         "parent": 90,
-        "symbol": 16
+        "symbol": 15
       }
     ],
     "eof": {
@@ -4795,32 +4797,42 @@
       "symbolTable": {
         "Table:Users": {
           "references": [],
-          "id": 2,
+          "id": 1,
           "symbolTable": {
             "Column:id": {
               "references": [],
-              "id": 3,
+              "id": 2,
               "declaration": 6
             },
             "Column:status1": {
               "references": [],
-              "id": 4,
+              "id": 3,
               "declaration": 14
             },
             "Column:status2": {
               "references": [],
-              "id": 5,
+              "id": 4,
               "declaration": 22
             },
             "Column:status3": {
               "references": [],
-              "id": 6,
+              "id": 5,
               "declaration": 30
             },
             "Column:status4": {
               "references": [],
-              "id": 7,
+              "id": 6,
               "declaration": 38
+            },
+            "Column:status5": {
+              "references": [],
+              "id": 7,
+              "declaration": 45
+            },
+            "Column:status6": {
+              "references": [],
+              "id": 8,
+              "declaration": 52
             }
           },
           "declaration": 54
@@ -4883,7 +4895,7 @@
                   "end": 45
                 }
               },
-              "referee": 9
+              "referee": 10
             },
             {
               "id": 34,
@@ -4941,7 +4953,7 @@
                   "end": 123
                 }
               },
-              "referee": 9
+              "referee": 10
             },
             {
               "id": 42,
@@ -4999,7 +5011,7 @@
                   "end": 147
                 }
               },
-              "referee": 9
+              "referee": 10
             },
             {
               "id": 49,
@@ -5057,10 +5069,10 @@
                   "end": 167
                 }
               },
-              "referee": 9
+              "referee": 10
             }
           ],
-          "id": 9,
+          "id": 10,
           "symbolTable": {
             "Enum:status": {
               "references": [
@@ -5142,10 +5154,10 @@
                       "end": 52
                     }
                   },
-                  "referee": 10
+                  "referee": 9
                 }
               ],
-              "id": 10,
+              "id": 9,
               "symbolTable": {
                 "Enum field:churn": {
                   "references": [],
@@ -5252,29 +5264,29 @@
                   "end": 79
                 }
               },
-              "referee": 16
+              "referee": 15
             }
           ],
-          "id": 16,
+          "id": 15,
           "symbolTable": {
             "Enum field:churn": {
               "references": [],
-              "id": 17,
+              "id": 16,
               "declaration": 78
             },
             "Enum field:new": {
               "references": [],
-              "id": 18,
+              "id": 17,
               "declaration": 81
             },
             "Enum field:active": {
               "references": [],
-              "id": 19,
+              "id": 18,
               "declaration": 84
             },
             "Enum field:tenant": {
               "references": [],
-              "id": 20,
+              "id": 19,
               "declaration": 87
             }
           },
@@ -5340,8 +5352,8 @@
       "name": "CompileError"
     },
     {
-      "code": 3020,
-      "diagnostic": "This field must be a valid column type",
+      "code": 3022,
+      "diagnostic": "Invalid column type",
       "nodeOrToken": {
         "id": 44,
         "kind": "<infix-expression>",
@@ -5458,7 +5470,7 @@
               "end": 147
             }
           },
-          "referee": 9
+          "referee": 10
         },
         "rightExpression": {
           "id": 43,
@@ -5550,8 +5562,8 @@
       "name": "CompileError"
     },
     {
-      "code": 3020,
-      "diagnostic": "This field must be a valid column type",
+      "code": 3022,
+      "diagnostic": "Invalid column type",
       "nodeOrToken": {
         "id": 51,
         "kind": "<infix-expression>",
@@ -5566,7 +5578,7 @@
           "line": 7,
           "column": 15
         },
-        "fullEnd": 170,
+        "fullEnd": 168,
         "start": 165,
         "end": 168,
         "op": {
@@ -5668,25 +5680,25 @@
               "end": 167
             }
           },
-          "referee": 9
+          "referee": 10
         },
         "rightExpression": {
           "id": 50,
-          "kind": "<function-expression>",
+          "kind": "<dummy>",
           "startPos": {
-            "offset": null,
-            "column": null,
-            "line": null
+            "offset": 168,
+            "line": 7,
+            "column": 15
           },
-          "fullStart": null,
+          "fullStart": 168,
           "endPos": {
-            "offset": null,
-            "column": null,
-            "line": null
+            "offset": 168,
+            "line": 7,
+            "column": 15
           },
-          "fullEnd": null,
-          "start": null,
-          "end": null
+          "fullEnd": 168,
+          "start": 168,
+          "end": 168
         }
       },
       "start": 165,
