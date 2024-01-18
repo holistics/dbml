@@ -1,3 +1,6 @@
+## v3.1.1 (2024-01-18)
+* Fix wrong casing file names in published package
+
 ## v3.1.0 (2024-01-18)
 
 #### :memo: Documentation
