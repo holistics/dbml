@@ -26,7 +26,10 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode || !([ElementKind.Table, ElementKind.Project] as (ElementKind | undefined)[]).includes(getElementKind(this.declarationNode.parent).unwrap_or(undefined))) {
+    if (
+      !(this.declarationNode.parent instanceof ProgramNode)
+      && !([ElementKind.Table, ElementKind.Project] as (ElementKind | undefined)[]).includes(getElementKind(this.declarationNode.parent).unwrap_or(undefined))
+    ) {
       return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'A Note can only appear inside a Table or a Project', this.declarationNode)];
     }
 
@@ -50,9 +53,9 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
-    if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList)];
-    }
+    // if (settingList) {
+    //   return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList)];
+    // }
 
     return [];
   }
