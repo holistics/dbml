@@ -1,0 +1,10 @@
+Table users [headercolor: #3498DB] {
+  id integer [primary key]
+  username varchar(255) [not null, unique]
+}
+
+Note nodeName [headercolor: #3457DB] {
+  '''
+    Hello is that me you are looking for.
+  '''
+}

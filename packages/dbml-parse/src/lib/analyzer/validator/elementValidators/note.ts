@@ -37,9 +37,9 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateName(nameNode?: SyntaxNode): CompileError[] {
-    if (nameNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode)];
-    }
+    // if (nameNode) {
+    //   return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode)];
+    // }
 
     return [];
   }
