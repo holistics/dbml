@@ -397,7 +397,7 @@ function isValidColumnType(type: SyntaxNode): boolean {
       return false;
     }
 
-    if (!type.argumentList.elementList.every(isExpressionANumber)) {
+    if (!type.argumentList.elementList.every((e) => isExpressionANumber(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
       return false;
     }
 
