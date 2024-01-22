@@ -322,7 +322,16 @@ function processColumnType(typeNode: SyntaxNode): Report<ColumnType, CompileErro
   let typeArgs: string | null = null;
   if (typeNode instanceof CallExpressionNode) {
       typeArgs = typeNode
-          .argumentList!.elementList.map((e) => (e as any).expression.literal.value)
+          .argumentList!.elementList.map((e) => {
+            if (isExpressionANumber(e)) {
+              return e.expression.literal.value;
+            }
+            if (isExpressionAQuotedString(e)) {
+              return extractQuotedStringToken(e).unwrap();
+            }
+            // e can only be an identifier here
+            return extractVariableFromExpression(e).unwrap();
+          })
           .join(',');
       typeNode = typeNode.callee!;
     }

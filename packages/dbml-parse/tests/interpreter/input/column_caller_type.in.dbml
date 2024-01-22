@@ -1,0 +1,7 @@
+Table User {
+    id int
+    followers int(MAX)
+    subscribers int("MAX")
+    patrons int('MAX')
+    ssid int(10)
+}
