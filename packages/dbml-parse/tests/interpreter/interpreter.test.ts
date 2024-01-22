@@ -13,7 +13,7 @@ describe('#interpreter', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {
-    if (testName !== 'sticky_note') return;
+    if (testName !== 'sticky_notes') return;
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
     const symbolIdGenerator = new NodeSymbolIdGenerator();
     const nodeIdGenerator = new SyntaxNodeIdGenerator();
