@@ -30,10 +30,10 @@
           "unique": false
         },
         {
-          "name": "followers",
+          "name": "secret",
           "type": {
             "schemaName": null,
-            "type_name": "int(MAX)",
+            "type_name": "nvarbinary(MAX)",
             "args": "MAX"
           },
           "token": {
@@ -43,31 +43,8 @@
               "column": 5
             },
             "end": {
-              "offset": 46,
+              "offset": 50,
               "line": 3,
-              "column": 23
-            }
-          },
-          "inline_refs": [],
-          "pk": false,
-          "unique": false
-        },
-        {
-          "name": "subscribers",
-          "type": {
-            "schemaName": null,
-            "type_name": "int(MAX)",
-            "args": "MAX"
-          },
-          "token": {
-            "start": {
-              "offset": 51,
-              "line": 4,
-              "column": 5
-            },
-            "end": {
-              "offset": 73,
-              "line": 4,
               "column": 27
             }
           },
@@ -76,22 +53,45 @@
           "unique": false
         },
         {
-          "name": "patrons",
+          "name": "name",
           "type": {
             "schemaName": null,
-            "type_name": "int(MAX)",
+            "type_name": "varchar(MAX)",
             "args": "MAX"
           },
           "token": {
             "start": {
-              "offset": 78,
+              "offset": 55,
+              "line": 4,
+              "column": 5
+            },
+            "end": {
+              "offset": 74,
+              "line": 4,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "code",
+          "type": {
+            "schemaName": null,
+            "type_name": "varbinary(MAX)",
+            "args": "MAX"
+          },
+          "token": {
+            "start": {
+              "offset": 79,
               "line": 5,
               "column": 5
             },
             "end": {
-              "offset": 96,
+              "offset": 100,
               "line": 5,
-              "column": 23
+              "column": 26
             }
           },
           "inline_refs": [],
@@ -107,12 +107,12 @@
           },
           "token": {
             "start": {
-              "offset": 101,
+              "offset": 105,
               "line": 6,
               "column": 5
             },
             "end": {
-              "offset": 113,
+              "offset": 117,
               "line": 6,
               "column": 17
             }
@@ -129,7 +129,7 @@
           "column": 1
         },
         "end": {
-          "offset": 115,
+          "offset": 119,
           "line": 7,
           "column": 2
         }
