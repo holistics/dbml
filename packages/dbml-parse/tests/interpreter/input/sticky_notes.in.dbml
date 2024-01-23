@@ -3,8 +3,13 @@ Table users [headercolor: #3498DB] {
   username varchar(255) [not null, unique]
 }
 
-Note nodeName [headercolor: #3457DB] {
+Note note [headercolor: #3457DB] {
+  'One line note'
+}
+
+Note note2 [headercolor: #3457DB] {
   '''
-    Hello is that me you are looking for.
+    # Title
+    body
   '''
 }
