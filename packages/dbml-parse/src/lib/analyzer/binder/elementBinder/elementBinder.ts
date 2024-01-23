@@ -162,10 +162,10 @@ export default abstract class ElementBinder {
 
     // The first index of the first fragment that is not a variable
     const invalidIndex = rawFragments.findIndex((f) => !isExpressionAVariableNode(f));
-    
+
     // If the fragments are of a complex tuple, the first non-variable fragment must be a tuple
     const isComplexTuple = invalidIndex !== -1 && isTupleOfVariables(rawFragments[invalidIndex]);
-    
+
     // In case of a complex tuple expression, both `tuple` and `tupleVarSymbolKind` will not be `undefined`
     const tuple = isComplexTuple ? (rawFragments[invalidIndex] as TupleExpressionNode) : undefined;
     const tupleVarSymbolKind = invalidIndex >= 0 ? topSubnamesSymbolKind.pop() : undefined;
