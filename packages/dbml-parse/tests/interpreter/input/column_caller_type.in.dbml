@@ -1,7 +1,7 @@
 Table User {
     id int
-    followers int(MAX)
-    subscribers int("MAX")
-    patrons int('MAX')
+    secret nvarbinary(MAX)
+    name varchar("MAX")
+    code varbinary('MAX')
     ssid int(10)
 }
