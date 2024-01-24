@@ -1,3 +1,20 @@
+## v3.1.2 (2024-01-24)
+
+#### :memo: Documentation
+* `dbml-parse`
+  * [#498](https://github.com/holistics/dbml/pull/498) feat: support strings and identifiers in column caller type ([@huy-dna](https://github.com/huy-dna))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#493](https://github.com/holistics/dbml/pull/493) fix(sql2dbml): properly escape notes when notes do contain some ' ([@pierresouchay](https://github.com/pierresouchay))
+* `dbml-parse`
+  * [#498](https://github.com/holistics/dbml/pull/498) feat: support strings and identifiers in column caller type ([@huy-dna](https://github.com/huy-dna))
+
+#### Committers: 3
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Pierre Souchay ([@pierresouchay](https://github.com/pierresouchay))
+- [@huy-dna](https://github.com/huy-dna)
+
 ## v3.1.1 (2024-01-18)
 * Fix wrong casing file names in published package
 
