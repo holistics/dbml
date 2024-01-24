@@ -365,9 +365,9 @@ Table "production"."productreview" {
   "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
   "reviewername" public.Name [not null, note: 'Name of the reviewer.']
   "reviewdate" timestamp [not null, default: `now()`, note: 'Date review was submitted.']
-  "emailaddress" "character varying(50)" [not null, note: 'Reviewer''s e-mail address.']
+  "emailaddress" "character varying(50)" [not null, note: 'Reviewer\'s e-mail address.']
   "rating" integer [not null, note: 'Product rating given by the reviewer. Scale is 1 to 5 with 5 as the highest rating.']
-  "comments" "character varying(3850)" [note: 'Reviewer''s comments']
+  "comments" "character varying(3850)" [note: 'Reviewer\'s comments']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Customer reviews of products they have purchased.'
 }
@@ -456,7 +456,7 @@ Table "purchasing"."purchaseorderdetail" {
   "duedate" timestamp [not null, note: 'Date the product is expected to be received.']
   "orderqty" smallint [not null, note: 'Quantity ordered.']
   "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
-  "unitprice" numeric [not null, note: 'Vendor''s selling price of a single product.']
+  "unitprice" numeric [not null, note: 'Vendor\'s selling price of a single product.']
   "receivedqty" numeric(8,2) [not null, note: 'Quantity actually received from the vendor.']
   "rejectedqty" numeric(8,2) [not null, note: 'Quantity rejected during inspection.']
   "modifieddate" timestamp [not null, default: `now()`]
@@ -483,13 +483,13 @@ Table "purchasing"."productvendor" {
   "productid" integer [not null, note: 'Primary key. Foreign key to Product.ProductID.']
   "businessentityid" integer [not null, note: 'Primary key. Foreign key to Vendor.BusinessEntityID.']
   "averageleadtime" integer [not null, note: 'The average span of time (in days) between placing an order with the vendor and receiving the purchased product.']
-  "standardprice" numeric [not null, note: 'The vendor''s usual selling price.']
+  "standardprice" numeric [not null, note: 'The vendor\'s usual selling price.']
   "lastreceiptcost" numeric [note: 'The selling price when last purchased.']
   "lastreceiptdate" timestamp [note: 'Date the product was last received by the vendor.']
   "minorderqty" integer [not null, note: 'The maximum quantity that should be ordered.']
   "maxorderqty" integer [not null, note: 'The minimum quantity that should be ordered.']
   "onorderqty" integer [note: 'The quantity currently on order.']
-  "unitmeasurecode" "character (3)" [not null, note: 'The product''s unit of measure.']
+  "unitmeasurecode" "character (3)" [not null, note: 'The product\'s unit of measure.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Cross-reference table mapping vendors with the products they supply.'
 }
