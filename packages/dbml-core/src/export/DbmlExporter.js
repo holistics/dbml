@@ -15,6 +15,10 @@ class DbmlExporter {
     return /\s*(\*|\+|-|\([A-Za-z0-9_]+\)|\(\))/g.test(str);
   }
 
+  static escapeNote (str) {
+    return str.replaceAll("'", "\\'")
+  }
+
   static exportEnums (enumIds, model) {
     const enumStrs = enumIds.map(enumId => {
       const _enum = model.enums[enumId];
@@ -23,7 +27,7 @@ class DbmlExporter {
       return `Enum ${shouldPrintSchema(schema, model)
         ? `"${schema.name}".` : ''}"${_enum.name}" {\n${
         _enum.valueIds.map(valueId => `  "${model.enumValues[valueId].name}"${model.enumValues[valueId].note
-          ? ` [note: '${model.enumValues[valueId].note}']` : ''}`).join('\n')}\n}\n`;
+          ? ` [note: '${DbmlExporter.escapeNote(model.enumValues[valueId].note)}']` : ''}`).join('\n')}\n}\n`;
     });
 
     return enumStrs.length ? enumStrs.join('\n') : '';
@@ -78,7 +82,7 @@ class DbmlExporter {
         constraints.push(value);
       }
       if (field.note) {
-        constraints.push(`note: '${field.note.replaceAll("'", "\\'")}'`);
+        constraints.push(`note: '${DbmlExporter.escapeNote(field.note)}'`);
       }
 
       if (constraints.length > 0) {
@@ -175,7 +179,7 @@ class DbmlExporter {
       if (!_.isEmpty(tableContent.indexContents)) {
         indexStr = `\nIndexes {\n${tableContent.indexContents.map(indexLine => `  ${indexLine}`).join('\n')}\n}`;
       }
-      const tableNote = table.note ? `  Note: '${table.note}'\n` : '';
+      const tableNote = table.note ? `  Note: '${DbmlExporter.escapeNote(table.note)}'\n` : '';
 
       const tableStr = `Table ${shouldPrintSchema(schema, model)
         ? `"${schema.name}".` : ''}"${table.name}"${tableSettingStr} {\n${
