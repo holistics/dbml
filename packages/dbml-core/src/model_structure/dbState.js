@@ -6,6 +6,7 @@ export default class DbState {
     this.tableGroupId = 1;
     this.refId = 1;
     this.tableId = 1;
+    this.noteId = 1;
     this.enumValueId = 1;
     this.endpointId = 1;
     this.indexId = 1;
