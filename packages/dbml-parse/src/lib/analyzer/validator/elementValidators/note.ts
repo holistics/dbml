@@ -8,7 +8,8 @@ import _ from 'lodash';
 import { pickValidator } from '../utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
 import { ElementKind } from '../../../analyzer/types';
-import { getElementKind } from '../../../analyzer/utils';
+import { destructureComplexVariable, getElementKind } from '../../../analyzer/utils';
+import { createStickyNoteSymbolIndex } from '../../../analyzer/symbol/symbolIndex';
 
 export default class NoteValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -37,9 +38,28 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateName(nameNode?: SyntaxNode): CompileError[] {
-    // if (nameNode) {
-    //   return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode)];
-    // }
+    if (!(this.declarationNode.parent instanceof ProgramNode)) {
+      if (nameNode) {
+        return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode)];
+      }
+    }
+
+    if (!nameNode) return [new CompileError(CompileErrorCode.INVALID_NAME, 'Sticky note must have a name', this.declarationNode)];
+
+    const nameFragments = destructureComplexVariable(nameNode);
+    if (!nameFragments.isOk()) return []
+
+    const names = nameFragments.unwrap();
+
+    const trueName = names.join('.');
+
+    const noteId = createStickyNoteSymbolIndex(trueName);
+
+    if (this.publicSymbolTable.has(noteId)) {
+      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `Sticky note "${trueName}" has already been defined`, nameNode)];
+    }
+
+    this.publicSymbolTable.set(noteId, this.declarationNode.symbol!);
 
     return [];
   }
