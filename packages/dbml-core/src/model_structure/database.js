@@ -4,9 +4,10 @@ import Ref from './ref';
 import Enum from './enum';
 import TableGroup from './tableGroup';
 import Table from './table';
+import Note from './note';
 import Element from './element';
 import {
-  DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF,
+  DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, NOTE,
 } from './config';
 import DbState from './dbState';
 
@@ -14,6 +15,7 @@ class Database extends Element {
   constructor ({
     schemas = [],
     tables = [],
+    notes = [],
     enums = [],
     refs = [],
     tableGroups = [],
@@ -35,6 +37,7 @@ class Database extends Element {
     this.processSchemas(schemas);
     this.processSchemaElements(enums, ENUM);
     this.processSchemaElements(tables, TABLE);
+    this.processSchemaElements(notes, NOTE);
     this.processSchemaElements(refs, REF);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
   }
@@ -76,6 +79,10 @@ class Database extends Element {
       switch (elementType) {
         case TABLE:
           schema.pushTable(new Table({ ...element, schema }));
+          break;
+
+        case NOTE:
+          schema.pushNote(new Note({ ...element, schema }));
           break;
 
         case ENUM:
@@ -189,6 +196,7 @@ class Database extends Element {
       enums: {},
       tableGroups: {},
       tables: {},
+      notes: {},
       endpoints: {},
       enumValues: {},
       indexes: {},
