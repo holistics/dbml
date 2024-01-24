@@ -10,6 +10,7 @@ export enum SymbolKind {
   TableGroupField = 'TableGroup field',
   Enum = 'Enum',
   EnumField = 'Enum field',
+  Note = 'Note'
 }
 
 export function createSchemaSymbolIndex(key: string): NodeSymbolIndex {
@@ -38,6 +39,10 @@ export function createTableGroupSymbolIndex(key: string): NodeSymbolIndex {
 
 export function createTableGroupFieldSymbolIndex(key: string): NodeSymbolIndex {
   return `${SymbolKind.TableGroupField}:${key}`;
+}
+
+export function createStickyNoteSymbolIndex (key: string): NodeSymbolIndex {
+  return `${SymbolKind.Note}:${key}`;
 }
 
 export function createNodeSymbolIndex(key: string, symbolKind: SymbolKind): NodeSymbolIndex {
