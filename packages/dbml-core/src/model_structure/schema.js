@@ -142,6 +142,7 @@ class Schema extends Element {
   exportChild () {
     return {
       tables: this.tables.map(t => t.export()),
+      notes: this.notes.map(n => n.export()),
       enums: this.enums.map(e => e.export()),
       tableGroups: this.tableGroups.map(tg => tg.export()),
       refs: this.refs.map(r => r.export()),
@@ -151,6 +152,7 @@ class Schema extends Element {
   exportChildIds () {
     return {
       tableIds: this.tables.map(t => t.id),
+      noteIds: this.notes.map(n => n.id),
       enumIds: this.enums.map(e => e.id),
       tableGroupIds: this.tableGroups.map(tg => tg.id),
       refIds: this.refs.map(r => r.id),

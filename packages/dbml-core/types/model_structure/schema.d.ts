@@ -10,6 +10,7 @@ export interface RawSchema {
     alias?: string;
     note?: RawNote;
     tables?: Table[];
+    notes?: Note[];
     refs?: Ref[];
     enums?: Enum[];
     tableGroups?: TableGroup[];
@@ -72,6 +73,11 @@ declare class Schema extends Element {
             note: string;
             headerColor: string;
         }[];
+        notes: {
+            name: string;
+            content: string;
+            headerColor: string;
+        }
         enums: {
             values: {
                 name: string;
@@ -130,6 +136,11 @@ declare class Schema extends Element {
             note: string;
             headerColor: string;
         }[];
+        notes: {
+            name: string;
+            content: string;
+            headerColor: string;
+        }
         enums: {
             values: {
                 name: string;
@@ -159,6 +170,7 @@ declare class Schema extends Element {
     };
     exportChildIds(): {
         tableIds: number[];
+        noteIds: number[];
         enumIds: number[];
         tableGroupIds: number[];
         refIds: number[];
@@ -180,6 +192,7 @@ export interface NormalizedSchema {
         note: string;
         alias: string;
         tableIds: number[];
+        noteIds: number[];
         enumIds: number[];
         tableGroupIds: number[];
         refIds: number[];
