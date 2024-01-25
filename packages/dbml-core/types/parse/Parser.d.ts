@@ -10,7 +10,7 @@ declare class Parser {
     static parseSchemaRbToJSON(str: string): RawDatabase;
     static parseMSSQLToJSON(str: string): RawDatabase;
     /**
-     * Should use the parser() instance method instead of this static method whenever possible
+     * Should use parse() instance method instead of this static method whenever possible
      */
     static parse(str: string, format: 'mysql' | 'postgres' | 'dbml' | 'dbmlv2' | 'schemarb' | 'mssql' | 'json'): Database;
     parse(str: string, format: 'mysql' | 'postgres' | 'dbml' | 'dbmlv2' | 'schemarb' | 'mssql' | 'json'): Database;
