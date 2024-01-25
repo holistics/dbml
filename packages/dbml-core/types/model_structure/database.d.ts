@@ -3,6 +3,7 @@ import Ref, { NormalizedRef } from './ref';
 import Enum, { NormalizedEnum } from './enum';
 import TableGroup, { NormalizedTableGroup } from './tableGroup';
 import Table, { NormalizedTable } from './table';
+import Note, { NormalizedNote } from './note';
 import Element, { RawNote, Token } from './element';
 import DbState from './dbState';
 import { NormalizedEndpoint } from './endpoint';
@@ -18,6 +19,7 @@ export interface Project {
 export interface RawDatabase {
     schemas: Schema[];
     tables: Table[];
+    notes: Note[];
     enums: Enum[];
     refs: Ref[];
     tableGroups: TableGroup[];
@@ -69,6 +71,11 @@ declare class Database extends Element {
                 note: string;
                 headerColor: string;
             }[];
+            notes: {
+                name: string;
+                content: string;
+                headerColor: string;
+            }
             enums: {
                 values: {
                     name: string;
@@ -135,6 +142,11 @@ declare class Database extends Element {
                 note: string;
                 headerColor: string;
             }[];
+            notes: {
+                name: string;
+                content: string;
+                headerColor: string;
+            }
             enums: {
                 values: {
                     name: string;
@@ -187,6 +199,7 @@ export interface NormalizedDatabase {
     enums: NormalizedEnum;
     tableGroups: NormalizedTableGroup;
     tables: NormalizedTable;
+    notes: NormalizedNote;
     endpoints: NormalizedEndpoint;
     enumValues: NormalizedEnumValue;
     indexes: NormalizedIndex;

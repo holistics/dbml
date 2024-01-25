@@ -17,7 +17,7 @@ class Note extends Element {
     this.id = this.dbState.generateId('noteId');
   }
 
-  shallowExport () {
+  export () {
     return {
       name: this.name,
       content: this.content,
@@ -30,7 +30,7 @@ class Note extends Element {
       ...model.notes,
       [this.id]: {
         id: this.id,
-        ...this.shallowExport(),
+        ...this.export(),
       },
     };
   }
