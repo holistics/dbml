@@ -29,6 +29,7 @@ declare class Database extends Element {
     dbState: DbState;
     hasDefaultSchema: boolean;
     schemas: Schema[];
+    notes: Note[];
     note: string;
     noteToken: Token;
     databaseType: string;
@@ -71,11 +72,6 @@ declare class Database extends Element {
                 note: string;
                 headerColor: string;
             }[];
-            notes: {
-                name: string;
-                content: string;
-                headerColor: string;
-            }
             enums: {
                 values: {
                     name: string;
@@ -105,6 +101,12 @@ declare class Database extends Element {
             name: string;
             note: string;
             alias: string;
+        }[];
+        notes: {
+            id: number;
+            name: string;
+            content: string;
+            headerColor: string;
         }[];
     };
     shallowExport(): {
@@ -142,11 +144,6 @@ declare class Database extends Element {
                 note: string;
                 headerColor: string;
             }[];
-            notes: {
-                name: string;
-                content: string;
-                headerColor: string;
-            }
             enums: {
                 values: {
                     name: string;
@@ -177,9 +174,16 @@ declare class Database extends Element {
             note: string;
             alias: string;
         }[];
+        notes: {
+            id: number;
+            name: string;
+            content: string;
+            headerColor: string;
+        }[];
     };
     exportChildIds(): {
         schemaIds: number[];
+        noteIds: number[];
     };
     normalize(): NormalizedDatabase;
 }
@@ -192,14 +196,15 @@ export interface NormalizedDatabase {
             databaseType: string;
             name: string;
             schemaIds: number[];
+            noteIds: number[];
         };
     };
     schemas: NormalizedSchema;
+    notes: NormalizedNote;
     refs: NormalizedRef;
     enums: NormalizedEnum;
     tableGroups: NormalizedTableGroup;
     tables: NormalizedTable;
-    notes: NormalizedNote;
     endpoints: NormalizedEndpoint;
     enumValues: NormalizedEnumValue;
     indexes: NormalizedIndex;

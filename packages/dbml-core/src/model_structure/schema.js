@@ -1,6 +1,5 @@
 import { get } from 'lodash';
 import Table from './table';
-import Note from './note';
 import Element from './element';
 import Enum from './enum';
 import { shouldPrintSchema } from './utils';
@@ -9,11 +8,10 @@ import Ref from './ref';
 
 class Schema extends Element {
   constructor ({
-    name, alias, note, tables = [], notes = [], refs = [], enums = [], tableGroups = [], token, database = {}, noteToken = null,
+    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {}, noteToken = null,
   } = {}) {
     super(token);
     this.tables = [];
-    this.notes = [];
     this.enums = [];
     this.tableGroups = [];
     this.refs = [];
@@ -27,7 +25,6 @@ class Schema extends Element {
 
     this.processEnums(enums);
     this.processTables(tables);
-    this.processNotes(notes);
     this.processRefs(refs);
     this.processTableGroups(tableGroups);
   }
@@ -55,16 +52,6 @@ class Schema extends Element {
 
   findTable (tableName) {
     return this.tables.find(t => t.name === tableName);
-  }
-
-  processNotes (rawNotes) {
-    rawNotes.forEach((note) => {
-      this.pushNote(new Note({ ...note, schema: this }));
-    });
-  }
-
-  pushNote (note) {
-    this.notes.push(note);
   }
 
   processEnums (rawEnums) {
@@ -142,7 +129,6 @@ class Schema extends Element {
   exportChild () {
     return {
       tables: this.tables.map(t => t.export()),
-      notes: this.notes.map(n => n.export()),
       enums: this.enums.map(e => e.export()),
       tableGroups: this.tableGroups.map(tg => tg.export()),
       refs: this.refs.map(r => r.export()),
@@ -152,7 +138,6 @@ class Schema extends Element {
   exportChildIds () {
     return {
       tableIds: this.tables.map(t => t.id),
-      noteIds: this.notes.map(n => n.id),
       enumIds: this.enums.map(e => e.id),
       tableGroupIds: this.tableGroups.map(tg => tg.id),
       refIds: this.refs.map(r => r.id),
@@ -185,7 +170,6 @@ class Schema extends Element {
     };
 
     this.tables.forEach((table) => table.normalize(model));
-    this.notes.forEach((note) => note.normalize(model));
     this.enums.forEach((_enum) => _enum.normalize(model));
     this.tableGroups.forEach((tableGroup) => tableGroup.normalize(model));
     this.refs.forEach((ref) => ref.normalize(model));
