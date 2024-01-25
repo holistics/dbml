@@ -2,14 +2,14 @@ import Element from './element';
 
 class Note extends Element {
   constructor ({
-    name, content, headerColor, token, schema = {},
+    name, content, headerColor, token, database = {},
   } = {}) {
     super(token);
     this.name = name;
     this.content = content;
     this.headerColor = headerColor;
-    this.schema = schema;
-    this.dbState = this.schema.dbState;
+    this.database = database;
+    this.dbState = this.database.dbState;
     this.generateId();
   }
 
