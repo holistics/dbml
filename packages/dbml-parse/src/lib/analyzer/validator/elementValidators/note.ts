@@ -42,9 +42,12 @@ export default class NoteValidator implements ElementValidator {
       if (nameNode) {
         return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode)];
       }
+      return [];
     }
 
-    if (!nameNode) return [new CompileError(CompileErrorCode.INVALID_NAME, 'Sticky note must have a name', this.declarationNode)];
+    if (!nameNode) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Sticky note must have a name', this.declarationNode)];
+    }
 
     const nameFragments = destructureComplexVariable(nameNode);
     if (!nameFragments.isOk()) return []
