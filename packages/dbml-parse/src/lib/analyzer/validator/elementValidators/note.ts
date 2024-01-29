@@ -31,7 +31,7 @@ export default class NoteValidator implements ElementValidator {
       !(this.declarationNode.parent instanceof ProgramNode)
       && !([ElementKind.Table, ElementKind.Project] as (ElementKind | undefined)[]).includes(getElementKind(this.declarationNode.parent).unwrap_or(undefined))
     ) {
-      return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'A Note can only appear inside a Table or a Project', this.declarationNode)];
+      return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'A Note can only appear inside a Table or a Project. Sticky note can only appear at the global scope.', this.declarationNode)];
     }
 
     return [];
