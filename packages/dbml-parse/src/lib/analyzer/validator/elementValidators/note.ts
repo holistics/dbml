@@ -76,9 +76,9 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
-    // if (settingList) {
-    //   return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList)];
-    // }
+    if (settingList && !(this.declarationNode.parent instanceof ProgramNode)) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList)];
+    }
 
     return [];
   }
