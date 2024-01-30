@@ -59,13 +59,7 @@ export class NoteInterpreter implements ElementInterpreter {
 
 
   private interpretNote(note: FunctionApplicationNode): CompileError[] {
-    const noteContent = _.get(note, 'callee.expression.literal.value', null);
-
-    if (!noteContent) {
-      return [
-        new CompileError(CompileErrorCode.INVALID_NOTE, 'Invalid note syntax', note),
-      ]
-    }
+    const noteContent = _.get(note, 'callee.expression.literal.value', '');
 
     this.note.content = noteContent;
     return [];
