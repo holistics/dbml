@@ -16,7 +16,7 @@ class DbmlExporter {
   }
 
   static escapeNote (str) {
-    return str.replaceAll("'", "\\'")
+    return str.replaceAll("'", "\\'").replaceAll("\n", "\\n");
   }
 
   static exportEnums (enumIds, model) {
