@@ -15,8 +15,24 @@ class DbmlExporter {
     return /\s*(\*|\+|-|\([A-Za-z0-9_]+\)|\(\))/g.test(str);
   }
 
-  static escapeNote (str) {
-    return str.replaceAll("'", "\\'").replaceAll("\n", "\\n");
+  static escapeNote (str, indent) {
+    if (str === null) {
+      return ''
+    }
+    if (str.match(/[\n\r']/)) {
+      const closure = function() {
+        function compute_line(line, lineNumber){
+          var prefix = (lineNumber > 0) ? ' '.repeat(indent + 3) : ""; // We add 3 because 3 simple quotes
+          return prefix + line;
+        }
+        return compute_line
+      }
+      const comp_line = closure();
+      const res = str.split(/[\r\n]/).map(comp_line).join("\n");
+      return `'''${res}'''`;
+    } else {
+      return `'${str}'`
+    }
   }
 
   static exportEnums (enumIds, model) {
@@ -27,7 +43,7 @@ class DbmlExporter {
       return `Enum ${shouldPrintSchema(schema, model)
         ? `"${schema.name}".` : ''}"${_enum.name}" {\n${
         _enum.valueIds.map(valueId => `  "${model.enumValues[valueId].name}"${model.enumValues[valueId].note
-          ? ` [note: '${DbmlExporter.escapeNote(model.enumValues[valueId].note)}']` : ''}`).join('\n')}\n}\n`;
+          ? ` [note: ${DbmlExporter.escapeNote(model.enumValues[valueId].note, 2 + model.enumValues[valueId].name.length)}]` : ''}`).join('\n')}\n}\n`;
     });
 
     return enumStrs.length ? enumStrs.join('\n') : '';
@@ -82,7 +98,8 @@ class DbmlExporter {
         constraints.push(value);
       }
       if (field.note) {
-        constraints.push(`note: '${DbmlExporter.escapeNote(field.note)}'`);
+        const indent = (line + ` [${constraints.join(', ')}]`).length + 7;
+        constraints.push(`note: ${DbmlExporter.escapeNote(field.note, indent)}`);
       }
 
       if (constraints.length > 0) {
@@ -179,7 +196,7 @@ class DbmlExporter {
       if (!_.isEmpty(tableContent.indexContents)) {
         indexStr = `\nIndexes {\n${tableContent.indexContents.map(indexLine => `  ${indexLine}`).join('\n')}\n}`;
       }
-      const tableNote = table.note ? `  Note: '${DbmlExporter.escapeNote(table.note)}'\n` : '';
+      const tableNote = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note, 8)}\n`: '';
 
       const tableStr = `Table ${shouldPrintSchema(schema, model)
         ? `"${schema.name}".` : ''}"${table.name}"${tableSettingStr} {\n${
