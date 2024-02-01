@@ -149,7 +149,7 @@ export class TableInterpreter implements ElementInterpreter {
     const settings = field.args.slice(1);
     if (_.last(settings) instanceof ListExpressionNode) {
       const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
-      column.pk = !!settingMap['pk']?.length;
+      column.pk = !!settingMap['pk']?.length || !!settingMap['primary key']?.length;
       column.increment = !!settingMap['increment']?.length;
       column.unique = !!settingMap['unique']?.length;
       column.not_null = !!settingMap['not null']?.length && true;
