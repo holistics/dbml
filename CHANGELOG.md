@@ -1,3 +1,13 @@
+## v3.1.3 (2024-02-01)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#504](https://github.com/holistics/dbml/pull/504) Fix/dbml alias & primary key & note content bug ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- HuyDNA ([@Huy-DNA](https://github.com/Huy-DNA))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
 ## v3.1.2 (2024-01-24)
 
 #### :memo: Documentation
