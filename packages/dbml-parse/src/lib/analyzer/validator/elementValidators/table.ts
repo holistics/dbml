@@ -134,7 +134,7 @@ export default class TableValidator implements ElementValidator {
 
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments.isOk()) {
-      const nameFragments = maybeNameFragments.unwrap();
+      const nameFragments = [...maybeNameFragments.unwrap()];
       const tableName = nameFragments.pop()!;
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableSymbolIndex(tableName);
@@ -144,10 +144,14 @@ export default class TableValidator implements ElementValidator {
       symbolTable.set(tableId, this.declarationNode.symbol!);
     }
   
-    if (alias && isSimpleName(alias)) {
-      const aliasId = createTableSymbolIndex(extractVarNameFromPrimaryVariable(alias as any).unwrap());
+    if (
+        alias && isSimpleName(alias) &&
+        !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
+    ) {
+      const aliasName = extractVarNameFromPrimaryVariable(alias as any).unwrap();
+      const aliasId = createTableSymbolIndex(aliasName);
       if (this.publicSymbolTable.has(aliasId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${alias}' already exists`, name!))
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists`, name!))
       }
       this.publicSymbolTable.set(aliasId, this.declarationNode.symbol!)
     }
@@ -421,4 +425,15 @@ function isValidColumnType(type: SyntaxNode): boolean {
   const variables = destructureComplexVariable(type).unwrap_or(undefined);
 
   return variables !== undefined && variables.length > 0;
+}
+
+function isAliasSameAsName(alias: string, nameFragments: string[]): boolean {
+  if (nameFragments.length > 1 || nameFragments.length === 0) {
+    return false;
+  }
+  if (alias === nameFragments[0]) {
+    return true;
+  }
+
+  return false;
 }
