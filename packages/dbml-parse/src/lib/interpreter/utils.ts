@@ -74,13 +74,6 @@ export function getColumnSymbolsOfRefOperand(ref: SyntaxNode): ColumnSymbol[] {
   return [colNode!.referee as ColumnSymbol];
 }
 
-export function normalizeNoteContent(content: string): string {
-  return content
-    .split('\n')
-    .map((s) => s.trim())
-    .join('\n');
-}
-
 export function extractElementName(nameNode: SyntaxNode): { schemaName: string[]; name: string } {
   const fragments = destructureComplexVariable(nameNode).unwrap();
   const name = fragments.pop()!;
