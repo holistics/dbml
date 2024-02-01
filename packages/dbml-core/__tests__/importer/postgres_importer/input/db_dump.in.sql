@@ -3363,7 +3363,8 @@ COMMENT ON COLUMN production.productreview.rating IS 'Product rating given by th
 -- Name: COLUMN productreview.comments; Type: COMMENT; Schema: production; Owner: admin
 --
 
-COMMENT ON COLUMN production.productreview.comments IS 'Reviewer''s comments';
+COMMENT ON COLUMN production.productreview.comments IS 'Reviewer''s comments
+WARNING: can have several lines!';
 
 
 --
@@ -4497,7 +4498,8 @@ ALTER TABLE purchasing.purchaseorderheader OWNER TO admin;
 -- Name: TABLE purchaseorderheader; Type: COMMENT; Schema: purchasing; Owner: admin
 --
 
-COMMENT ON TABLE purchasing.purchaseorderheader IS 'General purchase order information. See PurchaseOrderDetail.';
+COMMENT ON TABLE purchasing.purchaseorderheader IS 'General purchase order information. See PurchaseOrderDetail
+for more details.';
 
 
 --
