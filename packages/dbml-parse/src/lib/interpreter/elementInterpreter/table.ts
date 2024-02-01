@@ -1,6 +1,6 @@
 import { Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table } from '../types';
 import { ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode } from '../../parser/nodes';
-import { extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent } from '../utils';
+import { extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint } from '../utils';
 import { destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression } from '../../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../../errors';
 import { aggregateSettingList, isExpressionANumber } from '../../analyzer/validator/utils';
@@ -97,7 +97,7 @@ export class TableInterpreter implements ElementInterpreter {
     const [noteNode] = settingMap['note'] || [];
     const noteValue = extractQuotedStringToken(noteNode?.value).unwrap_or(undefined);
     this.table.note = noteNode && {
-      value: normalizeNoteContent(noteValue!),
+      value: noteValue!,
       token: getTokenPosition(noteNode),
     };
 
@@ -114,7 +114,7 @@ export class TableInterpreter implements ElementInterpreter {
       switch (sub.type?.value.toLowerCase()) {
         case 'note':
           this.table.note = {
-            value: normalizeNoteContent(extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? (sub.body.body[0] as FunctionApplicationNode).callee : sub.body!.callee).unwrap()),
+            value: extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? (sub.body.body[0] as FunctionApplicationNode).callee : sub.body!.callee).unwrap(),
             token: getTokenPosition(sub),
           }
           return [];
@@ -149,14 +149,14 @@ export class TableInterpreter implements ElementInterpreter {
     const settings = field.args.slice(1);
     if (_.last(settings) instanceof ListExpressionNode) {
       const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
-      column.pk = !!settingMap['pk']?.length;
+      column.pk = !!settingMap['pk']?.length || !!settingMap['primary key']?.length;
       column.increment = !!settingMap['increment']?.length;
       column.unique = !!settingMap['unique']?.length;
       column.not_null = !!settingMap['not null']?.length && true;
       column.dbdefault = processDefaultValue(settingMap['default']?.at(0)?.value);
       const noteNode = settingMap['note']?.at(0);
       column.note = noteNode && {
-        value: normalizeNoteContent(extractQuotedStringToken(noteNode.value).unwrap()),
+        value: extractQuotedStringToken(noteNode.value).unwrap(),
         token: getTokenPosition(noteNode),
       }
       const refs = settingMap['ref'] || [];
@@ -244,7 +244,7 @@ export class TableInterpreter implements ElementInterpreter {
         index.name = extractQuotedStringToken(settingMap['name']?.at(0)?.value).unwrap_or(undefined);
         const noteNode = settingMap['note']?.at(0);
         index.note = noteNode && {
-          value: normalizeNoteContent(extractQuotedStringToken(noteNode.value).unwrap()),
+          value: extractQuotedStringToken(noteNode.value).unwrap(),
           token: getTokenPosition(noteNode),
         };
         index.type = extractVariableFromExpression(settingMap['type']?.at(0)?.value).unwrap_or(undefined); 
