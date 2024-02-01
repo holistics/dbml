@@ -85,7 +85,7 @@ export default class TableValidator implements ElementValidator {
     }
 
     if (!isValidAlias(aliasNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_ALIAS, 'A Table alias must be of the form <alias>', aliasNode)]
+      return [new CompileError(CompileErrorCode.INVALID_ALIAS, 'Table aliases can only contains alphanumeric and underscore unless surrounded by double quotes', aliasNode)]
     }
 
     return [];
@@ -428,12 +428,5 @@ function isValidColumnType(type: SyntaxNode): boolean {
 }
 
 function isAliasSameAsName(alias: string, nameFragments: string[]): boolean {
-  if (nameFragments.length > 1 || nameFragments.length === 0) {
-    return false;
-  }
-  if (alias === nameFragments[0]) {
-    return true;
-  }
-
-  return false;
+  return nameFragments.length === 1 && alias === nameFragments[0];
 }
