@@ -383,7 +383,9 @@ COMMENT ON COLUMN humanresources.employee.hiredate IS 'Employee hired on this da
 -- Name: COLUMN employee.salariedflag; Type: COMMENT; Schema: humanresources; Owner: admin
 --
 
-COMMENT ON COLUMN humanresources.employee.salariedflag IS 'Job classification. 0 = Hourly, not exempt from collective bargaining. 1 = Salaried, exempt from collective bargaining.';
+COMMENT ON COLUMN humanresources.employee.salariedflag IS 'Job classification.
+0 = Hourly, not exempt from collective bargaining.
+1 = Salaried, exempt from collective bargaining.';
 
 
 --

@@ -15,14 +15,14 @@ class DbmlExporter {
     return /\s*(\*|\+|-|\([A-Za-z0-9_]+\)|\(\))/g.test(str);
   }
 
-  static escapeNote (str, indent) {
+  static escapeNote (str, indentLengh) {
     if (str === null) {
       return ''
     }
     if (str.match(/[\n\r']/)) {
       const closure = function() {
         function compute_line(line, lineNumber){
-          var prefix = (lineNumber > 0) ? ' '.repeat(indent + 3) : ""; // We add 3 because 3 simple quotes
+          var prefix = (lineNumber > 0) ? ' '.repeat(indentLengh) : "";
           return prefix + line;
         }
         return compute_line
@@ -49,7 +49,7 @@ class DbmlExporter {
     return enumStrs.length ? enumStrs.join('\n') : '';
   }
 
-  static getFieldLines (tableId, model) {
+  static getFieldLines (tableId, model, indent) {
     const table = model.tables[tableId];
 
     const lines = table.fieldIds.map((fieldId) => {
@@ -98,8 +98,16 @@ class DbmlExporter {
         constraints.push(value);
       }
       if (field.note) {
-        const indent = (line + ` [${constraints.join(', ')}]`).length + 7;
-        constraints.push(`note: ${DbmlExporter.escapeNote(field.note, indent)}`);
+        var constraintPfxLen;
+        if (constraints.length == 0) {
+          // If we have no constraint yet, we have to add " [" before
+          constraintPfxLen = 2;
+        } else {
+          constraintPfxLen = ` [${constraints.join(', ')}]`.length + 1;
+        }
+        const notePfx = 'note: ';
+        const indentLengh = indent.length + line.length + constraintPfxLen + notePfx.length;
+        constraints.push(`${notePfx}${DbmlExporter.escapeNote(field.note, indentLengh)}`);
       }
 
       if (constraints.length > 0) {
@@ -157,9 +165,9 @@ class DbmlExporter {
     return lines;
   }
 
-  static getTableContentArr (tableIds, model) {
+  static getTableContentArr (tableIds, model, indent) {
     const tableContentArr = tableIds.map((tableId) => {
-      const fieldContents = DbmlExporter.getFieldLines(tableId, model);
+      const fieldContents = DbmlExporter.getFieldLines(tableId, model, indent);
       const indexContents = DbmlExporter.getIndexLines(tableId, model);
 
       return {
@@ -185,7 +193,8 @@ class DbmlExporter {
   }
 
   static exportTables (tableIds, model) {
-    const tableContentArr = DbmlExporter.getTableContentArr(tableIds, model);
+    const indent = '  ';
+    const tableContentArr = DbmlExporter.getTableContentArr(tableIds, model, indent);
 
     const tableStrs = tableContentArr.map((tableContent) => {
       const table = model.tables[tableContent.tableId];
@@ -194,13 +203,13 @@ class DbmlExporter {
 
       let indexStr = '';
       if (!_.isEmpty(tableContent.indexContents)) {
-        indexStr = `\nIndexes {\n${tableContent.indexContents.map(indexLine => `  ${indexLine}`).join('\n')}\n}`;
+        indexStr = `\n${indent}Indexes {\n${tableContent.indexContents.map(indexLine => `${indent}  ${indexLine}`).join('\n')}\n${indent}}`;
       }
-      const tableNote = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note, 8)}\n`: '';
+      const tableNote = table.note ? `${indent}Note: ${DbmlExporter.escapeNote(table.note, indent.length + 6)}\n`: '';
 
       const tableStr = `Table ${shouldPrintSchema(schema, model)
         ? `"${schema.name}".` : ''}"${table.name}"${tableSettingStr} {\n${
-        tableContent.fieldContents.map(line => `  ${line}`).join('\n')}\n${indexStr ? `${indexStr}\n` : ''}${tableNote}}\n`;
+        tableContent.fieldContents.map(line => `${indent}${line}`).join('\n')}\n${indexStr ? `${indexStr}\n` : ''}${tableNote}}\n`;
 
       return tableStr;
     });
