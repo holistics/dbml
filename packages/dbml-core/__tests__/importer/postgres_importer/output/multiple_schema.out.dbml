@@ -23,9 +23,9 @@ Table "products" {
   "id" int [pk]
   "name" varchar [note: 'Product name of public schema']
 
-Indexes {
-  id [type: hash, unique]
-}
+  Indexes {
+    id [type: hash, unique]
+  }
 }
 
 Ref "fk_1":"schemaA"."locations"."id" < "schemaA"."products"."lid"
@@ -57,9 +57,9 @@ Table "schemaA"."products" {
   "name" varchar [note: 'Product name of schemaA']
   "lid" int
 
-Indexes {
-  (id, name) [name: "product_status"]
-}
+  Indexes {
+    (id, name) [name: "product_status"]
+  }
 }
 
 Table "schemaA"."locations" {

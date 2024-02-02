@@ -15,7 +15,9 @@ Table "humanresources"."employee" {
   "maritalstatus" "character (1)" [not null, note: 'M = Married, S = Single']
   "gender" "character (1)" [not null, note: 'M = Male, F = Female']
   "hiredate" date [not null, note: 'Employee hired on this date.']
-  "salariedflag" public.Flag [not null, default: true, note: 'Job classification. 0 = Hourly, not exempt from collective bargaining. 1 = Salaried, exempt from collective bargaining.']
+  "salariedflag" public.Flag [not null, default: true, note: '''Job classification.
+                                                             0 = Hourly, not exempt from collective bargaining.
+                                                             1 = Salaried, exempt from collective bargaining.''']
   "vacationhours" smallint [not null, default: 0, note: 'Number of available vacation hours.']
   "sickleavehours" smallint [not null, default: 0, note: 'Number of available sick leave hours.']
   "currentflag" public.Flag [not null, default: true, note: '0 = Inactive, 1 = Active']
@@ -368,7 +370,7 @@ Table "production"."productreview" {
   "emailaddress" "character varying(50)" [not null, note: '''Reviewer's e-mail address.''']
   "rating" integer [not null, note: 'Product rating given by the reviewer. Scale is 1 to 5 with 5 as the highest rating.']
   "comments" "character varying(3850)" [note: '''Reviewer's comments
-                                                 WARNING: can have several lines!''']
+                                              WARNING: can have several lines!''']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Customer reviews of products they have purchased.'
 }
@@ -478,7 +480,7 @@ Table "purchasing"."purchaseorderheader" {
   "freight" numeric [not null, default: 0.00, note: 'Shipping cost.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: '''General purchase order information. See PurchaseOrderDetail
-           for more details.'''
+        for more details.'''
 }
 
 Table "purchasing"."productvendor" {
