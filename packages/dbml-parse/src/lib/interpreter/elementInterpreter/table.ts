@@ -302,14 +302,14 @@ export class TableInterpreter implements ElementInterpreter {
       endpoints: [ 
         {
           ...inlineRef,
-          relation: multiplicities[0],
+          relation: multiplicities[1],
         },
         {
           schemaName: this.table.schemaName!,
           tableName: this.table.name!,
           fieldNames: [extractVariableFromExpression(column.callee!).unwrap()],
           token: getTokenPosition(column),
-          relation: multiplicities[1],
+          relation: multiplicities[0],
         },
       ]
     });

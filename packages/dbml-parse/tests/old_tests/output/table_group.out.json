@@ -295,7 +295,7 @@
           "fieldNames": [
             "id"
           ],
-          "relation": "*",
+          "relation": "1",
           "token": {
             "start": {
               "offset": 201,
@@ -327,7 +327,7 @@
               "column": 29
             }
           },
-          "relation": "1"
+          "relation": "*"
         }
       ]
     }
