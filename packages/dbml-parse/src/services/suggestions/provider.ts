@@ -30,6 +30,7 @@ import {
   AttributeNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
+  IdentiferStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   PrefixExpressionNode,
@@ -245,7 +246,7 @@ function suggestInAttribute(
     return suggestAttributeName(compiler, offset);
   }
 
-  if (container.name) {
+  if (container.name instanceof IdentiferStreamNode) {
     const res = suggestAttributeValue(
       compiler,
       offset,
@@ -673,7 +674,7 @@ function suggestColumnType(compiler: Compiler, offset: number): CompletionList {
 
 function suggestColumnNameInIndexes(compiler: Compiler, offset: number): CompletionList {
   const indexesNode = compiler.container.element(offset);
-  const tableNode = indexesNode.parent;
+  const tableNode = (indexesNode as any)?.parent;
   if (!(tableNode?.symbol instanceof TableSymbol)) {
     return noSuggestions();
   }
