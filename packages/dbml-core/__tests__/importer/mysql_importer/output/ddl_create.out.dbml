@@ -69,9 +69,9 @@ Table "parent_table" {
   "id" int [pk]
   "column1" varchar(30)
 
-  Indexes {
-    column1 [name: "parent_table_i1"]
-  }
+Indexes {
+  column1 [name: "parent_table_i1"]
+}
 }
 
 Table "child_table" {
@@ -227,18 +227,18 @@ Table "table_with_visible_index" {
   "id" int
   "data" varchar(50)
 
-  Indexes {
-    data [unique, name: "data_UNIQUE"]
-  }
+Indexes {
+  data [unique, name: "data_UNIQUE"]
+}
 }
 
 Table "table_with_index" {
   "id" int
   "data" varchar(50)
 
-  Indexes {
-    data [unique, name: "data_UNIQUE"]
-  }
+Indexes {
+  data [unique, name: "data_UNIQUE"]
+}
 }
 
 Table "blob_test" {
@@ -305,9 +305,9 @@ Table "T0" {
   "ID" INT [not null]
   "NAME" VARCHAR(255)
 
-  Indexes {
-    ID [unique]
-  }
+Indexes {
+  ID [unique]
+}
 }
 
 Table "table_items_with_subpartitions" {
@@ -320,10 +320,10 @@ Table "positions_rollover" {
   "time" datetime [not null]
   "partition_index" int(10) [not null, default: 0]
 
-  Indexes {
-    (id, partition_index) [pk]
-    time [name: "time"]
-  }
+Indexes {
+  (id, partition_index) [pk]
+  time [name: "time"]
+}
 }
 
 Table "tab_with_json_value" {
@@ -350,11 +350,11 @@ Table "tbl" {
   "col1" LONGTEXT
   "data" JSON
 
-  Indexes {
-    `(SUBSTRING(col1,1,10))` [name: "idx1"]
-    `(CAST(JSON_EXTRACT(data,_utf8mb4'$')ASUNSIGNEDARRAY))` [name: "idx2"]
-    `(CAST(data->>'$.name'ASCHAR(30)))`
-  }
+Indexes {
+  `(SUBSTRING(col1,1,10))` [name: "idx1"]
+  `(CAST(JSON_EXTRACT(data,_utf8mb4'$')ASUNSIGNEDARRAY))` [name: "idx2"]
+  `(CAST(data->>'$.name'ASCHAR(30)))`
+}
 }
 
 Table "orders_json_2" {
@@ -364,9 +364,9 @@ Table "orders_json_2" {
   "created_at" timestamp [default: NULL]
   "updated_at" timestamp [default: NULL]
 
-  Indexes {
-    `(cast(json_extract(`additional_info`,_utf8mb4'$.order_codes')aschar(17)array))` [name: "idx_order_codes"]
-  }
+Indexes {
+  `(cast(json_extract(`additional_info`,_utf8mb4'$.order_codes')aschar(17)array))` [name: "idx_order_codes"]
+}
 }
 
 Table "keywords" {
@@ -443,9 +443,9 @@ Table "auth_realm_clients" {
   "client_id" varchar(150) [not null]
   "client_secret" blob [not null]
 
-  Indexes {
-    fk_realm [name: "auth_realms_auth_realm_clients"]
-  }
+Indexes {
+  fk_realm [name: "auth_realms_auth_realm_clients"]
+}
 }
 
 Table "site_checker_b_sonet_group_favorites" {
@@ -453,9 +453,9 @@ Table "site_checker_b_sonet_group_favorites" {
   "GROUP_ID" int(11) [not null]
   "DATE_ADD" datetime [default: NULL]
 
-  Indexes {
-    (USER_ID, GROUP_ID) [pk]
-  }
+Indexes {
+  (USER_ID, GROUP_ID) [pk]
+}
 }
 
 Table "table_default_fn" {
@@ -480,9 +480,9 @@ Table "global_priv" {
   "User" CHAR(80) [not null, default: ""]
   "Privilege" LONGTEXT [not null, default: "{}"]
 
-  Indexes {
-    (Host, User) [pk]
-  }
+Indexes {
+  (Host, User) [pk]
+}
   Note: 'Users and global privileges'
 }
 

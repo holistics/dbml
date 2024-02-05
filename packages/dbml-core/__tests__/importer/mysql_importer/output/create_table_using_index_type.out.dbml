@@ -3,9 +3,9 @@ Table "bad_faith_users" {
   "user_id" int(11) [default: NULL]
   "created" int(11) [default: NULL]
 
-  Indexes {
-    user_id [type: btree, name: "user_id"]
-  }
+Indexes {
+  user_id [type: btree, name: "user_id"]
+}
 }
 
 Table "booking" {
@@ -33,44 +33,44 @@ Table "booking" {
   "feedback_notification_two" int(11) [not null, default: "0"]
   "Created_at" varchar(255) [not null, default: ""]
 
-  Indexes {
-    user_id_two [type: btree, name: "venue"]
-    user_id_one [type: hash, name: "user_id_one"]
-  }
+Indexes {
+  user_id_two [type: btree, name: "venue"]
+  user_id_one [type: hash, name: "user_id_one"]
+}
 }
 
 Table "test0" {
   "id" int(11) [pk, not null, increment]
   "gid" int(11) [default: NULL]
 
-  Indexes {
-    gid [type: hash, name: "gid"]
-  }
+Indexes {
+  gid [type: hash, name: "gid"]
+}
 }
 
 Table "test1" {
   "id" int(11) [pk, not null, increment]
   "gid" int(11) [default: NULL]
 
-  Indexes {
-    gid [type: hash, name: "gid"]
-  }
+Indexes {
+  gid [type: hash, name: "gid"]
+}
 }
 
 Table "test2" {
   "id" int(11) [pk, not null, increment]
   "gid" int(11) [default: NULL]
 
-  Indexes {
-    gid [type: btree, name: "gid"]
-  }
+Indexes {
+  gid [type: btree, name: "gid"]
+}
 }
 
 Table "test3" {
   "id" int(11) [pk, not null, increment]
   "gid" int(11) [default: NULL]
 
-  Indexes {
-    gid [type: btree, name: "gid"]
-  }
+Indexes {
+  gid [type: btree, name: "gid"]
+}
 }

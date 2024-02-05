@@ -8,12 +8,12 @@ Table "pulse_aggregates" {
   "value" decimal(20,2) [not null]
   "count" int(10) [default: NULL]
 
-  Indexes {
-    (bucket, period, type, aggregate, key_hash) [unique, name: "pulse_aggregates_bucket_period_type_aggregate_key_hash_unique"]
-    (period, bucket) [name: "pulse_aggregates_period_bucket_index"]
-    type [name: "pulse_aggregates_type_index"]
-    (period, type, aggregate, bucket) [name: "pulse_aggregates_period_type_aggregate_bucket_index"]
-  }
+Indexes {
+  (bucket, period, type, aggregate, key_hash) [unique, name: "pulse_aggregates_bucket_period_type_aggregate_key_hash_unique"]
+  (period, bucket) [name: "pulse_aggregates_period_bucket_index"]
+  type [name: "pulse_aggregates_type_index"]
+  (period, type, aggregate, bucket) [name: "pulse_aggregates_period_type_aggregate_bucket_index"]
+}
 }
 
 Table "users" {
@@ -24,9 +24,9 @@ Table "users" {
   "active" boolean [not null]
   "root" boolean [not null, default: false]
 
-  Indexes {
-    email [name: "idx_users_email"]
-  }
+Indexes {
+  email [name: "idx_users_email"]
+}
 }
 
 Table "user_roles" {
@@ -39,18 +39,18 @@ Table "user_role_links" {
   "user_id" bigint [not null]
   "role_id" bigint [not null]
 
-  Indexes {
-    (user_id, role_id) [pk]
-  }
+Indexes {
+  (user_id, role_id) [pk]
+}
 }
 
 Table "table1" {
   "id" int [pk]
   "name" varchar(255) [unique, not null]
 
-  Indexes {
-    name
-  }
+Indexes {
+  name
+}
 }
 
 Table "a" {

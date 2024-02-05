@@ -3,9 +3,9 @@ Table "booking_reference" {
   "cust_id" NUMBER(10) [not null]
   "status" NVARCHAR(1) [not null]
 
-  Indexes {
-    (reference_id, cust_id) [pk]
-  }
+Indexes {
+  (reference_id, cust_id) [pk]
+}
 }
 
 Table "br_flight" {
@@ -13,9 +13,9 @@ Table "br_flight" {
   "cust_id" NUMBER(10) [not null]
   "flight_id" NVARCHAR(10) [not null]
 
-  Indexes {
-    (reference_id, flight_id) [pk]
-  }
+Indexes {
+  (reference_id, flight_id) [pk]
+}
 }
 
 Table "users" {
