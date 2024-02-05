@@ -347,7 +347,7 @@ function processColumnType(typeNode: SyntaxNode): Report<ColumnType, CompileErro
 
   const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
   if (typeSchemaName.length > 1) {
-    new Report(
+    return new Report(
       {
         schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
         type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
