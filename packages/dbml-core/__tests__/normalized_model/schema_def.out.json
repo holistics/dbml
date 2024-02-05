@@ -4,15 +4,15 @@
       "id": 1,
       "hasDefaultSchema": false,
       "note": null,
-      "noteIds": [
-        1,
-        2
-      ],
       "schemaIds": [
         1,
         2,
         3,
         4
+      ],
+      "noteIds": [
+        1,
+        2
       ]
     }
   },
@@ -76,6 +76,20 @@
       "tableGroupIds": [],
       "refIds": [],
       "databaseId": 1
+    }
+  },
+  "notes": {
+    "1": {
+      "id": 1,
+      "name": "note",
+      "content": "One line note",
+      "headerColor": "#3457DB"
+    },
+    "2": {
+      "id": 2,
+      "name": "note2",
+      "content": "\n    # Title\n    body\n  ",
+      "headerColor": "#3457DB"
     }
   },
   "refs": {
@@ -252,36 +266,9 @@
       "groupId": null
     }
   },
-  "notes": {
-    "1": {
-      "id": 1,
-      "name": "note",
-      "content": "One line note",
-      "headerColor": "#3457DB"
-    },
-    "2": {
-      "id": 2,
-      "name": "note2",
-      "content": "\n    # Title\n    body\n  ",
-      "headerColor": "#3457DB"
-    }
-  },
   "endpoints": {
     "1": {
       "id": 1,
-      "schemaName": "schemaA",
-      "tableName": "products",
-      "fieldNames": [
-        "name"
-      ],
-      "relation": "*",
-      "refId": 1,
-      "fieldIds": [
-        16
-      ]
-    },
-    "2": {
-      "id": 2,
       "schemaName": null,
       "tableName": "EU",
       "fieldNames": [
@@ -293,21 +280,21 @@
         1
       ]
     },
-    "3": {
-      "id": 3,
+    "2": {
+      "id": 2,
       "schemaName": "schemaA",
-      "tableName": "locations",
+      "tableName": "products",
       "fieldNames": [
         "name"
       ],
       "relation": "*",
-      "refId": 2,
+      "refId": 1,
       "fieldIds": [
-        18
+        16
       ]
     },
-    "4": {
-      "id": 4,
+    "3": {
+      "id": 3,
       "schemaName": null,
       "tableName": "users",
       "fieldNames": [
@@ -317,6 +304,19 @@
       "refId": 2,
       "fieldIds": [
         7
+      ]
+    },
+    "4": {
+      "id": 4,
+      "schemaName": "schemaA",
+      "tableName": "locations",
+      "fieldNames": [
+        "name"
+      ],
+      "relation": "*",
+      "refId": 2,
+      "fieldIds": [
+        18
       ]
     },
     "5": {
@@ -439,7 +439,7 @@
       "note": null,
       "increment": false,
       "endpointIds": [
-        2,
+        1,
         6,
         8
       ],
@@ -535,7 +535,7 @@
       "note": null,
       "increment": false,
       "endpointIds": [
-        4,
+        3,
         5
       ],
       "tableId": 2,
@@ -681,7 +681,7 @@
       "note": null,
       "increment": false,
       "endpointIds": [
-        1
+        2
       ],
       "tableId": 4,
       "enumId": null
@@ -717,7 +717,7 @@
       "note": null,
       "increment": false,
       "endpointIds": [
-        3
+        4
       ],
       "tableId": 5,
       "enumId": null
