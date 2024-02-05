@@ -1,3 +1,13 @@
+## v3.1.4 (2024-02-05)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#507](https://github.com/holistics/dbml/pull/507) fix: swap ref endpoints in inline_refs ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- HuyDNA ([@Huy-DNA](https://github.com/Huy-DNA))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
 ## v3.1.3 (2024-02-01)
 
 #### :bug: Bug Fix
