@@ -22,7 +22,7 @@ class DbmlExporter {
     if (str.match(/[\n\r']/)) {
       const closure = function() {
         function compute_line(line, lineNumber){
-          var prefix = (lineNumber > 0) ? ' '.repeat(indent + 3) : ""; // We add 3 because 3 simple quotes
+          var prefix = (lineNumber > 0) ? ' '.repeat(indent) : ""; // We add 3 because 3 simple quotes
           return prefix + line;
         }
         return compute_line
@@ -43,7 +43,7 @@ class DbmlExporter {
       return `Enum ${shouldPrintSchema(schema, model)
         ? `"${schema.name}".` : ''}"${_enum.name}" {\n${
         _enum.valueIds.map(valueId => `  "${model.enumValues[valueId].name}"${model.enumValues[valueId].note
-          ? ` [note: ${DbmlExporter.escapeNote(model.enumValues[valueId].note, 2 + model.enumValues[valueId].name.length)}]` : ''}`).join('\n')}\n}\n`;
+          ? ` [note: ${DbmlExporter.escapeNote(model.enumValues[valueId].note, 0)}]` : ''}`).join('\n')}\n}\n`;
     });
 
     return enumStrs.length ? enumStrs.join('\n') : '';
@@ -98,8 +98,7 @@ class DbmlExporter {
         constraints.push(value);
       }
       if (field.note) {
-        const indent = (line + ` [${constraints.join(', ')}]`).length + 7;
-        constraints.push(`note: ${DbmlExporter.escapeNote(field.note, indent)}`);
+        constraints.push(`note: ${DbmlExporter.escapeNote(field.note, 0)}`);
       }
 
       if (constraints.length > 0) {
@@ -196,7 +195,7 @@ class DbmlExporter {
       if (!_.isEmpty(tableContent.indexContents)) {
         indexStr = `\nIndexes {\n${tableContent.indexContents.map(indexLine => `  ${indexLine}`).join('\n')}\n}`;
       }
-      const tableNote = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note, 8)}\n`: '';
+      const tableNote = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note, 0)}\n`: '';
 
       const tableStr = `Table ${shouldPrintSchema(schema, model)
         ? `"${schema.name}".` : ''}"${table.name}"${tableSettingStr} {\n${

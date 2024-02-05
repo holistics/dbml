@@ -368,7 +368,7 @@ Table "production"."productreview" {
   "emailaddress" "character varying(50)" [not null, note: '''Reviewer's e-mail address.''']
   "rating" integer [not null, note: 'Product rating given by the reviewer. Scale is 1 to 5 with 5 as the highest rating.']
   "comments" "character varying(3850)" [note: '''Reviewer's comments
-                                                 WARNING: can have several lines!''']
+WARNING: can have several lines!''']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: 'Customer reviews of products they have purchased.'
 }
@@ -478,7 +478,7 @@ Table "purchasing"."purchaseorderheader" {
   "freight" numeric [not null, default: 0.00, note: 'Shipping cost.']
   "modifieddate" timestamp [not null, default: `now()`]
   Note: '''General purchase order information. See PurchaseOrderDetail
-           for more details.'''
+for more details.'''
 }
 
 Table "purchasing"."productvendor" {
