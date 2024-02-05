@@ -299,17 +299,17 @@ export class TableInterpreter implements ElementInterpreter {
       name: null,
       schemaName: null,
       token: inlineRef.token,
-      endpoints: [
+      endpoints: [ 
+        {
+          ...inlineRef,
+          relation: multiplicities[1],
+        },
         {
           schemaName: this.table.schemaName!,
           tableName: this.table.name!,
           fieldNames: [extractVariableFromExpression(column.callee!).unwrap()],
           token: getTokenPosition(column),
           relation: multiplicities[0],
-        },
-        {
-          ...inlineRef,
-          relation: multiplicities[1],
         },
       ]
     });

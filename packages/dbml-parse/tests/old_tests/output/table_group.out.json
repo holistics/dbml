@@ -292,26 +292,6 @@
       "endpoints": [
         {
           "schemaName": null,
-          "tableName": "merchants",
-          "fieldNames": [
-            "admin_id"
-          ],
-          "token": {
-            "start": {
-              "offset": 187,
-              "line": 13,
-              "column": 3
-            },
-            "end": {
-              "offset": 213,
-              "line": 13,
-              "column": 29
-            }
-          },
-          "relation": "*"
-        },
-        {
-          "schemaName": null,
           "tableName": "U",
           "fieldNames": [
             "id"
@@ -329,6 +309,26 @@
               "column": 28
             }
           }
+        },
+        {
+          "schemaName": null,
+          "tableName": "merchants",
+          "fieldNames": [
+            "admin_id"
+          ],
+          "token": {
+            "start": {
+              "offset": 187,
+              "line": 13,
+              "column": 3
+            },
+            "end": {
+              "offset": 213,
+              "line": 13,
+              "column": 29
+            }
+          },
+          "relation": "*"
         }
       ]
     }

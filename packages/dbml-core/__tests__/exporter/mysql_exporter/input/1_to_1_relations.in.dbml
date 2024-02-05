@@ -1,0 +1,8 @@
+Table father {
+    obj_id char(50) [primary key, unique]
+}
+
+Table child {
+    obj_id char(50) [primary key, unique]
+    father_obj_id char(50) [ref: - father.obj_id]
+}
