@@ -15,9 +15,9 @@ Table "CodeDef" {
   "EffectiveFromDtTm" DATETIMEOFFSET(7) [not null]
   "EffectiveThruDtTm" DATETIMEOFFSET(7)
 
-  Indexes {
-    CdKey [pk]
-  }
+Indexes {
+  CdKey [pk]
+}
 }
 
 Ref "fk__CodeDef__ParentCdKey__CodeDef__CdKey":"CodeDef"."CdKey" < "CodeDef"."ParentCdKey"

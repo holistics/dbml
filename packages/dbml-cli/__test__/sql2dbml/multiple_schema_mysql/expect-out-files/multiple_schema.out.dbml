@@ -43,11 +43,11 @@ Table "orders" {
   "name" varchar(255)
   "name2" varchar(255)
 
-  Indexes {
-    (id1, id2) [pk, type: hash, name: "CPK_1"]
-    (name, name2) [type: btree, unique, name: "I_UNIQUE_1"]
-    (id1, id2) [type: hash, name: "INDEX_2"]
-  }
+Indexes {
+  (id1, id2) [pk, type: hash, name: "CPK_1"]
+  (name, name2) [type: btree, unique, name: "I_UNIQUE_1"]
+  (id1, id2) [type: hash, name: "INDEX_2"]
+}
   Note: 'this is table orders'
 }
 
@@ -56,18 +56,18 @@ Table "orders2" {
   "id2" int
   "pid" int
 
-  Indexes {
-    (id1, id2) [pk, name: "testCPK"]
-  }
+Indexes {
+  (id1, id2) [pk, name: "testCPK"]
+}
 }
 
 Table "orders4" {
   "id1" int
   "id2" int
 
-  Indexes {
-    (id1, id2) [pk, name: "PK_orders4_id1_id2"]
-  }
+Indexes {
+  (id1, id2) [pk, name: "PK_orders4_id1_id2"]
+}
 }
 
 Ref "FK_1":"schemaA"."locations"."id" < "schemaA"."products"."lid" [delete: cascade]

@@ -32,10 +32,10 @@ Table "products" {
   "created_at" datetime [default: `now()`]
 
         
-  Indexes {
-    (merchant_id, status) [name: "product_status"]
-    id [type: hash, unique, name: "products_index_1"]
-  }
+Indexes {
+  (merchant_id, status) [name: "product_status"]
+  id [type: hash, unique, name: "products_index_1"]
+}
 }
 
 Table "users" {

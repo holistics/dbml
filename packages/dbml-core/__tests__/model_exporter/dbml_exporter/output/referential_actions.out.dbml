@@ -18,9 +18,9 @@ Table "products" {
   "price" decimal(10,4)
   "created_at" datetime [default: `now()`]
 
-  Indexes {
-    (id, name) [pk]
-  }
+Indexes {
+  (id, name) [pk]
+}
 }
 
 Table "users" {

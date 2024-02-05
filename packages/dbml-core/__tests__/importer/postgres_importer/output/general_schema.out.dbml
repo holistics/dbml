@@ -35,11 +35,11 @@ Table "products" {
   "created_at" datetime [default: `now()`]
   "modified_at" timestamp
 
-  Indexes {
-    (id, name) [pk]
-    (merchant_id, status) [name: "product_status"]
-    id [type: hash, unique]
-  }
+Indexes {
+  (id, name) [pk]
+  (merchant_id, status) [name: "product_status"]
+  id [type: hash, unique]
+}
   Note: 'Products table comment'
 }
 
@@ -94,9 +94,9 @@ Table "accounts" {
   "name" "character varying(100)"
   "slug" "character varying(10)"
 
-  Indexes {
-    id [pk, name: "accounts_pkey"]
-  }
+Indexes {
+  id [pk, name: "accounts_pkey"]
+}
 }
 
 Table "tests" {
@@ -117,9 +117,9 @@ Table "table1" {
   "field" text [not null]
   "field2" text [not null]
 
-  Indexes {
-    (field, field2) [pk]
-  }
+Indexes {
+  (field, field2) [pk]
+}
 }
 
 Table "table2" {
@@ -133,9 +133,9 @@ Table "test_table" {
   "id" varchar
   "linked_name" varchar [not null]
 
-  Indexes {
-    (name, id) [pk, name: "test_table_pk"]
-  }
+Indexes {
+  (name, id) [pk, name: "test_table_pk"]
+}
 }
 
 Ref:"orders"."id" < "order_items"."order_id"

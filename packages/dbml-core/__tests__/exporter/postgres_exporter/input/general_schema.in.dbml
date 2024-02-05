@@ -33,11 +33,11 @@ Table "products" {
   "status" "product status"
   "created_at" datetime [default: `now()`]
 
-  Indexes {
-    (id, name) [pk]
-    (merchant_id, status) [name: "product_status"]
-    id [type: hash, unique]
-  }
+Indexes {
+  (id, name) [pk]
+  (merchant_id, status) [name: "product_status"]
+  id [type: hash, unique]
+}
 
   Note: "This is a note in table 'products'"
 }
