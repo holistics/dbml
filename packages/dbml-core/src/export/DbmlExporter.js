@@ -19,14 +19,15 @@ class DbmlExporter {
     if (str === null) {
       return '';
     }
-    // edge case: source text contain both \', we can preserve that by escaping any \ character
     let newStr = str.replaceAll('\\', '\\\\');
-    newStr = newStr.replaceAll("'", "\\'");
-    if (newStr.match(/[\n\r]/)) {
-      newStr = newStr.replaceAll('\r\n', '\n'); // turn all CRLF to LF
-      return `'''${newStr}'''`;
+    if (!newStr.match(/[\n\r']/)) {
+      // Only safe chars, no simple quotes nor CR/LF
+      return `'${newStr}'`;
     }
-    return `'${newStr}'`;
+    // see https://dbml.dbdiagram.io/docs/#multi-line-string
+    newStr = newStr.replaceAll("'''", "\\'''");
+    newStr = newStr.replaceAll('\r\n', '\n'); // turn all CRLF to LF
+    return `'''${newStr}'''`;
   }
 
   static exportEnums (enumIds, model) {
