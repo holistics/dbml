@@ -229,118 +229,9 @@
       },
       "value": "_ab",
       "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 40,
-            "line": 3,
-            "column": 4
-          },
-          "endPos": {
-            "offset": 41,
-            "line": 4,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 40,
-          "end": 41
-        }
-      ],
+      "trailingTrivia": [],
       "leadingInvalid": [],
-      "trailingInvalid": [
-        {
-          "kind": "<number>",
-          "startPos": {
-            "offset": 43,
-            "line": 5,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 45,
-            "line": 5,
-            "column": 2
-          },
-          "value": "3a",
-          "leadingTrivia": [
-            {
-              "kind": "<newline>",
-              "startPos": {
-                "offset": 42,
-                "line": 4,
-                "column": 1
-              },
-              "endPos": {
-                "offset": 43,
-                "line": 5,
-                "column": 0
-              },
-              "value": "\n",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 42,
-              "end": 43
-            }
-          ],
-          "trailingTrivia": [
-            {
-              "kind": "<space>",
-              "startPos": {
-                "offset": 45,
-                "line": 5,
-                "column": 2
-              },
-              "endPos": {
-                "offset": 46,
-                "line": 5,
-                "column": 3
-              },
-              "value": " ",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 45,
-              "end": 46
-            },
-            {
-              "kind": "<single-line-comment>",
-              "startPos": {
-                "offset": 46,
-                "line": 5,
-                "column": 3
-              },
-              "endPos": {
-                "offset": 67,
-                "line": 5,
-                "column": 24
-              },
-              "value": " invalid identifier",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 46,
-              "end": 67
-            }
-          ],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": true,
-          "start": 43,
-          "end": 45
-        }
-      ],
+      "trailingInvalid": [],
       "isInvalid": false,
       "start": 36,
       "end": 39
@@ -348,14 +239,14 @@
     {
       "kind": "<eof>",
       "startPos": {
-        "offset": 67,
-        "line": 5,
-        "column": 24
+        "offset": 39,
+        "line": 3,
+        "column": 3
       },
       "endPos": {
-        "offset": 67,
-        "line": 5,
-        "column": 24
+        "offset": 39,
+        "line": 3,
+        "column": 3
       },
       "value": "",
       "leadingTrivia": [],
@@ -363,103 +254,9 @@
       "leadingInvalid": [],
       "trailingInvalid": [],
       "isInvalid": false,
-      "start": 67,
-      "end": 67
+      "start": 39,
+      "end": 39
     }
   ],
-  "errors": [
-    {
-      "code": 1004,
-      "diagnostic": "Invalid number",
-      "nodeOrToken": {
-        "kind": "<number>",
-        "startPos": {
-          "offset": 43,
-          "line": 5,
-          "column": 0
-        },
-        "endPos": {
-          "offset": 45,
-          "line": 5,
-          "column": 2
-        },
-        "value": "3a",
-        "leadingTrivia": [
-          {
-            "kind": "<newline>",
-            "startPos": {
-              "offset": 42,
-              "line": 4,
-              "column": 1
-            },
-            "endPos": {
-              "offset": 43,
-              "line": 5,
-              "column": 0
-            },
-            "value": "\n",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 42,
-            "end": 43
-          }
-        ],
-        "trailingTrivia": [
-          {
-            "kind": "<space>",
-            "startPos": {
-              "offset": 45,
-              "line": 5,
-              "column": 2
-            },
-            "endPos": {
-              "offset": 46,
-              "line": 5,
-              "column": 3
-            },
-            "value": " ",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 45,
-            "end": 46
-          },
-          {
-            "kind": "<single-line-comment>",
-            "startPos": {
-              "offset": 46,
-              "line": 5,
-              "column": 3
-            },
-            "endPos": {
-              "offset": 67,
-              "line": 5,
-              "column": 24
-            },
-            "value": " invalid identifier",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 46,
-            "end": 67
-          }
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": [],
-        "isInvalid": true,
-        "start": 43,
-        "end": 45
-      },
-      "start": 43,
-      "end": 45,
-      "name": "CompileError"
-    }
-  ]
+  "errors": []
 }
