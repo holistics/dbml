@@ -57,3 +57,33 @@ describe('@dbml/core - model_exporter', () => {
   });
   /* eslint-enable */
 });
+
+
+describe('@dbml/core - model_exporter dbml_exporter.escapeNote', () => {
+  /**
+   * @param {string} inputStr       = input note
+   * @param {string} expectedOutput = expected DBML serialized output
+   */
+  const runTest = (inputStr, expectedOutput) => {
+    expect(DbmlExporter.escapeNote(inputStr)).toBe(expectedOutput);
+  };
+
+  runTest('hello', "'hello'");
+  // Spec is not very clear about string single quote, but also escape \ with \\
+  runTest('hell\\o', "'hell\\\\o'");
+
+  // As soon as we have CRLF or single quotes, we switch to triple quotes
+  runTest("hel'lo", "'''hel'lo'''");
+  // Only tripe quotes need escaping
+  // See https://dbml.dbdiagram.io/docs/#multi-line-string
+  runTest("hel'''lo", "'''hel\\'''lo'''");
+  runTest('hel\nlo', "'''hel\nlo'''");
+  // CRLF => \n
+  runTest('hel\r\nlo', "'''hel\nlo'''");
+  runTest('hel\n\nlo', "'''hel\n\nlo'''");
+  runTest("hel'\n\nlo", "'''hel'\n\nlo'''");
+  runTest("hel'\n\n''lo", "'''hel'\n\n''lo'''");
+  runTest("hel'\n\n''lo", "'''hel'\n\n''lo'''");
+  // Spec is clear here, \ needs to be escaped as \\
+  runTest('hell\\\no', "'''hell\\\\\no'''");
+});
