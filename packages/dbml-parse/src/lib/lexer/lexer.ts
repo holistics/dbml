@@ -178,7 +178,7 @@ export default class Lexer {
             break;
           }
           if (isDigit(c)) {
-            this.numericLiteral();
+            this.numericLiteralOrIdentifier();
             break;
           }
           this.addToken(SyntaxTokenKind.OP, true);
@@ -372,7 +372,8 @@ export default class Lexer {
     this.addToken(SyntaxTokenKind.OP);
   }
 
-  numericLiteral() {
+  // we accept identifiers starting with digits but must contain at least one char or underscore
+  numericLiteralOrIdentifier() {
     let nDots = 0;
     if (this.isAtEnd()) {
       return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
@@ -404,15 +405,28 @@ export default class Lexer {
 
       this.advance();
     }
-    // if control reaches here, an invalid number has been encountered
-    // consume all alphanumeric characters or . of the invalid number
-    while (!this.isAtEnd() && (this.check('.') || isAlphaNumeric(this.peek()!))) {
-      this.advance();
-    }
 
-    const token = this.createToken(SyntaxTokenKind.NUMERIC_LITERAL, true);
-    this.tokens.push(token);
-    this.errors.push(new CompileError(CompileErrorCode.UNKNOWN_TOKEN, 'Invalid number', token));
+    // if control reaches here, an invalid number or an identifier has been encountered
+    if (nDots > 0) {
+      // This must be an invalid number
+      // e.g. 12.3abc
+      // consume all alphanumeric characters or . of the invalid number
+      while (!this.isAtEnd() && (this.check('.') || isAlphaNumeric(this.peek()!))) {
+        this.advance();
+      }
+
+      const token = this.createToken(SyntaxTokenKind.NUMERIC_LITERAL, true);
+      this.tokens.push(token);
+      this.errors.push(new CompileError(CompileErrorCode.UNKNOWN_TOKEN, 'Invalid number', token));
+    } else {
+      // This must be an identifier
+      while (!this.isAtEnd() && isAlphaNumeric(this.peek()!)) {
+        this.advance();
+      }
+
+      const token = this.createToken(SyntaxTokenKind.IDENTIFIER, false);
+      this.tokens.push(token);
+    }
   }
 
   colorLiteral() {
