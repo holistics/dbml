@@ -377,17 +377,102 @@
         }
       ],
       "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 63,
+      "end": 65
+    },
+    {
+      "kind": "<identifier>",
+      "startPos": {
+        "offset": 96,
+        "line": 4,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 99,
+        "line": 4,
+        "column": 3
+      },
+      "value": "3a3",
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "startPos": {
+            "offset": 99,
+            "line": 4,
+            "column": 3
+          },
+          "endPos": {
+            "offset": 100,
+            "line": 4,
+            "column": 4
+          },
+          "value": " ",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 99,
+          "end": 100
+        },
+        {
+          "kind": "<single-line-comment>",
+          "startPos": {
+            "offset": 100,
+            "line": 4,
+            "column": 4
+          },
+          "endPos": {
+            "offset": 113,
+            "line": 4,
+            "column": 17
+          },
+          "value": " Identifier",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 100,
+          "end": 113
+        },
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 113,
+            "line": 4,
+            "column": 17
+          },
+          "endPos": {
+            "offset": 114,
+            "line": 5,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 113,
+          "end": 114
+        }
+      ],
+      "leadingInvalid": [],
       "trailingInvalid": [
         {
           "kind": "<number>",
           "startPos": {
-            "offset": 96,
-            "line": 4,
+            "offset": 114,
+            "line": 5,
             "column": 0
           },
           "endPos": {
-            "offset": 99,
-            "line": 4,
+            "offset": 117,
+            "line": 5,
             "column": 3
           },
           "value": "1.a",
@@ -396,13 +481,13 @@
             {
               "kind": "<space>",
               "startPos": {
-                "offset": 99,
-                "line": 4,
+                "offset": 117,
+                "line": 5,
                 "column": 3
               },
               "endPos": {
-                "offset": 100,
-                "line": 4,
+                "offset": 118,
+                "line": 5,
                 "column": 4
               },
               "value": " ",
@@ -411,19 +496,19 @@
               "leadingInvalid": [],
               "trailingInvalid": [],
               "isInvalid": false,
-              "start": 99,
-              "end": 100
+              "start": 117,
+              "end": 118
             },
             {
               "kind": "<single-line-comment>",
               "startPos": {
-                "offset": 100,
-                "line": 4,
+                "offset": 118,
+                "line": 5,
                 "column": 4
               },
               "endPos": {
-                "offset": 117,
-                "line": 4,
+                "offset": 135,
+                "line": 5,
                 "column": 21
               },
               "value": " Invalid number",
@@ -432,19 +517,19 @@
               "leadingInvalid": [],
               "trailingInvalid": [],
               "isInvalid": false,
-              "start": 100,
-              "end": 117
+              "start": 118,
+              "end": 135
             },
             {
               "kind": "<newline>",
               "startPos": {
-                "offset": 117,
-                "line": 4,
+                "offset": 135,
+                "line": 5,
                 "column": 21
               },
               "endPos": {
-                "offset": 118,
-                "line": 5,
+                "offset": 136,
+                "line": 6,
                 "column": 0
               },
               "value": "\n",
@@ -453,26 +538,26 @@
               "leadingInvalid": [],
               "trailingInvalid": [],
               "isInvalid": false,
-              "start": 117,
-              "end": 118
+              "start": 135,
+              "end": 136
             }
           ],
           "leadingInvalid": [],
           "trailingInvalid": [],
           "isInvalid": true,
-          "start": 96,
-          "end": 99
+          "start": 114,
+          "end": 117
         },
         {
           "kind": "<number>",
           "startPos": {
-            "offset": 118,
-            "line": 5,
+            "offset": 136,
+            "line": 6,
             "column": 0
           },
           "endPos": {
-            "offset": 123,
-            "line": 5,
+            "offset": 141,
+            "line": 6,
             "column": 5
           },
           "value": "1.3.a",
@@ -481,13 +566,13 @@
             {
               "kind": "<space>",
               "startPos": {
-                "offset": 123,
-                "line": 5,
+                "offset": 141,
+                "line": 6,
                 "column": 5
               },
               "endPos": {
-                "offset": 124,
-                "line": 5,
+                "offset": 142,
+                "line": 6,
                 "column": 6
               },
               "value": " ",
@@ -496,19 +581,19 @@
               "leadingInvalid": [],
               "trailingInvalid": [],
               "isInvalid": false,
-              "start": 123,
-              "end": 124
+              "start": 141,
+              "end": 142
             },
             {
               "kind": "<single-line-comment>",
               "startPos": {
-                "offset": 124,
-                "line": 5,
+                "offset": 142,
+                "line": 6,
                 "column": 6
               },
               "endPos": {
-                "offset": 141,
-                "line": 5,
+                "offset": 159,
+                "line": 6,
                 "column": 23
               },
               "value": " Invalid number",
@@ -517,19 +602,19 @@
               "leadingInvalid": [],
               "trailingInvalid": [],
               "isInvalid": false,
-              "start": 124,
-              "end": 141
+              "start": 142,
+              "end": 159
             },
             {
               "kind": "<newline>",
               "startPos": {
-                "offset": 141,
-                "line": 5,
+                "offset": 159,
+                "line": 6,
                 "column": 23
               },
               "endPos": {
-                "offset": 142,
-                "line": 6,
+                "offset": 160,
+                "line": 7,
                 "column": 0
               },
               "value": "\n",
@@ -538,26 +623,26 @@
               "leadingInvalid": [],
               "trailingInvalid": [],
               "isInvalid": false,
-              "start": 141,
-              "end": 142
+              "start": 159,
+              "end": 160
             }
           ],
           "leadingInvalid": [],
           "trailingInvalid": [],
           "isInvalid": true,
-          "start": 118,
-          "end": 123
+          "start": 136,
+          "end": 141
         },
         {
           "kind": "<number>",
           "startPos": {
-            "offset": 142,
-            "line": 6,
+            "offset": 160,
+            "line": 7,
             "column": 0
           },
           "endPos": {
-            "offset": 149,
-            "line": 6,
+            "offset": 167,
+            "line": 7,
             "column": 7
           },
           "value": "1.4.a.b",
@@ -566,13 +651,13 @@
             {
               "kind": "<space>",
               "startPos": {
-                "offset": 149,
-                "line": 6,
+                "offset": 167,
+                "line": 7,
                 "column": 7
               },
               "endPos": {
-                "offset": 150,
-                "line": 6,
+                "offset": 168,
+                "line": 7,
                 "column": 8
               },
               "value": " ",
@@ -581,19 +666,19 @@
               "leadingInvalid": [],
               "trailingInvalid": [],
               "isInvalid": false,
-              "start": 149,
-              "end": 150
+              "start": 167,
+              "end": 168
             },
             {
               "kind": "<single-line-comment>",
               "startPos": {
-                "offset": 150,
-                "line": 6,
+                "offset": 168,
+                "line": 7,
                 "column": 8
               },
               "endPos": {
-                "offset": 167,
-                "line": 6,
+                "offset": 185,
+                "line": 7,
                 "column": 25
               },
               "value": " Invalid_number",
@@ -602,31 +687,31 @@
               "leadingInvalid": [],
               "trailingInvalid": [],
               "isInvalid": false,
-              "start": 150,
-              "end": 167
+              "start": 168,
+              "end": 185
             }
           ],
           "leadingInvalid": [],
           "trailingInvalid": [],
           "isInvalid": true,
-          "start": 142,
-          "end": 149
+          "start": 160,
+          "end": 167
         }
       ],
       "isInvalid": false,
-      "start": 63,
-      "end": 65
+      "start": 96,
+      "end": 99
     },
     {
       "kind": "<eof>",
       "startPos": {
-        "offset": 167,
-        "line": 6,
+        "offset": 185,
+        "line": 7,
         "column": 25
       },
       "endPos": {
-        "offset": 167,
-        "line": 6,
+        "offset": 185,
+        "line": 7,
         "column": 25
       },
       "value": "",
@@ -635,8 +720,8 @@
       "leadingInvalid": [],
       "trailingInvalid": [],
       "isInvalid": false,
-      "start": 167,
-      "end": 167
+      "start": 185,
+      "end": 185
     }
   ],
   "errors": [
@@ -646,13 +731,13 @@
       "nodeOrToken": {
         "kind": "<number>",
         "startPos": {
-          "offset": 96,
-          "line": 4,
+          "offset": 114,
+          "line": 5,
           "column": 0
         },
         "endPos": {
-          "offset": 99,
-          "line": 4,
+          "offset": 117,
+          "line": 5,
           "column": 3
         },
         "value": "1.a",
@@ -661,13 +746,13 @@
           {
             "kind": "<space>",
             "startPos": {
-              "offset": 99,
-              "line": 4,
+              "offset": 117,
+              "line": 5,
               "column": 3
             },
             "endPos": {
-              "offset": 100,
-              "line": 4,
+              "offset": 118,
+              "line": 5,
               "column": 4
             },
             "value": " ",
@@ -676,19 +761,19 @@
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 99,
-            "end": 100
+            "start": 117,
+            "end": 118
           },
           {
             "kind": "<single-line-comment>",
             "startPos": {
-              "offset": 100,
-              "line": 4,
+              "offset": 118,
+              "line": 5,
               "column": 4
             },
             "endPos": {
-              "offset": 117,
-              "line": 4,
+              "offset": 135,
+              "line": 5,
               "column": 21
             },
             "value": " Invalid number",
@@ -697,19 +782,19 @@
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 100,
-            "end": 117
+            "start": 118,
+            "end": 135
           },
           {
             "kind": "<newline>",
             "startPos": {
-              "offset": 117,
-              "line": 4,
+              "offset": 135,
+              "line": 5,
               "column": 21
             },
             "endPos": {
-              "offset": 118,
-              "line": 5,
+              "offset": 136,
+              "line": 6,
               "column": 0
             },
             "value": "\n",
@@ -718,18 +803,18 @@
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 117,
-            "end": 118
+            "start": 135,
+            "end": 136
           }
         ],
         "leadingInvalid": [],
         "trailingInvalid": [],
         "isInvalid": true,
-        "start": 96,
-        "end": 99
+        "start": 114,
+        "end": 117
       },
-      "start": 96,
-      "end": 99,
+      "start": 114,
+      "end": 117,
       "name": "CompileError"
     },
     {
@@ -738,13 +823,13 @@
       "nodeOrToken": {
         "kind": "<number>",
         "startPos": {
-          "offset": 118,
-          "line": 5,
+          "offset": 136,
+          "line": 6,
           "column": 0
         },
         "endPos": {
-          "offset": 123,
-          "line": 5,
+          "offset": 141,
+          "line": 6,
           "column": 5
         },
         "value": "1.3.a",
@@ -753,13 +838,13 @@
           {
             "kind": "<space>",
             "startPos": {
-              "offset": 123,
-              "line": 5,
+              "offset": 141,
+              "line": 6,
               "column": 5
             },
             "endPos": {
-              "offset": 124,
-              "line": 5,
+              "offset": 142,
+              "line": 6,
               "column": 6
             },
             "value": " ",
@@ -768,19 +853,19 @@
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 123,
-            "end": 124
+            "start": 141,
+            "end": 142
           },
           {
             "kind": "<single-line-comment>",
             "startPos": {
-              "offset": 124,
-              "line": 5,
+              "offset": 142,
+              "line": 6,
               "column": 6
             },
             "endPos": {
-              "offset": 141,
-              "line": 5,
+              "offset": 159,
+              "line": 6,
               "column": 23
             },
             "value": " Invalid number",
@@ -789,19 +874,19 @@
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 124,
-            "end": 141
+            "start": 142,
+            "end": 159
           },
           {
             "kind": "<newline>",
             "startPos": {
-              "offset": 141,
-              "line": 5,
+              "offset": 159,
+              "line": 6,
               "column": 23
             },
             "endPos": {
-              "offset": 142,
-              "line": 6,
+              "offset": 160,
+              "line": 7,
               "column": 0
             },
             "value": "\n",
@@ -810,18 +895,18 @@
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 141,
-            "end": 142
+            "start": 159,
+            "end": 160
           }
         ],
         "leadingInvalid": [],
         "trailingInvalid": [],
         "isInvalid": true,
-        "start": 118,
-        "end": 123
+        "start": 136,
+        "end": 141
       },
-      "start": 118,
-      "end": 123,
+      "start": 136,
+      "end": 141,
       "name": "CompileError"
     },
     {
@@ -830,13 +915,13 @@
       "nodeOrToken": {
         "kind": "<number>",
         "startPos": {
-          "offset": 142,
-          "line": 6,
+          "offset": 160,
+          "line": 7,
           "column": 0
         },
         "endPos": {
-          "offset": 149,
-          "line": 6,
+          "offset": 167,
+          "line": 7,
           "column": 7
         },
         "value": "1.4.a.b",
@@ -845,13 +930,13 @@
           {
             "kind": "<space>",
             "startPos": {
-              "offset": 149,
-              "line": 6,
+              "offset": 167,
+              "line": 7,
               "column": 7
             },
             "endPos": {
-              "offset": 150,
-              "line": 6,
+              "offset": 168,
+              "line": 7,
               "column": 8
             },
             "value": " ",
@@ -860,19 +945,19 @@
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 149,
-            "end": 150
+            "start": 167,
+            "end": 168
           },
           {
             "kind": "<single-line-comment>",
             "startPos": {
-              "offset": 150,
-              "line": 6,
+              "offset": 168,
+              "line": 7,
               "column": 8
             },
             "endPos": {
-              "offset": 167,
-              "line": 6,
+              "offset": 185,
+              "line": 7,
               "column": 25
             },
             "value": " Invalid_number",
@@ -881,18 +966,18 @@
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 150,
-            "end": 167
+            "start": 168,
+            "end": 185
           }
         ],
         "leadingInvalid": [],
         "trailingInvalid": [],
         "isInvalid": true,
-        "start": 142,
-        "end": 149
+        "start": 160,
+        "end": 167
       },
-      "start": 142,
-      "end": 149,
+      "start": 160,
+      "end": 167,
       "name": "CompileError"
     }
   ]
