@@ -1,3 +1,14 @@
+## v3.1.5 (2024-02-06)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#510](https://github.com/holistics/dbml/pull/510) fix: support identifiers starting with numbers ([@Huy-DNA](https://github.com/Huy-DNA))
+  * [#509](https://github.com/holistics/dbml/pull/509) fix: type errors and missing return ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- HuyDNA ([@Huy-DNA](https://github.com/Huy-DNA))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
 ## v3.1.4 (2024-02-05)
 
 #### :bug: Bug Fix
