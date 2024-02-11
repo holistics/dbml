@@ -4,9 +4,10 @@ Table A {
 }
 
 Enum E {
-    a e [note: 'abc']
-    a [note: 'abc'] e
-    a e f
+    a1 e [note: 'abc']
+    a2 [note: 'abc'] e
+    a3 e f
+    a4 e
 }
 
 TableGroup G {
@@ -20,6 +21,10 @@ Ref {
 
 Ref {
     A.id > A.id a [delete: cascade]
+}
+
+Ref {
+    A.id > A.id a
 }
 
 Ref {
