@@ -1,0 +1,32 @@
+Table A {
+    id int
+    ssid
+}
+
+Enum E {
+    a1 e [note: 'abc']
+    a2 [note: 'abc'] e
+    a3 e f
+    a4 e
+}
+
+TableGroup G {
+    A a
+    A a a
+}
+
+Ref {
+    A.id > A.id [delete: cascade] a
+}
+
+Ref {
+    A.id > A.id a [delete: cascade]
+}
+
+Ref {
+    A.id > A.id a
+}
+
+Ref {
+    A.id > A.id a a
+}

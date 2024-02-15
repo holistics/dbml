@@ -4,6 +4,7 @@ import { None, Option, Some } from '../option';
 import { alternateLists } from '../utils';
 import NodeFactory from './factory';
 import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
@@ -260,6 +261,13 @@ export function getMemberChain(node: SyntaxNode): Readonly<(SyntaxNode | SyntaxT
 
   if (node instanceof PrimaryExpressionNode) {
     return filterUndefined(node.expression);
+  }
+
+  if (node instanceof ArrayNode) {
+    return filterUndefined(
+      node.array,
+      node.indexer,
+    )
   }
 
   if (node instanceof GroupExpressionNode) {

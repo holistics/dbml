@@ -3362,8 +3362,8 @@
       "name": "CompileError"
     },
     {
-      "code": 3020,
-      "diagnostic": "A column name must be an identifier or a quoted identifier",
+      "code": 3027,
+      "diagnostic": "An enum field must be an identifier or a quoted identifier",
       "nodeOrToken": {
         "id": 14,
         "kind": "<primary-expression>",

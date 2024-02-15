@@ -94,12 +94,17 @@ export default class RefValidator implements ElementValidator {
         errors.push(new CompileError(CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF, 'Unequal fields in ref endpoints', field.callee));
       }
 
-      if (_.last(field.args) instanceof ListExpressionNode) {
-        this.validateFieldSettings(_.last(field.args) as ListExpressionNode);
-      }
+      const args = [...field.args];
+      if (_.last(args) instanceof ListExpressionNode) {
+        this.validateFieldSettings(_.last(args) as ListExpressionNode);
+        args.pop();
+      } else if (args[0] instanceof ListExpressionNode) {
+        errors.push(...this.validateFieldSettings(args[0]));
+        args.shift();
+      } 
 
-      if (field.args.length > 1) {
-        errors.push(...field.args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg)));
+      if (args.length > 0) {
+        errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg)));
       }
     });
 
