@@ -11,6 +11,9 @@ Table users as U {
   created_at timestamp
 }
 
+Table A.users as U2 {
+  id integer
+}
 
 TableGroup A1 {
   follows
@@ -27,4 +30,12 @@ TableGroup A3 {
 
 TableGroup A4 {
     U
+}
+
+TableGroup A5 {
+  U2
+}
+
+TableGroup A6 {
+  A.users
 }
