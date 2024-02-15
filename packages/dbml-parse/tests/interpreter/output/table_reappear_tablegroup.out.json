@@ -3,65 +3,65 @@
     "code": 5005,
     "diagnostic": "Table \"follows\" already appears in group \"A1\"",
     "nodeOrToken": {
-      "id": 57,
+      "id": 59,
       "kind": "<function-application>",
       "startPos": {
-        "offset": 247,
+        "offset": 252,
         "line": 19,
         "column": 2
       },
-      "fullStart": 245,
+      "fullStart": 250,
       "endPos": {
-        "offset": 254,
+        "offset": 259,
         "line": 19,
         "column": 9
       },
-      "fullEnd": 255,
-      "start": 247,
-      "end": 254,
+      "fullEnd": 260,
+      "start": 252,
+      "end": 259,
       "callee": {
-        "id": 56,
+        "id": 58,
         "kind": "<primary-expression>",
         "startPos": {
-          "offset": 247,
+          "offset": 252,
           "line": 19,
           "column": 2
         },
-        "fullStart": 245,
+        "fullStart": 250,
         "endPos": {
-          "offset": 254,
+          "offset": 259,
           "line": 19,
           "column": 9
         },
-        "fullEnd": 255,
-        "start": 247,
-        "end": 254,
+        "fullEnd": 260,
+        "start": 252,
+        "end": 259,
         "expression": {
-          "id": 55,
+          "id": 57,
           "kind": "<variable>",
           "startPos": {
-            "offset": 247,
+            "offset": 252,
             "line": 19,
             "column": 2
           },
-          "fullStart": 245,
+          "fullStart": 250,
           "endPos": {
-            "offset": 254,
+            "offset": 259,
             "line": 19,
             "column": 9
           },
-          "fullEnd": 255,
-          "start": 247,
-          "end": 254,
+          "fullEnd": 260,
+          "start": 252,
+          "end": 259,
           "variable": {
             "kind": "<identifier>",
             "startPos": {
-              "offset": 247,
+              "offset": 252,
               "line": 19,
               "column": 2
             },
             "endPos": {
-              "offset": 254,
+              "offset": 259,
               "line": 19,
               "column": 9
             },
@@ -70,12 +70,12 @@
               {
                 "kind": "<space>",
                 "startPos": {
-                  "offset": 245,
+                  "offset": 250,
                   "line": 19,
                   "column": 0
                 },
                 "endPos": {
-                  "offset": 246,
+                  "offset": 251,
                   "line": 19,
                   "column": 1
                 },
@@ -85,18 +85,18 @@
                 "leadingInvalid": [],
                 "trailingInvalid": [],
                 "isInvalid": false,
-                "start": 245,
-                "end": 246
+                "start": 250,
+                "end": 251
               },
               {
                 "kind": "<space>",
                 "startPos": {
-                  "offset": 246,
+                  "offset": 251,
                   "line": 19,
                   "column": 1
                 },
                 "endPos": {
-                  "offset": 247,
+                  "offset": 252,
                   "line": 19,
                   "column": 2
                 },
@@ -106,20 +106,20 @@
                 "leadingInvalid": [],
                 "trailingInvalid": [],
                 "isInvalid": false,
-                "start": 246,
-                "end": 247
+                "start": 251,
+                "end": 252
               }
             ],
             "trailingTrivia": [
               {
                 "kind": "<newline>",
                 "startPos": {
-                  "offset": 254,
+                  "offset": 259,
                   "line": 19,
                   "column": 9
                 },
                 "endPos": {
-                  "offset": 255,
+                  "offset": 260,
                   "line": 20,
                   "column": 0
                 },
@@ -129,87 +129,87 @@
                 "leadingInvalid": [],
                 "trailingInvalid": [],
                 "isInvalid": false,
-                "start": 254,
-                "end": 255
+                "start": 259,
+                "end": 260
               }
             ],
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 247,
-            "end": 254
+            "start": 252,
+            "end": 259
           }
         }
       },
       "args": []
     },
-    "start": 247,
-    "end": 254,
+    "start": 252,
+    "end": 259,
     "name": "CompileError"
   },
   {
     "code": 5005,
     "diagnostic": "Table \"users\" already appears in group \"A2\"",
     "nodeOrToken": {
-      "id": 67,
+      "id": 69,
       "kind": "<function-application>",
       "startPos": {
-        "offset": 284,
+        "offset": 289,
         "line": 24,
         "column": 2
       },
-      "fullStart": 282,
+      "fullStart": 287,
       "endPos": {
-        "offset": 289,
+        "offset": 294,
         "line": 24,
         "column": 7
       },
-      "fullEnd": 290,
-      "start": 284,
-      "end": 289,
+      "fullEnd": 295,
+      "start": 289,
+      "end": 294,
       "callee": {
-        "id": 66,
+        "id": 68,
         "kind": "<primary-expression>",
         "startPos": {
-          "offset": 284,
+          "offset": 289,
           "line": 24,
           "column": 2
         },
-        "fullStart": 282,
+        "fullStart": 287,
         "endPos": {
-          "offset": 289,
+          "offset": 294,
           "line": 24,
           "column": 7
         },
-        "fullEnd": 290,
-        "start": 284,
-        "end": 289,
+        "fullEnd": 295,
+        "start": 289,
+        "end": 294,
         "expression": {
-          "id": 65,
+          "id": 67,
           "kind": "<variable>",
           "startPos": {
-            "offset": 284,
+            "offset": 289,
             "line": 24,
             "column": 2
           },
-          "fullStart": 282,
+          "fullStart": 287,
           "endPos": {
-            "offset": 289,
+            "offset": 294,
             "line": 24,
             "column": 7
           },
-          "fullEnd": 290,
-          "start": 284,
-          "end": 289,
+          "fullEnd": 295,
+          "start": 289,
+          "end": 294,
           "variable": {
             "kind": "<identifier>",
             "startPos": {
-              "offset": 284,
+              "offset": 289,
               "line": 24,
               "column": 2
             },
             "endPos": {
-              "offset": 289,
+              "offset": 294,
               "line": 24,
               "column": 7
             },
@@ -218,12 +218,12 @@
               {
                 "kind": "<space>",
                 "startPos": {
-                  "offset": 282,
+                  "offset": 287,
                   "line": 24,
                   "column": 0
                 },
                 "endPos": {
-                  "offset": 283,
+                  "offset": 288,
                   "line": 24,
                   "column": 1
                 },
@@ -233,18 +233,18 @@
                 "leadingInvalid": [],
                 "trailingInvalid": [],
                 "isInvalid": false,
-                "start": 282,
-                "end": 283
+                "start": 287,
+                "end": 288
               },
               {
                 "kind": "<space>",
                 "startPos": {
-                  "offset": 283,
+                  "offset": 288,
                   "line": 24,
                   "column": 1
                 },
                 "endPos": {
-                  "offset": 284,
+                  "offset": 289,
                   "line": 24,
                   "column": 2
                 },
@@ -254,20 +254,20 @@
                 "leadingInvalid": [],
                 "trailingInvalid": [],
                 "isInvalid": false,
-                "start": 283,
-                "end": 284
+                "start": 288,
+                "end": 289
               }
             ],
             "trailingTrivia": [
               {
                 "kind": "<newline>",
                 "startPos": {
-                  "offset": 289,
+                  "offset": 294,
                   "line": 24,
                   "column": 7
                 },
                 "endPos": {
-                  "offset": 290,
+                  "offset": 295,
                   "line": 25,
                   "column": 0
                 },
@@ -277,22 +277,212 @@
                 "leadingInvalid": [],
                 "trailingInvalid": [],
                 "isInvalid": false,
-                "start": 289,
-                "end": 290
+                "start": 294,
+                "end": 295
               }
             ],
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 284,
-            "end": 289
+            "start": 289,
+            "end": 294
           }
         }
       },
       "args": []
     },
-    "start": 284,
-    "end": 289,
+    "start": 289,
+    "end": 294,
+    "name": "CompileError"
+  },
+  {
+    "code": 5005,
+    "diagnostic": "Table \"U\" already appears in group \"A2\"",
+    "nodeOrToken": {
+      "id": 76,
+      "kind": "<function-application>",
+      "startPos": {
+        "offset": 318,
+        "line": 28,
+        "column": 4
+      },
+      "fullStart": 314,
+      "endPos": {
+        "offset": 319,
+        "line": 28,
+        "column": 5
+      },
+      "fullEnd": 320,
+      "start": 318,
+      "end": 319,
+      "callee": {
+        "id": 75,
+        "kind": "<primary-expression>",
+        "startPos": {
+          "offset": 318,
+          "line": 28,
+          "column": 4
+        },
+        "fullStart": 314,
+        "endPos": {
+          "offset": 319,
+          "line": 28,
+          "column": 5
+        },
+        "fullEnd": 320,
+        "start": 318,
+        "end": 319,
+        "expression": {
+          "id": 74,
+          "kind": "<variable>",
+          "startPos": {
+            "offset": 318,
+            "line": 28,
+            "column": 4
+          },
+          "fullStart": 314,
+          "endPos": {
+            "offset": 319,
+            "line": 28,
+            "column": 5
+          },
+          "fullEnd": 320,
+          "start": 318,
+          "end": 319,
+          "variable": {
+            "kind": "<identifier>",
+            "startPos": {
+              "offset": 318,
+              "line": 28,
+              "column": 4
+            },
+            "endPos": {
+              "offset": 319,
+              "line": 28,
+              "column": 5
+            },
+            "value": "U",
+            "leadingTrivia": [
+              {
+                "kind": "<space>",
+                "startPos": {
+                  "offset": 314,
+                  "line": 28,
+                  "column": 0
+                },
+                "endPos": {
+                  "offset": 315,
+                  "line": 28,
+                  "column": 1
+                },
+                "value": " ",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 314,
+                "end": 315
+              },
+              {
+                "kind": "<space>",
+                "startPos": {
+                  "offset": 315,
+                  "line": 28,
+                  "column": 1
+                },
+                "endPos": {
+                  "offset": 316,
+                  "line": 28,
+                  "column": 2
+                },
+                "value": " ",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 315,
+                "end": 316
+              },
+              {
+                "kind": "<space>",
+                "startPos": {
+                  "offset": 316,
+                  "line": 28,
+                  "column": 2
+                },
+                "endPos": {
+                  "offset": 317,
+                  "line": 28,
+                  "column": 3
+                },
+                "value": " ",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 316,
+                "end": 317
+              },
+              {
+                "kind": "<space>",
+                "startPos": {
+                  "offset": 317,
+                  "line": 28,
+                  "column": 3
+                },
+                "endPos": {
+                  "offset": 318,
+                  "line": 28,
+                  "column": 4
+                },
+                "value": " ",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 317,
+                "end": 318
+              }
+            ],
+            "trailingTrivia": [
+              {
+                "kind": "<newline>",
+                "startPos": {
+                  "offset": 319,
+                  "line": 28,
+                  "column": 5
+                },
+                "endPos": {
+                  "offset": 320,
+                  "line": 29,
+                  "column": 0
+                },
+                "value": "\n",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 319,
+                "end": 320
+              }
+            ],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 318,
+            "end": 319
+          }
+        }
+      },
+      "args": []
+    },
+    "start": 318,
+    "end": 319,
     "name": "CompileError"
   }
 ]
