@@ -1,0 +1,10 @@
+Table A {
+    id int
+}
+
+Table B {
+    id int
+}
+
+Ref: A.id > B.id
+Ref: B.id > A.id
