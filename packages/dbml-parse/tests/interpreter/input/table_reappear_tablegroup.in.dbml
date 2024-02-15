@@ -4,7 +4,7 @@ Table follows {
   created_at timestamp 
 }
 
-Table users {
+Table users as U {
   id integer [primary key]
   username varchar
   role varchar
@@ -23,4 +23,8 @@ TableGroup A2 {
 
 TableGroup A3 {
   users
+}
+
+TableGroup A4 {
+    U
 }
