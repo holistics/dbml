@@ -19,7 +19,7 @@ export interface InterpreterDatabase {
   ref: Map<ElementDeclarationNode, Ref>;
   enums: Map<ElementDeclarationNode, Enum>;
   // for keeping track of the owner table group of a table
-  tableOwnerGroup: { [tableid: string]: ElementDeclarationNode };
+  groupOfTable: { [tableid: string]: ElementDeclarationNode };
   tableGroups: Map<ElementDeclarationNode, TableGroup>;
   aliases: Alias[];
   project: Map<ElementDeclarationNode, Project>;
