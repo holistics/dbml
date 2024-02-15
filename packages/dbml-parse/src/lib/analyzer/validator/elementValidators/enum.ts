@@ -102,7 +102,7 @@ export default class EnumValidator implements ElementValidator {
       const errors: CompileError[] = [];
 
       if (field.callee && !isExpressionAVariableNode(field.callee)) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
+        errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_NAME, 'An enum field must be an identifier or a quoted identifier', field.callee));
       }
       
       const args = [...field.args];
