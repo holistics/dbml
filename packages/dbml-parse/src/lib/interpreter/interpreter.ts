@@ -24,6 +24,7 @@ export default class Interpreter {
       ref: new Map(),
       enums: new Map(),
       tableGroups: new Map(),
+      tableOwnerGroup: { },
       aliases: [],
       project: new Map(),
     };
