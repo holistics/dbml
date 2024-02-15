@@ -93,7 +93,7 @@ export function getRefId(sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol
   if (Array.isArray(sym1)) {
     const firstIds = sym1.map(({ id }) => id).sort().join(',');  
     const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort().join(',');  
-    return firstIds < secondIds ? `${firstIds}-${secondIds}` : `${firstIds}-${secondIds}`;
+    return firstIds < secondIds ? `${firstIds}-${secondIds}` : `${secondIds}-${firstIds}`;
   }
 
   const firstId = sym1.id;
