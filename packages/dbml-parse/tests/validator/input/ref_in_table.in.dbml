@@ -1,0 +1,16 @@
+Table A {
+    id integer
+    code number
+}
+
+Table B {
+    id integer
+    code number
+}
+
+Table C {
+    id integer
+    code number
+    Ref: id > A.id
+    Ref: code > B.code
+}
