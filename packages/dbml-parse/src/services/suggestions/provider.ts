@@ -497,7 +497,7 @@ function suggestInColumn(
 ): CompletionList {
   if (!container?.callee) {
     return {
-      suggestions: ['Ref', 'Note', 'indexes'].map((name) => ({
+      suggestions: ['Note', 'indexes'].map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
