@@ -120,8 +120,6 @@ export class TableInterpreter implements ElementInterpreter {
           return [];
         case 'indexes':
           return this.interpretIndexes(sub);
-        case 'ref':
-          return (new RefInterpreter(sub, this.env)).interpret();
       }
 
       return [];
