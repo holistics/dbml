@@ -1,0 +1,47 @@
+{
+  "value": [
+    {
+      "kind": "<identifier>",
+      "startPos": {
+        "offset": 0,
+        "line": 0,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 84,
+        "line": 0,
+        "column": 84
+      },
+      "value": "あぁかさたなはまやゃらわがざだばぱいぃきしちにひみりゐぎじぢびぴうぅくすつぬふむゆゅるぐずづぶぷえぇけせてねへめれゑげぜでべぺおぉこそとのほもよろをごどぼぽゔっんーゝゞ",
+      "leadingTrivia": [],
+      "trailingTrivia": [],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 0,
+      "end": 84
+    },
+    {
+      "kind": "<eof>",
+      "startPos": {
+        "offset": 84,
+        "line": 0,
+        "column": 84
+      },
+      "endPos": {
+        "offset": 84,
+        "line": 0,
+        "column": 84
+      },
+      "value": "",
+      "leadingTrivia": [],
+      "trailingTrivia": [],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 84,
+      "end": 84
+    }
+  ],
+  "errors": []
+}
