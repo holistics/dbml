@@ -3,9 +3,7 @@ import { SyntaxNode } from './parser/nodes';
 import { getTokenFullEnd, getTokenFullStart } from './lexer/utils';
 
 export function isAlphaOrUnderscore(char: string): boolean {
-  const [c] = char;
-
-  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c === '_';
+  return !!char.match(/(\p{General_Category=Letter}|_)/gu);
 }
 
 export function isDigit(char: string): boolean {
