@@ -4390,7 +4390,8 @@ ALTER TABLE purchasing.purchaseorderheader OWNER TO admin;
 -- Name: TABLE purchaseorderheader; Type: COMMENT; Schema: purchasing; Owner: admin
 --
 
-COMMENT ON TABLE purchasing.purchaseorderheader IS 'General purchase order information. See PurchaseOrderDetail.';
+COMMENT ON TABLE purchasing.purchaseorderheader IS 'General purchase order information. See PurchaseOrderDetail
+for more details.';
 
 
 --

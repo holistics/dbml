@@ -99,17 +99,23 @@ export default class EnumValidator implements ElementValidator {
     }
 
     return fields.flatMap((field) => {
-      const errors: CompileError[] = []
+      const errors: CompileError[] = [];
+
       if (field.callee && !isExpressionAVariableNode(field.callee)) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
+        errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_NAME, 'An enum field must be an identifier or a quoted identifier', field.callee));
       }
       
-      if (_.last(field.args) instanceof ListExpressionNode) {
-        errors.push(...this.validateFieldSetting(_.last(field.args) as ListExpressionNode));
+      const args = [...field.args];
+      if (_.last(args) instanceof ListExpressionNode) {
+        errors.push(...this.validateFieldSettings(_.last(args) as ListExpressionNode));
+        args.pop();
+      } else if (args[0] instanceof ListExpressionNode) {
+        errors.push(...this.validateFieldSettings(args[0]));
+        args.shift();
       }
 
-      if (field.args.length > 1) {
-        errors.push(...field.args.map((arg) => new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT, 'An Enum must have only a field and optionally a setting list', arg)));
+      if (args.length > 0) {
+        errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT, 'An Enum must have only a field and optionally a setting list', arg)));
       }
 
       errors.push(...this.registerField(field));
@@ -118,7 +124,7 @@ export default class EnumValidator implements ElementValidator {
     });
   }
 
-  validateFieldSetting(settings: ListExpressionNode): CompileError[] {
+  validateFieldSettings(settings: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settings);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();

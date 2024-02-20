@@ -95,6 +95,7 @@ export enum CompileErrorCode {
   SAME_ENDPOINT,
   UNEQUAL_FIELDS_BINARY_REF,
   CONFLICTING_SETTING,
+  TABLE_REAPPEAR_IN_TABLEGROUP
 }
 
 export class CompileError extends Error {
