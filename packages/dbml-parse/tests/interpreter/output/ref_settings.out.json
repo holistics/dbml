@@ -28,6 +28,29 @@
           "inline_refs": [],
           "pk": false,
           "unique": false
+        },
+        {
+          "name": "code",
+          "type": {
+            "schemaName": null,
+            "type_name": "number",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 29,
+              "line": 3,
+              "column": 5
+            },
+            "end": {
+              "offset": 40,
+              "line": 3,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -37,8 +60,8 @@
           "column": 1
         },
         "end": {
-          "offset": 26,
-          "line": 3,
+          "offset": 42,
+          "line": 4,
           "column": 2
         }
       },
@@ -58,14 +81,37 @@
           },
           "token": {
             "start": {
-              "offset": 42,
-              "line": 6,
+              "offset": 58,
+              "line": 7,
               "column": 5
             },
             "end": {
-              "offset": 52,
-              "line": 6,
+              "offset": 68,
+              "line": 7,
               "column": 15
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "code",
+          "type": {
+            "schemaName": null,
+            "type_name": "number",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 73,
+              "line": 8,
+              "column": 5
+            },
+            "end": {
+              "offset": 84,
+              "line": 8,
+              "column": 16
             }
           },
           "inline_refs": [],
@@ -75,13 +121,13 @@
       ],
       "token": {
         "start": {
-          "offset": 28,
-          "line": 5,
+          "offset": 44,
+          "line": 6,
           "column": 1
         },
         "end": {
-          "offset": 54,
-          "line": 7,
+          "offset": 86,
+          "line": 9,
           "column": 2
         }
       },
@@ -92,19 +138,19 @@
     {
       "token": {
         "start": {
-          "offset": 56,
-          "line": 9,
+          "offset": 88,
+          "line": 11,
           "column": 1
         },
         "end": {
-          "offset": 107,
-          "line": 9,
-          "column": 52
+          "offset": 141,
+          "line": 11,
+          "column": 54
         }
       },
       "name": null,
       "schemaName": null,
-      "onDelete": "cascade",
+      "onDelete": "no action",
       "onUpdate": "cascade",
       "endpoints": [
         {
@@ -116,13 +162,13 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 61,
-              "line": 9,
+              "offset": 93,
+              "line": 11,
               "column": 6
             },
             "end": {
-              "offset": 65,
-              "line": 9,
+              "offset": 97,
+              "line": 11,
               "column": 10
             }
           }
@@ -136,14 +182,74 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 68,
-              "line": 9,
+              "offset": 100,
+              "line": 11,
               "column": 13
             },
             "end": {
-              "offset": 72,
-              "line": 9,
+              "offset": 104,
+              "line": 11,
               "column": 17
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 142,
+          "line": 12,
+          "column": 1
+        },
+        "end": {
+          "offset": 202,
+          "line": 12,
+          "column": 61
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "onDelete": "set default",
+      "onUpdate": "set null",
+      "endpoints": [
+        {
+          "fieldNames": [
+            "code"
+          ],
+          "tableName": "A",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 147,
+              "line": 12,
+              "column": 6
+            },
+            "end": {
+              "offset": 153,
+              "line": 12,
+              "column": 12
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "code"
+          ],
+          "tableName": "B",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 156,
+              "line": 12,
+              "column": 15
+            },
+            "end": {
+              "offset": 162,
+              "line": 12,
+              "column": 21
             }
           }
         }
