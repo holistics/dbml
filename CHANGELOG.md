@@ -1,3 +1,13 @@
+## v3.1.7 (2024-02-20)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#522](https://github.com/holistics/dbml/pull/522) Parser/interpret ref on update ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.1.6 (2024-02-20)
 
 #### :memo: Documentation
