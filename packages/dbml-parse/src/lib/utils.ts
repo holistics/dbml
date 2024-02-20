@@ -16,7 +16,9 @@ export function isDigit(char: string): boolean {
 
 // Check if a character is a valid hexadecimal character
 export function isHexChar(char: string): boolean {
-  return !!char.match(/(\p{General_Category=Letter}|_)/gu);
+  const [c] = char;
+
+  return isDigit(c) || (isAlphaOrUnderscore(c) && c.toLowerCase() >= 'a' && c.toLowerCase() <= 'f');
 }
 
 export function isAlphaNumeric(char: string): boolean {
