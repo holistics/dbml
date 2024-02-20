@@ -30,6 +30,7 @@ import {
   AttributeNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
+  IdentiferStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   PrefixExpressionNode,
@@ -245,7 +246,7 @@ function suggestInAttribute(
     return suggestAttributeName(compiler, offset);
   }
 
-  if (container.name) {
+  if (container.name instanceof IdentiferStreamNode) {
     const res = suggestAttributeValue(
       compiler,
       offset,
@@ -496,7 +497,7 @@ function suggestInColumn(
 ): CompletionList {
   if (!container?.callee) {
     return {
-      suggestions: ['Ref', 'Note', 'indexes'].map((name) => ({
+      suggestions: ['Note', 'indexes'].map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -510,7 +511,7 @@ function suggestInColumn(
 
   if (containerArgId === 0) {
     return {
-      suggestions: ['Ref', 'Note', 'indexes'].map((name) => ({
+      suggestions: ['Note', 'indexes'].map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -673,7 +674,7 @@ function suggestColumnType(compiler: Compiler, offset: number): CompletionList {
 
 function suggestColumnNameInIndexes(compiler: Compiler, offset: number): CompletionList {
   const indexesNode = compiler.container.element(offset);
-  const tableNode = indexesNode.parent;
+  const tableNode = (indexesNode as any)?.parent;
   if (!(tableNode?.symbol instanceof TableSymbol)) {
     return noSuggestions();
   }

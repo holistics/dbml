@@ -8,7 +8,6 @@ import { isExpressionAQuotedString, isExpressionAnIdentifierNode } from '../../p
 import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import { ColumnSymbol } from '../../analyzer/symbol/symbols';
 import _ from 'lodash';
-import { RefInterpreter } from './ref';
 import Report from '../../report';
 
 export class TableInterpreter implements ElementInterpreter {
@@ -120,8 +119,6 @@ export class TableInterpreter implements ElementInterpreter {
           return [];
         case 'indexes':
           return this.interpretIndexes(sub);
-        case 'ref':
-          return (new RefInterpreter(sub, this.env)).interpret();
       }
 
       return [];
@@ -347,7 +344,7 @@ function processColumnType(typeNode: SyntaxNode): Report<ColumnType, CompileErro
 
   const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
   if (typeSchemaName.length > 1) {
-    new Report(
+    return new Report(
       {
         schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
         type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,

@@ -16,7 +16,18 @@ class DbmlExporter {
   }
 
   static escapeNote (str) {
-    return str.replaceAll("'", "\\'")
+    if (str === null) {
+      return '';
+    }
+    let newStr = str.replaceAll('\\', '\\\\');
+    if (!newStr.match(/[\n\r']/)) {
+      // Only safe chars, no simple quotes nor CR/LF
+      return `'${newStr}'`;
+    }
+    // see https://dbml.dbdiagram.io/docs/#multi-line-string
+    newStr = newStr.replaceAll("'''", "\\'''");
+    newStr = newStr.replaceAll('\r\n', '\n'); // turn all CRLF to LF
+    return `'''${newStr}'''`;
   }
 
   static exportEnums (enumIds, model) {
@@ -27,7 +38,7 @@ class DbmlExporter {
       return `Enum ${shouldPrintSchema(schema, model)
         ? `"${schema.name}".` : ''}"${_enum.name}" {\n${
         _enum.valueIds.map(valueId => `  "${model.enumValues[valueId].name}"${model.enumValues[valueId].note
-          ? ` [note: '${DbmlExporter.escapeNote(model.enumValues[valueId].note)}']` : ''}`).join('\n')}\n}\n`;
+          ? ` [note: ${DbmlExporter.escapeNote(model.enumValues[valueId].note)}]` : ''}`).join('\n')}\n}\n`;
     });
 
     return enumStrs.length ? enumStrs.join('\n') : '';
@@ -82,7 +93,7 @@ class DbmlExporter {
         constraints.push(value);
       }
       if (field.note) {
-        constraints.push(`note: '${DbmlExporter.escapeNote(field.note)}'`);
+        constraints.push(`note: ${DbmlExporter.escapeNote(field.note)}`);
       }
 
       if (constraints.length > 0) {
@@ -179,7 +190,7 @@ class DbmlExporter {
       if (!_.isEmpty(tableContent.indexContents)) {
         indexStr = `\nIndexes {\n${tableContent.indexContents.map(indexLine => `  ${indexLine}`).join('\n')}\n}`;
       }
-      const tableNote = table.note ? `  Note: '${DbmlExporter.escapeNote(table.note)}'\n` : '';
+      const tableNote = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note)}\n`: '';
 
       const tableStr = `Table ${shouldPrintSchema(schema, model)
         ? `"${schema.name}".` : ''}"${table.name}"${tableSettingStr} {\n${

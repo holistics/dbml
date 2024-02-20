@@ -1,0 +1,11 @@
+Table A {
+    id int [ref: > B.id] // circular ref
+    name string [ref: > B.name]
+}
+
+Table B {
+    id int
+    name string
+}
+
+Ref: B.id > A.id // circular ref

@@ -1,0 +1,41 @@
+Table follows {
+  following_user_id integer
+  followed_user_id integer
+  created_at timestamp 
+}
+
+Table users as U {
+  id integer [primary key]
+  username varchar
+  role varchar
+  created_at timestamp
+}
+
+Table A.users as U2 {
+  id integer
+}
+
+TableGroup A1 {
+  follows
+}
+
+TableGroup A2 {
+  follows
+  users
+}
+
+TableGroup A3 {
+  users
+}
+
+TableGroup A4 {
+    U
+}
+
+TableGroup A5 {
+  U2
+}
+
+TableGroup A6 {
+  A.users
+}
