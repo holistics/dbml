@@ -1,3 +1,26 @@
+## v3.1.6 (2024-02-20)
+
+#### :memo: Documentation
+* [#512](https://github.com/holistics/dbml/pull/512) Add contribution for DB2Code ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#519](https://github.com/holistics/dbml/pull/519) Remove ref in table syntax ([@Huy-DNA](https://github.com/Huy-DNA))
+  * [#518](https://github.com/holistics/dbml/pull/518) Add check for table reappear in tablegroups ([@Huy-DNA](https://github.com/Huy-DNA))
+  * [#515](https://github.com/holistics/dbml/pull/515) Fix validate when redundant args & `getMemberChain` ([@Huy-DNA](https://github.com/Huy-DNA))
+  * [#517](https://github.com/holistics/dbml/pull/517) Fix circular ref ([@Huy-DNA](https://github.com/Huy-DNA))
+* `dbml-core`
+  * [#503](https://github.com/holistics/dbml/pull/503) fix(notes): properly escape notes with new lines ([@pierresouchay](https://github.com/pierresouchay))
+
+#### :boom: Breaking Change
+* `dbml-parse`
+  * [#519](https://github.com/holistics/dbml/pull/519) Remove ref in table syntax ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 3
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Pierre Souchay ([@pierresouchay](https://github.com/pierresouchay))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.1.5 (2024-02-06)
 
 #### :bug: Bug Fix
