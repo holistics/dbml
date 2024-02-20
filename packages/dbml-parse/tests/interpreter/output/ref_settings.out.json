@@ -1,0 +1,157 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "A",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 14,
+              "line": 2,
+              "column": 5
+            },
+            "end": {
+              "offset": 24,
+              "line": 2,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 26,
+          "line": 3,
+          "column": 2
+        }
+      },
+      "indexes": []
+    },
+    {
+      "name": "B",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 42,
+              "line": 6,
+              "column": 5
+            },
+            "end": {
+              "offset": 52,
+              "line": 6,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 28,
+          "line": 5,
+          "column": 1
+        },
+        "end": {
+          "offset": 54,
+          "line": 7,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
+  ],
+  "refs": [
+    {
+      "token": {
+        "start": {
+          "offset": 56,
+          "line": 9,
+          "column": 1
+        },
+        "end": {
+          "offset": 107,
+          "line": 9,
+          "column": 52
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "onDelete": "cascade",
+      "onUpdate": "cascade",
+      "endpoints": [
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "A",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 61,
+              "line": 9,
+              "column": 6
+            },
+            "end": {
+              "offset": 65,
+              "line": 9,
+              "column": 10
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "B",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 68,
+              "line": 9,
+              "column": 13
+            },
+            "end": {
+              "offset": 72,
+              "line": 9,
+              "column": 17
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
+}

@@ -1,0 +1,9 @@
+Table A {
+    id integer
+}
+
+Table B {
+    id integer
+}
+
+Ref: A.id > B.id [update: cascade, delete: cascade]
