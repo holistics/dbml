@@ -1,6 +1,6 @@
 import Element from './element';
 
-class Note extends Element {
+class StickyNote extends Element {
   constructor ({
     name, content, headerColor, token, database = {},
   } = {}) {
@@ -36,4 +36,4 @@ class Note extends Element {
   }
 }
 
-export default Note;
+export default StickyNote;

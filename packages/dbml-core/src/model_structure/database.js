@@ -4,7 +4,7 @@ import Ref from './ref';
 import Enum from './enum';
 import TableGroup from './tableGroup';
 import Table from './table';
-import Note from './note';
+import StickyNote from './stickyNote';
 import Element from './element';
 import {
   DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, NOTE,
@@ -50,7 +50,7 @@ class Database extends Element {
 
   processNotes (rawNotes) {
     rawNotes.forEach((note) => {
-      this.pushNote(new Note({ ...note, database: this }));
+      this.pushNote(new StickyNote({ ...note, database: this }));
     });
   }
 
