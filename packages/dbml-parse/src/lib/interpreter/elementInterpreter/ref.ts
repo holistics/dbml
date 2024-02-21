@@ -2,9 +2,10 @@ import _ from "lodash";
 import { destructureComplexVariable, extractVariableFromExpression } from "../../analyzer/utils";
 import { aggregateSettingList } from "../../analyzer/validator/utils";
 import { CompileError, CompileErrorCode } from "../../errors";
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, ListExpressionNode, SyntaxNode } from "../../parser/nodes";
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode } from "../../parser/nodes";
 import { ElementInterpreter, InterpreterDatabase, Ref, Table } from "../types";
 import { extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint } from "../utils";
+import { extractStringFromIdentifierStream } from "../../parser/utils";
 
 export class RefInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -68,8 +69,14 @@ export class RefInterpreter implements ElementInterpreter {
 
     if (field.args[0]) {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
-      this.ref.onDelete = extractVariableFromExpression(settingMap['delete']?.at(0)?.value).unwrap_or(undefined) as any;
-      this.ref.onDelete = extractVariableFromExpression(settingMap['delete']?.at(0)?.value).unwrap_or(undefined) as any;
+      const deleteSetting = settingMap['delete']?.at(0)?.value;
+      this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode
+        ? extractStringFromIdentifierStream(deleteSetting).unwrap_or(undefined) 
+        : extractVariableFromExpression(deleteSetting).unwrap_or(undefined) as string;
+      const updateSetting = settingMap['update']?.at(0)?.value;
+      this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode
+        ? extractStringFromIdentifierStream(updateSetting).unwrap_or(undefined)
+        : extractVariableFromExpression(updateSetting).unwrap_or(undefined) as string;
     }
     
     const multiplicities = getMultiplicities(op);

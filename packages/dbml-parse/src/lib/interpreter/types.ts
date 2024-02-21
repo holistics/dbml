@@ -111,8 +111,8 @@ export interface Ref {
   schemaName: string | null;
   name: string | null;
   endpoints: RefEndpointPair;
-  onDelete?: 'cascade' | 'no action' | 'restrict' | 'set default' | 'set null';
-  onUpdate?: 'cascade' | 'no action' | 'restrict' | 'set default' | 'set null';
+  onDelete?: string;
+  onUpdate?: string;
   token: TokenPosition;
 }
 
