@@ -1,3 +1,13 @@
+## v3.1.8 (2024-02-21)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#524](https://github.com/holistics/dbml/pull/524) fix: unquoted update & delete ref setting ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.1.7 (2024-02-20)
 
 #### :bug: Bug Fix
