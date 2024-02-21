@@ -96,8 +96,8 @@ export function getRefId(sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol
     return firstIds < secondIds ? `${firstIds}-${secondIds}` : `${secondIds}-${firstIds}`;
   }
 
-  const firstId = sym1.id;
-  const secondId = (sym2 as ColumnSymbol).id;
+  const firstId = sym1.id.toString();
+  const secondId = (sym2 as ColumnSymbol).id.toString();
   return firstId < secondId ? `${firstId}-${secondId}` : `${secondId}-${firstId}`;
 }
 
