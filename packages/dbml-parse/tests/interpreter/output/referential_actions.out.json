@@ -776,6 +776,7 @@
       },
       "name": null,
       "schemaName": null,
+      "onDelete": "set null",
       "endpoints": [
         {
           "tableName": "products",
@@ -836,6 +837,7 @@
       },
       "name": null,
       "schemaName": null,
+      "onDelete": "no action",
       "endpoints": [
         {
           "fieldNames": [
