@@ -3,11 +3,11 @@ Table users [headercolor: #3498DB] {
   username varchar(255) [not null, unique]
 }
 
-Note note [headercolor: #3457DB] {
+Note note {
   'One line note'
 }
 
-Note note2 [headercolor: #3457DB] {
+Note note2 {
   '''
     # Title
     body

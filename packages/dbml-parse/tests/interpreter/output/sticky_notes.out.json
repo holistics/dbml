@@ -84,29 +84,27 @@
           "column": 1
         },
         "end": {
-          "offset": 164,
+          "offset": 141,
           "line": 8,
           "column": 2
         }
-      },
-      "headerColor": "#3457DB"
+      }
     },
     {
       "name": "note2",
       "content": "\n    # Title\n    body\n  ",
       "token": {
         "start": {
-          "offset": 166,
+          "offset": 143,
           "line": 10,
           "column": 1
         },
         "end": {
-          "offset": 236,
+          "offset": 190,
           "line": 15,
           "column": 2
         }
-      },
-      "headerColor": "#3457DB"
+      }
     }
   ],
   "refs": [],

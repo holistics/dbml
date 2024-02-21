@@ -61,11 +61,11 @@ enum gender {
     female2
 }
 
-Note note [headercolor: #3457DB] {
+Note note {
   'One line note'
 }
 
-Note note2 [headercolor: #3457DB] {
+Note note2 {
   '''
     # Title
     body

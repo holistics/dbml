@@ -3,29 +3,29 @@ Table users [headercolor: #3498DB] {
   username varchar(255) [not null, unique]
 }
 
-Note note2 [headercolor: #3457DB] {
+Note note2 {
   'One line note'
 }
 
-Note note2 [headercolor: #3457DB] {
+Note note2 {
   'One line note'
 }
 
-Note note3 [headercolor: #3457DB] {
+Note note3 {
   'One line note'
 }
 
-Note "note3" [headercolor: #3457DB] {
+Note "note3" {
   'One line note'
 }
 
-Note schema.note3 [headercolor: #3457DB] {
+Note schema.note3[] {
   '''
     # Title
     body
   '''
 }
-Note "schema.note4" [headercolor: #3457DB] {
+Note "schema.note4" {
   '''
     # Title
     body
