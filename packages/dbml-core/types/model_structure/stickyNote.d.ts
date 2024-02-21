@@ -9,7 +9,7 @@ interface RawStickyNote {
     token: Token;
     headerColor: string;
 }
-declare class Note extends Element {
+declare class StickyNote extends Element {
     name: string;
     content: string;
     noteToken: Token;
@@ -26,7 +26,7 @@ declare class Note extends Element {
     };
     normalize(model: NormalizedDatabase): void;
 }
-export interface NormalizedNote {
+export interface NormalizedStickyNote {
     [id: number]: {
         id: number;
         name: string;
@@ -34,4 +34,4 @@ export interface NormalizedNote {
         headerColor: string;
     };
 }
-export default Note;
+export default StickyNote;
