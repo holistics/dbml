@@ -70,9 +70,13 @@ export class RefInterpreter implements ElementInterpreter {
     if (field.args[0]) {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
       const deleteSetting = settingMap['delete']?.at(0)?.value;
-      this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode ? extractStringFromIdentifierStream(deleteSetting).unwrap_or(undefined) : extractVariableFromExpression(deleteSetting).unwrap_or(undefined) as any
+      this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode
+        ? extractStringFromIdentifierStream(deleteSetting).unwrap_or(undefined) 
+        : extractVariableFromExpression(deleteSetting).unwrap_or(undefined) as string;
       const updateSetting = settingMap['update']?.at(0)?.value;
-      this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode ? extractStringFromIdentifierStream(updateSetting).unwrap_or(undefined) : extractVariableFromExpression(updateSetting).unwrap_or(undefined) as any
+      this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode
+        ? extractStringFromIdentifierStream(updateSetting).unwrap_or(undefined)
+        : extractVariableFromExpression(updateSetting).unwrap_or(undefined) as string;
     }
     
     const multiplicities = getMultiplicities(op);
