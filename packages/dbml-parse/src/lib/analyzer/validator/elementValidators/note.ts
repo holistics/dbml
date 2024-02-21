@@ -50,7 +50,7 @@ export default class NoteValidator implements ElementValidator {
     }
 
     const nameFragments = destructureComplexVariable(nameNode);
-    if (!nameFragments.isOk()) return []
+    if (!nameFragments.isOk()) return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', this.declarationNode)]
 
     const names = nameFragments.unwrap();
 
@@ -76,7 +76,7 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
-    if (settingList && !(this.declarationNode.parent instanceof ProgramNode)) {
+    if (settingList) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList)];
     }
 

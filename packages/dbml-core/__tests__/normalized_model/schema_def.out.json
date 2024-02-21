@@ -82,14 +82,12 @@
     "1": {
       "id": 1,
       "name": "note",
-      "content": "One line note",
-      "headerColor": "#3457DB"
+      "content": "One line note"
     },
     "2": {
       "id": 2,
       "name": "note2",
-      "content": "\n    # Title\n    body\n  ",
-      "headerColor": "#3457DB"
+      "content": "\n    # Title\n    body\n  "
     }
   },
   "refs": {
