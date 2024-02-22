@@ -2,7 +2,7 @@ import { ProgramNode } from '../parser/nodes';
 import { CompileError } from '../errors';
 import { Database, InterpreterDatabase } from './types';
 import { TableInterpreter } from './elementInterpreter/table';
-import { NoteInterpreter } from './elementInterpreter/note';
+import { StickyNoteInterpreter } from './elementInterpreter/sticky_note';
 import { RefInterpreter } from './elementInterpreter/ref';
 import { TableGroupInterpreter } from './elementInterpreter/tableGroup';
 import { EnumInterpreter } from './elementInterpreter/enum';
@@ -38,7 +38,7 @@ export default class Interpreter {
         case ElementKind.Table:
           return (new TableInterpreter(element, this.env)).interpret();
         case ElementKind.Note:
-          return (new NoteInterpreter(element, this.env)).interpret();
+          return (new StickyNoteInterpreter(element, this.env)).interpret();
         case ElementKind.Ref:
           return (new RefInterpreter(element, this.env)).interpret();
         case ElementKind.TableGroup:
