@@ -5,7 +5,7 @@ import { CompileError, CompileErrorCode } from '../../errors';
 import { aggregateSettingList } from '../../analyzer/validator/utils';
 import _ from 'lodash';
 
-export class NoteInterpreter implements ElementInterpreter {
+export class StickyNoteInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private note: Partial<Note>;
