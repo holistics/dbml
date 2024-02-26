@@ -1,3 +1,12 @@
+## v3.2.0 (2024-02-26)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#500](https://github.com/holistics/dbml/pull/500) Support sticky note syntaxes ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 1
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v3.1.8 (2024-02-21)
 
 #### :bug: Bug Fix
