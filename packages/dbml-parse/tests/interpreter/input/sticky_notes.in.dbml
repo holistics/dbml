@@ -1,0 +1,15 @@
+Table users [headercolor: #3498DB] {
+  id integer [primary key]
+  username varchar(255) [not null, unique]
+}
+
+Note note {
+  'One line note'
+}
+
+Note note2 {
+  '''
+    # Title
+    body
+  '''
+}

@@ -2,6 +2,7 @@ import { ProgramNode } from '../parser/nodes';
 import { CompileError } from '../errors';
 import { Database, InterpreterDatabase } from './types';
 import { TableInterpreter } from './elementInterpreter/table';
+import { StickyNoteInterpreter } from './elementInterpreter/sticky_note';
 import { RefInterpreter } from './elementInterpreter/ref';
 import { TableGroupInterpreter } from './elementInterpreter/tableGroup';
 import { EnumInterpreter } from './elementInterpreter/enum';
@@ -20,6 +21,7 @@ export default class Interpreter {
     this.env = {
       schema: [],
       tables: new Map(),
+      notes: new Map(),
       refIds: { },
       ref: new Map(),
       enums: new Map(),
@@ -35,6 +37,8 @@ export default class Interpreter {
       switch (getElementKind(element).unwrap_or(undefined)) {
         case ElementKind.Table:
           return (new TableInterpreter(element, this.env)).interpret();
+        case ElementKind.Note:
+          return (new StickyNoteInterpreter(element, this.env)).interpret();
         case ElementKind.Ref:
           return (new RefInterpreter(element, this.env)).interpret();
         case ElementKind.TableGroup:
@@ -56,6 +60,7 @@ function convertEnvToDb(env: InterpreterDatabase): Database {
   return {
     schemas: [],
     tables: Array.from(env.tables.values()),
+    notes: Array.from(env.notes.values()),
     refs: Array.from(env.ref.values()),
     enums: Array.from(env.enums.values()),
     tableGroups: Array.from(env.tableGroups.values()),

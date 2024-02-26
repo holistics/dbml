@@ -60,3 +60,14 @@ enum gender {
     male2
     female2
 }
+
+Note note {
+  'One line note'
+}
+
+Note note2 {
+  '''
+    # Title
+    body
+  '''
+}
