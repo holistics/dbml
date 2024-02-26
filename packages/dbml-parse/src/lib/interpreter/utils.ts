@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { None, Option, Some } from '../option';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import { destructureComplexTuple, destructureComplexVariable, destructureMemberAccessExpression } from '../analyzer/utils';
 import { LiteralNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode } from '../parser/nodes';
@@ -91,8 +90,8 @@ export function getRefId(sym1: ColumnSymbol, sym2: ColumnSymbol): string;
 export function getRefId(sym1: ColumnSymbol[], sym2: ColumnSymbol[]): string;
 export function getRefId(sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): string {
   if (Array.isArray(sym1)) {
-    const firstIds = sym1.map(({ id }) => id).sort().join(',');  
-    const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort().join(',');  
+    const firstIds = sym1.map(({ id }) => id).sort().join(',');
+    const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort().join(',');
     return firstIds < secondIds ? `${firstIds}-${secondIds}` : `${secondIds}-${firstIds}`;
   }
 
@@ -105,7 +104,7 @@ export function isSameEndpoint(sym1: ColumnSymbol, sym2: ColumnSymbol): boolean;
 export function isSameEndpoint(sym1: ColumnSymbol[], sym2: ColumnSymbol[]): boolean;
 export function isSameEndpoint(sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): boolean {
   if (Array.isArray(sym1)) {
-    const firstIds = sym1.map(({ id }) => id).sort();  
+    const firstIds = sym1.map(({ id }) => id).sort();
     const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort();
     return _.zip(firstIds, secondIds).every(([first, second]) => first === second);
   }

@@ -1,0 +1,40 @@
+Table users [headercolor: #3498DB] {
+  id integer [primary key]
+  username varchar(255) [not null, unique]
+}
+
+Note note2 {
+  'One line note'
+}
+
+Note note2 {
+  'One line note'
+}
+
+Note note3 {
+  'One line note'
+}
+
+Note "note3" {
+  'One line note'
+}
+
+Note schema.note3[] {
+  '''
+    # Title
+    body
+  '''
+}
+Note "schema.note4" {
+  '''
+    # Title
+    body
+  '''
+}
+
+Note "schema"."note5" [headercolor: #3457DB] {
+  '''
+    # Title
+    body
+  '''
+}

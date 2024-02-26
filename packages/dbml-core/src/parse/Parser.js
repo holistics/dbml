@@ -45,6 +45,10 @@ class Parser {
     return mssqlParser.parseWithPegError(str);
   }
 
+  static parse (str, format) {
+    return new Parser().parse(str, format);
+  }
+
   parse (str, format) {
     let rawDatabase = {};
     switch (format) {

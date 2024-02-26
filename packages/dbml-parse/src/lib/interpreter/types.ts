@@ -14,6 +14,7 @@ export interface ElementInterpreter {
 export interface InterpreterDatabase {
   schema: [];
   tables: Map<ElementDeclarationNode, Table>;
+  notes: Map<ElementDeclarationNode, Note>;
   // for keeping track of circular refs
   refIds: { [refid: string]: ElementDeclarationNode };
   ref: Map<ElementDeclarationNode, Ref>;
@@ -28,6 +29,7 @@ export interface InterpreterDatabase {
 export interface Database {
   schemas: [];
   tables: Table[];
+  notes: Note[];
   refs: Ref[];
   enums: Enum[];
   tableGroups: TableGroup[];
@@ -47,6 +49,13 @@ export interface Table {
     value: string;
     token: TokenPosition;
   };
+}
+
+export interface Note {
+  name: string;
+  content: string;
+  token: TokenPosition;
+  headerColor?: string;
 }
 
 export interface ColumnType {

@@ -1,0 +1,115 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 39,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 63,
+              "line": 2,
+              "column": 27
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
+        },
+        {
+          "name": "username",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar(255)",
+            "args": "255"
+          },
+          "token": {
+            "start": {
+              "offset": 66,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 106,
+              "line": 3,
+              "column": 43
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": true,
+          "not_null": true
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 108,
+          "line": 4,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "headerColor": "#3498DB"
+    }
+  ],
+  "notes": [
+    {
+      "name": "note",
+      "content": "One line note",
+      "token": {
+        "start": {
+          "offset": 110,
+          "line": 6,
+          "column": 1
+        },
+        "end": {
+          "offset": 141,
+          "line": 8,
+          "column": 2
+        }
+      }
+    },
+    {
+      "name": "note2",
+      "content": "\n    # Title\n    body\n  ",
+      "token": {
+        "start": {
+          "offset": 143,
+          "line": 10,
+          "column": 1
+        },
+        "end": {
+          "offset": 190,
+          "line": 15,
+          "column": 2
+        }
+      }
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
+}

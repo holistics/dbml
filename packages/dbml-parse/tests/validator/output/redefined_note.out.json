@@ -3738,8 +3738,8 @@
       "name": "CompileError"
     },
     {
-      "code": 3042,
-      "diagnostic": "A Note can only appear inside a Table or a Project",
+      "code": 3000,
+      "diagnostic": "Sticky note must have a name",
       "nodeOrToken": {
         "id": 20,
         "kind": "<element-declaration>",
@@ -4118,8 +4118,8 @@
       "name": "CompileError"
     },
     {
-      "code": 3042,
-      "diagnostic": "A Note can only appear inside a Table or a Project",
+      "code": 3000,
+      "diagnostic": "Sticky note must have a name",
       "nodeOrToken": {
         "id": 24,
         "kind": "<element-declaration>",
