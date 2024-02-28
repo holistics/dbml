@@ -56,3 +56,4 @@ Example of a database definition of a simple blogging site:
 * [Kacher: Laravel's Database Schemas to DBML by Arsanandha Aphisitworachorch](https://github.com/aphisitworachorch/kacher)
 * [d365fo-entity-schema: Generate DBML from Dynamics 365 Finance and Operations ](https://github.com/noakesey/d365fo-entity-schema)
 * [DB2Code: Generate DBML from Maven](https://github.com/alberlau/DB2Code)
+* [dbml-java: A DBML parser written on Java 17 by Nils Wende](https://github.com/nilswende/dbml-java)
