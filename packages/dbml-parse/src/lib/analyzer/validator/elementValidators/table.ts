@@ -12,7 +12,7 @@ import {
   PrimaryExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '../../utils';
 import {
   aggregateSettingList,
   isExpressionANumber,
@@ -38,6 +38,7 @@ import {
 import { SyntaxToken } from '../../../lexer/tokens';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
 import _ from 'lodash';
+import { ElementKind } from '../../../analyzer/types';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken};
@@ -59,8 +60,8 @@ export default class TableValidator implements ElementValidator {
   }
 
   private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level', this.declarationNode)];
+    if (this.declarationNode.parent instanceof ElementDeclarationNode && getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Project ) {
+      return [new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level or inside a Project', this.declarationNode)];
     }
     return [];
   }
