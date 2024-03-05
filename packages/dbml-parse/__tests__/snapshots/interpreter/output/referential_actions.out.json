@@ -1,7 +1,7 @@
 [
   {
     "code": 4000,
-    "diagnostic": "Column id does not exists in Table users",
+    "diagnostic": "Column 'id' does not exists in Table 'users'",
     "nodeOrToken": {
       "id": 213,
       "kind": "<primary-expression>",
@@ -87,7 +87,7 @@
   },
   {
     "code": 4000,
-    "diagnostic": "Column id does not exists in Table orders",
+    "diagnostic": "Column 'id' does not exists in Table 'orders'",
     "nodeOrToken": {
       "id": 231,
       "kind": "<primary-expression>",
@@ -173,7 +173,7 @@
   },
   {
     "code": 4000,
-    "diagnostic": "Column name does not exists in Table products",
+    "diagnostic": "Column 'name' does not exists in Table 'products'",
     "nodeOrToken": {
       "id": 251,
       "kind": "<primary-expression>",
