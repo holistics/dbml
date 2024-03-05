@@ -105,7 +105,7 @@ export function lookupAndBindInScope (
     const symbol = curSymbolTable.get(index);
 
     if (!symbol) {
-      return [new CompileError(CompileErrorCode.BINDING_ERROR, `${kind} ${name} does not exists in ${curName === undefined ? 'global scope' : `${curKind} ${curName}`}`, node)];
+      return [new CompileError(CompileErrorCode.BINDING_ERROR, `${kind} '${name}' does not exists in ${curName === undefined ? 'global scope' : `${curKind} '${curName}'`}`, node)];
     }
     node.referee = symbol;
     symbol.references.push(node);
