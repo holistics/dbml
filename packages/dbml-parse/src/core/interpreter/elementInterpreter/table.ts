@@ -5,7 +5,7 @@ import {
 } from '@/core/interpreter/types';
 import {
   AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
-  FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PartialInjectionNode, PrefixExpressionNode,
+  FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
   SyntaxNode,
 } from '@/core/parser/nodes';
 import {
@@ -18,7 +18,7 @@ import {
   extractVariableFromExpression,
 } from '@/core/analyzer/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import { aggregateSettingList, isValidPartialInjection } from '@/core/analyzer/validator/utils';
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 import { destructureIndex, SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
@@ -82,6 +82,7 @@ export class TableInterpreter implements ElementInterpreter {
     if (schemaName.length > 1) {
       this.table.name = name;
       this.table.schemaName = schemaName.join('.');
+
       return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode)];
     }
 
@@ -129,9 +130,9 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode || e instanceof PartialInjectionNode);
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
-      ...this.interpretFields(fields as (FunctionApplicationNode | PartialInjectionNode)[]),
+      ...this.interpretFields(fields as FunctionApplicationNode[]),
       ...this.interpretSubElements(subs as ElementDeclarationNode[]),
     ];
   }
@@ -162,14 +163,14 @@ export class TableInterpreter implements ElementInterpreter {
     });
   }
 
-  private interpretInjection (injection: PartialInjectionNode, order: number) {
+  private interpretInjection (injection: PrefixExpressionNode, order: number) {
     const partial: Partial<TablePartialInjection> = { order, token: getTokenPosition(injection) };
-    partial.name = injection.partial!.variable!.value;
+    partial.name = extractVariableFromExpression(injection.expression).unwrap_or('');
     this.table.partials!.push(partial as TablePartialInjection);
     return [];
   }
 
-  private interpretFields (fields: (FunctionApplicationNode | PartialInjectionNode)[]): CompileError[] {
+  private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
     const symbolTableEntries = this.declarationNode.symbol?.symbolTable
       ? [...this.declarationNode.symbol.symbolTable.entries()]
       : [];
@@ -183,9 +184,9 @@ export class TableInterpreter implements ElementInterpreter {
       : [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
 
     const interpretFieldErrors = fields.flatMap((field, order) => {
-      return field instanceof FunctionApplicationNode
-        ? this.interpretColumn(field)
-        : this.interpretInjection(field, order);
+      return isValidPartialInjection(field.callee)
+        ? this.interpretInjection(field.callee, order)
+        : this.interpretColumn(field);
     });
 
     return [
@@ -235,6 +236,7 @@ export class TableInterpreter implements ElementInterpreter {
 
         if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
+
           return [];
         }
 
@@ -308,6 +310,7 @@ export class TableInterpreter implements ElementInterpreter {
     if (column.pk) {
       this.pkColumns.push(column as Column);
     }
+
     return errors;
   }
 
@@ -345,6 +348,7 @@ export class TableInterpreter implements ElementInterpreter {
           arg = arg.callee!;
         }
         fragments.push(arg);
+
         return fragments;
       }).forEach((arg) => {
         const { functional, nonFunctional } = destructureIndexNode(arg).unwrap();

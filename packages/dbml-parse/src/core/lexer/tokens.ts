@@ -65,6 +65,7 @@ export function isOp (c?: string): boolean {
     case '.':
     case '&':
     case '|':
+    case '~':
       return true;
     default:
       return false;

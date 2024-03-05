@@ -31,7 +31,6 @@ import {
   SyntaxNodeIdGenerator,
   TupleExpressionNode,
   VariableNode,
-  PartialInjectionNode,
 } from '@/core/parser/nodes';
 import NodeFactory from '@/core/parser/factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
@@ -107,7 +106,7 @@ export default class Parser {
     return this.tokens[this.current - 1];
   }
 
-  private canHandle<T extends SyntaxNode>(e: PartialParsingError<T>): boolean {
+  private canHandle<T extends SyntaxNode> (e: PartialParsingError<T>): boolean {
     return e.handlerContext === undefined || e.handlerContext === this.contextStack.top();
   }
 
@@ -708,12 +707,6 @@ export default class Parser {
     return this.nodeFactory.create(FunctionExpressionNode, args);
   }
 
-  private variable (): VariableNode {
-    this.consume('Expect a variable', SyntaxTokenKind.IDENTIFIER);
-    const variableToken = this.previous();
-    return this.nodeFactory.create(VariableNode, { variable: variableToken });
-  }
-
   /* Parsing and synchronizing BlockExpression */
 
   private blockExpression = this.contextStack.withContextDo(ParsingContext.BlockExpression, () => {
@@ -739,14 +732,7 @@ export default class Parser {
 
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
       try {
-        if (this.match(SyntaxTokenKind.TILDE)) { // Check for partial injection
-          const tildeToken = this.previous();
-          const variable = this.variable();
-          const partialInjection = this.nodeFactory.create(PartialInjectionNode, { op: tildeToken, partial: variable });
-          args.body.push(partialInjection);
-        } else {
-          args.body.push(this.canBeField() ? this.fieldDeclaration() : this.expression());
-        }
+        args.body.push(this.canBeField() ? this.fieldDeclaration() : this.expression());
       } catch (e) {
         if (!(e instanceof PartialParsingError)) {
           throw e;
@@ -1163,6 +1149,7 @@ const prefixBindingPowerMap: {
   '>': { left: null, right: 15 },
   '<>': { left: null, right: 15 },
   '!': { left: null, right: 15 },
+  '~': { left: null, right: 15 },
 };
 
 function prefixBindingPower (token: SyntaxToken): { left: null; right: null | number } {
