@@ -100,7 +100,6 @@ export enum SyntaxNodeKind {
   GROUP_EXPRESSION = '<group-expression>',
   DUMMY = '<dummy>',
   ARRAY = '<array>',
-  PARTIAL_INJECTION = '<partial-injection>',
 }
 
 export class ProgramNode extends SyntaxNode {
@@ -321,7 +320,7 @@ export class FunctionApplicationNode extends SyntaxNode {
 export class BlockExpressionNode extends SyntaxNode {
   blockOpenBrace?: SyntaxToken;
 
-  body: (PartialInjectionNode | ElementDeclarationNode | FunctionApplicationNode)[];
+  body: (ElementDeclarationNode | FunctionApplicationNode)[];
 
   blockCloseBrace?: SyntaxToken;
 
@@ -332,7 +331,7 @@ export class BlockExpressionNode extends SyntaxNode {
       blockCloseBrace,
     }: {
       blockOpenBrace?: SyntaxToken;
-      body?: (PartialInjectionNode | ElementDeclarationNode | FunctionApplicationNode)[];
+      body?: (ElementDeclarationNode | FunctionApplicationNode)[];
       blockCloseBrace?: SyntaxToken;
     },
     id: SyntaxNodeId,
@@ -341,17 +340,6 @@ export class BlockExpressionNode extends SyntaxNode {
     this.blockOpenBrace = blockOpenBrace;
     this.body = body;
     this.blockCloseBrace = blockCloseBrace;
-  }
-}
-
-export class PartialInjectionNode extends SyntaxNode {
-  op?: SyntaxToken;
-  partial?: VariableNode;
-
-  constructor ({ op, partial }: { op?: SyntaxToken; partial?: VariableNode }, id: SyntaxNodeId) {
-    super(id, SyntaxNodeKind.PARTIAL_INJECTION, [op, partial]); // Need `op` for suggestion service
-    this.op = op;
-    this.partial = partial;
   }
 }
 
