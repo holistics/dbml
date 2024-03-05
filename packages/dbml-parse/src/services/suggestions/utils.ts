@@ -2,6 +2,7 @@ import { SymbolKind } from '../../lib/analyzer/symbol/symbolIndex';
 import { CompletionItemKind, type CompletionList } from '../types';
 import { SyntaxToken, SyntaxTokenKind } from '../../lib/lexer/tokens';
 import { hasTrailingSpaces } from '../../lib/lexer/utils';
+import { isAlphaOrUnderscore } from '../../lib/utils';
 
 export function pickCompletionItemKind(symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
@@ -69,7 +70,7 @@ export function addQuoteIfNeeded(completionList: CompletionList): CompletionList
     ...completionList,
     suggestions: completionList.suggestions.map((s) => ({
       ...s,
-      insertText: (s.insertText.search(/[^a-zA-Z\d_]/) !== -1 || s.insertText[0].match(/\d/)) ? `"${s.insertText}"` : s.insertText,
+      insertText: (!s.insertText.split('').every(isAlphaOrUnderscore)) ? `"${s.insertText}"` : s.insertText,
     })),
   };
 }
