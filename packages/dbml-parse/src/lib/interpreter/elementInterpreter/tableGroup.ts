@@ -92,13 +92,13 @@ export class TableGroupInterpreter implements ElementInterpreter {
       }
 
       const tableid = destructureMemberAccessExpression((field as FunctionApplicationNode).callee!).unwrap().pop()!.referee!.id;
-      if (this.env.groupOfTable[tableid]) {
-        const tableGroup = this.env.groupOfTable[tableid];
+      if (this.env.tableOwnerGroup[tableid]) {
+        const tableGroup = this.env.tableOwnerGroup[tableid];
         const { schemaName, name } = this.env.tableGroups.get(tableGroup)!;
         const groupName = schemaName ? `${schemaName}.${name}` : name;
         errors.push(new CompileError(CompileErrorCode.TABLE_REAPPEAR_IN_TABLEGROUP, `Table "${fragments.join('.')}" already appears in group "${groupName}"`, field));
       } else {
-        this.env.groupOfTable[tableid] = this.declarationNode;
+        this.env.tableOwnerGroup[tableid] = this.declarationNode;
       }
 
       return {

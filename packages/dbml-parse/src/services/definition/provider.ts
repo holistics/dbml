@@ -31,8 +31,6 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
         ].includes(node?.kind)
       ) {
         ({ declaration } = node.referee);
-      } else if (node.referee?.injectorDeclaration) {
-        declaration = node.referee.injectorDeclaration;
       }
 
       if (declaration) {
