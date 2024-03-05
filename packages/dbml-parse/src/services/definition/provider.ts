@@ -27,12 +27,9 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
           && [
             SyntaxNodeKind.PRIMARY_EXPRESSION,
             SyntaxNodeKind.VARIABLE,
-            SyntaxNodeKind.PARTIAL_INJECTION,
           ].includes(node?.kind)
       ) {
         ({ declaration } = node.referee);
-      } else if (node.referee?.injectorDeclaration) {
-        declaration = node.referee.injectorDeclaration;
       }
 
       if (declaration) {

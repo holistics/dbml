@@ -4,30 +4,40 @@ import { pickBinder } from './utils';
 import Report from '../../report';
 import { SyntaxToken } from '../../lexer/tokens';
 import SymbolFactory from '../symbol/factory';
+import { getElementKind } from '../utils';
+import { ElementKind } from '../types';
+import TableBinder from './elementBinder/table';
 
 export default class Binder {
   private ast: ProgramNode;
 
-  private errors: CompileError[];
+  private symbolFactory: SymbolFactory;
 
-  constructor (ast: ProgramNode) {
+  constructor (ast: ProgramNode, symbolFactory: SymbolFactory) {
     this.ast = ast;
-    this.errors = [];
+    this.symbolFactory = symbolFactory;
   }
 
-  resolve (symbolFactory: SymbolFactory): Report<ProgramNode, CompileError> {
-    // Resolve injected fields and sub elements before binding
-    this.ast.body
-      .map((element) => {
-        if (!element.type) return null;
+  private resolvePartialInjections (): CompileError[] {
+    return this.ast.body.filter((e) => getElementKind(e).unwrap_or('') === ElementKind.Table).flatMap((t) => {
+      const binder = new TableBinder(t as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
+      return binder.resolvePartialInjections();
+    });
+  }
 
+  resolve (): Report<ProgramNode, CompileError> {
+    const errors: CompileError[] = [];
+    // Must call this before binding
+    errors.push(...this.resolvePartialInjections());
+    // eslint-disable-next-line no-restricted-syntax
+    for (const element of this.ast.body) {
+      if (element.type) {
         const _Binder = pickBinder(element as ElementDeclarationNode & { type: SyntaxToken });
-        const binder = new _Binder(element, this.errors);
-        binder.resolveInjections(symbolFactory);
-        return binder;
-      })
-      .forEach((binder) => binder?.bind());
+        const binder = new _Binder(element as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
+        errors.push(...binder.bind());
+      }
+    }
 
-    return new Report(this.ast, this.errors);
+    return new Report(this.ast, errors);
   }
 }

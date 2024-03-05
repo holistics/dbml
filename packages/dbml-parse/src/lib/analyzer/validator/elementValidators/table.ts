@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { last, forIn } from 'lodash';
+import { last, forIn, partition } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -11,11 +11,11 @@ import {
   FunctionApplicationNode,
   FunctionExpressionNode,
   ListExpressionNode,
-  PartialInjectionNode,
+  PrefixExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable, extractVariableFromExpression } from '../../utils';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -25,13 +25,14 @@ import {
   isValidColumnType,
   isValidDefaultValue,
   isValidName,
+  isValidPartialInjection,
   isVoid,
   pickValidator,
   registerSchemaStack,
 } from '../utils';
 import { ElementValidator } from '../types';
-import { ColumnSymbol, TablePartialInjectionSymbol, TableSymbol } from '../../symbol/symbols';
-import { createColumnSymbolIndex, createTablePartialInjectionSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
+import { ColumnSymbol, PartialInjectionSymbol, TableSymbol } from '../../symbol/symbols';
+import { createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
@@ -176,52 +177,19 @@ export default class TableValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Table\'s body must be a block', body)];
     }
 
-    const [fields, injections, subs] = body.body.reduce((res: [FunctionApplicationNode[], PartialInjectionNode[], ElementDeclarationNode[]], node) => {
-      if (node instanceof FunctionApplicationNode) res[0].push(node);
-      else if (node instanceof PartialInjectionNode) res[1].push(node);
-      else if (node instanceof ElementDeclarationNode) res[2].push(node);
-      return res;
-    }, [[], [], []]);
-
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
-      ...this.validateInjections(injections as PartialInjectionNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
     ];
   }
 
-  validateInjections (injections: PartialInjectionNode[]) {
-    return injections.flatMap((injection) => this.registerInjection(injection));
-  }
-
-  registerInjection (injection: PartialInjectionNode) {
-    if (!injection.partial?.variable?.value) return [];
-
-    const injectionName = injection.partial.variable?.value;
-    const injectionId = createTablePartialInjectionSymbolIndex(injectionName);
-
-    const injectionSymbol = this.symbolFactory.create(TablePartialInjectionSymbol, { declaration: injection });
-    injection.symbol = injectionSymbol;
-
-    const symbolTable = this.declarationNode.symbol!.symbolTable!;
-    const duplicateSymbol = symbolTable.get(injectionId);
-    if (duplicateSymbol) {
-      return [
-        new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate injection ${injectionName}`, injection),
-        new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate injection ${injectionName}`, duplicateSymbol.declaration!),
-      ];
-    }
-    symbolTable.set(injectionId, injectionSymbol);
-    return [];
-  }
-
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
-    return fields.flatMap((field) => {
+    const validateColumn = (field: FunctionApplicationNode) => {
+      const errors: CompileError[] = [];
       if (!field.callee) {
         return [];
       }
-
-      const errors: CompileError[] = [];
       if (field.args.length === 0) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', field.callee!));
       }
@@ -241,6 +209,38 @@ export default class TableValidator implements ElementValidator {
       errors.push(...this.registerField(field));
 
       return errors;
+    };
+    const validatePartialInjection = (field: FunctionApplicationNode) => {
+      const errors: CompileError[] = [];
+      if (!field.callee) {
+        return [];
+      }
+      if (!isValidPartialInjection(field.callee)) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION, 'A partial injection should be of the form ~<table-partial>', field.callee));
+      } else {
+        const injectedTablePartialName = extractVariableFromExpression(field.callee.expression).unwrap_or('');
+        const partialInjectionSymbol = this.symbolFactory.create(PartialInjectionSymbol, { symbolTable: new SymbolTable(), declaration: field });
+        const partialInjectionSymbolId = createPartialInjectionSymbolIndex(injectedTablePartialName);
+        const symbolTable = this.declarationNode.symbol!.symbolTable!;
+        if (symbolTable.has(partialInjectionSymbolId)) {
+          const symbol = symbolTable.get(partialInjectionSymbolId);
+          return [
+            new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection ${injectedTablePartialName}`, field),
+            new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection ${injectedTablePartialName}`, symbol!.declaration!),
+          ];
+        }
+        symbolTable.set(injectedTablePartialName, partialInjectionSymbol);
+      }
+      if (field.args.length) {
+        errors.push(
+          ...field.args.map((arg) => new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION, 'A partial injection does not have any trailing attributes', arg)),
+        );
+      }
+      return errors;
+    };
+    return fields.flatMap((field) => {
+      if (field.callee instanceof PrefixExpressionNode && field.callee.op?.value === '~') return validatePartialInjection(field);
+      return validateColumn(field);
     });
   }
 

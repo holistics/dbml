@@ -31,7 +31,8 @@ export class RefInterpreter implements ElementInterpreter {
     this.env.ref.set(this.declarationNode, this.ref as Ref);
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
-      ...this.interpretBody(this.declarationNode.body!)];
+      ...this.interpretBody(this.declarationNode.body!)
+    ];
     return errors;
   }
 
@@ -107,6 +108,7 @@ export class RefInterpreter implements ElementInterpreter {
     ];
 
     this.env.refIds[refId] = this.declarationNode;
+
     return [];
   }
 }

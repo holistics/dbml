@@ -24,6 +24,7 @@ export class EnumInterpreter implements ElementInterpreter {
     this.enum.token = getTokenPosition(this.declarationNode);
     this.env.enums.set(this.declarationNode, this.enum as Enum);
     const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
+
     return errors;
   }
 
@@ -33,6 +34,7 @@ export class EnumInterpreter implements ElementInterpreter {
     if (schemaName.length > 1) {
       this.enum.name = name;
       this.enum.schemaName = schemaName.join('.');
+
       return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode)];
     }
 
@@ -59,8 +61,8 @@ export class EnumInterpreter implements ElementInterpreter {
       };
 
       this.enum.values!.push(enumField as EnumField);
+
       return [];
     });
   }
 }
-

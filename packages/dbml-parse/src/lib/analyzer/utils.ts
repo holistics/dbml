@@ -82,9 +82,9 @@ export function destructureComplexVariable (node?: SyntaxNode): Option<string[]>
   return new Some(variables);
 }
 
-export function destructureComplexTuple (
+export function destructureComplexVariableTuple (
   node?: SyntaxNode,
-): Option<{ variables: string[]; tupleElements?: string[] }> {
+): Option<{ variables: (PrimaryExpressionNode & { expression: VariableNode })[]; tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] }> {
   if (node === undefined) {
     return new None();
   }
@@ -95,26 +95,20 @@ export function destructureComplexTuple (
     return new None();
   }
 
-  const variables: string[] = [];
-  let tupleElements: string[] | undefined;
+  let tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] = [];
 
   if (!isExpressionAVariableNode(last(fragments))) {
     const topFragment = fragments.pop()!;
     if (isTupleOfVariables(topFragment)) {
-      tupleElements = topFragment.elementList.map((e) => extractVarNameFromPrimaryVariable(e as any).unwrap());
+      tupleElements = topFragment.elementList;
     } else {
       return new None();
     }
   }
 
-  // eslint-disable-next-line no-restricted-syntax
-  for (const fragment of fragments) {
-    const variable = extractVariableFromExpression(fragment).unwrap_or(undefined);
-    if (!variable) {
-      return new None();
-    }
-
-    variables.push(variable);
+  const variables = fragments;
+  if (!variables.every(isExpressionAVariableNode)) {
+    return new None();
   }
 
   return new Some({
@@ -188,15 +182,15 @@ export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpress
   }
 
   return (
-    destructureComplexTuple(value.leftExpression)
-      .and_then(() => destructureComplexTuple(value.rightExpression))
+    destructureComplexVariableTuple(value.leftExpression)
+      .and_then(() => destructureComplexVariableTuple(value.rightExpression))
       .unwrap_or(undefined) !== undefined
   );
 }
 
 export function isEqualTupleOperands (value: InfixExpressionNode): value is InfixExpressionNode {
-  const leftRes = destructureComplexTuple(value.leftExpression);
-  const rightRes = destructureComplexTuple(value.rightExpression);
+  const leftRes = destructureComplexVariableTuple(value.leftExpression);
+  const rightRes = destructureComplexVariableTuple(value.rightExpression);
 
   if (!leftRes.isOk() || !rightRes.isOk()) {
     return false;

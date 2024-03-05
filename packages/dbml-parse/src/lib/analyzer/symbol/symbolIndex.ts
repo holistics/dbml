@@ -12,7 +12,7 @@ export enum SymbolKind {
   EnumField = 'Enum field',
   Note = 'Note',
   TablePartial = 'TablePartial',
-  TablePartialInjection = 'TablePartialInjection',
+  PartialInjection = 'PartialInjection',
 }
 
 export function createSchemaSymbolIndex (key: string): NodeSymbolIndex {
@@ -51,8 +51,8 @@ export function createTablePartialSymbolIndex (key: string): NodeSymbolIndex {
   return `${SymbolKind.TablePartial}:${key}`;
 }
 
-export function createTablePartialInjectionSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.TablePartialInjection}:${key}`;
+export function createPartialInjectionSymbolIndex (key: string): NodeSymbolIndex {
+  return `${SymbolKind.PartialInjection}:${key}`;
 }
 
 export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): NodeSymbolIndex {
@@ -73,6 +73,8 @@ export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): Nod
       return createTableGroupFieldSymbolIndex(key);
     case SymbolKind.TablePartial:
       return createTablePartialSymbolIndex(key);
+    case SymbolKind.PartialInjection:
+      return createPartialInjectionSymbolIndex(key);
     default:
       throw new Error('Unreachable');
   }
@@ -96,21 +98,5 @@ export function isPublicSchemaIndex (id: NodeSymbolIndex): boolean {
   }
   const { kind, name } = res;
 
-  return kind === 'Schema' && name === 'public';
-}
-
-export function isInjectionIndex (id: NodeSymbolIndex): boolean {
-  const res = destructureIndex(id).unwrap_or(undefined);
-  if (!res) return false;
-
-  const { kind } = res;
-  return kind === SymbolKind.TablePartialInjection;
-}
-
-export function getInjectorIndex (injectionNodeIndex: NodeSymbolIndex): NodeSymbolIndex | null {
-  const res = destructureIndex(injectionNodeIndex).unwrap_or(undefined);
-  if (!res) return null;
-
-  const { kind, name } = res;
-  return kind === SymbolKind.TablePartialInjection ? createNodeSymbolIndex(name, SymbolKind.TablePartial) : null;
+  return kind === SymbolKind.Schema && name === 'public';
 }

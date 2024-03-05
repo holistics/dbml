@@ -1408,7 +1408,7 @@
     "code": 3021,
     "diagnostic": "Unknown column setting 'constraint'",
     "nodeOrToken": {
-      "id": 35,
+      "id": 37,
       "kind": "<attribute>",
       "startPos": {
         "offset": 185,
@@ -1425,7 +1425,7 @@
       "start": 185,
       "end": 212,
       "name": {
-        "id": 33,
+        "id": 35,
         "kind": "<identifer-stream>",
         "startPos": {
           "offset": 185,
@@ -1466,7 +1466,7 @@
         ]
       },
       "value": {
-        "id": 34,
+        "id": 36,
         "kind": "<function-expression>",
         "startPos": {
           "offset": 197,
@@ -1556,7 +1556,7 @@
     "code": 3057,
     "diagnostic": "A Custom element can only appear in a Project",
     "nodeOrToken": {
-      "id": 55,
+      "id": 57,
       "kind": "<element-declaration>",
       "startPos": {
         "offset": 230,
@@ -1680,7 +1680,7 @@
         "end": 241
       },
       "body": {
-        "id": 54,
+        "id": 56,
         "kind": "<block-expression>",
         "startPos": {
           "offset": 242,
@@ -1741,7 +1741,7 @@
         },
         "body": [
           {
-            "id": 51,
+            "id": 53,
             "kind": "<function-application>",
             "startPos": {
               "offset": 248,
@@ -1758,7 +1758,7 @@
             "start": 248,
             "end": 293,
             "callee": {
-              "id": 45,
+              "id": 47,
               "kind": "<function-expression>",
               "startPos": {
                 "offset": 248,
@@ -1905,7 +1905,7 @@
             },
             "args": [
               {
-                "id": 50,
+                "id": 52,
                 "kind": "<list-expression>",
                 "startPos": {
                   "offset": 266,
@@ -1944,7 +1944,7 @@
                 },
                 "elementList": [
                   {
-                    "id": 49,
+                    "id": 51,
                     "kind": "<attribute>",
                     "startPos": {
                       "offset": 267,
@@ -1961,7 +1961,7 @@
                     "start": 267,
                     "end": 292,
                     "name": {
-                      "id": 46,
+                      "id": 48,
                       "kind": "<identifer-stream>",
                       "startPos": {
                         "offset": 267,
@@ -2002,7 +2002,7 @@
                       ]
                     },
                     "value": {
-                      "id": 48,
+                      "id": 50,
                       "kind": "<primary-expression>",
                       "startPos": {
                         "offset": 273,
@@ -2019,7 +2019,7 @@
                       "start": 273,
                       "end": 292,
                       "expression": {
-                        "id": 47,
+                        "id": 49,
                         "kind": "<literal>",
                         "startPos": {
                           "offset": 273,
@@ -2151,7 +2151,7 @@
             ]
           },
           {
-            "id": 53,
+            "id": 55,
             "kind": "<function-application>",
             "startPos": {
               "offset": 298,
@@ -2168,7 +2168,7 @@
             "start": 298,
             "end": 371,
             "callee": {
-              "id": 52,
+              "id": 54,
               "kind": "<function-expression>",
               "startPos": {
                 "offset": 298,
@@ -2412,7 +2412,7 @@
     "code": 3009,
     "diagnostic": "A Custom element can only have an inline field",
     "nodeOrToken": {
-      "id": 54,
+      "id": 56,
       "kind": "<block-expression>",
       "startPos": {
         "offset": 242,
@@ -2473,7 +2473,7 @@
       },
       "body": [
         {
-          "id": 51,
+          "id": 53,
           "kind": "<function-application>",
           "startPos": {
             "offset": 248,
@@ -2490,7 +2490,7 @@
           "start": 248,
           "end": 293,
           "callee": {
-            "id": 45,
+            "id": 47,
             "kind": "<function-expression>",
             "startPos": {
               "offset": 248,
@@ -2637,7 +2637,7 @@
           },
           "args": [
             {
-              "id": 50,
+              "id": 52,
               "kind": "<list-expression>",
               "startPos": {
                 "offset": 266,
@@ -2676,7 +2676,7 @@
               },
               "elementList": [
                 {
-                  "id": 49,
+                  "id": 51,
                   "kind": "<attribute>",
                   "startPos": {
                     "offset": 267,
@@ -2693,7 +2693,7 @@
                   "start": 267,
                   "end": 292,
                   "name": {
-                    "id": 46,
+                    "id": 48,
                     "kind": "<identifer-stream>",
                     "startPos": {
                       "offset": 267,
@@ -2734,7 +2734,7 @@
                     ]
                   },
                   "value": {
-                    "id": 48,
+                    "id": 50,
                     "kind": "<primary-expression>",
                     "startPos": {
                       "offset": 273,
@@ -2751,7 +2751,7 @@
                     "start": 273,
                     "end": 292,
                     "expression": {
-                      "id": 47,
+                      "id": 49,
                       "kind": "<literal>",
                       "startPos": {
                         "offset": 273,
@@ -2883,7 +2883,7 @@
           ]
         },
         {
-          "id": 53,
+          "id": 55,
           "kind": "<function-application>",
           "startPos": {
             "offset": 298,
@@ -2900,7 +2900,7 @@
           "start": 298,
           "end": 371,
           "callee": {
-            "id": 52,
+            "id": 54,
             "kind": "<function-expression>",
             "startPos": {
               "offset": 298,
@@ -3143,7 +3143,7 @@
     "code": 3021,
     "diagnostic": "Unknown column setting 'constraint'",
     "nodeOrToken": {
-      "id": 78,
+      "id": 82,
       "kind": "<attribute>",
       "startPos": {
         "offset": 455,
@@ -3160,7 +3160,7 @@
       "start": 455,
       "end": 480,
       "name": {
-        "id": 76,
+        "id": 80,
         "kind": "<identifer-stream>",
         "startPos": {
           "offset": 455,
@@ -3201,7 +3201,7 @@
         ]
       },
       "value": {
-        "id": 77,
+        "id": 81,
         "kind": "<function-expression>",
         "startPos": {
           "offset": 467,
@@ -3291,7 +3291,7 @@
     "code": 3021,
     "diagnostic": "Unknown column setting 'constraint'",
     "nodeOrToken": {
-      "id": 81,
+      "id": 85,
       "kind": "<attribute>",
       "startPos": {
         "offset": 482,
@@ -3308,7 +3308,7 @@
       "start": 482,
       "end": 514,
       "name": {
-        "id": 79,
+        "id": 83,
         "kind": "<identifer-stream>",
         "startPos": {
           "offset": 482,
@@ -3349,7 +3349,7 @@
         ]
       },
       "value": {
-        "id": 80,
+        "id": 84,
         "kind": "<function-expression>",
         "startPos": {
           "offset": 494,
