@@ -26,6 +26,7 @@ outlines the full syntax documentations of DBML.
 - [Multi-line String](#multi-line-string)
 - [Enum Definition](#enum-definition)
 - [TableGroup](#tablegroup)
+- [Stick Notes](#sticky-notes)
 - [Syntax Consistency](#syntax-consistency)
 
 ##### Take a look at an example below:
@@ -418,6 +419,33 @@ If your enum values contain spaces or other special characters you can use doubl
         merchants
         countries
     } 
+
+## Sticky Notes
+You can include sticky notes in your diagram and easily export them as png, svg, or pdf. These notes are simple to figure out without hovering over the diagram canvas.
+
+Sticky Notes can only be defined within the same scope as the tables.
+
+    Note note_name {
+      'Note content'
+    }
+
+Example,
+
+    Table jobs {
+        id integer
+        status job_status
+    }
+
+    Note single_line_note {
+      'This is a single line note'
+    }
+
+    Note multiple_lines_note {
+    '''
+      This is a multiple lines note
+      This string can spans over multiple lines.
+    '''
+    }
 
 ## Syntax Consistency
 
