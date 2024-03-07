@@ -19,6 +19,7 @@ outlines the full syntax documentations of DBML.
   - [Relationship settings](#relationship-settings)
   - [Many-to-many relationship](#many-to-many-relationship)
 - [Comments](#comments)
+- [Sticky Notes](#sticky-notes)
 - [Note Definition](#note-definition)
   - [Project Notes](#project-notes)
   - [Table Notes](#table-notes)
@@ -297,6 +298,26 @@ Example,
         comment
     */
 
+## Sticky Notes
+You can add sticky notes to the diagram canvas to serve as a quick reminder or to elaborate on a complex idea.
+
+Example,
+
+    Table jobs {
+        ...
+    }
+
+    Note single_line_note {
+      'This is a single line note'
+    }
+
+    Note multiple_lines_note {
+    '''
+      This is a multiple lines note
+      This string can spans over multiple lines.
+    '''
+    }
+
 
 ## Note Definition
 Note allows users to give description for a particular DBML element.
@@ -417,7 +438,7 @@ If your enum values contain spaces or other special characters you can use doubl
     TableGroup e-commerce1 {
         merchants
         countries
-    } 
+    }
 
 ## Syntax Consistency
 
