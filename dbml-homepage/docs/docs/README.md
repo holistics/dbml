@@ -421,9 +421,7 @@ If your enum values contain spaces or other special characters you can use doubl
     } 
 
 ## Sticky Notes
-You can include sticky notes in your diagram and easily export them as png, svg, or pdf. These notes are simple to figure out without hovering over the diagram canvas.
-
-Sticky Notes can only be defined within the same scope as the tables.
+You can add sticky notes to the diagram canvas to serve as a quick reminder or to elaborate on a complex idea.
 
     Note note_name {
       'Note content'
