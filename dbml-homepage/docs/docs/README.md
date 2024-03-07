@@ -19,6 +19,7 @@ outlines the full syntax documentations of DBML.
   - [Relationship settings](#relationship-settings)
   - [Many-to-many relationship](#many-to-many-relationship)
 - [Comments](#comments)
+- [Sticky Notes](#sticky-notes)
 - [Note Definition](#note-definition)
   - [Project Notes](#project-notes)
   - [Table Notes](#table-notes)
@@ -26,7 +27,6 @@ outlines the full syntax documentations of DBML.
 - [Multi-line String](#multi-line-string)
 - [Enum Definition](#enum-definition)
 - [TableGroup](#tablegroup)
-- [Sticky Notes](#sticky-notes)
 - [Syntax Consistency](#syntax-consistency)
 
 ##### Take a look at an example below:
