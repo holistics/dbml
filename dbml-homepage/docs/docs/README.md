@@ -298,6 +298,26 @@ Example,
         comment
     */
 
+## Sticky Notes
+You can add sticky notes to the diagram canvas to serve as a quick reminder or to elaborate on a complex idea.
+
+Example,
+
+    Table jobs {
+        ...
+    }
+
+    Note single_line_note {
+      'This is a single line note'
+    }
+
+    Note multiple_lines_note {
+    '''
+      This is a multiple lines note
+      This string can spans over multiple lines.
+    '''
+    }
+
 
 ## Note Definition
 Note allows users to give description for a particular DBML element.
@@ -418,31 +438,6 @@ If your enum values contain spaces or other special characters you can use doubl
     TableGroup e-commerce1 {
         merchants
         countries
-    } 
-
-## Sticky Notes
-You can add sticky notes to the diagram canvas to serve as a quick reminder or to elaborate on a complex idea.
-
-    Note note_name {
-      'Note content'
-    }
-
-Example,
-
-    Table jobs {
-        id integer
-        status job_status
-    }
-
-    Note single_line_note {
-      'This is a single line note'
-    }
-
-    Note multiple_lines_note {
-    '''
-      This is a multiple lines note
-      This string can spans over multiple lines.
-    '''
     }
 
 ## Syntax Consistency
