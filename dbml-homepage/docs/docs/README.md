@@ -26,7 +26,7 @@ outlines the full syntax documentations of DBML.
 - [Multi-line String](#multi-line-string)
 - [Enum Definition](#enum-definition)
 - [TableGroup](#tablegroup)
-- [Stick Notes](#sticky-notes)
+- [Sticky Notes](#sticky-notes)
 - [Syntax Consistency](#syntax-consistency)
 
 ##### Take a look at an example below:
