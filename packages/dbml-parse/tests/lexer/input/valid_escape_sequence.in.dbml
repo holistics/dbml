@@ -1,0 +1,13 @@
+"\n"
+"\r"
+"\uabce"
+"\u123F"
+"\uABCD"
+"\t"
+"\v"
+'''This is a single line \
+here!'''
+
+'''This is not a single line \ !'''
+'''This is also not a single line \    
+as there are spaces after \\'''

@@ -441,6 +441,14 @@ export default class Lexer {
       return '\\';
     }
     switch (this.advance()) {
+      case '\r':
+        if (this.check('\n')) {
+          this.advance();
+        }
+
+        return '';
+      case '\n':
+        return '';
       case 't':
         return '\t';
       case 'n':
@@ -461,10 +469,14 @@ export default class Lexer {
         return '\v';
       case 'f':
         return '\f';
+      case ' ':
+        return '\\ ';
       case 'u': {
         let hex = '';
         for (let i = 0; i <= 3; i += 1) {
           if (this.isAtEnd() || !isAlphaNumeric(this.peek()!)) {
+            this.errors.push(new CompileError(CompileErrorCode.INVALID_ESCAPE_SEQUENCE, `Invalid unicode escape sequence \\u${hex}, only unicode escape sequences of the form \\uHHHH where H is a hexadecimal number are allowed`, this.createToken(SyntaxTokenKind.STRING_LITERAL, true)));
+
             return `\\u${hex}`;
           }
           hex += this.advance();
@@ -472,8 +484,12 @@ export default class Lexer {
 
         return String.fromCharCode(parseInt(hex, 16));
       }
-      default:
-        return `\\${this.tokens[this.current.offset - 1]}`;
+      default: {
+        const invalidEscape = `\\${this.text[this.current.offset - 1]}`;
+        this.errors.push(new CompileError(CompileErrorCode.INVALID_ESCAPE_SEQUENCE, `Invalid escape sequence ${invalidEscape}`, this.createToken(SyntaxTokenKind.STRING_LITERAL, true)));
+
+        return invalidEscape;
+      }
     }
   }
 }
