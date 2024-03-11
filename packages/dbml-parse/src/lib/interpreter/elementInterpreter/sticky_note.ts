@@ -1,6 +1,6 @@
 import { ElementInterpreter, InterpreterDatabase, Note } from '../types';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '../../parser/nodes';
-import { extractColor, extractElementName, getTokenPosition } from '../utils';
+import { extractColor, extractElementName, getTokenPosition, normalizeNoteContent } from '../utils';
 import { CompileError, CompileErrorCode } from '../../errors';
 import { aggregateSettingList } from '../../analyzer/validator/utils';
 import _ from 'lodash';
@@ -61,7 +61,7 @@ export class StickyNoteInterpreter implements ElementInterpreter {
   private interpretNote(note: FunctionApplicationNode): CompileError[] {
     const noteContent = _.get(note, 'callee.expression.literal.value', '');
 
-    this.note.content = noteContent;
+    this.note.content = normalizeNoteContent(noteContent);
     return [];
   }
 }
