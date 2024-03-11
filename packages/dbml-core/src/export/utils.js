@@ -8,7 +8,6 @@ export function shouldPrintSchema (schema, model) {
   return schema.name !== DEFAULT_SCHEMA_NAME || (schema.name === DEFAULT_SCHEMA_NAME && model.database['1'].hasDefaultSchema);
 }
 
-
 export function buildJunctionFields1 (fieldIds, model) {
   const fieldsMap = new Map();
   fieldIds.map(fieldId => fieldsMap.set(`${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`, model.fields[fieldId].type.type_name));
@@ -17,7 +16,7 @@ export function buildJunctionFields1 (fieldIds, model) {
 
 export function buildJunctionFields2 (fieldIds, model, firstTableFieldsMap) {
   const fieldsMap = new Map();
-  fieldIds.map((fieldId) => {
+  fieldIds.forEach((fieldId) => {
     let fieldName = `${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`;
     let count = 1;
     while (firstTableFieldsMap.has(fieldName)) {
@@ -38,4 +37,28 @@ export function buildNewTableName (firstTable, secondTable, usedTableNames) {
   }
   usedTableNames.add(newTableName);
   return newTableName;
+}
+
+export function escapeObjectName (name, database) {
+  if (!name) {
+    return '';
+  }
+
+  let escapeSignature = '';
+
+  switch (database) {
+    case 'postgress':
+      escapeSignature = '"';
+      break;
+    case 'mysql':
+      escapeSignature = '`';
+      break;
+    case 'oracle':
+      escapeSignature = '"';
+      break;
+    default:
+      break;
+  }
+
+  return `${escapeSignature}${name}${escapeSignature}`;
 }
