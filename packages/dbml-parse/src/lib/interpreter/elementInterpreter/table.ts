@@ -1,13 +1,22 @@
-import { Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table } from '../types';
-import { ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode } from '../../parser/nodes';
-import { extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint } from '../utils';
-import { destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression } from '../../analyzer/utils';
+import _ from 'lodash';
+import {
+ Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table,
+} from '../types';
+import {
+ ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode,
+} from '../../parser/nodes';
+import {
+ extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
+} from '../utils';
+import {
+ destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression,
+} from '../../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../../errors';
 import { aggregateSettingList, isExpressionANumber } from '../../analyzer/validator/utils';
 import { isExpressionAQuotedString, isExpressionAnIdentifierNode } from '../../parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import { ColumnSymbol } from '../../analyzer/symbol/symbols';
-import _ from 'lodash';
+import { RefInterpreter } from './ref';
 import Report from '../../report';
 
 export class TableInterpreter implements ElementInterpreter {
@@ -19,14 +28,16 @@ export class TableInterpreter implements ElementInterpreter {
   constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.table = { name: undefined, schemaName: undefined, alias: null, fields: [], token: undefined, indexes: [] };
+    this.table = {
+ name: undefined, schemaName: undefined, alias: null, fields: [], token: undefined, indexes: [],
+};
     this.pkColumns = [];
   }
 
   interpret(): CompileError[] {
     this.table.token = getTokenPosition(this.declarationNode);
     this.env.tables.set(this.declarationNode, this.table as Table);
-  
+
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
       ...this.interpretAlias(this.declarationNode.alias),
@@ -54,10 +65,11 @@ export class TableInterpreter implements ElementInterpreter {
 
   private interpretName(nameNode: SyntaxNode): CompileError[] {
     const { name, schemaName } = extractElementName(nameNode);
-    
+
     if (schemaName.length > 1) {
       this.table.name = name;
       this.table.schemaName = schemaName.join('.');
+
       return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode)];
     }
 
@@ -91,9 +103,9 @@ export class TableInterpreter implements ElementInterpreter {
   private interpretSettingList(settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.table.headerColor = settingMap['headercolor']?.length ? extractColor(settingMap['headercolor']?.at(0)?.value as any) : undefined;
-    
-    const [noteNode] = settingMap['note'] || [];
+    this.table.headerColor = settingMap.headercolor?.length ? extractColor(settingMap.headercolor?.at(0)?.value as any) : undefined;
+
+    const [noteNode] = settingMap.note || [];
     const noteValue = extractQuotedStringToken(noteNode?.value).unwrap_or(undefined);
     this.table.note = noteNode && {
       value: noteValue!,
@@ -105,7 +117,8 @@ export class TableInterpreter implements ElementInterpreter {
 
   private interpretBody(body: BlockExpressionNode): CompileError[] {
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];   
+
+    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
   }
 
   private interpretSubElements(subs: ElementDeclarationNode[]): CompileError[] {
@@ -115,14 +128,17 @@ export class TableInterpreter implements ElementInterpreter {
           this.table.note = {
             value: extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? (sub.body.body[0] as FunctionApplicationNode).callee : sub.body!.callee).unwrap(),
             token: getTokenPosition(sub),
-          }
-          return [];
+          };
+
+      return [];
         case 'indexes':
           return this.interpretIndexes(sub);
+        case 'ref':
+          return (new RefInterpreter(sub, this.env)).interpret();
       }
 
       return [];
-    })
+    });
   }
 
   private interpretFields(fields: FunctionApplicationNode[]): CompileError[] {
@@ -133,7 +149,7 @@ export class TableInterpreter implements ElementInterpreter {
     const errors: CompileError[] = [];
 
     const column: Partial<Column> = {};
-    
+
     column.name = extractVarNameFromPrimaryVariable(field.callee as any).unwrap();
 
     const typeReport = processColumnType(field.args[0]);
@@ -142,31 +158,32 @@ export class TableInterpreter implements ElementInterpreter {
 
     column.token = getTokenPosition(field);
     column.inline_refs = [];
-    
+
     const settings = field.args.slice(1);
     if (_.last(settings) instanceof ListExpressionNode) {
       const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
-      column.pk = !!settingMap['pk']?.length || !!settingMap['primary key']?.length;
-      column.increment = !!settingMap['increment']?.length;
-      column.unique = !!settingMap['unique']?.length;
+      column.pk = !!settingMap.pk?.length || !!settingMap['primary key']?.length;
+      column.increment = !!settingMap.increment?.length;
+      column.unique = !!settingMap.unique?.length;
       column.not_null = !!settingMap['not null']?.length && true;
-      column.dbdefault = processDefaultValue(settingMap['default']?.at(0)?.value);
-      const noteNode = settingMap['note']?.at(0);
+      column.dbdefault = processDefaultValue(settingMap.default?.at(0)?.value);
+      const noteNode = settingMap.note?.at(0);
       column.note = noteNode && {
         value: extractQuotedStringToken(noteNode.value).unwrap(),
         token: getTokenPosition(noteNode),
-      }
-      const refs = settingMap['ref'] || [];
+      };
+      const refs = settingMap.ref || [];
       column.inline_refs = refs.flatMap((ref) => {
         const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
         if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
+
           return [];
         }
 
         const op = (ref.value as PrefixExpressionNode).op!;
         const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression).unwrap();
-        
+
         let inlineRef: InlineRef | undefined;
         if (fragments.length === 1) {
           const [column] = fragments;
@@ -214,7 +231,7 @@ export class TableInterpreter implements ElementInterpreter {
         errors.push(...errs);
 
         return errs.length === 0 ? inlineRef : [];
-      })
+      });
     }
 
     column.pk ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'pk');
@@ -224,27 +241,28 @@ export class TableInterpreter implements ElementInterpreter {
     if (column.pk) {
       this.pkColumns.push(column as Column);
     }
+
     return errors;
   }
 
   private interpretIndexes(indexes: ElementDeclarationNode): CompileError[] {
     this.table.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
-      const index: Partial<Index> = { columns: [], };
+      const index: Partial<Index> = { columns: [] };
 
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexes);
       const args = [indexField.callee!, ...indexField.args];
       if (_.last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
-        index.pk = !!settingMap['pk']?.length;
-        index.unique = !!settingMap['unique']?.length;
-        index.name = extractQuotedStringToken(settingMap['name']?.at(0)?.value).unwrap_or(undefined);
-        const noteNode = settingMap['note']?.at(0);
+        index.pk = !!settingMap.pk?.length;
+        index.unique = !!settingMap.unique?.length;
+        index.name = extractQuotedStringToken(settingMap.name?.at(0)?.value).unwrap_or(undefined);
+        const noteNode = settingMap.note?.at(0);
         index.note = noteNode && {
           value: extractQuotedStringToken(noteNode.value).unwrap(),
           token: getTokenPosition(noteNode),
         };
-        index.type = extractVariableFromExpression(settingMap['type']?.at(0)?.value).unwrap_or(undefined); 
+        index.type = extractVariableFromExpression(settingMap.type?.at(0)?.value).unwrap_or(undefined);
       }
 
       args.flatMap((arg) => {
@@ -260,8 +278,9 @@ export class TableInterpreter implements ElementInterpreter {
           arg = arg.callee!;
         }
         fragments.push(arg);
+
         return fragments;
-      }).forEach((arg) => { 
+      }).forEach((arg) => {
         const { functional, nonFunctional } = destructureIndexNode(arg).unwrap();
         index.columns!.push(
           ...functional.map((s) => ({
@@ -274,10 +293,10 @@ export class TableInterpreter implements ElementInterpreter {
           })),
         );
       });
-       
+
       return index as Index;
     }));
-    
+
     return [];
   }
 
@@ -296,7 +315,7 @@ export class TableInterpreter implements ElementInterpreter {
       name: null,
       schemaName: null,
       token: inlineRef.token,
-      endpoints: [ 
+      endpoints: [
         {
           ...inlineRef,
           relation: multiplicities[1],
@@ -308,7 +327,7 @@ export class TableInterpreter implements ElementInterpreter {
           token: getTokenPosition(column),
           relation: multiplicities[0],
         },
-      ]
+      ],
     });
 
     return [];
@@ -327,6 +346,7 @@ function processColumnType(typeNode: SyntaxNode): Report<ColumnType, CompileErro
               return extractQuotedStringToken(e).unwrap();
             }
             // e can only be an identifier here
+
             return extractVariableFromExpression(e).unwrap();
           })
           .join(',');
@@ -350,7 +370,7 @@ function processColumnType(typeNode: SyntaxNode): Report<ColumnType, CompileErro
         type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
         args: typeArgs,
       },
-      [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)]
+      [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)],
     );
   }
 
@@ -363,31 +383,32 @@ function processColumnType(typeNode: SyntaxNode): Report<ColumnType, CompileErro
 
 function processDefaultValue(valueNode?: SyntaxNode):
   {
-    type: "string" | "number" | "boolean" | "expression";
+    type: 'string' | 'number' | 'boolean' | 'expression';
     value: string | number;
   } | undefined {
   if (!valueNode) {
     return undefined;
   }
-  
+
   if (isExpressionAQuotedString(valueNode)) {
     return {
       value: extractQuotedStringToken(valueNode).unwrap(),
-      type: "string",
+      type: 'string',
     };
   }
 
   if (isExpressionANumber(valueNode)) {
     return {
-      type: "number",
+      type: 'number',
       value: Number.parseFloat(valueNode.expression.literal.value),
-    }
+    };
   }
 
   if (isExpressionAnIdentifierNode(valueNode)) {
     const value = valueNode.expression.variable.value.toLowerCase();
+
     return {
-      value, 
+      value,
       type: 'boolean',
     };
   }
@@ -398,17 +419,18 @@ function processDefaultValue(valueNode?: SyntaxNode):
     isExpressionANumber(valueNode.expression)
   ) {
     const number = Number.parseFloat(valueNode.expression.expression.literal.value);
+
     return {
-      value: valueNode.op?.value === '-' ? 0 - number : number, 
+      value: valueNode.op?.value === '-' ? 0 - number : number,
       type: 'number',
     };
   }
 
   if (valueNode instanceof FunctionExpressionNode) {
     return {
-      value: valueNode.value?.value!,
+      value: valueNode.value!.value!,
       type: 'expression',
-    }
+    };
   }
 
   throw new Error('Unreachable');

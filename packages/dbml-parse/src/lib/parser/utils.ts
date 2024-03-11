@@ -26,6 +26,7 @@ import {
   TupleExpressionNode,
   VariableNode,
 } from './nodes';
+import { destructureComplexVariable } from '../analyzer/utils';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem(
@@ -354,4 +355,8 @@ export function extractStringFromIdentifierStream(stream?: IdentiferStreamNode):
   }
 
   return new Some(name);
+}
+
+export function getElementName(element: ElementDeclarationNode): Option<string> {
+  return destructureComplexVariable(element).map((ss) => ss.join('.'));
 }

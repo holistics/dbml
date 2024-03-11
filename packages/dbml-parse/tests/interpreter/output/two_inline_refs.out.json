@@ -1,7 +1,7 @@
 [
   {
     "code": 4000,
-    "diagnostic": "Can not find Table 'staff'",
+    "diagnostic": "Table 'staff' does not exists in Schema 'public'",
     "nodeOrToken": {
       "id": 21,
       "kind": "<primary-expression>",
@@ -65,7 +65,7 @@
   },
   {
     "code": 4000,
-    "diagnostic": "Can not find Table 'rental'",
+    "diagnostic": "Table 'rental' does not exists in Schema 'public'",
     "nodeOrToken": {
       "id": 35,
       "kind": "<primary-expression>",

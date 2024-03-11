@@ -24,12 +24,13 @@ export class RefInterpreter implements ElementInterpreter {
     this.ref.token = getTokenPosition(this.declarationNode);
     this.env.ref.set(this.declarationNode, this.ref as Ref);
     const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body!)];
+
     return errors;
   }
 
   private interpretName(nameNode: SyntaxNode): CompileError[] {
     const errors: CompileError[] = [];
-  
+
     const fragments = destructureComplexVariable(this.declarationNode.name!).unwrap_or([]);
     this.ref.name = fragments.pop() || null;
     if (fragments.length > 1) {
@@ -44,15 +45,15 @@ export class RefInterpreter implements ElementInterpreter {
     if (body instanceof FunctionApplicationNode) {
       return this.interpretField(body);
     }
-    
+
     return this.interpretField(body.body[0] as FunctionApplicationNode);
   }
 
-  private interpretField(field: FunctionApplicationNode): CompileError[] {    
+  private interpretField(field: FunctionApplicationNode): CompileError[] {
     const op = (field.callee as InfixExpressionNode).op!.value;
     const { leftExpression, rightExpression } = field.callee as InfixExpressionNode;
-    
-    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!);  
+
+    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!);
     const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!);
 
     if (isSameEndpoint(leftSymbols, rightSymbols)) {
@@ -63,7 +64,7 @@ export class RefInterpreter implements ElementInterpreter {
     if (this.env.refIds[refId]) {
       return [
         new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode),
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),  
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
       ];
     }
 
@@ -78,7 +79,7 @@ export class RefInterpreter implements ElementInterpreter {
         ? extractStringFromIdentifierStream(updateSetting).unwrap_or(undefined)
         : extractVariableFromExpression(updateSetting).unwrap_or(undefined) as string;
     }
-    
+
     const multiplicities = getMultiplicities(op);
 
     this.ref.endpoints = [
@@ -95,6 +96,7 @@ export class RefInterpreter implements ElementInterpreter {
     ];
 
     this.env.refIds[refId] = this.declarationNode;
+
     return [];
   }
 }

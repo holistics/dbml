@@ -1400,7 +1400,7 @@
     },
     {
       "code": 4000,
-      "diagnostic": "Can not find Table 'Products'",
+      "diagnostic": "Table 'Products' does not exists in Schema 'public'",
       "nodeOrToken": {
         "id": 10,
         "kind": "<primary-expression>",

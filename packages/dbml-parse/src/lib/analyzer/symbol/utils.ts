@@ -1,5 +1,6 @@
 import {
   NodeSymbolIndex,
+  SymbolKind,
   createColumnSymbolIndex,
   createEnumFieldSymbolIndex,
   createEnumSymbolIndex,
@@ -8,12 +9,12 @@ import {
   createTableGroupSymbolIndex,
   createTableSymbolIndex,
 } from './symbolIndex';
-import SymbolTable from './symbolTable';
 import {
   ColumnSymbol,
   EnumFieldSymbol,
   EnumSymbol,
   NodeSymbol,
+  SchemaSymbol,
   TableGroupFieldSymbol,
   TableGroupSymbol,
   TableSymbol,
@@ -31,4 +32,29 @@ export function generatePossibleIndexes(name: string): NodeSymbolIndex[] {
     createEnumFieldSymbolIndex,
     createTableGroupFieldSymbolIndex,
   ].map((f) => f(name));
+}
+
+export function getSymbolKind(symbol: NodeSymbol): SymbolKind {
+  if (symbol instanceof SchemaSymbol) {
+    return SymbolKind.Schema;
+  }
+  if (symbol instanceof TableSymbol) {
+    return SymbolKind.Table;
+  }
+  if (symbol instanceof ColumnSymbol) {
+    return SymbolKind.Column;
+  }
+  if (symbol instanceof EnumSymbol) {
+    return SymbolKind.Enum;
+  }
+  if (symbol instanceof EnumFieldSymbol) {
+    return SymbolKind.EnumField;
+  }
+  if (symbol instanceof TableGroupSymbol) {
+    return SymbolKind.TableGroup;
+  }
+  if (symbol instanceof TableGroupFieldSymbol) {
+    return SymbolKind.TableGroupField;
+  }
+  throw new Error('No other possible symbol kind in getSymbolKind');
 }
