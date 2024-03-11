@@ -1,0 +1,98 @@
+/*
+Test general case:
+- Basic table: default column, increment, not null, timestamp column
+- Indexes
+- Many to many relation ship
+- Column comment
+- Table comment
+- Composite key: basic
+*/
+Table "user" {
+  "user_id" int [pk, increment]
+  "username" varchar2(40) [not null, unique]
+  "password" varchar2(255) [not null]
+  "email" nvarchar2(40) [not null, unique]
+  "address" nvarchar2(255)
+  "role" integer [default: 0]
+  "first_name" nvarchar2(20) [not null]
+  "last_name" nvarchar2(30) [not null]
+  "seller_expired_date" timestamp
+  "created_date" timestamp [default: `current_timestamp`]
+}
+
+Table "rating" {
+  "rating_id" int [pk, increment, not null, note: 'Ignore not null when using increment']
+  "rated_user_id" int [not null]
+  "evaluator_id" int [not null]
+  "feedback" nclob [not null]
+  "is_positive" number(1) [not null, note: 'Number(1) represents for boolean']
+  "rated_at" timestamp [default: `current_timestamp`]
+}
+
+Table "category" [note: 'Category is stored as tree like structure'] {
+  "cat_id" int [pk, increment]
+  "cat_name" nvarchar2(50) [not null]
+  "super_cat_id" int
+  "created_date" timestamp [default: `current_timestamp`]
+
+  Indexes {
+    cat_name [name: "FULLTEXT_INDEX_CATEGORY"]
+  }
+}
+
+Table "product" {
+  "product_id" int [pk, increment]
+  "product_name" nvarchar2(255) [not null]
+  "current_price" float [not null]
+  "buy_now_price" float
+  "expired_date" timestamp [not null]
+  "cat_id" int [not null]
+  "max_tolerable_price" float
+  "is_sold" number(1)
+  "won_bidder_id" int
+  "current_bidding_count" int [default: 0]
+  "created_date" timestamp [default: `current_timestamp`]
+  "is_allow_all" number(1)
+
+  Indexes {
+    product_name [name: "FULLTEXT_INDEX_PRODUCT"]
+  }
+}
+
+Table "product_detail" {
+  "product_id" int [pk, increment]
+  "step_price" int [not null]
+  "auto_extend" number(1) [default: 0]
+  "image_links" nclob [not null]
+  "description" nclob [not null]
+  "seller_id" int [not null]
+}
+
+// many to many relation ship + composite key
+Table "wishlist" {
+  "user_id" int [not null]
+  "product_id" int [not null]
+
+  Indexes {
+    (user_id, product_id) [pk, name: "PK_WISHLIST"]
+  }
+}
+
+
+Ref "FK_RATED_USER_ACOUNT":"user"."user_id" < "rating"."rated_user_id"
+
+Ref "FK_EVALUATOR_USER":"user"."user_id" < "rating"."evaluator_id"
+
+Ref "FK_CATEGORY_SUPER":"category"."cat_id" < "category"."super_cat_id"
+
+Ref "FK_PRODUCT_CATEGORY":"category"."cat_id" < "product"."cat_id"
+
+Ref "FK_PRODUCT_USER":"user"."user_id" < "product"."won_bidder_id"
+
+Ref "FK_PRODUCT_DETAIL_PRODUCT":"product"."product_id" < "product_detail"."product_id"
+
+Ref "FK_PRODUCT_DETAIL_USER":"user"."user_id" < "product_detail"."seller_id"
+
+Ref "FK_WISHLIST_PRODUCT":"product"."product_id" < "wishlist"."product_id"
+
+Ref "FK_WISHLIST_USER":"user"."user_id" < "wishlist"."user_id"
