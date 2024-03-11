@@ -261,169 +261,169 @@
   "errors": [
     {
       "code": 1011,
-      "diagnostic": "Invalid unicode escape sequence \\u, only unicode escape sequences of the form \\uHHHH where H is a hexadecimal number are allowed",
+      "diagnostic": "Invalid unicode escape sequence '\\u', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
       "nodeOrToken": {
         "kind": "<string>",
         "startPos": {
-          "offset": 0,
-          "line": 0,
-          "column": 0
+          "column": 1,
+          "offset": 1,
+          "line": 0
         },
         "endPos": {
           "offset": 3,
           "line": 0,
           "column": 3
         },
-        "value": "\"\\u",
+        "value": "\\u",
         "leadingTrivia": [],
         "trailingTrivia": [],
         "leadingInvalid": [],
         "trailingInvalid": [],
         "isInvalid": true,
-        "start": 0,
+        "start": 1,
         "end": 3
       },
-      "start": 0,
+      "start": 1,
       "end": 3,
       "name": "CompileError"
     },
     {
       "code": 1011,
-      "diagnostic": "Invalid escape sequence \\a",
+      "diagnostic": "Invalid escape sequence '\\a'",
       "nodeOrToken": {
         "kind": "<string>",
         "startPos": {
-          "offset": 5,
-          "line": 1,
-          "column": 0
+          "column": 1,
+          "offset": 6,
+          "line": 1
         },
         "endPos": {
           "offset": 8,
           "line": 1,
           "column": 3
         },
-        "value": "\"\\a",
+        "value": "\\a",
         "leadingTrivia": [],
         "trailingTrivia": [],
         "leadingInvalid": [],
         "trailingInvalid": [],
         "isInvalid": true,
-        "start": 5,
+        "start": 6,
         "end": 8
       },
-      "start": 5,
+      "start": 6,
       "end": 8,
       "name": "CompileError"
     },
     {
       "code": 1011,
-      "diagnostic": "Invalid unicode escape sequence \\u1, only unicode escape sequences of the form \\uHHHH where H is a hexadecimal number are allowed",
+      "diagnostic": "Invalid unicode escape sequence '\\u1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
       "nodeOrToken": {
         "kind": "<string>",
         "startPos": {
-          "offset": 10,
-          "line": 2,
-          "column": 0
+          "column": 1,
+          "offset": 11,
+          "line": 2
         },
         "endPos": {
           "offset": 14,
           "line": 2,
           "column": 4
         },
-        "value": "\"\\u1",
+        "value": "\\u1",
         "leadingTrivia": [],
         "trailingTrivia": [],
         "leadingInvalid": [],
         "trailingInvalid": [],
         "isInvalid": true,
-        "start": 10,
+        "start": 11,
         "end": 14
       },
-      "start": 10,
+      "start": 11,
       "end": 14,
       "name": "CompileError"
     },
     {
       "code": 1011,
-      "diagnostic": "Invalid unicode escape sequence \\u12, only unicode escape sequences of the form \\uHHHH where H is a hexadecimal number are allowed",
+      "diagnostic": "Invalid unicode escape sequence '\\u12', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
       "nodeOrToken": {
         "kind": "<string>",
         "startPos": {
-          "offset": 16,
-          "line": 3,
-          "column": 0
+          "column": 1,
+          "offset": 17,
+          "line": 3
         },
         "endPos": {
           "offset": 21,
           "line": 3,
           "column": 5
         },
-        "value": "\"\\u12",
+        "value": "\\u12",
         "leadingTrivia": [],
         "trailingTrivia": [],
         "leadingInvalid": [],
         "trailingInvalid": [],
         "isInvalid": true,
-        "start": 16,
+        "start": 17,
         "end": 21
       },
-      "start": 16,
+      "start": 17,
       "end": 21,
       "name": "CompileError"
     },
     {
       "code": 1011,
-      "diagnostic": "Invalid unicode escape sequence \\uab, only unicode escape sequences of the form \\uHHHH where H is a hexadecimal number are allowed",
+      "diagnostic": "Invalid unicode escape sequence '\\uab', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
       "nodeOrToken": {
         "kind": "<string>",
         "startPos": {
-          "offset": 23,
-          "line": 4,
-          "column": 0
+          "column": 1,
+          "offset": 24,
+          "line": 4
         },
         "endPos": {
           "offset": 28,
           "line": 4,
           "column": 5
         },
-        "value": "\"\\uab",
+        "value": "\\uab",
         "leadingTrivia": [],
         "trailingTrivia": [],
         "leadingInvalid": [],
         "trailingInvalid": [],
         "isInvalid": true,
-        "start": 23,
+        "start": 24,
         "end": 28
       },
-      "start": 23,
+      "start": 24,
       "end": 28,
       "name": "CompileError"
     },
     {
       "code": 1011,
-      "diagnostic": "Invalid unicode escape sequence \\ua1, only unicode escape sequences of the form \\uHHHH where H is a hexadecimal number are allowed",
+      "diagnostic": "Invalid unicode escape sequence '\\ua1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
       "nodeOrToken": {
         "kind": "<string>",
         "startPos": {
-          "offset": 30,
-          "line": 5,
-          "column": 0
+          "column": 1,
+          "offset": 31,
+          "line": 5
         },
         "endPos": {
           "offset": 35,
           "line": 5,
           "column": 5
         },
-        "value": "\"\\ua1",
+        "value": "\\ua1",
         "leadingTrivia": [],
         "trailingTrivia": [],
         "leadingInvalid": [],
         "trailingInvalid": [],
         "isInvalid": true,
-        "start": 30,
+        "start": 31,
         "end": 35
       },
-      "start": 30,
+      "start": 31,
       "end": 35,
       "name": "CompileError"
     }

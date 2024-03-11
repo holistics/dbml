@@ -437,6 +437,7 @@ export default class Lexer {
   }
 
   escapedString(): string {
+    const prevPos: Position = { column: this.current.column - 1, offset: this.current.offset - 1, line: this.current.line };
     if (this.isAtEnd()) {
       return '\\';
     }
@@ -475,7 +476,7 @@ export default class Lexer {
         let hex = '';
         for (let i = 0; i <= 3; i += 1) {
           if (this.isAtEnd() || !isAlphaNumeric(this.peek()!)) {
-            this.errors.push(new CompileError(CompileErrorCode.INVALID_ESCAPE_SEQUENCE, `Invalid unicode escape sequence \\u${hex}, only unicode escape sequences of the form \\uHHHH where H is a hexadecimal number are allowed`, this.createToken(SyntaxTokenKind.STRING_LITERAL, true)));
+            this.errors.push(new CompileError(CompileErrorCode.INVALID_ESCAPE_SEQUENCE, `Invalid unicode escape sequence '\\u${hex}', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed`, SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, prevPos, this.current, `\\u${hex}`, true)));
 
             return `\\u${hex}`;
           }
@@ -486,7 +487,7 @@ export default class Lexer {
       }
       default: {
         const invalidEscape = `\\${this.text[this.current.offset - 1]}`;
-        this.errors.push(new CompileError(CompileErrorCode.INVALID_ESCAPE_SEQUENCE, `Invalid escape sequence ${invalidEscape}`, this.createToken(SyntaxTokenKind.STRING_LITERAL, true)));
+        this.errors.push(new CompileError(CompileErrorCode.INVALID_ESCAPE_SEQUENCE, `Invalid escape sequence '${invalidEscape}'`, SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, prevPos, this.current, invalidEscape, true)));
 
         return invalidEscape;
       }
