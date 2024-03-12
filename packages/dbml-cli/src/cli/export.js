@@ -26,17 +26,21 @@ export default async function exportHandler (program) {
       generate(inputPaths, (dbml) => exporter.export(dbml, format), OutputConsolePlugin);
     } else if (opts.outFile) {
       const header = [
-        '-- SQL dump generated using DBML (dbml-lang.org)\n',
+        '-- SQL dump generated using DBML (dbml.dbdiagram.io)\n',
         `-- Database: ${config[format].name}\n`,
         `-- Generated at: ${new Date().toISOString()}\n\n`,
       ].join('');
 
-      generate(inputPaths, (dbml) => exporter.export(dbml, format),
-        new OutputFilePlugin(resolvePaths(opts.outFile), header));
+      generate(
+        inputPaths,
+        (dbml) => exporter.export(dbml, format),
+        new OutputFilePlugin(resolvePaths(opts.outFile), header)
+      );
 
       console.log(`  ${chalk.green(figures.main.tick)} Generated SQL dump file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
   } catch (errors) {
+    // TODO: handle error in case errors object is not mappable
     logger.error(`\n    ${errors.map(({ message }) => message).join('\n    ')}`);
   }
 }
