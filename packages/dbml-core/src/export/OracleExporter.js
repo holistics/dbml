@@ -12,6 +12,14 @@ class OracleExporter {
     return `${shouldPrintSchema(schema, model) ? `${escapeObjectName(schema.name, 'oracle')}.` : ''}${escapeObjectName(table.name, 'oracle')}`;
   }
 
+  static exportSchema (schemaName) {
+    return `CREATE USER ${escapeObjectName(schemaName, 'oracle')}\n`
+      + 'NO AUTHENTICATION\n'
+      + 'DEFAULT TABLESPACE system\n'
+      + 'TEMPORARY TABLESPACE temp\n'
+      + 'QUOTA UNLIMITED ON system;\n';
+  }
+
   static getFieldLines (tableId, model) {
     const table = model.tables[tableId];
 
@@ -301,6 +309,10 @@ class OracleExporter {
     const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
       const { tableIds, refIds } = schema;
+
+      if (shouldPrintSchema(schema, model)) {
+        prevStatements.schemas.push(this.exportSchema(schema.name));
+      }
 
       if (!_.isEmpty(tableIds)) {
         prevStatements.tables.push(...this.exportTables(tableIds, model));
