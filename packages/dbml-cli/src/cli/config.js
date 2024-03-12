@@ -14,4 +14,7 @@ export default {
   mssql: {
     name: 'SQL Server',
   },
+  oracle: {
+    name: 'Oracle',
+  },
 };
