@@ -29,7 +29,7 @@ export default class EnumValidator implements ElementValidator {
 
   private validateContext(): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode && getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Project ) {
-      return [new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'An Enum can only appear top-level', this.declarationNode)];
+      return [new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'An Enum can only appear top-level or inside a Project', this.declarationNode)];
     }
 
     return [];
