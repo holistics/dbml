@@ -43,27 +43,32 @@ class OracleExporter {
         line += ` ${field.type.type_name}`;
       }
 
-      if (field.increment) {
+      const cloneField = { ...field };
+
+      if (cloneField.increment) {
         line += ' GENERATED AS IDENTITY';
+
+        // in oracle, increment means using identity. If a clause includes identity, we must ignore not null + default value
+        cloneField.dbdefault = null;
+        cloneField.not_null = false;
       }
 
-      if (field.unique) {
+      if (cloneField.unique) {
         line += ' UNIQUE';
       }
-      if (field.pk) {
+      if (cloneField.pk) {
         line += ' PRIMARY KEY';
       }
 
-      // in oracle, increment means using identity. If a clause includes identity, we must ignore not null
-      if (field.not_null && !field.increment) {
+      if (cloneField.not_null) {
         line += ' NOT NULL';
       }
 
-      if (field.dbdefault) {
-        if (field.dbdefault.type === 'string') {
-          line += ` DEFAULT '${field.dbdefault.value}'`;
+      if (cloneField.dbdefault) {
+        if (cloneField.dbdefault.type === 'string') {
+          line += ` DEFAULT '${cloneField.dbdefault.value}'`;
         } else {
-          line += ` DEFAULT ${field.dbdefault.value}`;
+          line += ` DEFAULT ${cloneField.dbdefault.value}`;
         }
       }
 
