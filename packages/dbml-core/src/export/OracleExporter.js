@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {
   buildJunctionFields1,
   buildJunctionFields2,
-  buildNewTableName,
+  buildUniqueTableName,
   escapeObjectName,
   shouldPrintSchema,
 } from './utils';
@@ -157,7 +157,7 @@ class OracleExporter {
 
     const key1s = [...firstTableFieldsMap.keys()].join('`, `');
     const key2s = [...secondTableFieldsMap.keys()].join('`, `');
-    line += `  PRIMARY KEY ("${key1s}", "${key2s}")\n);\n\n`;
+    line += `  PRIMARY KEY ("${key1s}", "${key2s}")\n);\n`;
 
     return line;
   }
@@ -168,9 +168,10 @@ class OracleExporter {
     return line;
   }
 
-  static exportRefs (refIds, model, usedTableNames) {
-    const strArr = refIds.map((refId) => {
-      let line = '';
+  static exportReferencesAndNewTablesIfExists (refIds, model, usedTableNameMap) {
+    const result = { refs: [], tables: [] };
+
+    refIds.forEach((refId) => {
       const ref = model.refs[refId];
 
       // find the one relation in one-to-xxx or xxx-to-one relationship
@@ -193,37 +194,9 @@ class OracleExporter {
       const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
       const refEndpointFieldNameString = this.buildReferenceFieldNamesString(refEndpoint.fieldIds, model);
 
-      // many to many relationship
-      if (refOneIndex === -1) {
-        const firstTableFieldsMap = buildJunctionFields1(refEndpoint.fieldIds, model);
-        const secondTableFieldsMap = buildJunctionFields2(foreignEndpoint.fieldIds, model, firstTableFieldsMap);
-
-        const newTableName = buildNewTableName(refEndpointTable.name, foreignEndpointTable.name, usedTableNames);
-        const escapedNewTableName = `${shouldPrintSchema(refEndpointSchema, model)
-          ? `"${refEndpointSchema.name}".` : ''}"${newTableName}"`;
-
-        line += this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, escapedNewTableName);
-
-        const firstTableName = this.buildTableNameWithSchema(model, refEndpointSchema, refEndpointTable);
-        line += this.buildForeignKeyManyToMany(
-          escapedNewTableName,
-          firstTableFieldsMap,
-          firstTableName,
-          refEndpointFieldNameString,
-        );
-
-        line += '\n';
-
-        const secondTableName = this.buildTableNameWithSchema(model, foreignEndpointSchema, foreignEndpointTable);
-        line += this.buildForeignKeyManyToMany(
-          escapedNewTableName,
-          secondTableFieldsMap,
-          secondTableName,
-          foreignEndpointFieldNameString,
-        );
-      } else {
+      if (refOneIndex !== -1) {
         const foreignTableName = this.buildTableNameWithSchema(model, foreignEndpointSchema, foreignEndpointTable);
-        line = `ALTER TABLE ${foreignTableName} ADD`;
+        let line = `ALTER TABLE ${foreignTableName} ADD`;
 
         if (ref.name) {
           line += ` CONSTRAINT ${escapeObjectName(ref.name, 'oracle')}`;
@@ -237,12 +210,103 @@ class OracleExporter {
         }
 
         line += ';\n';
+        result.refs.push(line);
+        return;
       }
 
-      return line;
+      // many to many relationship
+      const firstTableFieldsMap = buildJunctionFields1(refEndpoint.fieldIds, model);
+      const secondTableFieldsMap = buildJunctionFields2(foreignEndpoint.fieldIds, model, firstTableFieldsMap);
+
+      const newTableName = buildUniqueTableName(refEndpointSchema, refEndpointTable.name, foreignEndpointTable.name, usedTableNameMap);
+      const tableNameSet = usedTableNameMap.get(refEndpointSchema);
+      if (!tableNameSet) {
+        usedTableNameMap.set(refEndpointSchema, new Set(newTableName));
+      } else {
+        tableNameSet.add(newTableName);
+      }
+
+      const escapedNewTableName = `${shouldPrintSchema(refEndpointSchema, model)
+        ? `"${refEndpointSchema.name}".` : ''}"${newTableName}"`;
+
+      result.tables.push(this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, escapedNewTableName));
+
+      const firstTableName = this.buildTableNameWithSchema(model, refEndpointSchema, refEndpointTable);
+      result.refs.push(
+        this.buildForeignKeyManyToMany(
+          escapedNewTableName,
+          firstTableFieldsMap,
+          firstTableName,
+          refEndpointFieldNameString,
+        ),
+      );
+
+      const secondTableName = this.buildTableNameWithSchema(model, foreignEndpointSchema, foreignEndpointTable);
+      result.refs.push(
+        this.buildForeignKeyManyToMany(
+          escapedNewTableName,
+          secondTableFieldsMap,
+          secondTableName,
+          foreignEndpointFieldNameString,
+        ),
+      );
     });
 
-    return strArr;
+    return result;
+  }
+
+  static exportReferenceGrants (model, refIds) {
+    // only default schema -> ignore it
+    if (Object.keys(model.schemas).length <= 1) {
+      return [];
+    }
+    const tableNameList = [];
+    refIds.forEach((refId) => {
+      const ref = model.refs[refId];
+
+      // find the one relation in one - many, many - one, one - one relationship
+      const refOneIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const refEndpointIndex = refOneIndex === -1 ? 0 : refOneIndex;
+
+      const refEndpointId = ref.endpointIds[refEndpointIndex];
+      const refEndpoint = model.endpoints[refEndpointId];
+      const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
+      const refEndpointTable = model.tables[refEndpointField.tableId];
+      const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
+
+      // refEndpointIndex could be 0 or 1, so use 1 - refEndpointIndex will take the remained index
+      const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
+      const foreignEndpoint = model.endpoints[foreignEndpointId];
+      const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
+      const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
+      const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
+
+      // reference in the same schema
+      if (refEndpointSchema.name === foreignEndpointSchema.name) {
+        tableNameList.push('');
+        return;
+      }
+
+      const refTableName = this.buildTableNameWithSchema(model, refEndpointSchema, refEndpointTable);
+      // refTableName is always needed to be grant
+      tableNameList.push(refTableName);
+
+      // one - many, many - one, one - one relationship
+      if (refOneIndex !== -1) {
+        return;
+      }
+
+      const foreignTableName = this.buildTableNameWithSchema(model, foreignEndpointSchema, foreignEndpointTable);
+      tableNameList.push(foreignTableName);
+    });
+
+    const tableToGrantList = tableNameList
+      // remove duplicate
+      .filter((table, index) => table && tableNameList.indexOf(table) === index)
+      // map into grant statement
+      .map((table) => `GRANT REFERENCES ON ${table} TO PUBLIC;\n`);
+
+    return tableToGrantList;
   }
 
   static exportIndexes (indexIds, model) {
@@ -321,7 +385,19 @@ class OracleExporter {
   static export (model) {
     const database = model.database['1'];
 
-    const usedTableNames = new Set(Object.values(model.tables).map(table => table.name));
+    const usedTableNameMap = new Map();
+    Object.values(model.tables).forEach((table) => {
+      const schema = model.schemas[table.schemaId];
+
+      const tableSet = usedTableNameMap.get(schema.name);
+
+      if (!tableSet) {
+        usedTableNameMap.set(schema.name, new Set(table.name));
+        return;
+      }
+
+      tableSet.add(table.name);
+    });
 
     const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
@@ -353,7 +429,11 @@ class OracleExporter {
       }
 
       if (!_.isEmpty(refIds)) {
-        prevStatements.refs.push(...this.exportRefs(refIds, model, usedTableNames));
+        const { refs, tables: manyToManyTables } = this.exportReferencesAndNewTablesIfExists(refIds, model, usedTableNameMap);
+        prevStatements.tables.push(...manyToManyTables);
+        prevStatements.refs.push(...refs);
+
+        prevStatements.referenceGrants.push(...this.exportReferenceGrants(model, refIds));
       }
 
       return prevStatements;
@@ -362,6 +442,7 @@ class OracleExporter {
       tables: [],
       indexes: [],
       comments: [],
+      referenceGrants: [],
       refs: [],
     });
 
@@ -370,6 +451,7 @@ class OracleExporter {
       statements.tables,
       statements.indexes,
       statements.comments,
+      statements.referenceGrants,
       statements.refs,
     ).join('\n');
     return res;
