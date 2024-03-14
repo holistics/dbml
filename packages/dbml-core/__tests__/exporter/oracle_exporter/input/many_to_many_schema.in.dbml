@@ -1,0 +1,23 @@
+Table users {
+  id int [pk]
+  name nvarchar2(255) [not null]
+}
+
+Table products {
+  id int [pk]
+  user_id int [not null]
+}
+
+Ref: "users"."id" <> "products"."user_id"
+
+Table "C##test"."users" {
+  id int [pk]
+  name nvarchar2(255) [not null]
+}
+
+Table "C##test"."products" {
+  id int [pk]
+  user_id int [not null]
+}
+
+Ref: "C##test"."users"."id" <> "C##test"."products"."user_id"

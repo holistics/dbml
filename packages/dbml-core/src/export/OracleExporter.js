@@ -162,9 +162,9 @@ class OracleExporter {
     return line;
   }
 
-  static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFieldsString, refEndpointTableName, foreignEndpointTableName) {
-    const refEndpointFields = [...fieldsMap.keys()].join('`, `');
-    const line = `ALTER TABLE ${foreignEndpointFieldsString} ADD FOREIGN KEY ("${refEndpointFields}") REFERENCES ${foreignEndpointTableName} ${refEndpointTableName};\n\n`;
+  static buildForeignKeyManyToMany (foreignEndpointTableName, foreignEndpointFields, refEndpointTableName, refEndpointFieldsString) {
+    const foreignEndpointFieldsString = [...foreignEndpointFields.keys()].join('`, `');
+    const line = `ALTER TABLE ${foreignEndpointTableName} ADD FOREIGN KEY ("${foreignEndpointFieldsString}") REFERENCES ${refEndpointTableName} ${refEndpointFieldsString};\n`;
     return line;
   }
 
@@ -205,10 +205,22 @@ class OracleExporter {
         line += this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, escapedNewTableName);
 
         const firstTableName = this.buildTableNameWithSchema(model, refEndpointSchema, refEndpointTable);
-        line += this.buildForeignKeyManyToMany(firstTableFieldsMap, newTableName, refEndpointFieldNameString, firstTableName);
+        line += this.buildForeignKeyManyToMany(
+          escapedNewTableName,
+          firstTableFieldsMap,
+          firstTableName,
+          refEndpointFieldNameString,
+        );
+
+        line += '\n';
 
         const secondTableName = this.buildTableNameWithSchema(model, foreignEndpointSchema, foreignEndpointTable);
-        line += this.buildForeignKeyManyToMany(secondTableFieldsMap, newTableName, foreignEndpointFieldNameString, secondTableName);
+        line += this.buildForeignKeyManyToMany(
+          escapedNewTableName,
+          secondTableFieldsMap,
+          secondTableName,
+          foreignEndpointFieldNameString,
+        );
       } else {
         const foreignTableName = this.buildTableNameWithSchema(model, foreignEndpointSchema, foreignEndpointTable);
         line = `ALTER TABLE ${foreignTableName} ADD`;
