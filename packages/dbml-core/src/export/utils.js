@@ -39,6 +39,31 @@ export function buildNewTableName (firstTable, secondTable, usedTableNames) {
   return newTableName;
 }
 
+/**
+ *
+ * @param {string} schemaName
+ * @param {string} firstTableName
+ * @param {string} secondTableName
+ * @param {Map<string, Set>} tableNameListToCheck
+ * @returns string
+ * @description This function is a clone version of the buildNewTableName, but without side effect - update the original usedTableNames
+ */
+export function buildUniqueTableName (schemaName, firstTableName, secondTableName, tableNameListToCheck) {
+  let newTableName = `${firstTableName}_${secondTableName}`;
+  let count = 1;
+
+  const tableNameSet = tableNameListToCheck.get(schemaName);
+  if (!tableNameSet) {
+    return newTableName;
+  }
+
+  while (tableNameSet.has(newTableName)) {
+    newTableName = `${firstTableName}_${secondTableName}(${count})`;
+    count += 1;
+  }
+  return newTableName;
+}
+
 export function escapeObjectName (name, database) {
   if (!name) {
     return '';
