@@ -1,0 +1,61 @@
+Table category {
+  id int [pk]
+  name nvarchar2(255)
+  last_update timestamp
+}
+
+Table film_category {
+  id int [pk]
+  category_id int [ref: > category.id]
+  last_update timestamp
+}
+
+Table language {
+  id int [pk]
+  name nvarchar2(255)
+  last_update timestamp
+}
+
+Table film_text {
+  id int [pk]
+  film_id int [ref: > film.id]
+  title nvarchar2(255)
+  description nclob
+}
+
+Table actor {
+  id int [pk]
+  first_name nvarchar2(255)
+  last_name nvarchar2(255)
+  last_update timestamp
+}
+
+Table film {
+  id int [pk]
+  title nvarchar2(255)
+  description nclob
+  releaase_year int
+  language_id int [ref: > language.id]
+  original_language_id int [ref: > language.id]
+  rental_duration int
+  rental_rate float
+  length int
+  replacement_cost float
+  rating nvarchar2(255)
+  special_feature nvarchar2(255)
+  last_update timestamp
+}
+
+Table film_actor {
+  id int [pk]
+  film_id int [ref: > film.id]
+  actor_id int [ref: > actor.id]
+  last_update timestamp
+}
+
+Table inventory {
+  id int [pk]
+  film_id int [ref: > film.id]
+  store_id int
+  last_update timestamp
+}

@@ -1,0 +1,57 @@
+CREATE TABLE "orders" (
+  "id" int GENERATED AS IDENTITY PRIMARY KEY,
+  "user_id" int UNIQUE NOT NULL,
+  "status" nvarchar2(255) NOT NULL CHECK ("status" IN ('created', 'running', 'done', 'failure'))
+);
+
+CREATE TABLE "order_items" (
+  "order_id" int,
+  "product_id" int,
+  "quantity" int DEFAULT 1
+);
+
+CREATE TABLE "products" (
+  "id" int PRIMARY KEY,
+  "name" nvarchar2(255),
+  "merchant_id" int NOT NULL,
+  "price" int,
+  "status" nvarchar2(255) NOT NULL CHECK ("status" IN ('Out of Stock', 'In Stock')),
+  "created_at" timestamp DEFAULT current_timestamp
+);
+
+CREATE TABLE "users" (
+  "id" int PRIMARY KEY,
+  "full_name" nvarchar2(255),
+  "email" nvarchar2(255) UNIQUE,
+  "gender" nvarchar2(255),
+  "date_of_birth" date,
+  "created_at" timestamp,
+  "country_code" int
+);
+
+CREATE TABLE "merchants" (
+  "id" int PRIMARY KEY,
+  "merchant_name" nvarchar2(255),
+  "country_code" int,
+  "created_at" timestamp,
+  "admin_id" int
+);
+
+CREATE TABLE "countries" (
+  "code" int PRIMARY KEY,
+  "name" nvarchar2(255)
+);
+
+CREATE INDEX "product_status" ON "products" ("merchant_id", "status");
+
+ALTER TABLE "order_items" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
+
+ALTER TABLE "order_items" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
+
+ALTER TABLE "users" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code");
+
+ALTER TABLE "merchants" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code");
+
+ALTER TABLE "products" ADD FOREIGN KEY ("merchant_id") REFERENCES "merchants" ("id");
+
+ALTER TABLE "merchants" ADD FOREIGN KEY ("admin_id") REFERENCES "users" ("id");
