@@ -116,6 +116,7 @@ export function isSameEndpoint(sym1: ColumnSymbol | ColumnSymbol[], sym2: Column
 
 export function normalizeNoteContent(content: string): string {
   const lines = content.split('\n');
-  const minIndent = Math.min(...lines.filter((line) => line.trim()).map((line) => line.match(/^\s+/)?.[0].length || 0));
+  const nonEmptyLines = lines.filter((line) => line.trimStart());
+  const minIndent = Math.min(...nonEmptyLines.map((line) => line.length - line.trimStart().length));
   return lines.map((line) => line.slice(minIndent)).join('\n');
 }
