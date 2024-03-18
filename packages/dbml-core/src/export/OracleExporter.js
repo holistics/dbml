@@ -8,11 +8,32 @@ import {
 } from './utils';
 
 class OracleExporter {
+  static buildSchemaToTableNameSetMap (model) {
+    const schemaToTableNameSetMap = new Map();
+
+    _.forEach(model.tables, (table) => {
+      const schema = model.schemas[table.schemaId];
+
+      const tableSet = schemaToTableNameSetMap.get(schema.name);
+
+      if (!tableSet) {
+        schemaToTableNameSetMap.set(schema.name, new Set([table.name]));
+        return;
+      }
+
+      tableSet.add(table.name);
+    });
+
+    return schemaToTableNameSetMap;
+  }
+
   static buildTableNameWithSchema (model, schema, table) {
     return `${shouldPrintSchema(schema, model) ? `${escapeObjectName(schema.name, 'oracle')}.` : ''}${escapeObjectName(table.name, 'oracle')}`;
   }
 
   static exportSchema (schemaName) {
+    // According to Oracle, CREATE SCHEMA statement does not actually create a schema and it automatically creates a schema when we create a user
+    // Learn more: https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/CREATE-SCHEMA.html#GUID-2D154F9C-9E2B-4A09-B658-2EA5B99AC838__GUID-CC0A5080-2AF3-4460-AB2B-DEA6C79519BA
     return `CREATE USER ${escapeObjectName(schemaName, 'oracle')}\n`
       + 'NO AUTHENTICATION\n'
       + 'DEFAULT TABLESPACE system\n'
@@ -108,8 +129,8 @@ class OracleExporter {
 
   static getTableContents (tableIds, model) {
     const tableContentArr = tableIds.map((tableId) => {
-      const fieldContents = OracleExporter.getFieldLines(tableId, model);
-      const compositePKs = OracleExporter.getCompositePKs(tableId, model);
+      const fieldContents = this.getFieldLines(tableId, model);
+      const compositePKs = this.getCompositePKs(tableId, model);
 
       return {
         tableId,
@@ -122,7 +143,7 @@ class OracleExporter {
   }
 
   static exportTables (tableIds, model) {
-    const tableContentList = OracleExporter.getTableContents(tableIds, model);
+    const tableContentList = this.getTableContents(tableIds, model);
 
     const tableStrs = tableContentList.map((tableContent) => {
       const content = [...tableContent.fieldContents, ...tableContent.compositePKs];
@@ -130,9 +151,9 @@ class OracleExporter {
       const schema = model.schemas[table.schemaId];
 
       const tableName = this.buildTableNameWithSchema(model, schema, table);
-      const constentString = content.map(line => `  ${line}`).join(',\n');
+      const contentString = content.map(line => `  ${line}`).join(',\n');
 
-      const tableStr = `CREATE TABLE ${tableName} (\n${constentString}\n);\n`;
+      const tableStr = `CREATE TABLE ${tableName} (\n${contentString}\n);\n`;
       return tableStr;
     });
 
@@ -221,7 +242,7 @@ class OracleExporter {
       const newTableName = buildUniqueTableName(refEndpointSchema, refEndpointTable.name, foreignEndpointTable.name, usedTableNameMap);
       const tableNameSet = usedTableNameMap.get(refEndpointSchema);
       if (!tableNameSet) {
-        usedTableNameMap.set(refEndpointSchema, new Set(newTableName));
+        usedTableNameMap.set(refEndpointSchema, new Set([newTableName]));
       } else {
         tableNameSet.add(newTableName);
       }
@@ -385,19 +406,7 @@ class OracleExporter {
   static export (model) {
     const database = model.database['1'];
 
-    const usedTableNameMap = new Map();
-    Object.values(model.tables).forEach((table) => {
-      const schema = model.schemas[table.schemaId];
-
-      const tableSet = usedTableNameMap.get(schema.name);
-
-      if (!tableSet) {
-        usedTableNameMap.set(schema.name, new Set(table.name));
-        return;
-      }
-
-      tableSet.add(table.name);
-    });
+    const schemaToTableNameSetMap = this.buildSchemaToTableNameSetMap(model);
 
     const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
@@ -429,7 +438,7 @@ class OracleExporter {
       }
 
       if (!_.isEmpty(refIds)) {
-        const { refs, tables: manyToManyTables } = this.exportReferencesAndNewTablesIfExists(refIds, model, usedTableNameMap);
+        const { refs, tables: manyToManyTables } = this.exportReferencesAndNewTablesIfExists(refIds, model, schemaToTableNameSetMap);
         prevStatements.tables.push(...manyToManyTables);
         prevStatements.refs.push(...refs);
 

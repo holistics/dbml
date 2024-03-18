@@ -1,6 +1,6 @@
-import { ExportFormatOptions } from "./ModelExporter";
+import { ExportFormatOption } from './ModelExporter';
 
-declare function _export(str: string, format: ExportFormatOptions): string;
+declare function _export(str: string, format: ExportFormatOption): string;
 declare const _default: {
     export: typeof _export;
 };
