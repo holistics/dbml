@@ -44,15 +44,15 @@ export function buildNewTableName (firstTable, secondTable, usedTableNames) {
  * @param {string} schemaName
  * @param {string} firstTableName
  * @param {string} secondTableName
- * @param {Map<string, Set>} tableNameListToCheck
+ * @param {Map<string, Set>} schemaToTableNameSetMap
  * @returns string
  * @description This function is a clone version of the buildNewTableName, but without side effect - update the original usedTableNames
  */
-export function buildUniqueTableName (schemaName, firstTableName, secondTableName, tableNameListToCheck) {
+export function buildUniqueTableName (schemaName, firstTableName, secondTableName, schemaToTableNameSetMap) {
   let newTableName = `${firstTableName}_${secondTableName}`;
   let count = 1;
 
-  const tableNameSet = tableNameListToCheck.get(schemaName);
+  const tableNameSet = schemaToTableNameSetMap.get(schemaName);
   if (!tableNameSet) {
     return newTableName;
   }
@@ -72,12 +72,10 @@ export function escapeObjectName (name, database) {
   let escapeSignature = '';
 
   switch (database) {
-    case 'postgress':
-      escapeSignature = '"';
-      break;
     case 'mysql':
       escapeSignature = '`';
       break;
+    case 'postgres':
     case 'oracle':
       escapeSignature = '"';
       break;
