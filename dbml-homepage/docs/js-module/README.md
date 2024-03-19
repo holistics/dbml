@@ -26,14 +26,14 @@ const { importer } = require('@dbml/core');
 
 ##### importer.import( str, format )
 
-* **Arguments:**  
+* **Arguments:**
   * ```{string} str```
   * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'json'} format```
 
-* **Returns:** 
+* **Returns:**
   * ```{string} DBML```
 
-* **Usage:**  
+* **Usage:**
 Generate DBML from SQL.
 
 Note: The `postgresLegacy` and `mysqlLegacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
@@ -57,14 +57,14 @@ const { exporter } = require('@dbml/core');
 
 ##### exporter.export( str, format )
 
-* **Arguments:**  
+* **Arguments:**
   * ```{string} str```
-  * ```{'mysql'|'postgres'|'dbml'|'schemarb'|'mssql'|'json'} format```
+  * ```{'mysql'|'postgres'|'oracle'|'dbml'|'schemarb'|'mssql'|'json'} format```
 
-* **Returns:** 
+* **Returns:**
   * ```{string} SQL```
 
-* **Usage:**  
+* **Usage:**
 Export DBML to SQL
 
 ```javascript
@@ -86,13 +86,13 @@ const { Parser } = require('@dbml/core');
 ```
 
 ##### Parser.parse( str, format )
-* **Arguments:**  
+* **Arguments:**
   * ```{string} str```
   * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'json'|'dbmlv2'} format```
 
 * **Returns:** ```Database``` object
 
-* **Usage:**  
+* **Usage:**
 Parse specified format to ```Database``` object
 
 Note: The `postgresLegacy` and `mysqlLegacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
@@ -118,14 +118,14 @@ const { ModelExporter } = require('@dbml/core');
 
 ##### ModelExporter.export( model, format, isNormalized = true )
 
-* **Arguments:**  
+* **Arguments:**
   * ```{model} Database```
-  * ```{'mysql'|'postgres'|'dbml'|'schemarb'|'mssql'|'json'} format```
+  * ```{'mysql'|'postgres'|'oracle'|'dbml'|'schemarb'|'mssql'|'json'} format```
   * ```{boolean} isNormalized```
 
 * **Returns:** specified format string
 
-* **Usage:**  
+* **Usage:**
 Export ```Database``` object to specified format
 
 ```javascript
