@@ -1,3 +1,24 @@
+## v3.3.0 (2024-03-19)
+
+#### :memo: Documentation
+* [#529](https://github.com/holistics/dbml/pull/529) Add contributor dbml java ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#536](https://github.com/holistics/dbml/pull/536) fix: add normalize note content ([@Huy-DNA](https://github.com/Huy-DNA))
+* `dbml-parse`
+  * [#526](https://github.com/holistics/dbml/pull/526) Parser/fix `getRefId` ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :rocket: New Feature
+* `dbml-parse`
+  * [#521](https://github.com/holistics/dbml/pull/521) Parser/support non ascii letters in identifiers ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 4
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.2.0 (2024-02-26)
 
 #### :rocket: New Feature
