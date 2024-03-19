@@ -423,7 +423,29 @@
       },
       "value": "This is also not a single line \\    \nas there are spaces after \\",
       "leadingTrivia": [],
-      "trailingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 191,
+            "line": 12,
+            "column": 31
+          },
+          "endPos": {
+            "offset": 192,
+            "line": 13,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 191,
+          "end": 192
+        }
+      ],
       "leadingInvalid": [],
       "trailingInvalid": [],
       "isInvalid": false,
@@ -431,16 +453,81 @@
       "end": 191
     },
     {
-      "kind": "<eof>",
+      "kind": "<string>",
       "startPos": {
-        "offset": 191,
-        "line": 12,
-        "column": 31
+        "offset": 193,
+        "line": 14,
+        "column": 0
       },
       "endPos": {
-        "offset": 191,
-        "line": 12,
-        "column": 31
+        "offset": 288,
+        "line": 16,
+        "column": 3
+      },
+      "value": "\nI escape three triple quotes here and then there are two single quotes-> '''''''''''\n",
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 192,
+            "line": 13,
+            "column": 0
+          },
+          "endPos": {
+            "offset": 193,
+            "line": 14,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 192,
+          "end": 193
+        }
+      ],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 288,
+            "line": 16,
+            "column": 3
+          },
+          "endPos": {
+            "offset": 289,
+            "line": 17,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 288,
+          "end": 289
+        }
+      ],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 193,
+      "end": 288
+    },
+    {
+      "kind": "<eof>",
+      "startPos": {
+        "offset": 289,
+        "line": 17,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 289,
+        "line": 17,
+        "column": 0
       },
       "value": "",
       "leadingTrivia": [],
@@ -448,8 +535,8 @@
       "leadingInvalid": [],
       "trailingInvalid": [],
       "isInvalid": false,
-      "start": 191,
-      "end": 191
+      "start": 289,
+      "end": 289
     }
   ],
   "errors": []
