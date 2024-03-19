@@ -1,6 +1,7 @@
 ## v3.3.0 (2024-03-19)
 
 #### :memo: Documentation
+* [#533](https://github.com/holistics/dbml/pull/533) Add Sticky Notes syntax guide and a new community contribution ([@huyphung1602](https://github.com/huyphung1602))
 * [#529](https://github.com/holistics/dbml/pull/529) Add contributor dbml java ([@huyleminh01](https://github.com/huyleminh01))
 
 #### :bug: Bug Fix
