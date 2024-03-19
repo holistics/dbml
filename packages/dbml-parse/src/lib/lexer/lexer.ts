@@ -459,7 +459,7 @@ export default class Lexer {
       case 'r':
         return '\r';
       case "'":
-        if (this.peek(1) === "'" && this.peek(2) === "'") {
+        if (this.peek() === "'" && this.peek(1) === "'") {
           this.advance();
           this.advance();
           return "'''";
