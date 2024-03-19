@@ -518,16 +518,59 @@
       "end": 288
     },
     {
-      "kind": "<eof>",
+      "kind": "<string>",
       "startPos": {
-        "offset": 289,
-        "line": 17,
+        "offset": 290,
+        "line": 18,
         "column": 0
       },
       "endPos": {
-        "offset": 289,
-        "line": 17,
-        "column": 0
+        "offset": 355,
+        "line": 21,
+        "column": 3
+      },
+      "value": "\nNasty triple quotes\n''''''''''''''''''''''''''''\n",
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 289,
+            "line": 17,
+            "column": 0
+          },
+          "endPos": {
+            "offset": 290,
+            "line": 18,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 289,
+          "end": 290
+        }
+      ],
+      "trailingTrivia": [],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 290,
+      "end": 355
+    },
+    {
+      "kind": "<eof>",
+      "startPos": {
+        "offset": 355,
+        "line": 21,
+        "column": 3
+      },
+      "endPos": {
+        "offset": 355,
+        "line": 21,
+        "column": 3
       },
       "value": "",
       "leadingTrivia": [],
@@ -535,8 +578,8 @@
       "leadingInvalid": [],
       "trailingInvalid": [],
       "isInvalid": false,
-      "start": 289,
-      "end": 289
+      "start": 355,
+      "end": 355
     }
   ],
   "errors": []
