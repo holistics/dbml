@@ -10,7 +10,7 @@ describe('@dbml/core - exporter', () => {
     const input = require(`./${testDir}/input/${fileName}.in.dbml`);
     const output = require(`./${testDir}/output/${fileName}.out.${fileExtension}`);
     const res = exporter.export(input, format);
-    
+
     expect(res).toBe(output);
     /* eslint-enable */
   };
@@ -26,6 +26,10 @@ describe('@dbml/core - exporter', () => {
 
   test.each(scanTestNames(__dirname, 'mssql_exporter/input'))('mssql_exporter/%s', (name) => {
     runTest(name, 'mssql_exporter', 'mssql');
+  });
+
+  test.each(scanTestNames(__dirname, 'oracle_exporter/input'))('oracle_exporter/%s', (name) => {
+    runTest(name, 'oracle_exporter', 'oracle');
   });
   /* eslint-enable */
 });
