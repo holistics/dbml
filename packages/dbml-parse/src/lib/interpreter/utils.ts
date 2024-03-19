@@ -113,3 +113,10 @@ export function isSameEndpoint(sym1: ColumnSymbol | ColumnSymbol[], sym2: Column
   const secondId = (sym2 as ColumnSymbol).id;
   return firstId === secondId;
 }
+
+export function normalizeNoteContent(content: string): string {
+  const lines = content.split('\n');
+  const nonEmptyLines = lines.filter((line) => line.trimStart());
+  const minIndent = Math.min(...nonEmptyLines.map((line) => line.length - line.trimStart().length));
+  return lines.map((line) => line.slice(minIndent)).join('\n');
+}
