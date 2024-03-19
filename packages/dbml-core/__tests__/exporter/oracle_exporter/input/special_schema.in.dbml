@@ -32,6 +32,8 @@ Table orders {
   "note" nclob [default: '']
   user_id "integer" [not null, note: 'Store user uuid']
   created_at timestamp [default: `current_timestamp`]
+  product_id int
+  supplier_id int
 
   indexes {
     (id, user_id) [name: 'IDX_ORDER_USER', type: btree, note: 'Ignore index  type', unique]
@@ -44,6 +46,18 @@ Table order_details {
   quantity number [not null]
   price float [not null]
 }
+
+Table products {
+  product_id int
+  supplier_id int
+
+  indexes {
+    (product_id, supplier_id) [pk]
+  }
+}
+
+// composite foreign key
+Ref: "orders".("product_id", "supplier_id") > "products".("product_id", "supplier_id")
 
 Ref: "users"."id" < "orders"."user_id" [delete: cascade]
 
