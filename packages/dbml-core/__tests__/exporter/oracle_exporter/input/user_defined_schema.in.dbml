@@ -1,0 +1,45 @@
+Table "C##dbx".users {
+  user_id int [pk, increment]
+  username varchar2(40) [not null, unique]
+  password varchar2(255) [not null]
+}
+
+Table "C##dbx".category [] {
+  cat_id int [pk, increment]
+  cat_name nvarchar2(50) [not null]
+  super_cat_id int
+  created_date timestamp [default: `current_timestamp`]
+
+  Indexes {
+    cat_name [name: "FULLTEXT_INDEX_CATEGORY"]
+  }
+}
+
+Table "C##dbx".product {
+  product_id int [pk, increment]
+  product_name nvarchar2(255) [not null]
+  current_price float [not null]
+  expired_date timestamp [not null]
+  cat_id int [not null]
+
+  Indexes {
+    product_name [name: "FULLTEXT_INDEX_PRODUCT"]
+  }
+}
+
+Table "C##dbx".wishlist {
+  user_id int [not null]
+  product_id int [not null]
+
+  Indexes {
+    (user_id, product_id) [pk, name: "PK_WISHLIST"]
+  }
+}
+
+Ref FK_CATEGORY_SUPER:"C##dbx".category.cat_id < "C##dbx".category.super_cat_id
+
+Ref FK_PRODUCT_CATEGORY:"C##dbx".category.cat_id < "C##dbx".product.cat_id
+
+Ref FK_WISHLIST_PRODUCT:"C##dbx".product.product_id < "C##dbx".wishlist.product_id
+
+Ref FK_WISHLIST_USER:"C##dbx".users.user_id < "C##dbx".wishlist.user_id
