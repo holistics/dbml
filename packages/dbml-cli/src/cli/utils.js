@@ -35,12 +35,8 @@ function getFormatOpt (opts) {
 function generate (inputPaths, transform, outputPlugin) {
   inputPaths.forEach((_path) => {
     const source = fs.readFileSync(_path, 'utf-8');
-    try {
-      const content = transform(source);
-      outputPlugin.write(content);
-    } catch (err) {
-      throw err.diags.map((diag) => new SyntaxError(path.basename(_path), diag));
-    }
+    const content = transform(source);
+    outputPlugin.write(content);
   });
 }
 
