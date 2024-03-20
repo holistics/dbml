@@ -13,6 +13,7 @@ import { validateFilePlugin } from './validatePlugins/validatePlugins';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
 import logger from '../helpers/logger';
+import { SyntaxError } from '../errors';
 
 export default async function importHandler (program) {
   try {
