@@ -39,8 +39,7 @@ export default async function exportHandler (program) {
 
       console.log(`  ${chalk.green(figures.main.tick)} Generated SQL dump file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
-  } catch (errors) {
-    // TODO: handle error in case errors object is not mappable
-    logger.error(`\n    ${errors.map(({ message }) => message).join('\n    ')}`);
+  } catch (error) {
+    logger.error(`\n    ${error.diags.map(({ message }) => message).join('\n    ')}`);
   }
 }
