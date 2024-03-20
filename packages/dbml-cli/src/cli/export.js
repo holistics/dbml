@@ -34,12 +34,12 @@ export default async function exportHandler (program) {
       generate(
         inputPaths,
         (dbml) => exporter.export(dbml, format),
-        new OutputFilePlugin(resolvePaths(opts.outFile), header)
+        new OutputFilePlugin(resolvePaths(opts.outFile), header),
       );
 
       console.log(`  ${chalk.green(figures.main.tick)} Generated SQL dump file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
   } catch (error) {
-    logger.error(`\n    ${error.diags.map(({ message }) => message).join('\n    ')}`);
+    logger.error(`\n    ${error.diags.map((diag) => new SyntaxError(diag)).map(({ message }) => message).join('\n    ')}`);
   }
 }
