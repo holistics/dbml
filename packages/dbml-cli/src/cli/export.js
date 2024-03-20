@@ -13,6 +13,7 @@ import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
 import config from './config';
 import logger from '../helpers/logger';
+import { SyntaxError } from '../errors';
 
 export default async function exportHandler (program) {
   try {
