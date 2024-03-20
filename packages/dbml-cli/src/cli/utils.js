@@ -39,10 +39,7 @@ function generate (inputPaths, transform, outputPlugin) {
       const content = transform(source);
       outputPlugin.write(content);
     } catch (err) {
-      if (Array.isArray(err)) {
-        throw err.map((e) => new SyntaxError(path.basename(_path), e));
-      }
-      throw new SyntaxError(path.basename(_path), err);
+      throw err.diags.map((diag) => new SyntaxError(path.basename(_path), diag));
     }
   });
 }
