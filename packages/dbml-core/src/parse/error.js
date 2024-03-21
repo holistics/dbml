@@ -1,6 +1,6 @@
 export class CompilerError {
   /**
-   * @param {import("../../types").CompilerDiagnostic} diags
+   * @param {import("../../types").CompilerDiagnostic[]} diags
    */
   constructor (diags) {
     this.diags = diags;
