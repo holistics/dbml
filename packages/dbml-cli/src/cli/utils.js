@@ -39,7 +39,7 @@ function generate (inputPaths, transform, outputPlugin) {
       const content = transform(source);
       outputPlugin.write(content);
     } catch (e) {
-      if (e instanceof CompilerError) throw e.map((diag) => ({ ...diag, filepath: _path }));
+      if (e instanceof CompilerError) throw e.map((diag) => ({ ...diag, filepath: path.basename(_path) }));
       throw e;
     }
   });
