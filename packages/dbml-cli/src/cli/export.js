@@ -41,6 +41,6 @@ export default async function exportHandler (program) {
       console.log(`  ${chalk.green(figures.main.tick)} Generated SQL dump file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
   } catch (error) {
-    logger.error(`\n    ${error.diags.map((diag) => new SyntaxError(diag)).map(({ message }) => message).join('\n    ')}`);
+    logger.error(`\n    ${error.diags.map((diag) => new SyntaxError(diag.filepath, diag)).map(({ message }) => message).join('\n    ')}`);
   }
 }
