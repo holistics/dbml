@@ -10,6 +10,10 @@ export class CompilerError {
     // eslint-disable-next-line no-use-before-define
     return new CompilerError(flattenDiag(nestedDiags));
   }
+
+  map (callback) {
+    return CompilerError.create(this.diags.map(callback));
+  }
 }
 
 function flattenDiag (diag) {
