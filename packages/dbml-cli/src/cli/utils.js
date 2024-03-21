@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { SyntaxError } from '../errors';
+import { CompilerError } from '@dbml/core';
 
 function resolvePaths (paths) {
   if (!Array.isArray(paths)) {
@@ -35,8 +35,13 @@ function getFormatOpt (opts) {
 function generate (inputPaths, transform, outputPlugin) {
   inputPaths.forEach((_path) => {
     const source = fs.readFileSync(_path, 'utf-8');
-    const content = transform(source);
-    outputPlugin.write(content);
+    try {
+      const content = transform(source);
+      outputPlugin.write(content);
+    } catch (e) {
+      if (e instanceof CompilerError) return e.map((diag) => ({ ...diag, filepath: _path }));
+      throw e;
+    }
   });
 }
 
