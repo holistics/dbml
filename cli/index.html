@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>CLI | DBML</title>
+    <meta name="generator" content="VuePress 1.9.9">
+    
+    <meta name="description" content="">
+    
+    <link rel="preload" href="/assets/css/0.styles.ca1df146.css" as="style"><link rel="preload" href="/assets/js/app.0a04eff5.js" as="script"><link rel="preload" href="/assets/js/3.6e3d3d02.js" as="script"><link rel="preload" href="/assets/js/2.988eaf09.js" as="script"><link rel="preload" href="/assets/js/7.0e30e186.js" as="script"><link rel="prefetch" href="/assets/js/10.a727523e.js"><link rel="prefetch" href="/assets/js/11.ee7c19f7.js"><link rel="prefetch" href="/assets/js/4.d7bf473f.js"><link rel="prefetch" href="/assets/js/5.99ff9f54.js"><link rel="prefetch" href="/assets/js/6.5cb7f394.js"><link rel="prefetch" href="/assets/js/8.f40b5d9b.js"><link rel="prefetch" href="/assets/js/9.b28f1dbd.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.ca1df146.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="myMain"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">DBML</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/home/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/docs/" class="nav-link">
+  Docs
+</a></div><div class="nav-item"><a href="/cli/" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  CLI
+</a></div><div class="nav-item"><a href="/js-module/" class="nav-link">
+  JS Module
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="dbx" class="dropdown-title"><span class="title">dbx</span> <span class="arrow down"></span></button> <button type="button" aria-label="dbx" class="mobile-dropdown-title"><span class="title">dbx</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://dbdiagram.io?utm_source=dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  dbdiagram - Database Diagram As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://dbdocs.io?utm_source=dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  dbdocs - Database Docs As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://www.holistics.io/?utm_source=dbml&amp;utm_medium=topnav&amp;utm_campaign=landing" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Holistics.io - BI Reporting As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="https://github.com/holistics/dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/home/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/docs/" class="nav-link">
+  Docs
+</a></div><div class="nav-item"><a href="/cli/" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  CLI
+</a></div><div class="nav-item"><a href="/js-module/" class="nav-link">
+  JS Module
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="dbx" class="dropdown-title"><span class="title">dbx</span> <span class="arrow down"></span></button> <button type="button" aria-label="dbx" class="mobile-dropdown-title"><span class="title">dbx</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://dbdiagram.io?utm_source=dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  dbdiagram - Database Diagram As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://dbdocs.io?utm_source=dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  dbdocs - Database Docs As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://www.holistics.io/?utm_source=dbml&amp;utm_medium=topnav&amp;utm_campaign=landing" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Holistics.io - BI Reporting As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="https://github.com/holistics/dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><a href="/cli/" aria-current="page" class="active sidebar-link">CLI</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/cli/#installation" class="sidebar-link">Installation</a></li><li class="sidebar-sub-header"><a href="/cli/#convert-a-dbml-file-to-sql" class="sidebar-link">Convert a DBML file to SQL</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/cli/#syntax-manual" class="sidebar-link">Syntax Manual</a></li></ul></li><li class="sidebar-sub-header"><a href="/cli/#convert-a-sql-file-to-dbml" class="sidebar-link">Convert  a SQL file to DBML</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/cli/#syntax-manual-2" class="sidebar-link">Syntax Manual</a></li></ul></li></ul></li></ul> </aside> <div class="main"><main class="page"> <div class="theme-default-content content__default"><h1 id="cli"><a href="#cli" class="header-anchor">#</a> CLI</h1> <p><a href="https://www.npmjs.com/package/@dbml/cli" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@dbml/cli" alt="NPM"><span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <p>DBML comes with a built-in CLI which can be used to convert between different formats from
+the command line</p> <p><img src="/assets/img/cli.29629c77.gif" alt="img"></p> <h2 id="installation"><a href="#installation" class="header-anchor">#</a> Installation</h2> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> @dbml/cli
+
+<span class="token comment"># or if you're using yarn</span>
+<span class="token function">yarn</span> global <span class="token function">add</span> @dbml/cli
+</code></pre></div><h2 id="convert-a-dbml-file-to-sql"><a href="#convert-a-dbml-file-to-sql" class="header-anchor">#</a> Convert a DBML file to SQL</h2> <div class="language-bash extra-class"><pre class="language-bash"><code>$ dbml2sql schema.dbml
+
+CREATE TABLE <span class="token string">&quot;staff&quot;</span> <span class="token punctuation">(</span>
+  <span class="token string">&quot;id&quot;</span> INT PRIMARY KEY,
+  <span class="token string">&quot;name&quot;</span> VARCHAR,
+  <span class="token string">&quot;age&quot;</span> INT,
+  <span class="token string">&quot;email&quot;</span> VARCHAR
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">..</span>.
+</code></pre></div><p>By default it will generate to &quot;PostgreSQL&quot;. To specify which database to generate to:</p> <div class="language-bash extra-class"><pre class="language-bash"><code>$ dbml2sql schema.dbml <span class="token parameter variable">--mysql</span>
+
+CREATE TABLE <span class="token variable"><span class="token variable">`</span>staff<span class="token variable">`</span></span> <span class="token punctuation">(</span>
+  <span class="token variable"><span class="token variable">`</span><span class="token function">id</span><span class="token variable">`</span></span> INT PRIMARY KEY,
+  <span class="token variable"><span class="token variable">`</span>name<span class="token variable">`</span></span> VARCHAR<span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>,
+  <span class="token variable"><span class="token variable">`</span>age<span class="token variable">`</span></span> INT,
+  <span class="token variable"><span class="token variable">`</span>email<span class="token variable">`</span></span> VARCHAR<span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">..</span>.
+</code></pre></div><p>To <strong>output to a file</strong> you may use <code>--out-file</code> or <code>-o</code>:</p> <div class="language-bash extra-class"><pre class="language-bash"><code>$ dbml2sql schema.dbml <span class="token parameter variable">-o</span> schema.sql
+  ✔ Generated SQL dump <span class="token function">file</span> <span class="token punctuation">(</span>PostgreSQL<span class="token punctuation">)</span>: schema.sql
+</code></pre></div><h3 id="syntax-manual"><a href="#syntax-manual" class="header-anchor">#</a> Syntax Manual</h3> <div class="language-bash extra-class"><pre class="language-bash"><code>$ dbml2sql <span class="token operator">&lt;</span>path-to-dbml-file<span class="token operator">&gt;</span>
+           <span class="token punctuation">[</span>--mysql<span class="token operator">|</span>--postgres<span class="token operator">|</span>--mssql<span class="token operator">|</span>--oracle<span class="token punctuation">]</span>
+           <span class="token punctuation">[</span>-o<span class="token operator">|</span>--out-file <span class="token operator">&lt;</span>output-filepath<span class="token operator">&gt;</span><span class="token punctuation">]</span>
+</code></pre></div><h2 id="convert-a-sql-file-to-dbml"><a href="#convert-a-sql-file-to-dbml" class="header-anchor">#</a> Convert  a SQL file to DBML</h2> <p>To convert SQL to DBML file:</p> <div class="language-bash extra-class"><pre class="language-bash"><code>$ sql2dbml dump.sql <span class="token parameter variable">--postgres</span>
+
+Table staff <span class="token punctuation">{</span>
+  <span class="token function">id</span> int <span class="token punctuation">[</span>pk<span class="token punctuation">]</span>
+  name varchar
+  age int
+  email varchar
+<span class="token punctuation">}</span>
+<span class="token punctuation">..</span>.
+</code></pre></div><p><strong>Output to a file:</strong></p> <div class="language-bash extra-class"><pre class="language-bash"><code>$ sql2dbml <span class="token parameter variable">--mysql</span> dump.sql <span class="token parameter variable">-o</span> mydatabase.dbml
+  ✔ Generated DBML <span class="token function">file</span> from SQL <span class="token function">file</span> <span class="token punctuation">(</span>MySQL<span class="token punctuation">)</span>: mydatabase.dbml
+</code></pre></div><h3 id="syntax-manual-2"><a href="#syntax-manual-2" class="header-anchor">#</a> Syntax Manual</h3> <div class="language-bash extra-class"><pre class="language-bash"><code>$ sql2dbml <span class="token operator">&lt;</span>path-to-sql-file<span class="token operator">&gt;</span>
+           <span class="token punctuation">[</span>--mysql<span class="token operator">|</span>--postgres<span class="token operator">|</span>--mssql<span class="token operator">|</span>--postgres-legacy<span class="token operator">|</span>--mysql-legacy<span class="token punctuation">]</span>
+           <span class="token punctuation">[</span>-o<span class="token operator">|</span>--out-file <span class="token operator">&lt;</span>output-filepath<span class="token operator">&gt;</span><span class="token punctuation">]</span>
+</code></pre></div><p>Note: The <code>--postgres-legacy</code> and <code>--mysql-legacy</code> options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.</p></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div></div></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.0a04eff5.js" defer></script><script src="/assets/js/3.6e3d3d02.js" defer></script><script src="/assets/js/2.988eaf09.js" defer></script><script src="/assets/js/7.0e30e186.js" defer></script>
+  </body>
+</html>

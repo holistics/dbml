@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>DBML - Full Syntax Docs | DBML</title>
+    <meta name="generator" content="VuePress 1.9.9">
+    
+    <meta name="description" content="">
+    
+    <link rel="preload" href="/assets/css/0.styles.ca1df146.css" as="style"><link rel="preload" href="/assets/js/app.0a04eff5.js" as="script"><link rel="preload" href="/assets/js/3.6e3d3d02.js" as="script"><link rel="preload" href="/assets/js/2.988eaf09.js" as="script"><link rel="preload" href="/assets/js/10.a727523e.js" as="script"><link rel="prefetch" href="/assets/js/11.ee7c19f7.js"><link rel="prefetch" href="/assets/js/4.d7bf473f.js"><link rel="prefetch" href="/assets/js/5.99ff9f54.js"><link rel="prefetch" href="/assets/js/6.5cb7f394.js"><link rel="prefetch" href="/assets/js/7.0e30e186.js"><link rel="prefetch" href="/assets/js/8.f40b5d9b.js"><link rel="prefetch" href="/assets/js/9.b28f1dbd.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.ca1df146.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="myMain"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">DBML</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/home/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/docs/" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  Docs
+</a></div><div class="nav-item"><a href="/cli/" class="nav-link">
+  CLI
+</a></div><div class="nav-item"><a href="/js-module/" class="nav-link">
+  JS Module
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="dbx" class="dropdown-title"><span class="title">dbx</span> <span class="arrow down"></span></button> <button type="button" aria-label="dbx" class="mobile-dropdown-title"><span class="title">dbx</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://dbdiagram.io?utm_source=dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  dbdiagram - Database Diagram As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://dbdocs.io?utm_source=dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  dbdocs - Database Docs As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://www.holistics.io/?utm_source=dbml&amp;utm_medium=topnav&amp;utm_campaign=landing" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Holistics.io - BI Reporting As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="https://github.com/holistics/dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/home/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/docs/" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  Docs
+</a></div><div class="nav-item"><a href="/cli/" class="nav-link">
+  CLI
+</a></div><div class="nav-item"><a href="/js-module/" class="nav-link">
+  JS Module
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="dbx" class="dropdown-title"><span class="title">dbx</span> <span class="arrow down"></span></button> <button type="button" aria-label="dbx" class="mobile-dropdown-title"><span class="title">dbx</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://dbdiagram.io?utm_source=dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  dbdiagram - Database Diagram As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://dbdocs.io?utm_source=dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  dbdocs - Database Docs As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://www.holistics.io/?utm_source=dbml&amp;utm_medium=topnav&amp;utm_campaign=landing" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Holistics.io - BI Reporting As Code
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="https://github.com/holistics/dbml" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><a href="/docs/" aria-current="page" class="active sidebar-link">DBML - Full Syntax Docs</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docs/#project-definition" class="sidebar-link">Project Definition</a></li><li class="sidebar-sub-header"><a href="/docs/#schema-definition" class="sidebar-link">Schema Definition</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docs/#public-schema" class="sidebar-link">Public Schema</a></li></ul></li><li class="sidebar-sub-header"><a href="/docs/#table-definition" class="sidebar-link">Table Definition</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docs/#table-alias" class="sidebar-link">Table Alias</a></li><li class="sidebar-sub-header"><a href="/docs/#table-notes" class="sidebar-link">Table Notes</a></li><li class="sidebar-sub-header"><a href="/docs/#table-settings" class="sidebar-link">Table Settings</a></li></ul></li><li class="sidebar-sub-header"><a href="/docs/#column-definition" class="sidebar-link">Column Definition</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docs/#column-settings" class="sidebar-link">Column Settings</a></li><li class="sidebar-sub-header"><a href="/docs/#default-value" class="sidebar-link">Default Value</a></li></ul></li><li class="sidebar-sub-header"><a href="/docs/#index-definition" class="sidebar-link">Index Definition</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docs/#index-settings" class="sidebar-link">Index Settings</a></li></ul></li><li class="sidebar-sub-header"><a href="/docs/#relationships-foreign-key-definitions" class="sidebar-link">Relationships &amp; Foreign Key Definitions</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docs/#relationship-settings" class="sidebar-link">Relationship settings</a></li><li class="sidebar-sub-header"><a href="/docs/#many-to-many-relationship" class="sidebar-link">Many-to-many relationship</a></li></ul></li><li class="sidebar-sub-header"><a href="/docs/#comments" class="sidebar-link">Comments</a></li><li class="sidebar-sub-header"><a href="/docs/#sticky-notes" class="sidebar-link">Sticky Notes</a></li><li class="sidebar-sub-header"><a href="/docs/#note-definition" class="sidebar-link">Note Definition</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docs/#project-notes" class="sidebar-link">Project Notes</a></li><li class="sidebar-sub-header"><a href="/docs/#table-notes-2" class="sidebar-link">Table Notes</a></li><li class="sidebar-sub-header"><a href="/docs/#column-notes" class="sidebar-link">Column Notes</a></li></ul></li><li class="sidebar-sub-header"><a href="/docs/#multi-line-string" class="sidebar-link">Multi-line String</a></li><li class="sidebar-sub-header"><a href="/docs/#enum-definition" class="sidebar-link">Enum Definition</a></li><li class="sidebar-sub-header"><a href="/docs/#tablegroup" class="sidebar-link">TableGroup</a></li><li class="sidebar-sub-header"><a href="/docs/#syntax-consistency" class="sidebar-link">Syntax Consistency</a></li></ul></li></ul> </aside> <div class="main"><main class="page"> <div class="theme-default-content content__default"><h1 id="dbml-full-syntax-docs"><a href="#dbml-full-syntax-docs" class="header-anchor">#</a> DBML - Full Syntax Docs</h1> <p>DBML (database markup language) is a simple, readable DSL language designed to define database structures. This page
+outlines the full syntax documentations of DBML.</p> <ul><li><a href="#project-definition">Project Definition</a></li> <li><a href="#schema-definition">Schema Definition</a> <ul><li><a href="#public-schema">Public Schema</a></li></ul></li> <li><a href="#table-definition">Table Definition</a> <ul><li><a href="#table-alias">Table Alias</a></li> <li><a href="#table-notes">Table Notes</a></li> <li><a href="#table-settings">Table Settings</a></li></ul></li> <li><a href="#column-definition">Column Definition</a> <ul><li><a href="#column-settings">Column Settings</a></li> <li><a href="#default-value">Default Value</a></li></ul></li> <li><a href="#index-definition">Index Definition</a> <ul><li><a href="#index-settings">Index Settings</a></li></ul></li> <li><a href="#relationships-foreign-key-definitions">Relationships &amp; Foreign Key Definitions</a> <ul><li><a href="#relationship-settings">Relationship settings</a></li> <li><a href="#many-to-many-relationship">Many-to-many relationship</a></li></ul></li> <li><a href="#comments">Comments</a></li> <li><a href="#sticky-notes">Sticky Notes</a></li> <li><a href="#note-definition">Note Definition</a> <ul><li><a href="#project-notes">Project Notes</a></li> <li><a href="#table-notes">Table Notes</a></li> <li><a href="#column-notes">Column Notes</a></li></ul></li> <li><a href="#multi-line-string">Multi-line String</a></li> <li><a href="#enum-definition">Enum Definition</a></li> <li><a href="#tablegroup">TableGroup</a></li> <li><a href="#syntax-consistency">Syntax Consistency</a></li></ul> <h5 id="take-a-look-at-an-example-below"><a href="#take-a-look-at-an-example-below" class="header-anchor">#</a> Take a look at an example below:</h5> <div class="language- extra-class"><pre><code>Table users {
+    id integer
+    username varchar
+    role varchar
+    created_at timestamp
+}
+
+Table posts {
+    id integer [primary key]
+    title varchar
+    body text [note: 'Content of the post']
+    user_id integer
+    created_at timestamp
+}
+
+Ref: posts.user_id &gt; users.id // many-to-one
+</code></pre></div><h2 id="project-definition"><a href="#project-definition" class="header-anchor">#</a> Project Definition</h2> <p>You can give overall description of the project.</p> <div class="language- extra-class"><pre><code>Project project_name {
+  database_type: 'PostgreSQL'
+  Note: 'Description of the project'
+}
+</code></pre></div><h2 id="schema-definition"><a href="#schema-definition" class="header-anchor">#</a> Schema Definition</h2> <p>A new schema will be defined as long as it contains any table or enum.</p> <p>For example, the following code will define a new schema <code>core</code> along with a table <code>user</code> placed inside it</p> <div class="language- extra-class"><pre><code>Table core.user {
+    ...
+}
+</code></pre></div><h3 id="public-schema"><a href="#public-schema" class="header-anchor">#</a> Public Schema</h3> <p>By default, any <strong>table</strong>, <strong>relationship</strong>, or <strong>enum</strong> definition that omits <code>schema_name</code> will be considered to belong to the <code>public</code> schema.</p> <h2 id="table-definition"><a href="#table-definition" class="header-anchor">#</a> Table Definition</h2> <div class="language- extra-class"><pre><code>// table belonged to default &quot;public&quot; schema
+Table table_name {
+    column_name column_type [column_settings]
+}
+
+// table belonged to a schema
+Table schema_name.table_name {
+    column_name column_type [column_settings]
+}
+</code></pre></div><ul><li>(Optional) title of database schema is listed as <code>schema_name</code>. If omitted, <code>schema_name</code> will default to <code>public</code></li> <li>title of database table is listed as <code>table_name</code></li> <li>name of the column is listed as <code>column_name</code></li> <li>type of the data in the column listed as <code>column_type</code> <ul><li>supports all data types, as long as it is a single word (remove all spaces in the data type). Example, JSON, JSONB, decimal(1,2), etc.</li></ul></li> <li>list is wrapped in <code>curly brackets {}</code>, for indexes, constraints and table definitions.</li> <li>settings are wrapped in <code>square brackets []</code></li> <li>string value is be wrapped in a <code>single quote as 'string'</code></li> <li><code>column_name</code> can be stated in just plain text, or wrapped in a <code>double quote as &quot;column name&quot;</code></li></ul> <h3 id="table-alias"><a href="#table-alias" class="header-anchor">#</a> Table Alias</h3> <p>You can alias the table, and use them in the references later on.</p> <div class="language- extra-class"><pre><code>Table very_long_user_table as U {
+    ...
+}
+
+Ref: U.id &lt; posts.user_id
+</code></pre></div><h3 id="table-notes"><a href="#table-notes" class="header-anchor">#</a> Table Notes</h3> <p>You can add notes to the table, and refer to them in the visual plane.</p> <div class="language- extra-class"><pre><code>Table users {
+    id integer
+    status varchar [note: 'status']
+
+    Note: 'Stores user data'
+}
+</code></pre></div><h3 id="table-settings"><a href="#table-settings" class="header-anchor">#</a> Table Settings</h3> <p>Settings are all defined within square brackets: <code>[setting1: value1, setting2: value2, setting3, setting4]</code></p> <p>Each setting item can take in 2 forms: <code>Key: Value</code> or <code>keyword</code>, similar to that of Python function parameters.</p> <ul><li><code>headercolor: &lt;color_code&gt;</code>: change the table header color.</li></ul> <p>Example,</p> <div class="language- extra-class"><pre><code>Table users [headercolor: #3498DB] {
+    id integer [primary key]
+    username varchar(255) [not null, unique]
+}
+</code></pre></div><h2 id="column-definition"><a href="#column-definition" class="header-anchor">#</a> Column Definition</h2> <h3 id="column-settings"><a href="#column-settings" class="header-anchor">#</a> Column Settings</h3> <p>Each column can take have optional settings, defined in square brackets like:</p> <div class="language- extra-class"><pre><code>Table buildings {
+    ...
+    address varchar(255) [unique, not null, note: 'to include unit number']
+    id integer [ pk, unique, default: 123, note: 'Number' ]
+}
+</code></pre></div><p>The list of column settings you can use:</p> <ul><li><code>note: 'string to add notes'</code>: add a metadata note to this column</li> <li><code>primary key</code> or <code>pk</code>: mark a column as primary key. For composite primary key, refer to the 'Indexes' section</li> <li><code>null</code> or <code>not null</code>: mark a column null or not null</li> <li><code>unique</code>: mark the column unique</li> <li><code>default: some_value</code>: set a default value of the column, please refer to the 'Default Value' section below</li> <li><code>increment</code>: mark the column as auto-increment</li></ul> <p><strong>Note:</strong> You can use a workaround for un-supported settings by adding the setting name into the column type name, such as <code>id “bigint unsigned” [pk]</code></p> <h3 id="default-value"><a href="#default-value" class="header-anchor">#</a> Default Value</h3> <p>You can set default value as:</p> <ul><li>number value starts blank: <code>default: 123</code> or <code>default: 123.456</code></li> <li>string value starts with single quotes: <code>default: 'some string value'</code></li> <li>expression value is wrapped with backticks: <code>default: `now() - interval '5 days'`</code></li> <li>boolean (true/false/null): <code>default: false</code> or <code>default: null</code></li></ul> <p>Example,</p> <div class="language- extra-class"><pre><code>Table users {
+    id integer [primary key]
+    username varchar(255) [not null, unique]
+    full_name varchar(255) [not null]
+    gender varchar(1) [not null]
+    source varchar(255) [default: 'direct']
+    created_at timestamp [default: `now()`]
+    rating integer [default: 10]
+}
+</code></pre></div><h2 id="index-definition"><a href="#index-definition" class="header-anchor">#</a> Index Definition</h2> <p>Indexes allow users to quickly locate and access the data. Users can define single or multi-column indexes.</p> <div class="language- extra-class"><pre><code>Table bookings {
+  id integer
+  country varchar
+  booking_date date
+  created_at timestamp
+
+  indexes {
+      (id, country) [pk] // composite primary key
+      created_at [name: 'created_at_index', note: 'Date']
+      booking_date
+      (country, booking_date) [unique]
+      booking_date [type: hash]
+      (`id*2`)
+      (`id*3`,`getdate()`)
+      (`id*3`,id)
+  }
+}
+</code></pre></div><p>There are 3 types of index definitions:</p> <ul><li>Index with single field (with index name): <code>CREATE INDEX created_at_index on users (created_at)</code></li> <li>Index with multiple fields (composite index): <code>CREATE INDEX on users (created_at, country)</code></li> <li>Index with an expression: <code>CREATE INDEX ON films ( first_name + last_name )</code></li> <li>(bonus) Composite index with expression: <code>CREATE INDEX ON users ( country, (lower(name)) )</code></li></ul> <h3 id="index-settings"><a href="#index-settings" class="header-anchor">#</a> Index Settings</h3> <ul><li><code>type</code>: type of index (btree, gin, gist, hash depending on DB). For now, only type btree and hash are accepted.</li> <li><code>name</code>: name of index</li> <li><code>unique</code>: unique index</li> <li><code>pk</code>: primary key</li></ul> <h2 id="relationships-foreign-key-definitions"><a href="#relationships-foreign-key-definitions" class="header-anchor">#</a> Relationships &amp; Foreign Key Definitions</h2> <p>Relationships are used to define foreign key constraints between tables across schemas.</p> <div class="language- extra-class"><pre><code>Table posts {
+    id integer [primary key]
+    user_id integer [ref: &gt; users.id] // many-to-one
+}
+
+// or this
+Table users {
+    id integer [ref: &lt; posts.user_id, ref: &lt; reviews.user_id] // one to many
+}
+
+// The space after '&lt;' is optional
+</code></pre></div><p>There are 4 types of relationships: one-to-one, one-to-many, many-to-one and many-to-many</p> <ul><li><code>&lt;</code>: one-to-many. E.g: <code>users.id &lt; posts.user_id</code></li> <li><code>&gt;</code>: many-to-one. E.g: <code>posts.user_id &gt; users.id</code></li> <li><code>-</code>: one-to-one. E.g: <code>users.id - user_infos.user_id</code></li> <li><code>&lt;&gt;</code>: many-to-many. E.g: <code>authors.id &lt;&gt; books.id</code></li></ul> <p>In DBML, there are 3 syntaxes to define relationships:</p> <div class="language- extra-class"><pre><code>//Long form
+Ref name_optional {
+  schema1.table1.column1 &lt; schema2.table2.column2
+}
+
+//Short form:
+Ref name_optional: schema1.table1.column1 &lt; schema2.table2.column2
+
+// Inline form
+Table schema2.table2 {
+    id integer
+    column2 integer [ref: &gt; schema1.table1.column1]
+}
+</code></pre></div><p><strong>Note:</strong> if <code>schema_name</code> prefix is omitted, it'll default to <code>public</code> schema</p> <p><strong>Composite foreign keys:</strong></p> <div class="language- extra-class"><pre><code>Ref: merchant_periods.(merchant_id, country_code) &gt; merchants.(id, country_code)
+</code></pre></div><p><strong>Cross-schema relationship:</strong></p> <div class="language- extra-class"><pre><code>Table core.users {
+    id integer [pk]
+}
+
+Table blogging.posts {
+    id integer [pk]
+    user_id integer [ref: &gt; core.users.id]
+}
+
+// or this
+Ref: blogging.posts.user_id &gt; core.users.id
+</code></pre></div><h3 id="relationship-settings"><a href="#relationship-settings" class="header-anchor">#</a> Relationship settings</h3> <div class="language- extra-class"><pre><code>Ref: products.merchant_id &gt; merchants.id [delete: cascade, update: no action]
+</code></pre></div><ul><li><code>delete / update: cascade | restrict | set null | set default | no action</code><br>
+Define referential actions. Similar to <code>ON DELETE/UPDATE CASCADE/...</code> in SQL.</li></ul> <p><em>Relationship settings are not supported for inline form ref.</em></p> <h3 id="many-to-many-relationship"><a href="#many-to-many-relationship" class="header-anchor">#</a> Many-to-many relationship</h3> <p>There're two ways to represent many-to-many relationship:</p> <ul><li><p>Using a single many-to-many relationship (<code>&lt;&gt;</code>).</p></li> <li><p>Using 2 many-to-one relationships (<code>&gt;</code> and <code>&lt;</code>). For more information, please refer to <a href="https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/" target="_blank" rel="noopener noreferrer">https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p></li></ul> <p>Beside presentation aspect, the main differece between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.</p> <h2 id="comments"><a href="#comments" class="header-anchor">#</a> Comments</h2> <p><strong>Single-line Comments</strong></p> <p>You can comment in your code using <code>//</code>, so it is easier for you to review the code later.</p> <p>Example,</p> <div class="language- extra-class"><pre><code>// order_items refer to items from that order
+</code></pre></div><p><strong>Multi-line Comments</strong></p> <p>You can also put comment spanning multiple lines in your code by putting inside <code>/*</code> and <code>*/</code>.</p> <p>Example,</p> <div class="language- extra-class"><pre><code>/*
+    This is a
+    Multi-lines
+    comment
+*/
+</code></pre></div><h2 id="sticky-notes"><a href="#sticky-notes" class="header-anchor">#</a> Sticky Notes</h2> <p>You can add sticky notes to the diagram canvas to serve as a quick reminder or to elaborate on a complex idea.</p> <p>Example,</p> <div class="language- extra-class"><pre><code>Table jobs {
+    ...
+}
+
+Note single_line_note {
+  'This is a single line note'
+}
+
+Note multiple_lines_note {
+'''
+  This is a multiple lines note
+  This string can spans over multiple lines.
+'''
+}
+</code></pre></div><h2 id="note-definition"><a href="#note-definition" class="header-anchor">#</a> Note Definition</h2> <p>Note allows users to give description for a particular DBML element.</p> <div class="language- extra-class"><pre><code>Table users {
+  id int [pk]
+  name varchar
+
+  Note: 'This is a note of this table'
+  // or
+  Note {
+    'This is a note of this table'
+  }
+}
+</code></pre></div><p>Note's value is a string. If your note spans over multiple lines, you can use <a href="#multi-line-string">multi-line string</a> to define your note.</p> <h3 id="project-notes"><a href="#project-notes" class="header-anchor">#</a> Project Notes</h3> <div class="language- extra-class"><pre><code>Project DBML {
+  Note: '''
+    # DBML - Database Markup Language
+    DBML (database markup language) is a simple, readable DSL language designed to define database structures.
+
+    ## Benefits
+    
+    * It is simple, flexible and highly human-readable
+    * It is database agnostic, focusing on the essential database structure definition without worrying about the detailed syntaxes of each database
+    * Comes with a free, simple database visualiser at [dbdiagram.io](http://dbdiagram.io)
+  '''
+}
+</code></pre></div><h3 id="table-notes-2"><a href="#table-notes-2" class="header-anchor">#</a> Table Notes</h3> <div class="language- extra-class"><pre><code>Table users {
+  id int [pk]
+  name varchar
+
+  Note: 'Stores user data'
+}
+</code></pre></div><h3 id="column-notes"><a href="#column-notes" class="header-anchor">#</a> Column Notes</h3> <p>You can add notes to your columns, so you can easily refer to it when hovering over the column in the diagram canvas.</p> <div class="language- extra-class"><pre><code>column_name column_type [note: 'replace text here']
+</code></pre></div><p>Example,</p> <div class="language- extra-class"><pre><code>Table orders {
+    status varchar [
+    note: '''
+    💸 1 = processing, 
+    ✔️ 2 = shipped, 
+    ❌ 3 = cancelled,
+    😔 4 = refunded
+    ''']
+} 
+</code></pre></div><h2 id="multi-line-string"><a href="#multi-line-string" class="header-anchor">#</a> Multi-line String</h2> <p>Multiline string will be defined between triple single quote <code>'''</code></p> <div class="language- extra-class"><pre><code>Note: '''
+  This is a block string
+  This string can spans over multiple lines.
+'''
+</code></pre></div><ul><li><p>Line breaks: &lt;enter&gt; key</p></li> <li><p>Line continuation: <code>\</code> backslash</p></li> <li><p>Escaping characters:</p> <ul><li><code>\</code>: using double backslash <code>\\</code></li> <li><code>'''</code>: using <code>\'''</code></li></ul></li> <li><p>The number of spaces you use to indent a block string will be the minimum number of leading spaces among all lines. The parser will automatically remove the number of indentation spaces in the final output. The result of the above example will be:</p> <div class="language- extra-class"><pre><code>This is a block string
+This string can spans over multiple lines.
+</code></pre></div></li></ul> <h2 id="enum-definition"><a href="#enum-definition" class="header-anchor">#</a> Enum Definition</h2> <p><code>Enum</code> allows users to define different values of a particular column.
+When hovering over the column in the canvas, the enum values will be displayed.</p> <div class="language- extra-class"><pre><code>// enum belonged to default &quot;public&quot; schema
+enum job_status {
+    created [note: 'Waiting to be processed']
+    running
+    done
+    failure
+}
+
+// enum belonged to a schema
+enum v2.job_status {
+    ...
+}
+
+Table jobs {
+    id integer
+    status job_status
+    status_v2 v2.job_status
+} 
+</code></pre></div><p><strong>Note:</strong> if <code>schema_name</code> prefix is omitted, it'll default to <code>public</code> schema</p> <p>If your enum values contain spaces or other special characters you can use double quotes.</p> <div class="language- extra-class"><pre><code>enum grade {
+    &quot;A+&quot;
+    &quot;A&quot;
+    &quot;A-&quot;
+    &quot;Not Yet Set&quot;
+}
+</code></pre></div><h2 id="tablegroup"><a href="#tablegroup" class="header-anchor">#</a> TableGroup</h2> <p><code>TableGroup</code> allows users to group the related or associated tables together.</p> <div class="language- extra-class"><pre><code>TableGroup tablegroup_name { // tablegroup is case-insensitive.
+    table1 
+    table2 
+    table3
+}
+
+//example
+TableGroup e-commerce1 {
+    merchants
+    countries
+}
+</code></pre></div><h2 id="syntax-consistency"><a href="#syntax-consistency" class="header-anchor">#</a> Syntax Consistency</h2> <p>DBML is the standard language for database and the syntax is consistent to provide clear and extensive functions.</p> <ul><li>curly brackets <code>{}</code>: grouping for indexes, constraints and table definitions</li> <li>square brackets <code>[]</code>: settings</li> <li>forward slashes <code>//</code>: comments</li> <li><code>column_name</code> is stated in just plain text</li> <li>single quote as <code>'string'</code>: string value</li> <li>double quote as <code>&quot;column name&quot;</code>: quoting variable</li> <li>triple quote as <code>'''multi-line string'''</code>: multi-line string value</li> <li>backtick <code>`</code>: function expression</li></ul></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div></div></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.0a04eff5.js" defer></script><script src="/assets/js/3.6e3d3d02.js" defer></script><script src="/assets/js/2.988eaf09.js" defer></script><script src="/assets/js/10.a727523e.js" defer></script>
+  </body>
+</html>
