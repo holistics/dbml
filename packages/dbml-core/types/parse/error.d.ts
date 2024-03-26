@@ -21,9 +21,8 @@ export interface CompilerDiagnostic {
   };
   readonly type?: Readonly<WarningLevel>;
   readonly code?: Readonly<ErrorCode>; // the error code
-  readonly [key: string]: any;
 }
 
 export interface CompilerError {
-  readonly diags: CompilerDiagnostic[];
+  readonly diagnostics: CompilerDiagnostic[];
 }
