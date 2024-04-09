@@ -24,5 +24,5 @@ export interface CompilerDiagnostic {
 }
 
 export interface CompilerError {
-  readonly diagnostics: CompilerDiagnostic[];
+  readonly diags: CompilerDiagnostic[];
 }
