@@ -13,6 +13,7 @@ import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
 import config from './config';
 import logger from '../helpers/logger';
+import { SyntaxError } from '../errors';
 
 export default async function exportHandler (program) {
   try {
@@ -34,13 +35,12 @@ export default async function exportHandler (program) {
       generate(
         inputPaths,
         (dbml) => exporter.export(dbml, format),
-        new OutputFilePlugin(resolvePaths(opts.outFile), header)
+        new OutputFilePlugin(resolvePaths(opts.outFile), header),
       );
 
       console.log(`  ${chalk.green(figures.main.tick)} Generated SQL dump file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
-  } catch (errors) {
-    // TODO: handle error in case errors object is not mappable
-    logger.error(`\n    ${errors.map(({ message }) => message).join('\n    ')}`);
+  } catch (error) {
+    logger.error(`\n    ${error.diags.map((diag) => new SyntaxError(diag.filepath, diag)).map(({ message }) => message).join('\n    ')}`);
   }
 }

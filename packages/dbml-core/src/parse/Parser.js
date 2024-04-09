@@ -6,6 +6,7 @@ import dbmlParser from './dbmlParser';
 import schemarbParser from './schemarbParser';
 import mssqlParser from './mssqlParser';
 import { parse } from './ANTLR/ASTGeneration';
+import { CompilerError } from './error';
 
 class Parser {
   constructor (DBMLCompiler) {
@@ -50,34 +51,33 @@ class Parser {
   }
 
   parse (str, format) {
-    let rawDatabase = {};
-    switch (format) {
-      case 'mysql':
-        rawDatabase = Parser.parseMySQLToJSONv2(str);
-        break;
+    try {
+      let rawDatabase = {};
+      switch (format) {
+        case 'mysql':
+          rawDatabase = Parser.parseMySQLToJSONv2(str);
+          break;
 
-      case 'mysqlLegacy':
-        rawDatabase = Parser.parseMySQLToJSON(str);
-        break;
+        case 'mysqlLegacy':
+          rawDatabase = Parser.parseMySQLToJSON(str);
+          break;
 
-      case 'postgres':
-        rawDatabase = Parser.parsePostgresToJSONv2(str);
-        break;
+        case 'postgres':
+          rawDatabase = Parser.parsePostgresToJSONv2(str);
+          break;
 
-      case 'postgresLegacy':
-        rawDatabase = Parser.parsePostgresToJSON(str);
-        break;
+        case 'postgresLegacy':
+          rawDatabase = Parser.parsePostgresToJSON(str);
+          break;
 
-      case 'dbml':
-        rawDatabase = Parser.parseDBMLToJSON(str);
-        break;
+        case 'dbml':
+          rawDatabase = Parser.parseDBMLToJSON(str);
+          break;
 
-      case 'dbmlv2': {
-        this.DBMLCompiler.setSource(str);
+        case 'dbmlv2': {
+          this.DBMLCompiler.setSource(str);
 
-        const errors = this.DBMLCompiler.parse.errors();
-        if (errors.length > 0) {
-          throw errors.map((error) => ({
+          const diags = this.DBMLCompiler.parse.errors().map((error) => ({
             message: error.diagnostic,
             location: {
               start: {
@@ -91,34 +91,37 @@ class Parser {
             },
             code: error.code,
           }));
-        }
 
-        rawDatabase = this.DBMLCompiler.parse.rawDb();
-        break;
+          if (diags.length > 0) throw CompilerError.create(diags);
+        }
+          rawDatabase = this.DBMLCompiler.parse.rawDb();
+          break;
+
+        case 'schemarb':
+          rawDatabase = Parser.parseSchemaRbToJSON(str);
+          break;
+
+        case 'mssql':
+          rawDatabase = Parser.parseMSSQLToJSON(str);
+          break;
+
+        case 'json':
+          if (typeof str === 'object') {
+            rawDatabase = str;
+          } else {
+            rawDatabase = JSON.parse(str);
+          }
+          break;
+
+        default:
+          break;
       }
 
-      case 'schemarb':
-        rawDatabase = Parser.parseSchemaRbToJSON(str);
-        break;
-
-      case 'mssql':
-        rawDatabase = Parser.parseMSSQLToJSON(str);
-        break;
-
-      case 'json':
-        if (typeof str === 'object') {
-          rawDatabase = str;
-        } else {
-          rawDatabase = JSON.parse(str);
-        }
-        break;
-
-      default:
-        break;
+      const schema = Parser.parseJSONToDatabase(rawDatabase);
+      return schema;
+    } catch (diags) {
+      throw CompilerError.create(diags);
     }
-
-    const schema = Parser.parseJSONToDatabase(rawDatabase);
-    return schema;
   }
 }
 
