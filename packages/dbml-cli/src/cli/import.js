@@ -13,6 +13,7 @@ import { validateFilePlugin } from './validatePlugins/validatePlugins';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
 import logger from '../helpers/logger';
+import { SyntaxError } from '../errors';
 
 export default async function importHandler (program) {
   try {
@@ -25,13 +26,11 @@ export default async function importHandler (program) {
     if (!opts.outFile && !opts.outDir) {
       generate(inputPaths, (sql) => importer.import(sql, format), OutputConsolePlugin);
     } else if (opts.outFile) {
-      generate(inputPaths, (sql) => importer.import(sql, format),
-        new OutputFilePlugin(resolvePaths(opts.outFile)));
+      generate(inputPaths, (sql) => importer.import(sql, format), new OutputFilePlugin(resolvePaths(opts.outFile)));
 
       console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from SQL file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
-  } catch (err) {
-    if (err instanceof Array) return logger.error(`\n    ${err.map(({ message }) => message).join('\n    ')}`);
-    logger.error(err);
+  } catch (error) {
+    logger.error(`\n    ${error.diags.map((diag) => new SyntaxError(diag.filepath, diag)).map(({ message }) => message).join('\n    ')}`);
   }
 }
