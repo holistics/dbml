@@ -1,3 +1,18 @@
+## v3.4.0 (2024-03-19)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#539](https://github.com/holistics/dbml/pull/539) fix: normalize note content in projects ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#534](https://github.com/holistics/dbml/pull/534) New feature: Export DBML to Oracle version 19c ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.3.0 (2024-03-19)
 
 #### :memo: Documentation

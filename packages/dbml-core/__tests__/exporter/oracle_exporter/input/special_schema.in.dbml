@@ -1,0 +1,65 @@
+/*
+enum
+special column: use in double quote
+default value column,
+default value as expression,
+indexes full case
+relationship on delete, on update
+*/
+
+enum order_status {
+  created
+  pending
+  processing
+  waiting_for_payment
+  success
+  cancel
+}
+
+Table users [note: 'This table has a expression index'] {
+  id "integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY"
+  username nvarchar2(255) [not null]
+  fullname nvarchar2(255) [not null]
+
+  indexes {
+    (username, `LOWER("fullname")`) [name: 'IDX_USERS']
+  }
+}
+
+Table orders {
+  id "integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY"
+  status order_status
+  "note" nclob [default: '']
+  user_id "integer" [not null, note: 'Store user uuid']
+  created_at timestamp [default: `current_timestamp`]
+  product_id int
+  supplier_id int
+
+  indexes {
+    (id, user_id) [name: 'IDX_ORDER_USER', type: btree, note: 'Ignore index  type', unique]
+  }
+}
+
+Table order_details {
+  order_id "INT" [unique, not null]
+  unit nvarchar2(50) [not null]
+  quantity number [not null]
+  price float [not null]
+}
+
+Table products {
+  product_id int
+  supplier_id int
+
+  indexes {
+    (product_id, supplier_id) [pk]
+  }
+}
+
+// composite foreign key
+Ref: "orders".("product_id", "supplier_id") > "products".("product_id", "supplier_id")
+
+Ref: "users"."id" < "orders"."user_id" [delete: cascade]
+
+// on update must be ignored
+Ref: "orders"."id" < "order_details"."order_id" [delete: cascade, update: restrict]
