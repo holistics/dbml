@@ -3,6 +3,7 @@ class ElementError extends Error {
   constructor (message, location = { start: { line: 1, column: 1 } }) {
     super(message);
     this.location = location;
+    this.error = 'error';
   }
 }
 
