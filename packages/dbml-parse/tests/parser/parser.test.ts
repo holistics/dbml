@@ -21,7 +21,7 @@ describe('#parser', () => {
       null,
       2,
     );
-    it('should equal snapshot', () =>
+    it(testName, () =>
       expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });
 });

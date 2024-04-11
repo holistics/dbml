@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { SyntaxToken } from './lexer/tokens';
 import { SyntaxNode } from './parser/nodes';
 
@@ -16,6 +15,7 @@ export enum CompileErrorCode {
   UNKNOWN_PREFIX_OP,
   INVALID_OPERAND,
   EMPTY_ATTRIBUTE_NAME,
+  INVALID_ESCAPE_SEQUENCE,
 
   INVALID_NAME = 3000,
   UNEXPECTED_NAME,

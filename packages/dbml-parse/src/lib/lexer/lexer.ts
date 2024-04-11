@@ -437,10 +437,19 @@ export default class Lexer {
   }
 
   escapedString(): string {
+    const prevPos: Position = { column: this.current.column - 1, offset: this.current.offset - 1, line: this.current.line };
     if (this.isAtEnd()) {
       return '\\';
     }
     switch (this.advance()) {
+      case '\r':
+        if (this.check('\n')) {
+          this.advance();
+        }
+
+        return '';
+      case '\n':
+        return '';
       case 't':
         return '\t';
       case 'n':
@@ -450,6 +459,11 @@ export default class Lexer {
       case 'r':
         return '\r';
       case "'":
+        if (this.peek() === "'" && this.peek(1) === "'") {
+          this.advance();
+          this.advance();
+          return "'''";
+        }
         return "'";
       case '"':
         return '"';
@@ -461,10 +475,14 @@ export default class Lexer {
         return '\v';
       case 'f':
         return '\f';
+      case ' ':
+        return '\\ ';
       case 'u': {
         let hex = '';
         for (let i = 0; i <= 3; i += 1) {
           if (this.isAtEnd() || !isAlphaNumeric(this.peek()!)) {
+            this.errors.push(new CompileError(CompileErrorCode.INVALID_ESCAPE_SEQUENCE, `Invalid unicode escape sequence '\\u${hex}', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed`, SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, prevPos, this.current, `\\u${hex}`, true)));
+
             return `\\u${hex}`;
           }
           hex += this.advance();
@@ -472,8 +490,9 @@ export default class Lexer {
 
         return String.fromCharCode(parseInt(hex, 16));
       }
-      default:
-        return `\\${this.tokens[this.current.offset - 1]}`;
+      default: {
+        return this.text[this.current.offset - 1];
+      }
     }
   }
 }
