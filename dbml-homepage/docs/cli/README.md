@@ -3,7 +3,7 @@
 [![NPM](https://img.shields.io/npm/v/@dbml/cli)](https://www.npmjs.com/package/@dbml/cli)
 
 DBML comes with a built-in CLI which can be used to convert between different formats from
-the command line  
+the command line
 
 ![img](./cli.gif)
 ## Installation
@@ -53,7 +53,7 @@ $ dbml2sql schema.dbml -o schema.sql
 
 ```bash
 $ dbml2sql <path-to-dbml-file>
-           [--mysql|--postgres|--mssql]
+           [--mysql|--postgres|--mssql|--oracle]
            [-o|--out-file <output-filepath>]
 ```
 ## Convert  a SQL file to DBML

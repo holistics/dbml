@@ -1,0 +1,19 @@
+Table users {
+  id int [pk]
+}
+
+Table products {
+  id int [pk]
+}
+
+Ref: "users"."id" <> "products"."id"
+
+Table "C##test"."users" {
+  id int [pk]
+}
+
+Table "C##test"."products" {
+  id int [pk]
+}
+
+Ref: "C##test"."users"."id" <> "C##test"."products"."id"

@@ -1,0 +1,168 @@
+CREATE TABLE "staff" (
+  "id" int PRIMARY KEY,
+  "first_name" nvarchar2(255),
+  "last_name" nvarchar2(255),
+  "address_id" int,
+  "picture" blob,
+  "email" nvarchar2(255),
+  "store_id" int,
+  "active" number(1),
+  "user_name" nvarchar2(255),
+  "password" nvarchar2(255),
+  "last_update" timestamp
+);
+
+CREATE TABLE "store" (
+  "id" int PRIMARY KEY,
+  "manager_staff_id" int,
+  "address_id" int,
+  "last_update" timestamp
+);
+
+CREATE TABLE "payment" (
+  "id" int PRIMARY KEY,
+  "customer_id" int,
+  "staff_id" int,
+  "rental_id" int,
+  "amount" float,
+  "payment_date" date,
+  "last_update" timestamp
+);
+
+CREATE TABLE "rental" (
+  "id" int PRIMARY KEY,
+  "rental_date" date,
+  "inventory_id" int,
+  "customer_id" int,
+  "return_date" date,
+  "staff_id" int,
+  "last_update" timestamp
+);
+
+ALTER TABLE "staff" ADD FOREIGN KEY ("store_id") REFERENCES "store" ("id");
+
+ALTER TABLE "store" ADD FOREIGN KEY ("manager_staff_id") REFERENCES "staff" ("id");
+
+ALTER TABLE "payment" ADD FOREIGN KEY ("staff_id") REFERENCES "staff" ("id");
+
+ALTER TABLE "payment" ADD FOREIGN KEY ("rental_id") REFERENCES "rental" ("id");
+
+ALTER TABLE "rental" ADD FOREIGN KEY ("staff_id") REFERENCES "staff" ("id");
+CREATE TABLE "country" (
+  "id" int PRIMARY KEY,
+  "country" nvarchar2(255),
+  "last_update" timestamp
+);
+
+CREATE TABLE "city" (
+  "id" int PRIMARY KEY,
+  "city" nvarchar2(255),
+  "country_id" int,
+  "last_update" timestamp
+);
+
+CREATE TABLE "address" (
+  "id" int PRIMARY KEY,
+  "address" nvarchar2(255),
+  "address2" nvarchar2(255),
+  "district" nvarchar2(255),
+  "city_id" int,
+  "postal_code" nvarchar2(255),
+  "phone" nvarchar2(255),
+  "last_update" timestamp
+);
+
+CREATE TABLE "customer" (
+  "id" int PRIMARY KEY,
+  "store_id" int,
+  "first_name" nvarchar2(255),
+  "last_name" nvarchar2(255),
+  "email" nvarchar2(255),
+  "address_id" int,
+  "active" number(1),
+  "create_Date" timestamp,
+  "last_update" timestamp
+);
+
+CREATE INDEX "IDX_CUSTOMER" ON "customer" ("id", "first_name");
+
+ALTER TABLE "city" ADD FOREIGN KEY ("country_id") REFERENCES "country" ("id");
+
+ALTER TABLE "address" ADD FOREIGN KEY ("city_id") REFERENCES "city" ("id");
+
+ALTER TABLE "customer" ADD FOREIGN KEY ("address_id") REFERENCES "address" ("id");
+CREATE TABLE "category" (
+  "id" int PRIMARY KEY,
+  "name" nvarchar2(255),
+  "last_update" timestamp
+);
+
+CREATE TABLE "film_category" (
+  "id" int PRIMARY KEY,
+  "category_id" int,
+  "last_update" timestamp
+);
+
+CREATE TABLE "language" (
+  "id" int PRIMARY KEY,
+  "name" nvarchar2(255),
+  "last_update" timestamp
+);
+
+CREATE TABLE "film_text" (
+  "id" int PRIMARY KEY,
+  "film_id" int,
+  "title" nvarchar2(255),
+  "description" nclob
+);
+
+CREATE TABLE "actor" (
+  "id" int PRIMARY KEY,
+  "first_name" nvarchar2(255),
+  "last_name" nvarchar2(255),
+  "last_update" timestamp
+);
+
+CREATE TABLE "film" (
+  "id" int PRIMARY KEY,
+  "title" nvarchar2(255),
+  "description" nclob,
+  "releaase_year" int,
+  "language_id" int,
+  "original_language_id" int,
+  "rental_duration" int,
+  "rental_rate" float,
+  "length" int,
+  "replacement_cost" float,
+  "rating" nvarchar2(255),
+  "special_feature" nvarchar2(255),
+  "last_update" timestamp
+);
+
+CREATE TABLE "film_actor" (
+  "id" int PRIMARY KEY,
+  "film_id" int,
+  "actor_id" int,
+  "last_update" timestamp
+);
+
+CREATE TABLE "inventory" (
+  "id" int PRIMARY KEY,
+  "film_id" int,
+  "store_id" int,
+  "last_update" timestamp
+);
+
+ALTER TABLE "film_category" ADD FOREIGN KEY ("category_id") REFERENCES "category" ("id");
+
+ALTER TABLE "film_text" ADD FOREIGN KEY ("film_id") REFERENCES "film" ("id");
+
+ALTER TABLE "film" ADD FOREIGN KEY ("language_id") REFERENCES "language" ("id");
+
+ALTER TABLE "film" ADD FOREIGN KEY ("original_language_id") REFERENCES "language" ("id");
+
+ALTER TABLE "film_actor" ADD FOREIGN KEY ("film_id") REFERENCES "film" ("id");
+
+ALTER TABLE "film_actor" ADD FOREIGN KEY ("actor_id") REFERENCES "actor" ("id");
+
+ALTER TABLE "inventory" ADD FOREIGN KEY ("film_id") REFERENCES "film" ("id");
