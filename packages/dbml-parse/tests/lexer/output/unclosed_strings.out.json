@@ -1,0 +1,417 @@
+{
+  "value": [
+    {
+      "kind": "<string>",
+      "startPos": {
+        "offset": 63,
+        "line": 4,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 106,
+        "line": 6,
+        "column": 7
+      },
+      "value": "This is also an unclosed string\n\n'''",
+      "leadingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 62,
+            "line": 3,
+            "column": 0
+          },
+          "endPos": {
+            "offset": 63,
+            "line": 4,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 62,
+          "end": 63
+        }
+      ],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 106,
+            "line": 6,
+            "column": 7
+          },
+          "endPos": {
+            "offset": 107,
+            "line": 7,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 106,
+          "end": 107
+        }
+      ],
+      "leadingInvalid": [
+        {
+          "kind": "<variable>",
+          "startPos": {
+            "offset": 0,
+            "line": 0,
+            "column": 0
+          },
+          "endPos": {
+            "offset": 27,
+            "line": 0,
+            "column": 27
+          },
+          "value": "\"This is an unclosed string",
+          "leadingTrivia": [],
+          "trailingTrivia": [
+            {
+              "kind": "<newline>",
+              "startPos": {
+                "offset": 27,
+                "line": 0,
+                "column": 27
+              },
+              "endPos": {
+                "offset": 28,
+                "line": 1,
+                "column": 0
+              },
+              "value": "\n",
+              "leadingTrivia": [],
+              "trailingTrivia": [],
+              "leadingInvalid": [],
+              "trailingInvalid": [],
+              "isInvalid": false,
+              "start": 27,
+              "end": 28
+            }
+          ],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": true,
+          "start": 0,
+          "end": 27
+        },
+        {
+          "kind": "<string>",
+          "startPos": {
+            "offset": 29,
+            "line": 2,
+            "column": 0
+          },
+          "endPos": {
+            "offset": 61,
+            "line": 2,
+            "column": 32
+          },
+          "value": "'This is also an unclosed string",
+          "leadingTrivia": [
+            {
+              "kind": "<newline>",
+              "startPos": {
+                "offset": 28,
+                "line": 1,
+                "column": 0
+              },
+              "endPos": {
+                "offset": 29,
+                "line": 2,
+                "column": 0
+              },
+              "value": "\n",
+              "leadingTrivia": [],
+              "trailingTrivia": [],
+              "leadingInvalid": [],
+              "trailingInvalid": [],
+              "isInvalid": false,
+              "start": 28,
+              "end": 29
+            }
+          ],
+          "trailingTrivia": [
+            {
+              "kind": "<newline>",
+              "startPos": {
+                "offset": 61,
+                "line": 2,
+                "column": 32
+              },
+              "endPos": {
+                "offset": 62,
+                "line": 3,
+                "column": 0
+              },
+              "value": "\n",
+              "leadingTrivia": [],
+              "trailingTrivia": [],
+              "leadingInvalid": [],
+              "trailingInvalid": [],
+              "isInvalid": false,
+              "start": 61,
+              "end": 62
+            }
+          ],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": true,
+          "start": 29,
+          "end": 61
+        }
+      ],
+      "trailingInvalid": [
+        {
+          "kind": "<string>",
+          "startPos": {
+            "offset": 108,
+            "line": 8,
+            "column": 0
+          },
+          "endPos": {
+            "offset": 111,
+            "line": 8,
+            "column": 3
+          },
+          "value": "'''",
+          "leadingTrivia": [
+            {
+              "kind": "<newline>",
+              "startPos": {
+                "offset": 107,
+                "line": 7,
+                "column": 0
+              },
+              "endPos": {
+                "offset": 108,
+                "line": 8,
+                "column": 0
+              },
+              "value": "\n",
+              "leadingTrivia": [],
+              "trailingTrivia": [],
+              "leadingInvalid": [],
+              "trailingInvalid": [],
+              "isInvalid": false,
+              "start": 107,
+              "end": 108
+            }
+          ],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": true,
+          "start": 108,
+          "end": 111
+        }
+      ],
+      "isInvalid": false,
+      "start": 63,
+      "end": 106
+    },
+    {
+      "kind": "<eof>",
+      "startPos": {
+        "offset": 111,
+        "line": 8,
+        "column": 3
+      },
+      "endPos": {
+        "offset": 111,
+        "line": 8,
+        "column": 3
+      },
+      "value": "",
+      "leadingTrivia": [],
+      "trailingTrivia": [],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 111,
+      "end": 111
+    }
+  ],
+  "errors": [
+    {
+      "code": 1003,
+      "diagnostic": "Invalid newline encountered while parsing",
+      "nodeOrToken": {
+        "kind": "<variable>",
+        "startPos": {
+          "offset": 0,
+          "line": 0,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 27,
+          "line": 0,
+          "column": 27
+        },
+        "value": "\"This is an unclosed string",
+        "leadingTrivia": [],
+        "trailingTrivia": [
+          {
+            "kind": "<newline>",
+            "startPos": {
+              "offset": 27,
+              "line": 0,
+              "column": 27
+            },
+            "endPos": {
+              "offset": 28,
+              "line": 1,
+              "column": 0
+            },
+            "value": "\n",
+            "leadingTrivia": [],
+            "trailingTrivia": [],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 27,
+            "end": 28
+          }
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": [],
+        "isInvalid": true,
+        "start": 0,
+        "end": 27
+      },
+      "start": 0,
+      "end": 27,
+      "name": "CompileError"
+    },
+    {
+      "code": 1003,
+      "diagnostic": "Invalid newline encountered while parsing",
+      "nodeOrToken": {
+        "kind": "<string>",
+        "startPos": {
+          "offset": 29,
+          "line": 2,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 61,
+          "line": 2,
+          "column": 32
+        },
+        "value": "'This is also an unclosed string",
+        "leadingTrivia": [
+          {
+            "kind": "<newline>",
+            "startPos": {
+              "offset": 28,
+              "line": 1,
+              "column": 0
+            },
+            "endPos": {
+              "offset": 29,
+              "line": 2,
+              "column": 0
+            },
+            "value": "\n",
+            "leadingTrivia": [],
+            "trailingTrivia": [],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 28,
+            "end": 29
+          }
+        ],
+        "trailingTrivia": [
+          {
+            "kind": "<newline>",
+            "startPos": {
+              "offset": 61,
+              "line": 2,
+              "column": 32
+            },
+            "endPos": {
+              "offset": 62,
+              "line": 3,
+              "column": 0
+            },
+            "value": "\n",
+            "leadingTrivia": [],
+            "trailingTrivia": [],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 61,
+            "end": 62
+          }
+        ],
+        "leadingInvalid": [],
+        "trailingInvalid": [],
+        "isInvalid": true,
+        "start": 29,
+        "end": 61
+      },
+      "start": 29,
+      "end": 61,
+      "name": "CompileError"
+    },
+    {
+      "code": 1002,
+      "diagnostic": "EOF reached while parsing",
+      "nodeOrToken": {
+        "kind": "<string>",
+        "startPos": {
+          "offset": 108,
+          "line": 8,
+          "column": 0
+        },
+        "endPos": {
+          "offset": 111,
+          "line": 8,
+          "column": 3
+        },
+        "value": "'''",
+        "leadingTrivia": [
+          {
+            "kind": "<newline>",
+            "startPos": {
+              "offset": 107,
+              "line": 7,
+              "column": 0
+            },
+            "endPos": {
+              "offset": 108,
+              "line": 8,
+              "column": 0
+            },
+            "value": "\n",
+            "leadingTrivia": [],
+            "trailingTrivia": [],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 107,
+            "end": 108
+          }
+        ],
+        "trailingTrivia": [],
+        "leadingInvalid": [],
+        "trailingInvalid": [],
+        "isInvalid": true,
+        "start": 108,
+        "end": 111
+      },
+      "start": 108,
+      "end": 111,
+      "name": "CompileError"
+    }
+  ]
+}

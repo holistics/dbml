@@ -1,0 +1,403 @@
+{
+  "value": [
+    {
+      "kind": "<variable>",
+      "startPos": {
+        "offset": 0,
+        "line": 0,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 4,
+        "line": 0,
+        "column": 4
+      },
+      "value": "\\u",
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 4,
+            "line": 0,
+            "column": 4
+          },
+          "endPos": {
+            "offset": 5,
+            "line": 1,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 4,
+          "end": 5
+        }
+      ],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 0,
+      "end": 4
+    },
+    {
+      "kind": "<variable>",
+      "startPos": {
+        "offset": 5,
+        "line": 1,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 9,
+        "line": 1,
+        "column": 4
+      },
+      "value": "a",
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 9,
+            "line": 1,
+            "column": 4
+          },
+          "endPos": {
+            "offset": 10,
+            "line": 2,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 9,
+          "end": 10
+        }
+      ],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 5,
+      "end": 9
+    },
+    {
+      "kind": "<variable>",
+      "startPos": {
+        "offset": 10,
+        "line": 2,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 15,
+        "line": 2,
+        "column": 5
+      },
+      "value": "\\u1",
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 15,
+            "line": 2,
+            "column": 5
+          },
+          "endPos": {
+            "offset": 16,
+            "line": 3,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 15,
+          "end": 16
+        }
+      ],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 10,
+      "end": 15
+    },
+    {
+      "kind": "<variable>",
+      "startPos": {
+        "offset": 16,
+        "line": 3,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 22,
+        "line": 3,
+        "column": 6
+      },
+      "value": "\\u12",
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 22,
+            "line": 3,
+            "column": 6
+          },
+          "endPos": {
+            "offset": 23,
+            "line": 4,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 22,
+          "end": 23
+        }
+      ],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 16,
+      "end": 22
+    },
+    {
+      "kind": "<variable>",
+      "startPos": {
+        "offset": 23,
+        "line": 4,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 29,
+        "line": 4,
+        "column": 6
+      },
+      "value": "\\uab",
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 29,
+            "line": 4,
+            "column": 6
+          },
+          "endPos": {
+            "offset": 30,
+            "line": 5,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 29,
+          "end": 30
+        }
+      ],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 23,
+      "end": 29
+    },
+    {
+      "kind": "<variable>",
+      "startPos": {
+        "offset": 30,
+        "line": 5,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 36,
+        "line": 5,
+        "column": 6
+      },
+      "value": "\\ua1",
+      "leadingTrivia": [],
+      "trailingTrivia": [],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 30,
+      "end": 36
+    },
+    {
+      "kind": "<eof>",
+      "startPos": {
+        "offset": 36,
+        "line": 5,
+        "column": 6
+      },
+      "endPos": {
+        "offset": 36,
+        "line": 5,
+        "column": 6
+      },
+      "value": "",
+      "leadingTrivia": [],
+      "trailingTrivia": [],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 36,
+      "end": 36
+    }
+  ],
+  "errors": [
+    {
+      "code": 1011,
+      "diagnostic": "Invalid unicode escape sequence '\\u', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "nodeOrToken": {
+        "kind": "<string>",
+        "startPos": {
+          "column": 1,
+          "offset": 1,
+          "line": 0
+        },
+        "endPos": {
+          "offset": 3,
+          "line": 0,
+          "column": 3
+        },
+        "value": "\\u",
+        "leadingTrivia": [],
+        "trailingTrivia": [],
+        "leadingInvalid": [],
+        "trailingInvalid": [],
+        "isInvalid": true,
+        "start": 1,
+        "end": 3
+      },
+      "start": 1,
+      "end": 3,
+      "name": "CompileError"
+    },
+    {
+      "code": 1011,
+      "diagnostic": "Invalid unicode escape sequence '\\u1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "nodeOrToken": {
+        "kind": "<string>",
+        "startPos": {
+          "column": 1,
+          "offset": 11,
+          "line": 2
+        },
+        "endPos": {
+          "offset": 14,
+          "line": 2,
+          "column": 4
+        },
+        "value": "\\u1",
+        "leadingTrivia": [],
+        "trailingTrivia": [],
+        "leadingInvalid": [],
+        "trailingInvalid": [],
+        "isInvalid": true,
+        "start": 11,
+        "end": 14
+      },
+      "start": 11,
+      "end": 14,
+      "name": "CompileError"
+    },
+    {
+      "code": 1011,
+      "diagnostic": "Invalid unicode escape sequence '\\u12', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "nodeOrToken": {
+        "kind": "<string>",
+        "startPos": {
+          "column": 1,
+          "offset": 17,
+          "line": 3
+        },
+        "endPos": {
+          "offset": 21,
+          "line": 3,
+          "column": 5
+        },
+        "value": "\\u12",
+        "leadingTrivia": [],
+        "trailingTrivia": [],
+        "leadingInvalid": [],
+        "trailingInvalid": [],
+        "isInvalid": true,
+        "start": 17,
+        "end": 21
+      },
+      "start": 17,
+      "end": 21,
+      "name": "CompileError"
+    },
+    {
+      "code": 1011,
+      "diagnostic": "Invalid unicode escape sequence '\\uab', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "nodeOrToken": {
+        "kind": "<string>",
+        "startPos": {
+          "column": 1,
+          "offset": 24,
+          "line": 4
+        },
+        "endPos": {
+          "offset": 28,
+          "line": 4,
+          "column": 5
+        },
+        "value": "\\uab",
+        "leadingTrivia": [],
+        "trailingTrivia": [],
+        "leadingInvalid": [],
+        "trailingInvalid": [],
+        "isInvalid": true,
+        "start": 24,
+        "end": 28
+      },
+      "start": 24,
+      "end": 28,
+      "name": "CompileError"
+    },
+    {
+      "code": 1011,
+      "diagnostic": "Invalid unicode escape sequence '\\ua1', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed",
+      "nodeOrToken": {
+        "kind": "<string>",
+        "startPos": {
+          "column": 1,
+          "offset": 31,
+          "line": 5
+        },
+        "endPos": {
+          "offset": 35,
+          "line": 5,
+          "column": 5
+        },
+        "value": "\\ua1",
+        "leadingTrivia": [],
+        "trailingTrivia": [],
+        "leadingInvalid": [],
+        "trailingInvalid": [],
+        "isInvalid": true,
+        "start": 31,
+        "end": 35
+      },
+      "start": 31,
+      "end": 35,
+      "name": "CompileError"
+    }
+  ]
+}

@@ -26,7 +26,7 @@ describe('#binder', () => {
       });
     const output = serialize(report, true);
 
-    it('should equal snapshot', () =>
+    it(testName, () =>
       expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });
 });
