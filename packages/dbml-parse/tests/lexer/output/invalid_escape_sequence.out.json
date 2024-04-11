@@ -55,7 +55,7 @@
         "line": 1,
         "column": 4
       },
-      "value": "\\a",
+      "value": "a",
       "leadingTrivia": [],
       "trailingTrivia": [
         {
@@ -285,34 +285,6 @@
       },
       "start": 1,
       "end": 3,
-      "name": "CompileError"
-    },
-    {
-      "code": 1011,
-      "diagnostic": "Invalid escape sequence '\\a'",
-      "nodeOrToken": {
-        "kind": "<string>",
-        "startPos": {
-          "column": 1,
-          "offset": 6,
-          "line": 1
-        },
-        "endPos": {
-          "offset": 8,
-          "line": 1,
-          "column": 3
-        },
-        "value": "\\a",
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": [],
-        "isInvalid": true,
-        "start": 6,
-        "end": 8
-      },
-      "start": 6,
-      "end": 8,
       "name": "CompileError"
     },
     {
