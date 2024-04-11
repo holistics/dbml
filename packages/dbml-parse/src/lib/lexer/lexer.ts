@@ -491,10 +491,7 @@ export default class Lexer {
         return String.fromCharCode(parseInt(hex, 16));
       }
       default: {
-        const invalidEscape = `\\${this.text[this.current.offset - 1]}`;
-        this.errors.push(new CompileError(CompileErrorCode.INVALID_ESCAPE_SEQUENCE, `Invalid escape sequence '${invalidEscape}'`, SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, prevPos, this.current, invalidEscape, true)));
-
-        return invalidEscape;
+        return this.text[this.current.offset - 1];
       }
     }
   }
