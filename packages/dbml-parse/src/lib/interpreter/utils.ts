@@ -116,7 +116,13 @@ export function isSameEndpoint(sym1: ColumnSymbol | ColumnSymbol[], sym2: Column
 
 export function normalizeNoteContent(content: string): string {
   const lines = content.split('\n');
-  const nonEmptyLines = lines.filter((line) => line.trimStart());
+
+  // Top empty lines are trimmed
+  const trimmedTopEmptyLines = lines.slice(lines.findIndex((line) => line.trimStart() !== ''));
+
+  // Calculate min-indentation, empty lines are ignored
+  const nonEmptyLines = trimmedTopEmptyLines.filter((line) => line.trimStart());
   const minIndent = Math.min(...nonEmptyLines.map((line) => line.length - line.trimStart().length));
-  return lines.map((line) => line.slice(minIndent)).join('\n');
+
+  return trimmedTopEmptyLines.map((line) => line.slice(minIndent)).join('\n');
 }

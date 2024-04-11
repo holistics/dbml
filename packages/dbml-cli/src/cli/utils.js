@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { SyntaxError } from '../errors';
+import { CompilerError } from '@dbml/core';
 
 function resolvePaths (paths) {
   if (!Array.isArray(paths)) {
@@ -38,11 +38,9 @@ function generate (inputPaths, transform, outputPlugin) {
     try {
       const content = transform(source);
       outputPlugin.write(content);
-    } catch (err) {
-      if (Array.isArray(err)) {
-        throw err.map((e) => new SyntaxError(path.basename(_path), e));
-      }
-      throw new SyntaxError(path.basename(_path), err);
+    } catch (e) {
+      if (e instanceof CompilerError) throw e.map((diag) => ({ ...diag, message: diag.message, filepath: path.basename(_path) }));
+      throw e;
     }
   });
 }

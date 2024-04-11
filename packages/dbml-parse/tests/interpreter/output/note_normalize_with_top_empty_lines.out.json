@@ -83,8 +83,8 @@
           "column": 1
         },
         "end": {
-          "offset": 283,
-          "line": 16,
+          "offset": 328,
+          "line": 20,
           "column": 2
         }
       },
@@ -98,8 +98,8 @@
             "column": 3
           },
           "end": {
-            "offset": 281,
-            "line": 15,
+            "offset": 326,
+            "line": 19,
             "column": 6
           }
         }
@@ -119,13 +119,13 @@
           },
           "token": {
             "start": {
-              "offset": 301,
-              "line": 19,
+              "offset": 346,
+              "line": 23,
               "column": 3
             },
             "end": {
-              "offset": 325,
-              "line": 19,
+              "offset": 370,
+              "line": 23,
               "column": 27
             }
           },
@@ -144,13 +144,13 @@
           },
           "token": {
             "start": {
-              "offset": 328,
-              "line": 20,
+              "offset": 373,
+              "line": 24,
               "column": 3
             },
             "end": {
-              "offset": 344,
-              "line": 20,
+              "offset": 389,
+              "line": 24,
               "column": 19
             }
           },
@@ -167,13 +167,13 @@
           },
           "token": {
             "start": {
-              "offset": 347,
-              "line": 21,
+              "offset": 392,
+              "line": 25,
               "column": 3
             },
             "end": {
-              "offset": 359,
-              "line": 21,
+              "offset": 404,
+              "line": 25,
               "column": 15
             }
           },
@@ -190,13 +190,13 @@
           },
           "token": {
             "start": {
-              "offset": 362,
-              "line": 22,
+              "offset": 407,
+              "line": 26,
               "column": 3
             },
             "end": {
-              "offset": 382,
-              "line": 22,
+              "offset": 427,
+              "line": 26,
               "column": 23
             }
           },
@@ -207,13 +207,13 @@
       ],
       "token": {
         "start": {
-          "offset": 285,
-          "line": 18,
+          "offset": 330,
+          "line": 22,
           "column": 1
         },
         "end": {
-          "offset": 491,
-          "line": 33,
+          "offset": 551,
+          "line": 38,
           "column": 2
         }
       },
@@ -222,13 +222,13 @@
         "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n",
         "token": {
           "start": {
-            "offset": 386,
-            "line": 24,
+            "offset": 431,
+            "line": 28,
             "column": 3
           },
           "end": {
-            "offset": 489,
-            "line": 32,
+            "offset": 549,
+            "line": 37,
             "column": 4
           }
         }
@@ -248,13 +248,13 @@
           },
           "token": {
             "start": {
-              "offset": 509,
-              "line": 36,
+              "offset": 569,
+              "line": 41,
               "column": 3
             },
             "end": {
-              "offset": 533,
-              "line": 36,
+              "offset": 593,
+              "line": 41,
               "column": 27
             }
           },
@@ -273,13 +273,13 @@
           },
           "token": {
             "start": {
-              "offset": 536,
-              "line": 37,
+              "offset": 596,
+              "line": 42,
               "column": 3
             },
             "end": {
-              "offset": 549,
-              "line": 37,
+              "offset": 609,
+              "line": 42,
               "column": 16
             }
           },
@@ -296,13 +296,13 @@
           },
           "token": {
             "start": {
-              "offset": 552,
-              "line": 38,
+              "offset": 612,
+              "line": 43,
               "column": 3
             },
             "end": {
-              "offset": 633,
-              "line": 45,
+              "offset": 693,
+              "line": 50,
               "column": 7
             }
           },
@@ -315,13 +315,13 @@
             "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n  ",
             "token": {
               "start": {
-                "offset": 563,
-                "line": 38,
+                "offset": 623,
+                "line": 43,
                 "column": 14
               },
               "end": {
-                "offset": 632,
-                "line": 45,
+                "offset": 692,
+                "line": 50,
                 "column": 6
               }
             }
@@ -336,13 +336,13 @@
           },
           "token": {
             "start": {
-              "offset": 636,
-              "line": 46,
+              "offset": 696,
+              "line": 51,
               "column": 3
             },
             "end": {
-              "offset": 651,
-              "line": 46,
+              "offset": 711,
+              "line": 51,
               "column": 18
             }
           },
@@ -359,13 +359,13 @@
           },
           "token": {
             "start": {
-              "offset": 654,
-              "line": 47,
+              "offset": 714,
+              "line": 52,
               "column": 3
             },
             "end": {
-              "offset": 668,
-              "line": 47,
+              "offset": 728,
+              "line": 52,
               "column": 17
             }
           },
@@ -382,13 +382,13 @@
           },
           "token": {
             "start": {
-              "offset": 671,
-              "line": 48,
+              "offset": 731,
+              "line": 53,
               "column": 3
             },
             "end": {
-              "offset": 691,
-              "line": 48,
+              "offset": 751,
+              "line": 53,
               "column": 23
             }
           },
@@ -399,13 +399,13 @@
       ],
       "token": {
         "start": {
-          "offset": 493,
-          "line": 35,
+          "offset": 553,
+          "line": 40,
           "column": 1
         },
         "end": {
-          "offset": 853,
-          "line": 59,
+          "offset": 917,
+          "line": 64,
           "column": 2
         }
       },
@@ -414,13 +414,13 @@
         "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n    * 1.1\n    * 1.2\n  * 2\n",
         "token": {
           "start": {
-            "offset": 695,
-            "line": 50,
+            "offset": 755,
+            "line": 55,
             "column": 3
           },
           "end": {
-            "offset": 851,
-            "line": 58,
+            "offset": 915,
+            "line": 63,
             "column": 6
           }
         }
@@ -432,13 +432,13 @@
     {
       "token": {
         "start": {
-          "offset": 855,
-          "line": 61,
+          "offset": 919,
+          "line": 66,
           "column": 1
         },
         "end": {
-          "offset": 884,
-          "line": 61,
+          "offset": 948,
+          "line": 66,
           "column": 30
         }
       },
@@ -454,13 +454,13 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 860,
-              "line": 61,
+              "offset": 924,
+              "line": 66,
               "column": 6
             },
             "end": {
-              "offset": 873,
-              "line": 61,
+              "offset": 937,
+              "line": 66,
               "column": 19
             }
           }
@@ -474,13 +474,13 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 876,
-              "line": 61,
+              "offset": 940,
+              "line": 66,
               "column": 22
             },
             "end": {
-              "offset": 884,
-              "line": 61,
+              "offset": 948,
+              "line": 66,
               "column": 30
             }
           }
@@ -490,13 +490,13 @@
     {
       "token": {
         "start": {
-          "offset": 901,
-          "line": 63,
+          "offset": 965,
+          "line": 68,
           "column": 1
         },
         "end": {
-          "offset": 942,
-          "line": 63,
+          "offset": 1006,
+          "line": 68,
           "column": 42
         }
       },
@@ -512,13 +512,13 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 906,
-              "line": 63,
+              "offset": 970,
+              "line": 68,
               "column": 6
             },
             "end": {
-              "offset": 914,
-              "line": 63,
+              "offset": 978,
+              "line": 68,
               "column": 14
             }
           }
@@ -532,13 +532,13 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 917,
-              "line": 63,
+              "offset": 981,
+              "line": 68,
               "column": 17
             },
             "end": {
-              "offset": 942,
-              "line": 63,
+              "offset": 1006,
+              "line": 68,
               "column": 42
             }
           }
@@ -548,13 +548,13 @@
     {
       "token": {
         "start": {
-          "offset": 944,
-          "line": 65,
+          "offset": 1008,
+          "line": 70,
           "column": 1
         },
         "end": {
-          "offset": 984,
-          "line": 65,
+          "offset": 1048,
+          "line": 70,
           "column": 41
         }
       },
@@ -570,13 +570,13 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 949,
-              "line": 65,
+              "offset": 1013,
+              "line": 70,
               "column": 6
             },
             "end": {
-              "offset": 957,
-              "line": 65,
+              "offset": 1021,
+              "line": 70,
               "column": 14
             }
           }
@@ -590,13 +590,13 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 960,
-              "line": 65,
+              "offset": 1024,
+              "line": 70,
               "column": 17
             },
             "end": {
-              "offset": 984,
-              "line": 65,
+              "offset": 1048,
+              "line": 70,
               "column": 41
             }
           }
