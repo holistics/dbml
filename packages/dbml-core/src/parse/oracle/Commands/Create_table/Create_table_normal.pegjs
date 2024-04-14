@@ -1,10 +1,13 @@
 create_table_normal =
-	_ CREATE __ ( ( GLOBAL __ / LOCAL __ )? ( TEMPORARY / TEMP ) __ / UNLOGGED __)? TABLE (__ IF_NOT_EXISTS)? __ table_name:table_name _ "(" _
+	_ CREATE __ ( (( GLOBAL __ / PRIVATE) __ TEMPORARY __) / SHARDED / DUPLICATED / IMMUTABLE/ IMMUTABLE_BLOCKCHAIN )? TABLE (__ IF_NOT_EXISTS)? __ table_name:table_name _ "(" _
 	table_properties:table_properties _ ")"
-	(__ INHERITS _ "(" _ parent_tables:table_names _ ")")?
-	(__ PARTITION __ BY __ (RANGE/LIST/HASH) _ "(" _ (column_name/"("_ expression _ ")") (__ COLLATE __ collation:identifier)? (__ opclasses)? _ ")" )?
-	(__ WITH _ "(" _ storage_parameters _ ")"/__ WITH __ OIDS/__ WITHOUT __ OIDS)?
-	(__ ON __ COMMIT __ (PRESERVE __ ROWS/ DELETE __ ROWS/ DROP))?
+	(__ SEGMENT __ CREATION __ (IMMEDIATE / DEFERRED))?
+	(__ PCTFREE __ int:integer)?
+	(__ PCTUSED __ int:integer)?
+	(__ INITRANS __ int:integer)?
+	(__ MAXTRANS __ int:integer)?
+	(__ (COMPRESS / NOCOMPRESS) __ LOGGING)?
+	(__ STORAGE _ "(" (INITIAL __ int:integer)? (__ NEXT __ int:integer)? (__ MINEXTENTS __ int:integer)? (__ MAXEXTENTS __ ( UNLIMITED / int:integer))? (__ PCTINCREASE __ int:integer)? (__ FREELISTS __ int:integer)? (__ FREELIST __ GROUPS __ int:integer)? (__ OPTIMAL __ (int:integer / NULL)?)? (__ BUFFER_POOL __ (KEEP / RECYCLE / DEFAULT))? (__ FLASH_CACHE __ (KEEP / NONE / DEFAULT))? (__ CELL_FLASH_CACHE __ (KEEP / NONE / DEFAULT))? (__ ENCRYPT)? _ ")" )?
 	(__ TABLESPACE __ tablespace_name:identifier)?
 	_ semicolon _ {
 		const table = { name: table_name.name, schemaName: table_name.schemaName, fields: [], indexes: [] }
@@ -74,6 +77,10 @@ create_table_normal =
 			value: table
 		}
 	}
+
+integer = digits:[0-9]+ {
+    return parseInt(digits.join(''));
+}
 
 table_properties = first:table_property rest: (_ comma _ table_property)* {
 	return [first, ...rest.map(r => r[3])];
@@ -169,7 +176,7 @@ column_constraint = constraint_name:(CONSTRAINT __ constraint_name:identifier __
 				}
 			}
 		}
-	) (__ DEFERRABLE /__ NOT DEFERRABLE)? (__ INITIALLY __ DEFERRED /__ INITIALLY __ IMMEDIATE)? {
+	) {
 		return column_constraint;
 	}
 
@@ -178,9 +185,7 @@ table_constraint = constraint_name:(CONSTRAINT __ constraint_name:identifier __ 
 	table_constraint: ( CHECK _ "("_ expression _")" (__ NO __ INHERIT)? { return { type:"not_supported" } }
 	/ UNIQUE _ "(" _ column_names:column_names _ ")" (__ index_parameters)? { return { type: "unique", t_value: column_names } }
 	/ PRIMARY_KEY _ "("_ column_names:column_names _ ")" (__ index_parameters)? { return { type: "pk", t_value: column_names } }
-	/ EXCLUDE (__ USING __ index_method)? __ "(" exclude_element_with_operator_list  ")" __ index_parameters (__ WHERE _ "(" _ predicate:expression _ ")")? { return { type: "not_supported" }}
 	/ FOREIGN_KEY _ "(" _ column_names:column_names _ ")" _ REFERENCES __ reftable:table_name refcolumn:( _ "(" _ refcolumn:column_names _ ")" {return refcolumn})?
-		(__ MATCH __ FULL/__ MATCH __ PARTIAL/__ MATCH __ SIMPLE)?
 		fk_actions:fk_action* {
 			const value = [];
 			if(refcolumn && refcolumn.length > column_names.length) {
@@ -218,7 +223,7 @@ table_constraint = constraint_name:(CONSTRAINT __ constraint_name:identifier __ 
 				t_value: value
 			}
 		}
-	) (__  DEFERRABLE /__ NOT __ DEFERRABLE)? (__ INITIALLY __ DEFERRED /__ INITIALLY __ IMMEDIATE)? {
+	) {
 		return table_constraint
 	}
 
