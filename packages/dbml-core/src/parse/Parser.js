@@ -5,6 +5,7 @@ import postgresParser from './postgresParser';
 import dbmlParser from './dbmlParser';
 import schemarbParser from './schemarbParser';
 import mssqlParser from './mssqlParser';
+import oracleParser from './oracleParser';
 import { parse } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
 
@@ -44,6 +45,10 @@ class Parser {
 
   static parseMSSQLToJSON (str) {
     return mssqlParser.parseWithPegError(str);
+  }
+
+  static parseOracleToJSON (str) {
+    return oracleParser.parse(str);
   }
 
   static parse (str, format) {
@@ -103,6 +108,10 @@ class Parser {
 
         case 'mssql':
           rawDatabase = Parser.parseMSSQLToJSON(str);
+          break;
+
+        case 'oracle':
+          rawDatabase = Parser.parseOracleToJSON(str);
           break;
 
         case 'json':
