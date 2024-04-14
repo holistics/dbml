@@ -21,6 +21,7 @@ export class ProjectInterpreter implements ElementInterpreter {
 
   interpret(): CompileError[] {
     this.env.project.set(this.declarationNode, this.project as Project);
+    this.project.token = getTokenPosition(this.declarationNode);
     const errors = [...this.interpretName(this.declarationNode.name), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
     return errors;
   }

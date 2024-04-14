@@ -177,6 +177,7 @@ export type Project =
         value: string;
         token: TokenPosition;
       };
+      token: TokenPosition;
       [
         index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note'>
       ]: string;
