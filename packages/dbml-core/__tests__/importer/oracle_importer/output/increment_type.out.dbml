@@ -1,0 +1,19 @@
+Table "table1" {
+  "id" NUMBER [pk, increment]
+  "payload" CLOB
+}
+
+Table "table2" {
+  "id" NUMBER [pk, increment]
+  "name" varchar2(20)
+}
+
+Table "table3" {
+  "id" smallint [pk, increment]
+  "name" varchar2(100)
+}
+
+Table "table4" {
+  "id" NUMBER [pk, increment]
+  "name" varchar2(100)
+}

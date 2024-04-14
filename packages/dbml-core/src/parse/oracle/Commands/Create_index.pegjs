@@ -4,8 +4,6 @@ create_index =
     (__ ONLY)? __ table_name:table_name
     type:(__ USING __ type:index_method {return type})? _
     "(" _ index_properties:index_properties _ ")"
-    (__ INCLUDE _ "(" _ column_names _ ")")? // reuse collumn_names
-    (__ WITH _ "("_ index_storage_parameters _")")?
     (__ TABLESPACE __ tablespace_name:identifier)?
     (__ WHERE _ "(" _ predicate:expression _ ")")?
     _ semicolon _ {

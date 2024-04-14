@@ -147,7 +147,7 @@ column_constraint = constraint_name:(CONSTRAINT __ constraint_name:identifier __
 	/ NULL { return { type: "not_null" , value: false } }
 	/ CHECK _ "("_ expression _")" (__ NO __ INHERIT)? { return { type: "not_supported" } }
 	/ DEFAULT __ default_expr:default_expr { return { type: "dbdefault", value: default_expr } }
-	/ GENERATED __ (ALWAYS/ BY __ DEFAULT) __ AS __ IDENTITY { return { type: "increment" } } // (_ "("_ sequence_options _ ")")? { return { type: "not_supported" } }
+	/ GENERATED __ (ALWAYS/ BY __ DEFAULT) __ (ON __ NULL __)? AS __ IDENTITY { return { type: "increment" } } // (_ "("_ sequence_options _ ")")? { return { type: "not_supported" } }
 	/ UNIQUE (__ index_parameters)? { return { type: "unique" } }
 	/ PRIMARY_KEY (__ index_parameters)? { return { type: "pk" } }
 	/ REFERENCES __ reftable:table_name refcolumn:(_ "(" _ refcolumn:column_name _ ")" {return refcolumn})? (__ MATCH __ FULL/__ MATCH __ PARTIAL/__ MATCH __ SIMPLE)?
