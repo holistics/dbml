@@ -541,6 +541,18 @@
     "refs": [],
     "tableGroups": [],
     "tables": [],
+    "token": {
+      "start": {
+        "offset": 0,
+        "line": 1,
+        "column": 1
+      },
+      "end": {
+        "offset": 88,
+        "line": 4,
+        "column": 2
+      }
+    },
     "name": "multi_notes",
     "note": {
       "value": "project multi_notes note",

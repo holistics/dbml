@@ -32,6 +32,7 @@ class Database extends Element {
     this.noteToken = project.note ? get(project, 'note.token', project.noteToken) : null;
     this.databaseType = project.database_type;
     this.name = project.name;
+    this.token = project.token;
     this.aliases = aliases;
 
     this.processNotes(notes);
