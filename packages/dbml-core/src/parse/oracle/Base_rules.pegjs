@@ -19,10 +19,6 @@ table_name "valid table name" = pathName:path_name name:identifier {
   return { ...pathName, name }
 }
 
-enum_name "valid enum name" = pathName:path_name? name:identifier {
-  return { ...pathName, name }
-}
-
 // string constant
 string_constant "string" = "'" c:char_inside_single_quote+ "'" {
 	return c.join('');

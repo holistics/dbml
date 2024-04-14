@@ -99,7 +99,7 @@ table_property =
 			value: source_table
 		}
 	}
-	/ column_name:column_name __ data_type:data_type (__ COLLATE __ collation:identifier)? column_constraints:(_ column_constraint)* {
+	/ column_name:column_name __ data_type:data_type column_constraints:(_ column_constraint)* {
 		const column = { name: column_name , type: data_type};
 		const columnTypeName = column.type.type_name.toLowerCase();
 		const serialIncrementType = new Set(['serial', 'smallserial', 'bigserial']);
