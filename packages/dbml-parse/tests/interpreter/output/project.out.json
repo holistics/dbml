@@ -1385,6 +1385,18 @@
     "refs": [],
     "tableGroups": [],
     "tables": [],
+    "token": {
+      "start": {
+        "offset": 0,
+        "line": 1,
+        "column": 1
+      },
+      "end": {
+        "offset": 148,
+        "line": 10,
+        "column": 2
+      }
+    },
     "name": "ecommerce",
     "note": {
       "value": "# Introduction\nThis is an ecommerce project\n\n# Description\n...\n",
