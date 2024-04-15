@@ -45,6 +45,10 @@ Table "users" {
   "date_of_birth" varchar
   "created_at" varchar
   "country_code" int
+
+Indexes {
+  email [unique, name: "email_must_be_unique"]
+}
 }
 
 Table "merchants" {
@@ -59,6 +63,10 @@ Table "countries" {
   "code" int [pk]
   "name" varchar
   "continent_name" varchar
+
+Indexes {
+  code [pk, name: "countries_pk"]
+}
 }
 
 Ref:"orders"."id" < "order_items"."order_id"

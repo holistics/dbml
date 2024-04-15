@@ -35,12 +35,14 @@ CREATE TABLE "products" (
 CREATE TABLE "users" (
   "id" int PRIMARY KEY,
   "full_name" varchar,
-  "email" varchar UNIQUE,
+  "email" varchar,
   "gender" varchar,
   "date_of_birth" varchar,
   "created_at" varchar,
   "country_code" int
 );
+
+ALTER TABLE ONLY "users" ADD CONSTRAINT email_must_be_unique UNIQUE (email);
 
 CREATE TABLE "merchants" (
   "id" int PRIMARY KEY,
@@ -51,10 +53,13 @@ CREATE TABLE "merchants" (
 );
 
 CREATE TABLE "countries" (
-  "code" int PRIMARY KEY,
+  "code" int,
   "name" varchar,
   "continent_name" varchar
 );
+
+ALTER TABLE ONLY "countries"
+    ADD CONSTRAINT countries_pk PRIMARY KEY ("code");
 
 ALTER TABLE "order_items" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
 
