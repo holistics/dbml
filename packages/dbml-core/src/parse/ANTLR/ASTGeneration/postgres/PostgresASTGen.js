@@ -808,11 +808,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
           case TABLE_CONSTRAINT_KIND.INDEX:
             kind = cmd.kind;
             if (cmd.value.pk || cmd.value.unique) {
-
-              let set_prop = (obj) => obj["pk"] = true;
-              if (cmd.value.unique) {
-                set_prop = (obj) => obj["unique"] = true;
-              }
+              let set_prop = cmd.value.unique ? (obj) => obj["unique"] = true : (obj) => obj["pk"] = true;
               const table = findTable(this.data.tables, schemaName, tableName);
               if (cmd.value.columns.length == 1) {
                 // We are in the single column case, we can update the column as well
