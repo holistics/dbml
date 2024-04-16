@@ -1,3 +1,20 @@
+## v3.4.1 (2024-04-16)
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#547](https://github.com/holistics/dbml/pull/547) Add project's token into interpreter result ([@huyphung1602](https://github.com/huyphung1602))
+* `dbml-parse`
+  * [#535](https://github.com/holistics/dbml/pull/535) Support continuation mark and catch invalid escape sequence ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`
+  * [#541](https://github.com/holistics/dbml/pull/541) fix: define a common error format ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 3
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.4.0 (2024-03-19)
 
 #### :bug: Bug Fix
