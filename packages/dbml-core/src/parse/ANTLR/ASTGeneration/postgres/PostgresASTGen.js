@@ -810,6 +810,9 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
             if (cmd.value.pk || cmd.value.unique) {
               let set_prop = cmd.value.unique ? (obj) => obj["unique"] = true : (obj) => obj["pk"] = true;
               const table = findTable(this.data.tables, schemaName, tableName);
+              if (!table){
+                break;
+              }
               if (cmd.value.columns.length == 1) {
                 // We are in the single column case, we can update the column as well
                 let key = cmd.value.columns[0].value;
