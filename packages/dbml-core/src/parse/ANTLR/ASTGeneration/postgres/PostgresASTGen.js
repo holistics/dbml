@@ -806,33 +806,26 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
             break;
           case TABLE_CONSTRAINT_KIND.UNIQUE:
           case TABLE_CONSTRAINT_KIND.INDEX:
+            if (cmd.value.columns == 0) break;
+            if (!(cmd.value.pk || cmd.value.unique)) break;
+            // eslint-disable-next-line prefer-destructuring
             kind = cmd.kind;
-            if (cmd.value.pk || cmd.value.unique) {
-              let set_prop = cmd.value.unique ? (obj) => obj["unique"] = true : (obj) => obj["pk"] = true;
-              const table = findTable(this.data.tables, schemaName, tableName);
-              if (!table){
-                break;
-              }
-              if (cmd.value.columns.length == 1) {
-                // We are in the single column case, we can update the column as well
-                let key = cmd.value.columns[0].value;
-                let field_to_update = table.fields.find(f => f.name === key);
-                // field might have been deleted
-                if (field_to_update != null) {
-                  set_prop(field_to_update);
-                }
-              }
-              let index = table.indexes.find(idx => { idx.name == cmd.value.name });
-              if (!index) {
-                index = new Index({
-                  name: cmd.value.name,
-                  columns: cmd.value.columns,
-                });
-                table.indexes.push(index);
-              }
-              set_prop(index);
-              index.columns = cmd.value.columns;
+            const table = findTable(this.data.tables, schemaName, tableName);
+            if (!table) break;
+            // multi column constraint -> need to create new index
+            if (cmd.value.columns.lenght > 1) {
+              const index = new Index({
+                name: cmd.value.name,
+                columns: cmd.value.columns,
+              });
+              index[cmd.value.unique ? 'unique' : 'pk'] = true;
+              table.indexes.push(index);
+              break;
             }
+            // single column contraint -> update the column instead
+            const key = cmd.value.columns[0].value;
+            const fieldToUpdate = table.fields.find(f => f.name === key);
+            if (fieldToUpdate) fieldToUpdate[cmd.value.unique ? 'unique' : 'pk'] = true;
             break;
           default:
             break;
