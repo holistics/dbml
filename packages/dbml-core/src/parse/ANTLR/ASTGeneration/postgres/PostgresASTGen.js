@@ -805,6 +805,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
             this.data.refs.push(cmd.value);
             break;
           case TABLE_CONSTRAINT_KIND.UNIQUE:
+          case TABLE_CONSTRAINT_KIND.PK:
           case TABLE_CONSTRAINT_KIND.INDEX:
             {
               if (cmd.value.columns.length === 0) break;
@@ -814,7 +815,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
               const table = findTable(this.data.tables, schemaName, tableName);
               if (!table) break;
               // multi column constraint -> need to create new index
-              if (cmd.value.columns.lenght > 1) {
+              if (cmd.value.columns.length > 1) {
                 const index = new Index({
                   name: cmd.value.name,
                   columns: cmd.value.columns,

@@ -26,21 +26,29 @@ Table "humanresources"."employee" {
 }
 
 Table "humanresources"."employeedepartmenthistory" {
-  "businessentityid" integer [pk, not null, note: 'Employee identification number. Foreign key to Employee.BusinessEntityID.']
+  "businessentityid" integer [not null, note: 'Employee identification number. Foreign key to Employee.BusinessEntityID.']
   "departmentid" smallint [not null, note: 'Department in which the employee worked including currently. Foreign key to Department.DepartmentID.']
   "shiftid" smallint [not null, note: 'Identifies which 8-hour shift the employee works. Foreign key to Shift.Shift.ID.']
   "startdate" date [not null, note: 'Date the employee started work in the department.']
   "enddate" date [note: 'Date the employee left the department. NULL = Current department.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (businessentityid, startdate, departmentid, shiftid) [pk, name: "PK_EmployeeDepartmentHistory_BusinessEntityID_StartDate_Departm"]
+}
   Note: 'Employee department transfers.'
 }
 
 Table "humanresources"."employeepayhistory" {
-  "businessentityid" integer [pk, not null, note: 'Employee identification number. Foreign key to Employee.BusinessEntityID.']
+  "businessentityid" integer [not null, note: 'Employee identification number. Foreign key to Employee.BusinessEntityID.']
   "ratechangedate" timestamp [not null, note: 'Date the change in pay is effective']
   "rate" numeric [not null, note: 'Salary hourly rate.']
   "payfrequency" smallint [not null, note: '1 = Salary received monthly, 2 = Salary received biweekly']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (businessentityid, ratechangedate) [pk, name: "PK_EmployeePayHistory_BusinessEntityID_RateChangeDate"]
+}
   Note: 'Employee pay history.'
 }
 
@@ -75,11 +83,15 @@ Table "person"."address" {
 }
 
 Table "person"."businessentityaddress" {
-  "businessentityid" integer [pk, not null, note: 'Primary key. Foreign key to BusinessEntity.BusinessEntityID.']
+  "businessentityid" integer [not null, note: 'Primary key. Foreign key to BusinessEntity.BusinessEntityID.']
   "addressid" integer [not null, note: 'Primary key. Foreign key to Address.AddressID.']
   "addresstypeid" integer [not null, note: 'Primary key. Foreign key to AddressType.AddressTypeID.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (businessentityid, addressid, addresstypeid) [pk, name: "PK_BusinessEntityAddress_BusinessEntityID_AddressID_AddressType"]
+}
   Note: 'Cross-reference table mapping customers, vendors, and employees to their addresses.'
 }
 
@@ -91,11 +103,15 @@ Table "person"."countryregion" {
 }
 
 Table "person"."emailaddress" {
-  "businessentityid" integer [pk, not null, note: 'Primary key. Person associated with this email address.  Foreign key to Person.BusinessEntityID']
+  "businessentityid" integer [not null, note: 'Primary key. Person associated with this email address.  Foreign key to Person.BusinessEntityID']
   "emailaddressid" integer [not null, note: 'Primary key. ID of this email address.']
   "emailaddress" "character varying(50)" [note: 'E-mail address for the person.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (businessentityid, emailaddressid) [pk, name: "PK_EmailAddress_BusinessEntityID_EmailAddressID"]
+}
   Note: 'Where to send a person email.'
 }
 
@@ -117,10 +133,14 @@ Table "person"."person" {
 }
 
 Table "person"."personphone" {
-  "businessentityid" integer [pk, not null, note: 'Business entity identification number. Foreign key to Person.BusinessEntityID.']
+  "businessentityid" integer [not null, note: 'Business entity identification number. Foreign key to Person.BusinessEntityID.']
   "phonenumber" public.Phone [not null, note: 'Telephone number identification number.']
   "phonenumbertypeid" integer [not null, note: 'Kind of phone number. Foreign key to PhoneNumberType.PhoneNumberTypeID.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (businessentityid, phonenumber, phonenumbertypeid) [pk, name: "PK_PersonPhone_BusinessEntityID_PhoneNumber_PhoneNumberTypeID"]
+}
   Note: 'Telephone number and type of a person.'
 }
 
@@ -159,11 +179,15 @@ Table "person"."businessentity" {
 }
 
 Table "person"."businessentitycontact" {
-  "businessentityid" integer [pk, not null, note: 'Primary key. Foreign key to BusinessEntity.BusinessEntityID.']
+  "businessentityid" integer [not null, note: 'Primary key. Foreign key to BusinessEntity.BusinessEntityID.']
   "personid" integer [not null, note: 'Primary key. Foreign key to Person.BusinessEntityID.']
   "contacttypeid" integer [not null, note: 'Primary key.  Foreign key to ContactType.ContactTypeID.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (businessentityid, personid, contacttypeid) [pk, name: "PK_BusinessEntityContact_BusinessEntityID_PersonID_ContactTypeI"]
+}
   Note: 'Cross-reference table mapping stores, vendors, and employees to people'
 }
 
@@ -274,11 +298,15 @@ Table "production"."productcategory" {
 }
 
 Table "production"."productcosthistory" {
-  "productid" integer [pk, not null, note: 'Product identification number. Foreign key to Product.ProductID']
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID']
   "startdate" timestamp [not null, note: 'Product cost start date.']
   "enddate" timestamp [note: 'Product cost end date.']
   "standardcost" numeric [not null, note: 'Standard cost of the product.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (productid, startdate) [pk, name: "PK_ProductCostHistory_ProductID_StartDate"]
+}
   Note: 'Changes in the cost of a product over time.'
 }
 
@@ -291,29 +319,41 @@ Table "production"."productdescription" {
 }
 
 Table "production"."productdocument" {
-  "productid" integer [pk, not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
   "modifieddate" timestamp [not null, default: `now()`]
   "documentnode" "character varying" [not null, default: `'/'::charactervarying`, note: 'Document identification number. Foreign key to Document.DocumentNode.']
+
+Indexes {
+  (productid, documentnode) [pk, name: "PK_ProductDocument_ProductID_DocumentNode"]
+}
   Note: 'Cross-reference table mapping products to related product documents.'
 }
 
 Table "production"."productinventory" {
-  "productid" integer [pk, not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
   "locationid" smallint [not null, note: 'Inventory location identification number. Foreign key to Location.LocationID.']
   "shelf" "character varying(10)" [not null, note: 'Storage compartment within an inventory location.']
   "bin" smallint [not null, note: 'Storage container on a shelf in an inventory location.']
   "quantity" smallint [not null, default: 0, note: 'Quantity of products in the inventory location.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (productid, locationid) [pk, name: "PK_ProductInventory_ProductID_LocationID"]
+}
   Note: 'Product inventory information.'
 }
 
 Table "production"."productlistpricehistory" {
-  "productid" integer [pk, not null, note: 'Product identification number. Foreign key to Product.ProductID']
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID']
   "startdate" timestamp [not null, note: 'List price start date.']
   "enddate" timestamp [note: 'List price end date']
   "listprice" numeric [not null, note: 'Product list price.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (productid, startdate) [pk, name: "PK_ProductListPriceHistory_ProductID_StartDate"]
+}
   Note: 'Changes in the list price of a product over time.'
 }
 
@@ -328,17 +368,25 @@ Table "production"."productmodel" {
 }
 
 Table "production"."productmodelillustration" {
-  "productmodelid" integer [pk, not null, note: 'Primary key. Foreign key to ProductModel.ProductModelID.']
+  "productmodelid" integer [not null, note: 'Primary key. Foreign key to ProductModel.ProductModelID.']
   "illustrationid" integer [not null, note: 'Primary key. Foreign key to Illustration.IllustrationID.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (productmodelid, illustrationid) [pk, name: "PK_ProductModelIllustration_ProductModelID_IllustrationID"]
+}
   Note: 'Cross-reference table mapping product models and illustrations.'
 }
 
 Table "production"."productmodelproductdescriptionculture" {
-  "productmodelid" integer [pk, not null, note: 'Primary key. Foreign key to ProductModel.ProductModelID.']
+  "productmodelid" integer [not null, note: 'Primary key. Foreign key to ProductModel.ProductModelID.']
   "productdescriptionid" integer [not null, note: 'Primary key. Foreign key to ProductDescription.ProductDescriptionID.']
   "cultureid" "character (6)" [not null, note: 'Culture identification number. Foreign key to Culture.CultureID.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (productmodelid, productdescriptionid, cultureid) [pk, name: "PK_ProductModelProductDescriptionCulture_ProductModelID_Product"]
+}
   Note: 'Cross-reference table mapping product descriptions and the language the description is written in.'
 }
 
@@ -353,10 +401,14 @@ Table "production"."productphoto" {
 }
 
 Table "production"."productproductphoto" {
-  "productid" integer [pk, not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
   "productphotoid" integer [not null, note: 'Product photo identification number. Foreign key to ProductPhoto.ProductPhotoID.']
   "primary" public.Flag [not null, default: false, note: '0 = Photo is not the principal image. 1 = Photo is the principal image.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (productid, productphotoid) [pk, name: "PK_ProductProductPhoto_ProductID_ProductPhotoID"]
+}
   Note: 'Cross-reference table mapping products and product photos.'
 }
 
@@ -436,7 +488,7 @@ Table "production"."workorder" {
 }
 
 Table "production"."workorderrouting" {
-  "workorderid" integer [pk, not null, note: 'Primary key. Foreign key to WorkOrder.WorkOrderID.']
+  "workorderid" integer [not null, note: 'Primary key. Foreign key to WorkOrder.WorkOrderID.']
   "productid" integer [not null, note: 'Primary key. Foreign key to Product.ProductID.']
   "operationsequence" smallint [not null, note: 'Primary key. Indicates the manufacturing process sequence.']
   "locationid" smallint [not null, note: 'Manufacturing location where the part is processed. Foreign key to Location.LocationID.']
@@ -448,11 +500,15 @@ Table "production"."workorderrouting" {
   "plannedcost" numeric [not null, note: 'Estimated manufacturing cost.']
   "actualcost" numeric [note: 'Actual manufacturing cost.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (workorderid, productid, operationsequence) [pk, name: "PK_WorkOrderRouting_WorkOrderID_ProductID_OperationSequence"]
+}
   Note: 'Work order details.'
 }
 
 Table "purchasing"."purchaseorderdetail" {
-  "purchaseorderid" integer [pk, not null, note: 'Primary key. Foreign key to PurchaseOrderHeader.PurchaseOrderID.']
+  "purchaseorderid" integer [not null, note: 'Primary key. Foreign key to PurchaseOrderHeader.PurchaseOrderID.']
   "purchaseorderdetailid" integer [not null, note: 'Primary key. One line number per purchased product.']
   "duedate" timestamp [not null, note: 'Date the product is expected to be received.']
   "orderqty" smallint [not null, note: 'Quantity ordered.']
@@ -461,6 +517,10 @@ Table "purchasing"."purchaseorderdetail" {
   "receivedqty" numeric(8,2) [not null, note: 'Quantity actually received from the vendor.']
   "rejectedqty" numeric(8,2) [not null, note: 'Quantity rejected during inspection.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (purchaseorderid, purchaseorderdetailid) [pk, name: "PK_PurchaseOrderDetail_PurchaseOrderID_PurchaseOrderDetailID"]
+}
   Note: 'Individual products associated with a specific purchase order. See PurchaseOrderHeader.'
 }
 
@@ -482,7 +542,7 @@ for more details.'''
 }
 
 Table "purchasing"."productvendor" {
-  "productid" integer [pk, not null, note: 'Primary key. Foreign key to Product.ProductID.']
+  "productid" integer [not null, note: 'Primary key. Foreign key to Product.ProductID.']
   "businessentityid" integer [not null, note: 'Primary key. Foreign key to Vendor.BusinessEntityID.']
   "averageleadtime" integer [not null, note: 'The average span of time (in days) between placing an order with the vendor and receiving the purchased product.']
   "standardprice" numeric [not null, note: '''The vendor's usual selling price.''']
@@ -493,6 +553,10 @@ Table "purchasing"."productvendor" {
   "onorderqty" integer [note: 'The quantity currently on order.']
   "unitmeasurecode" "character (3)" [not null, note: '''The product's unit of measure.''']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (productid, businessentityid) [pk, name: "PK_ProductVendor_ProductID_BusinessEntityID"]
+}
   Note: 'Cross-reference table mapping vendors with the products they supply.'
 }
 
@@ -550,9 +614,13 @@ Table "sales"."currencyrate" {
 }
 
 Table "sales"."countryregioncurrency" {
-  "countryregioncode" "character varying(3)" [pk, not null, note: 'ISO code for countries and regions. Foreign key to CountryRegion.CountryRegionCode.']
+  "countryregioncode" "character varying(3)" [not null, note: 'ISO code for countries and regions. Foreign key to CountryRegion.CountryRegionCode.']
   "currencycode" "character (3)" [not null, note: 'ISO standard currency code. Foreign key to Currency.CurrencyCode.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (countryregioncode, currencycode) [pk, name: "PK_CountryRegionCurrency_CountryRegionCode_CurrencyCode"]
+}
   Note: 'Cross-reference table mapping ISO currency codes to a country or region.'
 }
 
@@ -564,9 +632,13 @@ Table "sales"."currency" {
 }
 
 Table "sales"."personcreditcard" {
-  "businessentityid" integer [pk, not null, note: 'Business entity identification number. Foreign key to Person.BusinessEntityID.']
+  "businessentityid" integer [not null, note: 'Business entity identification number. Foreign key to Person.BusinessEntityID.']
   "creditcardid" integer [not null, note: 'Credit card identification number. Foreign key to CreditCard.CreditCardID.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (businessentityid, creditcardid) [pk, name: "PK_PersonCreditCard_BusinessEntityID_CreditCardID"]
+}
   Note: 'Cross-reference table mapping people to their credit card information in the CreditCard table.'
 }
 
@@ -606,7 +678,7 @@ Table "sales"."specialoffer" {
 }
 
 Table "sales"."salesorderdetail" {
-  "salesorderid" integer [pk, not null, note: 'Primary key. Foreign key to SalesOrderHeader.SalesOrderID.']
+  "salesorderid" integer [not null, note: 'Primary key. Foreign key to SalesOrderHeader.SalesOrderID.']
   "salesorderdetailid" integer [not null, note: 'Primary key. One incremental unique number per product sold.']
   "carriertrackingnumber" "character varying(25)" [note: 'Shipment tracking number supplied by the shipper.']
   "orderqty" smallint [not null, note: 'Quantity ordered per product.']
@@ -616,6 +688,10 @@ Table "sales"."salesorderdetail" {
   "unitpricediscount" numeric [not null, default: 0.0, note: 'Discount amount.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (salesorderid, salesorderdetailid) [pk, name: "PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID"]
+}
   Note: 'Individual products associated with a specific sales order. See SalesOrderHeader.'
 }
 
@@ -649,17 +725,25 @@ Table "sales"."salesorderheader" {
 }
 
 Table "sales"."salesorderheadersalesreason" {
-  "salesorderid" integer [pk, not null, note: 'Primary key. Foreign key to SalesOrderHeader.SalesOrderID.']
+  "salesorderid" integer [not null, note: 'Primary key. Foreign key to SalesOrderHeader.SalesOrderID.']
   "salesreasonid" integer [not null, note: 'Primary key. Foreign key to SalesReason.SalesReasonID.']
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (salesorderid, salesreasonid) [pk, name: "PK_SalesOrderHeaderSalesReason_SalesOrderID_SalesReasonID"]
+}
   Note: 'Cross-reference table mapping sales orders to sales reason codes.'
 }
 
 Table "sales"."specialofferproduct" {
-  "specialofferid" integer [pk, not null, note: 'Primary key for SpecialOfferProduct records.']
+  "specialofferid" integer [not null, note: 'Primary key for SpecialOfferProduct records.']
   "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (specialofferid, productid) [pk, name: "PK_SpecialOfferProduct_SpecialOfferID_ProductID"]
+}
   Note: 'Cross-reference table mapping products to special offer discounts.'
 }
 
@@ -677,11 +761,15 @@ Table "sales"."salesperson" {
 }
 
 Table "sales"."salespersonquotahistory" {
-  "businessentityid" integer [pk, not null, note: 'Sales person identification number. Foreign key to SalesPerson.BusinessEntityID.']
+  "businessentityid" integer [not null, note: 'Sales person identification number. Foreign key to SalesPerson.BusinessEntityID.']
   "quotadate" timestamp [not null, note: 'Sales quota date.']
   "salesquota" numeric [not null, note: 'Sales quota amount.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (businessentityid, quotadate) [pk, name: "PK_SalesPersonQuotaHistory_BusinessEntityID_QuotaDate"]
+}
   Note: 'Sales performance tracking.'
 }
 
@@ -708,12 +796,16 @@ Table "sales"."salesterritory" {
 }
 
 Table "sales"."salesterritoryhistory" {
-  "businessentityid" integer [pk, not null, note: 'Primary key. The sales rep.  Foreign key to SalesPerson.BusinessEntityID.']
+  "businessentityid" integer [not null, note: 'Primary key. The sales rep.  Foreign key to SalesPerson.BusinessEntityID.']
   "territoryid" integer [not null, note: 'Primary key. Territory identification number. Foreign key to SalesTerritory.SalesTerritoryID.']
   "startdate" timestamp [not null, note: 'Primary key. Date the sales representive started work in the territory.']
   "enddate" timestamp [note: 'Date the sales representative left work in the territory.']
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
+
+Indexes {
+  (businessentityid, startdate, territoryid) [pk, name: "PK_SalesTerritoryHistory_BusinessEntityID_StartDate_TerritoryID"]
+}
   Note: 'Sales representative transfers to other sales territories.'
 }
 
