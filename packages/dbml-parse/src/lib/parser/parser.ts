@@ -826,9 +826,7 @@ export default class Parser {
 
     throw new PartialParsingError(
       this.peek(),
-      this.nodeFactory.create(PrimaryExpressionNode, {
-        expression: this.nodeFactory.create(VariableNode, {}),
-      }),
+      undefined,
       this.contextStack.findHandlerContext(this.tokens, this.current),
     );
   }
@@ -1098,7 +1096,7 @@ export default class Parser {
 
   private attributeName(): IdentiferStreamNode | PrimaryExpressionNode {
     const identifiers: SyntaxToken[] = [];
-    
+
     if (this.peek().kind !== SyntaxTokenKind.IDENTIFIER) {
       return this.primaryExpression();
     }
