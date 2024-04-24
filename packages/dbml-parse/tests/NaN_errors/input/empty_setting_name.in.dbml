@@ -1,0 +1,3 @@
+Table M {
+    id int [  // this caused NaN
+}
