@@ -35,12 +35,14 @@ CREATE TABLE "products" (
 CREATE TABLE "users" (
   "id" int PRIMARY KEY,
   "full_name" varchar,
-  "email" varchar UNIQUE,
+  "email" varchar,
   "gender" varchar,
   "date_of_birth" varchar,
   "created_at" varchar,
   "country_code" int
 );
+
+ALTER TABLE ONLY "users" ADD CONSTRAINT email_must_be_unique UNIQUE (email);
 
 CREATE TABLE "merchants" (
   "id" int PRIMARY KEY,
@@ -51,10 +53,13 @@ CREATE TABLE "merchants" (
 );
 
 CREATE TABLE "countries" (
-  "code" int PRIMARY KEY,
+  "code" int,
   "name" varchar,
   "continent_name" varchar
 );
+
+ALTER TABLE ONLY "countries"
+    ADD CONSTRAINT countries_pk PRIMARY KEY ("code");
 
 ALTER TABLE "order_items" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
 
@@ -71,3 +76,14 @@ ALTER TABLE "merchants" ADD FOREIGN KEY ("admin_id") REFERENCES "users" ("id");
 CREATE INDEX "product_status" ON "products" ("merchant_id", "status");
 
 CREATE UNIQUE INDEX ON "products" USING HASH ("id");
+
+CREATE TABLE "comment_on_product" (
+  "comment_id" int,
+  "product_family" int,
+  "delete" boolean,
+  "comment_value" varchar
+);
+
+ALTER TABLE "comment_on_product" ADD CONSTRAINT "comment_on_product_pk" PRIMARY KEY ("comment_id", "product_family");
+
+ALTER TABLE "comment_on_product" ADD CONSTRAINT "comment_on_product_idx_unique" UNIQUE("delete", "comment_id", "product_family"); 

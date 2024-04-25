@@ -804,6 +804,37 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
             cmd.value.endpoints[0].schemaName = schemaName;
             this.data.refs.push(cmd.value);
             break;
+          case TABLE_CONSTRAINT_KIND.UNIQUE:
+          case TABLE_CONSTRAINT_KIND.PK:
+          case TABLE_CONSTRAINT_KIND.INDEX:
+            {
+              if (cmd.value.columns.length === 0) break;
+              if (!(cmd.value.pk || cmd.value.unique)) break;
+              // eslint-disable-next-line prefer-destructuring
+              kind = cmd.kind;
+              const table = findTable(this.data.tables, schemaName, tableName);
+              if (!table) break;
+              if (cmd.value.columns.length == 1 && (cmd.value.unique || cmd.value.pk)) {
+                const key = cmd.value.columns[0].value;
+                const fieldToUpdate = table.fields.find(f => f.name === key);
+                if (fieldToUpdate) {
+                  // If we have an exact match, this is a column, if not, might be an expression
+                  fieldToUpdate[cmd.value.unique ? 'unique' : 'pk'] = true;
+                  break;
+                }
+              }
+              // multi column constraint -> need to create new index
+              const index = new Index({
+                name: cmd.value.name,
+                columns: cmd.value.columns,
+                note: cmd.value.note,
+                pk: cmd.value.pk,
+                type: cmd.value.type,
+                unique: cmd.value.unique,
+              });
+              table.indexes.push(index);
+              break;
+            }
           default:
             break;
         }
