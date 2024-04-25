@@ -1,4 +1,24 @@
+## v3.4.2 (2024-04-25)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#561](https://github.com/holistics/dbml/pull/561) parse/fix/throw undefined at primary expression ([@Huy-DNA](https://github.com/Huy-DNA))
+* `dbml-cli`, `dbml-core`
+  * [#549](https://github.com/holistics/dbml/pull/549) fix(postgresql): properly handle definition of unique and PK constraints in ALTER TABLE statements ([@pierresouchay](https://github.com/pierresouchay))
+
+#### :robot: Dependencies Update
+* [#552](https://github.com/holistics/dbml/pull/552) build(deps-dev): bump vite from 4.5.0 to 4.5.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 3
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Pierre Souchay ([@pierresouchay](https://github.com/pierresouchay))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.4.1 (2024-04-16)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#543](https://github.com/holistics/dbml/pull/543) parse/trim note top empty lines ([@Huy-DNA](https://github.com/Huy-DNA))
 
 #### :rocket: New Feature
 * `dbml-core`, `dbml-parse`
