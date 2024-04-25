@@ -1,6 +1,6 @@
 {
   "name": "@dbml/core",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "description": "> TODO: description",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -32,7 +32,7 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "@dbml/parse": "^3.4.1",
+    "@dbml/parse": "^3.4.2",
     "antlr4": "^4.13.1",
     "lodash": "^4.17.15",
     "parsimmon": "^1.13.0",
