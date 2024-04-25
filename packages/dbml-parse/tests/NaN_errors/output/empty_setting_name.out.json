@@ -1,0 +1,30 @@
+[
+  {
+    "code": 1005,
+    "diagnostic": "Expect a variable or literal",
+    "nodeOrToken": {
+      "kind": "<rbrace>",
+      "startPos": {
+        "offset": 43,
+        "line": 2,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 44,
+        "line": 2,
+        "column": 1
+      },
+      "value": "}",
+      "leadingTrivia": [],
+      "trailingTrivia": [],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 43,
+      "end": 44
+    },
+    "start": 43,
+    "end": 44,
+    "name": "CompileError"
+  }
+]
