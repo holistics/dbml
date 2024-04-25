@@ -33,9 +33,9 @@ Table "humanresources"."employeedepartmenthistory" {
   "enddate" date [note: 'Date the employee left the department. NULL = Current department.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (businessentityid, startdate, departmentid, shiftid) [pk, name: "PK_EmployeeDepartmentHistory_BusinessEntityID_StartDate_Departm"]
-}
+  Indexes {
+    (businessentityid, startdate, departmentid, shiftid) [pk, name: "PK_EmployeeDepartmentHistory_BusinessEntityID_StartDate_Departm"]
+  }
   Note: 'Employee department transfers.'
 }
 
@@ -46,9 +46,9 @@ Table "humanresources"."employeepayhistory" {
   "payfrequency" smallint [not null, note: '1 = Salary received monthly, 2 = Salary received biweekly']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (businessentityid, ratechangedate) [pk, name: "PK_EmployeePayHistory_BusinessEntityID_RateChangeDate"]
-}
+  Indexes {
+    (businessentityid, ratechangedate) [pk, name: "PK_EmployeePayHistory_BusinessEntityID_RateChangeDate"]
+  }
   Note: 'Employee pay history.'
 }
 
@@ -89,9 +89,9 @@ Table "person"."businessentityaddress" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (businessentityid, addressid, addresstypeid) [pk, name: "PK_BusinessEntityAddress_BusinessEntityID_AddressID_AddressType"]
-}
+  Indexes {
+    (businessentityid, addressid, addresstypeid) [pk, name: "PK_BusinessEntityAddress_BusinessEntityID_AddressID_AddressType"]
+  }
   Note: 'Cross-reference table mapping customers, vendors, and employees to their addresses.'
 }
 
@@ -109,9 +109,9 @@ Table "person"."emailaddress" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (businessentityid, emailaddressid) [pk, name: "PK_EmailAddress_BusinessEntityID_EmailAddressID"]
-}
+  Indexes {
+    (businessentityid, emailaddressid) [pk, name: "PK_EmailAddress_BusinessEntityID_EmailAddressID"]
+  }
   Note: 'Where to send a person email.'
 }
 
@@ -138,9 +138,9 @@ Table "person"."personphone" {
   "phonenumbertypeid" integer [not null, note: 'Kind of phone number. Foreign key to PhoneNumberType.PhoneNumberTypeID.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (businessentityid, phonenumber, phonenumbertypeid) [pk, name: "PK_PersonPhone_BusinessEntityID_PhoneNumber_PhoneNumberTypeID"]
-}
+  Indexes {
+    (businessentityid, phonenumber, phonenumbertypeid) [pk, name: "PK_PersonPhone_BusinessEntityID_PhoneNumber_PhoneNumberTypeID"]
+  }
   Note: 'Telephone number and type of a person.'
 }
 
@@ -185,9 +185,9 @@ Table "person"."businessentitycontact" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (businessentityid, personid, contacttypeid) [pk, name: "PK_BusinessEntityContact_BusinessEntityID_PersonID_ContactTypeI"]
-}
+  Indexes {
+    (businessentityid, personid, contacttypeid) [pk, name: "PK_BusinessEntityContact_BusinessEntityID_PersonID_ContactTypeI"]
+  }
   Note: 'Cross-reference table mapping stores, vendors, and employees to people'
 }
 
@@ -304,9 +304,9 @@ Table "production"."productcosthistory" {
   "standardcost" numeric [not null, note: 'Standard cost of the product.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (productid, startdate) [pk, name: "PK_ProductCostHistory_ProductID_StartDate"]
-}
+  Indexes {
+    (productid, startdate) [pk, name: "PK_ProductCostHistory_ProductID_StartDate"]
+  }
   Note: 'Changes in the cost of a product over time.'
 }
 
@@ -323,9 +323,9 @@ Table "production"."productdocument" {
   "modifieddate" timestamp [not null, default: `now()`]
   "documentnode" "character varying" [not null, default: `'/'::charactervarying`, note: 'Document identification number. Foreign key to Document.DocumentNode.']
 
-Indexes {
-  (productid, documentnode) [pk, name: "PK_ProductDocument_ProductID_DocumentNode"]
-}
+  Indexes {
+    (productid, documentnode) [pk, name: "PK_ProductDocument_ProductID_DocumentNode"]
+  }
   Note: 'Cross-reference table mapping products to related product documents.'
 }
 
@@ -338,9 +338,9 @@ Table "production"."productinventory" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (productid, locationid) [pk, name: "PK_ProductInventory_ProductID_LocationID"]
-}
+  Indexes {
+    (productid, locationid) [pk, name: "PK_ProductInventory_ProductID_LocationID"]
+  }
   Note: 'Product inventory information.'
 }
 
@@ -351,9 +351,9 @@ Table "production"."productlistpricehistory" {
   "listprice" numeric [not null, note: 'Product list price.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (productid, startdate) [pk, name: "PK_ProductListPriceHistory_ProductID_StartDate"]
-}
+  Indexes {
+    (productid, startdate) [pk, name: "PK_ProductListPriceHistory_ProductID_StartDate"]
+  }
   Note: 'Changes in the list price of a product over time.'
 }
 
@@ -372,9 +372,9 @@ Table "production"."productmodelillustration" {
   "illustrationid" integer [not null, note: 'Primary key. Foreign key to Illustration.IllustrationID.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (productmodelid, illustrationid) [pk, name: "PK_ProductModelIllustration_ProductModelID_IllustrationID"]
-}
+  Indexes {
+    (productmodelid, illustrationid) [pk, name: "PK_ProductModelIllustration_ProductModelID_IllustrationID"]
+  }
   Note: 'Cross-reference table mapping product models and illustrations.'
 }
 
@@ -384,9 +384,9 @@ Table "production"."productmodelproductdescriptionculture" {
   "cultureid" "character (6)" [not null, note: 'Culture identification number. Foreign key to Culture.CultureID.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (productmodelid, productdescriptionid, cultureid) [pk, name: "PK_ProductModelProductDescriptionCulture_ProductModelID_Product"]
-}
+  Indexes {
+    (productmodelid, productdescriptionid, cultureid) [pk, name: "PK_ProductModelProductDescriptionCulture_ProductModelID_Product"]
+  }
   Note: 'Cross-reference table mapping product descriptions and the language the description is written in.'
 }
 
@@ -406,9 +406,9 @@ Table "production"."productproductphoto" {
   "primary" public.Flag [not null, default: false, note: '0 = Photo is not the principal image. 1 = Photo is the principal image.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (productid, productphotoid) [pk, name: "PK_ProductProductPhoto_ProductID_ProductPhotoID"]
-}
+  Indexes {
+    (productid, productphotoid) [pk, name: "PK_ProductProductPhoto_ProductID_ProductPhotoID"]
+  }
   Note: 'Cross-reference table mapping products and product photos.'
 }
 
@@ -501,9 +501,9 @@ Table "production"."workorderrouting" {
   "actualcost" numeric [note: 'Actual manufacturing cost.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (workorderid, productid, operationsequence) [pk, name: "PK_WorkOrderRouting_WorkOrderID_ProductID_OperationSequence"]
-}
+  Indexes {
+    (workorderid, productid, operationsequence) [pk, name: "PK_WorkOrderRouting_WorkOrderID_ProductID_OperationSequence"]
+  }
   Note: 'Work order details.'
 }
 
@@ -518,9 +518,9 @@ Table "purchasing"."purchaseorderdetail" {
   "rejectedqty" numeric(8,2) [not null, note: 'Quantity rejected during inspection.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (purchaseorderid, purchaseorderdetailid) [pk, name: "PK_PurchaseOrderDetail_PurchaseOrderID_PurchaseOrderDetailID"]
-}
+  Indexes {
+    (purchaseorderid, purchaseorderdetailid) [pk, name: "PK_PurchaseOrderDetail_PurchaseOrderID_PurchaseOrderDetailID"]
+  }
   Note: 'Individual products associated with a specific purchase order. See PurchaseOrderHeader.'
 }
 
@@ -554,9 +554,9 @@ Table "purchasing"."productvendor" {
   "unitmeasurecode" "character (3)" [not null, note: '''The product's unit of measure.''']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (productid, businessentityid) [pk, name: "PK_ProductVendor_ProductID_BusinessEntityID"]
-}
+  Indexes {
+    (productid, businessentityid) [pk, name: "PK_ProductVendor_ProductID_BusinessEntityID"]
+  }
   Note: 'Cross-reference table mapping vendors with the products they supply.'
 }
 
@@ -618,9 +618,9 @@ Table "sales"."countryregioncurrency" {
   "currencycode" "character (3)" [not null, note: 'ISO standard currency code. Foreign key to Currency.CurrencyCode.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (countryregioncode, currencycode) [pk, name: "PK_CountryRegionCurrency_CountryRegionCode_CurrencyCode"]
-}
+  Indexes {
+    (countryregioncode, currencycode) [pk, name: "PK_CountryRegionCurrency_CountryRegionCode_CurrencyCode"]
+  }
   Note: 'Cross-reference table mapping ISO currency codes to a country or region.'
 }
 
@@ -636,9 +636,9 @@ Table "sales"."personcreditcard" {
   "creditcardid" integer [not null, note: 'Credit card identification number. Foreign key to CreditCard.CreditCardID.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (businessentityid, creditcardid) [pk, name: "PK_PersonCreditCard_BusinessEntityID_CreditCardID"]
-}
+  Indexes {
+    (businessentityid, creditcardid) [pk, name: "PK_PersonCreditCard_BusinessEntityID_CreditCardID"]
+  }
   Note: 'Cross-reference table mapping people to their credit card information in the CreditCard table.'
 }
 
@@ -689,9 +689,9 @@ Table "sales"."salesorderdetail" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (salesorderid, salesorderdetailid) [pk, name: "PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID"]
-}
+  Indexes {
+    (salesorderid, salesorderdetailid) [pk, name: "PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID"]
+  }
   Note: 'Individual products associated with a specific sales order. See SalesOrderHeader.'
 }
 
@@ -729,9 +729,9 @@ Table "sales"."salesorderheadersalesreason" {
   "salesreasonid" integer [not null, note: 'Primary key. Foreign key to SalesReason.SalesReasonID.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (salesorderid, salesreasonid) [pk, name: "PK_SalesOrderHeaderSalesReason_SalesOrderID_SalesReasonID"]
-}
+  Indexes {
+    (salesorderid, salesreasonid) [pk, name: "PK_SalesOrderHeaderSalesReason_SalesOrderID_SalesReasonID"]
+  }
   Note: 'Cross-reference table mapping sales orders to sales reason codes.'
 }
 
@@ -741,9 +741,9 @@ Table "sales"."specialofferproduct" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (specialofferid, productid) [pk, name: "PK_SpecialOfferProduct_SpecialOfferID_ProductID"]
-}
+  Indexes {
+    (specialofferid, productid) [pk, name: "PK_SpecialOfferProduct_SpecialOfferID_ProductID"]
+  }
   Note: 'Cross-reference table mapping products to special offer discounts.'
 }
 
@@ -767,9 +767,9 @@ Table "sales"."salespersonquotahistory" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (businessentityid, quotadate) [pk, name: "PK_SalesPersonQuotaHistory_BusinessEntityID_QuotaDate"]
-}
+  Indexes {
+    (businessentityid, quotadate) [pk, name: "PK_SalesPersonQuotaHistory_BusinessEntityID_QuotaDate"]
+  }
   Note: 'Sales performance tracking.'
 }
 
@@ -803,9 +803,9 @@ Table "sales"."salesterritoryhistory" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-Indexes {
-  (businessentityid, startdate, territoryid) [pk, name: "PK_SalesTerritoryHistory_BusinessEntityID_StartDate_TerritoryID"]
-}
+  Indexes {
+    (businessentityid, startdate, territoryid) [pk, name: "PK_SalesTerritoryHistory_BusinessEntityID_StartDate_TerritoryID"]
+  }
   Note: 'Sales representative transfers to other sales territories.'
 }
 
