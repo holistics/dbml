@@ -61,6 +61,18 @@ Table "countries" {
   "continent_name" varchar
 }
 
+Table "comment_on_product" {
+  "comment_id" int
+  "product_family" int
+  "delete" boolean
+  "comment_value" varchar
+
+Indexes {
+  (comment_id, product_family) [pk, name: "comment_on_product_pk"]
+  (delete, comment_id, product_family) [unique, name: "comment_on_product_idx_unique"]
+}
+}
+
 Ref:"orders"."id" < "order_items"."order_id"
 
 Ref:"products"."id" < "order_items"."product_id"
