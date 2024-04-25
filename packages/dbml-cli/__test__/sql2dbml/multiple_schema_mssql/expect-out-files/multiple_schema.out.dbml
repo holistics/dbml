@@ -80,9 +80,9 @@ Table "ecommerce"."users" {
   "eg" ecommerce_users_eg_enum [not null]
   "eg2" ecommerce_users_eg2_enum [not null]
 
-Indexes {
-  (name, ejs) [name: "idx_1"]
-}
+  Indexes {
+    (name, ejs) [name: "idx_1"]
+  }
   Note: 'Note on table users of schema ecommerce'
 }
 
@@ -93,9 +93,9 @@ Table "schemaA"."products" {
   "lid" int
   "lid2" int
 
-Indexes {
-  (lid, lid2) [unique, name: "unique_lid_lid2"]
-}
+  Indexes {
+    (lid, lid2) [unique, name: "unique_lid_lid2"]
+  }
   Note: 'Note on table products of schemaA'
 }
 

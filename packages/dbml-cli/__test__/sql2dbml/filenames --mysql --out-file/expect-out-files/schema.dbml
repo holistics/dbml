@@ -83,9 +83,9 @@ Table "customer" {
   "create_Date" timestamp
   "last_update" timestamp
 
-Indexes {
-  (id, first_name) [type: btree, name: "customer_index_0"]
-}
+  Indexes {
+    (id, first_name) [type: btree, name: "customer_index_0"]
+  }
 }
 
 Ref:"country"."id" < "city"."country_id"
