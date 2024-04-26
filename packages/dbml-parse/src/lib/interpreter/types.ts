@@ -87,6 +87,7 @@ export interface Index {
   columns: {
     value: string;
     type: string;
+    token: TokenPosition;
   }[];
   token: TokenPosition;
   unique?: boolean;

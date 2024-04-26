@@ -356,11 +356,35 @@
           "columns": [
             {
               "value": "id",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 394,
+                  "line": 22,
+                  "column": 4
+                },
+                "end": {
+                  "offset": 396,
+                  "line": 22,
+                  "column": 6
+                }
+              }
             },
             {
               "value": "name",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 398,
+                  "line": 22,
+                  "column": 8
+                },
+                "end": {
+                  "offset": 402,
+                  "line": 22,
+                  "column": 12
+                }
+              }
             }
           ],
           "token": {
