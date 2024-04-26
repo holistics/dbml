@@ -266,10 +266,12 @@ export class TableInterpreter implements ElementInterpreter {
           ...functional.map((s) => ({
             value: s.value!.value,
             type: 'expression',
+            token: getTokenPosition(s),
           })),
           ...nonFunctional.map((s) => ({
             value: extractVarNameFromPrimaryVariable(s).unwrap(),
             type: 'column',
+            token: getTokenPosition(s),
           })),
         );
       });
