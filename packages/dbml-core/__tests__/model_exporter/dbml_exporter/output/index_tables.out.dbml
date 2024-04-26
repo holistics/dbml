@@ -8,14 +8,14 @@ Table "users" {
   "country_code" int
   "active" boolean
 
-Indexes {
-  id [unique]
-  (id, full_name) [pk]
-  full_name [name: "User Name"]
-  (email, created_at) [type: hash]
-  `now()`
-  (active, `(lower(full_name))`)
-  `(getdate()), (upper(gender))`
-  `reverse(country_code)`
-}
+  Indexes {
+    id [unique]
+    (id, full_name) [pk]
+    full_name [name: "User Name"]
+    (email, created_at) [type: hash]
+    `now()`
+    (active, `(lower(full_name))`)
+    `(getdate()), (upper(gender))`
+    `reverse(country_code)`
+  }
 }

@@ -188,7 +188,7 @@ class DbmlExporter {
 
       let indexStr = '';
       if (!_.isEmpty(tableContent.indexContents)) {
-        indexStr = `\nIndexes {\n${tableContent.indexContents.map(indexLine => `  ${indexLine}`).join('\n')}\n}`;
+        indexStr = `\n  Indexes {\n${tableContent.indexContents.map(indexLine => `    ${indexLine}`).join('\n')}\n  }`;
       }
       const tableNote = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note)}\n`: '';
 
