@@ -1,0 +1,129 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+// https://docusaurus.io/docs/styling-layout#styling-your-site-with-infima
+:root {
+  --ifm-color-primary: #0c5adb;
+  --ifm-color-primary-dark: #0b51c5;
+  --ifm-color-primary-darker: #0a4cba;
+  --ifm-color-primary-darkest: #083f99;
+  --ifm-color-primary-light: #0d63f1;
+  --ifm-color-primary-lighter: #176af2;
+  --ifm-color-primary-lightest: #387ff4;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --docsearch-muted-color: #969faf;
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #4285f4;
+  --ifm-color-primary-dark: #2572f2;
+  --ifm-color-primary-darker: #1669f1;
+  --ifm-color-primary-darkest: #0c55cd;
+  --ifm-color-primary-light: #5f98f6;
+  --ifm-color-primary-lighter: #6ea1f7;
+  --ifm-color-primary-lightest: #9abef9;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --docsearch-muted-color: #7f8497;
+}
+
+.markdown h1:first-child {
+  --ifm-h1-font-size: 2rem;
+}
+
+.markdown {
+  > h2 {
+    --ifm-h2-font-size: 1.5rem;
+  }
+  > h3 {
+    --ifm-h3-font-size: 1.25rem;
+  }
+}
+
+@mixin search-icon($color) {
+  background: var(--ifm-navbar-search-input-background-color)
+    url('data:image/svg+xml;utf8,<svg fill="#{$color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" height="16px" width="16px"><path d="M6.02945,10.20327a4.17382,4.17382,0,1,1,4.17382-4.17382A4.15609,4.15609,0,0,1,6.02945,10.20327Zm9.69195,4.2199L10.8989,9.59979A5.88021,5.88021,0,0,0,12.058,6.02856,6.00467,6.00467,0,1,0,9.59979,10.8989l4.82338,4.82338a.89729.89729,0,0,0,1.29912,0,.89749.89749,0,0,0-.00087-1.29909Z" /></svg>')
+    no-repeat 0.75rem center / 1rem 1rem;
+}
+
+.go-to-app:hover {
+  opacity: 0.6;
+}
+
+.go-to-app svg {
+  display: none;
+}
+.go-to-app span {
+  border: 1px solid var(--ifm-color-gray-900);
+  background: var(--ifm-color-gray-900);
+  border-radius: 5px;
+  padding: 2px 10px;
+  display: flex;
+  color: #f5f6f7;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+[data-theme='dark'] .go-to-app span {
+  color: var(--ifm-color-gray-900);
+  border-color: #f5f6f7;
+  background: #f5f6f7;
+}
+
+.dbx-dropdown + .dropdown__menu {
+  min-width: 0 !important;
+}
+
+@media screen and (min-width: 996px) {
+  .navbar__search {
+    margin-left: var(--ifm-navbar-item-padding-horizontal);
+  }
+}
+
+.search-bar {
+  color: var(--ifm-color-gray-900);
+  @include search-icon(var(--ifm-color-gray-900));
+}
+
+[data-theme='dark'] .search-bar {
+  color: white;
+  @include search-icon(white);
+}
+
+.search-bar::placeholder {
+  color: var(--ifm-color-gray-900);
+}
+[data-theme='dark'] .search-bar::placeholder {
+  color: white;
+}
+
+.divider {
+  background-color: var(--ifm-font-color-base);
+  border: none !important;
+  height: 1px;
+  opacity: 0.3;
+}
+
+.header-github-link {
+  &::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    display: flex;
+    background-color: var(--ifm-navbar-link-color);
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E");
+    transition: background-color var(--ifm-transition-fast) var(--ifm-transition-timing-default);
+  }
+
+  &:hover {
+    &::before {
+      background-color: var(--ifm-navbar-link-hover-color);
+    }
+  }
+}
