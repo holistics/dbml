@@ -237,11 +237,35 @@
           "columns": [
             {
               "value": "id",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 439,
+                  "line": 29,
+                  "column": 8
+                },
+                "end": {
+                  "offset": 441,
+                  "line": 29,
+                  "column": 10
+                }
+              }
             },
             {
               "value": "country",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 443,
+                  "line": 29,
+                  "column": 12
+                },
+                "end": {
+                  "offset": 450,
+                  "line": 29,
+                  "column": 19
+                }
+              }
             }
           ],
           "token": {
@@ -263,7 +287,19 @@
           "columns": [
             {
               "value": "created_at",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 488,
+                  "line": 30,
+                  "column": 7
+                },
+                "end": {
+                  "offset": 498,
+                  "line": 30,
+                  "column": 17
+                }
+              }
             }
           ],
           "token": {
@@ -301,7 +337,19 @@
           "columns": [
             {
               "value": "booking_date",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 546,
+                  "line": 31,
+                  "column": 7
+                },
+                "end": {
+                  "offset": 558,
+                  "line": 31,
+                  "column": 19
+                }
+              }
             }
           ],
           "token": {
@@ -321,11 +369,35 @@
           "columns": [
             {
               "value": "country",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 566,
+                  "line": 32,
+                  "column": 8
+                },
+                "end": {
+                  "offset": 573,
+                  "line": 32,
+                  "column": 15
+                }
+              }
             },
             {
               "value": "booking_date",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 575,
+                  "line": 32,
+                  "column": 17
+                },
+                "end": {
+                  "offset": 587,
+                  "line": 32,
+                  "column": 29
+                }
+              }
             }
           ],
           "token": {
@@ -347,7 +419,19 @@
           "columns": [
             {
               "value": "booking_date",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 604,
+                  "line": 33,
+                  "column": 7
+                },
+                "end": {
+                  "offset": 616,
+                  "line": 33,
+                  "column": 19
+                }
+              }
             }
           ],
           "token": {
@@ -370,7 +454,19 @@
           "columns": [
             {
               "value": "id*2",
-              "type": "expression"
+              "type": "expression",
+              "token": {
+                "start": {
+                  "offset": 637,
+                  "line": 34,
+                  "column": 8
+                },
+                "end": {
+                  "offset": 643,
+                  "line": 34,
+                  "column": 14
+                }
+              }
             }
           ],
           "token": {
@@ -390,11 +486,35 @@
           "columns": [
             {
               "value": "id*3",
-              "type": "expression"
+              "type": "expression",
+              "token": {
+                "start": {
+                  "offset": 652,
+                  "line": 35,
+                  "column": 8
+                },
+                "end": {
+                  "offset": 658,
+                  "line": 35,
+                  "column": 14
+                }
+              }
             },
             {
               "value": "getdate()",
-              "type": "expression"
+              "type": "expression",
+              "token": {
+                "start": {
+                  "offset": 659,
+                  "line": 35,
+                  "column": 15
+                },
+                "end": {
+                  "offset": 670,
+                  "line": 35,
+                  "column": 26
+                }
+              }
             }
           ],
           "token": {
@@ -414,11 +534,35 @@
           "columns": [
             {
               "value": "id*3",
-              "type": "expression"
+              "type": "expression",
+              "token": {
+                "start": {
+                  "offset": 679,
+                  "line": 36,
+                  "column": 8
+                },
+                "end": {
+                  "offset": 685,
+                  "line": 36,
+                  "column": 14
+                }
+              }
             },
             {
               "value": "id",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 686,
+                  "line": 36,
+                  "column": 15
+                },
+                "end": {
+                  "offset": 688,
+                  "line": 36,
+                  "column": 17
+                }
+              }
             }
           ],
           "token": {

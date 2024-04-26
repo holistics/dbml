@@ -384,11 +384,35 @@
           "columns": [
             {
               "value": "merchant_id",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 710,
+                  "line": 47,
+                  "column": 4
+                },
+                "end": {
+                  "offset": 721,
+                  "line": 47,
+                  "column": 15
+                }
+              }
             },
             {
               "value": "status",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 723,
+                  "line": 47,
+                  "column": 17
+                },
+                "end": {
+                  "offset": 729,
+                  "line": 47,
+                  "column": 23
+                }
+              }
             }
           ],
           "token": {
@@ -411,7 +435,19 @@
           "columns": [
             {
               "value": "id",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 758,
+                  "line": 48,
+                  "column": 3
+                },
+                "end": {
+                  "offset": 760,
+                  "line": 48,
+                  "column": 5
+                }
+              }
             }
           ],
           "token": {

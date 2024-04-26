@@ -154,7 +154,19 @@
           "columns": [
             {
               "value": "id",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 372,
+                  "line": 24,
+                  "column": 5
+                },
+                "end": {
+                  "offset": 374,
+                  "line": 24,
+                  "column": 7
+                }
+              }
             }
           ],
           "token": {
@@ -177,7 +189,19 @@
           "columns": [
             {
               "value": "created_at",
-              "type": "column"
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 399,
+                  "line": 25,
+                  "column": 5
+                },
+                "end": {
+                  "offset": 409,
+                  "line": 25,
+                  "column": 15
+                }
+              }
             }
           ],
           "token": {
