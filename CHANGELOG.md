@@ -1,3 +1,22 @@
+## v3.4.3 (2024-04-26)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#563](https://github.com/holistics/dbml/pull/563) Properly indent indexes in table ([@pierresouchay](https://github.com/pierresouchay))
+* `dbml-core`, `dbml-parse`
+  * [#564](https://github.com/holistics/dbml/pull/564) Fix/add token to index column ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :robot: Dependencies Update
+* `dbml-parse`
+  * [#554](https://github.com/holistics/dbml/pull/554) build(deps): bump ip from 2.0.0 to 2.0.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* Other
+  * [#557](https://github.com/holistics/dbml/pull/557) build(deps): bump axios from 1.3.4 to 1.6.8 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 3
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Pierre Souchay ([@pierresouchay](https://github.com/pierresouchay))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.4.2 (2024-04-25)
 
 #### :bug: Bug Fix
