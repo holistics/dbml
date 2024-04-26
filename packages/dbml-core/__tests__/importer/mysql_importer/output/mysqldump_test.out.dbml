@@ -4,13 +4,13 @@ Table "api_key_outer_auth" {
   "flag" varchar(255) [not null]
   "created_at" datetime [default: NULL]
 
-Indexes {
-  (api_key_outer_id, flag) [type: btree, unique, name: "UQE_api_key_outer_auth_api_key_outer_auth_af"]
-  id [type: btree, name: "IDX_api_key_outer_auth_id"]
-  api_key_outer_id [type: btree, name: "IDX_api_key_outer_auth_api_key_outer_id"]
-  flag [type: btree, name: "IDX_api_key_outer_auth_flag"]
-  created_at [type: btree, name: "IDX_api_key_outer_auth_created_at"]
-}
+  Indexes {
+    (api_key_outer_id, flag) [type: btree, unique, name: "UQE_api_key_outer_auth_api_key_outer_auth_af"]
+    id [type: btree, name: "IDX_api_key_outer_auth_id"]
+    api_key_outer_id [type: btree, name: "IDX_api_key_outer_auth_api_key_outer_id"]
+    flag [type: btree, name: "IDX_api_key_outer_auth_flag"]
+    created_at [type: btree, name: "IDX_api_key_outer_auth_created_at"]
+  }
 }
 
 Table "entity" {
@@ -23,13 +23,13 @@ Table "entity" {
   "name" varchar(255) [not null]
   "ein" varchar(16) [not null]
 
-Indexes {
-  id [unique, name: "id"]
-  constituentId [unique, name: "constituentId"]
-  ein [unique, name: "ein"]
-  constituentId [name: "entity_index_0"]
-  ein [name: "entity_index_1"]
-}
+  Indexes {
+    id [unique, name: "id"]
+    constituentId [unique, name: "constituentId"]
+    ein [unique, name: "ein"]
+    constituentId [name: "entity_index_0"]
+    ein [name: "entity_index_1"]
+  }
 }
 
 Table "entity2" {
@@ -42,9 +42,9 @@ Table "entity2" {
   "name" varchar(255) [not null, default: "hello"]
   "ein" varchar(16) [not null]
 
-Indexes {
-  id [unique, name: "id"]
-  constituentId [unique, name: "constituentId"]
-  ein [unique, name: "ein"]
-}
+  Indexes {
+    id [unique, name: "id"]
+    constituentId [unique, name: "constituentId"]
+    ein [unique, name: "ein"]
+  }
 }
