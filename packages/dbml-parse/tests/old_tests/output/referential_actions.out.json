@@ -359,14 +359,14 @@
               "type": "column",
               "token": {
                 "start": {
-                  "offset": 394,
-                  "line": 22,
-                  "column": 4
-                },
-                "end": {
-                  "offset": 396,
+                  "offset": 398,
                   "line": 22,
                   "column": 6
+                },
+                "end": {
+                  "offset": 400,
+                  "line": 22,
+                  "column": 8
                 }
               }
             },
@@ -375,14 +375,14 @@
               "type": "column",
               "token": {
                 "start": {
-                  "offset": 398,
-                  "line": 22,
-                  "column": 8
-                },
-                "end": {
                   "offset": 402,
                   "line": 22,
-                  "column": 12
+                  "column": 10
+                },
+                "end": {
+                  "offset": 406,
+                  "line": 22,
+                  "column": 14
                 }
               }
             }
