@@ -35,7 +35,7 @@ outlines the full syntax documentations of DBML.
 
 ## Example
 
-```
+```text
 Table users {
     id integer
     username varchar
@@ -58,7 +58,7 @@ Ref: posts.user_id > users.id // many-to-one
 
 You can give overall description of the project.
 
-```
+```text
 Project project_name {
     database_type: 'PostgreSQL'
     Note: 'Description of the project'
@@ -71,7 +71,7 @@ A new schema will be defined as long as it contains any table or enum.
 
 For example, the following code will define a new schema `core` along with a table `user` placed inside it
 
-```
+```text
 Table core.user {
     ...
 }
@@ -83,7 +83,7 @@ By default, any **table**, **relationship**, or **enum** definition that omits `
 
 ## Table Definition
 
-```
+```text
 // table belonged to default "public" schema
 Table table_name {
     column_name column_type [column_settings]
@@ -109,7 +109,7 @@ Table schema_name.table_name {
 
 You can alias the table, and use them in the references later on.
 
-```
+```text
 Table very_long_user_table as U {
     ...
 }
@@ -121,7 +121,7 @@ Ref: U.id < posts.user_id
 
 You can add notes to the table, and refer to them in the visual plane.
 
-```
+```text
 Table users {
     id integer
     status varchar [note: 'status']
@@ -140,7 +140,7 @@ Each setting item can take in 2 forms: `Key: Value` or `keyword`, similar to tha
 
 Example,
 
-```
+```text
 Table users [headercolor: #3498DB] {
     id integer [primary key]
     username varchar(255) [not null, unique]
@@ -153,7 +153,7 @@ Table users [headercolor: #3498DB] {
 
 Each column can take have optional settings, defined in square brackets like:
 
-```
+```text
 Table buildings {
     ...
     address varchar(255) [unique, not null, note: 'to include unit number']
@@ -183,7 +183,7 @@ You can set default value as:
 
 Example,
 
-```
+```text
 Table users {
     id integer [primary key]
     username varchar(255) [not null, unique]
@@ -199,7 +199,7 @@ Table users {
 
 Indexes allow users to quickly locate and access the data. Users can define single or multi-column indexes.
 
-```
+```text
 Table bookings {
     id integer
     country varchar
@@ -237,7 +237,7 @@ There are 3 types of index definitions:
 
 Relationships are used to define foreign key constraints between tables across schemas.
 
-```
+```text
 Table posts {
     id integer [primary key]
     user_id integer [ref: > users.id] // many-to-one
@@ -260,7 +260,7 @@ There are 4 types of relationships: one-to-one, one-to-many, many-to-one and man
 
 In DBML, there are 3 syntaxes to define relationships:
 
-```
+```text
 //Long form
 Ref name_optional {
     schema1.table1.column1 < schema2.table2.column2
@@ -280,13 +280,13 @@ Table schema2.table2 {
 
 **Composite foreign keys:**
 
-```
+```text
 Ref: merchant_periods.(merchant_id, country_code) > merchants.(id, country_code)
 ```
 
 **Cross-schema relationship:**
 
-```
+```text
 Table core.users {
     id integer [pk]
 }
@@ -302,7 +302,7 @@ Ref: blogging.posts.user_id > core.users.id
 
 ### Relationship settings
 
-```
+```text
 Ref: products.merchant_id > merchants.id [delete: cascade, update: no action]
 ```
 
@@ -329,7 +329,7 @@ You can comment in your code using `//`, so it is easier for you to review the c
 
 Example,
 
-```
+```text
 // order_items refer to items from that order
 ```
 
@@ -339,7 +339,7 @@ You can also put comment spanning multiple lines in your code by putting inside 
 
 Example,
 
-```
+```text
 /*
     This is a
     Multi-lines
@@ -353,7 +353,7 @@ You can add sticky notes to the diagram canvas to serve as a quick reminder or t
 
 Example,
 
-```
+```text
 Table jobs {
     ...
 }
@@ -374,7 +374,7 @@ Note multiple_lines_note {
 
 Note allows users to give description for a particular DBML element.
 
-```
+```text
 Table users {
     id int [pk]
     name varchar
@@ -391,7 +391,7 @@ Note's value is a string. If your note spans over multiple lines, you can use [m
 
 ### Project Notes
 
-```
+```text
 Project DBML {
     Note: '''
     # DBML - Database Markup Language
@@ -408,7 +408,7 @@ Project DBML {
 
 ### Table Notes
 
-```
+```text
 Table users {
     id int [pk]
     name varchar
@@ -421,11 +421,13 @@ Table users {
 
 You can add notes to your columns, so you can easily refer to it when hovering over the column in the diagram canvas.
 
-    column_name column_type [note: 'replace text here']
+```text
+column_name column_type [note: 'replace text here']
+```
 
 Example,
 
-```
+```text
 Table orders {
     status varchar [
     note: '''
@@ -441,7 +443,7 @@ Table orders {
 
 Multiline string will be defined between triple single quote `'''`
 
-```
+```text
 Note: '''
     This is a block string
     This string can spans over multiple lines.
@@ -455,15 +457,17 @@ Note: '''
   - `'''`: using `\'''`
 - The number of spaces you use to indent a block string will be the minimum number of leading spaces among all lines. The parser will automatically remove the number of indentation spaces in the final output. The result of the above example will be:
 
-      This is a block string
-      This string can spans over multiple lines.
+```text
+    This is a block string
+    This string can spans over multiple lines.
+```
 
 ## Enum Definition
 
 `Enum` allows users to define different values of a particular column.
 When hovering over the column in the canvas, the enum values will be displayed.
 
-```
+```text
 // enum belonged to default "public" schema
 enum job_status {
     created [note: 'Waiting to be processed']
@@ -488,7 +492,7 @@ Table jobs {
 
 If your enum values contain spaces or other special characters you can use double quotes.
 
-```
+```text
 enum grade {
     "A+"
     "A"
@@ -501,7 +505,7 @@ enum grade {
 
 `TableGroup` allows users to group the related or associated tables together.
 
-```
+```text
 TableGroup tablegroup_name { // tablegroup is case-insensitive.
     table1
     table2
