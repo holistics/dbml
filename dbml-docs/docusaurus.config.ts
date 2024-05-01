@@ -14,10 +14,11 @@ const config: Config = {
   baseUrl: '/',
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'Holistics', // Usually your GitHub org/user name.
+  organizationName: 'holistics', // Usually your GitHub org/user name.
   projectName: 'dbml-docs', // Usually your repo name.
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenAnchors: 'throw',
+  onBrokenMarkdownLinks: 'throw',
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
@@ -55,6 +56,12 @@ const config: Config = {
     //     anonymizeIP: true,
     //   },
     // ],
+    [
+      'docusaurus-lunr-search',
+      {
+        indexBaseUrl: true,
+      },
+    ],
   ],
 };
 

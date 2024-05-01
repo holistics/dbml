@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: Home
 ---
 
 # DBML - Database Markup Language
@@ -22,34 +22,34 @@ title: Introduction
 It also comes with command-line tool and open-source module to help you convert between DBML and SQL.
 
 ```text
-  Table users {
-    id integer
-    username varchar
-    role varchar
-    created_at timestamp
-  }
+Table users {
+  id integer
+  username varchar
+  role varchar
+  created_at timestamp
+}
 
-  Table posts {
-    id integer [primary key]
-    title varchar
-    body text [note: 'Content of the post']
-    user_id integer
-    status post_status
-    created_at timestamp
-  }
+Table posts {
+  id integer [primary key]
+  title varchar
+  body text [note: 'Content of the post']
+  user_id integer
+  status post_status
+  created_at timestamp
+}
 
-  Enum post_status {
-    draft
-    published
-    private [note: 'visible via URL only']
-  }
+Enum post_status {
+  draft
+  published
+  private [note: 'visible via URL only']
+}
 
-  Ref: posts.user_id > users.id // many-to-one
+Ref: posts.user_id > users.id // many-to-one
 ```
 
 _See the above dbml doc [visualized on dbdiagram](https://dbdiagram.io/d/5d5cb582ced98361d6ddc5ab)_
 
-For full DBML syntax documentation, refer to the [Docs](/docs/) section.
+For full DBML syntax documentation, refer to the [Syntax](/syntax) section.
 
 _Note: DBML is not to be confused with Microsoft's DBML file extension (XML format)._
 
@@ -64,7 +64,7 @@ DBML is born to solve the frustrations of developers working on large, complex s
 Our recommended best practices is to have a `database.dbml` file in your root repository
 _(similar to other config and/or boilerplate files, eg. `packages.json` or `README.md`)_
 
-```
+```text
 .
 |_ ...
 |_ database.dbml
@@ -89,7 +89,7 @@ DBML comes with:
 1. A free database visualiser at [dbdiagram.io](https://dbdiagram.io)
 2. A free database documentation builder at [dbdocs.io](https://dbdocs.io)
 3. A command-line tool to help to convert SQL to DBML files and vice versa.
-4. An [open-source JS library](/js-module/) (NPM package) for you to programmatically convert between DBML and SQL DDL.
+4. An [open-source JS library](/js-module) (NPM package) for you to programmatically convert between DBML and SQL DDL.
 
 ### dbdiagram
 
@@ -109,7 +109,7 @@ DBML comes with:
 
 A simple command-line tool to help you convert between SQL (DDL) and DBML. Refer to [CLI docs](/cli) for more info.
 
-![img](../static/img/dbml-cli.gif)
+![img](/img/dbml-cli.gif)
 
 ## DBML History
 
