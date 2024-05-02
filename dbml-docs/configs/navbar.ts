@@ -29,10 +29,6 @@ const NavbarConfigs: Navbar = {
           href: 'https://dbdocs.io/?utm_source=dbdiagram-docs',
         },
         {
-          label: 'dbml - Database Definition As Code',
-          href: 'https://dbml.dbdiagram.io/?utm_source=dbdiagram-docs',
-        },
-        {
           label: 'Holistics.io - BI Reporting As Code',
           href: 'https://www.holistics.io/?utm_source=dbdiagram-docs&utm_medium=topnav&utm_campaign=landing',
         },

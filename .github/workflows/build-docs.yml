@@ -1,33 +1,35 @@
-name: build docs
+name: Build DBML docs
+
 on:
-  push:
-    branches: [ master ]
-    paths:
-      - 'dbml-homepage/**'
   pull_request:
-    branches: [ master ]
-    types: [opened, synchronize]
+    branches:
+      - master
     paths:
-      - 'dbml-homepage/**'
+      - 'dbml-docs/**'
+
 jobs:
   build:
+    name: Build Docusaurus
     runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: dbml-homepage
-
-    strategy:
-      matrix:
-        node-version: [16.x]
+        working-directory: dbml-docs
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-    - name: Install dependencies
-      run: yarn install --frozen-lockfile
-    - name: Build docs page
-      run: yarn build
+      - name: Checkut source code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: yarn
+          cache-dependency-path: ./dbml-docs/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build source code
+        run: yarn build

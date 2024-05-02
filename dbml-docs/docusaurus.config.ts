@@ -8,14 +8,14 @@ const config: Config = {
   tagline: 'Documentations for dbml',
   favicon: '/img/dbml-favicon.svg',
   // Set the production url of your site here
-  url: 'https://dbml.dbdiagram.io/',
+  url: 'https://dbml.dbdiagram.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/dbml/',
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'holistics', // Usually your GitHub org/user name.
-  projectName: 'dbml-docs', // Usually your repo name.
+  projectName: 'dbml', // Usually your repo name.
   onBrokenLinks: 'throw',
   onBrokenAnchors: 'throw',
   onBrokenMarkdownLinks: 'throw',
