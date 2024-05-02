@@ -8,7 +8,7 @@ function Home() {
   const history = useHistory();
 
   useEffect(() => {
-    history.push('/home');
+    history.push('./home');
   }, []);
 
   return <Layout title={`${siteConfig.title}`} />;
