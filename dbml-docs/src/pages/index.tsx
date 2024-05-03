@@ -1,18 +1,9 @@
-import { useHistory } from '@docusaurus/router';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Layout from '@theme/Layout';
-import { useEffect } from 'react';
+import { Redirect } from '@docusaurus/router';
 
+// Same issue: https://stackoverflow.com/questions/58665817/redirect-to-docs-from-landing-page-in-docusaurus-v2
+// Redirect docs: https://docusaurus.io/docs/docusaurus-core#redirect
 function Home() {
-  const { siteConfig } = useDocusaurusContext();
-  const history = useHistory();
-
-  useEffect(() => {
-    // Auto redirect to the homepage after first load
-    history.push('./home');
-  }, []);
-
-  return <Layout title={`${siteConfig.title}`} />;
+  return <Redirect to={'./home'} />
 }
 
 export default Home;
