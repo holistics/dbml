@@ -1,41 +1,41 @@
-# Website
+# DBML Docs
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
 ### Installation
 
-```
-$ yarn
+```bash
+yarn
 ```
 
 ### Local Development
 
-```
-$ yarn start
+```bash
+yarn start
 ```
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
+### Commit
+
+Before commit your code, please run this command to make the code prettier.
+
+```bash
+yarn format
+```
+
 ### Build
 
-```
-$ yarn build
+```bash
+yarn build
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
 ### Deployment
 
-Using SSH:
+This page is deployed to Github Pages.
 
-```
-$ USE_SSH=true yarn deploy
-```
+To deploy this site, please manually trigger ***Deploy DBML docs to Github Pages*** action.
 
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+For more details, please read [Manually running a workflow](https://docs.github.com/en/actions/using-workflows/manually-running-a-workflow).

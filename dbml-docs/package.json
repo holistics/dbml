@@ -1,7 +1,6 @@
 {
-  "name": "dbml-docs",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@dbml/docs",
+  "version": "0.1.0",
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",

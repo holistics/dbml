@@ -148,3 +148,4 @@ DBML is created and maintained by [Holistics](https://holistics.io?utm_source=db
 * [DB2Code: Generate DBML from Maven](https://github.com/alberlau/DB2Code)
 * [dbml-java: A DBML parser written on Java 17 by Nils Wende](https://github.com/nilswende/dbml-java)
 * [SchemaToDbml: A gem that generates DBML from Rails schema.rb by Ricardo Ribeiro](https://github.com/ricardojcribeiro/schema_to_dbml)
+* [Snowflake DBML Generator by Ryan Rozich](https://github.com/ryanrozich/snowflake-dbml-generator)

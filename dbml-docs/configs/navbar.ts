@@ -22,15 +22,15 @@ const NavbarConfigs: Navbar = {
       items: [
         {
           label: 'dbdiagram - Database Diagram As Code',
-          href: 'https://dbdiagram.io/?utm_source=dbdiagram-docs',
+          href: 'https://dbdiagram.io/?utm_source=dbml',
         },
         {
           label: 'dbdocs - Database Docs As Code',
-          href: 'https://dbdocs.io/?utm_source=dbdiagram-docs',
+          href: 'https://dbdocs.io/?utm_source=dbml',
         },
         {
           label: 'Holistics.io - BI Reporting As Code',
-          href: 'https://www.holistics.io/?utm_source=dbdiagram-docs&utm_medium=topnav&utm_campaign=landing',
+          href: 'https://www.holistics.io/?utm_source=dbml&utm_medium=topnav&utm_campaign=landing',
         },
       ],
     },

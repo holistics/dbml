@@ -52,30 +52,6 @@
     no-repeat 0.75rem center / 1rem 1rem;
 }
 
-.go-to-app:hover {
-  opacity: 0.6;
-}
-
-.go-to-app svg {
-  display: none;
-}
-.go-to-app span {
-  border: 1px solid var(--ifm-color-gray-900);
-  background: var(--ifm-color-gray-900);
-  border-radius: 5px;
-  padding: 2px 10px;
-  display: flex;
-  color: #f5f6f7;
-  font-size: 13px;
-  font-weight: bold;
-}
-
-[data-theme='dark'] .go-to-app span {
-  color: var(--ifm-color-gray-900);
-  border-color: #f5f6f7;
-  background: #f5f6f7;
-}
-
 .dbx-dropdown + .dropdown__menu {
   min-width: 0 !important;
 }
@@ -101,13 +77,6 @@
 }
 [data-theme='dark'] .search-bar::placeholder {
   color: white;
-}
-
-.divider {
-  background-color: var(--ifm-font-color-base);
-  border: none !important;
-  height: 1px;
-  opacity: 0.3;
 }
 
 .header-github-link {
