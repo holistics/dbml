@@ -8,6 +8,7 @@ function Home() {
   const history = useHistory();
 
   useEffect(() => {
+    // Auto redirect to the homepage after first load
     history.push('./home');
   }, []);
 
