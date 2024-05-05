@@ -40,26 +40,31 @@ const config: Config = {
   ],
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/dbml-logo-full.svg',
+    image: 'img/dbml-logo.png',
     navbar: NavbarConfigs,
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
+    colorMode: {
+      // prefer system preferences
+      respectPrefersColorScheme: true,
+    },
+
   } satisfies Preset.ThemeConfig,
   plugins: [
     'docusaurus-plugin-sass',
-    // [
-    //   '@docusaurus/plugin-google-gtag',
-    //   {
-    //     trackingID: 'UA-47899822-13',
-    //     anonymizeIP: true,
-    //   },
-    // ],
+    [
+      '@docusaurus/plugin-google-gtag',
+      {
+        trackingID: 'G-46KNY3YRW9',
+        anonymizeIP: true,
+      },
+    ],
     [
       'docusaurus-lunr-search',
       {
-        indexBaseUrl: true,
+        indexBaseUrl: false,
       },
     ],
   ],
