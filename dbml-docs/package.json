@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "docusaurus": "docusaurus",
-    "start": "docusaurus start",
+    "dev": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
@@ -15,9 +15,9 @@
     "format": "prettier . --write"
   },
   "dependencies": {
-    "@docusaurus/core": "3.2.1",
-    "@docusaurus/plugin-google-gtag": "^3.2.1",
-    "@docusaurus/preset-classic": "3.2.1",
+    "@docusaurus/core": "^3.3.2",
+    "@docusaurus/plugin-google-gtag": "^3.3.2",
+    "@docusaurus/preset-classic": "^3.3.2",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
     "docusaurus-lunr-search": "^3.3.2",
@@ -28,8 +28,8 @@
     "sass": "^1.75.0"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^3.2.1",
-    "@docusaurus/tsconfig": "^3.2.1",
+    "@docusaurus/module-type-aliases": "^3.3.2",
+    "@docusaurus/tsconfig": "^3.3.2",
     "@docusaurus/types": "^3.2.1",
     "prettier": "3.2.5",
     "typescript": "^5.4.5"
