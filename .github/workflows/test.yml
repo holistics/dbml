@@ -1,14 +1,16 @@
-name: CI
+name: Run packages unit test
 on:
   push:
     branches: [ master ]
     paths-ignore:
       - 'dbml-homepage/**'
+      - 'dbml-docs/**'
   pull_request:
     branches: [ master ]
     types: [opened, synchronize]
     paths-ignore:
       - 'dbml-homepage/**'
+      - 'dbml-docs/**'
 jobs:
   build:
     runs-on: ubuntu-22.04
