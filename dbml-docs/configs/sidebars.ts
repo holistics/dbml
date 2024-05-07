@@ -12,7 +12,7 @@ import { SidebarsConfig } from '@docusaurus/plugin-content-docs';
  Create as many sidebars as you want.
  */
 const SidebarConfigs: SidebarsConfig = {
-  docs: ['home', 'syntax', 'cli', 'js-module'],
+  docs: ['home', 'docs', 'cli', 'js-module'],
 };
 
 export default SidebarConfigs;
