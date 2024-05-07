@@ -5,13 +5,16 @@ title: Home
 # DBML - Database Markup Language
 
 <div style={{ display: "flex", alignItems: "center" }}>
-  <p style={{ fontSize: "12px", marginBottom: "0px" }}>Open source</p>
+  <p style={{ fontSize: "0.75rem", marginBottom: "0px" }}>Open source</p>
   <a
     href="https://github.com/holistics/dbml"
     target="_blank"
-    style={{ marginLeft: "10px" }}
+    style={{ marginLeft: "10px", display: "flex", alignItems: "center" }}
   >
-    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/holistics/dbml?style=social"></img>
+    <img
+      alt="GitHub Repo stars"
+      src="https://img.shields.io/github/stars/holistics/dbml?style=social"
+    ></img>
   </a>
 </div>
 
@@ -49,7 +52,7 @@ Ref: posts.user_id > users.id // many-to-one
 
 _See the above dbml doc [visualized on dbdiagram](https://dbdiagram.io/d/5d5cb582ced98361d6ddc5ab)_
 
-For full DBML syntax documentation, refer to the [Syntax](/syntax) section.
+For full DBML syntax documentation, refer to the [Syntax](/docs) section.
 
 _Note: DBML is not to be confused with Microsoft's DBML file extension (XML format)._
 
