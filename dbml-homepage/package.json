@@ -1,29 +1,52 @@
 {
   "name": "@dbml/homepage",
   "version": "0.1.0",
-  "description": "",
-  "main": "index.js",
-  "authors": {
-    "name": "",
-    "email": ""
-  },
-  "repository": "https://github.com/holistics/dbml/tree/master/packages/dbml-homepage",
   "scripts": {
-    "dev": "vuepress dev docs",
-    "build": "vuepress build docs",
-    "deploy": "sh deploy.sh"
-  },
-  "resolutions": {
-    "vuepress/**/loader-utils": "^1.4.2",
-    "vuepress/**/selfsigned": "^2.1.1",
-    "vuepress/**/glob-parent": "^5.1.2",
-    "vuepress/**/optimize-css-assets-webpack-plugin": "^6.0.1"
-  },
-  "devDependencies": {
-    "@vuepress/theme-default": "^1.9.9",
-    "vuepress": "^1.9.9"
+    "docusaurus": "docusaurus",
+    "dev": "docusaurus start",
+    "build": "docusaurus build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "clear": "docusaurus clear",
+    "serve": "docusaurus serve",
+    "write-translations": "docusaurus write-translations",
+    "write-heading-ids": "docusaurus write-heading-ids",
+    "typecheck": "tsc",
+    "format": "prettier . --write"
   },
   "dependencies": {
-    "@vuepress/plugin-google-analytics": "^1.9.9"
+    "@docusaurus/core": "^3.3.2",
+    "@docusaurus/plugin-google-gtag": "^3.3.2",
+    "@docusaurus/preset-classic": "^3.3.2",
+    "@mdx-js/react": "^3.0.0",
+    "clsx": "^2.0.0",
+    "docusaurus-lunr-search": "^3.3.2",
+    "docusaurus-plugin-sass": "^0.2.5",
+    "prism-react-renderer": "^2.3.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "sass": "^1.75.0"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "^3.3.2",
+    "@docusaurus/tsconfig": "^3.3.2",
+    "@docusaurus/types": "^3.2.1",
+    "prettier": "3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 5 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0"
   }
 }
