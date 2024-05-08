@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'dbml-docs/**'
+      - 'dbml-homepage/**'
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: dbml-docs
+        working-directory: dbml-homepage
 
     steps:
       - name: Checkout source code
@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: 20.x
           cache: yarn
-          cache-dependency-path: ./dbml-docs/yarn.lock
+          cache-dependency-path: ./dbml-homepage/yarn.lock
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
