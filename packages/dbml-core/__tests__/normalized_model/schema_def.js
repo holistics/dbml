@@ -22,7 +22,7 @@ describe('@dbml/core - model_structure', () => {
     describe('normalized_structure', () => {
       test('normalized database - contains all properties', (done) => {
         // eslint-disable-next-line no-undef
-        isEqualExcludeTokenEmpty(normalizedModel, expectedNormalizeModel);
+        isEqualExcludeEmptyProperty(normalizedModel, expectedNormalizeModel);
         done();
       });
     });

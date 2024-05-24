@@ -31,6 +31,7 @@ class IndexColumn extends Element {
     return {
       type: this.type,
       value: this.value,
+      token: this.token,
     };
   }
 

@@ -180,7 +180,9 @@ class Database extends Element {
   shallowExport () {
     return {
       hasDefaultSchema: this.hasDefaultSchema,
+      token: this.token,
       note: this.note,
+      noteToken: this.noteToken,
       databaseType: this.databaseType,
       name: this.name,
     };

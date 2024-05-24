@@ -64,6 +64,7 @@ class Endpoint extends Element {
       schemaName: this.schemaName,
       tableName: this.tableName,
       fieldNames: this.fieldNames,
+      token: this.token,
       relation: this.relation,
     };
   }

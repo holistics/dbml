@@ -153,7 +153,9 @@ class Schema extends Element {
   shallowExport () {
     return {
       name: this.name,
+      token: this.token,
       note: this.note,
+      noteToken: this.noteToken,
       alias: this.alias,
     };
   }

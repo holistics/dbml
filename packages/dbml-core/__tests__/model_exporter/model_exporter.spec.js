@@ -26,7 +26,7 @@ describe('@dbml/core - model_exporter', () => {
     switch (format) {
       case 'json':
         // eslint-disable-next-line
-        isEqualExcludeTokenEmpty(JSON.parse(res), output);
+        isEqualExcludeEmptyProperty(JSON.parse(res), output);
         break;
 
       default:
@@ -57,7 +57,6 @@ describe('@dbml/core - model_exporter', () => {
   });
   /* eslint-enable */
 });
-
 
 describe('@dbml/core - model_exporter dbml_exporter.escapeNote', () => {
   /**

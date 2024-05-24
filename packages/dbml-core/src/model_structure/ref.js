@@ -67,6 +67,7 @@ class Ref extends Element {
       name: this.name,
       onDelete: this.onDelete,
       onUpdate: this.onUpdate,
+      token: this.token,
     };
   }
 

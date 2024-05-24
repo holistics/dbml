@@ -4,6 +4,7 @@
       "id": 1,
       "hasDefaultSchema": false,
       "note": null,
+      "noteToken": null,
       "schemaIds": [
         1,
         2,
@@ -21,6 +22,7 @@
       "id": 1,
       "name": "public",
       "note": "Default Public Schema",
+      "noteToken": null,
       "tableIds": [
         2,
         3
@@ -44,6 +46,7 @@
       "id": 2,
       "name": "schemaB",
       "note": null,
+      "noteToken": null,
       "tableIds": [],
       "enumIds": [
         2
@@ -56,6 +59,7 @@
       "id": 3,
       "name": "ecommerce",
       "note": null,
+      "noteToken": null,
       "tableIds": [
         1
       ],
@@ -68,6 +72,7 @@
       "id": 4,
       "name": "schemaA",
       "note": null,
+      "noteToken": null,
       "tableIds": [
         4,
         5
@@ -82,18 +87,54 @@
     "1": {
       "id": 1,
       "name": "note",
-      "content": "One line note"
+      "content": "One line note",
+      "token": {
+        "start": {
+          "offset": 848,
+          "line": 64,
+          "column": 1
+        },
+        "end": {
+          "offset": 879,
+          "line": 66,
+          "column": 2
+        }
+      }
     },
     "2": {
       "id": 2,
       "name": "note2",
-      "content": "# Title\nbody\n"
+      "content": "# Title\nbody\n",
+      "token": {
+        "start": {
+          "offset": 881,
+          "line": 68,
+          "column": 1
+        },
+        "end": {
+          "offset": 928,
+          "line": 73,
+          "column": 2
+        }
+      }
     }
   },
   "refs": {
     "1": {
       "id": 1,
       "name": null,
+      "token": {
+        "start": {
+          "offset": 378,
+          "line": 26,
+          "column": 17
+        },
+        "end": {
+          "offset": 390,
+          "line": 26,
+          "column": 29
+        }
+      },
       "endpointIds": [
         1,
         2
@@ -103,6 +144,18 @@
     "2": {
       "id": 2,
       "name": null,
+      "token": {
+        "start": {
+          "offset": 451,
+          "line": 31,
+          "column": 17
+        },
+        "end": {
+          "offset": 466,
+          "line": 31,
+          "column": 32
+        }
+      },
       "endpointIds": [
         3,
         4
@@ -112,6 +165,18 @@
     "3": {
       "id": 3,
       "name": null,
+      "token": {
+        "start": {
+          "offset": 472,
+          "line": 34,
+          "column": 1
+        },
+        "end": {
+          "offset": 502,
+          "line": 34,
+          "column": 31
+        }
+      },
       "endpointIds": [
         5,
         6
@@ -121,6 +186,18 @@
     "4": {
       "id": 4,
       "name": "name_optional",
+      "token": {
+        "start": {
+          "offset": 504,
+          "line": 36,
+          "column": 1
+        },
+        "end": {
+          "offset": 559,
+          "line": 38,
+          "column": 2
+        }
+      },
       "endpointIds": [
         7,
         8
@@ -132,7 +209,20 @@
     "1": {
       "id": 1,
       "name": "job_status",
+      "token": {
+        "start": {
+          "offset": 677,
+          "line": 47,
+          "column": 1
+        },
+        "end": {
+          "offset": 762,
+          "line": 52,
+          "column": 2
+        }
+      },
       "note": null,
+      "noteToken": null,
       "valueIds": [
         1,
         2,
@@ -150,7 +240,20 @@
     "2": {
       "id": 2,
       "name": "gender",
+      "token": {
+        "start": {
+          "offset": 764,
+          "line": 54,
+          "column": 1
+        },
+        "end": {
+          "offset": 807,
+          "line": 57,
+          "column": 2
+        }
+      },
       "note": null,
+      "noteToken": null,
       "valueIds": [
         5,
         6
@@ -164,7 +267,20 @@
     "3": {
       "id": 3,
       "name": "gender",
+      "token": {
+        "start": {
+          "offset": 809,
+          "line": 59,
+          "column": 1
+        },
+        "end": {
+          "offset": 846,
+          "line": 62,
+          "column": 2
+        }
+      },
       "note": null,
+      "noteToken": null,
       "valueIds": [
         7,
         8
@@ -180,6 +296,18 @@
     "1": {
       "id": 1,
       "name": "tablegroup_name",
+      "token": {
+        "start": {
+          "offset": 561,
+          "line": 40,
+          "column": 1
+        },
+        "end": {
+          "offset": 675,
+          "line": 45,
+          "column": 2
+        }
+      },
       "tableIds": [
         3,
         2,
@@ -194,7 +322,20 @@
       "id": 1,
       "name": "users",
       "alias": "EU",
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 139,
+          "line": 8,
+          "column": 2
+        }
+      },
       "note": null,
+      "noteToken": null,
       "fieldIds": [
         1,
         2,
@@ -211,7 +352,20 @@
       "id": 2,
       "name": "users",
       "alias": null,
+      "token": {
+        "start": {
+          "offset": 141,
+          "line": 10,
+          "column": 1
+        },
+        "end": {
+          "offset": 267,
+          "line": 17,
+          "column": 2
+        }
+      },
       "note": null,
+      "noteToken": null,
       "fieldIds": [
         7,
         8,
@@ -228,7 +382,20 @@
       "id": 3,
       "name": "products",
       "alias": null,
+      "token": {
+        "start": {
+          "offset": 269,
+          "line": 19,
+          "column": 1
+        },
+        "end": {
+          "offset": 316,
+          "line": 22,
+          "column": 2
+        }
+      },
       "note": null,
+      "noteToken": null,
       "fieldIds": [
         13,
         14
@@ -241,7 +408,20 @@
       "id": 4,
       "name": "products",
       "alias": "A",
+      "token": {
+        "start": {
+          "offset": 318,
+          "line": 24,
+          "column": 1
+        },
+        "end": {
+          "offset": 393,
+          "line": 27,
+          "column": 2
+        }
+      },
       "note": null,
+      "noteToken": null,
       "fieldIds": [
         15,
         16
@@ -254,7 +434,20 @@
       "id": 5,
       "name": "locations",
       "alias": null,
+      "token": {
+        "start": {
+          "offset": 395,
+          "line": 29,
+          "column": 1
+        },
+        "end": {
+          "offset": 470,
+          "line": 32,
+          "column": 2
+        }
+      },
       "note": null,
+      "noteToken": null,
       "fieldIds": [
         17,
         18
@@ -272,6 +465,18 @@
       "fieldNames": [
         "id"
       ],
+      "token": {
+        "start": {
+          "offset": 378,
+          "line": 26,
+          "column": 17
+        },
+        "end": {
+          "offset": 390,
+          "line": 26,
+          "column": 29
+        }
+      },
       "relation": "1",
       "refId": 1,
       "fieldIds": [
@@ -285,6 +490,18 @@
       "fieldNames": [
         "name"
       ],
+      "token": {
+        "start": {
+          "offset": 364,
+          "line": 26,
+          "column": 3
+        },
+        "end": {
+          "offset": 391,
+          "line": 26,
+          "column": 30
+        }
+      },
       "relation": "*",
       "refId": 1,
       "fieldIds": [
@@ -298,6 +515,18 @@
       "fieldNames": [
         "id"
       ],
+      "token": {
+        "start": {
+          "offset": 451,
+          "line": 31,
+          "column": 17
+        },
+        "end": {
+          "offset": 466,
+          "line": 31,
+          "column": 32
+        }
+      },
       "relation": "1",
       "refId": 2,
       "fieldIds": [
@@ -311,6 +540,18 @@
       "fieldNames": [
         "name"
       ],
+      "token": {
+        "start": {
+          "offset": 437,
+          "line": 31,
+          "column": 3
+        },
+        "end": {
+          "offset": 468,
+          "line": 31,
+          "column": 34
+        }
+      },
       "relation": "*",
       "refId": 2,
       "fieldIds": [
@@ -324,6 +565,18 @@
       "fieldNames": [
         "id"
       ],
+      "token": {
+        "start": {
+          "offset": 477,
+          "line": 34,
+          "column": 6
+        },
+        "end": {
+          "offset": 494,
+          "line": 34,
+          "column": 23
+        }
+      },
       "relation": "1",
       "refId": 3,
       "fieldIds": [
@@ -337,6 +590,18 @@
       "fieldNames": [
         "id"
       ],
+      "token": {
+        "start": {
+          "offset": 497,
+          "line": 34,
+          "column": 26
+        },
+        "end": {
+          "offset": 502,
+          "line": 34,
+          "column": 31
+        }
+      },
       "relation": "*",
       "refId": 3,
       "fieldIds": [
@@ -350,6 +615,18 @@
       "fieldNames": [
         "name"
       ],
+      "token": {
+        "start": {
+          "offset": 526,
+          "line": 37,
+          "column": 3
+        },
+        "end": {
+          "offset": 536,
+          "line": 37,
+          "column": 13
+        }
+      },
       "relation": "1",
       "refId": 4,
       "fieldIds": [
@@ -363,6 +640,18 @@
       "fieldNames": [
         "id"
       ],
+      "token": {
+        "start": {
+          "offset": 539,
+          "line": 37,
+          "column": 16
+        },
+        "end": {
+          "offset": 557,
+          "line": 37,
+          "column": 34
+        }
+      },
       "relation": "*",
       "refId": 4,
       "fieldIds": [
@@ -374,49 +663,164 @@
     "1": {
       "id": 1,
       "name": "created2",
+      "token": {
+        "start": {
+          "offset": 699,
+          "line": 48,
+          "column": 5
+        },
+        "end": {
+          "offset": 724,
+          "line": 48,
+          "column": 30
+        }
+      },
       "note": "abcdef",
+      "noteToken": {
+        "start": {
+          "offset": 709,
+          "line": 48,
+          "column": 15
+        },
+        "end": {
+          "offset": 723,
+          "line": 48,
+          "column": 29
+        }
+      },
       "enumId": 1
     },
     "2": {
       "id": 2,
       "name": "running2",
+      "token": {
+        "start": {
+          "offset": 729,
+          "line": 49,
+          "column": 5
+        },
+        "end": {
+          "offset": 737,
+          "line": 49,
+          "column": 13
+        }
+      },
       "note": null,
+      "noteToken": null,
       "enumId": 1
     },
     "3": {
       "id": 3,
       "name": "done2",
+      "token": {
+        "start": {
+          "offset": 742,
+          "line": 50,
+          "column": 5
+        },
+        "end": {
+          "offset": 747,
+          "line": 50,
+          "column": 10
+        }
+      },
       "note": null,
+      "noteToken": null,
       "enumId": 1
     },
     "4": {
       "id": 4,
       "name": "failure2",
+      "token": {
+        "start": {
+          "offset": 752,
+          "line": 51,
+          "column": 5
+        },
+        "end": {
+          "offset": 760,
+          "line": 51,
+          "column": 13
+        }
+      },
       "note": null,
+      "noteToken": null,
       "enumId": 1
     },
     "5": {
       "id": 5,
       "name": "male",
+      "token": {
+        "start": {
+          "offset": 790,
+          "line": 55,
+          "column": 5
+        },
+        "end": {
+          "offset": 794,
+          "line": 55,
+          "column": 9
+        }
+      },
       "note": null,
+      "noteToken": null,
       "enumId": 2
     },
     "6": {
       "id": 6,
       "name": "female",
+      "token": {
+        "start": {
+          "offset": 799,
+          "line": 56,
+          "column": 5
+        },
+        "end": {
+          "offset": 805,
+          "line": 56,
+          "column": 11
+        }
+      },
       "note": null,
+      "noteToken": null,
       "enumId": 2
     },
     "7": {
       "id": 7,
       "name": "male2",
+      "token": {
+        "start": {
+          "offset": 827,
+          "line": 60,
+          "column": 5
+        },
+        "end": {
+          "offset": 832,
+          "line": 60,
+          "column": 10
+        }
+      },
       "note": null,
+      "noteToken": null,
       "enumId": 3
     },
     "8": {
       "id": 8,
       "name": "female2",
+      "token": {
+        "start": {
+          "offset": 837,
+          "line": 61,
+          "column": 5
+        },
+        "end": {
+          "offset": 844,
+          "line": 61,
+          "column": 12
+        }
+      },
       "note": null,
+      "noteToken": null,
       "enumId": 3
     }
   },
@@ -434,7 +838,20 @@
       "unique": false,
       "pk": true,
       "not_null": false,
+      "token": {
+        "start": {
+          "offset": 36,
+          "line": 2,
+          "column": 3
+        },
+        "end": {
+          "offset": 47,
+          "line": 2,
+          "column": 14
+        }
+      },
       "note": null,
+      "noteToken": null,
       "increment": false,
       "endpointIds": [
         1,
@@ -454,7 +871,20 @@
       },
       "unique": false,
       "pk": false,
+      "token": {
+        "start": {
+          "offset": 50,
+          "line": 3,
+          "column": 3
+        },
+        "end": {
+          "offset": 62,
+          "line": 3,
+          "column": 15
+        }
+      },
       "note": null,
+      "noteToken": null,
       "endpointIds": [],
       "tableId": 1,
       "enumId": null
@@ -469,7 +899,20 @@
       },
       "unique": false,
       "pk": false,
+      "token": {
+        "start": {
+          "offset": 65,
+          "line": 4,
+          "column": 3
+        },
+        "end": {
+          "offset": 79,
+          "line": 4,
+          "column": 17
+        }
+      },
       "note": null,
+      "noteToken": null,
       "endpointIds": [],
       "tableId": 1,
       "enumId": 1
@@ -484,7 +927,20 @@
       },
       "unique": false,
       "pk": false,
+      "token": {
+        "start": {
+          "offset": 82,
+          "line": 5,
+          "column": 3
+        },
+        "end": {
+          "offset": 104,
+          "line": 5,
+          "column": 25
+        }
+      },
       "note": null,
+      "noteToken": null,
       "endpointIds": [],
       "tableId": 1,
       "enumId": 1
@@ -499,7 +955,20 @@
       },
       "unique": false,
       "pk": false,
+      "token": {
+        "start": {
+          "offset": 107,
+          "line": 6,
+          "column": 3
+        },
+        "end": {
+          "offset": 124,
+          "line": 6,
+          "column": 20
+        }
+      },
       "note": null,
+      "noteToken": null,
       "endpointIds": [],
       "tableId": 1,
       "enumId": 2
@@ -514,7 +983,20 @@
       },
       "unique": false,
       "pk": false,
+      "token": {
+        "start": {
+          "offset": 127,
+          "line": 7,
+          "column": 3
+        },
+        "end": {
+          "offset": 137,
+          "line": 7,
+          "column": 13
+        }
+      },
       "note": null,
+      "noteToken": null,
       "endpointIds": [],
       "tableId": 1,
       "enumId": 3
@@ -530,7 +1012,20 @@
       "unique": false,
       "pk": true,
       "not_null": false,
+      "token": {
+        "start": {
+          "offset": 164,
+          "line": 11,
+          "column": 3
+        },
+        "end": {
+          "offset": 175,
+          "line": 11,
+          "column": 14
+        }
+      },
       "note": null,
+      "noteToken": null,
       "increment": false,
       "endpointIds": [
         3,
@@ -549,7 +1044,20 @@
       },
       "unique": false,
       "pk": false,
+      "token": {
+        "start": {
+          "offset": 178,
+          "line": 12,
+          "column": 3
+        },
+        "end": {
+          "offset": 190,
+          "line": 12,
+          "column": 15
+        }
+      },
       "note": null,
+      "noteToken": null,
       "endpointIds": [
         7
       ],
@@ -566,7 +1074,20 @@
       },
       "unique": false,
       "pk": false,
+      "token": {
+        "start": {
+          "offset": 193,
+          "line": 13,
+          "column": 3
+        },
+        "end": {
+          "offset": 207,
+          "line": 13,
+          "column": 17
+        }
+      },
       "note": null,
+      "noteToken": null,
       "endpointIds": [],
       "tableId": 2,
       "enumId": 1
@@ -581,7 +1102,20 @@
       },
       "unique": false,
       "pk": false,
+      "token": {
+        "start": {
+          "offset": 210,
+          "line": 14,
+          "column": 3
+        },
+        "end": {
+          "offset": 232,
+          "line": 14,
+          "column": 25
+        }
+      },
       "note": null,
+      "noteToken": null,
       "endpointIds": [],
       "tableId": 2,
       "enumId": 1
@@ -596,7 +1130,20 @@
       },
       "unique": false,
       "pk": false,
+      "token": {
+        "start": {
+          "offset": 235,
+          "line": 15,
+          "column": 3
+        },
+        "end": {
+          "offset": 252,
+          "line": 15,
+          "column": 20
+        }
+      },
       "note": null,
+      "noteToken": null,
       "endpointIds": [],
       "tableId": 2,
       "enumId": 2
@@ -611,7 +1158,20 @@
       },
       "unique": false,
       "pk": false,
+      "token": {
+        "start": {
+          "offset": 255,
+          "line": 16,
+          "column": 3
+        },
+        "end": {
+          "offset": 265,
+          "line": 16,
+          "column": 13
+        }
+      },
       "note": null,
+      "noteToken": null,
       "endpointIds": [],
       "tableId": 2,
       "enumId": 3
@@ -627,7 +1187,20 @@
       "unique": false,
       "pk": true,
       "not_null": false,
+      "token": {
+        "start": {
+          "offset": 288,
+          "line": 20,
+          "column": 3
+        },
+        "end": {
+          "offset": 299,
+          "line": 20,
+          "column": 14
+        }
+      },
       "note": null,
+      "noteToken": null,
       "increment": false,
       "endpointIds": [],
       "tableId": 3,
@@ -643,7 +1216,20 @@
       },
       "unique": false,
       "pk": false,
+      "token": {
+        "start": {
+          "offset": 302,
+          "line": 21,
+          "column": 3
+        },
+        "end": {
+          "offset": 314,
+          "line": 21,
+          "column": 15
+        }
+      },
       "note": null,
+      "noteToken": null,
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -659,7 +1245,20 @@
       "unique": false,
       "pk": true,
       "not_null": false,
+      "token": {
+        "start": {
+          "offset": 350,
+          "line": 25,
+          "column": 3
+        },
+        "end": {
+          "offset": 361,
+          "line": 25,
+          "column": 14
+        }
+      },
       "note": null,
+      "noteToken": null,
       "increment": false,
       "endpointIds": [],
       "tableId": 4,
@@ -676,7 +1275,20 @@
       "unique": false,
       "pk": false,
       "not_null": false,
+      "token": {
+        "start": {
+          "offset": 364,
+          "line": 26,
+          "column": 3
+        },
+        "end": {
+          "offset": 391,
+          "line": 26,
+          "column": 30
+        }
+      },
       "note": null,
+      "noteToken": null,
       "increment": false,
       "endpointIds": [
         2
@@ -695,7 +1307,20 @@
       "unique": false,
       "pk": true,
       "not_null": false,
+      "token": {
+        "start": {
+          "offset": 423,
+          "line": 30,
+          "column": 3
+        },
+        "end": {
+          "offset": 434,
+          "line": 30,
+          "column": 14
+        }
+      },
       "note": null,
+      "noteToken": null,
       "increment": false,
       "endpointIds": [],
       "tableId": 5,
@@ -712,7 +1337,20 @@
       "unique": false,
       "pk": false,
       "not_null": false,
+      "token": {
+        "start": {
+          "offset": 437,
+          "line": 31,
+          "column": 3
+        },
+        "end": {
+          "offset": 468,
+          "line": 31,
+          "column": 34
+        }
+      },
       "note": null,
+      "noteToken": null,
       "increment": false,
       "endpointIds": [
         4

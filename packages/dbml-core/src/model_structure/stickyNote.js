@@ -22,6 +22,7 @@ class StickyNote extends Element {
       name: this.name,
       content: this.content,
       headerColor: this.headerColor,
+      token: this.token,
     };
   }
 

@@ -34,14 +34,14 @@ function omitDeep (obj, predicate) {
   return obj;
 }
 
-global.isEqualExcludeTokenEmpty = (receivedObj, sourceObj) => {
-  const isTokenEmptyProperty = (key, value) => {
-    return key === 'token' || value === undefined || value === null
+global.isEqualExcludeEmptyProperty = (receivedObj, sourceObj) => {
+  const isEmptyProperty = (key, value) => {
+    return value === undefined || value === null
       || (Array.isArray(value) && _.isEmpty(value)) || (typeof value === 'object' && _.isEmpty(value));
   };
 
-  const sourceObjExcludeTokenEmpty = omitDeep(sourceObj, isTokenEmptyProperty);
-  const receivedObjExludeTokenEmpty = omitDeep(receivedObj, isTokenEmptyProperty);
+  const sourceObjExcludeEmptyProperty = omitDeep(sourceObj, isEmptyProperty);
+  const receivedObjExludeEmptyProperty = omitDeep(receivedObj, isEmptyProperty);
 
-  expect(receivedObjExludeTokenEmpty).toEqual(sourceObjExcludeTokenEmpty);
+  expect(receivedObjExludeEmptyProperty).toEqual(sourceObjExcludeEmptyProperty);
 };

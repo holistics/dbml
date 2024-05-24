@@ -115,7 +115,9 @@ class Table extends Element {
     return {
       name: this.name,
       alias: this.alias,
+      token: this.token,
       note: this.note,
+      noteToken: this.noteToken,
       headerColor: this.headerColor,
     };
   }

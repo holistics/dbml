@@ -82,7 +82,9 @@ class Field extends Element {
       unique: this.unique,
       pk: this.pk,
       not_null: this.not_null,
+      token: this.token,
       note: this.note,
+      noteToken: this.noteToken,
       dbdefault: this.dbdefault,
       increment: this.increment,
     };

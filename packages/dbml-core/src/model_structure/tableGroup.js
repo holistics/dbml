@@ -73,6 +73,7 @@ class TableGroup extends Element {
   shallowExport () {
     return {
       name: this.name,
+      token: this.token,
     };
   }
 

@@ -72,7 +72,9 @@ class Index extends Element {
       type: this.type,
       unique: this.unique,
       pk: this.pk,
+      token: this.token,
       note: this.note,
+      noteToken: this.noteToken,
     };
   }
 
