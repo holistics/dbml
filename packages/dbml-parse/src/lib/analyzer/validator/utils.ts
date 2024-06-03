@@ -4,7 +4,6 @@ import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
-  IdentiferStreamNode,
   ListExpressionNode,
   LiteralNode,
   PrefixExpressionNode,
@@ -14,7 +13,7 @@ import {
   VariableNode,
 } from '../../parser/nodes';
 import { isHexChar } from '../../utils';
-import { destructureComplexVariable, isBinaryRelationship } from '../utils';
+import { destructureComplexVariable } from '../utils';
 import CustomValidator from './elementValidators/custom';
 import EnumValidator from './elementValidators/enum';
 import IndexesValidator from './elementValidators/indexes';
