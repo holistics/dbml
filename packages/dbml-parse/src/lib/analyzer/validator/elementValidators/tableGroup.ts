@@ -1,5 +1,5 @@
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { isValidName, pickValidator, registerSchemaStack } from '../utils';
+import { isSimpleName, pickValidator, registerSchemaStack } from '../utils';
 import { ElementValidator } from '../types';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
 import { SyntaxToken } from '../../../lexer/tokens';
@@ -37,8 +37,8 @@ export default class TableGroupValidator implements ElementValidator {
     if (!nameNode) {
       return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A TableGroup must have a name', this.declarationNode)]
     }
-    if (!isValidName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A TableGroup name must be of the form <tablegroup> or <schema>.<tablegroup>', nameNode)];
+    if (!isSimpleName(nameNode)) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A TableGroup name must be a single identifier', nameNode)];
     };
     return [];
   }
@@ -61,7 +61,7 @@ export default class TableGroupValidator implements ElementValidator {
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableGroupSymbolIndex(tableGroupName);
       if (symbolTable.has(tableId)) {
-        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup name '${tableGroupName}' already exists in schema '${nameFragments.join('.') || 'public'}'`, name!)];
+        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup name '${tableGroupName}' already exists`, name!)];
       }
       symbolTable.set(tableId, this.declarationNode.symbol!);
     }
