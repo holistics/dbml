@@ -2653,7 +2653,7 @@
     },
     {
       "code": 3003,
-      "diagnostic": "TableGroup name 'Users' already exists in schema 'public'",
+      "diagnostic": "TableGroup name 'Users' already exists",
       "nodeOrToken": {
         "id": 27,
         "kind": "<primary-expression>",
