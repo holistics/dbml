@@ -61,7 +61,7 @@ export default class TableGroupValidator implements ElementValidator {
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableGroupSymbolIndex(tableGroupName);
       if (symbolTable.has(tableId)) {
-        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup name '${tableGroupName}' already exists in schema '${nameFragments.join('.') || 'public'}'`, name!)];
+        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup name '${tableGroupName}' already exists`, name!)];
       }
       symbolTable.set(tableId, this.declarationNode.symbol!);
     }
