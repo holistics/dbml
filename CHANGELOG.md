@@ -1,3 +1,23 @@
+## v3.5.0 (2024-06-04)
+
+#### :memo: Documentation
+* [#571](https://github.com/holistics/dbml/pull/571) Migrate - Remove old hompepage and rename docs folder to homepage ([@huyleminh01](https://github.com/huyleminh01))
+* [#570](https://github.com/holistics/dbml/pull/570) Fix - Rename file syntax to docs to keep old route ([@huyleminh01](https://github.com/huyleminh01))
+* [#568](https://github.com/holistics/dbml/pull/568) Docs - Migrate dbml homepage to docusaurus ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#575](https://github.com/holistics/dbml/pull/575) Fix/remove tablegroup in schema ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#574](https://github.com/holistics/dbml/pull/574) Export @dbml/core version ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.4.3 (2024-04-26)
 
 #### :bug: Bug Fix
