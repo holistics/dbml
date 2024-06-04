@@ -3,6 +3,7 @@ import Parser from './parse/Parser';
 import { CompilerError } from '../lib/parse/error';
 import importer from './import';
 import exporter from './export';
+import { VERSION } from './utils/version';
 
 export {
   importer,
@@ -10,4 +11,5 @@ export {
   ModelExporter,
   CompilerError,
   Parser,
+  VERSION,
 };
