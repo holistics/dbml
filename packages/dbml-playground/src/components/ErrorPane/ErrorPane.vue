@@ -17,8 +17,10 @@
 </template>
 
 <script setup lang="ts">
+  import { computed } from 'vue';
   import { Pane } from 'splitpanes';
   import { useCompilerStore } from '../../stores/compiler';
 
-  const { errors } = useCompilerStore();
+  const compiler = useCompilerStore();
+  const errors = computed(() => compiler.errors);
 </script>

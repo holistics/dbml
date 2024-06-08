@@ -3,7 +3,7 @@
     <slot>
       <Editor
         class='h-full overflow-auto bg-white border rounded border-gray-300 flex flex-col'
-        @source-change='(newSource) => setSource(newSource)'
+        @source-change='(newSource) => compiler.setSource(newSource)'
       />
     </slot>
   </pane>
@@ -14,5 +14,5 @@
   import Editor from './Editor/Editor.vue';
   import { useCompilerStore } from '../../stores/compiler';
 
-  const { setSource } = useCompilerStore();
+  const compiler = useCompilerStore();
 </script>
