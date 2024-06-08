@@ -16,12 +16,25 @@
   };
 
   const editorDomNode = ref(null);
-  const editor = ref<monaco.editor.IEditor | null>(null);
+  const editor = ref<monaco.editor.ICodeEditor | null>(null);
+  
   onMounted(() => {
     editor.value = monaco.editor.create(editorDomNode.value, {
       value: '',
       automaticLayout: true,
       theme: 'vs-dark'
     });
+  });
+
+  const emit = defineEmits<{
+    (e: 'sourceChange', source: string): void,
+  }>();
+
+  onMounted(() => {
+    editor.value
+      .getModel()
+      .onDidChangeContent(() => {
+        emit('sourceChange', editor.value.getModel().getValue());       
+      });
   });
 </script>
