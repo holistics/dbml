@@ -1,14 +1,14 @@
 <template>
-  <splitpane vertical>
-    <splitpane horizontal>
-      <splitpane vertical>
+  <splitpanes vertical>
+    <splitpanes horizontal>
+      <splitpanes vertical>
         <FileTreePane />
         <DbmlEditorPane />
-      </splitpane>
+      </splitpanes>
       <ErrorPane />
-    </splitpane>
+    </splitpanes>
     <AstExplorerPane />
-  </splitpane>
+  </splitpanes>
 </template>
 
 <script setup lang="ts">
