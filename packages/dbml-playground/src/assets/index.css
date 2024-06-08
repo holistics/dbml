@@ -33,7 +33,7 @@
 @font-face {
   font-family: 'Open Sans';
   src: url('./fonts/OpenSans/OpenSans-Light.ttf') format('truetype');
-  font-weight: lighter;
+  font-weight: 300;
   font-style: normal;
 }
 
