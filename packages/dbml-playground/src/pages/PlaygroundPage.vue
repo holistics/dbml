@@ -1,5 +1,5 @@
 <template>
-  <splitpanes vertical class='default-theme w-full h-full'>
+  <splitpanes vertical class='default-theme w-full h-full p-2'>
     <pane min-size='70' max-size='70' size='70'>
       <splitpanes horizontal>
         <pane min-size='70' max-size='70' size='70'>
