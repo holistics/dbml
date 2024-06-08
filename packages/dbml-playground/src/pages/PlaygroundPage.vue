@@ -1,18 +1,22 @@
 <template>
   <splitpanes vertical>
-    <splitpanes horizontal>
-      <splitpanes vertical>
-        <FileTreePane />
-        <DbmlEditorPane :compiler="compiler"/>
+    <pane>
+      <splitpanes horizontal>
+        <pane>
+          <splitpanes vertical>
+            <FileTreePane />
+            <DbmlEditorPane :compiler="compiler"/>
+          </splitpanes>
+        </pane>
+        <ErrorPane :compiler="compiler"/>
       </splitpanes>
-      <ErrorPane :compiler="compiler"/>
-    </splitpanes>
-    <AstExplorerPane :compiler="compiler"/>
+      <AstExplorerPane :compiler="compiler"/>
+    </pane>
   </splitpanes>
 </template>
 
 <script setup lang="ts">
-  import { Splitpanes } from 'splitpanes';
+  import { Splitpanes, Pane } from 'splitpanes';
   import AstExplorerPane from '../components/AstExplorerPane/AstExplorerPane.vue'
   import ErrorPane from '../components/ErrorPane/ErrorPane.vue'
   import DbmlEditorPane from '../components/DbmlEditorPane/DbmlEditorPane.vue'
