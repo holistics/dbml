@@ -30,6 +30,13 @@
   font-style: italic;
 }
 
+@font-face {
+  font-family: 'Open Sans';
+  src: url('./fonts/OpenSans/OpenSans-Light.ttf') format('truetype');
+  font-weight: lighter;
+  font-style: normal;
+}
+
 * {
   font-family: 'Open Sans', sans-serif;
 }
