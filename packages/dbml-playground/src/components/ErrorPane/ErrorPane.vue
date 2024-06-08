@@ -19,8 +19,8 @@
 <script setup lang="ts">
   import { computed } from 'vue';
   import { Pane } from 'splitpanes';
-  import { useCompilerStore } from '../../stores/compiler';
+  import { useCompilerStore } from '@/stores/compiler';
 
   const compiler = useCompilerStore();
-  const errors = computed(() => compiler.errors);
+  const errors = computed(() => compiler.errors)
 </script>

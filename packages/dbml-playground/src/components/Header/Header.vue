@@ -9,6 +9,6 @@
 
 <script setup lang="ts">
   import { Pane } from 'splitpanes';
-  import DbmlLogoUrl from '../../assets/images/dbml-logo.png';
+  import DbmlLogoUrl from '@/assets/images/dbml-logo.png';
 </script>
 
