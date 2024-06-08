@@ -1,9 +1,9 @@
 <template>
-  <splitpanes vertical class='default-theme w-full h-full p-2'>
+  <splitpanes vertical class='default-theme w-full h-full p-2 bg-gray-300'>
     <pane min-size='70' max-size='70' size='70'>
-      <splitpanes horizontal>
+      <splitpanes horizontal class='bg-gray-300'>
         <pane min-size='70' max-size='70' size='70'>
-          <splitpanes vertical>
+          <splitpanes vertical class='bg-gray-300'>
             <FileTreePane />
             <DbmlEditorPane :compiler="compiler"/>
           </splitpanes>
@@ -26,3 +26,15 @@
 
   const compiler = new Compiler();
 </script>
+
+<style>
+div.splitpanes__splitter {
+  background-color: rgb(209, 213, 219) !important;
+  &::before {
+    background-color: #1e1e1e !important;
+  }
+  &::after {
+    background-color: #1e1e1e !important;
+  }
+}
+</style>
