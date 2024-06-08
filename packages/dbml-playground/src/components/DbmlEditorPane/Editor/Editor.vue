@@ -11,6 +11,7 @@
   onMounted(() => {
     editor.value = monaco.editor.create(editorDomNode.value, {
       value: '',
+      automaticLayout: true,
     }) 
   });
 </script>

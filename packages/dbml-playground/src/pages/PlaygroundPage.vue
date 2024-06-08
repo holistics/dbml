@@ -2,7 +2,7 @@
   <splitpanes vertical class='default-theme w-full h-full'>
     <pane max-size='70' size='70'>
       <splitpanes horizontal>
-        <pane max-size='60' size='60'>
+        <pane max-size='70' size='70'>
           <splitpanes vertical>
             <FileTreePane />
             <DbmlEditorPane :compiler="compiler"/>
