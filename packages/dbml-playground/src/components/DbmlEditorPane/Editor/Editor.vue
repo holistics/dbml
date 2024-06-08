@@ -15,26 +15,25 @@
     },
   };
 
-  const editorDomNode = ref(null);
-  const editor = ref<monaco.editor.ICodeEditor | null>(null);
-  
-  onMounted(() => {
-    editor.value = monaco.editor.create(editorDomNode.value, {
-      value: '',
-      automaticLayout: true,
-      theme: 'vs-dark'
-    });
-  });
-
   const emit = defineEmits<{
     (e: 'sourceChange', source: string): void,
   }>();
 
+  const editorDomNode = ref(null);
+  let editor: monaco.editor.ICodeEditor | null = null;
+  let model: monaco.editor.ITextModel | null = null;
   onMounted(() => {
-    editor.value
-      .getModel()
-      .onDidChangeContent(() => {
-        emit('sourceChange', editor.value.getModel().getValue());       
-      });
-  });
+    editor = monaco.editor.create(editorDomNode.value, {
+      value: '',
+      automaticLayout: true,
+      theme: 'vs-dark'
+    });
+
+    model = editor.getModel();
+
+    model.onDidChangeContent(() => {
+      const currentSource = model.getValue();
+      emit('sourceChange', currentSource);       
+    });
+  }); 
 </script>
