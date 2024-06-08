@@ -3,11 +3,11 @@
     <splitpanes horizontal>
       <splitpanes vertical>
         <FileTreePane />
-        <DbmlEditorPane />
+        <DbmlEditorPane :compiler="compiler"/>
       </splitpanes>
-      <ErrorPane />
+      <ErrorPane :compiler="compiler"/>
     </splitpanes>
-    <AstExplorerPane />
+    <AstExplorerPane :compiler="compiler"/>
   </splitpanes>
 </template>
 
@@ -17,4 +17,7 @@
   import ErrorPane from '../components/ErrorPane/ErrorPane.vue'
   import DbmlEditorPane from '../components/DbmlEditorPane/DbmlEditorPane.vue'
   import FileTreePane from '../components/FileTreePane/FileTreePane.vue'
+  import { Compiler } from '@dbml/parse';
+
+  const compiler = new Compiler();
 </script>
