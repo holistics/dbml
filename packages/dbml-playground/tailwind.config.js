@@ -8,6 +8,7 @@ export default {
     extend: {
       colors: {
         black: '#1c2128',
+        dark: '#1e1e1e',
         white: '#eeeeee',
       }
     },

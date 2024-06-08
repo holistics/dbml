@@ -12,6 +12,7 @@
     editor.value = monaco.editor.create(editorDomNode.value, {
       value: '',
       automaticLayout: true,
-    }) 
+      theme: 'vs-dark'
+    });
   });
 </script>
