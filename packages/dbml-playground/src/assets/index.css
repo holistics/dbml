@@ -11,9 +11,16 @@
 
 @font-face {
   font-family: 'Open Sans';
-  src: url('./fonts/OpenSans/OpenSans-Bold.ttf') format('truetype');
+  src: url('./fonts/OpenSans/OpenSans-SemiBold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('./fonts/OpenSans/OpenSans-SemiBoldItalic.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
 }
 
 @font-face {
