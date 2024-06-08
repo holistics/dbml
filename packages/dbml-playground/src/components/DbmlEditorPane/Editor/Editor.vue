@@ -1,5 +1,5 @@
 <template>
-  <div ref='editorDomNode'></div>
+  <div ref='editorDomNode' class='w-full h-full'></div>
 </template>
 
 <script setup lang="ts">

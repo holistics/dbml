@@ -1,7 +1,7 @@
 <template>
-  <pane>
+  <pane min-size='70' size='70'>
     <slot>
-      <Editor />
+      <Editor class='w-full h-full'/>
     </slot>
   </pane>
 </template>

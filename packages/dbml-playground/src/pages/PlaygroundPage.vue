@@ -1,8 +1,8 @@
 <template>
-  <splitpanes vertical>
-    <pane>
+  <splitpanes vertical class='default-theme w-full h-full'>
+    <pane max-size='70' size='70'>
       <splitpanes horizontal>
-        <pane>
+        <pane max-size='60' size='60'>
           <splitpanes vertical>
             <FileTreePane />
             <DbmlEditorPane :compiler="compiler"/>
@@ -10,13 +10,14 @@
         </pane>
         <ErrorPane :compiler="compiler"/>
       </splitpanes>
-      <AstExplorerPane :compiler="compiler"/>
     </pane>
+    <AstExplorerPane :compiler="compiler"/>
   </splitpanes>
 </template>
 
 <script setup lang="ts">
   import { Splitpanes, Pane } from 'splitpanes';
+  import 'splitpanes/dist/splitpanes.css';
   import AstExplorerPane from '../components/AstExplorerPane/AstExplorerPane.vue'
   import ErrorPane from '../components/ErrorPane/ErrorPane.vue'
   import DbmlEditorPane from '../components/DbmlEditorPane/DbmlEditorPane.vue'

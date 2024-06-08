@@ -2,10 +2,9 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { Splitpanes } from 'splitpanes';
 import Header from './components/Header/Header.vue'
-
 </script>
 
 <template>
   <Header />
-  <RouterView />
+  <RouterView class='w-full h-full'/>
 </template>

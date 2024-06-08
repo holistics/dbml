@@ -1,5 +1,5 @@
 <template>
-  <pane>
+  <pane max-size='40' size='40'>
     <slot>
       <ul v-if='errors.length'>
         <li v-for='error in errors' :key='error'>

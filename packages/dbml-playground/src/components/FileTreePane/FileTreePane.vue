@@ -1,5 +1,5 @@
 <template>
-  <pane>
+  <pane min-size='30' size='30'>
     <slot>
     </slot>
   </pane>
