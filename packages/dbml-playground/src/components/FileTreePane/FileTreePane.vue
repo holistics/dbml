@@ -1,5 +1,7 @@
 <template>
   <pane>
+    <slot>
+    </slot>
   </pane>
 </template>
 
