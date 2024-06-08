@@ -6,6 +6,7 @@
   import { ref, onMounted } from 'vue';
   import * as monaco from 'monaco-editor';
   import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker.js?worker&inline';
+  import { initialCode } from './initialCode';
 
   const editorWorker = new EditorWorker();
 
@@ -24,10 +25,11 @@
   let model: monaco.editor.ITextModel | null = null;
   onMounted(() => {
     editor = monaco.editor.create(editorDomNode.value, {
-      value: '',
+      value: initialCode,
       automaticLayout: true,
       theme: 'vs-dark'
     });
+    emit('sourceChange', initialCode);       
 
     model = editor.getModel();
 
