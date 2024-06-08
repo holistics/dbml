@@ -7,9 +7,7 @@ import HeaderPane from './components/HeaderPane/HeaderPane.vue'
 
 <template>
   <splitpanes horizontal>
-    <HeaderPane>
-      <RouterLink to="/">Home</RouterLink> 
-    </HeaderPane>
+    <HeaderPane />
     <RouterView />
   </splitpanes>
 </template>
