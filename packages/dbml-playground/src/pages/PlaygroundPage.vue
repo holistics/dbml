@@ -16,6 +16,7 @@
 </template>
 
 <script setup lang="ts">
+  import { reactive } from 'vue';
   import { Splitpanes, Pane } from 'splitpanes';
   import 'splitpanes/dist/splitpanes.css';
   import AstExplorerPane from '../components/AstExplorerPane/AstExplorerPane.vue'
@@ -24,7 +25,7 @@
   import FileTreePane from '../components/FileTreePane/FileTreePane.vue'
   import { Compiler } from '@dbml/parse';
 
-  const compiler = new Compiler();
+  const compiler = reactive<Compiler>(new Compiler());
 </script>
 
 <style>
