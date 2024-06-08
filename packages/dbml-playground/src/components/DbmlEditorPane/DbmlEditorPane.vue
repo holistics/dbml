@@ -11,8 +11,9 @@
 
 <script setup lang="ts">
   import { Pane } from 'splitpanes';
+  import * as monaco from 'monaco-editor';
   import Editor from './Editor/Editor.vue';
   import { useCompilerStore } from '@/stores/compiler';
 
-  const compiler = useCompilerStore();
+  const { compiler } = useCompilerStore();
 </script>
