@@ -8,7 +8,7 @@ import HeaderPane from './components/HeaderPane/HeaderPane.vue'
 <template>
   <splitpanes horizontal>
     <HeaderPane>
-      <RouterLink to="/">DBML Playground</RouterLink> 
+      <RouterLink to="/">Home</RouterLink> 
     </HeaderPane>
     <RouterView />
   </splitpanes>
