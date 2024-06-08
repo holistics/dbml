@@ -17,10 +17,8 @@
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue';
   import { Pane } from 'splitpanes';
-  import type { Compiler } from '@dbml/parse';
+  import { useCompilerStore } from '../../stores/compiler';
 
-  const { compiler } = defineProps<{ compiler: Compiler }>();
-  const errors = computed(() => compiler.parse.errors());
+  const { errors } = useCompilerStore();
 </script>

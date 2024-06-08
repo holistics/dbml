@@ -3,7 +3,7 @@
     <slot>
       <Editor
         class='h-full overflow-auto bg-white border rounded border-gray-300 flex flex-col'
-        @source-change='(newSource) => compiler.setSource(newSource)'
+        @source-change='(newSource) => setSource(newSource)'
       />
     </slot>
   </pane>
@@ -12,7 +12,7 @@
 <script setup lang="ts">
   import { Pane } from 'splitpanes';
   import Editor from './Editor/Editor.vue';
-  import type { Compiler } from '@dbml/parse';
+  import { useCompilerStore } from '../../stores/compiler';
 
-  const { compiler } = defineProps<{ compiler: Compiler }>();
+  const { setSource } = useCompilerStore();
 </script>
