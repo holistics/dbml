@@ -1,3 +1,13 @@
+## v3.5.1 (2024-06-11)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#579](https://github.com/holistics/dbml/pull/579) Fix/silent errors in compiler api stack container ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.5.0 (2024-06-04)
 
 #### :memo: Documentation
