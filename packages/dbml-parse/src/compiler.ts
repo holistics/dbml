@@ -190,9 +190,10 @@ export default class Compiler {
     stack: this.createQuery(
       Query.Container_Stack,
       (offset: number): readonly Readonly<SyntaxNode>[] => {
+        console.log('a');
         const tokens = this.token.flatStream();
         const { index: startIndex, token } = this.container.token(offset);
-        const validIndex = findLastIndex(tokens, (token) => !token.isInvalid, startIndex || -1);
+        const validIndex = startIndex === undefined ? -1 : findLastIndex(tokens, (token) => !token.isInvalid);
         if (validIndex === -1) {
           return [this.parse.ast()];
         }
