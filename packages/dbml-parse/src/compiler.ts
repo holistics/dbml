@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { findLastIndex, last } from 'lodash';
 import { SymbolKind, destructureIndex } from './lib/analyzer/symbol/symbolIndex';
 import { generatePossibleIndexes } from './lib/analyzer/symbol/utils';
 import SymbolTable from './lib/analyzer/symbol/symbolTable';
@@ -191,19 +191,13 @@ export default class Compiler {
       Query.Container_Stack,
       (offset: number): readonly Readonly<SyntaxNode>[] => {
         const tokens = this.token.flatStream();
-        let { index } = this.container.token(offset);
-        const { token } = this.container.token(offset);
-        if (index === undefined) {
-          return [this.parse.ast()];
-        }
-        while (index >= 0 && tokens[index].isInvalid) {
-          index -= 1;
-        }
-        if (index === -1) {
+        const { index: startIndex, token } = this.container.token(offset);
+        const validIndex = findLastIndex(tokens, (token) => !token.isInvalid, startIndex || -1);
+        if (validIndex === -1) {
           return [this.parse.ast()];
         }
 
-        const searchOffset = tokens[index].start;
+        const searchOffset = tokens[validIndex].start;
 
         let curNode: Readonly<SyntaxNode> = this.parse.ast();
         const res: SyntaxNode[] = [curNode];
@@ -224,7 +218,7 @@ export default class Compiler {
 
         while (res.length > 0) {
           let popOnce = false;
-          const lastContainer = _.last(res)!;
+          const lastContainer = last(res)!;
 
           if (lastContainer instanceof FunctionApplicationNode) {
             const source = this.parse.source();
@@ -265,7 +259,7 @@ export default class Compiler {
           }
 
           if (popOnce) {
-            const maybeElement = _.last(res);
+            const maybeElement = last(res);
             if (maybeElement instanceof ElementDeclarationNode && maybeElement.end <= offset) {
               res.pop();
             }
