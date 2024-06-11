@@ -196,7 +196,7 @@ export default class Compiler {
         if (index === undefined) {
           return [this.parse.ast()];
         }
-        while (tokens[index].isInvalid && index >= 0) {
+        while (index >= 0 && tokens[index].isInvalid) {
           index -= 1;
         }
         if (index === -1) {
