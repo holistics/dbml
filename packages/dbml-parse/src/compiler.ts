@@ -192,7 +192,7 @@ export default class Compiler {
       (offset: number): readonly Readonly<SyntaxNode>[] => {
         const tokens = this.token.flatStream();
         const { index: startIndex, token } = this.container.token(offset);
-        const validIndex = startIndex === undefined ? -1 : findLastIndex(tokens, (token) => !token.isInvalid);
+        const validIndex = startIndex === undefined ? -1 : findLastIndex(tokens, (token) => !token.isInvalid, startIndex);
         if (validIndex === -1) {
           return [this.parse.ast()];
         }
