@@ -190,7 +190,7 @@ export default class Compiler {
     stack: this.createQuery(
       Query.Container_Stack,
       (offset: number): readonly Readonly<SyntaxNode>[] => {
-        const tokens = this.parse.tokens();
+        const tokens = this.token.flatStream();
         let { index } = this.container.token(offset);
         const { token } = this.container.token(offset);
         if (index === undefined) {
