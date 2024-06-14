@@ -7,6 +7,8 @@ import {
   shouldPrintSchema,
 } from './utils';
 
+const oracleDataTypes = require('./DataTypes/OracleDataTypes');
+
 class OracleExporter {
   static buildSchemaToTableNameSetMap (model) {
     const schemaToTableNameSetMap = new Map();
@@ -35,10 +37,10 @@ class OracleExporter {
     // According to Oracle, CREATE SCHEMA statement does not actually create a schema and it automatically creates a schema when we create a user
     // Learn more: https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/CREATE-SCHEMA.html#GUID-2D154F9C-9E2B-4A09-B658-2EA5B99AC838__GUID-CC0A5080-2AF3-4460-AB2B-DEA6C79519BA
     return `CREATE USER ${escapeObjectName(schemaName, 'oracle')}\n`
-      + 'NO AUTHENTICATION\n'
-      + 'DEFAULT TABLESPACE system\n'
-      + 'TEMPORARY TABLESPACE temp\n'
-      + 'QUOTA UNLIMITED ON system;\n';
+        + 'NO AUTHENTICATION\n'
+        + 'DEFAULT TABLESPACE system\n'
+        + 'TEMPORARY TABLESPACE temp\n'
+        + 'QUOTA UNLIMITED ON system;\n';
   }
 
   static getFieldLines (tableId, model) {
@@ -47,6 +49,7 @@ class OracleExporter {
     const lines = table.fieldIds.map((fieldId) => {
       const field = model.fields[fieldId];
       const fieldName = escapeObjectName(field.name, 'oracle');
+      let fieldType = field.type.type_name;
 
       let line = fieldName;
 
@@ -60,6 +63,7 @@ class OracleExporter {
 
         const enumString = enumValues.join(', ');
         line += ` nvarchar2(255) NOT NULL CHECK (${fieldName} IN (${enumString}))`;
+        fieldType = 'nvarchar2(255)';
       } else {
         line += ` ${field.type.type_name}`;
       }
@@ -91,6 +95,19 @@ class OracleExporter {
         } else {
           line += ` DEFAULT ${cloneField.dbdefault.value}`;
         }
+      }
+
+      const index = fieldType.indexOf('(');
+      let fieldTypeCheck;
+
+      if (index !== -1) {
+        fieldTypeCheck = fieldType.substring(0, index);
+      } else {
+        fieldTypeCheck = fieldType;
+      }
+
+      if (!oracleDataTypes.includes(fieldTypeCheck.toUpperCase())) {
+        line += `, -- ${fieldType} data type is not supported in Oracle`;
       }
 
       return line;
@@ -248,28 +265,28 @@ class OracleExporter {
       }
 
       const escapedNewTableName = `${shouldPrintSchema(refEndpointSchema, model)
-        ? `"${refEndpointSchema.name}".` : ''}"${newTableName}"`;
+          ? `"${refEndpointSchema.name}".` : ''}"${newTableName}"`;
 
       result.tables.push(this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, escapedNewTableName));
 
       const firstTableName = this.buildTableNameWithSchema(model, refEndpointSchema, refEndpointTable);
       result.refs.push(
-        this.buildForeignKeyManyToMany(
-          escapedNewTableName,
-          firstTableFieldsMap,
-          firstTableName,
-          refEndpointFieldNameString,
-        ),
+          this.buildForeignKeyManyToMany(
+              escapedNewTableName,
+              firstTableFieldsMap,
+              firstTableName,
+              refEndpointFieldNameString,
+          ),
       );
 
       const secondTableName = this.buildTableNameWithSchema(model, foreignEndpointSchema, foreignEndpointTable);
       result.refs.push(
-        this.buildForeignKeyManyToMany(
-          escapedNewTableName,
-          secondTableFieldsMap,
-          secondTableName,
-          foreignEndpointFieldNameString,
-        ),
+          this.buildForeignKeyManyToMany(
+              escapedNewTableName,
+              secondTableFieldsMap,
+              secondTableName,
+              foreignEndpointFieldNameString,
+          ),
       );
     });
 
@@ -322,10 +339,10 @@ class OracleExporter {
     });
 
     const tableToGrantList = tableNameList
-      // remove duplicate
-      .filter((table, index) => table && tableNameList.indexOf(table) === index)
-      // map into grant statement
-      .map((table) => `GRANT REFERENCES ON ${table} TO PUBLIC;\n`);
+        // remove duplicate
+        .filter((table, index) => table && tableNameList.indexOf(table) === index)
+        // map into grant statement
+        .map((table) => `GRANT REFERENCES ON ${table} TO PUBLIC;\n`);
 
     return tableToGrantList;
   }
@@ -428,8 +445,8 @@ class OracleExporter {
       const commentNodes = _.flatten(tableIds.map((tableId) => {
         const { fieldIds, note } = model.tables[tableId];
         const fieldObjects = fieldIds
-          .filter((fieldId) => model.fields[fieldId].note)
-          .map((fieldId) => ({ type: 'column', fieldId, tableId }));
+            .filter((fieldId) => model.fields[fieldId].note)
+            .map((fieldId) => ({ type: 'column', fieldId, tableId }));
         return note ? [{ type: 'table', tableId }].concat(fieldObjects) : fieldObjects;
       }));
 
@@ -456,12 +473,12 @@ class OracleExporter {
     });
 
     const res = _.concat(
-      statements.schemas,
-      statements.tables,
-      statements.indexes,
-      statements.comments,
-      statements.referenceGrants,
-      statements.refs,
+        statements.schemas,
+        statements.tables,
+        statements.indexes,
+        statements.comments,
+        statements.referenceGrants,
+        statements.refs,
     ).join('\n');
     return res;
   }

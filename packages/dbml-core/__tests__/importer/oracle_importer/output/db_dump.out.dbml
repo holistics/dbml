@@ -1,0 +1,887 @@
+Table "department" {
+  "departmentid" NUMBER [not null, note: 'Primary key for Department records.']
+  "name" VARCHAR2(255) [not null, note: 'Name of the department.']
+  "groupname" VARCHAR2(255) [not null, note: 'Name of the group to which the department belongs.']
+  "modifieddate" timestamp [not null, default: `SYSDATE`]
+  Note: 'Lookup table containing the departments within the Adventure Works Cycles company.'
+}
+
+Table "employee" {
+  "businessentityid" NUMBER(10) [not null, note: 'Primary key for Employee records.  Foreign key to BusinessEntity.BusinessEntityID.']
+  "nationalidnumber" VARCHAR2(15) [not null, note: 'Unique national identification number such as a social security number.']
+  "loginid" VARCHAR2(256) [not null, note: 'Network login.']
+  "jobtitle" VARCHAR2(50) [not null, note: 'Work title such as Buyer or Sales Representative.']
+  "birthdate" DATE [not null, note: 'Date of birth.']
+  "maritalstatus" CHAR(1) [not null, note: 'M = Married, S = Single']
+  "gender" CHAR(1) [not null, note: 'M = Male, F = Female']
+  "hiredate" DATE [not null, note: 'Employee hired on this date.']
+  "salariedflag" "NUMBER(1, 0)" [not null, default: 1, note: 'Job classification. 0 = Hourly, not exempt from collective bargaining. 1 = Salaried, exempt from collective bargaining.']
+  "vacationhours" "NUMBER(5, 0)" [not null, default: 0, note: 'Number of available vacation hours.']
+  "sickleavehours" "NUMBER(5, 0)" [not null, default: 0, note: 'Number of available sick leave hours.']
+  "currentflag" "NUMBER(1, 0)" [not null, default: 1, note: '0 = Inactive, 1 = Active']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "organizationnode" VARCHAR2(255) [not null, default: "/", note: 'Where the employee is located in corporate hierarchy.']
+  Note: 'Employee information such as salary, department, and title.'
+}
+
+Table "employeedepartmenthistory" {
+  "businessentityid" NUMBER [not null, note: 'Employee identification number. Foreign key to Employee.BusinessEntityID.']
+  "departmentid" NUMBER(5) [not null, note: 'Department in which the employee worked including currently. Foreign key to Department.DepartmentID.']
+  "shiftid" NUMBER(5) [not null, note: 'Identifies which 8-hour shift the employee works. Foreign key to Shift.Shift.ID.']
+  "startdate" DATE [not null, note: 'Date the employee started work in the department.']
+  "enddate" DATE [note: 'Date the employee left the department. NULL = Current department.']
+  "modifieddate" timestamp [not null, default: `SYSTIMESTAMP`]
+  Note: 'Employee department transfers.'
+}
+
+Table "employeepayhistory" {
+  "businessentityid" NUMBER [not null, note: 'Employee identification number. Foreign key to Employee.BusinessEntityID.']
+  "ratechangedate" timestamp [not null, note: 'Date the change in pay is effective']
+  "rate" "NUMBER(8, 2)" [not null, note: 'Salary hourly rate.']
+  "payfrequency" NUMBER(5) [not null, note: '1 = Salary received monthly, 2 = Salary received biweekly']
+  "modifieddate" timestamp [not null, default: `SYSTIMESTAMP`]
+  Note: 'Employee pay history.'
+}
+
+Table "jobcandidate" {
+  "jobcandidateid" NUMBER [not null, note: 'Primary key for JobCandidate records.']
+  "businessentityid" NUMBER [note: 'Employee identification number if applicant was hired. Foreign key to Employee.BusinessEntityID.']
+  "resume" XMLType [note: 'RÃ©sumÃ© in XML format.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'RÃ©sumÃ©s submitted to Human Resources by job applicants.'
+}
+
+Table "shift" {
+  "shiftid" NUMBER [not null, note: 'Primary key for Shift records.']
+  "name" VARCHAR2(255) [not null, note: 'Shift description.']
+  "starttime" timestamp [note: 'Shift start time.']
+  "endtime" timestamp [note: 'Shift end time.']
+  "modifieddate" timestamp [not null, default: `SYSTIMESTAMP`]
+  Note: 'Work shift lookup table.'
+}
+
+Table "address" {
+  "addressid" NUMBER(10) [not null, note: 'Primary key for Address records.']
+  "addressline1" VARCHAR2(60) [not null, note: 'First street address line.']
+  "addressline2" VARCHAR2(60) [note: 'Second street address line.']
+  "city" VARCHAR2(30) [not null, note: 'Name of the city.']
+  "stateprovinceid" NUMBER [not null, note: 'Unique identification number for the state or province. Foreign key to StateProvince table.']
+  "postalcode" VARCHAR2(15) [not null, note: 'Postal code for the street address.']
+  "spatiallocation" VARCHAR2(44) [note: 'Latitude and longitude of this address.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Street address information for customers, employees, and vendors.'
+}
+
+Table "businessentityaddress" {
+  "businessentityid" NUMBER [not null, note: 'Primary key. Foreign key to BusinessEntity.BusinessEntityID.']
+  "addressid" NUMBER [not null, note: 'Primary key. Foreign key to Address.AddressID.']
+  "addresstypeid" NUMBER [not null, note: 'Primary key. Foreign key to AddressType.AddressTypeID.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Cross-reference table mapping customers, vendors, and employees to their addresses.'
+}
+
+Table "countryregion" {
+  "countryregioncode" VARCHAR2(3) [not null, note: 'ISO standard code for countries and regions.']
+  "name" VARCHAR2(255) [not null, note: 'Country or region name.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Lookup table containing the ISO standard codes for countries and regions.'
+}
+
+Table "emailaddress" {
+  "businessentityid" NUMBER [not null, note: 'Primary key. Person associated with this email address.  Foreign key to Person.BusinessEntityID']
+  "emailaddressid" NUMBER [not null, note: 'Primary key. ID of this email address.']
+  "emailaddress" VARCHAR2(50) [note: 'E-mail address for the person.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Where to send a person email.'
+}
+
+Table "person" {
+  "businessentityid" NUMBER [not null, note: 'Primary key for Person records.']
+  "persontype" CHAR(2) [not null, note: 'Primary type of person: SC = Store Contact, IN = Individual (retail) customer, SP = Sales person, EM = Employee (non-sales), VC = Vendor contact, GC = General contact']
+  "namestyle" NUMBER(1) [not null, default: 0, note: '0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.']
+  "title" VARCHAR2(8) [note: 'A courtesy title. For example, Mr. or Ms.']
+  "firstname" VARCHAR2(255) [not null, note: 'First name of the person.']
+  "middlename" VARCHAR2(255) [note: 'Middle name or middle initial of the person.']
+  "lastname" VARCHAR2(255) [not null, note: 'Last name of the person.']
+  "suffix" VARCHAR2(10) [note: 'Surname suffix. For example, Sr. or Jr.']
+  "emailpromotion" NUMBER(1) [not null, default: 0, note: '0 = Contact does not wish to receive e-mail promotions, 1 = Contact does wish to receive e-mail promotions from AdventureWorks, 2 = Contact does wish to receive e-mail promotions from AdventureWorks and selected partners.']
+  "additionalcontactinfo" XMLType [note: 'Additional contact information about the person stored in xml format.']
+  "demographics" XMLType [note: 'Personal information such as hobbies, and income collected from online shoppers. Used for sales analysis.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Human beings involved with AdventureWorks: employees, customer contacts, and vendor contacts.'
+}
+
+Table "personphone" {
+  "businessentityid" NUMBER [not null, note: 'Business entity identification number. Foreign key to Person.BusinessEntityID.']
+  "phonenumber" VARCHAR2(25) [not null, note: 'Telephone number identification number.']
+  "phonenumbertypeid" NUMBER [not null, note: 'Kind of phone number. Foreign key to PhoneNumberType.PhoneNumberTypeID.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Telephone number and type of a person.'
+}
+
+Table "phonenumbertype" {
+  "phonenumbertypeid" NUMBER [not null, note: 'Primary key for telephone number type records.']
+  "name" VARCHAR2(255) [not null, note: 'Name of the telephone number type']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Type of phone number of a person.'
+}
+
+Table "stateprovince" {
+  "stateprovinceid" NUMBER [not null, note: 'Primary key for StateProvince records.']
+  "stateprovincecode" CHAR(3) [not null, note: 'ISO standard state or province code.']
+  "countryregioncode" VARCHAR2(3) [not null, note: 'ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode.']
+  "isonlystateprovinceflag" NUMBER(1) [not null, default: 1, note: '0 = StateProvinceCode exists. 1 = StateProvinceCode unavailable, using CountryRegionCode.']
+  "name" VARCHAR2(255) [not null, note: 'State or province description.']
+  "territoryid" NUMBER [not null, note: 'ID of the territory in which the state or province is located. Foreign key to SalesTerritory.SalesTerritoryID.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'State and province lookup table.'
+}
+
+Table "addresstype" {
+  "addresstypeid" NUMBER [not null, note: 'Primary key for AddressType records.']
+  "name" VARCHAR2(255) [not null, note: 'Address type description. For example, Billing, Home, or Shipping.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Types of addresses stored in the Address table.'
+}
+
+Table "businessentity" {
+  "businessentityid" NUMBER [not null, note: 'Primary key for all customers, vendors, and employees.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Source of the ID that connects vendors, customers, and employees with address and contact information.'
+}
+
+Table "businessentitycontact" {
+  "businessentityid" NUMBER [not null, note: 'Primary key. Foreign key to BusinessEntity.BusinessEntityID.']
+  "personid" NUMBER [not null, note: 'Primary key. Foreign key to Person.BusinessEntityID.']
+  "contacttypeid" NUMBER [not null, note: 'Primary key.  Foreign key to ContactType.ContactTypeID.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Cross-reference table mapping stores, vendors, and employees to people'
+}
+
+Table "contacttype" {
+  "contacttypeid" NUMBER [not null, note: 'Primary key for ContactType records.']
+  "name" VARCHAR2(255) [not null, note: 'Contact type description.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Lookup table containing the types of business entity contacts.'
+}
+
+Table "password" {
+  "businessentityid" NUMBER [not null]
+  "passwordhash" VARCHAR2(128) [not null, note: 'Password for the e-mail account.']
+  "passwordsalt" VARCHAR2(10) [not null, note: 'Random value concatenated with the password string before the password is hashed.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'One way hashed authentication information'
+}
+
+Table "billofmaterials" {
+  "billofmaterialsid" NUMBER [not null, note: 'Primary key for BillOfMaterials records.']
+  "productassemblyid" NUMBER [note: 'Parent product identification number. Foreign key to Product.ProductID.']
+  "componentid" NUMBER [not null, note: 'Component identification number. Foreign key to Product.ProductID.']
+  "startdate" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: 'Date the component started being used in the assembly item.']
+  "enddate" timestamp [note: 'Date the component stopped being used in the assembly item.']
+  "unitmeasurecode" CHAR(3) [not null, note: 'Standard code identifying the unit of measure for the quantity.']
+  "bomlevel" "NUMBER(5, 0)" [not null, note: 'Indicates the depth the component is from its parent (AssemblyID).']
+  "perassemblyqty" "NUMBER(8, 2)" [not null, default: 1.00, note: 'Quantity of the component needed to create the assembly.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Items required to make bicycles and bicycle subassemblies. It identifies the heirarchical relationship between a parent product and its components.'
+}
+
+Table "culture" {
+  "cultureid" VARCHAR2(6) [not null, note: 'Primary key for Culture records.']
+  "name" VARCHAR2(255) [not null, note: 'Culture description.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Lookup table containing the languages in which some AdventureWorks data is stored.'
+}
+
+Table "document" {
+  "title" VARCHAR2(50) [not null, note: 'Title of the document.']
+  "owner" NUMBER [not null, note: 'Employee who controls the document.  Foreign key to Employee.BusinessEntityID']
+  "folderflag" NUMBER(1) [not null, default: 0, note: '0 = This is a folder, 1 = This is a document.']
+  "filename" VARCHAR2(400) [not null, note: 'File name of the document']
+  "fileextension" VARCHAR2(8) [note: 'File extension indicating the document type. For example, .doc or .txt.']
+  "revision" CHAR(5) [not null, note: 'Revision number of the document.']
+  "changenumber" NUMBER [not null, default: 0, note: 'Engineering change approval number.']
+  "status" "NUMBER(5, 0)" [not null, note: '1 = Pending approval, 2 = Approved, 3 = Obsolete']
+  "documentsummary" CLOB [note: 'Document abstract.']
+  "document" BLOB [note: 'Complete document.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`, note: 'ROWGUIDCOL number uniquely identifying the record. Required for FileStream.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "documentnode" VARCHAR2(255) [not null, default: "/", note: 'Primary key for Document records.']
+  Note: 'Product maintenance documents.'
+}
+
+Table "illustration" {
+  "illustrationid" NUMBER [not null, note: 'Primary key for Illustration records.']
+  "diagram" XMLType [note: 'Illustrations used in manufacturing instructions. Stored as XML.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Bicycle assembly diagrams.'
+}
+
+Table "location" {
+  "locationid" NUMBER [not null, note: 'Primary key for Location records.']
+  "name" VARCHAR2(255) [not null, note: 'Location description.']
+  "costrate" "NUMBER(10, 2)" [not null, default: 0.00, note: 'Standard hourly cost of the manufacturing location.']
+  "availability" "NUMBER(8, 2)" [not null, default: 0.00, note: 'Work capacity (in hours) of the manufacturing location.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Product inventory and manufacturing locations.'
+}
+
+Table "product" {
+  "productid" NUMBER [not null, note: 'Primary key for Product records.']
+  "name" VARCHAR2(255) [not null, note: 'Name of the product.']
+  "productnumber" VARCHAR2(25) [not null, note: 'Unique product identification number.']
+  "makeflag" NUMBER(1) [not null, default: 1, note: '0 = Product is purchased, 1 = Product is manufactured in-house.']
+  "finishedgoodsflag" NUMBER(1) [not null, default: 1, note: '0 = Product is not a salable item. 1 = Product is salable.']
+  "color" VARCHAR2(15) [note: 'Product color.']
+  "safetystocklevel" "NUMBER(5, 0)" [not null, note: 'Minimum inventory quantity.']
+  "reorderpoint" "NUMBER(5, 0)" [not null, note: 'Inventory level that triggers a purchase order or work order.']
+  "standardcost" NUMBER [not null, note: 'Standard cost of the product.']
+  "listprice" NUMBER [not null, note: 'Selling price.']
+  "size" VARCHAR2(5) [note: 'Product size.']
+  "sizeunitmeasurecode" CHAR(3) [note: 'Unit of measure for Size column.']
+  "weightunitmeasurecode" CHAR(3) [note: 'Unit of measure for Weight column.']
+  "weight" "NUMBER(8, 2)" [note: 'Product weight.']
+  "daystomanufacture" NUMBER [not null, note: 'Number of days required to manufacture the product.']
+  "productline" CHAR(2) [note: 'R = Road, M = Mountain, T = Touring, S = Standard']
+  "class" CHAR(2) [note: 'H = High, M = Medium, L = Low']
+  "style" CHAR(2) [note: 'W = Womens, M = Mens, U = Universal']
+  "productsubcategoryid" NUMBER [note: 'Product is a member of this product subcategory. Foreign key to ProductSubCategory.ProductSubCategoryID.']
+  "productmodelid" NUMBER [note: 'Product is a member of this product model. Foreign key to ProductModel.ProductModelID.']
+  "sellstartdate" timestamp [not null, note: 'Date the product was available for sale.']
+  "sellenddate" timestamp [note: 'Date the product was no longer available for sale.']
+  "discontinueddate" timestamp [note: 'Date the product was discontinued.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Products sold or used in the manfacturing of sold products.'
+}
+
+Table "productcategory" {
+  "productcategoryid" NUMBER [not null, note: 'Primary key for ProductCategory records.']
+  "name" VARCHAR2(255) [not null, note: 'Category description.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'High-level product categorization.'
+}
+
+Table "productcosthistory" {
+  "productid" NUMBER [not null, note: 'Product identification number. Foreign key to Product.ProductID']
+  "startdate" timestamp [not null, note: 'Product cost start date.']
+  "enddate" timestamp [note: 'Product cost end date.']
+  "standardcost" NUMBER [not null, note: 'Standard cost of the product.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Changes in the cost of a product over time.'
+}
+
+Table "productdescription" {
+  "productdescriptionid" NUMBER [not null, note: 'Primary key for ProductDescription records.']
+  "description" VARCHAR2(400) [not null, note: 'Description of the product.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Product descriptions in several languages.'
+}
+
+Table "productdocument" {
+  "productid" NUMBER [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "documentnode" VARCHAR2(255) [not null, default: "/", note: 'Document identification number. Foreign key to Document.DocumentNode.']
+  Note: 'Cross-reference table mapping products to related product documents.'
+}
+
+Table "productinventory" {
+  "productid" NUMBER [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "locationid" NUMBER [not null, note: 'Inventory location identification number. Foreign key to Location.LocationID.']
+  "shelf" VARCHAR2(10) [not null, note: 'Storage compartment within an inventory location.']
+  "bin" NUMBER [not null, note: 'Storage container on a shelf in an inventory location.']
+  "quantity" NUMBER [not null, default: 0, note: 'Quantity of products in the inventory location.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Product inventory information.'
+}
+
+Table "productlistpricehistory" {
+  "productid" NUMBER [not null, note: 'Product identification number. Foreign key to Product.ProductID']
+  "startdate" timestamp [not null, note: 'List price start date.']
+  "enddate" timestamp [note: 'List price end date']
+  "listprice" NUMBER [not null, note: 'Product list price.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Changes in the list price of a product over time.'
+}
+
+Table "productmodel" {
+  "productmodelid" NUMBER [not null, note: 'Primary key for ProductModel records.']
+  "name" VARCHAR2(255) [not null, note: 'Product model description.']
+  "catalogdescription" XMLTYPE [note: 'Detailed product catalog information in xml format.']
+  "instructions" XMLTYPE [note: 'Manufacturing instructions in xml format.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Product model classification.'
+}
+
+Table "productmodelillustration" {
+  "productmodelid" NUMBER [not null, note: 'Primary key. Foreign key to ProductModel.ProductModelID.']
+  "illustrationid" NUMBER [not null, note: 'Primary key. Foreign key to Illustration.IllustrationID.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Cross-reference table mapping product models and illustrations.'
+}
+
+Table "productmodelproductdescriptionculture" {
+  "productmodelid" NUMBER [not null, note: 'Primary key. Foreign key to ProductModel.ProductModelID.']
+  "productdescriptionid" NUMBER [not null, note: 'Primary key. Foreign key to ProductDescription.ProductDescriptionID.']
+  "cultureid" VARCHAR2(6) [not null, note: 'Culture identification number. Foreign key to Culture.CultureID.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Cross-reference table mapping product descriptions and the language the description is written in.'
+}
+
+Table "productphoto" {
+  "productphotoid" NUMBER [not null, note: 'Primary key for ProductPhoto records.']
+  "thumbnailphoto" BLOB [note: 'Small image of the product.']
+  "thumbnailphotofilename" VARCHAR2(50) [note: 'Small image file name.']
+  "largephoto" BLOB [note: 'Large image of the product.']
+  "largephotofilename" VARCHAR2(50) [note: 'Large image file name.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Product images.'
+}
+
+Table "productproductphoto" {
+  "productid" NUMBER [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "productphotoid" NUMBER [not null, note: 'Product photo identification number. Foreign key to ProductPhoto.ProductPhotoID.']
+  "primary" NUMBER(1) [not null, default: 0, note: '0 = Photo is not the principal image. 1 = Photo is the principal image.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Cross-reference table mapping products and product photos.'
+}
+
+Table "productreview" {
+  "productreviewid" NUMBER [not null, note: 'Primary key for ProductReview records.']
+  "productid" NUMBER [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "reviewername" VARCHAR2(255) [not null, note: 'Name of the reviewer.']
+  "reviewdate" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: 'Date review was submitted.']
+  "emailaddress" VARCHAR2(50) [not null, note: '''Reviewer's e-mail address.''']
+  "rating" NUMBER [not null, note: 'Product rating given by the reviewer. Scale is 1 to 5 with 5 as the highest rating.']
+  "comments" VARCHAR2(3850) [note: '''Reviewer's comments''']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Customer reviews of products they have purchased.'
+}
+
+Table "productsubcategory" {
+  "productsubcategoryid" NUMBER [not null, note: 'Primary key for ProductSubcategory records.']
+  "productcategoryid" NUMBER [not null, note: 'Product category identification number. Foreign key to ProductCategory.ProductCategoryID.']
+  "name" VARCHAR2(255) [not null, note: 'Subcategory description.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Product subcategories. See ProductCategory table.'
+}
+
+Table "scrapreason" {
+  "scrapreasonid" NUMBER [not null, note: 'Primary key for ScrapReason records.']
+  "name" VARCHAR2(255) [not null, note: 'Failure description.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Manufacturing failure reasons lookup table.'
+}
+
+Table "transactionhistory" {
+  "transactionid" NUMBER [not null, note: 'Primary key for TransactionHistory records.']
+  "productid" NUMBER [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "referenceorderid" NUMBER [not null, note: 'Purchase order, sales order, or work order identification number.']
+  "referenceorderlineid" NUMBER [not null, default: 0, note: 'Line number associated with the purchase order, sales order, or work order.']
+  "transactiondate" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: 'Date and time of the transaction.']
+  "transactiontype" CHAR(1) [not null, note: 'W = WorkOrder, S = SalesOrder, P = PurchaseOrder']
+  "quantity" NUMBER [not null, note: 'Product quantity.']
+  "actualcost" NUMBER [not null, note: 'Product cost.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Record of each purchase order, sales order, or work order transaction year to date.'
+}
+
+Table "transactionhistoryarchive" {
+  "transactionid" NUMBER [not null, note: 'Primary key for TransactionHistoryArchive records.']
+  "productid" NUMBER [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "referenceorderid" NUMBER [not null, note: 'Purchase order, sales order, or work order identification number.']
+  "referenceorderlineid" NUMBER [not null, default: 0, note: 'Line number associated with the purchase order, sales order, or work order.']
+  "transactiondate" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: 'Date and time of the transaction.']
+  "transactiontype" CHAR(1) [not null, note: 'W = Work Order, S = Sales Order, P = Purchase Order']
+  "quantity" NUMBER [not null, note: 'Product quantity.']
+  "actualcost" NUMBER [not null, note: 'Product cost.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Transactions for previous years.'
+}
+
+Table "unitmeasure" {
+  "unitmeasurecode" CHAR(3) [not null, note: 'Primary key.']
+  "name" VARCHAR2(255) [not null, note: 'Unit of measure description.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Unit of measure lookup table.'
+}
+
+Table "workorder" {
+  "workorderid" NUMBER [not null, note: 'Primary key for WorkOrder records.']
+  "productid" NUMBER [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "orderqty" NUMBER [not null, note: 'Product quantity to build.']
+  "scrappedqty" "NUMBER(5, 0)" [not null, note: 'Quantity that failed inspection.']
+  "startdate" timestamp [not null, note: 'Work order start date.']
+  "enddate" timestamp [note: 'Work order end date.']
+  "duedate" timestamp [not null, note: 'Work order due date.']
+  "scrapreasonid" NUMBER [note: 'Reason for inspection failure.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Manufacturing work orders.'
+}
+
+Table "workorderrouting" {
+  "workorderid" NUMBER [not null, note: 'Primary key. Foreign key to WorkOrder.WorkOrderID.']
+  "productid" NUMBER [not null, note: 'Primary key. Foreign key to Product.ProductID.']
+  "operationsequence" "NUMBER(5, 0)" [not null, note: 'Primary key. Indicates the manufacturing process sequence.']
+  "locationid" NUMBER [not null, note: 'Manufacturing location where the part is processed. Foreign key to Location.LocationID.']
+  "scheduledstartdate" timestamp [not null, note: 'Planned manufacturing start date.']
+  "scheduledenddate" timestamp [not null, note: 'Planned manufacturing end date.']
+  "actualstartdate" timestamp [note: 'Actual start date.']
+  "actualenddate" timestamp [note: 'Actual end date.']
+  "actualresourcehrs" "NUMBER(9, 4)" [note: 'Number of manufacturing hours used.']
+  "plannedcost" NUMBER [not null, note: 'Estimated manufacturing cost.']
+  "actualcost" NUMBER [note: 'Actual manufacturing cost.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Work order details.'
+}
+
+Table "purchaseorderdetail" {
+  "purchaseorderid" NUMBER [not null, note: 'Primary key. Foreign key to PurchaseOrderHeader.PurchaseOrderID.']
+  "purchaseorderdetailid" NUMBER [not null, note: 'Primary key. One line number per purchased product.']
+  "duedate" timestamp [not null, note: 'Date the product is expected to be received.']
+  "orderqty" "NUMBER(5, 0)" [not null, note: 'Quantity ordered.']
+  "productid" NUMBER [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "unitprice" NUMBER [not null, note: '''Vendor's selling price of a single product.''']
+  "receivedqty" "NUMBER(8, 2)" [not null, note: 'Quantity actually received from the vendor.']
+  "rejectedqty" "NUMBER(8, 2)" [not null, note: 'Quantity rejected during inspection.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Individual products associated with a specific purchase order. See PurchaseOrderHeader.'
+}
+
+Table "purchaseorderheader" {
+  "purchaseorderid" NUMBER [not null, note: 'Primary key.']
+  "revisionnumber" "NUMBER(5, 0)" [not null, default: 0, note: 'Incremental number to track changes to the purchase order over time.']
+  "status" "NUMBER(5, 0)" [not null, default: 1, note: 'Order current status. 1 = Pending; 2 = Approved; 3 = Rejected; 4 = Complete']
+  "employeeid" NUMBER [not null, note: 'Employee who created the purchase order. Foreign key to Employee.BusinessEntityID.']
+  "vendorid" NUMBER [not null, note: 'Vendor with whom the purchase order is placed. Foreign key to Vendor.BusinessEntityID.']
+  "shipmethodid" NUMBER [not null, note: 'Shipping method. Foreign key to ShipMethod.ShipMethodID.']
+  "orderdate" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: 'Purchase order creation date.']
+  "shipdate" timestamp [note: 'Estimated shipment date from the vendor.']
+  "subtotal" "NUMBER(10, 2)" [not null, default: 0.00, note: 'Purchase order subtotal. Computed as SUM(PurchaseOrderDetail.LineTotal)for the appropriate PurchaseOrderID.']
+  "taxamt" "NUMBER(10, 2)" [not null, default: 0.00, note: 'Tax amount.']
+  "freight" "NUMBER(10, 2)" [not null, default: 0.00, note: 'Shipping cost.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'General purchase order information. See PurchaseOrderDetail.'
+}
+
+Table "productvendor" {
+  "productid" NUMBER [not null, note: 'Primary key. Foreign key to Product.ProductID.']
+  "businessentityid" NUMBER [not null, note: 'Primary key. Foreign key to Vendor.BusinessEntityID.']
+  "averageleadtime" NUMBER [not null, note: 'The average span of time (in days) between placing an order with the vendor and receiving the purchased product.']
+  "standardprice" NUMBER [not null, note: '''The vendor's usual selling price.''']
+  "lastreceiptcost" NUMBER [note: 'The selling price when last purchased.']
+  "lastreceiptdate" timestamp [note: 'Date the product was last received by the vendor.']
+  "minorderqty" NUMBER [not null, note: 'The maximum quantity that should be ordered.']
+  "maxorderqty" NUMBER [not null, note: 'The minimum quantity that should be ordered.']
+  "onorderqty" NUMBER [note: 'The quantity currently on order.']
+  "unitmeasurecode" CHAR(3) [not null, note: '''The product's unit of measure.''']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Cross-reference table mapping vendors with the products they supply.'
+}
+
+Table "shipmethod" {
+  "shipmethodid" NUMBER [not null, note: 'Primary key for ShipMethod records.']
+  "name" VARCHAR2(255) [not null, note: 'Shipping company name.']
+  "shipbase" NUMBER [not null, default: 0.00, note: 'Minimum shipping charge.']
+  "shiprate" NUMBER [not null, default: 0.00, note: 'Shipping charge per pound.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Shipping company lookup table.'
+}
+
+Table "vendor" {
+  "businessentityid" NUMBER [not null, note: 'Primary key for Vendor records.  Foreign key to BusinessEntity.BusinessEntityID']
+  "accountnumber" VARCHAR2(255) [not null, note: 'Vendor account (identification) number.']
+  "name" VARCHAR2(255) [not null, note: 'Company name.']
+  "creditrating" "NUMBER(3, 0)" [not null, note: '1 = Superior, 2 = Excellent, 3 = Above average, 4 = Average, 5 = Below average']
+  "preferredvendorstatus" CHAR(1) [not null, default: "Y", note: '0 = Do not use if another vendor is available. 1 = Preferred over other vendors supplying the same product.']
+  "activeflag" CHAR(1) [not null, default: "Y", note: '0 = Vendor no longer used. 1 = Vendor is actively used.']
+  "purchasingwebserviceurl" VARCHAR2(1024) [note: 'Vendor URL.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Companies from whom Adventure Works Cycles purchases parts or other goods.'
+}
+
+Table "customer" {
+  "customerid" NUMBER [not null, note: 'Primary key.']
+  "personid" NUMBER [note: 'Foreign key to Person.BusinessEntityID']
+  "storeid" NUMBER [note: 'Foreign key to Store.BusinessEntityID']
+  "territoryid" NUMBER [note: 'ID of the territory in which the customer is located. Foreign key to SalesTerritory.SalesTerritoryID.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Current customer information. Also see the Person and Store tables.'
+}
+
+Table "creditcard" {
+  "creditcardid" NUMBER [not null, note: 'Primary key for CreditCard records.']
+  "cardtype" VARCHAR2(50) [not null, note: 'Credit card name.']
+  "cardnumber" VARCHAR2(25) [not null, note: 'Credit card number.']
+  "expmonth" NUMBER(2) [not null, note: 'Credit card expiration month.']
+  "expyear" NUMBER(4) [not null, note: 'Credit card expiration year.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Customer credit card information.'
+}
+
+Table "currencyrate" {
+  "currencyrateid" NUMBER [not null, note: 'Primary key for CurrencyRate records.']
+  "currencyratedate" timestamp [not null, note: 'Date and time the exchange rate was obtained.']
+  "fromcurrencycode" CHAR(3) [not null, note: 'Exchange rate was converted from this currency code.']
+  "tocurrencycode" CHAR(3) [not null, note: 'Exchange rate was converted to this currency code.']
+  "averagerate" NUMBER [not null, note: 'Average exchange rate for the day.']
+  "endofdayrate" NUMBER [not null, note: 'Final exchange rate for the day.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Currency exchange rates.'
+}
+
+Table "countryregioncurrency" {
+  "countryregioncode" VARCHAR2(3) [not null, note: 'ISO code for countries and regions. Foreign key to CountryRegion.CountryRegionCode.']
+  "currencycode" CHAR(3) [not null, note: 'ISO standard currency code. Foreign key to Currency.CurrencyCode.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Cross-reference table mapping ISO currency codes to a country or region.'
+}
+
+Table "currency" {
+  "currencycode" CHAR(3) [not null, note: 'The ISO code for the Currency.']
+  "name" VARCHAR2(255) [not null, note: 'Currency name.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Lookup table containing standard ISO currencies.'
+}
+
+Table "personcreditcard" {
+  "businessentityid" NUMBER [not null, note: 'Business entity identification number. Foreign key to Person.BusinessEntityID.']
+  "creditcardid" NUMBER [not null, note: 'Credit card identification number. Foreign key to CreditCard.CreditCardID.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Cross-reference table mapping people to their credit card information in the CreditCard table.'
+}
+
+Table "store" {
+  "businessentityid" NUMBER [not null, note: 'Primary key. Foreign key to Customer.BusinessEntityID.']
+  "name" VARCHAR2(255) [not null, note: 'Name of the store.']
+  "salespersonid" NUMBER [note: 'ID of the sales person assigned to the customer. Foreign key to SalesPerson.BusinessEntityID.']
+  "demographics" XMLType [note: 'Demographic informationg about the store such as the number of employees, annual sales and store type.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Customers (resellers) of Adventure Works products.'
+}
+
+Table "shoppingcartitem" {
+  "shoppingcartitemid" NUMBER [not null, note: 'Primary key for ShoppingCartItem records.']
+  "shoppingcartid" VARCHAR2(50) [not null, note: 'Shopping cart identification number.']
+  "quantity" NUMBER [not null, default: 1, note: 'Product quantity ordered.']
+  "productid" NUMBER [not null, note: 'Product ordered. Foreign key to Product.ProductID.']
+  "datecreated" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: 'Date the time the record was created.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Contains online customer orders until the order is submitted or cancelled.'
+}
+
+Table "specialoffer" {
+  "specialofferid" NUMBER [not null, note: 'Primary key for SpecialOffer records.']
+  "description" VARCHAR2(255) [not null, note: 'Discount description.']
+  "discountpct" "NUMBER(5, 2)" [not null, default: 0.00, note: 'Discount precentage.']
+  "type" VARCHAR2(50) [not null, note: 'Discount type category.']
+  "category" VARCHAR2(50) [not null, note: 'Group the discount applies to such as Reseller or Customer.']
+  "startdate" timestamp [not null, note: 'Discount start date.']
+  "enddate" timestamp [not null, note: 'Discount end date.']
+  "minqty" NUMBER [not null, default: 0, note: 'Minimum discount percent allowed.']
+  "maxqty" NUMBER [note: 'Maximum discount percent allowed.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Sale discounts lookup table.'
+}
+
+Table "salesorderdetail" {
+  "salesorderid" NUMBER [not null, note: 'Primary key. Foreign key to SalesOrderHeader.SalesOrderID.']
+  "salesorderdetailid" NUMBER [not null, note: 'Primary key. One incremental unique number per product sold.']
+  "carriertrackingnumber" VARCHAR2(25) [note: 'Shipment tracking number supplied by the shipper.']
+  "orderqty" NUMBER(5) [not null, note: 'Quantity ordered per product.']
+  "productid" NUMBER [not null, note: 'Product sold to customer. Foreign key to Product.ProductID.']
+  "specialofferid" NUMBER [not null, note: 'Promotional code. Foreign key to SpecialOffer.SpecialOfferID.']
+  "unitprice" NUMBER [not null, note: 'Selling price of a single product.']
+  "unitpricediscount" "NUMBER(5, 2)" [not null, default: 0.0, note: 'Discount amount.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Individual products associated with a specific sales order. See SalesOrderHeader.'
+}
+
+Table "salesorderheader" {
+  "salesorderid" NUMBER [not null, note: 'Primary key.']
+  "revisionnumber" "NUMBER(5, 0)" [not null, default: 0, note: 'Incremental number to track changes to the sales order over time.']
+  "orderdate" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: 'Dates the sales order was created.']
+  "duedate" timestamp [not null, note: 'Date the order is due to the customer.']
+  "shipdate" timestamp [note: 'Date the order was shipped to the customer.']
+  "status" "NUMBER(5, 0)" [not null, default: 1, note: 'Order current status. 1 = In process; 2 = Approved; 3 = Backordered; 4 = Rejected; 5 = Shipped; 6 = Cancelled']
+  "onlineorderflag" CHAR(1) [not null, default: "Y", note: '0 = Order placed by sales person. 1 = Order placed online by customer.']
+  "purchaseordernumber" VARCHAR2(25) [note: 'Customer purchase order number reference.']
+  "accountnumber" VARCHAR2(255) [note: 'Financial accounting number reference.']
+  "customerid" NUMBER [not null, note: 'Customer identification number. Foreign key to Customer.BusinessEntityID.']
+  "salespersonid" NUMBER [note: 'Sales person who created the sales order. Foreign key to SalesPerson.BusinessEntityID.']
+  "territoryid" NUMBER [note: 'Territory in which the sale was made. Foreign key to SalesTerritory.SalesTerritoryID.']
+  "billtoaddressid" NUMBER [not null, note: 'Customer billing address. Foreign key to Address.AddressID.']
+  "shiptoaddressid" NUMBER [not null, note: 'Customer shipping address. Foreign key to Address.AddressID.']
+  "shipmethodid" NUMBER [not null, note: 'Shipping method. Foreign key to ShipMethod.ShipMethodID.']
+  "creditcardid" NUMBER [note: 'Credit card identification number. Foreign key to CreditCard.CreditCardID.']
+  "creditcardapprovalcode" VARCHAR2(15) [note: 'Approval code provided by the credit card company.']
+  "currencyrateid" NUMBER [note: 'Currency exchange rate used. Foreign key to CurrencyRate.CurrencyRateID.']
+  "subtotal" "NUMBER(12, 2)" [not null, default: 0.00, note: 'Sales subtotal. Computed as SUM(SalesOrderDetail.LineTotal)for the appropriate SalesOrderID.']
+  "taxamt" "NUMBER(12, 2)" [not null, default: 0.00, note: 'Tax amount.']
+  "freight" "NUMBER(12, 2)" [not null, default: 0.00, note: 'Shipping cost.']
+  "totaldue" "NUMBER(12, 2)" [note: 'Total due from customer. Computed as Subtotal + TaxAmt + Freight.']
+  "comment" VARCHAR2(128) [note: 'Sales representative comments.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'General sales order information.'
+}
+
+Table "salesorderheadersalesreason" {
+  "salesorderid" NUMBER [not null, note: 'Primary key. Foreign key to SalesOrderHeader.SalesOrderID.']
+  "salesreasonid" NUMBER [not null, note: 'Primary key. Foreign key to SalesReason.SalesReasonID.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Cross-reference table mapping sales orders to sales reason codes.'
+}
+
+Table "specialofferproduct" {
+  "specialofferid" NUMBER [not null, note: 'Primary key for SpecialOfferProduct records.']
+  "productid" NUMBER [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Cross-reference table mapping products to special offer discounts.'
+}
+
+Table "salesperson" {
+  "businessentityid" NUMBER [not null, note: 'Primary key for SalesPerson records. Foreign key to Employee.BusinessEntityID']
+  "territoryid" NUMBER [note: 'Territory currently assigned to. Foreign key to SalesTerritory.SalesTerritoryID.']
+  "salesquota" NUMBER [note: 'Projected yearly sales.']
+  "bonus" "NUMBER(12, 2)" [not null, default: 0.00, note: 'Bonus due if quota is met.']
+  "commissionpct" "NUMBER(5, 2)" [not null, default: 0.00, note: 'Commision percent received per sale.']
+  "salesytd" "NUMBER(12, 2)" [not null, default: 0.00, note: 'Sales total year to date.']
+  "saleslastyear" "NUMBER(12, 2)" [not null, default: 0.00, note: 'Sales total of previous year.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Sales representative current information.'
+}
+
+Table "salespersonquotahistory" {
+  "businessentityid" NUMBER [not null, note: 'Sales person identification number. Foreign key to SalesPerson.BusinessEntityID.']
+  "quotadate" timestamp [not null, note: 'Sales quota date.']
+  "salesquota" NUMBER [not null, note: 'Sales quota amount.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Sales performance tracking.'
+}
+
+Table "salesreason" {
+  "salesreasonid" NUMBER [not null, note: 'Primary key for SalesReason records.']
+  "name" VARCHAR2(255) [not null, note: 'Sales reason description.']
+  "reasontype" VARCHAR2(255) [not null, note: 'Category the sales reason belongs to.']
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Lookup table of customer purchase reasons.'
+}
+
+Table "salesterritory" {
+  "territoryid" NUMBER [not null, note: 'Primary key for SalesTerritory records.']
+  "name" VARCHAR2(255) [not null, note: 'Sales territory description']
+  "countryregioncode" VARCHAR2(3) [not null, note: 'ISO standard country or region code. Foreign key to CountryRegion.CountryRegionCode.']
+  "group" VARCHAR2(50) [not null, note: 'Geographic area to which the sales territory belong.']
+  "salesytd" "NUMBER(12, 2)" [not null, default: 0.00, note: 'Sales in the territory year to date.']
+  "saleslastyear" "NUMBER(12, 2)" [not null, default: 0.00, note: 'Sales in the territory the previous year.']
+  "costytd" "NUMBER(12, 2)" [not null, default: 0.00, note: 'Business costs in the territory year to date.']
+  "costlastyear" "NUMBER(12, 2)" [not null, default: 0.00, note: 'Business costs in the territory the previous year.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Sales territory lookup table.'
+}
+
+Table "salesterritoryhistory" {
+  "businessentityid" NUMBER [not null, note: 'Primary key. The sales rep.  Foreign key to SalesPerson.BusinessEntityID.']
+  "territoryid" NUMBER [not null, note: 'Primary key. Territory identification number. Foreign key to SalesTerritory.SalesTerritoryID.']
+  "startdate" timestamp [not null, note: 'Primary key. Date the sales representive started work in the territory.']
+  "enddate" timestamp [note: 'Date the sales representative left work in the territory.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Sales representative transfers to other sales territories.'
+}
+
+Table "salestaxrate" {
+  "salestaxrateid" NUMBER [not null, note: 'Primary key for SalesTaxRate records.']
+  "stateprovinceid" NUMBER [not null, note: 'State, province, or country/region the sales tax applies to.']
+  "taxtype" "NUMBER(5, 0)" [not null, note: '1 = Tax applied to retail transactions, 2 = Tax applied to wholesale transactions, 3 = Tax applied to all sales (retail and wholesale) transactions.']
+  "taxrate" "NUMBER(12, 2)" [not null, default: 0.00, note: 'Tax rate amount.']
+  "name" VARCHAR2(255) [not null, note: 'Tax rate description.']
+  "rowguid" RAW(16) [not null, default: `SYS_GUID()`]
+  "modifieddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  Note: 'Tax rate lookup table.'
+}
+
+Ref "FK_EmployeeDepartmentHistory_Department_DepartmentID":"department"."departmentid" < "employeedepartmenthistory"."departmentid"
+
+Ref "FK_EmployeeDepartmentHistory_Employee_BusinessEntityID":"employee"."businessentityid" < "employeedepartmenthistory"."businessentityid"
+
+Ref "FK_EmployeeDepartmentHistory_Shift_ShiftID":"shift"."shiftid" < "employeedepartmenthistory"."shiftid"
+
+Ref "FK_EmployeePayHistory_Employee_BusinessEntityID":"employee"."businessentityid" < "employeepayhistory"."businessentityid"
+
+Ref "FK_Employee_Person_BusinessEntityID":"person"."businessentityid" < "employee"."businessentityid"
+
+Ref "FK_JobCandidate_Employee_BusinessEntityID":"employee"."businessentityid" < "jobcandidate"."businessentityid"
+
+Ref "FK_Address_StateProvince_StateProvinceID":"stateprovince"."stateprovinceid" < "address"."stateprovinceid"
+
+Ref "FK_BusinessEntityAddress_AddressType_AddressTypeID":"addresstype"."addresstypeid" < "businessentityaddress"."addresstypeid"
+
+Ref "FK_BusinessEntityAddress_Address_AddressID":"address"."addressid" < "businessentityaddress"."addressid"
+
+Ref "FK_BusinessEntityAddress_BusinessEntity_BusinessEntityID":"businessentity"."businessentityid" < "businessentityaddress"."businessentityid"
+
+Ref "FK_BusinessEntityContact_BusinessEntity_BusinessEntityID":"businessentity"."businessentityid" < "businessentitycontact"."businessentityid"
+
+Ref "FK_BusinessEntityContact_ContactType_ContactTypeID":"contacttype"."contacttypeid" < "businessentitycontact"."contacttypeid"
+
+Ref "FK_BusinessEntityContact_Person_PersonID":"person"."businessentityid" < "businessentitycontact"."personid"
+
+Ref "FK_EmailAddress_Person_BusinessEntityID":"person"."businessentityid" < "emailaddress"."businessentityid"
+
+Ref "FK_Password_Person_BusinessEntityID":"person"."businessentityid" < "password"."businessentityid"
+
+Ref "FK_PersonPhone_Person_BusinessEntityID":"person"."businessentityid" < "personphone"."businessentityid"
+
+Ref "FK_PersonPhone_PhoneNumberType_PhoneNumberTypeID":"phonenumbertype"."phonenumbertypeid" < "personphone"."phonenumbertypeid"
+
+Ref "FK_Person_BusinessEntity_BusinessEntityID":"businessentity"."businessentityid" < "person"."businessentityid"
+
+Ref "FK_StateProvince_CountryRegion_CountryRegionCode":"countryregion"."countryregioncode" < "stateprovince"."countryregioncode"
+
+Ref "FK_StateProvince_SalesTerritory_TerritoryID":"salesterritory"."territoryid" < "stateprovince"."territoryid"
+
+Ref "FK_BillOfMaterials_Product_ComponentID":"product"."productid" < "billofmaterials"."componentid"
+
+Ref "FK_BillOfMaterials_Product_ProductAssemblyID":"product"."productid" < "billofmaterials"."productassemblyid"
+
+Ref "FK_BillOfMaterials_UnitMeasure_UnitMeasureCode":"unitmeasure"."unitmeasurecode" < "billofmaterials"."unitmeasurecode"
+
+Ref "FK_Document_Employee_Owner":"employee"."businessentityid" < "document"."owner"
+
+Ref "FK_ProductCostHistory_Product_ProductID":"product"."productid" < "productcosthistory"."productid"
+
+Ref "FK_ProductDocument_Document_DocumentNode":"document"."documentnode" < "productdocument"."documentnode"
+
+Ref "FK_ProductDocument_Product_ProductID":"product"."productid" < "productdocument"."productid"
+
+Ref "FK_ProductInventory_Location_LocationID":"location"."locationid" < "productinventory"."locationid"
+
+Ref "FK_ProductInventory_Product_ProductID":"product"."productid" < "productinventory"."productid"
+
+Ref "FK_ProductListPriceHistory_Product_ProductID":"product"."productid" < "productlistpricehistory"."productid"
+
+Ref "FK_ProductModelIllustration_Illustration_IllustrationID":"illustration"."illustrationid" < "productmodelillustration"."illustrationid"
+
+Ref "FK_ProductModelIllustration_ProductModel_ProductModelID":"productmodel"."productmodelid" < "productmodelillustration"."productmodelid"
+
+Ref "FK_ProductModelProductDescriptionCulture_Culture_CultureID":"culture"."cultureid" < "productmodelproductdescriptionculture"."cultureid"
+
+Ref "FK_ProductModelProductDescriptionCulture_ProductDescription_Pro":"productdescription"."productdescriptionid" < "productmodelproductdescriptionculture"."productdescriptionid"
+
+Ref "FK_ProductModelProductDescriptionCulture_ProductModel_ProductMo":"productmodel"."productmodelid" < "productmodelproductdescriptionculture"."productmodelid"
+
+Ref "FK_ProductProductPhoto_ProductPhoto_ProductPhotoID":"productphoto"."productphotoid" < "productproductphoto"."productphotoid"
+
+Ref "FK_ProductProductPhoto_Product_ProductID":"product"."productid" < "productproductphoto"."productid"
+
+Ref "FK_ProductReview_Product_ProductID":"product"."productid" < "productreview"."productid"
+
+Ref "FK_ProductSubcategory_ProductCategory_ProductCategoryID":"productcategory"."productcategoryid" < "productsubcategory"."productcategoryid"
+
+Ref "FK_Product_ProductModel_ProductModelID":"productmodel"."productmodelid" < "product"."productmodelid"
+
+Ref "FK_Product_ProductSubcategory_ProductSubcategoryID":"productsubcategory"."productsubcategoryid" < "product"."productsubcategoryid"
+
+Ref "FK_Product_UnitMeasure_SizeUnitMeasureCode":"unitmeasure"."unitmeasurecode" < "product"."sizeunitmeasurecode"
+
+Ref "FK_Product_UnitMeasure_WeightUnitMeasureCode":"unitmeasure"."unitmeasurecode" < "product"."weightunitmeasurecode"
+
+Ref "FK_TransactionHistory_Product_ProductID":"product"."productid" < "transactionhistory"."productid"
+
+Ref "FK_WorkOrderRouting_Location_LocationID":"location"."locationid" < "workorderrouting"."locationid"
+
+Ref "FK_WorkOrderRouting_WorkOrder_WorkOrderID":"workorder"."workorderid" < "workorderrouting"."workorderid"
+
+Ref "FK_WorkOrder_Product_ProductID":"product"."productid" < "workorder"."productid"
+
+Ref "FK_WorkOrder_ScrapReason_ScrapReasonID":"scrapreason"."scrapreasonid" < "workorder"."scrapreasonid"
+
+Ref "FK_ProductVendor_Product_ProductID":"product"."productid" < "productvendor"."productid"
+
+Ref "FK_ProductVendor_UnitMeasure_UnitMeasureCode":"unitmeasure"."unitmeasurecode" < "productvendor"."unitmeasurecode"
+
+Ref "FK_ProductVendor_Vendor_BusinessEntityID":"vendor"."businessentityid" < "productvendor"."businessentityid"
+
+Ref "FK_PurchaseOrderDetail_Product_ProductID":"product"."productid" < "purchaseorderdetail"."productid"
+
+Ref "FK_PurchaseOrderDetail_PurchaseOrderHeader_PurchaseOrderID":"purchaseorderheader"."purchaseorderid" < "purchaseorderdetail"."purchaseorderid"
+
+Ref "FK_PurchaseOrderHeader_Employee_EmployeeID":"employee"."businessentityid" < "purchaseorderheader"."employeeid"
+
+Ref "FK_PurchaseOrderHeader_ShipMethod_ShipMethodID":"shipmethod"."shipmethodid" < "purchaseorderheader"."shipmethodid"
+
+Ref "FK_PurchaseOrderHeader_Vendor_VendorID":"vendor"."businessentityid" < "purchaseorderheader"."vendorid"
+
+Ref "FK_Vendor_BusinessEntity_BusinessEntityID":"businessentity"."businessentityid" < "vendor"."businessentityid"
+
+Ref "FK_CountryRegionCurrency_CountryRegion_CountryRegionCode":"countryregion"."countryregioncode" < "countryregioncurrency"."countryregioncode"
+
+Ref "FK_Customer_Person_PersonID":"person"."businessentityid" < "customer"."personid"
+
+Ref "FK_Customer_SalesTerritory_TerritoryID":"salesterritory"."territoryid" < "customer"."territoryid"
+
+Ref "FK_Customer_Store_StoreID":"store"."businessentityid" < "customer"."storeid"
+
+Ref "FK_PersonCreditCard_Person_BusinessEntityID":"person"."businessentityid" < "personcreditcard"."businessentityid"
+
+Ref "FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID":"specialofferproduct".("specialofferid", "productid") < "salesorderdetail".("specialofferid", "productid")
+
+Ref "FK_SalesOrderHeaderSalesReason_SalesReason_SalesReasonID":"salesreason"."salesreasonid" < "salesorderheadersalesreason"."salesreasonid"
+
+Ref "FK_SalesOrderHeader_Address_BillToAddressID":"address"."addressid" < "salesorderheader"."billtoaddressid"
+
+Ref "FK_SalesOrderHeader_Address_ShipToAddressID":"address"."addressid" < "salesorderheader"."shiptoaddressid"
+
+Ref "FK_SalesOrderHeader_CurrencyRate_CurrencyRateID":"currencyrate"."currencyrateid" < "salesorderheader"."currencyrateid"
+
+Ref "FK_SalesOrderHeader_Customer_CustomerID":"customer"."customerid" < "salesorderheader"."customerid"
+
+Ref "FK_SalesOrderHeader_SalesTerritory_TerritoryID":"salesterritory"."territoryid" < "salesorderheader"."territoryid"
+
+Ref "FK_SalesOrderHeader_ShipMethod_ShipMethodID":"shipmethod"."shipmethodid" < "salesorderheader"."shipmethodid"
+
+Ref "FK_SalesPerson_Employee_BusinessEntityID":"employee"."businessentityid" < "salesperson"."businessentityid"
+
+Ref "FK_SalesPerson_SalesTerritory_TerritoryID":"salesterritory"."territoryid" < "salesperson"."territoryid"
+
+Ref "FK_SalesTaxRate_StateProvince_StateProvinceID":"stateprovince"."stateprovinceid" < "salestaxrate"."stateprovinceid"
+
+Ref "FK_SalesTerritoryHistory_SalesTerritory_TerritoryID":"salesterritory"."territoryid" < "salesterritoryhistory"."territoryid"
+
+Ref "FK_SalesTerritory_CountryRegion_CountryRegionCode":"countryregion"."countryregioncode" < "salesterritory"."countryregioncode"
+
+Ref "FK_ShoppingCartItem_Product_ProductID":"product"."productid" < "shoppingcartitem"."productid"
+
+Ref "FK_SpecialOfferProduct_Product_ProductID":"product"."productid" < "specialofferproduct"."productid"
+
+Ref "FK_SpecialOfferProduct_SpecialOffer_SpecialOfferID":"specialoffer"."specialofferid" < "specialofferproduct"."specialofferid"
+
+Ref "FK_Store_BusinessEntity_BusinessEntityID":"businessentity"."businessentityid" < "store"."businessentityid"
+
+Ref "FK_Store_SalesPerson_SalesPersonID":"salesperson"."businessentityid" < "store"."salespersonid"

@@ -1,0 +1,49 @@
+Table "Customer" {
+  "idCustomer" int [pk]
+  "fName" varchar(20) [not null]
+  "lName" varchar(30) [not null]
+  "residence" varchar(20) [not null]
+  "gender" char(1) [not null]
+  "birthday" date [not null]
+}
+
+Table "Product" {
+  "idProduct" int [pk]
+  "name" varchar(30) [not null]
+  "unit_price" int [not null]
+  "producer" varchar(30) [not null]
+  "description" varchar(2000)
+}
+
+Table "Store" {
+  "idStore" int [pk]
+  "name" varchar(30) [not null]
+  "residence" varchar(20) [not null]
+}
+
+Table "Order" {
+  "idOrder" int [pk]
+  "order_datetime" date [not null]
+  "idCustomer" int [not null]
+  "order_status" varchar2(10)
+  "idStore" int [not null]
+}
+
+Table "OrderItem" {
+  "idOrder" int [not null]
+  "idProduct" int [not null]
+  "unit_price" int [not null]
+  "quantity" int [not null]
+
+Indexes {
+  (idOrder, idProduct) [pk]
+}
+}
+
+Ref:"Customer"."idCustomer" < "Order"."idCustomer"
+
+Ref:"Store"."idStore" < "Order"."idStore"
+
+Ref:"Order"."idOrder" < "OrderItem"."idOrder"
+
+Ref:"Product"."idProduct" < "OrderItem"."idProduct"

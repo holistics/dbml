@@ -1,0 +1,40 @@
+Table "booking_reference" {
+  "reference_id" NVARCHAR2(10) [not null]
+  "cust_id" NUMBER(10) [not null]
+  "status" NVARCHAR2(1) [not null]
+
+Indexes {
+  (reference_id, cust_id) [pk]
+}
+}
+
+Table "br_flight" {
+  "reference_id" NVARCHAR2(10) [not null]
+  "cust_id" NUMBER(10) [not null]
+  "flight_id" NVARCHAR2(10) [not null]
+
+Indexes {
+  (reference_id, flight_id) [pk]
+}
+}
+
+Table "users" {
+  "id" NUMBER [pk]
+  "full_name" VARCHAR2(255)
+  "email" VARCHAR2(255) [unique]
+  "gender" VARCHAR2(10)
+  "date_of_birth" DATE
+  "created_at" timestamp
+  "modified_at" timestamp
+  "country_code" NUMBER
+}
+
+Table "countries" {
+  "code" NUMBER [pk]
+  "name" VARCHAR2(255)
+  "continent_name" VARCHAR2(255)
+}
+
+Ref "fk_country_code":"countries"."code" < "users"."country_code"
+
+Ref "fk_composite":"booking_reference".("reference_id", "cust_id") < "br_flight".("reference_id", "cust_id")

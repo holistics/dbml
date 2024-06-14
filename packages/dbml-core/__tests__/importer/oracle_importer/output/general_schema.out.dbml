@@ -1,0 +1,82 @@
+Table "orders" {
+  "id" NUMBER [pk, increment]
+  "user_id" NUMBER [unique, not null]
+  "status" VARCHAR2(50)
+  "created_at" VARCHAR2(50)
+  "modified_at" timestamp
+}
+
+Table "order_items" {
+  "order_id" NUMBER
+  "product_id" NUMBER
+  "quantity" NUMBER [default: 1]
+  "created_at" timestamp
+  "modified_at" timestamp
+}
+
+Table "users" {
+  "id" NUMBER [pk]
+  "full_name" VARCHAR2(255)
+  "email" VARCHAR2(255) [unique]
+  "gender" VARCHAR2(10)
+  "date_of_birth" VARCHAR2(20)
+  "created_at" VARCHAR2(30)
+  "modified_at" timestamp(2)
+  "country_code" NUMBER
+}
+
+Table "merchants" {
+  "id" NUMBER [pk]
+  "merchant_name" VARCHAR2(255)
+  "country_code" NUMBER
+  "created_at" VARCHAR2(30)
+  "modified_at" timestamp
+  "admin_id" NUMBER
+}
+
+Table "countries" {
+  "code" NUMBER [pk]
+  "name" VARCHAR2(100)
+  "continent_name" VARCHAR2(100)
+}
+
+Table "accounts" {
+  "id" NUMBER [pk, increment]
+  "domain" VARCHAR2(100)
+  "name" VARCHAR2(100)
+  "slug" VARCHAR2(10)
+}
+
+Table "tests" {
+  "id" "NUMBER(19, 0)" [not null]
+  "type" VARCHAR2(100) [default: "testing"]
+}
+
+Table "users2" {
+  "username" VARCHAR2(255) [not null]
+  "hashed_password" VARCHAR2(255) [not null]
+  "full_name" VARCHAR2(255) [not null]
+  "email" VARCHAR2(255) [not null]
+  "created_at" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table "table1" {
+  "field" VARCHAR2(200) [not null]
+  "field2" VARCHAR2(200) [not null]
+
+Indexes {
+  (field, field2) [pk]
+}
+}
+
+Table "table2" {
+  "id" NUMBER [pk, increment]
+  "field" VARCHAR2(200)
+  "field2" VARCHAR2(200)
+}
+
+Ref:"countries"."code" < "users"."country_code"
+
+Ref:"countries"."code" < "merchants"."country_code"
+
+Ref "table2_fk":"table1"."field" < "table2"."field"
