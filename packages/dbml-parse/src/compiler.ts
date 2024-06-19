@@ -124,6 +124,7 @@ export default class Compiler {
 
   setSource(source: string) {
     this.source = source;
+    this.sourcePatches = [];
     this.cache = new Array(Query.TOTAL_QUERY_COUNT).fill(null);
     this.nodeIdGenerator.reset();
     this.symbolIdGenerator.reset();
