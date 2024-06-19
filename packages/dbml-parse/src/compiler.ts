@@ -423,6 +423,10 @@ export default class Compiler {
           []),
     ),
   };
+  
+  // A namespace for ast-access queries
+  readonly meta = {
+  };
 
   initMonacoServices() {
     return {
