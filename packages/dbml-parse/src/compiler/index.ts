@@ -51,15 +51,6 @@ const enum Query {
 
 type Cache = Map<any, any> | any;
 
-// An interface representing a patch in source code
-// This allows for lazyly updating the source
-// to reduce source update overhead
-interface SourcePatch {
-  startIndex: number;
-  endIndex: number;
-  newText: string;
-}
-
 export const enum ScopeKind {
   TABLE,
   ENUM,
@@ -74,7 +65,6 @@ export const enum ScopeKind {
 
 export default class Compiler {
   private source = '';
-  private sourcePatches: SourcePatch[] = [];
 
   private cache: Cache[] = new Array(Query.TOTAL_QUERY_COUNT).fill(null);
 
@@ -124,7 +114,6 @@ export default class Compiler {
 
   setSource(source: string) {
     this.source = source;
-    this.sourcePatches = [];
     this.cache = new Array(Query.TOTAL_QUERY_COUNT).fill(null);
     this.nodeIdGenerator.reset();
     this.symbolIdGenerator.reset();
