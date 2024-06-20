@@ -27,6 +27,7 @@ import { SyntaxToken, SyntaxTokenKind } from '../lib/lexer/tokens';
 import { getMemberChain, isInvalidToken } from '../lib/parser/utils';
 import { Database } from '../lib/interpreter/types';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from '../services/index';
+import { Source } from './source';
 
 const enum Query {
   _Interpret,
@@ -64,7 +65,7 @@ export const enum ScopeKind {
 }
 
 export default class Compiler {
-  private source = '';
+  private source = new Source();
 
   private cache: Cache[] = new Array(Query.TOTAL_QUERY_COUNT).fill(null);
 
@@ -113,7 +114,7 @@ export default class Compiler {
   }
 
   setSource(source: string) {
-    this.source = source;
+    this.source.set(source);
     this.cache = new Array(Query.TOTAL_QUERY_COUNT).fill(null);
     this.nodeIdGenerator.reset();
     this.symbolIdGenerator.reset();
@@ -134,14 +135,14 @@ export default class Compiler {
 
   // A namespace for parsing-related utility
   readonly parse = {
-    source: () => this.source as Readonly<string>,
+    source: () => this.source.get() as Readonly<string>,
     _: this.createQuery(
       Query._Interpret,
       (): Report<
         Readonly<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }>,
         CompileError
       > => {
-        const parseRes = new Lexer(this.source)
+        const parseRes = new Lexer(this.source.get())
           .lex()
           .chain((tokens) => {
             const parser = new Parser(tokens as SyntaxToken[], this.nodeIdGenerator);
