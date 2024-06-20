@@ -52,7 +52,7 @@ const enum Query {
 
 type Cache = Map<any, any> | any;
 
-export const enum ScopeKind {
+export enum ScopeKind {
   TABLE,
   ENUM,
   TABLEGROUP,
