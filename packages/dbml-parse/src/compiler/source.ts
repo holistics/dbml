@@ -10,4 +10,13 @@ interface SourcePatch {
 export class Source {
   private source: string = '';
   private sourcePatches: SourcePatch[] = [];
+
+  set(source: string) {
+    this.source = source;
+    this.sourcePatches = [];
+  }
+
+  get(): string {
+    return this.source;
+  }
 }
