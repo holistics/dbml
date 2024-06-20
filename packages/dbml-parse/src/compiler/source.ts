@@ -19,4 +19,16 @@ export class Source {
   get(): string {
     return this.source;
   }
+
+  patch(sourcePatch: SourcePatch) {
+    this.sourcePatches.push(sourcePatch);
+  }
+
+  delete(deletePatch: Exclude<SourcePatch, 'newText'>) {
+    this.sourcePatches.push({ ...deletePatch, newText: '' });
+  }
+
+  insert(insertPatch: Exclude<SourcePatch, 'endIndex'>) {
+    this.sourcePatches.push({ ...insertPatch, endIndex: insertPatch.startIndex });
+  }
 }
