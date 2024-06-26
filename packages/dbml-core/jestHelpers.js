@@ -12,7 +12,7 @@ global.scanTestNames = (dirname, subpath) => {
 };
 
 global.getFileExtension = (format) => {
-  if (format === 'mysql' || format === 'postgres' || format === 'mssql' || format === 'oracle') {
+  if (format === 'mysql' || format === 'postgres' || format === 'mssql' || format === 'oracle' || format === 'snowflake') {
     return 'sql';
   }
   if (format === 'schemarb') {
