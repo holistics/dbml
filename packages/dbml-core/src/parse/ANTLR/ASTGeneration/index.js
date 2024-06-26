@@ -9,6 +9,10 @@ import MySQLLexer from '../parsers/mysql/MySqlLexer';
 import MySQLParser from '../parsers/mysql/MySqlParser';
 import MySQLASTGen from './mysql/MySQLASTGen';
 
+import SnowflakeLexer from '../parsers/snowflake/SnowflakeLexer';
+import SnowflakeParser from '../parsers/snowflake/SnowflakeParser';
+import SnowflakeASTGen from './snowflake/SnowflakeASTGen';
+
 import ParserErrorListener from './ParserErrorListener';
 
 export function parse (input, format) {
@@ -44,6 +48,21 @@ export function parse (input, format) {
       const parseTree = parser.root();
 
       database = parseTree.accept(new MySQLASTGen());
+
+      if (errorListener.errors.length) throw errorListener.errors;
+      break;
+    }
+    case 'snowflake': {
+      const lexer = new SnowflakeLexer(chars);
+      const tokens = new antlr4.CommonTokenStream(lexer);
+      const parser = new SnowflakeParser(tokens);
+      parser.buildParseTrees = true;
+      parser.removeErrorListeners();
+      parser.addErrorListener(errorListener);
+
+      const parseTree = parser.snowflake_file();
+
+      database = parseTree.accept(new SnowflakeASTGen());
 
       if (errorListener.errors.length) throw errorListener.errors;
       break;
