@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { flatten } from 'lodash';
+import { isEmpty, flatten } from 'lodash';
 import SnowflakeParserVisitor from '../../parsers/snowflake/SnowflakeParserVisitor';
 import { Endpoint, Enum, Field, Index, Table, Ref } from '../AST';
 import { TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE } from '../constants';
@@ -68,15 +68,15 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
 
     const definitions = ctx.create_table_clause().accept(this);
 
-    const [fieldsData, indexes, tableRefs, pk] = definitions.reduce((acc, ele) => {
+    const [fieldsData, indexes, tableRefs, singlePkIndex] = definitions.reduce((acc, ele) => {
       if (ele.kind === TABLE_CONSTRAINT_KIND.FIELD) acc[0].push(ele.value);
-      else if (ele.kind === TABLE_CONSTRAINT_KIND.UNIQUE) acc[1] = ele.value;
-      else if (ele.kind === TABLE_CONSTRAINT_KIND.FK) {
-        acc[2].push(ele.value);
-      } else if (ele.kind === TABLE_CONSTRAINT_KIND.PK) {
-        if (ele.value.length === 1) {
-          acc[3] = ele.value[0];
-        }
+      else if (ele.kind === TABLE_CONSTRAINT_KIND.UNIQUE) acc[1].push(ele.value);
+      else if (ele.kind === TABLE_CONSTRAINT_KIND.FK) acc[2].push(ele.value);
+      else if (ele.kind === TABLE_CONSTRAINT_KIND.PK) {
+        /** @type {Index} */
+        const index = ele.value;
+        if (index.columns.length > 1) acc[1].push(ele.value);
+        else acc[3] = index;
       }
       return acc;
     }, [[], [], [], null]);
@@ -91,11 +91,11 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       name: tableName,
       schemaName,
       fields: fieldsData.map(fd => fd.field),
-      // indexes, // TODO: implement Index
+      indexes,
     });
 
-    if (pk) {
-      const field = table.fields.find(f => f.name === pk);
+    if (singlePkIndex) {
+      const field = table.fields.find(f => f.name === singlePkIndex.columns[0].value);
       if (field) field.pk = true;
     }
 
@@ -216,15 +216,29 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       };
     }
     if (ctx.UNIQUE()) {
+      const name = ctx.id_()?.accept(this);
+      const colNames = flatten(ctx.column_list_in_parentheses().map(c => c.accept(this)));
+      const value = new Index({
+        unique: true,
+        columns: colNames.map(colName => ({ value: colName, type: CONSTRAINT_TYPE.COLUMN })),
+      });
       return {
+        name,
         kind: TABLE_CONSTRAINT_KIND.UNIQUE,
-        value: flatten(ctx.column_list_in_parentheses().map(c => c.accept(this))),
+        value,
       };
     }
     if (ctx.primary_key()) {
+      const name = ctx.id_()?.accept(this);
+      const colNames = flatten(ctx.column_list_in_parentheses().map(c => c.accept(this)));
+      const value = new Index({
+        name,
+        pk: true,
+        columns: colNames.map(colName => ({ value: colName, type: CONSTRAINT_TYPE.COLUMN })),
+      });
       return {
         kind: TABLE_CONSTRAINT_KIND.PK,
-        value: flatten(ctx.column_list_in_parentheses().map(c => c.accept(this))),
+        value,
       };
     }
 
