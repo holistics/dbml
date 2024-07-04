@@ -52,7 +52,6 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   visitCreate_command (ctx) {
     if (ctx.create_table()) {
       const table = ctx.create_table().accept(this);
-      console.log(table);
       this.data.tables.push(table);
     }
   }
@@ -122,7 +121,6 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   | binary_or_ternary_builtin_function | ternary_builtin_function
   */
   visitId_ (ctx) {
-    // console.log(ctx);
     return getOriginalText(ctx);
   }
 
@@ -170,6 +168,16 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   visitFull_col_decl (ctx) {
     const field = ctx.col_decl().accept(this);
 
+    if (ctx.inline_constraint()) {
+      const inlineConstraints = ctx.inline_constraint().map(c => c.accept(this));
+      if (!isEmpty(inlineConstraints)) {
+        inlineConstraints.forEach(inlineConstraint => {
+          if (inlineConstraint.kind === TABLE_CONSTRAINT_KIND.UNIQUE) field.unique = true;
+          else if (inlineConstraint.kind === TABLE_CONSTRAINT_KIND.PK) field.pk = true;
+        });
+      }
+    }
+
     return {
       field,
     };
@@ -187,34 +195,37 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   }
 
   // (CONSTRAINT id_)? (
+  //   (UNIQUE | primary_key) common_constraint_properties*
+  //   | foreign_key REFERENCES object_name (LR_BRACKET column_name RR_BRACKET)? constraint_properties
+  // )
+  visitInline_constraint (ctx) {
+    if (ctx.UNIQUE()) {
+      return {
+        kind: TABLE_CONSTRAINT_KIND.UNIQUE,
+        value: true,
+      };
+    }
+    if (ctx.primary_key()) {
+      return {
+        kind: TABLE_CONSTRAINT_KIND.PK,
+        value: true,
+      };
+    }
+    if (ctx.foreign_key()) {
+      console.log('foreign_key inline_constraint', ctx.foreign_key().accept(this));
+      return {
+        kind: TABLE_CONSTRAINT_KIND.FK,
+        value: null, // TODO
+      };
+    }
+    return null;
+  }
+
+  // (CONSTRAINT id_)? (
   //   (UNIQUE | primary_key) column_list_in_parentheses common_constraint_properties*
   //   | foreign_key column_list_in_parentheses REFERENCES object_name column_list_in_parentheses constraint_properties
   // )
   visitOut_of_line_constraint (ctx) {
-    if (ctx.foreign_key()) {
-      const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
-      const sourceColumns = ctx.column_list_in_parentheses(0).accept(this);
-      const destColumns = ctx.column_list_in_parentheses(1).accept(this);
-      return {
-        kind: TABLE_CONSTRAINT_KIND.FK,
-        value: {
-          endpoints: [
-            {
-              tableName: null,
-              schemaName: null,
-              fieldNames: sourceColumns,
-              relation: '*',
-            },
-            {
-              tableName,
-              schemaName,
-              fieldNames: destColumns,
-              relation: '1',
-            },
-          ],
-        },
-      };
-    }
     if (ctx.UNIQUE()) {
       const name = ctx.id_()?.accept(this);
       const colNames = flatten(ctx.column_list_in_parentheses().map(c => c.accept(this)));
@@ -239,6 +250,30 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       return {
         kind: TABLE_CONSTRAINT_KIND.PK,
         value,
+      };
+    }
+    if (ctx.foreign_key()) {
+      const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
+      const sourceColumns = ctx.column_list_in_parentheses(0).accept(this);
+      const destColumns = ctx.column_list_in_parentheses(1).accept(this);
+      return {
+        kind: TABLE_CONSTRAINT_KIND.FK,
+        value: {
+          endpoints: [
+            {
+              tableName: null,
+              schemaName: null,
+              fieldNames: sourceColumns,
+              relation: '*',
+            },
+            {
+              tableName,
+              schemaName,
+              fieldNames: destColumns,
+              relation: '1',
+            },
+          ],
+        },
       };
     }
 
