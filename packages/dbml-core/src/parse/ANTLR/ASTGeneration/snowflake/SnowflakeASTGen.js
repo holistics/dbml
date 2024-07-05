@@ -206,7 +206,16 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       const notNulls = ctx.null_not_null().map(c => c.accept(this));
       if (!isEmpty(notNulls)) {
         notNulls.forEach(notNull => {
-          field.not_null = notNull;
+          if (notNull.kind === COLUMN_CONSTRAINT_KIND.NOT_NULL) field.not_null = notNull.value;
+        });
+      }
+    }
+
+    if (ctx.default_value()) {
+      const dbdefaults = ctx.default_value().map(c => c.accept(this));
+      if (!isEmpty(dbdefaults)) {
+        dbdefaults.forEach(dbdefault => {
+          field.dbdefault = dbdefault;
         });
       }
     }
@@ -234,19 +243,19 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   visitInline_constraint (ctx) {
     if (ctx.UNIQUE()) {
       return {
-        kind: TABLE_CONSTRAINT_KIND.UNIQUE,
+        kind: COLUMN_CONSTRAINT_KIND.UNIQUE,
         value: true,
       };
     }
     if (ctx.primary_key()) {
       return {
-        kind: TABLE_CONSTRAINT_KIND.PK,
+        kind: COLUMN_CONSTRAINT_KIND.PK,
         value: true,
       };
     }
     if (ctx.foreign_key()) {
       return {
-        kind: TABLE_CONSTRAINT_KIND.FK,
+        kind: COLUMN_CONSTRAINT_KIND.FK,
         value: null, // TODO
       };
     }
@@ -322,9 +331,27 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     return ctx.column_name().map(c => getOriginalText(c));
   }
 
-  // : NOT? NULL_
+  // NOT? NULL_
   visitNull_not_null (ctx) {
-    if (ctx.NOT()) return true;
-    return false;
+    return {
+      kind: COLUMN_CONSTRAINT_KIND.NOT_NULL,
+      value: !!ctx.NOT(),
+    };
+  }
+
+  // DEFAULT expr
+  // | (AUTOINCREMENT | IDENTITY) (
+  //     LR_BRACKET num COMMA num RR_BRACKET
+  //     | start_with
+  //     | increment_by
+  //     | start_with increment_by
+  // )? order_noorder?
+  visitDefault_value (ctx) {
+    // TODO: Improve this logic
+    // dbdefault: {value: string, type: 'string' | 'number' | 'boolean' | 'expression'},
+    if (ctx.expr()) {
+      return { value: ctx.expr().accept(this), type: 'expression' };
+    }
+    return { value: getOriginalText(ctx), type: 'string' };
   }
 }
