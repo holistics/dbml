@@ -53,6 +53,21 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     if (ctx.create_table()) {
       const table = ctx.create_table().accept(this);
       this.data.tables.push(table);
+    } else if (ctx.create_table_like()) {
+      const [schemaNameLike, nameLike, schemaNameOrigin, nameOrigin] = ctx.create_table_like().accept(this);
+      const originTable = this.data.tables.reduce((acc, ele) => {
+        if (ele.name === nameOrigin && ele.schemaName === schemaNameOrigin) return ele;
+        return acc;
+      }, null);
+
+      if (originTable) {
+        const likeTable = new Table({
+          name: nameLike,
+          schemaName: schemaNameLike,
+          fields: originTable.fields,
+        });
+        this.data.tables.push(likeTable);
+      }
     }
   }
 
@@ -99,6 +114,15 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     }
 
     return table;
+  }
+
+  /*
+    CREATE or_replace? TRANSIENT? TABLE if_not_exists? object_name LIKE object_name cluster_by? copy_grants?
+  */
+  visitCreate_table_like (ctx) {
+    const [databaseNameLike, schemaNameLike, nameLike] = ctx.object_name()[0].accept(this);
+    const [databaseNameOrigin, schemaNameOrigin, nameOrigin] = ctx.object_name()[1].accept(this);
+    return [schemaNameLike, nameLike, schemaNameOrigin, nameOrigin];
   }
 
   /*
@@ -212,7 +236,6 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       };
     }
     if (ctx.foreign_key()) {
-      console.log('foreign_key inline_constraint', ctx.foreign_key().accept(this));
       return {
         kind: TABLE_CONSTRAINT_KIND.FK,
         value: null, // TODO
