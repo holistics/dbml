@@ -1,4 +1,16 @@
+import fs from 'fs'; // TODO: Remove this line after development is done
 import importer from '../../src/import';
+
+// TODO: Remove this function after development is done
+const writeFile = (filePath, data) => {
+  fs.writeFileSync(filePath, data, (err) => {
+    if (err) console.error(err);
+    console.log('File has been created successfully');
+  });
+};
+
+
+
 
 describe('@dbml/core - importer', () => {
   /**
@@ -9,7 +21,13 @@ describe('@dbml/core - importer', () => {
     const fileExtension = getFileExtension(format);
     const input = require(`./${testDir}/input/${fileName}.in.${fileExtension}`);
     const output = require(`./${testDir}/output/${fileName}.out.dbml`);
+
     const res = importer.import(input, format);
+
+    // TODO: Remove this block after development is done
+    const filePath = './snowflake_test.dbml';
+    writeFile(filePath, res);
+
     expect(res).toBe(output);
     /* eslint-enable */
   };
