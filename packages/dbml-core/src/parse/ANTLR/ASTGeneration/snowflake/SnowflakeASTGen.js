@@ -202,6 +202,15 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       }
     }
 
+    if (ctx.null_not_null()) {
+      const notNulls = ctx.null_not_null().map(c => c.accept(this));
+      if (!isEmpty(notNulls)) {
+        notNulls.forEach(notNull => {
+          field.not_null = notNull;
+        });
+      }
+    }
+
     return {
       field,
     };
@@ -311,5 +320,11 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   // column_name (COMMA column_name)*
   visitColumn_list (ctx) {
     return ctx.column_name().map(c => getOriginalText(c));
+  }
+
+  // : NOT? NULL_
+  visitNull_not_null (ctx) {
+    if (ctx.NOT()) return true;
+    return false;
   }
 }
