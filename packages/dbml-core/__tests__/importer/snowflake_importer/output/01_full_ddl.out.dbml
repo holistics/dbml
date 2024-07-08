@@ -1,11 +1,13 @@
 Table "HP_TEST"."CUSTOMERS" {
   "CUSTOMER_ID" "NUMBER(38, 0)" [pk, not null]
-  "FIRST_NAME" VARCHAR(50)
-  "LAST_NAME" VARCHAR(50)
+  "FIRST_NAME" VARCHAR(50) [not null, default: "'John'"]
+  "LAST_NAME" VARCHAR(50) [not null, default: "'Doe'"]
   "EMAIL" VARCHAR(100)
   "SECOND_EMAIL" VARCHAR(100)
-  "UNIQUE_NAME" VARCHAR(100) [unique, not null]
-  "CREATED_AT" TIMESTAMP_NTZ(9)
+  "UNIQUE_NAME" VARCHAR(100) [unique, not null, default: `CONCAT(FIRST_NAME, LAST_NAME, EMAIL)`]
+  "IS_VIP" BOOLEAN [default: FALSE]
+  "IS_SOMETHING" BOOLEAN [default: null]
+  "CREATED_AT" TIMESTAMP_NTZ(9) [default: `CURRENT_TIMESTAMP()`]
 
   Indexes {
     (EMAIL, SECOND_EMAIL) [unique]
@@ -15,15 +17,15 @@ Table "HP_TEST"."CUSTOMERS" {
 Table "HP_TEST"."ORDERS" {
   "ORDER_ID" "NUMBER(38, 0)" [pk, not null]
   "CUSTOMER_ID" "NUMBER(38, 0)"
-  "ORDER_DATE" TIMESTAMP_NTZ(9)
-  "TOTAL_AMOUNT" "NUMBER(10, 2)"
+  "ORDER_DATE" TIMESTAMP_NTZ(9) [default: `CURRENT_TIMESTAMP()`]
+  "TOTAL_AMOUNT" "NUMBER(10, 2)" [default: 0.0]
 }
 
 Table "HP_TEST"."ORDER_ITEMS" {
   "ORDER_ITEM_ID" "NUMBER(38, 0)" [unique, pk, not null]
   "ORDER_ID" "NUMBER(38, 0)"
   "PRODUCT_ID" "NUMBER(38, 0)"
-  "QUANTITY" "NUMBER(38, 0)"
+  "QUANTITY" "NUMBER(38, 0)" [default: 1]
   "PRICE" "NUMBER(10, 2)"
 }
 
@@ -48,8 +50,8 @@ Table "HP_TEST"."COMPOSITE_PK_TABLE" {
 Table "HP_TEST"."CLONE_ORDERS" {
   "ORDER_ID" "NUMBER(38, 0)" [pk, not null]
   "CUSTOMER_ID" "NUMBER(38, 0)"
-  "ORDER_DATE" TIMESTAMP_NTZ(9)
-  "TOTAL_AMOUNT" "NUMBER(10, 2)"
+  "ORDER_DATE" TIMESTAMP_NTZ(9) [default: `CURRENT_TIMESTAMP()`]
+  "TOTAL_AMOUNT" "NUMBER(10, 2)" [default: 0.0]
 }
 
 Table "HP_TEST"."employees" {
@@ -57,7 +59,7 @@ Table "HP_TEST"."employees" {
   "first_name" VARCHAR(50) [not null]
   "last_name" VARCHAR(50) [not null]
   "email" VARCHAR(100)
-  "hire_date" DATE
+  "hire_date" DATE [default: `CURRENT_DATE()`]
 }
 
 Table "TEST".""_holistics_persisted_test_20240703094645"" {
