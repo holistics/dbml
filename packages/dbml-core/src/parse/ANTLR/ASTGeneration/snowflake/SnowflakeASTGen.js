@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { isEmpty, flatten } from 'lodash';
+import { isEmpty, flatten, get, values } from 'lodash';
 import SnowflakeParserVisitor from '../../parsers/snowflake/SnowflakeParserVisitor';
 import { Endpoint, Enum, Field, Index, Table, Ref } from '../AST';
 import { TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE } from '../constants';
@@ -248,12 +248,12 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     }
 
     if (ctx.default_value()) {
-      // const dbdefaults = ctx.default_value().map(c => c.accept(this));
-      // if (!isEmpty(dbdefaults)) {
-      //   dbdefaults.forEach(dbdefault => {
-      //     field.dbdefault = dbdefault;
-      //   });
-      // }
+      const dbdefaults = ctx.default_value().map(c => c.accept(this));
+      if (!isEmpty(dbdefaults)) {
+        dbdefaults.forEach(dbdefault => {
+          field.dbdefault = dbdefault;
+        });
+      }
     }
 
     return {
@@ -403,9 +403,75 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   visitDefault_value (ctx) {
     // TODO: Improve this logic
     // dbdefault: {value: string, type: 'string' | 'number' | 'boolean' | 'expression'},
-    if (ctx.expr()) {
-      return { value: ctx.expr().accept(this), type: 'expression' };
+    if (ctx.DEFAULT()) {
+      return ctx.expr().accept(this);
     }
-    return { value: getOriginalText(ctx), type: 'string' };
+    return null;
+  }
+
+  //  : object_name DOT NEXTVAL
+  //  | expr LSB expr RSB //array access
+  //  | expr COLON expr   //json access
+  //  | expr DOT (VALUE | expr)
+  //  | expr COLLATE string
+  //  | case_expression
+  //  | iff_expr
+  //  | bracket_expression
+  //  | op = ( PLUS | MINUS) expr
+  //  | expr op = (STAR | DIVIDE | MODULE) expr
+  //  | expr op = (PLUS | MINUS | PIPE_PIPE) expr
+  //  | expr comparison_operator expr
+  //  | op = NOT+ expr
+  //  | expr AND expr //bool operation
+  //  | expr OR expr  //bool operation
+  //  | arr_literal
+  //  //    | expr time_zone
+  //  | expr over_clause
+  //  | cast_expr
+  //  | expr COLON_COLON data_type // Cast also
+  //  | try_cast_expr
+  //  | json_literal
+  //  | trim_expression
+  //  | function_call
+  //  | subquery
+  //  | expr IS null_not_null
+  //  | expr NOT? IN LR_BRACKET (subquery | expr_list) RR_BRACKET
+  //  | expr NOT? ( LIKE | ILIKE) expr (ESCAPE expr)?
+  //  | expr NOT? RLIKE expr
+  //  | expr NOT? (LIKE | ILIKE) ANY LR_BRACKET expr (COMMA expr)* RR_BRACKET (ESCAPE expr)?
+  //  | primitive_expression //Should be latest rule as it's nearly a catch all
+  visitExpr (ctx) {
+    if (ctx.primitive_expression()) return ctx.primitive_expression().accept(this);
+    return { value: getOriginalText(ctx), type: 'expression' };
+  }
+
+  // : DEFAULT //?
+  // | NULL_
+  // | id_ ('.' id_)* // json field access
+  // | full_column_name
+  // | literal
+  // | BOTH_Q
+  // | ARRAY_Q
+  // | OBJECT_Q
+  // //| json_literal
+  // //| arr_literal
+  visitPrimitive_expression (ctx) {
+    if (ctx.NULL_()) return { value: null, type: 'boolean' };
+    if (ctx.literal()) return ctx.literal().accept(this);
+    return { value: getOriginalText(ctx), type: 'expression' };
+  }
+
+  //  : STRING // string, date, time, timestamp
+  //  | sign? DECIMAL
+  //  | sign? (REAL | FLOAT)
+  //  | true_false
+  //  | NULL_
+  //  | AT_Q
+  //  ;
+  visitLiteral (ctx) {
+    if (ctx.STRING()) return { value: getOriginalText(ctx), type: 'string' };
+    if (ctx.DECIMAL() || ctx.REAL || ctx.FLOAT) return { value: getOriginalText(ctx), type: 'number' };
+    if (ctx.true_false() || ctx.NULL_()) return { value: getOriginalText(ctx), type: 'boolean' };
+    return { value: getOriginalText(ctx), type: 'expression' };
   }
 }
