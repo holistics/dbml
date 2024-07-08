@@ -95,6 +95,40 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       return acc;
     }, [[], [], [], null]);
 
+    const inlineRefsOfFields = fieldsData.map(fieldData => {
+      const { field, inlineRefs } = fieldData;
+
+      if (field.type.type_name?.toLowerCase() === 'enum') {
+        const values = field.type.args.map(arg => {
+          const newValue = arg.replace(/'|"|`/g, '').trim();
+          return {
+            name: newValue,
+          };
+        });
+
+        const _enum = new Enum({
+          name: `${tableName}_${field.name}_enum`,
+          schemaName,
+          values,
+        });
+
+        field.type.type_name = _enum.name;
+        field.type.schemaName = _enum.schemaName;
+
+        this.data.enums.push(_enum);
+      }
+
+      inlineRefs.forEach((inlineRef) => {
+        inlineRef.endpoints[0].tableName = tableName;
+        inlineRef.endpoints[0].schemaName = schemaName;
+        inlineRef.endpoints[0].fieldNames = [field.name];
+      });
+
+      return inlineRefs;
+    });
+
+    this.data.refs.push(...flatten(inlineRefsOfFields));
+
     this.data.refs.push(...tableRefs.map(tableRef => {
       tableRef.endpoints[0].tableName = tableName;
       tableRef.endpoints[0].schemaName = schemaName;
@@ -191,13 +225,15 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   // col_decl (collate | inline_constraint | null_not_null | (default_value | NULL_))* with_masking_policy? with_tags? ( COMMENT string )?
   visitFull_col_decl (ctx) {
     const field = ctx.col_decl().accept(this);
+    const inlineRefs = [];
 
     if (ctx.inline_constraint()) {
       const inlineConstraints = ctx.inline_constraint().map(c => c.accept(this));
       if (!isEmpty(inlineConstraints)) {
         inlineConstraints.forEach(inlineConstraint => {
-          if (inlineConstraint.kind === TABLE_CONSTRAINT_KIND.UNIQUE) field.unique = true;
-          else if (inlineConstraint.kind === TABLE_CONSTRAINT_KIND.PK) field.pk = true;
+          if (inlineConstraint.kind === COLUMN_CONSTRAINT_KIND.UNIQUE) field.unique = true;
+          else if (inlineConstraint.kind === COLUMN_CONSTRAINT_KIND.PK) field.pk = true;
+          else if (inlineConstraint.kind === COLUMN_CONSTRAINT_KIND.FK) inlineRefs.push(inlineConstraint.value);
         });
       }
     }
@@ -212,16 +248,17 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     }
 
     if (ctx.default_value()) {
-      const dbdefaults = ctx.default_value().map(c => c.accept(this));
-      if (!isEmpty(dbdefaults)) {
-        dbdefaults.forEach(dbdefault => {
-          field.dbdefault = dbdefault;
-        });
-      }
+      // const dbdefaults = ctx.default_value().map(c => c.accept(this));
+      // if (!isEmpty(dbdefaults)) {
+      //   dbdefaults.forEach(dbdefault => {
+      //     field.dbdefault = dbdefault;
+      //   });
+      // }
     }
 
     return {
       field,
+      inlineRefs,
     };
   }
 
@@ -254,9 +291,26 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       };
     }
     if (ctx.foreign_key()) {
+      const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
+      const destColumns = ctx.column_name().accept(this);
       return {
         kind: COLUMN_CONSTRAINT_KIND.FK,
-        value: null, // TODO
+        value: {
+          endpoints: [
+            {
+              tableName: null,
+              schemaName: null,
+              fieldNames: null,
+              relation: '*',
+            },
+            {
+              tableName,
+              schemaName,
+              fieldNames: destColumns,
+              relation: '1',
+            },
+          ],
+        },
       };
     }
     return null;
@@ -295,8 +349,8 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     }
     if (ctx.foreign_key()) {
       const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
-      const sourceColumns = ctx.column_list_in_parentheses(0).accept(this);
-      const destColumns = ctx.column_list_in_parentheses(1).accept(this);
+      const sourceColumns = ctx.column_list_in_parentheses()[0].accept(this);
+      const destColumns = ctx.column_list_in_parentheses()[1].accept(this);
       return {
         kind: TABLE_CONSTRAINT_KIND.FK,
         value: {
