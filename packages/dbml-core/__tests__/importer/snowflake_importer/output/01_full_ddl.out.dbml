@@ -62,13 +62,13 @@ Table "HP_TEST"."employees" {
   "hire_date" DATE [default: `CURRENT_DATE()`]
 }
 
-Table "TEST".""_holistics_persisted_test_20240703094645"" {
-  ""a"" "NUMBER(1, 0)"
-  ""b"" "NUMBER(1, 0)"
-  ""c"" "NUMBER(1, 0)"
+Table "TEST"."_holistics_persisted_test_20240703094645" {
+  "a" "NUMBER(1, 0)"
+  "b" "NUMBER(1, 0)"
+  "c" "NUMBER(1, 0)"
 }
 
-Table "TEST_2024_06_28_10_01_ZQMIMY".""ONE"" {
+Table "TEST_2024_06_28_10_01_ZQMIMY"."ONE" {
   "FOO" VARCHAR(16777216) [pk]
   "BAR" VARCHAR(16777216)
 
@@ -95,6 +95,6 @@ Ref:"HP_TEST"."ORDERS"."ORDER_ID" < "HP_TEST"."ORDER_ITEMS"."ORDER_ID"
 
 Ref:"HP_TEST"."PRODUCTS"."PRODUCT_ID" < "HP_TEST"."ORDER_ITEMS"."PRODUCT_ID"
 
-Ref:"TEST_2024_06_28_10_01_ZQMIMY".""ONE"".("BAR", "FOO") < "TEST_2024_06_28_10_01_ZQMIMY"."TWO".("XYZ", "ABC")
+Ref:"TEST_2024_06_28_10_01_ZQMIMY"."ONE".("BAR", "FOO") < "TEST_2024_06_28_10_01_ZQMIMY"."TWO".("XYZ", "ABC")
 
-Ref:"TEST_2024_06_28_10_01_ZQMIMY".""ONE""."FOO" < "TEST_2024_06_28_10_01_ZQMIMY"."TWO"."QWE"
+Ref:"TEST_2024_06_28_10_01_ZQMIMY"."ONE"."FOO" < "TEST_2024_06_28_10_01_ZQMIMY"."TWO"."QWE"

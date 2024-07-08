@@ -179,6 +179,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   | binary_or_ternary_builtin_function | ternary_builtin_function
   */
   visitId_ (ctx) {
+    if (ctx.DOUBLE_QUOTE_ID()) return getOriginalText(ctx).slice(1, -1);
     return getOriginalText(ctx);
   }
 
@@ -265,12 +266,17 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   // column_name data_type virtual_column_decl?
   visitCol_decl (ctx) {
     return new Field({
-      name: getOriginalText(ctx.column_name()),
+      name: ctx.column_name().accept(this),
       type: {
         type_name: getOriginalText(ctx.data_type()),
         schemaName: null,
       },
     });
+  }
+
+  // : (id_ '.')? id_
+  visitColumn_name (ctx) {
+    return ctx.id_().map(c => c.accept(this)).join('.');
   }
 
   // (CONSTRAINT id_)? (
@@ -292,7 +298,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     }
     if (ctx.foreign_key()) {
       const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
-      const destColumns = ctx.column_name().accept(this);
+      const destColumns = [ctx.column_name().accept(this)];
       return {
         kind: COLUMN_CONSTRAINT_KIND.FK,
         value: {
@@ -382,7 +388,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
 
   // column_name (COMMA column_name)*
   visitColumn_list (ctx) {
-    return ctx.column_name().map(c => getOriginalText(c));
+    return ctx.column_name().map(c => c.accept(this));
   }
 
   // NOT? NULL_
