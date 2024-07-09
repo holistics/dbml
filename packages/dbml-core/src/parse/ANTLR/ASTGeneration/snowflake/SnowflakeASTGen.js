@@ -150,6 +150,70 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     return table;
   }
 
+  // : ALTER TABLE if_exists? object_name RENAME TO object_name
+  // | ALTER TABLE if_exists? object_name SWAP WITH object_name
+  // | ALTER TABLE if_exists? object_name (
+  //     clustering_action
+  //     | table_column_action
+  //     | constraint_action
+  // )
+  // | ALTER TABLE if_exists? object_name ext_table_column_action
+  // | ALTER TABLE if_exists? object_name search_optimization_action
+  // | ALTER TABLE if_exists? object_name SET stage_file_format? (
+  //     STAGE_COPY_OPTIONS EQ '(' copy_options ')'
+  // )? (DATA_RETENTION_TIME_IN_DAYS EQ num)? (MAX_DATA_EXTENSION_TIME_IN_DAYS EQ num)? (
+  //     CHANGE_TRACKING EQ true_false
+  // )? default_ddl_collation? comment_clause?
+  // | ALTER TABLE if_exists? object_name set_tags
+  // | ALTER TABLE if_exists? object_name unset_tags
+  // | ALTER TABLE if_exists? object_name UNSET (
+  //     DATA_RETENTION_TIME_IN_DAYS
+  //     | MAX_DATA_EXTENSION_TIME_IN_DAYS
+  //     | CHANGE_TRACKING
+  //     | DEFAULT_DDL_COLLATION_
+  //     | COMMENT
+  //     |
+  // )
+  // //[ , ... ]
+  // | ALTER TABLE if_exists? object_name ADD ROW ACCESS POLICY id_ ON column_list_in_parentheses
+  // | ALTER TABLE if_exists? object_name DROP ROW ACCESS POLICY id_
+  // | ALTER TABLE if_exists? object_name DROP ROW ACCESS POLICY id_ COMMA ADD ROW ACCESS POLICY id_ ON column_list_in_parentheses
+  // | ALTER TABLE if_exists? object_name DROP ALL ROW ACCESS POLICIES
+  visitAlter_table (ctx) {
+    if (ctx.constraint_action()) {
+      const [databaseName, schemaName, tableName] = ctx.object_name()[0].accept(this);
+      const definition = ctx.constraint_action().accept(this);
+
+      if (definition) {
+        const fieldsData = [];
+        const indexes = [];
+        const tableRefs = [];
+        if (definition.kind === TABLE_CONSTRAINT_KIND.FIELD) fieldsData.push(definition.value);
+        else if (definition.kind === TABLE_CONSTRAINT_KIND.UNIQUE) indexes.push(definition.value);
+        else if (definition.kind === TABLE_CONSTRAINT_KIND.FK) tableRefs.push(definition.value);
+
+        this.data.refs.push(...tableRefs.map(tableRef => {
+          tableRef.endpoints[0].tableName = tableName;
+          tableRef.endpoints[0].schemaName = schemaName;
+          return tableRef;
+        }));
+
+        const table = this.data.tables.reduce((acc, ele) => {
+          if (ele.name === tableName && ele.schemaName === schemaName) return ele;
+          return acc;
+        }, null);
+
+        if (table) {
+          table.fields.push(...fieldsData);
+          table.indexes.push(...indexes);
+        }
+        return table;
+      }
+    }
+
+    return null;
+  }
+
   /*
     CREATE or_replace? TRANSIENT? TABLE if_not_exists? object_name LIKE object_name cluster_by? copy_grants?
   */
@@ -282,9 +346,9 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     return ctx.id_().map(c => c.accept(this)).join('.');
   }
 
-  // (CONSTRAINT id_)? (
-  //   (UNIQUE | primary_key) common_constraint_properties*
-  //   | foreign_key REFERENCES object_name (LR_BRACKET column_name RR_BRACKET)? constraint_properties
+  // : (CONSTRAINT id_)? (
+  //     (UNIQUE | primary_key) common_constraint_properties*
+  //     | foreign_key REFERENCES object_name (LR_BRACKET column_name RR_BRACKET)? constraint_properties
   // )
   visitInline_constraint (ctx) {
     if (ctx.UNIQUE()) {
@@ -325,9 +389,9 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     return null;
   }
 
-  // (CONSTRAINT id_)? (
-  //   (UNIQUE | primary_key) column_list_in_parentheses common_constraint_properties*
-  //   | foreign_key column_list_in_parentheses REFERENCES object_name column_list_in_parentheses constraint_properties
+  // : (CONSTRAINT id_)? (
+  //     (UNIQUE | primary_key) column_list_in_parentheses common_constraint_properties*
+  //     | foreign_key column_list_in_parentheses REFERENCES object_name column_list_in_parentheses constraint_properties
   // )
   visitOut_of_line_constraint (ctx) {
     if (ctx.UNIQUE()) {
@@ -402,7 +466,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     };
   }
 
-  // DEFAULT expr
+  // : DEFAULT expr
   // | (AUTOINCREMENT | IDENTITY) (
   //     LR_BRACKET num COMMA num RR_BRACKET
   //     | start_with
@@ -490,5 +554,20 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     if (ctx.DECIMAL() || ctx.REAL || ctx.FLOAT) return { value: getOriginalText(ctx), type: 'number' };
     if (ctx.true_false() || ctx.NULL_()) return { value: getOriginalText(ctx), type: 'boolean' };
     return { value: getOriginalText(ctx), type: 'expression' };
+  }
+
+  // : ADD out_of_line_constraint
+  // | RENAME CONSTRAINT id_ TO id_
+  // | alter_modify (CONSTRAINT id_ | primary_key | UNIQUE | foreign_key) column_list_in_parentheses enforced_not_enforced? (
+  //     VALIDATE
+  //     | NOVALIDATE
+  // ) (RELY | NORELY)
+  // | DROP (CONSTRAINT id_ | primary_key | UNIQUE | foreign_key) column_list_in_parentheses? cascade_restrict?
+  // | DROP PRIMARY KEY
+  visitConstraint_action (ctx) {
+    if (ctx.ADD()) {
+      return ctx.out_of_line_constraint().accept(this);
+    }
+    return null;
   }
 }
