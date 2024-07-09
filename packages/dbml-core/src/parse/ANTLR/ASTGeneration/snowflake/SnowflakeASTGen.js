@@ -249,12 +249,15 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     }
 
     if (ctx.default_value()) {
-      const dbdefaults = ctx.default_value().map(c => c.accept(this));
-      if (!isEmpty(dbdefaults)) {
-        dbdefaults.forEach(dbdefault => {
-          field.dbdefault = dbdefault;
-        });
-      }
+      const defaultOrIncrements = ctx.default_value().map(c => c.accept(this));
+
+      defaultOrIncrements.forEach(defaultOrIncrement => {
+        if (defaultOrIncrement.kind === COLUMN_CONSTRAINT_KIND.DEFAULT) {
+          field.dbdefault = defaultOrIncrement.value;
+        } else if (defaultOrIncrement.kind === COLUMN_CONSTRAINT_KIND.INCREMENT) {
+          field.increment = defaultOrIncrement.value;
+        }
+      });
     }
 
     return {
@@ -407,10 +410,18 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   //     | start_with increment_by
   // )? order_noorder?
   visitDefault_value (ctx) {
-    // TODO: Improve this logic
     // dbdefault: {value: string, type: 'string' | 'number' | 'boolean' | 'expression'},
     if (ctx.DEFAULT()) {
-      return ctx.expr().accept(this);
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.DEFAULT,
+        value: ctx.expr().accept(this),
+      };
+    }
+    if (ctx.AUTOINCREMENT() || ctx.IDENTITY()) {
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.INCREMENT,
+        value: true,
+      };
     }
     return null;
   }
