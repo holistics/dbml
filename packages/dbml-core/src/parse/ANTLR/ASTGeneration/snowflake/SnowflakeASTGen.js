@@ -80,7 +80,8 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   visitCreate_table (ctx) {
     const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
 
-    const definitions = ctx.create_table_clause().accept(this);
+    const { definitions, tableNote } = ctx.create_table_clause().accept(this);
+    const note = ctx.comment_clause()?.accept(this) || tableNote;
 
     const [fieldsData, indexes, tableRefs, singlePkIndex] = definitions.reduce((acc, ele) => {
       if (ele.kind === TABLE_CONSTRAINT_KIND.FIELD) acc[0].push(ele.value);
@@ -140,6 +141,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
       schemaName,
       fields: fieldsData.map(fd => fd.field),
       indexes,
+      note,
     });
 
     if (singlePkIndex) {
@@ -257,7 +259,14 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     with_tags?
   */
   visitCreate_table_clause (ctx) {
-    return ctx.column_decl_item_list_paren().accept(this);
+    return {
+      definitions: ctx.column_decl_item_list_paren().accept(this),
+      tableNote: ctx.comment_clause()[0].accept(this),
+    };
+  }
+
+  visitComment_clause (ctx) {
+    return getOriginalText(ctx.string()).slice(1, -1);
   }
 
   // '(' column_decl_item_list ')'

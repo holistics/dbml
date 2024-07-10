@@ -1,0 +1,21 @@
+Table "employees_1" {
+  "employee_id" INT [not null]
+  "first_name" VARCHAR(50) [not null]
+  "last_name" VARCHAR(50) [not null]
+  "email" VARCHAR(100)
+  "hire_date" DATE
+  "department" VARCHAR(50)
+  "salary" DECIMAL(10,2)
+  Note: 'This table stores information about company employees'
+}
+
+Table "employees_2" {
+  "employee_id" INT [not null]
+  "first_name" VARCHAR(50) [not null]
+  "last_name" VARCHAR(50) [not null]
+  "email" VARCHAR(100)
+  "hire_date" DATE
+  "department" VARCHAR(50)
+  "salary" DECIMAL(10,2)
+  Note: 'Another comment for employees table'
+}
