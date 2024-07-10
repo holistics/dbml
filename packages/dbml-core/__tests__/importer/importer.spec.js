@@ -54,7 +54,8 @@ describe('@dbml/core - importer', () => {
   // });
 
   // const testName = '01_full_ddl';
-  const testName = 'alter';
+  // const testName = 'alter';
+  const testName = 'comment';
   test(testName, () => {
     runTest(testName, 'snowflake_importer', 'snowflake');
   });
