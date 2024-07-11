@@ -266,7 +266,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   }
 
   visitComment_clause (ctx) {
-    return getOriginalText(ctx.string()).slice(1, -1);
+    return getOriginalText(ctx.string()).replace(/''/g, "'").slice(1, -1);
   }
 
   // '(' column_decl_item_list ')'
@@ -331,6 +331,10 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
           field.increment = defaultOrIncrement.value;
         }
       });
+    }
+
+    if (ctx.COMMENT()) {
+      field.note = getOriginalText(ctx.string()).replace(/''/g, "'").slice(1, -1);
     }
 
     return {

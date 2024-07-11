@@ -7,7 +7,7 @@ CREATE TABLE employees_1 (
   department VARCHAR(50) COMMENT 'Department where the employee works',
   salary DECIMAL(10,2) COMMENT 'Employee''s annual salary'
 )
-COMMENT = 'This table stores information about company employees'
+COMMENT = 'This table stores information about company''s employees'
 ;
 
 CREATE TABLE employees_2 (
