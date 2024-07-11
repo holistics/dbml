@@ -9,15 +9,6 @@ const sanitizeComment = (stringContext) => {
   return getOriginalText(stringContext).replace(/''/g, "'").slice(1, -1);
 };
 
-const addOrReplaceTable = (tables, newTable) => {
-  const index = tables.findIndex((table) => table.name === newTable.name && table.schemaName === newTable.schemaName);
-  if (index === -1) {
-    tables.push(newTable);
-  } else {
-    tables[index] = newTable;
-  }
-};
-
 export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   constructor () {
     super();
@@ -65,7 +56,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   visitCreate_command (ctx) {
     if (ctx.create_table()) {
       const table = ctx.create_table().accept(this);
-      addOrReplaceTable(this.data.tables, table);
+      this.data.tables.push(table);
     } else if (ctx.create_table_like()) {
       const [schemaNameLike, nameLike, schemaNameOrigin, nameOrigin] = ctx.create_table_like().accept(this);
       const originTable = this.data.tables.reduce((acc, ele) => {
@@ -79,7 +70,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
           schemaName: schemaNameLike,
           fields: originTable.fields,
         });
-        addOrReplaceTable(this.data.tables, likeTable);
+        this.data.tables.push(likeTable);
       }
     }
   }

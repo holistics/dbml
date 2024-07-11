@@ -1,17 +1,13 @@
-import fs from 'fs'; // TODO: Remove this line after development is done
+// import fs from 'fs'; // Toggle comment of this line to right parsed result to file
 import importer from '../../src/import';
-import { after } from 'lodash';
 
-// TODO: Remove this function after development is done
-const writeFile = (filePath, data) => {
-  fs.writeFileSync(filePath, data, (err) => {
-    if (err) console.error(err);
-    console.log('File has been created successfully');
-  });
-};
-
-
-
+// Toggle comment for this block to write parsed result to file
+// const writeFile = (filePath, data) => {
+//   fs.writeFileSync(filePath, data, (err) => {
+//     if (err) console.error(err);
+//     console.log('File has been created successfully');
+//   });
+// };
 
 describe('@dbml/core - importer', () => {
   /**
@@ -25,9 +21,9 @@ describe('@dbml/core - importer', () => {
 
     const res = importer.import(input, format);
 
-    // TODO: Remove this block after development is done
-    const filePath = './snowflake_test.dbml';
-    writeFile(filePath, res);
+    // Toggle comment of this block to write parsed result to file
+    // const filePath = './snowflake_test.dbml';
+    // writeFile(filePath, res);
 
     expect(res).toBe(output);
     /* eslint-enable */
@@ -50,22 +46,25 @@ describe('@dbml/core - importer', () => {
   //   runTest(name, 'mssql_importer', 'mssql');
   // });
 
-  // test.each(scanTestNames(__dirname, 'snowflake_importer/input'))('snowflake_importer/%s', (name) => {
-  //   runTest(name, 'snowflake_importer', 'snowflake');
-  // });
-
-  const testNames = [
-    // '01_full_ddl',
-    // 'alter',
-    // 'comment',
-    'at_before',
-    'create',
-    'create_table',
-  ];
-  testNames.forEach((name) => {
-    test(name, () => {
-      runTest(name, 'snowflake_importer', 'snowflake');
-    });
+  test.each(scanTestNames(__dirname, 'snowflake_importer/input'))('snowflake_importer/%s', (name) => {
+    runTest(name, 'snowflake_importer', 'snowflake');
   });
+
+  // const testNames = [
+  //   'alter',
+  //   'comment',
+  //   'at_before',
+  //   'create',
+  //   'create_table',
+  //   'dml',
+  //   'general_schema',
+  //   'ids',
+  //   'tables',
+  // ];
+  // testNames.forEach((name) => {
+  //   test(name, () => {
+  //     runTest(name, 'snowflake_importer', 'snowflake');
+  //   });
+  // });
   /* eslint-enable */
 });
