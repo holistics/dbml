@@ -71,12 +71,19 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     }
   }
 
-  /*
-  CREATE or_replace? table_type? TABLE (
-    if_not_exists? object_name
-    | object_name if_not_exists?
-  ) ((comment_clause? create_table_clause) | (create_table_clause comment_clause?))
-  */
+  // : CREATE or_replace? TRANSIENT? DATABASE if_not_exists? id_ clone_at_before? (
+  //     DATA_RETENTION_TIME_IN_DAYS EQ num
+  // )? (MAX_DATA_EXTENSION_TIME_IN_DAYS EQ num)? default_ddl_collation? with_tags? comment_clause?
+  // ;
+  visitCreate_database (ctx) {
+    const schema = getOriginalText(ctx.object_name());
+    this.data.schemas.push(schema);
+  }
+
+  // CREATE or_replace? table_type? TABLE (
+  //   if_not_exists? object_name
+  //   | object_name if_not_exists?
+  // ) ((comment_clause? create_table_clause) | (create_table_clause comment_clause?))
   visitCreate_table (ctx) {
     const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
 
@@ -261,7 +268,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   visitCreate_table_clause (ctx) {
     return {
       definitions: ctx.column_decl_item_list_paren().accept(this),
-      tableNote: ctx.comment_clause()[0].accept(this),
+      tableNote: ctx.comment_clause().map(c => c.accept(this))?.[-1],
     };
   }
 

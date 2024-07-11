@@ -1,5 +1,6 @@
 import fs from 'fs'; // TODO: Remove this line after development is done
 import importer from '../../src/import';
+import { after } from 'lodash';
 
 // TODO: Remove this function after development is done
 const writeFile = (filePath, data) => {
@@ -53,11 +54,15 @@ describe('@dbml/core - importer', () => {
   //   runTest(name, 'snowflake_importer', 'snowflake');
   // });
 
-  // const testName = '01_full_ddl';
-  // const testName = 'alter';
-  const testName = 'comment';
-  test(testName, () => {
-    runTest(testName, 'snowflake_importer', 'snowflake');
+  const testNames = [
+    '01_full_ddl',
+    'alter',
+    'comment'
+  ];
+  testNames.forEach((name) => {
+    test(name, () => {
+      runTest(name, 'snowflake_importer', 'snowflake');
+    });
   });
   /* eslint-enable */
 });

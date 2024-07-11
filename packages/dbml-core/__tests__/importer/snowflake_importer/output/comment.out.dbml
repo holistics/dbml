@@ -1,4 +1,4 @@
-Table "employees_1" {
+Table "TEST_SCHEMA"."ONE" {
   "employee_id" INT [not null, note: 'Unique identifier for each employee']
   "first_name" VARCHAR(50) [not null, note: '''Employee's first name''']
   "last_name" VARCHAR(50) [not null, note: '''Employee's last name''']
@@ -6,10 +6,9 @@ Table "employees_1" {
   "hire_date" DATE [note: 'Date when the employee was hired']
   "department" VARCHAR(50) [note: 'Department where the employee works']
   "salary" DECIMAL(10,2) [note: '''Employee's annual salary''']
-  Note: '''This table stores information about company's employees'''
 }
 
-Table "employees_2" {
+Table "TEST_SCHEMA"."TWO" {
   "employee_id" INT [not null, note: 'Unique identifier for each employee']
   "first_name" VARCHAR(50) [not null, note: '''Employee's first name''']
   "last_name" VARCHAR(50) [not null, note: '''Employee's last name''']
