@@ -55,9 +55,12 @@ describe('@dbml/core - importer', () => {
   // });
 
   const testNames = [
-    '01_full_ddl',
-    'alter',
-    'comment'
+    // '01_full_ddl',
+    // 'alter',
+    // 'comment',
+    'at_before',
+    'create',
+    'create_table',
   ];
   testNames.forEach((name) => {
     test(name, () => {

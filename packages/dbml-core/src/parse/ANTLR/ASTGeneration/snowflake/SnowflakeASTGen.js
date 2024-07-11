@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { isEmpty, flatten, get, values } from 'lodash';
+import { isEmpty, flatten, get, values, add } from 'lodash';
 import SnowflakeParserVisitor from '../../parsers/snowflake/SnowflakeParserVisitor';
 import { Endpoint, Enum, Field, Index, Table, Ref } from '../AST';
 import { TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE } from '../constants';
@@ -7,6 +7,15 @@ import { getOriginalText } from '../helpers';
 
 const sanitizeComment = (stringContext) => {
   return getOriginalText(stringContext).replace(/''/g, "'").slice(1, -1);
+};
+
+const addOrReplaceTable = (tables, newTable) => {
+  const index = tables.findIndex((table) => table.name === newTable.name && table.schemaName === newTable.schemaName);
+  if (index === -1) {
+    tables.push(newTable);
+  } else {
+    tables[index] = newTable;
+  }
 };
 
 export default class SnowflakeASTGen extends SnowflakeParserVisitor {
@@ -56,7 +65,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   visitCreate_command (ctx) {
     if (ctx.create_table()) {
       const table = ctx.create_table().accept(this);
-      this.data.tables.push(table);
+      addOrReplaceTable(this.data.tables, table);
     } else if (ctx.create_table_like()) {
       const [schemaNameLike, nameLike, schemaNameOrigin, nameOrigin] = ctx.create_table_like().accept(this);
       const originTable = this.data.tables.reduce((acc, ele) => {
@@ -70,7 +79,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
           schemaName: schemaNameLike,
           fields: originTable.fields,
         });
-        this.data.tables.push(likeTable);
+        addOrReplaceTable(this.data.tables, likeTable);
       }
     }
   }
@@ -437,7 +446,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
         value,
       };
     }
-    if (ctx.foreign_key()) {
+    if (ctx.foreign_key() && ctx.column_list_in_parentheses().length === 2) {
       const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
       const sourceColumns = ctx.column_list_in_parentheses()[0].accept(this);
       const destColumns = ctx.column_list_in_parentheses()[1].accept(this);

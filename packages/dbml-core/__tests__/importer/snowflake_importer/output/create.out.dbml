@@ -1,0 +1,15 @@
+Table "s"."t" {
+  "i" int
+
+  Indexes {
+    i [unique]
+  }
+}
+
+Table "t" {
+  "i" int
+
+  Indexes {
+    i [unique]
+  }
+}
