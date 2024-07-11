@@ -380,7 +380,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
         value: true,
       };
     }
-    if (ctx.foreign_key()) {
+    if (ctx.foreign_key() && ctx.column_name()) {
       const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
       const destColumns = [ctx.column_name().accept(this)];
       return {
@@ -403,7 +403,10 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
         },
       };
     }
-    return null;
+    return {
+      kind: null,
+      value: null,
+    };
   }
 
   // : (CONSTRAINT id_)? (
