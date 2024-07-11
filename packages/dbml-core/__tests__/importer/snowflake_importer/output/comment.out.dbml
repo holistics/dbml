@@ -1,21 +1,21 @@
 Table "employees_1" {
-  "employee_id" INT [not null]
-  "first_name" VARCHAR(50) [not null]
-  "last_name" VARCHAR(50) [not null]
-  "email" VARCHAR(100)
-  "hire_date" DATE
-  "department" VARCHAR(50)
-  "salary" DECIMAL(10,2)
-  Note: 'This table stores information about company employees'
+  "employee_id" INT [not null, note: 'Unique identifier for each employee']
+  "first_name" VARCHAR(50) [not null, note: '''Employee's first name''']
+  "last_name" VARCHAR(50) [not null, note: '''Employee's last name''']
+  "email" VARCHAR(100) [note: '''Employee's work email address''']
+  "hire_date" DATE [note: 'Date when the employee was hired']
+  "department" VARCHAR(50) [note: 'Department where the employee works']
+  "salary" DECIMAL(10,2) [note: '''Employee's annual salary''']
+  Note: '''This table stores information about company's employees'''
 }
 
 Table "employees_2" {
-  "employee_id" INT [not null]
-  "first_name" VARCHAR(50) [not null]
-  "last_name" VARCHAR(50) [not null]
-  "email" VARCHAR(100)
-  "hire_date" DATE
-  "department" VARCHAR(50)
-  "salary" DECIMAL(10,2)
+  "employee_id" INT [not null, note: 'Unique identifier for each employee']
+  "first_name" VARCHAR(50) [not null, note: '''Employee's first name''']
+  "last_name" VARCHAR(50) [not null, note: '''Employee's last name''']
+  "email" VARCHAR(100) [note: '''Employee's work email address''']
+  "hire_date" DATE [note: 'Date when the employee was hired']
+  "department" VARCHAR(50) [note: 'Department where the employee works']
+  "salary" DECIMAL(10,2) [note: '''Employee's annual salary''']
   Note: 'Another comment for employees table'
 }
