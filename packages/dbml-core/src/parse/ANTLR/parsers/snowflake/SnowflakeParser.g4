@@ -3575,6 +3575,7 @@ non_reserved_words
     | NAME
     | NETWORK
     | OFFSET
+    | ONE
     | OPTION
     | ORGADMIN
     | OUTBOUND
