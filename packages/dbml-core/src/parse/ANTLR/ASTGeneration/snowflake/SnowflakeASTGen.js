@@ -5,6 +5,10 @@ import { Endpoint, Enum, Field, Index, Table, Ref } from '../AST';
 import { TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE } from '../constants';
 import { getOriginalText } from '../helpers';
 
+const sanitizeComment = (stringContext) => {
+  return getOriginalText(stringContext).replace(/''/g, "'").slice(1, -1);
+};
+
 export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   constructor () {
     super();
@@ -223,20 +227,16 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     return null;
   }
 
-  /*
-    CREATE or_replace? TRANSIENT? TABLE if_not_exists? object_name LIKE object_name cluster_by? copy_grants?
-  */
+  // CREATE or_replace? TRANSIENT? TABLE if_not_exists? object_name LIKE object_name cluster_by? copy_grants?
   visitCreate_table_like (ctx) {
     const [databaseNameLike, schemaNameLike, nameLike] = ctx.object_name()[0].accept(this);
     const [databaseNameOrigin, schemaNameOrigin, nameOrigin] = ctx.object_name()[1].accept(this);
     return [schemaNameLike, nameLike, schemaNameOrigin, nameOrigin];
   }
 
-  /*
-  d = id_ DOT s = id_ DOT o = id_
-  | s = id_ DOT o = id_
-  | o = id_
-  */
+  // : d = id_ DOT s = id_ DOT o = id_
+  // | s = id_ DOT o = id_
+  // | o = id_
   visitObject_name (ctx) {
     return [
       ctx.d?.accept(this),
@@ -245,26 +245,22 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     ];
   }
 
-  /*
-  ID | ID2 | DOUBLE_QUOTE_ID | DOUBLE_QUOTE_BLANK
-  | keyword | non_reserved_words | object_type_plural | data_type
-  | builtin_function | unary_or_binary_builtin_function | binary_builtin_function
-  | binary_or_ternary_builtin_function | ternary_builtin_function
-  */
+  // : ID | ID2 | DOUBLE_QUOTE_ID | DOUBLE_QUOTE_BLANK
+  // | keyword | non_reserved_words | object_type_plural | data_type
+  // | builtin_function | unary_or_binary_builtin_function | binary_builtin_function
+  // | binary_or_ternary_builtin_function | ternary_builtin_function
   visitId_ (ctx) {
     if (ctx.DOUBLE_QUOTE_ID()) return getOriginalText(ctx).slice(1, -1);
     return getOriginalText(ctx);
   }
 
-  /*
-  (
-    column_decl_item_list_paren cluster_by?
-    | cluster_by? comment_clause? column_decl_item_list_paren
-  ) stage_file_format? (STAGE_COPY_OPTIONS EQ LR_BRACKET copy_options RR_BRACKET)? (
-    DATA_RETENTION_TIME_IN_DAYS EQ num
-  )? (MAX_DATA_EXTENSION_TIME_IN_DAYS EQ num)? change_tracking? default_ddl_collation? copy_grants? comment_clause? with_row_access_policy?
-    with_tags?
-  */
+  // : (
+  //     column_decl_item_list_paren cluster_by?
+  //     | cluster_by? comment_clause? column_decl_item_list_paren
+  // ) stage_file_format? (STAGE_COPY_OPTIONS EQ LR_BRACKET copy_options RR_BRACKET)? (
+  //     DATA_RETENTION_TIME_IN_DAYS EQ num
+  // )? (MAX_DATA_EXTENSION_TIME_IN_DAYS EQ num)? change_tracking? default_ddl_collation? copy_grants? comment_clause? with_row_access_policy?
+  //     with_tags?
   visitCreate_table_clause (ctx) {
     return {
       definitions: ctx.column_decl_item_list_paren().accept(this),
@@ -272,8 +268,9 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     };
   }
 
+  // : COMMENT EQ string
   visitComment_clause (ctx) {
-    return getOriginalText(ctx.string()).replace(/''/g, "'").slice(1, -1);
+    return sanitizeComment(ctx.string());
   }
 
   // '(' column_decl_item_list ')'
@@ -341,7 +338,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     }
 
     if (ctx.COMMENT()) {
-      field.note = getOriginalText(ctx.string()).replace(/''/g, "'").slice(1, -1);
+      field.note = sanitizeComment(ctx.string());
     }
 
     return {
