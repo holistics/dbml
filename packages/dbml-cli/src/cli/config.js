@@ -17,4 +17,7 @@ export default {
   oracle: {
     name: 'Oracle',
   },
+  snowflake: {
+    name: 'Snowflake',
+  },
 };
