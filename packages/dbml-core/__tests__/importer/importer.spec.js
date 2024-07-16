@@ -1,13 +1,4 @@
-// import fs from 'fs'; // Toggle comment of this line to right parsed result to file
 import importer from '../../src/import';
-
-// Toggle comment for this block to write parsed result to file
-// const writeFile = (filePath, data) => {
-//   fs.writeFileSync(filePath, data, (err) => {
-//     if (err) console.error(err);
-//     console.log('File has been created successfully');
-//   });
-// };
 
 describe('@dbml/core - importer', () => {
   /**
@@ -20,10 +11,6 @@ describe('@dbml/core - importer', () => {
     const output = require(`./${testDir}/output/${fileName}.out.dbml`);
 
     const res = importer.import(input, format);
-
-    // Toggle comment of this block to write parsed result to file
-    // const filePath = './snowflake_test.dbml';
-    // writeFile(filePath, res);
 
     expect(res).toBe(output);
     /* eslint-enable */
@@ -50,21 +37,5 @@ describe('@dbml/core - importer', () => {
     runTest(name, 'snowflake_importer', 'snowflake');
   });
 
-  // const testNames = [
-  //   'alter',
-  //   'comment',
-  //   'at_before',
-  //   'create',
-  //   'create_table',
-  //   'dml',
-  //   'general_schema',
-  //   'ids',
-  //   'tables',
-  // ];
-  // testNames.forEach((name) => {
-  //   test(name, () => {
-  //     runTest(name, 'snowflake_importer', 'snowflake');
-  //   });
-  // });
   /* eslint-enable */
 });
