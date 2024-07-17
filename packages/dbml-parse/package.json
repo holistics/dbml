@@ -12,6 +12,7 @@
   ],
   "main": "./dist/dbml-parse.js",
   "module": "./dist/dbml-parse.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/dbml-parse.mjs",
@@ -37,6 +38,7 @@
     "typescript": "^5.2.2",
     "vite": "^4.5.0",
     "vite-dts": "^1.0.4",
+    "vite-plugin-dts": "^3.9.1",
     "vitest": "^0.34.6"
   },
   "dependencies": {
