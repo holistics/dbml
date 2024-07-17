@@ -1,0 +1,20 @@
+Table "TEST_SCHEMA"."ONE" {
+  "employee_id" INT [not null, note: 'Unique identifier for each employee']
+  "first_name" VARCHAR(50) [not null, note: '''Employee's first name''']
+  "last_name" VARCHAR(50) [not null, note: '''Employee's last name''']
+  "email" VARCHAR(100) [note: '''Employee's work email address''']
+  "hire_date" DATE [note: 'Date when the employee was hired']
+  "department" VARCHAR(50) [note: 'Department where the employee works']
+  "salary" DECIMAL(10,2) [note: '''Employee's annual salary''']
+}
+
+Table "TEST_SCHEMA"."TWO" {
+  "employee_id" INT [not null, note: 'Unique identifier for each employee']
+  "first_name" VARCHAR(50) [not null, note: '''Employee's first name''']
+  "last_name" VARCHAR(50) [not null, note: '''Employee's last name''']
+  "email" VARCHAR(100) [note: '''Employee's work email address''']
+  "hire_date" DATE [note: 'Date when the employee was hired']
+  "department" VARCHAR(50) [note: 'Department where the employee works']
+  "salary" DECIMAL(10,2) [note: '''Employee's annual salary''']
+  Note: 'Another comment for employees table'
+}

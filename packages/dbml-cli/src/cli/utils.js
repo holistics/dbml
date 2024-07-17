@@ -15,7 +15,7 @@ function validateInputFilePaths (paths, validatePlugin) {
 
 function getFormatOpt (opts) {
   const formatOpts = Object.keys(opts).filter((opt) => {
-    return ['postgres', 'mysql', 'mssql', 'postgresLegacy', 'mysqlLegacy', 'oracle'].includes(opt);
+    return ['postgres', 'mysql', 'mssql', 'postgresLegacy', 'mysqlLegacy', 'oracle', 'snowflake'].includes(opt);
   });
 
   let format = 'postgres';
@@ -39,7 +39,7 @@ function generate (inputPaths, transform, outputPlugin) {
       const content = transform(source);
       outputPlugin.write(content);
     } catch (e) {
-      if (e instanceof CompilerError) throw e.map((diag) => ({ ...diag, message: diag.message, filepath: path.basename(_path) }));
+      if (e instanceof CompilerError) throw e.map((diag) => ({ ...diag, message: diag.message, filepath: path.basename(_path), stack: diag.stack }));
       throw e;
     }
   });
