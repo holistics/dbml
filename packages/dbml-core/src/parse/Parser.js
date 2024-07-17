@@ -54,7 +54,7 @@ class Parser {
     return new Parser().parse(str, format);
   }
 
-  static fetchPostgresToJSON (connection) {
+  static async fetchPostgresToJSON (connection) {
     return fetch(connection, 'postgres');
   }
 
@@ -137,11 +137,11 @@ class Parser {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  fetch (connection, format) {
+  async fetch (connection, format) {
     let rawDatabase = {};
     switch (format) {
       case 'postgres':
-        rawDatabase = Parser.fetchPostgresToJSON(connection);
+        rawDatabase = await Parser.fetchPostgresToJSON(connection);
         break;
 
       default:
