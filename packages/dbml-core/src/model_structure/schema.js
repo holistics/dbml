@@ -136,11 +136,20 @@ class Schema extends Element {
   }
 
   exportChildIds () {
+    const tableIds = new Array(this.tables.length);
+    for (let i = 0; i < this.tables.length; i += 1) tableIds[i] = this.tables[i].id;
+
+    const enumIds = new Array(this.enums.length);
+    for (let i = 0; i < this.enums.length; i += 1) enumIds[i] = this.enums[i].id;
+
+    const tableGroupIds = new Array(this.tableGroups.length);
+    for (let i = 0; i < this.tableGroups.length; i += 1) tableGroupIds[i] = this.tableGroups[i].id;
+
+    const refIds = new Array(this.refs.length);
+    for (let i = 0; i < this.refs.length; i += 1) refIds[i] = this.refs[i].id;
+
     return {
-      tableIds: this.tables.map(t => t.id),
-      enumIds: this.enums.map(e => e.id),
-      tableGroupIds: this.tableGroups.map(tg => tg.id),
-      refIds: this.refs.map(r => r.id),
+      tableIds, enumIds, tableGroupIds, refIds,
     };
   }
 
@@ -159,14 +168,11 @@ class Schema extends Element {
   }
 
   normalize (model) {
-    model.schemas = {
-      ...model.schemas,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.schemas[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
 
     this.tables.forEach((table) => table.normalize(model));

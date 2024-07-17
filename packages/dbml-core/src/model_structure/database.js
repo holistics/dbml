@@ -194,10 +194,13 @@ class Database extends Element {
   }
 
   exportChildIds () {
-    return {
-      schemaIds: this.schemas.map(s => s.id),
-      noteIds: this.notes.map(n => n.id),
-    };
+    const schemaIds = new Array(this.schemas.length);
+    for (let i = 0; i < this.schemas.length; i += 1) schemaIds[i] = this.schemas[i].id;
+
+    const noteIds = new Array(this.notes.length);
+    for (let i = 0; i < this.notes.length; i += 1) noteIds[i] = this.notes[i].id;
+
+    return { schemaIds, noteIds };
   }
 
   normalize () {

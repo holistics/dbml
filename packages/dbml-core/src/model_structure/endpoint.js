@@ -53,10 +53,10 @@ class Endpoint extends Element {
   }
 
   exportParentIds () {
-    return {
-      refId: this.ref.id,
-      fieldIds: this.fields.map(field => field.id),
-    };
+    const fieldIds = new Array(this.fields.length);
+    for (let i = 0; i < this.fields.length; i += 1) fieldIds[i] = this.fields[i].id;
+
+    return { refId: this.ref.id, fieldIds };
   }
 
   shallowExport () {
@@ -95,13 +95,10 @@ class Endpoint extends Element {
   }
 
   normalize (model) {
-    model.endpoints = {
-      ...model.endpoints,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportParentIds(),
-      },
+    model.endpoints[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportParentIds(),
     };
   }
 }

@@ -77,9 +77,10 @@ class Ref extends Element {
   }
 
   exportChildIds () {
-    return {
-      endpointIds: this.endpoints.map(e => e.id),
-    };
+    const endpointIds = new Array(this.endpoints.length);
+    for (let i = 0; i < this.endpoints.length; i += 1) endpointIds[i] = this.endpoints[i].id;
+
+    return { endpointIds };
   }
 
   exportParentIds () {
@@ -89,14 +90,11 @@ class Ref extends Element {
   }
 
   normalize (model) {
-    model.refs = {
-      ...model.refs,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.refs[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
 
     this.endpoints.forEach((endpoint) => endpoint.normalize(model));

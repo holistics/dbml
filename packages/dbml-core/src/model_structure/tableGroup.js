@@ -59,9 +59,10 @@ class TableGroup extends Element {
   }
 
   exportChildIds () {
-    return {
-      tableIds: this.tables.map(t => t.id),
-    };
+    const tableIds = new Array(this.tables.length);
+    for (let i = 0; i < this.tables.length; i += 1) tableIds[i] = this.tables[i].id;
+
+    return { tableIds };
   }
 
   exportParentIds () {
@@ -77,14 +78,11 @@ class TableGroup extends Element {
   }
 
   normalize (model) {
-    model.tableGroups = {
-      ...model.tableGroups,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.tableGroups[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
   }
 }

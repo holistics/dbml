@@ -98,10 +98,13 @@ class Table extends Element {
   }
 
   exportChildIds () {
-    return {
-      fieldIds: this.fields.map(f => f.id),
-      indexIds: this.indexes.map(i => i.id),
-    };
+    const fieldIds = new Array(this.fields.length);
+    for (let i = 0; i < this.fields.length; i += 1) fieldIds[i] = this.fields[i].id;
+
+    const indexIds = new Array(this.indexes.length);
+    for (let i = 0; i < this.indexes.length; i += 1) indexIds[i] = this.indexes[i].id;
+
+    return { fieldIds, indexIds };
   }
 
   exportParentIds () {
@@ -121,14 +124,11 @@ class Table extends Element {
   }
 
   normalize (model) {
-    model.tables = {
-      ...model.tables,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.tables[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
 
     this.fields.forEach((field) => field.normalize(model));
