@@ -55,9 +55,10 @@ class Index extends Element {
   }
 
   exportChildIds () {
-    return {
-      columnIds: this.columns.map(c => c.id),
-    };
+    const columnIds = new Array(this.columns.length);
+    for (let i = 0; i < this.columns.length; i += 1) columnIds[i] = this.columns[i].id;
+
+    return { columnIds };
   }
 
   exportParentIds () {
@@ -77,14 +78,11 @@ class Index extends Element {
   }
 
   normalize (model) {
-    model.indexes = {
-      ...model.indexes,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.indexes[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
 
     this.columns.forEach(c => c.normalize(model));
