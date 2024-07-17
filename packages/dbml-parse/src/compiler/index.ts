@@ -1,9 +1,9 @@
 import { findLastIndex, last } from 'lodash';
-import { SymbolKind, destructureIndex } from './lib/analyzer/symbol/symbolIndex';
-import { generatePossibleIndexes } from './lib/analyzer/symbol/utils';
-import SymbolTable from './lib/analyzer/symbol/symbolTable';
-import { isOffsetWithinSpan } from './lib/utils';
-import { CompileError } from './lib/errors';
+import { SymbolKind, destructureIndex } from '../lib/analyzer/symbol/symbolIndex';
+import { generatePossibleIndexes } from '../lib/analyzer/symbol/utils';
+import SymbolTable from '../lib/analyzer/symbol/symbolTable';
+import { isOffsetWithinSpan } from '../lib/utils';
+import { CompileError } from '../lib/errors';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -16,17 +16,18 @@ import {
   SyntaxNode,
   SyntaxNodeIdGenerator,
   TupleExpressionNode,
-} from './lib/parser/nodes';
-import { NodeSymbol, NodeSymbolIdGenerator } from './lib/analyzer/symbol/symbols';
-import Report from './lib/report';
-import Lexer from './lib/lexer/lexer';
-import Parser from './lib/parser/parser';
-import Analyzer from './lib/analyzer/analyzer';
-import Interpreter from './lib/interpreter/interpreter';
-import { SyntaxToken, SyntaxTokenKind } from './lib/lexer/tokens';
-import { getMemberChain, isInvalidToken } from './lib/parser/utils';
-import { Database } from './lib/interpreter/types';
-import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from './services/index';
+} from '../lib/parser/nodes';
+import { NodeSymbol, NodeSymbolIdGenerator } from '../lib/analyzer/symbol/symbols';
+import Report from '../lib/report';
+import Lexer from '../lib/lexer/lexer';
+import Parser from '../lib/parser/parser';
+import Analyzer from '../lib/analyzer/analyzer';
+import Interpreter from '../lib/interpreter/interpreter';
+import { SyntaxToken, SyntaxTokenKind } from '../lib/lexer/tokens';
+import { getMemberChain, isInvalidToken } from '../lib/parser/utils';
+import { Database } from '../lib/interpreter/types';
+import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from '../services/index';
+import { Source } from './source';
 
 const enum Query {
   _Interpret,
@@ -51,7 +52,7 @@ const enum Query {
 
 type Cache = Map<any, any> | any;
 
-export const enum ScopeKind {
+export enum ScopeKind {
   TABLE,
   ENUM,
   TABLEGROUP,
@@ -64,7 +65,8 @@ export const enum ScopeKind {
 }
 
 export default class Compiler {
-  private source = '';
+  private source = new Source();
+
   private cache: Cache[] = new Array(Query.TOTAL_QUERY_COUNT).fill(null);
 
   private nodeIdGenerator = new SyntaxNodeIdGenerator();
@@ -112,7 +114,7 @@ export default class Compiler {
   }
 
   setSource(source: string) {
-    this.source = source;
+    this.source.set(source);
     this.cache = new Array(Query.TOTAL_QUERY_COUNT).fill(null);
     this.nodeIdGenerator.reset();
     this.symbolIdGenerator.reset();
@@ -133,14 +135,14 @@ export default class Compiler {
 
   // A namespace for parsing-related utility
   readonly parse = {
-    source: () => this.source as Readonly<string>,
+    source: () => this.source.get() as Readonly<string>,
     _: this.createQuery(
       Query._Interpret,
       (): Report<
         Readonly<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }>,
         CompileError
       > => {
-        const parseRes = new Lexer(this.source)
+        const parseRes = new Lexer(this.source.get())
           .lex()
           .chain((tokens) => {
             const parser = new Parser(tokens as SyntaxToken[], this.nodeIdGenerator);
@@ -410,6 +412,10 @@ export default class Compiler {
             })) :
           []),
     ),
+  };
+  
+  // A namespace for ast-access queries
+  readonly meta = {
   };
 
   initMonacoServices() {
