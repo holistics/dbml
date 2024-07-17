@@ -13,6 +13,7 @@ export declare interface EditorPosition {
 export interface CompilerDiagnostic {
   readonly message: Readonly<string>;
   readonly filepath?: Readonly<string>;
+  readonly stack?: Readonly<unknown>;
   readonly location: {
       start: Readonly<EditorPosition>,
       // in monaco, if an end position is not specified
