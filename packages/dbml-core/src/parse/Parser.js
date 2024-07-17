@@ -5,7 +5,7 @@ import postgresParser from './postgresParser';
 import dbmlParser from './dbmlParser';
 import schemarbParser from './schemarbParser';
 import mssqlParser from './mssqlParser';
-import { parse } from './ANTLR/ASTGeneration';
+import { parse, fetch } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
 
 class Parser {
@@ -52,6 +52,10 @@ class Parser {
 
   static parse (str, format) {
     return new Parser().parse(str, format);
+  }
+
+  static fetchPostgresToJSON (connection) {
+    return fetch(connection, 'postgres');
   }
 
   parse (str, format) {
@@ -130,6 +134,21 @@ class Parser {
     } catch (diags) {
       throw CompilerError.create(diags);
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  fetch (connection, format) {
+    let rawDatabase = {};
+    switch (format) {
+      case 'postgres':
+        rawDatabase = Parser.fetchPostgresToJSON(connection);
+        break;
+
+      default:
+        break;
+    }
+    const schema = Parser.parseJSONToDatabase(rawDatabase);
+    return schema;
   }
 }
 
