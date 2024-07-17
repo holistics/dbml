@@ -1,3 +1,17 @@
+## v3.6.0 (2024-07-17)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#587](https://github.com/holistics/dbml/pull/587) Snowflake DDL Importer ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :robot: Dependencies Update
+* [#581](https://github.com/holistics/dbml/pull/581) build(deps): bump braces from 3.0.2 to 3.0.3 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#582](https://github.com/holistics/dbml/pull/582) build(deps): bump braces from 3.0.2 to 3.0.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v3.5.1 (2024-06-11)
 
 #### :bug: Bug Fix
