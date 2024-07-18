@@ -90,7 +90,7 @@ $ sql2dbml --mysql dump.sql -o mydatabase.dbml
 
 ```bash
 $ sql2dbml <path-to-sql-file>
-           [--mysql|--postgres|--mssql|--postgres-legacy|--mysql-legacy]
+           [--mysql|--postgres|--mssql|--postgres-legacy|--mysql-legacy|--snowflake]
            [-o|--out-file <output-filepath>]
 ```
 

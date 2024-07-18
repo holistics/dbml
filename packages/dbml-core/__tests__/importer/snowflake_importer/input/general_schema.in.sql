@@ -1,0 +1,1 @@
+create table schema1.table1 (i integer not null);
