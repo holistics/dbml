@@ -53,10 +53,10 @@ class Endpoint extends Element {
   }
 
   exportParentIds () {
-    const fieldIds = new Array(this.fields.length);
-    for (let i = 0; i < this.fields.length; i += 1) fieldIds[i] = this.fields[i].id;
-
-    return { refId: this.ref.id, fieldIds };
+    return {
+      refId: this.ref.id,
+      fieldIds: this.fields.map(field => field.id),
+    };
   }
 
   shallowExport () {

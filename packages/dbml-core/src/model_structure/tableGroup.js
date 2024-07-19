@@ -59,10 +59,9 @@ class TableGroup extends Element {
   }
 
   exportChildIds () {
-    const tableIds = new Array(this.tables.length);
-    for (let i = 0; i < this.tables.length; i += 1) tableIds[i] = this.tables[i].id;
-
-    return { tableIds };
+    return {
+      tableIds: this.tables.map(t => t.id),
+    };
   }
 
   exportParentIds () {

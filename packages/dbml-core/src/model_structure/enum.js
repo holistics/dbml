@@ -70,13 +70,10 @@ class Enum extends Element {
   }
 
   exportChildIds () {
-    const valueIds = new Array(this.values.length);
-    for (let i = 0; i < this.values.length; i += 1) valueIds[i] = this.values[i].id;
-
-    const fieldIds = new Array(this.fields.length);
-    for (let i = 0; i < this.fields.length; i += 1) fieldIds[i] = this.fields[i].id;
-
-    return { valueIds, fieldIds };
+    return {
+      valueIds: this.values.map(value => value.id),
+      fieldIds: this.fields.map(field => field.id),
+    };
   }
 
   exportParentIds () {
