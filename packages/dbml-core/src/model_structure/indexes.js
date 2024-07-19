@@ -55,10 +55,9 @@ class Index extends Element {
   }
 
   exportChildIds () {
-    const columnIds = new Array(this.columns.length);
-    for (let i = 0; i < this.columns.length; i += 1) columnIds[i] = this.columns[i].id;
-
-    return { columnIds };
+    return {
+      columnIds: this.columns.map(c => c.id),
+    };
   }
 
   exportParentIds () {

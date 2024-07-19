@@ -98,13 +98,10 @@ class Table extends Element {
   }
 
   exportChildIds () {
-    const fieldIds = new Array(this.fields.length);
-    for (let i = 0; i < this.fields.length; i += 1) fieldIds[i] = this.fields[i].id;
-
-    const indexIds = new Array(this.indexes.length);
-    for (let i = 0; i < this.indexes.length; i += 1) indexIds[i] = this.indexes[i].id;
-
-    return { fieldIds, indexIds };
+    return {
+      fieldIds: this.fields.map(f => f.id),
+      indexIds: this.indexes.map(i => i.id),
+    };
   }
 
   exportParentIds () {

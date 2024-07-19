@@ -70,10 +70,9 @@ class Field extends Element {
   }
 
   exportChildIds () {
-    const endpointIds = new Array(this.endpoints.length);
-    for (let i = 0; i < this.endpoints.length; i += 1) endpointIds[i] = this.endpoints[i].id;
-
-    return { endpointIds };
+    return {
+      endpointIds: this.endpoints.map(e => e.id),
+    };
   }
 
   shallowExport () {
