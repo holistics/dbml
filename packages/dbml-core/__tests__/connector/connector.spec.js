@@ -6,7 +6,9 @@ import connector from '../../src/connector';
 
 // $ dbdocs db2dbml -postgresql --host=<db-host> --port=<db-port> --dbname=<db-name> --user=<username> --password=<password> --output=database.dbml
 describe('@dbml/core - connector', () => {
-  const connection = {};
+  const connection = {
+  };
+
   const postgresConnectorPath = './postgres_connector.dbml';
 
   const runTest = async (testName, conn, format) => {

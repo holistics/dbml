@@ -15,13 +15,22 @@ const connectPg = async (connection) => {
 
 const convertQueryBoolean = (val) => val === 'YES';
 
-const generateRawFields = (rows) => rows.map((columnRow) => {
+const generateRawField = (row) => {
   const {
     column_name,
-    data_type, udt_schema, udt_name,
-    is_nullable, identity_increment,
-  } = columnRow;
+    data_type,
+    // character_maximum_length,
+    // numeric_precision,
+    // numeric_scale,
+    udt_schema,
+    udt_name,
+    identity_increment,
+    is_nullable,
+    // column_default,
+    // default_type,
+  } = row;
 
+  // if (column_default) console.log(`type: ${default_type}, value: ${column_default}`);
   const dbdefault = null;
   /* if (column_default) {
     const [rawDefaultValue, rawDefaultType] = column_default.split('::');
@@ -46,36 +55,61 @@ const generateRawFields = (rows) => rows.map((columnRow) => {
     not_null: !convertQueryBoolean(is_nullable),
     increment: !!identity_increment,
   };
-});
+};
 
 const generateRawTables = async (client) => {
-  const tableListSql = `
-    SELECT *
-    FROM pg_catalog.pg_tables
-    WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'
+  const tablesAndFieldsSql = `
+    SELECT
+      t.table_schema,
+      t.table_name,
+      c.column_name,
+      c.data_type,
+      c.character_maximum_length,
+      c.numeric_precision,
+      c.numeric_scale,
+      c.udt_schema,
+      c.udt_name,
+      c.identity_increment,
+      c.is_nullable,
+      c.column_default,
+      CASE
+        WHEN c.column_default IS NULL THEN 'null'
+        WHEN c.column_default LIKE 'nextval(%' THEN 'expression'
+        WHEN c.column_default = 'CURRENT_TIMESTAMP' THEN 'expression'
+        WHEN c.column_default = 'true' OR c.column_default = 'false' THEN 'boolean'
+        WHEN c.column_default ~ '^-?[0-9]+(.[0-9]+)?$' THEN 'number'
+        ELSE 'string_or_expression'
+      END AS default_type
+    FROM
+      information_schema.columns c
+    JOIN
+      information_schema.tables t ON c.table_name = t.table_name AND c.table_schema = t.table_schema
+    WHERE
+      t.table_type = 'BASE TABLE'
+      AND t.table_schema NOT IN ('pg_catalog', 'information_schema')
+    ORDER BY
+      t.table_schema,
+      t.table_name,
+      c.ordinal_position
+    ;
   `;
-
-  const tableListResult = await client.query(tableListSql);
-  const rawTables = await Promise.all(tableListResult.rows.map(async (tableRow) => {
-    const { schemaname, tablename } = tableRow;
-    const columnListSql = `
-      SELECT *
-      FROM information_schema.columns
-      WHERE table_schema = '${schemaname}' AND table_name   = '${tablename}';
-    `;
-
-    const columnListResult = await client.query(columnListSql);
-    const rawFields = generateRawFields(columnListResult.rows);
-
-    const rawTable = {
-      name: tablename,
-      schemaName: schemaname,
-      rawFields,
-    };
-
-    return rawTable;
-  }));
-  return rawTables;
+  const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
+  const rawTables = tablesAndFieldsResult.rows.reduce((acc, row) => {
+    const {
+      table_schema, table_name,
+    } = row;
+    if (!acc[table_name]) {
+      acc[table_name] = {
+        name: table_name,
+        schemaName: table_schema,
+        rawFields: [],
+      };
+    }
+    const field = generateRawField(row);
+    acc[table_name].rawFields.push(field);
+    return acc; // Add this line to return the accumulator
+  }, {});
+  return Object.values(rawTables);
 };
 
 const generateTableContraints = (constraints) => {
@@ -228,6 +262,8 @@ const generateTableIndexes = async (client) => {
       user_tables ut
     LEFT JOIN
       index_info ii ON ut.tablename = ii.table_name
+    WHERE ii.columns IS NOT NULL
+    ;
   `;
   const indexListResult = await client.query(indexListSql);
 
@@ -291,7 +327,6 @@ const createIndexes = (rawIndexes) => {
     const {
       name, unique, primary, type, columns,
     } = rawIndex;
-    console.log(columns);
     const index = new Index({
       name,
       unique,
@@ -325,6 +360,7 @@ const generateRawDb = async (connection) => {
     const rawTables = await generateRawTables(client);
     const { refs, tableContraints } = await generateConstraints(rawTables, client);
     const tableIndexes = await generateTableIndexes(client);
+    console.log(tableIndexes);
     const tables = createTables(rawTables, tableIndexes, tableContraints);
 
     return {
