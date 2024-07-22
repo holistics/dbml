@@ -15,7 +15,7 @@ const connectPg = async (connection) => {
 
 const convertQueryBoolean = (val) => val === 'YES';
 
-const generateFields = (rows) => rows.map((columnRow) => {
+const generateRawFields = (rows) => rows.map((columnRow) => {
   const {
     column_name,
     data_type, udt_schema, udt_name,
@@ -39,16 +39,16 @@ const generateFields = (rows) => rows.map((columnRow) => {
     schemaname: null,
   };
 
-  return new Field({
+  return {
     name: column_name,
     type: fieldType,
     dbdefault,
     not_null: !convertQueryBoolean(is_nullable),
     increment: !!identity_increment,
-  });
+  };
 });
 
-const generateTables = async (client) => {
+const generateRawTables = async (client) => {
   const tableListSql = `
     SELECT *
     FROM pg_catalog.pg_tables
@@ -56,7 +56,7 @@ const generateTables = async (client) => {
   `;
 
   const tableListResult = await client.query(tableListSql);
-  const tables = await Promise.all(tableListResult.rows.map(async (tableRow) => {
+  const rawTables = await Promise.all(tableListResult.rows.map(async (tableRow) => {
     const { schemaname, tablename } = tableRow;
     const columnListSql = `
       SELECT *
@@ -65,22 +65,23 @@ const generateTables = async (client) => {
     `;
 
     const columnListResult = await client.query(columnListSql);
-    const fields = generateFields(columnListResult.rows);
+    const rawFields = generateRawFields(columnListResult.rows);
 
-    const table = new Table({
+    const rawTable = {
       name: tablename,
       schemaName: schemaname,
-      fields,
-    });
+      rawFields,
+    };
 
-    return table;
+    return rawTable;
   }));
-  return tables;
+  return rawTables;
 };
 
-const generateTableRefs = (constraints, fields) => {
+const generateTableContraints = (constraints) => {
   const registeredFK = [];
   const refs = [];
+  const fieldConstraints = {};
   constraints.rows.forEach((constraintRow) => {
     const {
       table_schema, constraint_name, table_name, column_name, foreign_table_schema, foreign_table_name, foreign_column_name, constraint_type,
@@ -88,8 +89,19 @@ const generateTableRefs = (constraints, fields) => {
 
     switch (constraint_type) {
       case 'PRIMARY KEY': {
-        const pkField = fields.find((f) => f.name === column_name);
-        pkField.pk = true;
+        if (fieldConstraints[column_name]) {
+          fieldConstraints[column_name].pk = true;
+        } else {
+          fieldConstraints[column_name] = { pk: true };
+        }
+        break;
+      }
+      case 'UNIQUE': {
+        if (fieldConstraints[column_name]) {
+          fieldConstraints[column_name].unique = true;
+        } else {
+          fieldConstraints[column_name] = { unique: true };
+        }
         break;
       }
       case 'FOREIGN KEY': {
@@ -133,11 +145,15 @@ const generateTableRefs = (constraints, fields) => {
     }
   });
 
-  return refs;
+  return {
+    refs,
+    fieldConstraints,
+  };
 };
 
-const generateRefs = async (tables, client) => {
-  const refs = await Promise.all(tables.map(async (table) => {
+const generateConstraints = async (tables, client) => {
+  const tableContraints = {};
+  const tableRefs = await Promise.all(tables.map(async (table) => {
     const constraintListSql = `
       SELECT
         tc.table_schema,
@@ -158,22 +174,63 @@ const generateRefs = async (tables, client) => {
     `;
 
     const constraintListResult = await client.query(constraintListSql);
-    return generateTableRefs(constraintListResult, table.fields);
+    const { refs, fieldConstraints } = generateTableContraints(constraintListResult, table.fields);
+    tableContraints[table.name] = fieldConstraints;
+    return refs;
   }));
-  return flatten(refs);
+  return {
+    refs: flatten(tableRefs),
+    tableContraints,
+  };
+};
+
+const createFields = (rawFields, fieldsConstraints) => {
+  return rawFields.map((field) => {
+    const constraints = fieldsConstraints[field.name] || {};
+    const f = new Field({
+      name: field.name,
+      type: field.type,
+      dbdefault: field.dbdefault,
+      not_null: field.not_null,
+      increment: field.increment,
+      pk: constraints.pk,
+      unique: constraints.unique,
+    });
+    return f;
+  });
+};
+
+const createTables = (rawTables, fieldsConstraints) => {
+  return rawTables.map((rawTable) => {
+    const { name, schemaName, rawFields } = rawTable;
+    const fields = createFields(rawFields, fieldsConstraints[name]);
+
+    return new Table({
+      name,
+      schemaName,
+      fields,
+      indexes: [],
+      enums: [],
+    });
+  });
 };
 
 const generateRawDb = async (connection) => {
   const client = await connectPg(connection);
+  try {
+    const rawTables = await generateRawTables(client);
+    const { refs, tableContraints } = await generateConstraints(rawTables, client);
+    const tables = createTables(rawTables, tableContraints);
 
-  const tables = await generateTables(client);
-  const refs = await generateRefs(tables, client);
-  await client.end();
-
-  return {
-    tables,
-    refs,
-  };
+    return {
+      tables,
+      refs,
+    };
+  } catch (err) {
+    throw new Error(err);
+  } finally {
+    client.end();
+  }
 };
 
 export default class PostgresDBASTGen {
