@@ -184,6 +184,92 @@ const generateConstraints = async (tables, client) => {
   };
 };
 
+const generateTableIndexes = async (client) => {
+  const indexListSql = `
+    WITH user_tables AS (
+      SELECT tablename
+      FROM pg_tables
+      WHERE schemaname = 'public'
+        AND tablename NOT LIKE 'pg_%'
+        AND tablename NOT LIKE 'sql_%'
+    ),
+    index_info AS (
+      SELECT
+        t.relname AS table_name,
+        i.relname AS index_name,
+        ix.indisunique AS is_unique,
+        ix.indisprimary AS is_primary,
+        am.amname AS index_type,
+        array_to_string(array_agg(a.attname ORDER BY x.n), ', ') AS columns,
+        pg_get_expr(ix.indexprs, ix.indrelid) AS expressions
+      FROM
+        pg_class t
+        JOIN pg_index ix ON t.oid = ix.indrelid
+        JOIN pg_class i ON i.oid = ix.indexrelid
+        LEFT JOIN pg_attribute a ON a.attrelid = t.oid AND a.attnum = ANY(ix.indkey)
+        JOIN pg_am am ON i.relam = am.oid
+        LEFT JOIN generate_subscripts(ix.indkey, 1) AS x(n) ON a.attnum = ix.indkey[x.n]
+      WHERE
+        t.relkind = 'r'
+        AND t.relname NOT LIKE 'pg_%'
+        AND t.relname NOT LIKE 'sql_%'
+      GROUP BY
+        t.relname, i.relname, ix.indisunique, ix.indisprimary, am.amname, ix.indexprs, ix.indrelid
+    )
+    SELECT
+      ut.tablename AS table_name,
+      ii.index_name,
+      ii.is_unique,
+      ii.is_primary,
+      ii.index_type,
+      ii.columns,
+      ii.expressions
+    FROM
+      user_tables ut
+    LEFT JOIN
+      index_info ii ON ut.tablename = ii.table_name
+  `;
+  const indexListResult = await client.query(indexListSql);
+
+  return indexListResult.rows.reduce((acc, indexRow) => {
+    const {
+      table_name, index_name, is_unique, is_primary, index_type, columns, expressions,
+    } = indexRow;
+    const indexColumns = columns.split(',').map((column) => {
+      return {
+        type: 'column',
+        value: column.trim(),
+      };
+    });
+
+    const indexExpressions = expressions ? expressions.split(',').map((expression) => {
+      return {
+        type: 'expression',
+        value: expression,
+      };
+    }) : [];
+
+    const index = {
+      name: index_name,
+      unique: is_unique,
+      primary: is_primary,
+      type: index_type,
+      columns: [
+        ...indexColumns,
+        ...indexExpressions,
+      ],
+    };
+
+    if (acc[table_name]) {
+      acc[table_name].push(index);
+    } else {
+      acc[table_name] = [index];
+    }
+
+    return acc;
+  }, {});
+};
+
 const createFields = (rawFields, fieldsConstraints) => {
   return rawFields.map((field) => {
     const constraints = fieldsConstraints[field.name] || {};
@@ -200,16 +286,34 @@ const createFields = (rawFields, fieldsConstraints) => {
   });
 };
 
-const createTables = (rawTables, fieldsConstraints) => {
+const createIndexes = (rawIndexes) => {
+  return rawIndexes.map((rawIndex) => {
+    const {
+      name, unique, primary, type, columns,
+    } = rawIndex;
+    console.log(columns);
+    const index = new Index({
+      name,
+      unique,
+      pk: primary,
+      type,
+      columns,
+    });
+    return index;
+  });
+};
+
+const createTables = (rawTables, tableIndexes, fieldsConstraints) => {
   return rawTables.map((rawTable) => {
     const { name, schemaName, rawFields } = rawTable;
     const fields = createFields(rawFields, fieldsConstraints[name]);
+    const indexes = createIndexes(tableIndexes[name] || []);
 
     return new Table({
       name,
       schemaName,
       fields,
-      indexes: [],
+      indexes,
       enums: [],
     });
   });
@@ -220,7 +324,8 @@ const generateRawDb = async (connection) => {
   try {
     const rawTables = await generateRawTables(client);
     const { refs, tableContraints } = await generateConstraints(rawTables, client);
-    const tables = createTables(rawTables, tableContraints);
+    const tableIndexes = await generateTableIndexes(client);
+    const tables = createTables(rawTables, tableIndexes, tableContraints);
 
     return {
       tables,
@@ -234,8 +339,7 @@ const generateRawDb = async (connection) => {
 };
 
 export default class PostgresDBASTGen {
-  constructor (connection) {
-    this.connection = connection;
+  constructor () {
     this.data = {
       schemas: [],
       tables: [],
@@ -247,8 +351,8 @@ export default class PostgresDBASTGen {
     };
   }
 
-  async fetch () {
-    const { tables, refs } = await generateRawDb(this.connection);
+  async fetch (connection) {
+    const { tables, refs } = await generateRawDb(connection);
 
     this.data.tables = tables;
     this.data.refs = refs;

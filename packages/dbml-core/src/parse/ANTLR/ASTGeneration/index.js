@@ -82,7 +82,7 @@ function fetch (connection, format) {
 
   switch (format) {
     case 'postgres': {
-      database = new PostgresDBASTGen(connection).fetch();
+      database = new PostgresDBASTGen().fetch(connection);
 
       if (errorListener.errors.length) throw errorListener.errors;
       break;
