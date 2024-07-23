@@ -8,11 +8,11 @@
         "column": 0
       },
       "endPos": {
-        "offset": 106,
+        "offset": 104,
         "line": 6,
-        "column": 7
+        "column": 5
       },
-      "value": "This is also an unclosed string\n\n'''",
+      "value": "This is also an unclosed string\n\n'",
       "leadingTrivia": [
         {
           "kind": "<newline>",
@@ -36,29 +36,7 @@
           "end": 63
         }
       ],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 106,
-            "line": 6,
-            "column": 7
-          },
-          "endPos": {
-            "offset": 107,
-            "line": 7,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 106,
-          "end": 107
-        }
-      ],
+      "trailingTrivia": [],
       "leadingInvalid": [
         {
           "kind": "<variable>",
@@ -169,6 +147,49 @@
           "end": 61
         }
       ],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 63,
+      "end": 104
+    },
+    {
+      "kind": "<string>",
+      "startPos": {
+        "offset": 104,
+        "line": 6,
+        "column": 5
+      },
+      "endPos": {
+        "offset": 106,
+        "line": 6,
+        "column": 7
+      },
+      "value": "",
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 106,
+            "line": 6,
+            "column": 7
+          },
+          "endPos": {
+            "offset": 107,
+            "line": 7,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 106,
+          "end": 107
+        }
+      ],
+      "leadingInvalid": [],
       "trailingInvalid": [
         {
           "kind": "<string>",
@@ -215,7 +236,7 @@
         }
       ],
       "isInvalid": false,
-      "start": 63,
+      "start": 104,
       "end": 106
     },
     {
