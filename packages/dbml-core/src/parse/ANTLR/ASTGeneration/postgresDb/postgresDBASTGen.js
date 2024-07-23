@@ -57,7 +57,8 @@ const generateRawField = (row) => {
   };
 };
 
-const generateRawTables = async (client) => {
+const generateRawTablesAndFields = async (client) => {
+  const rawFields = {};
   const tablesAndFieldsSql = `
     SELECT
       t.table_schema,
@@ -95,47 +96,45 @@ const generateRawTables = async (client) => {
   `;
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
   const rawTables = tablesAndFieldsResult.rows.reduce((acc, row) => {
-    const {
-      table_schema, table_name,
-    } = row;
+    const { table_schema, table_name } = row;
     if (!acc[table_name]) {
       acc[table_name] = {
         name: table_name,
         schemaName: table_schema,
-        rawFields: [],
       };
     }
+
+    if (!rawFields[table_name]) rawFields[table_name] = [];
     const field = generateRawField(row);
-    acc[table_name].rawFields.push(field);
+    rawFields[table_name].push(field);
+
     return acc; // Add this line to return the accumulator
   }, {});
-  return Object.values(rawTables);
+  return {
+    rawTables: Object.values(rawTables),
+    rawFields,
+  };
 };
 
 const generateTableContraints = (constraints) => {
   const registeredFK = [];
   const refs = [];
-  const fieldConstraints = {};
+  const tableConstraints = {};
   constraints.rows.forEach((constraintRow) => {
     const {
       table_schema, constraint_name, table_name, column_name, foreign_table_schema, foreign_table_name, foreign_column_name, constraint_type,
     } = constraintRow;
 
+    if (!tableConstraints[table_name]) tableConstraints[table_name] = {};
+    if (!tableConstraints[table_name][column_name]) tableConstraints[table_name][column_name] = {};
+
     switch (constraint_type) {
       case 'PRIMARY KEY': {
-        if (fieldConstraints[column_name]) {
-          fieldConstraints[column_name].pk = true;
-        } else {
-          fieldConstraints[column_name] = { pk: true };
-        }
+        tableConstraints[table_name][column_name].pk = true;
         break;
       }
       case 'UNIQUE': {
-        if (fieldConstraints[column_name]) {
-          fieldConstraints[column_name].unique = true;
-        } else {
-          fieldConstraints[column_name] = { unique: true };
-        }
+        tableConstraints[table_name][column_name].unique = true;
         break;
       }
       case 'FOREIGN KEY': {
@@ -181,40 +180,35 @@ const generateTableContraints = (constraints) => {
 
   return {
     refs,
-    fieldConstraints,
+    tableConstraints,
   };
 };
 
-const generateConstraints = async (tables, client) => {
-  const tableContraints = {};
-  const tableRefs = await Promise.all(tables.map(async (table) => {
-    const constraintListSql = `
-      SELECT
-        tc.table_schema,
-        tc.constraint_name,
-        tc.table_name,
-        kcu.column_name,
-        ccu.table_schema AS foreign_table_schema,
-        ccu.table_name AS foreign_table_name,
-        ccu.column_name AS foreign_column_name,
-        tc.constraint_type
-      FROM information_schema.table_constraints AS tc
-      JOIN information_schema.key_column_usage AS kcu
-        ON tc.constraint_name = kcu.constraint_name
-        AND tc.table_schema = kcu.table_schema
-      JOIN information_schema.constraint_column_usage AS ccu
-        ON ccu.constraint_name = tc.constraint_name
-      WHERE tc.table_schema='${table.schemaName}' AND tc.table_name='${table.name}';
-    `;
+const generateConstraints = async (client) => {
+  const constraintListSql = `
+    SELECT
+      tc.table_schema,
+      tc.constraint_name,
+      tc.table_name,
+      kcu.column_name,
+      ccu.table_schema AS foreign_table_schema,
+      ccu.table_name AS foreign_table_name,
+      ccu.column_name AS foreign_column_name,
+      tc.constraint_type
+    FROM information_schema.table_constraints AS tc
+    JOIN information_schema.key_column_usage AS kcu
+      ON tc.constraint_name = kcu.constraint_name
+      AND tc.table_schema = kcu.table_schema
+    JOIN information_schema.constraint_column_usage AS ccu
+      ON ccu.constraint_name = tc.constraint_name
+    WHERE tc.table_schema NOT IN ('pg_catalog', 'information_schema');
+  `;
 
-    const constraintListResult = await client.query(constraintListSql);
-    const { refs, fieldConstraints } = generateTableContraints(constraintListResult, table.fields);
-    tableContraints[table.name] = fieldConstraints;
-    return refs;
-  }));
+  const constraintListResult = await client.query(constraintListSql);
+  const { refs, tableConstraints } = generateTableContraints(constraintListResult);
   return {
-    refs: flatten(tableRefs),
-    tableContraints,
+    refs,
+    tableConstraints,
   };
 };
 
@@ -338,10 +332,11 @@ const createIndexes = (rawIndexes) => {
   });
 };
 
-const createTables = (rawTables, tableIndexes, fieldsConstraints) => {
+const createTables = (rawTables, rawFields, tableIndexes, tableConstraints) => {
   return rawTables.map((rawTable) => {
-    const { name, schemaName, rawFields } = rawTable;
-    const fields = createFields(rawFields, fieldsConstraints[name]);
+    const { name, schemaName } = rawTable;
+    const constraints = tableConstraints[name] || {};
+    const fields = createFields(rawFields[name], constraints);
     const indexes = createIndexes(tableIndexes[name] || []);
 
     return new Table({
@@ -357,11 +352,15 @@ const createTables = (rawTables, tableIndexes, fieldsConstraints) => {
 const generateRawDb = async (connection) => {
   const client = await connectPg(connection);
   try {
-    const rawTables = await generateRawTables(client);
-    const { refs, tableContraints } = await generateConstraints(rawTables, client);
-    const tableIndexes = await generateTableIndexes(client);
-    console.log(tableIndexes);
-    const tables = createTables(rawTables, tableIndexes, tableContraints);
+    const data1 = generateRawTablesAndFields(client);
+    const data2 = generateTableIndexes(client);
+    const data3 = generateConstraints(client);
+
+    const result = await Promise.all([data1, data2, data3]);
+    const { rawTables, rawFields } = result[0];
+    const tableIndexes = result[1];
+    const { refs, tableConstraints } = result[2];
+    const tables = createTables(rawTables, rawFields, tableIndexes, tableConstraints);
 
     return {
       tables,
