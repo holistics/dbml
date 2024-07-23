@@ -1,41 +1,19 @@
 {
   "value": [
     {
-      "kind": "<string>",
+      "kind": "<eof>",
       "startPos": {
-        "offset": 63,
-        "line": 4,
+        "offset": 104,
+        "line": 7,
         "column": 0
       },
       "endPos": {
         "offset": 104,
-        "line": 6,
-        "column": 5
+        "line": 7,
+        "column": 0
       },
-      "value": "This is also an unclosed string\n\n'",
-      "leadingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 62,
-            "line": 3,
-            "column": 0
-          },
-          "endPos": {
-            "offset": 63,
-            "line": 4,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 62,
-          "end": 63
-        }
-      ],
+      "value": "",
+      "leadingTrivia": [],
       "trailingTrivia": [],
       "leadingInvalid": [
         {
@@ -145,76 +123,31 @@
           "isInvalid": true,
           "start": 29,
           "end": 61
-        }
-      ],
-      "trailingInvalid": [],
-      "isInvalid": false,
-      "start": 63,
-      "end": 104
-    },
-    {
-      "kind": "<string>",
-      "startPos": {
-        "offset": 104,
-        "line": 6,
-        "column": 5
-      },
-      "endPos": {
-        "offset": 106,
-        "line": 6,
-        "column": 7
-      },
-      "value": "",
-      "leadingTrivia": [],
-      "trailingTrivia": [
-        {
-          "kind": "<newline>",
-          "startPos": {
-            "offset": 106,
-            "line": 6,
-            "column": 7
-          },
-          "endPos": {
-            "offset": 107,
-            "line": 7,
-            "column": 0
-          },
-          "value": "\n",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 106,
-          "end": 107
-        }
-      ],
-      "leadingInvalid": [],
-      "trailingInvalid": [
+        },
         {
           "kind": "<string>",
           "startPos": {
-            "offset": 108,
-            "line": 8,
+            "offset": 63,
+            "line": 4,
             "column": 0
           },
           "endPos": {
-            "offset": 111,
-            "line": 8,
-            "column": 3
+            "offset": 104,
+            "line": 7,
+            "column": 0
           },
-          "value": "'''",
+          "value": "'''This is also an unclosed string\n\n\\'''\n",
           "leadingTrivia": [
             {
               "kind": "<newline>",
               "startPos": {
-                "offset": 107,
-                "line": 7,
+                "offset": 62,
+                "line": 3,
                 "column": 0
               },
               "endPos": {
-                "offset": 108,
-                "line": 8,
+                "offset": 63,
+                "line": 4,
                 "column": 0
               },
               "value": "\n",
@@ -223,42 +156,22 @@
               "leadingInvalid": [],
               "trailingInvalid": [],
               "isInvalid": false,
-              "start": 107,
-              "end": 108
+              "start": 62,
+              "end": 63
             }
           ],
           "trailingTrivia": [],
           "leadingInvalid": [],
           "trailingInvalid": [],
           "isInvalid": true,
-          "start": 108,
-          "end": 111
+          "start": 63,
+          "end": 104
         }
       ],
-      "isInvalid": false,
-      "start": 104,
-      "end": 106
-    },
-    {
-      "kind": "<eof>",
-      "startPos": {
-        "offset": 111,
-        "line": 8,
-        "column": 3
-      },
-      "endPos": {
-        "offset": 111,
-        "line": 8,
-        "column": 3
-      },
-      "value": "",
-      "leadingTrivia": [],
-      "trailingTrivia": [],
-      "leadingInvalid": [],
       "trailingInvalid": [],
       "isInvalid": false,
-      "start": 111,
-      "end": 111
+      "start": 104,
+      "end": 104
     }
   ],
   "errors": [
@@ -390,27 +303,27 @@
       "nodeOrToken": {
         "kind": "<string>",
         "startPos": {
-          "offset": 108,
-          "line": 8,
+          "offset": 63,
+          "line": 4,
           "column": 0
         },
         "endPos": {
-          "offset": 111,
-          "line": 8,
-          "column": 3
+          "offset": 104,
+          "line": 7,
+          "column": 0
         },
-        "value": "'''",
+        "value": "'''This is also an unclosed string\n\n\\'''\n",
         "leadingTrivia": [
           {
             "kind": "<newline>",
             "startPos": {
-              "offset": 107,
-              "line": 7,
+              "offset": 62,
+              "line": 3,
               "column": 0
             },
             "endPos": {
-              "offset": 108,
-              "line": 8,
+              "offset": 63,
+              "line": 4,
               "column": 0
             },
             "value": "\n",
@@ -419,19 +332,19 @@
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 107,
-            "end": 108
+            "start": 62,
+            "end": 63
           }
         ],
         "trailingTrivia": [],
         "leadingInvalid": [],
         "trailingInvalid": [],
         "isInvalid": true,
-        "start": 108,
-        "end": 111
+        "start": 63,
+        "end": 104
       },
-      "start": 108,
-      "end": 111,
+      "start": 63,
+      "end": 104,
       "name": "CompileError"
     }
   ]
