@@ -14,6 +14,21 @@ const connectPg = async (connection) => {
 };
 
 const convertQueryBoolean = (val) => val === 'YES';
+const getDbdefault = (data_type, column_default, default_type) => {
+  if (default_type === 'string') {
+    const rawDefaultValues = column_default.split('::')[0];
+    const isJson = data_type === 'json' || data_type === 'jsonb';
+    const type = isJson ? 'expression' : 'string';
+    return {
+      type,
+      value: rawDefaultValues.slice(1, -1),
+    };
+  }
+  return {
+    type: default_type,
+    value: column_default,
+  };
+};
 
 const generateRawField = (row) => {
   const {
@@ -26,19 +41,11 @@ const generateRawField = (row) => {
     udt_name,
     identity_increment,
     is_nullable,
-    // column_default,
-    // default_type,
+    column_default,
+    default_type,
   } = row;
 
-  // if (column_default) console.log(`type: ${default_type}, value: ${column_default}`);
-  const dbdefault = null;
-  /* if (column_default) {
-    const [rawDefaultValue, rawDefaultType] = column_default.split('::');
-    dbdefault = { // improve this later
-      type: 'string', // always string for now,
-      value: rawDefaultValue,
-    };
-  } */
+  const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(data_type, column_default, default_type) : null;
 
   const fieldType = data_type === 'USER-DEFINED' ? { // TODO: add enum first
     type_name: `"${udt_name}.${udt_schema}"`, // udt_name,
@@ -53,7 +60,7 @@ const generateRawField = (row) => {
     type: fieldType,
     dbdefault,
     not_null: !convertQueryBoolean(is_nullable),
-    increment: !!identity_increment,
+    increment: !!identity_increment || default_type === 'increment',
   };
 };
 
@@ -74,12 +81,13 @@ const generateRawTablesAndFields = async (client) => {
       c.is_nullable,
       c.column_default,
       CASE
-        WHEN c.column_default IS NULL THEN 'null'
-        WHEN c.column_default LIKE 'nextval(%' THEN 'expression'
+        WHEN c.column_default IS NULL THEN NULL
+        WHEN c.column_default LIKE 'nextval(%' THEN 'increment'
         WHEN c.column_default = 'CURRENT_TIMESTAMP' THEN 'expression'
+        WHEN c.column_default LIKE '''%' THEN 'string'
         WHEN c.column_default = 'true' OR c.column_default = 'false' THEN 'boolean'
         WHEN c.column_default ~ '^-?[0-9]+(.[0-9]+)?$' THEN 'number'
-        ELSE 'string_or_expression'
+        ELSE 'expression'
       END AS default_type
     FROM
       information_schema.columns c
@@ -108,7 +116,7 @@ const generateRawTablesAndFields = async (client) => {
     const field = generateRawField(row);
     rawFields[table_name].push(field);
 
-    return acc; // Add this line to return the accumulator
+    return acc;
   }, {});
   return {
     rawTables: Object.values(rawTables),
