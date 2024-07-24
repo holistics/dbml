@@ -513,7 +513,7 @@ Table "purchasing"."purchaseorderdetail" {
   "duedate" timestamp [not null, note: 'Date the product is expected to be received.']
   "orderqty" smallint [not null, note: 'Quantity ordered.']
   "productid" integer [not null, note: 'Product identification number. Foreign key to Product.ProductID.']
-  "unitprice" numeric [not null, note: '''Vendor's selling price of a single product.''']
+  "unitprice" numeric [not null, note: '''Vendor\'s selling price of a single product.''']
   "receivedqty" numeric(8,2) [not null, note: 'Quantity actually received from the vendor.']
   "rejectedqty" numeric(8,2) [not null, note: 'Quantity rejected during inspection.']
   "modifieddate" timestamp [not null, default: `now()`]
