@@ -111,6 +111,7 @@ const generateRawTablesAndFields = async (client) => {
       c.ordinal_position
     ;
   `;
+
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
   const rawTables = tablesAndFieldsResult.rows.reduce((acc, row) => {
     const { table_schema, table_name } = row;
