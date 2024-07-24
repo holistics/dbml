@@ -454,7 +454,8 @@ Note: '''
 - Line continuation: `\` backslash
 - Escaping characters:
   - `\`: using double backslash `\\`
-  - `'''`: using `\'''`
+  - `'`: using `\'`
+  - `"`: using `\"`
 - The number of spaces you use to indent a block string will be the minimum number of leading spaces among all lines. The parser will automatically remove the number of indentation spaces in the final output. The result of the above example will be:
 
 ```text
