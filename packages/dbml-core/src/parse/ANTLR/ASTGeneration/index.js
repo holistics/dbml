@@ -13,8 +13,6 @@ import SnowflakeLexer from '../parsers/snowflake/SnowflakeLexer';
 import SnowflakeParser from '../parsers/snowflake/SnowflakeParser';
 import SnowflakeASTGen from './snowflake/SnowflakeASTGen';
 
-import PostgresDBASTGen from './postgresDb/postgresDBASTGen';
-
 import ParserErrorListener from './ParserErrorListener';
 
 function parse (input, format) {
@@ -76,24 +74,6 @@ function parse (input, format) {
   return database;
 }
 
-function fetch (connection, format) {
-  let database = null;
-  const errorListener = new ParserErrorListener();
-
-  switch (format) {
-    case 'postgres': {
-      database = new PostgresDBASTGen().fetch(connection);
-
-      if (errorListener.errors.length) throw errorListener.errors;
-      break;
-    }
-    default:
-      throw new Error(`Format not supported: ${format}`);
-  }
-  return database;
-}
-
 export {
   parse,
-  fetch,
 };

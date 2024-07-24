@@ -1,6 +1,7 @@
 import program from 'commander';
 import importHandler from './import';
 import exportHandler from './export';
+import connectionHandler from './connector';
 import projectInfo from '../../package.json';
 
 function dbml2sql (args) {
@@ -39,7 +40,26 @@ function sql2dbml (args) {
   importHandler(program);
 }
 
+function db2dbml (args) {
+  program.version(projectInfo.version);
+
+  program
+    .usage('[options]')
+    .option('--postgres', 'connect to a postgresql database')
+    .option('--database <name>', 'database name')
+    .option('--host <host>', 'database host. default: localhost')
+    .option('--port <port>', 'database port. default: 5432')
+    .option('--user <user>', 'database user')
+    .option('--password <password>', 'database password')
+    .option('-o, --out-file <pathspec>', 'compile all input files into a single files');
+
+  program.parse(args);
+
+  connectionHandler(program);
+}
+
 export {
   dbml2sql,
   sql2dbml,
+  db2dbml,
 };

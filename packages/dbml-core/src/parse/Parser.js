@@ -5,7 +5,8 @@ import postgresParser from './postgresParser';
 import dbmlParser from './dbmlParser';
 import schemarbParser from './schemarbParser';
 import mssqlParser from './mssqlParser';
-import { parse, fetch } from './ANTLR/ASTGeneration';
+import { parse } from './ANTLR/ASTGeneration';
+import { fetch } from './connection/ConnectionASTGeneration';
 import { CompilerError } from './error';
 
 class Parser {
