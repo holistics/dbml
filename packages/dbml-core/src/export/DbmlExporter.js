@@ -25,7 +25,6 @@ class DbmlExporter {
       return `'${newStr}'`;
     }
     newStr = newStr.replaceAll("'", "\\'");
-    newStr = newStr.replaceAll('"', '\\"');
     newStr = newStr.replaceAll('\r\n', '\n'); // turn all CRLF to LF
     return `'''${newStr}'''`;
   }
