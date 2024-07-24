@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import { Client } from 'pg';
-import { flatten } from 'lodash';
-import { Endpoint, Enum, Field, Index, Table, Ref } from '../AST';
+import { Endpoint, Enum, Field, Index, Table, Ref } from '../../ANTLR/ASTGeneration/AST';
 
 const connectPg = async (connection) => {
   if (!connection.host) throw new Error('Host is required');
@@ -447,7 +446,7 @@ const generateRawDb = async (connection) => {
   }
 };
 
-export default class PostgresDBASTGen {
+export default class PostgresConnectionASTGen {
   constructor () {
     this.data = {
       schemas: [],

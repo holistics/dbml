@@ -7,6 +7,11 @@ import connector from '../../src/connector';
 // $ dbdocs db2dbml -postgresql --host=<db-host> --port=<db-port> --dbname=<db-name> --user=<username> --password=<password> --output=database.dbml
 describe('@dbml/core - connector', () => {
   const connection = {
+    user: 'huyphung',
+    host: 'localhost',
+    database: 'shopify',
+    password: '',
+    port: '5432',
   };
 
   const postgresConnectorPath = './postgres_connector.dbml';
