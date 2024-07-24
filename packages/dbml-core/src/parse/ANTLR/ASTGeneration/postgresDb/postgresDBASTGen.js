@@ -14,6 +14,17 @@ const connectPg = async (connection) => {
 };
 
 const convertQueryBoolean = (val) => val === 'YES';
+
+const getFieldType = (data_type, character_maximum_length, numeric_precision, numeric_scale) => {
+  if (character_maximum_length) {
+    return `${data_type}(${character_maximum_length})`;
+  }
+  if (numeric_precision && numeric_scale) {
+    return `${data_type}(${numeric_precision},${numeric_scale})`;
+  }
+  return data_type;
+};
+
 const getDbdefault = (data_type, column_default, default_type) => {
   if (default_type === 'string') {
     const rawDefaultValues = column_default.split('::')[0];
@@ -34,9 +45,9 @@ const generateRawField = (row) => {
   const {
     column_name,
     data_type,
-    // character_maximum_length,
-    // numeric_precision,
-    // numeric_scale,
+    character_maximum_length,
+    numeric_precision,
+    numeric_scale,
     udt_schema,
     udt_name,
     identity_increment,
@@ -51,7 +62,7 @@ const generateRawField = (row) => {
     type_name: udt_name,
     schemaName: udt_schema,
   } : {
-    type_name: data_type,
+    type_name: getFieldType(data_type, character_maximum_length, numeric_precision, numeric_scale),
     schemaname: null,
   };
 
