@@ -1,6 +1,13 @@
 /* eslint-disable camelcase */
 import { Client } from 'pg';
-import { Endpoint, Enum, Field, Index, Table, Ref } from '../../ANTLR/ASTGeneration/AST';
+import {
+  Endpoint,
+  Enum,
+  Field,
+  Index,
+  Table,
+  Ref,
+} from '../../ANTLR/ASTGeneration/AST';
 
 const connectPg = async (connection) => {
   if (!connection.host) throw new Error('Host is required');
@@ -14,14 +21,36 @@ const connectPg = async (connection) => {
 
 const convertQueryBoolean = (val) => val === 'YES';
 
+const fullTypeToAlias = (fullType) => {
+  switch (fullType) {
+    case 'character varying':
+      return 'varchar';
+    case 'character':
+      return 'char';
+    case 'time without time zone':
+      return 'time';
+    case 'time with time zone':
+      return 'timetz';
+    case 'timestamp without time zone':
+      return 'timestamp';
+    case 'timestamp with time zone':
+      return 'timestamptz';
+    case 'double precision':
+      return 'float8';
+    default:
+      return fullType;
+  }
+};
+
 const getFieldType = (data_type, character_maximum_length, numeric_precision, numeric_scale) => {
+  const type = fullTypeToAlias(data_type);
   if (character_maximum_length) {
-    return `${data_type}(${character_maximum_length})`;
+    return `${type}(${character_maximum_length})`;
   }
   if (numeric_precision && numeric_scale) {
     return `${data_type}(${numeric_precision},${numeric_scale})`;
   }
-  return data_type;
+  return type;
 };
 
 const getDbdefault = (data_type, column_default, default_type) => {
@@ -135,27 +164,36 @@ const generateRawTablesAndFields = async (client) => {
   };
 };
 
-const generateTableContraints = (constraints) => {
+const generateRefs = async (client) => {
   const registeredFK = [];
   const refs = [];
-  const tableConstraints = {};
+
+  const constraintListSql = `
+    SELECT
+      tc.table_schema,
+      tc.constraint_name,
+      tc.table_name,
+      kcu.column_name,
+      ccu.table_schema AS foreign_table_schema,
+      ccu.table_name AS foreign_table_name,
+      ccu.column_name AS foreign_column_name,
+      tc.constraint_type
+    FROM information_schema.table_constraints AS tc
+    JOIN information_schema.key_column_usage AS kcu
+      ON tc.constraint_name = kcu.constraint_name
+      AND tc.table_schema = kcu.table_schema
+    JOIN information_schema.constraint_column_usage AS ccu
+      ON ccu.constraint_name = tc.constraint_name
+    WHERE tc.table_schema NOT IN ('pg_catalog', 'information_schema');
+  `;
+
+  const constraints = await client.query(constraintListSql);
   constraints.rows.forEach((constraintRow) => {
     const {
       table_schema, constraint_name, table_name, column_name, foreign_table_schema, foreign_table_name, foreign_column_name, constraint_type,
     } = constraintRow;
 
-    if (!tableConstraints[table_name]) tableConstraints[table_name] = {};
-    if (!tableConstraints[table_name][column_name]) tableConstraints[table_name][column_name] = {};
-
     switch (constraint_type) {
-      case 'PRIMARY KEY': {
-        tableConstraints[table_name][column_name].pk = true;
-        break;
-      }
-      case 'UNIQUE': {
-        tableConstraints[table_name][column_name].unique = true;
-        break;
-      }
       case 'FOREIGN KEY': {
         const ep1 = new Endpoint({
           tableName: table_name,
@@ -197,41 +235,11 @@ const generateTableContraints = (constraints) => {
     }
   });
 
-  return {
-    refs,
-    tableConstraints,
-  };
-};
-
-const generateConstraints = async (client) => {
-  const constraintListSql = `
-    SELECT
-      tc.table_schema,
-      tc.constraint_name,
-      tc.table_name,
-      kcu.column_name,
-      ccu.table_schema AS foreign_table_schema,
-      ccu.table_name AS foreign_table_name,
-      ccu.column_name AS foreign_column_name,
-      tc.constraint_type
-    FROM information_schema.table_constraints AS tc
-    JOIN information_schema.key_column_usage AS kcu
-      ON tc.constraint_name = kcu.constraint_name
-      AND tc.table_schema = kcu.table_schema
-    JOIN information_schema.constraint_column_usage AS ccu
-      ON ccu.constraint_name = tc.constraint_name
-    WHERE tc.table_schema NOT IN ('pg_catalog', 'information_schema');
-  `;
-
-  const constraintListResult = await client.query(constraintListSql);
-  const { refs, tableConstraints } = generateTableContraints(constraintListResult);
-  return {
-    refs,
-    tableConstraints,
-  };
+  return refs;
 };
 
 const generateRawIndexes = async (client) => {
+  // const tableConstraints = {};
   const indexListSql = `
     WITH user_tables AS (
       SELECT tablename
@@ -248,7 +256,12 @@ const generateRawIndexes = async (client) => {
         ix.indisprimary AS is_primary,
         am.amname AS index_type,
         array_to_string(array_agg(a.attname ORDER BY x.n), ', ') AS columns,
-        pg_get_expr(ix.indexprs, ix.indrelid) AS expressions
+        pg_get_expr(ix.indexprs, ix.indrelid) AS expressions,
+        CASE
+          WHEN ix.indisprimary THEN 'PRIMARY KEY'
+          WHEN ix.indisunique THEN 'UNIQUE'
+          ELSE NULL
+        END AS constraint_type
       FROM
         pg_class t
         JOIN pg_index ix ON t.oid = ix.indrelid
@@ -270,19 +283,37 @@ const generateRawIndexes = async (client) => {
       ii.is_primary,
       ii.index_type,
       ii.columns,
-      ii.expressions
+      ii.expressions,
+      ii.constraint_type  -- Added constraint type
     FROM
       user_tables ut
     LEFT JOIN
       index_info ii ON ut.tablename = ii.table_name
     WHERE ii.columns IS NOT NULL
+    ORDER BY
+      ut.tablename,
+      ii.constraint_type,
+      ii.index_name
     ;
   `;
   const indexListResult = await client.query(indexListSql);
+  const { indexes, constraint } = indexListResult.rows.reduce((acc, row) => {
+    const { constraint_type } = row;
+    if (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE') {
+      acc.constraint.push(row);
+    } else {
+      acc.indexes.push(row);
+    }
+    return acc;
+  }, { indexes: [], constraint: [] });
 
-  return indexListResult.rows.reduce((acc, indexRow) => {
+  const rawIndexes = indexes.reduce((acc, indexRow) => {
     const {
-      table_name, index_name, is_unique, is_primary, index_type, columns, expressions,
+      table_name,
+      index_name,
+      index_type,
+      columns,
+      expressions,
     } = indexRow;
     const indexColumns = columns.split(',').map((column) => {
       return {
@@ -300,8 +331,6 @@ const generateRawIndexes = async (client) => {
 
     const index = {
       name: index_name,
-      unique: is_unique,
-      primary: is_primary,
       type: index_type,
       columns: [
         ...indexColumns,
@@ -317,6 +346,32 @@ const generateRawIndexes = async (client) => {
 
     return acc;
   }, {});
+
+  const tableConstraints = constraint.reduce((acc, row) => {
+    const {
+      table_name,
+      columns,
+      constraint_type,
+    } = row;
+    if (!acc[table_name]) acc[table_name] = {};
+
+    const columnNames = columns.split(',').map((column) => column.trim());
+    columnNames.forEach((columnName) => {
+      if (!acc[table_name][columnName]) acc[table_name][columnName] = {};
+      if (constraint_type === 'PRIMARY KEY') {
+        acc[table_name][columnName].pk = true;
+      }
+      if (constraint_type === 'UNIQUE' && !acc[table_name][columnName].pk) {
+        acc[table_name][columnName].unique = true;
+      }
+    });
+    return acc;
+  }, {});
+
+  return {
+    rawIndexes,
+    tableConstraints,
+  };
 };
 
 const generateRawEnums = async (client) => {
@@ -423,13 +478,13 @@ const generateRawDb = async (connection) => {
   try {
     const data1 = generateRawTablesAndFields(client);
     const data2 = generateRawIndexes(client);
-    const data3 = generateConstraints(client);
+    const data3 = generateRefs(client);
     const data4 = generateRawEnums(client);
 
     const result = await Promise.all([data1, data2, data3, data4]);
     const { rawTables, rawFields } = result[0];
-    const rawIndexes = result[1];
-    const { refs, tableConstraints } = result[2];
+    const { rawIndexes, tableConstraints } = result[1];
+    const refs = result[2];
     const rawEnums = result[3];
 
     const tables = createTables(rawTables, rawFields, rawIndexes, tableConstraints);
