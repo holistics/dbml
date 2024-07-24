@@ -47,9 +47,9 @@ const generateRawField = (row) => {
 
   const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(data_type, column_default, default_type) : null;
 
-  const fieldType = data_type === 'USER-DEFINED' ? { // TODO: add enum first
-    type_name: `"${udt_name}.${udt_schema}"`, // udt_name,
-    schemaName: null, // udt_schema,
+  const fieldType = data_type === 'USER-DEFINED' ? {
+    type_name: udt_name,
+    schemaName: udt_schema,
   } : {
     type_name: data_type,
     schemaname: null,
@@ -83,7 +83,6 @@ const generateRawTablesAndFields = async (client) => {
       CASE
         WHEN c.column_default IS NULL THEN NULL
         WHEN c.column_default LIKE 'nextval(%' THEN 'increment'
-        WHEN c.column_default = 'CURRENT_TIMESTAMP' THEN 'expression'
         WHEN c.column_default LIKE '''%' THEN 'string'
         WHEN c.column_default = 'true' OR c.column_default = 'false' THEN 'boolean'
         WHEN c.column_default ~ '^-?[0-9]+(.[0-9]+)?$' THEN 'number'
@@ -105,6 +104,7 @@ const generateRawTablesAndFields = async (client) => {
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
   const rawTables = tablesAndFieldsResult.rows.reduce((acc, row) => {
     const { table_schema, table_name } = row;
+
     if (!acc[table_name]) {
       acc[table_name] = {
         name: table_name,
@@ -220,7 +220,7 @@ const generateConstraints = async (client) => {
   };
 };
 
-const generateTableIndexes = async (client) => {
+const generateRawIndexes = async (client) => {
   const indexListSql = `
     WITH user_tables AS (
       SELECT tablename
@@ -308,6 +308,56 @@ const generateTableIndexes = async (client) => {
   }, {});
 };
 
+const generateRawEnums = async (client) => {
+  const enumListSql = `
+    SELECT
+      n.nspname AS schema_name,
+      t.typname AS enum_type,
+      e.enumlabel AS enum_value,
+      e.enumsortorder AS sort_order
+    FROM
+      pg_enum e
+    JOIN
+      pg_type t ON e.enumtypid = t.oid
+    JOIN
+      pg_namespace n ON t.typnamespace = n.oid
+    ORDER BY
+      schema_name,
+      enum_type,
+      sort_order;
+    ;
+  `;
+  const enumListResult = await client.query(enumListSql);
+  const enums = enumListResult.rows.reduce((acc, row) => {
+    const { schema_name, enum_type, enum_value } = row;
+
+    if (!acc[enum_type]) {
+      acc[enum_type] = {
+        name: enum_type,
+        schemaName: schema_name,
+        values: [],
+      };
+    }
+    acc[enum_type].values.push({
+      name: enum_value,
+    });
+    return acc;
+  }, {});
+
+  return Object.values(enums);
+};
+
+const createEnums = (rawEnums) => {
+  return rawEnums.map((rawEnum) => {
+    const { name, schemaName, values } = rawEnum;
+    return new Enum({
+      name,
+      schemaName,
+      values,
+    });
+  });
+};
+
 const createFields = (rawFields, fieldsConstraints) => {
   return rawFields.map((field) => {
     const constraints = fieldsConstraints[field.name] || {};
@@ -340,12 +390,12 @@ const createIndexes = (rawIndexes) => {
   });
 };
 
-const createTables = (rawTables, rawFields, tableIndexes, tableConstraints) => {
+const createTables = (rawTables, rawFields, rawIndexes, tableConstraints) => {
   return rawTables.map((rawTable) => {
     const { name, schemaName } = rawTable;
     const constraints = tableConstraints[name] || {};
     const fields = createFields(rawFields[name], constraints);
-    const indexes = createIndexes(tableIndexes[name] || []);
+    const indexes = createIndexes(rawIndexes[name] || []);
 
     return new Table({
       name,
@@ -361,18 +411,23 @@ const generateRawDb = async (connection) => {
   const client = await connectPg(connection);
   try {
     const data1 = generateRawTablesAndFields(client);
-    const data2 = generateTableIndexes(client);
+    const data2 = generateRawIndexes(client);
     const data3 = generateConstraints(client);
+    const data4 = generateRawEnums(client);
 
-    const result = await Promise.all([data1, data2, data3]);
+    const result = await Promise.all([data1, data2, data3, data4]);
     const { rawTables, rawFields } = result[0];
-    const tableIndexes = result[1];
+    const rawIndexes = result[1];
     const { refs, tableConstraints } = result[2];
-    const tables = createTables(rawTables, rawFields, tableIndexes, tableConstraints);
+    const rawEnums = result[3];
+
+    const tables = createTables(rawTables, rawFields, rawIndexes, tableConstraints);
+    const enums = createEnums(rawEnums);
 
     return {
       tables,
       refs,
+      enums,
     };
   } catch (err) {
     throw new Error(err);
@@ -395,10 +450,11 @@ export default class PostgresDBASTGen {
   }
 
   async fetch (connection) {
-    const { tables, refs } = await generateRawDb(connection);
+    const { tables, refs, enums } = await generateRawDb(connection);
 
     this.data.tables = tables;
     this.data.refs = refs;
+    this.data.enums = enums;
 
     return this.data;
   }
