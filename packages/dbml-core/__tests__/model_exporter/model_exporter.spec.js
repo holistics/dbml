@@ -82,7 +82,7 @@ describe('@dbml/core - model_exporter dbml_exporter.escapeNote', () => {
   runTest('hel\r\nlo', "'''hel\nlo'''");
   runTest('hel\n\nlo', "'''hel\n\nlo'''");
   runTest("hel'\n\nlo", "'''hel\\'\n\nlo'''");
-  runTest("hel'\n\n''lo", "'''hel\\'\n\n''lo'''");
+  runTest("hel'\n\n''lo", "'''hel\\'\n\n\\'\\'lo'''");
   runTest("hel'\n\n''lo", "'''hel\\'\n\n\\'\\'lo'''");
   // Spec is clear here, \ needs to be escaped as \\
   runTest('hell\\\no', "'''hell\\\\\no'''");
