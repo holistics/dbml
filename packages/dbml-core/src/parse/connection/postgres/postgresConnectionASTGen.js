@@ -11,6 +11,7 @@ import {
 
 const connectPg = async (connection) => {
   const client = new Client(connection);
+  // bearer:disable javascript_lang_logger
   client.on('error', (err) => console.log('PG connection error:', err));
 
   await client.connect();
@@ -70,6 +71,7 @@ const generateRawField = (row) => {
     is_nullable,
     column_default,
     default_type,
+    column_comment,
   } = row;
 
   const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(data_type, column_default, default_type) : null;
@@ -88,6 +90,7 @@ const generateRawField = (row) => {
     dbdefault,
     not_null: !convertQueryBoolean(is_nullable),
     increment: !!identity_increment || default_type === 'increment',
+    note: column_comment ? { value: column_comment } : { value: '' },
   };
 };
 
@@ -114,7 +117,11 @@ const generateRawTablesAndFields = async (client) => {
         WHEN c.column_default = 'true' OR c.column_default = 'false' THEN 'boolean'
         WHEN c.column_default ~ '^-?[0-9]+(.[0-9]+)?$' THEN 'number'
         ELSE 'expression'
-      END AS default_type
+      END AS default_type,
+      -- Fetching table comments
+      obj_description(t.table_name::regclass) AS table_comment,
+      -- Fetching column comments
+      col_description(c.table_name::regclass::oid, c.ordinal_position) AS column_comment
     FROM
       information_schema.columns c
     JOIN
@@ -131,12 +138,13 @@ const generateRawTablesAndFields = async (client) => {
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
   const rawTables = tablesAndFieldsResult.rows.reduce((acc, row) => {
-    const { table_schema, table_name } = row;
+    const { table_schema, table_name, table_comment } = row;
 
     if (!acc[table_name]) {
       acc[table_name] = {
         name: table_name,
         schemaName: table_schema,
+        note: table_comment ? { value: table_comment } : { value: '' },
       };
     }
 
@@ -423,6 +431,7 @@ const createFields = (rawFields, fieldsConstraints) => {
       increment: field.increment,
       pk: constraints.pk,
       unique: constraints.unique,
+      note: field.note,
     });
     return f;
   });
@@ -446,7 +455,7 @@ const createIndexes = (rawIndexes) => {
 
 const createTables = (rawTables, rawFields, rawIndexes, tableConstraints) => {
   return rawTables.map((rawTable) => {
-    const { name, schemaName } = rawTable;
+    const { name, schemaName, note } = rawTable;
     const constraints = tableConstraints[name] || {};
     const fields = createFields(rawFields[name], constraints);
     const indexes = createIndexes(rawIndexes[name] || []);
@@ -456,7 +465,7 @@ const createTables = (rawTables, rawFields, rawIndexes, tableConstraints) => {
       schemaName,
       fields,
       indexes,
-      enums: [],
+      note,
     });
   });
 };
