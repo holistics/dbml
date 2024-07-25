@@ -21,39 +21,29 @@ const connectPg = async (connection) => {
 
 const convertQueryBoolean = (val) => val === 'YES';
 
-const fullTypeToAlias = (fullType) => {
-  switch (fullType) {
-    case 'character varying':
-      return 'varchar';
-    case 'character':
-      return 'char';
-    case 'time without time zone':
-      return 'time';
-    case 'time with time zone':
-      return 'timetz';
-    case 'timestamp without time zone':
-      return 'timestamp';
-    case 'timestamp with time zone':
-      return 'timestamptz';
-    case 'double precision':
-      return 'float8';
-    default:
-      return fullType;
+const getFieldType = (data_type, udt_name, character_maximum_length, numeric_precision, numeric_scale) => {
+  if (data_type === 'ARRAY') {
+    return `${udt_name.slice(1, udt_name.length)}[]`;
   }
-};
-
-const getFieldType = (data_type, character_maximum_length, numeric_precision, numeric_scale) => {
-  const type = fullTypeToAlias(data_type);
   if (character_maximum_length) {
-    return `${type}(${character_maximum_length})`;
+    return `${udt_name}(${character_maximum_length})`;
   }
   if (numeric_precision && numeric_scale) {
-    return `${data_type}(${numeric_precision},${numeric_scale})`;
+    return `${udt_name}(${numeric_precision},${numeric_scale})`;
   }
-  return type;
+  return udt_name;
 };
 
 const getDbdefault = (data_type, column_default, default_type) => {
+  if (data_type === 'ARRAY') {
+    const values = column_default.slice(6, -1).split(',').map((value) => {
+      return value.split('::')[0];
+    });
+    return {
+      type: default_type,
+      value: `ARRAY[${values.join(', ')}]`,
+    };
+  }
   if (default_type === 'string') {
     const rawDefaultValues = column_default.split('::')[0];
     const isJson = data_type === 'json' || data_type === 'jsonb';
@@ -90,7 +80,7 @@ const generateRawField = (row) => {
     type_name: udt_name,
     schemaName: udt_schema,
   } : {
-    type_name: getFieldType(data_type, character_maximum_length, numeric_precision, numeric_scale),
+    type_name: getFieldType(data_type, udt_name, character_maximum_length, numeric_precision, numeric_scale),
     schemaname: null,
   };
 
