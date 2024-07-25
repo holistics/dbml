@@ -39,7 +39,8 @@ function getConnectionOpt (opts) {
     if (supportedDatabases.includes(key) && value) return key;
     return format;
   }, 'postgres');
-  const connection = {
+
+  const connection = opts.connectionString ? { connectionString: opts.connectionString } : {
     user: opts.user,
     host: opts.host || 'localhost',
     database: opts.database,

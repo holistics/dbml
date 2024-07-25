@@ -51,6 +51,7 @@ function db2dbml (args) {
     .option('--port <port>', 'database port. default: 5432')
     .option('--user <user>', 'database user')
     .option('--password <password>', 'database password')
+    .option('--connection-string <connectionString>', 'database connection string')
     .option('-o, --out-file <pathspec>', 'compile all input files into a single files');
 
   program.parse(args);
