@@ -6,7 +6,6 @@ import dbmlParser from './dbmlParser';
 import schemarbParser from './schemarbParser';
 import mssqlParser from './mssqlParser';
 import { parse } from './ANTLR/ASTGeneration';
-import { fetch } from './connection/ConnectionASTGeneration';
 import { CompilerError } from './error';
 
 class Parser {
@@ -135,21 +134,6 @@ class Parser {
     } catch (diags) {
       throw CompilerError.create(diags);
     }
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  async fetch (connection, format) {
-    let rawDatabase = {};
-    switch (format) {
-      case 'postgres':
-        rawDatabase = await Parser.fetchPostgresToJSON(connection);
-        break;
-
-      default:
-        break;
-    }
-    const schema = Parser.parseJSONToDatabase(rawDatabase);
-    return schema;
   }
 }
 
