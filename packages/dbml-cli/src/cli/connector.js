@@ -14,7 +14,6 @@ export default async function connectionHandler (program) {
   try {
     const opts = program.opts();
     const { format, connection } = getConnectionOpt(opts);
-    console.log(connection);
 
     if (!opts.outFile && !opts.outDir) {
       const res = await connector.fetch(connection, format);
@@ -24,6 +23,7 @@ export default async function connectionHandler (program) {
       const res = await connector.fetch(connection, format);
       (new OutputFilePlugin(resolvePaths(opts.outFile))).write(res);
 
+      // bearer:disable javascript_lang_logger
       console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from database's connection ${JSON.stringify(connection)} : ${path.basename(opts.outFile)}`);
     }
   } catch (error) {
