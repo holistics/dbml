@@ -10,8 +10,6 @@ import {
 } from '../../ANTLR/ASTGeneration/AST';
 
 const connectPg = async (connection) => {
-  if (!connection.host) throw new Error('Host is required');
-
   const client = new Client(connection);
   client.on('error', (err) => console.log('PG connection error:', err));
 

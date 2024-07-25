@@ -14,6 +14,7 @@ export default async function connectionHandler (program) {
   try {
     const opts = program.opts();
     const { format, connection } = getConnectionOpt(opts);
+    console.log(connection);
 
     if (!opts.outFile && !opts.outDir) {
       const res = await connector.fetch(connection, format);
