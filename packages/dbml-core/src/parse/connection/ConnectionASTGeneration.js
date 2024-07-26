@@ -1,4 +1,4 @@
-import PostgresConnectionASTGen from './postgres/postgresConnectionASTGen';
+import PostgresConnectionASTGen from './postgres/PostgresConnectionASTGen';
 
 function fetch (connection, format) {
   let database = null;
