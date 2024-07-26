@@ -154,6 +154,7 @@ const generateRawTablesAndFields = async (client) => {
 
     return acc;
   }, {});
+
   return {
     rawTables: Object.values(rawTables),
     rawFields,
@@ -294,7 +295,9 @@ const generateRawIndexes = async (client) => {
   `;
   const indexListResult = await client.query(indexListSql);
   const { indexes, constraint } = indexListResult.rows.reduce((acc, row) => {
-    const { constraint_type } = row;
+    const { constraint_type, columns } = row;
+
+    if (columns === 'null' || columns.trim() === '') return acc;
     if (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE') {
       acc.constraint.push(row);
     } else {
