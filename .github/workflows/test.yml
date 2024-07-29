@@ -12,13 +12,32 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-
     strategy:
       matrix:
         node-version: [16.x]
+    services:
+      postgres:
+        image: postgres:11.21-bullseye
+        env:
+          POSTGRES_USER: dbml
+          POSTGRES_PASSWORD: testtest
+          POSTGRES_DB: dbml_test
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v3
+    - name: Import DDL to Postgres # TODO: This should be done in a separate job
+      run: |
+        psql -h localhost -U dbml -d dbml_test -f packages/dbml-cli/__test__/db2dbml/postgres/schema.sql
+      env:
+        PGPASSWORD: testtest 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
