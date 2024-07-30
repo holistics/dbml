@@ -1,18 +1,18 @@
 -- Create users table
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    full_name VARCHAR(100),
-    date_of_birth DATE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    last_login TIMESTAMP WITH TIME ZONE,
-    is_active BOOLEAN DEFAULT TRUE,
-    CONSTRAINT chk_email_format CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$'),
-    CONSTRAINT chk_age CHECK (date_of_birth <= CURRENT_DATE - INTERVAL '13 years')
+  user_id SERIAL PRIMARY KEY,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  first_name VARCHAR(50),
+  last_name VARCHAR(50),
+  full_name VARCHAR(100),
+  date_of_birth DATE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  last_login TIMESTAMP WITH TIME ZONE,
+  is_active BOOLEAN DEFAULT TRUE,
+  CONSTRAINT chk_email_format CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$'),
+  CONSTRAINT chk_age CHECK (date_of_birth <= CURRENT_DATE - INTERVAL '13 years')
 );
 
 -- Create an index on the email column for faster lookups
@@ -26,17 +26,17 @@ CREATE INDEX ON "users" ("is_active", ((lower(full_name))));
 
 -- Create products table
 CREATE TABLE products (
-    product_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description TEXT,
-    price DECIMAL(10, 2) NOT NULL,
-    stock_quantity INTEGER NOT NULL DEFAULT 0,
-    category VARCHAR(50),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    is_available BOOLEAN DEFAULT TRUE,
-    CONSTRAINT chk_price_positive CHECK (price > 0),
-    CONSTRAINT chk_stock_non_negative CHECK (stock_quantity >= 0)
+  product_id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  description TEXT,
+  price DECIMAL(10, 2) NOT NULL,
+  stock_quantity INTEGER NOT NULL DEFAULT 0,
+  category VARCHAR(50),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  is_available BOOLEAN DEFAULT TRUE,
+  CONSTRAINT chk_price_positive CHECK (price > 0),
+  CONSTRAINT chk_stock_non_negative CHECK (stock_quantity >= 0)
 );
 
 -- Create an index on the category column for faster filtering
@@ -44,16 +44,16 @@ CREATE INDEX idx_products_category ON products (category);
 
 -- Create orders table
 CREATE TABLE orders (
-    order_id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    order_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    total_amount DECIMAL(12, 2) NOT NULL,
-    status VARCHAR(20) DEFAULT 'pending',
-    shipping_address TEXT NOT NULL,
-    billing_address TEXT NOT NULL,
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE RESTRICT,
-    CONSTRAINT chk_total_amount_positive CHECK (total_amount > 0),
-    CONSTRAINT chk_status CHECK (status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled'))
+  order_id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  order_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  total_amount DECIMAL(12, 2) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending',
+  shipping_address TEXT NOT NULL,
+  billing_address TEXT NOT NULL,
+  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+  CONSTRAINT chk_total_amount_positive CHECK (total_amount > 0),
+  CONSTRAINT chk_status CHECK (status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled'))
 );
 
 -- Create an index on the user_id and order_date columns for faster querying
@@ -61,16 +61,16 @@ CREATE INDEX idx_orders_user_date ON orders (user_id, order_date);
 
 -- Create order_items table
 CREATE TABLE order_items (
-    order_item_id SERIAL PRIMARY KEY,
-    order_id INTEGER NOT NULL,
-    product_id INTEGER NOT NULL,
-    quantity INTEGER NOT NULL,
-    unit_price DECIMAL(10, 2) NOT NULL,
-    CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
-    CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE RESTRICT,
-    CONSTRAINT chk_quantity_positive CHECK (quantity > 0),
-    CONSTRAINT chk_unit_price_positive CHECK (unit_price > 0),
-    CONSTRAINT uq_order_product UNIQUE (order_id, product_id)
+  order_item_id SERIAL PRIMARY KEY,
+  order_id INTEGER NOT NULL,
+  product_id INTEGER NOT NULL,
+  quantity INTEGER NOT NULL,
+  unit_price DECIMAL(10, 2) NOT NULL,
+  CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+  CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+  CONSTRAINT chk_quantity_positive CHECK (quantity > 0),
+  CONSTRAINT chk_unit_price_positive CHECK (unit_price > 0),
+  CONSTRAINT uq_order_product UNIQUE (order_id, product_id)
 );
 
 -- Create a composite index on order_id and product_id for faster joins
