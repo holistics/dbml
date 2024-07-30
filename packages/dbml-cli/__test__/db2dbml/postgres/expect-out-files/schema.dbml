@@ -111,8 +111,8 @@ Table "users" {
   }
 }
 
-Ref "fk_user":"users"."user_id" < "orders"."user_id"
+Ref "fk_user":"users"."user_id" < "orders"."user_id" [update: no action, delete: cascade]
 
-Ref "fk_product":"products"."product_id" < "order_items"."product_id"
+Ref "fk_order":"orders"."order_id" < "order_items"."order_id" [update: no action, delete: cascade]
 
-Ref "fk_order":"orders"."order_id" < "order_items"."order_id"
+Ref "fk_product":"products"."product_id" < "order_items"."product_id" [update: no action, delete: cascade]

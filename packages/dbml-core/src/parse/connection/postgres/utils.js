@@ -165,7 +165,7 @@ const generateRefs = async (client) => {
   const registeredFK = [];
   const refs = [];
 
-  const constraintListSql = `
+  const refsListSql = `
     SELECT
       tc.table_schema,
       tc.constraint_name,
@@ -174,61 +174,68 @@ const generateRefs = async (client) => {
       ccu.table_schema AS foreign_table_schema,
       ccu.table_name AS foreign_table_name,
       ccu.column_name AS foreign_column_name,
-      tc.constraint_type
+      tc.constraint_type,
+      rc.delete_rule AS on_delete,
+      rc.update_rule AS on_update
     FROM information_schema.table_constraints AS tc
     JOIN information_schema.key_column_usage AS kcu
       ON tc.constraint_name = kcu.constraint_name
       AND tc.table_schema = kcu.table_schema
     JOIN information_schema.constraint_column_usage AS ccu
       ON ccu.constraint_name = tc.constraint_name
-    WHERE tc.table_schema NOT IN ('pg_catalog', 'information_schema');
+    JOIN information_schema.referential_constraints AS rc
+      ON tc.constraint_name = rc.constraint_name
+      AND tc.table_schema = rc.constraint_schema
+    WHERE tc.constraint_type = 'FOREIGN KEY'
+      AND tc.table_schema NOT IN ('pg_catalog', 'information_schema');
   `;
 
-  const constraints = await client.query(constraintListSql);
-  constraints.rows.forEach((constraintRow) => {
+  const refsQueryResult = await client.query(refsListSql);
+  refsQueryResult.rows.forEach((refRow) => {
     const {
-      table_schema, constraint_name, table_name, column_name, foreign_table_schema, foreign_table_name, foreign_column_name, constraint_type,
-    } = constraintRow;
+      table_schema,
+      constraint_name,
+      table_name,
+      column_name,
+      foreign_table_schema,
+      foreign_table_name,
+      foreign_column_name,
+      on_delete,
+      on_update,
+    } = refRow;
 
-    switch (constraint_type) {
-      case 'FOREIGN KEY': {
-        const ep1 = new Endpoint({
-          tableName: table_name,
-          schemaName: table_schema,
-          fieldNames: [column_name],
-          relation: '*',
-        });
+    const ep1 = new Endpoint({
+      tableName: table_name,
+      schemaName: table_schema,
+      fieldNames: [column_name],
+      relation: '*',
+    });
 
-        const ep2 = new Endpoint({
-          tableName: foreign_table_name,
-          schemaName: foreign_table_schema,
-          fieldNames: [foreign_column_name],
-          relation: '1',
-        });
+    const ep2 = new Endpoint({
+      tableName: foreign_table_name,
+      schemaName: foreign_table_schema,
+      fieldNames: [foreign_column_name],
+      relation: '1',
+    });
 
-        const ref = new Ref({
-          name: constraint_name,
-          endpoints: [ep1, ep2],
-          onDelete: '',
-          onUpdate: '',
-        });
+    const ref = new Ref({
+      name: constraint_name,
+      endpoints: [ep1, ep2],
+      onDelete: on_delete,
+      onUpdate: on_update,
+    });
 
-        if (!registeredFK.some(((fk) => fk.table_schema === table_schema
-          && fk.table_name === table_name
-          && fk.column_name === column_name
-          && fk.foreign_table_schema === foreign_table_schema
-          && fk.foreign_table_name === foreign_table_name
-          && fk.foreign_column_name === foreign_column_name
-        ))) {
-          refs.push(ref.toJSON());
-          registeredFK.push({
-            table_schema, table_name, column_name, foreign_table_schema, foreign_table_name, foreign_column_name,
-          });
-        }
-        break;
-      }
-      default:
-        break;
+    if (!registeredFK.some(((fk) => fk.table_schema === table_schema
+      && fk.table_name === table_name
+      && fk.column_name === column_name
+      && fk.foreign_table_schema === foreign_table_schema
+      && fk.foreign_table_name === foreign_table_name
+      && fk.foreign_column_name === foreign_column_name
+    ))) {
+      refs.push(ref.toJSON());
+      registeredFK.push({
+        table_schema, table_name, column_name, foreign_table_schema, foreign_table_name, foreign_column_name,
+      });
     }
   });
 
