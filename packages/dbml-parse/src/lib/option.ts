@@ -26,7 +26,7 @@ export class Some<T> {
     return new Some(callback(this.value));
   }
 
-  isOk_and(callback: (_: T) => boolean): boolean {
+  is_some_and(callback: (_: T) => boolean): boolean {
     return callback(this.value);
   }
 
@@ -58,7 +58,7 @@ export class None<T> {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  isOk_and(callback: (_: T) => boolean): boolean {
+  is_some_and(callback: (_: T) => boolean): boolean {
     return false;
   }
 

@@ -48,7 +48,7 @@ export function convertFuncAppToElem(
   const attributeList =
     _.last(cpArgs) instanceof ListExpressionNode ? (cpArgs.pop() as ListExpressionNode) : undefined;
 
-  if (cpArgs.length === 3 && extractVariableNode(cpArgs[1]).isOk_and((token) => token.value === 'as')) {
+  if (cpArgs.length === 3 && extractVariableNode(cpArgs[1]).is_some_and((token) => token.value === 'as')) {
     return new Some(
       factory.create(ElementDeclarationNode, {
         type,
