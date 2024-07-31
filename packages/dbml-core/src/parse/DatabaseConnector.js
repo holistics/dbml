@@ -1,5 +1,5 @@
 import Database from '../model_structure/database';
-import { fetch } from './connection/ConnectionASTGeneration';
+import { fetchSchema } from './connection/ConnectionASTGeneration';
 
 class DatabaseConnector {
   constructor (connection) {
@@ -12,10 +12,10 @@ class DatabaseConnector {
   }
 
   static async fetchPostgresToJSON (connection) {
-    return fetch(connection, 'postgres');
+    return fetchSchema(connection, 'postgres');
   }
 
-  async fetch (format) {
+  async fetchSchema (format) {
     let rawDatabase = {};
     switch (format) {
       case 'postgres':

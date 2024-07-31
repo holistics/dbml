@@ -40,17 +40,8 @@ function getConnectionOpt (opts) {
     return format;
   }, 'postgres');
 
-  const connection = opts.connectionString ? { connectionString: opts.connectionString } : {
-    user: opts.user,
-    host: opts.host || 'localhost',
-    database: opts.database,
-    password: opts.password,
-    port: opts.port || '5432',
-  };
-
   return {
     format: selectedFormat,
-    connection,
   };
 }
 

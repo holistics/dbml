@@ -13,7 +13,7 @@ export default class PostgresConnectionASTGen {
     };
   }
 
-  async fetch (connection) {
+  async fetchSchema (connection) {
     const { tables, refs, enums } = await generateRawDb(connection);
 
     this.data.tables = tables;

@@ -1,7 +1,7 @@
 {
   "args": [
     "--postgres",
-    "--connection-string=postgresql://dbml:testtest@localhost:5432/dbml_test",
+    "postgresql://dbml:testtest@localhost:5432/dbml_test",
     "-o",
     "./out-files/schema.dbml"
   ]

@@ -12,15 +12,15 @@ import logger from '../helpers/logger';
 
 export default async function connectionHandler (program) {
   try {
+    const connection = program.args[0];
     const opts = program.opts();
-    const { format, connection } = getConnectionOpt(opts);
+    const { format } = getConnectionOpt(opts);
 
     if (!opts.outFile && !opts.outDir) {
-      const res = await connector.fetch(connection, format);
+      const res = await connector.fetchSchema(connection, format);
       OutputConsolePlugin.write(res);
     } else if (opts.outFile) {
-      // generate(null, () => connector.fetch(connection, format), new OutputFilePlugin(resolvePaths(opts.outFile)));
-      const res = await connector.fetch(connection, format);
+      const res = await connector.fetchSchema(connection, format);
       (new OutputFilePlugin(resolvePaths(opts.outFile))).write(res);
 
       // bearer:disable javascript_lang_logger
