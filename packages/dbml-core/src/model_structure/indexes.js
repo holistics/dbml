@@ -77,14 +77,11 @@ class Index extends Element {
   }
 
   normalize (model) {
-    model.indexes = {
-      ...model.indexes,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.indexes[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
 
     this.columns.forEach(c => c.normalize(model));

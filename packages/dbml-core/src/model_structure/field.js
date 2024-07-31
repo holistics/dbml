@@ -89,14 +89,11 @@ class Field extends Element {
   }
 
   normalize (model) {
-    model.fields = {
-      ...model.fields,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.fields[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
   }
 }

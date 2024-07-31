@@ -89,14 +89,11 @@ class Ref extends Element {
   }
 
   normalize (model) {
-    model.refs = {
-      ...model.refs,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.refs[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
 
     this.endpoints.forEach((endpoint) => endpoint.normalize(model));

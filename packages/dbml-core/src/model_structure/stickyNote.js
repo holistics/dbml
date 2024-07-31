@@ -26,12 +26,9 @@ class StickyNote extends Element {
   }
 
   normalize (model) {
-    model.notes = {
-      ...model.notes,
-      [this.id]: {
-        id: this.id,
-        ...this.export(),
-      },
+    model.notes[this.id] = {
+      id: this.id,
+      ...this.export(),
     };
   }
 }
