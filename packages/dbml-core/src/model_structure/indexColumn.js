@@ -35,13 +35,10 @@ class IndexColumn extends Element {
   }
 
   normalize (model) {
-    model.indexColumns = {
-      ...model.indexColumns,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportParentIds(),
-      },
+    model.indexColumns[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportParentIds(),
     };
   }
 }

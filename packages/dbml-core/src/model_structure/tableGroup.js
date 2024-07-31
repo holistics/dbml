@@ -77,14 +77,11 @@ class TableGroup extends Element {
   }
 
   normalize (model) {
-    model.tableGroups = {
-      ...model.tableGroups,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.tableGroups[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
   }
 }
