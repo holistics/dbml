@@ -1,11 +1,11 @@
 import PostgresConnectionASTGen from './postgres/PostgresConnectionASTGen';
 
-function fetch (connection, format) {
+function fetchSchema (connection, format) {
   let database = null;
 
   switch (format) {
     case 'postgres': {
-      database = new PostgresConnectionASTGen().fetch(connection);
+      database = new PostgresConnectionASTGen().fetchSchema(connection);
 
       break;
     }
@@ -16,5 +16,5 @@ function fetch (connection, format) {
 }
 
 export {
-  fetch,
+  fetchSchema,
 };
