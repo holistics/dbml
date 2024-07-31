@@ -2,7 +2,7 @@
 import { Client } from 'pg';
 import {
   Endpoint,
-  Enum,
+  // Enum,
   Field,
   Index,
   Table,
@@ -98,42 +98,48 @@ const generateRawTablesAndFields = async (client) => {
   const rawFields = {};
   const tablesAndFieldsSql = `
     SELECT
-      t.table_schema,
-      t.table_name,
-      c.column_name,
-      c.data_type,
-      c.character_maximum_length,
-      c.numeric_precision,
-      c.numeric_scale,
-      c.udt_schema,
-      c.udt_name,
-      c.identity_increment,
-      c.is_nullable,
-      c.column_default,
+      s.name AS table_schema,
+      t.name AS table_name,
+      c.name AS column_name,
+      ty.name AS data_type,
+      c.max_length AS character_maximum_length,
+      c.precision AS numeric_precision,
+      c.scale AS numeric_scale,
+      c.is_identity AS identity_increment,
       CASE
-        WHEN c.column_default IS NULL THEN NULL
-        WHEN c.column_default LIKE 'nextval(%' THEN 'increment'
-        WHEN c.column_default LIKE '''%' THEN 'string'
-        WHEN c.column_default = 'true' OR c.column_default = 'false' THEN 'boolean'
-        WHEN c.column_default ~ '^-?[0-9]+(.[0-9]+)?$' THEN 'number'
+        WHEN c.is_nullable = 1 THEN 'YES'
+        ELSE 'NO'
+      END AS is_nullable,
+      c.default_object_id AS column_default,
+      CASE
+        WHEN c.default_object_id = 0 THEN NULL
+        WHEN OBJECT_NAME(c.default_object_id) LIKE 'nextval%' THEN 'increment'
+        WHEN c.default_object_id IS NOT NULL AND OBJECT_NAME(c.default_object_id) LIKE '''%' THEN 'string'
+        WHEN c.default_object_id IS NOT NULL AND (SELECT definition FROM sys.sql_modules WHERE object_id = c.default_object_id) IN ('true', 'false') THEN 'boolean'
+        WHEN c.default_object_id IS NOT NULL AND ISNUMERIC((SELECT definition FROM sys.sql_modules WHERE object_id = c.default_object_id)) = 1 THEN 'number'
         ELSE 'expression'
       END AS default_type,
       -- Fetching table comments
-      obj_description(t.table_name::regclass) AS table_comment,
-      -- Fetching column comments
-      col_description(c.table_name::regclass::oid, c.ordinal_position) AS column_comment
+      p.value AS table_comment,
+      ep.value AS column_comment
     FROM
-      information_schema.columns c
+      sys.tables t
     JOIN
-      information_schema.tables t ON c.table_name = t.table_name AND c.table_schema = t.table_schema
+      sys.schemas s ON t.schema_id = s.schema_id
+    JOIN
+      sys.columns c ON t.object_id = c.object_id
+    JOIN
+      sys.types ty ON c.user_type_id = ty.user_type_id
+    LEFT JOIN
+      sys.extended_properties p ON p.major_id = t.object_id AND p.name = 'MS_Description'
+    LEFT JOIN
+      sys.extended_properties ep ON ep.major_id = c.object_id AND ep.minor_id = c.column_id AND ep.name = 'MS_Description'
     WHERE
-      t.table_type = 'BASE TABLE'
-      AND t.table_schema NOT IN ('pg_catalog', 'information_schema')
+      t.type = 'U'  -- User-defined tables
     ORDER BY
-      t.table_schema,
-      t.table_name,
-      c.ordinal_position
-    ;
+      s.name,
+      t.name,
+      c.column_id;
   `;
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
@@ -167,27 +173,24 @@ const generateRefs = async (client) => {
 
   const refsListSql = `
     SELECT
-      tc.table_schema,
-      tc.constraint_name,
-      tc.table_name,
-      kcu.column_name,
-      ccu.table_schema AS foreign_table_schema,
-      ccu.table_name AS foreign_table_name,
-      ccu.column_name AS foreign_column_name,
-      tc.constraint_type,
-      rc.delete_rule AS on_delete,
-      rc.update_rule AS on_update
-    FROM information_schema.table_constraints AS tc
-    JOIN information_schema.key_column_usage AS kcu
-      ON tc.constraint_name = kcu.constraint_name
-      AND tc.table_schema = kcu.table_schema
-    JOIN information_schema.constraint_column_usage AS ccu
-      ON ccu.constraint_name = tc.constraint_name
-    JOIN information_schema.referential_constraints AS rc
-      ON tc.constraint_name = rc.constraint_name
-      AND tc.table_schema = rc.constraint_schema
-    WHERE tc.constraint_type = 'FOREIGN KEY'
-      AND tc.table_schema NOT IN ('pg_catalog', 'information_schema');
+      fk.name AS constraint_name,
+      OBJECT_SCHEMA_NAME(fk.parent_object_id) AS table_schema,
+      OBJECT_NAME(fk.parent_object_id) AS table_name,
+      c.name AS column_name,
+      OBJECT_SCHEMA_NAME(fk.referenced_object_id) AS foreign_table_schema,
+      OBJECT_NAME(fk.referenced_object_id) AS foreign_table_name,
+      ccu.name AS foreign_column_name,
+      fk.type_desc AS constraint_type,
+      fk.delete_referential_action_desc AS on_delete,
+      fk.update_referential_action_desc AS on_update
+    FROM sys.foreign_keys AS fk
+    JOIN sys.foreign_key_columns AS fkc
+      ON fk.object_id = fkc.constraint_object_id
+    JOIN sys.columns AS c
+      ON fkc.parent_object_id = c.object_id AND fkc.parent_column_id = c.column_id
+    JOIN sys.columns AS ccu
+      ON fkc.referenced_object_id = ccu.object_id AND fkc.referenced_column_id = ccu.column_id
+    WHERE fk.is_ms_shipped = 0;  -- Exclude system-defined constraints
   `;
 
   const refsQueryResult = await client.query(refsListSql);
@@ -246,59 +249,73 @@ const generateRawIndexes = async (client) => {
   // const tableConstraints = {};
   const indexListSql = `
     WITH user_tables AS (
-      SELECT tablename
-      FROM pg_tables
-      WHERE schemaname NOT IN ('pg_catalog', 'information_schema')  -- Exclude system schemas
-        AND tablename NOT LIKE 'pg_%'  -- Exclude PostgreSQL system tables
-        AND tablename NOT LIKE 'sql_%'  -- Exclude SQL standard tables
+      SELECT
+        TABLE_NAME
+      FROM
+        INFORMATION_SCHEMA.TABLES
+      WHERE
+        TABLE_SCHEMA = 'dbo'
+        AND TABLE_TYPE = 'BASE TABLE'  -- Ensure we are only getting base tables
+        AND TABLE_NAME NOT LIKE 'dt%'
+        AND TABLE_NAME NOT LIKE 'syscs%'
+        AND TABLE_NAME NOT LIKE 'sysss%'
+        AND TABLE_NAME NOT LIKE 'sysrs%'
+        AND TABLE_NAME NOT LIKE 'sysxlgc%'
     ),
     index_info AS (
       SELECT
-        t.relname AS table_name,
-        i.relname AS index_name,
-        ix.indisunique AS is_unique,
-        ix.indisprimary AS is_primary,
-        am.amname AS index_type,
-        array_to_string(array_agg(a.attname ORDER BY x.n), ', ') AS columns,
-        pg_get_expr(ix.indexprs, ix.indrelid) AS expressions,
+        OBJECT_NAME(i.object_id) AS table_name,
+        i.name AS index_name,
+        i.is_unique,
         CASE
-          WHEN ix.indisprimary THEN 'PRIMARY KEY'
-          WHEN ix.indisunique THEN 'UNIQUE'
+          WHEN i.type = 1 THEN 1
+          ELSE 0
+        END AS is_primary,
+        i.type_desc AS index_type,
+        STUFF((
+          SELECT
+            ', ' + c.name
+          FROM
+            sys.index_columns ic
+            JOIN sys.columns c ON ic.column_id = c.column_id AND ic.object_id = c.object_id
+          WHERE
+            ic.index_id = i.index_id
+            AND ic.object_id = i.object_id
+            AND OBJECT_NAME(ic.object_id) IN (SELECT TABLE_NAME FROM user_tables)  -- Filter for user tables
+          ORDER BY
+            ic.key_ordinal
+          FOR XML PATH('')
+        ), 1, 2, '') AS columns,
+        CASE
+          WHEN i.type = 1 THEN 'PRIMARY KEY'
+          WHEN i.is_unique = 1 THEN 'UNIQUE'
           ELSE NULL
         END AS constraint_type
       FROM
-        pg_class t
-        JOIN pg_index ix ON t.oid = ix.indrelid
-        JOIN pg_class i ON i.oid = ix.indexrelid
-        LEFT JOIN pg_attribute a ON a.attrelid = t.oid AND a.attnum = ANY(ix.indkey)
-        JOIN pg_am am ON i.relam = am.oid
-        LEFT JOIN generate_subscripts(ix.indkey, 1) AS x(n) ON a.attnum = ix.indkey[x.n]
+        sys.indexes i
+        JOIN sys.tables t ON i.object_id = t.object_id
       WHERE
-        t.relkind = 'r'
-        AND t.relname NOT LIKE 'pg_%'
-        AND t.relname NOT LIKE 'sql_%'
-      GROUP BY
-        t.relname, i.relname, ix.indisunique, ix.indisprimary, am.amname, ix.indexprs, ix.indrelid
+        t.is_ms_shipped = 0
+        AND i.type <> 0
     )
     SELECT
-      ut.tablename AS table_name,
+      ut.TABLE_NAME AS table_name,
       ii.index_name,
       ii.is_unique,
       ii.is_primary,
       ii.index_type,
       ii.columns,
-      ii.expressions,
-      ii.constraint_type  -- Added constraint type
+      ii.constraint_type
     FROM
       user_tables ut
     LEFT JOIN
-      index_info ii ON ut.tablename = ii.table_name
-    WHERE ii.columns IS NOT NULL
+      index_info ii ON ut.TABLE_NAME = ii.table_name
+    WHERE
+      ii.columns IS NOT NULL
     ORDER BY
-      ut.tablename,
+      ut.TABLE_NAME,
       ii.constraint_type,
-      ii.index_name
-    ;
+      ii.index_name;
   `;
   const indexListResult = await client.query(indexListSql);
   const { indexes, constraint } = indexListResult.rows.reduce((acc, row) => {
@@ -380,55 +397,73 @@ const generateRawIndexes = async (client) => {
   };
 };
 
-const generateRawEnums = async (client) => {
-  const enumListSql = `
-    SELECT
-      n.nspname AS schema_name,
-      t.typname AS enum_type,
-      e.enumlabel AS enum_value,
-      e.enumsortorder AS sort_order
-    FROM
-      pg_enum e
-    JOIN
-      pg_type t ON e.enumtypid = t.oid
-    JOIN
-      pg_namespace n ON t.typnamespace = n.oid
-    ORDER BY
-      schema_name,
-      enum_type,
-      sort_order;
-    ;
-  `;
-  const enumListResult = await client.query(enumListSql);
-  const enums = enumListResult.rows.reduce((acc, row) => {
-    const { schema_name, enum_type, enum_value } = row;
+// const generateRawEnums = async (client) => {
+//   const enumListSql = `
+//     WITH EnumValues AS (
+//         SELECT
+//             SCHEMA_NAME(t.schema_id) AS schema_name,
+//             t.name AS table_name,
+//             c.name AS column_name,
+//             cc.definition AS check_constraint_definition
+//         FROM
+//             sys.tables t
+//         JOIN
+//             sys.columns c ON t.object_id = c.object_id
+//         LEFT JOIN
+//             sys.check_constraints cc ON c.object_id = cc.parent_object_id AND c.column_id = cc.parent_column_id
+//         WHERE
+//             cc.definition IS NOT NULL
+//     )
+//     SELECT
+//         schema_name,
+//         table_name,
+//         column_name,
+//         -- Extracting the enum values from the CHECK constraint definition
+//         TRIM(SUBSTRING(
+//             cc.check_constraint_definition,
+//             CHARINDEX('(', cc.check_constraint_definition) + 1,
+//             CHARINDEX(')', cc.check_constraint_definition) - CHARINDEX('(', cc.check_constraint_definition) - 1
+//         )) AS enum_values
+//     FROM
+//         EnumValues cc
+//     WHERE
+//         cc.check_constraint_definition LIKE '%IN (%'  -- Check for inline constraints using IN
+//         OR cc.check_constraint_definition LIKE '%=%'   -- Check for inline constraints using =
+//     ORDER BY
+//         schema_name,
+//         table_name,
+//         column_name;
+//   `;
+//   const enumListResult = await client.query(enumListSql);
+//   const enums = enumListResult.rows.reduce((acc, row) => {
+//     const { schema_name, enum_type, enum_value } = row;
 
-    if (!acc[enum_type]) {
-      acc[enum_type] = {
-        name: enum_type,
-        schemaName: schema_name,
-        values: [],
-      };
-    }
-    acc[enum_type].values.push({
-      name: enum_value,
-    });
-    return acc;
-  }, {});
+//     if (!acc[enum_type]) {
+//       acc[enum_type] = {
+//         name: enum_type,
+//         schemaName: schema_name,
+//         values: [],
+//       };
+//     }
+//     acc[enum_type].values.push({
+//       name: enum_value,
+//     });
+//     return acc;
+//   }, {});
 
-  return Object.values(enums);
-};
+//   return Object.values(enums);
+// };
 
-const createEnums = (rawEnums) => {
-  return rawEnums.map((rawEnum) => {
-    const { name, schemaName, values } = rawEnum;
-    return new Enum({
-      name,
-      schemaName,
-      values,
-    });
-  });
-};
+// const createEnums = (rawEnums) => {
+//   return rawEnums.map((rawEnum) => {
+//     const { name, schemaName, values } = rawEnum;
+//     return new Enum({
+//       name,
+//       schemaName,
+//       values,
+//     });
+//   });
+// };
 
 const createFields = (rawFields, fieldsConstraints) => {
   return rawFields.map((field) => {
@@ -485,29 +520,29 @@ const generateRawDb = async (connection) => {
   const tablesAndFieldsRes = generateRawTablesAndFields(client);
   const rawIndexesRes = generateRawIndexes(client);
   const refsRes = generateRefs(client);
-  const rawEnumsRes = generateRawEnums(client);
+  // const rawEnumsRes = generateRawEnums(client);
 
   const res = await Promise.all([
     tablesAndFieldsRes,
     rawIndexesRes,
     refsRes,
-    rawEnumsRes,
+    // rawEnumsRes,
   ]);
   client.end();
 
   const { rawTables, rawFields } = res[0];
   const { rawIndexes, tableConstraints } = res[1];
   const refs = res[2];
-  const rawEnums = res[3];
+  // const rawEnums = res[3];
 
   try {
     const tables = createTables(rawTables, rawFields, rawIndexes, tableConstraints);
-    const enums = createEnums(rawEnums);
+    // const enums = createEnums(rawEnums);
 
     return {
       tables,
       refs,
-      enums,
+      // enums,
     };
   } catch (err) {
     throw new Error(err);
