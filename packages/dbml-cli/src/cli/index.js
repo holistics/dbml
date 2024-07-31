@@ -44,14 +44,9 @@ function db2dbml (args) {
   program.version(projectInfo.version);
 
   program
-    .usage('[options]')
+    .usage('<connection-string> [options]')
+    .arguments('database connection string')
     .option('--postgres', 'connect to a postgresql database')
-    .option('--database <name>', 'database name')
-    .option('--host <host>', 'database host. default: localhost')
-    .option('--port <port>', 'database port. default: 5432')
-    .option('--user <user>', 'database user')
-    .option('--password <password>', 'database password')
-    .option('--connection-string <connectionString>', 'database connection string')
     .option('-o, --out-file <pathspec>', 'compile all input files into a single files');
 
   program.parse(args);

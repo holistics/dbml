@@ -17,7 +17,7 @@ jobs:
         node-version: [16.x]
     services:
       postgres:
-        image: postgres:11.21-bullseye
+        image: postgres:15-bullseye
         env:
           POSTGRES_USER: dbml
           POSTGRES_PASSWORD: testtest
@@ -37,7 +37,7 @@ jobs:
       run: |
         psql -h localhost -U dbml -d dbml_test -f packages/dbml-cli/__test__/db2dbml/postgres/schema.sql
       env:
-        PGPASSWORD: testtest 
+        PGPASSWORD: testtest
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
