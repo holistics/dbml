@@ -10,6 +10,15 @@ import {
   Ref,
 } from '../../ANTLR/ASTGeneration/AST';
 
+const MSSQL_DATE_TYPES = [
+  'date',
+  'datetime',
+  'datetime2',
+  'smalldatetime',
+  'datetimeoffset',
+  'time',
+];
+
 const connect = async (connection) => {
   const options = connection.split(';').reduce((acc, option) => {
     const [key, value] = option.split('=');
@@ -43,38 +52,29 @@ const connect = async (connection) => {
 
 const convertQueryBoolean = (val) => val === 'YES';
 
-const getFieldType = (data_type, character_maximum_length, numeric_precision, numeric_scale) => {
-  if (numeric_precision && numeric_scale) {
+const getFieldType = (data_type, default_type, character_maximum_length, numeric_precision, numeric_scale) => {
+  if (MSSQL_DATE_TYPES.includes(data_type)) {
+    return data_type;
+  }
+  if (numeric_precision && numeric_scale && default_type === 'number') {
     return `${data_type}(${numeric_precision},${numeric_scale})`;
   }
-  if (character_maximum_length) {
+  if (character_maximum_length && default_type === 'string') {
     return `${data_type}(${character_maximum_length})`;
   }
   return data_type;
 };
 
-const getDbdefault = (data_type, column_default, default_type) => {
-  if (data_type === 'ARRAY') {
-    const values = column_default.slice(6, -1).split(',').map((value) => {
-      return value.split('::')[0];
-    });
-    return {
-      type: default_type,
-      value: `ARRAY[${values.join(', ')}]`,
-    };
-  }
-  if (default_type === 'string') {
-    const rawDefaultValues = column_default.split('::')[0];
-    const isJson = data_type === 'json' || data_type === 'jsonb';
-    const type = isJson ? 'expression' : 'string';
-    return {
-      type,
-      value: rawDefaultValues.slice(1, -1),
-    };
-  }
+const getDbdefault = (column_default, default_type) => {
+  // The regex below is used to extract the value from the default value
+  // \( and \) are used to escape parentheses
+  // [^()]+ is used to match any character except parentheses
+  // Example: (1) => 1, ('hello') => hello, getdate()-(1) => getdate()-1
+  const value = column_default.slice(1, -1).replace(/\(([^()]+)\)/g, '$1');
+
   return {
     type: default_type,
-    value: column_default,
+    value: default_type === 'string' ? value.slice(1, -1) : value, // Remove the quotes for string values
   };
 };
 
@@ -92,10 +92,10 @@ const generateRawField = (row) => {
     column_comment,
   } = row;
 
-  const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(data_type, column_default, default_type) : null;
+  const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(column_default, default_type) : null;
 
   const fieldType = {
-    type_name: getFieldType(data_type, character_maximum_length, numeric_precision, numeric_scale),
+    type_name: getFieldType(data_type, default_type, character_maximum_length, numeric_precision, numeric_scale),
     schemaname: null,
   };
 
@@ -104,7 +104,7 @@ const generateRawField = (row) => {
     type: fieldType,
     dbdefault,
     not_null: !convertQueryBoolean(is_nullable),
-    increment: !!identity_increment || default_type === 'increment',
+    increment: !!identity_increment,
     note: column_comment ? { value: column_comment } : { value: '' },
   };
 };
@@ -112,52 +112,63 @@ const generateRawField = (row) => {
 const generateRawTablesAndFields = async (client) => {
   const rawFields = {};
   const tablesAndFieldsSql = `
+    WITH
+      tables_and_fields
+      AS
+      (
+        SELECT
+          s.name AS table_schema,
+          t.name AS table_name,
+          c.name AS column_name,
+          ty.name AS data_type,
+          c.max_length AS character_maximum_length,
+          c.precision AS numeric_precision,
+          c.scale AS numeric_scale,
+          c.is_identity AS identity_increment,
+          CASE
+          WHEN c.is_nullable = 1 THEN 'YES'
+          ELSE 'NO'
+        END AS is_nullable,
+          CASE
+          WHEN c.default_object_id = 0 THEN NULL
+          ELSE OBJECT_DEFINITION(c.default_object_id)
+        END AS column_default,
+          -- Fetching table comments
+          p.value AS table_comment,
+          ep.value AS column_comment
+        FROM
+          sys.tables t
+          JOIN
+          sys.schemas s ON t.schema_id = s.schema_id
+          JOIN
+          sys.columns c ON t.object_id = c.object_id
+          JOIN
+          sys.types ty ON c.user_type_id = ty.user_type_id
+          LEFT JOIN
+          sys.extended_properties p ON p.major_id = t.object_id
+            AND p.name = 'MS_Description'
+            AND p.minor_id = 0 -- Ensure minor_id is 0 for table comments
+          LEFT JOIN
+          sys.extended_properties ep ON ep.major_id = c.object_id
+            AND ep.minor_id = c.column_id
+            AND ep.name = 'MS_Description'
+        WHERE
+        t.type = 'U'
+        -- User-defined tables
+      )
     SELECT
-      s.name AS table_schema,
-      t.name AS table_name,
-      c.name AS column_name,
-      ty.name AS data_type,
-      c.max_length AS character_maximum_length,
-      c.precision AS numeric_precision,
-      c.scale AS numeric_scale,
-      c.is_identity AS identity_increment,
+      *,
       CASE
-        WHEN c.is_nullable = 1 THEN 'YES'
-        ELSE 'NO'
-      END AS is_nullable,
-      CASE
-        WHEN c.default_object_id = 0 THEN NULL
-        ELSE OBJECT_DEFINITION(c.default_object_id)
-      END AS column_default,
-      CASE
-        WHEN c.default_object_id = 0 THEN NULL
-        WHEN OBJECT_NAME(c.default_object_id) LIKE 'nextval%' THEN 'increment'
-        WHEN c.default_object_id IS NOT NULL AND OBJECT_NAME(c.default_object_id) LIKE '''%' THEN 'string'
-        WHEN c.default_object_id IS NOT NULL AND (SELECT definition FROM sys.sql_modules WHERE object_id = c.default_object_id) IN ('true', 'false') THEN 'boolean'
-        WHEN c.default_object_id IS NOT NULL AND ISNUMERIC((SELECT definition FROM sys.sql_modules WHERE object_id = c.default_object_id)) = 1 THEN 'number'
+        WHEN tf.column_default LIKE '((%))' THEN 'number'
+        WHEN tf.column_default LIKE '(''%'')' THEN 'string'
         ELSE 'expression'
-      END AS default_type,
-      -- Fetching table comments
-      p.value AS table_comment,
-      ep.value AS column_comment
+      END AS default_type
     FROM
-      sys.tables t
-    JOIN
-      sys.schemas s ON t.schema_id = s.schema_id
-    JOIN
-      sys.columns c ON t.object_id = c.object_id
-    JOIN
-      sys.types ty ON c.user_type_id = ty.user_type_id
-    LEFT JOIN
-      sys.extended_properties p ON p.major_id = t.object_id AND p.name = 'MS_Description' AND p.minor_id = 0  -- Ensure minor_id is 0 for table comments
-    LEFT JOIN
-      sys.extended_properties ep ON ep.major_id = c.object_id AND ep.minor_id = c.column_id AND ep.name = 'MS_Description'
-    WHERE
-      t.type = 'U'  -- User-defined tables
+      tables_and_fields AS tf
     ORDER BY
-      s.name,
-      t.name,
-      c.column_id;
+      table_schema,
+      table_name,
+      column_name;
   `;
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
