@@ -1,13 +1,16 @@
+import { get } from 'lodash';
 import Element from './element';
 import { shouldPrintSchema } from './utils';
 
 class TableGroup extends Element {
-  constructor ({ name, token, tables = [], schema = {} }) {
+  constructor ({ name, token, tables = [], schema = {}, note, noteToken = null }) {
     super(token);
     this.name = name;
     this.tables = [];
     this.schema = schema;
     this.dbState = this.schema.dbState;
+    this.note = note ? get(note, 'value', note) : null;
+    this.noteToken = note ? get(note, 'token', noteToken) : null;
     this.generateId();
 
     this.processTables(tables);
@@ -73,6 +76,7 @@ class TableGroup extends Element {
   shallowExport () {
     return {
       name: this.name,
+      note: this.note,
     };
   }
 

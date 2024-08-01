@@ -1,20 +1,27 @@
 import { NormalizedDatabase } from './database';
 import DbState from './dbState';
-import Element from './element';
+import Element, { RawNote, Token} from './element';
 import Schema from './schema';
 import Table from './table';
+
+interface RawTableGroup {
+    name: string;
+    tables: Table[];
+    schema: Schema;
+    token: Token;
+    note: RawNote;
+}
+
 declare class TableGroup extends Element {
     name: string;
     tables: Table[];
     schema: Schema;
     dbState: DbState;
     id: number;
-    constructor({ name, token, tables, schema }: {
-        name: any;
-        token: any;
-        tables?: any[];
-        schema: any;
-    });
+    note: string;
+    noteToken: Token;
+    constructor({ name, token, tables, schema, note }: RawTableGroup
+  );
     generateId(): void;
     processTables(rawTables: any): void;
     pushTable(table: any): void;
@@ -25,6 +32,7 @@ declare class TableGroup extends Element {
             schemaName: string;
         }[];
         name: string;
+        note: string;
     };
     exportChild(): {
         tables: {
@@ -40,6 +48,7 @@ declare class TableGroup extends Element {
     };
     shallowExport(): {
         name: string;
+        note: string;
     };
     normalize(model: NormalizedDatabase): void;
 }
@@ -49,6 +58,7 @@ export interface NormalizedTableGroup {
         name: string;
         tableIds: number[];
         schemaId: number;
+        note: string;
     };
 }
 export default TableGroup;

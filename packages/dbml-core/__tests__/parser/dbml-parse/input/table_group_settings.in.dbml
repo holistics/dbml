@@ -1,0 +1,7 @@
+Table t1 {
+  id int
+}
+
+TableGroup g1 [note: 'note for table group'] {
+  t1
+}

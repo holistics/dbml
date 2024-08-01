@@ -1,15 +1,15 @@
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { isSimpleName, pickValidator, registerSchemaStack } from '../utils';
+import { isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList } from '../utils';
 import { ElementValidator } from '../types';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '../../../parser/nodes';
 import SymbolFactory from '../../../analyzer/symbol/factory';
-import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex, createTableSymbolIndex } from '../../../analyzer/symbol/symbolIndex';
+import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '../../../analyzer/symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../../analyzer/utils';
 import _ from 'lodash';
 import { TableGroupFieldSymbol, TableGroupSymbol } from '../../../analyzer/symbol/symbols';
-import { isExpressionAVariableNode } from '../../../parser/utils';
+import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../parser/utils';
 
 export default class TableGroupValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -70,11 +70,31 @@ export default class TableGroupValidator implements ElementValidator {
   }
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
-    if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A TableGroup shouldn\'t have a setting list', settingList)]
-    }
+    const aggReport = aggregateSettingList(settingList);
+    const errors = aggReport.getErrors();
+    const settingMap = aggReport.getValue();
 
-    return [];
+    for (const name in settingMap) {
+      const attrs = settingMap[name];
+      switch (name) {
+        case 'headercolor':
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'headercolor\' is not supported', attr)))
+          break;
+        case 'note':
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'note\' can only appear once', attr)))
+          }
+          attrs.forEach((attr) => {
+            if (!isExpressionAQuotedString(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'note\' must be a string literal', attr.value || attr.name!));
+            }
+          });
+          break;
+        default:
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown \'${name}\' setting`, attr)))
+      }
+    }
+    return errors;
   }
 
   validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -122,7 +142,7 @@ export default class TableGroupValidator implements ElementValidator {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
       const tableGroupField = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const tableGroupFieldId = createTableGroupFieldSymbolIndex(tableGroupField);
-      
+
       const tableGroupSymbol = this.symbolFactory.create(TableGroupFieldSymbol, { declaration: field })
       field.symbol = tableGroupSymbol;
 

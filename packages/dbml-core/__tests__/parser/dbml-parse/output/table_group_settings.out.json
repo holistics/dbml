@@ -1,0 +1,89 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "t1",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 21,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 28,
+              "line": 3,
+              "column": 1
+            }
+          },
+          "inline_refs": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 90,
+          "line": 6,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [
+    {
+      "name": "g1",
+      "schemaName": null,
+      "tables": [
+        {
+          "name": "t1",
+          "schemaName": null
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 254,
+          "line": 16,
+          "column": 1
+        },
+        "end": {
+          "offset": 291,
+          "line": 19,
+          "column": 2
+        }
+      },
+      "note": {
+        "value": "note for table group",
+        "token": {
+          "start": {
+            "offset": 87,
+            "line": 6,
+            "column": 18
+          },
+          "end": {
+            "offset": 111,
+            "line": 6,
+            "column": 42
+          }
+        }
+      }
+    }
+  ],
+  "aliases": [],
+  "project": {}
+}
