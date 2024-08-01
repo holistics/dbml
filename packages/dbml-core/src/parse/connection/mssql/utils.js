@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
-import { Client } from 'pg';
+import sql from 'mssql';
+
 import {
   Endpoint,
   // Enum,
@@ -9,28 +10,47 @@ import {
   Ref,
 } from '../../ANTLR/ASTGeneration/AST';
 
-const connectPg = async (connection) => {
-  const client = new Client(connection);
-  // bearer:disable javascript_lang_logger
-  client.on('error', (err) => console.log('PG connection error:', err));
+const connect = async (connection) => {
+  const options = connection.split(';').reduce((acc, option) => {
+    const [key, value] = option.split('=');
+    acc[key] = value;
+    return acc;
+  }, {});
+  const [host, port] = options['Data Source'].split(',');
 
-  await client.connect();
-  return client;
+  const config = {
+    user: options['User ID'],
+    password: options.Password,
+    server: host,
+    database: options['Initial Catalog'],
+    options: {
+      encrypt: options.Encrypt === 'True',
+      trustServerCertificate: options['Trust Server Certificate'] === 'True',
+      port: port || 1433,
+    },
+  };
+  console.log(config);
+
+  try {
+    // Connect to the database using the connection string
+    const client = await sql.connect(config);
+    return client;
+  } catch (err) {
+    console.log('MSSQL connection error:', err);
+    return null;
+  }
 };
 
 const convertQueryBoolean = (val) => val === 'YES';
 
-const getFieldType = (data_type, udt_name, character_maximum_length, numeric_precision, numeric_scale) => {
-  if (data_type === 'ARRAY') {
-    return `${udt_name.slice(1, udt_name.length)}[]`;
+const getFieldType = (data_type, character_maximum_length, numeric_precision, numeric_scale) => {
+  if (numeric_precision && numeric_scale) {
+    return `${data_type}(${numeric_precision},${numeric_scale})`;
   }
   if (character_maximum_length) {
-    return `${udt_name}(${character_maximum_length})`;
+    return `${data_type}(${character_maximum_length})`;
   }
-  if (numeric_precision && numeric_scale) {
-    return `${udt_name}(${numeric_precision},${numeric_scale})`;
-  }
-  return udt_name;
+  return data_type;
 };
 
 const getDbdefault = (data_type, column_default, default_type) => {
@@ -65,8 +85,6 @@ const generateRawField = (row) => {
     character_maximum_length,
     numeric_precision,
     numeric_scale,
-    udt_schema,
-    udt_name,
     identity_increment,
     is_nullable,
     column_default,
@@ -76,11 +94,8 @@ const generateRawField = (row) => {
 
   const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(data_type, column_default, default_type) : null;
 
-  const fieldType = data_type === 'USER-DEFINED' ? {
-    type_name: udt_name,
-    schemaName: udt_schema,
-  } : {
-    type_name: getFieldType(data_type, udt_name, character_maximum_length, numeric_precision, numeric_scale),
+  const fieldType = {
+    type_name: getFieldType(data_type, character_maximum_length, numeric_precision, numeric_scale),
     schemaname: null,
   };
 
@@ -110,7 +125,10 @@ const generateRawTablesAndFields = async (client) => {
         WHEN c.is_nullable = 1 THEN 'YES'
         ELSE 'NO'
       END AS is_nullable,
-      c.default_object_id AS column_default,
+      CASE
+        WHEN c.default_object_id = 0 THEN NULL
+        ELSE OBJECT_DEFINITION(c.default_object_id)
+      END AS column_default,
       CASE
         WHEN c.default_object_id = 0 THEN NULL
         WHEN OBJECT_NAME(c.default_object_id) LIKE 'nextval%' THEN 'increment'
@@ -131,7 +149,7 @@ const generateRawTablesAndFields = async (client) => {
     JOIN
       sys.types ty ON c.user_type_id = ty.user_type_id
     LEFT JOIN
-      sys.extended_properties p ON p.major_id = t.object_id AND p.name = 'MS_Description'
+      sys.extended_properties p ON p.major_id = t.object_id AND p.name = 'MS_Description' AND p.minor_id = 0  -- Ensure minor_id is 0 for table comments
     LEFT JOIN
       sys.extended_properties ep ON ep.major_id = c.object_id AND ep.minor_id = c.column_id AND ep.name = 'MS_Description'
     WHERE
@@ -143,7 +161,7 @@ const generateRawTablesAndFields = async (client) => {
   `;
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
-  const rawTables = tablesAndFieldsResult.rows.reduce((acc, row) => {
+  const rawTables = tablesAndFieldsResult.recordset.reduce((acc, row) => {
     const { table_schema, table_name, table_comment } = row;
 
     if (!acc[table_name]) {
@@ -194,7 +212,7 @@ const generateRefs = async (client) => {
   `;
 
   const refsQueryResult = await client.query(refsListSql);
-  refsQueryResult.rows.forEach((refRow) => {
+  refsQueryResult.recordset.forEach((refRow) => {
     const {
       table_schema,
       constraint_name,
@@ -318,7 +336,7 @@ const generateRawIndexes = async (client) => {
       ii.index_name;
   `;
   const indexListResult = await client.query(indexListSql);
-  const { indexes, constraint } = indexListResult.rows.reduce((acc, row) => {
+  const { indexes, constraint } = indexListResult.recordset.reduce((acc, row) => {
     const { constraint_type, columns } = row;
 
     if (columns === 'null' || columns.trim() === '') return acc;
@@ -516,7 +534,9 @@ const createTables = (rawTables, rawFields, rawIndexes, tableConstraints) => {
 };
 
 const generateRawDb = async (connection) => {
-  const client = await connectPg(connection);
+  const client = await connect(connection);
+  if (!client) throw new Error('Failed to connect to the database');
+
   const tablesAndFieldsRes = generateRawTablesAndFields(client);
   const rawIndexesRes = generateRawIndexes(client);
   const refsRes = generateRefs(client);
@@ -528,7 +548,7 @@ const generateRawDb = async (connection) => {
     refsRes,
     // rawEnumsRes,
   ]);
-  client.end();
+  client.close();
 
   const { rawTables, rawFields } = res[0];
   const { rawIndexes, tableConstraints } = res[1];
