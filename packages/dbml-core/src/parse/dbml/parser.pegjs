@@ -129,21 +129,52 @@ ProjectField
     }
   }
 
-TableGroupSyntax = table_group sp+ schemaName:schema_name? name:name _ "{" _ body:table_group_body _ "}" {
-  return {
+TableGroupSyntax = table_group sp+ schemaName:schema_name? name:name sp* table_group_settings:TableGroupSettings? _ "{" _ body:TableGroupBody _ "}" {
+  const result = {
     name: name,
     schemaName,
-    tables: body,
-    token: location()
-  }
+    tables: body.tables,
+    token: location(),
+    ...table_group_settings,
+  };
+  if (body.note) result.note = body.note;
+  return result;
 }
 
-table_group_body = tables:(schema_name? name __)* {
-  return tables.map(t => ({
-    name: t[1],
-    schemaName: t[0]
-  }));
-}
+TableGroupBody
+  = _ tables:(schema_name? name __)* _ elements:TableGroupElement* _ {
+    const note = elements.slice().reverse().find(ele => ele.type === 'note');
+
+    return {
+      tables: tables.map(t => ({
+        name: t[1],
+        schemaName: t[0],
+      })),
+      note: note ? note.value : null,
+    };
+  }
+
+TableGroupElement
+  = _ note: ObjectNoteElement _ {
+    return {
+      type: 'note',
+      value: note,
+    };
+  }
+
+
+TableGroupSettings
+  = "[" first:TableGroupSetting rest:(Comma TableGroupSetting)* "]" {
+    const settings = [first, ...rest.map(el => el[1])];
+    const result = {};
+    settings.forEach(el => {
+      if (el.type === "note") result.note = el.value;
+    });
+    return result;
+  }
+
+TableGroupSetting
+  = _ v: ObjectNote _ { return { type: 'note', value: v }; }
 
 // References
 RefSyntax
