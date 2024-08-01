@@ -15,13 +15,19 @@ class DatabaseConnector {
     return fetchSchema(connection, 'postgres');
   }
 
+  static async fetchMssqlToJSON (connection) {
+    return fetchSchema(connection, 'mssql');
+  }
+
   async fetchSchema (format) {
     let rawDatabase = {};
     switch (format) {
       case 'postgres':
         rawDatabase = await DatabaseConnector.fetchPostgresToJSON(this.connection);
         break;
-
+      case 'mssql':
+        rawDatabase = await DatabaseConnector.fetchMssqlToJSON(this.connection);
+        break;
       default:
         break;
     }
