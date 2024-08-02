@@ -237,8 +237,8 @@ const generateRefs = async (client) => {
     const ref = new Ref({
       name: constraint_name,
       endpoints: [ep1, ep2],
-      onDelete: on_delete,
-      onUpdate: on_update,
+      onDelete: on_delete === 'NO ACTION' ? null : on_delete,
+      onUpdate: on_update === 'NO ACTION' ? null : on_update,
     });
 
     if (!registeredFK.some(((fk) => fk.table_schema === table_schema
@@ -264,9 +264,9 @@ const generateRawIndexes = async (client) => {
     WITH user_tables AS (
       SELECT tablename
       FROM pg_tables
-      WHERE schemaname = 'public'
-        AND tablename NOT LIKE 'pg_%'
-        AND tablename NOT LIKE 'sql_%'
+      WHERE schemaname NOT IN ('pg_catalog', 'information_schema')  -- Exclude system schemas
+        AND tablename NOT LIKE 'pg_%'  -- Exclude PostgreSQL system tables
+        AND tablename NOT LIKE 'sql_%'  -- Exclude SQL standard tables
     ),
     index_info AS (
       SELECT
@@ -317,17 +317,20 @@ const generateRawIndexes = async (client) => {
     ;
   `;
   const indexListResult = await client.query(indexListSql);
-  const { indexes, constraint } = indexListResult.rows.reduce((acc, row) => {
+  const { indexes, inlineConstraints } = indexListResult.rows.reduce((acc, row) => {
     const { constraint_type, columns } = row;
 
     if (columns === 'null' || columns.trim() === '') return acc;
-    if (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE') {
-      acc.constraint.push(row);
+
+    const isSingleColumn = columns.split(',').length === 1;
+    const isInlineConstraint = isSingleColumn && (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE');
+    if (isInlineConstraint) {
+      acc.inlineConstraints.push(row);
     } else {
       acc.indexes.push(row);
     }
     return acc;
-  }, { indexes: [], constraint: [] });
+  }, { indexes: [], inlineConstraints: [] });
 
   const rawIndexes = indexes.reduce((acc, indexRow) => {
     const {
@@ -369,7 +372,7 @@ const generateRawIndexes = async (client) => {
     return acc;
   }, {});
 
-  const tableConstraints = constraint.reduce((acc, row) => {
+  const tableConstraints = inlineConstraints.reduce((acc, row) => {
     const {
       table_name,
       columns,
