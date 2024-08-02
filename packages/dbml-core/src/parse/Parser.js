@@ -54,10 +54,6 @@ class Parser {
     return new Parser().parse(str, format);
   }
 
-  static async fetchPostgresToJSON (connection) {
-    return fetch(connection, 'postgres');
-  }
-
   parse (str, format) {
     try {
       let rawDatabase = {};
