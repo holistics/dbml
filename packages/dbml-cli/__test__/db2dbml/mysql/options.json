@@ -1,0 +1,8 @@
+{
+  "args": [
+    "--mysql",
+    "mysql://root:root@localhost:3306/online_auction_app",
+    "-o",
+    "./out-files/schema.dbml"
+  ]
+}
