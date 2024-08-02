@@ -1,4 +1,4 @@
-declare function _fetch(connection: {
+declare function fetchSchema(connection: {
   host: string;
   port: number;
   user: string;
@@ -6,6 +6,6 @@ declare function _fetch(connection: {
   database: string;
 }, format: 'postgres'): Promise<string>;
 declare const _default: {
-  fetch: typeof _fetch;
+  fetchSchema: typeof fetchSchema;
 };
 export default _default;

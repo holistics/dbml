@@ -34,12 +34,13 @@ Table "all_string_types" {
 
 Table "order_items" {
   "order_item_id" int4 [pk, not null, increment]
-  "order_id" int4 [unique, not null]
-  "product_id" int4 [unique, not null]
+  "order_id" int4 [not null]
+  "product_id" int4 [not null]
   "quantity" int4 [not null]
   "unit_price" numeric(10,2) [not null]
 
   Indexes {
+    (order_id, product_id) [type: btree, name: "uq_order_product"]
     (order_id, product_id) [type: btree, name: "idx_order_items_order_product"]
   }
 }
@@ -111,8 +112,8 @@ Table "users" {
   }
 }
 
-Ref "fk_user":"users"."user_id" < "orders"."user_id" [update: no action, delete: cascade]
+Ref "fk_user":"users"."user_id" < "orders"."user_id" [delete: cascade]
 
-Ref "fk_order":"orders"."order_id" < "order_items"."order_id" [update: no action, delete: cascade]
+Ref "fk_order":"orders"."order_id" < "order_items"."order_id" [delete: cascade]
 
-Ref "fk_product":"products"."product_id" < "order_items"."product_id" [update: no action, delete: cascade]
+Ref "fk_product":"products"."product_id" < "order_items"."product_id" [delete: cascade]
