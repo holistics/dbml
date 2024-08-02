@@ -253,8 +253,8 @@ const generateRefs = async (client) => {
     const ref = new Ref({
       name: constraint_name,
       endpoints: [ep1, ep2],
-      onDelete: on_delete,
-      onUpdate: on_update,
+      onDelete: on_delete === 'NO_ACTION' ? null : on_delete,
+      onUpdate: on_update === 'NO_ACTION' ? null : on_update,
     });
 
     if (!registeredFK.some(((fk) => fk.table_schema === table_schema
