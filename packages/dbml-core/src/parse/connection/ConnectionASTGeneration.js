@@ -1,4 +1,5 @@
 import PostgresConnectionASTGen from './postgres/PostgresConnectionASTGen';
+import MySQLConnectionASTGen from './mysql/MySQLConnectionASTGen';
 
 function fetchSchema (connection, format) {
   let database = null;
@@ -7,6 +8,10 @@ function fetchSchema (connection, format) {
     case 'postgres': {
       database = new PostgresConnectionASTGen().fetchSchema(connection);
 
+      break;
+    }
+    case 'mysql': {
+      database = new MySQLConnectionASTGen().fetchSchema(connection);
       break;
     }
     default:
