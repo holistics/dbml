@@ -1,4 +1,4 @@
-import { generateRawDb } from './utils';
+import { generateRawDb } from './utils/sql';
 
 export default class MySQLConnectionASTGen {
   constructor () {
@@ -14,10 +14,11 @@ export default class MySQLConnectionASTGen {
   }
 
   async fetchSchema (connection) {
-    const { tables, refs } = await generateRawDb(connection);
+    const { tables, refs, enums } = await generateRawDb(connection);
 
     this.data.tables = tables;
     this.data.refs = refs;
+    this.data.enums = enums;
 
     return this.data;
   }
