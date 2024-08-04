@@ -1,22 +1,16 @@
 import { createConnection } from 'mysql2/promise';
+import { createEnums, createRefs, createTables } from './dbml';
 
 /**
- *
  * @param {string} connection
  * @returns {Promise<import('mysql2').Connection>} client
  */
 async function connectMySQL (connection) {
   const client = await createConnection(connection);
   await client.connect();
-  // TODO: handle connection error
   return client;
 }
 
-/**
- * @param {string} extraType
- * @param {string} generationExpression
- * @returns {string}
- */
 function getGenerationExpression (extraType, generationExpression) {
   if (!extraType) return '';
 
@@ -37,28 +31,28 @@ function getGenerationExpression (extraType, generationExpression) {
   return '';
 }
 
-/**
- * @param {string} columnDataType
- * @param {string | null} columnDefault
- * @param {boolean} isNullable
- */
+// TODO: check the correct form
 function getDbDefault (columnDefault, isNullable) {
+  // {value: string, type: 'string' | 'number' | 'boolean' | 'expression'}
+  // check default value is null
   if (columnDefault === null) {
     if (!isNullable) { return null; }
 
-    return { value: null };
+    return { value: null, type: 'number' };
   }
 
-  return { value: columnDefault };
+  return { value: columnDefault, type: 'number' };
 }
 
-// TODO: recheck enum value
+// TODO: recheck dbdefault value
 function generateRawField (row) {
   const {
+    tableName,
     columnName,
     columnDefault,
     columnIsNullable,
     columnType,
+    columnDataType,
     columnComment,
     columnExtra,
     generationExpression,
@@ -70,36 +64,38 @@ function generateRawField (row) {
     fieldType = `${fieldType} ${fieldGenerationExpression}`;
   }
 
+  if (columnDataType === 'enum') {
+    fieldType = `${tableName}_${columnName}`;
+  }
+
   const isNullable = columnIsNullable === 'YES';
+
   const fieldDefaultValue = getDbDefault(columnDefault, isNullable);
 
   // field object
   return {
     name: columnName,
-    type: fieldType,
-    default: fieldDefaultValue,
+    type: { type_name: fieldType },
+    dbdefault: fieldDefaultValue,
     notNull: !isNullable,
     increment: !!(columnExtra === 'auto_increment'),
     note: columnComment,
   };
 }
 
-function getIndexColumn (columnName, idxSubPart, idxExpression) {
+// Do not get the index sub part since in DBML, it is impossible to create index on part of column.
+function getIndexColumn (columnName, idxExpression) {
   if (idxExpression) {
-    return idxExpression;
+    return { value: idxExpression, type: 'expression' };
   }
 
-  if (idxSubPart && columnName) {
-    return `${columnName}(${idxSubPart})`;
+  if (columnName) {
+    return { value: columnName, type: 'column' };
   }
 
-  return '';
+  return null;
 }
 
-/**
- * @param {import('mysql2/promise').Connection} client
- * @param {string} schemaName
- */
 async function generateRawTablesAndFields (client, schemaName = 'public') {
   const query = `
     select
@@ -109,12 +105,6 @@ async function generateRawTablesAndFields (client, schemaName = 'public') {
       c.column_default as columnDefault,
       c.is_nullable as columnIsNullable,
       c.data_type as columnDataType,
-      c.character_maximum_length,
-      c.character_octet_length,
-      c.numeric_precision,
-      c.numeric_scale,
-      c.character_set_name,
-      c.collation_name,
       c.column_type as columnType,
       c.extra as columnExtra,
       c.column_comment as columnComment,
@@ -130,32 +120,34 @@ async function generateRawTablesAndFields (client, schemaName = 'public') {
   const queryResponse = await client.query(query, [schemaName]);
   const [rows] = queryResponse;
 
+  const rawTableMap = {};
   const rawFieldMap = {};
-  const rawTableMap = rows.reduce((acc, row) => {
-    const { tableName, tableComment } = row;
 
-    if (!acc[tableName]) {
-      acc[tableName] = {
-        comment: tableComment,
+  rows.forEach((row) => {
+    // Create raw table
+    const { tableName, tableComment } = row;
+    if (!rawTableMap[tableName]) {
+      rawTableMap[tableName] = {
+        name: tableName,
+        note: tableComment,
       };
     }
 
-    if (!rawFieldMap[tableName]) rawFieldMap[tableName] = [];
+    // Create raw field
+    if (!rawFieldMap[tableName]) {
+      rawFieldMap[tableName] = [];
+    }
+
     const field = generateRawField(row);
     rawFieldMap[tableName].push(field);
-    return acc;
-  }, {});
+  });
 
   return {
-    rawTableMap,
+    rawTableList: Object.values(rawTableMap),
     rawFieldMap,
   };
 }
 
-/**
- * @param {import('mysql2/promise').Connection} client
- * @param {string} schemaName
- */
 async function generateRawEnums (client, schemaName = 'public') {
   const query = `
     select
@@ -173,45 +165,38 @@ async function generateRawEnums (client, schemaName = 'public') {
   const queryResponse = await client.query(query, [schemaName]);
   const [rows] = queryResponse;
 
-  const rawEnumMap = rows.reduce((acc, row) => {
+  const rawEnumList = rows.map((row) => {
     const { tableName, columnName, rawValues } = row;
 
-    // ('value1','value2')
-    const valueList = rawValues.slice(1, -1).split(',');
+    // i.e. ('value1','value2')
+    const valueList = rawValues
+      .slice(1, -1)
+      .split(',')
+      .map((value) => ({ name: value.slice(1, -1) }));
 
     const enumName = `${tableName}_${columnName}`;
-    if (!acc[enumName]) {
-      acc[enumName] = {
-        name: enumName,
-        value: valueList,
-      };
-    }
-    return acc;
-  }, {});
 
-  return rawEnumMap;
+    return {
+      name: enumName,
+      values: valueList,
+    };
+  });
+
+  return rawEnumList;
 }
 
 /**
- * @param {import('mysql2/promise').Connection} client
- * @param {string} schemaName
+ * Mysql is automatically create index for primary keys, foreign keys, unique constraint. -> Ignore
+ * !Blocker: recheck the backtick in expression
  */
 async function generateRawIndexes (client, schemaName = 'public') {
-  /**
-   * Mysql is automatically create index for primary keys, foreign keys, unique constraint. -> Ignore
-   *
-   */
   const query = `
     with
-      foreign_keys as (
-        select col.constraint_name
-        from information_schema.tables t
-        join information_schema.key_column_usage col on t.table_name = col.table_name
-        where
-          t.table_schema = ? and t.table_type = 'BASE TABLE'
-          and col.referenced_table_name is not null
-          and col.referenced_column_name is not null
-        )
+      pk_fk_uniques as (
+        select constraint_name, table_name
+        from information_schema.table_constraints
+        where table_schema = ?
+      )
     select
       st.table_name as tableName,
       case
@@ -220,16 +205,17 @@ async function generateRawIndexes (client, schemaName = 'public') {
         end as isIdxUnique,
       st.index_name as idxName,
       st.column_name as columnName,
-      st.sub_part as idxSubPart,
+      -- st.sub_part as idxSubPart,
       st.index_type as idxType,
       st.expression as idxExpression
-    from information_schema.tables t
-    join information_schema.statistics st on t.table_name = st.table_name
+    from information_schema.statistics st
     where
       st.table_schema = ?
-      and t.table_type = 'BASE TABLE'
-      and st.index_name <> 'PRIMARY'
-      and st.index_name not in (select * from foreign_keys)
+      and st.index_name not in (
+        select constraint_name
+        from pk_fk_uniques pfu
+        where pfu.table_name = st.table_name
+      )
       and st.index_type in ('BTREE', 'HASH')
     group by st.table_name, st.non_unique, st.index_name, st.column_name, st.sub_part, st.index_type, st.expression;
   `;
@@ -239,7 +225,7 @@ async function generateRawIndexes (client, schemaName = 'public') {
 
   const rawIndexMap = rows.reduce((acc, row) => {
     const {
-      tableName, idxName, idxType, isIdxUnique, columnName, idxSubPart, idxExpression,
+      tableName, idxName, idxType, isIdxUnique, columnName, idxExpression,
     } = row;
 
     if (!acc[tableName]) {
@@ -258,7 +244,7 @@ async function generateRawIndexes (client, schemaName = 'public') {
 
     // init column value and push to index
     const currentIndex = acc[tableName][idxName];
-    const column = getIndexColumn(columnName, idxSubPart, idxExpression);
+    const column = getIndexColumn(columnName, idxExpression);
     if (column) {
       currentIndex.columns.push(column);
     }
@@ -269,14 +255,11 @@ async function generateRawIndexes (client, schemaName = 'public') {
   return rawIndexMap;
 }
 
-/**
- * @param {import('mysql2/promise').Connection} client
- * @param {string} schemaName
- */
 async function generateRawPrimaryKeys (client, schemaName = 'public') {
   const query = `
     select
       tc.table_name as tableName,
+      tc.constraint_name as constraintName,
       kcu.column_name as columnName
     from information_schema.table_constraints tc
     join information_schema.key_column_usage kcu
@@ -290,27 +273,23 @@ async function generateRawPrimaryKeys (client, schemaName = 'public') {
   const [rows] = queryResponse;
 
   const rawPrimaryKeyMap = rows.reduce((acc, row) => {
-    const { tableName, columnName } = row;
+    const { tableName, columnName, constraintName } = row;
 
     if (!acc[tableName]) {
       acc[tableName] = {
-        columns: [columnName],
+        name: `${tableName}_${constraintName}`,
+        columns: [],
       };
-
-      return acc;
     }
 
     acc[tableName].columns.push(columnName);
+
     return acc;
   }, {});
 
   return rawPrimaryKeyMap;
 }
 
-/**
- * @param {import('mysql2/promise').Connection} client
- * @param {string} schemaName
- */
 async function generateRawForeignKeys (client, schemaName = 'public') {
   const query = `
     select
@@ -355,8 +334,10 @@ async function generateRawForeignKeys (client, schemaName = 'public') {
         onDelete,
         onUpdate,
         foreignColumns: [],
+        foreignTableName,
         refTableName,
         refColumns: [],
+        name: constraintName,
       };
     }
 
@@ -370,21 +351,47 @@ async function generateRawForeignKeys (client, schemaName = 'public') {
   return rawForeignKeyMap;
 }
 
-/**
- * @param {import('mysql2/promise').Connection} client
- * @param {string} schemaName
- */
 async function generateRawUniqueConstraints (client, schemaName = 'public') {
-  // const query = ``;
+  const query = `
+    select
+      tc.constraint_name as constraintName,
+      tc.table_name as tableName,
+      kcu.column_name as columnName
+    from information_schema.table_constraints tc
+    join information_schema.key_column_usage kcu
+    on
+      tc.constraint_name = kcu.constraint_name
+      and tc.table_name = kcu.table_name
+      and tc.table_schema = kcu.table_schema
+    where
+      tc.constraint_type = 'UNIQUE' and tc.table_schema = ?
+    order by
+      tc.table_name, kcu.ordinal_position;
+  `;
 
-  // const queryResponse = await client.query(query, [schemaName]);
-  // const [rows] = queryResponse;
+  const queryResponse = await client.query(query, [schemaName]);
+  const [rows] = queryResponse;
 
-  // const uniqueConstraintMap = rows.reduce((acc, row) => {
-  //   return acc;
-  // }, {});
+  const rawUniqueConstraintMap = rows.reduce((acc, row) => {
+    const { constraintName, tableName, columnName } = row;
 
-  // return uniqueConstraintMap;
+    if (!acc[tableName]) {
+      acc[tableName] = {};
+    }
+
+    if (!acc[tableName][constraintName]) {
+      acc[tableName][constraintName] = {
+        name: constraintName,
+        columns: [],
+      };
+    }
+
+    acc[tableName][constraintName].columns.push(columnName);
+
+    return acc;
+  }, {});
+
+  return rawUniqueConstraintMap;
 }
 
 export async function generateRawDb (connection) {
@@ -401,27 +408,37 @@ export async function generateRawDb (connection) {
       generateRawEnums(client, schemaName),
       generateRawIndexes(client, schemaName),
       generateRawPrimaryKeys(client, schemaName),
-      generateRawForeignKeys(client, schemaName),
       generateRawUniqueConstraints(client, schemaName),
+      generateRawForeignKeys(client, schemaName),
     ]);
 
-    // const { rawTableMap, rawFieldMap } = result[0];
+    const [
+      { rawTableList, rawFieldMap },
+      rawEnumList,
+      rawIndexMap,
+      rawPrimaryKeyMap,
+      rawUniqueConstraintMap,
+      rawForeignKeyMap,
+    ] = result;
 
-    // console.table(rawTableMap);
+    const enumList = createEnums(rawEnumList);
+    const tableList = createTables(
+      rawTableList,
+      rawFieldMap,
+      rawPrimaryKeyMap,
+      rawUniqueConstraintMap,
+      rawIndexMap,
+    );
+    const refList = createRefs(rawForeignKeyMap);
 
-    // Object.keys(rawFieldMap).forEach((key) => {
-    //   console.log(key);
-    //   console.table(rawFieldMap[key]);
-    // });
-
-    // console.table(result[1]);
-    // console.log(JSON.stringify(result[2]));
-    console.log(JSON.stringify(result[4]));
+    return {
+      tables: tableList,
+      refs: refList,
+      enums: enumList,
+    };
   } catch (error) {
     throw new Error(error);
   } finally {
     client?.end();
   }
-
-  return { tables: {}, refs: {} };
 }
