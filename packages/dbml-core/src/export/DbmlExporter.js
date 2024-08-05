@@ -79,9 +79,11 @@ class DbmlExporter {
             value += `${field.dbdefault.value}`;
             break;
 
-          case 'string':
-            value += `"${field.dbdefault.value}"`;
+          case 'string': {
+            const quote = field.dbdefault.value.includes('\n') ? "'''" : "'";
+            value += `${quote}${field.dbdefault.value}${quote}`;
             break;
+          }
 
           case 'expression':
             value += `\`${field.dbdefault.value}\``;

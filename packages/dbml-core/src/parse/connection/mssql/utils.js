@@ -61,13 +61,13 @@ const getFieldType = (data_type, default_type, character_maximum_length, numeric
   if (numeric_precision && numeric_scale && default_type === 'number') {
     return `${data_type}(${numeric_precision},${numeric_scale})`;
   }
-  if (character_maximum_length && default_type === 'string') {
+  if (character_maximum_length && character_maximum_length > 0 && default_type === 'string') {
     return `${data_type}(${character_maximum_length})`;
   }
   return data_type;
 };
 
-const getDbdefault = (column_default, default_type) => {
+const getDbdefault = (data_type, column_default, default_type) => {
   // The regex below is used to extract the value from the default value
   // \( and \) are used to escape parentheses
   // [^()]+ is used to match any character except parentheses
@@ -118,7 +118,7 @@ const generateRawField = (row) => {
     column_comment,
   } = row;
 
-  const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(column_default, default_type) : null;
+  const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(data_type, column_default, default_type) : null;
 
   const fieldType = {
     type_name: getFieldType(data_type, default_type, character_maximum_length, numeric_precision, numeric_scale),
