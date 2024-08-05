@@ -187,7 +187,6 @@ async function generateRawEnums (client, schemaName = 'public') {
 
 /**
  * Mysql is automatically create index for primary keys, foreign keys, unique constraint. -> Ignore
- * !Blocker: recheck the backtick in expression
  */
 async function generateRawIndexes (client, schemaName = 'public') {
   const query = `
@@ -207,7 +206,7 @@ async function generateRawIndexes (client, schemaName = 'public') {
       st.column_name as columnName,
       -- st.sub_part as idxSubPart,
       st.index_type as idxType,
-      st.expression as idxExpression
+      replace(st.expression, '\`', '') as idxExpression
     from information_schema.statistics st
     where
       st.table_schema = ?
