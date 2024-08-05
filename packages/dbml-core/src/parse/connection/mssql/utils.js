@@ -38,7 +38,6 @@ const connect = async (connection) => {
       port: port || 1433,
     },
   };
-  console.log(config);
 
   try {
     // Connect to the database using the connection string
@@ -81,6 +80,30 @@ const getDbdefault = (column_default, default_type) => {
   };
 };
 
+const getEnumValues = (definition) => {
+  // Use the example below to understand the regex:
+  // ([quantity]>(0))
+  // ([unit_price]>(0))
+  // ([status]='cancelled' OR [status]='delivered' OR [status]='shipped' OR [status]='processing' OR [status]='pending')
+  // ([total_amount]>(0))
+  // ([price]>(0))
+  // ([stock_quantity]>=(0))
+  // ([age_start]<=[age_end])
+  // ([age_start]<=[age_end])
+  // ([gender]='Other' OR [gender]='Female' OR [gender]='Male')
+  // ([date_of_birth]<=dateadd(year,(-13),getdate()))
+  // ([email] like '%_@_%._%')
+  if (!definition) return null;
+  const values = definition.match(/\[([^\]]+)\]='([^']+)'/g); // Extracting the enum values when the definition contains ]='
+  if (!values) return null;
+
+  const enumValues = values.map((value) => {
+    const enumValue = value.split("]='")[1];
+    return { name: enumValue.slice(0, -1) };
+  });
+  return enumValues;
+};
+
 const generateRawField = (row) => {
   const {
     column_name,
@@ -112,8 +135,9 @@ const generateRawField = (row) => {
   };
 };
 
-const generateRawTablesAndFields = async (client) => {
+const generateRawTablesFieldsAndEnums = async (client) => {
   const rawFields = {};
+  const rawEnums = [];
   const tablesAndFieldsSql = `
     WITH tables_and_fields AS (
         SELECT
@@ -188,7 +212,13 @@ const generateRawTablesAndFields = async (client) => {
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
   const rawTables = tablesAndFieldsResult.recordset.reduce((acc, row) => {
-    const { table_schema, table_name, table_comment } = row;
+    const {
+      table_schema,
+      table_name,
+      table_comment,
+      check_constraint_name,
+      check_constraint_definition,
+    } = row;
 
     if (!acc[table_name]) {
       acc[table_name] = {
@@ -198,8 +228,23 @@ const generateRawTablesAndFields = async (client) => {
       };
     }
 
+    const enumValues = getEnumValues(check_constraint_definition);
+    if (enumValues) {
+      rawEnums.push({
+        name: check_constraint_name,
+        schemaName: table_schema,
+        values: enumValues,
+      });
+    }
+
     if (!rawFields[table_name]) rawFields[table_name] = [];
     const field = generateRawField(row);
+    if (enumValues) {
+      field.type = {
+        type_name: check_constraint_name,
+        schemaName: table_schema,
+      };
+    }
     rawFields[table_name].push(field);
 
     return acc;
@@ -208,6 +253,7 @@ const generateRawTablesAndFields = async (client) => {
   return {
     rawTables: Object.values(rawTables),
     rawFields,
+    rawEnums,
   };
 };
 
@@ -441,63 +487,6 @@ const generateRawIndexes = async (client) => {
   };
 };
 
-// const generateRawEnums = async (client) => {
-//   const enumListSql = `
-//     WITH EnumValues AS (
-//         SELECT
-//             SCHEMA_NAME(t.schema_id) AS schema_name,
-//             t.name AS table_name,
-//             c.name AS column_name,
-//             cc.definition AS check_constraint_definition
-//         FROM
-//             sys.tables t
-//         JOIN
-//             sys.columns c ON t.object_id = c.object_id
-//         LEFT JOIN
-//             sys.check_constraints cc ON c.object_id = cc.parent_object_id AND c.column_id = cc.parent_column_id
-//         WHERE
-//             cc.definition IS NOT NULL
-//     )
-//     SELECT
-//         schema_name,
-//         table_name,
-//         column_name,
-//         -- Extracting the enum values from the CHECK constraint definition
-//         TRIM(SUBSTRING(
-//             cc.check_constraint_definition,
-//             CHARINDEX('(', cc.check_constraint_definition) + 1,
-//             CHARINDEX(')', cc.check_constraint_definition) - CHARINDEX('(', cc.check_constraint_definition) - 1
-//         )) AS enum_values
-//     FROM
-//         EnumValues cc
-//     WHERE
-//         cc.check_constraint_definition LIKE '%IN (%'  -- Check for inline constraints using IN
-//         OR cc.check_constraint_definition LIKE '%=%'   -- Check for inline constraints using =
-//     ORDER BY
-//         schema_name,
-//         table_name,
-//         column_name;
-//   `;
-//   const enumListResult = await client.query(enumListSql);
-//   const enums = enumListResult.recordset.reduce((acc, row) => {
-//     const { schema_name, table_name, column_name, enum_values } = row;
-
-//     if (!acc[enum_type]) {
-//       acc[enum_type] = {
-//         name: enum_type,
-//         schemaName: schema_name,
-//         values: [],
-//       };
-//     }
-//     acc[enum_type].values.push({
-//       name: enum_value,
-//     });
-//     return acc;
-//   }, {});
-
-//   return Object.values(enums);
-// };
-
 const createEnums = (rawEnums) => {
   return rawEnums.map((rawEnum) => {
     const { name, schemaName, values } = rawEnum;
@@ -563,32 +552,29 @@ const generateRawDb = async (connection) => {
   const client = await connect(connection);
   if (!client) throw new Error('Failed to connect to the database');
 
-  const tablesAndFieldsRes = generateRawTablesAndFields(client);
+  const tablesFieldsAndEnumsRes = generateRawTablesFieldsAndEnums(client);
   const rawIndexesRes = generateRawIndexes(client);
   const refsRes = generateRefs(client);
-  // const rawEnumsRes = generateRawEnums(client);
 
   const res = await Promise.all([
-    tablesAndFieldsRes,
+    tablesFieldsAndEnumsRes,
     rawIndexesRes,
     refsRes,
-    // rawEnumsRes,
   ]);
   client.close();
 
-  const { rawTables, rawFields } = res[0];
+  const { rawTables, rawFields, rawEnums } = res[0];
   const { rawIndexes, tableConstraints } = res[1];
   const refs = res[2];
-  // const rawEnums = res[3];
 
   try {
     const tables = createTables(rawTables, rawFields, rawIndexes, tableConstraints);
-    // const enums = createEnums(rawEnums);
+    const enums = createEnums(rawEnums);
 
     return {
       tables,
       refs,
-      // enums,
+      enums,
     };
   } catch (err) {
     throw new Error(err);
