@@ -43,11 +43,11 @@ export function createRefs (tableForeignKeyMap) {
         endpoints: [endpoint1, endpoint2],
       });
 
-      if (onDelete === 'no action') {
+      if (onDelete !== 'NO ACTION') {
         ref.onDelete = onDelete;
       }
 
-      if (onUpdate === 'no action') {
+      if (onUpdate !== 'NO ACTION') {
         ref.onUpdate = onUpdate;
       }
 

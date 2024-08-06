@@ -11,9 +11,11 @@ async function connectMySQL (connection) {
   return client;
 }
 
-function getGenerationExpression (extraType, generationExpression) {
-  if (!extraType) return '';
+function getEnumName (tableName, columnName) {
+  return `${tableName}_${columnName}_enum`;
+}
 
+function getGenerationExpression (extraType, generationExpression) {
   if (extraType === 'VIRTUAL GENERATED') {
     return `GENERATED ALWAYS AS (${generationExpression}) VIRTUAL`;
   }
@@ -39,6 +41,20 @@ function getDbDefault (columnDefault, defaultValueType) {
   return { value: columnDefault, type: defaultValueType };
 }
 
+function getFieldType (tableName, columnName, columnType, columnDataType, columnExtra, generationExpression) {
+  if (columnDataType === 'enum') {
+    // enum must have static value -> no need to check the generation expression
+    return getEnumName(tableName, columnName);
+  }
+
+  const fieldGenerationExpression = getGenerationExpression(columnExtra, generationExpression);
+  if (fieldGenerationExpression) {
+    return `${columnType} ${fieldGenerationExpression}`;
+  }
+
+  return columnType;
+}
+
 function generateRawField (row) {
   const {
     tableName,
@@ -53,35 +69,37 @@ function generateRawField (row) {
     generationExpression,
   } = row;
 
-  let fieldType = columnType;
-  const fieldGenerationExpression = getGenerationExpression(columnExtra, generationExpression);
-  if (fieldGenerationExpression) {
-    fieldType = `${fieldType} ${fieldGenerationExpression}`;
-  }
-
-  if (columnDataType === 'enum') {
-    fieldType = `${tableName}_${columnName}`;
-  }
-
-  const isNullable = columnIsNullable === 'YES';
+  const fieldType = getFieldType(
+    tableName,
+    columnName,
+    columnType,
+    columnDataType,
+    columnExtra,
+    generationExpression,
+  );
 
   const fieldDefaultValue = getDbDefault(columnDefault, defaultValueType);
 
-  // field object
+  const isNullable = columnIsNullable === 'YES';
+
   return {
     name: columnName,
     type: { type_name: fieldType },
     dbdefault: fieldDefaultValue,
     notNull: !isNullable,
-    increment: !!(columnExtra === 'auto_increment'),
+    increment: columnExtra === 'auto_increment',
     note: columnComment,
   };
 }
 
 // Do not get the index sub part since in DBML, it is impossible to create index on part of column.
-function getIndexColumn (columnName, idxExpression) {
+function getIndexColumn (columnName, idxExpression, idxSubPart) {
   if (idxExpression) {
     return { value: idxExpression, type: 'expression' };
+  }
+
+  if (idxSubPart) {
+    return { value: `${columnName}(${idxSubPart})`, type: 'expression' };
   }
 
   if (columnName) {
@@ -102,6 +120,7 @@ async function generateRawTablesAndFields (client, schemaName = 'public') {
       c.column_default as columnDefault,
       case
         when c.column_default is null then 'boolean'
+        when c.data_type = 'enum' then 'string'
         when c.column_default regexp ? then 'number'
         when c.extra like '%DEFAULT_GENERATED%' then 'expression'
         else 'string'
@@ -113,7 +132,8 @@ async function generateRawTablesAndFields (client, schemaName = 'public') {
       c.column_comment as columnComment,
       c.generation_expression as generationExpression
     from information_schema.tables t
-    join information_schema.columns c on t.table_name = c.table_name
+    join information_schema.columns c
+    on t.table_schema = c.table_schema and t.table_name = c.table_name
     where
       t.table_schema = ? and t.table_type = 'BASE TABLE'
     order by
@@ -127,7 +147,6 @@ async function generateRawTablesAndFields (client, schemaName = 'public') {
   const rawFieldMap = {};
 
   rows.forEach((row) => {
-    // Create raw table
     const { tableName, tableComment } = row;
     if (!rawTableMap[tableName]) {
       rawTableMap[tableName] = {
@@ -136,7 +155,6 @@ async function generateRawTablesAndFields (client, schemaName = 'public') {
       };
     }
 
-    // Create raw field
     if (!rawFieldMap[tableName]) {
       rawFieldMap[tableName] = [];
     }
@@ -158,7 +176,8 @@ async function generateRawEnums (client, schemaName = 'public') {
       c.column_name as columnName,
       TRIM(LEADING 'enum' FROM c.column_type) AS rawValues
     from information_schema.tables t
-    join information_schema.columns c on t.table_name = c.table_name
+    join information_schema.columns c
+    on t.table_schema = c.table_schema and t.table_name = c.table_name
     where
       t.table_schema = ? and t.table_type = 'BASE TABLE' and c.data_type = 'enum'
     order by
@@ -177,7 +196,7 @@ async function generateRawEnums (client, schemaName = 'public') {
       .split(',')
       .map((value) => ({ name: value.slice(1, -1) }));
 
-    const enumName = `${tableName}_${columnName}`;
+    const enumName = getEnumName(tableName, columnName);
 
     return {
       name: enumName,
@@ -207,7 +226,7 @@ async function generateRawIndexes (client, schemaName = 'public') {
         end as isIdxUnique,
       st.index_name as idxName,
       st.column_name as columnName,
-      -- st.sub_part as idxSubPart,
+      st.sub_part as idxSubPart,
       st.index_type as idxType,
       replace(st.expression, '\`', '') as idxExpression
     from information_schema.statistics st
@@ -219,7 +238,9 @@ async function generateRawIndexes (client, schemaName = 'public') {
         where pfu.table_name = st.table_name
       )
       and st.index_type in ('BTREE', 'HASH')
-    group by st.table_name, st.non_unique, st.index_name, st.column_name, st.sub_part, st.index_type, st.expression;
+    group by
+      st.table_name, st.non_unique, st.index_name, st.column_name, st.sub_part, st.index_type, st.expression
+    order by st.index_name;
   `;
 
   const queryResponse = await client.query(query, [schemaName, schemaName]);
@@ -227,7 +248,7 @@ async function generateRawIndexes (client, schemaName = 'public') {
 
   const rawIndexMap = rows.reduce((acc, row) => {
     const {
-      tableName, idxName, idxType, isIdxUnique, columnName, idxExpression,
+      tableName, idxName, idxType, isIdxUnique, columnName, idxExpression, idxSubPart,
     } = row;
 
     if (!acc[tableName]) {
@@ -244,9 +265,8 @@ async function generateRawIndexes (client, schemaName = 'public') {
       };
     }
 
-    // init column value and push to index
     const currentIndex = acc[tableName][idxName];
-    const column = getIndexColumn(columnName, idxExpression);
+    const column = getIndexColumn(columnName, idxExpression, idxSubPart);
     if (column) {
       currentIndex.columns.push(column);
     }
@@ -265,7 +285,10 @@ async function generateRawPrimaryKeys (client, schemaName = 'public') {
       kcu.column_name as columnName
     from information_schema.table_constraints tc
     join information_schema.key_column_usage kcu
-    on tc.constraint_name = kcu.constraint_name and tc.table_name = kcu.table_name
+    on
+      tc.constraint_schema = kcu.constraint_schema
+      and tc.constraint_name = kcu.constraint_name
+      and tc.table_name = kcu.table_name
     where
       tc.constraint_type = 'PRIMARY KEY' and tc.table_schema = ?
     order by tc.table_name, kcu.ordinal_position;
@@ -279,7 +302,7 @@ async function generateRawPrimaryKeys (client, schemaName = 'public') {
 
     if (!acc[tableName]) {
       acc[tableName] = {
-        name: `${tableName}_${constraintName}`,
+        name: constraintName,
         columns: [],
       };
     }
