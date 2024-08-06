@@ -30,6 +30,19 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      # I would like to add mssql services
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          SA_PASSWORD: "dbml.123.123"
+          ACCEPT_EULA: "Y"
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "sqlcmd -U sa -P testtest -Q 'SELECT 1'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v3
@@ -38,6 +51,9 @@ jobs:
         psql -h localhost -U dbml -d dbml_test -f packages/dbml-cli/__test__/db2dbml/postgres/schema.sql
       env:
         PGPASSWORD: testtest
+    - name: Import DDL to MSSQL # TODO: This should be done in a separate job
+      run: |
+        sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__test__/db2dbml/mssql/schema.sql
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
