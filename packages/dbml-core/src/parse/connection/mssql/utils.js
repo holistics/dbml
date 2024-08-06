@@ -258,41 +258,51 @@ const generateRawTablesFieldsAndEnums = async (client) => {
 };
 
 const generateRefs = async (client) => {
-  const registeredFK = [];
   const refs = [];
 
   const refsListSql = `
     SELECT
-      fk.name AS constraint_name,
-      OBJECT_SCHEMA_NAME(fk.parent_object_id) AS table_schema,
-      OBJECT_NAME(fk.parent_object_id) AS table_name,
-      c.name AS column_name,
-      OBJECT_SCHEMA_NAME(fk.referenced_object_id) AS foreign_table_schema,
-      OBJECT_NAME(fk.referenced_object_id) AS foreign_table_name,
-      ccu.name AS foreign_column_name,
+      s.name AS table_schema,
+      t.name AS table_name,
+      fk.name AS fk_constraint_name,
+      STUFF((
+        SELECT ',' + c1.name
+        FROM sys.foreign_key_columns AS fkc
+        JOIN sys.columns AS c1 ON fkc.parent_object_id = c1.object_id AND fkc.parent_column_id = c1.column_id
+        WHERE fkc.constraint_object_id = fk.object_id
+        FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 1, '') AS column_names,
+      s2.name AS foreign_table_schema,
+      t2.name AS foreign_table_name,
+      STUFF((
+        SELECT ',' + c2.name
+        FROM sys.foreign_key_columns AS fkc
+        JOIN sys.columns AS c2 ON fkc.referenced_object_id = c2.object_id AND fkc.referenced_column_id = c2.column_id
+        WHERE fkc.constraint_object_id = fk.object_id
+        FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 1, '') AS foreign_column_names,
       fk.type_desc AS constraint_type,
       fk.delete_referential_action_desc AS on_delete,
       fk.update_referential_action_desc AS on_update
     FROM sys.foreign_keys AS fk
-    JOIN sys.foreign_key_columns AS fkc
-      ON fk.object_id = fkc.constraint_object_id
-    JOIN sys.columns AS c
-      ON fkc.parent_object_id = c.object_id AND fkc.parent_column_id = c.column_id
-    JOIN sys.columns AS ccu
-      ON fkc.referenced_object_id = ccu.object_id AND fkc.referenced_column_id = ccu.column_id
-    WHERE fk.is_ms_shipped = 0;  -- Exclude system-defined constraints
+    JOIN sys.tables AS t ON fk.parent_object_id = t.object_id
+    JOIN sys.schemas AS s ON t.schema_id = s.schema_id
+    JOIN sys.tables AS t2 ON fk.referenced_object_id = t2.object_id
+    JOIN sys.schemas AS s2 ON t2.schema_id = s2.schema_id
+    WHERE s.name NOT IN ('sys', 'information_schema')
+    ORDER BY
+      s.name,
+      t.name;
   `;
 
   const refsQueryResult = await client.query(refsListSql);
   refsQueryResult.recordset.forEach((refRow) => {
     const {
       table_schema,
-      constraint_name,
+      fk_constraint_name,
       table_name,
-      column_name,
+      column_names,
       foreign_table_schema,
       foreign_table_name,
-      foreign_column_name,
+      foreign_column_names,
       on_delete,
       on_update,
     } = refRow;
@@ -300,36 +310,25 @@ const generateRefs = async (client) => {
     const ep1 = new Endpoint({
       tableName: table_name,
       schemaName: table_schema,
-      fieldNames: [column_name],
+      fieldNames: column_names.split(','),
       relation: '*',
     });
 
     const ep2 = new Endpoint({
       tableName: foreign_table_name,
       schemaName: foreign_table_schema,
-      fieldNames: [foreign_column_name],
+      fieldNames: foreign_column_names.split(','),
       relation: '1',
     });
 
     const ref = new Ref({
-      name: constraint_name,
+      name: fk_constraint_name,
       endpoints: [ep1, ep2],
       onDelete: on_delete === 'NO_ACTION' ? null : on_delete,
       onUpdate: on_update === 'NO_ACTION' ? null : on_update,
     });
 
-    if (!registeredFK.some(((fk) => fk.table_schema === table_schema
-      && fk.table_name === table_name
-      && fk.column_name === column_name
-      && fk.foreign_table_schema === foreign_table_schema
-      && fk.foreign_table_name === foreign_table_name
-      && fk.foreign_column_name === foreign_column_name
-    ))) {
-      refs.push(ref.toJSON());
-      registeredFK.push({
-        table_schema, table_name, column_name, foreign_table_schema, foreign_table_name, foreign_column_name,
-      });
-    }
+    refs.push(ref.toJSON());
   });
 
   return refs;
