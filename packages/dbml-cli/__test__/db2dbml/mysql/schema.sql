@@ -1,135 +1,130 @@
--- Create users table
-CREATE TABLE users (
-  user_id SERIAL PRIMARY KEY,
-  username VARCHAR(50) UNIQUE NOT NULL,
-  email VARCHAR(100) UNIQUE NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
-  first_name VARCHAR(50),
-  last_name VARCHAR(50),
-  full_name VARCHAR(100),
-  date_of_birth DATE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  last_login TIMESTAMP WITH TIME ZONE,
-  is_active BOOLEAN DEFAULT TRUE,
-  CONSTRAINT chk_email_format CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$'),
-  CONSTRAINT chk_age CHECK (date_of_birth <= CURRENT_DATE - INTERVAL '13 years')
+-- create table
+create table users (
+  user_id int unsigned auto_increment primary key,
+  username varchar(50) unique not null,
+  email varchar(100) unique not null,
+  password_hash varchar(255) not null,
+  first_name varchar(50),
+  last_name varchar(50),
+  date_of_birth date,
+  created_at timestamp default current_timestamp,
+  last_login timestamp default now(),
+  is_active tinyint(1) default 1
 );
 
--- Create an index on the email column for faster lookups
-CREATE INDEX idx_users_email ON users (email);
-
-CREATE UNIQUE INDEX ON "users" ("user_id");
-
-CREATE INDEX "User Name" ON "users" ("full_name");
-
-CREATE INDEX ON "users" ("is_active", ((lower(full_name))));
-
--- Create products table
-CREATE TABLE products (
-  product_id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  description TEXT,
-  price DECIMAL(10, 2) NOT NULL,
-  stock_quantity INTEGER NOT NULL DEFAULT 0,
-  category VARCHAR(50),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  is_available BOOLEAN DEFAULT TRUE,
-  CONSTRAINT chk_price_positive CHECK (price > 0),
-  CONSTRAINT chk_stock_non_negative CHECK (stock_quantity >= 0)
+create table products (
+  id int unsigned primary key auto_increment,
+  price decimal(10,2) not null,
+  quantity int not null,
+  total_value decimal(10,2) generated always as ((price * quantity)) stored,
+  updated_at timestamp default current_timestamp on update current_timestamp
 );
 
--- Create an index on the category column for faster filtering
-CREATE INDEX idx_products_category ON products (category);
-
--- Create orders table
-CREATE TABLE orders (
-  order_id SERIAL PRIMARY KEY,
-  user_id INTEGER NOT NULL,
-  order_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  total_amount DECIMAL(12, 2) NOT NULL,
-  status VARCHAR(20) DEFAULT 'pending',
-  shipping_address TEXT NOT NULL,
-  billing_address TEXT NOT NULL,
-  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-  CONSTRAINT chk_total_amount_positive CHECK (total_amount > 0),
-  CONSTRAINT chk_status CHECK (status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled'))
+create table orders (
+  order_id int unsigned auto_increment primary key,
+  user_id int unsigned
 );
 
--- Create an index on the user_id and order_date columns for faster querying
-CREATE INDEX idx_orders_user_date ON orders (user_id, order_date);
-
--- Create order_items table
-CREATE TABLE order_items (
-  order_item_id SERIAL PRIMARY KEY,
-  order_id INTEGER NOT NULL,
-  product_id INTEGER NOT NULL,
-  quantity INTEGER NOT NULL,
-  unit_price DECIMAL(10, 2) NOT NULL,
-  CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
-  CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
-  CONSTRAINT chk_quantity_positive CHECK (quantity > 0),
-  CONSTRAINT chk_unit_price_positive CHECK (unit_price > 0),
-  CONSTRAINT uq_order_product UNIQUE (order_id, product_id)
+create table order_items (
+  order_id int unsigned not null,
+  product_id int unsigned not null
 );
 
--- Create a composite index on order_id and product_id for faster joins
-CREATE INDEX idx_order_items_order_product ON order_items (order_id, product_id);
+alter table order_items
+add constraint fk_detail_items_orders
+foreign key (order_id) references orders (order_id) on delete cascade;
 
--- Create a table with default values for string types
-CREATE TABLE all_string_types (
-  text_col TEXT DEFAULT 'default_text',
-  varchar_col VARCHAR(100) DEFAULT 'default_varchar',
-  char_col CHAR(10) DEFAULT 'default_char',
-  character_varying_col CHARACTER VARYING(50) DEFAULT 'default_character_varying',
-  character_col CHARACTER(5) DEFAULT 'default_character',
-  name_col NAME DEFAULT 'default_name',
-  bpchar_col BPCHAR(15) DEFAULT 'default_bpchar',
-  text_array_col TEXT[] DEFAULT ARRAY['default_text1', 'default_text2'],
-  json_col JSON DEFAULT '{"default_key": "default_value"}',
-  jsonb_col JSONB DEFAULT '{"default_key": "default_value"}'
+alter table order_items
+add constraint fk_detail_items_products
+foreign key (product_id) references products (id) on delete no action;
+
+alter table orders
+add constraint fk_order_user
+foreign key (user_id) references users (user_id) on delete set null;
+
+create table if not exists categories (
+	cat_id int unsigned auto_increment,
+  cat_name varchar(50) not null,
+  super_cat_id int unsigned,
+  created_at timestamp default current_timestamp,
+
+  constraint pk_category primary key (cat_id),
+  fulltext fulltext_index_category (cat_name)
 );
 
--- Create a table with default value for number type, boolean type, date type
-CREATE TABLE all_default_values (
-  id SERIAL PRIMARY KEY,  -- A primary key column
-  boolean_col BOOLEAN DEFAULT TRUE,  -- BOOLEAN type with default value
-  integer_col INTEGER DEFAULT 42,  -- INTEGER type with default value
-  numeric_col NUMERIC(10, 2) DEFAULT 99.99,  -- NUMERIC type with default value
-  date_col DATE DEFAULT CURRENT_DATE,  -- DATE type with default value
-  date_col_specific DATE DEFAULT '2024-01-01',  -- DATE with a specific default value
-  timestamp_col TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- TIMESTAMP with default value
-  timestamp_col_specific TIMESTAMP DEFAULT '2024-01-01 12:00:00',  -- TIMESTAMP with a specific default value
-  -- New columns that calculate default values based on formulas
-  date_plus_7_days DATE DEFAULT (CURRENT_DATE + INTERVAL '7 days'),  -- 7 days from current date
-  date_minus_30_days DATE DEFAULT (CURRENT_DATE - INTERVAL '30 days'),  -- 30 days before current date
-  timestamp_plus_1_hour TIMESTAMP DEFAULT (CURRENT_TIMESTAMP + INTERVAL '1 hour'),  -- 1 hour from current timestamp
-  timestamp_minus_15_minutes TIMESTAMP DEFAULT (CURRENT_TIMESTAMP - INTERVAL '15 minutes')  -- 15 minutes before current timestamp
+create table default_example (
+  id int auto_increment primary key,
+  column1 varchar(255) default (concat('default ', uuid())),
+  column2 varchar(255) default (concat('random ', floor(rand() * 100))),
+  column3 varchar(255) default '_utf8mb4',
+  column4 double default 0.5,
+  created_date date default (current_date),
+  first_date date default '2023-01-01',
+  event_time timestamp default '2024-01-01 00:00:00'
 );
 
--- Create a table with user-defined data types
-CREATE TYPE gender_type AS ENUM ('Male', 'Female', 'Other');
-
-CREATE TABLE user_define_data_types (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(50),
-  gender gender_type,
-  age int4range,  -- Using built-in int4range for age range
-  height FLOAT,
-  weight FLOAT
+create table sqrt_triangle (
+  side_a double default null,
+  side_b double default null,
+  side_c double generated always as (sqrt(((side_a * side_a) + (side_b * side_b)))) virtual
 );
 
--- Create table with comments
-CREATE TABLE table_with_comments (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100),
-  description TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+-- composite foreign key, primary key, unique
+create table composite_key_1 (
+  id1_1 int unsigned,
+  id1_2 int unsigned,
+
+  email varchar(255),
+  name varchar(50),
+  primary key (id1_1, id1_2)
 );
 
--- Add comments
-COMMENT ON TABLE table_with_comments IS 'This table stores information about various items.';
-COMMENT ON COLUMN table_with_comments.id IS 'Unique identifier for each item.';
-COMMENT ON COLUMN table_with_comments.name IS 'Name of the item.';
-COMMENT ON COLUMN table_with_comments.description IS 'Detailed description of the item.';
-COMMENT ON COLUMN table_with_comments.created_at IS 'Timestamp when the item was created.';
+alter table composite_key_1
+add constraint uc_unique_composite unique (email, name);
+
+create table composite_key_2 (
+  id2_1 int unsigned,
+  id2_2 int unsigned,
+
+  primary key (id2_1, id2_2)
+);
+
+alter table composite_key_1
+add constraint fk_test_composite foreign key (id1_1, id1_2)
+references composite_key_2 (id2_1, id2_2);
+
+-- enum
+create table status_example_2 (
+  s1 enum('active', 'inactive', 'pending') not null,
+  s2 enum('active', 'inactive', 'pending') default null,
+  s3 enum('active', 'inactive', 'pending') default 'active',
+  s4 enum('active', 'inactive', 'pending') default 'pending',
+  s5 enum('0', '1', '2'),
+  s6 enum('0', '1', '2') not null,
+  s7 enum('0', '1', '2') default '1',
+  s8 enum('0', '1', '2') default '0'
+);
+
+-- full index type
+create table index_example (
+  id int auto_increment primary key,
+  name_lower varchar(100) not null,
+  name_inline varchar(100) not null,
+  email varchar(100) not null,
+  age int,
+  city varchar(50),
+  index idx_name (name_inline)
+);
+
+create index idx_name_lower on index_example ((lower(name_lower)));
+create index idx_city_age on index_example (city, age);
+create index idx_city_part on index_example (city(5));
+create unique index idx_email_unique on index_example (email);
+
+-- comments & hash index
+create table hash_index_example (
+  id int primary key comment 'unique identifier for each record',
+  name varchar(100) comment 'first name of the individual',
+  name1 varchar(100) comment 'last name of the individual',
+  index idx_name_name1 (name, name1) using hash comment 'hash index for fast lookups on name and name1'
+) engine=memory comment='table for storing names with a hash index';

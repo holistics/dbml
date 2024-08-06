@@ -1,7 +1,7 @@
 {
   "args": [
     "--mysql",
-    "mysql://root:root@localhost:3306/online_auction_app",
+    "mysql://root:root@localhost:3306/mysql_connector_test",
     "-o",
     "./out-files/schema.dbml"
   ]

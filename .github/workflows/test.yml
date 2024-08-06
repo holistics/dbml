@@ -5,7 +5,7 @@ on:
     paths-ignore:
       - 'dbml-homepage/**'
   pull_request:
-    branches: [ master ]
+    branches: [ master, add-database-connector ]
     types: [opened, synchronize]
     paths-ignore:
       - 'dbml-homepage/**'
@@ -31,6 +31,19 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+      mysql-8.0:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: mysql_connector_test
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
     steps:
     - uses: actions/checkout@v3
     - name: Import DDL to Postgres # TODO: This should be done in a separate job
@@ -38,6 +51,9 @@ jobs:
         psql -h localhost -U dbml -d dbml_test -f packages/dbml-cli/__test__/db2dbml/postgres/schema.sql
       env:
         PGPASSWORD: testtest
+    - name: Import DDL to MySQL
+      run: |
+        mysql -h 127.0.0.1 -u root -proot mysql_connector_test < packages/dbml-cli/__test__/db2dbml/mysql/schema.sql
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
