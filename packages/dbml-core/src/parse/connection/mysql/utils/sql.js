@@ -31,25 +31,20 @@ function getGenerationExpression (extraType, generationExpression) {
   return '';
 }
 
-// TODO: check the correct form
-function getDbDefault (columnDefault, isNullable) {
-  // {value: string, type: 'string' | 'number' | 'boolean' | 'expression'}
-  // check default value is null
+function getDbDefault (columnDefault, defaultValueType) {
   if (columnDefault === null) {
-    if (!isNullable) { return null; }
-
-    return { value: null, type: 'number' };
+    return null;
   }
 
-  return { value: columnDefault, type: 'number' };
+  return { value: columnDefault, type: defaultValueType };
 }
 
-// TODO: recheck dbdefault value
 function generateRawField (row) {
   const {
     tableName,
     columnName,
     columnDefault,
+    defaultValueType,
     columnIsNullable,
     columnType,
     columnDataType,
@@ -70,7 +65,7 @@ function generateRawField (row) {
 
   const isNullable = columnIsNullable === 'YES';
 
-  const fieldDefaultValue = getDbDefault(columnDefault, isNullable);
+  const fieldDefaultValue = getDbDefault(columnDefault, defaultValueType);
 
   // field object
   return {
@@ -97,12 +92,20 @@ function getIndexColumn (columnName, idxExpression) {
 }
 
 async function generateRawTablesAndFields (client, schemaName = 'public') {
+  const numberRegex = '^-?[0-9]+(.[0-9]+)?$';
+
   const query = `
     select
       t.table_name as tableName,
       t.table_comment as tableComment,
       c.column_name as columnName,
       c.column_default as columnDefault,
+      case
+        when c.column_default is null then 'boolean'
+        when c.column_default regexp ? then 'number'
+        when c.extra like '%DEFAULT_GENERATED%' then 'expression'
+        else 'string'
+      end as defaultValueType,
       c.is_nullable as columnIsNullable,
       c.data_type as columnDataType,
       c.column_type as columnType,
@@ -117,7 +120,7 @@ async function generateRawTablesAndFields (client, schemaName = 'public') {
       t.table_name, c.ordinal_position;
   `;
 
-  const queryResponse = await client.query(query, [schemaName]);
+  const queryResponse = await client.query(query, [numberRegex, schemaName]);
   const [rows] = queryResponse;
 
   const rawTableMap = {};
