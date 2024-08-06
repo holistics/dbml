@@ -178,18 +178,17 @@ const generateRawTablesAndFields = async (client) => {
 };
 
 const generateRefs = async (client) => {
-  const registeredFK = [];
   const refs = [];
 
   const refsListSql = `
     SELECT
       tc.table_schema,
-      tc.constraint_name,
       tc.table_name,
-      kcu.column_name,
+      tc.constraint_name as fk_constraint_name,
+      STRING_AGG(DISTINCT kcu.column_name, ',') AS column_names,
       ccu.table_schema AS foreign_table_schema,
       ccu.table_name AS foreign_table_name,
-      ccu.column_name AS foreign_column_name,
+      STRING_AGG(DISTINCT ccu.column_name, ',') AS foreign_column_names,
       tc.constraint_type,
       rc.delete_rule AS on_delete,
       rc.update_rule AS on_update
@@ -203,19 +202,31 @@ const generateRefs = async (client) => {
       ON tc.constraint_name = rc.constraint_name
       AND tc.table_schema = rc.constraint_schema
     WHERE tc.constraint_type = 'FOREIGN KEY'
-      AND tc.table_schema NOT IN ('pg_catalog', 'information_schema');
+      AND tc.table_schema NOT IN ('pg_catalog', 'information_schema')
+    GROUP BY
+      tc.table_schema,
+      tc.table_name,
+      tc.constraint_name,
+      ccu.table_schema,
+      ccu.table_name,
+      tc.constraint_type,
+      rc.delete_rule,
+      rc.update_rule
+    ORDER BY
+      tc.table_schema,
+      tc.table_name;
   `;
 
   const refsQueryResult = await client.query(refsListSql);
   refsQueryResult.rows.forEach((refRow) => {
     const {
       table_schema,
-      constraint_name,
+      fk_constraint_name,
       table_name,
-      column_name,
+      column_names,
       foreign_table_schema,
       foreign_table_name,
-      foreign_column_name,
+      foreign_column_names,
       on_delete,
       on_update,
     } = refRow;
@@ -223,36 +234,25 @@ const generateRefs = async (client) => {
     const ep1 = new Endpoint({
       tableName: table_name,
       schemaName: table_schema,
-      fieldNames: [column_name],
+      fieldNames: column_names.split(','),
       relation: '*',
     });
 
     const ep2 = new Endpoint({
       tableName: foreign_table_name,
       schemaName: foreign_table_schema,
-      fieldNames: [foreign_column_name],
+      fieldNames: foreign_column_names.split(','),
       relation: '1',
     });
 
     const ref = new Ref({
-      name: constraint_name,
+      name: fk_constraint_name,
       endpoints: [ep1, ep2],
       onDelete: on_delete === 'NO ACTION' ? null : on_delete,
       onUpdate: on_update === 'NO ACTION' ? null : on_update,
     });
 
-    if (!registeredFK.some(((fk) => fk.table_schema === table_schema
-      && fk.table_name === table_name
-      && fk.column_name === column_name
-      && fk.foreign_table_schema === foreign_table_schema
-      && fk.foreign_table_name === foreign_table_name
-      && fk.foreign_column_name === foreign_column_name
-    ))) {
-      refs.push(ref.toJSON());
-      registeredFK.push({
-        table_schema, table_name, column_name, foreign_table_schema, foreign_table_name, foreign_column_name,
-      });
-    }
+    refs.push(ref.toJSON());
   });
 
   return refs;

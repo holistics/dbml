@@ -187,14 +187,12 @@ Table "dbo"."users" {
   }
 }
 
-Ref "fk_user":"dbo"."users"."user_id" < "dbo"."orders"."user_id" [update: cascade, delete: cascade]
+Ref "FK_AuthorNationality":"dbo"."Authors".("AuthorID", "NationalityID") < "dbo"."Books".("AuthorID", "NationalityID")
 
 Ref "fk_product":"dbo"."products"."product_id" < "dbo"."order_items"."product_id" [update: cascade]
 
 Ref "fk_order":"dbo"."orders"."order_id" < "dbo"."order_items"."order_id" [update: cascade, delete: cascade]
 
+Ref "fk_user":"dbo"."users"."user_id" < "dbo"."orders"."user_id" [update: cascade, delete: cascade]
+
 Ref "fk_gender":"dbo"."gender_reference"."value" < "dbo"."user_define_data_types"."gender"
-
-Ref "FK_AuthorNationality":"dbo"."Authors"."AuthorID" < "dbo"."Books"."AuthorID"
-
-Ref "FK_AuthorNationality":"dbo"."Authors"."NationalityID" < "dbo"."Books"."NationalityID"
