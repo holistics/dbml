@@ -1,15 +1,6 @@
 /* eslint-disable camelcase */
 import sql from 'mssql';
 
-import {
-  Endpoint,
-  Enum,
-  Field,
-  Index,
-  Table,
-  Ref,
-} from '../../ANTLR/ASTGeneration/AST';
-
 const MSSQL_DATE_TYPES = [
   'date',
   'datetime',
@@ -104,7 +95,7 @@ const getEnumValues = (definition) => {
   return enumValues;
 };
 
-const generateRawField = (row) => {
+const generateField = (row) => {
   const {
     column_name,
     data_type,
@@ -135,9 +126,9 @@ const generateRawField = (row) => {
   };
 };
 
-const generateRawTablesFieldsAndEnums = async (client) => {
-  const rawFields = {};
-  const rawEnums = [];
+const generateTablesFieldsAndEnums = async (client) => {
+  const fields = {};
+  const enums = [];
   const tablesAndFieldsSql = `
     WITH tables_and_fields AS (
         SELECT
@@ -211,7 +202,7 @@ const generateRawTablesFieldsAndEnums = async (client) => {
   `;
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
-  const rawTables = tablesAndFieldsResult.recordset.reduce((acc, row) => {
+  const tables = tablesAndFieldsResult.recordset.reduce((acc, row) => {
     const {
       table_schema,
       table_name,
@@ -230,30 +221,30 @@ const generateRawTablesFieldsAndEnums = async (client) => {
 
     const enumValues = getEnumValues(check_constraint_definition);
     if (enumValues) {
-      rawEnums.push({
+      enums.push({
         name: check_constraint_name,
         schemaName: table_schema,
         values: enumValues,
       });
     }
 
-    if (!rawFields[table_name]) rawFields[table_name] = [];
-    const field = generateRawField(row);
+    if (!fields[table_name]) fields[table_name] = [];
+    const field = generateField(row);
     if (enumValues) {
       field.type = {
         type_name: check_constraint_name,
         schemaName: table_schema,
       };
     }
-    rawFields[table_name].push(field);
+    fields[table_name].push(field);
 
     return acc;
   }, {});
 
   return {
-    rawTables: Object.values(rawTables),
-    rawFields,
-    rawEnums,
+    tables: Object.values(tables),
+    fields,
+    enums,
   };
 };
 
@@ -307,35 +298,32 @@ const generateRefs = async (client) => {
       on_update,
     } = refRow;
 
-    const ep1 = new Endpoint({
+    const ep1 = {
       tableName: table_name,
       schemaName: table_schema,
       fieldNames: column_names.split(','),
       relation: '*',
-    });
+    };
 
-    const ep2 = new Endpoint({
+    const ep2 = {
       tableName: foreign_table_name,
       schemaName: foreign_table_schema,
       fieldNames: foreign_column_names.split(','),
       relation: '1',
-    });
+    };
 
-    const ref = new Ref({
+    refs.push({
       name: fk_constraint_name,
       endpoints: [ep1, ep2],
       onDelete: on_delete === 'NO_ACTION' ? null : on_delete,
       onUpdate: on_update === 'NO_ACTION' ? null : on_update,
     });
-
-    refs.push(ref.toJSON());
   });
 
   return refs;
 };
 
-const generateRawIndexes = async (client) => {
-  // const tableConstraints = {};
+const generateIndexes = async (client) => {
   const indexListSql = `
     WITH user_tables AS (
       SELECT
@@ -407,19 +395,19 @@ const generateRawIndexes = async (client) => {
       ii.index_name;
   `;
   const indexListResult = await client.query(indexListSql);
-  const { indexes, constraint } = indexListResult.recordset.reduce((acc, row) => {
+  const { outOfLineConstraints, inlineConstraints } = indexListResult.recordset.reduce((acc, row) => {
     const { constraint_type, columns } = row;
 
     if (columns === 'null' || columns.trim() === '') return acc;
     if (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE') {
-      acc.constraint.push(row);
+      acc.inlineConstraints.push(row);
     } else {
-      acc.indexes.push(row);
+      acc.outOfLineConstraints.push(row);
     }
     return acc;
-  }, { indexes: [], constraint: [] });
+  }, { outOfLineConstraints: [], inlineConstraints: [] });
 
-  const rawIndexes = indexes.reduce((acc, indexRow) => {
+  const indexes = outOfLineConstraints.reduce((acc, indexRow) => {
     const {
       table_name,
       index_name,
@@ -459,7 +447,7 @@ const generateRawIndexes = async (client) => {
     return acc;
   }, {});
 
-  const tableConstraints = constraint.reduce((acc, row) => {
+  const tableConstraints = inlineConstraints.reduce((acc, row) => {
     const {
       table_name,
       columns,
@@ -481,105 +469,40 @@ const generateRawIndexes = async (client) => {
   }, {});
 
   return {
-    rawIndexes,
+    indexes,
     tableConstraints,
   };
 };
 
-const createEnums = (rawEnums) => {
-  return rawEnums.map((rawEnum) => {
-    const { name, schemaName, values } = rawEnum;
-    return new Enum({
-      name,
-      schemaName,
-      values,
-    });
-  });
-};
-
-const createFields = (rawFields, fieldsConstraints) => {
-  return rawFields.map((field) => {
-    const constraints = fieldsConstraints[field.name] || {};
-    const f = new Field({
-      name: field.name,
-      type: field.type,
-      dbdefault: field.dbdefault,
-      not_null: field.not_null,
-      increment: field.increment,
-      pk: constraints.pk,
-      unique: constraints.unique,
-      note: field.note,
-    });
-    return f;
-  });
-};
-
-const createIndexes = (rawIndexes) => {
-  return rawIndexes.map((rawIndex) => {
-    const {
-      name, unique, primary, type, columns,
-    } = rawIndex;
-    const index = new Index({
-      name,
-      unique,
-      pk: primary,
-      type,
-      columns,
-    });
-    return index;
-  });
-};
-
-const createTables = (rawTables, rawFields, rawIndexes, tableConstraints) => {
-  return rawTables.map((rawTable) => {
-    const { name, schemaName, note } = rawTable;
-    const constraints = tableConstraints[name] || {};
-    const fields = createFields(rawFields[name], constraints);
-    const indexes = createIndexes(rawIndexes[name] || []);
-
-    return new Table({
-      name,
-      schemaName,
-      fields,
-      indexes,
-      note,
-    });
-  });
-};
-
-const generateRawDb = async (connection) => {
+const fetchSchemaJson = async (connection) => {
   const client = await connect(connection);
   if (!client) throw new Error('Failed to connect to the database');
 
-  const tablesFieldsAndEnumsRes = generateRawTablesFieldsAndEnums(client);
-  const rawIndexesRes = generateRawIndexes(client);
+  const tablesFieldsAndEnumsRes = generateTablesFieldsAndEnums(client);
+  const indexesRes = generateIndexes(client);
   const refsRes = generateRefs(client);
 
   const res = await Promise.all([
     tablesFieldsAndEnumsRes,
-    rawIndexesRes,
+    indexesRes,
     refsRes,
   ]);
   client.close();
 
-  const { rawTables, rawFields, rawEnums } = res[0];
-  const { rawIndexes, tableConstraints } = res[1];
+  const { tables, fields, enums } = res[0];
+  const { indexes, tableConstraints } = res[1];
   const refs = res[2];
 
-  try {
-    const tables = createTables(rawTables, rawFields, rawIndexes, tableConstraints);
-    const enums = createEnums(rawEnums);
-
-    return {
-      tables,
-      refs,
-      enums,
-    };
-  } catch (err) {
-    throw new Error(err);
-  }
+  return {
+    tables,
+    fields,
+    enums,
+    refs,
+    indexes,
+    tableConstraints,
+  };
 };
 
 export {
-  generateRawDb,
+  fetchSchemaJson,
 };
