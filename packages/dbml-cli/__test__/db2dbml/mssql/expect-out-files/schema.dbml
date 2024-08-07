@@ -62,36 +62,28 @@ Table "dbo"."ObjectTypes" {
   "JsonField" nvarchar [default: `N'{"defaultKey": "defaultValue", "status": "active", "count": 0}'`]
   "VarBinaryField" varbinary [default: `0x00`]
   "VarBinaryMaxField" varbinary [default: `0x00`]
-  "XmlField" xml [default: '''<catalog>
-          <book>
-              <title lang="en">The Great Gatsby</title>
-              <author>F. Scott Fitzgerald</author>
-              <year>1925</year>
-              <price>10.99</price>
-              <publisher>
-                  <name>Scribner</name>
-                  <location>New York</location>
-              </publisher>
-              <genres>
-                  <genre>Fiction</genre>
-                  <genre>Classic</genre>
-              </genres>
-          </book>
-          <book>
-              <title lang="en">1984</title>
-              <author>George Orwell</author>
-              <year>1949</year>
-              <price>8.99</price>
-              <publisher>
-                  <name>Secker & Warburg</name>
-                  <location>London</location>
-              </publisher>
-              <genres>
-                  <genre>Dystopian</genre>
-                  <genre>Political Fiction</genre>
-              </genres>
-          </book>
-      </catalog>''']
+  "XmlField" xml [default: '''<Books>
+    <Book>
+      <Title>The Great Gatsby</Title>
+      <Author>F. Scott Fitzgerald</Author>
+      <Year>1925</Year>
+      <Price>10.99</Price>
+      <Publisher>Scribner</Publisher>
+      <Location>New York</Location>
+      <Genre>Fiction</Genre>
+      <Subgenre>Classic</Subgenre>
+    </Book>
+    <Book>
+      <Title>1984</Title>
+      <Author>George Orwell</Author>
+      <Year>1949</Year>
+      <Price>8.99</Price>
+      <Publisher>Secker & Warburg</Publisher>
+      <Location>London</Location>
+      <Genre>Dystopian</Genre>
+      <Subgenre>Political Fiction</Subgenre>
+    </Book>
+  </Books>''']
 }
 
 Table "dbo"."order_items" {
