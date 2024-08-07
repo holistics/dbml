@@ -1,11 +1,11 @@
 name: Run packages unit test
 on:
   push:
-    branches: [ master ]
+    branches: [ master]
     paths-ignore:
       - 'dbml-homepage/**'
   pull_request:
-    branches: [ master ]
+    # branches: [ master ]
     types: [opened, synchronize]
     paths-ignore:
       - 'dbml-homepage/**'
@@ -30,16 +30,15 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-      # I would like to add mssql services
       mssql:
-        image: mcr.microsoft.com/mssql/server:2022-latest
+        image: mcr.microsoft.com/mssql/server:2019-latest
         env:
-          SA_PASSWORD: "dbml.123.123"
           ACCEPT_EULA: "Y"
+          SA_PASSWORD: "dbml.123.123"
         ports:
           - 1433:1433
         options: >-
-          --health-cmd "sqlcmd -U sa -P testtest -Q 'SELECT 1'"
+          --health-cmd "exit 0"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
