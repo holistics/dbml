@@ -1,13 +1,25 @@
 /* eslint-disable camelcase */
 import { Client } from 'pg';
 
-const connectPg = async (connection) => {
+const getValidatedClient = async (connection) => {
   const client = new Client(connection);
-  // bearer:disable javascript_lang_logger
-  client.on('error', (err) => console.log('PG connection error:', err));
+  try {
+    // Connect to the PostgreSQL server
+    await client.connect();
 
-  await client.connect();
-  return client;
+    // Validate if the connection is successful by making a simple query
+    await client.query('SELECT 1');
+
+    // If successful, return the client
+    return client;
+  } catch (err) {
+    // Log the error and handle it as per your application's requirement
+    console.error('PostgreSQL connection error:', err);
+
+    // Ensure to close the client in case of failure
+    await client.end();
+    throw err; // Rethrow error if you want the calling code to handle it
+  }
 };
 
 const convertQueryBoolean = (val) => val === 'YES';
@@ -429,7 +441,8 @@ const generateRawEnums = async (client) => {
 };
 
 const fetchSchemaJson = async (connection) => {
-  const client = await connectPg(connection);
+  const client = await getValidatedClient(connection);
+
   const tablesAndFieldsRes = generateTablesAndFields(client);
   const indexesRes = generateIndexes(client);
   const refsRes = generateRawRefs(client);
