@@ -1,13 +1,5 @@
 /* eslint-disable camelcase */
 import { Client } from 'pg';
-import {
-  Endpoint,
-  Enum,
-  Field,
-  Index,
-  Table,
-  Ref,
-} from '../../ANTLR/ASTGeneration/AST';
 
 const connectPg = async (connection) => {
   const client = new Client(connection);
@@ -44,12 +36,12 @@ const getDbdefault = (data_type, column_default, default_type) => {
     };
   }
   if (default_type === 'string') {
-    const rawDefaultValues = column_default.split('::')[0];
+    const defaultValues = column_default.split('::')[0];
     const isJson = data_type === 'json' || data_type === 'jsonb';
     const type = isJson ? 'expression' : 'string';
     return {
       type,
-      value: rawDefaultValues.slice(1, -1),
+      value: defaultValues.slice(1, -1),
     };
   }
   return {
@@ -58,7 +50,7 @@ const getDbdefault = (data_type, column_default, default_type) => {
   };
 };
 
-const generateRawField = (row) => {
+const generateField = (row) => {
   const {
     column_name,
     data_type,
@@ -94,8 +86,8 @@ const generateRawField = (row) => {
   };
 };
 
-const generateRawTablesAndFields = async (client) => {
-  const rawFields = {};
+const generateTablesAndFields = async (client) => {
+  const fields = {};
   const tablesAndFieldsSql = `
     WITH comments AS (
       SELECT
@@ -153,7 +145,7 @@ const generateRawTablesAndFields = async (client) => {
   `;
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
-  const rawTables = tablesAndFieldsResult.rows.reduce((acc, row) => {
+  const tables = tablesAndFieldsResult.rows.reduce((acc, row) => {
     const { table_schema, table_name, table_comment } = row;
 
     if (!acc[table_name]) {
@@ -164,32 +156,31 @@ const generateRawTablesAndFields = async (client) => {
       };
     }
 
-    if (!rawFields[table_name]) rawFields[table_name] = [];
-    const field = generateRawField(row);
-    rawFields[table_name].push(field);
+    if (!fields[table_name]) fields[table_name] = [];
+    const field = generateField(row);
+    fields[table_name].push(field);
 
     return acc;
   }, {});
 
   return {
-    rawTables: Object.values(rawTables),
-    rawFields,
+    tables: Object.values(tables),
+    fields,
   };
 };
 
-const generateRefs = async (client) => {
-  const registeredFK = [];
+const generateRawRefs = async (client) => {
   const refs = [];
 
   const refsListSql = `
     SELECT
       tc.table_schema,
-      tc.constraint_name,
       tc.table_name,
-      kcu.column_name,
+      tc.constraint_name as fk_constraint_name,
+      STRING_AGG(DISTINCT kcu.column_name, ',') AS column_names,
       ccu.table_schema AS foreign_table_schema,
       ccu.table_name AS foreign_table_name,
-      ccu.column_name AS foreign_column_name,
+      STRING_AGG(DISTINCT ccu.column_name, ',') AS foreign_column_names,
       tc.constraint_type,
       rc.delete_rule AS on_delete,
       rc.update_rule AS on_update
@@ -203,70 +194,69 @@ const generateRefs = async (client) => {
       ON tc.constraint_name = rc.constraint_name
       AND tc.table_schema = rc.constraint_schema
     WHERE tc.constraint_type = 'FOREIGN KEY'
-      AND tc.table_schema NOT IN ('pg_catalog', 'information_schema');
+      AND tc.table_schema NOT IN ('pg_catalog', 'information_schema')
+    GROUP BY
+      tc.table_schema,
+      tc.table_name,
+      tc.constraint_name,
+      ccu.table_schema,
+      ccu.table_name,
+      tc.constraint_type,
+      rc.delete_rule,
+      rc.update_rule
+    ORDER BY
+      tc.table_schema,
+      tc.table_name;
   `;
 
   const refsQueryResult = await client.query(refsListSql);
   refsQueryResult.rows.forEach((refRow) => {
     const {
       table_schema,
-      constraint_name,
+      fk_constraint_name,
       table_name,
-      column_name,
+      column_names,
       foreign_table_schema,
       foreign_table_name,
-      foreign_column_name,
+      foreign_column_names,
       on_delete,
       on_update,
     } = refRow;
 
-    const ep1 = new Endpoint({
+    const ep1 = {
       tableName: table_name,
       schemaName: table_schema,
-      fieldNames: [column_name],
+      fieldNames: column_names.split(','),
       relation: '*',
-    });
+    };
 
-    const ep2 = new Endpoint({
+    const ep2 = {
       tableName: foreign_table_name,
       schemaName: foreign_table_schema,
-      fieldNames: [foreign_column_name],
+      fieldNames: foreign_column_names.split(','),
       relation: '1',
-    });
+    };
 
-    const ref = new Ref({
-      name: constraint_name,
+    refs.push({
+      name: fk_constraint_name,
       endpoints: [ep1, ep2],
-      onDelete: on_delete,
-      onUpdate: on_update,
+      onDelete: on_delete === 'NO ACTION' ? null : on_delete,
+      onUpdate: on_update === 'NO ACTION' ? null : on_update,
     });
-
-    if (!registeredFK.some(((fk) => fk.table_schema === table_schema
-      && fk.table_name === table_name
-      && fk.column_name === column_name
-      && fk.foreign_table_schema === foreign_table_schema
-      && fk.foreign_table_name === foreign_table_name
-      && fk.foreign_column_name === foreign_column_name
-    ))) {
-      refs.push(ref.toJSON());
-      registeredFK.push({
-        table_schema, table_name, column_name, foreign_table_schema, foreign_table_name, foreign_column_name,
-      });
-    }
   });
 
   return refs;
 };
 
-const generateRawIndexes = async (client) => {
+const generateIndexes = async (client) => {
   // const tableConstraints = {};
   const indexListSql = `
     WITH user_tables AS (
       SELECT tablename
       FROM pg_tables
-      WHERE schemaname = 'public'
-        AND tablename NOT LIKE 'pg_%'
-        AND tablename NOT LIKE 'sql_%'
+      WHERE schemaname NOT IN ('pg_catalog', 'information_schema')  -- Exclude system schemas
+        AND tablename NOT LIKE 'pg_%'  -- Exclude PostgreSQL system tables
+        AND tablename NOT LIKE 'sql_%'  -- Exclude SQL standard tables
     ),
     index_info AS (
       SELECT
@@ -317,19 +307,22 @@ const generateRawIndexes = async (client) => {
     ;
   `;
   const indexListResult = await client.query(indexListSql);
-  const { indexes, constraint } = indexListResult.rows.reduce((acc, row) => {
+  const { outOfLineConstraints, inlineConstraints } = indexListResult.rows.reduce((acc, row) => {
     const { constraint_type, columns } = row;
 
     if (columns === 'null' || columns.trim() === '') return acc;
-    if (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE') {
-      acc.constraint.push(row);
+
+    const isSingleColumn = columns.split(',').length === 1;
+    const isInlineConstraint = isSingleColumn && (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE');
+    if (isInlineConstraint) {
+      acc.inlineConstraints.push(row);
     } else {
-      acc.indexes.push(row);
+      acc.outOfLineConstraints.push(row);
     }
     return acc;
-  }, { indexes: [], constraint: [] });
+  }, { outOfLineConstraints: [], inlineConstraints: [] });
 
-  const rawIndexes = indexes.reduce((acc, indexRow) => {
+  const indexes = outOfLineConstraints.reduce((acc, indexRow) => {
     const {
       table_name,
       index_name,
@@ -369,7 +362,7 @@ const generateRawIndexes = async (client) => {
     return acc;
   }, {});
 
-  const tableConstraints = constraint.reduce((acc, row) => {
+  const tableConstraints = inlineConstraints.reduce((acc, row) => {
     const {
       table_name,
       columns,
@@ -391,7 +384,7 @@ const generateRawIndexes = async (client) => {
   }, {});
 
   return {
-    rawIndexes,
+    indexes,
     tableConstraints,
   };
 };
@@ -435,101 +428,36 @@ const generateRawEnums = async (client) => {
   return Object.values(enums);
 };
 
-const createEnums = (rawEnums) => {
-  return rawEnums.map((rawEnum) => {
-    const { name, schemaName, values } = rawEnum;
-    return new Enum({
-      name,
-      schemaName,
-      values,
-    });
-  });
-};
-
-const createFields = (rawFields, fieldsConstraints) => {
-  return rawFields.map((field) => {
-    const constraints = fieldsConstraints[field.name] || {};
-    const f = new Field({
-      name: field.name,
-      type: field.type,
-      dbdefault: field.dbdefault,
-      not_null: field.not_null,
-      increment: field.increment,
-      pk: constraints.pk,
-      unique: constraints.unique,
-      note: field.note,
-    });
-    return f;
-  });
-};
-
-const createIndexes = (rawIndexes) => {
-  return rawIndexes.map((rawIndex) => {
-    const {
-      name, unique, primary, type, columns,
-    } = rawIndex;
-    const index = new Index({
-      name,
-      unique,
-      pk: primary,
-      type,
-      columns,
-    });
-    return index;
-  });
-};
-
-const createTables = (rawTables, rawFields, rawIndexes, tableConstraints) => {
-  return rawTables.map((rawTable) => {
-    const { name, schemaName, note } = rawTable;
-    const constraints = tableConstraints[name] || {};
-    const fields = createFields(rawFields[name], constraints);
-    const indexes = createIndexes(rawIndexes[name] || []);
-
-    return new Table({
-      name,
-      schemaName,
-      fields,
-      indexes,
-      note,
-    });
-  });
-};
-
-const generateRawDb = async (connection) => {
+const fetchSchemaJson = async (connection) => {
   const client = await connectPg(connection);
-  const tablesAndFieldsRes = generateRawTablesAndFields(client);
-  const rawIndexesRes = generateRawIndexes(client);
-  const refsRes = generateRefs(client);
-  const rawEnumsRes = generateRawEnums(client);
+  const tablesAndFieldsRes = generateTablesAndFields(client);
+  const indexesRes = generateIndexes(client);
+  const refsRes = generateRawRefs(client);
+  const enumsRes = generateRawEnums(client);
 
   const res = await Promise.all([
     tablesAndFieldsRes,
-    rawIndexesRes,
+    indexesRes,
     refsRes,
-    rawEnumsRes,
+    enumsRes,
   ]);
   client.end();
 
-  const { rawTables, rawFields } = res[0];
-  const { rawIndexes, tableConstraints } = res[1];
+  const { tables, fields } = res[0];
+  const { indexes, tableConstraints } = res[1];
   const refs = res[2];
-  const rawEnums = res[3];
+  const enums = res[3];
 
-  try {
-    const tables = createTables(rawTables, rawFields, rawIndexes, tableConstraints);
-    const enums = createEnums(rawEnums);
-
-    return {
-      tables,
-      refs,
-      enums,
-    };
-  } catch (err) {
-    throw new Error(err);
-  }
+  return {
+    tables,
+    fields,
+    refs,
+    enums,
+    indexes,
+    tableConstraints,
+  };
 };
 
 export {
-  generateRawDb,
+  fetchSchemaJson,
 };

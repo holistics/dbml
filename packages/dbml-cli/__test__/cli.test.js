@@ -34,6 +34,7 @@ describe('@dbml/cli', () => {
       const fileNames = fs.readdirSync(path.join(dirName, './out-files'));
       let content = fs.readFileSync(path.join(dirName, './out-files', fileNames[0]), 'utf-8');
       content = content.replace(/--.*(?:\n)*/g, '');
+      content = content.replaceAll('\r\n', '\n');
       const expectContent = fs.readFileSync(path.join(dirName, './expect-out-files', fileNames[0]), 'utf-8');
       expect(content).toBe(expectContent);
     }
