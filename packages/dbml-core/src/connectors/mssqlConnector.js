@@ -222,9 +222,10 @@ const generateTablesFieldsAndEnums = async (client) => {
       check_constraint_name,
       check_constraint_definition,
     } = row;
+    const key = `${table_schema}.${table_name}`;
 
-    if (!acc[table_name]) {
-      acc[table_name] = {
+    if (!acc[key]) {
+      acc[key] = {
         name: table_name,
         schemaName: table_schema,
         note: table_comment ? { value: table_comment } : { value: '' },
@@ -240,7 +241,7 @@ const generateTablesFieldsAndEnums = async (client) => {
       });
     }
 
-    if (!fields[table_name]) fields[table_name] = [];
+    if (!fields[key]) fields[key] = [];
     const field = generateField(row);
     if (enumValues) {
       field.type = {
@@ -248,7 +249,7 @@ const generateTablesFieldsAndEnums = async (client) => {
         schemaName: table_schema,
       };
     }
-    fields[table_name].push(field);
+    fields[key].push(field);
 
     return acc;
   }, {});
@@ -339,12 +340,12 @@ const generateIndexes = async (client) => {
   const indexListSql = `
     WITH user_tables AS (
       SELECT
+        TABLE_SCHEMA,
         TABLE_NAME
       FROM
         INFORMATION_SCHEMA.TABLES
       WHERE
-        TABLE_SCHEMA = 'dbo'
-        AND TABLE_TYPE = 'BASE TABLE'  -- Ensure we are only getting base tables
+        TABLE_TYPE = 'BASE TABLE'  -- Ensure we are only getting base tables
         AND TABLE_NAME NOT LIKE 'dt%'
         AND TABLE_NAME NOT LIKE 'syscs%'
         AND TABLE_NAME NOT LIKE 'sysss%'
@@ -388,6 +389,7 @@ const generateIndexes = async (client) => {
         AND i.type <> 0
     )
     SELECT
+      ut.TABLE_SCHEMA AS table_schema,
       ut.TABLE_NAME AS table_name,
       ii.index_name,
       ii.is_unique,
@@ -421,6 +423,7 @@ const generateIndexes = async (client) => {
 
   const indexes = outOfLineConstraints.reduce((acc, indexRow) => {
     const {
+      table_schema,
       table_name,
       index_name,
       index_type,
@@ -450,10 +453,11 @@ const generateIndexes = async (client) => {
       ],
     };
 
-    if (acc[table_name]) {
-      acc[table_name].push(index);
+    const key = `${table_schema}.${table_name}`;
+    if (acc[key]) {
+      acc[key].push(index);
     } else {
-      acc[table_name] = [index];
+      acc[key] = [index];
     }
 
     return acc;
@@ -461,20 +465,22 @@ const generateIndexes = async (client) => {
 
   const tableConstraints = inlineConstraints.reduce((acc, row) => {
     const {
+      table_schema,
       table_name,
       columns,
       constraint_type,
     } = row;
-    if (!acc[table_name]) acc[table_name] = {};
+    const key = `${table_schema}.${table_name}`;
+    if (!acc[key]) acc[key] = {};
 
     const columnNames = columns.split(',').map((column) => column.trim());
     columnNames.forEach((columnName) => {
-      if (!acc[table_name][columnName]) acc[table_name][columnName] = {};
+      if (!acc[key][columnName]) acc[key][columnName] = {};
       if (constraint_type === 'PRIMARY KEY') {
-        acc[table_name][columnName].pk = true;
+        acc[key][columnName].pk = true;
       }
-      if (constraint_type === 'UNIQUE' && !acc[table_name][columnName].pk) {
-        acc[table_name][columnName].unique = true;
+      if (constraint_type === 'UNIQUE' && !acc[key][columnName].pk) {
+        acc[key][columnName].unique = true;
       }
     });
     return acc;
