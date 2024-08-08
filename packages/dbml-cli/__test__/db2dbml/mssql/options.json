@@ -1,0 +1,8 @@
+{
+  "args": [
+    "--mssql",
+    "'Data Source=localhost;Initial Catalog=dbml_test;User ID=SA;Password=dbml.123.123;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Authentication=SqlPassword;Application Name=azdata;Command Timeout=30'",
+    "-o",
+    "./out-files/schema.dbml"
+  ]
+}

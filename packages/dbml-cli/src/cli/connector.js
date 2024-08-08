@@ -1,7 +1,8 @@
-import { connector } from '@dbml/core';
+import { importer } from '@dbml/core';
 import figures from 'figures';
 import chalk from 'chalk';
 import path from 'path';
+import { fetchSchemaJson } from '../connectors/Connector';
 import {
   resolvePaths,
   getConnectionOpt,
@@ -15,12 +16,13 @@ export default async function connectionHandler (program) {
     const connection = program.args[0];
     const opts = program.opts();
     const { format } = getConnectionOpt(opts);
+    const schemaJson = await fetchSchemaJson(connection, format);
 
     if (!opts.outFile && !opts.outDir) {
-      const res = await connector.fetchSchema(connection, format);
+      const res = importer.generateDbml(schemaJson);
       OutputConsolePlugin.write(res);
     } else if (opts.outFile) {
-      const res = await connector.fetchSchema(connection, format);
+      const res = importer.generateDbml(schemaJson);
       (new OutputFilePlugin(resolvePaths(opts.outFile))).write(res);
 
       // bearer:disable javascript_lang_logger
