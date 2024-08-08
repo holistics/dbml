@@ -1,13 +1,25 @@
 /* eslint-disable camelcase */
 import { Client } from 'pg';
 
-const connectPg = async (connection) => {
+const getValidatedClient = async (connection) => {
   const client = new Client(connection);
-  // bearer:disable javascript_lang_logger
-  client.on('error', (err) => console.log('PG connection error:', err));
+  try {
+    // Connect to the PostgreSQL server
+    await client.connect();
 
-  await client.connect();
-  return client;
+    // Validate if the connection is successful by making a simple query
+    await client.query('SELECT 1');
+
+    // If successful, return the client
+    return client;
+  } catch (err) {
+    // Log the error and handle it as per your application's requirement
+    console.error('PostgreSQL connection error:', err);
+
+    // Ensure to close the client in case of failure
+    await client.end();
+    throw err; // Rethrow error if you want the calling code to handle it
+  }
 };
 
 const convertQueryBoolean = (val) => val === 'YES';
@@ -147,18 +159,19 @@ const generateTablesAndFields = async (client) => {
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
   const tables = tablesAndFieldsResult.rows.reduce((acc, row) => {
     const { table_schema, table_name, table_comment } = row;
+    const key = `${table_schema}.${table_name}`;
 
-    if (!acc[table_name]) {
-      acc[table_name] = {
+    if (!acc[key]) {
+      acc[key] = {
         name: table_name,
         schemaName: table_schema,
         note: table_comment ? { value: table_comment } : { value: '' },
       };
     }
 
-    if (!fields[table_name]) fields[table_name] = [];
+    if (!fields[key]) fields[key] = [];
     const field = generateField(row);
-    fields[table_name].push(field);
+    fields[key].push(field);
 
     return acc;
   }, {});
@@ -252,7 +265,9 @@ const generateIndexes = async (client) => {
   // const tableConstraints = {};
   const indexListSql = `
     WITH user_tables AS (
-      SELECT tablename
+      SELECT
+        schemaname AS tableschema,
+        tablename
       FROM pg_tables
       WHERE schemaname NOT IN ('pg_catalog', 'information_schema')  -- Exclude system schemas
         AND tablename NOT LIKE 'pg_%'  -- Exclude PostgreSQL system tables
@@ -287,6 +302,7 @@ const generateIndexes = async (client) => {
         t.relname, i.relname, ix.indisunique, ix.indisprimary, am.amname, ix.indexprs, ix.indrelid
     )
     SELECT
+      ut.tableschema AS table_schema,
       ut.tablename AS table_name,
       ii.index_name,
       ii.is_unique,
@@ -324,6 +340,7 @@ const generateIndexes = async (client) => {
 
   const indexes = outOfLineConstraints.reduce((acc, indexRow) => {
     const {
+      table_schema,
       table_name,
       index_name,
       index_type,
@@ -353,10 +370,11 @@ const generateIndexes = async (client) => {
       ],
     };
 
-    if (acc[table_name]) {
-      acc[table_name].push(index);
+    const key = `${table_schema}.${table_name}`;
+    if (acc[key]) {
+      acc[key].push(index);
     } else {
-      acc[table_name] = [index];
+      acc[key] = [index];
     }
 
     return acc;
@@ -364,20 +382,22 @@ const generateIndexes = async (client) => {
 
   const tableConstraints = inlineConstraints.reduce((acc, row) => {
     const {
+      table_schema,
       table_name,
       columns,
       constraint_type,
     } = row;
-    if (!acc[table_name]) acc[table_name] = {};
+    const key = `${table_schema}.${table_name}`;
+    if (!acc[key]) acc[key] = {};
 
     const columnNames = columns.split(',').map((column) => column.trim());
     columnNames.forEach((columnName) => {
-      if (!acc[table_name][columnName]) acc[table_name][columnName] = {};
+      if (!acc[key][columnName]) acc[key][columnName] = {};
       if (constraint_type === 'PRIMARY KEY') {
-        acc[table_name][columnName].pk = true;
+        acc[key][columnName].pk = true;
       }
-      if (constraint_type === 'UNIQUE' && !acc[table_name][columnName].pk) {
-        acc[table_name][columnName].unique = true;
+      if (constraint_type === 'UNIQUE' && !acc[key][columnName].pk) {
+        acc[key][columnName].unique = true;
       }
     });
     return acc;
@@ -429,7 +449,8 @@ const generateRawEnums = async (client) => {
 };
 
 const fetchSchemaJson = async (connection) => {
-  const client = await connectPg(connection);
+  const client = await getValidatedClient(connection);
+
   const tablesAndFieldsRes = generateTablesAndFields(client);
   const indexesRes = generateIndexes(client);
   const refsRes = generateRawRefs(client);

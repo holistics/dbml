@@ -9,8 +9,7 @@ import {
 } from './ANTLR/ASTGeneration/AST';
 
 const parseJSONToDatabase = (rawDatabase) => {
-  const database = new Database(rawDatabase);
-  return database;
+  return new Database(rawDatabase);
 };
 
 const createRefs = (rawRefs) => {
@@ -75,9 +74,10 @@ const createIndexes = (rawIndexes) => {
 const createTables = (rawTables, rawFields, rawIndexes, tableConstraints) => {
   return rawTables.map((rawTable) => {
     const { name, schemaName, note } = rawTable;
-    const constraints = tableConstraints[name] || {};
-    const fields = createFields(rawFields[name], constraints);
-    const indexes = createIndexes(rawIndexes[name] || []);
+    const key = `${schemaName}.${name}`;
+    const constraints = tableConstraints[key] || {};
+    const fields = createFields(rawFields[key], constraints);
+    const indexes = createIndexes(rawIndexes[key] || []);
 
     return new Table({
       name,
