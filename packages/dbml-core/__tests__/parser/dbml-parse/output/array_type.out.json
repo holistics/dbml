@@ -20,12 +20,14 @@
               "column": 3
             },
             "end": {
-              "offset": 28,
-              "line": 3,
-              "column": 1
+              "offset": 27,
+              "line": 2,
+              "column": 12
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "pay_by_quarter",
@@ -36,17 +38,20 @@
           },
           "token": {
             "start": {
-              "offset": 28,
+              "offset": 30,
               "line": 3,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 62,
-              "line": 4,
-              "column": 1
+              "offset": 61,
+              "line": 3,
+              "column": 34
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
           "not_null": true
         },
         {
@@ -58,17 +63,20 @@
           },
           "token": {
             "start": {
-              "offset": 62,
+              "offset": 64,
               "line": 4,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 89,
-              "line": 5,
-              "column": 1
+              "offset": 88,
+              "line": 4,
+              "column": 27
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
           "not_null": false
         }
       ],
@@ -105,12 +113,14 @@
               "column": 3
             },
             "end": {
-              "offset": 134,
-              "line": 9,
-              "column": 1
+              "offset": 133,
+              "line": 8,
+              "column": 24
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -128,6 +138,7 @@
       "indexes": []
     }
   ],
+  "notes": [],
   "refs": [],
   "enums": [],
   "tableGroups": [],

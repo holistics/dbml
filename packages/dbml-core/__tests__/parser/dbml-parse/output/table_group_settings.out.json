@@ -15,17 +15,19 @@
           },
           "token": {
             "start": {
-              "offset": 21,
+              "offset": 13,
               "line": 2,
               "column": 3
             },
             "end": {
-              "offset": 28,
-              "line": 3,
-              "column": 1
+              "offset": 19,
+              "line": 2,
+              "column": 9
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -35,35 +37,34 @@
           "column": 1
         },
         "end": {
-          "offset": 90,
-          "line": 6,
+          "offset": 21,
+          "line": 3,
           "column": 2
         }
       },
       "indexes": []
     }
   ],
+  "notes": [],
   "refs": [],
   "enums": [],
   "tableGroups": [
     {
-      "name": "g1",
-      "schemaName": null,
       "tables": [
         {
           "name": "t1",
-          "schemaName": null
+          "schemaName": ""
         }
       ],
       "token": {
         "start": {
-          "offset": 254,
-          "line": 16,
+          "offset": 23,
+          "line": 5,
           "column": 1
         },
         "end": {
-          "offset": 291,
-          "line": 19,
+          "offset": 76,
+          "line": 7,
           "column": 2
         }
       },
@@ -71,19 +72,22 @@
         "value": "note for table group",
         "token": {
           "start": {
-            "offset": 87,
-            "line": 6,
-            "column": 18
+            "offset": 38,
+            "line": 5,
+            "column": 16
           },
           "end": {
-            "offset": 111,
-            "line": 6,
-            "column": 42
+            "offset": 66,
+            "line": 5,
+            "column": 44
           }
         }
-      }
+      },
+      "name": "g1",
+      "schemaName": null
     }
   ],
   "aliases": [],
   "project": {}
 }
+

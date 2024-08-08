@@ -20,13 +20,16 @@
               "column": 3
             },
             "end": {
-              "offset": 51,
-              "line": 3,
-              "column": 1
+              "offset": 50,
+              "line": 2,
+              "column": 16
             }
           },
           "inline_refs": [],
-          "pk": true
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "name",
@@ -37,17 +40,19 @@
           },
           "token": {
             "start": {
-              "offset": 51,
+              "offset": 53,
               "line": 3,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 67,
-              "line": 4,
-              "column": 1
+              "offset": 66,
+              "line": 3,
+              "column": 16
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -84,13 +89,16 @@
               "column": 3
             },
             "end": {
-              "offset": 131,
-              "line": 8,
-              "column": 1
+              "offset": 130,
+              "line": 7,
+              "column": 16
             }
           },
           "inline_refs": [],
-          "pk": true
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "name",
@@ -101,17 +109,20 @@
           },
           "token": {
             "start": {
-              "offset": 131,
+              "offset": 133,
               "line": 8,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 158,
-              "line": 9,
-              "column": 1
+              "offset": 157,
+              "line": 8,
+              "column": 27
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
           "not_null": true
         }
       ],
@@ -163,13 +174,16 @@
               "column": 3
             },
             "end": {
-              "offset": 251,
-              "line": 13,
-              "column": 1
+              "offset": 250,
+              "line": 12,
+              "column": 16
             }
           },
           "inline_refs": [],
-          "pk": true
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "name",
@@ -180,17 +194,19 @@
           },
           "token": {
             "start": {
-              "offset": 251,
+              "offset": 253,
               "line": 13,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 267,
-              "line": 14,
-              "column": 1
+              "offset": 266,
+              "line": 13,
+              "column": 16
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "price",
@@ -201,17 +217,20 @@
           },
           "token": {
             "start": {
-              "offset": 267,
+              "offset": 269,
               "line": 14,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 296,
-              "line": 15,
-              "column": 1
+              "offset": 295,
+              "line": 14,
+              "column": 29
             }
           },
           "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
           "not_null": true
         }
       ],
@@ -264,13 +283,16 @@
               "column": 3
             },
             "end": {
-              "offset": 387,
-              "line": 19,
-              "column": 1
+              "offset": 386,
+              "line": 18,
+              "column": 16
             }
           },
           "inline_refs": [],
-          "pk": true
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         },
         {
           "name": "user_id",
@@ -281,17 +303,19 @@
           },
           "token": {
             "start": {
-              "offset": 387,
+              "offset": 389,
               "line": 19,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 403,
-              "line": 20,
-              "column": 1
+              "offset": 402,
+              "line": 19,
+              "column": 16
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "product_id",
@@ -302,17 +326,19 @@
           },
           "token": {
             "start": {
-              "offset": 403,
+              "offset": 405,
               "line": 20,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 422,
-              "line": 21,
-              "column": 1
+              "offset": 421,
+              "line": 20,
+              "column": 19
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "address",
@@ -323,17 +349,19 @@
           },
           "token": {
             "start": {
-              "offset": 422,
+              "offset": 424,
               "line": 21,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 441,
-              "line": 22,
-              "column": 1
+              "offset": 440,
+              "line": 21,
+              "column": 19
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -367,51 +395,9 @@
       }
     }
   ],
+  "notes": [],
   "refs": [
     {
-      "name": null,
-      "endpoints": [
-        {
-          "schemaName": null,
-          "tableName": "user",
-          "fieldNames": [
-            "id"
-          ],
-          "relation": "1",
-          "token": {
-            "start": {
-              "offset": 448,
-              "line": 24,
-              "column": 5
-            },
-            "end": {
-              "offset": 482,
-              "line": 24,
-              "column": 39
-            }
-          }
-        },
-        {
-          "schemaName": null,
-          "tableName": "merchant",
-          "fieldNames": [
-            "user_id"
-          ],
-          "relation": "*",
-          "token": {
-            "start": {
-              "offset": 448,
-              "line": 24,
-              "column": 5
-            },
-            "end": {
-              "offset": 482,
-              "line": 24,
-              "column": 39
-            }
-          }
-        }
-      ],
       "token": {
         "start": {
           "offset": 444,
@@ -424,52 +410,52 @@
           "column": 39
         }
       },
-      "schemaName": null
-    },
-    {
       "name": null,
+      "schemaName": null,
       "endpoints": [
         {
-          "schemaName": null,
-          "tableName": "product",
           "fieldNames": [
             "id"
           ],
+          "tableName": "user",
+          "schemaName": null,
           "relation": "1",
           "token": {
             "start": {
-              "offset": 488,
-              "line": 26,
+              "offset": 448,
+              "line": 24,
               "column": 5
             },
             "end": {
-              "offset": 528,
-              "line": 26,
-              "column": 45
+              "offset": 459,
+              "line": 24,
+              "column": 16
             }
           }
         },
         {
-          "schemaName": null,
-          "tableName": "merchant",
           "fieldNames": [
-            "product_id"
+            "user_id"
           ],
+          "tableName": "merchant",
+          "schemaName": null,
           "relation": "*",
           "token": {
             "start": {
-              "offset": 488,
-              "line": 26,
-              "column": 5
+              "offset": 462,
+              "line": 24,
+              "column": 19
             },
             "end": {
-              "offset": 528,
-              "line": 26,
-              "column": 45
+              "offset": 482,
+              "line": 24,
+              "column": 39
             }
           }
         }
-      ],
+      ]
+    },
+    {
       "token": {
         "start": {
           "offset": 484,
@@ -482,7 +468,50 @@
           "column": 45
         }
       },
-      "schemaName": null
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "product",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 488,
+              "line": 26,
+              "column": 5
+            },
+            "end": {
+              "offset": 502,
+              "line": 26,
+              "column": 19
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "product_id"
+          ],
+          "tableName": "merchant",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 505,
+              "line": 26,
+              "column": 22
+            },
+            "end": {
+              "offset": 528,
+              "line": 26,
+              "column": 45
+            }
+          }
+        }
+      ]
     }
   ],
   "enums": [],
