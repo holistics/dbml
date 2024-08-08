@@ -10,33 +10,45 @@ const MSSQL_DATE_TYPES = [
   'time',
 ];
 
-const connect = async (connection) => {
+const getValidatedClient = async (connection) => {
   const options = connection.split(';').reduce((acc, option) => {
     const [key, value] = option.split('=');
-    acc[key] = value;
+    const camelCaseKey = key.toLowerCase().replace(/\s([a-z])/g, (g) => g[1].toUpperCase());
+    acc[camelCaseKey] = value;
     return acc;
   }, {});
-  const [host, port] = options['Data Source'].split(',');
+
+  const [host, port] = options.dataSource.split(',');
 
   const config = {
-    user: options['User ID'],
-    password: options.Password,
+    user: options.userId,
+    password: options.password,
     server: host,
-    database: options['Initial Catalog'],
+    database: options.initialCatalog,
     options: {
-      encrypt: options.Encrypt === 'True',
-      trustServerCertificate: options['Trust Server Certificate'] === 'True',
+      encrypt: options.encrypt === 'True',
+      trustServerCertificate: options.trustServerCertificate === 'True',
       port: port || 1433,
     },
   };
-
   try {
-    // Connect to the database using the connection string
-    const client = await sql.connect(config);
-    return client;
+    // Establish a connection pool
+    const pool = await sql.connect(config);
+
+    // Validate if the connection is successful by making a simple query
+    await pool.request().query('SELECT 1');
+
+    // If successful, return the pool
+    return pool;
   } catch (err) {
-    console.log('MSSQL connection error:', err);
-    return null;
+    // Log the error and handle it as per your application's requirement
+    console.error('SQL connection error:', err);
+
+    // Ensure to close any open pool in case of failure
+    if (sql.connected) {
+      await sql.close();
+    }
+    throw err; // Rethrow error if you want the calling code to handle it
   }
 };
 
@@ -210,9 +222,10 @@ const generateTablesFieldsAndEnums = async (client) => {
       check_constraint_name,
       check_constraint_definition,
     } = row;
+    const key = `${table_schema}.${table_name}`;
 
-    if (!acc[table_name]) {
-      acc[table_name] = {
+    if (!acc[key]) {
+      acc[key] = {
         name: table_name,
         schemaName: table_schema,
         note: table_comment ? { value: table_comment } : { value: '' },
@@ -228,7 +241,7 @@ const generateTablesFieldsAndEnums = async (client) => {
       });
     }
 
-    if (!fields[table_name]) fields[table_name] = [];
+    if (!fields[key]) fields[key] = [];
     const field = generateField(row);
     if (enumValues) {
       field.type = {
@@ -236,7 +249,7 @@ const generateTablesFieldsAndEnums = async (client) => {
         schemaName: table_schema,
       };
     }
-    fields[table_name].push(field);
+    fields[key].push(field);
 
     return acc;
   }, {});
@@ -327,12 +340,12 @@ const generateIndexes = async (client) => {
   const indexListSql = `
     WITH user_tables AS (
       SELECT
+        TABLE_SCHEMA,
         TABLE_NAME
       FROM
         INFORMATION_SCHEMA.TABLES
       WHERE
-        TABLE_SCHEMA = 'dbo'
-        AND TABLE_TYPE = 'BASE TABLE'  -- Ensure we are only getting base tables
+        TABLE_TYPE = 'BASE TABLE'  -- Ensure we are only getting base tables
         AND TABLE_NAME NOT LIKE 'dt%'
         AND TABLE_NAME NOT LIKE 'syscs%'
         AND TABLE_NAME NOT LIKE 'sysss%'
@@ -376,6 +389,7 @@ const generateIndexes = async (client) => {
         AND i.type <> 0
     )
     SELECT
+      ut.TABLE_SCHEMA AS table_schema,
       ut.TABLE_NAME AS table_name,
       ii.index_name,
       ii.is_unique,
@@ -409,6 +423,7 @@ const generateIndexes = async (client) => {
 
   const indexes = outOfLineConstraints.reduce((acc, indexRow) => {
     const {
+      table_schema,
       table_name,
       index_name,
       index_type,
@@ -438,10 +453,11 @@ const generateIndexes = async (client) => {
       ],
     };
 
-    if (acc[table_name]) {
-      acc[table_name].push(index);
+    const key = `${table_schema}.${table_name}`;
+    if (acc[key]) {
+      acc[key].push(index);
     } else {
-      acc[table_name] = [index];
+      acc[key] = [index];
     }
 
     return acc;
@@ -449,20 +465,22 @@ const generateIndexes = async (client) => {
 
   const tableConstraints = inlineConstraints.reduce((acc, row) => {
     const {
+      table_schema,
       table_name,
       columns,
       constraint_type,
     } = row;
-    if (!acc[table_name]) acc[table_name] = {};
+    const key = `${table_schema}.${table_name}`;
+    if (!acc[key]) acc[key] = {};
 
     const columnNames = columns.split(',').map((column) => column.trim());
     columnNames.forEach((columnName) => {
-      if (!acc[table_name][columnName]) acc[table_name][columnName] = {};
+      if (!acc[key][columnName]) acc[key][columnName] = {};
       if (constraint_type === 'PRIMARY KEY') {
-        acc[table_name][columnName].pk = true;
+        acc[key][columnName].pk = true;
       }
-      if (constraint_type === 'UNIQUE' && !acc[table_name][columnName].pk) {
-        acc[table_name][columnName].unique = true;
+      if (constraint_type === 'UNIQUE' && !acc[key][columnName].pk) {
+        acc[key][columnName].unique = true;
       }
     });
     return acc;
@@ -475,8 +493,7 @@ const generateIndexes = async (client) => {
 };
 
 const fetchSchemaJson = async (connection) => {
-  const client = await connect(connection);
-  if (!client) throw new Error('Failed to connect to the database');
+  const client = await getValidatedClient(connection);
 
   const tablesFieldsAndEnumsRes = generateTablesFieldsAndEnums(client);
   const indexesRes = generateIndexes(client);
