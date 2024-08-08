@@ -1,5 +1,7 @@
 import { createConnection } from 'mysql2/promise';
-import { createEnums, createRefs, createTables } from './dbml';
+import { flatten } from 'lodash';
+
+const NUMBER_REGEX = '^-?[0-9]+(.[0-9]+)?$';
 
 /**
  * @param {string} connection
@@ -55,7 +57,7 @@ function getFieldType (tableName, columnName, columnType, columnDataType, column
   return columnType;
 }
 
-function generateRawField (row) {
+function generateField (row) {
   const {
     tableName,
     columnName,
@@ -86,9 +88,9 @@ function generateRawField (row) {
     name: columnName,
     type: { type_name: fieldType },
     dbdefault: fieldDefaultValue,
-    notNull: !isNullable,
+    not_null: !isNullable,
     increment: columnExtra === 'auto_increment',
-    note: columnComment,
+    note: { value: columnComment || '' },
   };
 }
 
@@ -109,9 +111,7 @@ function getIndexColumn (columnName, idxExpression, idxSubPart) {
   return null;
 }
 
-async function generateRawTablesAndFields (client, schemaName = 'public') {
-  const numberRegex = '^-?[0-9]+(.[0-9]+)?$';
-
+async function generateTablesAndFields (client, schemaName = 'public') {
   const query = `
     select
       t.table_name as tableName,
@@ -140,36 +140,36 @@ async function generateRawTablesAndFields (client, schemaName = 'public') {
       t.table_name, c.ordinal_position;
   `;
 
-  const queryResponse = await client.query(query, [numberRegex, schemaName]);
+  const queryResponse = await client.query(query, [NUMBER_REGEX, schemaName]);
   const [rows] = queryResponse;
 
-  const rawTableMap = {};
-  const rawFieldMap = {};
+  const tableMap = {};
+  const fieldMap = {};
 
   rows.forEach((row) => {
     const { tableName, tableComment } = row;
-    if (!rawTableMap[tableName]) {
-      rawTableMap[tableName] = {
+    if (!tableMap[tableName]) {
+      tableMap[tableName] = {
         name: tableName,
-        note: tableComment,
+        note: { value: tableComment || '' },
       };
     }
 
-    if (!rawFieldMap[tableName]) {
-      rawFieldMap[tableName] = [];
+    if (!fieldMap[tableName]) {
+      fieldMap[tableName] = [];
     }
 
-    const field = generateRawField(row);
-    rawFieldMap[tableName].push(field);
+    const field = generateField(row);
+    fieldMap[tableName].push(field);
   });
 
   return {
-    rawTableList: Object.values(rawTableMap),
-    rawFieldMap,
+    tableList: Object.values(tableMap),
+    fieldMap,
   };
 }
 
-async function generateRawEnums (client, schemaName = 'public') {
+async function generateEnums (client, schemaName = 'public') {
   const query = `
     select
       t.table_name as tableName,
@@ -187,7 +187,7 @@ async function generateRawEnums (client, schemaName = 'public') {
   const queryResponse = await client.query(query, [schemaName]);
   const [rows] = queryResponse;
 
-  const rawEnumList = rows.map((row) => {
+  const enumList = rows.map((row) => {
     const { tableName, columnName, rawValues } = row;
 
     // i.e. ('value1','value2')
@@ -204,13 +204,13 @@ async function generateRawEnums (client, schemaName = 'public') {
     };
   });
 
-  return rawEnumList;
+  return enumList;
 }
 
 /**
  * Mysql is automatically create index for primary keys, foreign keys, unique constraint. -> Ignore
  */
-async function generateRawIndexes (client, schemaName = 'public') {
+async function generateIndexes (client, schemaName = 'public') {
   const query = `
     with
       pk_fk_uniques as (
@@ -246,7 +246,7 @@ async function generateRawIndexes (client, schemaName = 'public') {
   const queryResponse = await client.query(query, [schemaName, schemaName]);
   const [rows] = queryResponse;
 
-  const rawIndexMap = rows.reduce((acc, row) => {
+  const tableIndexMap = rows.reduce((acc, row) => {
     const {
       tableName, idxName, idxType, isIdxUnique, columnName, idxExpression, idxSubPart,
     } = row;
@@ -274,15 +274,22 @@ async function generateRawIndexes (client, schemaName = 'public') {
     return acc;
   }, {});
 
-  return rawIndexMap;
+  const indexMap = {};
+  Object.keys(tableIndexMap).forEach((tableName) => {
+    indexMap[tableName] = flatten(Object.values(tableIndexMap[tableName]));
+  });
+
+  return indexMap;
 }
 
-async function generateRawPrimaryKeys (client, schemaName = 'public') {
+async function generatePrimaryAndUniqueConstraint (client, schemaName = 'public') {
   const query = `
     select
       tc.table_name as tableName,
       tc.constraint_name as constraintName,
-      kcu.column_name as columnName
+      group_concat(kcu.column_name order by kcu.ordinal_position separator ',') as columnNames,
+      count(kcu.column_name) as columnCount,
+      tc.constraint_type as constraintType
     from information_schema.table_constraints tc
     join information_schema.key_column_usage kcu
     on
@@ -290,39 +297,90 @@ async function generateRawPrimaryKeys (client, schemaName = 'public') {
       and tc.constraint_name = kcu.constraint_name
       and tc.table_name = kcu.table_name
     where
-      tc.constraint_type = 'PRIMARY KEY' and tc.table_schema = ?
-    order by tc.table_name, kcu.ordinal_position;
+      (tc.constraint_type = 'PRIMARY KEY' or tc.constraint_type = 'UNIQUE')
+      and tc.table_schema = ?
+    group by tc.table_name, tc.constraint_name, tc.constraint_type
+    order by tc.table_name, tc.constraint_name;
   `;
 
   const queryResponse = await client.query(query, [schemaName]);
   const [rows] = queryResponse;
 
-  const rawPrimaryKeyMap = rows.reduce((acc, row) => {
-    const { tableName, columnName, constraintName } = row;
+  const inlineConstraintList = rows.filter((constraint) => constraint.columnCount === 1);
+  const outOfConstraintList = rows.filter((constraint) => constraint.columnCount > 1);
+
+  const compositeTableConstraintMap = outOfConstraintList.reduce((acc, row) => {
+    const {
+      tableName, constraintName, columnNames, constraintType,
+    } = row;
 
     if (!acc[tableName]) {
-      acc[tableName] = {
+      acc[tableName] = {};
+    }
+
+    if (!acc[tableName][constraintName]) {
+      acc[tableName][constraintName] = {
         name: constraintName,
-        columns: [],
       };
     }
 
-    acc[tableName].columns.push(columnName);
+    if (constraintType === 'PRIMARY KEY') {
+      acc[tableName][constraintName].primary = true;
+    }
+
+    if (constraintType === 'UNIQUE') {
+      acc[tableName][constraintName].unique = true;
+    }
+
+    const columnList = columnNames
+      .split(',')
+      .map((col) => ({ type: 'column', value: col }));
+    acc[tableName][constraintName].columns = columnList;
 
     return acc;
   }, {});
 
-  return rawPrimaryKeyMap;
+  const compositeConstraintMap = {};
+  Object.keys(compositeTableConstraintMap).forEach((tableName) => {
+    compositeConstraintMap[tableName] = flatten(Object.values(compositeTableConstraintMap[tableName]));
+  });
+
+  const constraintMap = inlineConstraintList.reduce((acc, row) => {
+    const { tableName, columnNames, constraintType } = row;
+
+    if (!acc[tableName]) {
+      acc[tableName] = {};
+    }
+
+    const columnList = columnNames.split(',');
+
+    columnList.forEach((columnName) => {
+      if (!acc[tableName][columnName]) {
+        acc[tableName][columnName] = {};
+      }
+
+      if (constraintType === 'PRIMARY KEY') {
+        acc[tableName][columnName].pk = true;
+      }
+
+      if (constraintType === 'UNIQUE' && !acc[tableName][columnName].pk) {
+        acc[tableName][columnName].unique = true;
+      }
+    });
+    return acc;
+  }, {});
+
+  return { compositeConstraintMap, constraintMap };
 }
 
-async function generateRawForeignKeys (client, schemaName = 'public') {
+async function generateForeignKeys (client, schemaName = 'public') {
   const query = `
     select
       rc.constraint_name as constraintName,
       rc.table_name as foreignTableName,
-      kcu.column_name as foreignColumnName,
+      group_concat(kcu.column_name order by kcu.ordinal_position separator ',') as foreignColumnNames,
       kcu.referenced_table_name as refTableName,
-      kcu.referenced_column_name as refColumnName,
+      group_concat(kcu.referenced_column_name order by kcu.ordinal_position separator ',') as refColumnNames,
       rc.update_rule as onUpdate,
       rc.delete_rule as onDelete
     from information_schema.referential_constraints rc
@@ -332,94 +390,70 @@ async function generateRawForeignKeys (client, schemaName = 'public') {
       and rc.table_name = kcu.table_name
       and rc.constraint_schema = kcu.table_schema
     where rc.constraint_schema = ?
+    group by
+      rc.constraint_name,
+      rc.table_name,
+      kcu.referenced_table_name,
+      rc.update_rule,
+      rc.delete_rule
     order by
-      rc.table_name, kcu.ordinal_position;
+      rc.table_name;
   `;
 
   const queryResponse = await client.query(query, [schemaName]);
   const [rows] = queryResponse;
 
-  const rawForeignKeyMap = rows.reduce((acc, row) => {
+  const foreignKeyList = rows.map((row) => {
     const {
       constraintName,
       onDelete,
       onUpdate,
       foreignTableName,
-      foreignColumnName,
+      foreignColumnNames,
       refTableName,
-      refColumnName,
+      refColumnNames,
     } = row;
 
-    if (!acc[foreignTableName]) {
-      acc[foreignTableName] = {};
-    }
+    const endpoint1 = {
+      tableName: foreignTableName,
+      fieldNames: foreignColumnNames.split(','),
+      relation: '*',
+    };
 
-    if (!acc[foreignTableName][constraintName]) {
-      acc[foreignTableName][constraintName] = {
-        onDelete,
-        onUpdate,
-        foreignColumns: [],
-        foreignTableName,
-        refTableName,
-        refColumns: [],
-        name: constraintName,
-      };
-    }
+    const endpoint2 = {
+      tableName: refTableName,
+      fieldNames: refColumnNames.split(','),
+      relation: '1',
+    };
 
-    const currentForeignKey = acc[foreignTableName][constraintName];
-    currentForeignKey.foreignColumns.push(foreignColumnName);
-    currentForeignKey.refColumns.push(refColumnName);
+    return {
+      name: constraintName,
+      endpoints: [endpoint1, endpoint2],
+      onDelete: onDelete === 'NO ACTION' ? null : onDelete,
+      onUpdate: onUpdate === 'NO ACTION' ? null : onUpdate,
+    };
+  });
 
-    return acc;
-  }, {});
-
-  return rawForeignKeyMap;
+  return foreignKeyList;
 }
 
-async function generateRawUniqueConstraints (client, schemaName = 'public') {
-  const query = `
-    select
-      tc.constraint_name as constraintName,
-      tc.table_name as tableName,
-      kcu.column_name as columnName
-    from information_schema.table_constraints tc
-    join information_schema.key_column_usage kcu
-    on
-      tc.constraint_name = kcu.constraint_name
-      and tc.table_name = kcu.table_name
-      and tc.table_schema = kcu.table_schema
-    where
-      tc.constraint_type = 'UNIQUE' and tc.table_schema = ?
-    order by
-      tc.table_name, kcu.ordinal_position;
-  `;
+function combineIndexAndCompositeConstraint (userDefinedIndexMap, compositeConstraintMap) {
+  const indexMap = Object.assign(userDefinedIndexMap, {});
 
-  const queryResponse = await client.query(query, [schemaName]);
-  const [rows] = queryResponse;
-
-  const rawUniqueConstraintMap = rows.reduce((acc, row) => {
-    const { constraintName, tableName, columnName } = row;
-
-    if (!acc[tableName]) {
-      acc[tableName] = {};
+  Object.keys(compositeConstraintMap).forEach((tableName) => {
+    const compositeConstraint = compositeConstraintMap[tableName];
+    if (!indexMap[tableName]) {
+      indexMap[tableName] = compositeConstraint;
+      return;
     }
 
-    if (!acc[tableName][constraintName]) {
-      acc[tableName][constraintName] = {
-        name: constraintName,
-        columns: [],
-      };
-    }
+    indexMap[tableName].push(...compositeConstraint);
+  });
 
-    acc[tableName][constraintName].columns.push(columnName);
-
-    return acc;
-  }, {});
-
-  return rawUniqueConstraintMap;
+  return indexMap;
 }
 
-export async function generateRawDb (connection) {
+async function fetchSchemaJson (connection) {
   let client = null;
 
   try {
@@ -429,37 +463,31 @@ export async function generateRawDb (connection) {
     const { database: schemaName } = client.config;
 
     const result = await Promise.all([
-      generateRawTablesAndFields(client, schemaName),
-      generateRawEnums(client, schemaName),
-      generateRawIndexes(client, schemaName),
-      generateRawPrimaryKeys(client, schemaName),
-      generateRawUniqueConstraints(client, schemaName),
-      generateRawForeignKeys(client, schemaName),
+      generateTablesAndFields(client, schemaName),
+      generateEnums(client, schemaName),
+      generateIndexes(client, schemaName),
+      generatePrimaryAndUniqueConstraint(client, schemaName),
+      generateForeignKeys(client, schemaName),
     ]);
 
     const [
-      { rawTableList, rawFieldMap },
-      rawEnumList,
+      { tableList, fieldMap },
+      enumList,
       rawIndexMap,
-      rawPrimaryKeyMap,
-      rawUniqueConstraintMap,
-      rawForeignKeyMap,
+      { constraintMap, compositeConstraintMap },
+      foreignKeyList,
     ] = result;
 
-    const enumList = createEnums(rawEnumList);
-    const tableList = createTables(
-      rawTableList,
-      rawFieldMap,
-      rawPrimaryKeyMap,
-      rawUniqueConstraintMap,
-      rawIndexMap,
-    );
-    const refList = createRefs(rawForeignKeyMap);
+    // combine normal index and composite key
+    const indexMap = combineIndexAndCompositeConstraint(rawIndexMap, compositeConstraintMap);
 
     return {
       tables: tableList,
-      refs: refList,
+      fields: fieldMap,
+      refs: foreignKeyList,
       enums: enumList,
+      indexes: indexMap,
+      tableConstraints: constraintMap,
     };
   } catch (error) {
     throw new Error(error);
@@ -467,3 +495,7 @@ export async function generateRawDb (connection) {
     client?.end();
   }
 }
+
+export {
+  fetchSchemaJson,
+};

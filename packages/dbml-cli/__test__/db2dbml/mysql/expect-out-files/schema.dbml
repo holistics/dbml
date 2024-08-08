@@ -78,11 +78,11 @@ Table "default_example" {
   "id" int [pk, not null, increment]
   "column1" varchar(255) [default: `concat(_utf8mb4\'default \',uuid())`]
   "column2" varchar(255) [default: `concat(_utf8mb4\'random \',floor((rand() * 100)))`]
-  "column3" varchar(255) [default: "_utf8mb4"]
+  "column3" varchar(255) [default: '_utf8mb4']
   "column4" double [default: 0.5]
   "created_date" date [default: `curdate()`]
-  "first_date" date [default: "2023-01-01"]
-  "event_time" timestamp [default: "2024-01-01 00:00:00"]
+  "first_date" date [default: '2023-01-01']
+  "event_time" timestamp [default: '2024-01-01 00:00:00']
 }
 
 Table "hash_index_example" {
@@ -139,12 +139,12 @@ Table "sqrt_triangle" {
 Table "status_example_2" {
   "s1" status_example_2_s1_enum [not null]
   "s2" status_example_2_s2_enum
-  "s3" status_example_2_s3_enum [default: "active"]
-  "s4" status_example_2_s4_enum [default: "pending"]
+  "s3" status_example_2_s3_enum [default: 'active']
+  "s4" status_example_2_s4_enum [default: 'pending']
   "s5" status_example_2_s5_enum
   "s6" status_example_2_s6_enum [not null]
-  "s7" status_example_2_s7_enum [default: "1"]
-  "s8" status_example_2_s8_enum [default: "0"]
+  "s7" status_example_2_s7_enum [default: '1']
+  "s8" status_example_2_s8_enum [default: '0']
 }
 
 Table "users" {
