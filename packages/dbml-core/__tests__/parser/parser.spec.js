@@ -1,4 +1,5 @@
 import Parser from '../../src/parse/Parser';
+import { CompilerError } from '../../src/parse/error';
 
 describe('@dbml/core', () => {
   describe('parser', () => {
@@ -10,18 +11,23 @@ describe('@dbml/core', () => {
       const fileExtension = getFileExtension(format);
       const input = require(`./${testDir}/input/${fileName}.in.${fileExtension}`);
       const output = require(`./${testDir}/output/${fileName}.out.json`);
-      const jsonSchema = Parser[parseFuncName](input, format);
+      try {
+        const jsonSchema = Parser[parseFuncName](input);
+        isEqualExcludeTokenEmpty(jsonSchema, output);
+      } catch (error) {
+        if (error instanceof CompilerError) isEqualExcludeTokenEmpty(error.diags, output);
+        else throw error;
+      }
 
-      isEqualExcludeTokenEmpty(jsonSchema, output);
 
       /* eslint-enable */
     };
 
     /* eslint-disable */
     test.each(scanTestNames(__dirname, 'dbml-parse/input'))('dbml-parse/%s', (name) => {
-      runTest(name, 'dbml-parse', 'dbml', 'parseDBMLToJSON');
+      runTest(name, 'dbml-parse', 'dbml', 'parseDBMLToJSONv2');
     });
-    
+
     /*
     test.each(scanTestNames(__dirname, 'mysql-parse/input'))('mysql-parse/%s', (name) => {
       runTest(name, 'mysql-parse', 'mysql', 'parseMySQLToJSONv2');
