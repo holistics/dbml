@@ -20,12 +20,14 @@
               "column": 3
             },
             "end": {
-              "offset": 28,
-              "line": 3,
-              "column": 1
+              "offset": 27,
+              "line": 2,
+              "column": 9
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "full_name",
@@ -36,17 +38,19 @@
           },
           "token": {
             "start": {
-              "offset": 28,
+              "offset": 29,
               "line": 3,
-              "column": 1
+              "column": 2
             },
             "end": {
-              "offset": 47,
-              "line": 4,
-              "column": 1
+              "offset": 46,
+              "line": 3,
+              "column": 19
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "created_at",
@@ -57,17 +61,19 @@
           },
           "token": {
             "start": {
-              "offset": 47,
+              "offset": 49,
               "line": 4,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 70,
-              "line": 5,
-              "column": 1
+              "offset": 69,
+              "line": 4,
+              "column": 23
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "country_code",
@@ -78,17 +84,19 @@
           },
           "token": {
             "start": {
-              "offset": 70,
+              "offset": 72,
               "line": 5,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 89,
-              "line": 6,
-              "column": 1
+              "offset": 88,
+              "line": 5,
+              "column": 19
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
       ],
       "token": {
@@ -124,12 +132,14 @@
               "column": 3
             },
             "end": {
-              "offset": 120,
-              "line": 10,
-              "column": 1
+              "offset": 118,
+              "line": 9,
+              "column": 9
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "merchant_name",
@@ -140,17 +150,19 @@
           },
           "token": {
             "start": {
-              "offset": 120,
+              "offset": 122,
               "line": 10,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 144,
-              "line": 11,
-              "column": 1
+              "offset": 143,
+              "line": 10,
+              "column": 24
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "country_code",
@@ -161,17 +173,19 @@
           },
           "token": {
             "start": {
-              "offset": 144,
+              "offset": 145,
               "line": 11,
-              "column": 1
+              "column": 2
             },
             "end": {
-              "offset": 162,
-              "line": 12,
-              "column": 1
+              "offset": 161,
+              "line": 11,
+              "column": 18
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "created at",
@@ -182,17 +196,19 @@
           },
           "token": {
             "start": {
-              "offset": 162,
+              "offset": 164,
               "line": 12,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 185,
-              "line": 13,
-              "column": 1
+              "offset": 184,
+              "line": 12,
+              "column": 23
             }
           },
-          "inline_refs": []
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         },
         {
           "name": "admin_id",
@@ -203,14 +219,14 @@
           },
           "token": {
             "start": {
-              "offset": 185,
+              "offset": 187,
               "line": 13,
-              "column": 1
+              "column": 3
             },
             "end": {
-              "offset": 251,
-              "line": 14,
-              "column": 1
+              "offset": 213,
+              "line": 13,
+              "column": 29
             }
           },
           "inline_refs": [
@@ -234,7 +250,11 @@
                 }
               }
             }
-          ]
+          ],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         }
       ],
       "token": {
@@ -252,10 +272,23 @@
       "indexes": []
     }
   ],
+  "notes": [],
   "refs": [
     {
-      "schemaName": null,
       "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 201,
+          "line": 13,
+          "column": 17
+        },
+        "end": {
+          "offset": 212,
+          "line": 13,
+          "column": 28
+        }
+      },
       "endpoints": [
         {
           "schemaName": null,
@@ -283,48 +316,34 @@
           "fieldNames": [
             "admin_id"
           ],
-          "relation": "*",
           "token": {
             "start": {
-              "offset": 201,
+              "offset": 187,
               "line": 13,
-              "column": 17
+              "column": 3
             },
             "end": {
-              "offset": 212,
+              "offset": 213,
               "line": 13,
-              "column": 28
+              "column": 29
             }
-          }
+          },
+          "relation": "*"
         }
-      ],
-      "token": {
-        "start": {
-          "offset": 201,
-          "line": 13,
-          "column": 17
-        },
-        "end": {
-          "offset": 212,
-          "line": 13,
-          "column": 28
-        }
-      }
+      ]
     }
   ],
   "enums": [],
   "tableGroups": [
     {
-      "name": "g1",
-      "schemaName": null,
       "tables": [
         {
           "name": "users",
-          "schemaName": null
+          "schemaName": ""
         },
         {
           "name": "merchants",
-          "schemaName": null
+          "schemaName": ""
         }
       ],
       "token": {
@@ -338,7 +357,9 @@
           "line": 19,
           "column": 2
         }
-      }
+      },
+      "name": "g1",
+      "schemaName": null
     }
   ],
   "aliases": [
@@ -353,3 +374,4 @@
   ],
   "project": {}
 }
+

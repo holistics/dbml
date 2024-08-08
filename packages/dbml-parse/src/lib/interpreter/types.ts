@@ -150,6 +150,10 @@ export interface TableGroup {
   schemaName: string | null;
   tables: TableGroupField[];
   token: TokenPosition;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
 }
 
 export interface TableGroupField {
