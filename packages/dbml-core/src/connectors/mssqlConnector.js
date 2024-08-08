@@ -10,33 +10,45 @@ const MSSQL_DATE_TYPES = [
   'time',
 ];
 
-const connect = async (connection) => {
+const getValidatedClient = async (connection) => {
   const options = connection.split(';').reduce((acc, option) => {
     const [key, value] = option.split('=');
-    acc[key] = value;
+    const camelCaseKey = key.toLowerCase().replace(/\s([a-z])/g, (g) => g[1].toUpperCase());
+    acc[camelCaseKey] = value;
     return acc;
   }, {});
-  const [host, port] = options['Data Source'].split(',');
+
+  const [host, port] = options.dataSource.split(',');
 
   const config = {
-    user: options['User ID'],
-    password: options.Password,
+    user: options.userId,
+    password: options.password,
     server: host,
-    database: options['Initial Catalog'],
+    database: options.initialCatalog,
     options: {
-      encrypt: options.Encrypt === 'True',
-      trustServerCertificate: options['Trust Server Certificate'] === 'True',
+      encrypt: options.encrypt === 'True',
+      trustServerCertificate: options.trustServerCertificate === 'True',
       port: port || 1433,
     },
   };
-
   try {
-    // Connect to the database using the connection string
-    const client = await sql.connect(config);
-    return client;
+    // Establish a connection pool
+    const pool = await sql.connect(config);
+
+    // Validate if the connection is successful by making a simple query
+    await pool.request().query('SELECT 1');
+
+    // If successful, return the pool
+    return pool;
   } catch (err) {
-    console.log('MSSQL connection error:', err);
-    return null;
+    // Log the error and handle it as per your application's requirement
+    console.error('SQL connection error:', err);
+
+    // Ensure to close any open pool in case of failure
+    if (sql.connected) {
+      await sql.close();
+    }
+    throw err; // Rethrow error if you want the calling code to handle it
   }
 };
 
@@ -475,8 +487,7 @@ const generateIndexes = async (client) => {
 };
 
 const fetchSchemaJson = async (connection) => {
-  const client = await connect(connection);
-  if (!client) throw new Error('Failed to connect to the database');
+  const client = await getValidatedClient(connection);
 
   const tablesFieldsAndEnumsRes = generateTablesFieldsAndEnums(client);
   const indexesRes = generateIndexes(client);

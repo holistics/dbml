@@ -9,8 +9,7 @@ import {
 } from './ANTLR/ASTGeneration/AST';
 
 const parseJSONToDatabase = (rawDatabase) => {
-  const database = new Database(rawDatabase);
-  return database;
+  return new Database(rawDatabase);
 };
 
 const createRefs = (rawRefs) => {
