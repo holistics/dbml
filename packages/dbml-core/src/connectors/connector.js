@@ -1,5 +1,5 @@
-import { fetchSchemaJson as fetchPostgresSchemaJson } from './PostgresConnector';
-import { fetchSchemaJson as fetchMssqlSchemaJson } from './MssqlConnector';
+import { fetchSchemaJson as fetchPostgresSchemaJson } from './postgresConnector';
+import { fetchSchemaJson as fetchMssqlSchemaJson } from './mssqlConnector';
 
 const fetchSchemaJson = async (connection, format) => {
   switch (format) {
