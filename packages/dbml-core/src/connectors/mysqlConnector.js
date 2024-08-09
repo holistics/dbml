@@ -158,7 +158,7 @@ async function generateTablesAndFields (client, schemaName) {
 
   rows.forEach((row) => {
     const { tableName, tableComment } = row;
-    const key = `.${tableName}`;
+    const key = tableName;
 
     if (!tableMap[key]) {
       tableMap[key] = {
@@ -262,7 +262,7 @@ async function generateIndexes (client, schemaName) {
     const {
       tableName, idxName, idxType, isIdxUnique, columnName, idxExpression, idxSubPart,
     } = row;
-    const key = `.${tableName}`;
+    const key = tableName;
 
     if (!acc[key]) {
       acc[key] = {};
@@ -327,7 +327,7 @@ async function generatePrimaryAndUniqueConstraint (client, schemaName) {
       tableName, constraintName, columnNames, constraintType,
     } = row;
 
-    const key = `.${tableName}`;
+    const key = tableName;
     if (!acc[key]) {
       acc[key] = {};
     }
@@ -362,7 +362,7 @@ async function generatePrimaryAndUniqueConstraint (client, schemaName) {
   const constraintMap = inlineConstraintList.reduce((acc, row) => {
     const { tableName, columnNames, constraintType } = row;
 
-    const key = `.${tableName}`;
+    const key = tableName;
     if (!acc[key]) {
       acc[key] = {};
     }
