@@ -8,9 +8,19 @@ const NUMBER_REGEX = '^-?[0-9]+(.[0-9]+)?$';
  * @returns {Promise<import('mysql2').Connection>} client
  */
 async function connectMySQL (connection) {
-  const client = await createConnection(connection);
-  await client.connect();
-  return client;
+  let client = null;
+  try {
+    client = await createConnection(connection);
+
+    await client.connect();
+    await client.query('SELECT 1');
+
+    return client;
+  } catch (error) {
+    console.error('MySQL connection error:', error);
+    await client?.end();
+    throw error;
+  }
 }
 
 function getEnumName (tableName, columnName) {
@@ -111,7 +121,7 @@ function getIndexColumn (columnName, idxExpression, idxSubPart) {
   return null;
 }
 
-async function generateTablesAndFields (client, schemaName = 'public') {
+async function generateTablesAndFields (client, schemaName) {
   const query = `
     select
       t.table_name as tableName,
@@ -148,19 +158,21 @@ async function generateTablesAndFields (client, schemaName = 'public') {
 
   rows.forEach((row) => {
     const { tableName, tableComment } = row;
-    if (!tableMap[tableName]) {
-      tableMap[tableName] = {
+    const key = `.${tableName}`;
+
+    if (!tableMap[key]) {
+      tableMap[key] = {
         name: tableName,
         note: { value: tableComment || '' },
       };
     }
 
-    if (!fieldMap[tableName]) {
-      fieldMap[tableName] = [];
+    if (!fieldMap[key]) {
+      fieldMap[key] = [];
     }
 
     const field = generateField(row);
-    fieldMap[tableName].push(field);
+    fieldMap[key].push(field);
   });
 
   return {
@@ -169,7 +181,7 @@ async function generateTablesAndFields (client, schemaName = 'public') {
   };
 }
 
-async function generateEnums (client, schemaName = 'public') {
+async function generateEnums (client, schemaName) {
   const query = `
     select
       t.table_name as tableName,
@@ -210,7 +222,7 @@ async function generateEnums (client, schemaName = 'public') {
 /**
  * Mysql is automatically create index for primary keys, foreign keys, unique constraint. -> Ignore
  */
-async function generateIndexes (client, schemaName = 'public') {
+async function generateIndexes (client, schemaName) {
   const query = `
     with
       pk_fk_uniques as (
@@ -250,14 +262,15 @@ async function generateIndexes (client, schemaName = 'public') {
     const {
       tableName, idxName, idxType, isIdxUnique, columnName, idxExpression, idxSubPart,
     } = row;
+    const key = `.${tableName}`;
 
-    if (!acc[tableName]) {
-      acc[tableName] = {};
+    if (!acc[key]) {
+      acc[key] = {};
     }
 
-    if (!acc[tableName][idxName]) {
+    if (!acc[key][idxName]) {
       // init first index
-      acc[tableName][idxName] = {
+      acc[key][idxName] = {
         name: idxName,
         type: idxType,
         columns: [],
@@ -265,7 +278,7 @@ async function generateIndexes (client, schemaName = 'public') {
       };
     }
 
-    const currentIndex = acc[tableName][idxName];
+    const currentIndex = acc[key][idxName];
     const column = getIndexColumn(columnName, idxExpression, idxSubPart);
     if (column) {
       currentIndex.columns.push(column);
@@ -282,7 +295,7 @@ async function generateIndexes (client, schemaName = 'public') {
   return indexMap;
 }
 
-async function generatePrimaryAndUniqueConstraint (client, schemaName = 'public') {
+async function generatePrimaryAndUniqueConstraint (client, schemaName) {
   const query = `
     select
       tc.table_name as tableName,
@@ -314,28 +327,29 @@ async function generatePrimaryAndUniqueConstraint (client, schemaName = 'public'
       tableName, constraintName, columnNames, constraintType,
     } = row;
 
-    if (!acc[tableName]) {
-      acc[tableName] = {};
+    const key = `.${tableName}`;
+    if (!acc[key]) {
+      acc[key] = {};
     }
 
-    if (!acc[tableName][constraintName]) {
-      acc[tableName][constraintName] = {
+    if (!acc[key][constraintName]) {
+      acc[key][constraintName] = {
         name: constraintName,
       };
     }
 
     if (constraintType === 'PRIMARY KEY') {
-      acc[tableName][constraintName].primary = true;
+      acc[key][constraintName].primary = true;
     }
 
     if (constraintType === 'UNIQUE') {
-      acc[tableName][constraintName].unique = true;
+      acc[key][constraintName].unique = true;
     }
 
     const columnList = columnNames
       .split(',')
       .map((col) => ({ type: 'column', value: col }));
-    acc[tableName][constraintName].columns = columnList;
+    acc[key][constraintName].columns = columnList;
 
     return acc;
   }, {});
@@ -348,23 +362,24 @@ async function generatePrimaryAndUniqueConstraint (client, schemaName = 'public'
   const constraintMap = inlineConstraintList.reduce((acc, row) => {
     const { tableName, columnNames, constraintType } = row;
 
-    if (!acc[tableName]) {
-      acc[tableName] = {};
+    const key = `.${tableName}`;
+    if (!acc[key]) {
+      acc[key] = {};
     }
 
     const columnList = columnNames.split(',');
 
     columnList.forEach((columnName) => {
-      if (!acc[tableName][columnName]) {
-        acc[tableName][columnName] = {};
+      if (!acc[key][columnName]) {
+        acc[key][columnName] = {};
       }
 
       if (constraintType === 'PRIMARY KEY') {
-        acc[tableName][columnName].pk = true;
+        acc[key][columnName].pk = true;
       }
 
-      if (constraintType === 'UNIQUE' && !acc[tableName][columnName].pk) {
-        acc[tableName][columnName].unique = true;
+      if (constraintType === 'UNIQUE' && !acc[key][columnName].pk) {
+        acc[key][columnName].unique = true;
       }
     });
     return acc;
@@ -373,7 +388,7 @@ async function generatePrimaryAndUniqueConstraint (client, schemaName = 'public'
   return { compositeConstraintMap, constraintMap };
 }
 
-async function generateForeignKeys (client, schemaName = 'public') {
+async function generateForeignKeys (client, schemaName) {
   const query = `
     select
       rc.constraint_name as constraintName,
@@ -454,46 +469,39 @@ function combineIndexAndCompositeConstraint (userDefinedIndexMap, compositeConst
 }
 
 async function fetchSchemaJson (connection) {
-  let client = null;
+  const client = await connectMySQL(connection);
 
-  try {
-    client = await connectMySQL(connection);
+  // In MySQL, a schema is equal database
+  const { database: schemaName } = client.config;
 
-    // In MySQL, a schema is equal database
-    const { database: schemaName } = client.config;
+  const result = await Promise.all([
+    generateTablesAndFields(client, schemaName),
+    generateEnums(client, schemaName),
+    generateIndexes(client, schemaName),
+    generatePrimaryAndUniqueConstraint(client, schemaName),
+    generateForeignKeys(client, schemaName),
+  ]);
+  client.end();
 
-    const result = await Promise.all([
-      generateTablesAndFields(client, schemaName),
-      generateEnums(client, schemaName),
-      generateIndexes(client, schemaName),
-      generatePrimaryAndUniqueConstraint(client, schemaName),
-      generateForeignKeys(client, schemaName),
-    ]);
+  const [
+    { tableList, fieldMap },
+    enumList,
+    rawIndexMap,
+    { constraintMap, compositeConstraintMap },
+    foreignKeyList,
+  ] = result;
 
-    const [
-      { tableList, fieldMap },
-      enumList,
-      rawIndexMap,
-      { constraintMap, compositeConstraintMap },
-      foreignKeyList,
-    ] = result;
+  // combine normal index and composite key
+  const indexMap = combineIndexAndCompositeConstraint(rawIndexMap, compositeConstraintMap);
 
-    // combine normal index and composite key
-    const indexMap = combineIndexAndCompositeConstraint(rawIndexMap, compositeConstraintMap);
-
-    return {
-      tables: tableList,
-      fields: fieldMap,
-      refs: foreignKeyList,
-      enums: enumList,
-      indexes: indexMap,
-      tableConstraints: constraintMap,
-    };
-  } catch (error) {
-    throw new Error(error);
-  } finally {
-    client?.end();
-  }
+  return {
+    tables: tableList,
+    fields: fieldMap,
+    refs: foreignKeyList,
+    enums: enumList,
+    indexes: indexMap,
+    tableConstraints: constraintMap,
+  };
 }
 
 export {
