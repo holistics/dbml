@@ -1,8 +1,8 @@
 Table "test" {
-  "text1" varchar(255) [default: "Test2"]
-  "text2" varchar(255) [default: "Test2"]
-  "text3" varchar(255) [default: "Test2"]
-  "text4" varchar(255) [default: "Test2"]
+  "text1" varchar(255) [default: 'Test2']
+  "text2" varchar(255) [default: 'Test2']
+  "text3" varchar(255) [default: 'Test2']
+  "text4" varchar(255) [default: 'Test2']
   "number1" int [default: 1]
   "number2" int [default: 1]
   "number3" int [default: 1]

@@ -1,0 +1,190 @@
+Enum "dbo"."chk_status" {
+  "cancelled"
+  "delivered"
+  "shipped"
+  "processing"
+  "pending"
+}
+
+Enum "dbo"."chk_gender" {
+  "Other"
+  "Female"
+  "Male"
+}
+
+Table "dbo"."Authors" {
+  "AuthorID" int [pk, not null]
+  "AuthorName" nvarchar [unique]
+  "BirthYear" int [unique]
+  "NationalityID" int [pk, not null]
+}
+
+Table "dbo"."Books" {
+  "AuthorID" int [pk, not null]
+  "BookID" int [pk, not null]
+  "ISBN" nvarchar [unique]
+  "NationalityID" int
+  "Title" nvarchar
+}
+
+Table "dbo"."DatetimeTypes" {
+  "DATECol" date [default: `getdate()`]
+  "DATETIME2Col" datetime2 [default: `sysdatetime()`]
+  "DATETIMECol" datetime [default: `getdate()`]
+  "DATETIMEOFFSETCol" datetimeoffset [default: `sysdatetimeoffset()`]
+  "ID" int [pk, not null, increment]
+  "ROWVERSIONCol" timestamp [not null]
+  "SMALLDATETIMECol" smalldatetime [default: `getdate()`]
+  "TIMECol" time [default: `CONVERT([time],getdate())`]
+}
+
+Table "dbo"."gender_reference" {
+  "value" nvarchar [pk, not null]
+}
+
+Table "dbo"."NumberTypes" {
+  "BIGINTCol" bigint [default: 0]
+  "BITCol" bit [default: 0]
+  "DECIMALCol" decimal(10,2) [default: 0.00]
+  "FLOATCol" float [default: 0.0]
+  "ID" int [pk, not null, increment]
+  "INTCol" int [default: 0]
+  "NUMERICCol" numeric(10,2) [default: 0.00]
+  "REALCol" real [default: 0.0]
+  "SMALLINTCol" smallint [default: 0]
+  "TINYINTCol" tinyint [default: 0]
+}
+
+Table "dbo"."ObjectTypes" {
+  "BinaryField" binary [default: `0x00`]
+  "Id" int [pk, not null, increment]
+  "ImageField" image [default: `0x00`]
+  "JsonField" nvarchar [default: `N'{"defaultKey": "defaultValue", "status": "active", "count": 0}'`]
+  "VarBinaryField" varbinary [default: `0x00`]
+  "VarBinaryMaxField" varbinary [default: `0x00`]
+  "XmlField" xml [default: '''<Books>
+    <Book>
+      <Title>The Great Gatsby</Title>
+      <Author>F. Scott Fitzgerald</Author>
+      <Year>1925</Year>
+      <Price>10.99</Price>
+      <Publisher>Scribner</Publisher>
+      <Location>New York</Location>
+      <Genre>Fiction</Genre>
+      <Subgenre>Classic</Subgenre>
+    </Book>
+    <Book>
+      <Title>1984</Title>
+      <Author>George Orwell</Author>
+      <Year>1949</Year>
+      <Price>8.99</Price>
+      <Publisher>Secker & Warburg</Publisher>
+      <Location>London</Location>
+      <Genre>Dystopian</Genre>
+      <Subgenre>Political Fiction</Subgenre>
+    </Book>
+  </Books>''']
+}
+
+Table "dbo"."order_items" {
+  "order_id" int [unique, not null]
+  "order_item_id" int [pk, not null, increment]
+  "product_id" int [unique, not null]
+  "quantity" int [not null]
+  "unit_price" decimal [not null]
+
+  Indexes {
+    (order_id, product_id) [type: nonclustered, name: "idx_order_items_order_product"]
+  }
+}
+
+Table "dbo"."orders" {
+  "billing_address" text [not null]
+  "order_date" datetime2 [default: `getdate()`]
+  "order_id" int [pk, not null, increment]
+  "shipping_address" text [not null]
+  "status" dbo.chk_status [default: 'pending']
+  "total_amount" decimal [not null]
+  "user_id" int [not null]
+
+  Indexes {
+    (user_id, order_date) [type: nonclustered, name: "idx_orders_user_date"]
+  }
+}
+
+Table "dbo"."products" {
+  "category" varchar
+  "created_at" datetime2 [default: `getdate()`]
+  "description" text
+  "is_available" bit [default: 1]
+  "name" varchar [not null]
+  "price" decimal [not null]
+  "product_id" int [pk, not null, increment]
+  "stock_quantity" int [not null, default: 0]
+  "updated_at" datetime2 [default: `getdate()`]
+
+  Indexes {
+    category [type: nonclustered, name: "idx_products_category"]
+  }
+}
+
+Table "dbo"."StringTypes" {
+  "CharField" char(10) [default: 'N/A']
+  "Id" int [pk, not null, increment]
+  "NCharField" nchar [default: `N'N/A'`]
+  "NTextField" ntext [default: `N'N/A'`]
+  "NVarCharField" nvarchar [default: `N'N/A'`]
+  "NVarCharMaxField" nvarchar [default: `N'N/A'`]
+  "TextField" text(16) [default: 'N/A']
+  "VarcharField" varchar(50) [default: '{"default_key": "default_value"}']
+  "VarcharMaxField" varchar [default: 'N/A']
+}
+
+Table "dbo"."table_with_comments" {
+  "created_at" datetime2 [default: `getdate()`, note: 'Timestamp when the item was created.']
+  "description" text [note: 'Detailed description of the item.']
+  "id" int [pk, not null, increment, note: 'Unique identifier for each item.']
+  "name" varchar [note: 'Name of the item.']
+  Note: 'This table stores information about various items.'
+}
+
+Table "dbo"."user_define_data_types" {
+  "age_end" int
+  "age_start" int
+  "gender" dbo.chk_gender
+  "height" float
+  "id" int [pk, not null, increment]
+  "name" nvarchar
+  "weight" float
+}
+
+Table "dbo"."users" {
+  "created_at" datetime2 [default: `getdate()`]
+  "date_of_birth" date
+  "email" varchar [unique, not null]
+  "first_name" varchar
+  "full_name" varchar
+  "full_name_lower" varchar
+  "is_active" bit [default: 1]
+  "last_login" datetime2
+  "last_name" varchar
+  "password_hash" varchar [not null]
+  "user_id" int [pk, not null, increment]
+  "username" varchar [unique, not null]
+
+  Indexes {
+    email [type: nonclustered, name: "idx_users_email"]
+    full_name [type: nonclustered, name: "idx_users_full_name"]
+    (is_active, full_name_lower) [type: nonclustered, name: "idx_users_is_active_full_name"]
+  }
+}
+
+Ref "FK_AuthorNationality":"dbo"."Authors".("AuthorID", "NationalityID") < "dbo"."Books".("AuthorID", "NationalityID")
+
+Ref "fk_product":"dbo"."products"."product_id" < "dbo"."order_items"."product_id" [update: cascade]
+
+Ref "fk_order":"dbo"."orders"."order_id" < "dbo"."order_items"."order_id" [update: cascade, delete: cascade]
+
+Ref "fk_user":"dbo"."users"."user_id" < "dbo"."orders"."user_id" [update: cascade, delete: cascade]
+
+Ref "fk_gender":"dbo"."gender_reference"."value" < "dbo"."user_define_data_types"."gender"

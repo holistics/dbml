@@ -1,4 +1,4 @@
-import { connector } from '@dbml/core';
+import { importer } from '@dbml/core';
 import figures from 'figures';
 import chalk from 'chalk';
 import path from 'path';
@@ -17,10 +17,10 @@ export default async function connectionHandler (program) {
     const { format } = getConnectionOpt(opts);
 
     if (!opts.outFile && !opts.outDir) {
-      const res = await connector.fetchSchema(connection, format);
+      const res = await importer.generateDbml(connection, format);
       OutputConsolePlugin.write(res);
     } else if (opts.outFile) {
-      const res = await connector.fetchSchema(connection, format);
+      const res = await importer.generateDbml(connection, format);
       (new OutputFilePlugin(resolvePaths(opts.outFile))).write(res);
 
       // bearer:disable javascript_lang_logger
