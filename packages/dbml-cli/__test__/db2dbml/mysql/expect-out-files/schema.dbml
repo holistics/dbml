@@ -74,6 +74,17 @@ Table "composite_key_2" {
   }
 }
 
+Table "date_time_example" {
+  "default_now" timestamp [default: `CURRENT_TIMESTAMP`]
+  "default_local" timestamp [default: `CURRENT_TIMESTAMP`]
+  "date_plus_7_days" date [default: `(curdate() + interval 7 day)`]
+  "date_minus_30_days" date [default: `(curdate() - interval 30 day)`]
+  "timestamp_plus_1_hour" timestamp [default: `(now() + interval 1 hour)`]
+  "timestamp_minus_15_minutes" timestamp [default: `(now() - interval 15 minute)`]
+  "on_update_1" "datetime on update CURRENT_TIMESTAMP" [default: `CURRENT_TIMESTAMP`]
+  "on_update_2" "datetime on update CURRENT_TIMESTAMP" [default: `CURRENT_TIMESTAMP`]
+}
+
 Table "default_example" {
   "id" int [pk, not null, increment]
   "column1" varchar(255) [default: `concat(_utf8mb4\'default \',uuid())`]

@@ -128,3 +128,14 @@ create table hash_index_example (
   name1 varchar(100) comment 'last name of the individual',
   index idx_name_name1 (name, name1) using hash comment 'hash index for fast lookups on name and name1'
 ) engine=memory comment='table for storing names with a hash index';
+
+create table date_time_example (
+  default_now timestamp default localtime(),
+  default_local timestamp default now(),
+  date_plus_7_days date default (current_date() + interval 7 day),
+  date_minus_30_days date default (current_date - interval 30 day),
+  timestamp_plus_1_hour timestamp default (current_timestamp + interval 1 hour),
+  timestamp_minus_15_minutes timestamp default (current_timestamp - INTERVAL 15 minute),
+  on_update_1 datetime default now() on update now(),
+  on_update_2 datetime default now() on update localtime()
+);
