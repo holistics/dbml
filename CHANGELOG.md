@@ -1,3 +1,31 @@
+## v3.6.2 (2024-07-31)
+
+#### :running_woman: Performance
+* `dbml-core`
+  * [#590](https://github.com/holistics/dbml/pull/590) Improve DBML normalize performance ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### :house_with_garden: Internal
+* `dbml-parse`
+  * [#592](https://github.com/holistics/dbml/pull/592) chore: config vite to gen .d.ts file on build ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Tho Nguyen ([@thonx-holistics](https://github.com/thonx-holistics))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.6.1 (2024-07-23)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#588](https://github.com/holistics/dbml/pull/588) fix: safe unwrapping in suggesting attribute value when name is blank ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :robot: Dependencies Update
+* [#583](https://github.com/holistics/dbml/pull/583) build(deps): bump ws from 7.5.9 to 7.5.10 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.6.0 (2024-07-17)
 
 #### :rocket: New Feature
@@ -541,7 +569,7 @@
 * `dbml-cli`, `dbml-core`
   * [#240](https://github.com/holistics/dbml/pull/240) Support multiple schemas ([@NQPhuc](https://github.com/NQPhuc))
 * `dbml-cli`
-  * [#209](https://github.com/holistics/dbml/pull/209) Add --mssql option for sql2dbml CLI ([@NQPhuc](https://github.com/NQPhuc))      
+  * [#209](https://github.com/holistics/dbml/pull/209) Add --mssql option for sql2dbml CLI ([@NQPhuc](https://github.com/NQPhuc))
 
 #### :rocket: New Feature
 * `dbml-cli`, `dbml-core`

@@ -1,6 +1,6 @@
 {
   "name": "@dbml/parse",
-  "version": "3.6.0",
+  "version": "3.6.2",
   "description": "> TODO: description",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -12,6 +12,7 @@
   ],
   "main": "./dist/dbml-parse.js",
   "module": "./dist/dbml-parse.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/dbml-parse.mjs",
@@ -22,7 +23,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build",
+    "build": "tsc --noEmit && vite build",
     "dev": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest tests",
@@ -37,6 +38,7 @@
     "typescript": "^5.2.2",
     "vite": "^4.5.0",
     "vite-dts": "^1.0.4",
+    "vite-plugin-dts": "^3.9.1",
     "vitest": "^0.34.6"
   },
   "dependencies": {
