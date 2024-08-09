@@ -250,7 +250,7 @@ function suggestInAttribute(
     const res = suggestAttributeValue(
       compiler,
       offset,
-      extractStringFromIdentifierStream(container.name).unwrap(),
+      extractStringFromIdentifierStream(container.name).unwrap_or(''),
     );
 
     return (token?.kind === SyntaxTokenKind.COLON && shouldPrependSpace(token, offset)) ? prependSpace(res) : res;

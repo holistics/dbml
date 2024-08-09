@@ -90,14 +90,11 @@ class Enum extends Element {
   }
 
   normalize (model) {
-    model.enums = {
-      ...model.enums,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.enums[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
 
     this.values.forEach(v => v.normalize(model));
