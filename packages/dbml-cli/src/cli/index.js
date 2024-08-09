@@ -47,7 +47,8 @@ function db2dbml (args) {
     .usage('<connection-string> [options]')
     .arguments('database connection string')
     .option('--postgres', 'fetch schema from a postgresql database')
-    .option('--mssql', 'fetch schema from to a Microsoft SQL Server database')
+    .option('--mssql', 'fetch schema from a Microsoft SQL Server database')
+    .option('--mysql', 'fetch schema from a mysql database')
     .option('-o, --out-file <pathspec>', 'compile all input files into a single files');
 
   program.parse(args);

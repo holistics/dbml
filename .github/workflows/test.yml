@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [22.x]
     services:
       postgres:
         image: postgres:15-bullseye
@@ -43,6 +43,19 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+      mysql-8.0:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: mysql_connector_test
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
     steps:
     - uses: actions/checkout@v3
     - name: Import DDL to Postgres
@@ -50,6 +63,9 @@ jobs:
         psql -h localhost -U dbml -d dbml_test -f packages/dbml-cli/__test__/db2dbml/postgres/schema.sql
       env:
         PGPASSWORD: testtest
+    - name: Import DDL to MySQL
+      run: |
+        mysql -h 127.0.0.1 -u root -proot mysql_connector_test < packages/dbml-cli/__test__/db2dbml/mysql/schema.sql
     - name: Import DDL to MSSQL
       run: |
         sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__test__/db2dbml/mssql/schema.sql
