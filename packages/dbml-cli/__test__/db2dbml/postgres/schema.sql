@@ -133,3 +133,24 @@ COMMENT ON COLUMN table_with_comments.id IS 'Unique identifier for each item.';
 COMMENT ON COLUMN table_with_comments.name IS 'Name of the item.';
 COMMENT ON COLUMN table_with_comments.description IS 'Detailed description of the item.';
 COMMENT ON COLUMN table_with_comments.created_at IS 'Timestamp when the item was created.';
+
+-- Create Authors table
+CREATE TABLE Authors (
+  AuthorID SERIAL,
+  NationalityID INT,
+  AuthorName VARCHAR(100),
+  BirthYear INT,
+  PRIMARY KEY (AuthorID, NationalityID) -- Use composite primary key
+);
+
+-- Create Books table
+CREATE TABLE Books (
+  BookID SERIAL PRIMARY KEY,
+  AuthorID INT,
+  NationalityID INT,
+  ISBN VARCHAR(20),
+  Title VARCHAR(200),
+  UNIQUE (ISBN),
+  CONSTRAINT FK_AuthorNationality FOREIGN KEY (AuthorID, NationalityID)
+    REFERENCES Authors (AuthorID, NationalityID) ON DELETE CASCADE
+);

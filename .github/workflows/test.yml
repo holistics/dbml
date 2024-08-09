@@ -1,11 +1,11 @@
-name: Run packages unit test
+name: Run unit test
 on:
   push:
-    branches: [ master ]
+    branches: [ master]
     paths-ignore:
       - 'dbml-homepage/**'
   pull_request:
-    branches: [ master ]
+    # branches: [ master ]
     types: [opened, synchronize]
     paths-ignore:
       - 'dbml-homepage/**'
@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
     services:
       postgres:
         image: postgres:15-bullseye
@@ -30,14 +30,29 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: dbml.123.123
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "exit 0"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v3
-    - name: Import DDL to Postgres # TODO: This should be done in a separate job
+    - name: Import DDL to Postgres
       run: |
         psql -h localhost -U dbml -d dbml_test -f packages/dbml-cli/__test__/db2dbml/postgres/schema.sql
       env:
         PGPASSWORD: testtest
+    - name: Import DDL to MSSQL
+      run: |
+        sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__test__/db2dbml/mssql/schema.sql
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:

@@ -10,9 +10,9 @@ Table "all_default_values" {
   "integer_col" int4 [default: 42]
   "numeric_col" numeric(10,2) [default: 99.99]
   "date_col" date [default: `CURRENT_DATE`]
-  "date_col_specific" date [default: "2024-01-01"]
+  "date_col_specific" date [default: '2024-01-01']
   "timestamp_col" timestamp [default: `CURRENT_TIMESTAMP`]
-  "timestamp_col_specific" timestamp [default: "2024-01-01 12:00:00"]
+  "timestamp_col_specific" timestamp [default: '2024-01-01 12:00:00']
   "date_plus_7_days" date [default: `(CURRENT_DATE + '7 days'::interval)`]
   "date_minus_30_days" date [default: `(CURRENT_DATE - '30 days'::interval)`]
   "timestamp_plus_1_hour" timestamp [default: `(CURRENT_TIMESTAMP + '01:00:00'::interval)`]
@@ -20,16 +20,35 @@ Table "all_default_values" {
 }
 
 Table "all_string_types" {
-  "text_col" text [default: "default_text"]
-  "varchar_col" varchar(100) [default: "default_varchar"]
-  "char_col" bpchar(10) [default: "default_char"]
-  "character_varying_col" varchar(50) [default: "default_character_varying"]
-  "character_col" bpchar(5) [default: "default_character"]
-  "name_col" name [default: "default_name"]
-  "bpchar_col" bpchar(15) [default: "default_bpchar"]
+  "text_col" text [default: 'default_text']
+  "varchar_col" varchar(100) [default: 'default_varchar']
+  "char_col" bpchar(10) [default: 'default_char']
+  "character_varying_col" varchar(50) [default: 'default_character_varying']
+  "character_col" bpchar(5) [default: 'default_character']
+  "name_col" name [default: 'default_name']
+  "bpchar_col" bpchar(15) [default: 'default_bpchar']
   "text_array_col" "text[]" [default: `ARRAY['default_text1',  'default_text2']`]
   "json_col" json [default: `{"default_key": "default_value"}`]
   "jsonb_col" jsonb [default: `{"default_key": "default_value"}`]
+}
+
+Table "authors" {
+  "authorid" int4 [not null, increment]
+  "nationalityid" int4 [not null]
+  "authorname" varchar(100)
+  "birthyear" int4
+
+  Indexes {
+    (authorid, nationalityid) [type: btree, name: "authors_pkey"]
+  }
+}
+
+Table "books" {
+  "bookid" int4 [pk, not null, increment]
+  "authorid" int4
+  "nationalityid" int4
+  "isbn" varchar(20) [unique]
+  "title" varchar(200)
 }
 
 Table "order_items" {
@@ -50,7 +69,7 @@ Table "orders" {
   "user_id" int4 [not null]
   "order_date" timestamptz [default: `CURRENT_TIMESTAMP`]
   "total_amount" numeric(12,2) [not null]
-  "status" varchar(20) [default: "pending"]
+  "status" varchar(20) [default: 'pending']
   "shipping_address" text [not null]
   "billing_address" text [not null]
 
@@ -112,8 +131,10 @@ Table "users" {
   }
 }
 
-Ref "fk_user":"users"."user_id" < "orders"."user_id" [delete: cascade]
+Ref "fk_authornationality":"authors".("authorid", "nationalityid") < "books".("authorid", "nationalityid") [delete: cascade]
 
 Ref "fk_order":"orders"."order_id" < "order_items"."order_id" [delete: cascade]
 
 Ref "fk_product":"products"."product_id" < "order_items"."product_id" [delete: cascade]
+
+Ref "fk_user":"users"."user_id" < "orders"."user_id" [delete: cascade]
