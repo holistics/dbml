@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import sql from 'mssql';
+import { parseConnStr } from './ utils';
 
 const MSSQL_DATE_TYPES = [
   'date',
@@ -11,26 +12,22 @@ const MSSQL_DATE_TYPES = [
 ];
 
 const getValidatedClient = async (connection) => {
-  const options = connection.split(';').reduce((acc, option) => {
-    const [key, value] = option.split('=');
-    const camelCaseKey = key.toLowerCase().replace(/\s([a-z])/g, (g) => g[1].toUpperCase());
-    acc[camelCaseKey] = value;
-    return acc;
-  }, {});
-
-  const [host, port] = options.dataSource.split(',');
-
+  // Connection String format:
+  // 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;'
+  const options = parseConnStr(connection);
+  const [host, port] = options['data source'].split(',');
   const config = {
-    user: options.userId,
+    user: options['user id'] || options.uid,
     password: options.password,
     server: host,
-    database: options.initialCatalog,
+    database: options['initial catalog'],
     options: {
-      encrypt: options.encrypt === 'True',
-      trustServerCertificate: options.trustServerCertificate === 'True',
-      port: port || 1433,
+      encrypt: options.encrypt,
+      trustServerCertificate: options['trusted server certificate'],
+      port: Number(port) || 1433,
     },
   };
+
   try {
     // Establish a connection pool
     const pool = await sql.connect(config);
