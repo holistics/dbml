@@ -1,6 +1,7 @@
 import program from 'commander';
 import importHandler from './import';
 import exportHandler from './export';
+import connectionHandler from './connector';
 import projectInfo from '../../package.json';
 
 function dbml2sql (args) {
@@ -39,7 +40,23 @@ function sql2dbml (args) {
   importHandler(program);
 }
 
+function db2dbml (args) {
+  program.version(projectInfo.version);
+
+  program
+    .usage('<connection-string> [options]')
+    .arguments('database connection string')
+    .option('--postgres', 'fetch schema from a postgresql database')
+    .option('--mssql', 'fetch schema from to a Microsoft SQL Server database')
+    .option('-o, --out-file <pathspec>', 'compile all input files into a single files');
+
+  program.parse(args);
+
+  connectionHandler(program);
+}
+
 export {
   dbml2sql,
   sql2dbml,
+  db2dbml,
 };

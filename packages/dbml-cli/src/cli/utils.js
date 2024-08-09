@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { CompilerError } from '@dbml/core';
+import { reduce } from 'lodash';
 
 function resolvePaths (paths) {
   if (!Array.isArray(paths)) {
@@ -32,6 +33,18 @@ function getFormatOpt (opts) {
   return format;
 }
 
+function getConnectionOpt (opts) {
+  const supportedDatabases = ['postgres', 'mysql', 'mssql'];
+  const selectedFormat = reduce(opts, (format, value, key) => {
+    if (supportedDatabases.includes(key) && value) return key;
+    return format;
+  }, 'postgres');
+
+  return {
+    format: selectedFormat,
+  };
+}
+
 function generate (inputPaths, transform, outputPlugin) {
   inputPaths.forEach((_path) => {
     const source = fs.readFileSync(_path, 'utf-8');
@@ -49,5 +62,6 @@ export {
   resolvePaths,
   validateInputFilePaths,
   getFormatOpt,
+  getConnectionOpt,
   generate,
 };
