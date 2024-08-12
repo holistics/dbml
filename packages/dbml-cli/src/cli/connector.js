@@ -12,9 +12,8 @@ import logger from '../helpers/logger';
 
 export default async function connectionHandler (program) {
   try {
-    const connection = program.args[0];
+    const { connection, format } = getConnectionOpt(program.args);
     const opts = program.opts();
-    const { format } = getConnectionOpt(opts);
 
     if (!opts.outFile && !opts.outDir) {
       const res = await importer.generateDbml(connection, format);
