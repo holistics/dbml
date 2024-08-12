@@ -95,3 +95,43 @@ $ sql2dbml <path-to-sql-file>
 ```
 
 Note: The `--postgres-legacy` and `--mysql-legacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
+
+## Directly generating DBML from your database
+
+```bash
+$ db2dbml postgres postgresql://dbml:testtest@localhost:5432/dbml_test
+
+Enum "gender_type" {
+  "Male"
+  "Female"
+  "Other"
+}
+
+Table "all_default_values" {
+  "id" int4 [pk, not null, increment]
+  "boolean_col" bool [default: true]
+  "integer_col" int4 [default: 42]
+...
+
+```
+
+**Output to a file:**
+
+```bash
+$ db2dbml postgres postgresql://dbml:testtest@localhost:5432/dbml_test -o schema.dbml
+  ✔ Generated DBML file from database's connection: schema.dbml
+```
+
+### Syntax Manual
+
+```bash
+$ db2dbml postgres|mysql|mssql
+          <connection-string>
+          [-o|--out-file <output-filepath>]
+```
+
+Connection string examples:
+
+- postgres: `postgresql://user:password@localhost:5432/dbname`
+- mysql: `mysql://user:password@localhost:3306/dbname`
+- mssql: `'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;'`
