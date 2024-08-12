@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
 import sql from 'mssql';
-import { parseConnStr } from './ utils';
 
 const MSSQL_DATE_TYPES = [
   'date',
@@ -12,26 +11,9 @@ const MSSQL_DATE_TYPES = [
 ];
 
 const getValidatedClient = async (connection) => {
-  // Connection String format:
-  // 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;'
-  const options = parseConnStr(connection);
-  const [host, port] = options['data source'].split(',');
-  const config = {
-    user: options['user id'] || options.uid,
-    password: options.password,
-    server: host,
-    database: options['initial catalog'],
-    options: {
-      encrypt: options.encrypt,
-      trustServerCertificate: options['trusted server certificate'],
-      port: Number(port) || 1433,
-    },
-  };
-
   try {
     // Establish a connection pool
-    const pool = await sql.connect(config);
-
+    const pool = await sql.connect(connection);
     // Validate if the connection is successful by making a simple query
     await pool.request().query('SELECT 1');
 

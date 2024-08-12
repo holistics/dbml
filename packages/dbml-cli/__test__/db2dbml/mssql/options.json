@@ -1,7 +1,7 @@
 {
   "args": [
-    "--mssql",
-    "'Server=localhost,1433;Database=dbml_test;User ID=SA;Password=dbml.123.123;Encrypt=True;Trusted Server Certificate='Yes';'",
+    "mssql",
+    "'Server=localhost,1433;Database=dbml_test;User Id=SA;Password=dbml.123.123;Encrypt=true;TrustServerCertificate=true;'",
     "-o",
     "./out-files/schema.dbml"
   ]

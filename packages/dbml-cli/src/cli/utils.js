@@ -33,16 +33,25 @@ function getFormatOpt (opts) {
   return format;
 }
 
-function getConnectionOpt (opts) {
+function getConnectionOpt (args) {
   const supportedDatabases = ['postgres', 'mysql', 'mssql'];
-  const selectedFormat = reduce(opts, (format, value, key) => {
-    if (supportedDatabases.includes(key) && value) return key;
-    return format;
-  }, 'postgres');
-
-  return {
-    format: selectedFormat,
+  const defaultConnectionOpt = {
+    connection: args[0],
+    format: 'unknown',
   };
+
+  return reduce(args, (connectionOpt, arg) => {
+    if (supportedDatabases.includes(arg)) connectionOpt.format = arg;
+    // Check if the arg is a connection string using regex
+    const connectionStringRegex = /^.*[:;]/;
+    if (connectionStringRegex.test(arg)) {
+      // Example: jdbc:mysql://localhost:3306/mydatabase
+      // Example: odbc:Driver={SQL Server};Server=myServerAddress;Database=myDataBase;Uid=myUsername;Pwd=myPassword;
+      connectionOpt.connection = arg;
+    }
+
+    return connectionOpt;
+  }, defaultConnectionOpt);
 }
 
 function generate (inputPaths, transform, outputPlugin) {

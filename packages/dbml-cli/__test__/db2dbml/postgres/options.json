@@ -1,6 +1,6 @@
 {
   "args": [
-    "--postgres",
+    "postgres",
     "postgresql://dbml:testtest@localhost:5432/dbml_test",
     "-o",
     "./out-files/schema.dbml"
