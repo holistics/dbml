@@ -5,7 +5,7 @@ on:
     paths-ignore:
       - 'dbml-homepage/**'
   pull_request:
-    # branches: [ master ]
+    branches: [ master ]
     types: [opened, synchronize]
     paths-ignore:
       - 'dbml-homepage/**'
