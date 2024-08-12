@@ -1,7 +1,7 @@
 Table "HP_TEST"."CUSTOMERS" {
   "CUSTOMER_ID" "NUMBER(38, 0)" [pk, not null, increment]
-  "FIRST_NAME" VARCHAR(50) [not null, default: "'John'"]
-  "LAST_NAME" VARCHAR(50) [not null, default: "'Doe'"]
+  "FIRST_NAME" VARCHAR(50) [not null, default: 'John']
+  "LAST_NAME" VARCHAR(50) [not null, default: 'Doe']
   "EMAIL" VARCHAR(100)
   "SECOND_EMAIL" VARCHAR(100)
   "UNIQUE_NAME" VARCHAR(100) [unique, not null, default: `CONCAT(FIRST_NAME, LAST_NAME, EMAIL)`]
@@ -196,19 +196,19 @@ Table "t_default_14" {
 }
 
 Table "t_default_15" {
-  "v" varchar(32) [default: "'hey'"]
+  "v" varchar(32) [default: 'hey']
 }
 
 Table "t_default_16" {
-  "v" varchar(32) [unique, default: "'hey'"]
+  "v" varchar(32) [unique, default: 'hey']
 }
 
 Table "t_default_17" {
-  "v" varchar(32) [unique, default: "'hey'"]
+  "v" varchar(32) [unique, default: 'hey']
 }
 
 Table "t_default_18" {
-  "v" varchar(32) [pk, default: "'hey'"]
+  "v" varchar(32) [pk, default: 'hey']
 }
 
 Table "t_masking_1" {

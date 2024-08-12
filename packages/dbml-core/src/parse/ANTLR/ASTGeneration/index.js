@@ -15,7 +15,7 @@ import SnowflakeASTGen from './snowflake/SnowflakeASTGen';
 
 import ParserErrorListener from './ParserErrorListener';
 
-export function parse (input, format) {
+function parse (input, format) {
   const chars = new antlr4.InputStream(input);
   let database = null;
 
@@ -73,3 +73,7 @@ export function parse (input, format) {
 
   return database;
 }
+
+export {
+  parse,
+};
