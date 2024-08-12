@@ -6,8 +6,7 @@ title: CLI
 
 [![NPM](https://img.shields.io/npm/v/@dbml/cli)](https://www.npmjs.com/package/@dbml/cli)
 
-DBML comes with a built-in CLI which can be used to convert between different formats from
-the command line
+DBML comes with a built-in CLI that enables conversion/generation between various formats from the command line.
 
 ![img](/img/dbml-cli.gif)
 
@@ -96,7 +95,7 @@ $ sql2dbml <path-to-sql-file>
 
 Note: The `--postgres-legacy` and `--mysql-legacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
 
-## Directly generating DBML from your database
+## Generate DBML directly from a database
 
 ```bash
 $ db2dbml postgres postgresql://dbml:testtest@localhost:5432/dbml_test
