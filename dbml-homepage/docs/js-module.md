@@ -56,6 +56,30 @@ const dbml = importer.import(postgreSQL, 'postgres');
 
 ```
 
+##### importer.generateDbml( connection, format )
+
+* **Arguments:**
+  * ```{string} connection```
+  * ```{'postgres'|'mssql'|'mysql'} format```
+
+* **Returns:**
+  * ```{Promise<string>} DBML```
+
+* **Usage:**
+Generate DBML from your database.
+
+```javascript
+const { importer } = require('@dbml/core');
+
+// Your database connection string
+const connection = 'postgresql://dbml:testtest@localhost:5432/dbml_test';
+
+importer.generateDbml(connection, 'postgres')
+  .then((dbml) => console.log(dbml))
+  .catch((error) => console.log(error));
+
+```
+
 #### exporter
 
 ```javascript
