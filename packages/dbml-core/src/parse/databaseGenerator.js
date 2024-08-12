@@ -74,7 +74,7 @@ const createIndexes = (rawIndexes) => {
 const createTables = (rawTables, rawFields, rawIndexes, tableConstraints) => {
   return rawTables.map((rawTable) => {
     const { name, schemaName, note } = rawTable;
-    const key = `${schemaName}.${name}`;
+    const key = schemaName ? `${schemaName}.${name}` : `${name}`;
     const constraints = tableConstraints[key] || {};
     const fields = createFields(rawFields[key], constraints);
     const indexes = createIndexes(rawIndexes[key] || []);

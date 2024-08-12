@@ -1,0 +1,180 @@
+Enum "status_example_2_s1_enum" {
+  "active"
+  "inactive"
+  "pending"
+}
+
+Enum "status_example_2_s2_enum" {
+  "active"
+  "inactive"
+  "pending"
+}
+
+Enum "status_example_2_s3_enum" {
+  "active"
+  "inactive"
+  "pending"
+}
+
+Enum "status_example_2_s4_enum" {
+  "active"
+  "inactive"
+  "pending"
+}
+
+Enum "status_example_2_s5_enum" {
+  "0"
+  "1"
+  "2"
+}
+
+Enum "status_example_2_s6_enum" {
+  "0"
+  "1"
+  "2"
+}
+
+Enum "status_example_2_s7_enum" {
+  "0"
+  "1"
+  "2"
+}
+
+Enum "status_example_2_s8_enum" {
+  "0"
+  "1"
+  "2"
+}
+
+Table "categories" {
+  "cat_id" "int unsigned" [pk, not null, increment]
+  "cat_name" varchar(50) [not null]
+  "super_cat_id" "int unsigned"
+  "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "composite_key_1" {
+  "id1_1" "int unsigned" [not null]
+  "id1_2" "int unsigned" [not null]
+  "email" varchar(255)
+  "name" varchar(50)
+
+  Indexes {
+    (id1_1, id1_2) [pk, name: "PRIMARY"]
+    (email, name) [unique, name: "uc_unique_composite"]
+  }
+}
+
+Table "composite_key_2" {
+  "id2_1" "int unsigned" [not null]
+  "id2_2" "int unsigned" [not null]
+
+  Indexes {
+    (id2_1, id2_2) [pk, name: "PRIMARY"]
+  }
+}
+
+Table "date_time_example" {
+  "default_now" timestamp [default: `CURRENT_TIMESTAMP`]
+  "default_local" timestamp [default: `CURRENT_TIMESTAMP`]
+  "date_plus_7_days" date [default: `(curdate() + interval 7 day)`]
+  "date_minus_30_days" date [default: `(curdate() - interval 30 day)`]
+  "timestamp_plus_1_hour" timestamp [default: `(now() + interval 1 hour)`]
+  "timestamp_minus_15_minutes" timestamp [default: `(now() - interval 15 minute)`]
+  "on_update_1" "datetime on update CURRENT_TIMESTAMP" [default: `CURRENT_TIMESTAMP`]
+  "on_update_2" "datetime on update CURRENT_TIMESTAMP" [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "default_example" {
+  "id" int [pk, not null, increment]
+  "column1" varchar(255) [default: `concat(_utf8mb4\'default \',uuid())`]
+  "column2" varchar(255) [default: `concat(_utf8mb4\'random \',floor((rand() * 100)))`]
+  "column3" varchar(255) [default: '_utf8mb4']
+  "column4" double [default: 0.5]
+  "created_date" date [default: `curdate()`]
+  "first_date" date [default: '2023-01-01']
+  "event_time" timestamp [default: '2024-01-01 00:00:00']
+}
+
+Table "hash_index_example" {
+  "id" int [pk, not null, note: 'unique identifier for each record']
+  "name" varchar(100) [note: 'first name of the individual']
+  "name1" varchar(100) [note: 'last name of the individual']
+
+  Indexes {
+    (name, name1) [type: hash, name: "idx_name_name1"]
+  }
+  Note: 'table for storing names with a hash index'
+}
+
+Table "index_example" {
+  "id" int [pk, not null, increment]
+  "name_lower" varchar(100) [not null]
+  "name_inline" varchar(100) [not null]
+  "email" varchar(100) [unique, not null]
+  "age" int
+  "city" varchar(50)
+
+  Indexes {
+    (city, age) [type: btree, name: "idx_city_age"]
+    `city(5)` [type: btree, name: "idx_city_part"]
+    name_inline [type: btree, name: "idx_name"]
+    `lower(name_lower)` [type: btree, name: "idx_name_lower"]
+  }
+}
+
+Table "order_items" {
+  "order_id" "int unsigned" [not null]
+  "product_id" "int unsigned" [not null]
+}
+
+Table "orders" {
+  "order_id" "int unsigned" [pk, not null, increment]
+  "user_id" "int unsigned"
+}
+
+Table "products" {
+  "id" "int unsigned" [pk, not null, increment]
+  "price" decimal(10,2) [not null]
+  "quantity" int [not null]
+  "total_value" "decimal(10,2) GENERATED ALWAYS AS ((`price` * `quantity`)) STORED"
+  "updated_at" "timestamp on update CURRENT_TIMESTAMP" [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "sqrt_triangle" {
+  "side_a" double
+  "side_b" double
+  "side_c" "double GENERATED ALWAYS AS (sqrt(((`side_a` * `side_a`) + (`side_b` * `side_b`)))) VIRTUAL"
+}
+
+Table "status_example_2" {
+  "s1" status_example_2_s1_enum [not null]
+  "s2" status_example_2_s2_enum
+  "s3" status_example_2_s3_enum [default: 'active']
+  "s4" status_example_2_s4_enum [default: 'pending']
+  "s5" status_example_2_s5_enum
+  "s6" status_example_2_s6_enum [not null]
+  "s7" status_example_2_s7_enum [default: '1']
+  "s8" status_example_2_s8_enum [default: '0']
+}
+
+Table "users" {
+  "user_id" "int unsigned" [pk, not null, increment]
+  "username" varchar(50) [unique, not null]
+  "email" varchar(100) [unique, not null]
+  "password_hash" varchar(255) [not null]
+  "first_name" varchar(50)
+  "last_name" varchar(50)
+  "date_of_birth" date
+  "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
+  "last_login" timestamp [default: `CURRENT_TIMESTAMP`]
+  "is_active" tinyint(1) [default: 1]
+}
+
+Ref "fk_test_composite":"composite_key_2".("id2_1", "id2_2") < "composite_key_1".("id1_1", "id1_2")
+
+Ref "fk_detail_items_orders":"orders"."order_id" < "order_items"."order_id" [delete: cascade]
+
+Ref "fk_detail_items_products":"products"."id" < "order_items"."product_id"
+
+Ref "fk_order_user":"users"."user_id" < "orders"."user_id" [delete: set null]
