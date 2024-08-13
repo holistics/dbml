@@ -28,11 +28,9 @@ describe('@dbml/core', () => {
       runTest(name, 'dbml-parse', 'dbml', 'parseDBMLToJSONv2');
     });
 
-    /*
     test.each(scanTestNames(__dirname, 'mysql-parse/input'))('mysql-parse/%s', (name) => {
       runTest(name, 'mysql-parse', 'mysql', 'parseMySQLToJSONv2');
     });
-    */
 
     test.each(scanTestNames(__dirname, 'postgres-parse/input'))('postgres-parse/%s', (name) => {
       runTest(name, 'postgres-parse', 'postgres', 'parsePostgresToJSONv2');

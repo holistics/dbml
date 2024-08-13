@@ -9,8 +9,8 @@ import { parse } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
 
 class Parser {
-  constructor (DBMLCompiler) {
-    this.DBMLCompiler = DBMLCompiler || new Compiler();
+  constructor (dbmlCompiler) {
+    this.DBMLCompiler = dbmlCompiler || new Compiler();
   }
 
   static parseJSONToDatabase (rawDatabase) {
@@ -34,8 +34,8 @@ class Parser {
     return postgresParser.parse(str);
   }
 
-  static parseDBMLToJSONv2 (str, DBMLCompiler) {
-    const compiler = DBMLCompiler || new Compiler();
+  static parseDBMLToJSONv2 (str, dbmlCompiler) {
+    const compiler = dbmlCompiler || new Compiler();
 
     compiler.setSource(str);
 
@@ -108,7 +108,7 @@ class Parser {
           break;
 
         case 'dbmlv2':
-          rawDatabase = Parser.parseDBMLToJSONv2(str, this.DBMLCompiler);
+          rawDatabase = Parser.parseDBMLToJSONv2(str, this.dbmlCompiler);
           break;
 
         case 'schemarb':
