@@ -1,14 +1,19 @@
-import { CompileError, CompileErrorCode } from '../../../errors';
-import { isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList } from '../utils';
-import { ElementValidator } from '../types';
-import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '../../../parser/nodes';
-import SymbolFactory from '../../../analyzer/symbol/factory';
-import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '../../../analyzer/symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../../analyzer/utils';
+/* eslint-disable class-methods-use-this */
 import _ from 'lodash';
-import { TableGroupFieldSymbol, TableGroupSymbol } from '../../../analyzer/symbol/symbols';
+import { CompileError, CompileErrorCode } from '../../../errors';
+import {
+  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList,
+} from '../utils';
+import { ElementValidator } from '../types';
+import SymbolTable from '../../symbol/symbolTable';
+import { SyntaxToken } from '../../../lexer/tokens';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+} from '../../../parser/nodes';
+import SymbolFactory from '../../symbol/factory';
+import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '../../symbol/symbolIndex';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
+import { TableGroupFieldSymbol, TableGroupSymbol } from '../../symbol/symbols';
 import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../parser/utils';
 
 export default class TableGroupValidator implements ElementValidator {
@@ -23,29 +28,52 @@ export default class TableGroupValidator implements ElementValidator {
   }
 
   validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.registerElement(), ...this.validateBody(this.declarationNode.body)];
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.registerElement(),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
   private validateContext(): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(CompileErrorCode.INVALID_TABLEGROUP_CONTEXT, 'TableGroup must appear top-level', this.declarationNode)];
+      return [new CompileError(
+        CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
+        'TableGroup must appear top-level',
+        this.declarationNode,
+      )];
     }
     return [];
   }
 
   private validateName(nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
-      return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A TableGroup must have a name', this.declarationNode)]
+      return [new CompileError(
+        CompileErrorCode.NAME_NOT_FOUND,
+        'A TableGroup must have a name',
+        this.declarationNode,
+      )];
     }
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A TableGroup name must be a single identifier', nameNode)];
-    };
+      return [new CompileError(
+        CompileErrorCode.INVALID_NAME,
+        'A TableGroup name must be a single identifier',
+        nameNode,
+      )];
+    }
     return [];
   }
 
   private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A TableGroup shouldn\'t have an alias', aliasNode)];
+      return [new CompileError(
+        CompileErrorCode.UNEXPECTED_ALIAS,
+        'A TableGroup shouldn\'t have an alias',
+        aliasNode,
+      )];
     }
 
     return [];
@@ -74,44 +102,66 @@ export default class TableGroupValidator implements ElementValidator {
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    for (const name in settingMap) {
-      const attrs = settingMap[name];
+    _.forIn(settingMap, (attrs, name) => {
       switch (name) {
         case 'headercolor':
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'headercolor\' is not supported', attr)))
+          errors.push(...attrs.map((attr) => new CompileError(
+            CompileErrorCode.INVALID_TABLE_SETTING,
+            '\'headercolor\' is not supported',
+            attr,
+          )));
           break;
         case 'note':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'note\' can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(
+              CompileErrorCode.DUPLICATE_TABLE_SETTING,
+              '\'note\' can only appear once',
+              attr,
+            )));
           }
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'note\' must be a string literal', attr.value || attr.name!));
-            }
-          });
+          attrs
+            .filter((attr) => !isExpressionAQuotedString(attr.value))
+            .forEach((attr) => {
+              errors.push(new CompileError(
+                CompileErrorCode.INVALID_TABLE_SETTING,
+                '\'note\' must be a string literal',
+                attr.value || attr.name!,
+              ));
+            });
           break;
         default:
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown \'${name}\' setting`, attr)))
+          errors.push(...attrs.map((attr) => new CompileError(
+            CompileErrorCode.INVALID_TABLE_SETTING,
+            `Unknown '${name}' setting`,
+            attr,
+          )));
+          break;
       }
-    }
+    });
     return errors;
   }
 
   validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
-    if (!body) {
-      return [];
-    }
+    if (!body) return [];
+
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A TableGroup\'s body must be a block', body)];
+      return [new CompileError(
+        CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
+        'A TableGroup\'s body must be a block',
+        body,
+      )];
     }
 
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   validateFields(fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
-      const errors: CompileError[] = []
+      const errors: CompileError[] = [];
       if (field.callee && !destructureComplexVariable(field.callee).isOk()) {
         errors.push(new CompileError(CompileErrorCode.INVALID_TABLEGROUP_FIELD, 'A TableGroup field must be of the form <table> or <schema>.<table>', field.callee));
       }
@@ -143,7 +193,7 @@ export default class TableGroupValidator implements ElementValidator {
       const tableGroupField = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const tableGroupFieldId = createTableGroupFieldSymbolIndex(tableGroupField);
 
-      const tableGroupSymbol = this.symbolFactory.create(TableGroupFieldSymbol, { declaration: field })
+      const tableGroupSymbol = this.symbolFactory.create(TableGroupFieldSymbol, { declaration: field });
       field.symbol = tableGroupSymbol;
 
       const symbolTable = this.declarationNode.symbol!.symbolTable!;
@@ -152,7 +202,7 @@ export default class TableGroupValidator implements ElementValidator {
         return [
           new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, field),
           new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, symbol!.declaration!),
-        ]
+        ];
       }
       symbolTable.set(tableGroupFieldId, tableGroupSymbol);
     }
