@@ -1,3 +1,12 @@
+## v3.7.1 (2024-08-13)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-core`
+  * [#609](https://github.com/holistics/dbml/pull/609) Fix - Clean build cache and required using node 18 or higher ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 1
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+
 ## v3.7.0 (2024-08-12)
 
 #### :rocket: New Feature
