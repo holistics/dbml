@@ -6,7 +6,11 @@
   ],
   "scripts": {
     "test": "npx lerna run test",
-    "build": "npx lerna run build"
+    "build": "yarn clean-build && npx lerna run build",
+    "clean-build": "yarn clean-dbml-cli && yarn clean-dbml-core && yarn clean-dbml-parse",
+    "clean-dbml-cli": "rm -rf ./packages/dbml-cli/lib",
+    "clean-dbml-core": "rm -rf ./packages/dbml-core/lib",
+    "clean-dbml-parse": "rm -rf ./packages/dbml-parse/dist"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
