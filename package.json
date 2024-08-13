@@ -57,5 +57,8 @@
       "PR: Internal :house_with_garden:": ":house_with_garden: Internal",
       "PR: Dependencies Update :robot:": ":robot: Dependencies Update"
     }
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
