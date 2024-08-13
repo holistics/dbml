@@ -1,4 +1,6 @@
-import { ElementDeclarationNode, ProgramNode } from '../parser/nodes';
+/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ElementDeclarationNode } from '../parser/nodes';
 import { Position } from '../types';
 import { CompileError } from '../errors';
 
