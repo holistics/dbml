@@ -6,10 +6,15 @@ title: CLI
 
 [![NPM](https://img.shields.io/npm/v/@dbml/cli)](https://www.npmjs.com/package/@dbml/cli)
 
-DBML comes with a built-in CLI which can be used to convert between different formats from
-the command line
+DBML comes with a built-in CLI that enables conversion/generation between various formats from the command line.
 
 ![img](/img/dbml-cli.gif)
+
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- **Node.js**: From `@dbml/cli@3.7.1`, you need to have Node.js version 18.0.0 or higher installed.
 
 ## Installation
 
@@ -95,3 +100,39 @@ $ sql2dbml <path-to-sql-file>
 ```
 
 Note: The `--postgres-legacy` and `--mysql-legacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
+
+## Generate DBML directly from a database
+
+```bash
+$ db2dbml postgres postgresql://dbml_user:dbml_pass@localhost:5432/schema
+
+Table "staff" {
+  "id" int4 [pk, not null]
+  "name" varchar
+  "age" int4
+  "email" varchar
+}
+...
+
+```
+
+**Output to a file:**
+
+```bash
+$ db2dbml postgres postgresql://dbml_user:dbml_pass@localhost:5432/schema -o schema.dbml
+  ✔ Generated DBML file from database's connection: schema.dbml
+```
+
+### Syntax Manual
+
+```bash
+$ db2dbml postgres|mysql|mssql
+          <connection-string>
+          [-o|--out-file <output-filepath>]
+```
+
+Connection string examples:
+
+- postgres: `postgresql://user:password@localhost:5432/dbname`
+- mysql: `mysql://user:password@localhost:3306/dbname`
+- mssql: `'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;'`
