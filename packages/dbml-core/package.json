@@ -1,6 +1,6 @@
 {
   "name": "@dbml/core",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "description": "> TODO: description",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -32,7 +32,7 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "@dbml/parse": "^3.7.0",
+    "@dbml/parse": "^3.7.1",
     "@tediousjs/connection-string": "^0.5.0",
     "antlr4": "^4.13.1",
     "lodash": "^4.17.15",
