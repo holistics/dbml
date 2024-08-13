@@ -10,6 +10,12 @@ DBML comes with a built-in CLI that enables conversion/generation between variou
 
 ![img](/img/dbml-cli.gif)
 
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- **Node.js**: From `@dbml/cli@3.7.1`, you need to have Node.js version 18.0.0 or higher installed.
+
 ## Installation
 
 ```bash
@@ -98,18 +104,14 @@ Note: The `--postgres-legacy` and `--mysql-legacy` options import PostgreSQL/MyS
 ## Generate DBML directly from a database
 
 ```bash
-$ db2dbml postgres postgresql://dbml:testtest@localhost:5432/dbml_test
+$ db2dbml postgres postgresql://dbml_user:dbml_pass@localhost:5432/schema
 
-Enum "gender_type" {
-  "Male"
-  "Female"
-  "Other"
+Table "staff" {
+  "id" int4 [pk, not null]
+  "name" varchar
+  "age" int4
+  "email" varchar
 }
-
-Table "all_default_values" {
-  "id" int4 [pk, not null, increment]
-  "boolean_col" bool [default: true]
-  "integer_col" int4 [default: 42]
 ...
 
 ```
@@ -117,7 +119,7 @@ Table "all_default_values" {
 **Output to a file:**
 
 ```bash
-$ db2dbml postgres postgresql://dbml:testtest@localhost:5432/dbml_test -o schema.dbml
+$ db2dbml postgres postgresql://dbml_user:dbml_pass@localhost:5432/schema -o schema.dbml
   ✔ Generated DBML file from database's connection: schema.dbml
 ```
 

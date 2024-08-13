@@ -4,6 +4,12 @@ title: JS Module
 
 # JS Module
 
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- **Node.js**: From `@dbml/core@3.7.1`, you need to have Node.js version 18.0.0 or higher installed.
+
 ## core
 
 [![NPM](https://img.shields.io/npm/v/@dbml/core)](https://www.npmjs.com/package/@dbml/core)
@@ -72,7 +78,7 @@ Generate DBML from your database.
 const { importer } = require('@dbml/core');
 
 // Your database connection string
-const connection = 'postgresql://dbml:testtest@localhost:5432/dbml_test';
+const connection = 'postgresql://dbml_user:dbml_pass@localhost:5432/schema';
 
 importer.generateDbml(connection, 'postgres')
   .then((dbml) => console.log(dbml))
