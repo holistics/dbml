@@ -1,0 +1,207 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "table1",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 17,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 28,
+              "line": 2,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 30,
+          "line": 3,
+          "column": 2
+        }
+      },
+      "indexes": []
+    },
+    {
+      "name": "table2",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 49,
+              "line": 6,
+              "column": 3
+            },
+            "end": {
+              "offset": 60,
+              "line": 6,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 32,
+          "line": 5,
+          "column": 1
+        },
+        "end": {
+          "offset": 62,
+          "line": 7,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [
+    {
+      "tables": [
+        {
+          "name": "table1",
+          "schemaName": ""
+        },
+        {
+          "name": "table2",
+          "schemaName": ""
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 64,
+          "line": 9,
+          "column": 1
+        },
+        "end": {
+          "offset": 325,
+          "line": 24,
+          "column": 2
+        }
+      },
+      "name": "group1",
+      "schemaName": null,
+      "note": {
+        "value": "# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n  \n",
+        "token": {
+          "start": {
+            "offset": 145,
+            "line": 14,
+            "column": 3
+          },
+          "end": {
+            "offset": 323,
+            "line": 23,
+            "column": 4
+          }
+        }
+      }
+    },
+    {
+      "tables": [],
+      "token": {
+        "start": {
+          "offset": 327,
+          "line": 26,
+          "column": 1
+        },
+        "end": {
+          "offset": 425,
+          "line": 31,
+          "column": 2
+        }
+      },
+      "name": "group2",
+      "schemaName": null,
+      "note": {
+        "value": "# Note\n* Support define element's note inside element body\n  ",
+        "token": {
+          "start": {
+            "offset": 349,
+            "line": 27,
+            "column": 3
+          },
+          "end": {
+            "offset": 423,
+            "line": 30,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "tables": [],
+      "token": {
+        "start": {
+          "offset": 427,
+          "line": 33,
+          "column": 1
+        },
+        "end": {
+          "offset": 470,
+          "line": 35,
+          "column": 2
+        }
+      },
+      "name": "group3",
+      "schemaName": null,
+      "note": {
+        "value": "simple note",
+        "token": {
+          "start": {
+            "offset": 449,
+            "line": 34,
+            "column": 3
+          },
+          "end": {
+            "offset": 468,
+            "line": 34,
+            "column": 22
+          }
+        }
+      }
+    }
+  ],
+  "aliases": [],
+  "project": {}
+}
