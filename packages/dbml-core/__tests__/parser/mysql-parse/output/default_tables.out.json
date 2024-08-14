@@ -11,15 +11,14 @@
           },
           "pk": true,
           "dbdefault": {
-            "value": 123,
+            "value": "123",
             "type": "number"
           }
         },
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "dbdefault": {
             "value": "Tea",
@@ -41,15 +40,14 @@
             "args": null
           },
           "dbdefault": {
-            "value": 123.12,
+            "value": "123.12",
             "type": "number"
           }
         },
         {
           "name": "status",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "dbdefault": {
             "value": "NULL",
@@ -59,8 +57,7 @@
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "dbdefault": {
             "value": "now()",
@@ -85,7 +82,7 @@
             "args": null
           },
           "dbdefault": {
-            "value": "current_date + interval 1 year",
+            "value": "current_date+interval1year",
             "type": "expression"
           }
         }

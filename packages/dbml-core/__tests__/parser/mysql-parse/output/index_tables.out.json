@@ -14,37 +14,32 @@
         {
           "name": "full_name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "email",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "unique": true
         },
         {
           "name": "gender",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "date_of_birth",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
@@ -68,7 +63,7 @@
           "columns": [
             {
               "value": "id",
-              "type": "string"
+              "type": "column"
             }
           ],
           "name": "index_name",
@@ -78,24 +73,26 @@
           "columns": [
             {
               "value": "full_name",
-              "type": "string"
+              "type": "column"
             }
           ],
-          "name": "User Name"
+          "name": "User Name",
+          "unique": false
         },
         {
           "columns": [
             {
               "value": "email",
-              "type": "string"
+              "type": "column"
             },
             {
               "value": "created_at",
-              "type": "string"
+              "type": "column"
             }
           ],
           "name": "index_name1",
-          "type": "HASH"
+          "type": "HASH",
+          "unique": false
         },
         {
           "columns": [
@@ -104,20 +101,22 @@
               "type": "expression"
             }
           ],
-          "name": "index_name2"
+          "name": "index_name2",
+          "unique": false
         },
         {
           "columns": [
             {
               "value": "active",
-              "type": "string"
+              "type": "column"
             },
             {
               "value": "lower(full_name)",
               "type": "expression"
             }
           ],
-          "name": "index_name3"
+          "name": "index_name3",
+          "unique": false
         },
         {
           "columns": [
@@ -130,7 +129,8 @@
               "type": "expression"
             }
           ],
-          "name": "index_name4"
+          "name": "index_name4",
+          "unique": false
         },
         {
           "columns": [
@@ -139,7 +139,8 @@
               "type": "expression"
             }
           ],
-          "name": "index_name5"
+          "name": "index_name5",
+          "unique": false
         }
       ]
     }
