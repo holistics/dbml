@@ -23,3 +23,13 @@ TableGroup group1 [note: 'note in table group settings'] {
   }
 }
 
+TableGroup group2 {
+  note: '''
+# Note
+* Support define element's note inside element body
+  '''
+}
+
+TableGroup group3 {
+  note: 'simple note'
+}

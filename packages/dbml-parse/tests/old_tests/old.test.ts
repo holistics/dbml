@@ -10,7 +10,7 @@ import Analyzer from '../../src/lib/analyzer/analyzer';
 import Interpreter from '../../src/lib/interpreter/interpreter';
 
 describe('#old_tests', () => {
-  const inputDir = path.resolve(__dirname, '../../../dbml-core/__tests__/parser/dbml-parse/input');
+  const inputDir = path.resolve(__dirname, 'input');
   const testNames = scanTestNames(inputDir);
 
   testNames.forEach((testName) => {
