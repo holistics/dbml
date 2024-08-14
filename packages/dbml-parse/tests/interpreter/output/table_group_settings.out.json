@@ -2,7 +2,7 @@
   "schemas": [],
   "tables": [
     {
-      "name": "t1",
+      "name": "table1",
       "schemaName": null,
       "alias": null,
       "fields": [
@@ -15,19 +15,21 @@
           },
           "token": {
             "start": {
-              "offset": 13,
+              "offset": 17,
               "line": 2,
               "column": 3
             },
             "end": {
-              "offset": 19,
+              "offset": 28,
               "line": 2,
-              "column": 9
+              "column": 14
             }
           },
           "inline_refs": [],
-          "pk": false,
-          "unique": false
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
         }
       ],
       "token": {
@@ -37,7 +39,7 @@
           "column": 1
         },
         "end": {
-          "offset": 21,
+          "offset": 30,
           "line": 3,
           "column": 2
         }
@@ -52,42 +54,41 @@
     {
       "tables": [
         {
-          "name": "t1",
+          "name": "table1",
           "schemaName": ""
         }
       ],
       "token": {
         "start": {
-          "offset": 23,
+          "offset": 32,
           "line": 5,
           "column": 1
         },
         "end": {
-          "offset": 76,
-          "line": 7,
+          "offset": 128,
+          "line": 11,
           "column": 2
         }
       },
       "note": {
-        "value": "note for table group",
+        "value": "note inside setting list of a table group\n",
         "token": {
           "start": {
-            "offset": 38,
-            "line": 5,
-            "column": 16
+            "offset": 54,
+            "line": 6,
+            "column": 3
           },
           "end": {
-            "offset": 66,
-            "line": 5,
-            "column": 44
+            "offset": 113,
+            "line": 8,
+            "column": 6
           }
         }
       },
-      "name": "g1",
+      "name": "group1",
       "schemaName": null
     }
   ],
   "aliases": [],
   "project": {}
 }
-

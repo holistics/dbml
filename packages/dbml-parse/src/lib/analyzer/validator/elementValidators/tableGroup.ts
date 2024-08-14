@@ -177,7 +177,7 @@ export default class TableGroupValidator implements ElementValidator {
   }
 
   private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
-    return subs.flatMap((sub) => {
+    const errors = subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {
         return [];
@@ -186,6 +186,10 @@ export default class TableGroupValidator implements ElementValidator {
       const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
       return validator.validate();
     });
+
+    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
+    if (notes.length > 1) errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
+    return errors;
   }
 
   registerField(field: FunctionApplicationNode): CompileError[] {
