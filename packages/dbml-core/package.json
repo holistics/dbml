@@ -36,10 +36,7 @@
     "@tediousjs/connection-string": "^0.5.0",
     "antlr4": "^4.13.1",
     "lodash": "^4.17.15",
-    "mssql": "^11.0.1",
-    "mysql2": "^3.11.0",
     "parsimmon": "^1.13.0",
-    "pg": "^8.12.0",
     "pluralize": "^8.0.0"
   },
   "devDependencies": {
@@ -65,6 +62,6 @@
   },
   "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556",
   "engines": {
-    "node": ">=18"
+    "node": ">=16"
   }
 }

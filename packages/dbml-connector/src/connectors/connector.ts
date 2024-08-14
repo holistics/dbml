@@ -1,8 +1,9 @@
+import { DatabaseSchema } from './types';
 import { fetchSchemaJson as fetchPostgresSchemaJson } from './postgresConnector';
 import { fetchSchemaJson as fetchMssqlSchemaJson } from './mssqlConnector';
 import { fetchSchemaJson as fetchMysqlSchemaJson } from './mysqlConnector';
 
-const fetchSchemaJson = async (connection, format) => {
+const fetchSchemaJson = async (connection: string, format: string): Promise<DatabaseSchema> => {
   switch (format) {
     case 'postgres':
       return fetchPostgresSchemaJson(connection);

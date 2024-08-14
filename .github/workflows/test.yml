@@ -46,7 +46,7 @@ jobs:
       mysql-8.0:
         image: mysql:8.0
         env:
-          MYSQL_DATABASE: mysql_connector_test
+          MYSQL_DATABASE: dbml_test
           MYSQL_ROOT_PASSWORD: root
         ports:
           - 3306:3306
@@ -65,7 +65,7 @@ jobs:
         PGPASSWORD: testtest
     - name: Import DDL to MySQL
       run: |
-        mysql -h 127.0.0.1 -u root -proot mysql_connector_test < packages/dbml-cli/__test__/db2dbml/mysql/schema.sql
+        mysql -h 127.0.0.1 -u root -proot dbml_test < packages/dbml-cli/__test__/db2dbml/mysql/schema.sql
     - name: Import DDL to MSSQL
       run: |
         sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__test__/db2dbml/mssql/schema.sql
