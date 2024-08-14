@@ -19,3 +19,6 @@ dist/
 *.swp
 packages/dbml-core/src/parse/mssql/manual_tests.js
 packages/dbml-core/benchmarks/*
+
+# tsc
+tsconfig.tsbuildinfo

@@ -1,0 +1,140 @@
+Enum "gender_type" {
+  "Male"
+  "Female"
+  "Other"
+}
+
+Table "all_default_values" {
+  "id" int4 [pk, not null, increment]
+  "boolean_col" bool [default: true]
+  "integer_col" int4 [default: 42]
+  "numeric_col" numeric(10,2) [default: 99.99]
+  "date_col" date [default: `CURRENT_DATE`]
+  "date_col_specific" date [default: '2024-01-01']
+  "timestamp_col" timestamp [default: `CURRENT_TIMESTAMP`]
+  "timestamp_col_specific" timestamp [default: '2024-01-01 12:00:00']
+  "date_plus_7_days" date [default: `(CURRENT_DATE + '7 days'::interval)`]
+  "date_minus_30_days" date [default: `(CURRENT_DATE - '30 days'::interval)`]
+  "timestamp_plus_1_hour" timestamp [default: `(CURRENT_TIMESTAMP + '01:00:00'::interval)`]
+  "timestamp_minus_15_minutes" timestamp [default: `(CURRENT_TIMESTAMP - '00:15:00'::interval)`]
+}
+
+Table "all_string_types" {
+  "text_col" text [default: 'default_text']
+  "varchar_col" varchar(100) [default: 'default_varchar']
+  "char_col" bpchar(10) [default: 'default_char']
+  "character_varying_col" varchar(50) [default: 'default_character_varying']
+  "character_col" bpchar(5) [default: 'default_character']
+  "name_col" name [default: 'default_name']
+  "bpchar_col" bpchar(15) [default: 'default_bpchar']
+  "text_array_col" "text[]" [default: `ARRAY['default_text1',  'default_text2']`]
+  "json_col" json [default: `{"default_key": "default_value"}`]
+  "jsonb_col" jsonb [default: `{"default_key": "default_value"}`]
+}
+
+Table "authors" {
+  "authorid" int4 [not null, increment]
+  "nationalityid" int4 [not null]
+  "authorname" varchar(100)
+  "birthyear" int4
+
+  Indexes {
+    (authorid, nationalityid) [type: btree, name: "authors_pkey"]
+  }
+}
+
+Table "books" {
+  "bookid" int4 [pk, not null, increment]
+  "authorid" int4
+  "nationalityid" int4
+  "isbn" varchar(20) [unique]
+  "title" varchar(200)
+}
+
+Table "order_items" {
+  "order_item_id" int4 [pk, not null, increment]
+  "order_id" int4 [not null]
+  "product_id" int4 [not null]
+  "quantity" int4 [not null]
+  "unit_price" numeric(10,2) [not null]
+
+  Indexes {
+    (order_id, product_id) [type: btree, name: "uq_order_product"]
+    (order_id, product_id) [type: btree, name: "idx_order_items_order_product"]
+  }
+}
+
+Table "orders" {
+  "order_id" int4 [pk, not null, increment]
+  "user_id" int4 [not null]
+  "order_date" timestamptz [default: `CURRENT_TIMESTAMP`]
+  "total_amount" numeric(12,2) [not null]
+  "status" varchar(20) [default: 'pending']
+  "shipping_address" text [not null]
+  "billing_address" text [not null]
+
+  Indexes {
+    (user_id, order_date) [type: btree, name: "idx_orders_user_date"]
+  }
+}
+
+Table "products" {
+  "product_id" int4 [pk, not null, increment]
+  "name" varchar(100) [not null]
+  "description" text
+  "price" numeric(10,2) [not null]
+  "stock_quantity" int4 [not null, default: 0]
+  "category" varchar(50)
+  "created_at" timestamptz [default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamptz [default: `CURRENT_TIMESTAMP`]
+  "is_available" bool [default: true]
+
+  Indexes {
+    category [type: btree, name: "idx_products_category"]
+  }
+}
+
+Table "table_with_comments" {
+  "id" int4 [pk, not null, increment, note: 'Unique identifier for each item.']
+  "name" varchar(100) [note: 'Name of the item.']
+  "description" text [note: 'Detailed description of the item.']
+  "created_at" timestamptz [default: `CURRENT_TIMESTAMP`, note: 'Timestamp when the item was created.']
+  Note: 'This table stores information about various items.'
+}
+
+Table "user_define_data_types" {
+  "id" int4 [pk, not null, increment]
+  "name" varchar(50)
+  "gender" gender_type
+  "age" int4range
+  "height" float8
+  "weight" float8
+}
+
+Table "users" {
+  "user_id" int4 [pk, not null, increment]
+  "username" varchar(50) [unique, not null]
+  "email" varchar(100) [unique, not null]
+  "password_hash" varchar(255) [not null]
+  "first_name" varchar(50)
+  "last_name" varchar(50)
+  "full_name" varchar(100)
+  "date_of_birth" date
+  "created_at" timestamptz [default: `CURRENT_TIMESTAMP`]
+  "last_login" timestamptz
+  "is_active" bool [default: true]
+
+  Indexes {
+    full_name [type: btree, name: "User Name"]
+    email [type: btree, name: "idx_users_email"]
+    (is_active, `lower((full_name)::text)`) [type: btree, name: "users_is_active_lower_idx"]
+  }
+}
+
+Ref "fk_authornationality":"authors".("authorid", "nationalityid") < "books".("authorid", "nationalityid") [delete: cascade]
+
+Ref "fk_order":"orders"."order_id" < "order_items"."order_id" [delete: cascade]
+
+Ref "fk_product":"products"."product_id" < "order_items"."product_id" [delete: cascade]
+
+Ref "fk_user":"users"."user_id" < "orders"."user_id" [delete: cascade]

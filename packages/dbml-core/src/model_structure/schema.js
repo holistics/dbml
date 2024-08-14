@@ -159,14 +159,11 @@ class Schema extends Element {
   }
 
   normalize (model) {
-    model.schemas = {
-      ...model.schemas,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.schemas[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
 
     this.tables.forEach((table) => table.normalize(model));
