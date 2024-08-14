@@ -21,7 +21,7 @@ export default async function connectionHandler (program) {
       const res = importer.generateDbml(schemaJson);
       OutputConsolePlugin.write(res);
     } else if (opts.outFile) {
-      const res = await importer.generateDbml(schemaJson);
+      const res = importer.generateDbml(schemaJson);
       (new OutputFilePlugin(resolvePaths(opts.outFile))).write(res);
 
       // bearer:disable javascript_lang_logger
