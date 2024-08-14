@@ -1,7 +1,7 @@
 {
   "args": [
     "mysql",
-    "mysql://root:root@localhost:3306/mysql_connector_test",
+    "mysql://root:root@localhost:3306/dbml_test",
     "-o",
     "./out-files/schema.dbml"
   ]

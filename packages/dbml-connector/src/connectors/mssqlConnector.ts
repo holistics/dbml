@@ -114,8 +114,6 @@ const generateField = (row: Record<string, any>): Field => {
     column_comment,
   } = row;
 
-  console.log(typeof character_maximum_length);
-
   const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(data_type, column_default, default_type) : null;
 
   const fieldType = {

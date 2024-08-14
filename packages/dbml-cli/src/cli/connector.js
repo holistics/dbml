@@ -15,10 +15,10 @@ export default async function connectionHandler (program) {
   try {
     const { connection, format } = getConnectionOpt(program.args);
     const opts = program.opts();
-    const schemaJson = await connector.fetchSchemaJson(connection, format);
+    const schemaJson = connector.fetchSchemaJson(connection, format);
 
     if (!opts.outFile && !opts.outDir) {
-      const res = await importer.generateDbml(schemaJson);
+      const res = importer.generateDbml(schemaJson);
       OutputConsolePlugin.write(res);
     } else if (opts.outFile) {
       const res = await importer.generateDbml(schemaJson);
