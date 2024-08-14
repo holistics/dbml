@@ -1,0 +1,19 @@
+Table table1 {
+  id int [pk]
+}
+
+TableGroup group1 {
+  note: 'inline note'
+  table1
+  note: '''
+# Note
+
+## Objective
+  * Support define element's note inside element body
+  * Make writing long note easier with the new syntax
+'''
+
+  note {
+    'simple note'
+  }
+}
