@@ -25,8 +25,8 @@ export class TableGroupInterpreter implements ElementInterpreter {
     this.env.tableGroups.set(this.declarationNode, this.tableGroup as TableGroup);
 
     errors.push(
-      ...this.interpretSettingList(this.declarationNode.attributeList),
       ...this.interpretName(this.declarationNode.name!),
+      ...this.interpretSettingList(this.declarationNode.attributeList),
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     );
 
