@@ -34,13 +34,14 @@ const getValidatedClient = async (connection: string): Promise<sql.ConnectionPoo
     // If successful, return the pool
     return pool;
   } catch (err) {
-    // Log the error and handle it as per your application's requirement
-    console.error('SQL connection error:', err);
-
     // Ensure to close any open pool in case of failure
     if (pool.connected) {
       await pool.close();
     }
+    if (err instanceof Error) {
+      throw new Error(`SQL connection error: ${err.message}`);
+    }
+
     throw err; // Rethrow error if you want the calling code to handle it
   }
 };

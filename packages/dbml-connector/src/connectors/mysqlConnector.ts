@@ -12,8 +12,11 @@ async function connectMySQL (connection: string): Promise<Connection> {
 
     return client;
   } catch (error) {
-    console.error('MySQL connection error:', error);
     await client.end();
+    if (error instanceof Error) {
+      throw new Error(`MySQL connection error: ${error.message}`);
+    }
+
     throw error;
   }
 }

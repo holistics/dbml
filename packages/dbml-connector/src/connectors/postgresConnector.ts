@@ -26,11 +26,13 @@ const getValidatedClient = async (connection: string): Promise<Client> => {
     // If successful, return the client
     return client;
   } catch (err) {
-    // Log the error and handle it as per your application's requirement
-    console.error('PostgreSQL connection error:', err);
-
     // Ensure to close the client in case of failure
     await client.end();
+
+    if (err instanceof Error) {
+      throw new Error(`PostgreSQL connection error: ${err}`);
+    }
+
     throw err; // Rethrow error if you want the calling code to handle it
   }
 };
