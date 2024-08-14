@@ -39,13 +39,10 @@ class EnumValue extends Element {
   }
 
   normalize (model) {
-    model.enumValues = {
-      ...model.enumValues,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportParentIds(),
-      },
+    model.enumValues[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportParentIds(),
     };
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@dbml/core",
-  "version": "3.6.1",
+  "version": "3.7.1",
   "description": "> TODO: description",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -32,10 +32,14 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "@dbml/parse": "^3.6.1",
+    "@dbml/parse": "^3.7.1",
+    "@tediousjs/connection-string": "^0.5.0",
     "antlr4": "^4.13.1",
     "lodash": "^4.17.15",
+    "mssql": "^11.0.1",
+    "mysql2": "^3.11.0",
     "parsimmon": "^1.13.0",
+    "pg": "^8.12.0",
     "pluralize": "^8.0.0"
   },
   "devDependencies": {
@@ -59,5 +63,8 @@
       "\\.(?!json$)[^.]*$": "@glen/jest-raw-loader"
     }
   },
-  "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556"
+  "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556",
+  "engines": {
+    "node": ">=18"
+  }
 }

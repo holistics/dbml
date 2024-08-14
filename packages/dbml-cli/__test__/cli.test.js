@@ -33,7 +33,9 @@ describe('@dbml/cli', () => {
     if (isOutFile) {
       const fileNames = fs.readdirSync(path.join(dirName, './out-files'));
       let content = fs.readFileSync(path.join(dirName, './out-files', fileNames[0]), 'utf-8');
-      content = content.replace(/--.*(?:\n)*/g, '');
+      if (binFile === '../bin/dbml2sql.js') content = content.replace(/--.*(?:\n)*/g, '');
+
+      content = content.replaceAll('\r\n', '\n');
       const expectContent = fs.readFileSync(path.join(dirName, './expect-out-files', fileNames[0]), 'utf-8');
       expect(content).toBe(expectContent);
     }
@@ -46,6 +48,10 @@ describe('@dbml/cli', () => {
 
   test.each(scanDirNames(__dirname, 'sql2dbml'))('sql2dbml/%s', async (dirName) => {
     await runTest(path.join(__dirname, 'sql2dbml', dirName), '../bin/sql2dbml.js');
+  }, 10000);
+
+  test.each(scanDirNames(__dirname, 'db2dbml'))('db2dbml/%s', async (dirName) => {
+    await runTest(path.join(__dirname, 'db2dbml', dirName), '../bin/db2dbml.js');
   }, 10000);
   /* eslint-enable */
 });
