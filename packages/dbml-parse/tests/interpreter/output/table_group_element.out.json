@@ -136,6 +136,70 @@
       },
       "name": "group1",
       "schemaName": null
+    },
+    {
+      "tables": [],
+      "token": {
+        "start": {
+          "offset": 327,
+          "line": 26,
+          "column": 1
+        },
+        "end": {
+          "offset": 425,
+          "line": 31,
+          "column": 2
+        }
+      },
+      "note": {
+        "value": "# Note\n* Support define element's note inside element body\n  ",
+        "token": {
+          "start": {
+            "offset": 349,
+            "line": 27,
+            "column": 3
+          },
+          "end": {
+            "offset": 423,
+            "line": 30,
+            "column": 6
+          }
+        }
+      },
+      "name": "group2",
+      "schemaName": null
+    },
+    {
+      "tables": [],
+      "token": {
+        "start": {
+          "offset": 427,
+          "line": 33,
+          "column": 1
+        },
+        "end": {
+          "offset": 470,
+          "line": 35,
+          "column": 2
+        }
+      },
+      "note": {
+        "value": "simple note",
+        "token": {
+          "start": {
+            "offset": 449,
+            "line": 34,
+            "column": 3
+          },
+          "end": {
+            "offset": 468,
+            "line": 34,
+            "column": 22
+          }
+        }
+      },
+      "name": "group3",
+      "schemaName": null
     }
   ],
   "aliases": [],
