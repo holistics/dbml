@@ -1,5 +1,19 @@
 /* eslint-disable camelcase */
 import sql from 'mssql';
+import {
+  Field,
+  DefaultType,
+  FieldsDictionary,
+  Enum,
+  Ref,
+  RefEndpoint,
+  Table,
+  IndexesDictionary,
+  EnumValue,
+  TableConstraintsDictionary,
+  DatabaseSchema,
+  DefaultInfo,
+} from './types';
 
 const MSSQL_DATE_TYPES = [
   'date',
@@ -10,30 +24,31 @@ const MSSQL_DATE_TYPES = [
   'time',
 ];
 
-const getValidatedClient = async (connection) => {
+const getValidatedClient = async (connection: string): Promise<sql.ConnectionPool> => {
+  const pool = await sql.connect(connection);
   try {
     // Establish a connection pool
-    const pool = await sql.connect(connection);
     // Validate if the connection is successful by making a simple query
     await pool.request().query('SELECT 1');
 
     // If successful, return the pool
     return pool;
   } catch (err) {
-    // Log the error and handle it as per your application's requirement
-    console.error('SQL connection error:', err);
-
     // Ensure to close any open pool in case of failure
-    if (sql.connected) {
-      await sql.close();
+    if (pool.connected) {
+      await pool.close();
     }
+    if (err instanceof Error) {
+      throw new Error(`SQL connection error: ${err.message}`);
+    }
+
     throw err; // Rethrow error if you want the calling code to handle it
   }
 };
 
-const convertQueryBoolean = (val) => val === 'YES';
+const convertQueryBoolean = (val: string | null): boolean => val === 'YES';
 
-const getFieldType = (data_type, default_type, character_maximum_length, numeric_precision, numeric_scale) => {
+const getFieldType = (data_type: string, default_type: DefaultType, character_maximum_length: number, numeric_precision: number, numeric_scale: number): string => {
   if (MSSQL_DATE_TYPES.includes(data_type)) {
     return data_type;
   }
@@ -49,7 +64,7 @@ const getFieldType = (data_type, default_type, character_maximum_length, numeric
   return data_type;
 };
 
-const getDbdefault = (data_type, column_default, default_type) => {
+const getDbdefault = (data_type: string, column_default: string, default_type: DefaultType): DefaultInfo => {
   // The regex below is used to extract the value from the default value
   // \( and \) are used to escape parentheses
   // [^()]+ is used to match any character except parentheses
@@ -62,7 +77,7 @@ const getDbdefault = (data_type, column_default, default_type) => {
   };
 };
 
-const getEnumValues = (definition) => {
+const getEnumValues = (definition: string): EnumValue[] | null => {
   // Use the example below to understand the regex:
   // ([quantity]>(0))
   // ([unit_price]>(0))
@@ -86,7 +101,7 @@ const getEnumValues = (definition) => {
   return enumValues;
 };
 
-const generateField = (row) => {
+const generateField = (row: Record<string, any>): Field => {
   const {
     column_name,
     data_type,
@@ -104,7 +119,7 @@ const generateField = (row) => {
 
   const fieldType = {
     type_name: getFieldType(data_type, default_type, character_maximum_length, numeric_precision, numeric_scale),
-    schemaname: null,
+    schemaName: null,
   };
 
   return {
@@ -117,9 +132,13 @@ const generateField = (row) => {
   };
 };
 
-const generateTablesFieldsAndEnums = async (client) => {
-  const fields = {};
-  const enums = [];
+const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool): Promise<{
+  tables: Table[],
+  fields: FieldsDictionary,
+  enums: Enum[],
+}> => {
+  const fields: FieldsDictionary = {};
+  const enums: Enum[] = [];
   const tablesAndFieldsSql = `
     WITH tables_and_fields AS (
         SELECT
@@ -240,8 +259,8 @@ const generateTablesFieldsAndEnums = async (client) => {
   };
 };
 
-const generateRefs = async (client) => {
-  const refs = [];
+const generateRefs = async (client: sql.ConnectionPool): Promise<Ref[]> => {
+  const refs: Ref[] = [];
 
   const refsListSql = `
     SELECT
@@ -290,14 +309,14 @@ const generateRefs = async (client) => {
       on_update,
     } = refRow;
 
-    const ep1 = {
+    const ep1: RefEndpoint = {
       tableName: table_name,
       schemaName: table_schema,
       fieldNames: column_names.split(','),
       relation: '*',
     };
 
-    const ep2 = {
+    const ep2: RefEndpoint = {
       tableName: foreign_table_name,
       schemaName: foreign_table_schema,
       fieldNames: foreign_column_names.split(','),
@@ -315,7 +334,7 @@ const generateRefs = async (client) => {
   return refs;
 };
 
-const generateIndexes = async (client) => {
+const generateIndexes = async (client: sql.ConnectionPool) => {
   const indexListSql = `
     WITH user_tables AS (
       SELECT
@@ -400,7 +419,7 @@ const generateIndexes = async (client) => {
     return acc;
   }, { outOfLineConstraints: [], inlineConstraints: [] });
 
-  const indexes = outOfLineConstraints.reduce((acc, indexRow) => {
+  const indexes = outOfLineConstraints.reduce((acc: IndexesDictionary, indexRow: Record<string, any>) => {
     const {
       table_schema,
       table_name,
@@ -409,14 +428,14 @@ const generateIndexes = async (client) => {
       columns,
       expressions,
     } = indexRow;
-    const indexColumns = columns.split(',').map((column) => {
+    const indexColumns = columns.split(',').map((column: string) => {
       return {
         type: 'column',
         value: column.trim(),
       };
     });
 
-    const indexExpressions = expressions ? expressions.split(',').map((expression) => {
+    const indexExpressions = expressions ? expressions.split(',').map((expression: string) => {
       return {
         type: 'expression',
         value: expression,
@@ -442,7 +461,7 @@ const generateIndexes = async (client) => {
     return acc;
   }, {});
 
-  const tableConstraints = inlineConstraints.reduce((acc, row) => {
+  const tableConstraints = inlineConstraints.reduce((acc: TableConstraintsDictionary, row: Record<string, any>) => {
     const {
       table_schema,
       table_name,
@@ -452,8 +471,8 @@ const generateIndexes = async (client) => {
     const key = `${table_schema}.${table_name}`;
     if (!acc[key]) acc[key] = {};
 
-    const columnNames = columns.split(',').map((column) => column.trim());
-    columnNames.forEach((columnName) => {
+    const columnNames = columns.split(',').map((column: string) => column.trim());
+    columnNames.forEach((columnName: string) => {
       if (!acc[key][columnName]) acc[key][columnName] = {};
       if (constraint_type === 'PRIMARY KEY') {
         acc[key][columnName].pk = true;
@@ -471,7 +490,7 @@ const generateIndexes = async (client) => {
   };
 };
 
-const fetchSchemaJson = async (connection) => {
+const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   const client = await getValidatedClient(connection);
 
   const tablesFieldsAndEnumsRes = generateTablesFieldsAndEnums(client);

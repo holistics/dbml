@@ -1,5 +1,4 @@
 import { generateDatabase } from '../parse/databaseGenerator';
-import { fetchSchemaJson } from '../connectors/connector';
 import Parser from '../parse/Parser';
 import ModelExporter from '../export/ModelExporter';
 
@@ -10,8 +9,7 @@ function _import (str, format) {
   return dbml;
 }
 
-async function generateDbml (connection, format) {
-  const schemaJson = await fetchSchemaJson(connection, format);
+function generateDbml (schemaJson) {
   const database = generateDatabase(schemaJson);
   const dbml = ModelExporter.export(database.normalize(), 'dbml');
 
