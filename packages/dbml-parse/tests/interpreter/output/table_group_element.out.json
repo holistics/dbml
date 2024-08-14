@@ -119,6 +119,8 @@
           "column": 2
         }
       },
+      "name": "group1",
+      "schemaName": null,
       "note": {
         "value": "# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n  \n",
         "token": {
@@ -133,9 +135,7 @@
             "column": 4
           }
         }
-      },
-      "name": "group1",
-      "schemaName": null
+      }
     },
     {
       "tables": [],
@@ -151,6 +151,8 @@
           "column": 2
         }
       },
+      "name": "group2",
+      "schemaName": null,
       "note": {
         "value": "# Note\n* Support define element's note inside element body\n  ",
         "token": {
@@ -165,9 +167,7 @@
             "column": 6
           }
         }
-      },
-      "name": "group2",
-      "schemaName": null
+      }
     },
     {
       "tables": [],
@@ -183,6 +183,8 @@
           "column": 2
         }
       },
+      "name": "group3",
+      "schemaName": null,
       "note": {
         "value": "simple note",
         "token": {
@@ -197,9 +199,7 @@
             "column": 22
           }
         }
-      },
-      "name": "group3",
-      "schemaName": null
+      }
     }
   ],
   "aliases": [],
