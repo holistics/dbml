@@ -1,3 +1,28 @@
+## v3.7.2 (2024-08-14)
+
+#### :memo: Documentation
+* [#605](https://github.com/holistics/dbml/pull/605) Docs - Add document for database connector ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`
+  * [#611](https://github.com/holistics/dbml/pull/611) Add @dbml/connector ([@huyphung1602](https://github.com/huyphung1602))
+* `dbml-core`, `dbml-parse`
+  * [#601](https://github.com/holistics/dbml/pull/601) Support notes for table group ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Tho Nguyen ([@thonx-holistics](https://github.com/thonx-holistics))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v3.7.1 (2024-08-13)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-core`
+  * [#609](https://github.com/holistics/dbml/pull/609) Fix - Clean build cache and required using node 18 or higher ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 1
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+
 ## v3.7.0 (2024-08-12)
 
 #### :rocket: New Feature

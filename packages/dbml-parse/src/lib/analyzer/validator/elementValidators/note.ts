@@ -1,15 +1,18 @@
+/* eslint-disable class-methods-use-this */
+import _ from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode } from '../../../parser/nodes';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
+} from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
 import { isExpressionAQuotedString } from '../../../parser/utils';
-import _ from 'lodash';
 import { pickValidator } from '../utils';
-import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { ElementKind } from '../../../analyzer/types';
-import { destructureComplexVariable, getElementKind } from '../../../analyzer/utils';
-import { createStickyNoteSymbolIndex } from '../../../analyzer/symbol/symbolIndex';
+import SymbolTable from '../../symbol/symbolTable';
+import { ElementKind } from '../../types';
+import { destructureComplexVariable, getElementKind } from '../../utils';
+import { createStickyNoteSymbolIndex } from '../../symbol/symbolIndex';
 
 export default class NoteValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -23,15 +26,32 @@ export default class NoteValidator implements ElementValidator {
   }
 
   validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
   private validateContext(): CompileError[] {
     if (
       !(this.declarationNode.parent instanceof ProgramNode)
-      && !([ElementKind.Table, ElementKind.Project] as (ElementKind | undefined)[]).includes(getElementKind(this.declarationNode.parent).unwrap_or(undefined))
+      && !(
+        [
+          ElementKind.Table,
+          ElementKind.TableGroup,
+          ElementKind.Project,
+        ] as (ElementKind | undefined)[]
+      )
+        .includes(getElementKind(this.declarationNode.parent).unwrap_or(undefined))
     ) {
-      return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'A Note can only appear inside a Table or a Project. Sticky note can only appear at the global scope.', this.declarationNode)];
+      return [new CompileError(
+        CompileErrorCode.INVALID_NOTE_CONTEXT,
+        'A Note can only appear inside a Table, a Table Group or a Project. Sticky note can only appear at the global scope.',
+        this.declarationNode,
+      )];
     }
 
     return [];
@@ -50,7 +70,7 @@ export default class NoteValidator implements ElementValidator {
     }
 
     const nameFragments = destructureComplexVariable(nameNode);
-    if (!nameFragments.isOk()) return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', this.declarationNode)]
+    if (!nameFragments.isOk()) return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', this.declarationNode)];
 
     const names = nameFragments.unwrap();
 
@@ -92,7 +112,7 @@ export default class NoteValidator implements ElementValidator {
     }
 
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
   validateFields(fields: FunctionApplicationNode[]): CompileError[] {
