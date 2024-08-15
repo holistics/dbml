@@ -1,0 +1,12 @@
+Table t1 {
+    id integer
+}
+
+TableGroup g1 [
+    note: 'This is a note',
+    note: 'This is another note',
+    headercolor: #ccc,
+    what: 'ye ye'
+] {
+    t1
+}

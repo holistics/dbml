@@ -1,0 +1,1411 @@
+{
+  "tables": [
+    {
+      "name": "all_default_values",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "all_string_types",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "authors",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "books",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "order_items",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "orders",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "products",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "table_with_comments",
+      "schemaName": "public",
+      "note": {
+        "value": "This table stores information about various items."
+      }
+    },
+    {
+      "name": "user_define_data_types",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "users",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    }
+  ],
+  "fields": {
+    "public.all_default_values": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "boolean_col",
+        "type": {
+          "type_name": "bool",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "boolean",
+          "value": "true"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "integer_col",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "42"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "numeric_col",
+        "type": {
+          "type_name": "numeric(10,2)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "99.99"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "date_col",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "CURRENT_DATE"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "date_col_specific",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "2024-01-01"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "timestamp_col",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "CURRENT_TIMESTAMP"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "timestamp_col_specific",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "2024-01-01 12:00:00"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "date_plus_7_days",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "(CURRENT_DATE + '7 days'::interval)"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "date_minus_30_days",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "(CURRENT_DATE - '30 days'::interval)"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "timestamp_plus_1_hour",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "(CURRENT_TIMESTAMP + '01:00:00'::interval)"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "timestamp_minus_15_minutes",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "(CURRENT_TIMESTAMP - '00:15:00'::interval)"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "public.all_string_types": [
+      {
+        "name": "text_col",
+        "type": {
+          "type_name": "text",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "default_text"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "varchar_col",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "default_varchar"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "char_col",
+        "type": {
+          "type_name": "bpchar(10)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "default_char"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "character_varying_col",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "default_character_varying"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "character_col",
+        "type": {
+          "type_name": "bpchar(5)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "default_character"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "name_col",
+        "type": {
+          "type_name": "name",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "default_name"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "bpchar_col",
+        "type": {
+          "type_name": "bpchar(15)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "default_bpchar"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "text_array_col",
+        "type": {
+          "type_name": "text[]",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "ARRAY['default_text1',  'default_text2']"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "json_col",
+        "type": {
+          "type_name": "json",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "{\"default_key\": \"default_value\"}"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "jsonb_col",
+        "type": {
+          "type_name": "jsonb",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "{\"default_key\": \"default_value\"}"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "public.authors": [
+      {
+        "name": "authorid",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "nationalityid",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "authorname",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "birthyear",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "public.books": [
+      {
+        "name": "bookid",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "authorid",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "nationalityid",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "isbn",
+        "type": {
+          "type_name": "varchar(20)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "title",
+        "type": {
+          "type_name": "varchar(200)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "public.order_items": [
+      {
+        "name": "order_item_id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "order_id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "product_id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "quantity",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "unit_price",
+        "type": {
+          "type_name": "numeric(10,2)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "public.orders": [
+      {
+        "name": "order_id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "user_id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "order_date",
+        "type": {
+          "type_name": "timestamptz",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "CURRENT_TIMESTAMP"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "total_amount",
+        "type": {
+          "type_name": "numeric(12,2)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "status",
+        "type": {
+          "type_name": "varchar(20)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "pending"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "shipping_address",
+        "type": {
+          "type_name": "text",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "billing_address",
+        "type": {
+          "type_name": "text",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "public.products": [
+      {
+        "name": "product_id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "name",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "description",
+        "type": {
+          "type_name": "text",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "price",
+        "type": {
+          "type_name": "numeric(10,2)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "stock_quantity",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "0"
+        },
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "category",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "created_at",
+        "type": {
+          "type_name": "timestamptz",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "CURRENT_TIMESTAMP"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "updated_at",
+        "type": {
+          "type_name": "timestamptz",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "CURRENT_TIMESTAMP"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "is_available",
+        "type": {
+          "type_name": "bool",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "boolean",
+          "value": "true"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "public.table_with_comments": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": "Unique identifier for each item."
+        }
+      },
+      {
+        "name": "name",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": "Name of the item."
+        }
+      },
+      {
+        "name": "description",
+        "type": {
+          "type_name": "text",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": "Detailed description of the item."
+        }
+      },
+      {
+        "name": "created_at",
+        "type": {
+          "type_name": "timestamptz",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "CURRENT_TIMESTAMP"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": "Timestamp when the item was created."
+        }
+      }
+    ],
+    "public.user_define_data_types": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "name",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "gender",
+        "type": {
+          "type_name": "gender_type",
+          "schemaName": "public"
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "age",
+        "type": {
+          "type_name": "int4range",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "height",
+        "type": {
+          "type_name": "float8",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "weight",
+        "type": {
+          "type_name": "float8",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "public.users": [
+      {
+        "name": "user_id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "username",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "email",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "password_hash",
+        "type": {
+          "type_name": "varchar(255)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "first_name",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "last_name",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "full_name",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "date_of_birth",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "created_at",
+        "type": {
+          "type_name": "timestamptz",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "CURRENT_TIMESTAMP"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "last_login",
+        "type": {
+          "type_name": "timestamptz",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "is_active",
+        "type": {
+          "type_name": "bool",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "boolean",
+          "value": "true"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ]
+  },
+  "refs": [
+    {
+      "name": "fk_authornationality",
+      "endpoints": [
+        {
+          "tableName": "books",
+          "schemaName": "public",
+          "fieldNames": [
+            "authorid",
+            "nationalityid"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "authors",
+          "schemaName": "public",
+          "fieldNames": [
+            "authorid",
+            "nationalityid"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": null
+    },
+    {
+      "name": "fk_order",
+      "endpoints": [
+        {
+          "tableName": "order_items",
+          "schemaName": "public",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "orders",
+          "schemaName": "public",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": null
+    },
+    {
+      "name": "fk_product",
+      "endpoints": [
+        {
+          "tableName": "order_items",
+          "schemaName": "public",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "products",
+          "schemaName": "public",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": null
+    },
+    {
+      "name": "fk_user",
+      "endpoints": [
+        {
+          "tableName": "orders",
+          "schemaName": "public",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "users",
+          "schemaName": "public",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": null
+    }
+  ],
+  "enums": [
+    {
+      "name": "gender_type",
+      "schemaName": "public",
+      "values": [
+        {
+          "name": "Male"
+        },
+        {
+          "name": "Female"
+        },
+        {
+          "name": "Other"
+        }
+      ]
+    }
+  ],
+  "indexes": {
+    "public.authors": [
+      {
+        "name": "authors_pkey",
+        "type": "btree",
+        "columns": [
+          {
+            "type": "column",
+            "value": "authorid"
+          },
+          {
+            "type": "column",
+            "value": "nationalityid"
+          }
+        ]
+      }
+    ],
+    "public.order_items": [
+      {
+        "name": "uq_order_product",
+        "type": "btree",
+        "columns": [
+          {
+            "type": "column",
+            "value": "order_id"
+          },
+          {
+            "type": "column",
+            "value": "product_id"
+          }
+        ]
+      },
+      {
+        "name": "idx_order_items_order_product",
+        "type": "btree",
+        "columns": [
+          {
+            "type": "column",
+            "value": "order_id"
+          },
+          {
+            "type": "column",
+            "value": "product_id"
+          }
+        ]
+      }
+    ],
+    "public.orders": [
+      {
+        "name": "idx_orders_user_date",
+        "type": "btree",
+        "columns": [
+          {
+            "type": "column",
+            "value": "user_id"
+          },
+          {
+            "type": "column",
+            "value": "order_date"
+          }
+        ]
+      }
+    ],
+    "public.products": [
+      {
+        "name": "idx_products_category",
+        "type": "btree",
+        "columns": [
+          {
+            "type": "column",
+            "value": "category"
+          }
+        ]
+      }
+    ],
+    "public.users": [
+      {
+        "name": "User Name",
+        "type": "btree",
+        "columns": [
+          {
+            "type": "column",
+            "value": "full_name"
+          }
+        ]
+      },
+      {
+        "name": "idx_users_email",
+        "type": "btree",
+        "columns": [
+          {
+            "type": "column",
+            "value": "email"
+          }
+        ]
+      },
+      {
+        "name": "users_is_active_lower_idx",
+        "type": "btree",
+        "columns": [
+          {
+            "type": "column",
+            "value": "is_active"
+          },
+          {
+            "type": "expression",
+            "value": "lower((full_name)::text)"
+          }
+        ]
+      }
+    ]
+  },
+  "tableConstraints": {
+    "public.all_default_values": {
+      "id": {
+        "pk": true
+      }
+    },
+    "public.books": {
+      "bookid": {
+        "pk": true
+      },
+      "isbn": {
+        "unique": true
+      }
+    },
+    "public.order_items": {
+      "order_item_id": {
+        "pk": true
+      }
+    },
+    "public.orders": {
+      "order_id": {
+        "pk": true
+      }
+    },
+    "public.products": {
+      "product_id": {
+        "pk": true
+      }
+    },
+    "public.table_with_comments": {
+      "id": {
+        "pk": true
+      }
+    },
+    "public.user_define_data_types": {
+      "id": {
+        "pk": true
+      }
+    },
+    "public.users": {
+      "user_id": {
+        "pk": true
+      },
+      "email": {
+        "unique": true
+      },
+      "username": {
+        "unique": true
+      }
+    }
+  }
+}

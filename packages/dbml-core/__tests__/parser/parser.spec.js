@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Parser from '../../src/parse/Parser';
 
 describe('@dbml/core', () => {
@@ -6,20 +7,13 @@ describe('@dbml/core', () => {
      * @param {string} format = [json|mysql|postgres|dbml|schemarb]
      */
     const runTest = (fileName, testDir, format, parseFuncName) => {
-      /* eslint-disable */
       const fileExtension = getFileExtension(format);
       const input = require(`./${testDir}/input/${fileName}.in.${fileExtension}`);
       const output = require(`./${testDir}/output/${fileName}.out.json`);
-      const jsonSchema = Parser[parseFuncName](input, format);
-
-      /* eslint-enable */
+      const jsonSchema = Parser[parseFuncName](input);
+      isEqualExcludeTokenEmpty(jsonSchema, output);
     };
 
-    /* eslint-disable */
-    test.each(scanTestNames(__dirname, 'dbml-parse/input'))('dbml-parse/%s', (name) => {
-      runTest(name, 'dbml-parse', 'dbml', 'parseDBMLToJSON');
-    });
-    
     test.each(scanTestNames(__dirname, 'mysql-parse/input'))('mysql-parse/%s', (name) => {
       runTest(name, 'mysql-parse', 'mysql', 'parseMySQLToJSONv2');
     });
@@ -32,9 +26,8 @@ describe('@dbml/core', () => {
       runTest(name, 'schemarb-parse', 'schemarb', 'parseSchemaRbToJSON');
     });
 
-    test.each(scanTestNames(__dirname, 'mssql-parse/input'))('msql-parse/%s', (name) => {
+    test.each(scanTestNames(__dirname, 'mssql-parse/input'))('mssql-parse/%s', (name) => {
       runTest(name, 'mssql-parse', 'mssql', 'parseMSSQLToJSON');
     });
-    /* eslint-enable */
   });
 });

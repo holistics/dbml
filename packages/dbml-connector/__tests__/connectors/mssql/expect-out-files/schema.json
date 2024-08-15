@@ -1,0 +1,1714 @@
+{
+  "tables": [
+    {
+      "name": "Authors",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "Books",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "DatetimeTypes",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "gender_reference",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "NumberTypes",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "ObjectTypes",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "order_items",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "orders",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "products",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "StringTypes",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "table_with_comments",
+      "schemaName": "dbo",
+      "note": {
+        "value": "This table stores information about various items."
+      }
+    },
+    {
+      "name": "user_define_data_types",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "users",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    }
+  ],
+  "fields": {
+    "dbo.Authors": [
+      {
+        "name": "AuthorID",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "AuthorName",
+        "type": {
+          "type_name": "nvarchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "BirthYear",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NationalityID",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.Books": [
+      {
+        "name": "AuthorID",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "BookID",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ISBN",
+        "type": {
+          "type_name": "nvarchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NationalityID",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "Title",
+        "type": {
+          "type_name": "nvarchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.DatetimeTypes": [
+      {
+        "name": "DATECol",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "getdate()"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "DATETIME2Col",
+        "type": {
+          "type_name": "datetime2",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "sysdatetime()"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "DATETIMECol",
+        "type": {
+          "type_name": "datetime",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "getdate()"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "DATETIMEOFFSETCol",
+        "type": {
+          "type_name": "datetimeoffset",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "sysdatetimeoffset()"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ROWVERSIONCol",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "SMALLDATETIMECol",
+        "type": {
+          "type_name": "smalldatetime",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "getdate()"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "TIMECol",
+        "type": {
+          "type_name": "time",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "CONVERT([time],getdate())"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.gender_reference": [
+      {
+        "name": "value",
+        "type": {
+          "type_name": "nvarchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.NumberTypes": [
+      {
+        "name": "BIGINTCol",
+        "type": {
+          "type_name": "bigint",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "0"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "BITCol",
+        "type": {
+          "type_name": "bit",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "0"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "DECIMALCol",
+        "type": {
+          "type_name": "decimal(10,2)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "0.00"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "FLOATCol",
+        "type": {
+          "type_name": "float",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "0.0"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "INTCol",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "0"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NUMERICCol",
+        "type": {
+          "type_name": "numeric(10,2)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "0.00"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "REALCol",
+        "type": {
+          "type_name": "real",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "0.0"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "SMALLINTCol",
+        "type": {
+          "type_name": "smallint",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "0"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "TINYINTCol",
+        "type": {
+          "type_name": "tinyint",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "0"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.ObjectTypes": [
+      {
+        "name": "BinaryField",
+        "type": {
+          "type_name": "binary",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "0x00"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "Id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ImageField",
+        "type": {
+          "type_name": "image",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "0x00"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "JsonField",
+        "type": {
+          "type_name": "nvarchar",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "N'{\"defaultKey\": \"defaultValue\", \"status\": \"active\", \"count\": 0}'"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "VarBinaryField",
+        "type": {
+          "type_name": "varbinary",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "0x00"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "VarBinaryMaxField",
+        "type": {
+          "type_name": "varbinary",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "0x00"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "XmlField",
+        "type": {
+          "type_name": "xml",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "<Books>\r\n    <Book>\r\n      <Title>The Great Gatsby</Title>\r\n      <Author>F. Scott Fitzgerald</Author>\r\n      <Year>1925</Year>\r\n      <Price>10.99</Price>\r\n      <Publisher>Scribner</Publisher>\r\n      <Location>New York</Location>\r\n      <Genre>Fiction</Genre>\r\n      <Subgenre>Classic</Subgenre>\r\n    </Book>\r\n    <Book>\r\n      <Title>1984</Title>\r\n      <Author>George Orwell</Author>\r\n      <Year>1949</Year>\r\n      <Price>8.99</Price>\r\n      <Publisher>Secker & Warburg</Publisher>\r\n      <Location>London</Location>\r\n      <Genre>Dystopian</Genre>\r\n      <Subgenre>Political Fiction</Subgenre>\r\n    </Book>\r\n  </Books>"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.order_items": [
+      {
+        "name": "order_id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "order_item_id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "product_id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "quantity",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "unit_price",
+        "type": {
+          "type_name": "decimal",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.orders": [
+      {
+        "name": "billing_address",
+        "type": {
+          "type_name": "text",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "order_date",
+        "type": {
+          "type_name": "datetime2",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "getdate()"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "order_id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "shipping_address",
+        "type": {
+          "type_name": "text",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "status",
+        "type": {
+          "type_name": "chk_status",
+          "schemaName": "dbo"
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "pending"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "total_amount",
+        "type": {
+          "type_name": "decimal",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "user_id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.products": [
+      {
+        "name": "category",
+        "type": {
+          "type_name": "varchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "created_at",
+        "type": {
+          "type_name": "datetime2",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "getdate()"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "description",
+        "type": {
+          "type_name": "text",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "is_available",
+        "type": {
+          "type_name": "bit",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "1"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "name",
+        "type": {
+          "type_name": "varchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "price",
+        "type": {
+          "type_name": "decimal",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "product_id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "stock_quantity",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "0"
+        },
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "updated_at",
+        "type": {
+          "type_name": "datetime2",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "getdate()"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.StringTypes": [
+      {
+        "name": "CharField",
+        "type": {
+          "type_name": "char(10)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "N/A"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "Id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NCharField",
+        "type": {
+          "type_name": "nchar",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "N'N/A'"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NTextField",
+        "type": {
+          "type_name": "ntext",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "N'N/A'"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NVarCharField",
+        "type": {
+          "type_name": "nvarchar",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "N'N/A'"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NVarCharMaxField",
+        "type": {
+          "type_name": "nvarchar",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "N'N/A'"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "TextField",
+        "type": {
+          "type_name": "text(16)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "N/A"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "VarcharField",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "{\"default_key\": \"default_value\"}"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "VarcharMaxField",
+        "type": {
+          "type_name": "varchar",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "string",
+          "value": "N/A"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.table_with_comments": [
+      {
+        "name": "created_at",
+        "type": {
+          "type_name": "datetime2",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "getdate()"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": "Timestamp when the item was created."
+        }
+      },
+      {
+        "name": "description",
+        "type": {
+          "type_name": "text",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": "Detailed description of the item."
+        }
+      },
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": "Unique identifier for each item."
+        }
+      },
+      {
+        "name": "name",
+        "type": {
+          "type_name": "varchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": "Name of the item."
+        }
+      }
+    ],
+    "dbo.user_define_data_types": [
+      {
+        "name": "age_end",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "age_start",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "gender",
+        "type": {
+          "type_name": "chk_gender",
+          "schemaName": "dbo"
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "height",
+        "type": {
+          "type_name": "float",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "name",
+        "type": {
+          "type_name": "nvarchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "weight",
+        "type": {
+          "type_name": "float",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.users": [
+      {
+        "name": "created_at",
+        "type": {
+          "type_name": "datetime2",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "expression",
+          "value": "getdate()"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "date_of_birth",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "email",
+        "type": {
+          "type_name": "varchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "first_name",
+        "type": {
+          "type_name": "varchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "full_name",
+        "type": {
+          "type_name": "varchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "full_name_lower",
+        "type": {
+          "type_name": "varchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "is_active",
+        "type": {
+          "type_name": "bit",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "type": "number",
+          "value": "1"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "last_login",
+        "type": {
+          "type_name": "datetime2",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "last_name",
+        "type": {
+          "type_name": "varchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "password_hash",
+        "type": {
+          "type_name": "varchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "user_id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "username",
+        "type": {
+          "type_name": "varchar",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ]
+  },
+  "enums": [
+    {
+      "name": "chk_status",
+      "schemaName": "dbo",
+      "values": [
+        {
+          "name": "cancelled"
+        },
+        {
+          "name": "delivered"
+        },
+        {
+          "name": "shipped"
+        },
+        {
+          "name": "processing"
+        },
+        {
+          "name": "pending"
+        }
+      ]
+    },
+    {
+      "name": "chk_gender",
+      "schemaName": "dbo",
+      "values": [
+        {
+          "name": "Other"
+        },
+        {
+          "name": "Female"
+        },
+        {
+          "name": "Male"
+        }
+      ]
+    }
+  ],
+  "refs": [
+    {
+      "name": "FK_AuthorNationality",
+      "endpoints": [
+        {
+          "tableName": "Books",
+          "schemaName": "dbo",
+          "fieldNames": [
+            "AuthorID",
+            "NationalityID"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "Authors",
+          "schemaName": "dbo",
+          "fieldNames": [
+            "AuthorID",
+            "NationalityID"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "name": "fk_product",
+      "endpoints": [
+        {
+          "tableName": "order_items",
+          "schemaName": "dbo",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "products",
+          "schemaName": "dbo",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": "CASCADE"
+    },
+    {
+      "name": "fk_order",
+      "endpoints": [
+        {
+          "tableName": "order_items",
+          "schemaName": "dbo",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "orders",
+          "schemaName": "dbo",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": "CASCADE"
+    },
+    {
+      "name": "fk_user",
+      "endpoints": [
+        {
+          "tableName": "orders",
+          "schemaName": "dbo",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "users",
+          "schemaName": "dbo",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": "CASCADE"
+    },
+    {
+      "name": "fk_gender",
+      "endpoints": [
+        {
+          "tableName": "user_define_data_types",
+          "schemaName": "dbo",
+          "fieldNames": [
+            "gender"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "gender_reference",
+          "schemaName": "dbo",
+          "fieldNames": [
+            "value"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    }
+  ],
+  "indexes": {
+    "dbo.order_items": [
+      {
+        "name": "idx_order_items_order_product",
+        "type": "NONCLUSTERED",
+        "columns": [
+          {
+            "type": "column",
+            "value": "order_id"
+          },
+          {
+            "type": "column",
+            "value": "product_id"
+          }
+        ]
+      }
+    ],
+    "dbo.orders": [
+      {
+        "name": "idx_orders_user_date",
+        "type": "NONCLUSTERED",
+        "columns": [
+          {
+            "type": "column",
+            "value": "user_id"
+          },
+          {
+            "type": "column",
+            "value": "order_date"
+          }
+        ]
+      }
+    ],
+    "dbo.products": [
+      {
+        "name": "idx_products_category",
+        "type": "NONCLUSTERED",
+        "columns": [
+          {
+            "type": "column",
+            "value": "category"
+          }
+        ]
+      }
+    ],
+    "dbo.users": [
+      {
+        "name": "idx_users_email",
+        "type": "NONCLUSTERED",
+        "columns": [
+          {
+            "type": "column",
+            "value": "email"
+          }
+        ]
+      },
+      {
+        "name": "idx_users_full_name",
+        "type": "NONCLUSTERED",
+        "columns": [
+          {
+            "type": "column",
+            "value": "full_name"
+          }
+        ]
+      },
+      {
+        "name": "idx_users_is_active_full_name",
+        "type": "NONCLUSTERED",
+        "columns": [
+          {
+            "type": "column",
+            "value": "is_active"
+          },
+          {
+            "type": "column",
+            "value": "full_name_lower"
+          }
+        ]
+      }
+    ]
+  },
+  "tableConstraints": {
+    "dbo.Authors": {
+      "AuthorID": {
+        "pk": true
+      },
+      "NationalityID": {
+        "pk": true
+      },
+      "AuthorName": {
+        "unique": true
+      },
+      "BirthYear": {
+        "unique": true
+      }
+    },
+    "dbo.Books": {
+      "BookID": {
+        "pk": true
+      },
+      "AuthorID": {
+        "pk": true
+      },
+      "ISBN": {
+        "unique": true
+      }
+    },
+    "dbo.DatetimeTypes": {
+      "ID": {
+        "pk": true
+      }
+    },
+    "dbo.gender_reference": {
+      "value": {
+        "pk": true
+      }
+    },
+    "dbo.NumberTypes": {
+      "ID": {
+        "pk": true
+      }
+    },
+    "dbo.ObjectTypes": {
+      "Id": {
+        "pk": true
+      }
+    },
+    "dbo.order_items": {
+      "order_item_id": {
+        "pk": true
+      },
+      "order_id": {
+        "unique": true
+      },
+      "product_id": {
+        "unique": true
+      }
+    },
+    "dbo.orders": {
+      "order_id": {
+        "pk": true
+      }
+    },
+    "dbo.products": {
+      "product_id": {
+        "pk": true
+      }
+    },
+    "dbo.StringTypes": {
+      "Id": {
+        "pk": true
+      }
+    },
+    "dbo.table_with_comments": {
+      "id": {
+        "pk": true
+      }
+    },
+    "dbo.user_define_data_types": {
+      "id": {
+        "pk": true
+      }
+    },
+    "dbo.users": {
+      "user_id": {
+        "pk": true
+      },
+      "email": {
+        "unique": true
+      },
+      "username": {
+        "unique": true
+      }
+    }
+  }
+}

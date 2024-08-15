@@ -1,7 +1,7 @@
 import { Compiler } from '@dbml/parse';
 import Database, { RawDatabase } from '../model_structure/database';
 declare class Parser {
-    constructor(DBMLCompiler?: Compiler);
+    constructor(dbmlCompiler?: Compiler);
     static parseJSONToDatabase(rawDatabase: RawDatabase): Database;
     static parseMySQLToJSON(str: string): RawDatabase;
     static parsePostgresToJSON(str: string): RawDatabase;
