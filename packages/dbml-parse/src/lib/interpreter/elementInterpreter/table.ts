@@ -231,7 +231,7 @@ export class TableInterpreter implements ElementInterpreter {
       const index: Partial<Index> = { columns: [], };
 
       const indexField = _indexField as FunctionApplicationNode;
-      index.token = getTokenPosition(indexes);
+      index.token = getTokenPosition(indexField);
       const args = [indexField.callee!, ...indexField.args];
       if (_.last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
