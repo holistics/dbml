@@ -22,15 +22,17 @@ outlines the full syntax documentations of DBML.
 - [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
   - [Relationship settings](#relationship-settings)
   - [Many-to-many relationship](#many-to-many-relationship)
-- [Comments](#comments)
-- [Sticky Notes](#sticky-notes)
+- [Enum Definition](#enum-definition)
 - [Note Definition](#note-definition)
   - [Project Notes](#project-notes)
   - [Table Notes](#table-notes)
   - [Column Notes](#column-notes)
-- [Multi-line String](#multi-line-string)
-- [Enum Definition](#enum-definition)
+  - [TableGroup Notes](#tablegroup-notes)
+- [Sticky Notes](#sticky-notes)
 - [TableGroup](#tablegroup)
+    - [TableGroup Notes](#tablegroup-notes)
+- [Multi-line String](#multi-line-string)
+- [Comments](#comments)
 - [Syntax Consistency](#syntax-consistency)
 
 ## Example
@@ -321,52 +323,42 @@ There're two ways to represent many-to-many relationship:
 
 Beside presentation aspect, the main differece between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
 
-## Comments
+## Enum Definition
 
-**Single-line Comments**
-
-You can comment in your code using `//`, so it is easier for you to review the code later.
-
-Example,
+`Enum` allows users to define different values of a particular column.
+When hovering over the column in the canvas, the enum values will be displayed.
 
 ```text
-// order_items refer to items from that order
-```
+// enum belonged to default "public" schema
+enum job_status {
+    created [note: 'Waiting to be processed']
+    running
+    done
+    failure
+}
 
-**Multi-line Comments**
-
-You can also put comment spanning multiple lines in your code by putting inside `/*` and `*/`.
-
-Example,
-
-```text
-/*
-    This is a
-    Multi-lines
-    comment
-*/
-```
-
-## Sticky Notes
-
-You can add sticky notes to the diagram canvas to serve as a quick reminder or to elaborate on a complex idea.
-
-Example,
-
-```text
-Table jobs {
+// enum belonged to a schema
+enum v2.job_status {
     ...
 }
 
-Note single_line_note {
-    'This is a single line note'
+Table jobs {
+    id integer
+    status job_status
+    status_v2 v2.job_status
 }
+```
 
-Note multiple_lines_note {
-'''
-    This is a multiple lines note
-    This string can spans over multiple lines.
-'''
+**Note:** if `schema_name` prefix is omitted, it'll default to `public` schema
+
+If your enum values contain spaces or other special characters you can use double quotes.
+
+```text
+enum grade {
+    "A+"
+    "A"
+    "A-"
+    "Not Yet Set"
 }
 ```
 
@@ -439,6 +431,73 @@ Table orders {
 }
 ```
 
+### TableGroup Notes
+
+```text
+TableGroup e-commerce [note: 'Contains tables that are related to e-commerce system'] {
+    merchants
+    countries
+
+    // or
+    Note: 'Contains tables that are related to e-commerce system'
+}
+```
+
+## Sticky Notes
+
+You can add sticky notes to the diagram canvas to serve as a quick reminder or to elaborate on a complex idea.
+
+Example,
+
+```text
+Table jobs {
+    ...
+}
+
+Note single_line_note {
+    'This is a single line note'
+}
+
+Note multiple_lines_note {
+'''
+    This is a multiple lines note
+    This string can spans over multiple lines.
+'''
+}
+```
+
+## TableGroup
+
+`TableGroup` allows users to group the related or associated tables together.
+
+```text
+TableGroup tablegroup_name { // tablegroup is case-insensitive.
+    table1
+    table2
+    table3
+}
+
+//example
+TableGroup e-commerce1 {
+    merchants
+    countries
+}
+```
+
+### TableGroup Notes
+
+Table groupings can be annotated with notes that describe their meaning and purpose.
+
+```text
+TableGroup e-commerce [note: 'Contains tables that are related to e-commerce system'] {
+    merchants
+    countries
+
+    // or
+    Note: 'Contains tables that are related to e-commerce system'
+}
+```
+
 ## Multi-line String
 
 Multiline string will be defined between triple single quote `'''`
@@ -462,61 +521,30 @@ Note: '''
     This string can spans over multiple lines.
 ```
 
-## Enum Definition
+## Comments
 
-`Enum` allows users to define different values of a particular column.
-When hovering over the column in the canvas, the enum values will be displayed.
+**Single-line Comments**
+
+You can comment in your code using `//`, so it is easier for you to review the code later.
+
+Example,
 
 ```text
-// enum belonged to default "public" schema
-enum job_status {
-    created [note: 'Waiting to be processed']
-    running
-    done
-    failure
-}
-
-// enum belonged to a schema
-enum v2.job_status {
-    ...
-}
-
-Table jobs {
-    id integer
-    status job_status
-    status_v2 v2.job_status
-}
+// order_items refer to items from that order
 ```
 
-**Note:** if `schema_name` prefix is omitted, it'll default to `public` schema
+**Multi-line Comments**
 
-If your enum values contain spaces or other special characters you can use double quotes.
+You can also put comment spanning multiple lines in your code by putting inside `/*` and `*/`.
 
-```text
-enum grade {
-    "A+"
-    "A"
-    "A-"
-    "Not Yet Set"
-}
-```
-
-## TableGroup
-
-`TableGroup` allows users to group the related or associated tables together.
+Example,
 
 ```text
-TableGroup tablegroup_name { // tablegroup is case-insensitive.
-    table1
-    table2
-    table3
-}
-
-//example
-TableGroup e-commerce1 {
-    merchants
-    countries
-}
+/*
+    This is a
+    Multi-lines
+    comment
+*/
 ```
 
 ## Syntax Consistency
