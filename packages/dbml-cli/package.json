@@ -1,6 +1,6 @@
 {
   "name": "@dbml/cli",
-  "version": "3.7.2",
+  "version": "3.7.3",
   "description": "",
   "main": "lib/index.js",
   "license": "Apache-2.0",
@@ -26,8 +26,8 @@
   ],
   "dependencies": {
     "@babel/cli": "^7.21.0",
-    "@dbml/connector": "^3.7.2",
-    "@dbml/core": "^3.7.2",
+    "@dbml/connector": "^3.7.3",
+    "@dbml/core": "^3.7.3",
     "bluebird": "^3.5.5",
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
