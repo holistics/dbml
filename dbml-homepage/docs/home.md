@@ -92,7 +92,7 @@ DBML comes with:
 1. A free database visualiser at [dbdiagram.io](https://dbdiagram.io)
 2. A free database documentation builder at [dbdocs.io](https://dbdocs.io)
 3. A command-line tool to help to convert SQL to DBML files and vice versa.
-4. An [open-source JS library](/js-module) (NPM package) for you to programmatically convert between DBML and SQL DDL.
+4. An [open-source JS library](/js-module/core) (NPM package) for you to programmatically convert between DBML and SQL DDL.
 
 ### dbdiagram
 

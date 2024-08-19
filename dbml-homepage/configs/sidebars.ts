@@ -12,7 +12,29 @@ import { SidebarsConfig } from '@docusaurus/plugin-content-docs';
  Create as many sidebars as you want.
  */
 const SidebarConfigs: SidebarsConfig = {
-  docs: ['home', 'docs', 'cli', 'js-module'],
+  docs: [
+    'home',
+    'docs',
+    'cli',
+    {
+      type: 'category',
+      label: 'JS Module',
+      collapsed: false,
+      collapsible: true,
+      items: [
+        {
+          id: 'js-module/core',
+          type: 'doc',
+          label: '@dbml/core',
+        },
+        {
+          id: 'js-module/connector',
+          type: 'doc',
+          label: '@dbml/connector',
+        },
+      ],
+    },
+  ],
 };
 
 export default SidebarConfigs;
