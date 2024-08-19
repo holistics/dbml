@@ -19,7 +19,7 @@ const SidebarConfigs: SidebarsConfig = {
     {
       type: 'category',
       label: 'JS Module',
-      collapsed: true,
+      collapsed: false,
       collapsible: true,
       items: [
         {

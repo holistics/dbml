@@ -14,9 +14,7 @@ This package is responsible for connecting to a database on your local environme
 
 ## Prerequisites
 
-Before you begin, ensure you have met the following requirements:
-
-- **Node.js**: You need to have Node.js version 18.0.0 or higher installed.
+- **Nodejs** version 18.0.0 or higher.
 
 ## Installation
 
@@ -26,11 +24,13 @@ npm install @dbml/connector
 
 ## APIs
 
+### connector
+
 ```javascript
 const { connector } = require('@dbml/connector');
 ```
 
-### `fetchSchemaJson(connection, format)`
+#### `connector.fetchSchemaJson(connection, format)`
 
 - **Arguments:**
   - `{string} connection`
@@ -52,5 +52,5 @@ const schemaJson = await connector.fetchSchemaJson(connection, format);
 ```
 
 :::info
-You can find the definition of the `DatabaseSchema` [on this page](https://github.com/holistics/dbml/blob/a4dcb110f1d79f5d95b0d3db4b919914439e039d/packages/dbml-connector/src/connectors/types.ts#L89).
+The type definition of `DatabaseSchema` object can be found [here](https://github.com/holistics/dbml/blob/a4dcb110f1d79f5d95b0d3db4b919914439e039d/packages/dbml-connector/src/connectors/types.ts#L89).
 :::
