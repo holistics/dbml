@@ -108,7 +108,7 @@ class Parser {
           break;
 
         case 'dbmlv2':
-          rawDatabase = Parser.parseDBMLToJSONv2(str, this.dbmlCompiler);
+          rawDatabase = Parser.parseDBMLToJSONv2(str, this.DBMLCompiler);
           break;
 
         case 'schemarb':

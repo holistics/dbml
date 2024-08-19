@@ -286,6 +286,18 @@ function suggestAttributeName(compiler: Compiler, offset: number): CompletionLis
             },
           ],
         };
+      case ScopeKind.TABLEGROUP:
+        return {
+          suggestions: [
+            {
+              label: 'note',
+              insertText: 'note: ',
+              kind: CompletionItemKind.Field,
+              insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+              range: undefined as any,
+            },
+          ],
+        };
       default:
         return noSuggestions();
     }
@@ -570,26 +582,33 @@ function suggestInRefField(compiler: Compiler, offset: number): CompletionList {
 }
 
 function suggestInTableGroupField(compiler: Compiler): CompletionList {
-  return addQuoteIfNeeded({
-    suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
-      const res = destructureIndex(index).unwrap_or(undefined);
-      if (res === undefined) {
-        return [];
-      }
-      const { kind, name } = res;
-      if (kind !== SymbolKind.Table && kind !== SymbolKind.Schema) {
-        return [];
-      }
+  return {
+    suggestions: [
+      ...addQuoteIfNeeded({
+        suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
+          const res = destructureIndex(index).unwrap_or(undefined);
+          if (res === undefined) return [];
+          const { kind, name } = res;
+          if (kind !== SymbolKind.Table && kind !== SymbolKind.Schema) return [];
 
-      return {
+          return {
+            label: name,
+            insertText: name,
+            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+            kind: pickCompletionItemKind(kind),
+            range: undefined as any,
+          };
+        }),
+      }).suggestions,
+      ...['Note'].map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: pickCompletionItemKind(kind),
+        kind: CompletionItemKind.Keyword,
         range: undefined as any,
-      };
-    }),
-  });
+      })),
+    ]
+  }
 }
 
 function suggestInIndex(compiler: Compiler, offset: number): CompletionList {
