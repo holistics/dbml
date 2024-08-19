@@ -10,7 +10,7 @@ import { CompilerError } from './error';
 
 class Parser {
   constructor (dbmlCompiler) {
-    this.DBMLCompiler = dbmlCompiler || new Compiler();
+    this.dbmlCompiler = dbmlCompiler || new Compiler();
   }
 
   static parseJSONToDatabase (rawDatabase) {
