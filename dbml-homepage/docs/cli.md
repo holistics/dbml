@@ -18,11 +18,8 @@ Before you begin, ensure you have met the following requirements:
 
 ## Installation
 
-```bash
+```bash npm2yarn
 npm install -g @dbml/cli
-
-# or if you're using yarn
-yarn global add @dbml/cli
 ```
 
 ## Convert a DBML file to SQL
