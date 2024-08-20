@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import program from 'commander';
 import importHandler from './import';
 import exportHandler from './export';
@@ -61,6 +62,7 @@ function db2dbml (args) {
       - postgres: postgresql://user:password@localhost:5432/dbname
       - mysql: mysql://user:password@localhost:3306/dbname
       - mssql: 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;'
+      - snowflake: 'SERVER=<account_identifier>.<region>;UID=<your_username>;PWD=<your_password>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;'
   `;
   program
     .usage('<format> <connection-string> [options]')
