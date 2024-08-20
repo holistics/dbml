@@ -1,5 +1,5 @@
--- Create users table
-CREATE TABLE users (
+-- Create users table as a transient table
+CREATE OR REPLACE TRANSIENT TABLE users (
   user_id INT AUTOINCREMENT PRIMARY KEY,
   username VARCHAR(50) UNIQUE NOT NULL,
   email VARCHAR(100) UNIQUE NOT NULL,
@@ -10,22 +10,11 @@ CREATE TABLE users (
   date_of_birth DATE,
   created_at TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
   last_login TIMESTAMP_NTZ,
-  is_active BOOLEAN DEFAULT TRUE,
-  CONSTRAINT chk_email_format CHECK (email ILIKE '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$'),
-  CONSTRAINT chk_age CHECK (date_of_birth <= CURRENT_DATE() - INTERVAL '13 years')
+  is_active BOOLEAN DEFAULT TRUE
 );
 
--- Create an index on the email column for faster lookups
-CREATE INDEX idx_users_email ON users (email);
-
-CREATE UNIQUE INDEX idx_users_user_id ON users (user_id);
-
-CREATE INDEX idx_users_full_name ON users (full_name);
-
-CREATE INDEX idx_users_is_active ON users (is_active, LOWER(full_name));
-
--- Create products table
-CREATE TABLE products (
+-- Create products table as a transient table
+CREATE OR REPLACE TRANSIENT TABLE products (
   product_id INT AUTOINCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   description TEXT,
@@ -34,16 +23,11 @@ CREATE TABLE products (
   category VARCHAR(50),
   created_at TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
   updated_at TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
-  is_available BOOLEAN DEFAULT TRUE,
-  CONSTRAINT chk_price_positive CHECK (price > 0),
-  CONSTRAINT chk_stock_non_negative CHECK (stock_quantity >= 0)
+  is_available BOOLEAN DEFAULT TRUE
 );
 
--- Create an index on the category column for faster filtering
-CREATE INDEX idx_products_category ON products (category);
-
--- Create orders table
-CREATE TABLE orders (
+-- Create orders table as a transient table
+CREATE OR REPLACE TRANSIENT TABLE orders (
   order_id INT AUTOINCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   order_date TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
@@ -51,41 +35,30 @@ CREATE TABLE orders (
   status VARCHAR(20) DEFAULT 'pending',
   shipping_address TEXT NOT NULL,
   billing_address TEXT NOT NULL,
-  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-  CONSTRAINT chk_total_amount_positive CHECK (total_amount > 0),
-  CONSTRAINT chk_status CHECK (status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled'))
+  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
--- Create an index on the user_id and order_date columns for faster querying
-CREATE INDEX idx_orders_user_date ON orders (user_id, order_date);
-
--- Create order_items table
-CREATE TABLE order_items (
+-- Create order_items table as a transient table
+CREATE OR REPLACE TRANSIENT TABLE order_items (
   order_item_id INT AUTOINCREMENT PRIMARY KEY,
   order_id INT NOT NULL,
   product_id INT NOT NULL,
   quantity INTEGER NOT NULL,
   unit_price DECIMAL(10, 2) NOT NULL,
   CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
-  CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
-  CONSTRAINT chk_quantity_positive CHECK (quantity > 0),
-  CONSTRAINT chk_unit_price_positive CHECK (unit_price > 0),
-  CONSTRAINT uq_order_product UNIQUE (order_id, product_id)
+  CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
 );
 
--- Create a composite index on order_id and product_id for faster joins
-CREATE INDEX idx_order_items_order_product ON order_items (order_id, product_id);
-
 -- Create table with all data types
-CREATE TABLE all_data_types (
+CREATE OR REPLACE TABLE all_data_types (
   -- String Types
   string_col STRING DEFAULT 'default_string',
   varchar_col VARCHAR(100) DEFAULT 'default_varchar',
   char_col CHAR(10) DEFAULT 'default_char',
   nchar_col NCHAR(10) DEFAULT 'default_nchar',
   text_col TEXT DEFAULT 'default_text',
-  binary_col BINARY DEFAULT CONVERT_FROM('default_binary', 'UTF-8'),
-  varbinary_col VARBINARY DEFAULT CONVERT_FROM('default_varbinary', 'UTF-8'),
+  binary_col BINARY,
+  varbinary_col VARBINARY,
   array_col ARRAY DEFAULT ARRAY_CONSTRUCT('default_array1', 'default_array2'),
   json_col VARIANT DEFAULT PARSE_JSON('{"default_key": "default_value"}'),
 
@@ -108,28 +81,21 @@ CREATE TABLE all_data_types (
   time_col TIME DEFAULT CURRENT_TIME(),
   timestamp_col TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
   timestamp_tz_col TIMESTAMP_TZ DEFAULT CURRENT_TIMESTAMP(),
-  timestamp_ltz_col TIMESTAMP_LTZ DEFAULT CURRENT_TIMESTAMP(),
-  interval_col INTERVAL DEFAULT INTERVAL 1 DAY,
-
-  -- Semi-Structured Types
-  object_col OBJECT DEFAULT PARSE_JSON('{"default_key": "default_value"}'),
-  array_object_col ARRAY OF OBJECT DEFAULT ARRAY_CONSTRUCT(PARSE_JSON('{"default_key1": "default_value1"}'), PARSE_JSON('{"default_key2": "default_value2"}')),
-  geography_col GEOGRAPHY DEFAULT ST_POINT(0, 0),
-  uuid_col UUID DEFAULT UUID()
+  timestamp_ltz_col TIMESTAMP_LTZ DEFAULT CURRENT_TIMESTAMP()
 );
 
 -- Create table with user-defined data types
-CREATE TABLE user_define_data_types (
+CREATE OR REPLACE TABLE user_define_data_types (
   id INT AUTOINCREMENT PRIMARY KEY,
   name VARCHAR(50),
-  gender VARCHAR(10) CHECK (gender IN ('Male', 'Female', 'Other')),  -- Enforcing enum-like behavior
-  age_range VARIANT CHECK (age_range IS NULL OR (age_range:lower >= 0 AND age_range:upper <= 120)),  -- Example range check for age
+  gender VARCHAR(10),  -- Enforcing enum-like behavior can be handled in application logic
+  age_range VARIANT,  -- Example range check for age can be handled in application logic
   height FLOAT,
   weight FLOAT
 );
 
 -- Create table with comments
-CREATE TABLE table_with_comments (
+CREATE OR REPLACE TABLE table_with_comments (
   id INT AUTOINCREMENT PRIMARY KEY,
   name VARCHAR(100),
   description TEXT,
@@ -144,7 +110,7 @@ COMMENT ON COLUMN table_with_comments.description IS 'Detailed description of th
 COMMENT ON COLUMN table_with_comments.created_at IS 'Timestamp when the item was created.';
 
 -- Create Authors table
-CREATE TABLE Authors (
+CREATE OR REPLACE TABLE Authors (
   AuthorID INT AUTOINCREMENT,
   NationalityID INT,
   AuthorName VARCHAR(100),
@@ -153,7 +119,7 @@ CREATE TABLE Authors (
 );
 
 -- Create Books table
-CREATE TABLE Books (
+CREATE OR REPLACE TABLE Books (
   BookID INT AUTOINCREMENT PRIMARY KEY,
   AuthorID INT,
   NationalityID INT,
