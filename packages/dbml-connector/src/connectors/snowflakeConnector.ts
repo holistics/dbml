@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import snowflake, { Connection } from 'snowflake-sdk';
+import snowflake, { Connection, LogLevel } from 'snowflake-sdk';
 import {
   DatabaseSchema,
   DefaultInfo,
@@ -28,8 +28,7 @@ const parseConnectionString = (connectionString: string): Record<string, string>
 }
 
 
-// Helper function to connect
-function connect(connection: Connection): Promise<void> {
+const connect = async (connection: Connection): Promise<void> => {
   return new Promise((resolve, reject) => {
     console.log('Attempting to connect...');
     connection.connect((err) => {
@@ -42,8 +41,7 @@ function connect(connection: Connection): Promise<void> {
   });
 }
 
-// Helper function to execute query
-function executeQuery(connection: Connection, sqlText: string): Promise<any[]> {
+const executeQuery = (connection: Connection, sqlText: string): Promise<any[]> => {
   return new Promise((resolve, reject) => {
     console.log('Executing query...');
     connection.execute({
@@ -52,6 +50,7 @@ function executeQuery(connection: Connection, sqlText: string): Promise<any[]> {
         if (err) {
           reject(err);
         } else {
+          console.log('Query executed successfully.');
           if (rows) {
             resolve(rows);
           }
@@ -61,13 +60,17 @@ function executeQuery(connection: Connection, sqlText: string): Promise<any[]> {
   });
 }
 
-const connectToSnowflake = async (connectionString: string): Promise<Connection> => {
+const isLogLevel = (value: string): value is LogLevel => {
+  return ['ERROR', 'WARN', 'INFO', 'DEBUG', 'TRACE'].includes(value as LogLevel)
+}
+
+const connectToSnowflake = async (config: Record<string, string>): Promise<Connection> => {
+  const logLevel = isLogLevel(config.LOG_LEVEL) ? config.LOG_LEVEL : 'INFO';
+  const isDebugMode = config.IS_DEBUG_MODE === 'true';
   snowflake.configure({
-    logLevel: "INFO",
-    logFilePath: "./log_file.log",
-    additionalLogToConsole: true,
+    logLevel,
+    additionalLogToConsole: isDebugMode,
   });
-  const config = parseConnectionString(connectionString);
 
   // "SERVER=myaccount.snowflakecomputing.com;UID=myusername;PWD=mypassword;DATABASE=mydatabase;WAREHOUSE=mywarehouse;ROLE=myrole";
   const connection = snowflake.createConnection({
@@ -77,6 +80,8 @@ const connectToSnowflake = async (connectionString: string): Promise<Connection>
     database: config.DATABASE,
     warehouse: config.WAREHOUSE,
     schema: config.SCHEMA,
+    sfRetryMaxLoginRetries: 3,
+    timeout: 10000,
   });
 
   try {
@@ -96,36 +101,21 @@ const connectToSnowflake = async (connectionString: string): Promise<Connection>
 
 const convertQueryBoolean = (val: string | null) => val === 'YES';
 
-const getFieldType = (data_type: string, udt_name: string, character_maximum_length: number, numeric_precision: number, numeric_scale: number): string => {
-  // if (data_type === 'ARRAY') {
-  //   return `${udt_name.slice(1, udt_name.length)}[]`;
-  // }
+const getFieldType = (data_type: string, character_maximum_length: number, numeric_precision: number, numeric_scale: number): string => {
   if (character_maximum_length) {
-    return `${udt_name}(${character_maximum_length})`;
+    return `${data_type}(${character_maximum_length})`;
   }
   if (numeric_precision && numeric_scale) {
-    return `${udt_name}(${numeric_precision},${numeric_scale})`;
+    return `${data_type}(${numeric_precision},${numeric_scale})`;
   }
-  return udt_name;
+  return data_type;
 };
 
-const getDbdefault = (data_type: string, column_default: string, default_type: DefaultType): DefaultInfo => {
-  if (data_type === 'ARRAY') {
-    const values = column_default.slice(6, -1).split(',').map((value) => {
-      return value.split('::')[0];
-    });
+const getDbdefault = (column_default: string, default_type: DefaultType): DefaultInfo => {
+  if (default_type === 'string') {
     return {
       type: default_type,
-      value: `ARRAY[${values.join(', ')}]`,
-    };
-  }
-  if (default_type === 'string') {
-    const defaultValues = column_default.split('::')[0];
-    const isJson = data_type === 'json' || data_type === 'jsonb';
-    const type = isJson ? 'expression' : 'string';
-    return {
-      type,
-      value: defaultValues.slice(1, -1),
+      value: column_default.slice(1, -1),
     };
   }
   return {
@@ -135,28 +125,12 @@ const getDbdefault = (data_type: string, column_default: string, default_type: D
 };
 
 const generateField = (row: Record<string, any>): Field => {
-  // const {
-  //   column_name,
-  //   data_type,
-  //   character_maximum_length,
-  //   numeric_precision,
-  //   numeric_scale,
-  //   udt_schema,
-  //   udt_name,
-  //   identity_increment,
-  //   is_nullable,
-  //   column_default,
-  //   default_type,
-  //   column_comment,
-  // } = row;
   const {
     COLUMN_NAME: column_name,
     DATA_TYPE: data_type,
     CHARACTER_MAXIMUM_LENGTH: character_maximum_length,
     NUMERIC_PRECISION: numeric_precision,
     NUMERIC_SCALE: numeric_scale,
-    UDT_SCHEMA: udt_schema,
-    UDT_NAME: udt_name,
     IDENTITY_INCREMENT: identity_increment,
     IS_NULLABLE: is_nullable,
     COLUMN_DEFAULT: column_default,
@@ -164,64 +138,62 @@ const generateField = (row: Record<string, any>): Field => {
     COLUMN_COMMENT: column_comment,
   } = row;
 
-  // const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(data_type, column_default, default_type) : null;
+  const dbdefault = column_default ? getDbdefault(column_default, default_type) : null;
 
-  const fieldType = data_type === 'USER-DEFINED' ? {
-    type_name: udt_name,
-    schemaName: udt_schema,
-  } : {
-    type_name: getFieldType(data_type, udt_name, character_maximum_length, numeric_precision, numeric_scale),
+  const fieldType = {
+    type_name: getFieldType(data_type, character_maximum_length, numeric_precision, numeric_scale),
     schemaName: null,
   };
 
   return {
     name: column_name,
     type: fieldType,
-    dbdefault: null,
+    dbdefault,
     not_null: !convertQueryBoolean(is_nullable),
-    increment: !!identity_increment || default_type === 'increment',
+    increment: !!identity_increment,
     note: column_comment ? { value: column_comment } : { value: '' },
   };
 };
 
-const generateTablesAndFields = async (conn: Connection): Promise<{
+const generateTablesAndFields = async (conn: Connection, schema: string | null): Promise<{
   tables: Table[],
   fields: FieldsDictionary,
 }> => {
   const fields: FieldsDictionary = {};
   const tablesAndFieldsSql = `
     SELECT
-      c.table_schema,
-      c.table_name,
-      c.column_name,
-      c.data_type,
-      c.character_maximum_length,
-      c.numeric_precision,
-      c.numeric_scale,
-      c.is_nullable,
-      c.column_default,
-      CASE
-        WHEN c.column_default IS NULL THEN NULL
-        WHEN LOWER(c.column_default) LIKE 'auto_increment%' THEN 'increment'
-        WHEN c.column_default LIKE '''%' THEN 'string'
-        WHEN LOWER(c.column_default) = 'true' OR LOWER(c.column_default) = 'false' THEN 'boolean'
-        WHEN c.column_default REGEXP '^-?[0-9]+(\.[0-9]+)?$' THEN 'number'
-        ELSE 'expression'
-      END AS default_type,
-      t.comment AS table_comment,
-      c.comment AS column_comment
+        c.table_schema,
+        c.table_name,
+        c.column_name,
+        c.data_type,
+        c.character_maximum_length,
+        c.numeric_precision,
+        c.numeric_scale,
+        c.is_nullable,
+        c.column_default,
+        CASE
+            WHEN c.column_default IS NULL THEN NULL
+            WHEN c.column_default LIKE '''%' THEN 'string'
+            WHEN LOWER(c.column_default) = 'true' OR LOWER(c.column_default) = 'false' THEN 'boolean'
+            WHEN c.column_default REGEXP '^-?[0-9]+(\\.[0-9]+)?$' THEN 'number'
+            ELSE 'expression'
+        END AS default_type,
+        t.comment AS table_comment,
+        c.comment AS column_comment,
+        c.identity_increment
     FROM
-      information_schema.columns c
-      JOIN information_schema.tables t
-        ON c.table_name = t.table_name
-        AND c.table_schema = t.table_schema
+        information_schema.columns c
+        JOIN information_schema.tables t
+            ON c.table_name = t.table_name
+            AND c.table_schema = t.table_schema
     WHERE
-      t.table_type = 'BASE TABLE'
-      AND t.table_schema NOT IN ('INFORMATION_SCHEMA')
+        t.table_type = 'BASE TABLE'
+        AND t.table_schema NOT IN ('INFORMATION_SCHEMA')
+        ${schema ? `AND c.table_schema = '${schema}'` : ''}
     ORDER BY
-      c.table_schema,
-      c.table_name,
-      c.ordinal_position;
+        c.table_schema,
+        c.table_name,
+        c.ordinal_position;
   `;
 
   const tablesAndFieldsResult = await executeQuery(conn, tablesAndFieldsSql);
@@ -250,13 +222,15 @@ const generateTablesAndFields = async (conn: Connection): Promise<{
   };
 };
 
-const fetchSchemaJson = async (connection: string, schema = 'DBML_TEST'): Promise<DatabaseSchema> => {
-  const conn = await connectToSnowflake(connection);
+const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
+  const config = parseConnectionString(connection);
+  const conn = await connectToSnowflake(config);
   if (conn instanceof Error) {
     throw conn;
   }
+  const schema = config.SCHEMA || null;
 
-  const tablesAndFieldsRes = generateTablesAndFields(conn);
+  const tablesAndFieldsRes = generateTablesAndFields(conn, schema);
   // const indexesRes = generateIndexes(conn);
   // const refsRes = generateRawRefs(conn);
   // const enumsRes = generateRawEnums(conn);
@@ -280,8 +254,6 @@ const fetchSchemaJson = async (connection: string, schema = 'DBML_TEST'): Promis
   // const { indexes, tableConstraints } = res[1];
   // const refs = res[2];
   // const enums = res[3];
-
-  console.log('Tables:', tables);
 
   return {
     tables,
