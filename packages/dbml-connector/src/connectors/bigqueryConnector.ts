@@ -1,5 +1,5 @@
 import { BigQuery } from '@google-cloud/bigquery';
-import { DatabaseSchema, DefaultInfo, DefaultType, Field, FieldsDictionary, Table } from './types';
+import { DatabaseSchema, DefaultInfo, DefaultType, Field, FieldsDictionary, Index, IndexesDictionary, Table } from './types';
 
 const STRING_REGEX = `^['\"].*['\"]$`;
 
@@ -132,9 +132,57 @@ async function generateTablesAndFields(client: BigQuery, projectId: string, data
   }
 }
 
-async function generateIndexes(client: BigQuery, datasetId: string) {
-  // throw new Error('Function not implemented.');
-  return {}
+async function generateIndexes(client: BigQuery, projectId: string, datasetId: string): Promise<{ indexMap: IndexesDictionary; }> {
+  const tableName = `${projectId}.${datasetId}`;
+
+  const query = `
+    select
+      s.table_name as tableName,
+      s.index_name as indexName,
+      string_agg(sc.index_column_name, ', ') as indexColumnNames
+    from ${tableName}.INFORMATION_SCHEMA.SEARCH_INDEXES s
+    join ${tableName}.INFORMATION_SCHEMA.SEARCH_INDEX_COLUMNS sc
+    on
+      s.index_schema = sc.index_schema
+      and s.table_name = sc.table_name
+      and s.index_name = sc.index_name
+    where sc.index_column_name = sc.index_field_path
+    group by s.table_name, s.index_name
+    order by s.table_name, s.index_name;
+  `;
+
+  const [queryResult] = await client.query(query);
+
+  const indexMap: IndexesDictionary = {};
+
+  queryResult.forEach((row) => {
+    const { tableName, indexName, indexColumnNames } = row;
+
+    const indexColumns = indexColumnNames.split(', ').map((column: string) => {
+      return {
+        type: 'column',
+        value: column,
+      };
+    });
+
+    const index: Index = {
+      name: indexName,
+      type: '',
+      columns: [
+        ...indexColumns,
+      ],
+    };
+
+    const key = tableName as string;
+    if (indexMap[key]) {
+      indexMap[key].push(index);
+    } else {
+      indexMap[key] = [index];
+    }
+  });
+  return {
+    indexMap
+  };
 }
 
 async function validateDatasetId (client: BigQuery, datasetId: string): Promise<boolean> {
@@ -156,7 +204,7 @@ async function fetchSchemaJson (keyFilename: string, dataset: string): Promise<D
   }
 
   const tablesAndFieldsRes = generateTablesAndFields(client, projectId, datasetId);
-  const indexesRes = generateIndexes(client, datasetId);
+  const indexesRes = generateIndexes(client, projectId, datasetId);
 
   const res = await Promise.all([
     tablesAndFieldsRes,
@@ -164,7 +212,7 @@ async function fetchSchemaJson (keyFilename: string, dataset: string): Promise<D
   ]);
 
   const { tables, fields } = res[0];
-  // const { indexes, tableConstraints } = res[1];
+  const { indexMap } = res[1];
 
 
   return {
@@ -172,7 +220,7 @@ async function fetchSchemaJson (keyFilename: string, dataset: string): Promise<D
     fields,
     refs: [],
     enums: [],
-    indexes: {},
+    indexes: indexMap,
     tableConstraints: {},
   };
 }
