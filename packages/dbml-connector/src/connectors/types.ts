@@ -21,6 +21,8 @@ interface Field {
   dbdefault: DefaultInfo | null;
   not_null: boolean;
   increment: boolean;
+  pk?: boolean;
+  unique?: boolean;
   note: NoteInfo;
 }
 
