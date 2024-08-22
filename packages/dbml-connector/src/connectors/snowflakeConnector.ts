@@ -1,16 +1,23 @@
 /* eslint-disable camelcase */
+//
+// Description:
+// Snowflake info schema lacks reference direction for relationships.
+// Constraints and uniqueness cannot be auto-generated from Snowflake info schema.
+// Snowflake does not support ENUMs.
+// Snowflake does not support indexes for standard tables.
+//
 import snowflake, { Connection, LogLevel } from 'snowflake-sdk';
 import {
   DatabaseSchema,
   DefaultInfo,
   DefaultType,
-  // Enum,
   Field,
   FieldsDictionary,
+  Table,
+  // Enum,
   // IndexesDictionary,
   // Ref,
   // RefEndpoint,
-  Table,
   // TableConstraint,
   // TableConstraintsDictionary,
 } from './types';
@@ -27,6 +34,8 @@ const parseConnectionString = (connectionString: string): Record<string, string>
   return params;
 }
 
+
+const parseYesNo = (val: string): boolean => val === 'YES';
 
 const connect = async (connection: Connection): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -131,6 +140,7 @@ const generateField = (row: Record<string, any>): Field => {
     CHARACTER_MAXIMUM_LENGTH: character_maximum_length,
     NUMERIC_PRECISION: numeric_precision,
     NUMERIC_SCALE: numeric_scale,
+    IS_IDENTITY: is_identity,
     IDENTITY_INCREMENT: identity_increment,
     IS_NULLABLE: is_nullable,
     COLUMN_DEFAULT: column_default,
@@ -150,6 +160,7 @@ const generateField = (row: Record<string, any>): Field => {
     type: fieldType,
     dbdefault,
     not_null: !convertQueryBoolean(is_nullable),
+    pk: parseYesNo(is_identity),
     increment: !!identity_increment,
     note: column_comment ? { value: column_comment } : { value: '' },
   };
@@ -180,6 +191,7 @@ const generateTablesAndFields = async (conn: Connection, schema: string | null):
         END AS default_type,
         t.comment AS table_comment,
         c.comment AS column_comment,
+        c.is_identity,
         c.identity_increment
     FROM
         information_schema.columns c
@@ -232,13 +244,13 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
 
   const tablesAndFieldsRes = generateTablesAndFields(conn, schema);
   // const indexesRes = generateIndexes(conn);
-  // const refsRes = generateRawRefs(conn);
+  // const refsRes = generateRawRefs(conn, schema);
   // const enumsRes = generateRawEnums(conn);
 
   const res = await Promise.all([
     tablesAndFieldsRes,
     // indexesRes,
-    // refsRes,
+    //refsRes,
     // enumsRes,
   ]);
 
@@ -252,7 +264,7 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
 
   const { tables, fields } = res[0];
   // const { indexes, tableConstraints } = res[1];
-  // const refs = res[2];
+  // const refs = res[1];
   // const enums = res[3];
 
   return {

@@ -35,7 +35,7 @@ CREATE OR REPLACE TRANSIENT TABLE orders (
   status VARCHAR(20) DEFAULT 'pending',
   shipping_address TEXT NOT NULL,
   billing_address TEXT NOT NULL,
-  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 -- Create order_items table as a transient table
@@ -45,8 +45,8 @@ CREATE OR REPLACE TRANSIENT TABLE order_items (
   product_id INT NOT NULL,
   quantity INTEGER NOT NULL,
   unit_price DECIMAL(10, 2) NOT NULL,
-  CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
-  CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+  CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES orders(order_id),
+  CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
 
 -- Create table with all data types
@@ -127,5 +127,5 @@ CREATE OR REPLACE TABLE Books (
   Title VARCHAR(200),
   UNIQUE (ISBN),
   CONSTRAINT FK_AuthorNationality FOREIGN KEY (AuthorID, NationalityID)
-    REFERENCES Authors (AuthorID, NationalityID) ON DELETE CASCADE
+    REFERENCES Authors (AuthorID, NationalityID)
 );
