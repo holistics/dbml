@@ -1,5 +1,15 @@
 import { BigQuery } from '@google-cloud/bigquery';
-import { DatabaseSchema, DefaultInfo, DefaultType, Field, FieldsDictionary, Index, IndexesDictionary, Table } from './types';
+import {
+  DatabaseSchema,
+  DefaultInfo,
+  DefaultType,
+  Field,
+  FieldsDictionary,
+  Index,
+  IndexesDictionary,
+  Table,
+  TableConstraintsDictionary,
+} from './types';
 
 const STRING_REGEX = `^['\"].*['\"]$`;
 
@@ -29,7 +39,7 @@ function getDbDefault (columnDefault: string, defaultValueType: DefaultType | nu
   return { value: columnDefault, type: defaultValueType };
 }
 
-function generateField(row: any): Field {
+function generateField (row: any): Field {
   const { columnName, isNullable, dataType, columnDefault, columnDefaultType, columnDescription } = row;
 
   const fieldDefaultValue = getDbDefault(columnDefault, columnDefaultType);
@@ -46,14 +56,18 @@ function generateField(row: any): Field {
     },
     dbdefault: fieldDefaultValue,
     increment: false, // bigquery does not support native auto-increment
-  }
+  };
 
   return field;
 }
 
-async function generateTablesAndFields(client: BigQuery, projectId: string, datasetId: string): Promise<{
-  tables: Table[],
-  fields: FieldsDictionary,
+async function generateTablesAndFields(
+  client: BigQuery,
+  projectId: string,
+  datasetId: string
+): Promise<{
+  tables: Table[];
+  fields: FieldsDictionary;
 }> {
   const tableName = `${projectId}.${datasetId}`;
 
@@ -98,12 +112,15 @@ async function generateTablesAndFields(client: BigQuery, projectId: string, data
     order by t.table_name, c.ordinal_position;
   `;
 
-  const [queryResult] = await client.query({ query, params: {
-    stringRegex: STRING_REGEX,
-  } });
+  const [queryResult] = await client.query({
+    query,
+    params: {
+      stringRegex: STRING_REGEX,
+    },
+  });
 
   const tableMap: Record<string, Table> = {};
-  const fieldMap: FieldsDictionary = {}
+  const fieldMap: FieldsDictionary = {};
 
   queryResult.forEach((row) => {
     const { tableName, tableComment } = row;
@@ -114,7 +131,7 @@ async function generateTablesAndFields(client: BigQuery, projectId: string, data
       tableMap[key] = {
         name: tableName,
         note: { value: tableComment || '' },
-        schemaName: ''
+        schemaName: '',
       };
     }
 
@@ -129,10 +146,10 @@ async function generateTablesAndFields(client: BigQuery, projectId: string, data
   return {
     tables: Object.values(tableMap),
     fields: fieldMap,
-  }
+  };
 }
 
-async function generateIndexes(client: BigQuery, projectId: string, datasetId: string): Promise<{ indexMap: IndexesDictionary; }> {
+async function generateIndexes (client: BigQuery, projectId: string, datasetId: string): Promise<IndexesDictionary> {
   const tableName = `${projectId}.${datasetId}`;
 
   const query = `
@@ -168,34 +185,128 @@ async function generateIndexes(client: BigQuery, projectId: string, datasetId: s
     const index: Index = {
       name: indexName,
       type: '',
-      columns: [
-        ...indexColumns,
-      ],
+      columns: [...indexColumns],
     };
 
-    const key = tableName as string;
-    if (indexMap[key]) {
-      indexMap[key].push(index);
+    if (indexMap[tableName]) {
+      indexMap[tableName].push(index);
     } else {
-      indexMap[key] = [index];
+      indexMap[tableName] = [index];
     }
   });
+  return indexMap;
+}
+
+async function generateTableConstraints (
+  client: BigQuery,
+  projectId: string,
+  datasetId: string
+): Promise<{ inlinePrimaryKeyMap: TableConstraintsDictionary; compositePrimaryKeyMap: IndexesDictionary }> {
+  const tableName = `${projectId}.${datasetId}`;
+
+  const query = `
+    select
+      tc.table_name as tableName,
+      tc.constraint_name as constraintName,
+      string_agg(kcu.column_name, ', ') as columnNames,
+      count(kcu.column_name) as columnCount,
+    from ${tableName}.INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+    join ${tableName}.INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
+    on
+      tc.table_schema = kcu.table_schema
+      and tc.table_name = kcu.table_name
+      and tc.constraint_name = kcu.constraint_name
+    where tc.constraint_type = 'PRIMARY KEY'
+    group by tc.table_name, tc.constraint_name
+    order by tc.table_name, tc.constraint_name;
+  `;
+
+  const [queryResult] = await client.query(query);
+
+  const inlinePrimaryKeyList = queryResult.filter((row) => row.columnCount && row.columnCount === 1);
+  const compositePrimaryKeyList = queryResult.filter((row) => row.columnCount && row.columnCount > 1);
+
+  const inlinePrimaryKeyMap: TableConstraintsDictionary = {};
+  inlinePrimaryKeyList.forEach((key) => {
+    const { tableName, columnNames } = key;
+
+    if (!inlinePrimaryKeyMap[tableName]) {
+      inlinePrimaryKeyMap[tableName] = {};
+    }
+
+    if (!inlinePrimaryKeyMap[tableName][columnNames]) {
+      inlinePrimaryKeyMap[tableName][columnNames] = {};
+    }
+
+    inlinePrimaryKeyMap[tableName][columnNames].pk = true;
+  });
+
+  const compositePrimaryKeyMap: IndexesDictionary = {};
+  compositePrimaryKeyList.forEach((key) => {
+    const { tableName, constraintName, columnNames } = key;
+
+    const indexColumns = columnNames.split(", ").map((column: string) => {
+      return {
+        type: 'column',
+        value: column,
+      };
+    });
+
+    const index: Index = {
+      name: constraintName,
+      type: '',
+      columns: [...indexColumns],
+      pk: true,
+    };
+
+    if (compositePrimaryKeyMap[tableName]) {
+      compositePrimaryKeyMap[tableName].push(index);
+    } else {
+      compositePrimaryKeyMap[tableName] = [index];
+    }
+  });
+
   return {
-    indexMap
+    inlinePrimaryKeyMap,
+    compositePrimaryKeyMap,
   };
 }
 
 async function validateDatasetId (client: BigQuery, datasetId: string): Promise<boolean> {
   const [datasets] = await client.getDatasets();
 
-  const datasetIdLList = datasets.map(dataset => dataset.id);
-  return datasetIdLList.includes((datasetId));
+  const datasetIdLList = datasets.map((dataset) => dataset.id);
+  return datasetIdLList.includes(datasetId);
 }
 
-async function fetchSchemaJson (keyFilename: string, dataset: string): Promise<DatabaseSchema> {
+function combineIndexAndCompositeConstraint (
+  userDefinedIndexMap: IndexesDictionary,
+  compositeConstraintMap: IndexesDictionary
+): IndexesDictionary {
+  const indexMap = Object.assign(userDefinedIndexMap, {});
+
+  Object.keys(compositeConstraintMap).forEach((tableName) => {
+    const compositeConstraint = compositeConstraintMap[tableName];
+    if (!indexMap[tableName]) {
+      indexMap[tableName] = compositeConstraint;
+      return;
+    }
+
+    indexMap[tableName].push(...compositeConstraint);
+  });
+
+  return indexMap;
+}
+
+async function fetchSchemaJson(keyFilename: string, dataset: string): Promise<DatabaseSchema> {
   const client = await connectBigQuery(keyFilename);
 
   const projectId = await client.getProjectId();
+
+  // read credentials in json
+  // get all required informations
+  // fetch all datasets
+  // loop and query the information schema
 
   const datasetId = typeof dataset === 'string' ? dataset.trim() : '';
   const isDatasetIdExists = await validateDatasetId(client, datasetId);
@@ -203,28 +314,24 @@ async function fetchSchemaJson (keyFilename: string, dataset: string): Promise<D
     throw new Error(`Dataset ${datasetId} does not exist`);
   }
 
-  const tablesAndFieldsRes = generateTablesAndFields(client, projectId, datasetId);
-  const indexesRes = generateIndexes(client, projectId, datasetId);
-
   const res = await Promise.all([
-    tablesAndFieldsRes,
-    indexesRes,
+    generateTablesAndFields(client, projectId, datasetId),
+    generateIndexes(client, projectId, datasetId),
+    generateTableConstraints(client, projectId, datasetId),
   ]);
 
   const { tables, fields } = res[0];
-  const { indexMap } = res[1];
-
+  const indexMap = res[1];
+  const { inlinePrimaryKeyMap, compositePrimaryKeyMap} = res[2];
 
   return {
     tables,
     fields,
     refs: [],
     enums: [],
-    indexes: indexMap,
-    tableConstraints: {},
+    indexes: combineIndexAndCompositeConstraint(indexMap, compositePrimaryKeyMap),
+    tableConstraints: inlinePrimaryKeyMap,
   };
 }
 
-export {
-  fetchSchemaJson,
-};
+export { fetchSchemaJson };
