@@ -13,13 +13,10 @@ import {
   DefaultType,
   Field,
   FieldsDictionary,
+  Index,
+  IndexesDictionary,
   Table,
-  // Enum,
-  // IndexesDictionary,
-  // Ref,
-  // RefEndpoint,
-  // TableConstraint,
-  // TableConstraintsDictionary,
+  TableConstraintsDictionary,
 } from './types';
 
 const parseConnectionString = (connectionString: string): Record<string, string> => {
@@ -140,7 +137,6 @@ const generateField = (row: Record<string, any>): Field => {
     CHARACTER_MAXIMUM_LENGTH: character_maximum_length,
     NUMERIC_PRECISION: numeric_precision,
     NUMERIC_SCALE: numeric_scale,
-    IS_IDENTITY: is_identity,
     IDENTITY_INCREMENT: identity_increment,
     IS_NULLABLE: is_nullable,
     COLUMN_DEFAULT: column_default,
@@ -160,7 +156,6 @@ const generateField = (row: Record<string, any>): Field => {
     type: fieldType,
     dbdefault,
     not_null: !convertQueryBoolean(is_nullable),
-    pk: parseYesNo(is_identity),
     increment: !!identity_increment,
     note: column_comment ? { value: column_comment } : { value: '' },
   };
@@ -191,7 +186,6 @@ const generateTablesAndFields = async (conn: Connection, schema: string | null):
         END AS default_type,
         t.comment AS table_comment,
         c.comment AS column_comment,
-        c.is_identity,
         c.identity_increment
     FROM
         information_schema.columns c
@@ -234,6 +228,121 @@ const generateTablesAndFields = async (conn: Connection, schema: string | null):
   };
 };
 
+const generateIndexes = async (conn: Connection, databaseName: string, schema: string | null) => {
+  type constraintRow = {
+    schemaName: string;
+    tableName: string;
+    constraintName: string;
+    columnNames: string[];
+    type: string;
+    primary?: boolean;
+    unique?: boolean;
+  };
+  type generatedIndexes = {
+    indexes: IndexesDictionary;
+    tableConstraints: TableConstraintsDictionary;
+  };
+
+  const getPrimaryKeysSql = `
+    SHOW PRIMARY KEYS IN DATABASE ${databaseName};
+  `;
+
+  const getUniqueKeysSql = `
+    SHOW UNIQUE KEYS IN DATABASE ${databaseName};
+  `;
+
+  const primaryKeys = await executeQuery(conn, getPrimaryKeysSql);
+  const uniqueKeys = await executeQuery(conn, getUniqueKeysSql);
+
+  const primaryKeysByConstraint: Record<string, constraintRow> = primaryKeys.reduce((
+    acc: Record<string, constraintRow>,
+    row: Record<string, string>
+  ) => {
+    const { schema_name, table_name, column_name, constraint_name } = row;
+    if (schema && schema_name !== schema) { return acc; }
+
+    if (acc[constraint_name]) {
+      const columnNames = acc[constraint_name].columnNames;
+      columnNames.push(column_name);
+      return acc;
+    }
+
+    acc[constraint_name] = {
+      schemaName: schema_name,
+      tableName: table_name,
+      constraintName: constraint_name,
+      columnNames: [column_name],
+      type: '',
+      primary: true,
+    };
+    return acc;
+  }, {});
+
+  const uniqueKeysByConstraint: Record<string, constraintRow> = uniqueKeys.reduce((
+    acc: Record<string, constraintRow>,
+    row: Record<string, string>
+  ) => {
+    const { schema_name, table_name, column_name, constraint_name } = row;
+    if (schema && schema_name !== schema) { return acc; }
+
+    if (acc[constraint_name]) {
+      const columnNames = acc[constraint_name].columnNames;
+      columnNames.push(column_name);
+      return acc;
+    }
+
+    acc[constraint_name] = {
+      schemaName: schema_name,
+      tableName: table_name,
+      constraintName: constraint_name,
+      columnNames: [column_name],
+      type: '',
+      unique: true,
+    };
+    return acc;
+  }, {});
+
+  const allConstraints: constraintRow[] = [Object.values(primaryKeysByConstraint), Object.values(uniqueKeysByConstraint)].flat();
+  const { indexes, tableConstraints } = allConstraints.reduce((acc: generatedIndexes, row: constraintRow): generatedIndexes => {
+    const { schemaName, tableName, constraintName, columnNames, type, primary, unique } = row;
+    const key = `${schemaName}.${tableName}`;
+
+    if (columnNames.length < 2) {
+      acc.tableConstraints[key] = {
+        [columnNames[0]]: {
+          pk: primary,
+          unique,
+        },
+      };
+      return acc;
+    }
+
+    const index: Index = {
+      name: constraintName,
+      type,
+      unique,
+      pk: primary,
+      columns: columnNames.map((columnName) => ({
+        type: 'column',
+        value: columnName,
+      })),
+    };
+
+    if (acc.indexes[key]) {
+      acc.indexes[key].push(index);
+    } else {
+      acc.indexes[key] = [index];
+    }
+
+    return acc;
+  }, { indexes: {}, tableConstraints: {}});
+
+  return {
+    indexes,
+    tableConstraints,
+  };
+};
+
 const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   const config = parseConnectionString(connection);
   const conn = await connectToSnowflake(config);
@@ -241,17 +350,14 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
     throw conn;
   }
   const schema = config.SCHEMA || null;
+  const databaseName = config.DATABASE;
 
   const tablesAndFieldsRes = generateTablesAndFields(conn, schema);
-  // const indexesRes = generateIndexes(conn);
-  // const refsRes = generateRawRefs(conn, schema);
-  // const enumsRes = generateRawEnums(conn);
+  const indexesRes = generateIndexes(conn, databaseName, schema);
 
   const res = await Promise.all([
     tablesAndFieldsRes,
-    // indexesRes,
-    //refsRes,
-    // enumsRes,
+    indexesRes,
   ]);
 
   conn.destroy((err) => {
@@ -263,17 +369,15 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   });
 
   const { tables, fields } = res[0];
-  // const { indexes, tableConstraints } = res[1];
-  // const refs = res[1];
-  // const enums = res[3];
+  const { indexes, tableConstraints } = res[1];
 
   return {
     tables,
     fields,
     refs: [],
     enums: [],
-    indexes: {},
-    tableConstraints: {},
+    indexes,
+    tableConstraints,
   };
 };
 
