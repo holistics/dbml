@@ -57,10 +57,11 @@ function db2dbml (args) {
   //    - mssql: 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate
   const description = `
     <format> your database format (postgres, mysql, mssql)
-    <connection-string> your database connection string:
+    <connection-string> your database connection string or path to credential file:
       - postgres: postgresql://user:password@localhost:5432/dbname
       - mysql: mysql://user:password@localhost:3306/dbname
       - mssql: 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;'
+      - bigquery: /path_to_json_credential.json
   `;
   program
     .usage('<format> <connection-string> [options]')

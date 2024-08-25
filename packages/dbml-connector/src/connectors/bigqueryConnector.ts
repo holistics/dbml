@@ -1,5 +1,6 @@
 import { BigQuery } from '@google-cloud/bigquery';
 import {
+  BigQueryCredentials,
   DatabaseSchema,
   DefaultInfo,
   DefaultType,
@@ -10,12 +11,16 @@ import {
   Table,
   TableConstraintsDictionary,
 } from './types';
+import { loadCredentialFromFile, parseBigQueryCredential } from './utils/credential-loader';
+import { getIntersection, getTableSchemaKey, mergeFieldDictionary, mergeIndexDictionary, mergeTableConstraintDictionary, mergeTables } from './utils/helpers';
 
-const STRING_REGEX = `^['\"].*['\"]$`;
-
-async function connectBigQuery (connection: string): Promise<BigQuery> {
+async function connectBigQuery(credential: BigQueryCredentials): Promise<BigQuery> {
   const client = new BigQuery({
-    keyFilename: connection,
+    projectId: credential.projectId,
+    credentials: {
+      private_key: credential.credentials.privateKey,
+      client_email: credential.credentials.clientEmail,
+    },
   });
 
   try {
@@ -31,16 +36,31 @@ async function connectBigQuery (connection: string): Promise<BigQuery> {
   }
 }
 
-function getDbDefault (columnDefault: string, defaultValueType: DefaultType | null): DefaultInfo | null {
+function getDbDefault(
+  columnDefault: string,
+  defaultValueType: DefaultType | null
+): DefaultInfo | null {
   if (defaultValueType === null) {
     return null;
+  }
+
+  if (defaultValueType === 'string') {
+    // bigquery store the double qoutes and quotes at the end and the beginning of the string: "string" or 'string'
+    return { value: columnDefault.slice(1, -1).replaceAll("'", "\'"), type: defaultValueType }
   }
 
   return { value: columnDefault, type: defaultValueType };
 }
 
-function generateField (row: any): Field {
-  const { columnName, isNullable, dataType, columnDefault, columnDefaultType, columnDescription } = row;
+function generateField(row: any): Field {
+  const {
+    columnName,
+    isNullable,
+    dataType,
+    columnDefault,
+    columnDefaultType,
+    columnDescription,
+  } = row;
 
   const fieldDefaultValue = getDbDefault(columnDefault, columnDefaultType);
 
@@ -67,47 +87,48 @@ async function generateTablesAndFields(
   datasetId: string
 ): Promise<{
   tables: Table[];
-  fields: FieldsDictionary;
+  fieldMap: FieldsDictionary;
 }> {
   const tableName = `${projectId}.${datasetId}`;
 
   const query = `
     with
       table_comments as (
-          select table_schema, table_name, option_value as description
-          from ${tableName}.INFORMATION_SCHEMA.TABLE_OPTIONS
-          where option_name = 'description'
+        select table_schema, table_name, option_value as description
+        from ${tableName}.INFORMATION_SCHEMA.TABLE_OPTIONS
+        where option_name = 'description'
       ),
       column_comments as (
-          select column_name, table_schema, table_name, description
-          from ${tableName}.INFORMATION_SCHEMA.COLUMN_FIELD_PATHS
-          where column_name = field_path
+        select column_name, table_schema, table_name, description
+        from ${tableName}.INFORMATION_SCHEMA.COLUMN_FIELD_PATHS
+        where column_name = field_path
       )
     select
-        t.table_name as tableName,
-        (select description from table_comments tc where tc.table_name = t.table_name and tc.table_schema = t.table_schema) as tableDescription,
-        (
-            select description
-            from column_comments cc
-            where cc.table_name = c.table_name and cc.table_schema = c.table_schema and cc.column_name = c.column_name
-        ) as columnDescription,
-        c.column_name as columnName,
-        c.is_nullable as isNullable,
-        c.data_type as dataType,
-        c.column_default as columnDefault,
-        CASE
-            WHEN SAFE_CAST(c.column_default AS FLOAT64) IS NOT NULL THEN 'number'
-            WHEN SAFE_CAST(c.column_default AS BOOLEAN) IS NOT NULL THEN 'boolean'
-            -- string value is enclosed in single quotes, double quotes
-            WHEN REGEXP_CONTAINS(c.column_default, r"@stringRegex") THEN 'string'
-            WHEN c.column_default = "NULL" THEN NULL
-            ELSE 'expression'
-        END AS columnDefaultType
+      t.table_schema as tableSchema,
+      t.table_name as tableName,
+      (select description from table_comments tc where tc.table_name = t.table_name and tc.table_schema = t.table_schema) as tableDescription,
+      (
+        select description
+        from column_comments cc
+        where cc.table_name = c.table_name and cc.table_schema = c.table_schema and cc.column_name = c.column_name
+      ) as columnDescription,
+      c.column_name as columnName,
+      c.is_nullable as isNullable,
+      c.data_type as dataType,
+      c.column_default as columnDefault,
+      CASE
+        WHEN SAFE_CAST(c.column_default AS FLOAT64) IS NOT NULL THEN 'number'
+        WHEN SAFE_CAST(c.column_default AS BOOLEAN) IS NOT NULL THEN 'boolean'
+        -- string value is enclosed in single quotes, double quotes
+        WHEN REGEXP_CONTAINS(c.column_default, r"^['\\"].*['\\"]$") THEN 'string'
+        WHEN c.column_default = "NULL" THEN NULL
+        ELSE 'expression'
+      END AS columnDefaultType
     from ${tableName}.INFORMATION_SCHEMA.TABLES t
     join ${tableName}.INFORMATION_SCHEMA.COLUMNS c
     on
-        t.table_schema = c.table_schema
-        and t.table_name = c.table_name
+      t.table_schema = c.table_schema
+      and t.table_name = c.table_name
     where t.table_type = 'BASE TABLE'
     order by t.table_name, c.ordinal_position;
   `;
@@ -115,7 +136,7 @@ async function generateTablesAndFields(
   const [queryResult] = await client.query({
     query,
     params: {
-      stringRegex: STRING_REGEX,
+      // stringRegex: STRING_REGEX,
     },
   });
 
@@ -123,15 +144,15 @@ async function generateTablesAndFields(
   const fieldMap: FieldsDictionary = {};
 
   queryResult.forEach((row) => {
-    const { tableName, tableComment } = row;
+    const { tableSchema, tableName, tableComment } = row;
 
-    const key = tableName as string;
+    const key = getTableSchemaKey(tableSchema, tableName);
 
     if (!tableMap[key]) {
       tableMap[key] = {
         name: tableName,
         note: { value: tableComment || '' },
-        schemaName: '',
+        schemaName: tableSchema,
       };
     }
 
@@ -145,15 +166,20 @@ async function generateTablesAndFields(
 
   return {
     tables: Object.values(tableMap),
-    fields: fieldMap,
+    fieldMap,
   };
 }
 
-async function generateIndexes (client: BigQuery, projectId: string, datasetId: string): Promise<IndexesDictionary> {
+async function generateIndexes(
+  client: BigQuery,
+  projectId: string,
+  datasetId: string
+): Promise<IndexesDictionary> {
   const tableName = `${projectId}.${datasetId}`;
 
   const query = `
     select
+      s.index_schema as indexSchema,
       s.table_name as tableName,
       s.index_name as indexName,
       string_agg(sc.index_column_name, ', ') as indexColumnNames
@@ -164,7 +190,7 @@ async function generateIndexes (client: BigQuery, projectId: string, datasetId: 
       and s.table_name = sc.table_name
       and s.index_name = sc.index_name
     where sc.index_column_name = sc.index_field_path
-    group by s.table_name, s.index_name
+    group by s.index_schema, s.table_name, s.index_name
     order by s.table_name, s.index_name;
   `;
 
@@ -173,7 +199,7 @@ async function generateIndexes (client: BigQuery, projectId: string, datasetId: 
   const indexMap: IndexesDictionary = {};
 
   queryResult.forEach((row) => {
-    const { tableName, indexName, indexColumnNames } = row;
+    const { indexSchema, tableName, indexName, indexColumnNames } = row;
 
     const indexColumns = indexColumnNames.split(', ').map((column: string) => {
       return {
@@ -188,24 +214,30 @@ async function generateIndexes (client: BigQuery, projectId: string, datasetId: 
       columns: [...indexColumns],
     };
 
-    if (indexMap[tableName]) {
-      indexMap[tableName].push(index);
+    const key = getTableSchemaKey(indexSchema, tableName);
+
+    if (indexMap[key]) {
+      indexMap[key].push(index);
     } else {
-      indexMap[tableName] = [index];
+      indexMap[key] = [index];
     }
   });
   return indexMap;
 }
 
-async function generateTableConstraints (
+async function generateTableConstraints(
   client: BigQuery,
   projectId: string,
   datasetId: string
-): Promise<{ inlinePrimaryKeyMap: TableConstraintsDictionary; compositePrimaryKeyMap: IndexesDictionary }> {
+): Promise<{
+  inlinePrimaryKeyMap: TableConstraintsDictionary;
+  compositePrimaryKeyMap: IndexesDictionary;
+}> {
   const tableName = `${projectId}.${datasetId}`;
 
   const query = `
     select
+      tc.table_schema as tableSchema,
       tc.table_name as tableName,
       tc.constraint_name as constraintName,
       string_agg(kcu.column_name, ', ') as columnNames,
@@ -217,35 +249,41 @@ async function generateTableConstraints (
       and tc.table_name = kcu.table_name
       and tc.constraint_name = kcu.constraint_name
     where tc.constraint_type = 'PRIMARY KEY'
-    group by tc.table_name, tc.constraint_name
+    group by tc.table_schema, tc.table_name, tc.constraint_name
     order by tc.table_name, tc.constraint_name;
   `;
 
   const [queryResult] = await client.query(query);
 
-  const inlinePrimaryKeyList = queryResult.filter((row) => row.columnCount && row.columnCount === 1);
-  const compositePrimaryKeyList = queryResult.filter((row) => row.columnCount && row.columnCount > 1);
+  const inlinePrimaryKeyList = queryResult.filter(
+    (row) => row.columnCount && row.columnCount === 1
+  );
+  const compositePrimaryKeyList = queryResult.filter(
+    (row) => row.columnCount && row.columnCount > 1
+  );
 
   const inlinePrimaryKeyMap: TableConstraintsDictionary = {};
-  inlinePrimaryKeyList.forEach((key) => {
-    const { tableName, columnNames } = key;
+  inlinePrimaryKeyList.forEach((inlineKey) => {
+    const { tableSchema, tableName, columnNames } = inlineKey;
 
-    if (!inlinePrimaryKeyMap[tableName]) {
-      inlinePrimaryKeyMap[tableName] = {};
+    const key = getTableSchemaKey(tableSchema, tableName);
+
+    if (!inlinePrimaryKeyMap[key]) {
+      inlinePrimaryKeyMap[key] = {};
     }
 
-    if (!inlinePrimaryKeyMap[tableName][columnNames]) {
-      inlinePrimaryKeyMap[tableName][columnNames] = {};
+    if (!inlinePrimaryKeyMap[key][columnNames]) {
+      inlinePrimaryKeyMap[key][columnNames] = {};
     }
 
-    inlinePrimaryKeyMap[tableName][columnNames].pk = true;
+    inlinePrimaryKeyMap[key][columnNames].pk = true;
   });
 
   const compositePrimaryKeyMap: IndexesDictionary = {};
-  compositePrimaryKeyList.forEach((key) => {
-    const { tableName, constraintName, columnNames } = key;
+  compositePrimaryKeyList.forEach((compositeKey) => {
+    const { tableSchema, tableName, constraintName, columnNames } = compositeKey;
 
-    const indexColumns = columnNames.split(", ").map((column: string) => {
+    const indexColumns = columnNames.split(', ').map((column: string) => {
       return {
         type: 'column',
         value: column,
@@ -259,10 +297,12 @@ async function generateTableConstraints (
       pk: true,
     };
 
-    if (compositePrimaryKeyMap[tableName]) {
-      compositePrimaryKeyMap[tableName].push(index);
+    const key = getTableSchemaKey(tableSchema, tableName);
+
+    if (compositePrimaryKeyMap[key]) {
+      compositePrimaryKeyMap[key].push(index);
     } else {
-      compositePrimaryKeyMap[tableName] = [index];
+      compositePrimaryKeyMap[key] = [index];
     }
   });
 
@@ -272,66 +312,68 @@ async function generateTableConstraints (
   };
 }
 
-async function validateDatasetId (client: BigQuery, datasetId: string): Promise<boolean> {
+async function validateDatasetIdList(client: BigQuery, datasetIdList: string[]): Promise<string[]> {
   const [datasets] = await client.getDatasets();
 
-  const datasetIdLList = datasets.map((dataset) => dataset.id);
-  return datasetIdLList.includes(datasetId);
-}
+  const rawDatasetIdList = datasets.map((dataset) => dataset.id).filter((id) => id) as string[];
 
-function combineIndexAndCompositeConstraint (
-  userDefinedIndexMap: IndexesDictionary,
-  compositeConstraintMap: IndexesDictionary
-): IndexesDictionary {
-  const indexMap = Object.assign(userDefinedIndexMap, {});
-
-  Object.keys(compositeConstraintMap).forEach((tableName) => {
-    const compositeConstraint = compositeConstraintMap[tableName];
-    if (!indexMap[tableName]) {
-      indexMap[tableName] = compositeConstraint;
-      return;
-    }
-
-    indexMap[tableName].push(...compositeConstraint);
-  });
-
-  return indexMap;
-}
-
-async function fetchSchemaJson(keyFilename: string, dataset: string): Promise<DatabaseSchema> {
-  const client = await connectBigQuery(keyFilename);
-
-  const projectId = await client.getProjectId();
-
-  // read credentials in json
-  // get all required informations
-  // fetch all datasets
-  // loop and query the information schema
-
-  const datasetId = typeof dataset === 'string' ? dataset.trim() : '';
-  const isDatasetIdExists = await validateDatasetId(client, datasetId);
-  if (!isDatasetIdExists) {
-    throw new Error(`Dataset ${datasetId} does not exist`);
+  if (datasetIdList.length === 0) {
+    return rawDatasetIdList;
   }
+  return getIntersection(datasetIdList, rawDatasetIdList);
+}
 
+async function fetchSchemaJsonByDataset(
+  client: BigQuery,
+  projectId: string,
+  datasetId: string
+): Promise<DatabaseSchema> {
   const res = await Promise.all([
     generateTablesAndFields(client, projectId, datasetId),
     generateIndexes(client, projectId, datasetId),
     generateTableConstraints(client, projectId, datasetId),
   ]);
 
-  const { tables, fields } = res[0];
+  const { tables, fieldMap } = res[0];
   const indexMap = res[1];
-  const { inlinePrimaryKeyMap, compositePrimaryKeyMap} = res[2];
+  const { inlinePrimaryKeyMap, compositePrimaryKeyMap } = res[2];
 
   return {
     tables,
-    fields,
+    fields: fieldMap,
     refs: [],
     enums: [],
-    indexes: combineIndexAndCompositeConstraint(indexMap, compositePrimaryKeyMap),
+    indexes: mergeIndexDictionary(indexMap, compositePrimaryKeyMap),
     tableConstraints: inlinePrimaryKeyMap,
   };
+}
+
+async function fetchSchemaJson(keyFilename: string): Promise<DatabaseSchema> {
+  const rawCredential = await loadCredentialFromFile(keyFilename);
+  const credentialJson = parseBigQueryCredential(rawCredential);
+  const client = await connectBigQuery(credentialJson);
+
+  const projectId = await client.getProjectId();
+  const datasetIdList = await validateDatasetIdList(client, credentialJson.datasets);
+
+  const querySchemaPromises = datasetIdList.map((dataset) =>
+    fetchSchemaJsonByDataset(client, projectId, dataset)
+  );
+
+  const databaseSchemaRes = await Promise.all(querySchemaPromises);
+
+  const res = databaseSchemaRes.reduce((acc, dbSchema) => {
+    const { tables, fields, indexes, tableConstraints } = dbSchema;
+
+    acc.tables = mergeTables(acc.tables, tables);
+    acc.fields = mergeFieldDictionary(acc.fields, fields);
+    acc.indexes = mergeIndexDictionary(acc.indexes, indexes);
+    acc.tableConstraints = mergeTableConstraintDictionary(acc.tableConstraints, tableConstraints);
+
+    return acc;
+  }, { tables: [], fields: {}, tableConstraints: {}, indexes: {}, refs: [], enums: [] });
+
+  return res;
 }
 
 export { fetchSchemaJson };
