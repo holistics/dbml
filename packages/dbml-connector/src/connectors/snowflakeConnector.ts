@@ -348,6 +348,7 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   conn.destroy((err) => {
     if (err) {
       console.error('Error destroying connection');
+      // bearer:disable javascript_lang_logger_leak
       if  (config.IS_DEBUG_MODE === 'true') console.log(JSON.stringify(err, null, 2));
     } else {
       console.log('Connection destroyed successfully.');
