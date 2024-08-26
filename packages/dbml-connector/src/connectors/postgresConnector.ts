@@ -13,7 +13,7 @@ import {
   Table,
   TableConstraintsDictionary,
 } from './types';
-import { parsePostgresSchema, buildSchemaQuery } from '../utils/parseSchema';
+import { parseConnectionString, buildSchemaQuery } from '../utils/parseSchema';
 
 const getValidatedClient = async (connection: string): Promise<Client> => {
   const client = new Client(connection);
@@ -472,8 +472,8 @@ const generateRawEnums = async (client: Client, schemas: string[]): Promise<Enum
 };
 
 const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
-  const client = await getValidatedClient(connection);
-  const schemas = parsePostgresSchema(connection);
+  const { connectionString, schemas } = parseConnectionString(connection, 'jdbc');
+  const client = await getValidatedClient(connectionString);
 
   const tablesAndFieldsRes = generateTablesAndFields(client, schemas);
   const indexesRes = generateIndexes(client, schemas);
