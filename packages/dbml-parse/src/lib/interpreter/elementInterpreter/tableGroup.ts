@@ -5,7 +5,7 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
 } from '../../parser/nodes';
 import { ElementInterpreter, InterpreterDatabase, TableGroup } from '../types';
-import { extractElementName, getTokenPosition, normalizeNoteContent } from '../utils';
+import { extractElementName, getTokenPosition, normalizeNoteContent, extractColor } from '../utils';
 import { aggregateSettingList } from '../../analyzer/validator/utils';
 
 export class TableGroupInterpreter implements ElementInterpreter {
@@ -110,6 +110,10 @@ export class TableGroupInterpreter implements ElementInterpreter {
 
   private interpretSettingList(settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
+
+    this.tableGroup.color = settingMap['color']?.length
+      ? extractColor(settingMap['color']?.at(0)?.value as any)
+      : undefined;
 
     const [noteNode] = settingMap.note || [];
     this.tableGroup.note = noteNode && {
