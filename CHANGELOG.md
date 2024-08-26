@@ -1,3 +1,17 @@
+## v3.7.4 (2024-08-26)
+
+#### :memo: Documentation
+* `dbml-core`, `dbml-parse`
+  * [#619](https://github.com/holistics/dbml/pull/619) Support colors for Table Groups ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#619](https://github.com/holistics/dbml/pull/619) Support colors for Table Groups ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Tho Nguyen ([@thonx-holistics](https://github.com/thonx-holistics))
+
 ## v3.7.3 (2024-08-19)
 
 #### :memo: Documentation
