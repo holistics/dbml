@@ -19,6 +19,21 @@ import {
   TableConstraintsDictionary,
 } from './types';
 
+type constraintRow = {
+  schemaName: string;
+  tableName: string;
+  constraintName: string;
+  columnNames: string[];
+  type: string;
+  primary?: boolean;
+  unique?: boolean;
+};
+
+type generatedIndexes = {
+  indexes: IndexesDictionary;
+  tableConstraints: TableConstraintsDictionary;
+};
+
 const parseConnectionString = (connectionString: string): Record<string, string> => {
   const params: Record<string, string> = {};
   const regex = /([^;=]+)=([^;]*)/g;
@@ -31,8 +46,6 @@ const parseConnectionString = (connectionString: string): Record<string, string>
   return params;
 }
 
-
-const parseYesNo = (val: string): boolean => val === 'YES';
 
 const connect = async (connection: Connection): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -85,7 +98,6 @@ const connectToSnowflake = async (config: Record<string, string>): Promise<Conne
     password: config.PWD,
     database: config.DATABASE,
     warehouse: config.WAREHOUSE,
-    schema: config.SCHEMA,
     sfRetryMaxLoginRetries: 3,
     timeout: 10000,
   });
@@ -161,11 +173,12 @@ const generateField = (row: Record<string, any>): Field => {
   };
 };
 
-const generateTablesAndFields = async (conn: Connection, schema: string | null): Promise<{
+const generateTablesAndFields = async (conn: Connection, schemas: string[]): Promise<{
   tables: Table[],
   fields: FieldsDictionary,
 }> => {
   const fields: FieldsDictionary = {};
+  const schemaSql = schemas.length > 0 ? `AND c.table_schema IN (${schemas.map((schema) => `'${schema}'`).join(',')})` : '';
   const tablesAndFieldsSql = `
     SELECT
         c.table_schema,
@@ -195,7 +208,7 @@ const generateTablesAndFields = async (conn: Connection, schema: string | null):
     WHERE
         t.table_type = 'BASE TABLE'
         AND t.table_schema NOT IN ('INFORMATION_SCHEMA')
-        ${schema ? `AND c.table_schema = '${schema}'` : ''}
+        ${schemaSql}
     ORDER BY
         c.table_schema,
         c.table_name,
@@ -228,20 +241,34 @@ const generateTablesAndFields = async (conn: Connection, schema: string | null):
   };
 };
 
-const generateIndexes = async (conn: Connection, databaseName: string, schema: string | null) => {
-  type constraintRow = {
-    schemaName: string;
-    tableName: string;
-    constraintName: string;
-    columnNames: string[];
-    type: string;
-    primary?: boolean;
-    unique?: boolean;
-  };
-  type generatedIndexes = {
-    indexes: IndexesDictionary;
-    tableConstraints: TableConstraintsDictionary;
-  };
+const createConstraintKeysMap = (keys: Record<string, string>[], schemas: string[], constraintType: 'primary' | 'unique'): Record<string, constraintRow> => {
+  return keys.reduce((acc: Record<string, constraintRow>, row: Record<string, string>) => {
+    const { schema_name, table_name, column_name, constraint_name } = row;
+    const selectedSchema = schemas.length > 0 ? schemas.includes(schema_name) : true;
+    if (!selectedSchema) { return acc; }
+
+    const key = `${schema_name}.${table_name}.${constraint_name}`;
+
+    if (acc[key]) {
+      const columnNames = acc[key].columnNames;
+      columnNames.push(column_name);
+      return acc;
+    }
+
+    acc[key] = {
+      schemaName: schema_name,
+      tableName: table_name,
+      constraintName: constraint_name,
+      columnNames: [column_name],
+      type: '',
+    };
+    acc[key][constraintType] = true;
+
+    return acc;
+  }, {});
+};
+const generateIndexes = async (conn: Connection, databaseName: string, schemas: string[]) => {
+
 
   const getPrimaryKeysSql = `
     SHOW PRIMARY KEYS IN DATABASE ${databaseName};
@@ -254,53 +281,8 @@ const generateIndexes = async (conn: Connection, databaseName: string, schema: s
   const primaryKeys = await executeQuery(conn, getPrimaryKeysSql);
   const uniqueKeys = await executeQuery(conn, getUniqueKeysSql);
 
-  const primaryKeysByConstraint: Record<string, constraintRow> = primaryKeys.reduce((
-    acc: Record<string, constraintRow>,
-    row: Record<string, string>
-  ) => {
-    const { schema_name, table_name, column_name, constraint_name } = row;
-    if (schema && schema_name !== schema) { return acc; }
-
-    if (acc[constraint_name]) {
-      const columnNames = acc[constraint_name].columnNames;
-      columnNames.push(column_name);
-      return acc;
-    }
-
-    acc[constraint_name] = {
-      schemaName: schema_name,
-      tableName: table_name,
-      constraintName: constraint_name,
-      columnNames: [column_name],
-      type: '',
-      primary: true,
-    };
-    return acc;
-  }, {});
-
-  const uniqueKeysByConstraint: Record<string, constraintRow> = uniqueKeys.reduce((
-    acc: Record<string, constraintRow>,
-    row: Record<string, string>
-  ) => {
-    const { schema_name, table_name, column_name, constraint_name } = row;
-    if (schema && schema_name !== schema) { return acc; }
-
-    if (acc[constraint_name]) {
-      const columnNames = acc[constraint_name].columnNames;
-      columnNames.push(column_name);
-      return acc;
-    }
-
-    acc[constraint_name] = {
-      schemaName: schema_name,
-      tableName: table_name,
-      constraintName: constraint_name,
-      columnNames: [column_name],
-      type: '',
-      unique: true,
-    };
-    return acc;
-  }, {});
+  const primaryKeysByConstraint: Record<string, constraintRow> = createConstraintKeysMap(primaryKeys, schemas, 'primary');
+  const uniqueKeysByConstraint: Record<string, constraintRow> = createConstraintKeysMap(uniqueKeys, schemas, 'unique');
 
   const allConstraints: constraintRow[] = [Object.values(primaryKeysByConstraint), Object.values(uniqueKeysByConstraint)].flat();
   const { indexes, tableConstraints } = allConstraints.reduce((acc: generatedIndexes, row: constraintRow): generatedIndexes => {
@@ -349,11 +331,12 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   if (conn instanceof Error) {
     throw conn;
   }
-  const schema = config.SCHEMA || null;
+  // Schemas: schema1,schema2,schema3
+  const schemas = config.SCHEMAS ? config.SCHEMAS.split(',').map((schema) => schema.trim()) : [];
   const databaseName = config.DATABASE;
 
-  const tablesAndFieldsRes = generateTablesAndFields(conn, schema);
-  const indexesRes = generateIndexes(conn, databaseName, schema);
+  const tablesAndFieldsRes = generateTablesAndFields(conn, schemas);
+  const indexesRes = generateIndexes(conn, databaseName, schemas);
 
   const res = await Promise.all([
     tablesAndFieldsRes,
