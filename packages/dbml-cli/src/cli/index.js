@@ -57,15 +57,15 @@ function db2dbml (args) {
   //    - postgres: postgresql://user:password@localhost:5432/dbname
   //    - mssql: 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate
   const description = `
-    <format> your database format (postgres, mysql, mssql)
+    <database-type> your database format (postgres, mysql, mssql, snowflake)
     <connection-string> your database connection string:
-      - postgres: postgresql://user:password@localhost:5432/dbname
-      - mysql: mysql://user:password@localhost:3306/dbname
-      - mssql: 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;'
-      - snowflake: 'SERVER=<account_identifier>.<region>;UID=<your_username>;PWD=<your_password>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;'
+      - postgres: 'postgresql://user:password@localhost:5432/dbname?schemas=schema1,schema2,schema3'
+      - mysql: 'mysql://user:password@localhost:3306/dbname'
+      - mssql: 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;Schemas=schema1,schema2,schema3;'
+      - snowflake: 'SERVER=<account_identifier>.<region>;UID=<your_username>;PWD=<your_password>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;SCHEMAS=schema1,schema2,schema3;'
   `;
   program
-    .usage('<format> <connection-string> [options]')
+    .usage('<database-type> <connection-string> [options]')
     .description(description)
     .option('-o, --out-file <pathspec>', 'compile all input files into a single files');
 
