@@ -335,7 +335,6 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   }
   // Schemas: schema1,schema2,schema3
   const schemas = config.SCHEMAS ? parseSchema(config.SCHEMAS) : [];
-  console.log(schemas);
   const databaseName = config.DATABASE;
 
   const tablesAndFieldsRes = generateTablesAndFields(conn, schemas);
@@ -348,7 +347,8 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
 
   conn.destroy((err) => {
     if (err) {
-      console.error('Error destroying connection:', err);
+      console.error('Error destroying connection');
+      if  (config.IS_DEBUG_MODE === 'true') console.log(JSON.stringify(err, null, 2));
     } else {
       console.log('Connection destroyed successfully.');
     }
