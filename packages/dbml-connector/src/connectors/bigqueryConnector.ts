@@ -1,4 +1,13 @@
 import { BigQuery } from '@google-cloud/bigquery';
+import { loadCredentialFromFile, parseBigQueryCredential } from '../utils/credential-loader';
+import {
+  getIntersection,
+  getTableSchemaKey,
+  mergeFieldDictionary,
+  mergeIndexDictionary,
+  mergeTableConstraintDictionary,
+  mergeTables,
+} from '../utils/helpers';
 import {
   BigQueryCredentials,
   DatabaseSchema,
@@ -11,8 +20,6 @@ import {
   Table,
   TableConstraintsDictionary,
 } from './types';
-import { loadCredentialFromFile, parseBigQueryCredential } from './utils/credential-loader';
-import { getIntersection, getTableSchemaKey, mergeFieldDictionary, mergeIndexDictionary, mergeTableConstraintDictionary, mergeTables } from './utils/helpers';
 
 async function connectBigQuery(credential: BigQueryCredentials): Promise<BigQuery> {
   const client = new BigQuery({
@@ -317,6 +324,7 @@ async function validateDatasetIdList(client: BigQuery, datasetIdList: string[]):
 
   const rawDatasetIdList = datasets.map((dataset) => dataset.id).filter((id) => id) as string[];
 
+  // If user does not specify which datasets to be fetched, we will fetch all datasets
   if (datasetIdList.length === 0) {
     return rawDatasetIdList;
   }
@@ -363,15 +371,17 @@ async function fetchSchemaJson(keyFilename: string): Promise<DatabaseSchema> {
   const databaseSchemaRes = await Promise.all(querySchemaPromises);
 
   const res = databaseSchemaRes.reduce((acc, dbSchema) => {
-    const { tables, fields, indexes, tableConstraints } = dbSchema;
+      const { tables, fields, indexes, tableConstraints } = dbSchema;
 
-    acc.tables = mergeTables(acc.tables, tables);
-    acc.fields = mergeFieldDictionary(acc.fields, fields);
-    acc.indexes = mergeIndexDictionary(acc.indexes, indexes);
-    acc.tableConstraints = mergeTableConstraintDictionary(acc.tableConstraints, tableConstraints);
+      acc.tables = mergeTables(acc.tables, tables);
+      acc.fields = mergeFieldDictionary(acc.fields, fields);
+      acc.indexes = mergeIndexDictionary(acc.indexes, indexes);
+      acc.tableConstraints = mergeTableConstraintDictionary(acc.tableConstraints, tableConstraints);
 
-    return acc;
-  }, { tables: [], fields: {}, tableConstraints: {}, indexes: {}, refs: [], enums: [] });
+      return acc;
+    },
+    { tables: [], fields: {}, tableConstraints: {}, indexes: {}, refs: [], enums: [] }
+  );
 
   return res;
 }
