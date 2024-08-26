@@ -6,7 +6,9 @@
 // Snowflake does not support ENUMs.
 // Snowflake does not support indexes for standard tables.
 //
+
 import snowflake, { Connection, LogLevel } from 'snowflake-sdk';
+import { parseSchema } from '../utils/parseSchema';
 import {
   DatabaseSchema,
   DefaultInfo,
@@ -332,7 +334,8 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
     throw conn;
   }
   // Schemas: schema1,schema2,schema3
-  const schemas = config.SCHEMAS ? config.SCHEMAS.split(',').map((schema) => schema.trim()) : [];
+  const schemas = config.SCHEMAS ? parseSchema(config.SCHEMAS) : [];
+  console.log(schemas);
   const databaseName = config.DATABASE;
 
   const tablesAndFieldsRes = generateTablesAndFields(conn, schemas);
