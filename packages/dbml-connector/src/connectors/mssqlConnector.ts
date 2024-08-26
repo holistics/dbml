@@ -14,6 +14,7 @@ import {
   DatabaseSchema,
   DefaultInfo,
 } from './types';
+import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
 
 const MSSQL_DATE_TYPES = [
   'date',
@@ -132,7 +133,7 @@ const generateField = (row: Record<string, any>): Field => {
   };
 };
 
-const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool): Promise<{
+const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas: string[]): Promise<{
   tables: Table[],
   fields: FieldsDictionary,
   enums: Enum[],
@@ -140,75 +141,71 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool): Promise
   const fields: FieldsDictionary = {};
   const enums: Enum[] = [];
   const tablesAndFieldsSql = `
-    WITH tables_and_fields AS (
-        SELECT
-            s.name AS table_schema,
-            t.name AS table_name,
-            c.name AS column_name,
-            ty.name AS data_type,
-            c.max_length AS character_maximum_length,
-            c.precision AS numeric_precision,
-            c.scale AS numeric_scale,
-            c.is_identity AS identity_increment,
-            CASE
-                WHEN c.is_nullable = 1 THEN 'YES'
-                ELSE 'NO'
-            END AS is_nullable,
-            CASE
-                WHEN c.default_object_id = 0 THEN NULL
-                ELSE OBJECT_DEFINITION(c.default_object_id)
-            END AS column_default,
-            -- Fetching table comments
-            p.value AS table_comment,
-            ep.value AS column_comment
-        FROM
-            sys.tables t
-        JOIN
-            sys.schemas s ON t.schema_id = s.schema_id
-        JOIN
-            sys.columns c ON t.object_id = c.object_id
-        JOIN
-            sys.types ty ON c.user_type_id = ty.user_type_id
-        LEFT JOIN
-            sys.extended_properties p ON p.major_id = t.object_id
-                AND p.name = 'MS_Description'
-                AND p.minor_id = 0 -- Ensure minor_id is 0 for table comments
-        LEFT JOIN
-            sys.extended_properties ep ON ep.major_id = c.object_id
-                AND ep.minor_id = c.column_id
-                AND ep.name = 'MS_Description'
-        WHERE
-            t.type = 'U' -- User-defined tables
-    )
+  WITH tables_and_fields AS (
     SELECT
-        tf.table_schema,
-        tf.table_name,
-        tf.column_name,
-        tf.data_type,
-        tf.character_maximum_length,
-        tf.numeric_precision,
-        tf.numeric_scale,
-        tf.identity_increment,
-        tf.is_nullable,
-        tf.column_default,
-        tf.table_comment,
-        tf.column_comment,
-        cc.name AS check_constraint_name, -- Adding CHECK constraint name
-        cc.definition AS check_constraint_definition, -- Adding CHECK constraint definition
-        CASE
-            WHEN tf.column_default LIKE '((%))' THEN 'number'
-            WHEN tf.column_default LIKE '(''%'')' THEN 'string'
-            ELSE 'expression'
-        END AS default_type
+      s.name AS table_schema,
+      t.name AS table_name,
+      c.name AS column_name,
+      ty.name AS data_type,
+      c.max_length AS character_maximum_length,
+      c.precision AS numeric_precision,
+      c.scale AS numeric_scale,
+      c.is_identity AS identity_increment,
+      CASE
+        WHEN c.is_nullable = 1 THEN 'YES'
+        ELSE 'NO'
+      END AS is_nullable,
+      CASE
+        WHEN c.default_object_id = 0 THEN NULL
+        ELSE OBJECT_DEFINITION(c.default_object_id)
+      END AS column_default,
+      -- Fetching table comments
+      p.value AS table_comment,
+      ep.value AS column_comment
     FROM
-        tables_and_fields AS tf
-    LEFT JOIN
-        sys.check_constraints cc ON cc.parent_object_id = OBJECT_ID(tf.table_schema + '.' + tf.table_name)
-        AND cc.definition LIKE '%' + tf.column_name + '%' -- Ensure the constraint references the column
-    ORDER BY
-        tf.table_schema,
-        tf.table_name,
-        tf.column_name;
+      sys.tables t
+      JOIN sys.schemas s ON t.schema_id = s.schema_id
+      JOIN sys.columns c ON t.object_id = c.object_id
+      JOIN sys.types ty ON c.user_type_id = ty.user_type_id
+      LEFT JOIN sys.extended_properties p ON p.major_id = t.object_id
+        AND p.name = 'MS_Description'
+        AND p.minor_id = 0 -- Ensure minor_id is 0 for table comments
+      LEFT JOIN sys.extended_properties ep ON ep.major_id = c.object_id
+        AND ep.minor_id = c.column_id
+        AND ep.name = 'MS_Description'
+    WHERE
+      t.type = 'U' -- User-defined tables
+  )
+  SELECT
+    tf.table_schema,
+    tf.table_name,
+    tf.column_name,
+    tf.data_type,
+    tf.character_maximum_length,
+    tf.numeric_precision,
+    tf.numeric_scale,
+    tf.identity_increment,
+    tf.is_nullable,
+    tf.column_default,
+    tf.table_comment,
+    tf.column_comment,
+    cc.name AS check_constraint_name, -- Adding CHECK constraint name
+    cc.definition AS check_constraint_definition, -- Adding CHECK constraint definition
+    CASE
+      WHEN tf.column_default LIKE '((%))' THEN 'number'
+      WHEN tf.column_default LIKE '(''%'')' THEN 'string'
+      ELSE 'expression'
+    END AS default_type
+  FROM
+    tables_and_fields AS tf
+  LEFT JOIN sys.check_constraints cc
+    ON cc.parent_object_id = OBJECT_ID(tf.table_schema + '.' + tf.table_name)
+    AND cc.definition LIKE '%' + tf.column_name + '%' -- Ensure the constraint references the column
+  ${buildSchemaQuery('tf.table_schema', schemas, 'WHERE')}
+  ORDER BY
+    tf.table_schema,
+    tf.table_name,
+    tf.column_name;
   `;
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
@@ -259,7 +256,7 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool): Promise
   };
 };
 
-const generateRefs = async (client: sql.ConnectionPool): Promise<Ref[]> => {
+const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Promise<Ref[]> => {
   const refs: Ref[] = [];
 
   const refsListSql = `
@@ -290,6 +287,7 @@ const generateRefs = async (client: sql.ConnectionPool): Promise<Ref[]> => {
     JOIN sys.tables AS t2 ON fk.referenced_object_id = t2.object_id
     JOIN sys.schemas AS s2 ON t2.schema_id = s2.schema_id
     WHERE s.name NOT IN ('sys', 'information_schema')
+      ${buildSchemaQuery('s.name', schemas)}
     ORDER BY
       s.name,
       t.name;
@@ -334,7 +332,7 @@ const generateRefs = async (client: sql.ConnectionPool): Promise<Ref[]> => {
   return refs;
 };
 
-const generateIndexes = async (client: sql.ConnectionPool) => {
+const generateIndexes = async (client: sql.ConnectionPool, schemas: string[]) => {
   const indexListSql = `
     WITH user_tables AS (
       SELECT
@@ -352,6 +350,7 @@ const generateIndexes = async (client: sql.ConnectionPool) => {
     ),
     index_info AS (
       SELECT
+        SCHEMA_NAME(t.schema_id) AS table_schema,  -- Add schema information
         OBJECT_NAME(i.object_id) AS table_name,
         i.name AS index_name,
         i.is_unique,
@@ -399,8 +398,10 @@ const generateIndexes = async (client: sql.ConnectionPool) => {
       user_tables ut
     LEFT JOIN
       index_info ii ON ut.TABLE_NAME = ii.table_name
+      AND ut.TABLE_SCHEMA = ii.table_schema
     WHERE
       ii.columns IS NOT NULL
+      ${buildSchemaQuery('ut.TABLE_SCHEMA', schemas)}
     ORDER BY
       ut.TABLE_NAME,
       ii.constraint_type,
@@ -491,11 +492,12 @@ const generateIndexes = async (client: sql.ConnectionPool) => {
 };
 
 const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
-  const client = await getValidatedClient(connection);
+  const { connectionString, schemas } = parseConnectionString(connection, 'odbc');
+  const client = await getValidatedClient(connectionString);
 
-  const tablesFieldsAndEnumsRes = generateTablesFieldsAndEnums(client);
-  const indexesRes = generateIndexes(client);
-  const refsRes = generateRefs(client);
+  const tablesFieldsAndEnumsRes = generateTablesFieldsAndEnums(client, schemas);
+  const indexesRes = generateIndexes(client, schemas);
+  const refsRes = generateRefs(client, schemas);
 
   const res = await Promise.all([
     tablesFieldsAndEnumsRes,

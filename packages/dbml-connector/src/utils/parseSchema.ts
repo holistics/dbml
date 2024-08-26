@@ -1,17 +1,52 @@
-export const parsePostgresSchema = (connectionString: string): string[] => {
-  // postgresql://user:password@localhost:5432/dbname?schemas=schema1,schema2,schema3&ssl=true
-  if (!connectionString.includes('schemas=')) return [];
+// You cannot use the "=" inside database's schema name. It will be treated as a delimiter.
+const SCHEMAS_DELIMITER = 'schemas=';
+
+const haveSchemas = (str: string): boolean => {
+  return str.toLowerCase().includes(SCHEMAS_DELIMITER);
+};
+
+const getSchemasPart = (str: string | undefined): string => {
+  return str ? str.toLowerCase().split(SCHEMAS_DELIMITER)[1] : '';
+};
+
+const noSchemaResult = (connectionString: string) => ({
+  connectionString,
+  schemas: [],
+});
+
+const parseOdbcSchema = (connectionString: string) => {
+  const connectionParts = connectionString.split(';');
+  const schemasPart = connectionParts.find((part) => haveSchemas(part));
+
+  return {
+    connectionString: connectionParts.filter((part) => !haveSchemas(part)).join(';'),
+    schemas: parseSchema(getSchemasPart(schemasPart)),
+  };
+};
+
+export const parseJdbcSchema = (connectionString: string) => {
   const connectionParts = connectionString.split('?');
   const connectionArgs = connectionParts[1].split('&');
-  const schemasArg = connectionArgs.find((part) => part.includes('schemas='));
-  const schemas = schemasArg ? parseSchema(schemasArg.split('=')[1]) : [];
-  return schemas;
-}
+  const schemasPart = connectionArgs.find((part) => haveSchemas(part));
+
+  return {
+    connectionString: connectionParts[0],
+    schemas: parseSchema(getSchemasPart(schemasPart)),
+  };
+};
+
+export const parseConnectionString = (connectionString: string, connectionStringType: 'jdbc' | 'odbc') => {
+  if (!haveSchemas(connectionString)) return noSchemaResult(connectionString);
+
+  return connectionStringType === 'jdbc'
+    ? parseJdbcSchema(connectionString)
+    : parseOdbcSchema(connectionString);
+};
 
 export const buildSchemaQuery = (columnName: string, schemas: string[], prefix = 'AND'): string => {
   if (schemas.length === 0) return '';
   return `${prefix} ${columnName} IN (${schemas.map((schema) => `'${schema}'`).join(', ')})`;
-}
+};
 
 // Inputs: schemas string -> Output: schema array string[]
 // schema1, schema2 -> ['schema1', 'schema2']
