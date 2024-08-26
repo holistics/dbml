@@ -37,11 +37,11 @@ function getConnectionOpt (args) {
   const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake'];
   const defaultConnectionOpt = {
     connection: args[0],
-    format: 'unknown',
+    databaseType: 'unknown',
   };
 
   return reduce(args, (connectionOpt, arg) => {
-    if (supportedDatabases.includes(arg)) connectionOpt.format = arg;
+    if (supportedDatabases.includes(arg)) connectionOpt.databaseType = arg;
     // Check if the arg is a connection string using regex
     const connectionStringRegex = /^.*[:;]/;
     if (connectionStringRegex.test(arg)) {

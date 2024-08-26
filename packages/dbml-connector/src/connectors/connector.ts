@@ -4,8 +4,8 @@ import { fetchSchemaJson as fetchMssqlSchemaJson } from './mssqlConnector';
 import { fetchSchemaJson as fetchMysqlSchemaJson } from './mysqlConnector';
 import { fetchSchemaJson as fetchSnowflakeSchemaJson } from './snowflakeConnector';
 
-const fetchSchemaJson = async (connection: string, format: string): Promise<DatabaseSchema> => {
-  switch (format) {
+const fetchSchemaJson = async (connection: string, databaseType: string): Promise<DatabaseSchema> => {
+  switch (databaseType) {
     case 'postgres':
       return fetchPostgresSchemaJson(connection);
     case 'mssql':
@@ -15,7 +15,7 @@ const fetchSchemaJson = async (connection: string, format: string): Promise<Data
     case 'snowflake':
       return fetchSnowflakeSchemaJson(connection);
     default:
-      throw new Error(`Unsupported connection format: ${format}`);
+      throw new Error(`Unsupported database type: ${databaseType}`);
   }
 };
 
