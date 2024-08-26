@@ -1,5 +1,5 @@
 import { readFile } from 'fs/promises';
-import { BigQueryCredentials } from '../types';
+import { BigQueryCredentials } from '../connectors/types';
 
 export async function loadCredentialFromFile(filename: string): Promise<string> {
   try {

@@ -50,6 +50,13 @@ function getConnectionOpt (args) {
       connectionOpt.connection = arg;
     }
 
+    const windowFilepathRegex = /^[a-zA-Z]:[\\/](?:[^<>:"/\\|?*\n\r]+[\\/])*[^<>:"/\\|?*\n\r]*$/;
+    const unixFilepathRegex = /^(\/|\.\/|~\/|\.\.\/)([^<>:"|?*\n\r]*\/?)*[^<>:"|?*\n\r]*$/;
+
+    if (windowFilepathRegex.test(arg) || unixFilepathRegex.test(arg)) {
+      connectionOpt.connection = arg;
+    }
+
     return connectionOpt;
   }, defaultConnectionOpt);
 }

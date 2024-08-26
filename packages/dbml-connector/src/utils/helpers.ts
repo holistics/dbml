@@ -1,4 +1,9 @@
-import { FieldsDictionary, IndexesDictionary, Table, TableConstraintsDictionary } from '../types';
+import {
+  FieldsDictionary,
+  IndexesDictionary,
+  Table,
+  TableConstraintsDictionary,
+} from '../connectors/types';
 
 export function getIntersection<T>(firstList: T[], secondList: T[]): T[] {
   return firstList.filter((item) => secondList.includes(item));

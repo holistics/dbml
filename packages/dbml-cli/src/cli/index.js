@@ -49,19 +49,23 @@ function sql2dbml (args) {
 function db2dbml (args) {
   program.version(projectInfo.version);
 
-  // Q: How to write the arguments description for the below usage?
-  // A: The usage description is written in the following way:
-  //    - <format> your database format (postgres, mysql, mssql)
-  //    - <connection-string> your database connection string
-  //    - postgres: postgresql://user:password@localhost:5432/dbname
-  //    - mssql: 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate
-  const description = `
-    <format> your database format (postgres, mysql, mssql)
+  const description = `Generate DBML directly from a database
+    <format>            your database format (postgres, mysql, mssql, bigquery)
     <connection-string> your database connection string or path to credential file:
-      - postgres: postgresql://user:password@localhost:5432/dbname
-      - mysql: mysql://user:password@localhost:3306/dbname
-      - mssql: 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;'
-      - bigquery: /path_to_json_credential.json
+                        - postgres: postgresql://user:password@localhost:5432/dbname
+                        - mysql: mysql://user:password@localhost:3306/dbname
+                        - mssql: 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;'
+                        - bigquery: /path_to_json_credential.json
+
+                        For BigQuery, your JSON credential file must contain the following keys:
+                          {
+                            "project_id": "your-project-id",
+                            "client_email": "your-client-email",
+                            "private_key": "your-private-key",
+                            "datasets": ["dataset_1", "dataset_2", ...]
+                          }
+
+                        Note: If the "datasets" key is not provided or is an empty array, it will fetch information from all datasets.
   `;
   program
     .usage('<format> <connection-string> [options]')
