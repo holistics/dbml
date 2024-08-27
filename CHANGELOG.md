@@ -1,3 +1,23 @@
+## v3.8.0 (2024-08-27)
+
+#### :memo: Documentation
+* `dbml-core`
+  * [#624](https://github.com/holistics/dbml/pull/624) Fix erroneous examples in document for Table Groups ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`
+  * [#622](https://github.com/holistics/dbml/pull/622) Add bigquery connector ([@huyleminh01](https://github.com/huyleminh01))
+* `dbml-cli`, `dbml-connector`, `dbml-core`
+  * [#623](https://github.com/holistics/dbml/pull/623) Add Snowflake connector ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :robot: Dependencies Update
+* [#621](https://github.com/holistics/dbml/pull/621) Bump micromatch from 4.0.5 to 4.0.8 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Tho Nguyen ([@thonx-holistics](https://github.com/thonx-holistics))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v3.7.4 (2024-08-26)
 
 #### :memo: Documentation
