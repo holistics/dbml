@@ -31,6 +31,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@google-cloud/bigquery": "^7.9.0",
     "mssql": "^11.0.1",
     "mysql2": "^3.11.0",
     "pg": "^8.12.0",

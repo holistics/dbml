@@ -34,7 +34,7 @@ function getFormatOpt (opts) {
 }
 
 function getConnectionOpt (args) {
-  const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake'];
+  const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery'];
   const defaultConnectionOpt = {
     connection: args[0],
     databaseType: 'unknown',
@@ -47,6 +47,13 @@ function getConnectionOpt (args) {
     if (connectionStringRegex.test(arg)) {
       // Example: jdbc:mysql://localhost:3306/mydatabase
       // Example: odbc:Driver={SQL Server};Server=myServerAddress;Database=myDataBase;Uid=myUsername;Pwd=myPassword;
+      connectionOpt.connection = arg;
+    }
+
+    const windowFilepathRegex = /^[a-zA-Z]:[\\/](?:[^<>:"/\\|?*\n\r]+[\\/])*[^<>:"/\\|?*\n\r]*$/;
+    const unixFilepathRegex = /^(\/|\.\/|~\/|\.\.\/)([^<>:"|?*\n\r]*\/?)*[^<>:"|?*\n\r]*$/;
+
+    if (windowFilepathRegex.test(arg) || unixFilepathRegex.test(arg)) {
       connectionOpt.connection = arg;
     }
 
