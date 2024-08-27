@@ -13,9 +13,9 @@ import logger from '../helpers/logger';
 
 export default async function connectionHandler (program) {
   try {
-    const { connection, format } = getConnectionOpt(program.args);
+    const { connection, databaseType } = getConnectionOpt(program.args);
     const opts = program.opts();
-    const schemaJson = await connector.fetchSchemaJson(connection, format);
+    const schemaJson = await connector.fetchSchemaJson(connection, databaseType);
 
     if (!opts.outFile && !opts.outDir) {
       const res = importer.generateDbml(schemaJson);

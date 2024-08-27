@@ -13,6 +13,7 @@ import {
   Table,
   TableConstraintsDictionary,
 } from './types';
+import { parseConnectionString, buildSchemaQuery } from '../utils/parseSchema';
 
 const getValidatedClient = async (connection: string): Promise<Client> => {
   const client = new Client(connection);
@@ -113,7 +114,7 @@ const generateField = (row: Record<string, any>): Field => {
   };
 };
 
-const generateTablesAndFields = async (client: Client): Promise<{
+const generateTablesAndFields = async (client: Client, schemas: string[]): Promise<{
   tables: Table[],
   fields: FieldsDictionary,
 }> => {
@@ -167,6 +168,7 @@ const generateTablesAndFields = async (client: Client): Promise<{
     WHERE
       t.table_type = 'BASE TABLE'
       AND t.table_schema NOT IN ('pg_catalog', 'information_schema')
+      ${buildSchemaQuery('t.table_schema', schemas)}
     ORDER BY
       t.table_schema,
       t.table_name,
@@ -200,7 +202,7 @@ const generateTablesAndFields = async (client: Client): Promise<{
   };
 };
 
-const generateRawRefs = async (client: Client): Promise<Ref[]> => {
+const generateRawRefs = async (client: Client, schemas: string[]): Promise<Ref[]> => {
   const refs: Ref[] = [];
 
   const refsListSql = `
@@ -226,6 +228,7 @@ const generateRawRefs = async (client: Client): Promise<Ref[]> => {
       AND tc.table_schema = rc.constraint_schema
     WHERE tc.constraint_type = 'FOREIGN KEY'
       AND tc.table_schema NOT IN ('pg_catalog', 'information_schema')
+      ${buildSchemaQuery('tc.table_schema', schemas)}
     GROUP BY
       tc.table_schema,
       tc.table_name,
@@ -279,8 +282,7 @@ const generateRawRefs = async (client: Client): Promise<Ref[]> => {
   return refs;
 };
 
-const generateIndexes = async (client: Client) => {
-  // const tableConstraints = {};
+const generateIndexes = async (client: Client, schemas: string[]) => {
   const indexListSql = `
     WITH user_tables AS (
       SELECT
@@ -293,6 +295,7 @@ const generateIndexes = async (client: Client) => {
     ),
     index_info AS (
       SELECT
+        t.relnamespace::regnamespace::text AS table_schema,
         t.relname AS table_name,
         i.relname AS index_name,
         ix.indisunique AS is_unique,
@@ -317,7 +320,7 @@ const generateIndexes = async (client: Client) => {
         AND t.relname NOT LIKE 'pg_%'
         AND t.relname NOT LIKE 'sql_%'
       GROUP BY
-        t.relname, i.relname, ix.indisunique, ix.indisprimary, am.amname, ix.indexprs, ix.indrelid
+        t.relnamespace, t.relname, i.relname, ix.indisunique, ix.indisprimary, am.amname, ix.indexprs, ix.indrelid
     )
     SELECT
       ut.tableschema AS table_schema,
@@ -328,12 +331,13 @@ const generateIndexes = async (client: Client) => {
       ii.index_type,
       ii.columns,
       ii.expressions,
-      ii.constraint_type  -- Added constraint type
+      ii.constraint_type  -- Retained constraint type here
     FROM
       user_tables ut
     LEFT JOIN
-      index_info ii ON ut.tablename = ii.table_name
+      index_info ii ON ut.tableschema = ii.table_schema AND ut.tablename = ii.table_name
     WHERE ii.columns IS NOT NULL
+    ${buildSchemaQuery('ut.tableschema', schemas)}
     ORDER BY
       ut.tablename,
       ii.constraint_type,
@@ -427,7 +431,7 @@ const generateIndexes = async (client: Client) => {
   };
 };
 
-const generateRawEnums = async (client: Client): Promise<Enum[]> => {
+const generateRawEnums = async (client: Client, schemas: string[]): Promise<Enum[]> => {
   const enumListSql = `
     SELECT
       n.nspname AS schema_name,
@@ -440,6 +444,7 @@ const generateRawEnums = async (client: Client): Promise<Enum[]> => {
       pg_type t ON e.enumtypid = t.oid
     JOIN
       pg_namespace n ON t.typnamespace = n.oid
+    ${buildSchemaQuery('n.nspname', schemas, 'WHERE')}
     ORDER BY
       schema_name,
       enum_type,
@@ -467,12 +472,13 @@ const generateRawEnums = async (client: Client): Promise<Enum[]> => {
 };
 
 const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
-  const client = await getValidatedClient(connection);
+  const { connectionString, schemas } = parseConnectionString(connection, 'jdbc');
+  const client = await getValidatedClient(connectionString);
 
-  const tablesAndFieldsRes = generateTablesAndFields(client);
-  const indexesRes = generateIndexes(client);
-  const refsRes = generateRawRefs(client);
-  const enumsRes = generateRawEnums(client);
+  const tablesAndFieldsRes = generateTablesAndFields(client, schemas);
+  const indexesRes = generateIndexes(client, schemas);
+  const refsRes = generateRawRefs(client, schemas);
+  const enumsRes = generateRawEnums(client, schemas);
 
   const res = await Promise.all([
     tablesAndFieldsRes,
