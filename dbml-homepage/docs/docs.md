@@ -31,6 +31,7 @@ outlines the full syntax documentations of DBML.
 - [Sticky Notes](#sticky-notes)
 - [TableGroup](#tablegroup)
     - [TableGroup Notes](#tablegroup-notes)
+    - [TableGroup Settings](#tablegroup-settings)
 - [Multi-line String](#multi-line-string)
 - [Comments](#comments)
 - [Syntax Consistency](#syntax-consistency)
@@ -434,7 +435,7 @@ Table orders {
 ### TableGroup Notes
 
 ```text
-TableGroup e-commerce [note: 'Contains tables that are related to e-commerce system'] {
+TableGroup e_commerce [note: 'Contains tables that are related to e-commerce system'] {
   merchants
   countries
 
@@ -478,7 +479,7 @@ TableGroup tablegroup_name { // tablegroup is case-insensitive.
 }
 
 // example
-TableGroup e-commerce1 {
+TableGroup e_commerce1 {
   merchants
   countries
 }
@@ -489,12 +490,28 @@ TableGroup e-commerce1 {
 Table groupings can be annotated with notes that describe their meaning and purpose.
 
 ```text
-TableGroup e-commerce [note: 'Contains tables that are related to e-commerce system'] {
+TableGroup e_commerce [note: 'Contains tables that are related to e-commerce system'] {
   merchants
   countries
 
   // or
   Note: 'Contains tables that are related to e-commerce system'
+}
+```
+
+### TableGroup Settings
+
+Each table group can take optional settings, defined within square brackets: `[setting1: value1, setting2: value2, setting3, setting4]`
+
+The list of table group settings you can use:
+- `note: 'string to add notes'`: add a note to this table group.
+- `color: <color_code>`: change the table group color.
+
+Example,
+```text
+TableGroup e_commerce [color: #345] {
+  merchants
+  countries
 }
 ```
 

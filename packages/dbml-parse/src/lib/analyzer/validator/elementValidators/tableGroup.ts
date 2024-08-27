@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
-  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList,
+  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList, isValidColor
 } from '../utils';
 import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
@@ -104,12 +104,23 @@ export default class TableGroupValidator implements ElementValidator {
 
     _.forIn(settingMap, (attrs, name) => {
       switch (name) {
-        case 'headercolor':
-          errors.push(...attrs.map((attr) => new CompileError(
-            CompileErrorCode.INVALID_TABLE_SETTING,
-            '\'headercolor\' is not supported',
-            attr,
-          )));
+        case 'color':
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(
+              CompileErrorCode.DUPLICATE_TABLE_SETTING,
+              '\'color\' can only appear once',
+              attr,
+            )));
+          }
+          attrs.forEach((attr) => {
+            if (!isValidColor(attr.value)) {
+              errors.push(new CompileError(
+                CompileErrorCode.INVALID_TABLE_SETTING,
+                '\'color\' must be a color literal',
+                attr.value || attr.name!,
+              ));
+            }
+          });
           break;
         case 'note':
           if (attrs.length > 1) {
