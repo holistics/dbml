@@ -70,10 +70,10 @@ const { importer } = require('@dbml/core');
 const { connector } = require('@dbml/connector');
 
 // Use the dbml connector to get the DatabaseSchema object
-const connection = 'postgresql://dbml_user:dbml_pass@localhost:5432/schema';
-const format = 'postgres';
+const connection = 'postgresql://dbml_user:dbml_pass@localhost:5432/dbname?schemas=public';
+const databaseType = 'postgres';
 
-const schemaJson = await connector.fetchSchemaJson(connection, format);
+const schemaJson = await connector.fetchSchemaJson(connection, databaseType);
 
 // Generate DBML from the DatabaseSchema object
 const dbml = importer.generateDbml(schemaJson);
