@@ -30,11 +30,11 @@ npm install @dbml/connector
 const { connector } = require('@dbml/connector');
 ```
 
-#### `connector.fetchSchemaJson(connection, format)`
+#### `connector.fetchSchemaJson(connection, databaseType)`
 
 - **Arguments:**
   - `{string} connection`
-  - `{'postgres'|'mssql'|'mysql'} format`
+  - `{'postgres'|'mssql'|'mysql'|'snowflake'|'bigquery'} databaseType`
 
 - **Returns:**
   - `{DatabaseSchema} schemaJson`
@@ -45,12 +45,12 @@ Generate `DatabaseSchema` object directly from a database.
 ```javascript
 const { connector } = require('@dbml/connector');
 
-const connection = 'postgresql://dbml_user:dbml_pass@localhost:5432/schema';
-const format = 'postgres';
+const connection = 'postgresql://dbml_user:dbml_pass@localhost:5432/dbname?schemas=public';
+const databaseType = 'postgres';
 
-const schemaJson = await connector.fetchSchemaJson(connection, format);
+const schemaJson = await connector.fetchSchemaJson(connection, databaseType);
 ```
 
 :::info
-The type definition of `DatabaseSchema` object can be found [here](https://github.com/holistics/dbml/blob/a4dcb110f1d79f5d95b0d3db4b919914439e039d/packages/dbml-connector/src/connectors/types.ts#L89).
+The type definition of `DatabaseSchema` object can be found [here](https://github.com/holistics/dbml/blob/master/packages/dbml-connector/src/connectors/types.ts).
 :::

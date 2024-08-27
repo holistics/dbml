@@ -30,7 +30,7 @@ outlines the full syntax documentations of DBML.
   - [TableGroup Notes](#tablegroup-notes)
 - [Sticky Notes](#sticky-notes)
 - [TableGroup](#tablegroup)
-    - [TableGroup Notes](#tablegroup-notes)
+    - [TableGroup Notes](#tablegroup-notes-1)
     - [TableGroup Settings](#tablegroup-settings)
 - [Multi-line String](#multi-line-string)
 - [Comments](#comments)
