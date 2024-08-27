@@ -435,7 +435,7 @@ Table orders {
 ### TableGroup Notes
 
 ```text
-TableGroup e-commerce [note: 'Contains tables that are related to e-commerce system'] {
+TableGroup e_commerce [note: 'Contains tables that are related to e-commerce system'] {
   merchants
   countries
 
@@ -479,7 +479,7 @@ TableGroup tablegroup_name { // tablegroup is case-insensitive.
 }
 
 // example
-TableGroup e-commerce1 {
+TableGroup e_commerce1 {
   merchants
   countries
 }
@@ -490,7 +490,7 @@ TableGroup e-commerce1 {
 Table groupings can be annotated with notes that describe their meaning and purpose.
 
 ```text
-TableGroup e-commerce [note: 'Contains tables that are related to e-commerce system'] {
+TableGroup e_commerce [note: 'Contains tables that are related to e-commerce system'] {
   merchants
   countries
 
@@ -509,7 +509,7 @@ The list of table group settings you can use:
 
 Example,
 ```text
-TableGroup e-commerce [color: #345] {
+TableGroup e_commerce [color: #345] {
   merchants
   countries
 }
