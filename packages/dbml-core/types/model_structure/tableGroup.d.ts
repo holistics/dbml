@@ -21,6 +21,7 @@ declare class TableGroup extends Element {
     id: number;
     note: string;
     noteToken: Token;
+    color: string;
     constructor({ name, token, tables, schema, note, color }: RawTableGroup);
     generateId(): void;
     processTables(rawTables: any): void;
