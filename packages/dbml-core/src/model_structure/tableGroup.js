@@ -3,7 +3,9 @@ import Element from './element';
 import { shouldPrintSchema } from './utils';
 
 class TableGroup extends Element {
-  constructor ({ name, token, tables = [], schema = {}, note, noteToken = null }) {
+  constructor ({
+    name, token, tables = [], schema = {}, note, color, noteToken = null,
+  }) {
     super(token);
     this.name = name;
     this.tables = [];
@@ -11,6 +13,7 @@ class TableGroup extends Element {
     this.dbState = this.schema.dbState;
     this.note = note ? get(note, 'value', note) : null;
     this.noteToken = note ? get(note, 'token', noteToken) : null;
+    this.color = color;
     this.generateId();
 
     this.processTables(tables);
@@ -77,6 +80,7 @@ class TableGroup extends Element {
     return {
       name: this.name,
       note: this.note,
+      color: this.color,
     };
   }
 

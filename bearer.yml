@@ -32,3 +32,4 @@ scan:
     - packages/dbml-cli/jestHelpers.ts
     - packages/dbml-core/__tests__/**
     - packages/dbml-parser/__tests__/**
+    - dbml-homepage/docs/**

@@ -1,4 +1,5 @@
 import type * as Preset from '@docusaurus/preset-classic';
+import npm2yarn from '@docusaurus/remark-plugin-npm2yarn';
 import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
 import NavbarConfigs from './configs/navbar';
@@ -28,8 +29,11 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './configs/sidebars.ts',
-          breadcrumbs: false,
+          breadcrumbs: true,
           routeBasePath: '/',
+          remarkPlugins: [
+            [npm2yarn, { sync: true }]
+          ],
         },
         blog: false,
         theme: {
@@ -50,7 +54,11 @@ const config: Config = {
       // prefer system preferences
       respectPrefersColorScheme: true,
     },
-
+    // https://docusaurus.io/docs/markdown-features/toc#table-of-contents-heading-level
+    tableOfContents: {
+      minHeadingLevel: 2,
+      maxHeadingLevel: 5,
+    },
   } satisfies Preset.ThemeConfig,
   plugins: [
     'docusaurus-plugin-sass',

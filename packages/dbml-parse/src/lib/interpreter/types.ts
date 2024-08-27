@@ -152,6 +152,7 @@ export interface TableGroup {
   schemaName: string | null;
   tables: TableGroupField[];
   token: TokenPosition;
+  color?: string;
   note?: {
     value: string;
     token: TokenPosition;

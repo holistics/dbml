@@ -1,42 +1,31 @@
 ---
-title: JS Module
+title: '@dbml/core'
 ---
-
-# JS Module
-
-## Prerequisites
-
-Before you begin, ensure you have met the following requirements:
-
-- **Node.js**: From `@dbml/core@3.7.1`, you need to have Node.js version 18.0.0 or higher installed.
-
-## core
 
 [![NPM](https://img.shields.io/npm/v/@dbml/core)](https://www.npmjs.com/package/@dbml/core)
 
-A core package that is responsible for parsing and converting between different formats
+This is a core package that is responsible for parsing and converting between different formats:
 
 * Parse DBML and SQL to `Database` object
 * Export SQL and DBML from `Database` object
 * Convert DBML to SQL and SQL to DBML
+* Generate DBML from `DatabaseSchema` object
 
-### Installation
+## Installation
 
-```bash
+```bash npm2yarn
 npm install @dbml/core
-# or
-yarn add @dbml/core
 ```
 
-### API
+## APIs
 
-#### importer
+### importer
 
 ```javascript
 const { importer } = require('@dbml/core');
 ```
 
-##### importer.import( str, format )
+#### `importer.import(str, format)`
 
 * **Arguments:**
   * ```{string} str```
@@ -48,7 +37,9 @@ const { importer } = require('@dbml/core');
 * **Usage:**
 Generate DBML from SQL.
 
-Note: The `postgresLegacy` and `mysqlLegacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
+:::note
+The `postgresLegacy` and `mysqlLegacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
+:::
 
 ```javascript
 const fs = require('fs');
@@ -59,40 +50,42 @@ const postgreSQL = fs.readFileSync('./schema.sql', 'utf-8');
 
 // generate DBML from PostgreSQL script
 const dbml = importer.import(postgreSQL, 'postgres');
-
 ```
 
-##### importer.generateDbml( connection, format )
+#### `importer.generateDbml(schemaJson)`
 
 * **Arguments:**
-  * ```{string} connection```
-  * ```{'postgres'|'mssql'|'mysql'} format```
+  * ```{DatabaseSchema} schemaJson```
 
 * **Returns:**
-  * ```{Promise<string>} DBML```
+  * ```{string} DBML```
 
 * **Usage:**
-Generate DBML from your database.
+Generate DBML from a `DatabaseSchema` object.
+
+The following example use the [@dbml/connector](./connector.md) to get the `DatabaseSchema` object.
 
 ```javascript
 const { importer } = require('@dbml/core');
+const { connector } = require('@dbml/connector');
 
-// Your database connection string
+// Use the dbml connector to get the DatabaseSchema object
 const connection = 'postgresql://dbml_user:dbml_pass@localhost:5432/schema';
+const format = 'postgres';
 
-importer.generateDbml(connection, 'postgres')
-  .then((dbml) => console.log(dbml))
-  .catch((error) => console.log(error));
+const schemaJson = await connector.fetchSchemaJson(connection, format);
 
+// Generate DBML from the DatabaseSchema object
+const dbml = importer.generateDbml(schemaJson);
 ```
 
-#### exporter
+### exporter
 
 ```javascript
 const { exporter } = require('@dbml/core');
 ```
 
-##### exporter.export( str, format )
+#### `exporter.export(str, format)`
 
 * **Arguments:**
   * ```{string} str```
@@ -115,13 +108,15 @@ const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 const mysql = exporter.export(dbml, 'mysql');
 ```
 
-#### Class: Parser
+### Parser
 
 ```javascript
 const { Parser } = require('@dbml/core');
+
+const parser = new Parser();
 ```
 
-##### Parser.parse( str, format )
+#### `parser.parse(str, format)`
 
 * **Arguments:**
   * ```{string} str```
@@ -132,28 +127,34 @@ const { Parser } = require('@dbml/core');
 * **Usage:**
 Parse specified format to ```Database``` object
 
-Note: The `postgresLegacy` and `mysqlLegacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
+:::note
 
-Note: The `dbmlv2` option parse dbml using the new parser. It's quicker and more robust to errors/more user-friendly error messages.
+* The `postgresLegacy` and `mysqlLegacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
+
+* The `dbmlv2` option parse dbml using the new parser. It's quicker and more robust to errors/more user-friendly error messages.
+
+:::
 
 ```javascript
 const fs = require('fs');
 const { Parser } = require('@dbml/core');
 
+const parser = new Parser();
+
 // get DBML file content
 const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 
 // parse DBML to Database object
-const database = (new Parser()).parse(dbml, 'dbml');
+const database = parser.parse(dbml, 'dbml');
 ```
 
-#### Class: ModelExporter
+### ModelExporter
 
 ```javascript
 const { ModelExporter } = require('@dbml/core');
 ```
 
-##### ModelExporter.export( model, format, isNormalized = true )
+#### `ModelExporter.export(model, format, isNormalized)`
 
 * **Arguments:**
   * ```{model} Database```
@@ -166,13 +167,14 @@ const { ModelExporter } = require('@dbml/core');
 Export ```Database``` object to specified format
 
 ```javascript
-const { ModelExporter } = require('@dbml/core');
+const { ModelExporter, Parser } = require('@dbml/core');
 
 // get DBML file content
 const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 
 // parse DBML to Database object
-const database = (new Parser()).parse(dbml, 'dbml');
+const parser = new Parser();
+const database = parser.parse(dbml, 'dbml');
 
 // Export Database object to PostgreSQL
 const postgreSQL = ModelExporter.export(database, 'postgres', false);
