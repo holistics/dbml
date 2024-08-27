@@ -101,7 +101,7 @@ Note: The `--postgres-legacy` and `--mysql-legacy` options import PostgreSQL/MyS
 ## Generate DBML directly from a database
 
 ```bash
-$ db2dbml postgres postgresql://dbml_user:dbml_pass@localhost:5432/schema
+$ db2dbml postgres 'postgresql://dbml_user:dbml_pass@localhost:5432/dbname?schemas=public'
 
 Table "staff" {
   "id" int4 [pk, not null]
@@ -116,20 +116,35 @@ Table "staff" {
 **Output to a file:**
 
 ```bash
-$ db2dbml postgres postgresql://dbml_user:dbml_pass@localhost:5432/schema -o schema.dbml
+$ db2dbml postgres 'postgresql://dbml_user:dbml_pass@localhost:5432/dbname?schemas=public' -o schema.dbml
   ✔ Generated DBML file from database's connection: schema.dbml
 ```
 
 ### Syntax Manual
 
 ```bash
-$ db2dbml postgres|mysql|mssql
+$ db2dbml postgres|mysql|mssql|snowflake|bigquery
           <connection-string>
           [-o|--out-file <output-filepath>]
 ```
 
 Connection string examples:
 
-- postgres: `postgresql://user:password@localhost:5432/dbname`
-- mysql: `mysql://user:password@localhost:3306/dbname`
-- mssql: `'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;'`
+- postgres: `'postgresql://user:password@localhost:5432/dbname?schemas=schema1,schema2,schema3'`
+- mysql: `'mysql://user:password@localhost:3306/dbname'`
+- mssql: `'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;Schemas=schema1,schema2,schema3;'`
+- snowflake: `'SERVER=<account_identifier>.<region>;UID=<your_username>;PWD=<your_password>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;SCHEMAS=schema1,schema2,schema3;'`
+- bigquery: `/path_to_json_credential.json`
+
+For BigQuery, your JSON credential file must contain the following keys:
+
+```json
+{
+  "project_id": "your-project-id",
+  "client_email": "your-client-email",
+  "private_key": "your-private-key",
+  "datasets": ["dataset_1", "dataset_2", ...]
+}
+```
+
+*Note: If the "datasets" key is not provided or is an empty array, it will fetch information from all datasets.*
