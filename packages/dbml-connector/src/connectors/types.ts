@@ -97,6 +97,15 @@ interface DatabaseSchema {
   indexes: IndexesDictionary; // Represents the indexes property
 }
 
+interface BigQueryCredentials {
+  projectId: string,
+  credentials: {
+    clientEmail: string,
+    privateKey: string,
+  },
+  datasets: string[],
+}
+
 export {
   NoteInfo,
   TypeInfo,
@@ -115,4 +124,5 @@ export {
   Index,
   IndexesDictionary,
   DatabaseSchema,
+  BigQueryCredentials,
 };
