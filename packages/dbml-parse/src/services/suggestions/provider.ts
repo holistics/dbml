@@ -269,34 +269,27 @@ function suggestAttributeName(compiler: Compiler, offset: number): CompletionLis
     switch (scopeKind) {
       case ScopeKind.TABLE:
         return {
-          suggestions: [
-            {
-              label: 'headercolor',
-              insertText: 'headercolor: ',
+          suggestions: ['headercolor', 'note'].map((name) => {
+            return {
+              label: name,
+              insertText: `${name}: `,
               kind: CompletionItemKind.Field,
               insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
               range: undefined as any,
-            },
-            {
-              label: 'note',
-              insertText: 'note: ',
-              kind: CompletionItemKind.Field,
-              insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-              range: undefined as any,
-            },
-          ],
+            };
+          }),
         };
       case ScopeKind.TABLEGROUP:
         return {
-          suggestions: [
-            {
-              label: 'note',
-              insertText: 'note: ',
+          suggestions: ['color', 'note'].map((name) => {
+            return {
+              label: name,
+              insertText: `${name}: `,
               kind: CompletionItemKind.Field,
               insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
               range: undefined as any,
-            },
-          ],
+            };
+          }),
         };
       default:
         return noSuggestions();
