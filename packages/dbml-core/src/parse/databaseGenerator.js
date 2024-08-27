@@ -47,8 +47,8 @@ const createFields = (rawFields, fieldsConstraints) => {
       dbdefault: field.dbdefault,
       not_null: field.not_null,
       increment: field.increment,
-      pk: constraints.pk,
-      unique: constraints.unique,
+      pk: constraints.pk || field.pk,
+      unique: constraints.unique || field.unique,
       note: field.note,
     });
     return f;

@@ -33,7 +33,8 @@
   "dependencies": {
     "mssql": "^11.0.1",
     "mysql2": "^3.11.0",
-    "pg": "^8.12.0"
+    "pg": "^8.12.0",
+    "snowflake-sdk": "^1.12.0"
   },
   "engines": {
     "node": ">=18"
