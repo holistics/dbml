@@ -65,13 +65,14 @@
           "column": 1
         },
         "end": {
-          "offset": 128,
-          "line": 11,
+          "offset": 143,
+          "line": 12,
           "column": 2
         }
       },
       "name": "group1",
       "schemaName": null,
+      "color": "#06c",
       "note": {
         "value": "note inside setting list of a table group\n",
         "token": {

@@ -10,6 +10,7 @@ interface RawTableGroup {
     schema: Schema;
     token: Token;
     note: RawNote;
+    color: string;
 }
 
 declare class TableGroup extends Element {
@@ -20,8 +21,8 @@ declare class TableGroup extends Element {
     id: number;
     note: string;
     noteToken: Token;
-    constructor({ name, token, tables, schema, note }: RawTableGroup
-  );
+    color: string;
+    constructor({ name, token, tables, schema, note, color }: RawTableGroup);
     generateId(): void;
     processTables(rawTables: any): void;
     pushTable(table: any): void;
@@ -33,6 +34,7 @@ declare class TableGroup extends Element {
         }[];
         name: string;
         note: string;
+        color: string;
     };
     exportChild(): {
         tables: {
@@ -49,6 +51,7 @@ declare class TableGroup extends Element {
     shallowExport(): {
         name: string;
         note: string;
+        color: string;
     };
     normalize(model: NormalizedDatabase): void;
 }
@@ -59,6 +62,7 @@ export interface NormalizedTableGroup {
         tableIds: number[];
         schemaId: number;
         note: string;
+        color: string;
     };
 }
 export default TableGroup;
