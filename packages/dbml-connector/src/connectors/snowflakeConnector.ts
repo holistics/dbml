@@ -21,7 +21,7 @@ import {
   TableConstraintsDictionary,
 } from './types';
 
-type constraintRow = {
+type ConstraintRow = {
   schemaName: string;
   tableName: string;
   constraintName: string;
@@ -31,7 +31,7 @@ type constraintRow = {
   unique?: boolean;
 };
 
-type generatedIndexes = {
+type GeneratedIndexes = {
   indexes: IndexesDictionary;
   tableConstraints: TableConstraintsDictionary;
 };
@@ -242,8 +242,8 @@ const generateTablesAndFields = async (conn: Connection, schemas: string[]): Pro
   };
 };
 
-const createConstraintKeysMap = (keys: Record<string, string>[], schemas: string[], constraintType: 'primary' | 'unique'): Record<string, constraintRow> => {
-  return keys.reduce((acc: Record<string, constraintRow>, row: Record<string, string>) => {
+const createConstraintKeysMap = (keys: Record<string, string>[], schemas: string[], constraintType: 'primary' | 'unique'): Record<string, ConstraintRow> => {
+  return keys.reduce((acc: Record<string, ConstraintRow>, row: Record<string, string>) => {
     const { schema_name, table_name, column_name, constraint_name } = row;
     const selectedSchema = schemas.length > 0 ? schemas.includes(schema_name) : true;
     if (!selectedSchema) { return acc; }
@@ -282,11 +282,11 @@ const generateIndexes = async (conn: Connection, databaseName: string, schemas: 
   const primaryKeys = await executeQuery(conn, getPrimaryKeysSql);
   const uniqueKeys = await executeQuery(conn, getUniqueKeysSql);
 
-  const primaryKeysByConstraint: Record<string, constraintRow> = createConstraintKeysMap(primaryKeys, schemas, 'primary');
-  const uniqueKeysByConstraint: Record<string, constraintRow> = createConstraintKeysMap(uniqueKeys, schemas, 'unique');
+  const primaryKeysByConstraint: Record<string, ConstraintRow> = createConstraintKeysMap(primaryKeys, schemas, 'primary');
+  const uniqueKeysByConstraint: Record<string, ConstraintRow> = createConstraintKeysMap(uniqueKeys, schemas, 'unique');
 
-  const allConstraints: constraintRow[] = [Object.values(primaryKeysByConstraint), Object.values(uniqueKeysByConstraint)].flat();
-  const { indexes, tableConstraints } = allConstraints.reduce((acc: generatedIndexes, row: constraintRow): generatedIndexes => {
+  const allConstraints: ConstraintRow[] = [Object.values(primaryKeysByConstraint), Object.values(uniqueKeysByConstraint)].flat();
+  const { indexes, tableConstraints } = allConstraints.reduce((acc: GeneratedIndexes, row: ConstraintRow): GeneratedIndexes => {
     const { schemaName, tableName, constraintName, columnNames, type, primary, unique } = row;
     const key = `${schemaName}.${tableName}`;
 
