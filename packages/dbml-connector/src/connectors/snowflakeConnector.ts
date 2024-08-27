@@ -112,8 +112,7 @@ const connectToSnowflake = async (config: Record<string, string>): Promise<Conne
     await executeQuery(connection, 'SELECT CURRENT_VERSION();');
 
     return connection;
-  } catch (err: any) {
-    console.error('Error: ' + err.message);
+  } catch (err) {
     throw err;
   }
 }
@@ -347,9 +346,7 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
 
   conn.destroy((err) => {
     if (err) {
-      console.error('Error destroying connection');
-      // bearer:disable javascript_lang_logger_leak
-      if  (config.IS_DEBUG_MODE === 'true') console.log(JSON.stringify(err, null, 2));
+      throw err;
     } else {
       console.log('Connection destroyed successfully.');
     }
