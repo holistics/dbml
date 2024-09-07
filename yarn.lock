@@ -9103,7 +9103,7 @@ lines-and-columns@~2.0.3:
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-2.0.3.tgz"
   integrity sha512-cNOjgCnLB+FnvWWtyRTzmB3POJ+cXxTA81LoW7u8JdmhfXzriropYwpjShnz1QLLWsQwY7nIxoDmcPTwphDK9w==
 
-load-json-file@6.2.0, load-json-file@^6.2.0:
+load-json-file@6.2.0:
   version "6.2.0"
   resolved "https://registry.npmjs.org/load-json-file/-/load-json-file-6.2.0.tgz"
   integrity sha512-gUD/epcRms75Cw8RT1pUdHugZYM5ce64ucs2GEISABwkRsOQr0q2wm/MV2TKThycIe5e0ytRweW2RZxclogCdQ==
@@ -12503,13 +12503,6 @@ validate-npm-package-name@^3.0.0:
   integrity sha1-X6kS2B630MdK/BQN5zF/DKffQ34=
   dependencies:
     builtins "^1.0.3"
-
-vite-dts@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.npmjs.org/vite-dts/-/vite-dts-1.0.4.tgz"
-  integrity sha512-jfRsrBU8vibUS4a/AboDzHdph2/9/dpoMdYgkiD5tb4OXL75wnlzeEZ6D2XoEZNExwnkXqARKAvz7pv5VtUm5g==
-  dependencies:
-    load-json-file "^6.2.0"
 
 vite-node@0.34.6:
   version "0.34.6"
