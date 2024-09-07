@@ -2,4 +2,4 @@
 
 ## Requirements
 
-* Node: ^18.18.0
+* Node: ^18.0.0
