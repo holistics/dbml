@@ -1,17 +1,17 @@
 <template>
   <pane min-size='30' max-size='30' size='30'>
     <slot>
-      <section class='h-full overflow-auto border rounded border-gray-300 flex flex-col p-4 text-sm'>
+      <section class='h-full bg-white overflow-auto border rounded border-gray-300 flex flex-col p-4 text-sm'>
         <ul v-if='errors.length' class='list-none'>
           <li v-for='error in errors' :key='error'>
-            <p class='font-light flex gap-2 items-center'>
+            <p class='flex gap-2 items-center'>
               <FontAwesomeIcon :icon='faExclamationCircle' class='text-red-500' />
               {{ error }}
             </p>
           </li>
         </ul>
 
-        <p v-else class='font-light flex gap-2 items-center'>
+        <p v-else class='flex gap-2 items-center'>
           <FontAwesomeIcon :icon='faCheckCircle' class='text-green-400' />
           <span>No errors.</span>
         </p>

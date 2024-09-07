@@ -6,7 +6,7 @@ import Header from './components/Header/Header.vue'
 
 <template>
   <Header />
-  <main class='w-full h-full'>
+  <main class='w-full h-full bg-[#eeeeee]'>
     <RouterView class='w-full h-full'/>
   </main>
 </template>

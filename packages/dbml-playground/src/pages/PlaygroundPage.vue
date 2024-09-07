@@ -27,6 +27,7 @@
 
 <style>
 div.splitpanes__splitter {
+  background-color: #eeeeee !important;
   &::before {
     background-color: #1e1e1e !important;
   }
