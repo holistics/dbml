@@ -1,5 +1,5 @@
 <template>
-  <div ref='editorDomNode' class='w-full h-full p-1'></div>
+  <div ref='editorRef' class='w-full h-full p-1'></div>
 </template>
 
 <script setup lang="ts">
@@ -22,7 +22,7 @@
     (e: 'source-change', source: string): void,
   }>();
 
-  const editorDomNode = ref(null);
+  const editorRef = ref(null);
   let editor: monaco.editor.ICodeEditor | null = null;
   let model: monaco.editor.ITextModel | null = null;
   
@@ -40,7 +40,7 @@
   );
 
   onMounted(() => {
-    editor = monaco.editor.create(editorDomNode.value, {
+    editor = monaco.editor.create(editorRef.value, {
       language: 'dbml',
       value: initialCode,
       automaticLayout: true,
