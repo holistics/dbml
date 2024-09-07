@@ -13,6 +13,8 @@ declare class Parser {
      * Should use parse() instance method instead of this static method whenever possible
      */
     static parse(str: string, format: 'mysql' | 'postgres' | 'dbml' | 'dbmlv2' | 'schemarb' | 'mssql' | 'json'): Database;
+    static parse(str: RawDatabase, format: 'json'): Database;
     parse(str: string, format: 'mysql' | 'postgres' | 'dbml' | 'dbmlv2' | 'schemarb' | 'mssql' | 'json'): Database;
+    parse(str: RawDatabase, format: 'json'): Database;
 }
 export default Parser;
