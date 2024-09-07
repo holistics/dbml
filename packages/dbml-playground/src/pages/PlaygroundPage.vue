@@ -1,9 +1,9 @@
 <template>
-  <splitpanes vertical class='default-theme w-full h-full p-2 bg-gray-300'>
+  <splitpanes vertical class='default-theme w-full h-full p-2'>
     <pane min-size='70' max-size='70' size='70'>
-      <splitpanes horizontal class='bg-gray-300'>
+      <splitpanes horizontal>
         <pane min-size='70' max-size='70' size='70'>
-          <splitpanes vertical class='bg-gray-300'>
+          <splitpanes vertical>
             <FileTreePane />
             <DbmlEditorPane />
           </splitpanes>
@@ -27,7 +27,6 @@
 
 <style>
 div.splitpanes__splitter {
-  background-color: rgb(209, 213, 219) !important;
   &::before {
     background-color: #1e1e1e !important;
   }

@@ -44,7 +44,6 @@
       language: 'dbml',
       value: initialCode,
       automaticLayout: true,
-      theme: 'vs-dark',
     });
     emit('sourceChange', initialCode);       
 
