@@ -2,7 +2,7 @@
   <pane min-size='75' max-size='75' size='75'>
     <slot>
       <Editor
-        class='h-full overflow-auto border rounded border-gray-300 flex flex-col'
+        class='h-full bg-white overflow-auto border rounded border-gray-300 flex flex-col'
         @source-change='(newSource) => compiler.setSource(newSource)'
       />
     </slot>
