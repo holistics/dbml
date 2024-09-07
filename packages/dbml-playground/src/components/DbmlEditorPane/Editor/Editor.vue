@@ -19,7 +19,7 @@
   };
 
   const emit = defineEmits<{
-    (e: 'sourceChange', source: string): void,
+    (e: 'source-change', source: string): void,
   }>();
 
   const editorDomNode = ref(null);
@@ -45,13 +45,13 @@
       value: initialCode,
       automaticLayout: true,
     });
-    emit('sourceChange', initialCode);       
+    emit('source-change', initialCode);       
 
     model = editor.getModel();
 
     model.onDidChangeContent(() => {
       const currentSource = model.getValue();
-      emit('sourceChange', currentSource);       
+      emit('source-change', currentSource);       
     });
   }); 
 </script>
