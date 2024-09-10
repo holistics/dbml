@@ -1,6 +1,20 @@
 {
   "tables": [
     {
+      "name": "table1",
+      "schemaName": "dbml_test",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "table3",
+      "schemaName": "dbml_test",
+      "note": {
+        "value": ""
+      }
+    },
+    {
       "name": "all_default_values",
       "schemaName": "public",
       "note": {
@@ -50,6 +64,20 @@
       }
     },
     {
+      "name": "table1",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "table2",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
       "name": "table_with_comments",
       "schemaName": "public",
       "note": {
@@ -72,6 +100,62 @@
     }
   ],
   "fields": {
+    "dbml_test.table1": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "status",
+        "type": {
+          "type_name": "enum_type1",
+          "schemaName": "dbml_test"
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbml_test.table3": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "status",
+        "type": {
+          "type_name": "enum_type3",
+          "schemaName": "dbml_test"
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
     "public.all_default_values": [
       {
         "name": "id",
@@ -843,6 +927,62 @@
         }
       }
     ],
+    "public.table1": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "status",
+        "type": {
+          "type_name": "enum_type1",
+          "schemaName": "public"
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "public.table2": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "status",
+        "type": {
+          "type_name": "enum_type2",
+          "schemaName": "public"
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
     "public.table_with_comments": [
       {
         "name": "id",
@@ -1230,6 +1370,54 @@
   ],
   "enums": [
     {
+      "name": "enum_type1",
+      "schemaName": "dbml_test",
+      "values": [
+        {
+          "name": "value1"
+        },
+        {
+          "name": "value2"
+        }
+      ]
+    },
+    {
+      "name": "enum_type3",
+      "schemaName": "dbml_test",
+      "values": [
+        {
+          "name": "value4"
+        },
+        {
+          "name": "value5"
+        }
+      ]
+    },
+    {
+      "name": "enum_type1",
+      "schemaName": "public",
+      "values": [
+        {
+          "name": "value1"
+        },
+        {
+          "name": "value2"
+        }
+      ]
+    },
+    {
+      "name": "enum_type2",
+      "schemaName": "public",
+      "values": [
+        {
+          "name": "value1"
+        },
+        {
+          "name": "value3"
+        }
+      ]
+    },
+    {
       "name": "gender_type",
       "schemaName": "public",
       "values": [
@@ -1383,6 +1571,26 @@
     },
     "public.products": {
       "product_id": {
+        "pk": true
+      }
+    },
+    "public.table1": {
+      "id": {
+        "pk": true
+      }
+    },
+    "dbml_test.table1": {
+      "id": {
+        "pk": true
+      }
+    },
+    "public.table2": {
+      "id": {
+        "pk": true
+      }
+    },
+    "dbml_test.table3": {
+      "id": {
         "pk": true
       }
     },
