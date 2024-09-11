@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { Client } from 'pg';
+import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
 import {
   DatabaseSchema,
   DefaultInfo,
@@ -13,7 +14,6 @@ import {
   Table,
   TableConstraintsDictionary,
 } from './types';
-import { parseConnectionString, buildSchemaQuery } from '../utils/parseSchema';
 
 const getValidatedClient = async (connection: string): Promise<Client> => {
   const client = new Client(connection);
@@ -121,7 +121,7 @@ const generateTablesAndFields = async (client: Client, schemas: string[]): Promi
   const fields: FieldsDictionary = {};
   const tablesAndFieldsSql = `
     WITH comments AS (
-      SELECT
+      SELECT DISTINCT ON (pc.relname, pn.nspname, pa.attname)
         pc.relname AS table_name,
         pn.nspname AS table_schema,
         pa.attname AS column_name,
@@ -151,6 +151,7 @@ const generateTablesAndFields = async (client: Client, schemas: string[]): Promi
       c.identity_increment,
       c.is_nullable,
       c.column_default,
+      c.ordinal_position,
       CASE
         WHEN c.column_default IS NULL THEN NULL
         WHEN c.column_default LIKE 'nextval(%' THEN 'increment'
@@ -159,8 +160,8 @@ const generateTablesAndFields = async (client: Client, schemas: string[]): Promi
         WHEN c.column_default ~ '^-?[0-9]+(.[0-9]+)?$' THEN 'number'
         ELSE 'expression'
       END AS default_type,
-      (SELECT description FROM comments WHERE table_name = t.table_name AND table_schema = t.table_schema AND column_name IS NULL) AS table_comment,
-      (SELECT description FROM comments WHERE table_name = t.table_name AND table_schema = t.table_schema AND column_name = c.column_name) AS column_comment
+      (SELECT description FROM comments WHERE table_name = t.table_name AND table_schema = t.table_schema AND column_name IS NULL LIMIT 1) AS table_comment,
+      (SELECT description FROM comments WHERE table_name = t.table_name AND table_schema = t.table_schema AND column_name = c.column_name LIMIT 1) AS column_comment
     FROM
       information_schema.columns c
     JOIN
@@ -433,7 +434,7 @@ const generateIndexes = async (client: Client, schemas: string[]) => {
 
 const generateRawEnums = async (client: Client, schemas: string[]): Promise<Enum[]> => {
   const enumListSql = `
-    SELECT
+    SELECT DISTINCT
       n.nspname AS schema_name,
       t.typname AS enum_type,
       e.enumlabel AS enum_value,
@@ -454,15 +455,16 @@ const generateRawEnums = async (client: Client, schemas: string[]): Promise<Enum
   const enumListResult = await client.query(enumListSql);
   const enums = enumListResult.rows.reduce((acc, row) => {
     const { schema_name, enum_type, enum_value } = row;
+    const key = `${schema_name}.${enum_type}`;
 
-    if (!acc[enum_type]) {
-      acc[enum_type] = {
+    if (!acc[key]) {
+      acc[key] = {
         name: enum_type,
         schemaName: schema_name,
         values: [],
       };
     }
-    acc[enum_type].values.push({
+    acc[key].values.push({
       name: enum_value,
     });
     return acc;
@@ -504,5 +506,5 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
 };
 
 export {
-  fetchSchemaJson,
+  fetchSchemaJson
 };

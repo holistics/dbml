@@ -1,3 +1,33 @@
+Enum "dbml_test"."enum_type1" {
+  "value1"
+  "value2"
+}
+
+Enum "dbml_test"."enum_type3" {
+  "value4"
+  "value5"
+}
+
+Table "dbml_test"."table1" {
+  "id" int4 [pk, not null, increment]
+  "status" dbml_test.enum_type1
+}
+
+Table "dbml_test"."table3" {
+  "id" int4 [pk, not null, increment]
+  "status" dbml_test.enum_type3
+}
+
+Enum "enum_type1" {
+  "value1"
+  "value2"
+}
+
+Enum "enum_type2" {
+  "value1"
+  "value3"
+}
+
 Enum "gender_type" {
   "Male"
   "Female"
@@ -92,6 +122,16 @@ Table "products" {
   Indexes {
     category [type: btree, name: "idx_products_category"]
   }
+}
+
+Table "table1" {
+  "id" int4 [pk, not null, increment]
+  "status" enum_type1
+}
+
+Table "table2" {
+  "id" int4 [pk, not null, increment]
+  "status" enum_type2
 }
 
 Table "table_with_comments" {

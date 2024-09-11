@@ -1,4 +1,6 @@
 -- Create users table
+CREATE SCHEMA dbml_test;
+
 CREATE TABLE users (
   user_id SERIAL PRIMARY KEY,
   username VARCHAR(50) UNIQUE NOT NULL,
@@ -153,4 +155,33 @@ CREATE TABLE Books (
   UNIQUE (ISBN),
   CONSTRAINT FK_AuthorNationality FOREIGN KEY (AuthorID, NationalityID)
     REFERENCES Authors (AuthorID, NationalityID) ON DELETE CASCADE
+);
+
+-- Create enum types in the public schema
+CREATE TYPE public.enum_type1 AS ENUM ('value1', 'value2');
+CREATE TYPE public.enum_type2 AS ENUM ('value1', 'value3');
+
+-- Create enum types in the dbml_test schema
+CREATE TYPE dbml_test.enum_type1 AS ENUM ('value1', 'value2');
+CREATE TYPE dbml_test.enum_type3 AS ENUM ('value4', 'value5');
+
+-- Optionally, create tables to use these enum types
+CREATE TABLE public.table1 (
+  id SERIAL PRIMARY KEY,
+  status public.enum_type1
+);
+
+CREATE TABLE public.table2 (
+  id SERIAL PRIMARY KEY,
+  status public.enum_type2
+);
+
+CREATE TABLE dbml_test.table1 (
+  id SERIAL PRIMARY KEY,
+  status dbml_test.enum_type1
+);
+
+CREATE TABLE dbml_test.table3 (
+  id SERIAL PRIMARY KEY,
+  status dbml_test.enum_type3
 );

@@ -1,20 +1,20 @@
 /* eslint-disable camelcase */
 import sql from 'mssql';
+import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
 import {
-  Field,
+  DatabaseSchema,
+  DefaultInfo,
   DefaultType,
-  FieldsDictionary,
   Enum,
+  EnumValue,
+  Field,
+  FieldsDictionary,
+  IndexesDictionary,
   Ref,
   RefEndpoint,
   Table,
-  IndexesDictionary,
-  EnumValue,
   TableConstraintsDictionary,
-  DatabaseSchema,
-  DefaultInfo,
 } from './types';
-import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
 
 const MSSQL_DATE_TYPES = [
   'date',
@@ -141,71 +141,99 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
   const fields: FieldsDictionary = {};
   const enums: Enum[] = [];
   const tablesAndFieldsSql = `
-  WITH tables_and_fields AS (
+    WITH tables_and_fields AS (
+      SELECT
+        s.name AS table_schema,
+        t.name AS table_name,
+        c.name AS column_name,
+        ty.name AS data_type,
+        c.max_length AS character_maximum_length,
+        c.precision AS numeric_precision,
+        c.scale AS numeric_scale,
+        c.is_identity AS identity_increment,
+        CASE
+          WHEN c.is_nullable = 1 THEN 'YES'
+          ELSE 'NO'
+        END AS is_nullable,
+        CASE
+          WHEN c.default_object_id = 0 THEN NULL
+          ELSE OBJECT_DEFINITION(c.default_object_id)
+        END AS column_default,
+        -- Fetching table comments
+        p.value AS table_comment,
+        ep.value AS column_comment
+      FROM
+        sys.tables t
+        JOIN sys.schemas s ON t.schema_id = s.schema_id
+        JOIN sys.columns c ON t.object_id = c.object_id
+        JOIN sys.types ty ON c.user_type_id = ty.user_type_id
+        LEFT JOIN sys.extended_properties p ON p.major_id = t.object_id
+          AND p.name = 'MS_Description'
+          AND p.minor_id = 0 -- Ensure minor_id is 0 for table comments
+        LEFT JOIN sys.extended_properties ep ON ep.major_id = c.object_id
+          AND ep.minor_id = c.column_id
+          AND ep.name = 'MS_Description'
+      WHERE
+        t.type = 'U' -- User-defined tables
+    ),
+    constraints_with_nulls AS (
+      SELECT
+        tf.*,
+        cc.name AS check_constraint_name,
+        CASE
+          WHEN cc.definition LIKE '%[' + tf.column_name + ']%=''%' THEN cc.definition
+          ELSE NULL
+        END AS check_constraint_definition
+      FROM
+        tables_and_fields AS tf
+      LEFT JOIN sys.check_constraints cc
+        ON cc.parent_object_id = OBJECT_ID(tf.table_schema + '.' + tf.table_name)
+        AND cc.definition LIKE '%' + tf.column_name + '%' -- Ensure the constraint references the column
+    ),
+    constraints_with_row_number AS (
+      SELECT
+        *,
+        ROW_NUMBER() OVER (
+          PARTITION BY table_schema, table_name, column_name
+          ORDER BY
+            CASE
+              WHEN check_constraint_definition IS NOT NULL THEN 1
+              ELSE 2
+            END,
+            check_constraint_name
+        ) AS rn
+      FROM
+        constraints_with_nulls
+    )
     SELECT
-      s.name AS table_schema,
-      t.name AS table_name,
-      c.name AS column_name,
-      ty.name AS data_type,
-      c.max_length AS character_maximum_length,
-      c.precision AS numeric_precision,
-      c.scale AS numeric_scale,
-      c.is_identity AS identity_increment,
+      table_schema,
+      table_name,
+      column_name,
+      data_type,
+      character_maximum_length,
+      numeric_precision,
+      numeric_scale,
+      identity_increment,
+      is_nullable,
+      column_default,
+      table_comment,
+      column_comment,
+      check_constraint_name,
+      check_constraint_definition,
       CASE
-        WHEN c.is_nullable = 1 THEN 'YES'
-        ELSE 'NO'
-      END AS is_nullable,
-      CASE
-        WHEN c.default_object_id = 0 THEN NULL
-        ELSE OBJECT_DEFINITION(c.default_object_id)
-      END AS column_default,
-      -- Fetching table comments
-      p.value AS table_comment,
-      ep.value AS column_comment
+        WHEN column_default LIKE '((%))' THEN 'number'
+        WHEN column_default LIKE '(''%'')' THEN 'string'
+        ELSE 'expression'
+      END AS default_type
     FROM
-      sys.tables t
-      JOIN sys.schemas s ON t.schema_id = s.schema_id
-      JOIN sys.columns c ON t.object_id = c.object_id
-      JOIN sys.types ty ON c.user_type_id = ty.user_type_id
-      LEFT JOIN sys.extended_properties p ON p.major_id = t.object_id
-        AND p.name = 'MS_Description'
-        AND p.minor_id = 0 -- Ensure minor_id is 0 for table comments
-      LEFT JOIN sys.extended_properties ep ON ep.major_id = c.object_id
-        AND ep.minor_id = c.column_id
-        AND ep.name = 'MS_Description'
+      constraints_with_row_number
     WHERE
-      t.type = 'U' -- User-defined tables
-  )
-  SELECT
-    tf.table_schema,
-    tf.table_name,
-    tf.column_name,
-    tf.data_type,
-    tf.character_maximum_length,
-    tf.numeric_precision,
-    tf.numeric_scale,
-    tf.identity_increment,
-    tf.is_nullable,
-    tf.column_default,
-    tf.table_comment,
-    tf.column_comment,
-    cc.name AS check_constraint_name, -- Adding CHECK constraint name
-    cc.definition AS check_constraint_definition, -- Adding CHECK constraint definition
-    CASE
-      WHEN tf.column_default LIKE '((%))' THEN 'number'
-      WHEN tf.column_default LIKE '(''%'')' THEN 'string'
-      ELSE 'expression'
-    END AS default_type
-  FROM
-    tables_and_fields AS tf
-  LEFT JOIN sys.check_constraints cc
-    ON cc.parent_object_id = OBJECT_ID(tf.table_schema + '.' + tf.table_name)
-    AND cc.definition LIKE '%' + tf.column_name + '%' -- Ensure the constraint references the column
-  ${buildSchemaQuery('tf.table_schema', schemas, 'WHERE')}
-  ORDER BY
-    tf.table_schema,
-    tf.table_name,
-    tf.column_name;
+      rn = 1
+      ${buildSchemaQuery('table_schema', schemas, 'WHERE')}
+    ORDER BY
+      table_schema,
+      table_name,
+      column_name;
   `;
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);
@@ -521,5 +549,5 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
 };
 
 export {
-  fetchSchemaJson,
+  fetchSchemaJson
 };

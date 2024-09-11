@@ -1,10 +1,10 @@
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import { scanDirNames } from '../jestHelpers.ts';
 import { connector } from '../src/index.ts';
 
 describe('@dbml/connector', () => {
-  const runTest = async (dirName) => {
+  const runTest = async (dirName: string) => {
     process.chdir(dirName);
 
     const connectionRaw = fs.readFileSync(path.join(dirName, './connection.json'), 'utf-8');
