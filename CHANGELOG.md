@@ -1,3 +1,19 @@
+## v3.8.1 (2024-09-11)
+
+#### :memo: Documentation
+* [#627](https://github.com/holistics/dbml/pull/627) Docs - Update doc for bigquery and snowflake connector ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#634](https://github.com/holistics/dbml/pull/634) Fix postgres connector issues ([@huyphung1602](https://github.com/huyphung1602))
+* `dbml-core`
+  * [#629](https://github.com/holistics/dbml/pull/629) Fix: When the parameter format is JSON in Parser.parse, the first parameter 'parse' must be RawDatabase ([@Mrxyy](https://github.com/Mrxyy))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Mrxyy ([@Mrxyy](https://github.com/Mrxyy))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v3.8.0 (2024-08-27)
 
 #### :memo: Documentation
