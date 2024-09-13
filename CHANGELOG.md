@@ -1,4 +1,4 @@
-## Unreleased (2024-09-13)
+## v3.9.0 (2024-09-13)
 
 #### :bug: Bug Fix
 * `dbml-parse`
