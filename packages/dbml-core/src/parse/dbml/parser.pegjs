@@ -1,3 +1,5 @@
+// This file is deprecated and should not be maintain.
+// If you want to contribute to the DBML parser, modify the dbml-parse package instead.
 {
   const data = {
     schemas: [],

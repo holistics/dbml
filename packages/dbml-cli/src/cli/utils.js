@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { CompilerError } from '@dbml/core';
+import { reduce } from 'lodash';
 
 function resolvePaths (paths) {
   if (!Array.isArray(paths)) {
@@ -32,6 +33,34 @@ function getFormatOpt (opts) {
   return format;
 }
 
+function getConnectionOpt (args) {
+  const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery'];
+  const defaultConnectionOpt = {
+    connection: args[0],
+    databaseType: 'unknown',
+  };
+
+  return reduce(args, (connectionOpt, arg) => {
+    if (supportedDatabases.includes(arg)) connectionOpt.databaseType = arg;
+    // Check if the arg is a connection string using regex
+    const connectionStringRegex = /^.*[:;]/;
+    if (connectionStringRegex.test(arg)) {
+      // Example: jdbc:mysql://localhost:3306/mydatabase
+      // Example: odbc:Driver={SQL Server};Server=myServerAddress;Database=myDataBase;Uid=myUsername;Pwd=myPassword;
+      connectionOpt.connection = arg;
+    }
+
+    const windowFilepathRegex = /^[a-zA-Z]:[\\/](?:[^<>:"/\\|?*\n\r]+[\\/])*[^<>:"/\\|?*\n\r]*$/;
+    const unixFilepathRegex = /^(\/|\.\/|~\/|\.\.\/)([^<>:"|?*\n\r]*\/?)*[^<>:"|?*\n\r]*$/;
+
+    if (windowFilepathRegex.test(arg) || unixFilepathRegex.test(arg)) {
+      connectionOpt.connection = arg;
+    }
+
+    return connectionOpt;
+  }, defaultConnectionOpt);
+}
+
 function generate (inputPaths, transform, outputPlugin) {
   inputPaths.forEach((_path) => {
     const source = fs.readFileSync(_path, 'utf-8');
@@ -49,5 +78,6 @@ export {
   resolvePaths,
   validateInputFilePaths,
   getFormatOpt,
+  getConnectionOpt,
   generate,
 };

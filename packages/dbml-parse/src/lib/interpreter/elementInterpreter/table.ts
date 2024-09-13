@@ -39,7 +39,7 @@ export class TableInterpreter implements ElementInterpreter {
     // and a new pk composite index is added
     if (this.pkColumns.length >= 2) {
       this.table.indexes!.push({
-        columns: this.pkColumns.map(({ name }) => ({ value: name, type: 'column' })),
+        columns: this.pkColumns.map(({ name, token }) => ({ value: name, type: 'column', token })),
         token: {
           start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
           end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
@@ -231,7 +231,7 @@ export class TableInterpreter implements ElementInterpreter {
       const index: Partial<Index> = { columns: [], };
 
       const indexField = _indexField as FunctionApplicationNode;
-      index.token = getTokenPosition(indexes);
+      index.token = getTokenPosition(indexField);
       const args = [indexField.callee!, ...indexField.args];
       if (_.last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();

@@ -15,15 +15,13 @@
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "price",
           "type": {
-            "type_name": "decimal(10,4)",
-            "args": "10,4"
+            "type_name": "decimal(10,4)"
           }
         },
         {
@@ -54,15 +52,13 @@
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "continent_name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         }
       ],
@@ -83,15 +79,13 @@
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "email",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "unique": true
         },
@@ -119,20 +113,7 @@
             "type_name": "int",
             "args": null
           },
-          "not_null": true,
-          "inline_ref": [
-            {
-              "endpoint": {
-                "tableName": "countries",
-                "fieldNames": [
-                  "code"
-                ],
-                "relation": "1"
-              },
-              "onUpdate": "no action",
-              "onDelete": "no action"
-            }
-          ]
+          "not_null": true
         }
       ],
       "indexes": []
@@ -155,20 +136,7 @@
             "type_name": "int",
             "args": null
           },
-          "not_null": true,
-          "inline_ref": [
-            {
-              "endpoint": {
-                "tableName": "users",
-                "fieldNames": [
-                  "id"
-                ],
-                "relation": "1"
-              },
-              "onUpdate": "no action",
-              "onDelete": "restrict"
-            }
-          ]
+          "not_null": true
         },
         {
           "name": "created_at",
@@ -202,20 +170,7 @@
             "type_name": "int",
             "args": null
           },
-          "not_null": true,
-          "inline_ref": [
-            {
-              "endpoint": {
-                "tableName": "orders",
-                "fieldNames": [
-                  "id"
-                ],
-                "relation": "1"
-              },
-              "onUpdate": "restrict",
-              "onDelete": "cascade"
-            }
-          ]
+          "not_null": true
         },
         {
           "name": "product_id",
@@ -226,19 +181,7 @@
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "inline_ref": [
-            {
-              "endpoint": {
-                "tableName": "products",
-                "fieldNames": [
-                  "id"
-                ],
-                "relation": "1"
-              },
-              "onDelete": "set null"
-            }
-          ]
+          }
         },
         {
           "name": "quantity",
@@ -247,7 +190,7 @@
             "args": null
           },
           "dbdefault": {
-            "value": 1,
+            "value": "1",
             "type": "number"
           }
         }
@@ -271,8 +214,8 @@
           "relation": "1"
         }
       ],
-      "onUpdate": "no action",
-      "onDelete": "no action"
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION"
     },
     {
       "endpoints": [
@@ -289,8 +232,8 @@
           "relation": "1"
         }
       ],
-      "onUpdate": "no action",
-      "onDelete": "restrict"
+      "onUpdate": "NO ACTION",
+      "onDelete": "RESTRICT"
     },
     {
       "endpoints": [
@@ -307,8 +250,8 @@
           "relation": "1"
         }
       ],
-      "onUpdate": "restrict",
-      "onDelete": "cascade"
+      "onUpdate": "RESTRICT",
+      "onDelete": "CASCADE"
     },
     {
       "endpoints": [
@@ -325,7 +268,7 @@
           "relation": "1"
         }
       ],
-      "onDelete": "set null"
+      "onDelete": "SET NULL"
     }
   ],
   "enums": []

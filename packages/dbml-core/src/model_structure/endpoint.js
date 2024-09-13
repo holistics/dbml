@@ -95,13 +95,10 @@ class Endpoint extends Element {
   }
 
   normalize (model) {
-    model.endpoints = {
-      ...model.endpoints,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportParentIds(),
-      },
+    model.endpoints[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportParentIds(),
     };
   }
 }

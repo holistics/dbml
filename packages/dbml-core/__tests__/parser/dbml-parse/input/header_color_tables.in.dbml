@@ -1,6 +1,0 @@
-Table orders [HeaderColor: #0065ab] { // headercolor is case-insensitive.
-	id int //columns
-	user_id int
-	status varchar
-	create_at date_time
-}

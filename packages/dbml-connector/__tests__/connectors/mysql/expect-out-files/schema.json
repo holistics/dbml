@@ -1,0 +1,1390 @@
+{
+  "tables": [
+    {
+      "name": "categories",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "composite_key_1",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "composite_key_2",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "date_time_example",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "default_example",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "hash_index_example",
+      "note": {
+        "value": "table for storing names with a hash index"
+      }
+    },
+    {
+      "name": "index_example",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "order_items",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "orders",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "products",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "sqrt_triangle",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "status_example_2",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "users",
+      "note": {
+        "value": ""
+      }
+    }
+  ],
+  "fields": {
+    "categories": [
+      {
+        "name": "cat_id",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "cat_name",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "super_cat_id",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "created_at",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "CURRENT_TIMESTAMP",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "composite_key_1": [
+      {
+        "name": "id1_1",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "id1_2",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "email",
+        "type": {
+          "type_name": "varchar(255)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "name",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "composite_key_2": [
+      {
+        "name": "id2_1",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "id2_2",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "date_time_example": [
+      {
+        "name": "default_now",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "CURRENT_TIMESTAMP",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "default_local",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "CURRENT_TIMESTAMP",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "date_plus_7_days",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "(curdate() + interval 7 day)",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "date_minus_30_days",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "(curdate() - interval 30 day)",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "timestamp_plus_1_hour",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "(now() + interval 1 hour)",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "timestamp_minus_15_minutes",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "(now() - interval 15 minute)",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "on_update_1",
+        "type": {
+          "type_name": "datetime on update CURRENT_TIMESTAMP",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "CURRENT_TIMESTAMP",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "on_update_2",
+        "type": {
+          "type_name": "datetime on update CURRENT_TIMESTAMP",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "CURRENT_TIMESTAMP",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "default_example": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "column1",
+        "type": {
+          "type_name": "varchar(255)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "concat(_utf8mb4\\'default \\',uuid())",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "column2",
+        "type": {
+          "type_name": "varchar(255)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "concat(_utf8mb4\\'random \\',floor((rand() * 100)))",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "column3",
+        "type": {
+          "type_name": "varchar(255)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "_utf8mb4",
+          "type": "string"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "column4",
+        "type": {
+          "type_name": "double",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "0.5",
+          "type": "number"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "created_date",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "curdate()",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "first_date",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "2023-01-01",
+          "type": "string"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "event_time",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "2024-01-01 00:00:00",
+          "type": "string"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "hash_index_example": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": "unique identifier for each record"
+        }
+      },
+      {
+        "name": "name",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": "first name of the individual"
+        }
+      },
+      {
+        "name": "name1",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": "last name of the individual"
+        }
+      }
+    ],
+    "index_example": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "name_lower",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "name_inline",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "email",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "age",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "city",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "order_items": [
+      {
+        "name": "order_id",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "product_id",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "orders": [
+      {
+        "name": "order_id",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "user_id",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "price",
+        "type": {
+          "type_name": "decimal(10,2)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "quantity",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "total_value",
+        "type": {
+          "type_name": "decimal(10,2) GENERATED ALWAYS AS ((`price` * `quantity`)) STORED",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "updated_at",
+        "type": {
+          "type_name": "timestamp on update CURRENT_TIMESTAMP",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "CURRENT_TIMESTAMP",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "sqrt_triangle": [
+      {
+        "name": "side_a",
+        "type": {
+          "type_name": "double",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "side_b",
+        "type": {
+          "type_name": "double",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "side_c",
+        "type": {
+          "type_name": "double GENERATED ALWAYS AS (sqrt(((`side_a` * `side_a`) + (`side_b` * `side_b`)))) VIRTUAL",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "status_example_2": [
+      {
+        "name": "s1",
+        "type": {
+          "type_name": "status_example_2_s1_enum",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "s2",
+        "type": {
+          "type_name": "status_example_2_s2_enum",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "s3",
+        "type": {
+          "type_name": "status_example_2_s3_enum",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "active",
+          "type": "string"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "s4",
+        "type": {
+          "type_name": "status_example_2_s4_enum",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "pending",
+          "type": "string"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "s5",
+        "type": {
+          "type_name": "status_example_2_s5_enum",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "s6",
+        "type": {
+          "type_name": "status_example_2_s6_enum",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "s7",
+        "type": {
+          "type_name": "status_example_2_s7_enum",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "1",
+          "type": "string"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "s8",
+        "type": {
+          "type_name": "status_example_2_s8_enum",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "0",
+          "type": "string"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "users": [
+      {
+        "name": "user_id",
+        "type": {
+          "type_name": "int unsigned",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "username",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "email",
+        "type": {
+          "type_name": "varchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "password_hash",
+        "type": {
+          "type_name": "varchar(255)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "first_name",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "last_name",
+        "type": {
+          "type_name": "varchar(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "date_of_birth",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "created_at",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "CURRENT_TIMESTAMP",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "last_login",
+        "type": {
+          "type_name": "timestamp",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "CURRENT_TIMESTAMP",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "is_active",
+        "type": {
+          "type_name": "tinyint(1)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "1",
+          "type": "number"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ]
+  },
+  "refs": [
+    {
+      "name": "fk_test_composite",
+      "endpoints": [
+        {
+          "tableName": "composite_key_1",
+          "fieldNames": [
+            "id1_1",
+            "id1_2"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "composite_key_2",
+          "fieldNames": [
+            "id2_1",
+            "id2_2"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "name": "fk_detail_items_orders",
+      "endpoints": [
+        {
+          "tableName": "order_items",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": null
+    },
+    {
+      "name": "fk_detail_items_products",
+      "endpoints": [
+        {
+          "tableName": "order_items",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "products",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "name": "fk_order_user",
+      "endpoints": [
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "users",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "SET NULL",
+      "onUpdate": null
+    }
+  ],
+  "enums": [
+    {
+      "name": "status_example_2_s1_enum",
+      "values": [
+        {
+          "name": "active"
+        },
+        {
+          "name": "inactive"
+        },
+        {
+          "name": "pending"
+        }
+      ]
+    },
+    {
+      "name": "status_example_2_s2_enum",
+      "values": [
+        {
+          "name": "active"
+        },
+        {
+          "name": "inactive"
+        },
+        {
+          "name": "pending"
+        }
+      ]
+    },
+    {
+      "name": "status_example_2_s3_enum",
+      "values": [
+        {
+          "name": "active"
+        },
+        {
+          "name": "inactive"
+        },
+        {
+          "name": "pending"
+        }
+      ]
+    },
+    {
+      "name": "status_example_2_s4_enum",
+      "values": [
+        {
+          "name": "active"
+        },
+        {
+          "name": "inactive"
+        },
+        {
+          "name": "pending"
+        }
+      ]
+    },
+    {
+      "name": "status_example_2_s5_enum",
+      "values": [
+        {
+          "name": "0"
+        },
+        {
+          "name": "1"
+        },
+        {
+          "name": "2"
+        }
+      ]
+    },
+    {
+      "name": "status_example_2_s6_enum",
+      "values": [
+        {
+          "name": "0"
+        },
+        {
+          "name": "1"
+        },
+        {
+          "name": "2"
+        }
+      ]
+    },
+    {
+      "name": "status_example_2_s7_enum",
+      "values": [
+        {
+          "name": "0"
+        },
+        {
+          "name": "1"
+        },
+        {
+          "name": "2"
+        }
+      ]
+    },
+    {
+      "name": "status_example_2_s8_enum",
+      "values": [
+        {
+          "name": "0"
+        },
+        {
+          "name": "1"
+        },
+        {
+          "name": "2"
+        }
+      ]
+    }
+  ],
+  "indexes": {
+    "index_example": [
+      {
+        "name": "idx_city_age",
+        "type": "BTREE",
+        "columns": [
+          {
+            "value": "city",
+            "type": "column"
+          },
+          {
+            "value": "age",
+            "type": "column"
+          }
+        ],
+        "unique": false
+      },
+      {
+        "name": "idx_city_part",
+        "type": "BTREE",
+        "columns": [
+          {
+            "value": "city(5)",
+            "type": "expression"
+          }
+        ],
+        "unique": false
+      },
+      {
+        "name": "idx_name",
+        "type": "BTREE",
+        "columns": [
+          {
+            "value": "name_inline",
+            "type": "column"
+          }
+        ],
+        "unique": false
+      },
+      {
+        "name": "idx_name_lower",
+        "type": "BTREE",
+        "columns": [
+          {
+            "value": "lower(name_lower)",
+            "type": "expression"
+          }
+        ],
+        "unique": false
+      }
+    ],
+    "hash_index_example": [
+      {
+        "name": "idx_name_name1",
+        "type": "HASH",
+        "columns": [
+          {
+            "value": "name",
+            "type": "column"
+          },
+          {
+            "value": "name1",
+            "type": "column"
+          }
+        ],
+        "unique": false
+      }
+    ],
+    "composite_key_1": [
+      {
+        "name": "PRIMARY",
+        "primary": true,
+        "columns": [
+          {
+            "type": "column",
+            "value": "id1_1"
+          },
+          {
+            "type": "column",
+            "value": "id1_2"
+          }
+        ]
+      },
+      {
+        "name": "uc_unique_composite",
+        "unique": true,
+        "columns": [
+          {
+            "type": "column",
+            "value": "email"
+          },
+          {
+            "type": "column",
+            "value": "name"
+          }
+        ]
+      }
+    ],
+    "composite_key_2": [
+      {
+        "name": "PRIMARY",
+        "primary": true,
+        "columns": [
+          {
+            "type": "column",
+            "value": "id2_1"
+          },
+          {
+            "type": "column",
+            "value": "id2_2"
+          }
+        ]
+      }
+    ]
+  },
+  "tableConstraints": {
+    "categories": {
+      "cat_id": {
+        "pk": true
+      }
+    },
+    "default_example": {
+      "id": {
+        "pk": true
+      }
+    },
+    "hash_index_example": {
+      "id": {
+        "pk": true
+      }
+    },
+    "index_example": {
+      "email": {
+        "unique": true
+      },
+      "id": {
+        "pk": true
+      }
+    },
+    "orders": {
+      "order_id": {
+        "pk": true
+      }
+    },
+    "products": {
+      "id": {
+        "pk": true
+      }
+    },
+    "users": {
+      "email": {
+        "unique": true
+      },
+      "user_id": {
+        "pk": true
+      },
+      "username": {
+        "unique": true
+      }
+    }
+  }
+}

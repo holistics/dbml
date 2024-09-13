@@ -1,0 +1,95 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "table1",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 17,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 28,
+              "line": 2,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 30,
+          "line": 3,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [
+    {
+      "tables": [
+        {
+          "name": "table1",
+          "schemaName": ""
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 32,
+          "line": 5,
+          "column": 1
+        },
+        "end": {
+          "offset": 143,
+          "line": 12,
+          "column": 2
+        }
+      },
+      "name": "group1",
+      "schemaName": null,
+      "color": "#06c",
+      "note": {
+        "value": "note inside setting list of a table group\n",
+        "token": {
+          "start": {
+            "offset": 54,
+            "line": 6,
+            "column": 3
+          },
+          "end": {
+            "offset": 113,
+            "line": 8,
+            "column": 6
+          }
+        }
+      }
+    }
+  ],
+  "aliases": [],
+  "project": {}
+}

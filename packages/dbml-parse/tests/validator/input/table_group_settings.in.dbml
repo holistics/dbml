@@ -1,0 +1,22 @@
+Table t1 {
+    id integer
+}
+
+TableGroup g1 [
+    note: 'This is a note',
+    note: 'This is another note',
+    color: #ccc,
+    what: 'ye ye'
+] {
+    t1
+}
+
+Table table2 {
+  id int [pk]
+}
+
+TableGroup group2 [
+  color: #aa
+] {
+  table2
+}
