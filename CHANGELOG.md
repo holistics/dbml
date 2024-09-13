@@ -1,3 +1,25 @@
+## v3.9.0 (2024-09-13)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#632](https://github.com/holistics/dbml/pull/632) chore/upgrade vite plugin dts & fix tsconfig to properly include all sources ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :boom: Breaking Change
+* `dbml-core`, `dbml-parse`
+  * [#594](https://github.com/holistics/dbml/pull/594) Parse/fix!/no longer support escaping triple quote ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :robot: Dependencies Update
+* Other
+  * [#625](https://github.com/holistics/dbml/pull/625) Bump micromatch from 4.0.5 to 4.0.8 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#628](https://github.com/holistics/dbml/pull/628) Bump webpack from 5.91.0 to 5.94.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#637](https://github.com/holistics/dbml/pull/637) Bump express from 4.19.2 to 4.21.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* `dbml-parse`
+  * [#632](https://github.com/holistics/dbml/pull/632) chore/upgrade vite plugin dts & fix tsconfig to properly include all sources ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.8.1 (2024-09-11)
 
 #### :memo: Documentation
