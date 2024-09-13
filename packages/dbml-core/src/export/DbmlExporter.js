@@ -24,8 +24,7 @@ class DbmlExporter {
       // Only safe chars, no simple quotes nor CR/LF
       return `'${newStr}'`;
     }
-    // see https://dbml.dbdiagram.io/docs/#multi-line-string
-    newStr = newStr.replaceAll("'''", "\\'''");
+    newStr = newStr.replaceAll("'", "\\'");
     newStr = newStr.replaceAll('\r\n', '\n'); // turn all CRLF to LF
     return `'''${newStr}'''`;
   }
