@@ -121,14 +121,11 @@ class Table extends Element {
   }
 
   normalize (model) {
-    model.tables = {
-      ...model.tables,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.tables[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
 
     this.fields.forEach((field) => field.normalize(model));

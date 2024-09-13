@@ -570,7 +570,7 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   //  | AT_Q
   //  ;
   visitLiteral (ctx) {
-    if (ctx.STRING()) return { value: getOriginalText(ctx), type: 'string' };
+    if (ctx.STRING()) return { value: sanitizeComment(ctx), type: 'string' };
     if (ctx.DECIMAL() || ctx.REAL || ctx.FLOAT) return { value: getOriginalText(ctx), type: 'number' };
     if (ctx.true_false() || ctx.NULL_()) return { value: getOriginalText(ctx), type: 'boolean' };
     return { value: getOriginalText(ctx), type: 'expression' };
