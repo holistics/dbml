@@ -98,8 +98,8 @@ Table "default_example" {
 
 Table "hash_index_example" {
   "id" int [pk, not null, note: 'unique identifier for each record']
-  "name" varchar(100) [note: 'first name of the individual']
-  "name1" varchar(100) [note: 'last name of the individual']
+  "name" varchar(100) [note: '''first name\'s of the individual''']
+  "name1" varchar(100) [note: '''last name\'s of the individual''']
 
   Indexes {
     (name, name1) [type: hash, name: "idx_name_name1"]
