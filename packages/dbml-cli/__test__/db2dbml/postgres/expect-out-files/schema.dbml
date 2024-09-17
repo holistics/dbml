@@ -136,8 +136,8 @@ Table "table2" {
 
 Table "table_with_comments" {
   "id" int4 [pk, not null, increment, note: 'Unique identifier for each item.']
-  "name" varchar(100) [note: 'Name of the item.']
-  "description" text [note: 'Detailed description of the item.']
+  "name" varchar(100) [note: '''Item\'s name.''']
+  "description" text [note: '''Item\'s description''']
   "created_at" timestamptz [default: `CURRENT_TIMESTAMP`, note: 'Timestamp when the item was created.']
   Note: 'This table stores information about various items.'
 }
