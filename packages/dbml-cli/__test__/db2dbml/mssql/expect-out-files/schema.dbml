@@ -142,7 +142,7 @@ Table "dbo"."StringTypes" {
 
 Table "dbo"."table_with_comments" {
   "created_at" datetime2 [default: `getdate()`, note: 'Timestamp when the item was created.']
-  "description" text [note: 'Detailed description of the item.']
+  "description" text [note: '''Item\'s description''']
   "id" int [pk, not null, increment, note: 'Unique identifier for each item.']
   "name" varchar [note: 'Name of the item.']
   Note: 'This table stores information about various items.'
