@@ -42,7 +42,7 @@ expr
   }
   / __
 
-ProjectSyntax 
+ProjectSyntax
   = project name:(__ name)? _ "{" _ body:ProjectBody _ "}" {
     return {
       name: name ? name[1] : null,
@@ -154,7 +154,7 @@ RefSyntax
     return {
       ...r,
       schemaName,
-    }; 
+    };
   }
 
 ref_long
@@ -180,7 +180,7 @@ ref_short
     }
 
 ref_body
-  = field1:field_identifier sp+ relation:relation sp+ field2:field_identifier sp* ref_settings:RefSettings? {
+  = field1:field_identifier __ relation:relation __ field2:field_identifier sp* ref_settings:RefSettings? {
     const rel = getRelations(relation);
     const endpoints = [
       {
@@ -205,14 +205,14 @@ ref_body
   }
 //CHANGE
 RefField
-  = field:(RefSingleField/RefMultipleFields) { 
+  = field:(RefSingleField/RefMultipleFields) {
     if (typeof field === "string") field = [field];
-    return field; 
+    return field;
   }
 
 RefSingleField
   =  field:name { return field; }
- 
+
 RefMultipleFields
   = "(" sp* first:RefSingleField rest:(sp* Comma sp* RefSingleField)* sp* ")"  {
     let arrField = [first].concat(rest.map(el => el[3]));
@@ -486,7 +486,7 @@ Indexes
     {
       return body;
     }
-    
+
 IndexesBody = _ index: Index+ _ {
   return index;
 }
@@ -638,11 +638,11 @@ name "valid name"
 
 schema_name "schema name" = name:name "." { return name }
 
-field_identifier = 
+field_identifier =
   schemaName:name "." tableName:name "." fieldNames:RefField { return { schemaName, tableName, fieldNames } } /
   tableName:name "." fieldNames:RefField { return { schemaName: null, tableName, fieldNames } }
 
-inline_field_identifier = 
+inline_field_identifier =
   schemaName:name "." tableName:name "." fieldName:name { return { schemaName, tableName, fieldName } } /
   tableName:name "." fieldName:name { return { schemaName: null, tableName, fieldName } }
 
@@ -706,7 +706,7 @@ StringLiteral "string"
     / "'''" chars: MultiLineStringCharacter* "'''" {
         let str = chars.join('');
         // // replace line continuation using look around, but this is not compatible with firefox, safari.
-        // str = str.replace(/(?<!\\)\\(?!\\)(?:\n|\r\n)?/g, ''); 
+        // str = str.replace(/(?<!\\)\\(?!\\)(?:\n|\r\n)?/g, '');
         // str = str.replace(/\\\\/, '\\');
 
         let lines = str.split(/\n|\r\n?/);
