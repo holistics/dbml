@@ -124,8 +124,8 @@ create unique index idx_email_unique on index_example (email);
 -- comments & hash index
 create table hash_index_example (
   id int primary key comment 'unique identifier for each record',
-  name varchar(100) comment 'first name of the individual',
-  name1 varchar(100) comment 'last name of the individual',
+  name varchar(100) comment 'first name''s of the individual',
+  name1 varchar(100) comment 'last name''s of the individual',
   index idx_name_name1 (name, name1) using hash comment 'hash index for fast lookups on name and name1'
 ) engine=memory comment='table for storing names with a hash index';
 

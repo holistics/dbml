@@ -81,7 +81,7 @@
       "name": "table_with_comments",
       "schemaName": "public",
       "note": {
-        "value": "This table stores information about various items."
+        "value": "This table stores information about various items. Such as: 'id', 'name', 'description'"
       }
     },
     {
@@ -1007,7 +1007,7 @@
         "not_null": false,
         "increment": false,
         "note": {
-          "value": "Name of the item."
+          "value": "Item's name."
         }
       },
       {
@@ -1020,7 +1020,7 @@
         "not_null": false,
         "increment": false,
         "note": {
-          "value": "Detailed description of the item."
+          "value": "Item's description"
         }
       },
       {
