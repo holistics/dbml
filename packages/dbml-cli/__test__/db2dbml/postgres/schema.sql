@@ -130,7 +130,7 @@ CREATE TABLE table_with_comments (
 );
 
 -- Add comments
-COMMENT ON TABLE table_with_comments IS 'This table stores information about various items.';
+COMMENT ON TABLE table_with_comments IS 'This table stores information about various items. Such as: ''id'', ''name'', ''description''';
 COMMENT ON COLUMN table_with_comments.id IS 'Unique identifier for each item.';
 COMMENT ON COLUMN table_with_comments.name IS 'Item''s name.';
 COMMENT ON COLUMN table_with_comments.description IS 'Item''s description';

@@ -139,7 +139,7 @@ Table "table_with_comments" {
   "name" varchar(100) [note: '''Item\'s name.''']
   "description" text [note: '''Item\'s description''']
   "created_at" timestamptz [default: `CURRENT_TIMESTAMP`, note: 'Timestamp when the item was created.']
-  Note: 'This table stores information about various items.'
+  Note: '''This table stores information about various items. Such as: \'id\', \'name\', \'description\''''
 }
 
 Table "user_define_data_types" {
