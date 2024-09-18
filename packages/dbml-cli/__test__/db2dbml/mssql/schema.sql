@@ -251,7 +251,7 @@ GO
 
 EXEC sys.sp_addextendedproperty
   @name=N'MS_Description',
-  @value=N'Detailed description of the item.',
+  @value=N'Item''s description',
   @level0type=N'SCHEMA',
   @level0name=N'dbo',
   @level1type=N'TABLE',
