@@ -8,6 +8,7 @@ import {
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
+  DummyNode,
   ElementDeclarationNode,
   ExpressionNode,
   FunctionApplicationNode,
@@ -167,7 +168,7 @@ function markInvalidNode(node: SyntaxNode) {
     markInvalid(node.literal);
   } else if (node instanceof GroupExpressionNode) {
     throw new Error('This case is handled by the TupleExpressionNode case');
-  } else {
+  } else if (!(node instanceof DummyNode)) {
     throw new Error('Unreachable case in markInvalidNode');
   }
 }
@@ -270,9 +271,14 @@ export function getMemberChain(node: SyntaxNode): Readonly<(SyntaxNode | SyntaxT
     )
   }
 
+  if (node instanceof DummyNode) {
+    return [];
+  }
+
   if (node instanceof GroupExpressionNode) {
     throw new Error('This case is already handled by TupleExpressionNode');
   }
+
 
   throw new Error('Unreachable - no other possible cases');
 }
