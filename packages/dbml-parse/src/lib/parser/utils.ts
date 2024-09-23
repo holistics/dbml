@@ -271,9 +271,14 @@ export function getMemberChain(node: SyntaxNode): Readonly<(SyntaxNode | SyntaxT
     )
   }
 
+  if (node instanceof DummyNode) {
+    return [];
+  }
+
   if (node instanceof GroupExpressionNode) {
     throw new Error('This case is already handled by TupleExpressionNode');
   }
+
 
   throw new Error('Unreachable - no other possible cases');
 }
