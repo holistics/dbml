@@ -33,7 +33,7 @@ Table "dbo"."DatetimeTypes" {
   "DATETIMECol" datetime [default: `getdate()`]
   "DATETIMEOFFSETCol" datetimeoffset [default: `sysdatetimeoffset()`]
   "ID" int(10) [pk, not null, increment]
-  "ROWVERSIONCol" rowversion [not null]
+  "ROWVERSIONCol" timestamp [not null]
   "SMALLDATETIMECol" smalldatetime [default: `getdate()`]
   "TIMECol" time [default: `CONVERT([time],getdate())`]
 }

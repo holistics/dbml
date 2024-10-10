@@ -302,7 +302,7 @@
       {
         "name": "ROWVERSIONCol",
         "type": {
-          "type_name": "rowversion",
+          "type_name": "timestamp",
           "schemaName": null
         },
         "dbdefault": null,
