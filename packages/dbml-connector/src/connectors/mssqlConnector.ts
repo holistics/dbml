@@ -53,20 +53,47 @@ const getFieldType = (data_type: string, default_type: DefaultType, character_ma
   if (MSSQL_DATE_TYPES.includes(data_type)) {
     return data_type;
   }
+
+  // timestamp is a synonym of rowversion
+  // microsoft recommends that we should not use timestamp, so we will convert it back to rowversion
+  // https://learn.microsoft.com/en-us/sql/t-sql/data-types/rowversion-transact-sql?view=sql-server-ver15
+  if (data_type === 'timestamp') {
+    return 'rowversion';
+  }
+
+  // process numeric -based type
   if (data_type === 'bit') {
     return data_type;
   }
-
-  // if precision != 0 => numeric-based column and its precision is defined
+  // if precision != 0 => numeric-based column
   if (numeric_precision) {
     return numeric_scale
       ? `${data_type}(${numeric_precision},${numeric_scale})`
       : `${data_type}(${numeric_precision})`;
   }
 
-  if (character_maximum_length && character_maximum_length > 0 && default_type === 'string') {
-    return `${data_type}(${character_maximum_length})`;
+  // process string-based type
+  // ntext, text & image
+  if (['ntext', 'text', 'image'].includes(data_type)) {
+    return data_type;
   }
+
+  // Column data type is varchar(max), nvarchar(max), varbinary(max), or xml
+  if (character_maximum_length < 0) {
+    return data_type === 'xml' ? data_type : `${data_type}(MAX)`;
+  }
+
+  // character_maximum_length is the lenght in bytes
+  // nchar and nvarchar store Unicode characters, each character needs 2 bytes
+  // so we have to divide it by 2 to get the correct maximum lenght in character.
+  if (character_maximum_length > 0) {
+    const maximum_length_in_character = (data_type === 'nchar' || data_type === 'nvarchar')
+      ? character_maximum_length / 2
+      : character_maximum_length;
+
+    return `${data_type}(${maximum_length_in_character})`;
+  }
+
   return data_type;
 };
 
@@ -234,7 +261,7 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
       constraints_with_row_number
     WHERE
       rn = 1
-      ${buildSchemaQuery('table_schema', schemas, 'WHERE')}
+      ${buildSchemaQuery('table_schema', schemas)}
     ORDER BY
       table_schema,
       table_name,
