@@ -13,18 +13,18 @@ Enum "dbo"."chk_gender" {
 }
 
 Table "dbo"."Authors" {
-  "AuthorID" int [pk, not null]
-  "AuthorName" nvarchar [unique]
-  "BirthYear" int [unique]
-  "NationalityID" int [pk, not null]
+  "AuthorID" int(10) [pk, not null]
+  "AuthorName" nvarchar(100) [unique]
+  "BirthYear" int(10) [unique]
+  "NationalityID" int(10) [pk, not null]
 }
 
 Table "dbo"."Books" {
-  "AuthorID" int [pk, not null]
-  "BookID" int [pk, not null]
-  "ISBN" nvarchar [unique]
-  "NationalityID" int
-  "Title" nvarchar
+  "AuthorID" int(10) [pk, not null]
+  "BookID" int(10) [pk, not null]
+  "ISBN" nvarchar(20) [unique]
+  "NationalityID" int(10)
+  "Title" nvarchar(200)
 }
 
 Table "dbo"."DatetimeTypes" {
@@ -32,49 +32,49 @@ Table "dbo"."DatetimeTypes" {
   "DATETIME2Col" datetime2 [default: `sysdatetime()`]
   "DATETIMECol" datetime [default: `getdate()`]
   "DATETIMEOFFSETCol" datetimeoffset [default: `sysdatetimeoffset()`]
-  "ID" int [pk, not null, increment]
-  "ROWVERSIONCol" timestamp [not null]
+  "ID" int(10) [pk, not null, increment]
+  "ROWVERSIONCol" rowversion [not null]
   "SMALLDATETIMECol" smalldatetime [default: `getdate()`]
   "TIMECol" time [default: `CONVERT([time],getdate())`]
 }
 
 Table "dbo"."gender_reference" {
-  "value" nvarchar [pk, not null]
+  "value" nvarchar(10) [pk, not null]
 }
 
 Table "dbo"."NumberTypes" {
-  "BIGINTCol" bigint [default: 0]
+  "BIGINTCol" bigint(19) [default: 0]
   "BITCol" bit [default: 0]
   "DECIMALCol" decimal(10,2) [default: 0.00]
-  "FLOATCol" float [default: 0.0]
-  "ID" int [pk, not null, increment]
-  "INTCol" int [default: 0]
+  "FLOATCol" float(53) [default: 0.0]
+  "ID" int(10) [pk, not null, increment]
+  "INTCol" int(10) [default: 0]
   "NUMERICCol" numeric(10,2) [default: 0.00]
-  "REALCol" real [default: 0.0]
-  "SMALLINTCol" smallint [default: 0]
-  "TINYINTCol" tinyint [default: 0]
+  "REALCol" real(24) [default: 0.0]
+  "SMALLINTCol" smallint(5) [default: 0]
+  "TINYINTCol" tinyint(3) [default: 0]
 }
 
 Table "dbo"."NumberTypesNoDefault" {
-  "BIGINTCol" bigint
+  "BIGINTCol" bigint(19)
   "BITCol" bit
   "DECIMALCol" decimal(10,2)
-  "FLOATCol" float
-  "ID" int [pk, not null, increment]
-  "INTCol" int
+  "FLOATCol" float(53)
+  "ID" int(10) [pk, not null, increment]
+  "INTCol" int(10)
   "NUMERICCol" numeric(10,2)
-  "REALCol" real
-  "SMALLINTCol" smallint
-  "TINYINTCol" tinyint
+  "REALCol" real(24)
+  "SMALLINTCol" smallint(5)
+  "TINYINTCol" tinyint(3)
 }
 
 Table "dbo"."ObjectTypes" {
-  "BinaryField" binary [default: `0x00`]
-  "Id" int [pk, not null, increment]
+  "BinaryField" binary(50) [default: `0x00`]
+  "Id" int(10) [pk, not null, increment]
   "ImageField" image [default: `0x00`]
-  "JsonField" nvarchar [default: `N'{"defaultKey": "defaultValue", "status": "active", "count": 0}'`]
-  "VarBinaryField" varbinary [default: `0x00`]
-  "VarBinaryMaxField" varbinary [default: `0x00`]
+  "JsonField" nvarchar(MAX) [default: `N'{"defaultKey": "defaultValue", "status": "active", "count": 0}'`]
+  "VarBinaryField" varbinary(50) [default: `0x00`]
+  "VarBinaryMaxField" varbinary(MAX) [default: `0x00`]
   "XmlField" xml [default: '''<Books>
     <Book>
       <Title>The Great Gatsby</Title>
@@ -100,10 +100,10 @@ Table "dbo"."ObjectTypes" {
 }
 
 Table "dbo"."order_items" {
-  "order_id" int [unique, not null]
-  "order_item_id" int [pk, not null, increment]
-  "product_id" int [unique, not null]
-  "quantity" int [not null]
+  "order_id" int(10) [unique, not null]
+  "order_item_id" int(10) [pk, not null, increment]
+  "product_id" int(10) [unique, not null]
+  "quantity" int(10) [not null]
   "unit_price" decimal(10,2) [not null]
 
   Indexes {
@@ -114,11 +114,11 @@ Table "dbo"."order_items" {
 Table "dbo"."orders" {
   "billing_address" text [not null]
   "order_date" datetime2 [default: `getdate()`]
-  "order_id" int [pk, not null, increment]
+  "order_id" int(10) [pk, not null, increment]
   "shipping_address" text [not null]
   "status" dbo.chk_status [default: 'pending']
   "total_amount" decimal(12,2) [not null]
-  "user_id" int [not null]
+  "user_id" int(10) [not null]
 
   Indexes {
     (user_id, order_date) [type: nonclustered, name: "idx_orders_user_date"]
@@ -126,14 +126,14 @@ Table "dbo"."orders" {
 }
 
 Table "dbo"."products" {
-  "category" varchar
+  "category" varchar(50)
   "created_at" datetime2 [default: `getdate()`]
   "description" text
   "is_available" bit [default: 1]
-  "name" varchar [not null]
+  "name" varchar(100) [not null]
   "price" decimal(10,2) [not null]
-  "product_id" int [pk, not null, increment]
-  "stock_quantity" int [not null, default: 0]
+  "product_id" int(10) [pk, not null, increment]
+  "stock_quantity" int(10) [not null, default: 0]
   "updated_at" datetime2 [default: `getdate()`]
 
   Indexes {
@@ -143,47 +143,47 @@ Table "dbo"."products" {
 
 Table "dbo"."StringTypes" {
   "CharField" char(10) [default: 'N/A']
-  "Id" int [pk, not null, increment]
-  "NCharField" nchar [default: `N'N/A'`]
+  "Id" int(10) [pk, not null, increment]
+  "NCharField" nchar(10) [default: `N'N/A'`]
   "NTextField" ntext [default: `N'N/A'`]
-  "NVarCharField" nvarchar [default: `N'N/A'`]
-  "NVarCharMaxField" nvarchar [default: `N'N/A'`]
-  "TextField" text(16) [default: 'N/A']
+  "NVarCharField" nvarchar(50) [default: `N'N/A'`]
+  "NVarCharMaxField" nvarchar(MAX) [default: `N'N/A'`]
+  "TextField" text [default: 'N/A']
   "VarcharField" varchar(50) [default: '{"default_key": "default_value"}']
-  "VarcharMaxField" varchar [default: 'N/A']
+  "VarcharMaxField" varchar(MAX) [default: 'N/A']
 }
 
 Table "dbo"."table_with_comments" {
   "created_at" datetime2 [default: `getdate()`, note: 'Timestamp when the item was created.']
   "description" text [note: '''Item\'s description''']
-  "id" int [pk, not null, increment, note: 'Unique identifier for each item.']
-  "name" varchar [note: 'Name of the item.']
+  "id" int(10) [pk, not null, increment, note: 'Unique identifier for each item.']
+  "name" varchar(100) [note: 'Name of the item.']
   Note: 'This table stores information about various items.'
 }
 
 Table "dbo"."user_define_data_types" {
-  "age_end" int
-  "age_start" int
+  "age_end" int(10)
+  "age_start" int(10)
   "gender" dbo.chk_gender
-  "height" float
-  "id" int [pk, not null, increment]
-  "name" nvarchar
-  "weight" float
+  "height" float(53)
+  "id" int(10) [pk, not null, increment]
+  "name" nvarchar(50)
+  "weight" float(53)
 }
 
 Table "dbo"."users" {
   "created_at" datetime2 [default: `getdate()`]
   "date_of_birth" date
-  "email" varchar [unique, not null]
-  "first_name" varchar
-  "full_name" varchar
-  "full_name_lower" varchar
+  "email" varchar(100) [unique, not null]
+  "first_name" varchar(50)
+  "full_name" varchar(100)
+  "full_name_lower" varchar(100)
   "is_active" bit [default: 1]
   "last_login" datetime2
-  "last_name" varchar
-  "password_hash" varchar [not null]
-  "user_id" int [pk, not null, increment]
-  "username" varchar [unique, not null]
+  "last_name" varchar(50)
+  "password_hash" varchar(255) [not null]
+  "user_id" int(10) [pk, not null, increment]
+  "username" varchar(50) [unique, not null]
 
   Indexes {
     email [type: nonclustered, name: "idx_users_email"]

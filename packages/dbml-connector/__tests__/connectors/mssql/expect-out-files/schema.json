@@ -117,7 +117,7 @@
       {
         "name": "AuthorName",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -184,7 +184,7 @@
       {
         "name": "ISBN",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(20)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -210,7 +210,7 @@
       {
         "name": "Title",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(200)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -302,7 +302,7 @@
       {
         "name": "ROWVERSIONCol",
         "type": {
-          "type_name": "timestamp",
+          "type_name": "rowversion",
           "schemaName": null
         },
         "dbdefault": null,
@@ -349,7 +349,7 @@
       {
         "name": "value",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -655,7 +655,7 @@
       {
         "name": "BinaryField",
         "type": {
-          "type_name": "binary",
+          "type_name": "binary(50)",
           "schemaName": null
         },
         "dbdefault": {
@@ -700,7 +700,7 @@
       {
         "name": "JsonField",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(MAX)",
           "schemaName": null
         },
         "dbdefault": {
@@ -716,7 +716,7 @@
       {
         "name": "VarBinaryField",
         "type": {
-          "type_name": "varbinary",
+          "type_name": "varbinary(50)",
           "schemaName": null
         },
         "dbdefault": {
@@ -732,7 +732,7 @@
       {
         "name": "VarBinaryMaxField",
         "type": {
-          "type_name": "varbinary",
+          "type_name": "varbinary(MAX)",
           "schemaName": null
         },
         "dbdefault": {
@@ -932,7 +932,7 @@
       {
         "name": "category",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(50)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -990,7 +990,7 @@
       {
         "name": "name",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1092,7 +1092,7 @@
       {
         "name": "NCharField",
         "type": {
-          "type_name": "nchar",
+          "type_name": "nchar(10)",
           "schemaName": null
         },
         "dbdefault": {
@@ -1124,7 +1124,7 @@
       {
         "name": "NVarCharField",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(50)",
           "schemaName": null
         },
         "dbdefault": {
@@ -1140,7 +1140,7 @@
       {
         "name": "NVarCharMaxField",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(MAX)",
           "schemaName": null
         },
         "dbdefault": {
@@ -1156,7 +1156,7 @@
       {
         "name": "TextField",
         "type": {
-          "type_name": "text(16)",
+          "type_name": "text",
           "schemaName": null
         },
         "dbdefault": {
@@ -1188,7 +1188,7 @@
       {
         "name": "VarcharMaxField",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(MAX)",
           "schemaName": null
         },
         "dbdefault": {
@@ -1248,7 +1248,7 @@
       {
         "name": "name",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1328,7 +1328,7 @@
       {
         "name": "name",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(50)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1385,7 +1385,7 @@
       {
         "name": "email",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1398,7 +1398,7 @@
       {
         "name": "first_name",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(50)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1411,7 +1411,7 @@
       {
         "name": "full_name",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1424,7 +1424,7 @@
       {
         "name": "full_name_lower",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1466,7 +1466,7 @@
       {
         "name": "last_name",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(50)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1479,7 +1479,7 @@
       {
         "name": "password_hash",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(255)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1505,7 +1505,7 @@
       {
         "name": "username",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(50)",
           "schemaName": null
         },
         "dbdefault": null,
