@@ -132,6 +132,20 @@ CREATE TABLE NumberTypes (
 );
 GO
 
+CREATE TABLE NumberTypesNoDefault (
+  ID INT IDENTITY(1,1) PRIMARY KEY,
+  TINYINTCol TINYINT,
+  SMALLINTCol SMALLINT,
+  INTCol INT,
+  BIGINTCol BIGINT,
+  DECIMALCol DECIMAL(10, 2),
+  NUMERICCol NUMERIC(10, 2),
+  FLOATCol FLOAT,
+  REALCol REAL,
+  BITCol BIT
+);
+GO
+
 -- Create a table with default values for date and time types
 CREATE TABLE DatetimeTypes (
   ID INT IDENTITY(1,1) PRIMARY KEY,

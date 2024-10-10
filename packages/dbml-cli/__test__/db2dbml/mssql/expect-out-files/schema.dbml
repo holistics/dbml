@@ -55,6 +55,19 @@ Table "dbo"."NumberTypes" {
   "TINYINTCol" tinyint [default: 0]
 }
 
+Table "dbo"."NumberTypesNoDefault" {
+  "BIGINTCol" bigint
+  "BITCol" bit
+  "DECIMALCol" decimal(10,2)
+  "FLOATCol" float
+  "ID" int [pk, not null, increment]
+  "INTCol" int
+  "NUMERICCol" numeric(10,2)
+  "REALCol" real
+  "SMALLINTCol" smallint
+  "TINYINTCol" tinyint
+}
+
 Table "dbo"."ObjectTypes" {
   "BinaryField" binary [default: `0x00`]
   "Id" int [pk, not null, increment]
@@ -91,7 +104,7 @@ Table "dbo"."order_items" {
   "order_item_id" int [pk, not null, increment]
   "product_id" int [unique, not null]
   "quantity" int [not null]
-  "unit_price" decimal [not null]
+  "unit_price" decimal(10,2) [not null]
 
   Indexes {
     (order_id, product_id) [type: nonclustered, name: "idx_order_items_order_product"]
@@ -104,7 +117,7 @@ Table "dbo"."orders" {
   "order_id" int [pk, not null, increment]
   "shipping_address" text [not null]
   "status" dbo.chk_status [default: 'pending']
-  "total_amount" decimal [not null]
+  "total_amount" decimal(12,2) [not null]
   "user_id" int [not null]
 
   Indexes {
@@ -118,7 +131,7 @@ Table "dbo"."products" {
   "description" text
   "is_available" bit [default: 1]
   "name" varchar [not null]
-  "price" decimal [not null]
+  "price" decimal(10,2) [not null]
   "product_id" int [pk, not null, increment]
   "stock_quantity" int [not null, default: 0]
   "updated_at" datetime2 [default: `getdate()`]

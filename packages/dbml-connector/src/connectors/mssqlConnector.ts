@@ -56,9 +56,14 @@ const getFieldType = (data_type: string, default_type: DefaultType, character_ma
   if (data_type === 'bit') {
     return data_type;
   }
-  if (numeric_precision && numeric_scale && default_type === 'number') {
-    return `${data_type}(${numeric_precision},${numeric_scale})`;
+
+  // if precision != 0 => numeric-based column and its precision is defined
+  if (numeric_precision) {
+    return numeric_scale
+      ? `${data_type}(${numeric_precision},${numeric_scale})`
+      : `${data_type}(${numeric_precision})`;
   }
+
   if (character_maximum_length && character_maximum_length > 0 && default_type === 'string') {
     return `${data_type}(${character_maximum_length})`;
   }
