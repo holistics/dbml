@@ -54,14 +54,13 @@ const getFieldType = (data_type: string, character_maximum_length: number, numer
     return data_type;
   }
 
-  // timestamp is a synonym of rowversion
-  // microsoft recommends that we should not use timestamp, so we will convert it back to rowversion
+  // timestamp is a synonym of rowversion and we cannot specify the precision for it
   // https://learn.microsoft.com/en-us/sql/t-sql/data-types/rowversion-transact-sql?view=sql-server-ver15
   if (data_type === 'timestamp') {
-    return 'rowversion';
+    return data_type;
   }
 
-  // process numeric -based type
+  // process numeric-based type
   if (data_type === 'bit') {
     return data_type;
   }
