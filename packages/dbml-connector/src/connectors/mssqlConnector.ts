@@ -85,6 +85,7 @@ const getFieldType = (data_type: string, character_maximum_length: number, numer
   // character_maximum_length is the lenght in bytes
   // nchar and nvarchar store Unicode characters, each character needs 2 bytes
   // so we have to divide it by 2 to get the correct maximum lenght in character.
+  // ref: https://learn.microsoft.com/en-us/sql/t-sql/data-types/nchar-and-nvarchar-transact-sql?view=sql-server-ver15
   if (character_maximum_length > 0) {
     const maximum_length_in_character = (data_type === 'nchar' || data_type === 'nvarchar')
       ? character_maximum_length / 2
