@@ -49,7 +49,7 @@ const getValidatedClient = async (connection: string): Promise<sql.ConnectionPoo
 
 const convertQueryBoolean = (val: string | null): boolean => val === 'YES';
 
-const getFieldType = (data_type: string, default_type: DefaultType, character_maximum_length: number, numeric_precision: number, numeric_scale: number): string => {
+const getFieldType = (data_type: string, character_maximum_length: number, numeric_precision: number, numeric_scale: number): string => {
   if (MSSQL_DATE_TYPES.includes(data_type)) {
     return data_type;
   }
@@ -151,7 +151,7 @@ const generateField = (row: Record<string, any>): Field => {
   const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(data_type, column_default, default_type) : null;
 
   const fieldType = {
-    type_name: getFieldType(data_type, default_type, character_maximum_length, numeric_precision, numeric_scale),
+    type_name: getFieldType(data_type, character_maximum_length, numeric_precision, numeric_scale),
     schemaName: null,
   };
 
