@@ -211,7 +211,9 @@ class DbmlExporter {
   static exportRefs (refIds, model) {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
-      const refEndpointIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const oneRelationEndpointIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const isManyToMany = oneRelationEndpointIndex === -1;
+      const refEndpointIndex = isManyToMany ? 0 : oneRelationEndpointIndex;
       const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
       const refEndpointId = ref.endpointIds[refEndpointIndex];
       const foreignEndpoint = model.endpoints[foreignEndpointId];
@@ -236,8 +238,10 @@ class DbmlExporter {
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
       const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'dbml');
 
-      if (foreignEndpoint.relation === '1') line += '- ';
-      else line += '< ';
+      if (isManyToMany) line += '<> ';
+      else
+        if (foreignEndpoint.relation === '1') line += '- ';
+        else line += '< ';
       line += `${shouldPrintSchema(foreignEndpointSchema, model)
         ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}".${foreignEndpointFieldName}`;
 
