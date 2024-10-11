@@ -16,6 +16,7 @@ import {
   TableConstraintsDictionary,
 } from './types';
 
+// https://learn.microsoft.com/en-us/sql/t-sql/data-types/date-and-time-types?view=sql-server-ver15
 const MSSQL_DATE_TYPES = [
   'date',
   'datetime',
