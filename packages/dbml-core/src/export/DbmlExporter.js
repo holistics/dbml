@@ -1,4 +1,4 @@
-import { isEmpty, forIn } from 'lodash';
+import { isEmpty, reduce } from 'lodash';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
@@ -284,28 +284,29 @@ class DbmlExporter {
       const groupSchemaName = shouldPrintSchema(groupSchema, model) ? `"${groupSchema.name}".` : '';
       const groupName = `${groupSchemaName}"${group.name}"`;
 
-      const tableStr = group.tableIds
-        .map(tableId => {
+      const tableNames = group.tableIds
+        .reduce((result, tableId) => {
           const table = model.tables[tableId];
           const tableSchema = model.schemas[table.schemaId];
-          return `  ${shouldPrintSchema(tableSchema, model)
-            ? `"${tableSchema.name}".` : ''}"${table.name}"\n`;
-        })
-        .join('');
+          const tableName = `  ${shouldPrintSchema(tableSchema, model) ? `"${tableSchema.name}".` : ''}"${table.name}"`;
+          return result + `${tableName}\n`;
+        }, '');
 
-      return `TableGroup ${groupName}${groupSettingStr} {\n${tableStr}${groupNote}}\n`;
+      return `TableGroup ${groupName}${groupSettingStr} {\n${tableNames}${groupNote}}\n`;
     });
 
     return tableGroupStrs.length ? tableGroupStrs.join('\n') : '';
   }
 
   static exportStickyNotes (model) {
-    const noteStrs = [];
-    forIn(model.notes, (note) => {
+    return reduce(model.notes, (result, note) => {
       const escapedContent = `  ${DbmlExporter.escapeNote(note.content)}`;
-      noteStrs.push(`Note ${note.name} {\n${escapedContent}\n}\n`);
-    });
-    return noteStrs.join('\n');
+      const stickyNote = `Note ${note.name} {\n${escapedContent}\n}\n`;
+
+      // Add a blank line between note elements
+      if (result) return result + '\n' + stickyNote;
+      return result + stickyNote;
+    }, '');
   }
 
   static export (model) {
