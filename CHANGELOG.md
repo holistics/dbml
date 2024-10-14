@@ -1,3 +1,14 @@
+## v3.9.1 (2024-10-14)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#645](https://github.com/holistics/dbml/pull/645) Fix mssql connector - Missing data type size for numeric-based and string-based columns ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.9.0 (2024-09-13)
 
 #### :bug: Bug Fix
