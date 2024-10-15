@@ -1,3 +1,12 @@
+## v3.9.2 (2024-10-15)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#647](https://github.com/holistics/dbml/pull/647) Fix model-exporter don't export sticky notes, table group notes and color ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### Committers: 1
+- Tho Nguyen ([@thonx-holistics](https://github.com/thonx-holistics))
+
 ## v3.9.1 (2024-10-14)
 
 #### :bug: Bug Fix
