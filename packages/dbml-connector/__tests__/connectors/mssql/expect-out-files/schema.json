@@ -36,6 +36,13 @@
       }
     },
     {
+      "name": "NumberTypesNoDefault",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
       "name": "ObjectTypes",
       "schemaName": "dbo",
       "note": {
@@ -97,7 +104,7 @@
       {
         "name": "AuthorID",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -110,7 +117,7 @@
       {
         "name": "AuthorName",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -123,7 +130,7 @@
       {
         "name": "BirthYear",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -136,7 +143,7 @@
       {
         "name": "NationalityID",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -151,7 +158,7 @@
       {
         "name": "AuthorID",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -164,7 +171,7 @@
       {
         "name": "BookID",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -177,7 +184,7 @@
       {
         "name": "ISBN",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(20)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -190,7 +197,7 @@
       {
         "name": "NationalityID",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -203,7 +210,7 @@
       {
         "name": "Title",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(200)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -282,7 +289,7 @@
       {
         "name": "ID",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -342,7 +349,7 @@
       {
         "name": "value",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -357,7 +364,7 @@
       {
         "name": "BIGINTCol",
         "type": {
-          "type_name": "bigint",
+          "type_name": "bigint(19)",
           "schemaName": null
         },
         "dbdefault": {
@@ -405,7 +412,7 @@
       {
         "name": "FLOATCol",
         "type": {
-          "type_name": "float",
+          "type_name": "float(53)",
           "schemaName": null
         },
         "dbdefault": {
@@ -421,7 +428,7 @@
       {
         "name": "ID",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -434,7 +441,7 @@
       {
         "name": "INTCol",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": {
@@ -466,7 +473,7 @@
       {
         "name": "REALCol",
         "type": {
-          "type_name": "real",
+          "type_name": "real(24)",
           "schemaName": null
         },
         "dbdefault": {
@@ -482,7 +489,7 @@
       {
         "name": "SMALLINTCol",
         "type": {
-          "type_name": "smallint",
+          "type_name": "smallint(5)",
           "schemaName": null
         },
         "dbdefault": {
@@ -498,7 +505,7 @@
       {
         "name": "TINYINTCol",
         "type": {
-          "type_name": "tinyint",
+          "type_name": "tinyint(3)",
           "schemaName": null
         },
         "dbdefault": {
@@ -512,11 +519,143 @@
         }
       }
     ],
+    "dbo.NumberTypesNoDefault": [
+      {
+        "name": "BIGINTCol",
+        "type": {
+          "type_name": "bigint(19)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "BITCol",
+        "type": {
+          "type_name": "bit",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "DECIMALCol",
+        "type": {
+          "type_name": "decimal(10,2)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "FLOATCol",
+        "type": {
+          "type_name": "float(53)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "int(10)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "INTCol",
+        "type": {
+          "type_name": "int(10)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NUMERICCol",
+        "type": {
+          "type_name": "numeric(10,2)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "REALCol",
+        "type": {
+          "type_name": "real(24)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "SMALLINTCol",
+        "type": {
+          "type_name": "smallint(5)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "TINYINTCol",
+        "type": {
+          "type_name": "tinyint(3)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
     "dbo.ObjectTypes": [
       {
         "name": "BinaryField",
         "type": {
-          "type_name": "binary",
+          "type_name": "binary(50)",
           "schemaName": null
         },
         "dbdefault": {
@@ -532,7 +671,7 @@
       {
         "name": "Id",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -561,7 +700,7 @@
       {
         "name": "JsonField",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(MAX)",
           "schemaName": null
         },
         "dbdefault": {
@@ -577,7 +716,7 @@
       {
         "name": "VarBinaryField",
         "type": {
-          "type_name": "varbinary",
+          "type_name": "varbinary(50)",
           "schemaName": null
         },
         "dbdefault": {
@@ -593,7 +732,7 @@
       {
         "name": "VarBinaryMaxField",
         "type": {
-          "type_name": "varbinary",
+          "type_name": "varbinary(MAX)",
           "schemaName": null
         },
         "dbdefault": {
@@ -627,7 +766,7 @@
       {
         "name": "order_id",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -640,7 +779,7 @@
       {
         "name": "order_item_id",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -653,7 +792,7 @@
       {
         "name": "product_id",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -666,7 +805,7 @@
       {
         "name": "quantity",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -679,7 +818,7 @@
       {
         "name": "unit_price",
         "type": {
-          "type_name": "decimal",
+          "type_name": "decimal(10,2)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -723,7 +862,7 @@
       {
         "name": "order_id",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -765,7 +904,7 @@
       {
         "name": "total_amount",
         "type": {
-          "type_name": "decimal",
+          "type_name": "decimal(12,2)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -778,7 +917,7 @@
       {
         "name": "user_id",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -793,7 +932,7 @@
       {
         "name": "category",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(50)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -851,7 +990,7 @@
       {
         "name": "name",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -864,7 +1003,7 @@
       {
         "name": "price",
         "type": {
-          "type_name": "decimal",
+          "type_name": "decimal(10,2)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -877,7 +1016,7 @@
       {
         "name": "product_id",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -890,7 +1029,7 @@
       {
         "name": "stock_quantity",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": {
@@ -940,7 +1079,7 @@
       {
         "name": "Id",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -953,7 +1092,7 @@
       {
         "name": "NCharField",
         "type": {
-          "type_name": "nchar",
+          "type_name": "nchar(10)",
           "schemaName": null
         },
         "dbdefault": {
@@ -985,7 +1124,7 @@
       {
         "name": "NVarCharField",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(50)",
           "schemaName": null
         },
         "dbdefault": {
@@ -1001,7 +1140,7 @@
       {
         "name": "NVarCharMaxField",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(MAX)",
           "schemaName": null
         },
         "dbdefault": {
@@ -1017,7 +1156,7 @@
       {
         "name": "TextField",
         "type": {
-          "type_name": "text(16)",
+          "type_name": "text",
           "schemaName": null
         },
         "dbdefault": {
@@ -1049,7 +1188,7 @@
       {
         "name": "VarcharMaxField",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(MAX)",
           "schemaName": null
         },
         "dbdefault": {
@@ -1096,7 +1235,7 @@
       {
         "name": "id",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1109,7 +1248,7 @@
       {
         "name": "name",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1124,7 +1263,7 @@
       {
         "name": "age_end",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1137,7 +1276,7 @@
       {
         "name": "age_start",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1163,7 +1302,7 @@
       {
         "name": "height",
         "type": {
-          "type_name": "float",
+          "type_name": "float(53)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1176,7 +1315,7 @@
       {
         "name": "id",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1189,7 +1328,7 @@
       {
         "name": "name",
         "type": {
-          "type_name": "nvarchar",
+          "type_name": "nvarchar(50)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1202,7 +1341,7 @@
       {
         "name": "weight",
         "type": {
-          "type_name": "float",
+          "type_name": "float(53)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1246,7 +1385,7 @@
       {
         "name": "email",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1259,7 +1398,7 @@
       {
         "name": "first_name",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(50)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1272,7 +1411,7 @@
       {
         "name": "full_name",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1285,7 +1424,7 @@
       {
         "name": "full_name_lower",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(100)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1327,7 +1466,7 @@
       {
         "name": "last_name",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(50)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1340,7 +1479,7 @@
       {
         "name": "password_hash",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(255)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1353,7 +1492,7 @@
       {
         "name": "user_id",
         "type": {
-          "type_name": "int",
+          "type_name": "int(10)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1366,7 +1505,7 @@
       {
         "name": "username",
         "type": {
-          "type_name": "varchar",
+          "type_name": "varchar(50)",
           "schemaName": null
         },
         "dbdefault": null,
@@ -1654,6 +1793,11 @@
       }
     },
     "dbo.NumberTypes": {
+      "ID": {
+        "pk": true
+      }
+    },
+    "dbo.NumberTypesNoDefault": {
       "ID": {
         "pk": true
       }
