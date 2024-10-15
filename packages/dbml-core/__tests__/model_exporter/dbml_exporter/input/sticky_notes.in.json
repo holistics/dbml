@@ -1,0 +1,615 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "follows",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "following_user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 18,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 43,
+              "line": 2,
+              "column": 28
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "followed_user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 46,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 70,
+              "line": 3,
+              "column": 27
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 73,
+              "line": 4,
+              "column": 3
+            },
+            "end": {
+              "offset": 93,
+              "line": 4,
+              "column": 23
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 95,
+          "line": 5,
+          "column": 2
+        }
+      },
+      "indexes": []
+    },
+    {
+      "name": "users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 113,
+              "line": 8,
+              "column": 3
+            },
+            "end": {
+              "offset": 137,
+              "line": 8,
+              "column": 27
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
+        },
+        {
+          "name": "username",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 140,
+              "line": 9,
+              "column": 3
+            },
+            "end": {
+              "offset": 156,
+              "line": 9,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "role",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 159,
+              "line": 10,
+              "column": 3
+            },
+            "end": {
+              "offset": 171,
+              "line": 10,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 174,
+              "line": 11,
+              "column": 3
+            },
+            "end": {
+              "offset": 194,
+              "line": 11,
+              "column": 23
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 97,
+          "line": 7,
+          "column": 1
+        },
+        "end": {
+          "offset": 196,
+          "line": 12,
+          "column": 2
+        }
+      },
+      "indexes": []
+    },
+    {
+      "name": "posts",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 214,
+              "line": 15,
+              "column": 3
+            },
+            "end": {
+              "offset": 238,
+              "line": 15,
+              "column": 27
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
+        },
+        {
+          "name": "title",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 241,
+              "line": 16,
+              "column": 3
+            },
+            "end": {
+              "offset": 254,
+              "line": 16,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "body",
+          "type": {
+            "schemaName": null,
+            "type_name": "text",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 257,
+              "line": 17,
+              "column": 3
+            },
+            "end": {
+              "offset": 296,
+              "line": 17,
+              "column": 42
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": false,
+          "note": {
+            "value": "Content of the post",
+            "token": {
+              "start": {
+                "offset": 268,
+                "line": 17,
+                "column": 14
+              },
+              "end": {
+                "offset": 295,
+                "line": 17,
+                "column": 41
+              }
+            }
+          }
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 299,
+              "line": 18,
+              "column": 3
+            },
+            "end": {
+              "offset": 314,
+              "line": 18,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "status",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 317,
+              "line": 19,
+              "column": 3
+            },
+            "end": {
+              "offset": 331,
+              "line": 19,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 334,
+              "line": 20,
+              "column": 3
+            },
+            "end": {
+              "offset": 354,
+              "line": 20,
+              "column": 23
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 198,
+          "line": 14,
+          "column": 1
+        },
+        "end": {
+          "offset": 356,
+          "line": 21,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
+  ],
+  "notes": [
+    {
+      "name": "note1",
+      "content": "sticky note with one line content",
+      "token": {
+        "start": {
+          "offset": 474,
+          "line": 29,
+          "column": 1
+        },
+        "end": {
+          "offset": 526,
+          "line": 31,
+          "column": 2
+        }
+      }
+    },
+    {
+      "name": "random_sticky_note_name",
+      "content": "Sticky note\nWith content\nThat spans\nMultiple lines\n",
+      "token": {
+        "start": {
+          "offset": 528,
+          "line": 33,
+          "column": 1
+        },
+        "end": {
+          "offset": 627,
+          "line": 40,
+          "column": 2
+        }
+      }
+    },
+    {
+      "name": "wrogn_noet_naem",
+      "content": "Maybe you read the note's name as \"wrong note name\", and you had that wrong =))\n",
+      "token": {
+        "start": {
+          "offset": 632,
+          "line": 45,
+          "column": 1
+        },
+        "end": {
+          "offset": 744,
+          "line": 47,
+          "column": 5
+        }
+      }
+    }
+  ],
+  "refs": [
+    {
+      "token": {
+        "start": {
+          "offset": 358,
+          "line": 23,
+          "column": 1
+        },
+        "end": {
+          "offset": 387,
+          "line": 23,
+          "column": 30
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "user_id"
+          ],
+          "tableName": "posts",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 363,
+              "line": 23,
+              "column": 6
+            },
+            "end": {
+              "offset": 376,
+              "line": 23,
+              "column": 19
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "users",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 379,
+              "line": 23,
+              "column": 22
+            },
+            "end": {
+              "offset": 387,
+              "line": 23,
+              "column": 30
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 388,
+          "line": 24,
+          "column": 1
+        },
+        "end": {
+          "offset": 429,
+          "line": 24,
+          "column": 42
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "users",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 393,
+              "line": 24,
+              "column": 6
+            },
+            "end": {
+              "offset": 401,
+              "line": 24,
+              "column": 14
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "following_user_id"
+          ],
+          "tableName": "follows",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 404,
+              "line": 24,
+              "column": 17
+            },
+            "end": {
+              "offset": 429,
+              "line": 24,
+              "column": 42
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 431,
+          "line": 26,
+          "column": 1
+        },
+        "end": {
+          "offset": 471,
+          "line": 26,
+          "column": 41
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "users",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 436,
+              "line": 26,
+              "column": 6
+            },
+            "end": {
+              "offset": 444,
+              "line": 26,
+              "column": 14
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "followed_user_id"
+          ],
+          "tableName": "follows",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 447,
+              "line": 26,
+              "column": 17
+            },
+            "end": {
+              "offset": 471,
+              "line": 26,
+              "column": 41
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
+}
