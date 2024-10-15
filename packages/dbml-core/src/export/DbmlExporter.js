@@ -304,8 +304,7 @@ class DbmlExporter {
       const stickyNote = `Note ${note.name} {\n${escapedContent}\n}\n`;
 
       // Add a blank line between note elements
-      if (result) return result + '\n' + stickyNote;
-      return result + stickyNote;
+      return result ? result + '\n' + stickyNote : stickyNote;
     }, '');
   }
 
