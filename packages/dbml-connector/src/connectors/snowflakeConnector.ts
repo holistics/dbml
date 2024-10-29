@@ -212,7 +212,7 @@ const generateTablesAndFields = async (conn: Connection, schemas: string[]): Pro
         ${schemaSql}
     ORDER BY
         c.table_schema,
-        c.table_name,
+        t.created,
         c.ordinal_position;
   `;
 
