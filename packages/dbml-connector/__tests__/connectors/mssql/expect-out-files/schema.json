@@ -1117,38 +1117,6 @@
         "note": {
           "value": ""
         }
-      },
-      {
-        "name": "DATETIME2Col_2",
-        "type": {
-          "type_name": "datetime2",
-          "schemaName": null
-        },
-        "dbdefault": {
-          "type": "expression",
-          "value": "sysdatetime()"
-        },
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "DATETIMEOFFSETCol_2",
-        "type": {
-          "type_name": "datetimeoffset",
-          "schemaName": null
-        },
-        "dbdefault": {
-          "type": "expression",
-          "value": "sysdatetimeoffset()"
-        },
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
       }
     ],
     "dbo.ObjectTypes": [
