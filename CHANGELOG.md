@@ -1,3 +1,13 @@
+## v3.9.3 (2024-10-30)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#650](https://github.com/holistics/dbml/pull/650) Connector - Keep table ordinal position ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
 ## v3.9.2 (2024-10-15)
 
 #### :bug: Bug Fix
@@ -12,6 +22,8 @@
 #### :bug: Bug Fix
 * `dbml-cli`, `dbml-connector`
   * [#645](https://github.com/holistics/dbml/pull/645) Fix mssql connector - Missing data type size for numeric-based and string-based columns ([@huyleminh01](https://github.com/huyleminh01))
+* `dbml-core`
+  * [#646](https://github.com/holistics/dbml/pull/646) Model Exporter cannot export <> refs in dbml ([@huyphung1602](https://github.com/huyphung1602))
 
 #### Committers: 3
 - Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
