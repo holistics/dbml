@@ -178,7 +178,9 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
       SELECT
         s.name AS table_schema,
         t.name AS table_name,
+        t.create_date as table_create_date,
         c.name AS column_name,
+        c.column_id as column_id,
         ty.name AS data_type,
         c.max_length AS character_maximum_length,
         c.precision AS numeric_precision,
@@ -265,8 +267,8 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
       ${buildSchemaQuery('table_schema', schemas)}
     ORDER BY
       table_schema,
-      table_name,
-      column_name;
+      table_create_date,
+      column_id;
   `;
 
   const tablesAndFieldsResult = await client.query(tablesAndFieldsSql);

@@ -137,15 +137,10 @@ async function generateTablesAndFields(
       t.table_schema = c.table_schema
       and t.table_name = c.table_name
     where t.table_type = 'BASE TABLE'
-    order by t.table_name, c.ordinal_position;
+    order by t.create_time, c.ordinal_position;
   `;
 
-  const [queryResult] = await client.query({
-    query,
-    params: {
-      // stringRegex: STRING_REGEX,
-    },
-  });
+  const [queryResult] = await client.query({ query });
 
   const tableMap: Record<string, Table> = {};
   const fieldMap: FieldsDictionary = {};
