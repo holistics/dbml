@@ -122,8 +122,6 @@ Table "dbo"."DatetimeTypes" {
   "SMALLDATETIMECol" smalldatetime [default: `getdate()`]
   "ROWVERSIONCol" timestamp [not null]
   "DATETIMEOFFSETCol" datetimeoffset [default: `sysdatetimeoffset()`]
-  "DATETIME2Col_2" datetime2 [default: `sysdatetime()`]
-  "DATETIMEOFFSETCol_2" datetimeoffset [default: `sysdatetimeoffset()`]
 }
 
 Table "dbo"."ObjectTypes" {
