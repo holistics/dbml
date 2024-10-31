@@ -185,3 +185,52 @@ CREATE TABLE dbml_test.table3 (
   id SERIAL PRIMARY KEY,
   status dbml_test.enum_type3
 );
+
+-- Foreign keys with same names
+CREATE TABLE table_same_fk (
+  id SERIAL PRIMARY KEY
+);
+
+CREATE TABLE table_same_fk_1 (
+  id SERIAL PRIMARY KEY,
+  fk_id_1 INT
+);
+
+CREATE TABLE table_same_fk_2 (
+  id SERIAL PRIMARY KEY,
+  fk_id_2 INT
+);
+
+ALTER TABLE table_same_fk_1
+ADD CONSTRAINT fk_same_name_test
+FOREIGN KEY (fk_id_1) REFERENCES table_same_fk(id);
+
+ALTER TABLE table_same_fk_2
+ADD CONSTRAINT fk_same_name_test
+FOREIGN KEY (fk_id_2) REFERENCES table_same_fk(id);
+
+-- Composite foreign keys with same names
+-- CREATE TABLE table_same_composite_fk (
+--   ref_id_1 SERIAL,
+--   ref_id_2 SERIAL,
+
+--   CONSTRAINT pk_same_fk PRIMARY KEY (ref_id_1, ref_id_2)
+-- );
+
+-- CREATE TABLE table_same_composite_fk_1 (
+--   fk_id1_1 INT,
+--   fk_id1_2 INT
+-- );
+
+-- CREATE TABLE table_same_composite_fk_2 (
+--   fk_id2_1 INT,
+--   fk_id2_2 INT
+-- );
+
+-- ALTER TABLE table_same_composite_fk_1
+-- ADD CONSTRAINT fk_same_name_test
+-- FOREIGN KEY (fk_id1_1, fk_id1_2) REFERENCES table_same_composite_fk(ref_id_1, ref_id_2);
+
+-- ALTER TABLE table_same_composite_fk_2
+-- ADD CONSTRAINT fk_same_name_test
+-- FOREIGN KEY (fk_id2_1, fk_id2_2) REFERENCES table_same_composite_fk(ref_id_1, ref_id_2);

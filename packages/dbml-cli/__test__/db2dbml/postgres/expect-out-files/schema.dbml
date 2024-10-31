@@ -171,6 +171,20 @@ Table "table2" {
   "status" enum_type2
 }
 
+Table "table_same_fk" {
+  "id" int4 [pk, not null, increment]
+}
+
+Table "table_same_fk_1" {
+  "id" int4 [pk, not null, increment]
+  "fk_id_1" int4
+}
+
+Table "table_same_fk_2" {
+  "id" int4 [pk, not null, increment]
+  "fk_id_2" int4
+}
+
 Ref "fk_authornationality":"authors".("authorid", "nationalityid") < "books".("authorid", "nationalityid") [delete: cascade]
 
 Ref "fk_order":"orders"."order_id" < "order_items"."order_id" [delete: cascade]
@@ -178,3 +192,7 @@ Ref "fk_order":"orders"."order_id" < "order_items"."order_id" [delete: cascade]
 Ref "fk_product":"products"."product_id" < "order_items"."product_id" [delete: cascade]
 
 Ref "fk_user":"users"."user_id" < "orders"."user_id" [delete: cascade]
+
+Ref "fk_same_name_test":"table_same_fk"."id" < "table_same_fk_1"."fk_id_1"
+
+Ref "fk_same_name_test":"table_same_fk"."id" < "table_same_fk_2"."fk_id_2"

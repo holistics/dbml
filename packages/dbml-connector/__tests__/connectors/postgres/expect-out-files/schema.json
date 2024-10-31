@@ -97,6 +97,27 @@
       "note": {
         "value": ""
       }
+    },
+    {
+      "name": "table_same_fk",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "table_same_fk_1",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "table_same_fk_2",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
     }
   ],
   "fields": {
@@ -1270,6 +1291,77 @@
           "value": ""
         }
       }
+    ],
+    "public.table_same_fk": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "public.table_same_fk_1": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "fk_id_1",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "public.table_same_fk_2": [
+      {
+        "name": "id",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "fk_id_2",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
     ]
   },
   "refs": [
@@ -1365,6 +1457,52 @@
         }
       ],
       "onDelete": "CASCADE",
+      "onUpdate": null
+    },
+    {
+      "name": "fk_same_name_test",
+      "endpoints": [
+        {
+          "tableName": "table_same_fk_1",
+          "schemaName": "public",
+          "fieldNames": [
+            "fk_id_1"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "table_same_fk",
+          "schemaName": "public",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "name": "fk_same_name_test",
+      "endpoints": [
+        {
+          "tableName": "table_same_fk_2",
+          "schemaName": "public",
+          "fieldNames": [
+            "fk_id_2"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "table_same_fk",
+          "schemaName": "public",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
       "onUpdate": null
     }
   ],
@@ -1590,6 +1728,21 @@
       }
     },
     "dbml_test.table3": {
+      "id": {
+        "pk": true
+      }
+    },
+    "public.table_same_fk": {
+      "id": {
+        "pk": true
+      }
+    },
+    "public.table_same_fk_1": {
+      "id": {
+        "pk": true
+      }
+    },
+    "public.table_same_fk_2": {
       "id": {
         "pk": true
       }
