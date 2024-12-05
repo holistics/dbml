@@ -1,3 +1,16 @@
+## v3.9.4 (2024-12-05)
+
+#### :bug: Bug Fix
+* `dbml-connector`
+  * [#660](https://github.com/holistics/dbml/pull/660) fix: db2dbml bigquery connector's query ([@kenzht](https://github.com/kenzht))
+
+#### :robot: Dependencies Update
+* [#661](https://github.com/holistics/dbml/pull/661) Bump cross-spawn from 7.0.3 to 7.0.6 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- [@kenzht](https://github.com/kenzht)
+
 ## v3.9.3 (2024-10-30)
 
 #### :bug: Bug Fix
