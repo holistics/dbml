@@ -240,6 +240,7 @@ const generateRawRefs = async (client: Client, schemas: string[]): Promise<Ref[]
     JOIN information_schema.key_column_usage AS kcu
       ON tc.constraint_name = kcu.constraint_name
       AND tc.table_schema = kcu.table_schema
+      AND tc.table_name = kcu.table_name
     JOIN information_schema.constraint_column_usage AS ccu
       ON ccu.constraint_name = tc.constraint_name
     JOIN information_schema.referential_constraints AS rc
