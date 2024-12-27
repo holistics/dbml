@@ -409,6 +409,17 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
   `;
 
   const refsQueryResult = await client.query(refsListSql);
+
+  const endpointsEqual = (ep1: RefEndpoint[], ep2: RefEndpoint[]): boolean => {
+    if (ep1.length !== ep2.length) return false;
+    return ep1.every((endpoint, index) => 
+      endpoint.tableName === ep2[index].tableName &&
+      endpoint.schemaName === ep2[index].schemaName &&
+      endpoint.fieldNames.length === ep2[index].fieldNames.length &&
+      endpoint.fieldNames.every((field, fieldIndex) => field === ep2[index].fieldNames[fieldIndex])
+    );
+  };
+
   refsQueryResult.recordset.forEach((refRow) => {
     const {
       table_schema,
@@ -436,12 +447,18 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
       relation: '1',
     };
 
-    refs.push({
+    const newRef = {
       name: fk_constraint_name,
       endpoints: [ep1, ep2],
       onDelete: on_delete === 'NO_ACTION' ? null : on_delete,
       onUpdate: on_update === 'NO_ACTION' ? null : on_update,
-    });
+    };
+
+    const isDuplicate = refs.some(ref => endpointsEqual(ref.endpoints, newRef.endpoints));
+
+    if (!isDuplicate) {
+      refs.push(newRef);
+    }
   });
 
   return refs;
