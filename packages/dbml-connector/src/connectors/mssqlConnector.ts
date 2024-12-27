@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import sql from 'mssql';
+import sql, { columns } from 'mssql';
 import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
 import {
   DatabaseSchema,
@@ -111,7 +111,7 @@ const getDbdefault = (data_type: string, column_default: string, default_type: D
   };
 };
 
-const getEnumValues = (definition: string): EnumValue[] | null => {
+const getEnumValues = (definition: string, constraint_name: string): { columns: string[], enumValues: EnumValue[], constraint_name: string }[] => {
   // Use the example below to understand the regex:
   // ([quantity]>(0))
   // ([unit_price]>(0))
@@ -124,15 +124,50 @@ const getEnumValues = (definition: string): EnumValue[] | null => {
   // ([gender]='Other' OR [gender]='Female' OR [gender]='Male')
   // ([date_of_birth]<=dateadd(year,(-13),getdate()))
   // ([email] like '%_@_%._%')
-  if (!definition) return null;
+  if (!definition) return [];
   const values = definition.match(/\[([^\]]+)\]='([^']+)'/g); // Extracting the enum values when the definition contains ]='
-  if (!values) return null;
+  if (!values) return [];
 
-  const enumValues = values.map((value) => {
-    const enumValue = value.split("]='")[1];
-    return { name: enumValue.slice(0, -1) };
+  const colMap: { [key: string]: string[] } = {};
+  values.forEach((value) => {
+    const [columnName, enumValue] = value.split("]='");
+    const cleanColumnName = columnName.slice(1); // Remove the leading '['
+    const cleanEnumValue = enumValue.slice(0, -1); // Remove the trailing "'"
+    if (!colMap[cleanColumnName]) {
+      colMap[cleanColumnName] = [cleanEnumValue];
+    } else {
+      colMap[cleanColumnName].push(cleanEnumValue);
+    }
   });
-  return enumValues;
+
+  const arraysEqual = (a: string[], b: string[]): boolean => {
+    if (a.length !== b.length) return false;
+    const sortedA = [...a].sort();
+    const sortedB = [...b].sort();
+    return sortedA.every((value, index) => value === sortedB[index]);
+  };
+
+  const result: { columns: string[], enumValues: EnumValue[], constraint_name: string }[] = [];
+  const processedKeys = new Set<string>();
+
+  Object.keys(colMap).forEach((key) => {
+    if (processedKeys.has(key)) return;
+
+    let mergedColumns = [key];
+    const values = colMap[key];
+
+    Object.keys(colMap).forEach((innerKey) => {
+      if (key !== innerKey && arraysEqual(values, colMap[innerKey])) {
+        mergedColumns.push(innerKey);
+        processedKeys.add(innerKey);
+      }
+    });
+    const enumValues = values.map((value) => ({ name: value }));
+    result.push({ columns: mergedColumns, enumValues, constraint_name: `${constraint_name}_${mergedColumns.join('_')}` });
+    processedKeys.add(key);
+  });
+
+  return result;
 };
 
 const generateField = (row: Record<string, any>): Field => {
@@ -171,6 +206,14 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
   fields: FieldsDictionary,
   enums: Enum[],
 }> => {
+  const checkConstraintDefinitionDedup: {
+    [key: string]: {
+      columns: string[],
+      enumValues: EnumValue[],
+      constraint_name: string,
+    }[]
+  } = {};
+
   const fields: FieldsDictionary = {};
   const enums: Enum[] = [];
   const tablesAndFieldsSql = `
@@ -290,23 +333,32 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
       };
     }
 
-    const enumValues = getEnumValues(check_constraint_definition);
-    if (enumValues) {
-      enums.push({
-        name: check_constraint_name,
-        schemaName: table_schema,
-        values: enumValues,
-      });
-    }
-
     if (!fields[key]) fields[key] = [];
     const field = generateField(row);
-    if (enumValues) {
-      field.type = {
-        type_name: check_constraint_name,
-        schemaName: table_schema,
-      };
+
+    if (check_constraint_definition && !checkConstraintDefinitionDedup[check_constraint_name]) {
+      const enumValuesByColumns = getEnumValues(check_constraint_definition, check_constraint_name);
+      enumValuesByColumns.forEach((item) => {
+        enums.push({
+          name: item.constraint_name,
+          schemaName: table_schema,
+          values: item.enumValues,
+        });
+      });
+      checkConstraintDefinitionDedup[check_constraint_name] = enumValuesByColumns;
     }
+
+    if (checkConstraintDefinitionDedup[check_constraint_name]) {
+      const enumValuesByColumns = checkConstraintDefinitionDedup[check_constraint_name];
+      const columnEnumValues = enumValuesByColumns.find((item) => item.columns.includes(field.name));
+      if (columnEnumValues) {
+        field.type = {
+          type_name: columnEnumValues.constraint_name,
+          schemaName: table_schema,
+        };
+      }
+    }
+
     fields[key].push(field);
 
     return acc;
