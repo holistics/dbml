@@ -12,6 +12,27 @@ Enum "dbo"."chk_gender" {
   "Male"
 }
 
+Enum "dbo"."CK_Address_Valid_AddressID_AddressFormatID" {
+  "176029FA-D6D3-49E1-A48C-000000000002"
+  "176029FA-D6D3-49E1-A48C-000000000001"
+}
+
+Enum "dbo"."CK_Address_Valid2_A1" {
+  "333"
+  "2222"
+  "1111"
+}
+
+Enum "dbo"."CK_Address_Valid2_A2_A3" {
+  "2222"
+  "1111"
+}
+
+Enum "dbo"."CK_Address_Valid2_A4" {
+  "3333"
+  "2222"
+}
+
 Table "dbo"."users" {
   "user_id" int(10) [pk, not null, increment]
   "username" varchar(50) [unique, not null]
@@ -190,6 +211,18 @@ Table "dbo"."Books" {
   "NationalityID" int(10)
   "ISBN" nvarchar(20) [unique]
   "Title" nvarchar(200)
+}
+
+Table "dbo"."AddressInfo" {
+  "AddressID" dbo.CK_Address_Valid_AddressID_AddressFormatID [not null]
+  "AddressFormatID" dbo.CK_Address_Valid_AddressID_AddressFormatID [not null]
+}
+
+Table "dbo"."AddressInfo2" {
+  "A1" dbo.CK_Address_Valid2_A1 [not null]
+  "A2" dbo.CK_Address_Valid2_A2_A3 [not null]
+  "A3" dbo.CK_Address_Valid2_A2_A3 [not null]
+  "A4" dbo.CK_Address_Valid2_A4 [not null]
 }
 
 Ref "FK_AuthorNationality":"dbo"."Authors".("AuthorID", "NationalityID") < "dbo"."Books".("AuthorID", "NationalityID")
