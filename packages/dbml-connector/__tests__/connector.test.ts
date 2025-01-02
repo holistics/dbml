@@ -3,6 +3,18 @@ import path from 'path';
 import { scanDirNames } from '../jestHelpers.ts';
 import { connector } from '../src/index.ts';
 
+const sortKeys = (obj: any): any => {
+  if (Array.isArray(obj)) {
+    return obj.map(sortKeys);
+  } else if (obj !== null && typeof obj === 'object') {
+    return Object.keys(obj).sort().reduce((result: any, key: string) => {
+      result[key] = sortKeys(obj[key]);
+      return result;
+    }, {});
+  }
+  return obj;
+};
+
 describe('@dbml/connector', () => {
   const runTest = async (dirName: string) => {
     process.chdir(dirName);
@@ -23,7 +35,7 @@ describe('@dbml/connector', () => {
     const contentObj = JSON.parse(contentJson);
     const expectObj = JSON.parse(expectContent);
 
-    expect(contentObj).toEqual(expectObj);
+    expect(sortKeys(contentObj)).toEqual(sortKeys(expectObj));
   };
 
   test.each(scanDirNames(__dirname, 'connectors'))('connectors/%s', async (dirName) => {
