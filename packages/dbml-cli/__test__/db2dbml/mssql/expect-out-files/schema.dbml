@@ -1,4 +1,4 @@
-Enum "dbo"."chk_status" {
+Enum "dbo"."chk_status_status" {
   "cancelled"
   "delivered"
   "shipped"
@@ -6,7 +6,7 @@ Enum "dbo"."chk_status" {
   "pending"
 }
 
-Enum "dbo"."chk_gender" {
+Enum "dbo"."chk_gender_gender" {
   "Other"
   "Female"
   "Male"
@@ -75,7 +75,7 @@ Table "dbo"."orders" {
   "user_id" int(10) [not null]
   "order_date" datetime2 [default: `getdate()`]
   "total_amount" decimal(12,2) [not null]
-  "status" dbo.chk_status [default: 'pending']
+  "status" dbo.chk_status_status [default: 'pending']
   "shipping_address" text [not null]
   "billing_address" text [not null]
 
@@ -121,6 +121,17 @@ Table "dbo"."NumberTypes" {
   "BITCol" bit [default: 0]
 }
 
+Table "dbo"."DatetimeTypes" {
+  "ID" int(10) [pk, not null, increment]
+  "DATECol" date [default: `getdate()`]
+  "TIMECol" time [default: `CONVERT([time],getdate())`]
+  "DATETIMECol" datetime [default: `getdate()`]
+  "DATETIME2Col" datetime2 [default: `sysdatetime()`]
+  "SMALLDATETIMECol" smalldatetime [default: `getdate()`]
+  "ROWVERSIONCol" timestamp [not null]
+  "DATETIMEOFFSETCol" datetimeoffset [default: `sysdatetimeoffset()`]
+}
+
 Table "dbo"."NumberTypesNoDefault" {
   "ID" int(10) [pk, not null, increment]
   "TINYINTCol" tinyint(3)
@@ -134,15 +145,8 @@ Table "dbo"."NumberTypesNoDefault" {
   "BITCol" bit
 }
 
-Table "dbo"."DatetimeTypes" {
-  "ID" int(10) [pk, not null, increment]
-  "DATECol" date [default: `getdate()`]
-  "TIMECol" time [default: `CONVERT([time],getdate())`]
-  "DATETIMECol" datetime [default: `getdate()`]
-  "DATETIME2Col" datetime2 [default: `sysdatetime()`]
-  "SMALLDATETIMECol" smalldatetime [default: `getdate()`]
-  "ROWVERSIONCol" timestamp [not null]
-  "DATETIMEOFFSETCol" datetimeoffset [default: `sysdatetimeoffset()`]
+Table "dbo"."gender_reference" {
+  "value" nvarchar(10) [pk, not null]
 }
 
 Table "dbo"."ObjectTypes" {
@@ -176,14 +180,10 @@ Table "dbo"."ObjectTypes" {
   "ImageField" image [default: `0x00`]
 }
 
-Table "dbo"."gender_reference" {
-  "value" nvarchar(10) [pk, not null]
-}
-
 Table "dbo"."user_define_data_types" {
   "id" int(10) [pk, not null, increment]
   "name" nvarchar(50)
-  "gender" dbo.chk_gender
+  "gender" dbo.chk_gender_gender
   "age_start" int(10)
   "age_end" int(10)
   "height" float(53)
@@ -198,19 +198,19 @@ Table "dbo"."table_with_comments" {
   Note: 'This table stores information about various items.'
 }
 
-Table "dbo"."Authors" {
-  "AuthorID" int(10) [pk, not null]
-  "NationalityID" int(10) [pk, not null]
-  "AuthorName" nvarchar(100) [unique]
-  "BirthYear" int(10) [unique]
-}
-
 Table "dbo"."Books" {
   "BookID" int(10) [pk, not null]
   "AuthorID" int(10) [pk, not null]
   "NationalityID" int(10)
   "ISBN" nvarchar(20) [unique]
   "Title" nvarchar(200)
+}
+
+Table "dbo"."Authors" {
+  "AuthorID" int(10) [pk, not null]
+  "NationalityID" int(10) [pk, not null]
+  "AuthorName" nvarchar(100) [unique]
+  "BirthYear" int(10) [unique]
 }
 
 Table "dbo"."AddressInfo" {
