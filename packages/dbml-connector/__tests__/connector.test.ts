@@ -19,7 +19,11 @@ describe('@dbml/connector', () => {
     const fileNames = fs.readdirSync(path.join(dirName, './out-files'));
     const contentJson = fs.readFileSync(path.join(dirName, './out-files', fileNames[0]), 'utf-8');
     const expectContent = fs.readFileSync(path.join(dirName, './expect-out-files', fileNames[0]), 'utf-8');
-    expect(contentJson.replace(/\\r\\n/g, '\\n')).toBe(expectContent.replace(/\\r\\n/g, '\\n'));
+
+    const contentObj = JSON.parse(contentJson);
+    const expectObj = JSON.parse(expectContent);
+
+    expect(contentObj).toEqual(expectObj);
   };
 
   test.each(scanDirNames(__dirname, 'connectors'))('connectors/%s', async (dirName) => {
