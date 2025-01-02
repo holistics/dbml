@@ -5,6 +5,9 @@ import { connector } from '../src/index.ts';
 
 const sortKeys = (obj: any): any => {
   if (Array.isArray(obj)) {
+    if (obj.length > 0 && typeof obj[0] === 'object' && obj[0] !== null && 'name' in obj[0]) {
+      return obj.map(sortKeys).sort((a, b) => (a.name > b.name ? 1 : -1));
+    }
     return obj.map(sortKeys);
   } else if (obj !== null && typeof obj === 'object') {
     return Object.keys(obj).sort().reduce((result: any, key: string) => {
