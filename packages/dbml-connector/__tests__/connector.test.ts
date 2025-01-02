@@ -32,8 +32,8 @@ describe('@dbml/connector', () => {
     const contentJson = fs.readFileSync(path.join(dirName, './out-files', fileNames[0]), 'utf-8');
     const expectContent = fs.readFileSync(path.join(dirName, './expect-out-files', fileNames[0]), 'utf-8');
 
-    const contentObj = JSON.parse(contentJson);
-    const expectObj = JSON.parse(expectContent);
+    const contentObj = JSON.parse(contentJson.replace(/\\r\\n/g, '\\n'));
+    const expectObj = JSON.parse(expectContent.replace(/\\r\\n/g, '\\n'));
 
     expect(sortKeys(contentObj)).toEqual(sortKeys(expectObj));
   };
