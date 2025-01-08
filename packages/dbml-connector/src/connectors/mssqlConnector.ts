@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import sql, { columns } from 'mssql';
+import sql from 'mssql';
 import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
 import {
   DatabaseSchema,
@@ -14,6 +14,7 @@ import {
   RefEndpoint,
   Table,
   TableConstraintsDictionary,
+  EnumValuesDict,
 } from './types';
 
 // https://learn.microsoft.com/en-us/sql/t-sql/data-types/date-and-time-types?view=sql-server-ver15
@@ -111,7 +112,7 @@ const getDbdefault = (data_type: string, column_default: string, default_type: D
   };
 };
 
-const getEnumValues = (definition: string, constraint_name: string): { columns: string[], enumValues: EnumValue[], constraint_name: string }[] => {
+const getEnumValues = (definition: string, constraint_name: string): EnumValuesDict[] => {
   // Use the example below to understand the regex:
   // ([quantity]>(0))
   // ([unit_price]>(0))
@@ -147,7 +148,8 @@ const getEnumValues = (definition: string, constraint_name: string): { columns: 
     return sortedA.every((value, index) => value === sortedB[index]);
   };
 
-  const result: { columns: string[], enumValues: EnumValue[], constraint_name: string }[] = [];
+  // Please check the comments of the EnumValuesDict type in types.ts to understand the structure
+  const result: EnumValuesDict[] = [];
   const processedKeys = new Set<string>();
 
   Object.keys(colMap).forEach((key) => {
@@ -206,13 +208,7 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
   fields: FieldsDictionary,
   enums: Enum[],
 }> => {
-  const checkConstraintDefinitionDedup: {
-    [key: string]: {
-      columns: string[],
-      enumValues: EnumValue[],
-      constraint_name: string,
-    }[]
-  } = {};
+  const checkConstraintDefinitionDedup: { [key: string]: EnumValuesDict[] } = {};
 
   const fields: FieldsDictionary = {};
   const enums: Enum[] = [];

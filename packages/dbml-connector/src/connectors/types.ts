@@ -1,3 +1,5 @@
+import { columns } from "mssql";
+
 interface NoteInfo {
   value: string;
 }
@@ -106,6 +108,59 @@ interface BigQueryCredentials {
   datasets: string[],
 }
 
+// Currently, we parse the check constraints as enum values in mssql.
+// However, one check constraint can have multiple set of enum values.
+// So, we need to store the enum values in a dictionary.
+// Examples:
+// CREATE TABLE AddressInfo (
+//   A1 UNIQUEIDENTIFIER NOT NULL,
+//   A2 UNIQUEIDENTIFIER NOT NULL,
+//   A3 UNIQUEIDENTIFIER NOT NULL,
+//   A4 UNIQUEIDENTIFIER NOT NULL,
+//   CONSTRAINT CK_Address_Valid CHECK (
+//       A1 IN ('1111', '2222', '333') AND
+//       A2 IN ('1111', '2222') AND
+//       A3 IN ('2222', '1111') AND
+//       A4 IN ('2222', '3333')
+//   )
+// );
+// GO
+// In the above example, we have a check constraint CK_Address_Valid2 with 4 columns: A1, A2, A3, A4.
+// Each column has a different set of enum values. So, we need to store the enum values in a dictionary.
+// In the above example, the enum values dictionary will look like this:
+// [
+//   {
+//     columns : ['A1'],
+//     enumValues: [
+//       { name: '1111' },
+//       { name: '2222' },
+//       { name: '333' }
+//     ],
+//     constraint_name: 'CK_Address_Valid_A1'
+//   },
+//   {
+//     columns : ['A2, A3'], => In this case, these two columns have the same set of enum values.
+//     enumValues: [
+//       { name: '1111' },
+//       { name: '2222' }
+//     ],
+//     constraint_name: 'CK_Address_Valid_A2_A3'
+//   },
+//   {
+//     columns : ['A4'],
+//     enumValues: [
+//       { name: '2222' },
+//       { name: '3333' }
+//     ],
+//     constraint_name: 'CK_Address_Valid_A4'
+//   }
+// ]
+interface EnumValuesDict {
+  columns: string[],
+  enumValues: EnumValue[],
+  constraint_name: string,
+}
+
 export {
   NoteInfo,
   TypeInfo,
@@ -125,4 +180,5 @@ export {
   IndexesDictionary,
   DatabaseSchema,
   BigQueryCredentials,
+  EnumValuesDict,
 };
