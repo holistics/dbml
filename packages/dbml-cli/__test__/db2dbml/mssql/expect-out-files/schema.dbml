@@ -121,17 +121,6 @@ Table "dbo"."NumberTypes" {
   "BITCol" bit [default: 0]
 }
 
-Table "dbo"."DatetimeTypes" {
-  "ID" int(10) [pk, not null, increment]
-  "DATECol" date [default: `getdate()`]
-  "TIMECol" time [default: `CONVERT([time],getdate())`]
-  "DATETIMECol" datetime [default: `getdate()`]
-  "DATETIME2Col" datetime2 [default: `sysdatetime()`]
-  "SMALLDATETIMECol" smalldatetime [default: `getdate()`]
-  "ROWVERSIONCol" timestamp [not null]
-  "DATETIMEOFFSETCol" datetimeoffset [default: `sysdatetimeoffset()`]
-}
-
 Table "dbo"."NumberTypesNoDefault" {
   "ID" int(10) [pk, not null, increment]
   "TINYINTCol" tinyint(3)
@@ -145,8 +134,15 @@ Table "dbo"."NumberTypesNoDefault" {
   "BITCol" bit
 }
 
-Table "dbo"."gender_reference" {
-  "value" nvarchar(10) [pk, not null]
+Table "dbo"."DatetimeTypes" {
+  "ID" int(10) [pk, not null, increment]
+  "DATECol" date [default: `getdate()`]
+  "TIMECol" time [default: `CONVERT([time],getdate())`]
+  "DATETIMECol" datetime [default: `getdate()`]
+  "DATETIME2Col" datetime2 [default: `sysdatetime()`]
+  "SMALLDATETIMECol" smalldatetime [default: `getdate()`]
+  "ROWVERSIONCol" timestamp [not null]
+  "DATETIMEOFFSETCol" datetimeoffset [default: `sysdatetimeoffset()`]
 }
 
 Table "dbo"."ObjectTypes" {
@@ -180,6 +176,10 @@ Table "dbo"."ObjectTypes" {
   "ImageField" image [default: `0x00`]
 }
 
+Table "dbo"."gender_reference" {
+  "value" nvarchar(10) [pk, not null]
+}
+
 Table "dbo"."user_define_data_types" {
   "id" int(10) [pk, not null, increment]
   "name" nvarchar(50)
@@ -205,6 +205,14 @@ Table "dbo"."Authors" {
   "BirthYear" int(10) [unique]
 }
 
+Table "dbo"."Books" {
+  "BookID" int(10) [pk, not null]
+  "AuthorID" int(10) [pk, not null]
+  "NationalityID" int(10)
+  "ISBN" nvarchar(20) [unique]
+  "Title" nvarchar(200)
+}
+
 Table "dbo"."AddressInfo" {
   "AddressID" dbo.CK_Address_Valid_AddressID_AddressFormatID [not null]
   "AddressFormatID" dbo.CK_Address_Valid_AddressID_AddressFormatID [not null]
@@ -215,14 +223,6 @@ Table "dbo"."AddressInfo2" {
   "A2" dbo.CK_Address_Valid2_A2_A3 [not null]
   "A3" dbo.CK_Address_Valid2_A2_A3 [not null]
   "A4" dbo.CK_Address_Valid2_A4 [not null]
-}
-
-Table "dbo"."Books" {
-  "BookID" int(10) [pk, not null]
-  "AuthorID" int(10) [pk, not null]
-  "NationalityID" int(10)
-  "ISBN" nvarchar(20) [unique]
-  "Title" nvarchar(200)
 }
 
 Ref "FK_AuthorNationality":"dbo"."Authors".("AuthorID", "NationalityID") < "dbo"."Books".("AuthorID", "NationalityID")
