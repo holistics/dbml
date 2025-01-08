@@ -108,6 +108,19 @@ Table "dbo"."StringTypes" {
   "NTextField" ntext [default: `N'N/A'`]
 }
 
+Table "dbo"."NumberTypesNoDefault" {
+  "ID" int(10) [pk, not null, increment]
+  "TINYINTCol" tinyint(3)
+  "SMALLINTCol" smallint(5)
+  "INTCol" int(10)
+  "BIGINTCol" bigint(19)
+  "DECIMALCol" decimal(10,2)
+  "NUMERICCol" numeric(10,2)
+  "FLOATCol" float(53)
+  "REALCol" real(24)
+  "BITCol" bit
+}
+
 Table "dbo"."NumberTypes" {
   "ID" int(10) [pk, not null, increment]
   "TINYINTCol" tinyint(3) [default: 0]
@@ -130,19 +143,6 @@ Table "dbo"."DatetimeTypes" {
   "SMALLDATETIMECol" smalldatetime [default: `getdate()`]
   "ROWVERSIONCol" timestamp [not null]
   "DATETIMEOFFSETCol" datetimeoffset [default: `sysdatetimeoffset()`]
-}
-
-Table "dbo"."NumberTypesNoDefault" {
-  "ID" int(10) [pk, not null, increment]
-  "TINYINTCol" tinyint(3)
-  "SMALLINTCol" smallint(5)
-  "INTCol" int(10)
-  "BIGINTCol" bigint(19)
-  "DECIMALCol" decimal(10,2)
-  "NUMERICCol" numeric(10,2)
-  "FLOATCol" float(53)
-  "REALCol" real(24)
-  "BITCol" bit
 }
 
 Table "dbo"."gender_reference" {
