@@ -152,7 +152,7 @@ const generateTablesAndFields = async (client: Client, schemas: string[]): Promi
           -- see https://www.postgresql.org/docs/14/catalog-pg-class.html#:~:text=%3D%20temporary%20table-,relkind,-char
           pc.relkind = 'r'
           AND pn.nspname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
-          ${buildSchemaQuery('t.table_schema', schemas)}
+          ${buildSchemaQuery('pn.nspname', schemas)}
       )
     SELECT
       t.table_schema,
