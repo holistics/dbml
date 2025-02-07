@@ -224,8 +224,8 @@ Table bookings {
 
 There are 3 types of index definitions:
 
-- Index with single field (with index name): `CREATE INDEX created_at_index on users (created_at)`
-- Index with multiple fields (composite index): `CREATE INDEX on users (created_at, country)`
+- Index with single column (with index name): `CREATE INDEX created_at_index on users (created_at)`
+- Index with multiple columns (composite index): `CREATE INDEX on users (created_at, country)`
 - Index with an expression: `CREATE INDEX ON films ( first_name + last_name )`
 - (bonus) Composite index with expression: `CREATE INDEX ON users ( country, (lower(name)) )`
 
@@ -269,7 +269,7 @@ Ref name_optional {
   schema1.table1.column1 < schema2.table2.column2
 }
 
-// Short form:
+// Short form
 Ref name_optional: schema1.table1.column1 < schema2.table2.column2
 
 // Inline form
@@ -279,7 +279,22 @@ Table schema2.table2 {
 }
 ```
 
-**Note:** if `schema_name` prefix is omitted, it'll default to `public` schema
+:::note
+* When defining one-to-one relationships, ensure columns are listed in the correct order:
+  * With long & short form, the second column will be treated as a foreign key.
+  
+    E.g: `users.id - user_infos.user_id`, *user_infos.user_id* will be the foreign key.
+  * With inline form, the column that have the `ref` definition will be treated as a foreign key. 
+
+    E.g: 
+    ```text
+    Table user_infos {
+      user_id integer [ref: - users.id]
+    }
+    ```
+    *user_infos.user_id* will be the foreign key.
+* If `schema_name` prefix is omitted, it'll default to `public` schema.
+:::
 
 **Composite foreign keys:**
 
