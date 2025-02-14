@@ -168,7 +168,7 @@ The list of column settings you can use:
 
 - `note: 'string to add notes'`: add a metadata note to this column
 - `primary key` or `pk`: mark a column as primary key. For composite primary key, refer to the 'Indexes' section
-- `null` or `not null`: mark a column null or not null
+- `null` or `not null`: mark a column null or not null. If you ommit this setting, the column will be null by default
 - `unique`: mark the column unique
 - `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below
 - `increment`: mark the column as auto-increment
