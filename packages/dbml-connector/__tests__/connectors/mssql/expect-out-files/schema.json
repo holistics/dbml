@@ -97,6 +97,20 @@
       "note": {
         "value": ""
       }
+    },
+    {
+      "name": "AddressInfo",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "AddressInfo2",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
     }
   ],
   "fields": {
@@ -454,7 +468,7 @@
       {
         "name": "status",
         "type": {
-          "type_name": "chk_status",
+          "type_name": "chk_status_status",
           "schemaName": "dbo"
         },
         "dbdefault": {
@@ -1275,7 +1289,7 @@
       {
         "name": "gender",
         "type": {
-          "type_name": "chk_gender",
+          "type_name": "chk_gender_gender",
           "schemaName": "dbo"
         },
         "dbdefault": null,
@@ -1515,11 +1529,93 @@
           "value": ""
         }
       }
+    ],
+    "dbo.AddressInfo": [
+      {
+        "name": "AddressID",
+        "type": {
+          "type_name": "CK_Address_Valid_AddressID_AddressFormatID",
+          "schemaName": "dbo"
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "AddressFormatID",
+        "type": {
+          "type_name": "CK_Address_Valid_AddressID_AddressFormatID",
+          "schemaName": "dbo"
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "dbo.AddressInfo2": [
+      {
+        "name": "A1",
+        "type": {
+          "type_name": "CK_Address_Valid2_A1",
+          "schemaName": "dbo"
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "A2",
+        "type": {
+          "type_name": "CK_Address_Valid2_A2_A3",
+          "schemaName": "dbo"
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "A3",
+        "type": {
+          "type_name": "CK_Address_Valid2_A2_A3",
+          "schemaName": "dbo"
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "A4",
+        "type": {
+          "type_name": "CK_Address_Valid2_A4",
+          "schemaName": "dbo"
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
     ]
   },
   "enums": [
     {
-      "name": "chk_status",
+      "name": "chk_status_status",
       "schemaName": "dbo",
       "values": [
         {
@@ -1540,7 +1636,7 @@
       ]
     },
     {
-      "name": "chk_gender",
+      "name": "chk_gender_gender",
       "schemaName": "dbo",
       "values": [
         {
@@ -1551,6 +1647,57 @@
         },
         {
           "name": "Male"
+        }
+      ]
+    },
+    {
+      "name": "CK_Address_Valid_AddressID_AddressFormatID",
+      "schemaName": "dbo",
+      "values": [
+        {
+          "name": "176029FA-D6D3-49E1-A48C-000000000002"
+        },
+        {
+          "name": "176029FA-D6D3-49E1-A48C-000000000001"
+        }
+      ]
+    },
+    {
+      "name": "CK_Address_Valid2_A1",
+      "schemaName": "dbo",
+      "values": [
+        {
+          "name": "333"
+        },
+        {
+          "name": "2222"
+        },
+        {
+          "name": "1111"
+        }
+      ]
+    },
+    {
+      "name": "CK_Address_Valid2_A2_A3",
+      "schemaName": "dbo",
+      "values": [
+        {
+          "name": "2222"
+        },
+        {
+          "name": "1111"
+        }
+      ]
+    },
+    {
+      "name": "CK_Address_Valid2_A4",
+      "schemaName": "dbo",
+      "values": [
+        {
+          "name": "3333"
+        },
+        {
+          "name": "2222"
         }
       ]
     }

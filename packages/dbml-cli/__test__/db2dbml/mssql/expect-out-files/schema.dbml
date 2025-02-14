@@ -1,4 +1,4 @@
-Enum "dbo"."chk_status" {
+Enum "dbo"."chk_status_status" {
   "cancelled"
   "delivered"
   "shipped"
@@ -6,10 +6,31 @@ Enum "dbo"."chk_status" {
   "pending"
 }
 
-Enum "dbo"."chk_gender" {
+Enum "dbo"."chk_gender_gender" {
   "Other"
   "Female"
   "Male"
+}
+
+Enum "dbo"."CK_Address_Valid_AddressID_AddressFormatID" {
+  "176029FA-D6D3-49E1-A48C-000000000002"
+  "176029FA-D6D3-49E1-A48C-000000000001"
+}
+
+Enum "dbo"."CK_Address_Valid2_A1" {
+  "333"
+  "2222"
+  "1111"
+}
+
+Enum "dbo"."CK_Address_Valid2_A2_A3" {
+  "2222"
+  "1111"
+}
+
+Enum "dbo"."CK_Address_Valid2_A4" {
+  "3333"
+  "2222"
 }
 
 Table "dbo"."users" {
@@ -54,7 +75,7 @@ Table "dbo"."orders" {
   "user_id" int(10) [not null]
   "order_date" datetime2 [default: `getdate()`]
   "total_amount" decimal(12,2) [not null]
-  "status" dbo.chk_status [default: 'pending']
+  "status" dbo.chk_status_status [default: 'pending']
   "shipping_address" text [not null]
   "billing_address" text [not null]
 
@@ -162,7 +183,7 @@ Table "dbo"."gender_reference" {
 Table "dbo"."user_define_data_types" {
   "id" int(10) [pk, not null, increment]
   "name" nvarchar(50)
-  "gender" dbo.chk_gender
+  "gender" dbo.chk_gender_gender
   "age_start" int(10)
   "age_end" int(10)
   "height" float(53)
@@ -190,6 +211,18 @@ Table "dbo"."Books" {
   "NationalityID" int(10)
   "ISBN" nvarchar(20) [unique]
   "Title" nvarchar(200)
+}
+
+Table "dbo"."AddressInfo" {
+  "AddressID" dbo.CK_Address_Valid_AddressID_AddressFormatID [not null]
+  "AddressFormatID" dbo.CK_Address_Valid_AddressID_AddressFormatID [not null]
+}
+
+Table "dbo"."AddressInfo2" {
+  "A1" dbo.CK_Address_Valid2_A1 [not null]
+  "A2" dbo.CK_Address_Valid2_A2_A3 [not null]
+  "A3" dbo.CK_Address_Valid2_A2_A3 [not null]
+  "A4" dbo.CK_Address_Valid2_A4 [not null]
 }
 
 Ref "FK_AuthorNationality":"dbo"."Authors".("AuthorID", "NationalityID") < "dbo"."Books".("AuthorID", "NationalityID")
