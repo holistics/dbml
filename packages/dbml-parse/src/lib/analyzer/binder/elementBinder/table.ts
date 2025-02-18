@@ -21,6 +21,14 @@ export default class TableBinder extends ElementBinder {
         topSubnamesSymbolKind: [SymbolKind.Table, SymbolKind.Column],
         remainingSubnamesSymbolKind: SymbolKind.Schema,
         ignoreNameNotFound: false,
+        settingList: {
+          column: {
+            shouldBind: true as const,
+            topSubnamesSymbolKind: [SymbolKind.Table, SymbolKind.Column],
+            remainingSubnamesSymbolKind: SymbolKind.Schema,
+            ignoreNameNotFound: false,
+          },
+        },
       },
       default: {
         shouldBind: false as const,

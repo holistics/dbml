@@ -1,0 +1,465 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "b",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 35,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 41,
+              "line": 2,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "a_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 44,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 52,
+              "line": 3,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 54,
+          "line": 4,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "headerColor": "#aaaaaa"
+    },
+    {
+      "name": "c",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 68,
+              "line": 7,
+              "column": 3
+            },
+            "end": {
+              "offset": 74,
+              "line": 7,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "a_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 77,
+              "line": 8,
+              "column": 3
+            },
+            "end": {
+              "offset": 85,
+              "line": 8,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 56,
+          "line": 6,
+          "column": 1
+        },
+        "end": {
+          "offset": 87,
+          "line": 9,
+          "column": 2
+        }
+      },
+      "indexes": []
+    },
+    {
+      "name": "a",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 124,
+              "line": 13,
+              "column": 3
+            },
+            "end": {
+              "offset": 209,
+              "line": 13,
+              "column": 88
+            }
+          },
+          "inline_refs": [
+            {
+              "schemaName": null,
+              "tableName": "b",
+              "fieldNames": [
+                "a_id"
+              ],
+              "relation": "<",
+              "token": {
+                "start": {
+                  "offset": 136,
+                  "line": 13,
+                  "column": 15
+                },
+                "end": {
+                  "offset": 193,
+                  "line": 13,
+                  "column": 72
+                }
+              }
+            },
+            {
+              "schemaName": null,
+              "tableName": "c",
+              "fieldNames": [
+                "a_id"
+              ],
+              "relation": ">",
+              "token": {
+                "start": {
+                  "offset": 195,
+                  "line": 13,
+                  "column": 74
+                },
+                "end": {
+                  "offset": 208,
+                  "line": 13,
+                  "column": 87
+                }
+              }
+            }
+          ],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 112,
+          "line": 12,
+          "column": 1
+        },
+        "end": {
+          "offset": 211,
+          "line": 14,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
+  ],
+  "notes": [],
+  "refs": [
+    {
+      "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 136,
+          "line": 13,
+          "column": 15
+        },
+        "end": {
+          "offset": 193,
+          "line": 13,
+          "column": 72
+        }
+      },
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "b",
+          "fieldNames": [
+            "a_id"
+          ],
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 136,
+              "line": 13,
+              "column": 15
+            },
+            "end": {
+              "offset": 193,
+              "line": 13,
+              "column": 72
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "a",
+          "fieldNames": [
+            "id"
+          ],
+          "token": {
+            "start": {
+              "offset": 124,
+              "line": 13,
+              "column": 3
+            },
+            "end": {
+              "offset": 209,
+              "line": 13,
+              "column": 88
+            }
+          },
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 195,
+          "line": 13,
+          "column": 74
+        },
+        "end": {
+          "offset": 208,
+          "line": 13,
+          "column": 87
+        }
+      },
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "c",
+          "fieldNames": [
+            "a_id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 195,
+              "line": 13,
+              "column": 74
+            },
+            "end": {
+              "offset": 208,
+              "line": 13,
+              "column": 87
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "a",
+          "fieldNames": [
+            "id"
+          ],
+          "token": {
+            "start": {
+              "offset": 124,
+              "line": 13,
+              "column": 3
+            },
+            "end": {
+              "offset": 209,
+              "line": 13,
+              "column": 88
+            }
+          },
+          "relation": "*"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 227,
+          "line": 17,
+          "column": 1
+        },
+        "end": {
+          "offset": 270,
+          "line": 17,
+          "column": 44
+        }
+      },
+      "name": "short_ref",
+      "schemaName": null,
+      "color": "#aabbcc",
+      "endpoints": [
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "a",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 259,
+              "line": 17,
+              "column": 33
+            },
+            "end": {
+              "offset": 263,
+              "line": 17,
+              "column": 37
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "c",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 266,
+              "line": 17,
+              "column": 40
+            },
+            "end": {
+              "offset": 270,
+              "line": 17,
+              "column": 44
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 285,
+          "line": 20,
+          "column": 1
+        },
+        "end": {
+          "offset": 332,
+          "line": 22,
+          "column": 2
+        }
+      },
+      "name": "long_ref",
+      "schemaName": null,
+      "color": "#123456",
+      "endpoints": [
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "a",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 319,
+              "line": 21,
+              "column": 3
+            },
+            "end": {
+              "offset": 323,
+              "line": 21,
+              "column": 7
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "b",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 326,
+              "line": 21,
+              "column": 10
+            },
+            "end": {
+              "offset": 330,
+              "line": 21,
+              "column": 14
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
+}

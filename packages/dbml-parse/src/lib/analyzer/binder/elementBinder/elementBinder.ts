@@ -142,6 +142,15 @@ export default abstract class ElementBinder {
       this.scanAndBind(node.expression, rule);
     } else if (node instanceof TupleExpressionNode) {
       node.elementList.forEach((e) => this.scanAndBind(e, rule));
+    } else if (node instanceof ListExpressionNode) {
+      /**
+       * Only full form inline ref use this for now, via the syntax:
+       * Table a {
+       *   id int [ref: [column: > b.a_id, color: #aabbcc, name: ref_name]]
+       * }
+       * We need to bind the b.a_id in column attribute
+       */
+      this.bindSettingList(node, rule.settingList!);
     }
 
     // The other cases are not supported as practically they shouldn't arise
