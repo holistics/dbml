@@ -103,6 +103,8 @@ export interface Index {
 }
 
 export interface InlineRef {
+  name?: string;
+  color?: string;
   schemaName: string | null;
   tableName: string;
   fieldNames: string[];
@@ -114,6 +116,7 @@ export interface Ref {
   schemaName: string | null;
   name: string | null;
   endpoints: RefEndpointPair;
+  color?: string;
   onDelete?: string;
   onUpdate?: string;
   token: TokenPosition;

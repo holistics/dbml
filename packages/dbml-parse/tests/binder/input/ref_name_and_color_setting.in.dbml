@@ -1,0 +1,22 @@
+Table b [headercolor: #aaaaaa] {
+  id int
+  a_id int
+}
+
+Table c {
+  id int
+  a_id int
+}
+
+// Inline relationship
+Table a {
+  id int [pk, ref: [column: < b.a_id, color: #000001, name: inline_ref], ref: > c.a_id]
+}
+
+// Short form
+Ref short_ref [color: #aabbcc]: a.id < c.id
+
+// Long form
+Ref long_ref [color: #123456] {
+  a.id < b.id
+}

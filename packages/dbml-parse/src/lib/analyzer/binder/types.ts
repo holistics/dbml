@@ -22,6 +22,7 @@ export type BinderRule =
       //    }
       ignoreNameNotFound: boolean;
       // A list of keywords that, when encountered by the binder as a standalone variable, skipped
+      settingList?: SettingListBinderRule,
       keywords?: readonly string[];
     }
   | {
@@ -33,5 +34,6 @@ export interface ArgumentBinderRule {
 }
 
 export interface SettingListBinderRule {
-  [index: string]: BinderRule;
+  // only the key "settingList" should have "SettingListBinderRule" type. Other keys should have type BinderRule
+  [index: string]: BinderRule,
 }
