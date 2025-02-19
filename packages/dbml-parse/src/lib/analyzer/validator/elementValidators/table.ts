@@ -277,29 +277,8 @@ export default class TableValidator implements ElementValidator {
           break;
         case 'ref':
           attrs.forEach((attr) => {
-            if (
-              !isUnaryRelationship(attr.value) && !(attr.value instanceof ListExpressionNode)
-            ) {
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
-                "Invalid inline_ref. It must have the form of <relationship_type> <column_name> or [column: <relationship_type> <column_name>, color: #xxxxxx, name: <ref_name>]",
-                attr.value || attr.name!
-              ));
-            }
-            if (attr.value instanceof ListExpressionNode) {
-              const aggReport = aggregateSettingList(attr.value);
-              const errors2 = aggReport.getErrors();
-              const settingMap = aggReport.getValue();
-              errors.push (...errors2);
-              
-              if (!settingMap.column) {
-                const error = new CompileError(
-                  CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
-                  "Missing 'column' attribute for inline ref",
-                  attr.value || attr.name!
-                )
-                errors.push(error);
-              }
+            if (!isUnaryRelationship(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'ref\' must be a valid unary relationship', attr.value || attr.name!));
             }
           });
           break;

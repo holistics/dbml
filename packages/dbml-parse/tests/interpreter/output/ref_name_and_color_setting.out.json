@@ -30,7 +30,7 @@
           "unique": false
         },
         {
-          "name": "a_id",
+          "name": "c_id",
           "type": {
             "schemaName": null,
             "type_name": "int",
@@ -97,7 +97,7 @@
           "unique": false
         },
         {
-          "name": "a_id",
+          "name": "b_id",
           "type": {
             "schemaName": null,
             "type_name": "int",
@@ -133,222 +133,20 @@
         }
       },
       "indexes": []
-    },
-    {
-      "name": "a",
-      "schemaName": null,
-      "alias": null,
-      "fields": [
-        {
-          "name": "id",
-          "type": {
-            "schemaName": null,
-            "type_name": "int",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 124,
-              "line": 13,
-              "column": 3
-            },
-            "end": {
-              "offset": 209,
-              "line": 13,
-              "column": 88
-            }
-          },
-          "inline_refs": [
-            {
-              "schemaName": null,
-              "tableName": "b",
-              "fieldNames": [
-                "a_id"
-              ],
-              "relation": "<",
-              "token": {
-                "start": {
-                  "offset": 136,
-                  "line": 13,
-                  "column": 15
-                },
-                "end": {
-                  "offset": 193,
-                  "line": 13,
-                  "column": 72
-                }
-              }
-            },
-            {
-              "schemaName": null,
-              "tableName": "c",
-              "fieldNames": [
-                "a_id"
-              ],
-              "relation": ">",
-              "token": {
-                "start": {
-                  "offset": 195,
-                  "line": 13,
-                  "column": 74
-                },
-                "end": {
-                  "offset": 208,
-                  "line": 13,
-                  "column": 87
-                }
-              }
-            }
-          ],
-          "pk": true,
-          "increment": false,
-          "unique": false,
-          "not_null": false
-        }
-      ],
-      "token": {
-        "start": {
-          "offset": 112,
-          "line": 12,
-          "column": 1
-        },
-        "end": {
-          "offset": 211,
-          "line": 14,
-          "column": 2
-        }
-      },
-      "indexes": []
     }
   ],
   "notes": [],
   "refs": [
     {
-      "name": null,
-      "schemaName": null,
       "token": {
         "start": {
-          "offset": 136,
-          "line": 13,
-          "column": 15
-        },
-        "end": {
-          "offset": 193,
-          "line": 13,
-          "column": 72
-        }
-      },
-      "endpoints": [
-        {
-          "schemaName": null,
-          "tableName": "b",
-          "fieldNames": [
-            "a_id"
-          ],
-          "relation": "*",
-          "token": {
-            "start": {
-              "offset": 136,
-              "line": 13,
-              "column": 15
-            },
-            "end": {
-              "offset": 193,
-              "line": 13,
-              "column": 72
-            }
-          }
-        },
-        {
-          "schemaName": null,
-          "tableName": "a",
-          "fieldNames": [
-            "id"
-          ],
-          "token": {
-            "start": {
-              "offset": 124,
-              "line": 13,
-              "column": 3
-            },
-            "end": {
-              "offset": 209,
-              "line": 13,
-              "column": 88
-            }
-          },
-          "relation": "1"
-        }
-      ]
-    },
-    {
-      "name": null,
-      "schemaName": null,
-      "token": {
-        "start": {
-          "offset": 195,
-          "line": 13,
-          "column": 74
-        },
-        "end": {
-          "offset": 208,
-          "line": 13,
-          "column": 87
-        }
-      },
-      "endpoints": [
-        {
-          "schemaName": null,
-          "tableName": "c",
-          "fieldNames": [
-            "a_id"
-          ],
-          "relation": "1",
-          "token": {
-            "start": {
-              "offset": 195,
-              "line": 13,
-              "column": 74
-            },
-            "end": {
-              "offset": 208,
-              "line": 13,
-              "column": 87
-            }
-          }
-        },
-        {
-          "schemaName": null,
-          "tableName": "a",
-          "fieldNames": [
-            "id"
-          ],
-          "token": {
-            "start": {
-              "offset": 124,
-              "line": 13,
-              "column": 3
-            },
-            "end": {
-              "offset": 209,
-              "line": 13,
-              "column": 88
-            }
-          },
-          "relation": "*"
-        }
-      ]
-    },
-    {
-      "token": {
-        "start": {
-          "offset": 227,
-          "line": 17,
+          "offset": 103,
+          "line": 12,
           "column": 1
         },
         "end": {
-          "offset": 270,
-          "line": 17,
+          "offset": 146,
+          "line": 12,
           "column": 44
         }
       },
@@ -360,18 +158,18 @@
           "fieldNames": [
             "id"
           ],
-          "tableName": "a",
+          "tableName": "b",
           "schemaName": null,
           "relation": "1",
           "token": {
             "start": {
-              "offset": 259,
-              "line": 17,
+              "offset": 135,
+              "line": 12,
               "column": 33
             },
             "end": {
-              "offset": 263,
-              "line": 17,
+              "offset": 139,
+              "line": 12,
               "column": 37
             }
           }
@@ -385,13 +183,13 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 266,
-              "line": 17,
+              "offset": 142,
+              "line": 12,
               "column": 40
             },
             "end": {
-              "offset": 270,
-              "line": 17,
+              "offset": 146,
+              "line": 12,
               "column": 44
             }
           }
@@ -401,13 +199,13 @@
     {
       "token": {
         "start": {
-          "offset": 285,
-          "line": 20,
+          "offset": 161,
+          "line": 15,
           "column": 1
         },
         "end": {
-          "offset": 332,
-          "line": 22,
+          "offset": 210,
+          "line": 17,
           "column": 2
         }
       },
@@ -419,39 +217,39 @@
           "fieldNames": [
             "id"
           ],
-          "tableName": "a",
+          "tableName": "c",
           "schemaName": null,
           "relation": "1",
           "token": {
             "start": {
-              "offset": 319,
-              "line": 21,
+              "offset": 195,
+              "line": 16,
               "column": 3
             },
             "end": {
-              "offset": 323,
-              "line": 21,
+              "offset": 199,
+              "line": 16,
               "column": 7
             }
           }
         },
         {
           "fieldNames": [
-            "id"
+            "c_id"
           ],
           "tableName": "b",
           "schemaName": null,
           "relation": "*",
           "token": {
             "start": {
-              "offset": 326,
-              "line": 21,
+              "offset": 202,
+              "line": 16,
               "column": 10
             },
             "end": {
-              "offset": 330,
-              "line": 21,
-              "column": 14
+              "offset": 208,
+              "line": 16,
+              "column": 16
             }
           }
         }
