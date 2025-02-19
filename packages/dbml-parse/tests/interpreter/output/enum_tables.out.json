@@ -28,8 +28,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "status",
@@ -54,7 +53,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "note": {
             "value": "This is a column note",
             "token": {

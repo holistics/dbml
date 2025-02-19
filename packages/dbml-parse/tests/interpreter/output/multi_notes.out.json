@@ -29,7 +29,6 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "note": {
             "value": "primary key field",
             "token": {
