@@ -28,8 +28,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": true,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "user_id",
@@ -192,7 +191,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "type": "number",
             "value": 1
@@ -240,8 +238,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "name",
@@ -360,7 +357,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "now()",
             "type": "expression"
@@ -495,8 +491,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "full_name",
@@ -543,8 +538,7 @@
           "inline_refs": [],
           "pk": false,
           "increment": false,
-          "unique": true,
-          "not_null": false
+          "unique": true
         },
         {
           "name": "gender",
@@ -680,8 +674,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "merchant_name",
@@ -817,8 +810,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "name",
