@@ -103,8 +103,6 @@ export interface Index {
 }
 
 export interface InlineRef {
-  name?: string;
-  color?: string;
   schemaName: string | null;
   tableName: string;
   fieldNames: string[];

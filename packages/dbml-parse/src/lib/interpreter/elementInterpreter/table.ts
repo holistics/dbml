@@ -158,23 +158,15 @@ export class TableInterpreter implements ElementInterpreter {
       const refs = settingMap['ref'] || [];
       column.inline_refs = refs.flatMap((ref) => {
 
-        // must be a PrefixExpressionNode with the follow syntax: <relationship_type> <column_name>. E.g: > table_a.id
-        let refValueNode = ref.value;
-        let subSettingMap;
+        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
 
-        if (ref.value instanceof ListExpressionNode) {
-          subSettingMap = aggregateSettingList(ref.value).getValue();
-          refValueNode = subSettingMap.column[0].value;
-        }
-
-        const [referredSymbol] = getColumnSymbolsOfRefOperand((refValueNode as PrefixExpressionNode).expression!);
         if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
           return [];
         }
 
-        const op = (refValueNode as PrefixExpressionNode).op!;
-        const fragments = destructureComplexVariable((refValueNode as PrefixExpressionNode).expression).unwrap();
+        const op = (ref.value as PrefixExpressionNode).op!;
+        const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression).unwrap();
         
         let inlineRef: InlineRef | undefined;
         if (fragments.length === 1) {
@@ -221,16 +213,6 @@ export class TableInterpreter implements ElementInterpreter {
 
         const errs = this.registerInlineRefToEnv(field, referredSymbol, inlineRef, ref);
         errors.push(...errs);
-
-        if (ref.value instanceof ListExpressionNode && subSettingMap) {
-          if (subSettingMap!.color.length) inlineRef.color = extractColor(subSettingMap.color[0].value as any);
-
-          if (subSettingMap!.name.length) {
-            const fragments = destructureComplexVariable(subSettingMap.name[0].value).unwrap_or([]);
-            const name = fragments.pop();
-            inlineRef.name = name;
-          }
-        }
 
         return errs.length === 0 ? inlineRef : [];
       })
