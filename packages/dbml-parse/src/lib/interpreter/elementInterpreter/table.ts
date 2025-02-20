@@ -148,9 +148,11 @@ export class TableInterpreter implements ElementInterpreter {
       column.pk = !!settingMap['pk']?.length || !!settingMap['primary key']?.length;
       column.increment = !!settingMap['increment']?.length;
       column.unique = !!settingMap['unique']?.length;
-
-      const hasNullSetting = !!settingMap['null']?.length || !!settingMap['not null']?.length;
-      column.not_null = hasNullSetting ? !!settingMap['not null']?.length : undefined;
+      column.not_null = !!settingMap['not null']?.length
+        ? true
+        : !!settingMap['null']?.length
+          ? false
+          : undefined;
       column.dbdefault = processDefaultValue(settingMap['default']?.at(0)?.value);
       const noteNode = settingMap['note']?.at(0);
       column.note = noteNode && {
