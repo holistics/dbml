@@ -28,8 +28,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": true,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "user_id",
@@ -214,7 +213,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "type": "number",
             "value": 1
@@ -332,7 +330,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "now()",
             "type": "expression"
@@ -431,8 +428,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": true,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "name",
@@ -479,8 +475,7 @@
           "inline_refs": [],
           "pk": false,
           "increment": false,
-          "unique": true,
-          "not_null": false
+          "unique": true
         },
         {
           "name": "date_of_birth",
@@ -528,7 +523,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "now()",
             "type": "expression"
@@ -601,8 +595,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "name",
