@@ -433,7 +433,6 @@
       },
       "unique": false,
       "pk": true,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [
@@ -529,7 +528,6 @@
       },
       "unique": false,
       "pk": true,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [
@@ -626,7 +624,6 @@
       },
       "unique": false,
       "pk": true,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [],
@@ -658,7 +655,6 @@
       },
       "unique": false,
       "pk": true,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [],
@@ -675,7 +671,6 @@
       },
       "unique": false,
       "pk": false,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [
@@ -694,7 +689,6 @@
       },
       "unique": false,
       "pk": true,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [],
@@ -711,7 +705,6 @@
       },
       "unique": false,
       "pk": false,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [
