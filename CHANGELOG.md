@@ -1,3 +1,19 @@
+## v3.9.6 (2025-02-20)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#677](https://github.com/holistics/dbml/pull/677) DBX-5750: Fix an issue where tab characters are not recognized as white-space characters ([@xuantho573](https://github.com/xuantho573))
+* `dbml-core`, `dbml-parse`
+  * [#679](https://github.com/holistics/dbml/pull/679) Fix: Unset not_null if null or not_null setting is not specified ([@nguyenalter](https://github.com/nguyenalter))
+* `dbml-connector`
+  * [#671](https://github.com/holistics/dbml/pull/671) Fix missing FROM-clause entry for table "t" ([@g4b1nagy](https://github.com/g4b1nagy))
+
+#### Committers: 4
+- Gabi Nagy ([@g4b1nagy](https://github.com/g4b1nagy))
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
 ## v3.9.5 (2024-12-13)
 
 #### :memo: Documentation
