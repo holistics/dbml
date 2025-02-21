@@ -89,9 +89,9 @@ instead of low-level database creation.
 
 DBML comes with:
 
-1. A free database visualiser at [dbdiagram.io](https://dbdiagram.io?utm_source=dbml)
-2. A free database documentation builder at [dbdocs.io](https://dbdocs.io?utm_source=dbml)
-3. A free SQL playground at [runsql.com](https://runsql.com?utm_source=dbml)
+1. A free database visualiser at [dbdiagram.io](https://dbdiagram.io?utm_source=dbml).
+2. A free database documentation builder at [dbdocs.io](https://dbdocs.io?utm_source=dbml).
+3. A free SQL playground at [runsql.com](https://runsql.com?utm_source=dbml).
 4. A command-line tool to help to convert SQL to DBML files and vice versa.
 5. An [open-source JS library](/js-module/core) (NPM package) for you to programmatically convert between DBML and SQL DDL.
 
@@ -111,7 +111,7 @@ DBML comes with:
 
 ### RunSQL
 
-[RunSQL.com](https://runsql.com?utm_source=dbml) is a free & simple tool to create mock database environments to validate your SQL queries
+[runsql.com](https://runsql.com?utm_source=dbml) is a free & simple tool to create mock database environments to validate your SQL queries.
 
 <video width="100%" height="auto" controls autoPlay muted loop>
   <source src="https://runsql.com/assets/hero-video-DsrQvnnA.webm" type="video/mp4"></source>
@@ -131,8 +131,8 @@ After 1 year and over 100k diagrams created by 60k internet users later, we real
 
 ## DBML Statistics
 
-* 2.5M DBML docs created via dbdiagram.io and dbdocs.io (as of Feb 2025)
-* 1.4M users using DBML (as of Feb 2025)
+* 2.5M DBML docs created via dbdiagram.io and dbdocs.io (as of Feb 2025).
+* 1.4M users using DBML (as of Feb 2025).
 
 ## Who's behind DBML?
 
@@ -140,8 +140,8 @@ DBML is created and maintained by [Holistics](https://holistics.io?utm_source=db
 
 ## Community
 
-* DBML is [being open-sourced on Github](https://github.com/holistics/dbml/)
-* Have a question, suggestion or want to contribute? Use [the dbml issues page](https://github.com/holistics/dbml/issues)
+* DBML is [being open-sourced on Github](https://github.com/holistics/dbml/).
+* Have a question, suggestion or want to contribute? Use [the dbml issues page](https://github.com/holistics/dbml/issues).
 
 ## Community Contributions
 
