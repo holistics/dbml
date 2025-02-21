@@ -28,8 +28,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "full_name",
@@ -76,8 +75,7 @@
           "inline_refs": [],
           "pk": false,
           "increment": false,
-          "unique": true,
-          "not_null": false
+          "unique": true
         },
         {
           "name": "gender",
