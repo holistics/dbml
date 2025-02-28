@@ -1,3 +1,12 @@
+## v3.10.0 (2025-02-28)
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#678](https://github.com/holistics/dbml/pull/678) ft: support color and name for short & long forms of the relationship ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 1
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
 ## v3.9.6 (2025-02-20)
 
 #### :bug: Bug Fix
