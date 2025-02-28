@@ -25,7 +25,6 @@ export class RefInterpreter implements ElementInterpreter {
     this.env.ref.set(this.declarationNode, this.ref as Ref);
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
-      ...this.interpretSettingList(this.declarationNode.attributeList),
       ...this.interpretBody(this.declarationNode.body!)];
     return errors;
   }
@@ -41,14 +40,6 @@ export class RefInterpreter implements ElementInterpreter {
     this.ref.schemaName = fragments.join('.') || null;
 
     return errors;
-  }
-
-  private interpretSettingList(settings?: ListExpressionNode): CompileError[] {
-    const settingMap = aggregateSettingList(settings).getValue();
-
-    this.ref.color = settingMap['color']?.length ? extractColor(settingMap['color']?.at(0)?.value as any) : undefined;
-    
-    return [];
   }
 
   private interpretBody(body: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -80,14 +71,18 @@ export class RefInterpreter implements ElementInterpreter {
 
     if (field.args[0]) {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
+
       const deleteSetting = settingMap['delete']?.at(0)?.value;
       this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode
         ? extractStringFromIdentifierStream(deleteSetting).unwrap_or(undefined) 
         : extractVariableFromExpression(deleteSetting).unwrap_or(undefined) as string;
+
       const updateSetting = settingMap['update']?.at(0)?.value;
       this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode
         ? extractStringFromIdentifierStream(updateSetting).unwrap_or(undefined)
         : extractVariableFromExpression(updateSetting).unwrap_or(undefined) as string;
+
+      this.ref.color = settingMap['color']?.length ? extractColor(settingMap['color']?.at(0)?.value as any) : undefined;
     }
     
     const multiplicities = getMultiplicities(op);

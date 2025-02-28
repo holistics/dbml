@@ -83,9 +83,9 @@ Table c {
 }
 
 // Short form
-Ref short_ref [color: #aabbcc]: b.id < c.id
+Ref short_ref: b.id < c.id [color: #aabbcc]
 
 // Long form
-Ref long_ref [color: #123456] {
-  c.id < b.c_id
+Ref long_ref {
+  c.id < b.c_id [color: #123456]
 }
