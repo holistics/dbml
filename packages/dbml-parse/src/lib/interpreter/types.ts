@@ -114,6 +114,7 @@ export interface Ref {
   schemaName: string | null;
   name: string | null;
   endpoints: RefEndpointPair;
+  color?: string;
   onDelete?: string;
   onUpdate?: string;
   token: TokenPosition;

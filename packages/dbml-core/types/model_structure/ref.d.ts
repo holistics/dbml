@@ -5,6 +5,7 @@ import DbState from './dbState';
 import Database, { NormalizedDatabase } from './database';
 interface RawRef {
     name: string;
+    color?: string;
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
@@ -13,6 +14,7 @@ interface RawRef {
 }
 declare class Ref extends Element {
     name: string;
+    color?: string;
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
@@ -59,6 +61,10 @@ declare class Ref extends Element {
 export interface NormalizedRef {
     [_id: number]: {
         id: number;
+        name?: string;
+        color?: string;
+        onUpdate?: string;
+        onDelete?: string;
         endpointIds: number[];
         schemaId: number;
     };

@@ -1,0 +1,17 @@
+Table b [headercolor: #aaaaaa] {
+  id int
+  c_id int
+}
+
+Table c {
+  id int
+  b_id int
+}
+
+// Short form
+Ref short_ref [color: #aabbcc]: b.id < c.id
+
+// Long form
+Ref long_ref [color: #123456] {
+  c.id < b.c_id
+}
