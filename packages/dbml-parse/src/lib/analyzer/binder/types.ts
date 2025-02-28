@@ -33,5 +33,5 @@ export interface ArgumentBinderRule {
 }
 
 export interface SettingListBinderRule {
-  [index: string]: BinderRule,
+  [index: string]: BinderRule;
 }
