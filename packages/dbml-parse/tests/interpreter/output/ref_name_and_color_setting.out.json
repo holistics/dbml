@@ -163,14 +163,14 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 135,
+              "offset": 118,
               "line": 12,
-              "column": 33
+              "column": 16
             },
             "end": {
-              "offset": 139,
+              "offset": 122,
               "line": 12,
-              "column": 37
+              "column": 20
             }
           }
         },
@@ -183,14 +183,14 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 142,
+              "offset": 125,
               "line": 12,
-              "column": 40
+              "column": 23
             },
             "end": {
-              "offset": 146,
+              "offset": 129,
               "line": 12,
-              "column": 44
+              "column": 27
             }
           }
         }
@@ -222,12 +222,12 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 195,
+              "offset": 178,
               "line": 16,
               "column": 3
             },
             "end": {
-              "offset": 199,
+              "offset": 182,
               "line": 16,
               "column": 7
             }
@@ -242,12 +242,12 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 202,
+              "offset": 185,
               "line": 16,
               "column": 10
             },
             "end": {
-              "offset": 208,
+              "offset": 191,
               "line": 16,
               "column": 16
             }

@@ -321,7 +321,13 @@ Ref: blogging.posts.user_id > core.users.id
 ### Relationship settings
 
 ```text
+// short form
 Ref: products.merchant_id > merchants.id [delete: cascade, update: no action, color: #79AD51]
+
+// long form
+Ref {
+  products.merchant_id > merchants.id [delete: cascade, update: no action, color: #79AD51]
+}
 ```
 
 - `delete / update: cascade | restrict | set null | set default | no action`
