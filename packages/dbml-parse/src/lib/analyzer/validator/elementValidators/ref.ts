@@ -7,7 +7,7 @@ import {
   isExpressionAVariableNode,
 } from '../../../parser/utils';
 import { ElementValidator } from '../types';
-import { aggregateSettingList, isSimpleName, pickValidator } from '../utils';
+import { aggregateSettingList, isSimpleName, isValidColor, pickValidator } from '../utils';
 import _ from 'lodash';
 import { getElementKind, isBinaryRelationship, isEqualTupleOperands } from '../../../analyzer/utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
@@ -56,11 +56,30 @@ export default class RefValidator implements ElementValidator {
   }
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
-    if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref shouldn\'t have a setting list', settingList)]
-    }
+    if (!settingList) return [];
 
-    return [];
+    const aggReport = aggregateSettingList(settingList);
+    const errors = aggReport.getErrors();
+    const settingMap = aggReport.getValue();
+
+    for (const name in settingMap) {
+      const attrs = settingMap[name];
+      switch (name) {
+        case 'color':
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)))
+          }
+          attrs.forEach((attr) => {
+            if (!isValidColor(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'color\' must be a color literal', attr.value || attr.name!));
+            }
+          });
+          break;
+        default:
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown \'${name}\' setting`, attr)))
+      }
+    }
+    return errors;
   }
 
   validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {

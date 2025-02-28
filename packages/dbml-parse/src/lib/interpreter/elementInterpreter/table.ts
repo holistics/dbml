@@ -161,7 +161,9 @@ export class TableInterpreter implements ElementInterpreter {
       }
       const refs = settingMap['ref'] || [];
       column.inline_refs = refs.flatMap((ref) => {
+
         const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
+
         if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
           return [];

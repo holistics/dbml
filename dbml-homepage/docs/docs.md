@@ -321,13 +321,14 @@ Ref: blogging.posts.user_id > core.users.id
 ### Relationship settings
 
 ```text
-Ref: products.merchant_id > merchants.id [delete: cascade, update: no action]
+Ref: products.merchant_id > merchants.id [delete: cascade, update: no action, color: #79AD51]
 ```
 
 - `delete / update: cascade | restrict | set null | set default | no action`
 Define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
+- `color: <color_code>`: change the relationship color.
 
-*Relationship settings are not supported for inline form ref.*
+*Relationship settings and names are not supported for inline form ref.*
 
 ### Many-to-many relationship
 
@@ -335,7 +336,7 @@ There're two ways to represent many-to-many relationship:
 
 - Using a single many-to-many relationship (`<>`).
 
-- Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/](https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/)
+- Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412](https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412)
 
 Beside presentation aspect, the main differece between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
 
