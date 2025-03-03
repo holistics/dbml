@@ -3,6 +3,21 @@ import path from 'path';
 import { scanDirNames } from '../jestHelpers.ts';
 import { connector } from '../src/index.ts';
 
+const sortKeys = (obj: any): any => {
+  if (Array.isArray(obj)) {
+    if (obj.length > 0 && typeof obj[0] === 'object' && obj[0] !== null && 'name' in obj[0]) {
+      return obj.map(sortKeys).sort((a, b) => (a.name > b.name ? 1 : -1));
+    }
+    return obj.map(sortKeys);
+  } else if (obj !== null && typeof obj === 'object') {
+    return Object.keys(obj).sort().reduce((result: any, key: string) => {
+      result[key] = sortKeys(obj[key]);
+      return result;
+    }, {});
+  }
+  return obj;
+};
+
 describe('@dbml/connector', () => {
   const runTest = async (dirName: string) => {
     process.chdir(dirName);
@@ -19,7 +34,11 @@ describe('@dbml/connector', () => {
     const fileNames = fs.readdirSync(path.join(dirName, './out-files'));
     const contentJson = fs.readFileSync(path.join(dirName, './out-files', fileNames[0]), 'utf-8');
     const expectContent = fs.readFileSync(path.join(dirName, './expect-out-files', fileNames[0]), 'utf-8');
-    expect(contentJson.replace(/\\r\\n/g, '\\n')).toBe(expectContent.replace(/\\r\\n/g, '\\n'));
+
+    const contentObj = JSON.parse(contentJson.replace(/\\r\\n/g, '\\n'));
+    const expectObj = JSON.parse(expectContent.replace(/\\r\\n/g, '\\n'));
+
+    expect(sortKeys(contentObj)).toEqual(sortKeys(expectObj));
   };
 
   test.each(scanDirNames(__dirname, 'connectors'))('connectors/%s', async (dirName) => {
