@@ -5,6 +5,7 @@ export default class DbState {
     tableGroupId: number;
     refId: number;
     tableId: number;
+    noteId: number;
     enumValueId: number;
     endpointId: number;
     indexId: number;

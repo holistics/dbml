@@ -1,0 +1,12 @@
+Table A {
+    id integer
+    code number
+}
+
+Table B {
+    id integer
+    code number
+}
+
+Ref: A.id > B.id [update: cascade, delete: no action]
+Ref: A.code > B.code [update: set null, delete: set default]

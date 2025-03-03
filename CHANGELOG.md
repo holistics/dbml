@@ -1,3 +1,555 @@
+## v3.10.2 (2025-03-03)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#670](https://github.com/holistics/dbml/pull/670) Fix duplicated enums refs mssql connector ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :robot: Dependencies Update
+* [#673](https://github.com/holistics/dbml/pull/673) Bump vite from 4.5.5 to 4.5.6 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v3.10.1 (2025-02-28)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#683](https://github.com/holistics/dbml/pull/683) fix: Incorrect Ref color settings position ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#678](https://github.com/holistics/dbml/pull/678) ft: support color and name for short & long forms of the relationship ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 1
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v3.9.6 (2025-02-20)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#677](https://github.com/holistics/dbml/pull/677) DBX-5750: Fix an issue where tab characters are not recognized as white-space characters ([@xuantho573](https://github.com/xuantho573))
+* `dbml-core`, `dbml-parse`
+  * [#679](https://github.com/holistics/dbml/pull/679) Fix: Unset not_null if null or not_null setting is not specified ([@nguyenalter](https://github.com/nguyenalter))
+* `dbml-connector`
+  * [#671](https://github.com/holistics/dbml/pull/671) Fix missing FROM-clause entry for table "t" ([@g4b1nagy](https://github.com/g4b1nagy))
+
+#### Committers: 4
+- Gabi Nagy ([@g4b1nagy](https://github.com/g4b1nagy))
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
+## v3.9.5 (2024-12-13)
+
+#### :memo: Documentation
+* [#667](https://github.com/holistics/dbml/pull/667) Homepage - Upgrade docusaurus to 3.6.3 ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#664](https://github.com/holistics/dbml/pull/664) Update type definition for Parser.js ([@nguyenalter](https://github.com/nguyenalter))
+
+#### :robot: Dependencies Update
+* [#667](https://github.com/holistics/dbml/pull/667) Homepage - Upgrade docusaurus to 3.6.3 ([@huyleminh01](https://github.com/huyleminh01))
+* [#640](https://github.com/holistics/dbml/pull/640) Bump vite from 4.5.3 to 4.5.5 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#643](https://github.com/holistics/dbml/pull/643) Bump rollup from 3.29.4 to 3.29.5 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#665](https://github.com/holistics/dbml/pull/665) Bump nanoid from 3.3.6 to 3.3.8 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#666](https://github.com/holistics/dbml/pull/666) Bump nanoid from 3.3.7 to 3.3.8 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#651](https://github.com/holistics/dbml/pull/651) Bump http-proxy-middleware from 2.0.6 to 2.0.7 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#662](https://github.com/holistics/dbml/pull/662) Bump cross-spawn from 7.0.3 to 7.0.6 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+## v3.9.4 (2024-12-05)
+
+#### :bug: Bug Fix
+* `dbml-connector`
+  * [#660](https://github.com/holistics/dbml/pull/660) fix: db2dbml bigquery connector's query ([@kenzht](https://github.com/kenzht))
+
+#### :robot: Dependencies Update
+* [#661](https://github.com/holistics/dbml/pull/661) Bump cross-spawn from 7.0.3 to 7.0.6 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- [@kenzht](https://github.com/kenzht)
+
+## v3.9.3 (2024-10-30)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#650](https://github.com/holistics/dbml/pull/650) Connector - Keep table ordinal position ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v3.9.2 (2024-10-15)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#647](https://github.com/holistics/dbml/pull/647) Fix model-exporter don't export sticky notes, table group notes and color ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### Committers: 1
+- Tho Nguyen ([@thonx-holistics](https://github.com/thonx-holistics))
+
+## v3.9.1 (2024-10-14)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#645](https://github.com/holistics/dbml/pull/645) Fix mssql connector - Missing data type size for numeric-based and string-based columns ([@huyleminh01](https://github.com/huyleminh01))
+* `dbml-core`
+  * [#646](https://github.com/holistics/dbml/pull/646) Model Exporter cannot export <> refs in dbml ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.9.0 (2024-09-13)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#632](https://github.com/holistics/dbml/pull/632) chore/upgrade vite plugin dts & fix tsconfig to properly include all sources ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :boom: Breaking Change
+* `dbml-core`, `dbml-parse`
+  * [#594](https://github.com/holistics/dbml/pull/594) Parse/fix!/no longer support escaping triple quote ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :robot: Dependencies Update
+* Other
+  * [#625](https://github.com/holistics/dbml/pull/625) Bump micromatch from 4.0.5 to 4.0.8 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#628](https://github.com/holistics/dbml/pull/628) Bump webpack from 5.91.0 to 5.94.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#637](https://github.com/holistics/dbml/pull/637) Bump express from 4.19.2 to 4.21.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* `dbml-parse`
+  * [#632](https://github.com/holistics/dbml/pull/632) chore/upgrade vite plugin dts & fix tsconfig to properly include all sources ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.8.1 (2024-09-11)
+
+#### :memo: Documentation
+* [#627](https://github.com/holistics/dbml/pull/627) Docs - Update doc for bigquery and snowflake connector ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#634](https://github.com/holistics/dbml/pull/634) Fix postgres connector issues ([@huyphung1602](https://github.com/huyphung1602))
+* `dbml-core`
+  * [#629](https://github.com/holistics/dbml/pull/629) Fix: When the parameter format is JSON in Parser.parse, the first parameter 'parse' must be RawDatabase ([@Mrxyy](https://github.com/Mrxyy))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Mrxyy ([@Mrxyy](https://github.com/Mrxyy))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v3.8.0 (2024-08-27)
+
+#### :memo: Documentation
+* `dbml-core`
+  * [#624](https://github.com/holistics/dbml/pull/624) Fix erroneous examples in document for Table Groups ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`
+  * [#622](https://github.com/holistics/dbml/pull/622) Add bigquery connector ([@huyleminh01](https://github.com/huyleminh01))
+* `dbml-cli`, `dbml-connector`, `dbml-core`
+  * [#623](https://github.com/holistics/dbml/pull/623) Add Snowflake connector ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :robot: Dependencies Update
+* [#621](https://github.com/holistics/dbml/pull/621) Bump micromatch from 4.0.5 to 4.0.8 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Tho Nguyen ([@thonx-holistics](https://github.com/thonx-holistics))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v3.7.4 (2024-08-26)
+
+#### :memo: Documentation
+* `dbml-core`, `dbml-parse`
+  * [#619](https://github.com/holistics/dbml/pull/619) Support colors for Table Groups ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#619](https://github.com/holistics/dbml/pull/619) Support colors for Table Groups ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Tho Nguyen ([@thonx-holistics](https://github.com/thonx-holistics))
+
+## v3.7.3 (2024-08-19)
+
+#### :memo: Documentation
+* `dbml-connector`, `dbml-core`
+  * [#617](https://github.com/holistics/dbml/pull/617) Update readme for dbml core and connector ([@huyleminh01](https://github.com/huyleminh01))
+* Other
+  * [#615](https://github.com/holistics/dbml/pull/615) Docs - Add document for connector ([@huyleminh01](https://github.com/huyleminh01))
+  * [#614](https://github.com/holistics/dbml/pull/614) Add syntax manuals for table group notes ([@TeaNguyen](https://github.com/TeaNguyen))
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#616](https://github.com/holistics/dbml/pull/616) Fix wrong suggestion behaviors for Table Groups ([@thonx-holistics](https://github.com/thonx-holistics))
+* `dbml-parse`
+  * [#606](https://github.com/holistics/dbml/pull/606) Parse/fix/wrongly extract index position ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 4
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Thi Nguyen ([@TeaNguyen](https://github.com/TeaNguyen))
+- Tho Nguyen ([@thonx-holistics](https://github.com/thonx-holistics))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.7.2 (2024-08-14)
+
+#### :memo: Documentation
+* [#605](https://github.com/holistics/dbml/pull/605) Docs - Add document for database connector ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`
+  * [#611](https://github.com/holistics/dbml/pull/611) Add @dbml/connector ([@huyphung1602](https://github.com/huyphung1602))
+* `dbml-core`, `dbml-parse`
+  * [#601](https://github.com/holistics/dbml/pull/601) Support notes for table group ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Tho Nguyen ([@thonx-holistics](https://github.com/thonx-holistics))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v3.7.1 (2024-08-13)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-core`
+  * [#609](https://github.com/holistics/dbml/pull/609) Fix - Clean build cache and required using node 18 or higher ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 1
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+
+## v3.7.0 (2024-08-12)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#596](https://github.com/holistics/dbml/pull/596) Add database connectors ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v3.6.2 (2024-07-31)
+
+#### :running_woman: Performance
+* `dbml-core`
+  * [#590](https://github.com/holistics/dbml/pull/590) Improve DBML normalize performance ([@thonx-holistics](https://github.com/thonx-holistics))
+
+#### :house_with_garden: Internal
+* `dbml-parse`
+  * [#592](https://github.com/holistics/dbml/pull/592) chore: config vite to gen .d.ts file on build ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Tho Nguyen ([@thonx-holistics](https://github.com/thonx-holistics))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.6.1 (2024-07-23)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#588](https://github.com/holistics/dbml/pull/588) fix: safe unwrapping in suggesting attribute value when name is blank ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :robot: Dependencies Update
+* [#583](https://github.com/holistics/dbml/pull/583) build(deps): bump ws from 7.5.9 to 7.5.10 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.6.0 (2024-07-17)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#587](https://github.com/holistics/dbml/pull/587) Snowflake DDL Importer ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :robot: Dependencies Update
+* [#581](https://github.com/holistics/dbml/pull/581) build(deps): bump braces from 3.0.2 to 3.0.3 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#582](https://github.com/holistics/dbml/pull/582) build(deps): bump braces from 3.0.2 to 3.0.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v3.5.1 (2024-06-11)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#579](https://github.com/holistics/dbml/pull/579) Fix/silent errors in compiler api stack container ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.5.0 (2024-06-04)
+
+#### :memo: Documentation
+* [#571](https://github.com/holistics/dbml/pull/571) Migrate - Remove old hompepage and rename docs folder to homepage ([@huyleminh01](https://github.com/huyleminh01))
+* [#570](https://github.com/holistics/dbml/pull/570) Fix - Rename file syntax to docs to keep old route ([@huyleminh01](https://github.com/huyleminh01))
+* [#568](https://github.com/holistics/dbml/pull/568) Docs - Migrate dbml homepage to docusaurus ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#575](https://github.com/holistics/dbml/pull/575) Fix/remove tablegroup in schema ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#574](https://github.com/holistics/dbml/pull/574) Export @dbml/core version ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.4.3 (2024-04-26)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#563](https://github.com/holistics/dbml/pull/563) Properly indent indexes in table ([@pierresouchay](https://github.com/pierresouchay))
+* `dbml-core`, `dbml-parse`
+  * [#564](https://github.com/holistics/dbml/pull/564) Fix/add token to index column ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :robot: Dependencies Update
+* `dbml-parse`
+  * [#554](https://github.com/holistics/dbml/pull/554) build(deps): bump ip from 2.0.0 to 2.0.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* Other
+  * [#557](https://github.com/holistics/dbml/pull/557) build(deps): bump axios from 1.3.4 to 1.6.8 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 3
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Pierre Souchay ([@pierresouchay](https://github.com/pierresouchay))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.4.2 (2024-04-25)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#561](https://github.com/holistics/dbml/pull/561) parse/fix/throw undefined at primary expression ([@Huy-DNA](https://github.com/Huy-DNA))
+* `dbml-cli`, `dbml-core`
+  * [#549](https://github.com/holistics/dbml/pull/549) fix(postgresql): properly handle definition of unique and PK constraints in ALTER TABLE statements ([@pierresouchay](https://github.com/pierresouchay))
+
+#### :robot: Dependencies Update
+* [#552](https://github.com/holistics/dbml/pull/552) build(deps-dev): bump vite from 4.5.0 to 4.5.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 3
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Pierre Souchay ([@pierresouchay](https://github.com/pierresouchay))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.4.1 (2024-04-16)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#543](https://github.com/holistics/dbml/pull/543) parse/trim note top empty lines ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#547](https://github.com/holistics/dbml/pull/547) Add project's token into interpreter result ([@huyphung1602](https://github.com/huyphung1602))
+* `dbml-parse`
+  * [#535](https://github.com/holistics/dbml/pull/535) Support continuation mark and catch invalid escape sequence ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`
+  * [#541](https://github.com/holistics/dbml/pull/541) fix: define a common error format ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 3
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.4.0 (2024-03-19)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#539](https://github.com/holistics/dbml/pull/539) fix: normalize note content in projects ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#534](https://github.com/holistics/dbml/pull/534) New feature: Export DBML to Oracle version 19c ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 3
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.3.0 (2024-03-19)
+
+#### :memo: Documentation
+* [#533](https://github.com/holistics/dbml/pull/533) Add Sticky Notes syntax guide and a new community contribution ([@huyphung1602](https://github.com/huyphung1602))
+* [#529](https://github.com/holistics/dbml/pull/529) Add contributor dbml java ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#536](https://github.com/holistics/dbml/pull/536) fix: add normalize note content ([@Huy-DNA](https://github.com/Huy-DNA))
+* `dbml-parse`
+  * [#526](https://github.com/holistics/dbml/pull/526) Parser/fix `getRefId` ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### :rocket: New Feature
+* `dbml-parse`
+  * [#521](https://github.com/holistics/dbml/pull/521) Parser/support non ascii letters in identifiers ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 4
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.2.0 (2024-02-26)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#500](https://github.com/holistics/dbml/pull/500) Support sticky note syntaxes ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 1
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v3.1.8 (2024-02-21)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#524](https://github.com/holistics/dbml/pull/524) fix: unquoted update & delete ref setting ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.1.7 (2024-02-20)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#522](https://github.com/holistics/dbml/pull/522) Parser/interpret ref on update ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.1.6 (2024-02-20)
+
+#### :memo: Documentation
+* [#512](https://github.com/holistics/dbml/pull/512) Add contribution for DB2Code ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#519](https://github.com/holistics/dbml/pull/519) Remove ref in table syntax ([@Huy-DNA](https://github.com/Huy-DNA))
+  * [#518](https://github.com/holistics/dbml/pull/518) Add check for table reappear in tablegroups ([@Huy-DNA](https://github.com/Huy-DNA))
+  * [#515](https://github.com/holistics/dbml/pull/515) Fix validate when redundant args & `getMemberChain` ([@Huy-DNA](https://github.com/Huy-DNA))
+  * [#517](https://github.com/holistics/dbml/pull/517) Fix circular ref ([@Huy-DNA](https://github.com/Huy-DNA))
+* `dbml-core`
+  * [#503](https://github.com/holistics/dbml/pull/503) fix(notes): properly escape notes with new lines ([@pierresouchay](https://github.com/pierresouchay))
+
+#### :boom: Breaking Change
+* `dbml-parse`
+  * [#519](https://github.com/holistics/dbml/pull/519) Remove ref in table syntax ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 3
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Pierre Souchay ([@pierresouchay](https://github.com/pierresouchay))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.1.5 (2024-02-06)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#510](https://github.com/holistics/dbml/pull/510) fix: support identifiers starting with numbers ([@Huy-DNA](https://github.com/Huy-DNA))
+  * [#509](https://github.com/holistics/dbml/pull/509) fix: type errors and missing return ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- HuyDNA ([@Huy-DNA](https://github.com/Huy-DNA))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v3.1.4 (2024-02-05)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#507](https://github.com/holistics/dbml/pull/507) fix: swap ref endpoints in inline_refs ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- HuyDNA ([@Huy-DNA](https://github.com/Huy-DNA))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v3.1.3 (2024-02-01)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#504](https://github.com/holistics/dbml/pull/504) Fix/dbml alias & primary key & note content bug ([@Huy-DNA](https://github.com/Huy-DNA))
+
+#### Committers: 2
+- HuyDNA ([@Huy-DNA](https://github.com/Huy-DNA))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
+## v3.1.2 (2024-01-24)
+
+#### :memo: Documentation
+* `dbml-parse`
+  * [#498](https://github.com/holistics/dbml/pull/498) feat: support strings and identifiers in column caller type ([@huy-dna](https://github.com/huy-dna))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#493](https://github.com/holistics/dbml/pull/493) fix(sql2dbml): properly escape notes when notes do contain some ' ([@pierresouchay](https://github.com/pierresouchay))
+* `dbml-parse`
+  * [#498](https://github.com/holistics/dbml/pull/498) feat: support strings and identifiers in column caller type ([@huy-dna](https://github.com/huy-dna))
+
+#### Committers: 3
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Pierre Souchay ([@pierresouchay](https://github.com/pierresouchay))
+- [@huy-dna](https://github.com/huy-dna)
+
+## v3.1.1 (2024-01-18)
+* Fix wrong casing file names in published package
+
+## v3.1.0 (2024-01-18)
+
+#### :memo: Documentation
+* [#479](https://github.com/holistics/dbml/pull/479) Update README ([@matthewjumpsoffbuildings](https://github.com/matthewjumpsoffbuildings))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#487](https://github.com/holistics/dbml/pull/487) fix: type of note field that is string doesn show ([@Mrxyy](https://github.com/Mrxyy))
+* `dbml-cli`, `dbml-parse`
+  * [#488](https://github.com/holistics/dbml/pull/488) Fix new DBML parser inconsistencies ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`
+  * [#486](https://github.com/holistics/dbml/pull/486) Add Mysql ANTLR4 parser ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`
+  * [#486](https://github.com/holistics/dbml/pull/486) Add Mysql ANTLR4 parser ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 3
+- Matthew ([@matthewjumpsoffbuildings](https://github.com/matthewjumpsoffbuildings))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- jaden ([@Mrxyy](https://github.com/Mrxyy))
+
+## v3.0.0 (2023-11-23)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#477](https://github.com/holistics/dbml/pull/477) Fix: Export note string and default value ([@nguyenalter](https://github.com/nguyenalter))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#458](https://github.com/holistics/dbml/pull/458) Alternative dbml parser ([@huy-dna](https://github.com/huy-dna))
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#458](https://github.com/holistics/dbml/pull/458) Alternative dbml parser ([@huy-dna](https://github.com/huy-dna))
+
+#### :robot: Dependencies Update
+* [#469](https://github.com/holistics/dbml/pull/469) Bump browserify-sign from 4.0.4 to 4.2.2 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#451](https://github.com/holistics/dbml/pull/451) Bump fsevents from 1.2.9 to 1.2.13 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#464](https://github.com/holistics/dbml/pull/464) Bump @babel/traverse from 7.21.4 to 7.23.2 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#463](https://github.com/holistics/dbml/pull/463) Bump @babel/traverse from 7.21.4 to 7.23.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 4
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Vinh Ho ([@vinh-hh](https://github.com/vinh-hh))
+- [@huy-dna](https://github.com/huy-dna)
+
 ## v2.6.1 (2023-10-16)
 
 #### :memo: Documentation
@@ -251,7 +803,7 @@
 * `dbml-cli`, `dbml-core`
   * [#240](https://github.com/holistics/dbml/pull/240) Support multiple schemas ([@NQPhuc](https://github.com/NQPhuc))
 * `dbml-cli`
-  * [#209](https://github.com/holistics/dbml/pull/209) Add --mssql option for sql2dbml CLI ([@NQPhuc](https://github.com/NQPhuc))      
+  * [#209](https://github.com/holistics/dbml/pull/209) Add --mssql option for sql2dbml CLI ([@NQPhuc](https://github.com/NQPhuc))
 
 #### :rocket: New Feature
 * `dbml-cli`, `dbml-core`

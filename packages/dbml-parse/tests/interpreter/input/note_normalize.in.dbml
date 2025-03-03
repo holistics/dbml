@@ -1,0 +1,65 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table follows {
+  following_user_id integer
+  followed_user_id integer
+  created_at timestamp 
+
+  Note: '''
+      # Heading 1
+          code block
+      # Heading 2
+        * 1
+        * 1
+  '''
+}
+
+Table users {
+  id integer [primary key]
+  username varchar
+  role varchar
+  created_at timestamp
+
+  Note {
+  '''
+      # Heading 1
+          code block
+      # Heading 2
+        * 1
+        * 2
+  '''
+  }
+}
+
+Table posts {
+  id integer [primary key]
+  title varchar
+  body text [note: 
+  '''
+# Heading 1
+    code block
+# Heading 2
+  * 1
+  * 2
+  ''']
+  user_id integer
+  status varchar
+  created_at timestamp
+
+  Note: '''
+          # Heading 1
+              code block
+          # Heading 2
+            * 1
+              * 1.1
+              * 1.2
+            * 2
+  '''
+}
+
+Ref: posts.user_id > users.id // many-to-one
+
+Ref: users.id < follows.following_user_id
+
+Ref: users.id < follows.followed_user_id

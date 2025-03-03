@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isEmpty, reduce } from 'lodash';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
@@ -15,6 +15,20 @@ class DbmlExporter {
     return /\s*(\*|\+|-|\([A-Za-z0-9_]+\)|\(\))/g.test(str);
   }
 
+  static escapeNote (str) {
+    if (str === null) {
+      return '';
+    }
+    let newStr = str.replaceAll('\\', '\\\\');
+    if (!newStr.match(/[\n\r']/)) {
+      // Only safe chars, no simple quotes nor CR/LF
+      return `'${newStr}'`;
+    }
+    newStr = newStr.replaceAll("'", "\\'");
+    newStr = newStr.replaceAll('\r\n', '\n'); // turn all CRLF to LF
+    return `'''${newStr}'''`;
+  }
+
   static exportEnums (enumIds, model) {
     const enumStrs = enumIds.map(enumId => {
       const _enum = model.enums[enumId];
@@ -23,7 +37,7 @@ class DbmlExporter {
       return `Enum ${shouldPrintSchema(schema, model)
         ? `"${schema.name}".` : ''}"${_enum.name}" {\n${
         _enum.valueIds.map(valueId => `  "${model.enumValues[valueId].name}"${model.enumValues[valueId].note
-          ? ` [note: '${model.enumValues[valueId].note}']` : ''}`).join('\n')}\n}\n`;
+          ? ` [note: ${DbmlExporter.escapeNote(model.enumValues[valueId].note)}]` : ''}`).join('\n')}\n}\n`;
     });
 
     return enumStrs.length ? enumStrs.join('\n') : '';
@@ -64,9 +78,11 @@ class DbmlExporter {
             value += `${field.dbdefault.value}`;
             break;
 
-          case 'string':
-            value += `"${field.dbdefault.value}"`;
+          case 'string': {
+            const quote = field.dbdefault.value.includes('\n') ? "'''" : "'";
+            value += `${quote}${field.dbdefault.value}${quote}`;
             break;
+          }
 
           case 'expression':
             value += `\`${field.dbdefault.value}\``;
@@ -78,7 +94,7 @@ class DbmlExporter {
         constraints.push(value);
       }
       if (field.note) {
-        constraints.push(`note: '${field.note}'`);
+        constraints.push(`note: ${DbmlExporter.escapeNote(field.note)}`);
       }
 
       if (constraints.length > 0) {
@@ -169,19 +185,22 @@ class DbmlExporter {
     const tableStrs = tableContentArr.map((tableContent) => {
       const table = model.tables[tableContent.tableId];
       const schema = model.schemas[table.schemaId];
-      const tableSettingStr = this.getTableSettings(table);
+      const tableSettingStr = DbmlExporter.getTableSettings(table);
+      // Include schema name if needed
+      let tableName = `"${table.name}"`;
+      if (shouldPrintSchema(schema, model)) tableName = `"${schema.name}"."${table.name}"`;
+
+      const fieldStr = tableContent.fieldContents.map(field => `  ${field}\n`).join('');
 
       let indexStr = '';
-      if (!_.isEmpty(tableContent.indexContents)) {
-        indexStr = `\nIndexes {\n${tableContent.indexContents.map(indexLine => `  ${indexLine}`).join('\n')}\n}`;
+      if (!isEmpty(tableContent.indexContents)) {
+        const indexBody = tableContent.indexContents.map(indexLine => `    ${indexLine}\n`).join('');
+        indexStr = `\n  Indexes {\n${indexBody}  }\n`;
       }
-      const tableNote = table.note ? `  Note: '${table.note}'\n` : '';
 
-      const tableStr = `Table ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".` : ''}"${table.name}"${tableSettingStr} {\n${
-        tableContent.fieldContents.map(line => `  ${line}`).join('\n')}\n${indexStr ? `${indexStr}\n` : ''}${tableNote}}\n`;
+      const noteStr = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note)}\n`: '';
 
-      return tableStr;
+      return `Table ${tableName}${tableSettingStr} {\n${fieldStr}${indexStr}${noteStr}}\n`;
     });
 
     return tableStrs.length ? tableStrs.join('\n') : '';
@@ -195,7 +214,9 @@ class DbmlExporter {
   static exportRefs (refIds, model) {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
-      const refEndpointIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const oneRelationEndpointIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const isManyToMany = oneRelationEndpointIndex === -1;
+      const refEndpointIndex = isManyToMany ? 0 : oneRelationEndpointIndex;
       const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
       const refEndpointId = ref.endpointIds[refEndpointIndex];
       const foreignEndpoint = model.endpoints[foreignEndpointId];
@@ -220,8 +241,10 @@ class DbmlExporter {
       const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
       const foreignEndpointFieldName = this.buildFieldName(foreignEndpoint.fieldIds, model, 'dbml');
 
-      if (foreignEndpoint.relation === '1') line += '- ';
-      else line += '< ';
+      if (isManyToMany) line += '<> ';
+      else
+        if (foreignEndpoint.relation === '1') line += '- ';
+        else line += '< ';
       line += `${shouldPrintSchema(foreignEndpointSchema, model)
         ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}".${foreignEndpointFieldName}`;
 
@@ -243,27 +266,50 @@ class DbmlExporter {
     return strArr.length ? strArr.join('\n') : '';
   }
 
+  static getTableGroupSettings (tableGroup) {
+    const settings = [];
+
+    if (tableGroup.color) settings.push(`color: ${tableGroup.color}`);
+
+    return settings.length ? ` [${settings.join(', ')}]` : '';
+  }
+
   static exportTableGroups (tableGroupIds, model) {
     const tableGroupStrs = tableGroupIds.map(groupId => {
       const group = model.tableGroups[groupId];
       const groupSchema = model.schemas[group.schemaId];
+      const groupSettingStr = DbmlExporter.getTableGroupSettings(group);
 
-      return `TableGroup ${shouldPrintSchema(groupSchema, model)
-        ? `"${groupSchema.name}".` : ''}"${group.name}" {\n${
-        group.tableIds.map(tableId => {
+      const groupNote = group.note ? `  Note: ${DbmlExporter.escapeNote(group.note)}\n`: '';
+      const groupSchemaName = shouldPrintSchema(groupSchema, model) ? `"${groupSchema.name}".` : '';
+      const groupName = `${groupSchemaName}"${group.name}"`;
+
+      const tableNames = group.tableIds
+        .reduce((result, tableId) => {
           const table = model.tables[tableId];
           const tableSchema = model.schemas[table.schemaId];
-          return `  ${shouldPrintSchema(tableSchema, model)
-            ? `"${tableSchema.name}".` : ''}"${table.name}"`;
-        }).join('\n')}\n}\n`;
+          const tableName = `  ${shouldPrintSchema(tableSchema, model) ? `"${tableSchema.name}".` : ''}"${table.name}"`;
+          return result + `${tableName}\n`;
+        }, '');
+
+      return `TableGroup ${groupName}${groupSettingStr} {\n${tableNames}${groupNote}}\n`;
     });
 
     return tableGroupStrs.length ? tableGroupStrs.join('\n') : '';
   }
 
+  static exportStickyNotes (model) {
+    return reduce(model.notes, (result, note) => {
+      const escapedContent = `  ${DbmlExporter.escapeNote(note.content)}`;
+      const stickyNote = `Note ${note.name} {\n${escapedContent}\n}\n`;
+
+      // Add a blank line between note elements
+      return result ? result + '\n' + stickyNote : stickyNote;
+    }, '');
+  }
+
   static export (model) {
-    let res = '';
-    let hasBlockAbove = false;
+    const elementStrs = [];
     const database = model.database['1'];
 
     database.schemaIds.forEach((schemaId) => {
@@ -271,31 +317,16 @@ class DbmlExporter {
         enumIds, tableIds, tableGroupIds, refIds,
       } = model.schemas[schemaId];
 
-      if (!_.isEmpty(enumIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += DbmlExporter.exportEnums(enumIds, model);
-        hasBlockAbove = true;
-      }
-
-      if (!_.isEmpty(tableIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += DbmlExporter.exportTables(tableIds, model);
-        hasBlockAbove = true;
-      }
-
-      if (!_.isEmpty(tableGroupIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += DbmlExporter.exportTableGroups(tableGroupIds, model);
-        hasBlockAbove = true;
-      }
-
-      if (!_.isEmpty(refIds)) {
-        if (hasBlockAbove) res += '\n';
-        res += DbmlExporter.exportRefs(refIds, model);
-        hasBlockAbove = true;
-      }
+      if (!isEmpty(enumIds)) elementStrs.push(DbmlExporter.exportEnums(enumIds, model));
+      if (!isEmpty(tableIds)) elementStrs.push(DbmlExporter.exportTables(tableIds, model));
+      if (!isEmpty(tableGroupIds)) elementStrs.push(DbmlExporter.exportTableGroups(tableGroupIds, model));
+      if (!isEmpty(refIds)) elementStrs.push(DbmlExporter.exportRefs(refIds, model));
     });
-    return res;
+
+    if(!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));
+
+    // all elements already end with 1 '\n', so join('\n') to separate them with 1 blank line
+    return elementStrs.join('\n');
   }
 }
 

@@ -13,37 +13,32 @@
         {
           "name": "full_name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "email",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "unique": true
         },
         {
           "name": "gender",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "date_of_birth",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
@@ -79,7 +74,7 @@
           "columns": [
             {
               "value": "id",
-              "type": "string"
+              "type": "column"
             }
           ],
           "name": "users_index_0",
@@ -89,24 +84,26 @@
           "columns": [
             {
               "value": "full_name",
-              "type": "string"
+              "type": "column"
             }
           ],
-          "name": "User Name"
+          "name": "User Name",
+          "unique": false
         },
         {
           "columns": [
             {
               "value": "email",
-              "type": "string"
+              "type": "column"
             },
             {
               "value": "created_at",
-              "type": "string"
+              "type": "column"
             }
           ],
           "name": "users_index_2",
-          "type": "HASH"
+          "type": "HASH",
+          "unique": false
         },
         {
           "columns": [
@@ -115,20 +112,22 @@
               "type": "expression"
             }
           ],
-          "name": "users_index_3"
+          "name": "users_index_3",
+          "unique": false
         },
         {
           "columns": [
             {
               "value": "active",
-              "type": "string"
+              "type": "column"
             },
             {
               "value": "((lower(full_name)))",
               "type": "expression"
             }
           ],
-          "name": "users_index_4"
+          "name": "users_index_4",
+          "unique": false
         },
         {
           "columns": [
@@ -137,7 +136,8 @@
               "type": "expression"
             }
           ],
-          "name": "users_index_5"
+          "name": "users_index_5",
+          "unique": false
         },
         {
           "columns": [
@@ -146,7 +146,8 @@
               "type": "expression"
             }
           ],
-          "name": "users_index_6"
+          "name": "users_index_6",
+          "unique": false
         }
       ]
     },
@@ -161,15 +162,14 @@
           },
           "pk": true,
           "dbdefault": {
-            "value": 123,
+            "value": "123",
             "type": "number"
           }
         },
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "dbdefault": {
             "value": "Tea",
@@ -191,15 +191,14 @@
             "args": null
           },
           "dbdefault": {
-            "value": 123.12,
+            "value": "123.12",
             "type": "number"
           }
         },
         {
           "name": "status",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "dbdefault": {
             "value": "NULL",
@@ -209,8 +208,7 @@
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "dbdefault": {
             "value": "now()",
@@ -235,7 +233,7 @@
             "args": null
           },
           "dbdefault": {
-            "value": "current_date + interval 1 year",
+            "value": "current_date+interval1year",
             "type": "expression"
           }
         }
@@ -255,8 +253,7 @@
         {
           "name": "code",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         }
       ],

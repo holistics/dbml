@@ -1,11 +1,12 @@
 import Element from './element';
 
 class IndexColumn extends Element {
-  constructor ({ type, value, index }) {
+  constructor ({ type, value, index, token }) {
     super();
     this.type = type;
     this.value = value;
     this.index = index;
+    this.token = token;
     this.dbState = this.index.dbState;
     this.generateId();
   }
@@ -34,13 +35,10 @@ class IndexColumn extends Element {
   }
 
   normalize (model) {
-    model.indexColumns = {
-      ...model.indexColumns,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportParentIds(),
-      },
+    model.indexColumns[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportParentIds(),
     };
   }
 }

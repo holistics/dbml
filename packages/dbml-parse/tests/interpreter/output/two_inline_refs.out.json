@@ -1,0 +1,130 @@
+[
+  {
+    "code": 4000,
+    "diagnostic": "Can not find Table 'staff'",
+    "nodeOrToken": {
+      "id": 21,
+      "kind": "<primary-expression>",
+      "startPos": {
+        "offset": 71,
+        "line": 3,
+        "column": 23
+      },
+      "fullStart": 71,
+      "endPos": {
+        "offset": 76,
+        "line": 3,
+        "column": 28
+      },
+      "fullEnd": 76,
+      "start": 71,
+      "end": 76,
+      "expression": {
+        "id": 20,
+        "kind": "<variable>",
+        "startPos": {
+          "offset": 71,
+          "line": 3,
+          "column": 23
+        },
+        "fullStart": 71,
+        "endPos": {
+          "offset": 76,
+          "line": 3,
+          "column": 28
+        },
+        "fullEnd": 76,
+        "start": 71,
+        "end": 76,
+        "variable": {
+          "kind": "<identifier>",
+          "startPos": {
+            "offset": 71,
+            "line": 3,
+            "column": 23
+          },
+          "endPos": {
+            "offset": 76,
+            "line": 3,
+            "column": 28
+          },
+          "value": "staff",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 71,
+          "end": 76
+        }
+      }
+    },
+    "start": 71,
+    "end": 76,
+    "name": "CompileError"
+  },
+  {
+    "code": 4000,
+    "diagnostic": "Can not find Table 'rental'",
+    "nodeOrToken": {
+      "id": 35,
+      "kind": "<primary-expression>",
+      "startPos": {
+        "offset": 105,
+        "line": 4,
+        "column": 24
+      },
+      "fullStart": 105,
+      "endPos": {
+        "offset": 111,
+        "line": 4,
+        "column": 30
+      },
+      "fullEnd": 111,
+      "start": 105,
+      "end": 111,
+      "expression": {
+        "id": 34,
+        "kind": "<variable>",
+        "startPos": {
+          "offset": 105,
+          "line": 4,
+          "column": 24
+        },
+        "fullStart": 105,
+        "endPos": {
+          "offset": 111,
+          "line": 4,
+          "column": 30
+        },
+        "fullEnd": 111,
+        "start": 105,
+        "end": 111,
+        "variable": {
+          "kind": "<identifier>",
+          "startPos": {
+            "offset": 105,
+            "line": 4,
+            "column": 24
+          },
+          "endPos": {
+            "offset": 111,
+            "line": 4,
+            "column": 30
+          },
+          "value": "rental",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 105,
+          "end": 111
+        }
+      }
+    },
+    "start": 105,
+    "end": 111,
+    "name": "CompileError"
+  }
+]

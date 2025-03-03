@@ -2,27 +2,14 @@
 import { last, flatten } from 'lodash';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
 import { Enum, Field, Index, Table } from '../AST';
+import { TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TYPE } from '../constants';
 
 const COMMAND_KIND = {
   REF: 'ref',
 }
 
-const TABLE_CONSTRAINT_KIND = {
-  FIELD: 'field',
-  INDEX: 'index',
-  FK: 'fk',
-  UNIQUE: 'unique',
-}
-
 const COMMENT_OBJECT_TYPE = {
   TABLE: 'table',
-}
-
-// legacy - for compatibility with model_structure
-const CONSTRAINT_TYPE = {
-  COLUMN: 'column',
-  STRING: 'string',
-  EXPRESSION: 'expression',
 }
 
 const findTable = (tables, schemaName, tableName) => {
@@ -33,6 +20,13 @@ const findTable = (tables, schemaName, tableName) => {
   });
   return table;
 };
+
+const escapeStr = (str) => {
+  if (str) {
+    return str.replaceAll("''", "'");
+  }
+  return str;
+}
 
 export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
@@ -265,22 +259,21 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     const contraints = ctx.colquallist().accept(this);
 
-    
     const serialIncrementType = new Set(['serial', 'smallserial', 'bigserial']);
     const columnTypeName = type.type_name.toLowerCase();
     if ((serialIncrementType.has(columnTypeName))) contraints.increment = true;
 
     return {
       kind: TABLE_CONSTRAINT_KIND.FIELD,
-      value: { 
+      value: {
         field: new Field({
           name,
           type,
           ...contraints,
         }),
         inline_refs: contraints.inline_refs,
-      }
-    }
+      },
+    };
   }
 
   // colconstraint*
@@ -290,7 +283,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const constraint = c.accept(this);
       if (!constraint) return;
 
-      if (constraint.kind === 'inline_ref') {
+      if (constraint.kind === COLUMN_CONSTRAINT_KIND.INLINE_REF) {
         r.inline_refs.push(constraint.value);
         return;
       }
@@ -325,29 +318,37 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
    */
   visitColconstraintelem (ctx) {
     if (ctx.NULL_P()) {
-      let not_null = false;
-      if (ctx.NOT()) not_null = true;
-      return { kind: 'not_null', value: not_null }
+      let notNull = false;
+      if (ctx.NOT()) notNull = true;
+      return { kind: COLUMN_CONSTRAINT_KIND.NOT_NULL, value: notNull };
     }
 
-    if (ctx.UNIQUE()) return {
-      kind: 'unique',
-      value: true,
+    if (ctx.UNIQUE()) {
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.UNIQUE,
+        value: true,
+      };
     }
 
-    if (ctx.PRIMARY()) return {
-      kind: 'pk',
-      value: true,
+    if (ctx.PRIMARY()) {
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.PK,
+        value: true,
+      };
     }
 
-    if (ctx.DEFAULT()) return {
-      kind: 'dbdefault',
-      value: ctx.b_expr().accept(this),
+    if (ctx.DEFAULT()) {
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.DEFAULT,
+        value: ctx.b_expr().accept(this),
+      };
     }
 
-    if (ctx.IDENTITY_P()) return {
-      kind: 'increment',
-      value: true,
+    if (ctx.IDENTITY_P()) {
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.INCREMENT,
+        value: true,
+      };
     }
 
     if (ctx.REFERENCES()) {
@@ -358,7 +359,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
       const actions = ctx.key_actions().accept(this);
       return {
-        kind: 'inline_ref',
+        kind: COLUMN_CONSTRAINT_KIND.INLINE_REF,
         value: {
           endpoints: [{
             tableName: null,
@@ -373,8 +374,8 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
           }],
           onDelete: actions.onDelete,
           onUpdate: actions.onUpdate,
-        }
-      }
+        },
+      };
     }
   }
 
@@ -383,7 +384,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     if (ctx.c_expr()) return ctx.c_expr().accept(this);
     return {
       value: ctx.getText(),
-      type: 'expression',
+      type: DATA_TYPE.EXPRESSION,
     }
   }
 
@@ -392,49 +393,55 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     if (ctx.aexprconst()) return ctx.aexprconst().accept(this);
     if (ctx.a_expr()) return {
       value: ctx.a_expr().getText(),
-      type: 'expression'
+      type: DATA_TYPE.EXPRESSION
     }
     return {
       value: ctx.getText(),
-      type: 'expression',
+      type: DATA_TYPE.EXPRESSION,
     }
   }
 
   visitC_expr_exists (ctx) {
     return {
       value: ctx.getText(),
-      type: 'expression',
+      type: DATA_TYPE.EXPRESSION,
     }
   }
 
   visitC_expr_case (ctx) {
     return {
       value: ctx.getText(),
-      type: 'expression',
+      type: DATA_TYPE.EXPRESSION,
     }
   }
 
   // iconst | fconst | sconst | bconst | xconst | func_name (sconst | OPEN_PAREN func_arg_list opt_sort_clause CLOSE_PAREN sconst) | consttypename sconst | constinterval (sconst opt_interval | OPEN_PAREN iconst CLOSE_PAREN sconst) | TRUE_P | FALSE_P | NULL_P
   visitAexprconst (ctx) {
-    if (ctx.sconst() && ctx.getChildCount() === 1) return {
-      value: ctx.sconst().accept(this),
-      type: 'string',
+    if (ctx.sconst() && ctx.getChildCount() === 1) {
+      return {
+        value: ctx.sconst().accept(this),
+        type: DATA_TYPE.STRING,
+      };
     }
 
-    if (ctx.TRUE_P() || ctx.FALSE_P() || ctx.NULL_P()) return {
-      value: ctx.getText(),
-      type: 'boolean',
+    if (ctx.TRUE_P() || ctx.FALSE_P() || ctx.NULL_P()) {
+      return {
+        value: ctx.getText(),
+        type: DATA_TYPE.BOOLEAN,
+      };
     }
 
-    if (ctx.iconst() || ctx.fconst) return {
-      value: ctx.getText(),
-      type: 'number',
+    if (ctx.iconst() || ctx.fconst) {
+      return {
+        value: ctx.getText(),
+        type: DATA_TYPE.NUMBER,
+      };
     }
 
     return {
       value: ctx.getText(),
-      type: 'expression',
-    }
+      type: DATA_TYPE.EXPRESSION,
+    };
   }
 
   // key_update | key_delete | key_update key_delete | key_delete key_update |
@@ -788,7 +795,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const cmds = ctx.alter_table_cmds().accept(this);
 
       return cmds.map((cmd) => {
-        if (!cmd) return;
+        if (!cmd) return null;
         let kind = null;
         switch (cmd.kind) {
           case TABLE_CONSTRAINT_KIND.FK:
@@ -797,9 +804,40 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
             cmd.value.endpoints[0].schemaName = schemaName;
             this.data.refs.push(cmd.value);
             break;
+          case TABLE_CONSTRAINT_KIND.UNIQUE:
+          case TABLE_CONSTRAINT_KIND.PK:
+          case TABLE_CONSTRAINT_KIND.INDEX: {
+            if (cmd.value.columns.length === 0) break;
+            if (!(cmd.value.pk || cmd.value.unique)) break;
+            // eslint-disable-next-line prefer-destructuring
+            kind = cmd.kind;
+            const table = findTable(this.data.tables, schemaName, tableName);
+            if (!table) break;
+            if (cmd.value.columns.length === 1 && (cmd.value.unique || cmd.value.pk)) {
+              const key = cmd.value.columns[0].value;
+              const fieldToUpdate = table.fields.find(f => f.name === key);
+              if (fieldToUpdate) {
+                // If we have an exact match, this is a column, if not, might be an expression
+                fieldToUpdate[cmd.value.unique ? 'unique' : 'pk'] = true;
+                break;
+              }
+            }
+            // multi column constraint -> need to create new index
+            const index = new Index({
+              name: cmd.value.name,
+              columns: cmd.value.columns,
+              note: cmd.value.note,
+              pk: cmd.value.pk,
+              type: cmd.value.type,
+              unique: cmd.value.unique,
+            });
+            table.indexes.push(index);
+            break;
+          }
           default:
             break;
         }
+
         return {
           kind,
           value: cmd.value,
@@ -856,7 +894,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
         if (!table) return;
 
         const note = ctx.comment_text().accept(this);
-        table.note = { value: note };
+        table.note = { value: escapeStr(note) };
       }
     }
 
@@ -872,7 +910,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       if (!field) return;
 
       const note = ctx.comment_text().accept(this);
-      field.note = { value: note };
+      field.note = { value: escapeStr(note) };
     }
   }
 

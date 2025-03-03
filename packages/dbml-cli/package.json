@@ -1,6 +1,6 @@
 {
   "name": "@dbml/cli",
-  "version": "2.6.1",
+  "version": "3.10.2",
   "description": "",
   "main": "lib/index.js",
   "license": "Apache-2.0",
@@ -14,7 +14,8 @@
   },
   "bin": {
     "dbml2sql": "bin/dbml2sql.js",
-    "sql2dbml": "bin/sql2dbml.js"
+    "sql2dbml": "bin/sql2dbml.js",
+    "db2dbml": "bin/db2dbml.js"
   },
   "author": "Holistics <dev@holistics.io>",
   "homepage": "https://dbml.dbdiagram.io",
@@ -25,7 +26,8 @@
   ],
   "dependencies": {
     "@babel/cli": "^7.21.0",
-    "@dbml/core": "^2.6.1",
+    "@dbml/connector": "^3.10.2",
+    "@dbml/core": "^3.10.2",
     "bluebird": "^3.5.5",
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
@@ -53,5 +55,8 @@
       "^.+\\.js$": "babel-jest"
     }
   },
-  "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556"
+  "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556",
+  "engines": {
+    "node": ">=18"
+  }
 }

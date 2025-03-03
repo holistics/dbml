@@ -1,0 +1,11 @@
+Table Users {
+	id integer
+    status v2.status [default: "churn"]
+    
+    referrer integer [ref: -id]
+}
+
+enum v2.status {
+	churn
+    new [note: 'This is a new employee']
+}

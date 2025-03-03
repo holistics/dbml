@@ -1,0 +1,14 @@
+Table A {
+    Note: ''' This is a local note '''
+    Note {
+        'This is another local note'
+    }
+}
+
+Note {
+    'This is a global note'
+}
+
+Note: '''
+    This is another global note
+'''

@@ -1,7 +1,7 @@
 CREATE TABLE `orders` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `user_id` int UNIQUE NOT NULL,
-  `status` orders_status_enum,
+  `status` ENUM('fulfilled', 'pending', 'new'),
   `created_at` varchar(255)
 );
 

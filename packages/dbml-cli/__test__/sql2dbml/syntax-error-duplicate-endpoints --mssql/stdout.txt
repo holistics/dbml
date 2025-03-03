@@ -1,3 +1,4 @@
-  ERROR: You have a syntax error at "schema.sql" line 17 column 25. Reference with the same endpoints already exists: "student"("subject_id", "score_id") references "score_subject"("subject_id", "score_id")
+  ERROR: 
+    You have a syntax error at "schema.sql" line 17 column 25. Reference with the same endpoints already exists: "student"("subject_id", "score_id") references "score_subject"("subject_id", "score_id")
 
   A complete log can be found in:

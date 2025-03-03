@@ -38,7 +38,7 @@ CREATE TABLE `rental` (
   `rental_date` datetime,
   `inventory_id` int,
   `customer_id` int,
-  `return_date` ddatetime,
+  `return_date` datetime,
   `staff_id` int,
   `last_update` timestamp
 );

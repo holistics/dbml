@@ -1,10 +1,11 @@
+import { get } from 'lodash';
 import Element from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
 
 class Field extends Element {
   constructor ({
     name, type, unique, pk, token, not_null: notNull, note, dbdefault,
-    increment, table = {},
+    increment, table = {}, noteToken = null,
   } = {}) {
     super(token);
     if (!name) { this.error('Field must have a name'); }
@@ -15,8 +16,8 @@ class Field extends Element {
     this.unique = unique;
     this.pk = pk;
     this.not_null = notNull;
-    this.note = note ? note.value : null;
-    this.noteToken = note ? note.token : null;
+    this.note = note ? get(note, 'value', note) : null;
+    this.noteToken = note ? get(note, 'token', noteToken) : null;
     this.dbdefault = dbdefault;
     this.increment = increment;
     this.endpoints = [];
@@ -88,14 +89,11 @@ class Field extends Element {
   }
 
   normalize (model) {
-    model.fields = {
-      ...model.fields,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.fields[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
   }
 }

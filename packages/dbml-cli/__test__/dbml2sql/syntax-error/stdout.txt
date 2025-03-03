@@ -1,3 +1,5 @@
-  ERROR: You have a syntax error at "ecommerce.dbml" line 17 column 3. Expected ",", "]", comment, or whitespace but "m" found.
+  ERROR: 
+    You have a syntax error at "ecommerce.dbml" line 17 column 24. Expect an identifier
+    You have a syntax error at "ecommerce.dbml" line 16 column 11. Unknown column setting 'pk manager_staff_id int'
 
   A complete log can be found in:

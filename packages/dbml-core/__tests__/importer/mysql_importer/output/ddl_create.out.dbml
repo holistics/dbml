@@ -1,0 +1,508 @@
+Table "log_table" {
+  "row" varchar(512)
+}
+
+Table "ships" {
+  "name" varchar(255)
+  "class_id" int
+  "id" int
+}
+
+Table "ships_guns" {
+  "guns_id" int
+  "ship_id" int
+}
+
+Table "guns" {
+  "id" int
+  "power" decimal(7,2)
+  "callibr" decimal(10,3)
+}
+
+Table "ship_class" {
+  "id" int
+  "class_name" varchar(100)
+  "tonange" decimal(10,2)
+  "max_length" decimal(10,2)
+  "start_build" year
+  "end_build" year(4)
+  "max_guns_size" int
+}
+
+Table "some table $$" {
+  "id" int [increment]
+  "class" varchar(10)
+  "data" binary
+}
+
+Table "quengine" {
+  "id" int [increment]
+  "class" varchar(10)
+  "data" binary
+}
+
+Table "quengine2" {
+  "id" int [increment]
+  "class" varchar(10)
+  "data" binary
+}
+
+Table "quengine3" {
+  "id" int [increment]
+  "class" varchar(10)
+  "data" binary
+}
+
+Table "quengine4" {
+  "id" int [increment]
+  "class" varchar(10)
+  "data" binary [note: 'CSV']
+}
+
+Table "quengine5" {
+  "id" int [increment]
+  "class" varchar(10)
+  "data" binary
+}
+
+Table "parent_table" {
+  "id" int [pk]
+  "column1" varchar(30)
+
+  Indexes {
+    column1 [name: "parent_table_i1"]
+  }
+}
+
+Table "child_table" {
+  "id" int [pk, increment]
+  "id_parent" int
+}
+
+Table "actor" {
+  "last_update" timestamp [default: `CURRENT_TIMESTAMP`]
+  "birthday" datetime [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "boolean_table" {
+  "c1" bool
+  "c2" boolean [default: true]
+}
+
+Table "default_table" {
+  "c1" int [default: 42]
+  "c2" int [default: `-42`]
+  "c3" varchar(256) [default: 'utf8mb3'xxx']
+}
+
+Table "ts_table" {
+  "ts1" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
+  "ts2" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
+  "ts3" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
+  "ts4" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
+  "ts5" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
+  "ts6" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
+  "ts7" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
+  "ts8" TIMESTAMP(6) [not null]
+  "ts9" TIMESTAMP(6) [not null, default: `NOW(6)`]
+  "ts10" TIMESTAMP [default: NULL]
+  "ts11" TIMESTAMP [not null, default: '2038-01-01 00:00:00']
+}
+
+Table "dt_table" {
+  "dt1" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+  "dt2" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+  "dt3" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+  "dt4" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+  "dt5" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+  "dt6" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+  "dt7" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+  "dt10" DATETIME [default: NULL]
+  "dt11" DATETIME [default: '2038-01-01 00:00:00']
+}
+
+Table "with_check" {
+  "c1" integer [not null]
+  "c2" varchar(22)
+}
+
+Table "genvalue1" {
+  "id" binary(16) [pk, not null]
+  "val" char(32)
+}
+
+Table "genvalue2" {
+  "id" binary(16) [pk, not null]
+  "val" char(32)
+}
+
+Table "genvalue3" {
+  "id" binary(16) [pk, not null]
+  "val" char(32)
+}
+
+Table "cast_charset" {
+  "col" BINARY(16)
+}
+
+Table "cast_charset2" {
+  "col" BINARY(16)
+}
+
+Table "check_table_kw" {
+  "id" int [pk]
+  "upgrade" varchar(256)
+  "quick" varchar(256)
+  "fast" varchar(256)
+  "medium" varchar(256)
+  "extended" varchar(256)
+  "changed" varchar(256)
+}
+
+Table "sercol1" {
+  "id" SERIAL
+  "val" INT
+}
+
+Table "sercol2" {
+  "id" SERIAL [pk]
+  "val" INT
+}
+
+Table "sercol3" {
+  "id" SERIAL
+  "val" INT
+}
+
+Table "sercol4" {
+  "id" SERIAL [not null]
+  "val" INT
+}
+
+Table "serval1" {
+  "id" SMALLINT
+  "val" INT
+}
+
+Table "serval2" {
+  "id" SMALLINT [pk]
+  "val" INT
+}
+
+Table "serval3" {
+  "id" SMALLINT(3)
+  "val" INT
+}
+
+Table "serval4" {
+  "id" SMALLINT(5) [not null]
+  "val" INT
+}
+
+Table "serial" {
+  "serial" INT
+}
+
+Table "float_table" {
+  "f1" FLOAT
+  "f2" FLOAT(10)
+  "f3" FLOAT(7,4)
+}
+
+Table "USER" {
+  "INTERNAL" BOOLEAN [default: FALSE]
+}
+
+Table "table_with_character_set_eq" {
+  "id" int
+  "data" varchar(50)
+}
+
+Table "table_with_character_set" {
+  "id" int
+  "data" varchar(50)
+}
+
+Table "table_with_visible_index" {
+  "id" int
+  "data" varchar(50)
+
+  Indexes {
+    data [unique, name: "data_UNIQUE"]
+  }
+}
+
+Table "table_with_index" {
+  "id" int
+  "data" varchar(50)
+
+  Indexes {
+    data [unique, name: "data_UNIQUE"]
+  }
+}
+
+Table "blob_test" {
+  "id" int
+  "col1" blob(45)
+}
+
+Table "žluťoučký" {
+  "kůň" int
+}
+
+Table "column_names_as_aggr_funcs" {
+  "min" varchar(100)
+  "max" varchar(100)
+  "sum" varchar(100)
+  "count" varchar(100)
+}
+
+Table "char_table" {
+  "c1" CHAR(10)
+  "c2" CHARACTER(10)
+  "c3" NCHAR(10)
+}
+
+Table "rack_shelf_bin" {
+  "id" int [unique, pk, not null, increment]
+  "bin_volume" decimal(20,4) [default: `bin_len*bin_width*bin_height`]
+}
+
+Table "tblSRCHjob_desc" {
+  "description_id" bigint(20) [pk, not null, increment]
+  "description" mediumtext [not null]
+}
+
+Table "invisible_column_test" {
+  "id" int
+  "col1" int
+}
+
+Table "visible_column_test" {
+  "id" int
+  "col1" int
+}
+
+Table "table_with_buckets" {
+  "id" int(11) [not null, increment, note: 'ID']
+  "buckets" int(11) [not null, note: '分桶数']
+}
+
+Table "foo" {
+  "c1" decimal(19)
+  "c2" decimal(19.5)
+  "c3" decimal(0.0)
+  "c4" decimal(0.2)
+  "c5" decimal(19,2)
+}
+
+Table "table_items" {
+  "id" INT
+  "purchased" DATE
+}
+
+Table "T0" {
+  "ID" INT [not null]
+  "NAME" VARCHAR(255)
+
+  Indexes {
+    ID [unique]
+  }
+}
+
+Table "table_items_with_subpartitions" {
+  "id" INT
+  "purchased" DATE
+}
+
+Table "positions_rollover" {
+  "id" bigint(20) [not null, increment]
+  "time" datetime [not null]
+  "partition_index" int(10) [not null, default: 0]
+
+  Indexes {
+    (id, partition_index) [pk]
+    time [name: "time"]
+  }
+}
+
+Table "tab_with_json_value" {
+  "col0" JSON [not null]
+  "col1" VARCHAR(36) [pk, not null]
+  "col2" VARCHAR(36) [not null]
+  "col3" VARCHAR(36) [not null]
+  "col4" JSON [not null]
+}
+
+Table "CustomerTable" {
+  "CustomerID" varchar(5)
+  "CompanyName" varchar(40)
+  "ContactName" varchar(30)
+  "Address" varchar(60)
+  "Phone" varchar(24)
+}
+
+Table "CustomerTable2" {
+  "table_type" varchar(5)
+}
+
+Table "tbl" {
+  "col1" LONGTEXT
+  "data" JSON
+
+  Indexes {
+    `(SUBSTRING(col1,1,10))` [name: "idx1"]
+    `(CAST(JSON_EXTRACT(data,_utf8mb4'$')ASUNSIGNEDARRAY))` [name: "idx2"]
+    `(CAST(data->>'$.name'ASCHAR(30)))`
+  }
+}
+
+Table "orders_json_2" {
+  "id" int [pk, not null, increment]
+  "reward" json [default: NULL]
+  "additional_info" json [default: NULL]
+  "created_at" timestamp [default: NULL]
+  "updated_at" timestamp [default: NULL]
+
+  Indexes {
+    `(cast(json_extract(`additional_info`,_utf8mb4'$.order_codes')aschar(17)array))` [name: "idx_order_codes"]
+  }
+}
+
+Table "keywords" {
+  "eur" VARCHAR(100)
+  "iso" VARCHAR(10) [not null]
+  "usa" VARCHAR(100)
+  "jis" VARCHAR(100)
+  "internal" INT
+  "instant" BIT
+}
+
+Table "T1" {
+  "C" CHAR
+}
+
+Table "T2" {
+  "C" GEOMETRY
+}
+
+Table "T3" {
+  "C" POINT
+}
+
+Table "T4" {
+  "C" LINESTRING
+}
+
+Table "T5" {
+  "C" POLYGON
+}
+
+Table "T6" {
+  "C" MULTIPOINT
+}
+
+Table "T7" {
+  "C" MULTILINESTRING
+}
+
+Table "T8" {
+  "C" MULTIPOLYGON
+}
+
+Table "T9" {
+  "C" GEOMETRYCOLLECTION
+}
+
+Table "T10" {
+  "ID" BIGINT
+  "S" VARCHAR(100)
+  "I" INT
+}
+
+Table "tbl_signed_unsigned" {
+  "id" bigint(20) [pk, not null, increment, note: 'ID']
+  "c1" int
+  "c2" decimal(10,2)
+  "c3" float
+  "c4" double(18,4)
+}
+
+Table "daily_intelligences" {
+  "id" bigint(20) [pk, not null, increment]
+  "partner_code" varchar(32) [default: NULL]
+  "text" LONGTEXT [default: NULL]
+  "monitor_time" TIMESTAMP [default: NULL]
+  "gmt_modify" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
+  "gmt_create" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table "auth_realm_clients" {
+  "pk_realm" int [pk, not null, default: '0']
+  "fk_realm" int [default: NULL]
+  "client_id" varchar(150) [not null]
+  "client_secret" blob [not null]
+
+  Indexes {
+    fk_realm [name: "auth_realms_auth_realm_clients"]
+  }
+}
+
+Table "site_checker_b_sonet_group_favorites" {
+  "USER_ID" int(11) [not null]
+  "GROUP_ID" int(11) [not null]
+  "DATE_ADD" datetime [default: NULL]
+
+  Indexes {
+    (USER_ID, GROUP_ID) [pk]
+  }
+}
+
+Table "table_default_fn" {
+  "quote_id" varchar(32) [not null]
+  "created_at" bigint(20) [not null]
+}
+
+Table "test_table\\" {
+  "id" INT(11) [pk, not null]
+}
+
+Table "\\test_table" {
+  "id" INT(11) [pk, not null]
+}
+
+Table "\\test\\_table\\" {
+  "id" INT(11) [pk, not null]
+}
+
+Table "global_priv" {
+  "Host" CHAR(60) [not null, default: '']
+  "User" CHAR(80) [not null, default: '']
+  "Privilege" LONGTEXT [not null, default: '{}']
+
+  Indexes {
+    (Host, User) [pk]
+  }
+  Note: 'Users and global privileges'
+}
+
+Table "geo" {
+  "coordinate" JSON
+}
+
+Table "tab1" {
+  "f4" FLOAT4
+  "f8" FLOAT8
+  "i1" INT1
+  "i2" INT2
+  "i3" INT3
+  "i4" INT4
+  "i8" INT8
+  "lvb" "LONG VARBINARY"
+  "lvc" LONG
+  "lvcfull" LONG
+  "l" LONG
+  "mi" MIDDLEINT
+}
+
+Ref:"parent_table"."id" < "child_table"."id_parent" [update: cascade, delete: set null]

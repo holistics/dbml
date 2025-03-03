@@ -31,11 +31,11 @@ Table "products" {
   "status" products_status_enum
   "created_at" datetime [default: `now()`]
 
-Indexes {
-  (id, price) [pk]
-  (merchant_id, status) [name: "product_status"]
-  id [type: hash, unique, name: "products_index_1"]
-}
+  Indexes {
+    (id, price) [pk]
+    (merchant_id, status) [name: "product_status"]
+    id [type: hash, unique, name: "products_index_1"]
+  }
   Note: 'Notes about products table'
 }
 
@@ -73,13 +73,13 @@ Table "composite_service_item" {
   "patient_price" decimal(10,0) [not null]
   "insurance_price" decimal(10,0) [not null]
 
-Indexes {
-  ticket_item_id [name: "ticket_item_id"]
-  service_id [name: "service_id"]
-  (service_id, ticket_item_id) [type: hash, name: "service_id, ticket_item_id"]
-  composite_service_item_id [type: btree, name: "composite_service_item_id"]
-  (service_id, patient_price) [type: hash, name: "test test test key"]
-}
+  Indexes {
+    ticket_item_id [name: "ticket_item_id"]
+    service_id [name: "service_id"]
+    (service_id, ticket_item_id) [type: hash, name: "service_id, ticket_item_id"]
+    composite_service_item_id [type: btree, name: "composite_service_item_id"]
+    (service_id, patient_price) [type: hash, name: "test test test key"]
+  }
 }
 
 Table "Countries" {
@@ -92,10 +92,10 @@ Table "States" {
   "CountryId" int [not null]
   "Name" varchar(32) [not null]
 
-Indexes {
-  CountryId [name: "IX_States_CountryId"]
-  (Id, CountryId) [pk]
-}
+  Indexes {
+    (Id, CountryId) [pk]
+    CountryId [name: "IX_States_CountryId"]
+  }
 }
 
 Table "Cities" {
@@ -104,11 +104,11 @@ Table "Cities" {
   "StateId" int [not null]
   "Name" varchar(32) [not null]
 
-Indexes {
-  CountryId [name: "IX_Cities_CountryId"]
-  (StateId, CountryId) [name: "IX_Cities_StateId_CountryId"]
-  (Id, StateId, CountryId) [pk]
-}
+  Indexes {
+    (Id, StateId, CountryId) [pk]
+    CountryId [name: "IX_Cities_CountryId"]
+    (StateId, CountryId) [name: "IX_Cities_StateId_CountryId"]
+  }
 }
 
 Ref "FK_States_Countries_CountryId":"Countries"."Id" < "States"."CountryId" [delete: cascade]

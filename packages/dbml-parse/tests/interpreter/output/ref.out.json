@@ -1,0 +1,132 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "Users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 18,
+              "line": 2,
+              "column": 5
+            },
+            "end": {
+              "offset": 28,
+              "line": 2,
+              "column": 15
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "referrer_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 33,
+              "line": 3,
+              "column": 5
+            },
+            "end": {
+              "offset": 52,
+              "line": 3,
+              "column": 24
+            }
+          },
+          "inline_refs": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 96,
+          "line": 8,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
+  ],
+  "notes": [],
+  "refs": [
+    {
+      "name": null,
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "Users",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 72,
+              "line": 6,
+              "column": 9
+            },
+            "end": {
+              "offset": 74,
+              "line": 6,
+              "column": 11
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "Users",
+          "fieldNames": [
+            "referrer_id"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 77,
+              "line": 6,
+              "column": 14
+            },
+            "end": {
+              "offset": 88,
+              "line": 6,
+              "column": 25
+            }
+          }
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 72,
+          "line": 6,
+          "column": 9
+        },
+        "end": {
+          "offset": 88,
+          "line": 6,
+          "column": 25
+        }
+      },
+      "schemaName": null
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
+}

@@ -6,7 +6,8 @@
   ],
   "scripts": {
     "test": "npx lerna run test",
-    "build": "npx lerna run build"
+    "build": "yarn clean-build && npx lerna run build",
+    "clean-build": "rm -rf ./packages/dbml-cli/lib ./packages/dbml-core/lib ./packages/dbml-parse/dist ./packages/dbml-connector/dist"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
@@ -53,5 +54,8 @@
       "PR: Internal :house_with_garden:": ":house_with_garden: Internal",
       "PR: Dependencies Update :robot:": ":robot: Dependencies Update"
     }
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

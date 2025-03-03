@@ -16,6 +16,7 @@ jobs:
       - uses: reviewdog/action-setup@v1
         with:
           reviewdog_version: latest
+      # I would like to include the bearer.ignore
       - name: Run Report
         id: report
         uses: bearer/bearer-action@v2
