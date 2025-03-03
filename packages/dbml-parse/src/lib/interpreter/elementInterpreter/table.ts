@@ -26,7 +26,7 @@ export class TableInterpreter implements ElementInterpreter {
   interpret(): CompileError[] {
     this.table.token = getTokenPosition(this.declarationNode);
     this.env.tables.set(this.declarationNode, this.table as Table);
-  
+
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
       ...this.interpretAlias(this.declarationNode.alias),
@@ -54,7 +54,7 @@ export class TableInterpreter implements ElementInterpreter {
 
   private interpretName(nameNode: SyntaxNode): CompileError[] {
     const { name, schemaName } = extractElementName(nameNode);
-    
+
     if (schemaName.length > 1) {
       this.table.name = name;
       this.table.schemaName = schemaName.join('.');
@@ -92,7 +92,7 @@ export class TableInterpreter implements ElementInterpreter {
     const settingMap = aggregateSettingList(settings).getValue();
 
     this.table.headerColor = settingMap['headercolor']?.length ? extractColor(settingMap['headercolor']?.at(0)?.value as any) : undefined;
-    
+
     const [noteNode] = settingMap['note'] || [];
     this.table.note = noteNode && {
       value: extractQuotedStringToken(noteNode?.value).map(normalizeNoteContent).unwrap(),
@@ -104,7 +104,7 @@ export class TableInterpreter implements ElementInterpreter {
 
   private interpretBody(body: BlockExpressionNode): CompileError[] {
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];   
+    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
   }
 
   private interpretSubElements(subs: ElementDeclarationNode[]): CompileError[] {
@@ -132,7 +132,7 @@ export class TableInterpreter implements ElementInterpreter {
     const errors: CompileError[] = [];
 
     const column: Partial<Column> = {};
-    
+
     column.name = extractVarNameFromPrimaryVariable(field.callee as any).unwrap();
 
     const typeReport = processColumnType(field.args[0]);
@@ -141,14 +141,18 @@ export class TableInterpreter implements ElementInterpreter {
 
     column.token = getTokenPosition(field);
     column.inline_refs = [];
-    
+
     const settings = field.args.slice(1);
     if (_.last(settings) instanceof ListExpressionNode) {
       const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
       column.pk = !!settingMap['pk']?.length || !!settingMap['primary key']?.length;
       column.increment = !!settingMap['increment']?.length;
       column.unique = !!settingMap['unique']?.length;
-      column.not_null = !!settingMap['not null']?.length && true;
+      column.not_null = !!settingMap['not null']?.length
+        ? true
+        : !!settingMap['null']?.length
+          ? false
+          : undefined;
       column.dbdefault = processDefaultValue(settingMap['default']?.at(0)?.value);
       const noteNode = settingMap['note']?.at(0);
       column.note = noteNode && {
@@ -157,7 +161,9 @@ export class TableInterpreter implements ElementInterpreter {
       }
       const refs = settingMap['ref'] || [];
       column.inline_refs = refs.flatMap((ref) => {
+
         const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
+
         if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
           return [];
@@ -165,7 +171,7 @@ export class TableInterpreter implements ElementInterpreter {
 
         const op = (ref.value as PrefixExpressionNode).op!;
         const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression).unwrap();
-        
+
         let inlineRef: InlineRef | undefined;
         if (fragments.length === 1) {
           const [column] = fragments;
@@ -243,7 +249,7 @@ export class TableInterpreter implements ElementInterpreter {
           value: extractQuotedStringToken(noteNode.value).unwrap(),
           token: getTokenPosition(noteNode),
         };
-        index.type = extractVariableFromExpression(settingMap['type']?.at(0)?.value).unwrap_or(undefined); 
+        index.type = extractVariableFromExpression(settingMap['type']?.at(0)?.value).unwrap_or(undefined);
       }
 
       args.flatMap((arg) => {
@@ -260,7 +266,7 @@ export class TableInterpreter implements ElementInterpreter {
         }
         fragments.push(arg);
         return fragments;
-      }).forEach((arg) => { 
+      }).forEach((arg) => {
         const { functional, nonFunctional } = destructureIndexNode(arg).unwrap();
         index.columns!.push(
           ...functional.map((s) => ({
@@ -275,10 +281,10 @@ export class TableInterpreter implements ElementInterpreter {
           })),
         );
       });
-       
+
       return index as Index;
     }));
-    
+
     return [];
   }
 
@@ -297,7 +303,7 @@ export class TableInterpreter implements ElementInterpreter {
       name: null,
       schemaName: null,
       token: inlineRef.token,
-      endpoints: [ 
+      endpoints: [
         {
           ...inlineRef,
           relation: multiplicities[1],
@@ -370,7 +376,7 @@ function processDefaultValue(valueNode?: SyntaxNode):
   if (!valueNode) {
     return undefined;
   }
-  
+
   if (isExpressionAQuotedString(valueNode)) {
     return {
       value: extractQuotedStringToken(valueNode).unwrap(),
@@ -388,7 +394,7 @@ function processDefaultValue(valueNode?: SyntaxNode):
   if (isExpressionAnIdentifierNode(valueNode)) {
     const value = valueNode.expression.variable.value.toLowerCase();
     return {
-      value, 
+      value,
       type: 'boolean',
     };
   }
@@ -400,7 +406,7 @@ function processDefaultValue(valueNode?: SyntaxNode):
   ) {
     const number = Number.parseFloat(valueNode.expression.expression.literal.value);
     return {
-      value: valueNode.op?.value === '-' ? 0 - number : number, 
+      value: valueNode.op?.value === '-' ? 0 - number : number,
       type: 'number',
     };
   }

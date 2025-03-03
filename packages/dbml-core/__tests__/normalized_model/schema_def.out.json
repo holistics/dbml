@@ -23,7 +23,9 @@
       "note": "Default Public Schema",
       "tableIds": [
         2,
-        3
+        3,
+        6,
+        7
       ],
       "enumIds": [
         1,
@@ -36,7 +38,9 @@
         1,
         2,
         3,
-        4
+        4,
+        5,
+        6
       ],
       "databaseId": 1
     },
@@ -126,6 +130,26 @@
         8
       ],
       "schemaId": 1
+    },
+    "5": {
+      "id": 5,
+      "name": "short_ref",
+      "color": "#aabbcc",
+      "endpointIds": [
+        9,
+        10
+      ],
+      "schemaId": 1
+    },
+    "6": {
+      "id": 6,
+      "name": "long_ref",
+      "color": "#123456",
+      "endpointIds": [
+        11,
+        12
+      ],
+      "schemaId": 1
     }
   },
   "enums": {
@@ -180,6 +204,7 @@
     "1": {
       "id": 1,
       "name": "tablegroup_name",
+      "note": null,
       "tableIds": [
         3,
         2,
@@ -261,6 +286,33 @@
       ],
       "indexIds": [],
       "schemaId": 4,
+      "groupId": null
+    },
+    "6": {
+      "id": 6,
+      "name": "b",
+      "alias": null,
+      "note": null,
+      "headerColor": "#aaaaaa",
+      "fieldIds": [
+        19,
+        20
+      ],
+      "indexIds": [],
+      "schemaId": 1,
+      "groupId": null
+    },
+    "7": {
+      "id": 7,
+      "name": "c",
+      "alias": null,
+      "note": null,
+      "fieldIds": [
+        21,
+        22
+      ],
+      "indexIds": [],
+      "schemaId": 1,
       "groupId": null
     }
   },
@@ -368,6 +420,58 @@
       "fieldIds": [
         1
       ]
+    },
+    "9": {
+      "id": 9,
+      "schemaName": null,
+      "tableName": "b",
+      "fieldNames": [
+        "id"
+      ],
+      "relation": "1",
+      "refId": 5,
+      "fieldIds": [
+        19
+      ]
+    },
+    "10": {
+      "id": 10,
+      "schemaName": null,
+      "tableName": "c",
+      "fieldNames": [
+        "id"
+      ],
+      "relation": "*",
+      "refId": 5,
+      "fieldIds": [
+        21
+      ]
+    },
+    "11": {
+      "id": 11,
+      "schemaName": null,
+      "tableName": "c",
+      "fieldNames": [
+        "id"
+      ],
+      "relation": "1",
+      "refId": 6,
+      "fieldIds": [
+        21
+      ]
+    },
+    "12": {
+      "id": 12,
+      "schemaName": null,
+      "tableName": "b",
+      "fieldNames": [
+        "c_id"
+      ],
+      "relation": "*",
+      "refId": 6,
+      "fieldIds": [
+        20
+      ]
     }
   },
   "enumValues": {
@@ -433,7 +537,6 @@
       },
       "unique": false,
       "pk": true,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [
@@ -529,7 +632,6 @@
       },
       "unique": false,
       "pk": true,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [
@@ -626,7 +728,6 @@
       },
       "unique": false,
       "pk": true,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [],
@@ -658,7 +759,6 @@
       },
       "unique": false,
       "pk": true,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [],
@@ -675,7 +775,6 @@
       },
       "unique": false,
       "pk": false,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [
@@ -694,7 +793,6 @@
       },
       "unique": false,
       "pk": true,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [],
@@ -711,13 +809,79 @@
       },
       "unique": false,
       "pk": false,
-      "not_null": false,
       "note": null,
       "increment": false,
       "endpointIds": [
         4
       ],
       "tableId": 5,
+      "enumId": null
+    },
+    "19": {
+      "id": 19,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "endpointIds": [
+        9
+      ],
+      "tableId": 6,
+      "enumId": null
+    },
+    "20": {
+      "id": 20,
+      "name": "c_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "endpointIds": [
+        12
+      ],
+      "tableId": 6,
+      "enumId": null
+    },
+    "21": {
+      "id": 21,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "endpointIds": [
+        10,
+        11
+      ],
+      "tableId": 7,
+      "enumId": null
+    },
+    "22": {
+      "id": 22,
+      "name": "b_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "endpointIds": [],
+      "tableId": 7,
       "enumId": null
     }
   }

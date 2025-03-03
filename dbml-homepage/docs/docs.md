@@ -168,7 +168,7 @@ The list of column settings you can use:
 
 - `note: 'string to add notes'`: add a metadata note to this column
 - `primary key` or `pk`: mark a column as primary key. For composite primary key, refer to the 'Indexes' section
-- `null` or `not null`: mark a column null or not null
+- `null` or `not null`: mark a column null or not null. If you ommit this setting, the column will be null by default
 - `unique`: mark the column unique
 - `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below
 - `increment`: mark the column as auto-increment
@@ -224,8 +224,8 @@ Table bookings {
 
 There are 3 types of index definitions:
 
-- Index with single field (with index name): `CREATE INDEX created_at_index on users (created_at)`
-- Index with multiple fields (composite index): `CREATE INDEX on users (created_at, country)`
+- Index with single column (with index name): `CREATE INDEX created_at_index on users (created_at)`
+- Index with multiple columns (composite index): `CREATE INDEX on users (created_at, country)`
 - Index with an expression: `CREATE INDEX ON films ( first_name + last_name )`
 - (bonus) Composite index with expression: `CREATE INDEX ON users ( country, (lower(name)) )`
 
@@ -269,7 +269,7 @@ Ref name_optional {
   schema1.table1.column1 < schema2.table2.column2
 }
 
-// Short form:
+// Short form
 Ref name_optional: schema1.table1.column1 < schema2.table2.column2
 
 // Inline form
@@ -279,7 +279,22 @@ Table schema2.table2 {
 }
 ```
 
-**Note:** if `schema_name` prefix is omitted, it'll default to `public` schema
+:::note
+* When defining one-to-one relationships, ensure columns are listed in the correct order:
+  * With long & short form, the second column will be treated as a foreign key.
+  
+    E.g: `users.id - user_infos.user_id`, *user_infos.user_id* will be the foreign key.
+  * With inline form, the column that have the `ref` definition will be treated as a foreign key. 
+
+    E.g: 
+    ```text
+    Table user_infos {
+      user_id integer [ref: - users.id]
+    }
+    ```
+    *user_infos.user_id* will be the foreign key.
+* If `schema_name` prefix is omitted, it'll default to `public` schema.
+:::
 
 **Composite foreign keys:**
 
@@ -306,13 +321,20 @@ Ref: blogging.posts.user_id > core.users.id
 ### Relationship settings
 
 ```text
-Ref: products.merchant_id > merchants.id [delete: cascade, update: no action]
+// short form
+Ref: products.merchant_id > merchants.id [delete: cascade, update: no action, color: #79AD51]
+
+// long form
+Ref {
+  products.merchant_id > merchants.id [delete: cascade, update: no action, color: #79AD51]
+}
 ```
 
 - `delete / update: cascade | restrict | set null | set default | no action`
 Define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
+- `color: <color_code>`: change the relationship color.
 
-*Relationship settings are not supported for inline form ref.*
+*Relationship settings and names are not supported for inline form ref.*
 
 ### Many-to-many relationship
 
@@ -320,7 +342,7 @@ There're two ways to represent many-to-many relationship:
 
 - Using a single many-to-many relationship (`<>`).
 
-- Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/](https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/)
+- Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412](https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412)
 
 Beside presentation aspect, the main differece between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
 

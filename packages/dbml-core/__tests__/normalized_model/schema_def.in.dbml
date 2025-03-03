@@ -71,3 +71,21 @@ Note note2 {
     body
   '''
 }
+
+Table b [headercolor: #aaaaaa] {
+  id int
+  c_id int
+}
+
+Table c {
+  id int
+  b_id int
+}
+
+// Short form
+Ref short_ref: b.id < c.id [color: #aabbcc]
+
+// Long form
+Ref long_ref {
+  c.id < b.c_id [color: #123456]
+}
