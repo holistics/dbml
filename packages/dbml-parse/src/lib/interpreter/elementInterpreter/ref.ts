@@ -4,7 +4,7 @@ import { aggregateSettingList } from "../../analyzer/validator/utils";
 import { CompileError, CompileErrorCode } from "../../errors";
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode } from "../../parser/nodes";
 import { ElementInterpreter, InterpreterDatabase, Ref, Table } from "../types";
-import { extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint } from "../utils";
+import { extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint } from "../utils";
 import { extractStringFromIdentifierStream } from "../../parser/utils";
 
 export class RefInterpreter implements ElementInterpreter {
@@ -23,7 +23,9 @@ export class RefInterpreter implements ElementInterpreter {
   interpret(): CompileError[] {
     this.ref.token = getTokenPosition(this.declarationNode);
     this.env.ref.set(this.declarationNode, this.ref as Ref);
-    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body!)];
+    const errors = [
+      ...this.interpretName(this.declarationNode.name!),
+      ...this.interpretBody(this.declarationNode.body!)];
     return errors;
   }
 
@@ -69,14 +71,18 @@ export class RefInterpreter implements ElementInterpreter {
 
     if (field.args[0]) {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
+
       const deleteSetting = settingMap['delete']?.at(0)?.value;
       this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode
         ? extractStringFromIdentifierStream(deleteSetting).unwrap_or(undefined) 
         : extractVariableFromExpression(deleteSetting).unwrap_or(undefined) as string;
+
       const updateSetting = settingMap['update']?.at(0)?.value;
       this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode
         ? extractStringFromIdentifierStream(updateSetting).unwrap_or(undefined)
         : extractVariableFromExpression(updateSetting).unwrap_or(undefined) as string;
+
+      this.ref.color = settingMap['color']?.length ? extractColor(settingMap['color']?.at(0)?.value as any) : undefined;
     }
     
     const multiplicities = getMultiplicities(op);
