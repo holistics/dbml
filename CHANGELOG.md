@@ -1,3 +1,16 @@
+## v3.10.2 (2025-03-03)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#670](https://github.com/holistics/dbml/pull/670) Fix duplicated enums refs mssql connector ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :robot: Dependencies Update
+* [#673](https://github.com/holistics/dbml/pull/673) Bump vite from 4.5.5 to 4.5.6 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v3.10.1 (2025-02-28)
 
 #### :bug: Bug Fix
