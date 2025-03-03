@@ -1,0 +1,473 @@
+Table "HP_TEST"."CUSTOMERS" {
+  "CUSTOMER_ID" "NUMBER(38, 0)" [pk, not null, increment]
+  "FIRST_NAME" VARCHAR(50) [not null, default: 'John']
+  "LAST_NAME" VARCHAR(50) [not null, default: 'Doe']
+  "EMAIL" VARCHAR(100)
+  "SECOND_EMAIL" VARCHAR(100)
+  "UNIQUE_NAME" VARCHAR(100) [unique, not null, default: `CONCAT(FIRST_NAME, LAST_NAME, EMAIL)`]
+  "IS_VIP" BOOLEAN [default: FALSE]
+  "IS_SOMETHING" BOOLEAN [default: null]
+  "CREATED_AT" TIMESTAMP_NTZ(9) [default: `CURRENT_TIMESTAMP()`]
+
+  Indexes {
+    (EMAIL, SECOND_EMAIL) [unique]
+  }
+}
+
+Table "HP_TEST"."ORDERS" {
+  "ORDER_ID" "NUMBER(38, 0)" [pk, not null, increment]
+  "CUSTOMER_ID" "NUMBER(38, 0)"
+  "ORDER_DATE" TIMESTAMP_NTZ(9) [default: `CURRENT_TIMESTAMP()`]
+  "TOTAL_AMOUNT" "NUMBER(10, 2)" [default: 0.0]
+}
+
+Table "HP_TEST"."ORDER_ITEMS" {
+  "ORDER_ITEM_ID" "NUMBER(38, 0)" [unique, pk, not null, increment]
+  "ORDER_ID" "NUMBER(38, 0)"
+  "PRODUCT_ID" "NUMBER(38, 0)"
+  "QUANTITY" "NUMBER(38, 0)" [default: 1]
+  "PRICE" "NUMBER(10, 2)"
+}
+
+Table "HP_TEST"."PRODUCTS" {
+  "PRODUCT_ID" "NUMBER(38, 0)" [pk, not null, increment]
+  "PRODUCT_NAME" VARCHAR(100)
+  "DESCRIPTION" VARCHAR(16777216)
+  "PRICE" "NUMBER(10, 2)"
+  "STOCK_QUANTITY" "NUMBER(38, 0)"
+}
+
+Table "HP_TEST"."COMPOSITE_PK_TABLE" {
+  "COLUMN1" NUMBER(38,0) [not null]
+  "COLUMN2" VARCHAR(16777216) [not null]
+  "COLUMN3" DATE
+
+  Indexes {
+    (COLUMN1, COLUMN2) [pk, name: "PK_COMPOSITE"]
+  }
+}
+
+Table "HP_TEST"."CLONE_ORDERS" {
+  "ORDER_ID" "NUMBER(38, 0)" [pk, not null, increment]
+  "CUSTOMER_ID" "NUMBER(38, 0)"
+  "ORDER_DATE" TIMESTAMP_NTZ(9) [default: `CURRENT_TIMESTAMP()`]
+  "TOTAL_AMOUNT" "NUMBER(10, 2)" [default: 0.0]
+}
+
+Table "HP_TEST"."employees" {
+  "employee_id" INT [pk, increment]
+  "first_name" VARCHAR(50) [not null]
+  "last_name" VARCHAR(50) [not null]
+  "email" VARCHAR(100)
+  "hire_date" DATE [default: `CURRENT_DATE()`]
+}
+
+Table "TEST"."_holistics_persisted_test_20240703094645" {
+  "a" "NUMBER(1, 0)"
+  "b" "NUMBER(1, 0)"
+  "c" "NUMBER(1, 0)"
+}
+
+Table "TEST_2024_06_28_10_01_ZQMIMY"."ONE" {
+  "FOO" VARCHAR(16777216) [pk]
+  "BAR" VARCHAR(16777216)
+
+  Indexes {
+    BAR [unique]
+    (FOO, BAR) [unique]
+    (BAR, FOO) [unique]
+  }
+}
+
+Table "TEST_2024_06_28_10_01_ZQMIMY"."TWO" {
+  "ABC" VARCHAR(16777216)
+  "XYZ" VARCHAR(16777216)
+  "QWE" VARCHAR(16777216)
+
+  Indexes {
+    (QWE, ABC) [unique]
+  }
+}
+
+Table "TESTKEYWORD" {
+  "IFNULL" int
+  "NVL" int
+  "GET" int
+  "LEFT" int
+  "RIGHT" int
+  "DATE_PART" int
+  "TO_DATE" int
+  "DATE" int
+  "SPLIT" int
+  "NULLIF" int
+  "EQUAL_NULL" int
+}
+
+Table "t" {
+  "i" int
+}
+
+Table "t1" {
+  "v" varchar(16777216)
+}
+
+Table "t4" {
+  "v" varchar(16777216) [note: 'hello world']
+}
+
+Table "t5" {
+  "v" varchar(16777216) [not null, note: 'hello world']
+}
+
+Table "t6" {
+  "v" varchar(32) [unique, not null, note: 'hello world']
+}
+
+Table "t7" {
+  "i" integer [default: 1, note: 'hello world']
+}
+
+Table "t8" {
+  "i" integer
+}
+
+Table "t9" {
+  "i" integer
+}
+
+Table "t10" {
+  "i" integer
+}
+
+Table "t_default_1" {
+  "i" integer [not null]
+}
+
+Table "t_default_2" {
+  "i" integer [unique, not null]
+}
+
+Table "t_default_3" {
+  "i" integer [unique, not null]
+}
+
+Table "t_default_4" {
+  "i" integer [pk, not null]
+}
+
+Table "t_default_5" {
+  "i" integer [unique, pk, not null]
+}
+
+Table "t_default_6" {
+  "i" integer [unique, pk, not null]
+}
+
+Table "t_default_7" {
+  "i" integer [not null, default: 1]
+}
+
+Table "t_default_8" {
+  "i" integer [not null, default: 1]
+}
+
+Table "t_default_9" {
+  "i" integer [not null, increment]
+}
+
+Table "t_default_10" {
+  "i" integer [not null, increment]
+}
+
+Table "t_default_11" {
+  "v" varchar(32) [not null]
+}
+
+Table "t_default_12" {
+  "v" varchar(32) [not null]
+}
+
+Table "t_default_13" {
+  "v" varchar(32) [unique, not null]
+}
+
+Table "t_default_14" {
+  "v" varchar(32) [unique, not null]
+}
+
+Table "t_default_15" {
+  "v" varchar(32) [default: 'hey']
+}
+
+Table "t_default_16" {
+  "v" varchar(32) [unique, default: 'hey']
+}
+
+Table "t_default_17" {
+  "v" varchar(32) [unique, default: 'hey']
+}
+
+Table "t_default_18" {
+  "v" varchar(32) [pk, default: 'hey']
+}
+
+Table "t_masking_1" {
+  "i" integer
+}
+
+Table "t_masking_2" {
+  "i" integer
+}
+
+Table "t_policy_1" {
+  "i" integer [unique, not null, default: 1, note: 'hello world']
+}
+
+Table "t_policy_2" {
+  "v" varchar [unique, not null, note: 'hello world']
+}
+
+Table "public" {
+  "public" int
+}
+
+Table "T" {
+  "Source" string [not null]
+  "Query_Id" string
+  "State" string [not null]
+  "Procedure_Name" string
+}
+
+Table "t_not_exist_1" {
+  "v" varchar(16777216)
+}
+
+Table "t_not_exist_2" {
+  "v" varchar(16777216)
+}
+
+Table "TESTSEED1" {
+  "IDENT" int [default: `SEQID.NEXTVAL`]
+  "mycol" string
+}
+
+Table "TESTSEED2" {
+  "IDENT" int [default: `SCHEM.SEQID.NEXTVAL`]
+  "mycol" string
+}
+
+Table "TESTSEED3" {
+  "ident" int [increment]
+}
+
+Table "TESTSEED4" {
+  "ident" int [increment]
+}
+
+Table "TESTSEED5" {
+  "ident" int [increment]
+}
+
+Table "TESTSEED6" {
+  "ident" int [increment]
+}
+
+Table "t_date_time_1" {
+  "v" datetime(9)
+}
+
+Table "T_DATE_TIME_2" {
+  "TIMESTAMP" DATETIME
+  "VALUE" STRING
+  "NAME" STRING
+}
+
+Table "T_OUT_1" {
+  "C1" STRING
+
+  Indexes {
+    C1 [unique]
+  }
+}
+
+Table "T_OUT_2" {
+  "C2" STRING [pk]
+}
+
+Table "T_OUT_3" {
+  "C3" STRING
+}
+
+Table "T_OUT_4" {
+  "C1" STRING
+
+  Indexes {
+    C1 [unique]
+  }
+}
+
+Table "T_OUT_5" {
+  "C2" STRING [pk]
+}
+
+Table "T_OUT_6" {
+  "C3" STRING
+}
+
+Table "T_CONSTRAINT_1" {
+  "C1" STRING
+
+  Indexes {
+    C1 [unique]
+  }
+}
+
+Table "T_CONSTRAINT_2" {
+  "C1" STRING
+
+  Indexes {
+    C1 [unique]
+  }
+}
+
+Table "T_CONSTRAINT_3" {
+  "C3" STRING
+}
+
+Table "T_CONSTRAINT_4" {
+  "C3" STRING
+}
+
+Table "T_CONSTRAINT_5" {
+  "C3" STRING
+}
+
+Table "T_CONSTRAINT_6" {
+  "C3" STRING
+}
+
+Table "T_CONSTRAINT_7" {
+  "C1" STRING [unique]
+}
+
+Table "T_CONSTRAINT_8" {
+  "C3" STRING
+}
+
+Table "T_CONSTRAINT_9" {
+  "C3" STRING
+}
+
+Table "T_CONSTRAINT_10" {
+  "C3" STRING
+}
+
+Table "TestK" {
+  "NVL2" string
+  "FIRST_VALUE" string
+  "RESTRICT" int
+  "NVL" int
+  "RESPECT" int
+}
+
+Table "T_TAG_1" {
+  "C1" string
+}
+
+Table "tpk" {
+  "i" int [pk]
+}
+
+Table "tc1" {
+  "i" int
+}
+
+Table "tc2" {
+  "i" int
+}
+
+Table "tc3" {
+  "c" char(4)
+  "c2" character(2)
+}
+
+Table "tz1" {
+  "i" TIMESTAMPLTZ
+}
+
+Table "tz2" {
+  "i" TIMESTAMPNTZ
+}
+
+Table "tz3" {
+  "i" TIMESTAMPTZ
+}
+
+Table "TESTSEED7" {
+  "ident" int [increment]
+}
+
+Table "TESTSEED8" {
+  "ident" int [increment]
+}
+
+Table "DIRECTION" {
+  "LENGTH" INT
+  "LANGUAGE" INT
+}
+
+Table "t_comment" {
+  "i" int
+}
+
+Table "T_NULL_NOT_NULL" {
+  "C_NULL" INT [not null]
+}
+
+Table "t_cluster" {
+  "f1" varchar
+  "f2" number
+}
+
+Table "t_virtual_1" {
+  "f1" number
+  "f2" number
+  "f3" number
+}
+
+Table "t_virtual_2" {
+  "f1" number
+  "f2" number
+  "f3" number
+}
+
+Table "floor" {
+  "any_value" int
+  "getdate" int
+}
+
+Ref:"HP_TEST"."CUSTOMERS"."CUSTOMER_ID" < "HP_TEST"."ORDERS"."CUSTOMER_ID"
+
+Ref:"HP_TEST"."ORDERS"."ORDER_ID" < "HP_TEST"."ORDER_ITEMS"."ORDER_ID"
+
+Ref:"HP_TEST"."PRODUCTS"."PRODUCT_ID" < "HP_TEST"."ORDER_ITEMS"."PRODUCT_ID"
+
+Ref:"TEST_2024_06_28_10_01_ZQMIMY"."ONE".("BAR", "FOO") < "TEST_2024_06_28_10_01_ZQMIMY"."TWO".("XYZ", "ABC")
+
+Ref:"TEST_2024_06_28_10_01_ZQMIMY"."ONE"."FOO" < "TEST_2024_06_28_10_01_ZQMIMY"."TWO"."QWE"
+
+Ref:"T_OUT_2"."C2" < "T_OUT_3"."C3"
+
+Ref:"T_OUT_5"."C2" < "T_OUT_6"."C3"
+
+Ref:"T_OUT_5"."C2" < "T_CONSTRAINT_3"."C3"
+
+Ref:"T_OUT_5"."C2" < "T_CONSTRAINT_4"."C3"
+
+Ref:"T_OUT_5"."C2" < "T_CONSTRAINT_5"."C3"
+
+Ref:"T_OUT_5"."C2" < "T_CONSTRAINT_6"."C3"
+
+Ref:"T_OUT_5"."C2" < "T_CONSTRAINT_8"."C3"
+
+Ref:"T_OUT_5"."C2" < "T_CONSTRAINT_9"."C3"

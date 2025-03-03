@@ -1,12 +1,13 @@
-import _ from 'lodash';
+import _, { get } from 'lodash';
 import Schema from './schema';
 import Ref from './ref';
 import Enum from './enum';
 import TableGroup from './tableGroup';
 import Table from './table';
+import StickyNote from './stickyNote';
 import Element from './element';
 import {
-  DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF,
+  DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, NOTE,
 } from './config';
 import DbState from './dbState';
 
@@ -14,6 +15,7 @@ class Database extends Element {
   constructor ({
     schemas = [],
     tables = [],
+    notes = [],
     enums = [],
     refs = [],
     tableGroups = [],
@@ -25,22 +27,43 @@ class Database extends Element {
     this.generateId();
     this.hasDefaultSchema = false;
     this.schemas = [];
-    this.note = project.note ? project.note.value : null;
-    this.noteToken = project.note ? project.note.token : null;
+    this.notes = [];
+    this.note = project.note ? get(project, 'note.value', project.note) : null;
+    this.noteToken = project.note ? get(project, 'note.token', project.noteToken) : null;
     this.databaseType = project.database_type;
     this.name = project.name;
+    this.token = project.token;
     this.aliases = aliases;
 
+    this.processNotes(notes);
     // The process order is important. Do not change !
     this.processSchemas(schemas);
     this.processSchemaElements(enums, ENUM);
     this.processSchemaElements(tables, TABLE);
+    this.processSchemaElements(notes, NOTE);
     this.processSchemaElements(refs, REF);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
   }
 
   generateId () {
     this.id = this.dbState.generateId('dbId');
+  }
+
+  processNotes (rawNotes) {
+    rawNotes.forEach((note) => {
+      this.pushNote(new StickyNote({ ...note, database: this }));
+    });
+  }
+
+  pushNote (note) {
+    this.checkNote(note);
+    this.notes.push(note);
+  }
+
+  checkNote (note) {
+    if (this.notes.some(n => n.name === note.name)) {
+      note.error(`Notes ${note.name} existed`);
+    }
   }
 
   processSchemas (rawSchemas) {
@@ -166,12 +189,14 @@ class Database extends Element {
   exportChild () {
     return {
       schemas: this.schemas.map(s => s.export()),
+      notes: this.notes.map(n => n.export()),
     };
   }
 
   exportChildIds () {
     return {
       schemaIds: this.schemas.map(s => s.id),
+      noteIds: this.notes.map(n => n.id),
     };
   }
 
@@ -185,6 +210,7 @@ class Database extends Element {
         },
       },
       schemas: {},
+      notes: {},
       refs: {},
       enums: {},
       tableGroups: {},
@@ -197,6 +223,7 @@ class Database extends Element {
     };
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));
+    this.notes.forEach((note) => note.normalize(normalizedModel));
     return normalizedModel;
   }
 }

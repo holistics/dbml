@@ -2,6 +2,9 @@ export default {
   mysql: {
     name: 'MySQL',
   },
+  mysqlLegacy: {
+    name: 'MySQL',
+  },
   postgres: {
     name: 'PostgreSQL',
   },
@@ -10,5 +13,11 @@ export default {
   },
   mssql: {
     name: 'SQL Server',
+  },
+  oracle: {
+    name: 'Oracle',
+  },
+  snowflake: {
+    name: 'Snowflake',
   },
 };

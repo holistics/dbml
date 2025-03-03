@@ -159,6 +159,7 @@ declare class Schema extends Element {
     };
     exportChildIds(): {
         tableIds: number[];
+        noteIds: number[];
         enumIds: number[];
         tableGroupIds: number[];
         refIds: number[];
@@ -180,6 +181,7 @@ export interface NormalizedSchema {
         note: string;
         alias: string;
         tableIds: number[];
+        noteIds: number[];
         enumIds: number[];
         tableGroupIds: number[];
         refIds: number[];

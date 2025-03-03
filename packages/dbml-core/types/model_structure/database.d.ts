@@ -3,6 +3,7 @@ import Ref, { NormalizedRef } from './ref';
 import Enum, { NormalizedEnum } from './enum';
 import TableGroup, { NormalizedTableGroup } from './tableGroup';
 import Table, { NormalizedTable } from './table';
+import StickyNote, { NormalizedStickyNote } from './stickyNote';
 import Element, { RawNote, Token } from './element';
 import DbState from './dbState';
 import { NormalizedEndpoint } from './endpoint';
@@ -18,6 +19,7 @@ export interface Project {
 export interface RawDatabase {
     schemas: Schema[];
     tables: Table[];
+    notes: StickyNote[];
     enums: Enum[];
     refs: Ref[];
     tableGroups: TableGroup[];
@@ -27,6 +29,7 @@ declare class Database extends Element {
     dbState: DbState;
     hasDefaultSchema: boolean;
     schemas: Schema[];
+    notes: StickyNote[];
     note: string;
     noteToken: Token;
     databaseType: string;
@@ -99,6 +102,12 @@ declare class Database extends Element {
             note: string;
             alias: string;
         }[];
+        notes: {
+            id: number;
+            name: string;
+            content: string;
+            headerColor: string;
+        }[];
     };
     shallowExport(): {
         hasDefaultSchema: boolean;
@@ -165,9 +174,16 @@ declare class Database extends Element {
             note: string;
             alias: string;
         }[];
+        notes: {
+            id: number;
+            name: string;
+            content: string;
+            headerColor: string;
+        }[];
     };
     exportChildIds(): {
         schemaIds: number[];
+        noteIds: number[];
     };
     normalize(): NormalizedDatabase;
 }
@@ -180,9 +196,11 @@ export interface NormalizedDatabase {
             databaseType: string;
             name: string;
             schemaIds: number[];
+            noteIds: number[];
         };
     };
     schemas: NormalizedSchema;
+    notes: NormalizedStickyNote;
     refs: NormalizedRef;
     enums: NormalizedEnum;
     tableGroups: NormalizedTableGroup;

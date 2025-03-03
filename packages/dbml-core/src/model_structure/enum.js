@@ -1,16 +1,17 @@
+import { get } from 'lodash';
 import Element from './element';
 import EnumValue from './enumValue';
 import { shouldPrintSchema } from './utils';
 
 class Enum extends Element {
   constructor ({
-    name, token, values, note, schema,
+    name, token, values, note, schema, noteToken = null,
   } = {}) {
     super(token);
     if (!name) { this.error('Enum must have a name'); }
     this.name = name;
-    this.note = note ? note.value : null;
-    this.noteToken = note ? note.token : null;
+    this.note = note ? get(note, 'value', note) : null;
+    this.noteToken = note ? get(note, 'token', noteToken) : null;
     this.values = [];
     this.fields = [];
     this.schema = schema;
@@ -89,14 +90,11 @@ class Enum extends Element {
   }
 
   normalize (model) {
-    model.enums = {
-      ...model.enums,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.enums[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
 
     this.values.forEach(v => v.normalize(model));

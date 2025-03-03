@@ -1,0 +1,55 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "A",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 14,
+              "line": 2,
+              "column": 5
+            },
+            "end": {
+              "offset": 34,
+              "line": 2,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 36,
+          "line": 3,
+          "column": 2
+        }
+      },
+      "indexes": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
+}

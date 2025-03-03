@@ -1,0 +1,45 @@
+Table users {
+  id int [pk]
+}
+
+Table products {
+  id int [pk]
+  user_id int [not null]
+}
+
+Table "C##test01"."users" {
+  id int [pk]
+}
+
+Table "C##test01"."products" {
+  id int [pk]
+  user_id int [not null]
+}
+
+Table "C##test02"."users" {
+  id int [pk]
+}
+
+Table "C##test02"."products" {
+  id int [pk]
+  user_id int [not null]
+}
+
+// default to schema
+Ref: "C##test01"."users"."id" < "public"."products"."user_id"
+
+// schema to default
+Ref: "public"."users"."id" < "C##test01"."products"."user_id"
+
+// schema to schema
+Ref: "C##test01"."users"."id" < "C##test01"."products"."user_id"
+
+// many to many
+// default - schema
+Ref: "C##test02"."users"."id" <> "public"."products"."id"
+
+// schema - default
+Ref: "public"."users"."id" <> "C##test02"."products"."id"
+
+// schema - schema
+Ref: "C##test01"."users"."id" <> "C##test02"."products"."id"

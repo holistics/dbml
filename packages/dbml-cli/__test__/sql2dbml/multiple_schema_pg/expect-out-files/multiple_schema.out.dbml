@@ -31,9 +31,9 @@ Table "products" {
   "id" int [pk]
   "name" varchar [note: 'Product name of table products in public schema']
 
-Indexes {
-  id [type: hash, unique]
-}
+  Indexes {
+    id [type: hash, unique]
+  }
 }
 
 Table "booking_reference" {
@@ -41,9 +41,9 @@ Table "booking_reference" {
   "cust_id" NUMBER(10) [not null]
   "status" NVARCHAR(1) [not null]
 
-Indexes {
-  (reference_id, cust_id) [pk]
-}
+  Indexes {
+    (reference_id, cust_id) [pk]
+  }
 }
 
 Table "br_flight" {
@@ -51,9 +51,9 @@ Table "br_flight" {
   "cust_id" NUMBER(10) [not null]
   "flight_id" NVARCHAR(10) [not null]
 
-Indexes {
-  (reference_id, flight_id) [pk]
-}
+  Indexes {
+    (reference_id, flight_id) [pk]
+  }
 }
 
 Ref "fk_1":"schemaA"."locations"."id" < "schemaA"."products"."lid"
@@ -89,9 +89,9 @@ Table "schemaA"."products" {
   "name" varchar [note: 'Product name of schemaA']
   "lid" int
 
-Indexes {
-  (id, name) [name: "product_status"]
-}
+  Indexes {
+    (id, name) [name: "product_status"]
+  }
 }
 
 Table "schemaA"."locations" {

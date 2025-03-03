@@ -106,6 +106,7 @@
           "column": 2
         }
       },
+      "note": "User orders",
       "indexes": []
     }
   ],
@@ -155,9 +156,7 @@
               "column": 1
             }
           },
-          "note": {
-            "value": "In stock"
-          }
+          "note": "In stock"
         },
         {
           "name": "running_low",

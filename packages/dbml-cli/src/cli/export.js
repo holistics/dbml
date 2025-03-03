@@ -13,6 +13,7 @@ import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
 import config from './config';
 import logger from '../helpers/logger';
+import { SyntaxError } from '../errors';
 
 export default async function exportHandler (program) {
   try {
@@ -26,17 +27,20 @@ export default async function exportHandler (program) {
       generate(inputPaths, (dbml) => exporter.export(dbml, format), OutputConsolePlugin);
     } else if (opts.outFile) {
       const header = [
-        '-- SQL dump generated using DBML (dbml-lang.org)\n',
+        '-- SQL dump generated using DBML (dbml.dbdiagram.io)\n',
         `-- Database: ${config[format].name}\n`,
         `-- Generated at: ${new Date().toISOString()}\n\n`,
       ].join('');
 
-      generate(inputPaths, (dbml) => exporter.export(dbml, format),
-        new OutputFilePlugin(resolvePaths(opts.outFile), header));
+      generate(
+        inputPaths,
+        (dbml) => exporter.export(dbml, format),
+        new OutputFilePlugin(resolvePaths(opts.outFile), header),
+      );
 
       console.log(`  ${chalk.green(figures.main.tick)} Generated SQL dump file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
-  } catch (err) {
-    logger.error(err);
+  } catch (error) {
+    logger.error(`\n    ${error.diags.map((diag) => new SyntaxError(diag.filepath, diag)).map(({ message }) => message).join('\n    ')}`);
   }
 }

@@ -1,0 +1,15 @@
+Table A as A {
+    id int [primary key]
+}
+
+Table "B" as B {
+    id int [primary key]
+}
+
+Table C as "C" {
+    id int [primary key]
+}
+
+Table "D" as "D" {
+    id int [primary key]
+}

@@ -1,7 +1,7 @@
 .npmrc
 .DS_Store
 node_modules/
-/dist/
+dist/
 *.log
 *.cache
 *.package-lock.json
@@ -19,3 +19,8 @@ node_modules/
 *.swp
 packages/dbml-core/src/parse/mssql/manual_tests.js
 packages/dbml-core/benchmarks/*
+
+# tsc
+tsconfig.tsbuildinfo
+
+packages/dbml-connector/keys
