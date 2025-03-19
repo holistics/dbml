@@ -40,6 +40,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       tableGroups: [],
       aliases: [],
       project: {},
+      records: {},
     };
   }
 
@@ -1007,13 +1008,19 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   //  : opt_with_clause INSERT INTO insert_target insert_rest opt_on_conflict returning_clause
   //  ;
   visitInsertstmt (ctx) {
-    const [schemaName, tableName] = ctx.insert_target().accept(this);
-    console.log('schemaName', schemaName);
-    console.log('tableName', tableName);
+    const [schemaName = 'public', tableName] = ctx.insert_target().accept(this);
+    const fullTableName = `${schemaName}.${tableName}`;
 
     const { columns, values } = ctx.insert_rest().accept(this);
-    console.log('columns', columns);
-    console.log('values', values);
+    if (!this.data.records[fullTableName]) {
+      this.data.records[fullTableName] = {
+        schemaName,
+        tableName,
+        columns,
+        values: [],
+      };
+    }
+    this.data.records[fullTableName].values.push(...values);
   }
 
   visitInsert_target (ctx) {
@@ -1028,8 +1035,31 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   //  ;
   visitInsert_rest (ctx) {
     const columns = ctx.insert_column_list().accept(this);
-    const values = ctx.selectstmt().accept(this);
-    return { columns, values };
+    const rowsValue = ctx.selectstmt().accept(this);
+    // each sub array represents a set of value of a row
+    // [
+    //   [
+    //     { value: '1', type: 'number' },
+    //     undefined,
+    //     {
+    //       value: '{"theme": "dark", "notifications": true}',
+    //       type: 'string',
+    //       type_name: 'JSONB',
+    //       schemaName: null
+    //     },
+    //     undefined,
+    //   ]
+    // ]
+
+    const sanitizeRowValue = (rowValue = []) => {
+      return rowValue
+        .filter((row) => row)
+        .map(({ value, type }) => ({ value, type }));
+    };
+
+    const sanitizedRowsValue = rowsValue.map(sanitizeRowValue);
+
+    return { columns, values: sanitizedRowsValue };
   }
 
   // insert_column_list
@@ -1103,25 +1133,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       // a_expr_typecast
       const FLATTEN_DEPTH = 21;
       const rawRowValues = flattenDepth(rawValues, FLATTEN_DEPTH);
-      // [
-      //   { value: '4', type: 'number' }, // this is the value
-      //   undefined, // The A_expr_typecastContext, we can skip this atm
-      //   { value: 'Dana', type: 'string' },
-      //   undefined,
-      //   { value: 'dana@host', type: 'string' },
-      //   undefined,
-      //   { value: '2021-01-02', type: 'string' },
-      //   undefined,
-      //   { value: '2021-01-02', type: 'string' },
-      //   undefined,
-      //   {
-      //     value: '{"theme": "dark", "compact": true, "font_size": "large"}',
-      //     type: 'string'
-      //   },
-      //   undefined,
-      //   { type_name: 'JSONB', schemaName: null } // The typename
-      // ]
-      return rawRowValues.filter((rawRowValue) => rawRowValue);
+      return rawRowValues;
     });
   }
 
@@ -1251,8 +1263,24 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   // a_expr_collate
   //  : a_expr_typecast (COLLATE any_name)?
   //  ;
-  //  visitA_expr_collate (ctx) {
-  // }
+   visitA_expr_collate (ctx) {
+    const expressionValueSet = ctx.a_expr_typecast().accept(this);
+
+    // Possible values
+    // 1: [ { value: 'inactive', type: 'string' } ]
+    // 2: [
+    //   { value: '2021-01-05 18:45:00+00', type: 'string' },
+    //   undefined,
+    //   { type_name: 'TIMESTAMPTZ', schemaName: null }
+    // ]
+    const [rawValue, _, rawType = {}] = expressionValueSet;
+    const { value, type } = rawValue;
+    return {
+      value,
+      type,
+      ...rawType,
+    };
+  }
 
   // a_expr_typecast
   //  : c_expr (TYPECAST typename)*
