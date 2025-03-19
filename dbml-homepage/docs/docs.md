@@ -173,7 +173,7 @@ The list of column settings you can use:
 - `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below
 - `increment`: mark the column as auto-increment
 
-**Note:** You can use a workaround for un-supported settings by adding the setting name into the column type name, such as `id “bigint unsigned” [pk]`
+**Note:** You can use a workaround for un-supported settings by adding the setting name into the column type name, such as `id "bigint unsigned" [pk]`
 
 ### Default Value
 
@@ -295,11 +295,11 @@ Table schema2.table2 {
 :::note
 * When defining one-to-one relationships, ensure columns are listed in the correct order:
   * With long & short form, the second column will be treated as a foreign key.
-  
-    E.g: `users.id - user_infos.user_id`, *user_infos.user_id* will be the foreign key.
-  * With inline form, the column that have the `ref` definition will be treated as a foreign key. 
 
-    E.g: 
+    E.g: `users.id - user_infos.user_id`, *user_infos.user_id* will be the foreign key.
+  * With inline form, the column that have the `ref` definition will be treated as a foreign key.
+
+    E.g:
     ```text
     Table user_infos {
       user_id integer [ref: - users.id]
