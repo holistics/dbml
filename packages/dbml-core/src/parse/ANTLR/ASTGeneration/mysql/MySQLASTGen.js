@@ -1,8 +1,9 @@
 /* eslint-disable class-methods-use-this */
-import { last, flatten } from 'lodash';
+import { last, flatten, flattenDepth } from 'lodash';
 import MySQLParserVisitor from '../../parsers/mysql/MySqlParserVisitor';
 import { Endpoint, Enum, Field, Index, Table, Ref } from '../AST';
 import { TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE } from '../constants';
+import { shouldPrintSchemaName } from '../../../../model_structure/utils';
 
 const TABLE_OPTIONS_KIND = {
   NOTE: 'note',
@@ -49,6 +50,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
       tableGroups: [],
       aliases: [],
       project: {},
+      records: {},
     };
   }
 
@@ -79,6 +81,11 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   visitSqlStatement (ctx) {
     if (ctx.ddlStatement()) {
       ctx.ddlStatement().accept(this);
+      return;
+    }
+
+    if (ctx.dmlStatement()) {
+      ctx.dmlStatement().accept(this);
     }
   }
 
@@ -977,5 +984,140 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     });
 
     table.indexes.push(index);
+  }
+
+  // dmlStatement
+  //   : selectStatement | insertStatement | updateStatement | deleteStatement | replaceStatement |
+  // callStatement | loadDataStatement | loadXmlStatement | doStatement | handlerStatement | valuesStatement | withStatement | tableStatement ;
+  visitDmlStatement (ctx) {
+    if (ctx.insertStatement()) {
+      ctx.insertStatement().accept(this);
+      return;
+    }
+  }
+
+  // insertStatement
+  //   : INSERT priority = (LOW_PRIORITY | DELAYED | HIGH_PRIORITY)? IGNORE? INTO? tableName (
+  //       PARTITION '(' partitions = uidList? ')'
+  //   )? (
+  //       ('(' columns = fullColumnNameList? ')')? insertStatementValue (AS? uid)?
+  //       | SET setFirst = updatedElement (',' setElements += updatedElement)*
+  //   ) (
+  //       ON DUPLICATE KEY UPDATE duplicatedFirst = updatedElement (
+  //           ',' duplicatedElements += updatedElement
+  //       )*
+  //   )?
+  //   ;
+  visitInsertStatement (ctx) {
+    const names = ctx.tableName().accept(this);
+    const tableName = last(names);
+    const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
+    const fullTableName = `${schemaName && shouldPrintSchemaName(schemaName) ? `${schemaName}.` : ''}${tableName}`;
+
+    const columns = ctx.fullColumnNameList().accept(this);
+    const values = ctx.insertStatementValue().accept(this);
+    if (!this.data.records[fullTableName]) {
+      this.data.records[fullTableName] = {
+        schemaName,
+        tableName,
+        columns,
+        values: [],
+      };
+    }
+    this.data.records[fullTableName].values.push(...values);
+  }
+
+  // fullColumnNameList
+  //   : fullColumnName (',' fullColumnName)*
+  //   ;
+  visitFullColumnNameList (ctx) {
+    const columns = ctx.fullColumnName().map((fullColumn) => fullColumn.accept(this));
+    return columns;
+  }
+
+  // insertStatementValue
+  //   : selectStatement
+  //   | insertFormat = (VALUES | VALUE) '(' expressionsWithDefaults? ')' (
+  //       ',' '(' expressionsWithDefaults? ')'
+  //   )*
+  //   ;
+  visitInsertStatementValue (ctx) {
+    return ctx.expressionsWithDefaults().map((expression) => {
+      // [
+      //   [ { value: '1', type: 'number' } ],
+      //   [ { value: 'Alice', type: 'string' } ],
+      //   [ { value: 'alice@host', type: 'string' } ],
+      //   [ { value: '2021-01-01', type: 'string' } ],
+      //   [ { value: '2021-01-01', type: 'string' } ],
+      // ]
+      const rowValues = expression.accept(this);
+      return flattenDepth(rowValues, 1);
+    });
+  }
+
+  // expressionsWithDefaults
+  //   : expressionOrDefault (',' expressionOrDefault)*
+  //   ;
+  visitExpressionsWithDefaults (ctx) {
+    return ctx.expressionOrDefault().map((expressionOrDefault) => {
+      const rawValues = expressionOrDefault.accept(this);
+
+      // We get the value of the column (constantExpressionAtom or functionCallExpressionAtom) through:
+      // expression->predicate->expressionAtom
+      const FLATTEN_DEPTH = 3;
+      const rawColumnValues = flattenDepth(rawValues, FLATTEN_DEPTH);
+      // [ { value: '["555-1234", "555-5678"]', type: 'string' } ]
+      return rawColumnValues;
+    });
+  }
+
+  // predicate
+  //   : predicate NOT? IN '(' (selectStatement | expressions) ')'                            # inPredicate
+  //   | predicate IS nullNotnull                                                             # isNullPredicate
+  //   | left = predicate comparisonOperator right = predicate                                # binaryComparisonPredicate
+  //   | predicate comparisonOperator quantifier = (ALL | ANY | SOME) '(' selectStatement ')' # subqueryComparisonPredicate
+  //   | predicate NOT? BETWEEN predicate AND predicate                                       # betweenPredicate
+  //   | predicate SOUNDS LIKE predicate                                                      # soundsLikePredicate
+  //   | predicate NOT? LIKE predicate (ESCAPE STRING_LITERAL)?                               # likePredicate
+  //   | predicate NOT? regex = (REGEXP | RLIKE) predicate                                    # regexpPredicate
+  //   | predicate MEMBER OF '(' predicate ')'                                                # jsonMemberOfPredicate
+  //   | expressionAtom                                                                       # expressionAtomPredicate
+  //   ;
+
+  // expressionAtom
+  //   : constant                                                  # constantExpressionAtom
+  //   | fullColumnName                                            # fullColumnNameExpressionAtom
+  //   | functionCall                                              # functionCallExpressionAtom
+  //   | expressionAtom COLLATE collationName                      # collateExpressionAtom
+  //   | mysqlVariable                                             # mysqlVariableExpressionAtom
+  //   | unaryOperator expressionAtom                              # unaryExpressionAtom
+  //   | BINARY expressionAtom                                     # binaryExpressionAtom
+  //   | LOCAL_ID VAR_ASSIGN expressionAtom                        # variableAssignExpressionAtom
+  //   | '(' expression (',' expression)* ')'                      # nestedExpressionAtom
+  //   | ROW '(' expression (',' expression)+ ')'                  # nestedRowExpressionAtom
+  //   | EXISTS '(' selectStatement ')'                            # existsExpressionAtom
+  //   | '(' selectStatement ')'                                   # subqueryExpressionAtom
+  //   | INTERVAL expression intervalType                          # intervalExpressionAtom
+  //   | left = expressionAtom bitOperator right = expressionAtom  # bitExpressionAtom
+  //   | left = expressionAtom multOperator right = expressionAtom # mathExpressionAtom
+  //   | left = expressionAtom addOperator right = expressionAtom  # mathExpressionAtom
+  //   | left = expressionAtom jsonOperator right = expressionAtom # jsonExpressionAtom
+  //   ;
+  // visitExpressionAtomPredicate (ctx) {
+  //   const expressionAtomValue = ctx.expressionAtom().accept(this);
+  //   console.log(111, ctx.expressionAtom().accept(this));
+  // }
+
+  visitFunctionCallExpressionAtom (ctx) {
+    // insert value: POINT(40.7128 -74.0060)
+    // function call sample:
+    // [
+    //   [ [ undefined ] ],
+    //   undefined,
+    //   [ { value: 'POINT(40.7128 -74.0060)', type: 'string' } ],
+    //   undefined
+    // ]
+    const functionCallValue = ctx.functionCall().accept(this);
+    return functionCallValue[2];
   }
 }
