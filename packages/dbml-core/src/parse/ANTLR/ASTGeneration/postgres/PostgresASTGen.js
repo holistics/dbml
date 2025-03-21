@@ -3,6 +3,7 @@ import { last, flatten, flattenDepth } from 'lodash';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
 import { Enum, Field, Index, Table } from '../AST';
 import { TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TYPE } from '../constants';
+import { shouldPrintSchemaName } from '../../../../model_structure/utils';
 
 const COMMAND_KIND = {
   REF: 'ref',
@@ -1008,8 +1009,11 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   //  : opt_with_clause INSERT INTO insert_target insert_rest opt_on_conflict returning_clause
   //  ;
   visitInsertstmt (ctx) {
-    const [schemaName = 'public', tableName] = ctx.insert_target().accept(this);
-    const fullTableName = `${schemaName}.${tableName}`;
+    const names = ctx.insert_target().accept(this);
+    const tableName = last(names);
+    const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
+
+    const fullTableName = `${schemaName && shouldPrintSchemaName(schemaName) ? `${schemaName}.` : ''}${tableName}`;
 
     const { columns, values } = ctx.insert_rest().accept(this);
     if (!this.data.records[fullTableName]) {
@@ -1133,6 +1137,18 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       // a_expr_typecast
       const FLATTEN_DEPTH = 21;
       const rawRowValues = flattenDepth(rawValues, FLATTEN_DEPTH);
+
+      // [
+      //   { value: '1', type: 'number' },
+      //   undefined,
+      //   {
+      //     value: '{"theme": "dark", "notifications": true}',
+      //     type: 'string',
+      //     type_name: 'JSONB',
+      //     schemaName: null
+      //   },
+      //   undefined,
+      // ]
       return rawRowValues;
     });
   }
