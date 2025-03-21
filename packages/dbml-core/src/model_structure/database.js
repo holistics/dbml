@@ -21,6 +21,7 @@ class Database extends Element {
     tableGroups = [],
     project = {},
     aliases = [],
+    records = {},
   }) {
     super();
     this.dbState = new DbState();
@@ -34,6 +35,7 @@ class Database extends Element {
     this.name = project.name;
     this.token = project.token;
     this.aliases = aliases;
+    this.records = records;
 
     this.processNotes(notes);
     // The process order is important. Do not change !
@@ -220,6 +222,7 @@ class Database extends Element {
       indexes: {},
       indexColumns: {},
       fields: {},
+      records: this.records,
     };
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));
