@@ -1,13 +1,3 @@
--- INSERT
-INSERT INTO films VALUES
-	('UA502', 'Bananas', 105, '1971-07-13', 'Comedy', '82 minutes');
-
-INSERT INTO distributors (did, dname) VALUES (10, 'Conrad International')
-	ON CONFLICT (did) WHERE is_active DO NOTHING;
-
-INSERT INTO tictactoe (game, board[1:3][1:3])
-	VALUES (1, '{{" "," "," "},{" "," "," "},{" "," "," "}}');
-
 -- SET
 SET search_path TO my_schema, public;
 

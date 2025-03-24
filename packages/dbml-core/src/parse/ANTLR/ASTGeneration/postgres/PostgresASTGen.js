@@ -1018,7 +1018,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     const { columns, values } = ctx.insert_rest().accept(this);
 
     // handle insert into all columns
-    if (columns.length === 0) {
+    if (columns.length === 0 || values.length === 0) {
       // temporarily ignore
       return;
     }
@@ -1031,6 +1031,8 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
         values: [],
       };
     }
+
+    // TODO: should handle case the number of columns is not equal
     this.data.records[fullTableName].values.push(...values);
   }
 
@@ -1046,7 +1048,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   //  ;
   visitInsert_rest (ctx) {
     const columns = ctx.insert_column_list()?.accept(this) || [];
-    const rowsValue = ctx.selectstmt().accept(this);
+    const rowsValue = ctx.selectstmt().accept(this) || [];
     // each sub array represents a set of value of a row
     // [
     //   [
@@ -1062,13 +1064,13 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     //   ]
     // ]
 
-    const sanitizeRowValue = (rowValue = []) => {
+    const sanitizeRowValue = (rowValue) => {
       return rowValue
         .filter((row) => row)
         .map(({ value, type }) => ({ value, type }));
     };
 
-    const sanitizedRowsValue = rowsValue.map(sanitizeRowValue);
+    const sanitizedRowsValue = rowsValue.filter((rowValue) => Array.isArray(rowValue)).map(sanitizeRowValue);
 
     return { columns, values: sanitizedRowsValue };
   }
@@ -1092,7 +1094,11 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   //  | select_with_parens
   //  ;
   visitSelectstmt (ctx) {
-    return ctx.select_no_parens().accept(this)
+    if (!ctx.select_no_parens()) {
+      return null;
+    }
+
+    return ctx.select_no_parens().accept(this);
   }
 
   // select_no_parens
@@ -1126,6 +1132,10 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   //       (set_operator_with_all_or_distinct (simple_select | select_with_parens))*
   //  ;
   visitSimple_select (ctx) {
+    if (!ctx.values_clause()) {
+      return null;
+    }
+
     return ctx.values_clause().accept(this);
   }
 
@@ -1160,129 +1170,6 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     });
   }
 
-  // expr_list
-  //  : a_expr (COMMA a_expr)*
-  //  ;
-  // visitExpr_list (ctx) {
-  // }
-
-  // a_expr
-  //  : a_expr_qual
-  //  ;
-  // visitA_expr (ctx) {
-  // }
-
-  // a_expr_qual
-  //  : a_expr_lessless qual_op?
-  //  ;
-  // visitA_expr_qual (ctx) {
-  // }
-
-  // a_expr_lessless
-  //  : a_expr_or ((LESS_LESS | GREATER_GREATER) a_expr_or)*
-  //  ;
-  // visitA_expr_lessless (ctx) {
-  // }
-
-  // a_expr_or
-  //  : a_expr_and (OR a_expr_and)*
-  //  ;
-  // visitA_expr_or (ctx) {
-  // }
-
-  // a_expr_and
-  //  : a_expr_between (AND a_expr_between)*
-  //  ;
-  // visitA_expr_and (ctx) {
-  // }
-
-  // a_expr_between
-  //  : a_expr_in (NOT? BETWEEN SYMMETRIC? a_expr_in AND a_expr_in)?
-  //  ;
-  // visitA_expr_between (ctx) {
-  // }
-
-  // a_expr_in
-  //  : a_expr_unary_not (NOT? IN_P in_expr)?
-  //  ;
-  // visitA_expr_in (ctx) {
-  // }
-
-  // a_expr_unary_not
-  //  : NOT? a_expr_isnull
-  //  ;
-  // visitA_expr_unary_not (ctx) {
-  // }
-
-  // a_expr_isnull
-  //  : a_expr_is_not (ISNULL | NOTNULL)?
-  //  ;
-  // visitA_expr_isnull (ctx) {
-  // }
-
-  // a_expr_is_not
-  //  : a_expr_compare (IS NOT? (NULL_P | TRUE_P | FALSE_P | UNKNOWN | DISTINCT FROM a_expr | OF OPEN_PAREN type_list CLOSE_PAREN | DOCUMENT_P | unicode_normal_form? NORMALIZED))?
-  //  ;
-  // visitA_expr_is_not (ctx) {
-  // }
-
-
-  // a_expr_compare
-  //  : a_expr_like ((LT | GT | EQUAL | LESS_EQUALS | GREATER_EQUALS | NOT_EQUALS) a_expr_like |subquery_Op sub_type (select_with_parens | OPEN_PAREN a_expr CLOSE_PAREN) /*21*/
-
-  //  )?
-  //  ;
-  // visitA_expr_compare (ctx) {
-  // }
-
-  // a_expr_like
-  //  : a_expr_qual_op (NOT? (LIKE | ILIKE | SIMILAR TO) a_expr_qual_op opt_escape)?
-  //  ;
-  //  visitA_expr_like (ctx) {
-  // }
-
-  // a_expr_qual_op
-  //  : a_expr_unary_qualop (qual_op a_expr_unary_qualop)*
-  //  ;
-  // visitA_expr_qual_op (ctx) {
-  // }
-
-  // a_expr_unary_qualop
-  //  : qual_op? a_expr_add
-  //  ;
-  // visitA_expr_unary_qualop (ctx) {
-  // }
-
-  // a_expr_add
-  //  : a_expr_mul ((MINUS | PLUS) a_expr_mul)*
-  //  ;
-  //  visitA_expr_add (ctx) {
-  // }
-
-  // a_expr_mul
-  //  : a_expr_caret ((STAR | SLASH | PERCENT) a_expr_caret)*
-  //  ;
-  // visitA_expr_mul (ctx) {
-  // }
-
-  // a_expr_caret
-  // : a_expr_unary_sign (CARET a_expr)?
-  // ;
-  // visitA_expr_caret (ctx) {
-  // }
-
-  // a_expr_unary_sign
-  //   : (MINUS | PLUS)? a_expr_at_time_zone /* */
-  //   ;
-  // visitA_expr_unary_sign (ctx) {
-  // }
-
-  // a_expr_at_time_zone
-  //  : a_expr_collate (AT TIME ZONE a_expr)?
-  //  ;
-  //  visitA_expr_at_time_zone (ctx) {
-  // }
-
   // a_expr_collate
   //  : a_expr_typecast (COLLATE any_name)?
   //  ;
@@ -1304,10 +1191,4 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       ...rawType,
     };
   }
-
-  // a_expr_typecast
-  //  : c_expr (TYPECAST typename)*
-  //  ;
-  // visitA_expr_typecast (ctx) {
-  // }
 }
