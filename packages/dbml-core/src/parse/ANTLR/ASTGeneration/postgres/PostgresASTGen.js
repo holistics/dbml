@@ -1016,6 +1016,13 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     const fullTableName = `${schemaName && shouldPrintSchemaName(schemaName) ? `${schemaName}.` : ''}${tableName}`;
 
     const { columns, values } = ctx.insert_rest().accept(this);
+
+    // handle insert into all columns
+    if (columns.length === 0) {
+      // temporarily ignore
+      return;
+    }
+
     if (!this.data.records[fullTableName]) {
       this.data.records[fullTableName] = {
         schemaName,
@@ -1038,7 +1045,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   //  | DEFAULT VALUES
   //  ;
   visitInsert_rest (ctx) {
-    const columns = ctx.insert_column_list().accept(this);
+    const columns = ctx.insert_column_list()?.accept(this) || [];
     const rowsValue = ctx.selectstmt().accept(this);
     // each sub array represents a set of value of a row
     // [
