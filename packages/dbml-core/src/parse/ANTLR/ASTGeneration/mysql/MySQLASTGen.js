@@ -1014,8 +1014,14 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
     const fullTableName = `${schemaName && shouldPrintSchemaName(schemaName) ? `${schemaName}.` : ''}${tableName}`;
 
-    const columns = ctx.fullColumnNameList().accept(this);
+    // insert without specified columns
+    const columns = ctx.fullColumnNameList()?.accept(this) || [];
     const values = ctx.insertStatementValue().accept(this);
+
+    if (columns.length === 0 || values.length === 0) {
+      return;
+    }
+
     if (!this.data.records[fullTableName]) {
       this.data.records[fullTableName] = {
         schemaName,
@@ -1031,8 +1037,9 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   //   : fullColumnName (',' fullColumnName)*
   //   ;
   visitFullColumnNameList (ctx) {
+    // [ [ 'id' ], [ 'name' ], [ 'email' ], [ 'created_at' ] ]
     const columns = ctx.fullColumnName().map((fullColumn) => fullColumn.accept(this));
-    return columns;
+    return flattenDepth(columns, 1);
   }
 
   // insertStatementValue
@@ -1103,21 +1110,19 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   //   | left = expressionAtom addOperator right = expressionAtom  # mathExpressionAtom
   //   | left = expressionAtom jsonOperator right = expressionAtom # jsonExpressionAtom
   //   ;
-  // visitExpressionAtomPredicate (ctx) {
-  //   const expressionAtomValue = ctx.expressionAtom().accept(this);
-  //   console.log(111, ctx.expressionAtom().accept(this));
-  // }
 
+  // functionCall
+  //   : specificFunction                         # specificFunctionCall
+  //   | aggregateWindowedFunction                # aggregateFunctionCall
+  //   | nonAggregateWindowedFunction             # nonAggregateFunctionCall
+  //   | scalarFunctionName '(' functionArgs? ')' # scalarFunctionCall
+  //   | fullId '(' functionArgs? ')'             # udfFunctionCall
+  //   | passwordFunctionClause                   # passwordFunctionCall
+  //   ;
   visitFunctionCallExpressionAtom (ctx) {
-    // insert value: POINT(40.7128 -74.0060)
-    // function call sample:
-    // [
-    //   [ [ undefined ] ],
-    //   undefined,
-    //   [ { value: 'POINT(40.7128 -74.0060)', type: 'string' } ],
-    //   undefined
-    // ]
-    const functionCallValue = ctx.functionCall().accept(this);
-    return functionCallValue[2];
+    return {
+      value: ctx.getText(),
+      type: DATA_TYPE.EXPRESSION,
+    }
   }
 }
