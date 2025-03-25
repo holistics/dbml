@@ -1,0 +1,253 @@
+{
+  "records": {
+    "users": {
+      "tableName": "users",
+      "columns": [
+        "id",
+        "name",
+        "email",
+        "created_at"
+      ],
+      "values": [
+        [
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "Alice Johnson",
+            "type": "string"
+          },
+          {
+            "value": "alice@example.com",
+            "type": "string"
+          },
+          {
+            "value": "NOW()",
+            "type": "expression"
+          }
+        ],
+        [
+          {
+            "value": "2",
+            "type": "number"
+          },
+          {
+            "value": "Bob Smith",
+            "type": "string"
+          },
+          {
+            "value": "bob@example.com",
+            "type": "string"
+          },
+          {
+            "value": "NOW()",
+            "type": "expression"
+          }
+        ],
+        [
+          {
+            "value": "3",
+            "type": "number"
+          },
+          {
+            "value": "Charlie Davis",
+            "type": "string"
+          },
+          {
+            "value": "charlie@example.com",
+            "type": "string"
+          },
+          {
+            "value": "NOW()",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    "blog.posts": {
+      "schemaName": "blog",
+      "tableName": "posts",
+      "columns": [
+        "id",
+        "title",
+        "content",
+        "author_id",
+        "published_at"
+      ],
+      "values": [
+        [
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "Getting Started with MySQL",
+            "type": "string"
+          },
+          {
+            "value": "This post covers the basics of MySQL...",
+            "type": "string"
+          },
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "NOW()",
+            "type": "expression"
+          }
+        ],
+        [
+          {
+            "value": "2",
+            "type": "number"
+          },
+          {
+            "value": "Understanding Indexing in Databases",
+            "type": "string"
+          },
+          {
+            "value": "Indexes help speed up queries by...",
+            "type": "string"
+          },
+          {
+            "value": "2",
+            "type": "number"
+          },
+          {
+            "value": "NOW()",
+            "type": "expression"
+          }
+        ],
+        [
+          {
+            "value": "3",
+            "type": "number"
+          },
+          {
+            "value": "Best Practices for SQL Queries",
+            "type": "string"
+          },
+          {
+            "value": "Writing efficient SQL queries is crucial for...",
+            "type": "string"
+          },
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "NOW()",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    "store.products": {
+      "schemaName": "store",
+      "tableName": "products",
+      "columns": [
+        "id",
+        "name",
+        "details",
+        "tags",
+        "in_stock",
+        "price",
+        "created_at"
+      ],
+      "values": [
+        [
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "Laptop",
+            "type": "string"
+          },
+          {
+            "value": "{\"brand\": \"Dell\", \"specs\": {\"ram\": \"16GB\", \"storage\": \"512GB SSD\"}}",
+            "type": "string"
+          },
+          {
+            "value": "[\"electronics\", \"computer\"]",
+            "type": "string"
+          },
+          {
+            "value": "TRUE",
+            "type": "boolean"
+          },
+          {
+            "value": "1299.99",
+            "type": "number"
+          },
+          {
+            "value": "NOW()",
+            "type": "expression"
+          }
+        ],
+        [
+          {
+            "value": "2",
+            "type": "number"
+          },
+          {
+            "value": "Smartphone",
+            "type": "string"
+          },
+          {
+            "value": "{\"brand\": \"Samsung\", \"specs\": {\"ram\": \"8GB\", \"storage\": \"256GB\"}}",
+            "type": "string"
+          },
+          {
+            "value": "[\"electronics\", \"mobile\"]",
+            "type": "string"
+          },
+          {
+            "value": "TRUE",
+            "type": "boolean"
+          },
+          {
+            "value": "899.99",
+            "type": "number"
+          },
+          {
+            "value": "NOW()",
+            "type": "expression"
+          }
+        ],
+        [
+          {
+            "value": "3",
+            "type": "number"
+          },
+          {
+            "value": "Headphones",
+            "type": "string"
+          },
+          {
+            "value": "{\"brand\": \"Sony\", \"specs\": {\"type\": \"Wireless\", \"battery_life\": \"30 hours\"}}",
+            "type": "string"
+          },
+          {
+            "value": "[\"electronics\", \"audio\"]",
+            "type": "string"
+          },
+          {
+            "value": "FALSE",
+            "type": "boolean"
+          },
+          {
+            "value": "199.99",
+            "type": "number"
+          },
+          {
+            "value": "NOW()",
+            "type": "expression"
+          }
+        ]
+      ]
+    }
+  }
+}
