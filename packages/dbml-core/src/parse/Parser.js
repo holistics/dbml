@@ -71,6 +71,10 @@ class Parser {
     return mssqlParser.parseWithPegError(str);
   }
 
+  static parseMSSQLToJSONV2 (str) {
+    return parse(str, 'mssql');
+  }
+
   static parseSnowflakeToJSON (str) {
     return parse(str, 'snowflake');
   }
@@ -117,6 +121,11 @@ class Parser {
 
         case 'mssql':
           rawDatabase = Parser.parseMSSQLToJSON(str);
+          break;
+
+        // When we finish implementing the new parser, it should be mssql and the old one will be mssqlLegacy
+        case 'mssqlv2':
+          rawDatabase = Parser.parseMSSQLToJSONV2(str);
           break;
 
         case 'json':
