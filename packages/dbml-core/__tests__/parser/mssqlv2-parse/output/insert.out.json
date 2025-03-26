@@ -1,0 +1,184 @@
+{
+  "records": {
+    "Production.UnitMeasure": {
+      "tableName": "Production.UnitMeasure",
+      "columns": [
+        "Name",
+        "UnitMeasureCode",
+        "ModifiedDate"
+      ],
+      "values": [
+        [
+          {
+            "value": "N'Square Yards'",
+            "type": "string"
+          },
+          {
+            "value": "N'Y2'",
+            "type": "string"
+          },
+          {
+            "value": "GETDATE()",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    "special_chars": {
+      "tableName": "special_chars",
+      "columns": [
+        "id",
+        "name",
+        "value"
+      ],
+      "values": [
+        [
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "'Special 1'",
+            "type": "string"
+          },
+          {
+            "value": "'test''s value'",
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": "2",
+            "type": "number"
+          },
+          {
+            "value": "'Special 2'",
+            "type": "string"
+          },
+          {
+            "value": "'value with \"quotes\"'",
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": "3",
+            "type": "number"
+          },
+          {
+            "value": "'Special 3'",
+            "type": "string"
+          },
+          {
+            "value": "'value with [brackets]'",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    "complex_table": {
+      "tableName": "complex_table",
+      "columns": [
+        "id",
+        "name",
+        "value",
+        "created_at"
+      ],
+      "values": [
+        [
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "'Complex 1'",
+            "type": "string"
+          },
+          {
+            "value": "ABS(-100) * 2 + 3",
+            "type": "expression"
+          },
+          {
+            "value": "GETDATE()",
+            "type": "expression"
+          }
+        ],
+        [
+          {
+            "value": "2",
+            "type": "number"
+          },
+          {
+            "value": "'Complex 2'",
+            "type": "string"
+          },
+          {
+            "value": "CAST(123 AS VARCHAR(10)) + 'test'",
+            "type": "expression"
+          },
+          {
+            "value": "CURRENT_TIMESTAMP",
+            "type": "expression"
+          }
+        ],
+        [
+          {
+            "value": "3",
+            "type": "number"
+          },
+          {
+            "value": "'Complex 3'",
+            "type": "string"
+          },
+          {
+            "value": "NULLIF(1, 1)",
+            "type": "expression"
+          },
+          {
+            "value": "GETDATE()",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    "T1": {
+      "tableName": "T1",
+      "columns": [
+        "column_1",
+        "column_2"
+      ],
+      "values": [
+        [
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "'Row #1'",
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "'Explicit identity value'",
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": "2",
+            "type": "number"
+          },
+          {
+            "value": "'Explicit identity value'",
+            "type": "string"
+          }
+        ]
+      ]
+    }
+  }
+}
