@@ -1,8 +1,8 @@
-import { first, flattenDepth, last, nth } from "lodash";
-import TSqlParserVisitor from "../../parsers/mssql/TSqlParserVisitor";
-import { getOriginalText } from "../helpers";
-import { shouldPrintSchemaName } from "../../../../model_structure/utils";
-import { DATA_TYPE } from "../constants";
+import { first, flattenDepth, last, nth } from 'lodash';
+import { shouldPrintSchemaName } from '../../../../model_structure/utils';
+import TSqlParserVisitor from '../../parsers/mssql/TSqlParserVisitor';
+import { DATA_TYPE } from '../constants';
+import { getOriginalText } from '../helpers';
 
 export default class MssqlASTGen extends TSqlParserVisitor {
   constructor () {
@@ -104,7 +104,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       };
     }
 
-
+    this.data.records[fullTableName].values.push(...values);
   }
 
   // ddl_object
@@ -160,10 +160,9 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   | DEFAULT VALUES
   //   ;
   visitInsert_statement_value (ctx) {
-    if (!ctx.table_value_constructor()) return;
+    if (!ctx.table_value_constructor()) return [];
 
     const rawValues = ctx.table_value_constructor().accept(this);
-    console.log(333, flattenDepth(rawValues, 3));
     return rawValues;
   }
 
@@ -198,9 +197,25 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   | DOLLAR_ACTION
   //   ;
 
-  // visitExpression (ctx) {
-  //   console.log('visitExpression')
-  // }
+  visitExpression (ctx) {
+    if (ctx.primitive_expression()) {
+      return ctx.primitive_expression().accept(this);
+    }
+
+    if (ctx.function_call()) {
+      return ctx.function_call().accept(this);
+    }
+
+    if (ctx.unary_operator_expression()) {
+      return ctx.unary_operator_expression().accept(this);
+    }
+
+    // Default case for any other expression type
+    return {
+      value: getOriginalText(ctx),
+      type: DATA_TYPE.EXPRESSION
+    };
+  }
 
   // primitive_constant
   //   : STRING // string, datetime or uniqueidentifier
@@ -250,7 +265,56 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   | partition_function                             # PARTITION_FUNC
   //   | hierarchyid_static_method                      # HIERARCHYID_METHOD
   //   ;
-  visitBUILT_IN_FUNC (ctx) {
 
+  // See packages/dbml-core/src/parse/ANTLR/parsers/mssql/TSqlParser.g4 at line 4338
+  visitBUILT_IN_FUNC (ctx) {
+    return {
+      value: getOriginalText(ctx),
+      type: DATA_TYPE.EXPRESSION,
+    }
+  }
+
+  // unary_operator_expression
+  //   : '~' expression
+  //   | op = ('+' | '-') expression
+  //   ;
+  visitUnary_operator_expression (ctx) {
+    const operator = ctx.children[0].getText();
+    const expression = ctx.expression().accept(this);
+
+    return {
+      value: `${operator}${expression.value}`,
+      type: expression.type
+    };
+  }
+
+  // data_type
+  //   : scaled = (VARCHAR | NVARCHAR | BINARY_KEYWORD | VARBINARY_KEYWORD | SQUARE_BRACKET_ID) '(' MAX ')'
+  //   | ext_type = id_ '(' scale = DECIMAL ',' prec = DECIMAL ')'
+  //   | ext_type = id_ '(' scale = DECIMAL ')'
+  //   | ext_type = id_ IDENTITY ('(' seed = DECIMAL ',' inc = DECIMAL ')')?
+  //   | double_prec = DOUBLE PRECISION?
+  //   | unscaled_type = id_
+  //   ;
+  visitData_type (ctx) {
+    return ctx.getText();
+  }
+
+  visitPrimitive_expression (ctx) {
+    if (ctx.NULL_()) {
+      return {
+        value: 'NULL',
+        type: DATA_TYPE.NUMBER
+      };
+    }
+
+    if (ctx.primitive_constant()) {
+      return ctx.primitive_constant().accept(this);
+    }
+
+    return {
+      value: ctx.getText(),
+      type: DATA_TYPE.EXPRESSION
+    };
   }
 }
