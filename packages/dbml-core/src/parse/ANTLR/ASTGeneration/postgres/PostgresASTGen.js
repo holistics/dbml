@@ -1047,7 +1047,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   //  | DEFAULT VALUES
   //  ;
   visitInsert_rest (ctx) {
-    const columns = ctx.insert_column_list()?.accept(this) || [];
+    const columns = ctx.insert_column_list() ? ctx.insert_column_list().accept(this) : [];
     const rowsValue = ctx.selectstmt().accept(this) || [];
     // each sub array represents a set of value of a row
     // [
@@ -1106,7 +1106,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   //  | with_clause select_clause opt_sort_clause (for_locking_clause opt_select_limit | select_limit opt_for_locking_clause)?
   //  ;
   visitSelect_no_parens (ctx) {
-    return ctx.select_clause().accept(this)
+    return ctx.select_clause().accept(this);
   }
 
   // select_clause
@@ -1114,7 +1114,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   //  | select_with_parens
   //  ;
   visitSelect_clause (ctx) {
-    return ctx.simple_select().accept(this)
+    return ctx.simple_select().accept(this);
   }
 
   // simple_select
@@ -1173,7 +1173,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   // a_expr_collate
   //  : a_expr_typecast (COLLATE any_name)?
   //  ;
-   visitA_expr_collate (ctx) {
+  visitA_expr_collate (ctx) {
     const expressionValueSet = ctx.a_expr_typecast().accept(this);
 
     // Possible values
@@ -1183,6 +1183,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     //   undefined,
     //   { type_name: 'TIMESTAMPTZ', schemaName: null }
     // ]
+    // eslint-disable-next-line no-unused-vars
     const [rawValue, _, rawType = {}] = expressionValueSet;
     const { value, type } = rawValue;
     return {

@@ -1,4 +1,7 @@
-import { first, flattenDepth, last, nth } from 'lodash';
+/* eslint-disable class-methods-use-this */
+import {
+  first, flattenDepth, last, nth,
+} from 'lodash';
 import { shouldPrintSchemaName } from '../../../../model_structure/utils';
 import TSqlParserVisitor from '../../parsers/mssql/TSqlParserVisitor';
 import { DATA_TYPE } from '../constants';
@@ -84,7 +87,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const tableName = last(names);
     const schemaName = names.length > 1 ? nth(names, -2) : undefined;
 
-    const columns = ctx.insert_column_name_list()?.accept(this) || [];
+    const columns = ctx.insert_column_name_list() ? ctx.insert_column_name_list().accept(this) : [];
     const values = ctx.insert_statement_value().accept(this);
 
     // handle insert into all columns
@@ -213,7 +216,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     // Default case for any other expression type
     return {
       value: getOriginalText(ctx),
-      type: DATA_TYPE.EXPRESSION
+      type: DATA_TYPE.EXPRESSION,
     };
   }
 
@@ -239,7 +242,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       return {
         value: `${dollar}${sign}${value}`,
         type: DATA_TYPE.STRING,
-      }
+      };
     }
 
     if (ctx.REAL() || ctx.DECIMAL() || ctx.FLOAT()) {
@@ -271,7 +274,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     return {
       value: getOriginalText(ctx),
       type: DATA_TYPE.EXPRESSION,
-    }
+    };
   }
 
   // unary_operator_expression
@@ -284,7 +287,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
     return {
       value: `${operator}${expression.value}`,
-      type: expression.type
+      type: expression.type,
     };
   }
 
@@ -304,7 +307,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     if (ctx.NULL_()) {
       return {
         value: 'NULL',
-        type: DATA_TYPE.NUMBER
+        type: DATA_TYPE.NUMBER,
       };
     }
 
@@ -314,7 +317,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
     return {
       value: ctx.getText(),
-      type: DATA_TYPE.EXPRESSION
+      type: DATA_TYPE.EXPRESSION,
     };
   }
 }
