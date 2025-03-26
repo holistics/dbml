@@ -1,8 +1,12 @@
 /* eslint-disable class-methods-use-this */
 import { last, flatten, flattenDepth } from 'lodash';
 import MySQLParserVisitor from '../../parsers/mysql/MySqlParserVisitor';
-import { Endpoint, Enum, Field, Index, Table, Ref } from '../AST';
-import { TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE } from '../constants';
+import {
+  Endpoint, Enum, Field, Index, Table, Ref,
+} from '../AST';
+import {
+  TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE,
+} from '../constants';
 import { shouldPrintSchemaName } from '../../../../model_structure/utils';
 
 const TABLE_OPTIONS_KIND = {
@@ -188,7 +192,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   // CREATE TEMPORARY? TABLE ifNotExists? tableName (LIKE tableName | '(' LIKE parenthesisTable = tableName ')') # copyCreateTable
   // | CREATE TEMPORARY? TABLE ifNotExists? tableName createDefinitions? (tableOption (','? tableOption)*)? partitionDefinitions? keyViolate = (IGNORE | REPLACE)? AS? selectStatement # queryCreateTable
   // | CREATE TEMPORARY? TABLE ifNotExists? tableName createDefinitions (tableOption (','? tableOption)*)? partitionDefinitions? # columnCreateTable
-  visitCopyCreateTable (ctx) {
+  visitCopyCreateTable () {
     // not supported
   }
 
@@ -541,7 +545,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   }
 
   // uniqueKeyColumnConstraint: UNIQUE KEY?
-  visitUniqueKeyColumnConstraint (ctx) {
+  visitUniqueKeyColumnConstraint () {
     return {
       kind: COLUMN_CONSTRAINT_KIND.UNIQUE,
       value: true,
@@ -738,8 +742,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   // | ON UPDATE onUpdate = referenceControlType (ON DELETE onDelete = referenceControlType)?
   visitReferenceAction (ctx) {
     const r = {};
-    r.onDelete = ctx.onDelete?.accept(this);
-    r.onUpdate = ctx.onUpdate?.accept(this);
+    r.onDelete = ctx.onDelete.accept(this);
+    r.onUpdate = ctx.onUpdate.accept(this);
     return r;
   }
 
@@ -815,7 +819,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     };
   }
 
-  visitCheckTableConstraint (ctx) {
+  visitCheckTableConstraint () {
     // ignored
   }
 
@@ -992,7 +996,6 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   visitDmlStatement (ctx) {
     if (ctx.insertStatement()) {
       ctx.insertStatement().accept(this);
-      return;
     }
   }
 
@@ -1015,7 +1018,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     const fullTableName = `${schemaName && shouldPrintSchemaName(schemaName) ? `${schemaName}.` : ''}${tableName}`;
 
     // insert without specified columns
-    const columns = ctx.fullColumnNameList()?.accept(this) || [];
+    const columns = ctx.fullColumnNameList() ? ctx.fullColumnNameList().accept(this) : [];
     const values = ctx.insertStatementValue().accept(this);
 
     if (columns.length === 0 || values.length === 0) {
@@ -1123,6 +1126,6 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     return {
       value: ctx.getText(),
       type: DATA_TYPE.EXPRESSION,
-    }
+    };
   }
 }
