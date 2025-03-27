@@ -32,7 +32,7 @@ describe('@dbml/core', () => {
     });
 
     test.each(scanTestNames(__dirname, 'mssqlv2-parse/input'))('mssqlv2-parse/%s', (name) => {
-      runTest(name, 'mssqlv2-parse', 'mssql', 'parseMSSQLToJSONV2');
+      runTest(name, 'mssqlv2-parse', 'mssql', 'parseMSSQLToJSONv2');
     });
   });
 });
