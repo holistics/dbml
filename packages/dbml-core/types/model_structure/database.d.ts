@@ -16,6 +16,19 @@ export interface Project {
     database_type: string;
     name: string;
 }
+
+export interface Records {
+    [tableSchemaName: string]: {
+        schemaName: string | undefined;
+        tableName: string;
+        columns: string[];
+        values: {
+            value: any;
+            type: string;
+        }[];
+    }
+}
+
 export interface RawDatabase {
     schemas: Schema[];
     tables: Table[];
@@ -24,6 +37,7 @@ export interface RawDatabase {
     refs: Ref[];
     tableGroups: TableGroup[];
     project: Project;
+    records: Records;
 }
 declare class Database extends Element {
     dbState: DbState;
@@ -35,7 +49,7 @@ declare class Database extends Element {
     databaseType: string;
     name: string;
     id: number;
-    constructor({ schemas, tables, enums, refs, tableGroups, project }: RawDatabase);
+    constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
     generateId(): void;
     processSchemas(rawSchemas: RawSchema[]): void;
     pushSchema(schema: Schema): void;
@@ -210,5 +224,6 @@ export interface NormalizedDatabase {
     indexes: NormalizedIndex;
     indexColumns: NormalizedIndexColumn;
     fields: NormalizedField;
+    records: Records;
 }
 export default Database;
