@@ -3,7 +3,7 @@ import { last, flatten, flattenDepth } from 'lodash';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
 import { Enum, Field, Index, Table } from '../AST';
 import { TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TYPE } from '../constants';
-import { shouldPrintSchemaName } from '../../../../model_structure/utils';
+import { getFullTableName } from '../../../../model_structure/utils';
 
 const COMMAND_KIND = {
   REF: 'ref',
@@ -1013,7 +1013,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
-    const fullTableName = `${schemaName && shouldPrintSchemaName(schemaName) ? `${schemaName}.` : ''}${tableName}`;
+    const fullTableName = getFullTableName(schemaName, tableName);
 
     const { columns, values } = ctx.insert_rest().accept(this);
 
