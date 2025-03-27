@@ -7,7 +7,7 @@ import {
 import {
   TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE,
 } from '../constants';
-import { shouldPrintSchemaName } from '../../../../model_structure/utils';
+import { getFullTableName } from '../../../../model_structure/utils';
 
 const TABLE_OPTIONS_KIND = {
   NOTE: 'note',
@@ -742,8 +742,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   // | ON UPDATE onUpdate = referenceControlType (ON DELETE onDelete = referenceControlType)?
   visitReferenceAction (ctx) {
     const r = {};
-    r.onDelete = ctx.onDelete.accept(this);
-    r.onUpdate = ctx.onUpdate.accept(this);
+    r.onDelete = ctx.onDelete?.accept(this);
+    r.onUpdate = ctx.onUpdate?.accept(this);
     return r;
   }
 
@@ -1015,7 +1015,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     const names = ctx.tableName().accept(this);
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
-    const fullTableName = `${schemaName && shouldPrintSchemaName(schemaName) ? `${schemaName}.` : ''}${tableName}`;
+    const fullTableName = getFullTableName(schemaName, tableName);
 
     // insert without specified columns
     const columns = ctx.fullColumnNameList() ? ctx.fullColumnNameList().accept(this) : [];

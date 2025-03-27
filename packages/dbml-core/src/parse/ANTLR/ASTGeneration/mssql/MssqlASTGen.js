@@ -2,7 +2,7 @@
 import {
   first, flattenDepth, last, nth,
 } from 'lodash';
-import { shouldPrintSchemaName } from '../../../../model_structure/utils';
+import { getFullTableName } from '../../../../model_structure/utils';
 import TSqlParserVisitor from '../../parsers/mssql/TSqlParserVisitor';
 import { DATA_TYPE } from '../constants';
 import { getOriginalText } from '../helpers';
@@ -96,7 +96,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       return;
     }
 
-    const fullTableName = `${schemaName && shouldPrintSchemaName(schemaName) ? `${schemaName}.` : ''}${tableName}`;
+    const fullTableName = getFullTableName(schemaName, tableName);
 
     if (!this.data.records[fullTableName]) {
       this.data.records[fullTableName] = {
