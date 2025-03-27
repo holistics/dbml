@@ -306,8 +306,8 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   visitPrimitive_expression (ctx) {
     if (ctx.NULL_()) {
       return {
-        value: 'NULL',
-        type: DATA_TYPE.NUMBER,
+        value: ctx.getText(),
+        type: DATA_TYPE.EXPRESSION,
       };
     }
 
