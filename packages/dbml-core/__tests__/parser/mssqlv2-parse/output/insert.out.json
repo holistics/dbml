@@ -11,11 +11,11 @@
         [
           {
             "value": "N'Square Yards'",
-            "type": "string"
+            "type": "expression"
           },
           {
             "value": "N'Y2'",
-            "type": "string"
+            "type": "expression"
           },
           {
             "value": "GETDATE()",
@@ -38,11 +38,11 @@
             "type": "number"
           },
           {
-            "value": "'Special 1'",
+            "value": "Special 1",
             "type": "string"
           },
           {
-            "value": "'test''s value'",
+            "value": "test''s value",
             "type": "string"
           }
         ],
@@ -52,11 +52,11 @@
             "type": "number"
           },
           {
-            "value": "'Special 2'",
+            "value": "Special 2",
             "type": "string"
           },
           {
-            "value": "'value with \"quotes\"'",
+            "value": "value with \"quotes\"",
             "type": "string"
           }
         ],
@@ -66,11 +66,11 @@
             "type": "number"
           },
           {
-            "value": "'Special 3'",
+            "value": "Special 3",
             "type": "string"
           },
           {
-            "value": "'value with [brackets]'",
+            "value": "value with [brackets]",
             "type": "string"
           }
         ]
@@ -91,7 +91,7 @@
             "type": "number"
           },
           {
-            "value": "'Complex 1'",
+            "value": "Complex 1",
             "type": "string"
           },
           {
@@ -109,7 +109,7 @@
             "type": "number"
           },
           {
-            "value": "'Complex 2'",
+            "value": "Complex 2",
             "type": "string"
           },
           {
@@ -127,7 +127,7 @@
             "type": "number"
           },
           {
-            "value": "'Complex 3'",
+            "value": "Complex 3",
             "type": "string"
           },
           {
@@ -154,7 +154,7 @@
             "type": "number"
           },
           {
-            "value": "'Row #1'",
+            "value": "Row #1",
             "type": "string"
           }
         ],
@@ -164,7 +164,7 @@
             "type": "number"
           },
           {
-            "value": "'Explicit identity value'",
+            "value": "Explicit identity value",
             "type": "string"
           }
         ],
@@ -174,11 +174,34 @@
             "type": "number"
           },
           {
-            "value": "'Explicit identity value'",
+            "value": "Explicit identity value",
             "type": "string"
           }
         ]
       ]
     }
-  }
+  },
+  "tables": [
+    {
+      "fields": [
+        {
+          "name": "column_1",
+          "type": {
+            "type_name": "int IDENTITY"
+          }
+        },
+        {
+          "name": "column_2",
+          "type": {
+            "type_name": "VARCHAR(30)"
+          }
+        }
+      ],
+      "name": "T1",
+      "note": {
+        "value": ""
+      },
+      "schemaName": "dbo"
+    }
+  ]
 }
