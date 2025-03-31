@@ -17,6 +17,59 @@ const getSchemaAndTableName = (names) => {
   };
 };
 
+/**
+ * @param {any[]} columnDefTableConstraints
+ * @returns {{
+ *  fieldsData: any[],
+ *  indexes: any[],
+ *  tableRefs: any[],
+ * }}
+ */
+const splitColumnDefTableConstraints = (columnDefTableConstraints) => {
+  const [fieldsData, indexes, tableRefs] = columnDefTableConstraints.reduce((acc, columnDefTableConstraint) => {
+    switch (columnDefTableConstraint.kind) {
+      case TABLE_CONSTRAINT_KIND.FIELD:
+        acc[0].push(columnDefTableConstraint.value);
+        break;
+
+      case TABLE_CONSTRAINT_KIND.INDEX:
+      case TABLE_CONSTRAINT_KIND.PK:
+      case TABLE_CONSTRAINT_KIND.UNIQUE:
+        acc[1].push(columnDefTableConstraint.value);
+        break;
+
+      case TABLE_CONSTRAINT_KIND.FK:
+        acc[2].push(columnDefTableConstraint.value);
+        break;
+
+      default:
+        break;
+    }
+
+    return acc;
+  }, [[], [], []]);
+
+  return { fieldsData, indexes, tableRefs };
+};
+
+const parseFieldsAndInlineRefsFromFieldsData = (fieldsData, tableName, schemaName) => {
+  const [resInlineRefs, fields] = fieldsData.reduce((acc, fieldData) => {
+    const inlineRefs = fieldData.inline_refs.map(inlineRef => {
+      inlineRef.endpoints[0].tableName = tableName;
+      inlineRef.endpoints[0].schemaName = schemaName;
+      inlineRef.endpoints[0].fieldNames = [fieldData.field.name];
+      return inlineRef;
+    });
+
+    acc[0].push(inlineRefs);
+    acc[1].push(fieldData.field);
+
+    return acc;
+  }, [[], []]);
+
+  return { inlineRefs: resInlineRefs, fields };
+};
+
 export default class MssqlASTGen extends TSqlParserVisitor {
   constructor () {
     super();
@@ -396,28 +449,9 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const columnDefTableConstraints = ctx.column_def_table_constraints().accept(this);
     const tableIndices = ctx.table_indices().map((tableIndex) => tableIndex.accept(this));
 
-    const [fieldsData, indexes, tableRefs] = columnDefTableConstraints.reduce((acc, columnDefTableConstraint) => {
-      if (columnDefTableConstraint.kind === TABLE_CONSTRAINT_KIND.INDEX) {
-        acc[1].push(columnDefTableConstraint.value);
-      } else if (columnDefTableConstraint.kind === TABLE_CONSTRAINT_KIND.FIELD) {
-        acc[0].push(columnDefTableConstraint.value);
-      } else if (columnDefTableConstraint.kind === TABLE_CONSTRAINT_KIND.FK) {
-        acc[2].push(columnDefTableConstraint.value);
-      } else if (columnDefTableConstraint.kind === TABLE_CONSTRAINT_KIND.PK) {
-        acc[1].push(columnDefTableConstraint.value);
-      } else if (columnDefTableConstraint.kind === TABLE_CONSTRAINT_KIND.UNIQUE) {
-        acc[1].push(columnDefTableConstraint.value);
-      }
+    const { fieldsData, indexes, tableRefs } = splitColumnDefTableConstraints(columnDefTableConstraints);
 
-      return acc;
-    }, [[], [], []]);
-
-    const inlineRefs = fieldsData.map((fieldData) => fieldData.inline_refs.map(inlineRef => {
-      inlineRef.endpoints[0].tableName = tableName;
-      inlineRef.endpoints[0].schemaName = schemaName;
-      inlineRef.endpoints[0].fieldNames = [fieldData.field.name];
-      return inlineRef;
-    }));
+    const { inlineRefs, fields } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
 
     this.data.refs.push(...flatten(inlineRefs));
 
@@ -430,7 +464,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const table = new Table({
       name: tableName,
       schemaName,
-      fields: fieldsData.map((fieldData) => fieldData.field),
+      fields,
       indexes: tableIndices.concat(indexes),
     });
 
@@ -852,9 +886,28 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   ) ';'?
   //   ;
   visitAlter_table (ctx) {
-    const names = ctx.table_name().accept(this);
+    // table_name() returns an array because there are multiple table_name in the clause (REFERENCES table_name ...)
+    const names = ctx.table_name()[0].accept(this);
     const { schemaName, tableName } = getSchemaAndTableName(names);
 
+    const table = this.data.tables.find((t) => t.name === tableName && t.schemaName === schemaName);
+    if (!table) return; // ALTER TABLE should appear after CREATE TABLE, so skip if table is not created yet
+
     const columnDefTableConstraints = ctx.column_def_table_constraints() ? ctx.column_def_table_constraints().accept(this) : [];
+
+    const { fieldsData, indexes, tableRefs } = splitColumnDefTableConstraints(columnDefTableConstraints);
+
+    const { inlineRefs, fields } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
+
+    this.data.refs.push(...flatten(inlineRefs));
+
+    this.data.refs.push(...tableRefs.map(tableRef => {
+      tableRef.endpoints[0].tableName = tableName;
+      tableRef.endpoints[0].schemaName = schemaName;
+      return tableRef;
+    }));
+
+    table.fields.push(...fields);
+    table.indexes.push(...indexes);
   }
 }
