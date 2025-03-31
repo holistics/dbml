@@ -228,11 +228,23 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       return ctx.unary_operator_expression().accept(this);
     }
 
+    if (ctx.bracket_expression()) {
+      return ctx.bracket_expression().accept(this);
+    }
+
     // Default case for any other expression type
     return {
       value: getOriginalText(ctx),
       type: DATA_TYPE.EXPRESSION,
     };
+  }
+
+  // bracket_expression
+  //   : '(' expression ')'
+  //   | '(' subquery ')'
+  //   ;
+  visitBracket_expression (ctx) {
+    return ctx.expression() ? ctx.expression().accept(this) : null;
   }
 
   // primitive_constant
@@ -276,7 +288,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     }
 
     return {
-      value: ctx.getText(),
+      value: getOriginalText(ctx),
       type: DATA_TYPE.EXPRESSION,
     };
   }
@@ -294,6 +306,13 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
   // See packages/dbml-core/src/parse/ANTLR/parsers/mssql/TSqlParser.g4 at line 4338
   visitBUILT_IN_FUNC (ctx) {
+    return {
+      value: getOriginalText(ctx),
+      type: DATA_TYPE.EXPRESSION,
+    };
+  }
+
+  visitSCALAR_FUNCTION (ctx) {
     return {
       value: getOriginalText(ctx),
       type: DATA_TYPE.EXPRESSION,
@@ -330,7 +349,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     if (ctx.NULL_()) {
       return {
         value: ctx.getText(),
-        type: DATA_TYPE.EXPRESSION,
+        type: DATA_TYPE.BOOLEAN,
       };
     }
 
@@ -413,7 +432,6 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       schemaName,
       fields: fieldsData.map((fieldData) => fieldData.field),
       indexes: tableIndices.concat(indexes),
-      note: { value: '' },
     });
 
     this.data.tables.push(table);
@@ -477,7 +495,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       name: columnName,
       type: {
         type_name: type,
-        schemaName: undefined,
+        schemaName: null,
       },
     });
 
@@ -502,6 +520,9 @@ export default class MssqlASTGen extends TSqlParserVisitor {
         switch (columnDef.kind) {
           case COLUMN_CONSTRAINT_KIND.DEFAULT:
             field.dbdefault = columnDef.value;
+            break;
+          case COLUMN_CONSTRAINT_KIND.INCREMENT:
+            field.increment = columnDef.value;
             break;
           case COLUMN_CONSTRAINT_KIND.NOT_NULL:
             field.not_null = columnDef.value;
@@ -547,6 +568,13 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       return {
         kind: COLUMN_CONSTRAINT_KIND.DEFAULT,
         value: ctx.expression().accept(this),
+      };
+    }
+
+    if (ctx.IDENTITY()) {
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.INCREMENT,
+        value: true,
       };
     }
 
@@ -712,14 +740,22 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     if (ctx.PRIMARY() || ctx.UNIQUE()) {
       const columns = ctx.column_name_list_with_order().accept(this);
 
+      const index = new Index({
+        name,
+        columns,
+      });
+
+      if (ctx.PRIMARY()) {
+        index.pk = true;
+      }
+
+      if (ctx.UNIQUE()) {
+        index.unique = true;
+      }
+
       return {
         kind: ctx.PRIMARY() ? TABLE_CONSTRAINT_KIND.PK : TABLE_CONSTRAINT_KIND.UNIQUE,
-        value: new Index({
-          name,
-          columns,
-          pk: !!ctx.PRIMARY(),
-          unique: !!ctx.UNIQUE(),
-        }),
+        value: index,
       };
     }
 
@@ -794,5 +830,31 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     });
 
     return index;
+  }
+
+  // alter_table
+  //   : ALTER TABLE table_name (
+  //       SET '(' LOCK_ESCALATION '=' (AUTO | TABLE | DISABLE) ')'
+  //       | ADD column_def_table_constraints
+  //       | ALTER COLUMN (column_definition | column_modifier)
+  //       | DROP COLUMN id_ (',' id_)*
+  //       | DROP CONSTRAINT constraint = id_
+  //       | WITH (CHECK | NOCHECK) ADD (CONSTRAINT constraint = id_)? (
+  //           FOREIGN KEY '(' fk = column_name_list ')' REFERENCES table_name (
+  //               '(' pk = column_name_list ')'
+  //           )? (on_delete | on_update)*
+  //           | CHECK '(' search_condition ')'
+  //       )
+  //       | (NOCHECK | CHECK) CONSTRAINT constraint = id_
+  //       | (ENABLE | DISABLE) TRIGGER id_?
+  //       | REBUILD table_options
+  //       | SWITCH switch_partition
+  //   ) ';'?
+  //   ;
+  visitAlter_table (ctx) {
+    const names = ctx.table_name().accept(this);
+    const { schemaName, tableName } = getSchemaAndTableName(names);
+
+    const columnDefTableConstraints = ctx.column_def_table_constraints() ? ctx.column_def_table_constraints().accept(this) : [];
   }
 }
