@@ -12,8 +12,7 @@
         },
         {
           "type": {
-            "type_name": "jobs_status_enum",
-            "args": "'created', 'running', 'done', 'failed', 'wait for validation'"
+            "type_name": "nvarchar(255)"
           },
           "not_null": true,
           "name": "status"
@@ -32,76 +31,23 @@
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "name": "created_at"
         },
         {
           "type": {
-            "type_name": "orders_priority_enum",
-            "args": "'low', 'medium', 'high'"
+            "type_name": "nvarchar(255)"
           },
           "not_null": true,
           "name": "priority"
         },
         {
           "type": {
-            "type_name": "orders_status_enum",
-            "args": "'pending', 'processing', 'done'"
+            "type_name": "nvarchar(255)"
           },
           "not_null": true,
           "name": "status"
-        }
-      ]
-    }
-  ],
-  "enums": [
-    {
-      "name": "jobs_status_enum",
-      "values": [
-        {
-          "name": "created"
-        },
-        {
-          "name": "running"
-        },
-        {
-          "name": "done"
-        },
-        {
-          "name": "failed"
-        },
-        {
-          "name": "wait for validation"
-        }
-      ]
-    },
-    {
-      "name": "orders_priority_enum",
-      "values": [
-        {
-          "name": "low"
-        },
-        {
-          "name": "medium"
-        },
-        {
-          "name": "high"
-        }
-      ]
-    },
-    {
-      "name": "orders_status_enum",
-      "values": [
-        {
-          "name": "pending"
-        },
-        {
-          "name": "processing"
-        },
-        {
-          "name": "done"
         }
       ]
     }
