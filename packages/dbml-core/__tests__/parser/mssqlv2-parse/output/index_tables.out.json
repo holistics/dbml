@@ -11,37 +11,32 @@
         },
         {
           "type": {
-            "type_name": "nvarchar(255)",
-            "args": "255"
+            "type_name": "nvarchar(255)"
           },
           "name": "full_name"
         },
         {
           "type": {
-            "type_name": "nvarchar(255)",
-            "args": "255"
+            "type_name": "nvarchar(255)"
           },
           "unique": true,
           "name": "email"
         },
         {
           "type": {
-            "type_name": "nvarchar(255)",
-            "args": "255"
+            "type_name": "nvarchar(255)"
           },
           "name": "gender"
         },
         {
           "type": {
-            "type_name": "nvarchar(255)",
-            "args": "255"
+            "type_name": "nvarchar(255)"
           },
           "name": "date_of_birth"
         },
         {
           "type": {
-            "type_name": "nvarchar(255)",
-            "args": "255"
+            "type_name": "nvarchar(255)"
           },
           "name": "created_at"
         },
@@ -84,6 +79,7 @@
         },
         {
           "name": "User Name",
+          "unique": false,
           "columns": [
             {
               "value": "full_name",
@@ -93,6 +89,7 @@
         },
         {
           "name": "users_index_2",
+          "unique": false,
           "columns": [
             {
               "value": "email",

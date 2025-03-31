@@ -21,16 +21,14 @@
         },
         {
           "type": {
-            "type_name": "orders_status_enum",
-            "args": "'created', 'running', 'done', 'failure'"
+            "type_name": "nvarchar(255)"
           },
           "not_null": true,
           "name": "status"
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "name": "created_at"
         }
@@ -57,7 +55,7 @@
           },
           "dbdefault": {
             "type": "number",
-            "value": 1
+            "value": "1"
           },
           "name": "quantity"
         }
@@ -75,8 +73,7 @@
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "name": "name"
         },
@@ -95,8 +92,7 @@
         },
         {
           "type": {
-            "type_name": "products_status_enum",
-            "args": "'Out of Stock', 'In Stock'"
+            "type_name": "nvarchar(255)"
           },
           "not_null": true,
           "name": "status"
@@ -105,16 +101,13 @@
           "type": {
             "type_name": "datetime"
           },
-          "name": "created_at",
-          "dbdefault": {
-            "type": "expression",
-            "value": "now()"
-          }
+          "name": "created_at"
         }
       ],
       "indexes": [
         {
           "name": "product_status",
+          "unique": false,
           "columns": [
             {
               "value": "merchant_id",
@@ -150,37 +143,32 @@
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "name": "full_name"
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "unique": true,
           "name": "email"
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "name": "gender"
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "name": "date_of_birth"
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "name": "created_at"
         },
@@ -203,8 +191,7 @@
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "name": "merchant_name"
         },
@@ -216,8 +203,7 @@
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "name": "created_at"
         },
@@ -252,15 +238,13 @@
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "name": "name"
         },
         {
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "name": "continent_name"
         }
@@ -373,36 +357,6 @@
           ],
           "relation": "1",
           "tableName": "users"
-        }
-      ]
-    }
-  ],
-  "enums": [
-    {
-      "name": "orders_status_enum",
-      "values": [
-        {
-          "name": "created"
-        },
-        {
-          "name": "running"
-        },
-        {
-          "name": "done"
-        },
-        {
-          "name": "failure"
-        }
-      ]
-    },
-    {
-      "name": "products_status_enum",
-      "values": [
-        {
-          "name": "Out of Stock"
-        },
-        {
-          "name": "In Stock"
         }
       ]
     }
