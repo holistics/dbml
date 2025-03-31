@@ -910,4 +910,23 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     table.fields.push(...fields);
     table.indexes.push(...indexes);
   }
+
+  // create_index
+  //   : CREATE UNIQUE? clustered? INDEX id_ ON table_name '(' column_name_list_with_order ')' (
+  //       INCLUDE '(' column_name_list ')'
+  //   )? (WHERE where = search_condition)? (create_index_options)? (ON id_)? ';'?
+  //   ;
+  visitCreate_index (ctx) {
+    const { schemaName, tableName } = getSchemaAndTableName(ctx.table_name().accept(this));
+    const table = this.data.tables.find((t) => t.name === tableName && t.schemaName === schemaName);
+    if (!table) return; // ALTER TABLE should appear after CREATE TABLE, so skip if table is not created yet
+
+    const index = new Index({
+      name: ctx.id_()[0].accept(this),
+      unique: !!ctx.UNIQUE(),
+      columns: ctx.column_name_list_with_order().accept(this),
+    });
+
+    table.indexes.push(index);
+  }
 }
