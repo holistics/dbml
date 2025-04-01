@@ -7,7 +7,8 @@
 // Snowflake does not support indexes for standard tables.
 //
 
-import snowflake, { Connection, LogLevel } from 'snowflake-sdk';
+import snowflake from 'snowflake-sdk';
+import type { Connection, LogLevel, ConnectionOptions } from 'snowflake-sdk';
 import { parseSchema } from '../utils/parseSchema';
 import {
   DatabaseSchema,
@@ -93,30 +94,51 @@ const connectToSnowflake = async (config: Record<string, string>): Promise<Conne
     additionalLogToConsole: isDebugMode,
   });
 
+  // https://docs.snowflake.com/en/developer-guide/node-js/nodejs-driver-options#authentication-options
+  let authConfig = {};
+  switch (config.AUTHENTICATOR) {
+    case 'SNOWFLAKE_JWT':
+      // https://docs.snowflake.com/en/developer-guide/node-js/nodejs-driver-authenticate#label-nodejs-key-pair-authentication
+      // Support private key file
+      authConfig = {
+        privateKeyPath: config.PRIVATE_KEY_PATH,
+        privateKeyPass: config.PASSPHRASE,
+      };
+      break;
+
+    case 'SNOWFLAKE':
+    case undefined:
+      authConfig = {
+        password: config.PWD,
+      };
+      break;
+
+    default:
+      throw new Error('Unsupported authenticator');
+  }
+
   // "SERVER=myaccount.snowflakecomputing.com;UID=myusername;PWD=mypassword;DATABASE=mydatabase;WAREHOUSE=mywarehouse;ROLE=myrole";
-  const connection = snowflake.createConnection({
+  const connectionOptions: ConnectionOptions = {
+    authenticator: config.AUTHENTICATOR,
     account: config.SERVER,
     username: config.UID,
-    password: config.PWD,
     database: config.DATABASE,
     warehouse: config.WAREHOUSE,
     sfRetryMaxLoginRetries: 3,
     timeout: 10000,
-  });
+    ...authConfig,
+  };
 
-  try {
-    // Connect to Snowflake
-    await connect(connection);
+  const connection = snowflake.createConnection(connectionOptions);
 
-    // Execute the query
-    await executeQuery(connection, 'SELECT CURRENT_VERSION();');
+  // Connect to Snowflake
+  await connect(connection);
 
-    return connection;
-  } catch (err) {
-    throw err;
-  }
-}
+  // Execute the query
+  await executeQuery(connection, 'SELECT CURRENT_VERSION();');
 
+  return connection;
+};
 
 const convertQueryBoolean = (val: string | null) => val === 'YES';
 
