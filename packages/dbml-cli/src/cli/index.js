@@ -56,9 +56,11 @@ function db2dbml (args) {
                         - postgres: 'postgresql://user:password@localhost:5432/dbname?schemas=schema1,schema2,schema3'
                         - mysql: 'mysql://user:password@localhost:3306/dbname'
                         - mssql: 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;Schemas=schema1,schema2,schema3;'
-                        - snowflake: 'SERVER=<account_identifier>.<region>;UID=<your_username>;PWD=<your_password>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;SCHEMAS=schema1,schema2,schema3;'
+                        - snowflake:
+                          - password-based authentication: 'SERVER=<account_identifier>.<region>;UID=<your_username>;PWD=<your_password>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;SCHEMAS=schema1,schema2,schema3;'
+                          - key pair authentication: 'SERVER=<account_identifier>.<region>;UID=<your_username>;AUTHENTICATOR=SNOWFLAKE_JWT;PRIVATE_KEY_PATH=<path_to_your_private_key.p8>;PASSPHRASE=<your_private_key_passphrase>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;SCHEMAS=schema1,schema2,schema3;'
 
-                        Note: If you want to use key pair authentication, you need to replace 'PWD=<your_password>;' with 'AUTHENTICATOR=SNOWFLAKE_JWT;PRIVATE_KEY_PATH=<path_to_private_key.p8>;PASSPHRASE=<your_private_key_passphrase>;'
+                          Note: If you did not use passphrase to encrypt your private key, you can leave the "PASSPHRASE" empty.
 
                         - bigquery: /path_to_json_credential.json
 
