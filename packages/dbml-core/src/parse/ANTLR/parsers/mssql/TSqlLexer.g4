@@ -1,4 +1,10 @@
 /*
+Original: https://github.com/antlr/grammars-v4/blob/master/sql/tsql/TSqlLexer.g4
+Last updated: 2024-05-01
+*/
+
+
+/*
 T-SQL (Transact-SQL, MSSQL) grammar.
 The MIT License (MIT).
 Copyright (c) 2017, Mark Adams (madams51703@gmail.com)

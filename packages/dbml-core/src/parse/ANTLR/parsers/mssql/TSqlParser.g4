@@ -1,4 +1,10 @@
 /*
+Original: https://github.com/antlr/grammars-v4/blob/master/sql/tsql/TSqlParser.g4
+Last updated: 2024-04-14
+References: https://infocenter.sybase.com/help/topic/com.sybase.dc36272_1251/pdf/commands.pdf
+*/
+
+/*
 T-SQL (Transact-SQL, MSSQL) grammar.
 The MIT License (MIT).
 Copyright (c) 2017, Mark Adams (madams51703@gmail.com)
