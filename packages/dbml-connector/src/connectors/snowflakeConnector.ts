@@ -7,7 +7,8 @@
 // Snowflake does not support indexes for standard tables.
 //
 
-import snowflake, { Connection, LogLevel, ConnectionOptions } from 'snowflake-sdk';
+import snowflake from 'snowflake-sdk';
+import type { Connection, LogLevel, ConnectionOptions } from 'snowflake-sdk';
 import { parseSchema } from '../utils/parseSchema';
 import {
   DatabaseSchema,
