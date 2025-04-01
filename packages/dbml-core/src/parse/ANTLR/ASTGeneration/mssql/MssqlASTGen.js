@@ -395,7 +395,34 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   | unscaled_type = id_
   //   ;
   visitData_type (ctx) {
-    return getOriginalText(ctx);
+    const id = ctx.id_().accept(this);
+    if (ctx.MAX()) {
+      return `${id}(MAX)`;
+    }
+
+    if (ctx.IDENTITY()) {
+      if (ctx.DECIMAL().length) {
+        const seedAndInc = ctx.DECIMAL().map((decimal) => decimal.getText());
+        return `${id} IDENTITY(${seedAndInc})`;
+      }
+
+      return `${id} IDENTITY`;
+    }
+
+    if (ctx.DOUBLE()) {
+      if (ctx.PRECISION()) {
+        return `${id}(${ctx.PRECISION().getText()})`;
+      }
+
+      return id;
+    }
+
+    if (ctx.DECIMAL().length) {
+      const scaleAndPrec = ctx.DECIMAL().map((decimal) => decimal.getText());
+      return `${id}(${scaleAndPrec.join(',')})`;
+    }
+
+    return id;
   }
 
   visitPrimitive_expression (ctx) {
