@@ -1,3 +1,23 @@
+## v3.11.0 (2025-04-01)
+
+#### :memo: Documentation
+* [#689](https://github.com/holistics/dbml/pull/689) Doc: fix wrong double quote character ([@nguyenalter](https://github.com/nguyenalter))
+* [#471](https://github.com/holistics/dbml/pull/471) docs: add treesitter parser ([@dynamotn](https://github.com/dynamotn))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`
+  * [#692](https://github.com/holistics/dbml/pull/692) [DBX-5925] Add key pair authentication for Snowflake connector ([@xuantho573](https://github.com/xuantho573))
+
+#### :robot: Dependencies Update
+* `dbml-cli`, `dbml-connector`
+  * [#692](https://github.com/holistics/dbml/pull/692) [DBX-5925] Add key pair authentication for Snowflake connector ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 4
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+- Trần Đức Nam ([@dynamotn](https://github.com/dynamotn))
+
 ## v3.10.2 (2025-03-03)
 
 #### :bug: Bug Fix
