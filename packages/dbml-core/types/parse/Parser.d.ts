@@ -18,7 +18,7 @@ declare class Parser {
     static parsePostgresToJSON(str: string): RawDatabase;
     static parsePostgresToJSONv2(str: string): RawDatabase;
     static parseDBMLToJSON(str: string): RawDatabase;
-    static parseDBMLToJSONv2(str: string, dbmlCompiler: Compiler): RawDatabase;
+    static parseDBMLToJSONv2(str: string, dbmlCompiler?: Compiler): RawDatabase;
     static parseSchemaRbToJSON(str: string): RawDatabase;
     static parseMSSQLToJSON(str: string): RawDatabase;
     static parseSnowflakeToJSON(str: string): RawDatabase;
