@@ -17,16 +17,18 @@ export interface Project {
     name: string;
 }
 
+export interface Record {
+    schemaName: string | undefined;
+    tableName: string;
+    columns: string[];
+    values: {
+        value: any;
+        type: string;
+    }[];
+}
+
 export interface Records {
-    [tableSchemaName: string]: {
-        schemaName: string | undefined;
-        tableName: string;
-        columns: string[];
-        values: {
-            value: any;
-            type: string;
-        }[];
-    }
+    [tableSchemaName: string]: Record;
 }
 
 export interface RawDatabase {
