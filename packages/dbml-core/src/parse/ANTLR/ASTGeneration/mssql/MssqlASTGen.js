@@ -95,7 +95,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       tableGroups: [],
       aliases: [],
       project: {},
-      records: {},
+      records: [],
     };
   }
 
@@ -177,24 +177,14 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const columns = ctx.insert_column_name_list() ? ctx.insert_column_name_list().accept(this) : [];
     const values = ctx.insert_statement_value().accept(this);
 
-    // handle insert into all columns
-    if (columns.length === 0 || values.length === 0) {
-      // temporarily ignore
-      return;
-    }
+    const record = {
+      schemaName,
+      tableName,
+      columns,
+      values,
+    };
 
-    const fullTableName = getFullTableName(schemaName, tableName);
-
-    if (!this.data.records[fullTableName]) {
-      this.data.records[fullTableName] = {
-        schemaName,
-        tableName,
-        columns,
-        values: [],
-      };
-    }
-
-    this.data.records[fullTableName].values.push(...values);
+    this.data.records.push(record);
   }
 
   // ddl_object

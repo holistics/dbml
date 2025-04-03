@@ -1,7 +1,8 @@
 {
-  "records": {
-    "Production.UnitMeasure": {
-      "tableName": "Production.UnitMeasure",
+  "records": [
+    {
+      "tableName": "UnitMeasure",
+      "schemaName": "Production",
       "columns": [
         "Name",
         "UnitMeasureCode",
@@ -24,7 +25,7 @@
         ]
       ]
     },
-    "special_chars": {
+    {
       "tableName": "special_chars",
       "columns": [
         "id",
@@ -76,7 +77,7 @@
         ]
       ]
     },
-    "complex_table": {
+    {
       "tableName": "complex_table",
       "columns": [
         "id",
@@ -141,7 +142,28 @@
         ]
       ]
     },
-    "T1": {
+    {
+      "tableName": "UnitMeasure",
+      "schemaName": "Production",
+      "columns": [],
+      "values": [
+        [
+          {
+            "value": "N'FT'",
+            "type": "expression"
+          },
+          {
+            "value": "N'Feet'",
+            "type": "expression"
+          },
+          {
+            "value": "20080414",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
       "tableName": "T1",
       "columns": [
         "column_1",
@@ -157,7 +179,16 @@
             "value": "Row #1",
             "type": "string"
           }
-        ],
+        ]
+      ]
+    },
+    {
+      "tableName": "T1",
+      "columns": [
+        "column_1",
+        "column_2"
+      ],
+      "values": [
         [
           {
             "value": "1",
@@ -180,20 +211,22 @@
         ]
       ]
     }
-  },
+  ],
   "tables": [
     {
       "fields": [
         {
           "name": "column_1",
           "type": {
-            "type_name": "int IDENTITY"
+            "type_name": "int IDENTITY",
+            "schemaName": null
           }
         },
         {
           "name": "column_2",
           "type": {
-            "type_name": "VARCHAR(30)"
+            "type_name": "VARCHAR(30)",
+            "schemaName": null
           }
         }
       ],
