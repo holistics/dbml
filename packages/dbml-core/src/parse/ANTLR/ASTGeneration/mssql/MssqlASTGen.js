@@ -8,6 +8,8 @@ import { COLUMN_CONSTRAINT_KIND, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../con
 import { getOriginalText } from '../helpers';
 import { Field, Index, Table } from '../AST';
 
+const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
+
 const getSchemaAndTableName = (names) => {
   const tableName = last(names);
   const schemaName = names.length > 1 ? nth(names, -2) : undefined;
@@ -15,6 +17,14 @@ const getSchemaAndTableName = (names) => {
     schemaName,
     tableName,
   };
+};
+
+const getStringFromRawString = (rawString) => {
+  if (rawString.startsWith("N'")) {
+    return rawString;
+  }
+
+  return rawString.slice(1, rawString.length - 1);
 };
 
 /**
@@ -126,6 +136,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
     if (ctx.dml_clause()) {
       ctx.dml_clause().accept(this);
+      return;
     }
 
     if (ctx.another_statement()) {
@@ -317,17 +328,10 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   ;
   visitPrimitive_constant (ctx) {
     if (ctx.STRING() || ctx.BINARY()) {
-      const value = ctx.getText();
-      if (value.startsWith("N'")) {
-        return {
-          value,
-          type: DATA_TYPE.EXPRESSION,
-        };
-      }
-
+      const value = getStringFromRawString(ctx.getText());
       return {
-        value: value.slice(1, value.length - 1),
-        type: DATA_TYPE.STRING,
+        value,
+        type: value.startsWith("N'") ? DATA_TYPE.EXPRESSION : DATA_TYPE.STRING,
       };
     }
 
@@ -1014,8 +1018,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   : EXECUTE execute_body ';'?
   //   ;
   visitExecute_statement (ctx) {
-    const executeBody = ctx.execute_body().accept(this);
-    console.log('executeBody', executeBody);
+    ctx.execute_body().accept(this);
   }
 
   // execute_body
@@ -1028,11 +1031,71 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   visitExecute_body (ctx) {
     const funcNames = ctx.func_proc_name_server_database_schema() ? ctx.func_proc_name_server_database_schema().accept(this) : [];
     const funcName = last(funcNames);
-    console.log('funcName', funcName);
+
+    if (funcName !== ADD_DESCRIPTION_FUNCTION_NAME) {
+      return;
+    }
 
     if (ctx.execute_statement_arg()) {
+      // [
+      //   { name: '@name', value: "N'Column_Description'", type: 'expression' },
+      //   { name: '@value', value: '$-1', type: 'string' },
+      //   { name: '@level0type', value: "N'Schema'", type: 'expression' },
+      //   { name: '@level0name', value: 'dbo', type: 'string' },
+      //   { name: '@level1type', value: "N'Table'", type: 'expression' },
+      //   { name: '@level1name', value: 'orders', type: 'string' },
+      //   { name: '@level2type', value: "N'Column'", type: 'expression' },
+      //   { name: '@level2name', value: 'status', type: 'string' }
+      // ]
       const args = ctx.execute_statement_arg().accept(this);
-      console.log('args', args);
+
+      // {
+      //   name: "N'Table_Description'",
+      //   value: 'This is a note in table "orders"',
+      //   level0type: "N'Schema'",
+      //   level0name: 'dbo',
+      //   level1type: "N'Table'",
+      //   level1name: 'orders'
+      // }
+      const argsObj = args.reduce((acc, arg) => {
+        const name = arg.name.slice(1);
+        acc[name] = arg.value;
+        return acc;
+      }, {});
+
+      if (!argsObj['name'].includes('Description')) {
+        return;
+      }
+
+      // https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16#----level0type
+      const level0Type = argsObj['level0type'].toLowerCase();
+
+      if (!level0Type.includes('schema')) return;
+
+      const schemaName = argsObj['level0name'] !== 'dbo' ? argsObj['level0name'] : undefined;
+
+      const level1Type = argsObj['level1type'].toLowerCase();
+      const tableName = level1Type.includes('table') ? argsObj['level1name'] : null;
+
+      const table = this.data.tables.find((t) => t.name === tableName && t.schemaName === schemaName);
+      if (!table) return;
+
+      if (!argsObj['level2type']) {
+        table.note = {
+          value: argsObj.value,
+        };
+
+        return;
+      }
+
+      const level2Type = argsObj['level2type'].toLowerCase();
+      const columnName = level2Type.includes('column') ? argsObj['level2name'] : null;
+      const field = table.fields.find((f) => f.name === columnName);
+      if (!field) return;
+
+      field.note = {
+        value: argsObj.value,
+      };
     }
   }
 
@@ -1073,18 +1136,21 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   ;
   visitExecute_statement_arg (ctx) {
     if (ctx.execute_statement_arg_unnamed()) {
-      console.log('execute_statement_arg_unnamed', ctx.execute_statement_arg_unnamed().map((item) => item.accept(this)));
-    } else if (ctx.execute_statement_arg_named()) {
-      console.log('execute_statement_arg_named', ctx.execute_statement_arg_named().map((item) => item.accept(this)));
+      return ctx.execute_statement_arg_unnamed().map((item) => item.accept(this));
     }
+
+    return ctx.execute_statement_arg_named().map((item) => item.accept(this));
   }
 
   // execute_statement_arg_named
   //   : name = LOCAL_ID '=' value = execute_parameter
   //   ;
   visitExecute_statement_arg_named (ctx) {
+    const { value, type } = ctx.execute_parameter().accept(this);
     return {
       name: ctx.LOCAL_ID().getText(),
+      value,
+      type,
     };
   }
 
@@ -1092,6 +1158,48 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   : (constant | LOCAL_ID (OUTPUT | OUT)? | id_ | DEFAULT | NULL_)
   //   ;
   visitExecute_parameter (ctx) {
-    return getOriginalText(ctx);
+    if (ctx.constant()) {
+      return ctx.constant().accept(this);
+    }
+
+    return ctx.getText();
+  }
+
+  // constant
+  //   : STRING // string, datetime or uniqueidentifier
+  //   | BINARY
+  //   | '-'? (DECIMAL | REAL | FLOAT)                    // float or decimal
+  //   | '-'? dollar = '$' ('-' | '+')? (DECIMAL | FLOAT) // money
+  //   | parameter
+  //   ;
+  visitConstant (ctx) {
+    if (ctx.STRING() || ctx.BINARY()) {
+      const value = getStringFromRawString(ctx.getText());
+
+      return {
+        value,
+        type: value.startsWith("N'") ? DATA_TYPE.EXPRESSION : DATA_TYPE.STRING,
+      };
+    }
+
+    if (ctx.DOLLAR()) {
+      const value = ctx.getText();
+      return {
+        value,
+        type: DATA_TYPE.STRING,
+      };
+    }
+
+    if (ctx.REAL() || ctx.DECIMAL() || ctx.FLOAT()) {
+      return {
+        value: ctx.getText(),
+        type: DATA_TYPE.NUMBER,
+      };
+    }
+
+    return {
+      value: getOriginalText(ctx),
+      type: DATA_TYPE.EXPRESSION,
+    };
   }
 }
