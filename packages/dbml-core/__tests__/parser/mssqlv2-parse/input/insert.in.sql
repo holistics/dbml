@@ -1,4 +1,4 @@
-INSERT INTO [Production.UnitMeasure] (Name, UnitMeasureCode, ModifiedDate)
+INSERT INTO [Production].[UnitMeasure] (Name, UnitMeasureCode, ModifiedDate)
 VALUES (N'Square Yards', N'Y2', GETDATE());
 -- Insert with special characters in values
 INSERT INTO "special_chars" (id, name, value)
@@ -14,8 +14,7 @@ VALUES
   (2, 'Complex 2', CAST(123 AS VARCHAR(10)) + 'test', CURRENT_TIMESTAMP),
   (3, 'Complex 3', NULLIF(1, 1), GETDATE());
 
--- ignore
-INSERT INTO [Production.UnitMeasure]
+INSERT INTO [Production].[UnitMeasure]
 VALUES (N'FT', N'Feet', '20080414');
 
 --  Inserting data into a table with an identity column
@@ -35,5 +34,3 @@ GO
 SELECT column_1, column_2
 FROM T1;
 GO
-
--- should handle case same table, but insert for diffent columns

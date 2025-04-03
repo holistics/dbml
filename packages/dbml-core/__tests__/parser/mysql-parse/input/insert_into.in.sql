@@ -22,11 +22,9 @@ VALUES
   (2, 'Smartphone', '{"brand": "Samsung", "specs": {"ram": "8GB", "storage": "256GB"}}', '["electronics", "mobile"]', TRUE, 899.99, NOW()),
   (3, 'Headphones', '{"brand": "Sony", "specs": {"type": "Wireless", "battery_life": "30 hours"}}', '["electronics", "audio"]', FALSE, 199.99, NOW());
 
--- should ignore: no columns
 INSERT INTO users
 VALUES (1, 'Alice Johnson', 'alice@example.com', NOW());
 
--- Ignoring cases
 INSERT INTO app.users (id, name, email, preferences, created_at)
 SELECT id, name, email, preferences, NOW()
 FROM app.new_users

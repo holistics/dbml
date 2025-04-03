@@ -26,11 +26,10 @@ VALUES
   (2, 'Smartphone', '{"brand": "Samsung", "specs": {"ram": "8GB", "storage": "256GB"}}'::json, ARRAY['electronics', 'mobile'], TRUE, 899.99, NOW()),
   (3, 'Headphones', '{"brand": "Sony", "specs": {"type": "Wireless", "battery_life": "30 hours"}}'::json, ARRAY['electronics', 'audio'], FALSE, 199.99, NOW());
 
--- should ignore: no columns
 INSERT INTO ignore_1.users
 VALUES (1, 'Alice Johnson', 'alice@example.com', NOW());
 
--- should ignore no value
+
 INSERT INTO ignore_2.users (id, name, email, preferences, created_at)
 SELECT
   id, name, email, preferences, NOW()
@@ -41,8 +40,3 @@ DO UPDATE SET
   name = EXCLUDED.name,
   preferences = EXCLUDED.preferences,
   created_at = NOW();
-
-
--- should handle insert part of table
--- same table
--- new table

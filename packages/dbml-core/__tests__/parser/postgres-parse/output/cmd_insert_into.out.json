@@ -1,6 +1,6 @@
 {
-  "records": {
-    "users": {
+  "records": [
+    {
       "tableName": "users",
       "columns": [
         "id",
@@ -26,7 +26,18 @@
             "value": "NOW()",
             "type": "expression"
           }
-        ],
+        ]
+      ]
+    },
+    {
+      "tableName": "users",
+      "columns": [
+        "id",
+        "name",
+        "email",
+        "created_at"
+      ],
+      "values": [
         [
           {
             "value": "2",
@@ -65,7 +76,7 @@
         ]
       ]
     },
-    "posts": {
+    {
       "schemaName": "public",
       "tableName": "posts",
       "columns": [
@@ -144,7 +155,7 @@
         ]
       ]
     },
-    "blog.posts": {
+    {
       "schemaName": "blog",
       "tableName": "posts",
       "columns": [
@@ -223,7 +234,7 @@
         ]
       ]
     },
-    "store.products": {
+    {
       "schemaName": "store",
       "tableName": "products",
       "columns": [
@@ -327,6 +338,43 @@
           }
         ]
       ]
+    },
+    {
+      "tableName": "users",
+      "schemaName": "ignore_1",
+      "columns": [],
+      "values": [
+        [
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "Alice Johnson",
+            "type": "string"
+          },
+          {
+            "value": "alice@example.com",
+            "type": "string"
+          },
+          {
+            "value": "NOW()",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "users",
+      "schemaName": "ignore_2",
+      "columns": [
+        "id",
+        "name",
+        "email",
+        "preferences",
+        "created_at"
+      ],
+      "values": []
     }
-  }
+  ]
 }

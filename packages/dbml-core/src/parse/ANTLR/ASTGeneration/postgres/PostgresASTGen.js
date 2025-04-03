@@ -41,7 +41,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       tableGroups: [],
       aliases: [],
       project: {},
-      records: {},
+      records: [],
     };
   }
 
@@ -1017,23 +1017,14 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     const { columns, values } = ctx.insert_rest().accept(this);
 
-    // handle insert into all columns
-    if (columns.length === 0 || values.length === 0) {
-      // temporarily ignore
-      return;
-    }
+    const record = {
+      schemaName,
+      tableName,
+      columns,
+      values,
+    };
 
-    if (!this.data.records[fullTableName]) {
-      this.data.records[fullTableName] = {
-        schemaName,
-        tableName,
-        columns,
-        values: [],
-      };
-    }
-
-    // TODO: should handle case the number of columns is not equal
-    this.data.records[fullTableName].values.push(...values);
+    this.data.records.push(record);
   }
 
   visitInsert_target (ctx) {

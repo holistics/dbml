@@ -54,7 +54,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
       tableGroups: [],
       aliases: [],
       project: {},
-      records: {},
+      records: [],
     };
   }
 
@@ -1021,19 +1021,14 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     const columns = ctx.fullColumnNameList() ? ctx.fullColumnNameList().accept(this) : [];
     const values = ctx.insertStatementValue().accept(this);
 
-    if (columns.length === 0 || values.length === 0) {
-      return;
-    }
+    const record = {
+      schemaName,
+      tableName,
+      columns,
+      values,
+    };
 
-    if (!this.data.records[fullTableName]) {
-      this.data.records[fullTableName] = {
-        schemaName,
-        tableName,
-        columns,
-        values: [],
-      };
-    }
-    this.data.records[fullTableName].values.push(...values);
+    this.data.records.push(record);
   }
 
   // fullColumnNameList
