@@ -1,0 +1,57 @@
+Table "users" {
+  "id" int [pk]
+  "name" nvarchar(255)
+  "pjs" "nvarchar(255) CHECK ([pjs] IN ('created2', 'running2', 'done2', 'failure2'))" [not null]
+  "pjs2" "nvarchar(255) CHECK ([pjs2] IN ('created2', 'running2', 'done2', 'failure2'))" [not null]
+  "pg" "nvarchar(255) CHECK ([pg] IN ('male', 'female'))" [not null]
+  "pg2" "nvarchar(255) CHECK ([pg2] IN ('male2', 'female2'))" [not null]
+}
+
+Table "products" {
+  "id" int [pk]
+  "name" nvarchar(255) [note: 'Product name']
+}
+
+Ref:"schemaA"."locations"."id" < "schemaA"."products"."lid"
+
+Ref "FK_1":"schemaA"."locations"."id" < "schemaA"."products"."lid2"
+
+Ref:"users"."id" < "ecommerce"."users"."id"
+
+Ref "name_optional":"users"."name" < "ecommerce"."users"."id"
+
+Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
+
+Ref:"users"."id" < "schemaA"."locations"."name"
+
+Table "ecommerce"."users" {
+  "id" int [pk]
+  "name" nvarchar(255)
+  "ejs" "nvarchar(255) CHECK ([ejs] IN ('created2', 'running2', 'done2', 'failure2'))" [not null]
+  "ejs2" "nvarchar(255) CHECK ([ejs2] IN ('created2', 'running2', 'done2', 'failure2'))" [not null]
+  "eg" "nvarchar(255) CHECK ([eg] IN ('male', 'female'))" [not null]
+  "eg2" "nvarchar(255) CHECK ([eg2] IN ('male2', 'female2'))" [not null]
+
+  Indexes {
+    (name, ejs) [name: "idx_1"]
+  }
+  Note: 'Note on table users of schema ecommerce'
+}
+
+Table "schemaA"."products" {
+  "id" int [pk]
+  "name" nvarchar(255)
+  "created_at" varchar(255) [default: `now()`]
+  "lid" int
+  "lid2" int
+
+  Indexes {
+    (lid, lid2) [unique, name: "unique_lid_lid2"]
+  }
+}
+
+Table "schemaA"."locations" {
+  "id" int [pk]
+  "name" nvarchar(255)
+  Note: 'This is a note in table "schemaA"."locations"'
+}
