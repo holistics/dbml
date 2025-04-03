@@ -16,7 +16,7 @@ global.getFileExtension = (format) => {
     return 'rb';
   }
 
-  const SQL_FORMATS = ['mysql', 'postgres', 'mssql', 'oracle', 'snowflake'];
+  const SQL_FORMATS = ['mysql', 'postgres', 'mssql', 'oracle', 'snowflake', 'mssqlv2'];
   if (SQL_FORMATS.includes(format)) {
     return 'sql';
   }

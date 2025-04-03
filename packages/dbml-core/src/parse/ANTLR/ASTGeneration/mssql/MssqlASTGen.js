@@ -26,7 +26,7 @@ const getSchemaAndTableName = (names) => {
  * }}
  */
 const splitColumnDefTableConstraints = (columnDefTableConstraints) => {
-  const [fieldsData, indexes, tableRefs] = columnDefTableConstraints.reduce((acc, columnDefTableConstraint) => {
+  const [fieldsData, indexes, tableRefs, columnDefaults] = columnDefTableConstraints.reduce((acc, columnDefTableConstraint) => {
     switch (columnDefTableConstraint.kind) {
       case TABLE_CONSTRAINT_KIND.FIELD:
         acc[0].push(columnDefTableConstraint.value);
@@ -42,14 +42,18 @@ const splitColumnDefTableConstraints = (columnDefTableConstraints) => {
         acc[2].push(columnDefTableConstraint.value);
         break;
 
+      case TABLE_CONSTRAINT_KIND.DEFAULT:
+        acc[3].push(columnDefTableConstraint.value);
+        break;
+
       default:
         break;
     }
 
     return acc;
-  }, [[], [], []]);
+  }, [[], [], [], []]);
 
-  return { fieldsData, indexes, tableRefs };
+  return { fieldsData, indexes, tableRefs, columnDefaults };
 };
 
 const parseFieldsAndInlineRefsFromFieldsData = (fieldsData, tableName, schemaName) => {
@@ -122,6 +126,10 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
     if (ctx.dml_clause()) {
       ctx.dml_clause().accept(this);
+    }
+
+    if (ctx.another_statement()) {
+      ctx.another_statement().accept(this);
     }
   }
 
@@ -597,6 +605,9 @@ export default class MssqlASTGen extends TSqlParserVisitor {
           case COLUMN_CONSTRAINT_KIND.INLINE_REF:
             definition.value.inline_refs.push(columnDef.value);
             break;
+          case COLUMN_CONSTRAINT_KIND.CHECK:
+            field.type.type_name = `${field.type.type_name} ${columnDef.value}`;
+            break;
           default:
             break;
         }
@@ -710,8 +721,21 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     }
 
     // we do not handle check constraint since it is complicated and hard to extract enum from it
+    if (ctx.check_constraint()) {
+      return {
+        kind: COLUMN_CONSTRAINT_KIND.CHECK,
+        value: ctx.check_constraint().accept(this),
+      };
+    }
 
     return null;
+  }
+
+  // check_constraint
+  //   : CHECK (NOT FOR REPLICATION)? '(' search_condition ')'
+  //   ;
+  visitCheck_constraint (ctx) {
+    return getOriginalText(ctx);
   }
 
   visitNull_notnull (ctx) {
@@ -856,7 +880,6 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       return {
         kind: TABLE_CONSTRAINT_KIND.DEFAULT,
         value: {
-          name,
           column,
           defaultValue: expression,
         },
@@ -921,11 +944,9 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     if (!table) return; // ALTER TABLE should appear after CREATE TABLE, so skip if table is not created yet
 
     const columnDefTableConstraints = ctx.column_def_table_constraints() ? ctx.column_def_table_constraints().accept(this) : [];
-
-    const { fieldsData, indexes, tableRefs } = splitColumnDefTableConstraints(columnDefTableConstraints);
+    const { fieldsData, indexes, tableRefs, columnDefaults } = splitColumnDefTableConstraints(columnDefTableConstraints);
 
     const { inlineRefs, fields } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
-
     this.data.refs.push(...flatten(inlineRefs));
 
     this.data.refs.push(...tableRefs.map(tableRef => {
@@ -936,6 +957,13 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
     table.fields.push(...fields);
     table.indexes.push(...indexes);
+
+    columnDefaults.forEach((columnDefault) => {
+      const field = table.fields.find((f) => f.name === columnDefault.column);
+
+      if (!field) return;
+      field.dbdefault = columnDefault.defaultValue;
+    });
   }
 
   // create_index
@@ -955,5 +983,115 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     });
 
     table.indexes.push(index);
+  }
+
+  // another_statement
+  //   : alter_queue
+  //   | checkpoint_statement
+  //   | conversation_statement
+  //   | create_contract
+  //   | create_queue
+  //   | cursor_statement
+  //   | declare_statement
+  //   | execute_statement
+  //   | kill_statement
+  //   | message_statement
+  //   | reconfigure_statement
+  //   | security_statement
+  //   | set_statement
+  //   | setuser_statement
+  //   | shutdown_statement
+  //   | transaction_statement
+  //   | use_statement
+  //   ;
+  visitAnother_statement (ctx) {
+    if (ctx.execute_statement()) {
+      ctx.execute_statement().accept(this);
+    }
+  }
+
+  // execute_statement
+  //   : EXECUTE execute_body ';'?
+  //   ;
+  visitExecute_statement (ctx) {
+    const executeBody = ctx.execute_body().accept(this);
+    console.log('executeBody', executeBody);
+  }
+
+  // execute_body
+  //   : (return_status = LOCAL_ID '=')? (func_proc_name_server_database_schema | execute_var_string) execute_statement_arg?
+  //   | '(' execute_var_string (',' execute_var_string)* ')' (AS (LOGIN | USER) '=' STRING)? (
+  //       AT_KEYWORD linkedServer = id_
+  //   )?
+  //   | AS ( (LOGIN | USER) '=' STRING | CALLER)
+  //   ;
+  visitExecute_body (ctx) {
+    const funcNames = ctx.func_proc_name_server_database_schema() ? ctx.func_proc_name_server_database_schema().accept(this) : [];
+    const funcName = last(funcNames);
+    console.log('funcName', funcName);
+
+    if (ctx.execute_statement_arg()) {
+      const args = ctx.execute_statement_arg().accept(this);
+      console.log('args', args);
+    }
+  }
+
+  // func_proc_name_server_database_schema
+  //   : server = id_? '.' database = id_? '.' schema = id_? '.' procedure = id_
+  //   | func_proc_name_database_schema
+  //   ;
+  visitFunc_proc_name_server_database_schema (ctx) {
+    if (ctx.func_proc_name_database_schema()) {
+      return ctx.func_proc_name_database_schema().accept(this);
+    } else {
+      return ctx.id_().map((id) => id.accept(this));
+    }
+  }
+
+  // func_proc_name_database_schema
+  //   : database = id_? '.' schema = id_? '.' procedure = id_
+  //   | func_proc_name_schema
+  //   ;
+  visitFunc_proc_name_database_schema (ctx) {
+    if (ctx.func_proc_name_schema()) {
+      return ctx.func_proc_name_schema().accept(this);
+    } else {
+      return ctx.id_().map((id) => id.accept(this));
+    }
+  }
+
+  // func_proc_name_schema
+  //   : ((schema = id_) '.')? procedure = id_
+  //   ;
+  visitFunc_proc_name_schema (ctx) {
+   return ctx.id_().map((id) => id.accept(this));
+  }
+
+  // execute_statement_arg
+  //   : execute_statement_arg_unnamed (',' execute_statement_arg)*     //Unnamed params can continue unnamed
+  //   | execute_statement_arg_named (',' execute_statement_arg_named)* //Named can only be continued by unnamed
+  //   ;
+  visitExecute_statement_arg (ctx) {
+    if (ctx.execute_statement_arg_unnamed()) {
+      console.log('execute_statement_arg_unnamed', ctx.execute_statement_arg_unnamed().map((item) => item.accept(this)));
+    } else if (ctx.execute_statement_arg_named()) {
+      console.log('execute_statement_arg_named', ctx.execute_statement_arg_named().map((item) => item.accept(this)));
+    }
+  }
+
+  // execute_statement_arg_named
+  //   : name = LOCAL_ID '=' value = execute_parameter
+  //   ;
+  visitExecute_statement_arg_named (ctx) {
+    return {
+      name: ctx.LOCAL_ID().getText(),
+    };
+  }
+
+  // execute_parameter
+  //   : (constant | LOCAL_ID (OUTPUT | OUT)? | id_ | DEFAULT | NULL_)
+  //   ;
+  visitExecute_parameter (ctx) {
+    return getOriginalText(ctx);
   }
 }

@@ -24,7 +24,7 @@ export interface Record {
     values: {
         value: any;
         type: string;
-    }[];
+    }[][];
 }
 
 export interface Records {

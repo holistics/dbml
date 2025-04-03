@@ -15,6 +15,7 @@ export const COLUMN_CONSTRAINT_KIND = {
   INCREMENT: 'increment',
   INLINE_REF: 'inline_ref',
   NOTE: 'note',
+  CHECK: 'check',
 };
 
 export const DATA_TYPE = {
