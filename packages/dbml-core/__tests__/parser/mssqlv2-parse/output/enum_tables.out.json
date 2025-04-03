@@ -12,7 +12,7 @@
         },
         {
           "type": {
-            "type_name": "nvarchar(255)"
+            "type_name": "nvarchar(255) CHECK ([status] IN ('created', 'running', 'done', 'failed', 'wait for validation'))"
           },
           "not_null": true,
           "name": "status"
@@ -37,14 +37,14 @@
         },
         {
           "type": {
-            "type_name": "nvarchar(255)"
+            "type_name": "nvarchar(255) CHECK ([priority] IN ('low', 'medium', 'high'))"
           },
           "not_null": true,
           "name": "priority"
         },
         {
           "type": {
-            "type_name": "nvarchar(255)"
+            "type_name": "nvarchar(255) CHECK ([status] IN ('pending', 'processing', 'done'))"
           },
           "not_null": true,
           "name": "status"
