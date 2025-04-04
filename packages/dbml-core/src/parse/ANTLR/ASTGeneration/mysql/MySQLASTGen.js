@@ -7,7 +7,6 @@ import {
 import {
   TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE,
 } from '../constants';
-import { getFullTableName } from '../../../../model_structure/utils';
 
 const TABLE_OPTIONS_KIND = {
   NOTE: 'note',
@@ -1015,7 +1014,6 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     const names = ctx.tableName().accept(this);
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
-    const fullTableName = getFullTableName(schemaName, tableName);
 
     // insert without specified columns
     const columns = ctx.fullColumnNameList() ? ctx.fullColumnNameList().accept(this) : [];
