@@ -17,7 +17,7 @@ export interface Project {
     name: string;
 }
 
-interface RawRecord {
+interface RawTableRecord {
     schemaName: string | undefined;
     tableName: string;
     columns: string[];
@@ -27,12 +27,12 @@ interface RawRecord {
     }[][];
 }
 
-export interface Record extends RawRecord {
+export interface TableRecord extends RawTableRecord {
     id: number;
 }
 
-export interface NormalizedRecord {
-    [_id: number]: Record;
+export interface NormalizedRecords {
+    [_id: number]: TableRecord;
 }
 
 export interface RawDatabase {
@@ -43,7 +43,7 @@ export interface RawDatabase {
     refs: Ref[];
     tableGroups: TableGroup[];
     project: Project;
-    records: RawRecord[];
+    records: RawTableRecord[];
 }
 declare class Database extends Element {
     dbState: DbState;
@@ -54,11 +54,11 @@ declare class Database extends Element {
     noteToken: Token;
     databaseType: string;
     name: string;
-    records: Record[];
+    records: TableRecord[];
     id: number;
     constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
     generateId(): void;
-    processRecords(rawRecords: RawRecord[]): void;
+    processRecords(rawRecords: RawTableRecord[]): void;
     processSchemas(rawSchemas: RawSchema[]): void;
     pushSchema(schema: Schema): void;
     checkSchema(schema: Schema): void;
@@ -242,6 +242,6 @@ export interface NormalizedDatabase {
     indexes: NormalizedIndex;
     indexColumns: NormalizedIndexColumn;
     fields: NormalizedField;
-    records: NormalizedRecord;
+    records: NormalizedRecords;
 }
 export default Database;

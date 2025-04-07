@@ -3,6 +3,7 @@ import { last, flatten, flattenDepth } from 'lodash';
 import MySQLParserVisitor from '../../parsers/mysql/MySqlParserVisitor';
 import {
   Endpoint, Enum, Field, Index, Table, Ref,
+  TableRecord,
 } from '../AST';
 import {
   TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE,
@@ -1019,12 +1020,12 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     const columns = ctx.fullColumnNameList() ? ctx.fullColumnNameList().accept(this) : [];
     const values = ctx.insertStatementValue().accept(this);
 
-    const record = {
+    const record = new TableRecord({
       schemaName,
       tableName,
       columns,
       values,
-    };
+    });
 
     this.data.records.push(record);
   }
