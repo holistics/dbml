@@ -5,20 +5,19 @@
       "fields": [
         {
           "type": {
-            "type_name": "int",
-            "schemaName": null
+            "type_name": "int"
           },
           "pk": true,
           "dbdefault": {
             "type": "number",
-            "value": "123"
+            "value": 123
           },
           "name": "id"
         },
         {
           "type": {
             "type_name": "varchar(255)",
-            "schemaName": null
+            "args": "255"
           },
           "dbdefault": {
             "type": "string",
@@ -28,27 +27,25 @@
         },
         {
           "type": {
-            "type_name": "int",
-            "schemaName": null
+            "type_name": "int"
           },
           "not_null": true,
           "name": "merchant_id"
         },
         {
           "type": {
-            "type_name": "float",
-            "schemaName": null
+            "type_name": "float"
           },
           "dbdefault": {
             "type": "number",
-            "value": "123.12"
+            "value": 123.12
           },
           "name": "price"
         },
         {
           "type": {
             "type_name": "varchar(255)",
-            "schemaName": null
+            "args": "255"
           },
           "dbdefault": {
             "type": "boolean",
@@ -59,7 +56,7 @@
         {
           "type": {
             "type_name": "varchar(255)",
-            "schemaName": null
+            "args": "255"
           },
           "dbdefault": {
             "type": "expression",
@@ -69,8 +66,7 @@
         },
         {
           "type": {
-            "type_name": "boolean",
-            "schemaName": null
+            "type_name": "boolean"
           },
           "dbdefault": {
             "type": "string",
@@ -80,8 +76,7 @@
         },
         {
           "type": {
-            "type_name": "date",
-            "schemaName": null
+            "type_name": "date"
           },
           "dbdefault": {
             "type": "expression",

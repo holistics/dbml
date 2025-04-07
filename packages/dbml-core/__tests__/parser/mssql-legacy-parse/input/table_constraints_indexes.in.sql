@@ -2,7 +2,7 @@ CREATE TABLE [products] (
   [id] int PRIMARY KEY IDENTITY(1,1),
   [name] varchar(255),
   [price] decimal(10,4),
-  [created_at] datetime DEFAULT (GETDATE())
+  [created_at] datetime DEFAULT (now())
 );
 
 CREATE TABLE [countries] (
@@ -17,16 +17,16 @@ CREATE TABLE [users] (
   [name] varchar(255),
   [email] varchar(255),
   [date_of_birth] datetime,
-  [created_at] datetime DEFAULT (GETDATE()),
+  [created_at] datetime DEFAULT (now()),
   [country_code] int NOT NULL,
-  FOREIGN KEY ([country_code]) REFERENCES [countries] ([country_code]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  FOREIGN KEY ([country_code]) REFERENCES [countries] ON DELETE NO ACTION ON UPDATE NO ACTION,
   INDEX [unique_email_name] UNIQUE CLUSTERED ([email],[name])
 );
 
 CREATE TABLE [orders] (
   [id] int PRIMARY KEY IDENTITY(1,1),
   [user_id] int NOT NULL,
-  [created_at] datetime DEFAULT (GETDATE()),
+  [created_at] datetime DEFAULT (now()),
   FOREIGN KEY ([user_id]) REFERENCES [users] ([id]) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 

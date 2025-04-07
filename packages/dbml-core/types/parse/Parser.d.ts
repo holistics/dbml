@@ -5,7 +5,7 @@ declare type ParseFormat = 'json'
     | 'mysql' | 'mysqlLegacy'
     | 'postgres' | 'postgresLegacy'
     | 'dbml' | 'dbmlv2'
-    | 'mssql' | 'mssqlv2'
+    | 'mssql' | 'mssqlLegacy'
     | 'schemarb'
     | 'snowflake';
 

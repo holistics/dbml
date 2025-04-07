@@ -119,12 +119,11 @@ class Parser {
           rawDatabase = Parser.parseSchemaRbToJSON(str);
           break;
 
-        case 'mssql':
+        case 'mssqlLegacy':
           rawDatabase = Parser.parseMSSQLToJSON(str);
           break;
 
-        // When we finish implementing the new parser, it should be mssql and the old one will be mssqlLegacy
-        case 'mssqlv2':
+        case 'mssql':
           rawDatabase = Parser.parseMSSQLToJSONv2(str);
           break;
 

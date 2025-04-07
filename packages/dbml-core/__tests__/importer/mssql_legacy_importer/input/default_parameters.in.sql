@@ -9,10 +9,10 @@ CREATE TABLE [test] (
   [number3] int DEFAULT ((0)),
   [number4] int DEFAULT (((0))),
 
-  [date1] datetime DEFAULT GETDATE(),
-  [date2] datetime DEFAULT (GETDATE()),
-  [date3] datetime DEFAULT ((GETDATE())),
-  [date4] datetime DEFAULT (((GETDATE())))
+  [date1] datetime DEFAULT now(),
+  [date2] datetime DEFAULT (now()),
+  [date3] datetime DEFAULT ((now())),
+  [date4] datetime DEFAULT (((now())))
 )
 
 ALTER TABLE [test] ADD DEFAULT 'Test2' FOR [text1] WITH VALUES
@@ -25,8 +25,8 @@ ALTER TABLE [test] ADD DEFAULT (1) FOR [number2] WITH VALUES
 ALTER TABLE [test] ADD DEFAULT ((1)) FOR [number3] WITH VALUES
 ALTER TABLE [test] ADD DEFAULT (((1))) FOR [number4] WITH VALUES
 
-ALTER TABLE [test] ADD DEFAULT GETDATE() FOR [date1] WITH VALUES
-ALTER TABLE [test] ADD DEFAULT (GETDATE()) FOR [date2] WITH VALUES
-ALTER TABLE [test] ADD DEFAULT ((GETDATE())) FOR [date3] WITH VALUES
-ALTER TABLE [test] ADD DEFAULT (((GETDATE()))) FOR [date4] WITH VALUES
+ALTER TABLE [test] ADD DEFAULT now() FOR [date1] WITH VALUES
+ALTER TABLE [test] ADD DEFAULT (now()) FOR [date2] WITH VALUES
+ALTER TABLE [test] ADD DEFAULT ((now())) FOR [date3] WITH VALUES
+ALTER TABLE [test] ADD DEFAULT (((now()))) FOR [date4] WITH VALUES
 GO

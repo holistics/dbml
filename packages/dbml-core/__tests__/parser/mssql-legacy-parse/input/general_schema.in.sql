@@ -18,8 +18,8 @@ CREATE TABLE [products] (
   [name] varchar(255),
   [merchant_id] int NOT NULL,
   [price] int,
-  [status] nvarchar(255) NOT NULL CHECK ([status] IN ('Out of Stock', 'In Stock')),
-  [created_at] datetime DEFAULT (GETDATE())
+  [status] nvarchar(255) NOT NULL ,
+  [created_at] datetime
 )
 GO
 
@@ -35,7 +35,7 @@ CREATE TABLE [users] (
 GO
 
 CREATE TABLE [merchants] (
-  [id] int PRIMARY KEY,
+  [id] int,
   [merchant_name] varchar(255),
   [country_code] int,
   [created_at] varchar(255),
@@ -49,6 +49,12 @@ CREATE TABLE [countries] (
   [continent_name] varchar(255)
 )
 GO
+
+ALTER TABLE [products] ADD DEFAULT now() FOR [created_at] WITH VALUES
+
+ALTER TABLE [products] ADD CHECK ([status] IN ('Out of Stock', 'In Stock'))
+
+ALTER TABLE [merchants] ADD PRIMARY KEY CLUSTERED ([id])
 
 ALTER TABLE [order_items] ADD FOREIGN KEY ([order_id]) REFERENCES [orders] ([id])
 GO
@@ -72,19 +78,4 @@ CREATE INDEX [product_status] ON [products] ("merchant_id", "status")
 GO
 
 CREATE UNIQUE INDEX [products_index_1] ON [products] ("id")
-GO
-
-EXEC sp_addextendedproperty
-@name = N'Table_Description',
-@value = 'This is a note in table "orders"',
-@level0type = N'Schema', @level0name = 'dbo',
-@level1type = N'Table',  @level1name = 'orders';
-GO
-
-EXEC sp_addextendedproperty
-@name = N'Column_Description',
-@value = 'When order created',
-@level0type = N'Schema', @level0name = 'dbo',
-@level1type = N'Table',  @level1name = 'orders',
-@level2type = N'Column', @level2name = 'created_at';
 GO
