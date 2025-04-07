@@ -5,8 +5,7 @@
       "fields": [
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "pk": true,
           "increment": true,
@@ -14,8 +13,7 @@
         },
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "unique": true,
           "not_null": true,
@@ -23,8 +21,8 @@
         },
         {
           "type": {
-            "type_name": "nvarchar(255) CHECK ([status] IN ('created', 'running', 'done', 'failure'))",
-            "schema": null
+            "type_name": "orders_status_enum",
+            "args": "'created', 'running', 'done', 'failure'"
           },
           "not_null": true,
           "name": "status"
@@ -32,7 +30,7 @@
         {
           "type": {
             "type_name": "varchar(255)",
-            "schema": null
+            "args": "255"
           },
           "name": "created_at"
         }
@@ -43,26 +41,23 @@
       "fields": [
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "name": "order_id"
         },
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "name": "product_id"
         },
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "dbdefault": {
             "type": "number",
-            "value": "1"
+            "value": 1
           },
           "name": "quantity"
         }
@@ -73,8 +68,7 @@
       "fields": [
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "pk": true,
           "name": "id"
@@ -82,49 +76,45 @@
         {
           "type": {
             "type_name": "varchar(255)",
-            "schema": null
+            "args": "255"
           },
           "name": "name"
         },
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "not_null": true,
           "name": "merchant_id"
         },
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "name": "price"
         },
         {
           "type": {
-            "type_name": "nvarchar(255)",
-            "schema": null
+            "type_name": "products_status_enum",
+            "args": "'Out of Stock', 'In Stock'"
           },
           "not_null": true,
           "name": "status"
         },
         {
           "type": {
-            "type_name": "datetime",
-            "schema": null
+            "type_name": "datetime"
           },
+          "name": "created_at",
           "dbdefault": {
             "type": "expression",
-            "value": "GETDATE()"
-          },
-          "name": "created_at"
+            "value": "now()"
+          }
         }
       ],
       "indexes": [
         {
           "name": "product_status",
-          "unique": false,
           "columns": [
             {
               "value": "merchant_id",
@@ -153,8 +143,7 @@
       "fields": [
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "pk": true,
           "name": "id"
@@ -162,14 +151,14 @@
         {
           "type": {
             "type_name": "varchar(255)",
-            "schema": null
+            "args": "255"
           },
           "name": "full_name"
         },
         {
           "type": {
             "type_name": "varchar(255)",
-            "schema": null
+            "args": "255"
           },
           "unique": true,
           "name": "email"
@@ -177,28 +166,27 @@
         {
           "type": {
             "type_name": "varchar(255)",
-            "schema": null
+            "args": "255"
           },
           "name": "gender"
         },
         {
           "type": {
             "type_name": "varchar(255)",
-            "schema": null
+            "args": "255"
           },
           "name": "date_of_birth"
         },
         {
           "type": {
             "type_name": "varchar(255)",
-            "schema": null
+            "args": "255"
           },
           "name": "created_at"
         },
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "name": "country_code"
         }
@@ -209,36 +197,33 @@
       "fields": [
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "name": "id"
         },
         {
           "type": {
             "type_name": "varchar(255)",
-            "schema": null
+            "args": "255"
           },
           "name": "merchant_name"
         },
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "name": "country_code"
         },
         {
           "type": {
             "type_name": "varchar(255)",
-            "schema": null
+            "args": "255"
           },
           "name": "created_at"
         },
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "name": "admin_id"
         }
@@ -260,8 +245,7 @@
       "fields": [
         {
           "type": {
-            "type_name": "int",
-            "schema": null
+            "type_name": "int"
           },
           "pk": true,
           "name": "code"
@@ -269,14 +253,14 @@
         {
           "type": {
             "type_name": "varchar(255)",
-            "schema": null
+            "args": "255"
           },
           "name": "name"
         },
         {
           "type": {
             "type_name": "varchar(255)",
-            "schema": null
+            "args": "255"
           },
           "name": "continent_name"
         }
@@ -389,6 +373,36 @@
           ],
           "relation": "1",
           "tableName": "users"
+        }
+      ]
+    }
+  ],
+  "enums": [
+    {
+      "name": "orders_status_enum",
+      "values": [
+        {
+          "name": "created"
+        },
+        {
+          "name": "running"
+        },
+        {
+          "name": "done"
+        },
+        {
+          "name": "failure"
+        }
+      ]
+    },
+    {
+      "name": "products_status_enum",
+      "values": [
+        {
+          "name": "Out of Stock"
+        },
+        {
+          "name": "In Stock"
         }
       ]
     }

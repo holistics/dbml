@@ -33,10 +33,6 @@ describe('@dbml/core - importer', () => {
     runTest(name, 'mssql_importer', 'mssql');
   });
 
-  test.each(scanTestNames(__dirname, 'mssqlv2_importer/input'))('mssqlv2_importer/%s', (name) => {
-    runTest(name, 'mssqlv2_importer', 'mssqlv2');
-  });
-
   test.each(scanTestNames(__dirname, 'snowflake_importer/input'))('snowflake_importer/%s', (name) => {
     runTest(name, 'snowflake_importer', 'snowflake');
   });

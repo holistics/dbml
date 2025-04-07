@@ -77,7 +77,7 @@ const splitColumnDefTableConstraints = (columnDefTableConstraints) => {
 };
 
 const parseFieldsAndInlineRefsFromFieldsData = (fieldsData, tableName, schemaName) => {
-  const [resInlineRefs, fields] = fieldsData.reduce((acc, fieldData) => {
+  const [resInlineRefs, fields, checkConstraints] = fieldsData.reduce((acc, fieldData) => {
     const inlineRefs = fieldData.inline_refs.map(inlineRef => {
       inlineRef.endpoints[0].tableName = tableName;
       inlineRef.endpoints[0].schemaName = schemaName;
@@ -87,31 +87,11 @@ const parseFieldsAndInlineRefsFromFieldsData = (fieldsData, tableName, schemaNam
 
     acc[0].push(inlineRefs);
     acc[1].push(fieldData.field);
-
+    acc[2].push(...fieldData.checkConstraints);
     return acc;
-  }, [[], []]);
+  }, [[], [], []]);
 
-  // parse enums for fields
-  const enumList = [];
-  fields.forEach((field) => {
-    if (!field.type.isEnum) return;
-
-    const enumName = `${tableName}_${field.name}_enum`;
-    const { columnValues } = field.type.enum;
-
-    const enumObject= new Enum({
-      name: enumName,
-      values: columnValues.map((value) => ({ name: value })),
-      schemaName,
-    });
-
-    field.type.type_name = enumObject.name;
-    field.type.schemaName = enumObject.schemaName;
-
-    enumList.push(enumObject);
-  });
-
-  return { inlineRefs: resInlineRefs, fields, enums: enumList };
+  return { inlineRefs: resInlineRefs, fields, checkConstraints };
 };
 
 export default class MssqlASTGen extends TSqlParserVisitor {
@@ -528,11 +508,10 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const columnDefTableConstraints = ctx.column_def_table_constraints().accept(this);
     const tableIndices = ctx.table_indices().map((tableIndex) => tableIndex.accept(this));
 
-    const { fieldsData, indexes, tableRefs, checkConstraints } = splitColumnDefTableConstraints(columnDefTableConstraints);
+    const { fieldsData, indexes, tableRefs, checkConstraints: tableCheckConstraints } = splitColumnDefTableConstraints(columnDefTableConstraints);
 
-    const { inlineRefs, fields, enums } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
+    const { inlineRefs, fields, checkConstraints: columnCheckConstraints } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
 
-    this.data.enums.push(...enums);
     this.data.refs.push(...flatten(inlineRefs));
 
     this.data.refs.push(...tableRefs.map(tableRef => {
@@ -541,27 +520,23 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       return tableRef;
     }));
 
-
+    // these check constraints represent enums
+    const enums = [];
+    const checkConstraints = columnCheckConstraints.concat(tableCheckConstraints);
     checkConstraints.forEach((checkConstraint) => {
-      const { type: checkConstraintType, value } = checkConstraint;
-
-      const field = fields.find((field) => field.name === value.column);
+      const field = fields.find((field) => field.name === checkConstraint.column);
       if (!field) return;
 
-      if (checkConstraintType === CHECK_CONSTRAINT_CONDITION_TYPE.ENUM) {
-        const enumObject = new Enum({
-          name: `${tableName}_${field.name}_enum`,
-          values: value.columnValues.map((value) => ({ name: value })),
-          schemaName,
-        });
+      const enumObject = new Enum({
+        name: `${tableName}_${field.name}_enum`,
+        values: checkConstraint.columnValues.map((value) => ({ name: value })),
+        schemaName,
+      });
 
-        this.data.enums.push(enumObject);
-        // we keep the current behavior: when a field has multiple check constraints (enum), we will only apply the first one
-        if (field.type.isEnum) return;
-
-        field.type.type_name = enumObject.name;
-        field.type.schemaName = enumObject.schemaName;
-      }
+      this.data.enums.push(enumObject);
+      // TODO: handle multiple enums for the same field
+      field.type.type_name = enumObject.name;
+      field.type.schemaName = enumObject.schemaName;
     });
 
     const table = new Table({
@@ -641,6 +616,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       value: {
         field,
         inline_refs: [],
+        checkConstraints: [],
       },
     };
 
@@ -679,11 +655,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
             // we keep the current behavior: when a field has a check constraints cannot be converted to enum, we will ignore it
             if (type !== CHECK_CONSTRAINT_CONDITION_TYPE.ENUM) return;
 
-            // use isEnum since in mssql, enum is not a key work and can be used as user defined type
-            field.type.isEnum = true;
-
-            // { column: 'status', columnValues: [ 'active', 'inactive', 'pending' ] }
-            field.type.enum = value;
+            definition.value.checkConstraints.push(value);
             break;
           }
           default:
@@ -1026,9 +998,12 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     }
 
     if (ctx.check_constraint()) {
+      const checkConstraint = ctx.check_constraint().accept(this);
+      if (checkConstraint.type !== CHECK_CONSTRAINT_CONDITION_TYPE.ENUM) return null;
+
       return {
         kind: TABLE_CONSTRAINT_KIND.CHECK,
-        value: ctx.check_constraint().accept(this),
+        value: checkConstraint.value,
       };
     }
 
@@ -1090,7 +1065,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     if (!table) return; // ALTER TABLE should appear after CREATE TABLE, so skip if table is not created yet
 
     const columnDefTableConstraints = ctx.column_def_table_constraints() ? ctx.column_def_table_constraints().accept(this) : [];
-    const { fieldsData, indexes, tableRefs, columnDefaults } = splitColumnDefTableConstraints(columnDefTableConstraints);
+    const { fieldsData, indexes, tableRefs, columnDefaults, checkConstraints } = splitColumnDefTableConstraints(columnDefTableConstraints);
 
     const { inlineRefs, fields } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
     this.data.refs.push(...flatten(inlineRefs));
@@ -1109,6 +1084,22 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
       if (!field) return;
       field.dbdefault = columnDefault.defaultValue;
+    });
+
+    checkConstraints.forEach((checkConstraint) => {
+      const field = table.fields.find((field) => field.name === checkConstraint.column);
+      if (!field) return;
+
+      const enumObject = new Enum({
+        name: `${tableName}_${field.name}_enum`,
+        values: checkConstraint.columnValues.map((value) => ({ name: value })),
+        schemaName,
+      });
+
+      this.data.enums.push(enumObject);
+      // TODO: handle multiple enums for the same field
+      field.type.type_name = enumObject.name;
+      field.type.schemaName = enumObject.schemaName;
     });
   }
 

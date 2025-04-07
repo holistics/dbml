@@ -5,15 +5,15 @@
       "fields": [
         {
           "type": {
-            "type_name": "integer",
-            "schemaName": null
+            "type_name": "integer"
           },
           "pk": true,
           "name": "id"
         },
         {
           "type": {
-            "type_name": "jobs_status_enum"
+            "type_name": "jobs_status_enum",
+            "args": "'created', 'running', 'done', 'failed', 'wait for validation'"
           },
           "not_null": true,
           "name": "status"
@@ -25,8 +25,7 @@
       "fields": [
         {
           "type": {
-            "type_name": "int",
-            "schemaName": null
+            "type_name": "int"
           },
           "pk": true,
           "name": "id"
@@ -34,14 +33,14 @@
         {
           "type": {
             "type_name": "varchar(255)",
-            "schemaName": null
+            "args": "255"
           },
           "name": "created_at"
         },
         {
           "type": {
             "type_name": "orders_priority_enum",
-            "schemaName": null
+            "args": "'low', 'medium', 'high'"
           },
           "not_null": true,
           "name": "priority"
@@ -49,7 +48,7 @@
         {
           "type": {
             "type_name": "orders_status_enum",
-            "schemaName": null
+            "args": "'pending', 'processing', 'done'"
           },
           "not_null": true,
           "name": "status"

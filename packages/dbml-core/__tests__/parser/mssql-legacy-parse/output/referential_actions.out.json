@@ -27,7 +27,8 @@
         },
         {
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "args": "255"
           },
           "name": "created_at"
         }
@@ -50,7 +51,8 @@
         },
         {
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "args": "255"
           },
           "name": "product_name"
         },
@@ -60,7 +62,7 @@
           },
           "dbdefault": {
             "type": "number",
-            "value": "1"
+            "value": 1
           },
           "name": "quantity"
         }
@@ -77,13 +79,15 @@
         },
         {
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "args": "255"
           },
           "name": "name"
         },
         {
           "type": {
-            "type_name": "decimal(10,4)"
+            "type_name": "decimal(10,4)",
+            "args": "10,4"
           },
           "name": "price"
         },
@@ -100,6 +104,7 @@
       ],
       "indexes": [
         {
+          
           "pk": true,
           "columns": [
             {
@@ -127,13 +132,15 @@
         },
         {
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "args": "255"
           },
           "name": "name"
         },
         {
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "args": "255"
           },
           "unique": true,
           "name": "email"
@@ -175,13 +182,15 @@
         },
         {
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "args": "255"
           },
           "name": "name"
         },
         {
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "args": "255"
           },
           "name": "continent_name"
         }
@@ -206,7 +215,7 @@
           "tableName": "users"
         }
       ],
-      "onDelete": "NO ACTION"
+      "onDelete": "no action"
     },
     {
       "endpoints": [
@@ -225,7 +234,7 @@
           "tableName": "orders"
         }
       ],
-      "onDelete": "CASCADE"
+      "onDelete": "cascade"
     },
     {
       "endpoints": [
@@ -246,7 +255,7 @@
           "tableName": "products"
         }
       ],
-      "onDelete": "SET NULL"
+      "onDelete": "set null"
     },
     {
       "endpoints": [
@@ -265,7 +274,7 @@
           "tableName": "countries"
         }
       ],
-      "onDelete": "NO ACTION"
+      "onDelete": "no action"
     }
   ]
 }
