@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { last, flatten, flattenDepth } from 'lodash';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
-import { Enum, Field, Index, Table } from '../AST';
+import { Enum, Field, Index, TableRecord, Table } from '../AST';
 import { TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TYPE } from '../constants';
 
 const COMMAND_KIND = {
@@ -1014,12 +1014,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     const { columns, values } = ctx.insert_rest().accept(this);
 
-    const record = {
+    const record = new TableRecord({
       schemaName,
       tableName,
       columns,
       values,
-    };
+    });
 
     this.data.records.push(record);
   }

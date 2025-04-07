@@ -5,7 +5,7 @@ import {
 import TSqlParserVisitor from '../../parsers/mssql/TSqlParserVisitor';
 import { COLUMN_CONSTRAINT_KIND, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../constants';
 import { getOriginalText } from '../helpers';
-import { Field, Index, Table } from '../AST';
+import { Field, Index, Table, TableRecord } from '../AST';
 
 const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
 
@@ -176,12 +176,12 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const columns = ctx.insert_column_name_list() ? ctx.insert_column_name_list().accept(this) : [];
     const values = ctx.insert_statement_value().accept(this);
 
-    const record = {
-      schemaName,
+    const record = new TableRecord({
       tableName,
+      schemaName,
       columns,
       values,
-    };
+    });
 
     this.data.records.push(record);
   }
