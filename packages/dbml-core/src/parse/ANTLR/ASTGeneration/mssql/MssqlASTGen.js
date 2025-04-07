@@ -5,9 +5,14 @@ import {
 import TSqlParserVisitor from '../../parsers/mssql/TSqlParserVisitor';
 import { COLUMN_CONSTRAINT_KIND, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../constants';
 import { getOriginalText } from '../helpers';
-import { Field, Index, Table, TableRecord } from '../AST';
+import { Field, Index, Table, TableRecord, Enum } from '../AST';
 
 const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
+
+const CHECK_CONSTRAINT_CONDITION_TYPE = {
+  RAW: 'raw',
+  ENUM: 'enum',
+};
 
 const getSchemaAndTableName = (names) => {
   const tableName = last(names);
@@ -32,10 +37,12 @@ const getStringFromRawString = (rawString) => {
  *  fieldsData: any[],
  *  indexes: any[],
  *  tableRefs: any[],
+ *  columnDefaults: any[],
+ *  checkConstraints: any[],
  * }}
  */
 const splitColumnDefTableConstraints = (columnDefTableConstraints) => {
-  const [fieldsData, indexes, tableRefs, columnDefaults] = columnDefTableConstraints.reduce((acc, columnDefTableConstraint) => {
+  const [fieldsData, indexes, tableRefs, columnDefaults, checkConstraints] = columnDefTableConstraints.reduce((acc, columnDefTableConstraint) => {
     switch (columnDefTableConstraint.kind) {
       case TABLE_CONSTRAINT_KIND.FIELD:
         acc[0].push(columnDefTableConstraint.value);
@@ -55,14 +62,18 @@ const splitColumnDefTableConstraints = (columnDefTableConstraints) => {
         acc[3].push(columnDefTableConstraint.value);
         break;
 
+      case TABLE_CONSTRAINT_KIND.CHECK:
+        acc[4].push(columnDefTableConstraint.value);
+        break;
+
       default:
         break;
     }
 
     return acc;
-  }, [[], [], [], []]);
+  }, [[], [], [], [], []]);
 
-  return { fieldsData, indexes, tableRefs, columnDefaults };
+  return { fieldsData, indexes, tableRefs, columnDefaults, checkConstraints };
 };
 
 const parseFieldsAndInlineRefsFromFieldsData = (fieldsData, tableName, schemaName) => {
@@ -80,7 +91,27 @@ const parseFieldsAndInlineRefsFromFieldsData = (fieldsData, tableName, schemaNam
     return acc;
   }, [[], []]);
 
-  return { inlineRefs: resInlineRefs, fields };
+  // parse enums for fields
+  const enumList = [];
+  fields.forEach((field) => {
+    if (!field.type.isEnum) return;
+
+    const enumName = `${tableName}_${field.name}_enum`;
+    const { columnValues } = field.type.enum;
+
+    const enumObject= new Enum({
+      name: enumName,
+      values: columnValues.map((value) => ({ name: value })),
+      schemaName,
+    });
+
+    field.type.type_name = enumObject.name;
+    field.type.schemaName = enumObject.schemaName;
+
+    enumList.push(enumObject);
+  });
+
+  return { inlineRefs: resInlineRefs, fields, enums: enumList };
 };
 
 export default class MssqlASTGen extends TSqlParserVisitor {
@@ -293,6 +324,10 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       return ctx.bracket_expression().accept(this);
     }
 
+    if (ctx.full_column_name()) {
+      return ctx.full_column_name().accept(this);
+    }
+
     // Default case for any other expression type
     return {
       value: getOriginalText(ctx),
@@ -306,6 +341,22 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   ;
   visitBracket_expression (ctx) {
     return ctx.expression() ? ctx.expression().accept(this) : null;
+  }
+
+  // full_column_name
+  //   : ((DELETED | INSERTED | full_table_name) '.')? (
+  //       column_name = id_
+  //       | ('$' (IDENTITY | ROWGUID))
+  //   )
+  //   ;
+  visitFull_column_name (ctx) {
+    const columnName = ctx.id_().accept(this);
+    const fullTableName = ctx.full_table_name() ? ctx.full_table_name().accept(this) : [];
+
+    return {
+      value: [...fullTableName, columnName],
+      type: DATA_TYPE.EXPRESSION,
+    }
   }
 
   // primitive_constant
@@ -477,10 +528,11 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const columnDefTableConstraints = ctx.column_def_table_constraints().accept(this);
     const tableIndices = ctx.table_indices().map((tableIndex) => tableIndex.accept(this));
 
-    const { fieldsData, indexes, tableRefs } = splitColumnDefTableConstraints(columnDefTableConstraints);
+    const { fieldsData, indexes, tableRefs, checkConstraints } = splitColumnDefTableConstraints(columnDefTableConstraints);
 
-    const { inlineRefs, fields } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
+    const { inlineRefs, fields, enums } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
 
+    this.data.enums.push(...enums);
     this.data.refs.push(...flatten(inlineRefs));
 
     this.data.refs.push(...tableRefs.map(tableRef => {
@@ -488,6 +540,29 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       tableRef.endpoints[0].schemaName = schemaName;
       return tableRef;
     }));
+
+
+    checkConstraints.forEach((checkConstraint) => {
+      const { type: checkConstraintType, value } = checkConstraint;
+
+      const field = fields.find((field) => field.name === value.column);
+      if (!field) return;
+
+      if (checkConstraintType === CHECK_CONSTRAINT_CONDITION_TYPE.ENUM) {
+        const enumObject = new Enum({
+          name: `${tableName}_${field.name}_enum`,
+          values: value.columnValues.map((value) => ({ name: value })),
+          schemaName,
+        });
+
+        this.data.enums.push(enumObject);
+        // we keep the current behavior: when a field has multiple check constraints (enum), we will only apply the first one
+        if (field.type.isEnum) return;
+
+        field.type.type_name = enumObject.name;
+        field.type.schemaName = enumObject.schemaName;
+      }
+    });
 
     const table = new Table({
       name: tableName,
@@ -598,9 +673,19 @@ export default class MssqlASTGen extends TSqlParserVisitor {
           case COLUMN_CONSTRAINT_KIND.INLINE_REF:
             definition.value.inline_refs.push(columnDef.value);
             break;
-          case COLUMN_CONSTRAINT_KIND.CHECK:
-            field.type.type_name = `${field.type.type_name} ${columnDef.value}`;
+          case COLUMN_CONSTRAINT_KIND.CHECK: {
+            const { type, value } = columnDef.value;
+
+            // we keep the current behavior: when a field has a check constraints cannot be converted to enum, we will ignore it
+            if (type !== CHECK_CONSTRAINT_CONDITION_TYPE.ENUM) return;
+
+            // use isEnum since in mssql, enum is not a key work and can be used as user defined type
+            field.type.isEnum = true;
+
+            // { column: 'status', columnValues: [ 'active', 'inactive', 'pending' ] }
+            field.type.enum = value;
             break;
+          }
           default:
             break;
         }
@@ -728,7 +813,68 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   : CHECK (NOT FOR REPLICATION)? '(' search_condition ')'
   //   ;
   visitCheck_constraint (ctx) {
-    return getOriginalText(ctx);
+    return ctx.search_condition().accept(this);
+  }
+
+  // search_condition
+  //   : NOT* (predicate | '(' search_condition ')')
+  //   | search_condition AND search_condition // AND takes precedence over OR
+  //   | search_condition OR search_condition
+  //   ;
+  visitSearch_condition (ctx) {
+    // we will parse the enum from the most basic condition - map to the old behavior
+    // others, we will get the check constraint to ensure the constraint is applied - enhance the old behavior
+    if (!ctx.predicate() || ctx.NOT().length) {
+      return {
+        type: CHECK_CONSTRAINT_CONDITION_TYPE.RAW,
+        value: getOriginalText(ctx),
+      }
+    }
+
+    const predicate = ctx.predicate().accept(this);
+
+    if (!predicate) {
+      return {
+        type: CHECK_CONSTRAINT_CONDITION_TYPE.RAW,
+        value: getOriginalText(ctx),
+      }
+    }
+
+    return {
+      type: CHECK_CONSTRAINT_CONDITION_TYPE.ENUM,
+      value: predicate,
+    }
+  }
+
+  // predicate
+  //   : EXISTS '(' subquery ')'
+  //   | freetext_predicate
+  //   | expression comparison_operator expression
+  //   | expression MULT_ASSIGN expression ////SQL-82 syntax for left outer joins; '*='. See https://stackoverflow.com/questions/40665/in-sybase-sql
+  //   | expression comparison_operator (ALL | SOME | ANY) '(' subquery ')'
+  //   | expression NOT* BETWEEN expression AND expression
+  //   | expression NOT* IN '(' (subquery | expression_list_) ')'
+  //   | expression NOT* LIKE expression (ESCAPE expression)?
+  //   | expression IS null_notnull
+  //   ;
+  visitPredicate (ctx) {
+    if (ctx.IN() && ctx.expression_list_() && ctx.NOT().length === 0) {
+      const [expression = {}] = ctx.expression().map((e) => e.accept(this));
+
+      // {
+      //   value: [ 'myschema', 'sample_table', 'column_name' ],
+      //   type: 'expression'
+      // }
+      const column = last(expression.value ?? []);
+      const expressionList = ctx.expression_list_().accept(this).map((e) => e.value);
+      return {
+        column,
+        columnValues: expressionList,
+      };
+    }
+
+
+    return null;
   }
 
   visitNull_notnull (ctx) {
@@ -876,6 +1022,13 @@ export default class MssqlASTGen extends TSqlParserVisitor {
           column,
           defaultValue: expression,
         },
+      };
+    }
+
+    if (ctx.check_constraint()) {
+      return {
+        kind: TABLE_CONSTRAINT_KIND.CHECK,
+        value: ctx.check_constraint().accept(this),
       };
     }
 
