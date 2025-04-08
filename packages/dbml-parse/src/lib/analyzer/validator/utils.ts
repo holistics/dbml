@@ -1,7 +1,9 @@
 import { SyntaxToken, SyntaxTokenKind } from '../../lexer/tokens';
 import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
+  CallExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
   ListExpressionNode,
@@ -22,17 +24,20 @@ import ProjectValidator from './elementValidators/project';
 import RefValidator from './elementValidators/ref';
 import TableValidator from './elementValidators/table';
 import TableGroupValidator from './elementValidators/tableGroup';
+import TableFragmentValidator from './elementValidators/tableFragment';
 import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
 import { SchemaSymbol } from '../symbol/symbols';
 import SymbolTable from '../symbol/symbolTable';
 import SymbolFactory from '../symbol/factory';
-import { extractStringFromIdentifierStream, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode } from '../../parser/utils';
+import {
+  extractStringFromIdentifierStream, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
+} from '../../parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import Report from '../../report';
 import { CompileError, CompileErrorCode } from '../../errors';
 import { ElementKind } from '../types';
 
-export function pickValidator(element: ElementDeclarationNode & { type: SyntaxToken }) {
+export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
     case ElementKind.Enum:
       return EnumValidator;
@@ -48,6 +53,8 @@ export function pickValidator(element: ElementDeclarationNode & { type: SyntaxTo
       return NoteValidator;
     case ElementKind.Indexes:
       return IndexesValidator;
+    case ElementKind.TableFragment:
+      return TableFragmentValidator;
     default:
       return CustomValidator;
   }
@@ -224,33 +231,204 @@ export function isTupleOfVariables(value?: SyntaxNode): value is TupleExpression
   return value instanceof TupleExpressionNode && value.elementList.every(isExpressionAVariableNode);
 }
 
-export function aggregateSettingList(settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }, CompileError> {
-  const map: { [index: string]: AttributeNode[]; } = {};
+export enum SettingName {
+  Note = 'note',
+  Ref = 'ref',
+  PKey = 'primary key',
+  PK = 'pk',
+  NotNull = 'not null',
+  Null = 'null',
+  Unique = 'unique',
+  Increment = 'increment',
+  Default = 'default',
+}
+
+export function aggregateSettingList (settingList?: ListExpressionNode): Report<Record<SettingName | string, AttributeNode[]>, CompileError> {
+  if (!settingList) return new Report({});
+
+  const map: Record<SettingName | string, AttributeNode[]> = {};
   const errors: CompileError[] = [];
-  if (!settingList) {
-    return new Report({});
-  }
-  for (const attribute of settingList.elementList) {
-    if (!attribute.name) {
-      continue;
-    }
+
+  settingList.elementList.forEach((attribute) => {
+    if (!attribute.name) return;
 
     if (attribute.name instanceof PrimaryExpressionNode) {
       errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'A setting name must be a stream of identifiers', attribute.name));
-      continue;
+      return;
     }
 
     const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined)?.toLowerCase();
-    if (!name) {
-      continue;
-    }
+    if (!name) return;
 
-    if (map[name] === undefined) {
-      map[name] = [attribute]
-    } else {
-      map[name].push(attribute);
-    }
-  }
+    if (map[name] === undefined) map[name] = [attribute];
+    else map[name].push(attribute);
+  });
 
   return new Report(map, errors);
 }
+
+export const isValidColumnType = (type: SyntaxNode): boolean => {
+  if (
+    !(
+      type instanceof CallExpressionNode
+      || isAccessExpression(type)
+      || type instanceof PrimaryExpressionNode
+      || type instanceof ArrayNode
+    )
+  ) {
+    return false;
+  }
+
+  if (type instanceof CallExpressionNode) {
+    if (type.callee === undefined || type.argumentList === undefined) {
+      return false;
+    }
+
+    if (!type.argumentList.elementList.every((e) => isExpressionANumber(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.callee;
+  }
+
+  while (type instanceof ArrayNode) {
+    if (type.array === undefined || type.indexer === undefined) {
+      return false;
+    }
+
+    if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isExpressionANumber(attribute.name))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.array;
+  }
+
+  const variables = destructureComplexVariable(type).unwrap_or(undefined);
+
+  return variables !== undefined && variables.length > 0;
+};
+
+const validateUniqueColumnSetting = (attrName: string, attrs: (AttributeNode | PrimaryExpressionNode)[]) => {
+  const uniqueSettingNames = [
+    SettingName.Note,
+    SettingName.Ref,
+    SettingName.PKey,
+    SettingName.PK,
+    SettingName.NotNull,
+    SettingName.Null,
+    SettingName.Unique,
+    SettingName.Increment,
+    SettingName.Default,
+  ] as string[];
+
+  if (uniqueSettingNames.includes(attrName) && attrs.length > 1) {
+    return attrs.map(attr => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${attrName}' can only appear once`, attr));
+  }
+  return [];
+};
+
+const validateNonValueAttribute = (attrName: string, attrs: (AttributeNode | PrimaryExpressionNode)[]) => {
+  const errors: CompileError[] = [];
+
+  const nonValueAttributeNames = [
+    SettingName.PKey,
+    SettingName.PK,
+    SettingName.NotNull,
+    SettingName.Null,
+    SettingName.Unique,
+    SettingName.Increment,
+  ] as string[];
+
+  if (nonValueAttributeNames.includes(attrName)) {
+    attrs.forEach((attr) => {
+      if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${attrName}' must not have a value`, attr.value || attr.name!));
+      }
+    });
+  }
+  return errors;
+};
+
+export const validateColumnSettings = (settingMap: Record<SettingName | string, AttributeNode[]> & {
+  pk?: (AttributeNode | PrimaryExpressionNode)[],
+  unique?: (AttributeNode | PrimaryExpressionNode)[],
+}) => {
+  const errors: CompileError[] = [];
+  Object.entries(settingMap).forEach(([name, attrs]) => {
+    if (!attrs) return;
+
+    errors.push(...validateUniqueColumnSetting(name, attrs));
+    errors.push(...validateNonValueAttribute(name, attrs));
+
+    switch (name) {
+      case SettingName.PK: {
+        const pkeyAttrs = settingMap[SettingName.PKey] || [];
+        if (attrs.length >= 1 && pkeyAttrs.length >= 1) {
+          errors.push(...[...attrs, ...pkeyAttrs].map((attr) => new CompileError(
+            CompileErrorCode.DUPLICATE_COLUMN_SETTING,
+            'Either one of \'primary key\' and \'pk\' can appear',
+            attr,
+          )));
+        }
+        break;
+      }
+
+      case SettingName.Note:
+        (attrs as AttributeNode[]).forEach((attr) => {
+          if (!isExpressionAQuotedString(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'note\' must be a quoted string', attr.value || attr.name!));
+          }
+        });
+        break;
+
+      case SettingName.Ref:
+        (attrs as AttributeNode[]).forEach((attr) => {
+          if (!isUnaryRelationship(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'ref\' must be a valid unary relationship', attr.value || attr.name!));
+          }
+        });
+        break;
+
+      case SettingName.Null: {
+        const nullAttrs = settingMap[SettingName.NotNull] || [];
+        if (attrs.length >= 1 && nullAttrs.length >= 1) {
+          errors.push(...[...attrs, ...nullAttrs].map((attr) => new CompileError(
+            CompileErrorCode.CONFLICTING_SETTING,
+            '\'not null\' and \'null\' can not be set at the same time',
+            attr,
+          )));
+        }
+        break;
+      }
+
+      case SettingName.Default:
+        (attrs as AttributeNode[]).forEach((attr) => {
+          if (!isValidDefaultValue(attr.value)) {
+            errors.push(new CompileError(
+              CompileErrorCode.INVALID_TABLE_SETTING,
+              '\'default\' must be a string literal, number literal, function expression, true, false or null',
+              attr.value || attr.name!,
+            ));
+          }
+        });
+        break;
+
+      case SettingName.PKey:
+      case SettingName.Unique:
+      case SettingName.NotNull:
+      case SettingName.Increment:
+        break;
+
+      default:
+        attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
+    }
+  // }
+  });
+
+  return errors;
+};
+
+export const validateSettings = () => {
+};
