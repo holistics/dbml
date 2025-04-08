@@ -29,7 +29,7 @@ const { importer } = require('@dbml/core');
 
 * **Arguments:**
   * ```{string} str```
-  * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'snowflake'|'json'} format```
+  * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'mssqlLegacy'|'snowflake'|'json'} format```
 
 * **Returns:**
   * ```{string} DBML```
@@ -38,7 +38,7 @@ const { importer } = require('@dbml/core');
 Generate DBML from SQL.
 
 :::note
-The `postgresLegacy` and `mysqlLegacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
+The `postgresLegacy`, `mysqlLegacy` and `mssqlLegacy` options import PostgreSQL/MySQL/MSSQL to dbml using the old parsers. It's quicker but less accurate.
 :::
 
 ```javascript
@@ -120,7 +120,7 @@ const parser = new Parser();
 
 * **Arguments:**
   * ```{string} str```
-  * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'snowflake'|'json'|'dbmlv2'} format```
+  * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'mssqlLegacy'|'snowflake'|'json'|'dbmlv2'} format```
 
 * **Returns:** ```Database``` object
 
@@ -129,7 +129,7 @@ Parse specified format to ```Database``` object
 
 :::note
 
-* The `postgresLegacy` and `mysqlLegacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
+* The `postgresLegacy`, `mysqlLegacy` and `mssqlLegacy` options import PostgreSQL/MySQL/MSSQL to dbml using the old parsers. It's quicker but less accurate.
 
 * The `dbmlv2` option parse dbml using the new parser. It's quicker and more robust to errors/more user-friendly error messages.
 
