@@ -47,6 +47,16 @@ export enum CompileErrorCode {
   DUPLICATE_COLUMN_SETTING,
   INVALID_COLUMN_SETTING_VALUE,
 
+  MISSING_TABLE_FRAGMENT_SYMBOL,
+  INVALID_TABLE_FRAGMENT_SYMBOL,
+  INVALID_TABLE_FRAGMENT_CONTEXT,
+  INVALID_TABLE_FRAGMENT_ELEMENT_NAME,
+  DUPLICATE_TABLE_FRAGMENT_ELEMENT_NAME,
+  DUPLICATE_TABLE_FRAGMENT_FIELD_NAME,
+  INVALID_TABLE_FRAGMENT_FIELD,
+  INVALID_TABLE_FRAGMENT_SETTING,
+  DUPLICATE_TABLE_FRAGMENT_SETTING,
+
   INVALID_ENUM_CONTEXT,
   INVALID_ENUM_ELEMENT_NAME,
   INVALID_ENUM_ELEMENT,
@@ -109,7 +119,7 @@ export class CompileError extends Error {
 
   end: Readonly<number>;
 
-  constructor(code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
     this.diagnostic = message;

@@ -141,3 +141,24 @@ export class TableGroupFieldSymbol implements NodeSymbol {
     this.declaration = declaration;
   }
 }
+
+// A symbol for a table fragment, contains the table fragment's symbol table
+// which is used to hold all the column symbols of the table fragment
+export class TableFragmentSymbol implements NodeSymbol {
+  id: NodeSymbolId;
+
+  symbolTable: SymbolTable;
+
+  declaration: SyntaxNode;
+
+  references: SyntaxNode[] = [];
+
+  constructor (
+    { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
+    id: NodeSymbolId,
+  ) {
+    this.id = id;
+    this.symbolTable = symbolTable;
+    this.declaration = declaration;
+  }
+}
