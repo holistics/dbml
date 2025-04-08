@@ -218,3 +218,39 @@ export class Enum {
     };
   }
 }
+
+export class TableRecord {
+  /**
+   * @param {{
+   *  tableName: string,
+   *  columns: string[],
+   *  values: {
+   *    value: any,
+   *    type: string,
+   *  }[]
+   *  schemaName?: string,
+   * }} param0
+   */
+  constructor({ tableName, columns, values, schemaName = undefined }) {
+    /** @type {string} */
+    this.tableName = tableName;
+
+    /** @type {string | undefined} */
+    this.schemaName = schemaName;
+
+    /** @type {string[]} */
+    this.columns = columns;
+
+    /** @type {{value: any, type: string}[]} */
+    this.values = values;
+  }
+
+  toJSON () {
+    return {
+      tableName: this.tableName,
+      schemaName: this.schemaName,
+      columns: this.columns,
+      values: this.values,
+    };
+  }
+}

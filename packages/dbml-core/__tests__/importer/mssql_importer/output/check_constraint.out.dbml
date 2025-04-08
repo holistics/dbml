@@ -1,0 +1,23 @@
+Enum "sample_table_status_enum" {
+  "active"
+  "inactive"
+  "pending"
+}
+
+Table "sample_table" {
+  "status" sample_table_status_enum
+  "email" VARCHAR(100)
+  "user_type" VARCHAR(20)
+}
+
+Enum "myschema"."sample_table_status_enum" {
+  "active"
+  "inactive"
+  "pending"
+}
+
+Table "myschema"."sample_table" {
+  "status" myschema.sample_table_status_enum
+  "email" VARCHAR(100)
+  "user_type" VARCHAR(20)
+}

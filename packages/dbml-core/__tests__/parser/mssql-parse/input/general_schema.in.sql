@@ -50,7 +50,7 @@ CREATE TABLE [countries] (
 )
 GO
 
-ALTER TABLE [products] ADD DEFAULT now() FOR [created_at] WITH VALUES
+ALTER TABLE [products] ADD DEFAULT GETDATE() FOR [created_at] WITH VALUES
 
 ALTER TABLE [products] ADD CHECK ([status] IN ('Out of Stock', 'In Stock'))
 
