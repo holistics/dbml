@@ -7,8 +7,8 @@ Table "test" {
   "number2" int [default: 1]
   "number3" int [default: 1]
   "number4" int [default: 1]
-  "date1" datetime [default: `now()`]
-  "date2" datetime [default: `now()`]
-  "date3" datetime [default: `now()`]
-  "date4" datetime [default: `now()`]
+  "date1" datetime [default: `GETDATE()`]
+  "date2" datetime [default: `GETDATE()`]
+  "date3" datetime [default: `GETDATE()`]
+  "date4" datetime [default: `GETDATE()`]
 }

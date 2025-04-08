@@ -1,11 +1,67 @@
 {
   "tables": [
     {
+      "name": "users",
+      "fields": [
+        {
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "increment": true,
+          "name": "user_id"
+        },
+        {
+          "type": {
+            "type_name": "varchar(255)",
+            "schemaName": null
+          },
+          "name": "name"
+        },
+        {
+          "type": {
+            "type_name": "varchar(255)",
+            "schemaName": null
+          },
+          "unique": true,
+          "name": "email"
+        },
+        {
+          "type": {
+            "type_name": "datetime",
+            "schemaName": null
+          },
+          "name": "date_of_birth"
+        },
+        {
+          "type": {
+            "type_name": "datetime",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "type": "expression",
+            "value": "GETDATE()"
+          },
+          "name": "created_at"
+        },
+        {
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "not_null": true,
+          "name": "country_code"
+        }
+      ]
+    },
+    {
       "name": "orders",
       "fields": [
         {
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true,
           "increment": true,
@@ -13,145 +69,19 @@
         },
         {
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "unique": true,
           "not_null": true,
-          "inline_refs": [
-            {
-              "endpoint": {
-                "tableName": "users",
-                "fieldNames": [
-                  "user_id"
-                ],
-                "relation": "1"
-              },
-              "onDelete": "no action"
-            }
-          ],
-          "name": "user_id"
-        },
-        {
-          "type": {
-            "type_name": "orders_status_enum"
-          },
-          "name": "status"
-        },
-        {
-          "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
-          },
-          "name": "created_at"
-        }
-      ]
-    },
-    {
-      "name": "order_items",
-      "fields": [
-        {
-          "type": {
-            "type_name": "int"
-          },
-          "inline_refs": [
-            {
-              "endpoint": {
-                "tableName": "orders",
-                "fieldNames": [
-                  "id"
-                ],
-                "relation": "1"
-              },
-              "onDelete": "cascade"
-            }
-          ],
-          "name": "order_id"
-        },
-        {
-          "type": {
-            "type_name": "int"
-          },
-          "inline_refs": [
-            {
-              "endpoint": {
-                "tableName": "products",
-                "fieldNames": [
-                  "id"
-                ],
-                "relation": "1"
-              },
-              "onDelete": "set null"
-            }
-          ],
-          "name": "product_id"
-        },
-        {
-          "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
-          },
-          "name": "product_name"
-        },
-        {
-          "type": {
-            "type_name": "int"
-          },
-          "dbdefault": {
-            "type": "number",
-            "value": 1
-          },
-          "name": "quantity"
-        }
-      ]
-    },
-    {
-      "name": "users",
-      "fields": [
-        {
-          "type": {
-            "type_name": "int"
-          },
-          "pk": true,
-          "increment": true,
           "name": "user_id"
         },
         {
           "type": {
             "type_name": "varchar(255)",
-            "args": "255"
-          },
-          "name": "name"
-        },
-        {
-          "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
-          },
-          "unique": true,
-          "name": "email"
-        },
-        {
-          "type": {
-            "type_name": "datetime"
-          },
-          "name": "date_of_birth"
-        },
-        {
-          "type": {
-            "type_name": "datetime"
-          },
-          "dbdefault": {
-            "type": "expression",
-            "value": "now()"
+            "schemaName": null
           },
           "name": "created_at"
-        },
-        {
-          "type": {
-            "type_name": "int"
-          },
-          "not_null": true,
-          "name": "country_code"
         }
       ]
     },
@@ -160,56 +90,90 @@
       "fields": [
         {
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "name": "id"
         },
         {
           "type": {
             "type_name": "varchar(255)",
-            "args": "255"
+            "schemaName": null
           },
           "name": "name"
         },
         {
           "type": {
             "type_name": "decimal(10,4)",
-            "args": "10,4"
+            "schemaName": null
           },
           "name": "price"
         },
         {
           "type": {
-            "type_name": "datetime"
+            "type_name": "datetime",
+            "schemaName": null
           },
           "dbdefault": {
             "type": "expression",
-            "value": "now()"
+            "value": "GETDATE()"
           },
           "name": "created_at"
         }
       ],
       "indexes": [
         {
-          
           "pk": true,
           "columns": [
             {
               "value": "id",
               "type": "column"
-            },
-            {
-              "value": "name",
-              "type": "column"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "order_items",
+      "fields": [
+        {
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "name": "order_id"
+        },
+        {
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "name": "product_id"
+        },
+        {
+          "type": {
+            "type_name": "varchar(255)",
+            "schemaName": null
+          },
+          "name": "product_name"
+        },
+        {
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "type": "number",
+            "value": "1"
+          },
+          "name": "quantity"
         }
       ]
     }
   ],
   "refs": [
     {
-      "onDelete": "no action",
+      "onDelete": "NO ACTION",
       "endpoints": [
         {
           "tableName": "orders",
@@ -228,7 +192,7 @@
       ]
     },
     {
-      "onDelete": "cascade",
+      "onDelete": "CASCADE",
       "endpoints": [
         {
           "tableName": "order_items",
@@ -247,7 +211,7 @@
       ]
     },
     {
-      "onDelete": "set null",
+      "onDelete": "SET NULL",
       "endpoints": [
         {
           "tableName": "order_items",

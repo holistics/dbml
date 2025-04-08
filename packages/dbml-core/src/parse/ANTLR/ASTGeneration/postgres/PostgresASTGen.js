@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
-import { last, flatten } from 'lodash';
+import { last, flatten, flattenDepth } from 'lodash';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
-import { Enum, Field, Index, Table } from '../AST';
+import { Enum, Field, Index, TableRecord, Table } from '../AST';
 import { TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TYPE } from '../constants';
 
 const COMMAND_KIND = {
@@ -40,6 +40,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       tableGroups: [],
       aliases: [],
       project: {},
+      records: [],
     };
   }
 
@@ -86,9 +87,14 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       ctx.commentstmt().accept(this);
       return;
     }
-    
+
     if (ctx.definestmt()) {
       ctx.definestmt().accept(this);
+      return;
+    }
+
+    if (ctx.insertstmt()) {
+      ctx.insertstmt().accept(this);
       return;
     }
   }
@@ -188,7 +194,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
         }),
         // value: {
         //   type: 'PrimaryKey',
-        //   columns: 
+        //   columns:
         // },
       }
     }
@@ -503,7 +509,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   visitUnreserved_keyword (ctx) {
     return ctx.getText();
   }
-  
+
   /*
    Identifier opt_uescape
    | QuotedIdentifier
@@ -551,7 +557,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     return ctx.indirection_el().map(i => i.accept(this));
   }
 
-  // DOT (attr_name | STAR) 
+  // DOT (attr_name | STAR)
   // | OPEN_BRACKET (a_expr | opt_slice_bound COLON opt_slice_bound) CLOSE_BRACKET
   visitIndirection_el (ctx) {
     if (ctx.attr_name()) return ctx.attr_name().accept(this);
@@ -726,7 +732,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     }
   }
 
-  // name | 
+  // name |
   visitOpt_index_name (ctx) {
     return ctx.name()?.accept(this);
   }
@@ -736,11 +742,11 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     return ctx.colid().accept(this);
   }
 
-  // USING name | 
+  // USING name |
   visitAccess_method_clause (ctx) {
     if (ctx.name()) return ctx.name().accept(this);
   }
-  
+
   // qualified_name STAR?
   // | ONLY (qualified_name | OPEN_PAREN qualified_name CLOSE_PAREN)
   visitRelation_expr (ctx) {
@@ -996,5 +1002,182 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   // sconst (COMMA sconst)*
   visitEnum_val_list (ctx) {
     return ctx.sconst().map((s) => s.accept(this));
+  }
+
+  // insertstmt
+  //  : opt_with_clause INSERT INTO insert_target insert_rest opt_on_conflict returning_clause
+  //  ;
+  visitInsertstmt (ctx) {
+    const names = ctx.insert_target().accept(this);
+    const tableName = last(names);
+    const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
+
+    const { columns, values } = ctx.insert_rest().accept(this);
+
+    const record = new TableRecord({
+      schemaName,
+      tableName,
+      columns,
+      values,
+    });
+
+    this.data.records.push(record);
+  }
+
+  visitInsert_target (ctx) {
+    return ctx.qualified_name().accept(this);
+  }
+
+  // insert_rest
+  //  : selectstmt
+  //  | OVERRIDING override_kind VALUE_P selectstmt
+  //  | OPEN_PAREN insert_column_list CLOSE_PAREN (OVERRIDING override_kind VALUE_P)? selectstmt
+  //  | DEFAULT VALUES
+  //  ;
+  visitInsert_rest (ctx) {
+    const columns = ctx.insert_column_list() ? ctx.insert_column_list().accept(this) : [];
+    const rowsValue = ctx.selectstmt().accept(this) || [];
+    // each sub array represents a set of value of a row
+    // [
+    //   [
+    //     { value: '1', type: 'number' },
+    //     undefined,
+    //     {
+    //       value: '{"theme": "dark", "notifications": true}',
+    //       type: 'string',
+    //       type_name: 'JSONB',
+    //       schemaName: null
+    //     },
+    //     undefined,
+    //   ]
+    // ]
+
+    const sanitizeRowValue = (rowValue) => {
+      return rowValue
+        .filter((row) => row)
+        .map(({ value, type }) => ({ value, type }));
+    };
+
+    const sanitizedRowsValue = rowsValue.filter((rowValue) => Array.isArray(rowValue)).map(sanitizeRowValue);
+
+    return { columns, values: sanitizedRowsValue };
+  }
+
+  // insert_column_list
+  //  : insert_column_item (COMMA insert_column_item)*
+  //  ;
+  visitInsert_column_list (ctx) {
+    return ctx.insert_column_item().map((colItem) => colItem.accept(this));
+  }
+
+  // insert_column_item
+  //  : colid opt_indirection
+  //  ;
+  visitInsert_column_item (ctx) {
+    return ctx.colid().accept(this);
+  }
+
+  // selectstmt
+  //  : select_no_parens
+  //  | select_with_parens
+  //  ;
+  visitSelectstmt (ctx) {
+    if (!ctx.select_no_parens()) {
+      return null;
+    }
+
+    return ctx.select_no_parens().accept(this);
+  }
+
+  // select_no_parens
+  //  : select_clause opt_sort_clause (for_locking_clause opt_select_limit | select_limit opt_for_locking_clause)?
+  //  | with_clause select_clause opt_sort_clause (for_locking_clause opt_select_limit | select_limit opt_for_locking_clause)?
+  //  ;
+  visitSelect_no_parens (ctx) {
+    return ctx.select_clause().accept(this);
+  }
+
+  // select_clause
+  //  : simple_select
+  //  | select_with_parens
+  //  ;
+  visitSelect_clause (ctx) {
+    return ctx.simple_select().accept(this);
+  }
+
+  // simple_select
+  //  : ( SELECT (opt_all_clause into_clause opt_target_list | distinct_clause target_list)
+  //          into_clause
+  //          from_clause
+  //          where_clause
+  //          group_clause
+  //          having_clause
+  //          window_clause
+  //      | values_clause
+  //      | TABLE relation_expr
+  //      | select_with_parens set_operator_with_all_or_distinct (simple_select | select_with_parens)
+  //    )
+  //       (set_operator_with_all_or_distinct (simple_select | select_with_parens))*
+  //  ;
+  visitSimple_select (ctx) {
+    if (!ctx.values_clause()) {
+      return null;
+    }
+
+    return ctx.values_clause().accept(this);
+  }
+
+  // values_clause
+  //  : VALUES OPEN_PAREN expr_list CLOSE_PAREN (COMMA OPEN_PAREN expr_list CLOSE_PAREN)*
+  //  ;
+  visitValues_clause (ctx) {
+    return ctx.expr_list().map((expr) => {
+      const rawValues = expr.accept(this);
+
+      // We get the value of the c_expr through:
+      // a_expr->a_expr_qual->a_expr_lessless->a_expr_or->a_expr_and->
+      // a_expr_between->a_expr_in->a_expr_unary_not->a_expr_isnull->a_expr_is_not->
+      // a_expr_compare->a_expr_like->a_expr_qual_op->a_expr_unary_qualop->a_expr_add->
+      // a_expr_mul->a_expr_caret->a_expr_unary_sign->a_expr_at_time_zone->a_expr_collate->
+      // a_expr_typecast
+      const FLATTEN_DEPTH = 21;
+      const rawRowValues = flattenDepth(rawValues, FLATTEN_DEPTH);
+
+      // [
+      //   { value: '1', type: 'number' },
+      //   undefined,
+      //   {
+      //     value: '{"theme": "dark", "notifications": true}',
+      //     type: 'string',
+      //     type_name: 'JSONB',
+      //     schemaName: null
+      //   },
+      //   undefined,
+      // ]
+      return rawRowValues;
+    });
+  }
+
+  // a_expr_collate
+  //  : a_expr_typecast (COLLATE any_name)?
+  //  ;
+  visitA_expr_collate (ctx) {
+    const expressionValueSet = ctx.a_expr_typecast().accept(this);
+
+    // Possible values
+    // 1: [ { value: 'inactive', type: 'string' } ]
+    // 2: [
+    //   { value: '2021-01-05 18:45:00+00', type: 'string' },
+    //   undefined,
+    //   { type_name: 'TIMESTAMPTZ', schemaName: null }
+    // ]
+    // eslint-disable-next-line no-unused-vars
+    const [rawValue, _, rawType = {}] = expressionValueSet;
+    const { value, type } = rawValue;
+    return {
+      value,
+      type,
+      ...rawType,
+    };
   }
 }

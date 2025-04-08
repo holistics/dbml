@@ -1,6 +1,6 @@
 Table "booking_reference" {
   "reference_id" NVARCHAR(10) [not null]
-  "cust_id" NUMBER(10) [not null]
+  "cust_id" DECIMAL(10) [not null]
   "status" NVARCHAR(1) [not null]
 
   Indexes {
@@ -10,12 +10,18 @@ Table "booking_reference" {
 
 Table "br_flight" {
   "reference_id" NVARCHAR(10) [not null]
-  "cust_id" NUMBER(10) [not null]
+  "cust_id" DECIMAL(10) [not null]
   "flight_id" NVARCHAR(10) [not null]
 
   Indexes {
     (reference_id, flight_id) [pk]
   }
+}
+
+Table "countries" {
+  "code" int [pk]
+  "name" varchar
+  "continent_name" varchar
 }
 
 Table "users" {
@@ -27,12 +33,6 @@ Table "users" {
   "created_at" varchar
   "modified_at" time(2)
   "country_code" int
-}
-
-Table "countries" {
-  "code" int [pk]
-  "name" varchar
-  "continent_name" varchar
 }
 
 Ref "fk_country_code":"countries"."code" < "users"."country_code"

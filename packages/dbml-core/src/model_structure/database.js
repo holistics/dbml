@@ -21,6 +21,7 @@ class Database extends Element {
     tableGroups = [],
     project = {},
     aliases = [],
+    records = [],
   }) {
     super();
     this.dbState = new DbState();
@@ -34,8 +35,10 @@ class Database extends Element {
     this.name = project.name;
     this.token = project.token;
     this.aliases = aliases;
+    this.records = [];
 
     this.processNotes(notes);
+    this.processRecords(records);
     // The process order is important. Do not change !
     this.processSchemas(schemas);
     this.processSchemaElements(enums, ENUM);
@@ -52,6 +55,18 @@ class Database extends Element {
   processNotes (rawNotes) {
     rawNotes.forEach((note) => {
       this.pushNote(new StickyNote({ ...note, database: this }));
+    });
+  }
+
+  processRecords (rawRecords) {
+    rawRecords.forEach(({ schemaName, tableName, columns, values }) => {
+      this.records.push({
+        id: this.dbState.generateId('recordId'),
+        schemaName,
+        tableName,
+        columns,
+        values,
+      });
     });
   }
 
@@ -190,6 +205,7 @@ class Database extends Element {
     return {
       schemas: this.schemas.map(s => s.export()),
       notes: this.notes.map(n => n.export()),
+      records: this.records.map(r => ({ ...r })),
     };
   }
 
@@ -220,10 +236,12 @@ class Database extends Element {
       indexes: {},
       indexColumns: {},
       fields: {},
+      records: {},
     };
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));
     this.notes.forEach((note) => note.normalize(normalizedModel));
+    this.records.forEach((record) => normalizedModel.records[record.id] = { ...record });
     return normalizedModel;
   }
 }

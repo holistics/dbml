@@ -15,6 +15,10 @@ import SnowflakeASTGen from './snowflake/SnowflakeASTGen';
 
 import ParserErrorListener from './ParserErrorListener';
 
+import TSqlLexer from '../parsers/mssql/TSqlLexer';
+import TSqlParser from '../parsers/mssql/TSqlParser';
+import MssqlASTGen from './mssql/MssqlASTGen';
+
 function parse (input, format) {
   const chars = new antlr4.InputStream(input);
   let database = null;
@@ -48,6 +52,21 @@ function parse (input, format) {
       const parseTree = parser.root();
 
       database = parseTree.accept(new MySQLASTGen());
+
+      if (errorListener.errors.length) throw errorListener.errors;
+      break;
+    }
+    case 'mssql': {
+      const lexer = new TSqlLexer(chars);
+      const tokens = new antlr4.CommonTokenStream(lexer);
+      const parser = new TSqlParser(tokens);
+      parser.buildParseTrees = true;
+      parser.removeErrorListeners();
+      parser.addErrorListener(errorListener);
+
+      const parseTree = parser.tsql_file();
+
+      database = parseTree.accept(new MssqlASTGen());
 
       if (errorListener.errors.length) throw errorListener.errors;
       break;
