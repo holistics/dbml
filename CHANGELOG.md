@@ -1,3 +1,19 @@
+## v3.12.0 (2025-04-08)
+
+#### :memo: Documentation
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#690](https://github.com/holistics/dbml/pull/690) Support parse insert from SQL DDL and new parser for MSSQL ([@huyleminh01](https://github.com/huyleminh01))
+* Other
+  * [#702](https://github.com/holistics/dbml/pull/702) Update README.md ([@nielsbosma](https://github.com/nielsbosma))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#690](https://github.com/holistics/dbml/pull/690) Support parse insert from SQL DDL and new parser for MSSQL ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Niels Bosma ([@nielsbosma](https://github.com/nielsbosma))
+
 ## v3.11.0 (2025-04-01)
 
 #### :memo: Documentation
