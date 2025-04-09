@@ -1,9 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import _, { forIn } from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import {
-  pickValidator, registerSchemaStack, aggregateSettingList, isValidColumnType,
-} from '../utils';
+import { registerSchemaStack, aggregateSettingList, isValidColumnType } from '../utils';
 import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
 import { SyntaxToken } from '../../../lexer/tokens';
@@ -150,18 +148,15 @@ export default class TableFragmentValidator implements ElementValidator {
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
-    const errors = subs.flatMap((sub) => {
-      sub.parent = this.declarationNode;
-      if (!sub.type) return [];
-
-      const Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
-    });
-
-    errors.push(...CommonValidator.validateNotesAsSubElements(subs));
-
-    return errors;
+    return [
+      ...CommonValidator.validateSubElementsWithOwnedValidators(
+        subs,
+        this.declarationNode,
+        this.publicSymbolTable,
+        this.symbolFactory,
+      ),
+      ...CommonValidator.validateNotesAsSubElements(subs),
+    ];
   }
 
   registerField (field: FunctionApplicationNode): CompileError[] {

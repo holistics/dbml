@@ -8,7 +8,6 @@ import {
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
 import { isExpressionAQuotedString } from '../../../parser/utils';
-import { pickValidator } from '../utils';
 import SymbolTable from '../../symbol/symbolTable';
 import { ElementKind, ElementKindName } from '../../types';
 import { destructureComplexVariable, getElementKind } from '../../utils';
@@ -126,15 +125,12 @@ export default class NoteValidator implements ElementValidator {
     return errors;
   }
 
-  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
-    return subs.flatMap((sub) => {
-      sub.parent = this.declarationNode;
-      if (!sub.type) {
-        return [];
-      }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
-    });
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
+    return CommonValidator.validateSubElementsWithOwnedValidators(
+      subs,
+      this.declarationNode,
+      this.publicSymbolTable,
+      this.symbolFactory,
+    );
   }
 }

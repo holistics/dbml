@@ -8,7 +8,6 @@ import {
 } from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
-import { pickValidator } from '../utils';
 import SymbolTable from '../../symbol/symbolTable';
 import CommonValidator from '../commonValidator';
 import { ElementKindName } from '../../types';
@@ -61,19 +60,16 @@ export default class ProjectValidator implements ElementValidator {
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)),
-      ...this.validateSubElements(subs as ElementDeclarationNode[])
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
     ];
   }
 
-  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
-    return subs.flatMap((sub) => {
-      sub.parent = this.declarationNode;
-      if (!sub.type) {
-        return [];
-      }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
-    });
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
+    return CommonValidator.validateSubElementsWithOwnedValidators(
+      subs,
+      this.declarationNode,
+      this.publicSymbolTable,
+      this.symbolFactory,
+    );
   }
 }

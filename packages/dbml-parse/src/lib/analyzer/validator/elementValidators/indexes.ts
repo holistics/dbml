@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+import _ from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -13,13 +14,12 @@ import {
   VariableNode,
 } from '../../../parser/nodes';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
-import { aggregateSettingList, isVoid, pickValidator } from '../utils';
+import { aggregateSettingList, isVoid } from '../utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
-import _ from 'lodash';
-import { destructureIndexNode, getElementKind } from '../../../analyzer/utils';
-import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { ElementKind, ElementKindName } from '../../../analyzer/types';
+import { destructureIndexNode, getElementKind } from '../../utils';
+import SymbolTable from '../../symbol/symbolTable';
+import { ElementKind, ElementKindName } from '../../types';
 import CommonValidator from '../commonValidator';
 
 export default class IndexesValidator implements ElementValidator {
@@ -152,16 +152,13 @@ export default class IndexesValidator implements ElementValidator {
     return errors;
   }
 
-  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
-    return subs.flatMap((sub) => {
-      sub.parent = this.declarationNode;
-      if (!sub.type) {
-        return [];
-      }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
-    });
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
+    return CommonValidator.validateSubElementsWithOwnedValidators(
+      subs,
+      this.declarationNode,
+      this.publicSymbolTable,
+      this.symbolFactory,
+    );
   }
 }
 

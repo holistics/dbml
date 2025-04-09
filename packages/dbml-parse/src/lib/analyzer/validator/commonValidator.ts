@@ -12,11 +12,15 @@ import {
 } from '../../parser/nodes';
 import {
   aggregateSettingList, isSimpleName, isUnaryRelationship, isValidColor, isValidDefaultValue, isVoid,
+  pickValidator,
 } from './utils';
 import { extractVarNameFromPrimaryVariable } from '../utils';
 import {
   ElementKind, ElementKindName, SettingName, TopLevelElementKindName,
 } from '../types';
+import SymbolTable from '../symbol/symbolTable';
+import SymbolFactory from '../symbol/factory';
+import { SyntaxToken } from '../../lexer/tokens';
 
 // Include static validator methods for common cases
 export default class CommonValidator {
@@ -280,6 +284,22 @@ export default class CommonValidator {
         `${elementKindName} shouldn't have a setting list`,
         settingList,
       )];
+  }
+
+  static validateSubElementsWithOwnedValidators (
+    subElements: ElementDeclarationNode[],
+    declarationNode: ElementDeclarationNode,
+    publicSymbolTable: SymbolTable,
+    symbolFactory: SymbolFactory,
+  ) {
+    return subElements.flatMap((subElement) => {
+      subElement.parent = declarationNode;
+      if (!subElement.type) return [];
+
+      const Validator = pickValidator(subElement as ElementDeclarationNode & { type: SyntaxToken });
+      const validator = new Validator(subElement as ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable, symbolFactory);
+      return validator.validate();
+    });
   }
 
   static validateNotesAsSubElements (subElements: ElementDeclarationNode[]) {

@@ -10,7 +10,7 @@ import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../p
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
 import {
-  aggregateSettingList, isValidName, pickValidator, registerSchemaStack,
+  aggregateSettingList, isValidName, registerSchemaStack,
 } from '../utils';
 import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '../../symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
@@ -152,17 +152,13 @@ export default class EnumValidator implements ElementValidator {
     return errors;
   }
 
-  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
-    return subs.flatMap((sub) => {
-      sub.parent = this.declarationNode;
-      if (!sub.type) {
-        return [];
-      }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
-    });
-
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
+    return CommonValidator.validateSubElementsWithOwnedValidators(
+      subs,
+      this.declarationNode,
+      this.publicSymbolTable,
+      this.symbolFactory,
+    );
   }
 
   registerField(field: FunctionApplicationNode): CompileError[] {

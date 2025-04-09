@@ -12,7 +12,7 @@ import {
   isExpressionAVariableNode,
 } from '../../../parser/utils';
 import { ElementValidator } from '../types';
-import { aggregateSettingList, isValidColor, pickValidator } from '../utils';
+import { aggregateSettingList, isValidColor } from '../utils';
 import { isBinaryRelationship, isEqualTupleOperands } from '../../utils';
 import SymbolTable from '../../symbol/symbolTable';
 import { ElementKindName } from '../../types';
@@ -139,16 +139,13 @@ export default class RefValidator implements ElementValidator {
     return errors;
   }
 
-  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
-    return subs.flatMap((sub) => {
-      sub.parent = this.declarationNode;
-      if (!sub.type) {
-        return [];
-      }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
-    });
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
+    return CommonValidator.validateSubElementsWithOwnedValidators(
+      subs,
+      this.declarationNode,
+      this.publicSymbolTable,
+      this.symbolFactory,
+    );
   }
 }
 

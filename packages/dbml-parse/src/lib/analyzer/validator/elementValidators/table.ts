@@ -276,18 +276,14 @@ export default class TableValidator implements ElementValidator {
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
-    const errors = subs.flatMap((sub) => {
-      sub.parent = this.declarationNode;
-      if (!sub.type) {
-        return [];
-      }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate();
-    });
-
-    errors.push(...CommonValidator.validateNotesAsSubElements(subs));
-
-    return errors;
+    return [
+      ...CommonValidator.validateSubElementsWithOwnedValidators(
+        subs,
+        this.declarationNode,
+        this.publicSymbolTable,
+        this.symbolFactory,
+      ),
+      ...CommonValidator.validateNotesAsSubElements(subs),
+    ];
   }
 }
