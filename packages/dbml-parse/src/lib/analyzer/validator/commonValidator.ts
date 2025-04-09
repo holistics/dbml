@@ -27,13 +27,11 @@ export default class CommonValidator {
   static validateUniqueSetting (
     settingName: string,
     attrs: (AttributeNode | PrimaryExpressionNode)[],
-    settingNamesToValidate: string[],
     errorCode: CompileErrorCode,
   ) {
-    if (settingNamesToValidate.includes(settingName) && attrs.length > 1) {
-      return attrs.map((attr) => new CompileError(errorCode, `'${settingName}' can only appear once`, attr));
-    }
-    return [];
+    return attrs.length <= 1
+      ? []
+      : attrs.map((attr) => new CompileError(errorCode, `'${settingName}' can only appear once`, attr));
   }
 
   static validateStringSetting (settingName: string, attrs: AttributeNode[], errorCode: CompileErrorCode) {
@@ -81,19 +79,6 @@ export default class CommonValidator {
       settingMap[name].push(part);
     });
 
-    // Same for both Table and TableFragment columns
-    const UNIQUE_COLUMN_SETTINGS: string[] = [
-      SettingName.Note,
-      SettingName.Ref,
-      SettingName.PKey,
-      SettingName.PK,
-      SettingName.NotNull,
-      SettingName.Null,
-      SettingName.Unique,
-      SettingName.Increment,
-      SettingName.Default,
-    ];
-
     const nonValueAttributeNames: string[] = [
       SettingName.PKey,
       SettingName.PK,
@@ -106,19 +91,21 @@ export default class CommonValidator {
     forIn(settingMap, (attrs, name) => {
       if (!attrs) return;
 
-      errors.push(...CommonValidator.validateUniqueSetting(name, attrs, UNIQUE_COLUMN_SETTINGS, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
       errors.push(...CommonValidator.validateNonValueSetting(name, attrs, nonValueAttributeNames, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
 
       switch (name) {
         case SettingName.PK:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
           errors.push(...CommonValidator.validatePrimaryKeyAndPKSetting(attrs, settingMap[SettingName.PKey]));
           break;
 
         case SettingName.Note:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
           errors.push(...CommonValidator.validateStringSetting(name, attrs as AttributeNode[], CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
           break;
 
         case SettingName.Ref:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
           (attrs as AttributeNode[]).forEach((attr) => {
             if (!isUnaryRelationship(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'ref\' must be a valid unary relationship', attr.value || attr.name!));
@@ -127,10 +114,12 @@ export default class CommonValidator {
           break;
 
         case SettingName.Null:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
           errors.push(...CommonValidator.validateNullAndNotNullSetting(attrs, settingMap[SettingName.NotNull]));
           break;
 
         case SettingName.Default:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
           (attrs as AttributeNode[]).forEach((attr) => {
             if (!isValidDefaultValue(attr.value)) {
               errors.push(new CompileError(
@@ -147,6 +136,7 @@ export default class CommonValidator {
         case SettingName.Unique:
         case SettingName.NotNull:
         case SettingName.Increment:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
           break;
 
         default:

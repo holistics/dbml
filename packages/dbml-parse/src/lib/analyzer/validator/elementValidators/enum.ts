@@ -133,15 +133,9 @@ export default class EnumValidator implements ElementValidator {
     const settingMap = aggReport.getValue();
 
     forIn(settingMap, (attrs, name) => {
-      errors.push(...CommonValidator.validateUniqueSetting(
-        name,
-        attrs,
-        [SettingName.Note],
-        CompileErrorCode.DUPLICATE_ENUM_ELEMENT_SETTING,
-      ));
-
       switch (name) {
         case SettingName.Note:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_ENUM_ELEMENT_SETTING));
           errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_ENUM_ELEMENT_SETTING));
           break;
 

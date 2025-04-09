@@ -74,19 +74,14 @@ export default class TableGroupValidator implements ElementValidator {
     const settingMap = aggReport.getValue();
 
     forIn(settingMap, (attrs, name) => {
-      errors.push(...CommonValidator.validateUniqueSetting(
-        name,
-        attrs,
-        [SettingName.Color, SettingName.Note],
-        CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING,
-      ));
-
       switch (name) {
         case SettingName.Color:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING));
           errors.push(...CommonValidator.validateColorSetting(name, attrs, CompileErrorCode.INVALID_TABLEGROUP_SETTING));
           break;
 
         case SettingName.Note:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING));
           errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_TABLEGROUP_SETTING));
           break;
 

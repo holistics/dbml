@@ -75,19 +75,14 @@ export default class TableFragmentValidator implements ElementValidator {
     const settingMap = aggReport.getValue();
 
     forIn(settingMap, (attrs, name) => {
-      errors.push(...CommonValidator.validateUniqueSetting(
-        name,
-        attrs,
-        [SettingName.HeaderColor, SettingName.Note],
-        CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING,
-      ));
-
       switch (name) {
         case SettingName.HeaderColor:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING));
           errors.push(...CommonValidator.validateColorSetting(name, attrs, CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING));
           break;
 
         case SettingName.Note:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING));
           errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING));
           break;
 

@@ -33,6 +33,9 @@ export enum SettingName {
 
   HeaderColor = 'headercolor',
   Color = 'color',
+
+  Name = 'name',
+  Type = 'type',
 }
 
 export type TopLevelElementKindName =

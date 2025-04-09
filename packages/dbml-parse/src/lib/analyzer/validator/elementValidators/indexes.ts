@@ -117,13 +117,6 @@ export default class IndexesValidator implements ElementValidator {
     const settingMap = aggReport.getValue();
 
     forIn(settingMap, (attrs, name) => {
-      errors.push(...CommonValidator.validateUniqueSetting(
-        name,
-        attrs,
-        [SettingName.Note, SettingName.Name, SettingName.Unique, SettingName.PK, SettingName.Type],
-        CompileErrorCode.DUPLICATE_INDEX_SETTING,
-      ));
-
       errors.push(...CommonValidator.validateNonValueSetting(
         name,
         attrs,
@@ -134,14 +127,17 @@ export default class IndexesValidator implements ElementValidator {
       switch (name) {
         case SettingName.Note:
         case SettingName.Name:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_INDEX_SETTING));
           errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_INDEX_SETTING_VALUE));
           break;
 
         case SettingName.Unique:
         case SettingName.PK:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_INDEX_SETTING));
           break;
 
         case SettingName.Type:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_INDEX_SETTING));
           attrs.forEach((attr) => {
             if (!isExpressionAVariableNode(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, '\'type\' must be "btree" or "hash"', attr));
