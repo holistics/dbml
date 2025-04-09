@@ -44,22 +44,8 @@ export default class TableGroupValidator implements ElementValidator {
     return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.TableGroup);
   }
 
-  private validateName(nameNode?: SyntaxNode): CompileError[] {
-    if (!nameNode) {
-      return [new CompileError(
-        CompileErrorCode.NAME_NOT_FOUND,
-        'A TableGroup must have a name',
-        this.declarationNode,
-      )];
-    }
-    if (!isSimpleName(nameNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NAME,
-        'A TableGroup name must be a single identifier',
-        nameNode,
-      )];
-    }
-    return [];
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
+    return CommonValidator.validateSimpleName(nameNode, this.declarationNode, ElementKindName.TableGroup);
   }
 
   private validateAlias(aliasNode?: SyntaxNode): CompileError[] {

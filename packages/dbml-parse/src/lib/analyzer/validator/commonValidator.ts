@@ -7,10 +7,11 @@ import {
   ExpressionNode,
   ListExpressionNode,
   PrimaryExpressionNode,
+  SyntaxNode,
   VariableNode,
 } from '../../parser/nodes';
 import {
-  aggregateSettingList, isUnaryRelationship, isValidColor, isValidDefaultValue, isVoid,
+  aggregateSettingList, isSimpleName, isUnaryRelationship, isValidColor, isValidDefaultValue, isVoid,
 } from './utils';
 import { extractVarNameFromPrimaryVariable } from '../utils';
 import { ElementKindName, SettingName, TopLevelElementKindName } from '../types';
@@ -223,6 +224,26 @@ export default class CommonValidator {
         errorCodeBySymbolKind[elementKindName],
         `${elementKindName} must appear top-level`,
         declarationNode,
+      )];
+    }
+
+    return [];
+  }
+
+  static validateSimpleName (nameNode: SyntaxNode | undefined, declarationNode: ElementDeclarationNode, elementKindName: ElementKindName) {
+    if (!nameNode) {
+      return [new CompileError(
+        CompileErrorCode.NAME_NOT_FOUND,
+        `${elementKindName} must have a name`,
+        declarationNode,
+      )];
+    }
+
+    if (!isSimpleName(nameNode)) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_NAME,
+        `${elementKindName} name must be a single identifier or a quoted identifer`,
+        nameNode,
       )];
     }
 

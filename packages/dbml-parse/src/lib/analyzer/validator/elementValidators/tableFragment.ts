@@ -47,21 +47,7 @@ export default class TableFragmentValidator implements ElementValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
-    if (!nameNode) {
-      return [new CompileError(
-        CompileErrorCode.NAME_NOT_FOUND,
-        'A TableFragment must have a name',
-        this.declarationNode,
-      )];
-    }
-    if (!isSimpleName(nameNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NAME,
-        'A TableFragment name must be a single identifier',
-        nameNode,
-      )];
-    }
-    return [];
+    return CommonValidator.validateSimpleName(nameNode, this.declarationNode, ElementKindName.TableFragment);
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
