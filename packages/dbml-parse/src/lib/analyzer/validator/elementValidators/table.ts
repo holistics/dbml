@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import _, { forIn } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
@@ -270,7 +271,6 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  // eslint-disable-next-line class-methods-use-this
   validateColumnSetting (parts: (ExpressionNode | (PrimaryExpressionNode & { expression: VariableNode }))[]): CompileError[] {
     return CommonValidator.validateColumnSettings(parts);
   }
@@ -286,10 +286,7 @@ export default class TableValidator implements ElementValidator {
       return validator.validate();
     });
 
-    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
-    if (notes.length > 1) {
-      errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
-    }
+    errors.push(...CommonValidator.validateNotesAsSubElements(subs));
 
     return errors;
   }

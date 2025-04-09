@@ -14,7 +14,9 @@ import {
   aggregateSettingList, isSimpleName, isUnaryRelationship, isValidColor, isValidDefaultValue, isVoid,
 } from './utils';
 import { extractVarNameFromPrimaryVariable } from '../utils';
-import { ElementKindName, SettingName, TopLevelElementKindName } from '../types';
+import {
+  ElementKind, ElementKindName, SettingName, TopLevelElementKindName,
+} from '../types';
 
 // Include static validator methods for common cases
 export default class CommonValidator {
@@ -278,5 +280,17 @@ export default class CommonValidator {
         `${elementKindName} shouldn't have a setting list`,
         settingList,
       )];
+  }
+
+  static validateNotesAsSubElements (subElements: ElementDeclarationNode[]) {
+    const notes = subElements.filter((subElement) => subElement.type?.value.toLowerCase() === ElementKind.Note);
+
+    return notes.length <= 1
+      ? []
+      : notes.map((note) => new CompileError(
+        CompileErrorCode.NOTE_REDEFINED,
+        'Duplicate notes are defined',
+        note,
+      ));
   }
 }

@@ -2,8 +2,7 @@
 import _, { forIn } from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
-  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList,
-  isValidColumnType,
+  pickValidator, registerSchemaStack, aggregateSettingList, isValidColumnType,
 } from '../utils';
 import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
@@ -160,8 +159,8 @@ export default class TableFragmentValidator implements ElementValidator {
       return validator.validate();
     });
 
-    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
-    if (notes.length > 1) errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
+    errors.push(...CommonValidator.validateNotesAsSubElements(subs));
+
     return errors;
   }
 
