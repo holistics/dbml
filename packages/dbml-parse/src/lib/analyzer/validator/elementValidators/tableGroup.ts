@@ -14,9 +14,9 @@ import SymbolFactory from '../../symbol/factory';
 import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '../../symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import { TableGroupFieldSymbol, TableGroupSymbol } from '../../symbol/symbols';
-import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../parser/utils';
+import { isExpressionAVariableNode } from '../../../parser/utils';
 import CommonValidator from '../commonValidator';
-import { SettingName } from '../../types';
+import { ElementKindName, SettingName } from '../../types';
 
 export default class TableGroupValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -29,7 +29,7 @@ export default class TableGroupValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate(): CompileError[] {
+  validate (): CompileError[] {
     return [
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
@@ -40,15 +40,8 @@ export default class TableGroupValidator implements ElementValidator {
     ];
   }
 
-  private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
-        'TableGroup must appear top-level',
-        this.declarationNode,
-      )];
-    }
-    return [];
+  private validateContext (): CompileError[] {
+    return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.TableGroup);
   }
 
   private validateName(nameNode?: SyntaxNode): CompileError[] {

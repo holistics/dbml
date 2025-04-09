@@ -9,17 +9,16 @@ import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
 import { SyntaxToken } from '../../../lexer/tokens';
 import {
-  BlockExpressionNode, ElementDeclarationNode, ExpressionNode,
-  FunctionApplicationNode, ListExpressionNode, PrimaryExpressionNode, SyntaxNode,
-  VariableNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode,
+  SyntaxNode,
 } from '../../../parser/nodes';
 import SymbolFactory from '../../symbol/factory';
 import { createColumnSymbolIndex, createTableFragmentSymbolIndex } from '../../symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import { ColumnSymbol, TableFragmentSymbol } from '../../symbol/symbols';
-import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../parser/utils';
+import { isExpressionAVariableNode } from '../../../parser/utils';
 import CommonValidator from '../commonValidator';
-import { SettingName } from '../../types';
+import { ElementKindName, SettingName } from '../../types';
 
 export default class TableFragmentValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -44,14 +43,7 @@ export default class TableFragmentValidator implements ElementValidator {
   }
 
   private validateContext (): CompileError[] {
-    if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_TABLE_FRAGMENT_CONTEXT,
-        'TableFragment must appear top-level',
-        this.declarationNode,
-      )];
-    }
-    return [];
+    return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.TableFragment);
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {

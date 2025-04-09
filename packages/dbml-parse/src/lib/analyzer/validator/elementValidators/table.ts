@@ -18,7 +18,6 @@ import {
   aggregateSettingList,
   isSimpleName,
   isValidAlias,
-  isValidColor,
   isValidColumnType,
   isValidName,
   pickValidator,
@@ -27,14 +26,11 @@ import {
 import { ElementValidator } from '../types';
 import { ColumnSymbol, TableFragmentAsFieldSymbol, TableSymbol } from '../../symbol/symbols';
 import { createColumnSymbolIndex, createTableFragmentSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
-import {
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
-} from '../../../parser/utils';
+import { isExpressionAVariableNode } from '../../../parser/utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import SymbolTable from '../../symbol/symbolTable';
 import CommonValidator from '../commonValidator';
-import { SettingName } from '../../types';
+import { ElementKindName, SettingName } from '../../types';
 
 function isAliasSameAsName (alias: string, nameFragments: string[]): boolean {
   return nameFragments.length === 1 && alias === nameFragments[0];
@@ -67,10 +63,7 @@ export default class TableValidator implements ElementValidator {
   }
 
   private validateContext (): CompileError[] {
-    if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level', this.declarationNode)];
-    }
-    return [];
+    return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.Table);
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {

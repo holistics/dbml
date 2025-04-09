@@ -3,6 +3,7 @@ import { isExpressionAnIdentifierNode, isExpressionAQuotedString } from '../../p
 import { CompileError, CompileErrorCode } from '../../errors';
 import {
   AttributeNode,
+  ElementDeclarationNode,
   ExpressionNode,
   ListExpressionNode,
   PrimaryExpressionNode,
@@ -12,7 +13,7 @@ import {
   aggregateSettingList, isUnaryRelationship, isValidColor, isValidDefaultValue, isVoid,
 } from './utils';
 import { extractVarNameFromPrimaryVariable } from '../utils';
-import { SettingName } from '../types';
+import { ElementKindName, SettingName, TopLevelElementKindName } from '../types';
 
 // Include static validator methods for common cases
 export default class CommonValidator {
@@ -29,22 +30,22 @@ export default class CommonValidator {
   }
 
   // This is needed to support legacy inline settings
+  // Used for Table and TableFragment columns
   // e.g. `id int pk unique [note: 'abc']`
   static validateColumnSettings (parts: (ExpressionNode | PrimaryExpressionNode & { expression: VariableNode })[]) {
     if (parts.length === 0) return [];
 
-    const firstParts = parts.slice(0, -1) as (PrimaryExpressionNode & { expression: VariableNode })[];
+    // algorithm: if last part is not list expression, then it must be identifer node
+    // so we can check it with the remaining parts as well
+    const isLastPartListExpression = last(parts) instanceof ListExpressionNode;
+    const firstParts = (isLastPartListExpression ? parts.slice(0, -1) : parts) as (PrimaryExpressionNode & { expression: VariableNode })[];
 
-    const lastPart = last(parts);
-    const isLastPartListExpression = lastPart instanceof ListExpressionNode;
-    const isLastPartIdentifierOrListExpression = isLastPartListExpression || isExpressionAnIdentifierNode(lastPart);
-
-    if (!firstParts.every(isExpressionAnIdentifierNode) || !isLastPartIdentifierOrListExpression) {
+    if (!firstParts.every(isExpressionAnIdentifierNode) && !isLastPartListExpression) {
       return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
     }
 
     const settingList = isLastPartListExpression
-      ? lastPart as ListExpressionNode
+      ? last(parts) as ListExpressionNode
       : undefined;
 
     const aggReport = aggregateSettingList(settingList);
@@ -59,7 +60,7 @@ export default class CommonValidator {
         return;
       }
 
-      settingMap[name] = (settingMap[name] ?? []);
+      if (settingMap[name] === undefined) settingMap[name] = [];
       settingMap[name].push(part);
     });
 
@@ -80,7 +81,6 @@ export default class CommonValidator {
       if (!attrs) return;
 
       errors.push(...CommonValidator.validateUniqueSetting(name, attrs, UNIQUE_COLUMN_SETTINGS, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
-      // errors.push(...CommonValidator.validateUniqueSetting(name, attrs, [], CompileErrorCode.DUPLICATE_COLUMN_SETTING));
       errors.push(...CommonValidator.validateNonValueSetting(name, attrs));
 
       switch (name) {
@@ -89,11 +89,7 @@ export default class CommonValidator {
           break;
 
         case SettingName.Note:
-          (attrs as AttributeNode[]).forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'note\' must be a quoted string', attr.value || attr.name!));
-            }
-          });
+          errors.push(...CommonValidator.validateNoteSetting(attrs as AttributeNode[], CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
           break;
 
         case SettingName.Ref:
@@ -213,5 +209,29 @@ export default class CommonValidator {
         '\'note\' must be a string literal',
         attr.value || attr.name!,
       ));
+  }
+
+  static validateTopLevelContext (
+    declarationNode: ElementDeclarationNode,
+    elementKindName: TopLevelElementKindName,
+  ) {
+    const errorCodeBySymbolKind: Record<TopLevelElementKindName, CompileErrorCode> = {
+      [ElementKindName.Table]: CompileErrorCode.INVALID_TABLE_CONTEXT,
+      [ElementKindName.Enum]: CompileErrorCode.INVALID_ENUM_CONTEXT,
+      [ElementKindName.TableGroup]: CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
+      [ElementKindName.TableFragment]: CompileErrorCode.INVALID_TABLE_FRAGMENT_CONTEXT,
+      [ElementKindName.Project]: CompileErrorCode.INVALID_PROJECT_CONTEXT,
+      [ElementKindName.Ref]: CompileErrorCode.INVALID_REF_CONTEXT,
+    };
+
+    if (declarationNode.parent instanceof ElementDeclarationNode) {
+      return [new CompileError(
+        errorCodeBySymbolKind[elementKindName],
+        `${elementKindName} must appear top-level`,
+        declarationNode,
+      )];
+    }
+
+    return [];
   }
 }

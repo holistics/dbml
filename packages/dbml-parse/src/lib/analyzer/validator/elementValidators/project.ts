@@ -1,11 +1,16 @@
+import _ from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '../../../parser/nodes';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode,
+  SyntaxNode,
+} from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
 import { isSimpleName, pickValidator } from '../utils';
-import _ from 'lodash';
-import SymbolTable from '../../../analyzer/symbol/symbolTable';
+import SymbolTable from '../../symbol/symbolTable';
+import CommonValidator from '../commonValidator';
+import { ElementKindName } from '../../types';
 
 export default class ProjectValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -18,16 +23,18 @@ export default class ProjectValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
-  private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'A Project can only appear top-level', this.declarationNode)];
-    }
-
-    return [];
+  private validateContext (): CompileError[] {
+    return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.Project);
   }
 
   private validateName(nameNode?: SyntaxNode): CompileError[] {

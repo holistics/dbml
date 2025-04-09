@@ -1,3 +1,14 @@
+export enum ElementKindName {
+  Table = 'Table',
+  Enum = 'Enum',
+  Ref = 'Ref',
+  Note = 'Note',
+  Project = 'Project',
+  Indexes = 'Indexes',
+  TableGroup = 'TableGroup',
+  TableFragment = 'TableFragment',
+}
+
 export enum ElementKind {
   Table = 'table',
   Enum = 'enum',
@@ -23,3 +34,11 @@ export enum SettingName {
   HeaderColor = 'headercolor',
   Color = 'color',
 }
+
+export type TopLevelElementKindName =
+  ElementKindName.Table
+  | ElementKindName.Enum
+  | ElementKindName.TableFragment
+  | ElementKindName.TableGroup
+  | ElementKindName.Project
+  | ElementKindName.Ref;

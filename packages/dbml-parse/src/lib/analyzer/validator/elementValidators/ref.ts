@@ -1,17 +1,23 @@
+import _ from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../../../lexer/tokens';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode } from '../../../parser/nodes';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode,
+  ListExpressionNode, SyntaxNode,
+} from '../../../parser/nodes';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
 } from '../../../parser/utils';
 import { ElementValidator } from '../types';
-import { aggregateSettingList, isSimpleName, isValidColor, pickValidator } from '../utils';
-import _ from 'lodash';
-import { getElementKind, isBinaryRelationship, isEqualTupleOperands } from '../../../analyzer/utils';
-import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { ElementKind } from '../../../analyzer/types';
+import {
+  aggregateSettingList, isSimpleName, isValidColor, pickValidator,
+} from '../utils';
+import { isBinaryRelationship, isEqualTupleOperands } from '../../utils';
+import SymbolTable from '../../symbol/symbolTable';
+import { ElementKindName } from '../../types';
+import CommonValidator from '../commonValidator';
 
 export default class RefValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -24,15 +30,18 @@ export default class RefValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
-  private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode) {
-      return [];
-    }
-    return [new CompileError(CompileErrorCode.INVALID_REF_CONTEXT, 'A Ref must appear top-level', this.declarationNode)];
+  private validateContext (): CompileError[] {
+    return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.Ref);
   }
 
   private validateName(nameNode?: SyntaxNode): CompileError[] {

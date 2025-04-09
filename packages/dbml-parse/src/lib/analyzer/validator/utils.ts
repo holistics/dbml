@@ -1,4 +1,3 @@
-import { forIn } from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../../lexer/tokens';
 import {
   ArrayNode,
@@ -298,69 +297,4 @@ export const isValidColumnType = (type: SyntaxNode): boolean => {
   const variables = destructureComplexVariable(type).unwrap_or(undefined);
 
   return variables !== undefined && variables.length > 0;
-};
-
-export const validateSettingList = (settingList: ListExpressionNode, allowedSettings: string[]) => {
-  const aggReport = aggregateSettingList(settingList);
-  const errors = aggReport.getErrors();
-  const settingMap = aggReport.getValue();
-
-  forIn(settingMap, (attrs, name) => {
-    if (!allowedSettings.includes(name)) {
-      errors.push(...attrs.map((attr) => new CompileError(
-        CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
-        `Unknown '${name}' setting`,
-        attr,
-      )));
-      return;
-    }
-
-    switch (name) {
-      case SettingName.HeaderColor:
-      case SettingName.Color:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(
-            CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING,
-            `'${name}' can only appear once`,
-            attr,
-          )));
-        }
-        attrs.forEach((attr) => {
-          if (!isValidColor(attr.value)) {
-            errors.push(new CompileError(
-              CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
-              `'${name}' must be a color literal`,
-              attr.value || attr.name!,
-            ));
-          }
-        });
-        break;
-      case SettingName.Note:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(
-            CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING,
-            '\'note\' can only appear once',
-            attr,
-          )));
-        }
-        attrs
-          .filter((attr) => !isExpressionAQuotedString(attr.value))
-          .forEach((attr) => {
-            errors.push(new CompileError(
-              CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
-              '\'note\' must be a string literal',
-              attr.value || attr.name!,
-            ));
-          });
-        break;
-      default:
-        errors.push(...attrs.map((attr) => new CompileError(
-          CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
-          `Unknown '${name}' setting`,
-          attr,
-        )));
-        break;
-    }
-  });
-  return errors;
 };

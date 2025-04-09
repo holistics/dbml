@@ -1,15 +1,22 @@
+import _ from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '../../../parser/nodes';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode,
+  SyntaxNode,
+} from '../../../parser/nodes';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
-import { aggregateSettingList, isValidName, pickValidator, registerSchemaStack } from '../utils';
-import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '../../../analyzer/symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../../analyzer/utils';
-import _ from 'lodash';
-import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { EnumFieldSymbol, EnumSymbol } from '../../../analyzer/symbol/symbols';
+import {
+  aggregateSettingList, isValidName, pickValidator, registerSchemaStack,
+} from '../utils';
+import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '../../symbol/symbolIndex';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
+import SymbolTable from '../../symbol/symbolTable';
+import { EnumFieldSymbol, EnumSymbol } from '../../symbol/symbols';
+import CommonValidator from '../commonValidator';
+import { ElementKindName } from '../../types';
 
 export default class EnumValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -22,16 +29,19 @@ export default class EnumValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.registerElement(), ...this.validateBody(this.declarationNode.body)];
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.registerElement(),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
-  private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'An Enum can only appear top-level', this.declarationNode)];
-    }
-
-    return [];
+  private validateContext (): CompileError[] {
+    return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.Enum);
   }
 
   private validateName(nameNode?: SyntaxNode): CompileError[] {
