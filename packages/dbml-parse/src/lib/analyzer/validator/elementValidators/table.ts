@@ -24,50 +24,28 @@ import {
   isValidName,
   registerSchemaStack,
 } from '../utils';
-import { ElementValidator } from '../types';
 import { ColumnSymbol, TableFragmentAsFieldSymbol, TableSymbol } from '../../symbol/symbols';
 import { createColumnSymbolIndex, createTableFragmentSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
 import { isExpressionAVariableNode } from '../../../parser/utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import SymbolTable from '../../symbol/symbolTable';
-import CommonValidator from '../commonValidator';
 import { ElementKindName, SettingName } from '../../types';
+import ElementValidator from './elementValidator';
 
 function isAliasSameAsName (alias: string, nameFragments: string[]): boolean {
   return nameFragments.length === 1 && alias === nameFragments[0];
 }
 
-export default class TableValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken};
-  private symbolFactory: SymbolFactory;
-  private publicSymbolTable: SymbolTable;
-
-  constructor (
-    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
-    publicSymbolTable: SymbolTable,
-    symbolFactory: SymbolFactory,
-  ) {
-    this.declarationNode = declarationNode;
-    this.symbolFactory = symbolFactory;
-    this.publicSymbolTable = publicSymbolTable;
+export default class TableValidator extends ElementValidator {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    super(declarationNode, publicSymbolTable, symbolFactory, ElementKindName.Table);
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.registerElement(),
-      ...this.validateBody(this.declarationNode.body),
-    ];
+  protected validateContext (): CompileError[] {
+    return this.validateTopLevelContext(this.declarationNode);
   }
 
-  private validateContext (): CompileError[] {
-    return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.Table);
-  }
-
-  private validateName (nameNode?: SyntaxNode): CompileError[] {
+  protected validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', this.declarationNode)];
     }
@@ -81,7 +59,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+  protected validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (!aliasNode) {
       return [];
     }
@@ -93,7 +71,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+  protected validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -101,13 +79,13 @@ export default class TableValidator implements ElementValidator {
     forIn(settingMap, (attrs, name) => {
       switch (name) {
         case SettingName.HeaderColor:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLE_SETTING));
-          errors.push(...CommonValidator.validateColorSetting(name, attrs, CompileErrorCode.INVALID_TABLE_SETTING));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLE_SETTING));
+          errors.push(...this.validateColorSetting(name, attrs, CompileErrorCode.INVALID_TABLE_SETTING));
           break;
 
         case SettingName.Note:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLE_SETTING));
-          errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_TABLE_SETTING));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLE_SETTING));
+          errors.push(...this.validateStringSetting(name, attrs, CompileErrorCode.INVALID_TABLE_SETTING));
           break;
 
         default:
@@ -118,10 +96,10 @@ export default class TableValidator implements ElementValidator {
     return errors;
   }
 
-  registerElement(): CompileError[] {
+  protected registerElement (): CompileError[] {
     const errors: CompileError[] = [];
     this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
-    
+
     const { name, alias } = this.declarationNode;
 
     const maybeNameFragments = destructureComplexVariable(name);
@@ -131,27 +109,27 @@ export default class TableValidator implements ElementValidator {
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableSymbolIndex(tableName);
       if (symbolTable.has(tableId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${tableName}' already exists in schema '${nameFragments.join('.') || 'public'}'`, name!))
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${tableName}' already exists in schema '${nameFragments.join('.') || 'public'}'`, name!));
       }
       symbolTable.set(tableId, this.declarationNode.symbol!);
     }
-  
+
     if (
-        alias && isSimpleName(alias) &&
-        !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
+      alias && isSimpleName(alias)
+      && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
     ) {
-      const aliasName = extractVarNameFromPrimaryVariable(alias as any).unwrap();
+      const aliasName = extractVarNameFromPrimaryVariable(alias).unwrap();
       const aliasId = createTableSymbolIndex(aliasName);
       if (this.publicSymbolTable.has(aliasId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists`, name!))
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists`, name!));
       }
-      this.publicSymbolTable.set(aliasId, this.declarationNode.symbol!)
+      this.publicSymbolTable.set(aliasId, this.declarationNode.symbol!);
     }
 
     return errors;
   }
 
-  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  protected validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) return [];
 
     if (body instanceof FunctionApplicationNode) {
@@ -165,7 +143,7 @@ export default class TableValidator implements ElementValidator {
     ];
   }
 
-  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+  private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     if (fields.length === 0) {
       return [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
     }
@@ -177,7 +155,7 @@ export default class TableValidator implements ElementValidator {
     });
   }
 
-  validateTableFragment (tableFragment: FunctionApplicationNode): CompileError[] {
+  private validateTableFragment (tableFragment: FunctionApplicationNode): CompileError[] {
     if (!tableFragment.callee) return [];
 
     const errors: CompileError[] = [];
@@ -197,7 +175,7 @@ export default class TableValidator implements ElementValidator {
     return errors;
   }
 
-  registerTableFragment (tableFragment: FunctionApplicationNode): CompileError[] {
+  private registerTableFragment (tableFragment: FunctionApplicationNode): CompileError[] {
     const callee = tableFragment.callee as PrefixExpressionNode;
     if (callee && isExpressionAVariableNode(callee.expression)) {
       const tableFragmentName = extractVarNameFromPrimaryVariable(callee.expression).unwrap();
@@ -219,7 +197,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  validateColumn (column: FunctionApplicationNode): CompileError[] {
+  private validateColumn (column: FunctionApplicationNode): CompileError[] {
     if (!column.callee) return [];
 
     const errors: CompileError[] = [];
@@ -244,7 +222,7 @@ export default class TableValidator implements ElementValidator {
     return errors;
   }
 
-  registerColumn (column: FunctionApplicationNode): CompileError[] {
+  private registerColumn (column: FunctionApplicationNode): CompileError[] {
     if (column.callee && isExpressionAVariableNode(column.callee)) {
       const columnName = extractVarNameFromPrimaryVariable(column.callee).unwrap();
       const columnId = createColumnSymbolIndex(columnName);
@@ -265,19 +243,19 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  validateColumnSetting (parts: (ExpressionNode | (PrimaryExpressionNode & { expression: VariableNode }))[]): CompileError[] {
-    return CommonValidator.validateColumnSettings(parts);
+  private validateColumnSetting (parts: (ExpressionNode | (PrimaryExpressionNode & { expression: VariableNode }))[]): CompileError[] {
+    return this.validateColumnSettings(parts);
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return [
-      ...CommonValidator.validateSubElementsWithOwnedValidators(
+      ...this.validateSubElementsWithOwnedValidators(
         subs,
         this.declarationNode,
         this.publicSymbolTable,
         this.symbolFactory,
       ),
-      ...CommonValidator.validateNotesAsSubElements(subs),
+      ...this.validateNotesAsSubElements(subs),
     ];
   }
 }

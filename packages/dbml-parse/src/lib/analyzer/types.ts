@@ -7,6 +7,7 @@ export enum ElementKindName {
   Indexes = 'Indexes',
   TableGroup = 'TableGroup',
   TableFragment = 'TableFragment',
+  Custom = 'Custom',
 }
 
 export enum ElementKind {

@@ -7,49 +7,36 @@ import {
   SyntaxNode,
 } from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
-import CommonValidator from '../commonValidator';
 import { ElementKindName } from '../../types';
+import ElementValidator from './elementValidator';
 
-export default class ProjectValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
-
-  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
-    this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
+export default class ProjectValidator extends ElementValidator {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    super(declarationNode, publicSymbolTable, symbolFactory, ElementKindName.Project);
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.validateBody(this.declarationNode.body),
-    ];
+  protected validateContext (): CompileError[] {
+    return this.validateTopLevelContext(this.declarationNode);
   }
 
-  private validateContext (): CompileError[] {
-    return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.Project);
+  protected validateName (nameNode?: SyntaxNode): CompileError[] {
+    return this.validateOptionalSimpleName(nameNode);
   }
 
-  private validateName (nameNode?: SyntaxNode): CompileError[] {
-    return CommonValidator.validateOptionalSimpleName(nameNode, ElementKindName.Project);
+  protected validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+    return this.validateNoAlias(aliasNode);
   }
 
-  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
-    return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Project);
+  protected validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+    return this.validateNoSettingList(settingList);
   }
 
-  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    return CommonValidator.validateNoSettingList(settingList, ElementKindName.Project);
+  protected registerElement (): CompileError[] {
+    return [];
   }
 
-  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  protected validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -65,7 +52,7 @@ export default class ProjectValidator implements ElementValidator {
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
-    return CommonValidator.validateSubElementsWithOwnedValidators(
+    return this.validateSubElementsWithOwnedValidators(
       subs,
       this.declarationNode,
       this.publicSymbolTable,

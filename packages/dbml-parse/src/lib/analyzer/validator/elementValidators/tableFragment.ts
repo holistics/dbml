@@ -4,7 +4,6 @@ import { CompileError, CompileErrorCode } from '../../../errors';
 import {
   registerSchemaStack, aggregateSettingList, isValidColumnType, generateUnknownSettingErrors,
 } from '../utils';
-import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
 import { SyntaxToken } from '../../../lexer/tokens';
 import {
@@ -16,44 +15,27 @@ import { createColumnSymbolIndex, createTableFragmentSymbolIndex } from '../../s
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import { ColumnSymbol, TableFragmentSymbol } from '../../symbol/symbols';
 import { isExpressionAVariableNode } from '../../../parser/utils';
-import CommonValidator from '../commonValidator';
 import { ElementKindName, SettingName } from '../../types';
+import ElementValidator from './elementValidator';
 
-export default class TableFragmentValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
-
+export default class TableFragmentValidator extends ElementValidator {
   constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
-    this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
+    super(declarationNode, publicSymbolTable, symbolFactory, ElementKindName.TableFragment);
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.registerElement(),
-      ...this.validateBody(this.declarationNode.body),
-    ];
+  protected validateContext (): CompileError[] {
+    return this.validateTopLevelContext(this.declarationNode);
   }
 
-  private validateContext (): CompileError[] {
-    return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.TableFragment);
+  protected validateName (nameNode?: SyntaxNode): CompileError[] {
+    return this.validateSimpleName(nameNode, this.declarationNode);
   }
 
-  private validateName (nameNode?: SyntaxNode): CompileError[] {
-    return CommonValidator.validateSimpleName(nameNode, this.declarationNode, ElementKindName.TableFragment);
+  protected validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+    return this.validateNoAlias(aliasNode);
   }
 
-  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
-    return CommonValidator.validateNoAlias(aliasNode, ElementKindName.TableFragment);
-  }
-
-  registerElement (): CompileError[] {
+  protected registerElement (): CompileError[] {
     const { name } = this.declarationNode;
     this.declarationNode.symbol = this.symbolFactory.create(TableFragmentSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
     const maybeNameFragments = destructureComplexVariable(name);
@@ -71,7 +53,7 @@ export default class TableFragmentValidator implements ElementValidator {
     return [];
   }
 
-  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+  protected validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -79,13 +61,13 @@ export default class TableFragmentValidator implements ElementValidator {
     forIn(settingMap, (attrs, name) => {
       switch (name) {
         case SettingName.HeaderColor:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING));
-          errors.push(...CommonValidator.validateColorSetting(name, attrs, CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING));
+          errors.push(...this.validateColorSetting(name, attrs, CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING));
           break;
 
         case SettingName.Note:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING));
-          errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING));
+          errors.push(...this.validateStringSetting(name, attrs, CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING));
           break;
 
         default:
@@ -96,7 +78,7 @@ export default class TableFragmentValidator implements ElementValidator {
     return errors;
   }
 
-  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  protected validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) return [];
 
     if (body instanceof FunctionApplicationNode) {
@@ -114,7 +96,7 @@ export default class TableFragmentValidator implements ElementValidator {
     ];
   }
 
-  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+  private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       const errors: CompileError[] = [];
 
@@ -132,7 +114,7 @@ export default class TableFragmentValidator implements ElementValidator {
 
       const remains = field.args.slice(1);
 
-      errors.push(...CommonValidator.validateColumnSettings(remains));
+      errors.push(...this.validateColumnSettings(remains));
       errors.push(...this.registerField(field));
 
       return errors;
@@ -141,17 +123,17 @@ export default class TableFragmentValidator implements ElementValidator {
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return [
-      ...CommonValidator.validateSubElementsWithOwnedValidators(
+      ...this.validateSubElementsWithOwnedValidators(
         subs,
         this.declarationNode,
         this.publicSymbolTable,
         this.symbolFactory,
       ),
-      ...CommonValidator.validateNotesAsSubElements(subs),
+      ...this.validateNotesAsSubElements(subs),
     ];
   }
 
-  registerField (field: FunctionApplicationNode): CompileError[] {
+  private registerField (field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
       const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const columnId = createColumnSymbolIndex(columnName);

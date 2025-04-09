@@ -11,12 +11,11 @@ import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
 } from '../../../parser/utils';
-import { ElementValidator } from '../types';
 import { aggregateSettingList, generateUnknownSettingErrors } from '../utils';
 import { isBinaryRelationship, isEqualTupleOperands } from '../../utils';
 import SymbolTable from '../../symbol/symbolTable';
 import { ElementKindName, SettingName } from '../../types';
-import CommonValidator from '../commonValidator';
+import ElementValidator from './elementValidator';
 
 function isValidPolicy (value?: SyntaxNode): boolean {
   if (
@@ -46,44 +45,32 @@ function isValidPolicy (value?: SyntaxNode): boolean {
   }
 }
 
-export default class RefValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
-
-  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
-    this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
+export default class RefValidator extends ElementValidator {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    super(declarationNode, publicSymbolTable, symbolFactory, ElementKindName.Ref);
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.validateBody(this.declarationNode.body),
-    ];
+  protected validateContext (): CompileError[] {
+    return this.validateTopLevelContext(this.declarationNode);
   }
 
-  private validateContext (): CompileError[] {
-    return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.Ref);
+  protected validateName (nameNode?: SyntaxNode): CompileError[] {
+    return this.validateOptionalSimpleName(nameNode);
   }
 
-  private validateName (nameNode?: SyntaxNode): CompileError[] {
-    return CommonValidator.validateOptionalSimpleName(nameNode, ElementKindName.Ref);
+  protected validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+    return this.validateNoAlias(aliasNode);
   }
 
-  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
-    return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Ref);
+  protected validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+    return this.validateNoSettingList(settingList);
   }
 
-  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    return CommonValidator.validateNoSettingList(settingList, ElementKindName.Ref);
+  protected registerElement (): CompileError[] {
+    return [];
   }
 
-  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  protected validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -92,10 +79,13 @@ export default class RefValidator implements ElementValidator {
     }
 
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
-  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
+  private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     if (fields.length === 0) {
       return [new CompileError(CompileErrorCode.EMPTY_REF, 'A Ref must have at least one field', this.declarationNode)];
     }
@@ -132,7 +122,7 @@ export default class RefValidator implements ElementValidator {
     return errors;
   }
 
-  validateFieldSettings (settings: ListExpressionNode): CompileError[] {
+  private validateFieldSettings (settings: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settings);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -141,7 +131,7 @@ export default class RefValidator implements ElementValidator {
       switch (name) {
         case SettingName.Delete:
         case SettingName.Update:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_REF_SETTING));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_REF_SETTING));
           attrs.forEach((attr) => {
             if (!isValidPolicy(attr.value)) {
               errors.push(new CompileError(
@@ -154,8 +144,8 @@ export default class RefValidator implements ElementValidator {
           break;
 
         case SettingName.Color:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_REF_SETTING));
-          errors.push(...CommonValidator.validateColorSetting(name, attrs, CompileErrorCode.INVALID_REF_SETTING_VALUE));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_REF_SETTING));
+          errors.push(...this.validateColorSetting(name, attrs, CompileErrorCode.INVALID_REF_SETTING_VALUE));
           break;
 
         default:
@@ -167,7 +157,7 @@ export default class RefValidator implements ElementValidator {
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
-    return CommonValidator.validateSubElementsWithOwnedValidators(
+    return this.validateSubElementsWithOwnedValidators(
       subs,
       this.declarationNode,
       this.publicSymbolTable,

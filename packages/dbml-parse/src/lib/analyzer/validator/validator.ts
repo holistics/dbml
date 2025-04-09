@@ -11,12 +11,10 @@ import { ElementKind } from '../types';
 
 export default class Validator {
   private ast: ProgramNode;
-
   private publicSchemaSymbol: SchemaSymbol;
-
   private symbolFactory: SymbolFactory;
 
-  constructor(ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (ast: ProgramNode, symbolFactory: SymbolFactory) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
     this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
@@ -27,7 +25,7 @@ export default class Validator {
     this.ast.symbol.declaration = this.ast;
   }
 
-  validate(): Report<ProgramNode, CompileError> {
+  validate (): Report<ProgramNode, CompileError> {
     const errors: CompileError[] = [];
 
     this.ast.body.forEach((element) => {
@@ -45,7 +43,7 @@ export default class Validator {
       );
       errors.push(...validatorObject.validate());
     });
-    
+
     const projects = this.ast.body.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);
     if (projects.length > 1) {
       projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));

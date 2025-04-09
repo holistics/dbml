@@ -6,36 +6,19 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementValidator } from '../types';
 import { isExpressionAQuotedString } from '../../../parser/utils';
 import SymbolTable from '../../symbol/symbolTable';
 import { ElementKind, ElementKindName } from '../../types';
 import { destructureComplexVariable, getElementKind } from '../../utils';
 import { createStickyNoteSymbolIndex } from '../../symbol/symbolIndex';
-import CommonValidator from '../commonValidator';
+import ElementValidator from './elementValidator';
 
-export default class NoteValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
-
-  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
-    this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
+export default class NoteValidator extends ElementValidator {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    super(declarationNode, publicSymbolTable, symbolFactory, ElementKindName.Note);
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.validateBody(this.declarationNode.body),
-    ];
-  }
-
-  private validateContext(): CompileError[] {
+  protected validateContext (): CompileError[] {
     if (
       !(this.declarationNode.parent instanceof ProgramNode)
       && !(
@@ -58,7 +41,7 @@ export default class NoteValidator implements ElementValidator {
     return [];
   }
 
-  private validateName(nameNode?: SyntaxNode): CompileError[] {
+  protected validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!(this.declarationNode.parent instanceof ProgramNode)) {
       if (nameNode) {
         return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode)];
@@ -88,15 +71,19 @@ export default class NoteValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
-    return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Note);
+  protected validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+    return this.validateNoAlias(aliasNode);
   }
 
-  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    return CommonValidator.validateNoSettingList(settingList, ElementKindName.Note);
+  protected validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+    return this.validateNoSettingList(settingList);
   }
 
-  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  protected registerElement (): CompileError[] {
+    return [];
+  }
+
+  protected validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -105,10 +92,13 @@ export default class NoteValidator implements ElementValidator {
     }
 
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
-  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
+  private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     const errors: CompileError[] = [];
     if (fields.length === 0) {
       return [new CompileError(CompileErrorCode.EMPTY_NOTE, 'A Note must have a content', this.declarationNode)];
@@ -126,7 +116,7 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
-    return CommonValidator.validateSubElementsWithOwnedValidators(
+    return this.validateSubElementsWithOwnedValidators(
       subs,
       this.declarationNode,
       this.publicSymbolTable,

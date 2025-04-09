@@ -1,30 +1,64 @@
+/* eslint-disable class-methods-use-this */
 import { forIn, last } from 'lodash';
-import { isExpressionAnIdentifierNode, isExpressionAQuotedString } from '../../parser/utils';
-import { CompileError, CompileErrorCode } from '../../errors';
+import SymbolFactory from '../../symbol/factory';
+import { CompileError, CompileErrorCode } from '../../../errors';
 import {
-  AttributeNode,
-  ElementDeclarationNode,
-  ExpressionNode,
-  ListExpressionNode,
-  PrimaryExpressionNode,
-  SyntaxNode,
+  AttributeNode, BlockExpressionNode, ElementDeclarationNode, ExpressionNode,
+  FunctionApplicationNode, ListExpressionNode, PrimaryExpressionNode, SyntaxNode,
   VariableNode,
-} from '../../parser/nodes';
+} from '../../../parser/nodes';
+import { isExpressionAnIdentifierNode, isExpressionAQuotedString } from '../../../parser/utils';
+import { SyntaxToken } from '../../../lexer/tokens';
 import {
-  aggregateSettingList, isSimpleName, isUnaryRelationship, isValidColor, isValidDefaultValue, isVoid,
-  pickValidator,
-} from './utils';
-import { extractVarNameFromPrimaryVariable } from '../utils';
-import {
-  ElementKind, ElementKindName, SettingName, TopLevelElementKindName,
-} from '../types';
-import SymbolTable from '../symbol/symbolTable';
-import SymbolFactory from '../symbol/factory';
-import { SyntaxToken } from '../../lexer/tokens';
+  aggregateSettingList, isSimpleName, isUnaryRelationship, isValidColor,
+  isValidDefaultValue, isVoid, pickValidator,
+} from '../utils';
+import { extractVarNameFromPrimaryVariable } from '../../utils';
+import SymbolTable from '../../symbol/symbolTable';
+import { ElementKind, ElementKindName, SettingName } from '../../types';
 
-// Include static validator methods for common cases
-export default class CommonValidator {
-  static validateUniqueSetting (
+export default abstract class ElementValidator {
+  protected declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  protected publicSymbolTable: SymbolTable;
+  protected symbolFactory: SymbolFactory;
+  protected elementKindName: ElementKindName;
+
+  constructor (
+    declarationNode: ElementDeclarationNode & { type: SyntaxToken },
+    publicSymbolTable: SymbolTable,
+    symbolFactory: SymbolFactory,
+    elementKindName: ElementKindName,
+  ) {
+    this.declarationNode = declarationNode;
+    this.publicSymbolTable = publicSymbolTable;
+    this.symbolFactory = symbolFactory;
+    this.elementKindName = elementKindName;
+  }
+
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.registerElement(),
+      ...this.validateBody(this.declarationNode.body),
+    ];
+  }
+
+  protected abstract validateContext (): CompileError[]
+
+  protected abstract validateName(nameNode?: SyntaxNode): CompileError[]
+
+  protected abstract validateAlias (aliasNode?: SyntaxNode): CompileError[]
+
+  protected abstract validateSettingList (settingList?: ListExpressionNode): CompileError[]
+
+  protected abstract registerElement(): CompileError[]
+
+  protected abstract validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[]
+
+  protected validateUniqueSetting (
     settingName: string,
     attrs: (AttributeNode | PrimaryExpressionNode)[],
     errorCode: CompileErrorCode,
@@ -34,7 +68,7 @@ export default class CommonValidator {
       : attrs.map((attr) => new CompileError(errorCode, `'${settingName}' can only appear once`, attr));
   }
 
-  static validateStringSetting (settingName: string, attrs: AttributeNode[], errorCode: CompileErrorCode) {
+  protected validateStringSetting (settingName: string, attrs: AttributeNode[], errorCode: CompileErrorCode) {
     return attrs
       .filter(attr => !isExpressionAQuotedString(attr.value))
       .map(attr => new CompileError(
@@ -47,7 +81,7 @@ export default class CommonValidator {
   // This is needed to support legacy inline settings
   // Used for Table and TableFragment columns
   // e.g. `id int pk unique [note: 'abc']`
-  static validateColumnSettings (parts: (ExpressionNode | PrimaryExpressionNode & { expression: VariableNode })[]) {
+  protected validateColumnSettings (parts: (ExpressionNode | PrimaryExpressionNode & { expression: VariableNode })[]) {
     if (parts.length === 0) return [];
 
     // algorithm: if last part is not list expression, then it must be identifer node
@@ -84,18 +118,18 @@ export default class CommonValidator {
 
       switch (name) {
         case SettingName.PK:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
-          errors.push(...CommonValidator.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
-          errors.push(...CommonValidator.validatePrimaryKeyAndPKSetting(attrs, settingMap[SettingName.PKey]));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
+          errors.push(...this.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
+          errors.push(...this.validatePrimaryKeyAndPKSetting(attrs, settingMap[SettingName.PKey]));
           break;
 
         case SettingName.Note:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
-          errors.push(...CommonValidator.validateStringSetting(name, attrs as AttributeNode[], CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
+          errors.push(...this.validateStringSetting(name, attrs as AttributeNode[], CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
           break;
 
         case SettingName.Ref:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
           (attrs as AttributeNode[]).forEach((attr) => {
             if (!isUnaryRelationship(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'ref\' must be a valid unary relationship', attr.value || attr.name!));
@@ -104,13 +138,13 @@ export default class CommonValidator {
           break;
 
         case SettingName.Null:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
-          errors.push(...CommonValidator.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
-          errors.push(...CommonValidator.validateNullAndNotNullSetting(attrs, settingMap[SettingName.NotNull]));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
+          errors.push(...this.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
+          errors.push(...this.validateNullAndNotNullSetting(attrs, settingMap[SettingName.NotNull]));
           break;
 
         case SettingName.Default:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
           (attrs as AttributeNode[]).forEach((attr) => {
             if (!isValidDefaultValue(attr.value)) {
               errors.push(new CompileError(
@@ -126,8 +160,8 @@ export default class CommonValidator {
         case SettingName.Unique:
         case SettingName.NotNull:
         case SettingName.Increment:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
-          errors.push(...CommonValidator.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
+          errors.push(...this.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
           break;
 
         default:
@@ -138,7 +172,7 @@ export default class CommonValidator {
     return errors;
   }
 
-  static validateNullAndNotNullSetting (
+  protected validateNullAndNotNullSetting (
     nullAttrs: (PrimaryExpressionNode | AttributeNode)[] | undefined,
     notNullAttrs: (PrimaryExpressionNode | AttributeNode)[] | undefined,
   ) {
@@ -155,7 +189,7 @@ export default class CommonValidator {
     return [];
   }
 
-  static validatePrimaryKeyAndPKSetting (
+  protected validatePrimaryKeyAndPKSetting (
     pkAttrs: (PrimaryExpressionNode | AttributeNode)[] | undefined,
     pkeyAttrs: (PrimaryExpressionNode | AttributeNode)[] | undefined,
   ) {
@@ -172,7 +206,7 @@ export default class CommonValidator {
     return [];
   }
 
-  static validateNonValueSetting (
+  protected validateNonValueSetting (
     settingName: string,
     attrs: (AttributeNode | PrimaryExpressionNode)[],
     errorCode: CompileErrorCode,
@@ -186,7 +220,7 @@ export default class CommonValidator {
       ));
   }
 
-  static validateColorSetting (settingName: string, attrs: AttributeNode[], errorCode: CompileErrorCode) {
+  protected validateColorSetting (settingName: string, attrs: AttributeNode[], errorCode: CompileErrorCode) {
     return attrs
       .filter((attr) => !isValidColor(attr.value))
       .map((attr) => new CompileError(
@@ -196,8 +230,8 @@ export default class CommonValidator {
       ));
   }
 
-  static validateTopLevelContext (declarationNode: ElementDeclarationNode, elementKindName: TopLevelElementKindName) {
-    const errorCodeBySymbolKind: Record<TopLevelElementKindName, CompileErrorCode> = {
+  protected validateTopLevelContext (declarationNode: ElementDeclarationNode) {
+    const errorCodeBySymbolKind: Record<string, CompileErrorCode> = {
       [ElementKindName.Table]: CompileErrorCode.INVALID_TABLE_CONTEXT,
       [ElementKindName.Enum]: CompileErrorCode.INVALID_ENUM_CONTEXT,
       [ElementKindName.TableGroup]: CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
@@ -206,10 +240,10 @@ export default class CommonValidator {
       [ElementKindName.Ref]: CompileErrorCode.INVALID_REF_CONTEXT,
     };
 
-    if (declarationNode.parent instanceof ElementDeclarationNode) {
+    if (declarationNode.parent instanceof ElementDeclarationNode && errorCodeBySymbolKind[this.elementKindName]) {
       return [new CompileError(
-        errorCodeBySymbolKind[elementKindName],
-        `${elementKindName} must appear top-level`,
+        errorCodeBySymbolKind[this.elementKindName],
+        `${this.elementKindName} must appear top-level`,
         declarationNode,
       )];
     }
@@ -217,11 +251,11 @@ export default class CommonValidator {
     return [];
   }
 
-  static validateSimpleName (nameNode: SyntaxNode | undefined, declarationNode: ElementDeclarationNode, elementKindName: ElementKindName) {
+  protected validateSimpleName (nameNode: SyntaxNode | undefined, declarationNode: ElementDeclarationNode) {
     if (!nameNode) {
       return [new CompileError(
         CompileErrorCode.NAME_NOT_FOUND,
-        `${elementKindName} must have a name`,
+        `${this.elementKindName} must have a name`,
         declarationNode,
       )];
     }
@@ -229,7 +263,7 @@ export default class CommonValidator {
     if (!isSimpleName(nameNode)) {
       return [new CompileError(
         CompileErrorCode.INVALID_NAME,
-        `${elementKindName} name must be a single identifier or a quoted identifer`,
+        `${this.elementKindName} name must be a single identifier or a quoted identifer`,
         nameNode,
       )];
     }
@@ -237,37 +271,37 @@ export default class CommonValidator {
     return [];
   }
 
-  static validateOptionalSimpleName (nameNode: SyntaxNode | undefined, elementKindName: ElementKindName) {
+  protected validateOptionalSimpleName (nameNode?: SyntaxNode) {
     return (nameNode && !isSimpleName(nameNode))
       ? [new CompileError(
         CompileErrorCode.INVALID_NAME,
-        `${elementKindName} name is optional or must be a single identifier or a quoted identifer`,
+        `${this.elementKindName} name is optional or must be a single identifier or a quoted identifer`,
         nameNode,
       )]
       : [];
   }
 
-  static validateNoAlias (aliasNode: SyntaxNode | undefined, elementKindName: ElementKindName) {
+  protected validateNoAlias (aliasNode?: SyntaxNode) {
     return !aliasNode
       ? []
       : [new CompileError(
         CompileErrorCode.UNEXPECTED_ALIAS,
-        `${elementKindName} shouldn't have an alias`,
+        `${this.elementKindName} shouldn't have an alias`,
         aliasNode,
       )];
   }
 
-  static validateNoSettingList (settingList: ListExpressionNode | undefined, elementKindName: ElementKindName) {
+  protected validateNoSettingList (settingList?: ListExpressionNode) {
     return !settingList
       ? []
       : [new CompileError(
         CompileErrorCode.UNEXPECTED_SETTINGS,
-        `${elementKindName} shouldn't have a setting list`,
+        `${this.elementKindName} shouldn't have a setting list`,
         settingList,
       )];
   }
 
-  static validateSubElementsWithOwnedValidators (
+  protected validateSubElementsWithOwnedValidators (
     subElements: ElementDeclarationNode[],
     declarationNode: ElementDeclarationNode,
     publicSymbolTable: SymbolTable,
@@ -283,15 +317,11 @@ export default class CommonValidator {
     });
   }
 
-  static validateNotesAsSubElements (subElements: ElementDeclarationNode[]) {
+  protected validateNotesAsSubElements (subElements: ElementDeclarationNode[]) {
     const notes = subElements.filter((subElement) => subElement.type?.value.toLowerCase() === ElementKind.Note);
 
     return notes.length <= 1
       ? []
-      : notes.map((note) => new CompileError(
-        CompileErrorCode.NOTE_REDEFINED,
-        'Duplicate notes are defined',
-        note,
-      ));
+      : notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note));
   }
 }

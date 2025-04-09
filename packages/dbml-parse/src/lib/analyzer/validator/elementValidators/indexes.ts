@@ -16,34 +16,17 @@ import {
 import { isExpressionAVariableNode } from '../../../parser/utils';
 import { aggregateSettingList, generateUnknownSettingErrors } from '../utils';
 import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementValidator } from '../types';
 import { destructureIndexNode, getElementKind } from '../../utils';
 import SymbolTable from '../../symbol/symbolTable';
 import { ElementKind, ElementKindName, SettingName } from '../../types';
-import CommonValidator from '../commonValidator';
+import ElementValidator from './elementValidator';
 
-export default class IndexesValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
-
-  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
-    this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
+export default class IndexesValidator extends ElementValidator {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    super(declarationNode, publicSymbolTable, symbolFactory, ElementKindName.Indexes);
   }
 
-  validate (): CompileError[] {
-    return [
-      ...this.validateContext(),
-      ...this.validateName(this.declarationNode.name),
-      ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
-      ...this.validateBody(this.declarationNode.body),
-    ];
-  }
-
-  private validateContext(): CompileError[] {
+  protected validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ProgramNode || getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Table) {
       return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'An Indexes can only appear inside a Table', this.declarationNode)];
     }
@@ -51,7 +34,7 @@ export default class IndexesValidator implements ElementValidator {
     return [];
   }
 
-  private validateName(nameNode?: SyntaxNode): CompileError[] {
+  protected validateName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', nameNode)];
     }
@@ -59,15 +42,19 @@ export default class IndexesValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
-    return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Indexes);
+  protected validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+    return this.validateNoAlias(aliasNode);
   }
 
-  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    return CommonValidator.validateNoSettingList(settingList, ElementKindName.Indexes);
+  protected validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+    return this.validateNoSettingList(settingList);
   }
 
-  private validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  protected registerElement (): CompileError[] {
+    return [];
+  }
+
+  protected validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -76,10 +63,13 @@ export default class IndexesValidator implements ElementValidator {
     }
 
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
-  private validateFields(fields: FunctionApplicationNode[]): CompileError[] {
+  private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       if (!field.callee) {
         return [];
@@ -96,19 +86,28 @@ export default class IndexesValidator implements ElementValidator {
         // (id, name) (age, weight)
         // which is parsed as a call expression
         while (sub instanceof CallExpressionNode) {
-          if (sub.argumentList && !destructureIndexNode(sub.argumentList).isOk()) { 
-            errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList));
+          if (sub.argumentList && !destructureIndexNode(sub.argumentList).isOk()) {
+            errors.push(new CompileError(
+              CompileErrorCode.INVALID_INDEXES_FIELD,
+              'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such',
+              sub.argumentList,
+            ));
           }
+          // eslint-disable-next-line no-param-reassign
           sub = sub.callee!;
         }
 
         if (!destructureIndexNode(sub).isOk()) {
-          errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
+          errors.push(new CompileError(
+            CompileErrorCode.INVALID_INDEXES_FIELD,
+            'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such',
+            sub,
+          ));
         }
       });
 
       return errors;
-    })
+    });
   }
 
   private validateFieldSetting (settings: ListExpressionNode): CompileError[] {
@@ -120,18 +119,18 @@ export default class IndexesValidator implements ElementValidator {
       switch (name) {
         case SettingName.Note:
         case SettingName.Name:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_INDEX_SETTING));
-          errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_INDEX_SETTING_VALUE));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_INDEX_SETTING));
+          errors.push(...this.validateStringSetting(name, attrs, CompileErrorCode.INVALID_INDEX_SETTING_VALUE));
           break;
 
         case SettingName.Unique:
         case SettingName.PK:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_INDEX_SETTING));
-          errors.push(...CommonValidator.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_INDEX_SETTING_VALUE));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_INDEX_SETTING));
+          errors.push(...this.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_INDEX_SETTING_VALUE));
           break;
 
         case SettingName.Type:
-          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_INDEX_SETTING));
+          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_INDEX_SETTING));
           attrs.forEach((attr) => {
             if (!isExpressionAVariableNode(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, '\'type\' must be "btree" or "hash"', attr));
@@ -148,7 +147,7 @@ export default class IndexesValidator implements ElementValidator {
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
-    return CommonValidator.validateSubElementsWithOwnedValidators(
+    return this.validateSubElementsWithOwnedValidators(
       subs,
       this.declarationNode,
       this.publicSymbolTable,
