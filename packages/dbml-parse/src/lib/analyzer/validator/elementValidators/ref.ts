@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import _ from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../../../lexer/tokens';
 import SymbolFactory from '../../symbol/factory';
@@ -56,12 +57,8 @@ export default class RefValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
-    if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
-    }
-
-    return [];
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+    return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Ref);
   }
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {

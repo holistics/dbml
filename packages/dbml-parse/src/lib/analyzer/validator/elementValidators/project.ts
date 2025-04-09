@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import _ from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
@@ -49,12 +50,8 @@ export default class ProjectValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
-    if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Project shouldn\'t have an alias', aliasNode)];
-    }
-
-    return [];
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+    return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Project);
   }
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {

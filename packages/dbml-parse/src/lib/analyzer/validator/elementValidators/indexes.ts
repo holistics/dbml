@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -18,7 +19,8 @@ import { ElementValidator } from '../types';
 import _ from 'lodash';
 import { destructureIndexNode, getElementKind } from '../../../analyzer/utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { ElementKind } from '../../../analyzer/types';
+import { ElementKind, ElementKindName } from '../../../analyzer/types';
+import CommonValidator from '../commonValidator';
 
 export default class IndexesValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -51,12 +53,8 @@ export default class IndexesValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
-    if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', aliasNode)];
-    }
-
-    return [];
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+    return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Indexes);
   }
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {

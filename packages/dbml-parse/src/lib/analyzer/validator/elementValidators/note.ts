@@ -10,9 +10,10 @@ import { ElementValidator } from '../types';
 import { isExpressionAQuotedString } from '../../../parser/utils';
 import { pickValidator } from '../utils';
 import SymbolTable from '../../symbol/symbolTable';
-import { ElementKind } from '../../types';
+import { ElementKind, ElementKindName } from '../../types';
 import { destructureComplexVariable, getElementKind } from '../../utils';
 import { createStickyNoteSymbolIndex } from '../../symbol/symbolIndex';
+import CommonValidator from '../commonValidator';
 
 export default class NoteValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -87,12 +88,8 @@ export default class NoteValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
-    if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
-    }
-
-    return [];
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+    return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Note);
   }
 
   private validateSettingList(settingList?: ListExpressionNode): CompileError[] {

@@ -1,9 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import _, { forIn } from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import {
-  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList, isValidColor
-} from '../utils';
+import { pickValidator, registerSchemaStack, aggregateSettingList } from '../utils';
 import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
 import { SyntaxToken } from '../../../lexer/tokens';
@@ -48,16 +46,8 @@ export default class TableGroupValidator implements ElementValidator {
     return CommonValidator.validateSimpleName(nameNode, this.declarationNode, ElementKindName.TableGroup);
   }
 
-  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
-    if (aliasNode) {
-      return [new CompileError(
-        CompileErrorCode.UNEXPECTED_ALIAS,
-        'A TableGroup shouldn\'t have an alias',
-        aliasNode,
-      )];
-    }
-
-    return [];
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+    return CommonValidator.validateNoAlias(aliasNode, ElementKindName.TableGroup);
   }
 
   registerElement(): CompileError[] {

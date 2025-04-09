@@ -51,15 +51,7 @@ export default class TableFragmentValidator implements ElementValidator {
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
-    if (aliasNode) {
-      return [new CompileError(
-        CompileErrorCode.UNEXPECTED_ALIAS,
-        'A TableFragment shouldn\'t have an alias',
-        aliasNode,
-      )];
-    }
-
-    return [];
+    return CommonValidator.validateNoAlias(aliasNode, ElementKindName.TableFragment);
   }
 
   registerElement (): CompileError[] {

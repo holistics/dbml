@@ -249,4 +249,14 @@ export default class CommonValidator {
 
     return [];
   }
+
+  static validateNoAlias (aliasNode: SyntaxNode | undefined, elementKindName: ElementKindName) {
+    return !aliasNode
+      ? []
+      : [new CompileError(
+        CompileErrorCode.UNEXPECTED_ALIAS,
+        `${elementKindName} shouldn't have an alias`,
+        aliasNode,
+      )];
+  }
 }
