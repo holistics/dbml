@@ -79,23 +79,13 @@ export default class CommonValidator {
       settingMap[name].push(part);
     });
 
-    const nonValueAttributeNames: string[] = [
-      SettingName.PKey,
-      SettingName.PK,
-      SettingName.NotNull,
-      SettingName.Null,
-      SettingName.Unique,
-      SettingName.Increment,
-    ];
-
     forIn(settingMap, (attrs, name) => {
       if (!attrs) return;
-
-      errors.push(...CommonValidator.validateNonValueSetting(name, attrs, nonValueAttributeNames, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
 
       switch (name) {
         case SettingName.PK:
           errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
+          errors.push(...CommonValidator.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
           errors.push(...CommonValidator.validatePrimaryKeyAndPKSetting(attrs, settingMap[SettingName.PKey]));
           break;
 
@@ -115,6 +105,7 @@ export default class CommonValidator {
 
         case SettingName.Null:
           errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
+          errors.push(...CommonValidator.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
           errors.push(...CommonValidator.validateNullAndNotNullSetting(attrs, settingMap[SettingName.NotNull]));
           break;
 
@@ -131,12 +122,12 @@ export default class CommonValidator {
           });
           break;
 
-        // These cases already validated with unique setting validator
         case SettingName.PKey:
         case SettingName.Unique:
         case SettingName.NotNull:
         case SettingName.Increment:
           errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
+          errors.push(...CommonValidator.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
           break;
 
         default:
@@ -184,20 +175,15 @@ export default class CommonValidator {
   static validateNonValueSetting (
     settingName: string,
     attrs: (AttributeNode | PrimaryExpressionNode)[],
-    settingNamesToValidate: string[],
     errorCode: CompileErrorCode,
   ) {
-    if (settingNamesToValidate.includes(settingName)) {
-      return attrs
-        .filter((attr) => attr instanceof AttributeNode && !isVoid(attr.value))
-        .map((attr: AttributeNode) => new CompileError(
-          errorCode,
-          `'${settingName}' must not have a value`,
-          attr.value || attr.name!,
-        ));
-    }
-
-    return [];
+    return attrs
+      .filter((attr) => attr instanceof AttributeNode && !isVoid(attr.value))
+      .map((attr: AttributeNode) => new CompileError(
+        errorCode,
+        `'${settingName}' must not have a value`,
+        attr.value || attr.name!,
+      ));
   }
 
   static validateColorSetting (settingName: string, attrs: AttributeNode[], errorCode: CompileErrorCode) {

@@ -117,13 +117,6 @@ export default class IndexesValidator implements ElementValidator {
     const settingMap = aggReport.getValue();
 
     forIn(settingMap, (attrs, name) => {
-      errors.push(...CommonValidator.validateNonValueSetting(
-        name,
-        attrs,
-        [SettingName.Unique, SettingName.PK],
-        CompileErrorCode.INVALID_INDEX_SETTING_VALUE,
-      ));
-
       switch (name) {
         case SettingName.Note:
         case SettingName.Name:
@@ -134,6 +127,7 @@ export default class IndexesValidator implements ElementValidator {
         case SettingName.Unique:
         case SettingName.PK:
           errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_INDEX_SETTING));
+          errors.push(...CommonValidator.validateNonValueSetting(name, attrs, CompileErrorCode.INVALID_INDEX_SETTING_VALUE));
           break;
 
         case SettingName.Type:
