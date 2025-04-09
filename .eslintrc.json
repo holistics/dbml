@@ -15,6 +15,14 @@
     "SharedArrayBuffer": "readonly"
   },
   "parser": "@typescript-eslint/parser",
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "packages/*/{ts,js}config.json"
+      }
+    }
+  },
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2020,
@@ -51,6 +59,16 @@
         ]
       }
     ],
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "ts": "never"
+      }
+    ],
+    "max-classes-per-file": "off",
+    "lines-between-class-members": "off"
   }
 }
