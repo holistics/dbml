@@ -116,19 +116,11 @@ export default class TableValidator implements ElementValidator {
 
       switch (name) {
         case SettingName.HeaderColor:
-          attrs.forEach((attr) => {
-            if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'headercolor\' must be a color literal', attr.value || attr.name!));
-            }
-          });
+          errors.push(...CommonValidator.validateColorSetting(name, attrs, CompileErrorCode.INVALID_TABLE_SETTING));
           break;
 
         case SettingName.Note:
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'note\' must be a string literal', attr.value || attr.name!));
-            }
-          });
+          errors.push(...CommonValidator.validateNoteSetting(attrs, CompileErrorCode.INVALID_TABLE_SETTING));
           break;
 
         default:

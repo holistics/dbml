@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import _ from 'lodash';
+import _, { forIn } from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
   isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList, isValidColor
@@ -15,6 +15,8 @@ import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '.
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import { TableGroupFieldSymbol, TableGroupSymbol } from '../../symbol/symbols';
 import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../parser/utils';
+import CommonValidator from '../commonValidator';
+import { SettingName } from '../../types';
 
 export default class TableGroupValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -97,58 +99,38 @@ export default class TableGroupValidator implements ElementValidator {
     return [];
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    _.forIn(settingMap, (attrs, name) => {
+    forIn(settingMap, (attrs, name) => {
+      errors.push(...CommonValidator.validateUniqueSetting(
+        name,
+        attrs,
+        [SettingName.Color, SettingName.Note],
+        CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING,
+      ));
+
       switch (name) {
-        case 'color':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(
-              CompileErrorCode.DUPLICATE_TABLE_SETTING,
-              '\'color\' can only appear once',
-              attr,
-            )));
-          }
-          attrs.forEach((attr) => {
-            if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_SETTING,
-                '\'color\' must be a color literal',
-                attr.value || attr.name!,
-              ));
-            }
-          });
+        case SettingName.Color:
+          errors.push(...CommonValidator.validateColorSetting(name, attrs, CompileErrorCode.INVALID_TABLEGROUP_SETTING));
           break;
-        case 'note':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(
-              CompileErrorCode.DUPLICATE_TABLE_SETTING,
-              '\'note\' can only appear once',
-              attr,
-            )));
-          }
-          attrs
-            .filter((attr) => !isExpressionAQuotedString(attr.value))
-            .forEach((attr) => {
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_SETTING,
-                '\'note\' must be a string literal',
-                attr.value || attr.name!,
-              ));
-            });
+
+        case SettingName.Note:
+          errors.push(...CommonValidator.validateNoteSetting(attrs, CompileErrorCode.INVALID_TABLEGROUP_SETTING));
           break;
+
         default:
           errors.push(...attrs.map((attr) => new CompileError(
-            CompileErrorCode.INVALID_TABLE_SETTING,
+            CompileErrorCode.INVALID_TABLEGROUP_SETTING,
             `Unknown '${name}' setting`,
             attr,
           )));
           break;
       }
     });
+
     return errors;
   }
 

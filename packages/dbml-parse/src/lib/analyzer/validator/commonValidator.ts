@@ -9,7 +9,7 @@ import {
   VariableNode,
 } from '../../parser/nodes';
 import {
-  aggregateSettingList, isUnaryRelationship, isValidDefaultValue, isVoid,
+  aggregateSettingList, isUnaryRelationship, isValidColor, isValidDefaultValue, isVoid,
 } from './utils';
 import { extractVarNameFromPrimaryVariable } from '../utils';
 import { SettingName } from '../types';
@@ -84,17 +84,9 @@ export default class CommonValidator {
       errors.push(...CommonValidator.validateNonValueSetting(name, attrs));
 
       switch (name) {
-        case SettingName.PK: {
-          const pkeyAttrs = settingMap[SettingName.PKey] || [];
-          if (attrs.length >= 1 && pkeyAttrs.length >= 1) {
-            errors.push(...[...attrs, ...pkeyAttrs].map((attr) => new CompileError(
-              CompileErrorCode.DUPLICATE_COLUMN_SETTING,
-              'Either one of \'primary key\' and \'pk\' can appear',
-              attr,
-            )));
-          }
+        case SettingName.PK:
+          errors.push(...CommonValidator.validatePrimaryKeyAndPKSetting(attrs, settingMap[SettingName.PKey]));
           break;
-        }
 
         case SettingName.Note:
           (attrs as AttributeNode[]).forEach((attr) => {
@@ -197,5 +189,29 @@ export default class CommonValidator {
       });
     }
     return errors;
+  }
+
+  static validateColorSetting (
+    settingName: string,
+    attrs: AttributeNode[],
+    errorCode: CompileErrorCode,
+  ) {
+    return attrs.flatMap((attr) => {
+      if (!isValidColor(attr.value)) {
+        return [new CompileError(errorCode, `'${settingName}' must be a color literal`, attr.value || attr.name!)];
+      }
+
+      return [];
+    });
+  }
+
+  static validateNoteSetting (attrs: AttributeNode[], errorCode: CompileErrorCode) {
+    return attrs
+      .filter((attr) => !isExpressionAQuotedString(attr.value))
+      .map((attr) => new CompileError(
+        errorCode,
+        '\'note\' must be a string literal',
+        attr.value || attr.name!,
+      ));
   }
 }

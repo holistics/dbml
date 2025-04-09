@@ -1,8 +1,8 @@
 /* eslint-disable class-methods-use-this */
-import _ from 'lodash';
+import _, { forIn } from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
-  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList, isValidColor,
+  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList,
   isValidColumnType,
 } from '../utils';
 import { ElementValidator } from '../types';
@@ -19,6 +19,7 @@ import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '.
 import { ColumnSymbol, TableFragmentSymbol } from '../../symbol/symbols';
 import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../parser/utils';
 import CommonValidator from '../commonValidator';
+import { SettingName } from '../../types';
 
 export default class TableFragmentValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -106,44 +107,23 @@ export default class TableFragmentValidator implements ElementValidator {
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    _.forIn(settingMap, (attrs, name) => {
+    forIn(settingMap, (attrs, name) => {
+      errors.push(...CommonValidator.validateUniqueSetting(
+        name,
+        attrs,
+        [SettingName.HeaderColor, SettingName.Note],
+        CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING,
+      ));
+
       switch (name) {
-        case 'headercolor':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(
-              CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING,
-              '\'headercolor\' can only appear once',
-              attr,
-            )));
-          }
-          attrs.forEach((attr) => {
-            if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
-                '\'headercolor\' must be a color literal',
-                attr.value || attr.name!,
-              ));
-            }
-          });
+        case SettingName.HeaderColor:
+          errors.push(...CommonValidator.validateColorSetting(name, attrs, CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING));
           break;
-        case 'note':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(
-              CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING,
-              '\'note\' can only appear once',
-              attr,
-            )));
-          }
-          attrs
-            .filter((attr) => !isExpressionAQuotedString(attr.value))
-            .forEach((attr) => {
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
-                '\'note\' must be a string literal',
-                attr.value || attr.name!,
-              ));
-            });
+
+        case SettingName.Note:
+          errors.push(...CommonValidator.validateNoteSetting(attrs, CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING));
           break;
+
         default:
           errors.push(...attrs.map((attr) => new CompileError(
             CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
@@ -153,6 +133,7 @@ export default class TableFragmentValidator implements ElementValidator {
           break;
       }
     });
+
     return errors;
   }
 
@@ -192,25 +173,20 @@ export default class TableFragmentValidator implements ElementValidator {
 
       const remains = field.args.slice(1);
 
-      errors.push(...this.validateFieldSetting(remains));
+      errors.push(...CommonValidator.validateColumnSettings(remains));
       errors.push(...this.registerField(field));
 
       return errors;
     });
   }
 
-  validateFieldSetting (parts: (ExpressionNode | PrimaryExpressionNode & { expression: VariableNode })[]): CompileError[] {
-    return CommonValidator.validateColumnSettings(parts);
-  }
-
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     const errors = subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
-      if (!sub.type) {
-        return [];
-      }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
+      if (!sub.type) return [];
+
+      const Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const validator = new Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
       return validator.validate();
     });
 
