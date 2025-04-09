@@ -166,8 +166,6 @@ export default class CommonValidator {
   }
 
   static validateNonValueSetting (settingName: string, attrs: (AttributeNode | PrimaryExpressionNode)[]) {
-    const errors: CompileError[] = [];
-
     const nonValueAttributeNames = [
       SettingName.PKey,
       SettingName.PK,
@@ -178,27 +176,26 @@ export default class CommonValidator {
     ] as string[];
 
     if (nonValueAttributeNames.includes(settingName)) {
-      attrs.forEach((attr) => {
-        if (attr instanceof AttributeNode && !isVoid(attr.value)) {
-          errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${settingName}' must not have a value`, attr.value || attr.name!));
-        }
-      });
+      return attrs
+        .filter((attr) => attr instanceof AttributeNode && !isVoid(attr.value))
+        .map((attr: AttributeNode) => new CompileError(
+          CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
+          `'${settingName}' must not have a value`,
+          attr.value || attr.name!,
+        ));
     }
-    return errors;
+
+    return [];
   }
 
-  static validateColorSetting (
-    settingName: string,
-    attrs: AttributeNode[],
-    errorCode: CompileErrorCode,
-  ) {
-    return attrs.flatMap((attr) => {
-      if (!isValidColor(attr.value)) {
-        return [new CompileError(errorCode, `'${settingName}' must be a color literal`, attr.value || attr.name!)];
-      }
-
-      return [];
-    });
+  static validateColorSetting (settingName: string, attrs: AttributeNode[], errorCode: CompileErrorCode) {
+    return attrs
+      .filter((attr) => !isValidColor(attr.value))
+      .map((attr) => new CompileError(
+        errorCode,
+        `'${settingName}' must be a color literal`,
+        attr.value || attr.name!,
+      ));
   }
 
   static validateNoteSetting (attrs: AttributeNode[], errorCode: CompileErrorCode) {
@@ -211,10 +208,7 @@ export default class CommonValidator {
       ));
   }
 
-  static validateTopLevelContext (
-    declarationNode: ElementDeclarationNode,
-    elementKindName: TopLevelElementKindName,
-  ) {
+  static validateTopLevelContext (declarationNode: ElementDeclarationNode, elementKindName: TopLevelElementKindName) {
     const errorCodeBySymbolKind: Record<TopLevelElementKindName, CompileErrorCode> = {
       [ElementKindName.Table]: CompileErrorCode.INVALID_TABLE_CONTEXT,
       [ElementKindName.Enum]: CompileErrorCode.INVALID_ENUM_CONTEXT,
