@@ -21,7 +21,6 @@ import {
   isValidAlias,
   isValidColumnType,
   isValidName,
-  pickValidator,
   registerSchemaStack,
 } from '../utils';
 import { ElementValidator } from '../types';
@@ -114,7 +113,7 @@ export default class TableValidator implements ElementValidator {
           break;
 
         case SettingName.Note:
-          errors.push(...CommonValidator.validateNoteSetting(attrs, CompileErrorCode.INVALID_TABLE_SETTING));
+          errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_TABLE_SETTING));
           break;
 
         default:

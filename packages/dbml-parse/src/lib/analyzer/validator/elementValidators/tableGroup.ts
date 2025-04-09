@@ -87,7 +87,7 @@ export default class TableGroupValidator implements ElementValidator {
           break;
 
         case SettingName.Note:
-          errors.push(...CommonValidator.validateNoteSetting(attrs, CompileErrorCode.INVALID_TABLEGROUP_SETTING));
+          errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_TABLEGROUP_SETTING));
           break;
 
         default:

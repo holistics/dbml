@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import _ from 'lodash';
+import _, { forIn } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -17,7 +17,7 @@ import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '.
 import SymbolTable from '../../symbol/symbolTable';
 import { EnumFieldSymbol, EnumSymbol } from '../../symbol/symbols';
 import CommonValidator from '../commonValidator';
-import { ElementKindName } from '../../types';
+import { ElementKindName, SettingName } from '../../types';
 
 export default class EnumValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -127,28 +127,29 @@ export default class EnumValidator implements ElementValidator {
     });
   }
 
-  validateFieldSettings(settings: ListExpressionNode): CompileError[] {
+  validateFieldSettings (settings: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settings);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    for (const name in settingMap) {
-      const attrs = settingMap[name];
+    forIn(settingMap, (attrs, name) => {
+      errors.push(...CommonValidator.validateUniqueSetting(
+        name,
+        attrs,
+        [SettingName.Note],
+        CompileErrorCode.DUPLICATE_ENUM_ELEMENT_SETTING,
+      ));
+
       switch (name) {
-        case 'note':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_ENUM_ELEMENT_SETTING, `\'note\' can only appear once`, attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_SETTING, `\'note\' must be a string`, attr));
-            }
-          });
+        case SettingName.Note:
+          errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_ENUM_ELEMENT_SETTING));
           break;
+
         default:
           attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_ENUM_ELEMENT_SETTING, `Unknown enum field setting \'${name}\'`, attr)));
       }
-    }
+    });
+
     return errors;
   }
 

@@ -88,7 +88,7 @@ export default class TableFragmentValidator implements ElementValidator {
           break;
 
         case SettingName.Note:
-          errors.push(...CommonValidator.validateNoteSetting(attrs, CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING));
+          errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING));
           break;
 
         default:

@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import _ from 'lodash';
+import _, { forIn } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -13,13 +13,13 @@ import {
   SyntaxNode,
   VariableNode,
 } from '../../../parser/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
-import { aggregateSettingList, isVoid } from '../utils';
+import { isExpressionAVariableNode } from '../../../parser/utils';
+import { aggregateSettingList } from '../utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
 import { destructureIndexNode, getElementKind } from '../../utils';
 import SymbolTable from '../../symbol/symbolTable';
-import { ElementKind, ElementKindName } from '../../types';
+import { ElementKind, ElementKindName, SettingName } from '../../types';
 import CommonValidator from '../commonValidator';
 
 export default class IndexesValidator implements ElementValidator {
@@ -33,8 +33,14 @@ export default class IndexesValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
   private validateContext(): CompileError[] {
@@ -96,7 +102,7 @@ export default class IndexesValidator implements ElementValidator {
           sub = sub.callee!;
         }
 
-        if (!destructureIndexNode(sub).isOk()) { 
+        if (!destructureIndexNode(sub).isOk()) {
           errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
         }
       });
@@ -105,50 +111,49 @@ export default class IndexesValidator implements ElementValidator {
     })
   }
 
-  private validateFieldSetting(settings: ListExpressionNode): CompileError[] {
+  private validateFieldSetting (settings: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settings);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    for (const name in settingMap) {
-      const attrs = settingMap[name];
+    forIn(settingMap, (attrs, name) => {
+      errors.push(...CommonValidator.validateUniqueSetting(
+        name,
+        attrs,
+        [SettingName.Note, SettingName.Name, SettingName.Unique, SettingName.PK, SettingName.Type],
+        CompileErrorCode.DUPLICATE_INDEX_SETTING,
+      ));
+
+      errors.push(...CommonValidator.validateNonValueSetting(
+        name,
+        attrs,
+        [SettingName.Unique, SettingName.PK],
+        CompileErrorCode.INVALID_INDEX_SETTING_VALUE,
+      ));
+
       switch (name) {
-        case 'note':
-        case 'name':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `\'${name}\' can only appear once`, attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `\'${name}\' must be a string`, attr));
-            }
-          });
+        case SettingName.Note:
+        case SettingName.Name:
+          errors.push(...CommonValidator.validateStringSetting(name, attrs, CompileErrorCode.INVALID_INDEX_SETTING_VALUE));
           break;
-        case 'unique':
-        case 'pk':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `\'${name}\' can only appear once`, attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `\'${name}\' must not have a value`, attr));
-            }
-          });
+
+        case SettingName.Unique:
+        case SettingName.PK:
           break;
-        case 'type':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, '\'type\' can only appear once', attr)));
-          }
+
+        case SettingName.Type:
           attrs.forEach((attr) => {
             if (!isExpressionAVariableNode(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, '\'type\' must be "btree" or "hash"', attr));
             }
           });
           break;
+
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting \'${name}\'`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting '${name}'`, attr)));
       }
-    }
+    });
+
     return errors;
   }
 

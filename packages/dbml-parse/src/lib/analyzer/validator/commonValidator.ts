@@ -36,6 +36,16 @@ export default class CommonValidator {
     return [];
   }
 
+  static validateStringSetting (settingName: string, attrs: AttributeNode[], errorCode: CompileErrorCode) {
+    return attrs
+      .filter(attr => !isExpressionAQuotedString(attr.value))
+      .map(attr => new CompileError(
+        errorCode,
+        `'${settingName}' must be a string literal`,
+        attr,
+      ));
+  }
+
   // This is needed to support legacy inline settings
   // Used for Table and TableFragment columns
   // e.g. `id int pk unique [note: 'abc']`
@@ -84,11 +94,20 @@ export default class CommonValidator {
       SettingName.Default,
     ];
 
+    const nonValueAttributeNames: string[] = [
+      SettingName.PKey,
+      SettingName.PK,
+      SettingName.NotNull,
+      SettingName.Null,
+      SettingName.Unique,
+      SettingName.Increment,
+    ];
+
     forIn(settingMap, (attrs, name) => {
       if (!attrs) return;
 
       errors.push(...CommonValidator.validateUniqueSetting(name, attrs, UNIQUE_COLUMN_SETTINGS, CompileErrorCode.DUPLICATE_COLUMN_SETTING));
-      errors.push(...CommonValidator.validateNonValueSetting(name, attrs));
+      errors.push(...CommonValidator.validateNonValueSetting(name, attrs, nonValueAttributeNames, CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
 
       switch (name) {
         case SettingName.PK:
@@ -96,7 +115,7 @@ export default class CommonValidator {
           break;
 
         case SettingName.Note:
-          errors.push(...CommonValidator.validateNoteSetting(attrs as AttributeNode[], CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
+          errors.push(...CommonValidator.validateStringSetting(name, attrs as AttributeNode[], CompileErrorCode.INVALID_COLUMN_SETTING_VALUE));
           break;
 
         case SettingName.Ref:
@@ -172,21 +191,17 @@ export default class CommonValidator {
     return [];
   }
 
-  static validateNonValueSetting (settingName: string, attrs: (AttributeNode | PrimaryExpressionNode)[]) {
-    const nonValueAttributeNames = [
-      SettingName.PKey,
-      SettingName.PK,
-      SettingName.NotNull,
-      SettingName.Null,
-      SettingName.Unique,
-      SettingName.Increment,
-    ] as string[];
-
-    if (nonValueAttributeNames.includes(settingName)) {
+  static validateNonValueSetting (
+    settingName: string,
+    attrs: (AttributeNode | PrimaryExpressionNode)[],
+    settingNamesToValidate: string[],
+    errorCode: CompileErrorCode,
+  ) {
+    if (settingNamesToValidate.includes(settingName)) {
       return attrs
         .filter((attr) => attr instanceof AttributeNode && !isVoid(attr.value))
         .map((attr: AttributeNode) => new CompileError(
-          CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
+          errorCode,
           `'${settingName}' must not have a value`,
           attr.value || attr.name!,
         ));
@@ -201,16 +216,6 @@ export default class CommonValidator {
       .map((attr) => new CompileError(
         errorCode,
         `'${settingName}' must be a color literal`,
-        attr.value || attr.name!,
-      ));
-  }
-
-  static validateNoteSetting (attrs: AttributeNode[], errorCode: CompileErrorCode) {
-    return attrs
-      .filter((attr) => !isExpressionAQuotedString(attr.value))
-      .map((attr) => new CompileError(
-        errorCode,
-        '\'note\' must be a string literal',
         attr.value || attr.name!,
       ));
   }

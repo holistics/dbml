@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import _ from 'lodash';
+import _, { forIn } from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../../../lexer/tokens';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
@@ -108,8 +108,8 @@ export default class RefValidator implements ElementValidator {
     const aggReport = aggregateSettingList(settings);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
-    for (const name in settingMap) {
-      const attrs = settingMap[name];
+
+    forIn(settingMap, (attrs, name) => {
       switch (name) {
         case 'delete':
         case 'update':
@@ -135,7 +135,8 @@ export default class RefValidator implements ElementValidator {
         default:
           attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting \'${name}\'`, attr)));
       }
-    }
+    });
+
     return errors;
   }
 
