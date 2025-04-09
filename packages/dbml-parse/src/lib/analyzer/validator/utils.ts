@@ -1,3 +1,4 @@
+import { forIn } from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../../lexer/tokens';
 import {
   ArrayNode,
@@ -30,12 +31,13 @@ import { SchemaSymbol } from '../symbol/symbols';
 import SymbolTable from '../symbol/symbolTable';
 import SymbolFactory from '../symbol/factory';
 import {
-  extractStringFromIdentifierStream, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
+  extractStringFromIdentifierStream, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
+  isExpressionAnIdentifierNode,
 } from '../../parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import Report from '../../report';
 import { CompileError, CompileErrorCode } from '../../errors';
-import { ElementKind } from '../types';
+import { ElementKind, SettingName } from '../types';
 
 export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -231,18 +233,6 @@ export function isTupleOfVariables(value?: SyntaxNode): value is TupleExpression
   return value instanceof TupleExpressionNode && value.elementList.every(isExpressionAVariableNode);
 }
 
-export enum SettingName {
-  Note = 'note',
-  Ref = 'ref',
-  PKey = 'primary key',
-  PK = 'pk',
-  NotNull = 'not null',
-  Null = 'null',
-  Unique = 'unique',
-  Increment = 'increment',
-  Default = 'default',
-}
-
 export function aggregateSettingList (settingList?: ListExpressionNode): Report<Record<SettingName | string, AttributeNode[]>, CompileError> {
   if (!settingList) return new Report({});
 
@@ -310,125 +300,67 @@ export const isValidColumnType = (type: SyntaxNode): boolean => {
   return variables !== undefined && variables.length > 0;
 };
 
-const validateUniqueColumnSetting = (attrName: string, attrs: (AttributeNode | PrimaryExpressionNode)[]) => {
-  const uniqueSettingNames = [
-    SettingName.Note,
-    SettingName.Ref,
-    SettingName.PKey,
-    SettingName.PK,
-    SettingName.NotNull,
-    SettingName.Null,
-    SettingName.Unique,
-    SettingName.Increment,
-    SettingName.Default,
-  ] as string[];
+export const validateSettingList = (settingList: ListExpressionNode, allowedSettings: string[]) => {
+  const aggReport = aggregateSettingList(settingList);
+  const errors = aggReport.getErrors();
+  const settingMap = aggReport.getValue();
 
-  if (uniqueSettingNames.includes(attrName) && attrs.length > 1) {
-    return attrs.map(attr => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${attrName}' can only appear once`, attr));
-  }
-  return [];
-};
-
-const validateNonValueAttribute = (attrName: string, attrs: (AttributeNode | PrimaryExpressionNode)[]) => {
-  const errors: CompileError[] = [];
-
-  const nonValueAttributeNames = [
-    SettingName.PKey,
-    SettingName.PK,
-    SettingName.NotNull,
-    SettingName.Null,
-    SettingName.Unique,
-    SettingName.Increment,
-  ] as string[];
-
-  if (nonValueAttributeNames.includes(attrName)) {
-    attrs.forEach((attr) => {
-      if (attr instanceof AttributeNode && !isVoid(attr.value)) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${attrName}' must not have a value`, attr.value || attr.name!));
-      }
-    });
-  }
-  return errors;
-};
-
-export const validateColumnSettings = (settingMap: Record<SettingName | string, AttributeNode[]> & {
-  pk?: (AttributeNode | PrimaryExpressionNode)[],
-  unique?: (AttributeNode | PrimaryExpressionNode)[],
-}) => {
-  const errors: CompileError[] = [];
-  Object.entries(settingMap).forEach(([name, attrs]) => {
-    if (!attrs) return;
-
-    errors.push(...validateUniqueColumnSetting(name, attrs));
-    errors.push(...validateNonValueAttribute(name, attrs));
+  forIn(settingMap, (attrs, name) => {
+    if (!allowedSettings.includes(name)) {
+      errors.push(...attrs.map((attr) => new CompileError(
+        CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
+        `Unknown '${name}' setting`,
+        attr,
+      )));
+      return;
+    }
 
     switch (name) {
-      case SettingName.PK: {
-        const pkeyAttrs = settingMap[SettingName.PKey] || [];
-        if (attrs.length >= 1 && pkeyAttrs.length >= 1) {
-          errors.push(...[...attrs, ...pkeyAttrs].map((attr) => new CompileError(
-            CompileErrorCode.DUPLICATE_COLUMN_SETTING,
-            'Either one of \'primary key\' and \'pk\' can appear',
+      case SettingName.HeaderColor:
+      case SettingName.Color:
+        if (attrs.length > 1) {
+          errors.push(...attrs.map((attr) => new CompileError(
+            CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING,
+            `'${name}' can only appear once`,
             attr,
           )));
         }
-        break;
-      }
-
-      case SettingName.Note:
-        (attrs as AttributeNode[]).forEach((attr) => {
-          if (!isExpressionAQuotedString(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'note\' must be a quoted string', attr.value || attr.name!));
-          }
-        });
-        break;
-
-      case SettingName.Ref:
-        (attrs as AttributeNode[]).forEach((attr) => {
-          if (!isUnaryRelationship(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'ref\' must be a valid unary relationship', attr.value || attr.name!));
-          }
-        });
-        break;
-
-      case SettingName.Null: {
-        const nullAttrs = settingMap[SettingName.NotNull] || [];
-        if (attrs.length >= 1 && nullAttrs.length >= 1) {
-          errors.push(...[...attrs, ...nullAttrs].map((attr) => new CompileError(
-            CompileErrorCode.CONFLICTING_SETTING,
-            '\'not null\' and \'null\' can not be set at the same time',
-            attr,
-          )));
-        }
-        break;
-      }
-
-      case SettingName.Default:
-        (attrs as AttributeNode[]).forEach((attr) => {
-          if (!isValidDefaultValue(attr.value)) {
+        attrs.forEach((attr) => {
+          if (!isValidColor(attr.value)) {
             errors.push(new CompileError(
-              CompileErrorCode.INVALID_TABLE_SETTING,
-              '\'default\' must be a string literal, number literal, function expression, true, false or null',
+              CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
+              `'${name}' must be a color literal`,
               attr.value || attr.name!,
             ));
           }
         });
         break;
-
-      case SettingName.PKey:
-      case SettingName.Unique:
-      case SettingName.NotNull:
-      case SettingName.Increment:
+      case SettingName.Note:
+        if (attrs.length > 1) {
+          errors.push(...attrs.map((attr) => new CompileError(
+            CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING,
+            '\'note\' can only appear once',
+            attr,
+          )));
+        }
+        attrs
+          .filter((attr) => !isExpressionAQuotedString(attr.value))
+          .forEach((attr) => {
+            errors.push(new CompileError(
+              CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
+              '\'note\' must be a string literal',
+              attr.value || attr.name!,
+            ));
+          });
         break;
-
       default:
-        attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
+        errors.push(...attrs.map((attr) => new CompileError(
+          CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
+          `Unknown '${name}' setting`,
+          attr,
+        )));
+        break;
     }
-  // }
   });
-
   return errors;
-};
-
-export const validateSettings = () => {
 };

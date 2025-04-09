@@ -162,3 +162,17 @@ export class TableFragmentSymbol implements NodeSymbol {
     this.declaration = declaration;
   }
 }
+
+// A symbol for a table fragment as field in other tables
+export class TableFragmentAsFieldSymbol implements NodeSymbol {
+  id: NodeSymbolId;
+
+  declaration: SyntaxNode;
+
+  references: SyntaxNode[] = [];
+
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+    this.id = id;
+    this.declaration = declaration;
+  }
+}

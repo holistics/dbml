@@ -1,17 +1,15 @@
 /* eslint-disable class-methods-use-this */
-import _, { last } from 'lodash';
+import _ from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
   isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList, isValidColor,
   isValidColumnType,
-  SettingName,
-  validateColumnSettings,
 } from '../utils';
 import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
 import { SyntaxToken } from '../../../lexer/tokens';
 import {
-  AttributeNode, BlockExpressionNode, ElementDeclarationNode, ExpressionNode,
+  BlockExpressionNode, ElementDeclarationNode, ExpressionNode,
   FunctionApplicationNode, ListExpressionNode, PrimaryExpressionNode, SyntaxNode,
   VariableNode,
 } from '../../../parser/nodes';
@@ -19,7 +17,8 @@ import SymbolFactory from '../../symbol/factory';
 import { createColumnSymbolIndex, createTableFragmentSymbolIndex } from '../../symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import { ColumnSymbol, TableFragmentSymbol } from '../../symbol/symbols';
-import { isExpressionAVariableNode, isExpressionAQuotedString, isExpressionAnIdentifierNode } from '../../../parser/utils';
+import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../parser/utils';
+import CommonValidator from '../commonValidator';
 
 export default class TableFragmentValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -201,45 +200,7 @@ export default class TableFragmentValidator implements ElementValidator {
   }
 
   validateFieldSetting (parts: (ExpressionNode | PrimaryExpressionNode & { expression: VariableNode })[]): CompileError[] {
-    if (parts.length === 0) return [];
-    const remains = parts.slice(0, -1) as (PrimaryExpressionNode & { expression: VariableNode })[];
-
-    const lastPart = last(parts);
-    const isLastPartListExpression = lastPart instanceof ListExpressionNode;
-
-    if (
-      !remains.every(isExpressionAnIdentifierNode)
-      || !(
-        isExpressionAnIdentifierNode(lastPart)
-        || isLastPartListExpression
-      )
-    ) {
-      return parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part));
-    }
-
-    const settingList = isLastPartListExpression
-      ? lastPart as ListExpressionNode
-      : undefined;
-
-    const aggReport = aggregateSettingList(settingList);
-    const errors = aggReport.getErrors();
-    const settingMap: Record<SettingName | string, (AttributeNode | PrimaryExpressionNode)[]> = aggReport.getValue();
-
-    remains.forEach((part) => {
-      const name = extractVarNameFromPrimaryVariable(part).unwrap_or('').toLowerCase();
-
-      if (name !== SettingName.PK && name !== SettingName.Unique) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
-        return;
-      }
-
-      if (settingMap[name] === undefined) settingMap[name] = [part];
-      else settingMap[name]!.push(part);
-    });
-
-    errors.push(...validateColumnSettings(settingMap));
-
-    return errors;
+    return CommonValidator.validateColumnSettings(parts);
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {

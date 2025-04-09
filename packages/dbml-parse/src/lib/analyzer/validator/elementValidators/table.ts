@@ -1,9 +1,8 @@
-import _, { last } from 'lodash';
+import _, { forIn } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
   ArrayNode,
-  AttributeNode,
   BlockExpressionNode,
   ElementDeclarationNode,
   ExpressionNode,
@@ -17,29 +16,25 @@ import {
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import {
   aggregateSettingList,
-  SettingName,
   isSimpleName,
-  isUnaryRelationship,
   isValidAlias,
   isValidColor,
   isValidColumnType,
-  isValidDefaultValue,
   isValidName,
-  isVoid,
   pickValidator,
   registerSchemaStack,
-  validateColumnSettings,
 } from '../utils';
 import { ElementValidator } from '../types';
-import { ColumnSymbol, TableSymbol } from '../../symbol/symbols';
-import { createColumnSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
+import { ColumnSymbol, TableFragmentAsFieldSymbol, TableSymbol } from '../../symbol/symbols';
+import { createColumnSymbolIndex, createTableFragmentSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
-  isExpressionAnIdentifierNode,
 } from '../../../parser/utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import SymbolTable from '../../symbol/symbolTable';
+import CommonValidator from '../commonValidator';
+import { SettingName } from '../../types';
 
 function isAliasSameAsName (alias: string, nameFragments: string[]): boolean {
   return nameFragments.length === 1 && alias === nameFragments[0];
@@ -105,38 +100,41 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  // eslint-disable-next-line class-methods-use-this
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    for (const name in settingMap) {
-      const attrs = settingMap[name];
+    forIn(settingMap, (attrs, name) => {
+      errors.push(...CommonValidator.validateUniqueSetting(
+        name,
+        attrs,
+        [SettingName.Note, SettingName.HeaderColor],
+        CompileErrorCode.DUPLICATE_TABLE_SETTING,
+      ));
+
       switch (name) {
-        case 'headercolor':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'headercolor\' can only appear once', attr)))
-          }
+        case SettingName.HeaderColor:
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'headercolor\' must be a color literal', attr.value || attr.name!));
             }
           });
           break;
-        case 'note':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'note\' can only appear once', attr)))
-          }
+
+        case SettingName.Note:
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'note\' must be a string literal', attr.value || attr.name!));
             }
           });
           break;
+
         default:
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown \'${name}\' setting`, attr)))
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
       }
-    }
+    });
     return errors;
   }
 
@@ -180,26 +178,25 @@ export default class TableValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Table\'s body must be a block', body)];
     }
 
-    const [fieldsAndTableFragments, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
-      ...this.validateFieldsAndTableFragments(fieldsAndTableFragments as FunctionApplicationNode[]),
+      ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
     ];
   }
 
-  validateFieldsAndTableFragments (fieldsAndTableFragments: FunctionApplicationNode[]): CompileError[] {
-    if (fieldsAndTableFragments.length === 0) {
+  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+    if (fields.length === 0) {
       return [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
     }
 
-    return fieldsAndTableFragments.flatMap((fieldOrTableFragment) => {
-      return fieldOrTableFragment.callee instanceof PrefixExpressionNode
-        ? this.validateTableFragment(fieldOrTableFragment)
-        : this.validateField(fieldOrTableFragment);
+    return fields.flatMap((field) => {
+      return field.callee instanceof PrefixExpressionNode
+        ? this.validateTableFragment(field)
+        : this.validateColumn(field);
     });
   }
 
-  /* eslint-disable-next-line class-methods-use-this */
   validateTableFragment (tableFragment: FunctionApplicationNode): CompileError[] {
     if (!tableFragment.callee) return [];
 
@@ -213,47 +210,73 @@ export default class TableValidator implements ElementValidator {
       errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A table fragment name must be an identifier or a quoted identifier', callee));
     }
 
+    if (tableFragment.args.length > 0) errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_FRAGMENT_FIELD, 'A table fragment should not have arguments', tableFragment));
+
+    errors.push(...this.registerTableFragment(tableFragment));
+
     return errors;
   }
 
-  validateField (field: FunctionApplicationNode): CompileError[] {
-    if (!field.callee) return [];
+  registerTableFragment (tableFragment: FunctionApplicationNode): CompileError[] {
+    const callee = tableFragment.callee as PrefixExpressionNode;
+    if (callee && isExpressionAVariableNode(callee.expression)) {
+      const tableFragmentName = extractVarNameFromPrimaryVariable(callee.expression).unwrap();
+      const tableFragmentId = createTableFragmentSymbolIndex(tableFragmentName);
+
+      const tableFragmentSymbol = this.symbolFactory.create(TableFragmentAsFieldSymbol, { declaration: tableFragment });
+      tableFragment.symbol = tableFragmentSymbol;
+
+      const symbolTable = this.declarationNode.symbol!.symbolTable!;
+      if (symbolTable.has(tableFragmentId)) {
+        const symbol = symbolTable.get(tableFragmentId)!;
+        return [
+          new CompileError(CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_NAME, `Duplicate tableFragment ${tableFragmentName}`, tableFragment),
+          new CompileError(CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_NAME, `Duplicate tableFragment ${tableFragmentName}`, symbol.declaration!),
+        ];
+      }
+      symbolTable.set(tableFragmentId, tableFragmentSymbol);
+    }
+    return [];
+  }
+
+  validateColumn (column: FunctionApplicationNode): CompileError[] {
+    if (!column.callee) return [];
 
     const errors: CompileError[] = [];
 
-    if (field.args.length === 0) {
-      errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', field.callee!));
+    if (column.args.length === 0) {
+      errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', column.callee!));
     }
 
-    if (!isExpressionAVariableNode(field.callee)) {
-      errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
+    if (!isExpressionAVariableNode(column.callee)) {
+      errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', column.callee));
     }
 
-    if (field.args[0] && !isValidColumnType(field.args[0])) {
-      errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', field.args[0]));
+    if (column.args[0] && !isValidColumnType(column.args[0])) {
+      errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', column.args[0]));
     }
 
-    const remains = field.args.slice(1);
+    const remains = column.args.slice(1);
 
-    errors.push(...this.validateFieldSetting(remains));
-    errors.push(...this.registerField(field));
+    errors.push(...this.validateColumnSetting(remains));
+    errors.push(...this.registerColumn(column));
 
     return errors;
   }
 
-  registerField (field: FunctionApplicationNode): CompileError[] {
-    if (field.callee && isExpressionAVariableNode(field.callee)) {
-      const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
+  registerColumn (column: FunctionApplicationNode): CompileError[] {
+    if (column.callee && isExpressionAVariableNode(column.callee)) {
+      const columnName = extractVarNameFromPrimaryVariable(column.callee).unwrap();
       const columnId = createColumnSymbolIndex(columnName);
 
-      const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
-      field.symbol = columnSymbol;
+      const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: column });
+      column.symbol = columnSymbol;
 
       const symbolTable = this.declarationNode.symbol!.symbolTable!;
       if (symbolTable.has(columnId)) {
         const symbol = symbolTable.get(columnId)!;
         return [
-          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, field),
+          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, column),
           new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, symbol.declaration!),
         ];
       }
@@ -262,52 +285,12 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  // This is needed to support legacy inline settings
   // eslint-disable-next-line class-methods-use-this
-  validateFieldSetting (parts: (ExpressionNode | PrimaryExpressionNode & { expression: VariableNode })[]): CompileError[] {
-    if (parts.length === 0) return [];
-
-    const remains = parts.slice(0, -1) as (PrimaryExpressionNode & { expression: VariableNode })[];
-
-    const lastPart = last(parts);
-    const isLastPartListExpression = lastPart instanceof ListExpressionNode;
-
-    if (
-      !remains.every(isExpressionAnIdentifierNode)
-      || !(
-        isExpressionAnIdentifierNode(lastPart)
-        || isLastPartListExpression
-      )
-    ) {
-      return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
-    }
-
-    const settingList = isLastPartListExpression
-      ? lastPart as ListExpressionNode
-      : undefined;
-
-    const aggReport = aggregateSettingList(settingList);
-    const errors = aggReport.getErrors();
-    const settingMap: Record<SettingName | string, (AttributeNode | PrimaryExpressionNode)[]> = aggReport.getValue();
-
-    remains.forEach((part) => {
-      const name = extractVarNameFromPrimaryVariable(part).unwrap_or('').toLowerCase();
-
-      if (name !== SettingName.PK && name !== SettingName.Unique) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
-        return;
-      }
-
-      if (settingMap[name] === undefined) settingMap[name] = [part];
-      else settingMap[name]!.push(part);
-    });
-
-    errors.push(...validateColumnSettings(settingMap));
-
-    return errors;
+  validateColumnSetting (parts: (ExpressionNode | (PrimaryExpressionNode & { expression: VariableNode }))[]): CompileError[] {
+    return CommonValidator.validateColumnSettings(parts);
   }
 
-  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     const errors = subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {
