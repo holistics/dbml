@@ -57,12 +57,8 @@ export default class IndexesValidator implements ElementValidator {
     return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Indexes);
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
-    if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Indexes shouldn\'t have a setting list', settingList)];
-    }
-
-    return [];
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+    return CommonValidator.validateNoSettingList(settingList, ElementKindName.Indexes);
   }
 
   private validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {

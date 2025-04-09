@@ -61,12 +61,8 @@ export default class RefValidator implements ElementValidator {
     return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Ref);
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
-    if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref shouldn\'t have a setting list', settingList)]
-    }
-
-    return [];
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+    return CommonValidator.validateNoSettingList(settingList, ElementKindName.Ref);
   }
 
   validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {

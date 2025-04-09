@@ -80,12 +80,8 @@ export default class EnumValidator implements ElementValidator {
     return errors;
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
-    if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Enum shouldn\'t have a setting list', settingList)];
-    }
-
-    return [];
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+    return CommonValidator.validateNoSettingList(settingList, ElementKindName.Enum);
   }
 
   validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {

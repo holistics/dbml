@@ -26,7 +26,7 @@ export default class NoteValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate(): CompileError[] {
+  validate (): CompileError[] {
     return [
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
@@ -92,12 +92,8 @@ export default class NoteValidator implements ElementValidator {
     return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Note);
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
-    if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList)];
-    }
-
-    return [];
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+    return CommonValidator.validateNoSettingList(settingList, ElementKindName.Note);
   }
 
   validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {

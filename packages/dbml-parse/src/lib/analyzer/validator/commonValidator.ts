@@ -259,4 +259,14 @@ export default class CommonValidator {
         aliasNode,
       )];
   }
+
+  static validateNoSettingList (settingList: ListExpressionNode | undefined, elementKindName: ElementKindName) {
+    return !settingList
+      ? []
+      : [new CompileError(
+        CompileErrorCode.UNEXPECTED_SETTINGS,
+        `${elementKindName} shouldn't have a setting list`,
+        settingList,
+      )];
+  }
 }

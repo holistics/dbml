@@ -54,12 +54,8 @@ export default class ProjectValidator implements ElementValidator {
     return CommonValidator.validateNoAlias(aliasNode, ElementKindName.Project);
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
-    if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project shouldn\'t have a setting list', settingList)];
-    }
-
-    return [];
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+    return CommonValidator.validateNoSettingList(settingList, ElementKindName.Project);
   }
 
   validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
