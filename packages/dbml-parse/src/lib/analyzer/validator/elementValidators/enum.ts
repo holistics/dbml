@@ -6,11 +6,11 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
+import { isExpressionAVariableNode } from '../../../parser/utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
 import {
-  aggregateSettingList, isValidName, registerSchemaStack,
+  aggregateSettingList, generateUnknownSettingErrors, isValidName, registerSchemaStack,
 } from '../utils';
 import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '../../symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
@@ -140,7 +140,7 @@ export default class EnumValidator implements ElementValidator {
           break;
 
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_ENUM_ELEMENT_SETTING, `Unknown enum field setting \'${name}\'`, attr)));
+          errors.push(...generateUnknownSettingErrors(name, attrs, CompileErrorCode.UNKNOWN_ENUM_ELEMENT_SETTING));
       }
     });
 

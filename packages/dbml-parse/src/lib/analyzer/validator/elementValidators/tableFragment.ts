@@ -1,7 +1,9 @@
 /* eslint-disable class-methods-use-this */
 import _, { forIn } from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { registerSchemaStack, aggregateSettingList, isValidColumnType } from '../utils';
+import {
+  registerSchemaStack, aggregateSettingList, isValidColumnType, generateUnknownSettingErrors,
+} from '../utils';
 import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
 import { SyntaxToken } from '../../../lexer/tokens';
@@ -87,12 +89,7 @@ export default class TableFragmentValidator implements ElementValidator {
           break;
 
         default:
-          errors.push(...attrs.map((attr) => new CompileError(
-            CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING,
-            `Unknown '${name}' setting`,
-            attr,
-          )));
-          break;
+          errors.push(...generateUnknownSettingErrors(name, attrs, CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING));
       }
     });
 

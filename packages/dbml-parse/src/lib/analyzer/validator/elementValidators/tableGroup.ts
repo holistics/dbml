@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import _, { forIn } from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { registerSchemaStack, aggregateSettingList } from '../utils';
+import { registerSchemaStack, aggregateSettingList, generateUnknownSettingErrors } from '../utils';
 import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
 import { SyntaxToken } from '../../../lexer/tokens';
@@ -86,11 +86,7 @@ export default class TableGroupValidator implements ElementValidator {
           break;
 
         default:
-          errors.push(...attrs.map((attr) => new CompileError(
-            CompileErrorCode.INVALID_TABLEGROUP_SETTING,
-            `Unknown '${name}' setting`,
-            attr,
-          )));
+          errors.push(...generateUnknownSettingErrors(name, attrs, CompileErrorCode.INVALID_TABLEGROUP_SETTING));
           break;
       }
     });

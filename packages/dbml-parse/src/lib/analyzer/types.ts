@@ -36,6 +36,9 @@ export enum SettingName {
 
   Name = 'name',
   Type = 'type',
+
+  Update = 'update',
+  Delete = 'delete',
 }
 
 export type TopLevelElementKindName =

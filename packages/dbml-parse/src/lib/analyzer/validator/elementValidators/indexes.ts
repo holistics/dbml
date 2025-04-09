@@ -14,7 +14,7 @@ import {
   VariableNode,
 } from '../../../parser/nodes';
 import { isExpressionAVariableNode } from '../../../parser/utils';
-import { aggregateSettingList } from '../utils';
+import { aggregateSettingList, generateUnknownSettingErrors } from '../utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
 import { destructureIndexNode, getElementKind } from '../../utils';
@@ -140,7 +140,7 @@ export default class IndexesValidator implements ElementValidator {
           break;
 
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting '${name}'`, attr)));
+          errors.push(...generateUnknownSettingErrors(name, attrs, CompileErrorCode.UNKNOWN_INDEX_SETTING));
       }
     });
 
@@ -157,7 +157,7 @@ export default class IndexesValidator implements ElementValidator {
   }
 }
 
-export function isValidIndexesType(value?: SyntaxNode): boolean {
+export function isValidIndexesType (value?: SyntaxNode): boolean {
   if (!(value instanceof PrimaryExpressionNode) || !(value.expression instanceof VariableNode)) {
     return false;
   }

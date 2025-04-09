@@ -12,11 +12,39 @@ import {
   isExpressionAVariableNode,
 } from '../../../parser/utils';
 import { ElementValidator } from '../types';
-import { aggregateSettingList, isValidColor } from '../utils';
+import { aggregateSettingList, generateUnknownSettingErrors } from '../utils';
 import { isBinaryRelationship, isEqualTupleOperands } from '../../utils';
 import SymbolTable from '../../symbol/symbolTable';
-import { ElementKindName } from '../../types';
+import { ElementKindName, SettingName } from '../../types';
 import CommonValidator from '../commonValidator';
+
+function isValidPolicy (value?: SyntaxNode): boolean {
+  if (
+    !(
+      isExpressionAVariableNode(value)
+      && value.expression.variable.kind !== SyntaxTokenKind.QUOTED_STRING
+    )
+    && !(value instanceof IdentiferStreamNode)
+  ) {
+    return false;
+  }
+
+  const extractedString = (value instanceof IdentiferStreamNode)
+    ? extractStringFromIdentifierStream(value).unwrap_or('')
+    : value.expression.variable.value;
+
+  switch (extractedString.toLowerCase()) {
+    case 'cascade':
+    case 'no action':
+    case 'set null':
+    case 'set default':
+    case 'restrict':
+      return true;
+
+    default:
+      return false;
+  }
+}
 
 export default class RefValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -94,7 +122,7 @@ export default class RefValidator implements ElementValidator {
       } else if (args[0] instanceof ListExpressionNode) {
         errors.push(...this.validateFieldSettings(args[0]));
         args.shift();
-      } 
+      }
 
       if (args.length > 0) {
         errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg)));
@@ -104,36 +132,34 @@ export default class RefValidator implements ElementValidator {
     return errors;
   }
 
-  validateFieldSettings(settings: ListExpressionNode): CompileError[] {
+  validateFieldSettings (settings: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settings);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
     forIn(settingMap, (attrs, name) => {
       switch (name) {
-        case 'delete':
-        case 'update':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `\'${name}\' can only appear once`, attr)));
-          }
+        case SettingName.Delete:
+        case SettingName.Update:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_REF_SETTING));
           attrs.forEach((attr) => {
             if (!isValidPolicy(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `\'${name}\' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
+              errors.push(new CompileError(
+                CompileErrorCode.INVALID_REF_SETTING_VALUE,
+                `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`,
+                attr,
+              ));
             }
           });
           break;
-        case 'color':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)))
-          }
-          attrs.forEach((attr) => {
-            if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!));
-            }
-          });
+
+        case SettingName.Color:
+          errors.push(...CommonValidator.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_REF_SETTING));
+          errors.push(...CommonValidator.validateColorSetting(name, attrs, CompileErrorCode.INVALID_REF_SETTING_VALUE));
           break;
+
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting \'${name}\'`, attr)));
+          errors.push(...generateUnknownSettingErrors(name, attrs, CompileErrorCode.UNKNOWN_REF_SETTING));
       }
     });
 
@@ -148,38 +174,4 @@ export default class RefValidator implements ElementValidator {
       this.symbolFactory,
     );
   }
-}
-
-function isValidPolicy(value?: SyntaxNode): boolean {
-  if (
-    !(
-      isExpressionAVariableNode(value) &&
-      value.expression.variable.kind !== SyntaxTokenKind.QUOTED_STRING
-    ) &&
-    !(value instanceof IdentiferStreamNode)
-  ) {
-    return false;
-  }
-
-  let extractedString: string | undefined;
-  if (value instanceof IdentiferStreamNode) {
-    extractedString = extractStringFromIdentifierStream(value).unwrap_or('');
-  } else {
-    extractedString = value.expression.variable.value;
-  }
-
-  if (extractedString) {
-    switch (extractedString.toLowerCase()) {
-      case 'cascade':
-      case 'no action':
-      case 'set null':
-      case 'set default':
-      case 'restrict':
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  return false; // unreachable
 }

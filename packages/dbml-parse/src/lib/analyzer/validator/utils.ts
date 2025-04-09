@@ -298,3 +298,7 @@ export const isValidColumnType = (type: SyntaxNode): boolean => {
 
   return variables !== undefined && variables.length > 0;
 };
+
+export function generateUnknownSettingErrors (name: string, attrs: AttributeNode[], errorCode: CompileErrorCode) {
+  return attrs.map((attr) => new CompileError(errorCode, `Unknown '${name}' setting`, attr));
+}

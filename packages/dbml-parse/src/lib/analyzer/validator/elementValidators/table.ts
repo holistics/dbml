@@ -17,6 +17,7 @@ import {
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import {
   aggregateSettingList,
+  generateUnknownSettingErrors,
   isSimpleName,
   isValidAlias,
   isValidColumnType,
@@ -80,7 +81,6 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  /* eslint-disable-next-line class-methods-use-this */
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (!aliasNode) {
       return [];
@@ -93,7 +93,6 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
@@ -112,9 +111,10 @@ export default class TableValidator implements ElementValidator {
           break;
 
         default:
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
+          errors.push(...generateUnknownSettingErrors(name, attrs, CompileErrorCode.INVALID_TABLE_SETTING));
       }
     });
+
     return errors;
   }
 
