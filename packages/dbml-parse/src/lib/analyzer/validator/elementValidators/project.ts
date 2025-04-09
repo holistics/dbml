@@ -8,7 +8,7 @@ import {
 } from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
-import { isSimpleName, pickValidator } from '../utils';
+import { pickValidator } from '../utils';
 import SymbolTable from '../../symbol/symbolTable';
 import CommonValidator from '../commonValidator';
 import { ElementKindName } from '../../types';
@@ -38,16 +38,8 @@ export default class ProjectValidator implements ElementValidator {
     return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.Project);
   }
 
-  private validateName(nameNode?: SyntaxNode): CompileError[] {
-    if (!nameNode) {
-      return [];
-    }
-
-    if (!isSimpleName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Project\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
-    }
-
-    return [];
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
+    return CommonValidator.validateOptionalSimpleName(nameNode, ElementKindName.Project);
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {

@@ -250,6 +250,16 @@ export default class CommonValidator {
     return [];
   }
 
+  static validateOptionalSimpleName (nameNode: SyntaxNode | undefined, elementKindName: ElementKindName) {
+    return (nameNode && !isSimpleName(nameNode))
+      ? [new CompileError(
+        CompileErrorCode.INVALID_NAME,
+        `${elementKindName} name is optional or must be a single identifier or a quoted identifer`,
+        nameNode,
+      )]
+      : [];
+  }
+
   static validateNoAlias (aliasNode: SyntaxNode | undefined, elementKindName: ElementKindName) {
     return !aliasNode
       ? []

@@ -12,9 +12,7 @@ import {
   isExpressionAVariableNode,
 } from '../../../parser/utils';
 import { ElementValidator } from '../types';
-import {
-  aggregateSettingList, isSimpleName, isValidColor, pickValidator,
-} from '../utils';
+import { aggregateSettingList, isValidColor, pickValidator } from '../utils';
 import { isBinaryRelationship, isEqualTupleOperands } from '../../utils';
 import SymbolTable from '../../symbol/symbolTable';
 import { ElementKindName } from '../../types';
@@ -45,16 +43,8 @@ export default class RefValidator implements ElementValidator {
     return CommonValidator.validateTopLevelContext(this.declarationNode, ElementKindName.Ref);
   }
 
-  private validateName(nameNode?: SyntaxNode): CompileError[] {
-    if (!nameNode) {
-      return [];
-    }
-
-    if (!isSimpleName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
-    }
-
-    return [];
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
+    return CommonValidator.validateOptionalSimpleName(nameNode, ElementKindName.Ref);
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
