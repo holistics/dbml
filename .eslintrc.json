@@ -69,6 +69,7 @@
       }
     ],
     "max-classes-per-file": "off",
-    "lines-between-class-members": "off"
+    "lines-between-class-members": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }
