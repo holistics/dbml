@@ -103,6 +103,7 @@ export enum SyntaxNodeKind {
   GROUP_EXPRESSION = '<group-expression>',
   DUMMY = '<dummy>',
   ARRAY = '<array>',
+  FRAGMENT_INJECTION = '<fragment-injection>',
 }
 
 export class ProgramNode extends SyntaxNode {
@@ -323,7 +324,7 @@ export class FunctionApplicationNode extends SyntaxNode {
 export class BlockExpressionNode extends SyntaxNode {
   blockOpenBrace?: SyntaxToken;
 
-  body: (ElementDeclarationNode | FunctionApplicationNode)[];
+  body: (FragmentInjectionNode | ElementDeclarationNode | FunctionApplicationNode)[];
 
   blockCloseBrace?: SyntaxToken;
 
@@ -334,7 +335,7 @@ export class BlockExpressionNode extends SyntaxNode {
       blockCloseBrace,
     }: {
       blockOpenBrace?: SyntaxToken;
-      body?: (ElementDeclarationNode | FunctionApplicationNode)[];
+      body?: (FragmentInjectionNode | ElementDeclarationNode | FunctionApplicationNode)[];
       blockCloseBrace?: SyntaxToken;
     },
     id: SyntaxNodeId,
@@ -343,6 +344,16 @@ export class BlockExpressionNode extends SyntaxNode {
     this.blockOpenBrace = blockOpenBrace;
     this.body = body;
     this.blockCloseBrace = blockCloseBrace;
+  }
+}
+
+
+export class FragmentInjectionNode extends SyntaxNode {
+  fragment?: VariableNode;
+
+  constructor({ fragment }: { fragment?: VariableNode }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.FRAGMENT_INJECTION, [fragment]);
+    this.fragment = fragment;
   }
 }
 

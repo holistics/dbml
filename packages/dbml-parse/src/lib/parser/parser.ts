@@ -31,6 +31,7 @@ import {
   SyntaxNodeIdGenerator,
   TupleExpressionNode,
   VariableNode,
+  FragmentInjectionNode,
 } from './nodes';
 import NodeFactory from './factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '../lexer/utils';
@@ -714,6 +715,12 @@ export default class Parser {
     return this.nodeFactory.create(FunctionExpressionNode, args);
   }
 
+  private variable(): VariableNode {
+    this.consume('Expect a variable', SyntaxTokenKind.IDENTIFIER);
+    const variableToken = this.previous();
+    return this.nodeFactory.create(VariableNode, { variable: variableToken });
+  }
+
   /* Parsing and synchronizing BlockExpression */
 
   private blockExpression = this.contextStack.withContextDo(ParsingContext.BlockExpression, () => {
@@ -740,7 +747,15 @@ export default class Parser {
 
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
       try {
-        args.body.push(this.canBeField() ? this.fieldDeclaration() : this.expression());
+        // if (this.match(SyntaxTokenKind.OP) && this.previous().value === '+') { // Check for fragment injection
+        if (this.match(SyntaxTokenKind.TILDE) ) { // Check for fragment injection
+          const plusToken = this.previous();
+          const variable = this.variable();
+          const fragmentInjection = this.nodeFactory.create(FragmentInjectionNode, { fragment: variable });
+          args.body.push(fragmentInjection);
+        } else {
+          args.body.push(this.canBeField() ? this.fieldDeclaration() : this.expression());
+        }
       } catch (e) {
         if (!(e instanceof PartialParsingError)) {
           throw e;
