@@ -233,11 +233,7 @@ export default abstract class ElementValidator {
   protected validateTopLevelContext (declarationNode: ElementDeclarationNode) {
     const errorCodeBySymbolKind: Record<string, CompileErrorCode> = {
       [ElementKindName.Table]: CompileErrorCode.INVALID_TABLE_CONTEXT,
-      [ElementKindName.Enum]: CompileErrorCode.INVALID_ENUM_CONTEXT,
-      [ElementKindName.TableGroup]: CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
       [ElementKindName.TableFragment]: CompileErrorCode.INVALID_TABLE_FRAGMENT_CONTEXT,
-      [ElementKindName.Project]: CompileErrorCode.INVALID_PROJECT_CONTEXT,
-      [ElementKindName.Ref]: CompileErrorCode.INVALID_REF_CONTEXT,
     };
 
     if (declarationNode.parent instanceof ElementDeclarationNode && errorCodeBySymbolKind[this.elementKindName]) {
@@ -271,16 +267,6 @@ export default abstract class ElementValidator {
     return [];
   }
 
-  protected validateOptionalSimpleName (nameNode?: SyntaxNode) {
-    return (nameNode && !isSimpleName(nameNode))
-      ? [new CompileError(
-        CompileErrorCode.INVALID_NAME,
-        `${this.elementKindName} name is optional or must be a single identifier or a quoted identifer`,
-        nameNode,
-      )]
-      : [];
-  }
-
   protected validateNoAlias (aliasNode?: SyntaxNode) {
     return !aliasNode
       ? []
@@ -288,16 +274,6 @@ export default abstract class ElementValidator {
         CompileErrorCode.UNEXPECTED_ALIAS,
         `${this.elementKindName} shouldn't have an alias`,
         aliasNode,
-      )];
-  }
-
-  protected validateNoSettingList (settingList?: ListExpressionNode) {
-    return !settingList
-      ? []
-      : [new CompileError(
-        CompileErrorCode.UNEXPECTED_SETTINGS,
-        `${this.elementKindName} shouldn't have a setting list`,
-        settingList,
       )];
   }
 

@@ -1,48 +1,59 @@
-/* eslint-disable class-methods-use-this */
-import _, { forIn } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode,
-  SyntaxNode,
-} from '../../../parser/nodes';
-import { isExpressionAVariableNode } from '../../../parser/utils';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '../../../parser/nodes';
+import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
 import { SyntaxToken } from '../../../lexer/tokens';
-import {
-  aggregateSettingList, generateUnknownSettingErrors, isValidName, registerSchemaStack,
-} from '../utils';
-import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '../../symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
-import SymbolTable from '../../symbol/symbolTable';
-import { EnumFieldSymbol, EnumSymbol } from '../../symbol/symbols';
-import { ElementKindName, SettingName } from '../../types';
-import ElementValidator from './elementValidator';
+import { ElementValidator } from '../types';
+import { aggregateSettingList, isValidName, pickValidator, registerSchemaStack } from '../utils';
+import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '../../../analyzer/symbol/symbolIndex';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../../analyzer/utils';
+import _ from 'lodash';
+import SymbolTable from '../../../analyzer/symbol/symbolTable';
+import { EnumFieldSymbol, EnumSymbol } from '../../../analyzer/symbol/symbols';
 
-export default class EnumValidator extends ElementValidator {
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
-    super(declarationNode, publicSymbolTable, symbolFactory, ElementKindName.Enum);
+export default class EnumValidator implements ElementValidator {
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private publicSymbolTable: SymbolTable;
+  private symbolFactory: SymbolFactory;
+
+  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    this.declarationNode = declarationNode;
+    this.publicSymbolTable = publicSymbolTable;
+    this.symbolFactory = symbolFactory;
   }
 
-  protected validateContext (): CompileError[] {
-    return this.validateTopLevelContext(this.declarationNode);
+  validate(): CompileError[] {
+    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.registerElement(), ...this.validateBody(this.declarationNode.body)];
   }
 
-  protected validateName (nameNode?: SyntaxNode): CompileError[] {
-    if (!nameNode) {
-      return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'An Enum must have a name', this.declarationNode)];
-    }
-    if (!isValidName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'An Enum name must be of the form <enum> or <schema>.<enum>', nameNode)];
+  private validateContext(): CompileError[] {
+    if (this.declarationNode.parent instanceof ElementDeclarationNode) {
+      return [new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'An Enum can only appear top-level', this.declarationNode)];
     }
 
     return [];
   }
 
-  protected validateAlias (aliasNode?: SyntaxNode): CompileError[] {
-    return this.validateNoAlias(aliasNode);
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
+    if (!nameNode) {
+      return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'An Enum must have a name', this.declarationNode)]
+    }
+    if (!isValidName(nameNode)) {
+      return [new CompileError(CompileErrorCode.INVALID_NAME, 'An Enum name must be of the form <enum> or <schema>.<enum>', nameNode)];
+    };
+
+    return [];
   }
 
-  protected registerElement (): CompileError[] {
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+    if (aliasNode) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
+    }
+
+    return [];
+  }
+
+  registerElement(): CompileError[] {
     const errors: CompileError[] = [];
     this.declarationNode.symbol = this.symbolFactory.create(EnumSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
     const { name } = this.declarationNode;
@@ -54,7 +65,7 @@ export default class EnumValidator extends ElementValidator {
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const enumId = createEnumSymbolIndex(enumName);
       if (symbolTable.has(enumId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Enum name ${enumName} already exists in schema '${nameFragments.join('.') || 'public'}'`, name!));
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Enum name ${enumName} already exists in schema '${nameFragments.join('.') || 'public'}'`, name!))
       }
       symbolTable.set(enumId, this.declarationNode.symbol!);
     }
@@ -62,11 +73,15 @@ export default class EnumValidator extends ElementValidator {
     return errors;
   }
 
-  protected validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    return this.validateNoSettingList(settingList);
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+    if (settingList) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Enum shouldn\'t have a setting list', settingList)];
+    }
+
+    return [];
   }
 
-  protected validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -75,13 +90,10 @@ export default class EnumValidator extends ElementValidator {
     }
 
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.validateFields(fields as FunctionApplicationNode[]),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
   }
 
-  private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
     if (fields.length === 0) {
       return [new CompileError(CompileErrorCode.EMPTY_ENUM, 'An Enum must have at least one element', this.declarationNode)];
     }
@@ -92,7 +104,7 @@ export default class EnumValidator extends ElementValidator {
       if (field.callee && !isExpressionAVariableNode(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_NAME, 'An enum field must be an identifier or a quoted identifier', field.callee));
       }
-
+      
       const args = [...field.args];
       if (_.last(args) instanceof ListExpressionNode) {
         errors.push(...this.validateFieldSettings(_.last(args) as ListExpressionNode));
@@ -107,46 +119,55 @@ export default class EnumValidator extends ElementValidator {
       }
 
       errors.push(...this.registerField(field));
-
+  
       return errors;
     });
   }
 
-  private validateFieldSettings (settings: ListExpressionNode): CompileError[] {
+  validateFieldSettings(settings: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settings);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    forIn(settingMap, (attrs, name) => {
+    for (const name in settingMap) {
+      const attrs = settingMap[name];
       switch (name) {
-        case SettingName.Note:
-          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_ENUM_ELEMENT_SETTING));
-          errors.push(...this.validateStringSetting(name, attrs, CompileErrorCode.INVALID_ENUM_ELEMENT_SETTING));
+        case 'note':
+          if (attrs.length > 1) {
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_ENUM_ELEMENT_SETTING, `\'note\' can only appear once`, attr)));
+          }
+          attrs.forEach((attr) => {
+            if (!isExpressionAQuotedString(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_SETTING, `\'note\' must be a string`, attr));
+            }
+          });
           break;
-
         default:
-          errors.push(...generateUnknownSettingErrors(name, attrs, CompileErrorCode.UNKNOWN_ENUM_ELEMENT_SETTING));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_ENUM_ELEMENT_SETTING, `Unknown enum field setting \'${name}\'`, attr)));
       }
-    });
-
+    }
     return errors;
   }
 
-  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
-    return this.validateSubElementsWithOwnedValidators(
-      subs,
-      this.declarationNode,
-      this.publicSymbolTable,
-      this.symbolFactory,
-    );
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+    return subs.flatMap((sub) => {
+      sub.parent = this.declarationNode;
+      if (!sub.type) {
+        return [];
+      }
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
+      return validator.validate();
+    });
+
   }
 
-  private registerField (field: FunctionApplicationNode): CompileError[] {
+  registerField(field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
       const enumFieldName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const enumFieldId = createEnumFieldSymbolIndex(enumFieldName);
-
-      const enumSymbol = this.symbolFactory.create(EnumFieldSymbol, { declaration: field });
+      
+      const enumSymbol = this.symbolFactory.create(EnumFieldSymbol, { declaration: field })
       field.symbol = enumSymbol;
 
       const symbolTable = this.declarationNode.symbol!.symbolTable!;
@@ -154,8 +175,8 @@ export default class EnumValidator extends ElementValidator {
         const symbol = symbolTable.get(enumFieldId);
         return [
           new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${enumFieldName}`, field),
-          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${enumFieldName}`, symbol!.declaration!),
-        ];
+          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${enumFieldName}`, symbol!.declaration!)
+        ]
       }
       symbolTable.set(enumFieldId, enumSymbol);
     }

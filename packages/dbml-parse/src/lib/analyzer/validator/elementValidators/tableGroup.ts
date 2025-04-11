@@ -1,7 +1,10 @@
 /* eslint-disable class-methods-use-this */
-import _, { forIn } from 'lodash';
+import _ from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { registerSchemaStack, aggregateSettingList, generateUnknownSettingErrors } from '../utils';
+import {
+  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList, isValidColor
+} from '../utils';
+import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
 import { SyntaxToken } from '../../../lexer/tokens';
 import {
@@ -11,28 +14,72 @@ import SymbolFactory from '../../symbol/factory';
 import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '../../symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import { TableGroupFieldSymbol, TableGroupSymbol } from '../../symbol/symbols';
-import { isExpressionAVariableNode } from '../../../parser/utils';
-import { ElementKindName, SettingName } from '../../types';
-import ElementValidator from './elementValidator';
+import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../parser/utils';
 
-export default class TableGroupValidator extends ElementValidator {
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
-    super(declarationNode, publicSymbolTable, symbolFactory, ElementKindName.TableGroup);
+export default class TableGroupValidator implements ElementValidator {
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private publicSymbolTable: SymbolTable;
+  private symbolFactory: SymbolFactory;
+
+  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    this.declarationNode = declarationNode;
+    this.publicSymbolTable = publicSymbolTable;
+    this.symbolFactory = symbolFactory;
   }
 
-  protected validateContext (): CompileError[] {
-    return this.validateTopLevelContext(this.declarationNode);
+  validate(): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.registerElement(),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
-  protected validateName (nameNode?: SyntaxNode): CompileError[] {
-    return this.validateSimpleName(nameNode, this.declarationNode);
+  private validateContext(): CompileError[] {
+    if (this.declarationNode.parent instanceof ElementDeclarationNode) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
+        'TableGroup must appear top-level',
+        this.declarationNode,
+      )];
+    }
+    return [];
   }
 
-  protected validateAlias (aliasNode?: SyntaxNode): CompileError[] {
-    return this.validateNoAlias(aliasNode);
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
+    if (!nameNode) {
+      return [new CompileError(
+        CompileErrorCode.NAME_NOT_FOUND,
+        'A TableGroup must have a name',
+        this.declarationNode,
+      )];
+    }
+    if (!isSimpleName(nameNode)) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_NAME,
+        'A TableGroup name must be a single identifier',
+        nameNode,
+      )];
+    }
+    return [];
   }
 
-  protected registerElement (): CompileError[] {
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+    if (aliasNode) {
+      return [new CompileError(
+        CompileErrorCode.UNEXPECTED_ALIAS,
+        'A TableGroup shouldn\'t have an alias',
+        aliasNode,
+      )];
+    }
+
+    return [];
+  }
+
+  registerElement(): CompileError[] {
     const { name } = this.declarationNode;
     this.declarationNode.symbol = this.symbolFactory.create(TableGroupSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
     const maybeNameFragments = destructureComplexVariable(name);
@@ -50,33 +97,62 @@ export default class TableGroupValidator extends ElementValidator {
     return [];
   }
 
-  protected validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    forIn(settingMap, (attrs, name) => {
+    _.forIn(settingMap, (attrs, name) => {
       switch (name) {
-        case SettingName.Color:
-          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING));
-          errors.push(...this.validateColorSetting(name, attrs, CompileErrorCode.INVALID_TABLEGROUP_SETTING));
+        case 'color':
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(
+              CompileErrorCode.DUPLICATE_TABLE_SETTING,
+              '\'color\' can only appear once',
+              attr,
+            )));
+          }
+          attrs.forEach((attr) => {
+            if (!isValidColor(attr.value)) {
+              errors.push(new CompileError(
+                CompileErrorCode.INVALID_TABLE_SETTING,
+                '\'color\' must be a color literal',
+                attr.value || attr.name!,
+              ));
+            }
+          });
           break;
-
-        case SettingName.Note:
-          errors.push(...this.validateUniqueSetting(name, attrs, CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING));
-          errors.push(...this.validateStringSetting(name, attrs, CompileErrorCode.INVALID_TABLEGROUP_SETTING));
+        case 'note':
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(
+              CompileErrorCode.DUPLICATE_TABLE_SETTING,
+              '\'note\' can only appear once',
+              attr,
+            )));
+          }
+          attrs
+            .filter((attr) => !isExpressionAQuotedString(attr.value))
+            .forEach((attr) => {
+              errors.push(new CompileError(
+                CompileErrorCode.INVALID_TABLE_SETTING,
+                '\'note\' must be a string literal',
+                attr.value || attr.name!,
+              ));
+            });
           break;
-
         default:
-          errors.push(...generateUnknownSettingErrors(name, attrs, CompileErrorCode.INVALID_TABLEGROUP_SETTING));
+          errors.push(...attrs.map((attr) => new CompileError(
+            CompileErrorCode.INVALID_TABLE_SETTING,
+            `Unknown '${name}' setting`,
+            attr,
+          )));
           break;
       }
     });
-
     return errors;
   }
 
-  protected validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) return [];
 
     if (body instanceof FunctionApplicationNode) {
@@ -94,7 +170,7 @@ export default class TableGroupValidator extends ElementValidator {
     ];
   }
 
-  private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       const errors: CompileError[] = [];
       if (field.callee && !destructureComplexVariable(field.callee).isOk()) {
@@ -111,19 +187,23 @@ export default class TableGroupValidator extends ElementValidator {
     });
   }
 
-  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
-    return [
-      ...this.validateSubElementsWithOwnedValidators(
-        subs,
-        this.declarationNode,
-        this.publicSymbolTable,
-        this.symbolFactory,
-      ),
-      ...this.validateNotesAsSubElements(subs),
-    ];
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+    const errors = subs.flatMap((sub) => {
+      sub.parent = this.declarationNode;
+      if (!sub.type) {
+        return [];
+      }
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
+      return validator.validate();
+    });
+
+    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
+    if (notes.length > 1) errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
+    return errors;
   }
 
-  private registerField (field: FunctionApplicationNode): CompileError[] {
+  registerField(field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
       const tableGroupField = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const tableGroupFieldId = createTableGroupFieldSymbolIndex(tableGroupField);
@@ -144,3 +224,4 @@ export default class TableGroupValidator extends ElementValidator {
     return [];
   }
 }
+

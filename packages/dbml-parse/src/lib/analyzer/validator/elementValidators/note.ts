@@ -6,26 +6,42 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
+import { ElementValidator } from '../types';
 import { isExpressionAQuotedString } from '../../../parser/utils';
+import { pickValidator } from '../utils';
 import SymbolTable from '../../symbol/symbolTable';
-import { ElementKind, ElementKindName } from '../../types';
+import { ElementKind } from '../../types';
 import { destructureComplexVariable, getElementKind } from '../../utils';
 import { createStickyNoteSymbolIndex } from '../../symbol/symbolIndex';
-import ElementValidator from './elementValidator';
 
-export default class NoteValidator extends ElementValidator {
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
-    super(declarationNode, publicSymbolTable, symbolFactory, ElementKindName.Note);
+export default class NoteValidator implements ElementValidator {
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private publicSymbolTable: SymbolTable;
+  private symbolFactory: SymbolFactory;
+
+  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+    this.declarationNode = declarationNode;
+    this.publicSymbolTable = publicSymbolTable;
+    this.symbolFactory = symbolFactory;
   }
 
-  protected validateContext (): CompileError[] {
+  validate(): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.validateBody(this.declarationNode.body),
+    ];
+  }
+
+  private validateContext(): CompileError[] {
     if (
       !(this.declarationNode.parent instanceof ProgramNode)
       && !(
         [
           ElementKind.Table,
           ElementKind.TableGroup,
-          ElementKind.TableFragment,
           ElementKind.Project,
         ] as (ElementKind | undefined)[]
       )
@@ -33,7 +49,7 @@ export default class NoteValidator extends ElementValidator {
     ) {
       return [new CompileError(
         CompileErrorCode.INVALID_NOTE_CONTEXT,
-        'Note can only appear inside Table, Table Group, Table Fragment or Project. Sticky note can only appear at the global scope.',
+        'A Note can only appear inside a Table, a Table Group or a Project. Sticky note can only appear at the global scope.',
         this.declarationNode,
       )];
     }
@@ -41,7 +57,7 @@ export default class NoteValidator extends ElementValidator {
     return [];
   }
 
-  protected validateName (nameNode?: SyntaxNode): CompileError[] {
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
     if (!(this.declarationNode.parent instanceof ProgramNode)) {
       if (nameNode) {
         return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode)];
@@ -71,19 +87,23 @@ export default class NoteValidator extends ElementValidator {
     return [];
   }
 
-  protected validateAlias (aliasNode?: SyntaxNode): CompileError[] {
-    return this.validateNoAlias(aliasNode);
-  }
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+    if (aliasNode) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
+    }
 
-  protected validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    return this.validateNoSettingList(settingList);
-  }
-
-  protected registerElement (): CompileError[] {
     return [];
   }
 
-  protected validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+    if (settingList) {
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList)];
+    }
+
+    return [];
+  }
+
+  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -92,13 +112,10 @@ export default class NoteValidator extends ElementValidator {
     }
 
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [
-      ...this.validateFields(fields as FunctionApplicationNode[]),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
-    ];
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
-  private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
     const errors: CompileError[] = [];
     if (fields.length === 0) {
       return [new CompileError(CompileErrorCode.EMPTY_NOTE, 'A Note must have a content', this.declarationNode)];
@@ -115,12 +132,15 @@ export default class NoteValidator extends ElementValidator {
     return errors;
   }
 
-  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
-    return this.validateSubElementsWithOwnedValidators(
-      subs,
-      this.declarationNode,
-      this.publicSymbolTable,
-      this.symbolFactory,
-    );
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+    return subs.flatMap((sub) => {
+      sub.parent = this.declarationNode;
+      if (!sub.type) {
+        return [];
+      }
+      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
+      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
+      return validator.validate();
+    });
   }
 }
