@@ -91,8 +91,10 @@ export default abstract class ElementBinder {
           const Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
           const binder = new Binder(sub, this.errors);
           binder.bind();
-        } else {
+        } else if (sub instanceof FunctionApplicationNode) {
           this.bindSubfield(sub);
+        } else {
+          // do nothing - TODO: implement this
         }
       }
     } else {
