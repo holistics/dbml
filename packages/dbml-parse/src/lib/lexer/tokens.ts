@@ -28,6 +28,8 @@ export enum SyntaxTokenKind {
   SEMICOLON = '<semicolon>',
   COLON = '<colon>',
 
+  TILDE = '<tilde>',
+
   SINGLE_LINE_COMMENT = '<single-line-comment>',
   MULTILINE_COMMENT = '<multiline-comment>',
 }
