@@ -11,7 +11,7 @@ export enum SymbolKind {
   Enum = 'Enum',
   EnumField = 'Enum field',
   Note = 'Note',
-  TableFragment = 'TableFragment',
+  TablePartial = 'TablePartial',
 }
 
 export function createSchemaSymbolIndex(key: string): NodeSymbolIndex {
@@ -46,8 +46,8 @@ export function createStickyNoteSymbolIndex (key: string): NodeSymbolIndex {
   return `${SymbolKind.Note}:${key}`;
 }
 
-export function createTableFragmentSymbolIndex (key: string): NodeSymbolIndex {
-  return `${SymbolKind.TableFragment}:${key}`;
+export function createTablePartialSymbolIndex (key: string): NodeSymbolIndex {
+  return `${SymbolKind.TablePartial}:${key}`;
 }
 
 export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): NodeSymbolIndex {
@@ -66,8 +66,8 @@ export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): Nod
       return createTableGroupSymbolIndex(key);
     case SymbolKind.TableGroupField:
       return createTableGroupFieldSymbolIndex(key);
-    case SymbolKind.TableFragment:
-      return createTableFragmentSymbolIndex(key);
+    case SymbolKind.TablePartial:
+      return createTablePartialSymbolIndex(key);
     default:
       throw new Error('Unreachable');
   }

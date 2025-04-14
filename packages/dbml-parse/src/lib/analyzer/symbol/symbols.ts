@@ -74,7 +74,7 @@ export class EnumFieldSymbol implements NodeSymbol {
 }
 
 // A symbol for a table, contains the table's symbol table
-// which is used to hold all the column and table fragment symbols of the table
+// which is used to hold all the column and table partial symbols of the table
 export class TableSymbol implements NodeSymbol {
   id: NodeSymbolId;
 
@@ -143,9 +143,9 @@ export class TableGroupFieldSymbol implements NodeSymbol {
   }
 }
 
-// A symbol for a table fragment, contains the table fragment's symbol table
-// which is used to hold all the column symbols of the table fragment
-export class TableFragmentSymbol implements NodeSymbol {
+// A symbol for a table partial, contains the table partial's symbol table
+// which is used to hold all the column symbols of the table partial
+export class TablePartialSymbol implements NodeSymbol {
   id: NodeSymbolId;
 
   symbolTable: SymbolTable;

@@ -103,7 +103,7 @@ export enum SyntaxNodeKind {
   GROUP_EXPRESSION = '<group-expression>',
   DUMMY = '<dummy>',
   ARRAY = '<array>',
-  FRAGMENT_INJECTION = '<fragment-injection>',
+  PARTIAL_INJECTION = '<partial-injection>',
 }
 
 export class ProgramNode extends SyntaxNode {
@@ -324,7 +324,7 @@ export class FunctionApplicationNode extends SyntaxNode {
 export class BlockExpressionNode extends SyntaxNode {
   blockOpenBrace?: SyntaxToken;
 
-  body: (FragmentInjectionNode | ElementDeclarationNode | FunctionApplicationNode)[];
+  body: (PartialInjectionNode | ElementDeclarationNode | FunctionApplicationNode)[];
 
   blockCloseBrace?: SyntaxToken;
 
@@ -335,7 +335,7 @@ export class BlockExpressionNode extends SyntaxNode {
       blockCloseBrace,
     }: {
       blockOpenBrace?: SyntaxToken;
-      body?: (FragmentInjectionNode | ElementDeclarationNode | FunctionApplicationNode)[];
+      body?: (PartialInjectionNode | ElementDeclarationNode | FunctionApplicationNode)[];
       blockCloseBrace?: SyntaxToken;
     },
     id: SyntaxNodeId,
@@ -348,12 +348,12 @@ export class BlockExpressionNode extends SyntaxNode {
 }
 
 
-export class FragmentInjectionNode extends SyntaxNode {
-  fragment?: VariableNode;
+export class PartialInjectionNode extends SyntaxNode {
+  partial?: VariableNode;
 
-  constructor({ fragment }: { fragment?: VariableNode }, id: SyntaxNodeId) {
-    super(id, SyntaxNodeKind.FRAGMENT_INJECTION, [fragment]);
-    this.fragment = fragment;
+  constructor({ partial }: { partial?: VariableNode }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.PARTIAL_INJECTION, [partial]);
+    this.partial = partial;
   }
 }
 

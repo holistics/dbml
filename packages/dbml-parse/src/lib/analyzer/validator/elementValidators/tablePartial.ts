@@ -26,8 +26,8 @@ import {
   registerSchemaStack,
 } from '../utils';
 import { ElementValidator } from '../types';
-import { ColumnSymbol, TableFragmentSymbol } from '../../symbol/symbols';
-import { createColumnSymbolIndex, createTableFragmentSymbolIndex } from '../../symbol/symbolIndex';
+import { ColumnSymbol, TablePartialSymbol } from '../../symbol/symbols';
+import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '../../symbol/symbolIndex';
 import {
   isAccessExpression,
   isExpressionAQuotedString,
@@ -35,7 +35,7 @@ import {
   isExpressionAnIdentifierNode,
 } from '../../../parser/utils';
 import { SyntaxToken } from '../../../lexer/tokens';
-import SymbolTable from '../../../analyzer/symbol/symbolTable';
+import SymbolTable from '../../symbol/symbolTable';
 
 function isValidColumnType (type: SyntaxNode): boolean {
   if (
@@ -80,7 +80,7 @@ function isValidColumnType (type: SyntaxNode): boolean {
   return variables !== undefined && variables.length > 0;
 }
 
-export default class TableFragmentValidator implements ElementValidator {
+export default class TablePartialValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken};
 
   private symbolFactory: SymbolFactory;
@@ -111,8 +111,8 @@ export default class TableFragmentValidator implements ElementValidator {
   private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
       return [new CompileError(
-        CompileErrorCode.INVALID_TABLE_FRAGMENT_CONTEXT,
-        'TableFragment must appear top-level',
+        CompileErrorCode.INVALID_TABLE_PARTIAL_CONTEXT,
+        'TablePartial must appear top-level',
         this.declarationNode,
       )];
     }
@@ -123,14 +123,14 @@ export default class TableFragmentValidator implements ElementValidator {
     if (!nameNode) {
       return [new CompileError(
         CompileErrorCode.NAME_NOT_FOUND,
-        'A TableFragment must have a name',
+        'A TablePartial must have a name',
         this.declarationNode,
       )];
     }
     if (!isSimpleName(nameNode)) {
       return [new CompileError(
         CompileErrorCode.INVALID_NAME,
-        'A TableFragment name must be an identifier or a quoted identifer',
+        'A TablePartial name must be an identifier or a quoted identifer',
         nameNode,
       )];
     }
@@ -142,7 +142,7 @@ export default class TableFragmentValidator implements ElementValidator {
     if (aliasNode) {
       return [new CompileError(
         CompileErrorCode.UNEXPECTED_ALIAS,
-        'A TableFragment shouldn\'t have an alias',
+        'A TablePartial shouldn\'t have an alias',
         aliasNode,
       )];
     }
@@ -159,21 +159,21 @@ export default class TableFragmentValidator implements ElementValidator {
       switch (name) {
         case 'headercolor':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING, '\'headercolor\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, '\'headercolor\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING, '\'headercolor\' must be a color literal', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING, '\'headercolor\' must be a color literal', attr.value || attr.name!));
             }
           });
           break;
         case 'note':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_FRAGMENT_SETTING, '\'note\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, '\'note\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_FRAGMENT_SETTING, '\'note\' must be a string literal', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING, '\'note\' must be a string literal', attr.value || attr.name!));
             }
           });
           break;
@@ -186,17 +186,17 @@ export default class TableFragmentValidator implements ElementValidator {
 
   registerElement (): CompileError[] {
     const { name } = this.declarationNode;
-    this.declarationNode.symbol = this.symbolFactory.create(TableFragmentSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
-    const maybeNameFragments = destructureComplexVariable(name);
-    if (maybeNameFragments.isOk()) {
-      const nameFragments = maybeNameFragments.unwrap();
-      const tableFragmentName = nameFragments.pop()!;
-      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
-      const tableFragmentId = createTableFragmentSymbolIndex(tableFragmentName);
-      if (symbolTable.has(tableFragmentId)) {
-        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableFragment name '${tableFragmentName}' already exists`, name!)];
+    this.declarationNode.symbol = this.symbolFactory.create(TablePartialSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    const maybeNamePartials = destructureComplexVariable(name);
+    if (maybeNamePartials.isOk()) {
+      const namePartials = maybeNamePartials.unwrap();
+      const tablePartialName = namePartials.pop()!;
+      const symbolTable = registerSchemaStack(namePartials, this.publicSymbolTable, this.symbolFactory);
+      const tablePartialId = createTablePartialSymbolIndex(tablePartialName);
+      if (symbolTable.has(tablePartialId)) {
+        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial name '${tablePartialName}' already exists`, name!)];
       }
-      symbolTable.set(tableFragmentId, this.declarationNode.symbol!);
+      symbolTable.set(tablePartialId, this.declarationNode.symbol!);
     }
 
     return [];
@@ -207,7 +207,7 @@ export default class TableFragmentValidator implements ElementValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A TableFragment\'s body must be a block', body)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A TablePartial\'s body must be a block', body)];
     }
 
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
