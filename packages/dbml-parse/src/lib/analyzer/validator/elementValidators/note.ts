@@ -35,13 +35,14 @@ export default class NoteValidator implements ElementValidator {
     ];
   }
 
-  private validateContext(): CompileError[] {
+  private validateContext (): CompileError[] {
     if (
       !(this.declarationNode.parent instanceof ProgramNode)
       && !(
         [
           ElementKind.Table,
           ElementKind.TableGroup,
+          ElementKind.TableFragment,
           ElementKind.Project,
         ] as (ElementKind | undefined)[]
       )
@@ -49,7 +50,7 @@ export default class NoteValidator implements ElementValidator {
     ) {
       return [new CompileError(
         CompileErrorCode.INVALID_NOTE_CONTEXT,
-        'A Note can only appear inside a Table, a Table Group or a Project. Sticky note can only appear at the global scope.',
+        'A Note can only appear inside a Table, a TableGroup, a TableFragment or a Project. Sticky note can only appear at the global scope.',
         this.declarationNode,
       )];
     }
