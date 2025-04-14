@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+/* eslint-disable no-loop-func */
 import _ from 'lodash';
 import {
   convertFuncAppToElem,
@@ -31,12 +33,10 @@ import {
   SyntaxNodeIdGenerator,
   TupleExpressionNode,
   VariableNode,
-  FragmentInjectionNode,
+  PartialInjectionNode,
 } from './nodes';
 import NodeFactory from './factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '../lexer/utils';
-
-/* eslint-disable no-loop-func */
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {
@@ -747,12 +747,11 @@ export default class Parser {
 
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
       try {
-        // if (this.match(SyntaxTokenKind.OP) && this.previous().value === '+') { // Check for fragment injection
-        if (this.match(SyntaxTokenKind.TILDE) ) { // Check for fragment injection
-          const plusToken = this.previous();
+        if (this.match(SyntaxTokenKind.TILDE)) { // Check for partial injection
+          // const tildeToken = this.previous();
           const variable = this.variable();
-          const fragmentInjection = this.nodeFactory.create(FragmentInjectionNode, { fragment: variable });
-          args.body.push(fragmentInjection);
+          const partialInjection = this.nodeFactory.create(PartialInjectionNode, { partial: variable });
+          args.body.push(partialInjection);
         } else {
           args.body.push(this.canBeField() ? this.fieldDeclaration() : this.expression());
         }

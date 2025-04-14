@@ -39,17 +39,17 @@ export default class IndexesValidator implements ElementValidator {
     if (this.declarationNode.parent instanceof ProgramNode) {
       return [new CompileError(
         CompileErrorCode.INVALID_NOTE_CONTEXT,
-        'An Indexes can only appear inside a Table or a TableFragment',
+        'An Indexes can only appear inside a Table or a TablePartial',
         this.declarationNode,
       )];
     }
 
     const elementKind = getElementKind(this.declarationNode.parent).unwrap_or(undefined);
-    return (elementKind && [ElementKind.Table, ElementKind.TableFragment].includes(elementKind))
+    return (elementKind && [ElementKind.Table, ElementKind.TablePartial].includes(elementKind))
       ? []
       : [new CompileError(
         CompileErrorCode.INVALID_NOTE_CONTEXT,
-        'An Indexes can only appear inside a Table or a TableFragment',
+        'An Indexes can only appear inside a Table or a TablePartial',
         this.declarationNode,
       )];
   }
