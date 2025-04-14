@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import SymbolTable from './symbolTable';
 import { SyntaxNode } from '../../parser/nodes';
 
@@ -73,7 +74,7 @@ export class EnumFieldSymbol implements NodeSymbol {
 }
 
 // A symbol for a table, contains the table's symbol table
-// which is used to hold all the column symbols of the table
+// which is used to hold all the column and table fragment symbols of the table
 export class TableSymbol implements NodeSymbol {
   id: NodeSymbolId;
 
@@ -138,6 +139,27 @@ export class TableGroupFieldSymbol implements NodeSymbol {
 
   constructor({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
+    this.declaration = declaration;
+  }
+}
+
+// A symbol for a table fragment, contains the table fragment's symbol table
+// which is used to hold all the column symbols of the table fragment
+export class TableFragmentSymbol implements NodeSymbol {
+  id: NodeSymbolId;
+
+  symbolTable: SymbolTable;
+
+  declaration: SyntaxNode;
+
+  references: SyntaxNode[] = [];
+
+  constructor (
+    { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
+    id: NodeSymbolId,
+  ) {
+    this.id = id;
+    this.symbolTable = symbolTable;
     this.declaration = declaration;
   }
 }
