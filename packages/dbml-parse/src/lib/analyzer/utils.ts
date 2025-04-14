@@ -31,6 +31,7 @@ export function getElementKind(node?: ElementDeclarationNode): Option<ElementKin
     case ElementKind.Project:
     case ElementKind.Ref:
     case ElementKind.TableGroup:
+    case ElementKind.TableFragment:
       return new Some(kind as ElementKind);
     default:
       return new None();
