@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -15,7 +16,6 @@ import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../p
 import { aggregateSettingList, isVoid, pickValidator } from '../utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
-import _ from 'lodash';
 import { destructureIndexNode, getElementKind } from '../../../analyzer/utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
 import { ElementKind } from '../../../analyzer/types';
@@ -35,12 +35,23 @@ export default class IndexesValidator implements ElementValidator {
     return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
   }
 
-  private validateContext(): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode || getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Table) {
-      return [new CompileError(CompileErrorCode.INVALID_NOTE_CONTEXT, 'An Indexes can only appear inside a Table', this.declarationNode)];
+  private validateContext (): CompileError[] {
+    if (this.declarationNode.parent instanceof ProgramNode) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_NOTE_CONTEXT,
+        'An Indexes can only appear inside a Table or a TableFragment',
+        this.declarationNode,
+      )];
     }
 
-    return [];
+    const elementKind = getElementKind(this.declarationNode.parent).unwrap_or(undefined);
+    return (elementKind && [ElementKind.Table, ElementKind.TableFragment].includes(elementKind))
+      ? []
+      : [new CompileError(
+        CompileErrorCode.INVALID_NOTE_CONTEXT,
+        'An Indexes can only appear inside a Table or a TableFragment',
+        this.declarationNode,
+      )];
   }
 
   private validateName(nameNode?: SyntaxNode): CompileError[] {
