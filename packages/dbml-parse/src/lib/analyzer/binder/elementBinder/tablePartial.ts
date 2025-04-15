@@ -1,8 +1,7 @@
 import { SymbolKind } from '../../symbol/symbolIndex';
 import ElementBinder from './elementBinder';
-import { KEYWORDS_OF_DEFAULT_SETTING } from '../../../../constants';
 
-export default class TableBinder extends ElementBinder {
+export default class TablePartialBinder extends ElementBinder {
   protected subfield = {
     arg: {
       argBinderRules: [
@@ -14,14 +13,6 @@ export default class TableBinder extends ElementBinder {
           ignoreNameNotFound: true,
         },
       ],
-    },
-    injection: {
-      injectionBinderRule: {
-        shouldBind: true as const,
-        topSubnamesSymbolKind: [],
-        remainingSubnamesSymbolKind: SymbolKind.TablePartial,
-        ignoreNameNotFound: false,
-      },
     },
     settingList: {
       ref: {
