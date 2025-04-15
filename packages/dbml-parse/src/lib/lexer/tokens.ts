@@ -28,8 +28,6 @@ export enum SyntaxTokenKind {
   SEMICOLON = '<semicolon>',
   COLON = '<colon>',
 
-  TILDE = '<tilde>',
-
   SINGLE_LINE_COMMENT = '<single-line-comment>',
   MULTILINE_COMMENT = '<multiline-comment>',
 }
@@ -47,7 +45,7 @@ export function isTriviaToken(token: SyntaxToken): boolean {
   }
 }
 
-export function isOp(c?: string): boolean {
+export function isOp (c?: string): boolean {
   if (!c) {
     return false;
   }
@@ -65,6 +63,7 @@ export function isOp(c?: string): boolean {
     case '.':
     case '&':
     case '|':
+    case '~':
       return true;
     default:
       return false;

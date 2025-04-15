@@ -12,6 +12,7 @@ export enum SymbolKind {
   EnumField = 'Enum field',
   Note = 'Note',
   TablePartial = 'TablePartial',
+  TablePartialInjection = 'TablePartialInjection',
 }
 
 export function createSchemaSymbolIndex(key: string): NodeSymbolIndex {
@@ -48,6 +49,10 @@ export function createStickyNoteSymbolIndex (key: string): NodeSymbolIndex {
 
 export function createTablePartialSymbolIndex (key: string): NodeSymbolIndex {
   return `${SymbolKind.TablePartial}:${key}`;
+}
+
+export function createTablePartialInjectionSymbolIndex (key: string): NodeSymbolIndex {
+  return `${SymbolKind.TablePartialInjection}:${key}`;
 }
 
 export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): NodeSymbolIndex {

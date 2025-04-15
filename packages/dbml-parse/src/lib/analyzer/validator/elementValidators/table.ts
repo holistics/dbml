@@ -9,6 +9,7 @@ import {
   ExpressionNode,
   FunctionApplicationNode,
   ListExpressionNode,
+  PrefixExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
@@ -27,8 +28,8 @@ import {
   registerSchemaStack,
 } from '../utils';
 import { ElementValidator } from '../types';
-import { ColumnSymbol, TableSymbol } from '../../symbol/symbols';
-import { createColumnSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
+import { ColumnSymbol, TablePartialInjectionSymbol, TableSymbol } from '../../symbol/symbols';
+import { createColumnSymbolIndex, createTablePartialInjectionSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
 import {
   isAccessExpression,
   isExpressionAQuotedString,
@@ -38,6 +39,7 @@ import {
 import { SyntaxToken } from '../../../lexer/tokens';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
 import _ from 'lodash';
+import { error } from 'console';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken};
@@ -171,39 +173,103 @@ export default class TableValidator implements ElementValidator {
     return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
   }
 
-  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
-    if (fields.length === 0) {
-      return [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
-    }
+  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+    const [columns, injections, invalidFieldErrors] = fields.reduce((res: [FunctionApplicationNode[], FunctionApplicationNode[], CompileError[]], field) => {
+      if (field.callee instanceof PrimaryExpressionNode) res[0].push(field);
+      else if (field.callee instanceof PrefixExpressionNode) res[1].push(field);
+      else res[2].push(new CompileError(CompileErrorCode.INVALID_TABLE_FIELD, 'A Table field must be a column or a TablePartial injection', field));
+      return res;
+    }, [[], [], []]);
 
-    return fields.flatMap((field) => {
-      if (!field.callee) {
-        return [];
-      }
+    return [
+      ...invalidFieldErrors,
+      ...this.validateColumns(columns),
+      ...this.validateInjections(injections),
+    ];
+  }
 
+  validateInjections (injections: FunctionApplicationNode[]) {
+    return injections.flatMap((injection) => {
       const errors: CompileError[] = [];
-      if (field.args.length === 0) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', field.callee!));
-      }
-  
-      if (!isExpressionAVariableNode(field.callee)) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
-      }
+      const callee = injection.callee as PrefixExpressionNode;
 
-      if (field.args[0] && !isValidColumnType(field.args[0])) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', field.args[0]));
+      if (callee.op?.value !== '~') {
+        errors.push(new CompileError(
+          CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION_OP,
+          'A TablePartial injection should start with the ~ operator',
+          callee,
+        ));
       }
-
-      const remains = field.args.slice(1);
-      errors.push(...this.validateFieldSetting(remains));
-
-      errors.push(...this.registerField(field));
-  
+      if (injection.args.length > 0) {
+        errors.push(...injection.args.map((arg) => new CompileError(
+          CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION,
+          'A TablePartial injection should only have a single TablePartial name',
+          arg,
+        )));
+      }
+      if (!callee.expression || !isExpressionAVariableNode(callee.expression)) {
+        errors.push(new CompileError(
+          CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION_NAME,
+          'A TablePartial injection name must be an identifier or a quoted identifier',
+          callee,
+        ));
+      }
+      errors.push(...this.registerInjection(injection));
       return errors;
     });
   }
 
-  registerField(field: FunctionApplicationNode): CompileError[] {
+  registerInjection (injection: FunctionApplicationNode) {
+    const callee = injection.callee as PrefixExpressionNode;
+    if (callee.expression && isExpressionAVariableNode(callee.expression)) {
+      const injectionName = extractVarNameFromPrimaryVariable(callee.expression).unwrap();
+      const injectionId = createTablePartialInjectionSymbolIndex(injectionName);
+
+      const injectionSymbol = this.symbolFactory.create(TablePartialInjectionSymbol, { declaration: injection });
+      injection.symbol = injectionSymbol;
+
+      const symbolTable = this.declarationNode.symbol!.symbolTable!;
+      const duplicateSymbol = symbolTable.get(injectionId);
+      if (duplicateSymbol) {
+        return [
+          new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate injection ${injectionName}`, injection),
+          new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate injection ${injectionName}`, duplicateSymbol.declaration!),
+        ];
+      }
+      symbolTable.set(injectionId, injectionSymbol);
+    }
+    return [];
+  }
+
+  validateColumns (columns: FunctionApplicationNode[]) {
+    if (columns.length === 0) {
+      return [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
+    }
+
+    return columns.flatMap((column) => {
+      const errors: CompileError[] = [];
+      if (column.args.length === 0) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', column.callee!));
+      }
+
+      if (!isExpressionAVariableNode(column.callee)) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', column.callee!));
+      }
+
+      if (column.args[0] && !isValidColumnType(column.args[0])) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', column.args[0]));
+      }
+
+      const remains = column.args.slice(1);
+      errors.push(...this.validateColumnSetting(remains));
+
+      errors.push(...this.registerColumn(column));
+
+      return errors;
+    });
+  }
+
+  registerColumn(field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
       const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const columnId = createColumnSymbolIndex(columnName);
@@ -225,7 +291,7 @@ export default class TableValidator implements ElementValidator {
   }
 
   // This is needed to support legacy inline settings
-  validateFieldSetting(parts: ExpressionNode[]): CompileError[] {
+  validateColumnSetting (parts: ExpressionNode[]): CompileError[] {
     if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
       return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
     }
@@ -364,7 +430,9 @@ export default class TableValidator implements ElementValidator {
   }
 
   private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+    // console.log(subs);
     const errors = subs.flatMap((sub) => {
+      if (!sub) return [];
       sub.parent = this.declarationNode;
       if (!sub.type) {
         return [];
@@ -374,7 +442,7 @@ export default class TableValidator implements ElementValidator {
       return validator.validate();
     });
     
-    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
+    const notes = subs.filter((sub) => sub?.type?.value.toLowerCase() === 'note');
     if (notes.length > 1) {
       errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
     }

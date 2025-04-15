@@ -18,7 +18,7 @@ import {
   isAccessExpression,
   isExpressionAVariableNode,
 } from '../../../parser/utils';
-import { ArgumentBinderRule, BinderRule, SettingListBinderRule } from '../types';
+import { ArgumentBinderRule, BinderRule, InjectionBinderRule, SettingListBinderRule } from '../types';
 import {
   destructureMemberAccessExpression,
   extractVarNameFromPrimaryVariable,
@@ -32,6 +32,7 @@ import { pickBinder } from '../utils';
 export default abstract class ElementBinder {
   protected abstract subfield: {
     arg: ArgumentBinderRule;
+    injection?: InjectionBinderRule;
     settingList: SettingListBinderRule;
   };
   protected abstract settingList: SettingListBinderRule;
@@ -92,9 +93,10 @@ export default abstract class ElementBinder {
           const binder = new Binder(sub, this.errors);
           binder.bind();
         } else if (sub instanceof FunctionApplicationNode) {
-          this.bindSubfield(sub);
+          if (sub.callee instanceof PrefixExpressionNode) this.bindPartialInjection(sub.callee);
+          else this.bindSubfield(sub);
         } else {
-          // do nothing - TODO: implement this
+          // this.bindPartialInjection(sub);
         }
       }
     } else {
@@ -115,6 +117,10 @@ export default abstract class ElementBinder {
         this.scanAndBind(args[i], argBinderRules[i] as BinderRule & { shouldBind: true });
       }
     }
+  }
+
+  private bindPartialInjection (node: PrefixExpressionNode) {
+    if (this.subfield.injection?.injectionBinderRule.shouldBind && node.op?.value === '~') this.scanAndBind(node, this.subfield.injection.injectionBinderRule as BinderRule & { shouldBind: true });
   }
 
   // Scan for variable node and member access expression in the node to bind
