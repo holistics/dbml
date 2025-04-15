@@ -10,6 +10,7 @@ import {
   DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, NOTE,
 } from './config';
 import DbState from './dbState';
+import TablePartial from './tablePartial';
 
 class Database extends Element {
   constructor ({
@@ -22,6 +23,7 @@ class Database extends Element {
     project = {},
     aliases = [],
     records = [],
+    tablePartials = [],
   }) {
     super();
     this.dbState = new DbState();
@@ -36,9 +38,11 @@ class Database extends Element {
     this.token = project.token;
     this.aliases = aliases;
     this.records = [];
+    this.tablePartials = [];
 
     this.processNotes(notes);
     this.processRecords(records);
+    this.processTablePartials(tablePartials);
     // The process order is important. Do not change !
     this.processSchemas(schemas);
     this.processSchemaElements(enums, ENUM);
@@ -67,6 +71,12 @@ class Database extends Element {
         columns,
         values,
       });
+    });
+  }
+
+  processTablePartials (rawTablePartials) {
+    rawTablePartials.forEach((tablePartial) => {
+      this.tablePartials.push(new TablePartial({ ...tablePartial, dbState: this.dbState }));
     });
   }
 
@@ -184,6 +194,10 @@ class Database extends Element {
     if (!schema) return null;
     const _enum = schema.enums.find(e => e.name === name);
     return _enum;
+  }
+
+  findTablePartial (name) {
+    return this.tablePartials.find(tp => tp.name === name);
   }
 
   export () {

@@ -5,7 +5,7 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 class Field extends Element {
   constructor ({
     name, type, unique, pk, token, not_null: notNull, note, dbdefault,
-    increment, table = {}, noteToken = null,
+    increment, table = {}, noteToken = null, injectedPartial = null,
   } = {}) {
     super(token);
     if (!name) { this.error('Field must have a name'); }
@@ -22,6 +22,7 @@ class Field extends Element {
     this.increment = increment;
     this.endpoints = [];
     this.table = table;
+    this.injectedPartial = injectedPartial,
     this.dbState = this.table.dbState;
     this.generateId();
     this.bindType();

@@ -1,0 +1,153 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "users",
+      "alias": "U",
+      "fields": [
+        {
+          "name": "name",
+          "type": {
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 150,
+              "line": 9,
+              "column": 1
+            },
+            "end": {
+              "offset": 180,
+              "line": 10,
+              "column": 1
+            }
+          },
+          "inline_refs": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 150,
+              "line": 9,
+              "column": 1
+            },
+            "end": {
+              "offset": 180,
+              "line": 10,
+              "column": 1
+            }
+          },
+          "inline_refs": []
+        }
+      ],
+      "partials": [
+        {
+          "name": "base_template",
+          "order": 1,
+          "token": {
+            "start": {
+              "offset": 150,
+              "line": 9,
+              "column": 1
+            },
+            "end": {
+              "offset": 180,
+              "line": 10,
+              "column": 1
+            }
+          }
+        },
+        {
+          "name": "time_template",
+          "order": 3
+        }
+      ]
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "tablePartials": [
+    {
+      "name": "base_template",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 88,
+              "line": 7,
+              "column": 3
+            },
+            "end": {
+              "offset": 129,
+              "line": 8,
+              "column": 1
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": true,
+          "note": {
+            "value": "Id of user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "time_template",
+      "fields": [
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "datetime",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 88,
+              "line": 7,
+              "column": 3
+            },
+            "end": {
+              "offset": 129,
+              "line": 8,
+              "column": 1
+            }
+          }
+        },
+        {
+          "name": "updated_at",
+          "type": {
+            "type_name": "datetime",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 88,
+              "line": 7,
+              "column": 3
+            },
+            "end": {
+              "offset": 129,
+              "line": 8,
+              "column": 1
+            }
+          },
+          "inline_refs": []
+        }
+      ]
+    }
+  ]
+}
