@@ -12562,7 +12562,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3037,
+      "code": 3047,
       "diagnostic": "'color' must be a color literal",
       "nodeOrToken": {
         "id": 178,
@@ -12728,7 +12728,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3035,
+      "code": 3045,
       "diagnostic": "Unknown ref setting 'hello'",
       "nodeOrToken": {
         "id": 199,
@@ -13123,7 +13123,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3037,
+      "code": 3047,
       "diagnostic": "'color' must be a color literal",
       "nodeOrToken": {
         "id": 240,
@@ -13289,7 +13289,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3035,
+      "code": 3045,
       "diagnostic": "Unknown ref setting 'hello'",
       "nodeOrToken": {
         "id": 260,
