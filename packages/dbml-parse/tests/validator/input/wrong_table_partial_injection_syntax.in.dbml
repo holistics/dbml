@@ -1,0 +1,10 @@
+Table Users {
+  id int
+
+  !common
+  +common
+  -common
+
+  ~1
+  ~
+}

@@ -838,7 +838,7 @@
   },
   "errors": [
     {
-      "code": 3023,
+      "code": 3033,
       "diagnostic": "Duplicate enum field churn",
       "nodeOrToken": {
         "id": 7,
@@ -1029,7 +1029,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3023,
+      "code": 3033,
       "diagnostic": "Duplicate enum field churn",
       "nodeOrToken": {
         "id": 4,
@@ -1220,7 +1220,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3023,
+      "code": 3033,
       "diagnostic": "Duplicate enum field churn",
       "nodeOrToken": {
         "id": 10,
@@ -1411,7 +1411,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3023,
+      "code": 3033,
       "diagnostic": "Duplicate enum field churn",
       "nodeOrToken": {
         "id": 4,
