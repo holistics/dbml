@@ -4,10 +4,11 @@ import Field from './field';
 import Index from './indexes';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
+import Ref from './ref';
 
 class Table extends Element {
   constructor ({
-    name, alias, note, fields = [], indexes = [], schema = {}, token, headerColor, noteToken = null,
+    name, alias, note, fields = [], indexes = [], schema = {}, token, headerColor, noteToken = null, partials = [],
   } = {}) {
     super(token);
     this.name = name;
@@ -18,11 +19,13 @@ class Table extends Element {
     this.fields = [];
     this.indexes = [];
     this.schema = schema;
+    this.partials = partials;
     this.dbState = this.schema.dbState;
     this.generateId();
 
     this.processFields(fields);
     this.processIndexes(indexes);
+    this.processPartials();
   }
 
   generateId () {
@@ -83,11 +86,60 @@ class Table extends Element {
         || (this.alias && this.alias === table.alias));
   }
 
-  export () {
-    return {
-      ...this.shallowExport(),
-      ...this.exportChild(),
-    };
+  processPartials () {
+    if (!this.partials?.length) return;
+
+    /**
+     * When encountering conflicting columns or settings with identical names, the following resolution order is applied:
+     * 1. Local Table Definition: If a definition exists within the local table, it takes precedence.
+     * 2. Last Partial Definition: If no local definition is found,
+     *  the definition from the most recently processed partial containing the conflicting name is used.
+     *
+     * Indexes with identical column tuples and attributes will be merged into a single index.
+     */
+
+    const existingFieldNames = new Set(this.fields.map(f => f.name));
+
+    // descending order, we'll inserted the partial fields from tail to head
+    const sortedPartials = this.partials.sort((a, b) => b.order - a.order);
+
+    sortedPartials.forEach((partial) => {
+
+      const tablePartial = this.schema.database.findTablePartial(partial.name);
+
+      if (tablePartial.fields) {
+        // ignore fields that already exist in the table, or have been added by a later partial
+        const rawFields = tablePartial.fields.filter(f => !existingFieldNames.has(f.name));
+
+        const fields =  rawFields.map((rawField) => {
+          existingFieldNames.add(rawField.name);
+
+          // convert inline_refs from injected fields to refs
+          if (rawFields.inline_refs) {
+            const schema = this.schema.database.findOrCreateSchema(DEFAULT_SCHEMA_NAME);
+            const ref = new Ref({ endpoints: [{
+              tableName: this.name,
+              schemaName: this.schemaName,
+              fieldNames: [rawField.name],
+              relation: ['-', '<'].includes(rawFields.inline_refs.relation) ? '1' : '*',
+            }, {
+              tableName: rawFields.inline_refs.tableName,
+              schemaName: rawFields.inline_refs.schemaName,
+              fieldNames: rawFields.inline_refs.fieldNames,
+              relation: ['-', '>'].includes(rawFields.inline_refs.relation) ? '1' : '*',
+            }], schema, injectedPartial: tablePartial });
+
+            schema.pushRef(ref);
+          }
+
+          return new Field({ ...rawField, table: this, injectedPartial: tablePartial });
+        });
+
+        this.fields.splice(partial.order, 0, ...fields);
+      }
+
+      // TODO: index merging
+    });
   }
 
   exportChild () {
