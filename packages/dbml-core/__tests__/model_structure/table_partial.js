@@ -10,7 +10,7 @@ describe('@dbml/core - model_structure', () => {
     database = new Database(jsonDb);
   });
 
-  describe('general_schema', () => {
+  describe('table_partial_schema', () => {
     describe('nested_structure', () => {
       // test('table "users" - contains all parent references', () => {
       //   const table = database.schemas[0].findTable('users');
@@ -21,7 +21,7 @@ describe('@dbml/core - model_structure', () => {
       test('table partial has correct properties', () => {
         const tablePartial = database.tablePartials[0];
         expect(tablePartial.name).toEqual('base_template');
-        expect(tablePartial.fields.length).toEqual(1);
+        expect(tablePartial.fields.length).toEqual(3);
 
         const field0 = tablePartial.fields[0];
         expect(field0.name).toEqual('id');
@@ -32,9 +32,26 @@ describe('@dbml/core - model_structure', () => {
         const table = database.schemas[0].findTable('users');
         const fields = table.fields.map(f => f.name);
   
-        expect(fields).toEqual(['name', 'id', 'email', 'created_at', 'updated_at']);
+        expect(fields).toEqual(['name', 'id', 'id2', 'email', 'created_at', 'updated_at']);
       });
 
+      test('table "users" has inline_refs from table partial', () => {
+        const table = database.schemas[0].findTable('users');
+        expect(database.schemas[0].refs.length).toEqual(1);
+        const ref0 = database.schemas[0].refs[0];
+        expect(ref0.endpoints.length).toEqual(2);
+        expect(ref0.endpoints[0].tableName).toEqual('users');
+        expect(ref0.endpoints[0].fieldNames).toEqual(['id2']);
+        expect(ref0.endpoints[0].relation).toEqual('1');
+        expect(ref0.endpoints[1].tableName).toEqual('users');
+        expect(ref0.endpoints[1].fieldNames).toEqual(['id']);
+        expect(ref0.endpoints[1].relation).toEqual('1');
+      });
+
+      test('table settings from partial is injected in the correct order', () => {
+        const table = database.schemas[0].findTable('users');
+        expect(table.note).toEqual('time_template note');
+      });
     });
 
     describe('normalized_structure', () => {
