@@ -82,7 +82,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "orders",
@@ -171,7 +172,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],

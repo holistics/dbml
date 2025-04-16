@@ -111,7 +111,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "merchants",
@@ -268,7 +269,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],

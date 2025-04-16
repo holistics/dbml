@@ -105,6 +105,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "note": {
         "value": "Note on table orders",
         "token": {
@@ -577,7 +578,8 @@
             }
           }
         }
-      ]
+      ],
+      "partials": []
     }
   ],
   "notes": [],

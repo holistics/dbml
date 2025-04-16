@@ -6,6 +6,7 @@ import {
   FunctionApplicationNode,
   InfixExpressionNode,
   ListExpressionNode,
+  PartialInjectionNode,
   PostfixExpressionNode,
   PrefixExpressionNode,
   PrimaryExpressionNode,
@@ -25,9 +26,11 @@ import {
   findSymbol,
 } from '../../utils';
 import { SyntaxToken } from '../../../lexer/tokens';
-import { NodeSymbolIndex, createNodeSymbolIndex, destructureIndex } from '../../symbol/symbolIndex';
+import { NodeSymbolIndex, createNodeSymbolIndex, destructureIndex, getInjectorIndex, isInjectionIndex } from '../../symbol/symbolIndex';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { pickBinder } from '../utils';
+import SymbolFactory from '../../symbol/factory';
+import { NodeSymbol, NodeSymbolId, TablePartialInjectedColumnSymbol } from '../../symbol/symbols';
 
 export default abstract class ElementBinder {
   protected abstract subfield: {
@@ -93,10 +96,10 @@ export default abstract class ElementBinder {
           const binder = new Binder(sub, this.errors);
           binder.bind();
         } else if (sub instanceof FunctionApplicationNode) {
-          if (sub.callee instanceof PrefixExpressionNode) this.bindPartialInjection(sub.callee);
-          else this.bindSubfield(sub);
+          // if (sub.callee instanceof PrefixExpressionNode) this.bindPartialInjection(sub.callee);
+          this.bindSubfield(sub);
         } else {
-          // this.bindPartialInjection(sub);
+          this.bindPartialInjection(sub);
         }
       }
     } else {
@@ -119,8 +122,8 @@ export default abstract class ElementBinder {
     }
   }
 
-  private bindPartialInjection (node: PrefixExpressionNode) {
-    if (this.subfield.injection?.injectionBinderRule.shouldBind && node.op?.value === '~') this.scanAndBind(node, this.subfield.injection.injectionBinderRule as BinderRule & { shouldBind: true });
+  private bindPartialInjection (node: PartialInjectionNode) {
+    if (this.subfield.injection?.injectionBinderRule.shouldBind) this.scanAndBind(node, this.subfield.injection.injectionBinderRule as BinderRule & { shouldBind: true });
   }
 
   // Scan for variable node and member access expression in the node to bind
@@ -150,6 +153,8 @@ export default abstract class ElementBinder {
       this.scanAndBind(node.expression, rule);
     } else if (node instanceof TupleExpressionNode) {
       node.elementList.forEach((e) => this.scanAndBind(e, rule));
+    } else if (node instanceof PartialInjectionNode) {
+      this.bindFragments([node], rule);
     }
 
     // The other cases are not supported as practically they shouldn't arise
@@ -281,5 +286,29 @@ export default abstract class ElementBinder {
     if (!ignoreError) {
       this.errors.push(new CompileError(CompileErrorCode.BINDING_ERROR, message, node));
     }
+  }
+
+  resolveInjections (symbolFactory: SymbolFactory) {
+    const symbolTable = this.declarationNode.symbol?.symbolTable;
+    if (!symbolTable) return;
+
+    const injectedSymbols = new Map<NodeSymbolIndex, NodeSymbol>();
+
+    symbolTable.forEach((_, nodeSymbolIndex) => {
+      console.log(isInjectionIndex(nodeSymbolIndex), nodeSymbolIndex);
+      if (isInjectionIndex(nodeSymbolIndex)) {
+        const nodeSymbol = findSymbol(getInjectorIndex(nodeSymbolIndex)!, this.declarationNode);
+        nodeSymbol?.declaration?.symbol?.symbolTable?.forEach((injectedSymbol, injectedIndex) => {
+          console.log(injectedIndex, injectedSymbol);
+          if (symbolTable.has(injectedIndex)) return;
+          injectedSymbols.set(injectedIndex, injectedSymbol);
+        });
+      }
+    });
+
+    injectedSymbols.forEach((injectedSymbol, injectedIndex) => {
+      const resInjectedSymbol = symbolFactory.create(TablePartialInjectedColumnSymbol, { injectorId: injectedSymbol.id });
+      symbolTable.set(injectedIndex, resInjectedSymbol);
+    });
   }
 }

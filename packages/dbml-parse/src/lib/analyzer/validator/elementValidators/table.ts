@@ -9,6 +9,7 @@ import {
   ExpressionNode,
   FunctionApplicationNode,
   ListExpressionNode,
+  PartialInjectionNode,
   PrefixExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
@@ -161,7 +162,7 @@ export default class TableValidator implements ElementValidator {
     return errors;
   }
 
-  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -169,8 +170,14 @@ export default class TableValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Table\'s body must be a block', body)];
     }
 
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
+    const [fields, subsAndInjections] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [injections, subs] = _.partition(subsAndInjections, (e) => e instanceof PartialInjectionNode);
+
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateInjections(injections as PartialInjectionNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -188,41 +195,16 @@ export default class TableValidator implements ElementValidator {
     ];
   }
 
-  validateInjections (injections: FunctionApplicationNode[]) {
-    return injections.flatMap((injection) => {
-      const errors: CompileError[] = [];
-      const callee = injection.callee as PrefixExpressionNode;
-
-      if (callee.op?.value !== '~') {
-        errors.push(new CompileError(
-          CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION_OP,
-          'A TablePartial injection should start with the ~ operator',
-          callee,
-        ));
-      }
-      if (injection.args.length > 0) {
-        errors.push(...injection.args.map((arg) => new CompileError(
-          CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION,
-          'A TablePartial injection should only have a single TablePartial name',
-          arg,
-        )));
-      }
-      if (!callee.expression || !isExpressionAVariableNode(callee.expression)) {
-        errors.push(new CompileError(
-          CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION_NAME,
-          'A TablePartial injection name must be an identifier or a quoted identifier',
-          callee,
-        ));
-      }
-      errors.push(...this.registerInjection(injection));
-      return errors;
-    });
+  validateInjections (injections: PartialInjectionNode[]) {
+    return injections.flatMap((injection) => this.registerInjection(injection));
   }
 
-  registerInjection (injection: FunctionApplicationNode) {
-    const callee = injection.callee as PrefixExpressionNode;
-    if (callee.expression && isExpressionAVariableNode(callee.expression)) {
-      const injectionName = extractVarNameFromPrimaryVariable(callee.expression).unwrap();
+  registerInjection (injection: PartialInjectionNode) {
+    // const callee = injection.callee as PrefixExpressionNode;
+    if (injection.partial && injection.partial.variable?.value) {
+    // if (callee.expression && isExpressionAVariableNode(callee.expression)) {
+      const injectionName = injection.partial.variable?.value;
+      // const injectionName = extractVarNameFromPrimaryVariable(callee.expression).unwrap();
       const injectionId = createTablePartialInjectionSymbolIndex(injectionName);
 
       const injectionSymbol = this.symbolFactory.create(TablePartialInjectionSymbol, { declaration: injection });
@@ -430,7 +412,6 @@ export default class TableValidator implements ElementValidator {
   }
 
   private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
-    // console.log(subs);
     const errors = subs.flatMap((sub) => {
       if (!sub) return [];
       sub.parent = this.declarationNode;

@@ -98,3 +98,19 @@ export function isPublicSchemaIndex(id: NodeSymbolIndex): boolean {
 
   return kind === 'Schema' && name === 'public';
 }
+
+export function isInjectionIndex (id: NodeSymbolIndex): boolean {
+  const res = destructureIndex(id).unwrap_or(undefined);
+  if (!res) return false;
+
+  const { kind } = res;
+  return kind === SymbolKind.TablePartialInjection;
+}
+
+export function getInjectorIndex (injectionNodeIndex: NodeSymbolIndex): NodeSymbolIndex | null {
+  const res = destructureIndex(injectionNodeIndex).unwrap_or(undefined);
+  if (!res) return null;
+
+  const { kind, name } = res;
+  return kind === SymbolKind.TablePartialInjection ? createNodeSymbolIndex(name, SymbolKind.TablePartial) : null;
+}

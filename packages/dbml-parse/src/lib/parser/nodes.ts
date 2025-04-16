@@ -351,8 +351,8 @@ export class BlockExpressionNode extends SyntaxNode {
 export class PartialInjectionNode extends SyntaxNode {
   partial?: VariableNode;
 
-  constructor({ op, partial }: { op: SyntaxToken, partial?: VariableNode }, id: SyntaxNodeId) {
-    super(id, SyntaxNodeKind.PARTIAL_INJECTION, [op, partial]);
+  constructor ({ partial }: { partial?: VariableNode }, id: SyntaxNodeId) {
+    super(id, SyntaxNodeKind.PARTIAL_INJECTION, [partial]);
     this.partial = partial;
   }
 }

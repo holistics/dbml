@@ -44,6 +44,7 @@ export interface Table {
   schemaName: null | string;
   alias: string | null;
   fields: Column[];
+  partials: TablePartialInjection[];
   token: TokenPosition;
   indexes: Index[];
   headerColor?: string;
@@ -172,6 +173,24 @@ export interface Alias {
     tableName: string;
     schemaName: string | null;
   };
+}
+
+export interface TablePartial {
+  name: string;
+  fields: Column[];
+  token: TokenPosition;
+  indexes: Index[];
+  headerColor?: string;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+}
+
+export interface TablePartialInjection {
+  name: string;
+  order: number;
+  token: TokenPosition;
 }
 
 export type Project =
