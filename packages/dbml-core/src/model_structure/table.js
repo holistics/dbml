@@ -1,10 +1,9 @@
-import { get } from 'lodash';
+import { get, isNil } from 'lodash';
 import Element from './element';
 import Field from './field';
 import Index from './indexes';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
-import Ref from './ref';
 
 class Table extends Element {
   constructor ({
@@ -99,6 +98,10 @@ class Table extends Element {
      */
 
     const existingFieldNames = new Set(this.fields.map(f => f.name));
+    const existingSettingNames = new Set();
+    if (!isNil(this.note)) existingSettingNames.add('note');
+    if (!isNil(this.headerColor)) existingSettingNames.add('headerColor');
+
 
     // descending order, we'll inserted the partial fields from tail to head
     const sortedPartials = this.partials.sort((a, b) => b.order - a.order);
@@ -115,27 +118,40 @@ class Table extends Element {
           existingFieldNames.add(rawField.name);
 
           // convert inline_refs from injected fields to refs
-          if (rawFields.inline_refs) {
-            const schema = this.schema.database.findOrCreateSchema(DEFAULT_SCHEMA_NAME);
-            const ref = new Ref({ endpoints: [{
-              tableName: this.name,
-              schemaName: this.schemaName,
-              fieldNames: [rawField.name],
-              relation: ['-', '<'].includes(rawFields.inline_refs.relation) ? '1' : '*',
-            }, {
-              tableName: rawFields.inline_refs.tableName,
-              schemaName: rawFields.inline_refs.schemaName,
-              fieldNames: rawFields.inline_refs.fieldNames,
-              relation: ['-', '>'].includes(rawFields.inline_refs.relation) ? '1' : '*',
-            }], schema, injectedPartial: tablePartial });
-
-            schema.pushRef(ref);
+          if (rawField.inline_refs) {
+            rawField.inline_refs.forEach((iref) => {
+              const ref = { 
+                endpoints: [{
+                  tableName: this.name,
+                  schemaName: this.schema.name,
+                  fieldNames: [rawField.name],
+                  relation: ['-', '<'].includes(iref.relation) ? '1' : '*',
+                }, {
+                  tableName: iref.tableName,
+                  schemaName: iref.schemaName,
+                  fieldNames: iref.fieldNames,
+                  relation: ['-', '>'].includes(iref.relation) ? '1' : '*',
+                }],
+                injectedPartial: tablePartial,
+              };
+              this.schema.database.injectedRawRefs.push(ref);
+            });
           }
 
           return new Field({ ...rawField, table: this, injectedPartial: tablePartial });
         });
 
         this.fields.splice(partial.order, 0, ...fields);
+      }
+
+      if (!existingSettingNames.has('note')) {
+        this.noteToken = null;
+        this.note = tablePartial.note;
+        existingSettingNames.add('note');
+      }
+      if (!existingSettingNames.has('headerColor')) {
+        this.headerColor = tablePartial.headerColor;
+        existingSettingNames.add('headerColor');
       }
 
       // TODO: index merging

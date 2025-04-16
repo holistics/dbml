@@ -40,6 +40,8 @@ class Database extends Element {
     this.records = [];
     this.tablePartials = [];
 
+    this.injectedRawRefs = [];
+
     this.processNotes(notes);
     this.processRecords(records);
     this.processTablePartials(tablePartials);
@@ -50,6 +52,11 @@ class Database extends Element {
     this.processSchemaElements(notes, NOTE);
     this.processSchemaElements(refs, REF);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
+
+    this.injectedRawRefs.forEach((ref) => {
+      const schema = this.findOrCreateSchema(DEFAULT_SCHEMA_NAME);
+      schema.pushRef(new Ref({ ...ref, schema }));
+    });
   }
 
   generateId () {
