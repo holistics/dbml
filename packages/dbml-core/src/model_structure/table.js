@@ -1,4 +1,4 @@
-import { get, isNil } from 'lodash';
+import { get, isNil, uniqWith, isEqual } from 'lodash';
 import Element from './element';
 import Field from './field';
 import Index from './indexes';
@@ -144,6 +144,7 @@ class Table extends Element {
         this.fields.splice(partial.order, 0, ...fields);
       }
 
+      // merge settings
       if (!existingSettingNames.has('note')) {
         this.noteToken = null;
         this.note = tablePartial.note;
@@ -154,7 +155,18 @@ class Table extends Element {
         existingSettingNames.add('headerColor');
       }
 
-      // TODO: index merging
+      // merge indexes
+      partial.indexes.forEach((index) => {
+        this.indexes.push(new Index({ ...index, table: this, injectedPartial: tablePartial }));
+      });
+
+      // uniqWith(this.indexes, (a, b) => {
+      //   return 
+      //   isEqual(a.columns, b.columns) &&
+      //   a.unique === b.unique &&
+      //   a.pk === b.pk &&
+      //   a.type === b.type &&
+      // });
     });
   }
 
