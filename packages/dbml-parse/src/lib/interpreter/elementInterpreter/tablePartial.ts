@@ -1,5 +1,5 @@
-import { Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table, TablePartialInjection } from '../types';
-import { ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PartialInjectionNode, PrefixExpressionNode, SyntaxNode } from '../../parser/nodes';
+import { Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table } from '../types';
+import { ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode } from '../../parser/nodes';
 import { extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent } from '../utils';
 import { destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression } from '../../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../../errors';
@@ -19,7 +19,7 @@ export class TableInterpreter implements ElementInterpreter {
   constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.table = { name: undefined, schemaName: undefined, alias: null, fields: [], token: undefined, indexes: [], partials: [] };
+    this.table = { name: undefined, schemaName: undefined, alias: null, fields: [], token: undefined, indexes: [] };
     this.pkColumns = [];
   }
 
@@ -103,11 +103,8 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretBody(body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode || e instanceof PartialInjectionNode);
-    return [
-      ...this.interpretFields(fields as (FunctionApplicationNode | PartialInjectionNode)[]),
-      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
-    ];
+    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
   }
 
   private interpretSubElements(subs: ElementDeclarationNode[]): CompileError[] {
@@ -127,17 +124,8 @@ export class TableInterpreter implements ElementInterpreter {
     })
   }
 
-  private interpretInjection (injection: PartialInjectionNode, order: number) {
-    const partial: Partial<TablePartialInjection> = { order, token: getTokenPosition(injection) };
-    partial.name = injection.partial!.variable!.value;
-    this.table.partials!.push(partial as TablePartialInjection);
-    return [];
-  }
-
-  private interpretFields(fields: (FunctionApplicationNode | PartialInjectionNode)[]): CompileError[] {
-    return fields.flatMap((field, order) => {
-      return field instanceof FunctionApplicationNode ? this.interpretColumn(field) : this.interpretInjection(field, order);
-    });
+  private interpretFields(fields: FunctionApplicationNode[]): CompileError[] {
+    return fields.flatMap((field) => this.interpretColumn(field));
   }
 
   private interpretColumn(field: FunctionApplicationNode): CompileError[] {
@@ -171,67 +159,67 @@ export class TableInterpreter implements ElementInterpreter {
         value: extractQuotedStringToken(noteNode.value).map(normalizeNoteContent).unwrap(),
         token: getTokenPosition(noteNode),
       }
-      const refs = settingMap['ref'] || [];
-      column.inline_refs = refs.flatMap((ref) => {
-
-        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
-
-        if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
-          errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
-          return [];
-        }
-
-        const op = (ref.value as PrefixExpressionNode).op!;
-        const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression).unwrap();
-
-        let inlineRef: InlineRef | undefined;
-        if (fragments.length === 1) {
-          const [column] = fragments;
-
-          inlineRef = {
-            schemaName: this.table.schemaName!,
-            tableName: this.table.name!,
-            fieldNames: [column],
-            relation: op.value as any,
-            token: getTokenPosition(ref),
-          };
-        } else if (fragments.length === 2) {
-          const [table, column] = fragments;
-          inlineRef = {
-            schemaName: null,
-            tableName: table,
-            fieldNames: [column],
-            relation: op.value as any,
-            token: getTokenPosition(ref),
-          };
-        } else if (fragments.length === 3) {
-          const [schema, table, column] = fragments;
-          inlineRef = {
-            schemaName: schema,
-            tableName: table,
-            fieldNames: [column],
-            relation: op.value as any,
-            token: getTokenPosition(ref),
-          };
-        } else {
-          errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref));
-          const column = fragments.pop()!;
-          const table = fragments.pop()!;
-          const schema = fragments.join('.');
-          inlineRef = {
-            schemaName: schema,
-            tableName: table,
-            fieldNames: [column],
-            relation: op.value as any,
-            token: getTokenPosition(ref),
-          };
-        }
-
-        const errs = this.registerInlineRefToEnv(field, referredSymbol, inlineRef, ref);
-        errors.push(...errs);
-
-        return errs.length === 0 ? inlineRef : [];
-      })
+      // const refs = settingMap['ref'] || [];
+      // column.inline_refs = refs.flatMap((ref) => {
+      //
+      //   const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
+      //
+      //   if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
+      //     errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
+      //     return [];
+      //   }
+      //
+      //   const op = (ref.value as PrefixExpressionNode).op!;
+      //   const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression).unwrap();
+      //
+      //   let inlineRef: InlineRef | undefined;
+      //   if (fragments.length === 1) {
+      //     const [column] = fragments;
+      //
+      //     inlineRef = {
+      //       schemaName: this.table.schemaName!,
+      //       tableName: this.table.name!,
+      //       fieldNames: [column],
+      //       relation: op.value as any,
+      //       token: getTokenPosition(ref),
+      //     };
+      //   } else if (fragments.length === 2) {
+      //     const [table, column] = fragments;
+      //     inlineRef = {
+      //       schemaName: null,
+      //       tableName: table,
+      //       fieldNames: [column],
+      //       relation: op.value as any,
+      //       token: getTokenPosition(ref),
+      //     };
+      //   } else if (fragments.length === 3) {
+      //     const [schema, table, column] = fragments;
+      //     inlineRef = {
+      //       schemaName: schema,
+      //       tableName: table,
+      //       fieldNames: [column],
+      //       relation: op.value as any,
+      //       token: getTokenPosition(ref),
+      //     };
+      //   } else {
+      //     errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref));
+      //     const column = fragments.pop()!;
+      //     const table = fragments.pop()!;
+      //     const schema = fragments.join('.');
+      //     inlineRef = {
+      //       schemaName: schema,
+      //       tableName: table,
+      //       fieldNames: [column],
+      //       relation: op.value as any,
+      //       token: getTokenPosition(ref),
+      //     };
+      //   }
+      //
+      //   const errs = this.registerInlineRefToEnv(field, referredSymbol, inlineRef, ref);
+      //   errors.push(...errs);
+      //
+      //   return errs.length === 0 ? inlineRef : [];
+      // })
     }
 
     column.pk ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'pk');

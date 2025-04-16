@@ -747,14 +747,14 @@ export default class Parser {
 
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
       try {
-        // if (this.match(SyntaxTokenKind.TILDE)) { // Check for partial injection
-        //   const tildeToken = this.previous();
-        //   const variable = this.variable();
-        //   const partialInjection = this.nodeFactory.create(PartialInjectionNode, { op: tildeToken, partial: variable });
-        //   args.body.push(partialInjection);
-        // } else {
+        if (this.match(SyntaxTokenKind.TILDE)) { // Check for partial injection
+          const tildeToken = this.previous();
+          const variable = this.variable();
+          const partialInjection = this.nodeFactory.create(PartialInjectionNode, { op: tildeToken, partial: variable });
+          args.body.push(partialInjection);
+        } else {
           args.body.push(this.canBeField() ? this.fieldDeclaration() : this.expression());
-        // }
+        }
       } catch (e) {
         if (!(e instanceof PartialParsingError)) {
           throw e;
@@ -1178,7 +1178,6 @@ const prefixBindingPowerMap: {
   '>': { left: null, right: 15 },
   '<>': { left: null, right: 15 },
   '!': { left: null, right: 15 },
-  '~': { left: null, right: 15 },
 };
 
 function prefixBindingPower(token: SyntaxToken): { left: null; right: null | number } {

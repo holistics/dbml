@@ -1,0 +1,20 @@
+TablePartial p1 {
+  id int [pk]
+  indexes {
+    id [unique]
+  }
+}
+
+TablePartial p2 {
+  name text
+}
+
+Table t1 {
+  ~p1
+  email text
+  ~p2
+}
+
+Table t2 {
+  id int [ref: > t1.id]
+}

@@ -22,6 +22,7 @@ export interface NodeSymbol {
   symbolTable?: SymbolTable;
   declaration?: SyntaxNode;
   references: SyntaxNode[];
+  injectorId?: NodeSymbolId;
 }
 
 // A symbol for a schema, contains the schema's symbol table
@@ -178,5 +179,19 @@ export class TablePartialInjectionSymbol implements NodeSymbol {
   ) {
     this.id = id;
     this.declaration = declaration;
+  }
+}
+
+// A symbol for a column field
+export class TablePartialInjectedColumnSymbol implements NodeSymbol {
+  id: NodeSymbolId;
+
+  injectorId: NodeSymbolId;
+
+  references: SyntaxNode[] = [];
+
+  constructor ({ injectorId }: { injectorId: NodeSymbolId }, id: NodeSymbolId) {
+    this.id = id;
+    this.injectorId = injectorId;
   }
 }
