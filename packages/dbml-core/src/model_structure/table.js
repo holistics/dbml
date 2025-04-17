@@ -110,6 +110,7 @@ class Table extends Element {
 
       const tablePartial = this.schema.database.findTablePartial(partial.name);
 
+      if (!tablePartial) this.error(`Table partial ${partial.name} not found`, partial.token);
       if (tablePartial.fields) {
         // ignore fields that already exist in the table, or have been added by a later partial
         const rawFields = tablePartial.fields.filter(f => !existingFieldNames.has(f.name));
@@ -156,7 +157,7 @@ class Table extends Element {
       }
 
       // merge indexes
-      partial.indexes.forEach((index) => {
+      tablePartial.indexes.forEach((index) => {
         this.indexes.push(new Index({ ...index, table: this, injectedPartial: tablePartial }));
       });
 

@@ -14,7 +14,7 @@ describe('@dbml/core - model_structure', () => {
       normalizedModel = database.normalize();
       // fs.writeFile('./normalized.txt', JSON.stringify(normalizedModel, null, 2), { flag: 'w+' }, err => {});
     } catch (err) {
-      console.log('error', JSON.stringify(err, null, 2));
+      console.log('error', err);
     }
   });
 

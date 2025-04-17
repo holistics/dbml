@@ -82,8 +82,8 @@ class Database extends Element {
   }
 
   processTablePartials (rawTablePartials) {
-    rawTablePartials.forEach((tablePartial) => {
-      this.tablePartials.push(new TablePartial({ ...tablePartial, dbState: this.dbState }));
+    rawTablePartials.forEach((rawTablePartial) => {
+      this.tablePartials.push(new TablePartial({ ...rawTablePartial, dbState: this.dbState }));
     });
   }
 
