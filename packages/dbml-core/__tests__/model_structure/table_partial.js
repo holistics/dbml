@@ -12,12 +12,6 @@ describe('@dbml/core - model_structure', () => {
 
   describe('table_partial_schema', () => {
     describe('nested_structure', () => {
-      // test('table "users" - contains all parent references', () => {
-      //   const table = database.schemas[0].findTable('users');
-
-      //   expect(table.schema.name).toEqual(DEFAULT_SCHEMA_NAME);
-      //   expect(table.group.name).toEqual('g1');
-      // });
       test('table partial has correct properties', () => {
         const tablePartial = database.tablePartials[0];
         expect(tablePartial.name).toEqual('base_template');
@@ -32,7 +26,7 @@ describe('@dbml/core - model_structure', () => {
         const table = database.schemas[0].findTable('users');
         const fields = table.fields.map(f => f.name);
   
-        expect(fields).toEqual(['name', 'id', 'id2', 'email', 'created_at', 'updated_at']);
+        expect(fields).toEqual(['id', 'id2', 'name', 'email', 'created_at', 'updated_at', 'a', 'b']);
       });
 
       test('table "users" has inline_refs from table partial', () => {
@@ -51,29 +45,6 @@ describe('@dbml/core - model_structure', () => {
       test('table settings from partial is injected in the correct order', () => {
         const table = database.schemas[0].findTable('users');
         expect(table.note).toEqual('time_template note');
-      });
-    });
-
-    describe('normalized_structure', () => {
-      let normalizedModel;
-
-      function getEle (ele, id) {
-        return normalizedModel[ele][id];
-      }
-
-      beforeAll(() => {
-        normalizedModel = database.normalize();
-      });
-
-      // test('table "users" - contains all parent references', () => {
-      //   const tableId = Object.keys(normalizedModel.tables).find((key) => getEle('tables', key).name === 'users');
-      //   const table = getEle('tables', tableId);
-
-      //   expect(getEle('schemas', table.schemaId).name).toEqual(DEFAULT_SCHEMA_NAME);
-      //   expect(getEle('tableGroups', table.groupId).name).toEqual('g1');
-      // });
-      test('ok', () => {
-
       });
     });
   });

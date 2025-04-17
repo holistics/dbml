@@ -105,8 +105,12 @@ class Table extends Element {
     // descending order, we'll inserted the partial fields from tail to head
     const sortedPartials = this.partials.sort((a, b) => b.order - a.order);
 
-    sortedPartials.forEach((partial) => {
+    // insert placeholder into table.fields
+    sortedPartials.toReversed().forEach((partial) => {
+      this.fields.splice(partial.order, 0, 'dummy')
+    });
 
+    sortedPartials.forEach((partial) => {
       const tablePartial = this.schema.database.findTablePartial(partial.name);
 
       if (!tablePartial) this.error(`Table partial ${partial.name} not found`, partial.token);
@@ -141,7 +145,9 @@ class Table extends Element {
           return new Field({ ...rawField, table: this, injectedPartial: tablePartial });
         });
 
-        this.fields.splice(partial.order, 0, ...fields);
+        this.fields.splice(partial.order, 1, ...fields);
+      } else {
+        this.fields.splice(partial.order, 1); // still need to remove the dummy element, even when there's no field in the partial
       }
 
       // merge settings
