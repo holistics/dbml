@@ -1,4 +1,4 @@
-import { Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table } from '../types';
+import { Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table, TablePartial } from '../types';
 import { ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode } from '../../parser/nodes';
 import { extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent } from '../utils';
 import { destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression } from '../../analyzer/utils';
@@ -10,26 +10,25 @@ import { ColumnSymbol } from '../../analyzer/symbol/symbols';
 import _ from 'lodash';
 import Report from '../../report';
 
-export class TableInterpreter implements ElementInterpreter {
+export class TablePartialInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
-  private table: Partial<Table>;
+  private tablePartial: Partial<TablePartial>;
   private pkColumns: Column[];
 
   constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.table = { name: undefined, schemaName: undefined, alias: null, fields: [], token: undefined, indexes: [] };
+    this.tablePartial = { name: undefined, fields: [], token: undefined, indexes: [] };
     this.pkColumns = [];
   }
 
   interpret(): CompileError[] {
-    this.table.token = getTokenPosition(this.declarationNode);
-    this.env.tables.set(this.declarationNode, this.table as Table);
+    this.tablePartial.token = getTokenPosition(this.declarationNode);
+    this.env.tablePartials.set(this.declarationNode, this.tablePartial as TablePartial);
 
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
-      ...this.interpretAlias(this.declarationNode.alias),
       ...this.interpretSettingList(this.declarationNode.attributeList),
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     ];
@@ -38,7 +37,7 @@ export class TableInterpreter implements ElementInterpreter {
     // all the pk field of the columns are reset to false
     // and a new pk composite index is added
     if (this.pkColumns.length >= 2) {
-      this.table.indexes!.push({
+      this.tablePartial.indexes!.push({
         columns: this.pkColumns.map(({ name, token }) => ({ value: name, type: 'column', token })),
         token: {
           start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
@@ -53,37 +52,9 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretName(nameNode: SyntaxNode): CompileError[] {
-    const { name, schemaName } = extractElementName(nameNode);
+    const { name } = extractElementName(nameNode);
 
-    if (schemaName.length > 1) {
-      this.table.name = name;
-      this.table.schemaName = schemaName.join('.');
-      return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode)];
-    }
-
-    this.table.name = name;
-    this.table.schemaName = schemaName.length ? schemaName[0] : null;
-
-    return [];
-  }
-
-  private interpretAlias(aliasNode?: SyntaxNode): CompileError[] {
-    if (!aliasNode) {
-      return [];
-    }
-
-    const alias = extractVarNameFromPrimaryVariable(aliasNode as any).unwrap_or(null);
-    if (alias) {
-      this.env.aliases.push({
-        name: alias,
-        kind: 'table',
-        value: {
-          tableName: this.table.name!,
-          schemaName: this.table.schemaName!,
-        },
-      });
-      this.table.alias = alias;
-    }
+    this.tablePartial.name = name;
 
     return [];
   }
@@ -91,10 +62,10 @@ export class TableInterpreter implements ElementInterpreter {
   private interpretSettingList(settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.table.headerColor = settingMap['headercolor']?.length ? extractColor(settingMap['headercolor']?.at(0)?.value as any) : undefined;
+    this.tablePartial.headerColor = settingMap['headercolor']?.length ? extractColor(settingMap['headercolor']?.at(0)?.value as any) : undefined;
 
     const [noteNode] = settingMap['note'] || [];
-    this.table.note = noteNode && {
+    this.tablePartial.note = noteNode && {
       value: extractQuotedStringToken(noteNode?.value).map(normalizeNoteContent).unwrap(),
       token: getTokenPosition(noteNode),
     };
@@ -111,7 +82,7 @@ export class TableInterpreter implements ElementInterpreter {
     return subs.flatMap((sub) => {
       switch (sub.type?.value.toLowerCase()) {
         case 'note':
-          this.table.note = {
+          this.tablePartial.note = {
             value: extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? (sub.body.body[0] as FunctionApplicationNode).callee : sub.body!.callee).map(normalizeNoteContent).unwrap(),
             token: getTokenPosition(sub),
           }
@@ -225,7 +196,7 @@ export class TableInterpreter implements ElementInterpreter {
     column.pk ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'pk');
     column.unique ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'unique');
 
-    this.table.fields!.push(column as Column);
+    this.tablePartial.fields!.push(column as Column);
     if (column.pk) {
       this.pkColumns.push(column as Column);
     }
@@ -233,7 +204,7 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretIndexes(indexes: ElementDeclarationNode): CompileError[] {
-    this.table.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
+    this.tablePartial.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
       const index: Partial<Index> = { columns: [], };
 
       const indexField = _indexField as FunctionApplicationNode;
@@ -288,38 +259,38 @@ export class TableInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private registerInlineRefToEnv(column: FunctionApplicationNode, referredSymbol: ColumnSymbol, inlineRef: InlineRef, ref: AttributeNode): CompileError[] {
-    const refId = getRefId(column.symbol as ColumnSymbol, referredSymbol);
-    if (this.env.refIds[refId]) {
-      return [
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', ref),
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
-      ];
-    }
-
-    const multiplicities = getMultiplicities(inlineRef.relation);
-    this.env.refIds[refId] = ref;
-    this.env.ref.set(ref, {
-      name: null,
-      schemaName: null,
-      token: inlineRef.token,
-      endpoints: [
-        {
-          ...inlineRef,
-          relation: multiplicities[1],
-        },
-        {
-          schemaName: this.table.schemaName!,
-          tableName: this.table.name!,
-          fieldNames: [extractVariableFromExpression(column.callee!).unwrap()],
-          token: getTokenPosition(column),
-          relation: multiplicities[0],
-        },
-      ]
-    });
-
-    return [];
-  }
+  // private registerInlineRefToEnv(column: FunctionApplicationNode, referredSymbol: ColumnSymbol, inlineRef: InlineRef, ref: AttributeNode): CompileError[] {
+  //   const refId = getRefId(column.symbol as ColumnSymbol, referredSymbol);
+  //   if (this.env.refIds[refId]) {
+  //     return [
+  //       new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', ref),
+  //       new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
+  //     ];
+  //   }
+  //
+  //   const multiplicities = getMultiplicities(inlineRef.relation);
+  //   this.env.refIds[refId] = ref;
+  //   this.env.ref.set(ref, {
+  //     name: null,
+  //     schemaName: null,
+  //     token: inlineRef.token,
+  //     endpoints: [
+  //       {
+  //         ...inlineRef,
+  //         relation: multiplicities[1],
+  //       },
+  //       {
+  //         schemaName: this.table.schemaName!,
+  //         tableName: this.table.name!,
+  //         fieldNames: [extractVariableFromExpression(column.callee!).unwrap()],
+  //         token: getTokenPosition(column),
+  //         relation: multiplicities[0],
+  //       },
+  //     ]
+  //   });
+  //
+  //   return [];
+  // }
 }
 
 function processColumnType(typeNode: SyntaxNode): Report<ColumnType, CompileError> {

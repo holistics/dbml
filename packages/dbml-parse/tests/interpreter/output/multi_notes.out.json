@@ -686,6 +686,7 @@
     "refs": [],
     "tableGroups": [],
     "tables": [],
+    "tablePartials": [],
     "token": {
       "start": {
         "offset": 0,
@@ -715,5 +716,6 @@
       }
     },
     "database_type": "PostgreSQL"
-  }
+  },
+  "tablePartials": []
 }

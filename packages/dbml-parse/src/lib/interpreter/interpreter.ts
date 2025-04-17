@@ -10,6 +10,7 @@ import { ProjectInterpreter } from './elementInterpreter/project';
 import Report from '../report';
 import { getElementKind } from '../analyzer/utils';
 import { ElementKind } from '../analyzer/types';
+import { TablePartialInterpreter } from './elementInterpreter/tablePartial';
 
 // The interpreted format follows the old parser
 export default class Interpreter {
@@ -29,6 +30,7 @@ export default class Interpreter {
       groupOfTable: { },
       aliases: [],
       project: new Map(),
+      tablePartials: new Map(),
     };
   }
 
@@ -43,6 +45,8 @@ export default class Interpreter {
           return (new RefInterpreter(element, this.env)).interpret();
         case ElementKind.TableGroup:
           return (new TableGroupInterpreter(element, this.env)).interpret();
+        case ElementKind.TablePartial:
+          return (new TablePartialInterpreter(element, this.env)).interpret();
         case ElementKind.Enum:
           return (new EnumInterpreter(element, this.env)).interpret();
         case ElementKind.Project:
@@ -66,5 +70,6 @@ function convertEnvToDb(env: InterpreterDatabase): Database {
     tableGroups: Array.from(env.tableGroups.values()),
     aliases: env.aliases,
     project: Array.from(env.project.values())[0] || {},
+    tablePartials: Array.from(env.tablePartials.values()),
   };
 }
