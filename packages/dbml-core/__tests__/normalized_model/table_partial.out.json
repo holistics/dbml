@@ -23,7 +23,8 @@
       "enumIds": [],
       "tableGroupIds": [],
       "refIds": [
-        1
+        1,
+        2
       ],
       "databaseId": 1
     },
@@ -48,6 +49,14 @@
       "endpointIds": [
         1,
         2
+      ],
+      "schemaId": 1
+    },
+    "2": {
+      "id": 2,
+      "endpointIds": [
+        3,
+        4
       ],
       "schemaId": 1
     }
@@ -86,6 +95,7 @@
       "name": "users",
       "alias": null,
       "note": null,
+      "headerColor": "#ff0000",
       "fieldIds": [
         11,
         12,
@@ -132,6 +142,32 @@
       "refId": 1,
       "fieldIds": [
         6
+      ]
+    },
+    "3": {
+      "id": 3,
+      "schemaName": "public",
+      "tableName": "users",
+      "fieldNames": [
+        "refColumn2"
+      ],
+      "relation": "*",
+      "refId": 2,
+      "fieldIds": [
+        7
+      ]
+    },
+    "4": {
+      "id": 4,
+      "schemaName": "a",
+      "tableName": "a",
+      "fieldNames": [
+        "id"
+      ],
+      "relation": "1",
+      "refId": 2,
+      "fieldIds": [
+        3
       ]
     }
   },
@@ -255,7 +291,9 @@
       "unique": false,
       "pk": false,
       "note": null,
-      "endpointIds": [],
+      "endpointIds": [
+        4
+      ],
       "tableId": 2,
       "enumId": null
     },
@@ -319,7 +357,9 @@
       "pk": false,
       "note": null,
       "increment": false,
-      "endpointIds": [],
+      "endpointIds": [
+        3
+      ],
       "tableId": 3,
       "enumId": null
     },

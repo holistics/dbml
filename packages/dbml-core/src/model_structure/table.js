@@ -102,7 +102,6 @@ class Table extends Element {
     if (!isNil(this.note)) existingSettingNames.add('note');
     if (!isNil(this.headerColor)) existingSettingNames.add('headerColor');
 
-
     // descending order, we'll inserted the partial fields from tail to head
     const sortedPartials = this.partials.sort((a, b) => b.order - a.order);
 
@@ -111,10 +110,10 @@ class Table extends Element {
       const tablePartial = this.schema.database.findTablePartial(partial.name);
 
       if (!tablePartial) this.error(`Table partial ${partial.name} not found`, partial.token);
+
       if (tablePartial.fields) {
         // ignore fields that already exist in the table, or have been added by a later partial
         const rawFields = tablePartial.fields.filter(f => !existingFieldNames.has(f.name));
-
         const fields =  rawFields.map((rawField) => {
           existingFieldNames.add(rawField.name);
 
@@ -146,12 +145,12 @@ class Table extends Element {
       }
 
       // merge settings
-      if (!existingSettingNames.has('note')) {
+      if (!existingSettingNames.has('note') && !isNil(tablePartial.note)) {
         this.noteToken = null;
         this.note = tablePartial.note;
         existingSettingNames.add('note');
       }
-      if (!existingSettingNames.has('headerColor')) {
+      if (!existingSettingNames.has('headerColor') && !isNil(tablePartial.headerColor)) {
         this.headerColor = tablePartial.headerColor;
         existingSettingNames.add('headerColor');
       }
