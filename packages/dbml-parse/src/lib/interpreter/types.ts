@@ -24,6 +24,7 @@ export interface InterpreterDatabase {
   // for keeping track of the owner table group of a table
   groupOfTable: { [tableid: string]: ElementDeclarationNode };
   tableGroups: Map<ElementDeclarationNode, TableGroup>;
+  tablePartials: Map<ElementDeclarationNode, TablePartial>;
   aliases: Alias[];
   project: Map<ElementDeclarationNode, Project>;
 }
@@ -37,6 +38,7 @@ export interface Database {
   tableGroups: TableGroup[];
   aliases: Alias[];
   project: Project;
+  tablePartials: TablePartial[];
 }
 
 export interface Table {
@@ -201,12 +203,13 @@ export type Project =
       refs: Ref[];
       enums: Enum[];
       tableGroups: TableGroup[];
+      tablePartials: TablePartial[];
       note?: {
         value: string;
         token: TokenPosition;
       };
       token: TokenPosition;
       [
-        index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note'>
+        index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials'>
       ]: string;
     };

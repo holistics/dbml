@@ -164,9 +164,9 @@ export default abstract class ElementBinder {
   // which can be a simple expression like v1.User,
   // or a complex tuple like v1.User.(id, name)
   private bindFragments(rawFragments: SyntaxNode[], rule: BinderRule & { shouldBind: true }) {
-    if (rawFragments.length === 0) {
-      return;
-    }
+    if (rawFragments.length === 0) return;
+
+    const isPartialInjection = rawFragments[0] instanceof PartialInjectionNode;
 
     const topSubnamesSymbolKind = [...rule.topSubnamesSymbolKind!];
     const { remainingSubnamesSymbolKind } = rule;
@@ -174,7 +174,9 @@ export default abstract class ElementBinder {
     // Handle cases of binding an incomplete member access expression
 
     // The first index of the first fragment that is not a variable
-    const invalidIndex = rawFragments.findIndex((f) => !isExpressionAVariableNode(f));
+    const invalidIndex = isPartialInjection
+      ? -1
+      : rawFragments.findIndex((f) => !isExpressionAVariableNode(f));
 
     // If the fragments are of a complex tuple, the first non-variable fragment must be a tuple
     const isComplexTuple = invalidIndex !== -1 && isTupleOfVariables(rawFragments[invalidIndex]);
@@ -187,6 +189,7 @@ export default abstract class ElementBinder {
       0,
       invalidIndex === -1 ? undefined : invalidIndex,
     ) as (PrimaryExpressionNode & { expression: VariableNode })[];
+    // if (rawFragments[0] instanceof PartialInjectionNode) console.log(fragments.length);
     if (fragments.length === 0) {
       return;
     }
@@ -207,7 +210,7 @@ export default abstract class ElementBinder {
 
     while (fragments.length) {
       const fragment = fragments.pop()!;
-      const varname = extractVarNameFromPrimaryVariable(fragment).unwrap();
+      const varname = isPartialInjection ? (fragment as PartialInjectionNode).partial!.variable!.value : extractVarNameFromPrimaryVariable(fragment).unwrap();
       subnameStack.unshift({
         index: createNodeSymbolIndex(varname, remainingSubnamesSymbolKind!),
         referrer: fragment,
@@ -295,11 +298,11 @@ export default abstract class ElementBinder {
     const injectedSymbols = new Map<NodeSymbolIndex, NodeSymbol>();
 
     symbolTable.forEach((_, nodeSymbolIndex) => {
-      console.log(isInjectionIndex(nodeSymbolIndex), nodeSymbolIndex);
+      // console.log(isInjectionIndex(nodeSymbolIndex), nodeSymbolIndex);
       if (isInjectionIndex(nodeSymbolIndex)) {
         const nodeSymbol = findSymbol(getInjectorIndex(nodeSymbolIndex)!, this.declarationNode);
         nodeSymbol?.declaration?.symbol?.symbolTable?.forEach((injectedSymbol, injectedIndex) => {
-          console.log(injectedIndex, injectedSymbol);
+          // console.log(injectedIndex, injectedSymbol);
           if (symbolTable.has(injectedIndex)) return;
           injectedSymbols.set(injectedIndex, injectedSymbol);
         });
