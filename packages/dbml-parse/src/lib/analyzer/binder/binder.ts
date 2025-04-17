@@ -16,21 +16,17 @@ export default class Binder {
   }
 
   resolve (symbolFactory: SymbolFactory): Report<ProgramNode, CompileError> {
-    this.ast.body.forEach((element) => {
-      if (element.type) {
+    // Resolve injected fields and sub elements before binding
+    this.ast.body
+      .map((element) => {
+        if (!element.type) return null;
+
         const _Binder = pickBinder(element as ElementDeclarationNode & { type: SyntaxToken });
         const binder = new _Binder(element, this.errors);
         binder.resolveInjections(symbolFactory);
-      }
-    });
-    // eslint-disable-next-line no-restricted-syntax
-    for (const element of this.ast.body) {
-      if (element.type) {
-        const _Binder = pickBinder(element as ElementDeclarationNode & { type: SyntaxToken });
-        const binder = new _Binder(element, this.errors);
-        binder.bind();
-      }
-    }
+        return binder;
+      })
+      .forEach((binder) => binder?.bind());
 
     return new Report(this.ast, this.errors);
   }

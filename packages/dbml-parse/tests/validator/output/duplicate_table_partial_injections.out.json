@@ -935,18 +935,18 @@
               "id": 17,
               "kind": "<partial-injection>",
               "startPos": {
-                "offset": 69,
+                "offset": 68,
                 "line": 6,
-                "column": 3
+                "column": 2
               },
-              "fullStart": 69,
+              "fullStart": 66,
               "endPos": {
                 "offset": 75,
                 "line": 6,
                 "column": 9
               },
               "fullEnd": 77,
-              "start": 69,
+              "start": 68,
               "end": 75,
               "partial": {
                 "id": 16,
@@ -1015,18 +1015,18 @@
               "id": 19,
               "kind": "<partial-injection>",
               "startPos": {
-                "offset": 80,
+                "offset": 79,
                 "line": 7,
-                "column": 3
+                "column": 2
               },
-              "fullStart": 80,
+              "fullStart": 77,
               "endPos": {
                 "offset": 86,
                 "line": 7,
                 "column": 9
               },
               "fullEnd": 88,
-              "start": 80,
+              "start": 79,
               "end": 86,
               "partial": {
                 "id": 18,
@@ -1095,18 +1095,18 @@
               "id": 21,
               "kind": "<partial-injection>",
               "startPos": {
-                "offset": 91,
+                "offset": 90,
                 "line": 8,
-                "column": 3
+                "column": 2
               },
-              "fullStart": 91,
+              "fullStart": 88,
               "endPos": {
                 "offset": 97,
                 "line": 8,
                 "column": 9
               },
               "fullEnd": 99,
-              "start": 91,
+              "start": 90,
               "end": 97,
               "partial": {
                 "id": 20,
@@ -1285,18 +1285,18 @@
         "id": 19,
         "kind": "<partial-injection>",
         "startPos": {
-          "offset": 80,
+          "offset": 79,
           "line": 7,
-          "column": 3
+          "column": 2
         },
-        "fullStart": 80,
+        "fullStart": 77,
         "endPos": {
           "offset": 86,
           "line": 7,
           "column": 9
         },
         "fullEnd": 88,
-        "start": 80,
+        "start": 79,
         "end": 86,
         "partial": {
           "id": 18,
@@ -1361,7 +1361,7 @@
         },
         "symbol": 6
       },
-      "start": 80,
+      "start": 79,
       "end": 86,
       "name": "CompileError"
     },
@@ -1372,18 +1372,18 @@
         "id": 17,
         "kind": "<partial-injection>",
         "startPos": {
-          "offset": 69,
+          "offset": 68,
           "line": 6,
-          "column": 3
+          "column": 2
         },
-        "fullStart": 69,
+        "fullStart": 66,
         "endPos": {
           "offset": 75,
           "line": 6,
           "column": 9
         },
         "fullEnd": 77,
-        "start": 69,
+        "start": 68,
         "end": 75,
         "partial": {
           "id": 16,
@@ -1448,7 +1448,7 @@
         },
         "symbol": 5
       },
-      "start": 69,
+      "start": 68,
       "end": 75,
       "name": "CompileError"
     },
@@ -1459,18 +1459,18 @@
         "id": 21,
         "kind": "<partial-injection>",
         "startPos": {
-          "offset": 91,
+          "offset": 90,
           "line": 8,
-          "column": 3
+          "column": 2
         },
-        "fullStart": 91,
+        "fullStart": 88,
         "endPos": {
           "offset": 97,
           "line": 8,
           "column": 9
         },
         "fullEnd": 99,
-        "start": 91,
+        "start": 90,
         "end": 97,
         "partial": {
           "id": 20,
@@ -1535,7 +1535,7 @@
         },
         "symbol": 7
       },
-      "start": 91,
+      "start": 90,
       "end": 97,
       "name": "CompileError"
     },
@@ -1546,18 +1546,18 @@
         "id": 17,
         "kind": "<partial-injection>",
         "startPos": {
-          "offset": 69,
+          "offset": 68,
           "line": 6,
-          "column": 3
+          "column": 2
         },
-        "fullStart": 69,
+        "fullStart": 66,
         "endPos": {
           "offset": 75,
           "line": 6,
           "column": 9
         },
         "fullEnd": 77,
-        "start": 69,
+        "start": 68,
         "end": 75,
         "partial": {
           "id": 16,
@@ -1622,7 +1622,7 @@
         },
         "symbol": 5
       },
-      "start": 69,
+      "start": 68,
       "end": 75,
       "name": "CompileError"
     }
