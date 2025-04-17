@@ -23,6 +23,7 @@ import {
 import { ArgumentBinderRule, BinderRule, InjectionBinderRule, SettingListBinderRule } from '../types';
 import {
   destructureMemberAccessExpression,
+  extractVarNameFromPartialInjection,
   extractVarNameFromPrimaryVariable,
   findSymbol,
 } from '../../utils';
@@ -168,7 +169,7 @@ export default abstract class ElementBinder {
   private bindFragments(rawFragments: SyntaxNode[], rule: BinderRule & { shouldBind: true }) {
     if (rawFragments.length === 0) return;
 
-    const isPartialInjection = rawFragments[0] instanceof PartialInjectionNode;
+    const isPartialInjection = rawFragments.length === 1 && rawFragments[0] instanceof PartialInjectionNode;
 
     const topSubnamesSymbolKind = [...rule.topSubnamesSymbolKind!];
     const { remainingSubnamesSymbolKind } = rule;
@@ -209,7 +210,7 @@ export default abstract class ElementBinder {
 
     while (fragments.length) {
       const fragment = fragments.pop()!;
-      const varname = isPartialInjection ? (fragment as PartialInjectionNode).partial!.variable!.value : extractVarNameFromPrimaryVariable(fragment).unwrap();
+      const varname = isPartialInjection ? extractVarNameFromPartialInjection(fragment as PartialInjectionNode).unwrap() : extractVarNameFromPrimaryVariable(fragment).unwrap();
       subnameStack.unshift({
         index: createNodeSymbolIndex(varname, remainingSubnamesSymbolKind!),
         referrer: fragment,
@@ -294,21 +295,22 @@ export default abstract class ElementBinder {
     const symbolTable = this.declarationNode.symbol?.symbolTable;
     if (!symbolTable) return;
 
-    const injectedSymbols = new Map<NodeSymbolIndex, NodeSymbol>();
+    const injectorSymbols = new Map<NodeSymbolIndex, NodeSymbol>();
 
     symbolTable.forEach((_, nodeSymbolIndex) => {
-      // console.log(isInjectionIndex(nodeSymbolIndex), nodeSymbolIndex);
-      if (isInjectionIndex(nodeSymbolIndex)) {
-        const nodeSymbol = findSymbol(getInjectorIndex(nodeSymbolIndex)!, this.declarationNode);
-        nodeSymbol?.declaration?.symbol?.symbolTable?.forEach((injectedSymbol, injectedIndex) => {
-          // console.log(injectedIndex, injectedSymbol);
-          if (symbolTable.has(injectedIndex)) return;
-          injectedSymbols.set(injectedIndex, injectedSymbol);
-        });
-      }
+      if (!isInjectionIndex(nodeSymbolIndex)) return;
+
+      const nodeSymbol = findSymbol(getInjectorIndex(nodeSymbolIndex)!, this.declarationNode);
+
+      const injectorSymbolTable = nodeSymbol?.declaration?.symbol?.symbolTable;
+      if (!injectorSymbolTable) return;
+
+      injectorSymbolTable.forEach((injectedSymbol, injectedIndex) => {
+        if (!symbolTable.has(injectedIndex)) injectorSymbols.set(injectedIndex, injectedSymbol);
+      });
     });
 
-    injectedSymbols.forEach((injectedSymbol, injectedIndex) => {
+    injectorSymbols.forEach((injectedSymbol, injectedIndex) => {
       const resInjectedSymbol = symbolFactory.create(TablePartialInjectedColumnSymbol, { injectorId: injectedSymbol.id });
       symbolTable.set(injectedIndex, resInjectedSymbol);
     });
