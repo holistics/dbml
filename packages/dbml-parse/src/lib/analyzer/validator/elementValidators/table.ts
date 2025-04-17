@@ -10,7 +10,6 @@ import {
   FunctionApplicationNode,
   ListExpressionNode,
   PartialInjectionNode,
-  PrefixExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
@@ -40,7 +39,6 @@ import {
 import { SyntaxToken } from '../../../lexer/tokens';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
 import _ from 'lodash';
-import { error } from 'console';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken};
@@ -170,8 +168,12 @@ export default class TableValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Table\'s body must be a block', body)];
     }
 
-    const [fields, subsAndInjections] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    const [injections, subs] = _.partition(subsAndInjections, (e) => e instanceof PartialInjectionNode);
+    const [fields, injections, subs] = body.body.reduce((res: [FunctionApplicationNode[], PartialInjectionNode[], ElementDeclarationNode[]], node) => {
+      if (node instanceof FunctionApplicationNode) res[0].push(node);
+      else if (node instanceof PartialInjectionNode) res[1].push(node);
+      else if (node instanceof ElementDeclarationNode) res[2].push(node);
+      return res;
+    }, [[], [], []]);
 
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
@@ -180,31 +182,13 @@ export default class TableValidator implements ElementValidator {
     ];
   }
 
-  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
-    const [columns, injections, invalidFieldErrors] = fields.reduce((res: [FunctionApplicationNode[], FunctionApplicationNode[], CompileError[]], field) => {
-      if (field.callee instanceof PrimaryExpressionNode) res[0].push(field);
-      else if (field.callee instanceof PrefixExpressionNode) res[1].push(field);
-      else res[2].push(new CompileError(CompileErrorCode.INVALID_TABLE_FIELD, 'A Table field must be a column or a TablePartial injection', field));
-      return res;
-    }, [[], [], []]);
-
-    return [
-      ...invalidFieldErrors,
-      ...this.validateColumns(columns),
-      ...this.validateInjections(injections),
-    ];
-  }
-
   validateInjections (injections: PartialInjectionNode[]) {
     return injections.flatMap((injection) => this.registerInjection(injection));
   }
 
   registerInjection (injection: PartialInjectionNode) {
-    // const callee = injection.callee as PrefixExpressionNode;
-    if (injection.partial && injection.partial.variable?.value) {
-    // if (callee.expression && isExpressionAVariableNode(callee.expression)) {
+    if (injection.partial?.variable?.value) {
       const injectionName = injection.partial.variable?.value;
-      // const injectionName = extractVarNameFromPrimaryVariable(callee.expression).unwrap();
       const injectionId = createTablePartialInjectionSymbolIndex(injectionName);
 
       const injectionSymbol = this.symbolFactory.create(TablePartialInjectionSymbol, { declaration: injection });
@@ -223,35 +207,39 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  validateColumns (columns: FunctionApplicationNode[]) {
-    if (columns.length === 0) {
+  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
+    if (fields.length === 0) {
       return [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
     }
 
-    return columns.flatMap((column) => {
+    return fields.flatMap((field) => {
+      if (!field.callee) {
+        return [];
+      }
+
       const errors: CompileError[] = [];
-      if (column.args.length === 0) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', column.callee!));
+      if (field.args.length === 0) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', field.callee!));
+      }
+  
+      if (!isExpressionAVariableNode(field.callee)) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
       }
 
-      if (!isExpressionAVariableNode(column.callee)) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', column.callee!));
+      if (field.args[0] && !isValidColumnType(field.args[0])) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', field.args[0]));
       }
 
-      if (column.args[0] && !isValidColumnType(column.args[0])) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', column.args[0]));
-      }
+      const remains = field.args.slice(1);
+      errors.push(...this.validateFieldSetting(remains));
 
-      const remains = column.args.slice(1);
-      errors.push(...this.validateColumnSetting(remains));
-
-      errors.push(...this.registerColumn(column));
-
+      errors.push(...this.registerField(field));
+  
       return errors;
     });
   }
 
-  registerColumn(field: FunctionApplicationNode): CompileError[] {
+  registerField(field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
       const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const columnId = createColumnSymbolIndex(columnName);
@@ -273,7 +261,7 @@ export default class TableValidator implements ElementValidator {
   }
 
   // This is needed to support legacy inline settings
-  validateColumnSetting (parts: ExpressionNode[]): CompileError[] {
+  validateFieldSetting(parts: ExpressionNode[]): CompileError[] {
     if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
       return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
     }
@@ -413,7 +401,6 @@ export default class TableValidator implements ElementValidator {
 
   private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
     const errors = subs.flatMap((sub) => {
-      if (!sub) return [];
       sub.parent = this.declarationNode;
       if (!sub.type) {
         return [];
@@ -423,7 +410,7 @@ export default class TableValidator implements ElementValidator {
       return validator.validate();
     });
     
-    const notes = subs.filter((sub) => sub?.type?.value.toLowerCase() === 'note');
+    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
     if (notes.length > 1) {
       errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
     }
