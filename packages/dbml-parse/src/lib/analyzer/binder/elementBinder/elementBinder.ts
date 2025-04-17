@@ -91,7 +91,7 @@ export default abstract class ElementBinder {
       // eslint-disable-next-line no-restricted-syntax
       for (const sub of nodeBody.body) {
         if (sub instanceof ElementDeclarationNode) {
-          if (this.declarationNode.type?.value.toLowerCase() === ElementKind.TablePartial) continue;
+          if (this.declarationNode.type?.value.toLowerCase() === ElementKind.TablePartial && sub.type?.value.toLowerCase() === ElementKind.Indexes) continue;
           if (!sub.type) {
             continue;
           }
@@ -99,7 +99,6 @@ export default abstract class ElementBinder {
           const binder = new Binder(sub, this.errors);
           binder.bind();
         } else if (sub instanceof FunctionApplicationNode) {
-          // if (sub.callee instanceof PrefixExpressionNode) this.bindPartialInjection(sub.callee);
           this.bindSubfield(sub);
         } else {
           this.bindPartialInjection(sub);
@@ -192,10 +191,7 @@ export default abstract class ElementBinder {
       0,
       invalidIndex === -1 ? undefined : invalidIndex,
     ) as (PrimaryExpressionNode & { expression: VariableNode })[];
-    // if (rawFragments[0] instanceof PartialInjectionNode) console.log(fragments.length);
-    if (fragments.length === 0) {
-      return;
-    }
+    if (fragments.length === 0) return;
 
     const subnameStack: {
       index: NodeSymbolIndex;

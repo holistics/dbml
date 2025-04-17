@@ -1,12 +1,17 @@
 TablePartial p1 {
   id int [pk]
+
   indexes {
     id [unique]
   }
+
+  note {
+    'table partial note'
+  }
 }
 
-TablePartial p2 {
-  name text
+TablePartial p2 [note: 'table partial note in setting list', headerColor: #0178ef] {
+  email text [ref: > t1.email]
 }
 
 Table t1 {
@@ -17,4 +22,7 @@ Table t1 {
 
 Table t2 {
   id int [ref: > t1.id]
+  note {
+    'table note'
+  }
 }
