@@ -11,6 +11,7 @@ import {
   PrefixExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
+  SyntaxNodeKind,
   TupleExpressionNode,
   VariableNode,
 } from '../../../parser/nodes';
@@ -30,7 +31,8 @@ import { NodeSymbolIndex, createNodeSymbolIndex, destructureIndex, getInjectorIn
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { pickBinder } from '../utils';
 import SymbolFactory from '../../symbol/factory';
-import { NodeSymbol, NodeSymbolId, TablePartialInjectedColumnSymbol } from '../../symbol/symbols';
+import { NodeSymbol, TablePartialInjectedColumnSymbol } from '../../symbol/symbols';
+import { ElementKind } from '../../types';
 
 export default abstract class ElementBinder {
   protected abstract subfield: {
@@ -89,6 +91,7 @@ export default abstract class ElementBinder {
       // eslint-disable-next-line no-restricted-syntax
       for (const sub of nodeBody.body) {
         if (sub instanceof ElementDeclarationNode) {
+          if (this.declarationNode.type?.value.toLowerCase() === ElementKind.TablePartial) continue;
           if (!sub.type) {
             continue;
           }
