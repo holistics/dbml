@@ -33,6 +33,7 @@ import {
   IdentiferStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
+  PartialInjectionNode,
   PrefixExpressionNode,
   ProgramNode,
   SyntaxNode,
@@ -67,15 +68,18 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         ...(abOcToken?.leadingTrivia || []),
       ].find((token) => isComment(token) && isOffsetWithinSpan(offset, token))
     ) {
+      // console.log('provideCompletionItems', 'comment');
       return noSuggestions();
     } 
 
     if (bOcTokenId === undefined) {
+      // console.log('provideCompletionItems', 'TOPLEVEL 1');
       return suggestTopLevelElementType();
     }
 
     // Check if we're inside a string
     if ([SyntaxTokenKind.STRING_LITERAL, SyntaxTokenKind.QUOTED_STRING].includes(bOcToken.kind) && isOffsetWithinSpan(offset, bOcToken)) {
+      // console.log('provideCompletionItems', 'string');
       return noSuggestions(); 
     }
 
@@ -87,10 +91,12 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         element.type.start <= offset &&
         element.type.end >= offset)
     ) {
+      // console.log('provideCompletionItems', 'TOPLEVEL 2');
       return suggestTopLevelElementType();
     }
 
     const containers = [...this.compiler.container.stack(offset)].reverse();
+    // console.log('provideCompletionItems', containers);
     // eslint-disable-next-line no-restricted-syntax
     for (const container of containers) {
       if (container instanceof PrefixExpressionNode) {
@@ -129,6 +135,9 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         return suggestInAttribute(this.compiler, offset, container);
       } else if (container instanceof TupleExpressionNode) {
         return suggestInTuple(this.compiler, offset);
+      } else if (container instanceof PartialInjectionNode) {
+        return suggestOnPartialInjectionOp(this.compiler, offset, container);
+        // return suggestNamesInScope(this.compiler, offset, this.compiler.container.element(offset), [SymbolKind.TablePartial]);
       } else if (container instanceof FunctionApplicationNode) {
         return suggestInSubField(this.compiler, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
@@ -143,6 +152,15 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     return noSuggestions();
   }
+}
+
+function suggestOnPartialInjectionOp (
+  compiler: Compiler,
+  offset: number,
+  container: PartialInjectionNode,
+) {
+  const parent = compiler.container.element(offset);
+  return suggestNamesInScope(compiler, offset, parent, [SymbolKind.TablePartial]) ;
 }
 
 function suggestOnRelOp(
@@ -171,6 +189,7 @@ function suggestNamesInScope(
   parent: ElementDeclarationNode | ProgramNode | undefined,
   acceptedKinds: SymbolKind[],
 ): CompletionList {
+  // console.log('suggestNamesInScope', offset, parent, acceptedKinds);
   if (parent === undefined) {
     return noSuggestions();
   }
@@ -441,6 +460,8 @@ function suggestInSubField(
   switch (scopeKind) {
     case ScopeKind.TABLE:
       return suggestInColumn(compiler, offset, container);
+    case ScopeKind.TABLEPARTIAL:
+      return suggestInColumn(compiler, offset, container);
     case ScopeKind.PROJECT:
       return suggestInProjectField(compiler, offset, container);
     case ScopeKind.INDEXES:
@@ -464,7 +485,7 @@ function suggestInSubField(
 
 function suggestTopLevelElementType(): CompletionList {
   return {
-    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref'].map((name) => ({
+    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial'].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -500,6 +521,7 @@ function suggestInColumn(
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
+  // console.log('suggestInColumn', container);
   if (!container?.callee) {
     return {
       suggestions: ['Note', 'indexes'].map((name) => ({
