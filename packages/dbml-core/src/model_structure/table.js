@@ -166,9 +166,16 @@ class Table extends Element {
       //   isEqual(a.columns, b.columns) &&
       //   a.unique === b.unique &&
       //   a.pk === b.pk &&
-      //   a.type === b.type &&
+      //   a.type === b.type
       // });
     });
+  }
+
+  export () {
+    return {
+      ...this.shallowExport(),
+      ...this.exportChild(),
+    };
   }
 
   exportChild () {

@@ -87,10 +87,22 @@
       "alias": null,
       "note": null,
       "fieldIds": [
+        11,
+        12,
+        13,
         5,
-        6
+        10,
+        6,
+        7,
+        8,
+        9
       ],
-      "indexIds": [],
+      "indexIds": [
+        1,
+        2,
+        3,
+        4
+      ],
       "schemaId": 1,
       "groupId": null
     }
@@ -124,8 +136,81 @@
     }
   },
   "enumValues": {},
-  "indexes": {},
-  "indexColumns": {},
+  "indexes": {
+    "1": {
+      "id": 1,
+      "unique": true,
+      "pk": false,
+      "note": null,
+      "columnIds": [
+        1
+      ],
+      "tableId": 3
+    },
+    "2": {
+      "id": 2,
+      "unique": false,
+      "pk": true,
+      "note": null,
+      "columnIds": [
+        2
+      ],
+      "tableId": 3
+    },
+    "3": {
+      "id": 3,
+      "unique": true,
+      "pk": false,
+      "note": null,
+      "columnIds": [
+        3,
+        4
+      ],
+      "tableId": 3
+    },
+    "4": {
+      "id": 4,
+      "unique": true,
+      "pk": false,
+      "note": null,
+      "columnIds": [
+        5
+      ],
+      "tableId": 3
+    }
+  },
+  "indexColumns": {
+    "1": {
+      "id": 1,
+      "type": "column",
+      "value": "email",
+      "indexId": 1
+    },
+    "2": {
+      "id": 2,
+      "type": "column",
+      "value": "id",
+      "indexId": 2
+    },
+    "3": {
+      "id": 3,
+      "type": "column",
+      "value": "email",
+      "indexId": 3
+    },
+    "4": {
+      "id": 4,
+      "type": "column",
+      "value": "id",
+      "indexId": 3
+    },
+    "5": {
+      "id": 5,
+      "type": "column",
+      "value": "email",
+      "indexId": 4
+    }
+  },
   "fields": {
     "1": {
       "id": 1,
@@ -219,6 +304,132 @@
       "endpointIds": [
         2
       ],
+      "tableId": 3,
+      "enumId": null
+    },
+    "7": {
+      "id": 7,
+      "name": "refColumn2",
+      "type": {
+        "schemaName": null,
+        "type_name": "bool",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "increment": false,
+      "endpointIds": [],
+      "tableId": 3,
+      "enumId": null
+    },
+    "8": {
+      "id": 8,
+      "name": "delete_status",
+      "type": {
+        "schemaName": null,
+        "type_name": "boolean",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "not_null": true,
+      "note": null,
+      "increment": false,
+      "endpointIds": [],
+      "tableId": 3,
+      "enumId": null
+    },
+    "9": {
+      "id": 9,
+      "name": "deleted_at",
+      "type": {
+        "schemaName": null,
+        "type_name": "timestamp",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "dbdefault": {
+        "value": "now()",
+        "type": "expression"
+      },
+      "increment": false,
+      "endpointIds": [],
+      "tableId": 3,
+      "enumId": null
+    },
+    "10": {
+      "id": 10,
+      "name": "email",
+      "type": {
+        "schemaName": null,
+        "type_name": "varchar",
+        "args": null
+      },
+      "unique": true,
+      "pk": false,
+      "note": null,
+      "increment": false,
+      "endpointIds": [],
+      "tableId": 3,
+      "enumId": null
+    },
+    "11": {
+      "id": 11,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": true,
+      "not_null": true,
+      "note": null,
+      "increment": false,
+      "endpointIds": [],
+      "tableId": 3,
+      "enumId": null
+    },
+    "12": {
+      "id": 12,
+      "name": "created_at",
+      "type": {
+        "schemaName": null,
+        "type_name": "timestamp",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "dbdefault": {
+        "value": "now()",
+        "type": "expression"
+      },
+      "increment": false,
+      "endpointIds": [],
+      "tableId": 3,
+      "enumId": null
+    },
+    "13": {
+      "id": 13,
+      "name": "updated_at",
+      "type": {
+        "schemaName": null,
+        "type_name": "timestamp",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "dbdefault": {
+        "value": "now()",
+        "type": "expression"
+      },
+      "increment": false,
+      "endpointIds": [],
       "tableId": 3,
       "enumId": null
     }

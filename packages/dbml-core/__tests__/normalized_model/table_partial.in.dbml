@@ -37,16 +37,18 @@ TablePartial test2 {
 }
 
 TablePartial testIndex {
-  // indexes {
-  //   email [unique]
-  //   id [pk]
-  // }
+  indexes {
+    email [unique]
+    id [pk]
+    (email, id) [unique]
+  }
 }
 
 Table users {
   ~base_template
   ~email_index
   name varchar
+  ~testIndex
   ~soft_delete_template
   refColumn1 bit [ref: > a.id2]
   ~test
