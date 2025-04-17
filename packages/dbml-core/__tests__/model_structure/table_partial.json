@@ -48,7 +48,7 @@
       "partials": [
         {
           "name": "base_template",
-          "order": 1,
+          "order": 0,
           "token": {
             "start": {
               "offset": 150,
@@ -65,7 +65,15 @@
         {
           "name": "time_template",
           "order": 3
-        }
+        },
+        {
+          "name": "a",
+          "order": 4
+        },
+        {
+          "name": "b",
+          "order": 5
+        } 
       ]
     }
   ],
@@ -190,6 +198,26 @@
           "inline_refs": []
         }
       ]
+    },
+    { 
+      "name": "a",
+      "fields": [{
+        "name": "a",
+        "type": {
+          "type_name": "int",
+          "args": null
+        }
+      }]
+    },
+    {
+      "name": "b",
+      "fields": [{
+        "name": "b",
+        "type": {
+          "type_name": "int",
+          "args": null
+        }
+      }]
     }
   ]
 }
