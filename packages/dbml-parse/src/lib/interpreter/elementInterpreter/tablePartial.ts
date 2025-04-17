@@ -130,67 +130,58 @@ export class TablePartialInterpreter implements ElementInterpreter {
         value: extractQuotedStringToken(noteNode.value).map(normalizeNoteContent).unwrap(),
         token: getTokenPosition(noteNode),
       }
-      // const refs = settingMap['ref'] || [];
-      // column.inline_refs = refs.flatMap((ref) => {
-      //
-      //   const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
-      //
-      //   if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
-      //     errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
-      //     return [];
-      //   }
-      //
-      //   const op = (ref.value as PrefixExpressionNode).op!;
-      //   const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression).unwrap();
-      //
-      //   let inlineRef: InlineRef | undefined;
-      //   if (fragments.length === 1) {
-      //     const [column] = fragments;
-      //
-      //     inlineRef = {
-      //       schemaName: this.table.schemaName!,
-      //       tableName: this.table.name!,
-      //       fieldNames: [column],
-      //       relation: op.value as any,
-      //       token: getTokenPosition(ref),
-      //     };
-      //   } else if (fragments.length === 2) {
-      //     const [table, column] = fragments;
-      //     inlineRef = {
-      //       schemaName: null,
-      //       tableName: table,
-      //       fieldNames: [column],
-      //       relation: op.value as any,
-      //       token: getTokenPosition(ref),
-      //     };
-      //   } else if (fragments.length === 3) {
-      //     const [schema, table, column] = fragments;
-      //     inlineRef = {
-      //       schemaName: schema,
-      //       tableName: table,
-      //       fieldNames: [column],
-      //       relation: op.value as any,
-      //       token: getTokenPosition(ref),
-      //     };
-      //   } else {
-      //     errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref));
-      //     const column = fragments.pop()!;
-      //     const table = fragments.pop()!;
-      //     const schema = fragments.join('.');
-      //     inlineRef = {
-      //       schemaName: schema,
-      //       tableName: table,
-      //       fieldNames: [column],
-      //       relation: op.value as any,
-      //       token: getTokenPosition(ref),
-      //     };
-      //   }
-      //
-      //   const errs = this.registerInlineRefToEnv(field, referredSymbol, inlineRef, ref);
-      //   errors.push(...errs);
-      //
-      //   return errs.length === 0 ? inlineRef : [];
-      // })
+      const refs = settingMap['ref'] || [];
+      column.inline_refs = refs.flatMap((ref) => {
+
+        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
+
+        if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
+          errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
+          return [];
+        }
+
+        const op = (ref.value as PrefixExpressionNode).op!;
+        const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression).unwrap();
+
+        let inlineRef: InlineRef | undefined;
+        if (fragments.length === 2) {
+          const [table, column] = fragments;
+          inlineRef = {
+            schemaName: null,
+            tableName: table,
+            fieldNames: [column],
+            relation: op.value as any,
+            token: getTokenPosition(ref),
+          };
+        } else if (fragments.length === 3) {
+          const [schema, table, column] = fragments;
+          inlineRef = {
+            schemaName: schema,
+            tableName: table,
+            fieldNames: [column],
+            relation: op.value as any,
+            token: getTokenPosition(ref),
+          };
+        } else {
+          errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Unsupported', ref));
+          const column = fragments.pop()!;
+          const table = fragments.pop()!;
+          const schema = fragments.join('.');
+          inlineRef = {
+            schemaName: schema,
+            tableName: table,
+            fieldNames: [column],
+            relation: op.value as any,
+            token: getTokenPosition(ref),
+          };
+        }
+
+        // const errs = this.registerInlineRefToEnv(field, referredSymbol, inlineRef, ref);
+        // errors.push(...errs);
+
+        return inlineRef;
+        // return errs.length === 0 ? inlineRef : [];
+      })
     }
 
     column.pk ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'pk');
