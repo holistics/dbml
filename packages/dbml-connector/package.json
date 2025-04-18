@@ -16,6 +16,7 @@
     "@babel/preset-typescript": "^7.24.7",
     "@babel/runtime": "^7.21.0",
     "@types/jest": "^29.5.12",
+    "@types/lodash": "^4.17.16",
     "@types/mssql": "^9.1.5",
     "@types/node": "^22.2.0",
     "@types/pg": "^8.11.6",
@@ -32,6 +33,9 @@
   },
   "dependencies": {
     "@google-cloud/bigquery": "^7.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.30.1",
+    "@typescript-eslint/parser": "^8.30.1",
+    "lodash": "^4.17.21",
     "mssql": "^11.0.1",
     "mysql2": "^3.11.0",
     "pg": "^8.12.0",
