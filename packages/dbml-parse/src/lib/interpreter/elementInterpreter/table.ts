@@ -1,5 +1,5 @@
-import { Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table } from '../types';
-import { ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode } from '../../parser/nodes';
+import { Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table, TablePartialInjection } from '../types';
+import { ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PartialInjectionNode, PrefixExpressionNode, SyntaxNode } from '../../parser/nodes';
 import { extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent } from '../utils';
 import { destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression } from '../../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../../errors';
@@ -19,7 +19,7 @@ export class TableInterpreter implements ElementInterpreter {
   constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.table = { name: undefined, schemaName: undefined, alias: null, fields: [], token: undefined, indexes: [] };
+    this.table = { name: undefined, schemaName: undefined, alias: null, fields: [], token: undefined, indexes: [], partials: [] };
     this.pkColumns = [];
   }
 
@@ -103,8 +103,11 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretBody(body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
+    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode || e instanceof PartialInjectionNode);
+    return [
+      ...this.interpretFields(fields as (FunctionApplicationNode | PartialInjectionNode)[]),
+      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private interpretSubElements(subs: ElementDeclarationNode[]): CompileError[] {
@@ -124,8 +127,17 @@ export class TableInterpreter implements ElementInterpreter {
     })
   }
 
-  private interpretFields(fields: FunctionApplicationNode[]): CompileError[] {
-    return fields.flatMap((field) => this.interpretColumn(field));
+  private interpretInjection (injection: PartialInjectionNode, order: number) {
+    const partial: Partial<TablePartialInjection> = { order, token: getTokenPosition(injection) };
+    partial.name = injection.partial!.variable!.value;
+    this.table.partials!.push(partial as TablePartialInjection);
+    return [];
+  }
+
+  private interpretFields(fields: (FunctionApplicationNode | PartialInjectionNode)[]): CompileError[] {
+    return fields.flatMap((field, order) => {
+      return field instanceof FunctionApplicationNode ? this.interpretColumn(field) : this.interpretInjection(field, order);
+    });
   }
 
   private interpretColumn(field: FunctionApplicationNode): CompileError[] {

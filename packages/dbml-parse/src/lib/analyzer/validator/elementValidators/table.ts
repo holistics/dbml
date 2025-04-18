@@ -9,6 +9,7 @@ import {
   ExpressionNode,
   FunctionApplicationNode,
   ListExpressionNode,
+  PartialInjectionNode,
   PrimaryExpressionNode,
   SyntaxNode,
 } from '../../../parser/nodes';
@@ -27,8 +28,8 @@ import {
   registerSchemaStack,
 } from '../utils';
 import { ElementValidator } from '../types';
-import { ColumnSymbol, TableSymbol } from '../../symbol/symbols';
-import { createColumnSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
+import { ColumnSymbol, TablePartialInjectionSymbol, TableSymbol } from '../../symbol/symbols';
+import { createColumnSymbolIndex, createTablePartialInjectionSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
 import {
   isAccessExpression,
   isExpressionAQuotedString,
@@ -159,7 +160,7 @@ export default class TableValidator implements ElementValidator {
     return errors;
   }
 
-  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -167,8 +168,43 @@ export default class TableValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Table\'s body must be a block', body)];
     }
 
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
+    const [fields, injections, subs] = body.body.reduce((res: [FunctionApplicationNode[], PartialInjectionNode[], ElementDeclarationNode[]], node) => {
+      if (node instanceof FunctionApplicationNode) res[0].push(node);
+      else if (node instanceof PartialInjectionNode) res[1].push(node);
+      else if (node instanceof ElementDeclarationNode) res[2].push(node);
+      return res;
+    }, [[], [], []]);
+
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateInjections(injections as PartialInjectionNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
+  }
+
+  validateInjections (injections: PartialInjectionNode[]) {
+    return injections.flatMap((injection) => this.registerInjection(injection));
+  }
+
+  registerInjection (injection: PartialInjectionNode) {
+    if (injection.partial?.variable?.value) {
+      const injectionName = injection.partial.variable?.value;
+      const injectionId = createTablePartialInjectionSymbolIndex(injectionName);
+
+      const injectionSymbol = this.symbolFactory.create(TablePartialInjectionSymbol, { declaration: injection });
+      injection.symbol = injectionSymbol;
+
+      const symbolTable = this.declarationNode.symbol!.symbolTable!;
+      const duplicateSymbol = symbolTable.get(injectionId);
+      if (duplicateSymbol) {
+        return [
+          new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate injection ${injectionName}`, injection),
+          new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate injection ${injectionName}`, duplicateSymbol.declaration!),
+        ];
+      }
+      symbolTable.set(injectionId, injectionSymbol);
+    }
+    return [];
   }
 
   validateFields(fields: FunctionApplicationNode[]): CompileError[] {

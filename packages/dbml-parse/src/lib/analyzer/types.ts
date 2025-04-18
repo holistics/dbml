@@ -6,4 +6,5 @@ export enum ElementKind {
   Project = 'project',
   Indexes = 'indexes',
   TableGroup = 'tablegroup',
+  TablePartial = 'tablepartial',
 }

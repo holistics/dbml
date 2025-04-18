@@ -15,6 +15,14 @@ export default class TableBinder extends ElementBinder {
         },
       ],
     },
+    injection: {
+      injectionBinderRule: {
+        shouldBind: true as const,
+        topSubnamesSymbolKind: [],
+        remainingSubnamesSymbolKind: SymbolKind.TablePartial,
+        ignoreNameNotFound: false,
+      },
+    },
     settingList: {
       ref: {
         shouldBind: true as const,

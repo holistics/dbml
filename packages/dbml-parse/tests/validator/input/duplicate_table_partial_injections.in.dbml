@@ -1,0 +1,10 @@
+TablePartial common {
+  name text
+}
+
+Table Users {
+  id int
+  ~common
+  ~common
+  ~common
+}

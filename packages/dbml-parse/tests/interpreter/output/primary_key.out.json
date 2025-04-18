@@ -43,7 +43,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],
@@ -51,5 +52,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

@@ -6,10 +6,12 @@ import {
   FunctionApplicationNode,
   InfixExpressionNode,
   ListExpressionNode,
+  PartialInjectionNode,
   PostfixExpressionNode,
   PrefixExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
+  SyntaxNodeKind,
   TupleExpressionNode,
   VariableNode,
 } from '../../../parser/nodes';
@@ -18,20 +20,25 @@ import {
   isAccessExpression,
   isExpressionAVariableNode,
 } from '../../../parser/utils';
-import { ArgumentBinderRule, BinderRule, SettingListBinderRule } from '../types';
+import { ArgumentBinderRule, BinderRule, InjectionBinderRule, SettingListBinderRule } from '../types';
 import {
   destructureMemberAccessExpression,
+  extractVarNameFromPartialInjection,
   extractVarNameFromPrimaryVariable,
   findSymbol,
 } from '../../utils';
 import { SyntaxToken } from '../../../lexer/tokens';
-import { NodeSymbolIndex, createNodeSymbolIndex, destructureIndex } from '../../symbol/symbolIndex';
+import { NodeSymbolIndex, createNodeSymbolIndex, destructureIndex, getInjectorIndex, isInjectionIndex } from '../../symbol/symbolIndex';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { pickBinder } from '../utils';
+import SymbolFactory from '../../symbol/factory';
+import { NodeSymbol, TablePartialInjectedColumnSymbol } from '../../symbol/symbols';
+import { ElementKind } from '../../types';
 
 export default abstract class ElementBinder {
   protected abstract subfield: {
     arg: ArgumentBinderRule;
+    injection?: InjectionBinderRule;
     settingList: SettingListBinderRule;
   };
   protected abstract settingList: SettingListBinderRule;
@@ -85,14 +92,17 @@ export default abstract class ElementBinder {
       // eslint-disable-next-line no-restricted-syntax
       for (const sub of nodeBody.body) {
         if (sub instanceof ElementDeclarationNode) {
+          if (this.declarationNode.type?.value.toLowerCase() === ElementKind.TablePartial && sub.type?.value.toLowerCase() === ElementKind.Indexes) continue;
           if (!sub.type) {
             continue;
           }
           const Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
           const binder = new Binder(sub, this.errors);
           binder.bind();
-        } else {
+        } else if (sub instanceof FunctionApplicationNode) {
           this.bindSubfield(sub);
+        } else {
+          this.bindPartialInjection(sub);
         }
       }
     } else {
@@ -113,6 +123,10 @@ export default abstract class ElementBinder {
         this.scanAndBind(args[i], argBinderRules[i] as BinderRule & { shouldBind: true });
       }
     }
+  }
+
+  private bindPartialInjection (node: PartialInjectionNode) {
+    if (this.subfield.injection?.injectionBinderRule.shouldBind) this.scanAndBind(node, this.subfield.injection.injectionBinderRule as BinderRule & { shouldBind: true });
   }
 
   // Scan for variable node and member access expression in the node to bind
@@ -142,6 +156,8 @@ export default abstract class ElementBinder {
       this.scanAndBind(node.expression, rule);
     } else if (node instanceof TupleExpressionNode) {
       node.elementList.forEach((e) => this.scanAndBind(e, rule));
+    } else if (node instanceof PartialInjectionNode) {
+      this.bindFragments([node], rule);
     }
 
     // The other cases are not supported as practically they shouldn't arise
@@ -151,9 +167,9 @@ export default abstract class ElementBinder {
   // which can be a simple expression like v1.User,
   // or a complex tuple like v1.User.(id, name)
   private bindFragments(rawFragments: SyntaxNode[], rule: BinderRule & { shouldBind: true }) {
-    if (rawFragments.length === 0) {
-      return;
-    }
+    if (rawFragments.length === 0) return;
+
+    const isPartialInjection = rawFragments.length === 1 && rawFragments[0] instanceof PartialInjectionNode;
 
     const topSubnamesSymbolKind = [...rule.topSubnamesSymbolKind!];
     const { remainingSubnamesSymbolKind } = rule;
@@ -161,7 +177,9 @@ export default abstract class ElementBinder {
     // Handle cases of binding an incomplete member access expression
 
     // The first index of the first fragment that is not a variable
-    const invalidIndex = rawFragments.findIndex((f) => !isExpressionAVariableNode(f));
+    const invalidIndex = isPartialInjection
+      ? -1
+      : rawFragments.findIndex((f) => !isExpressionAVariableNode(f));
 
     // If the fragments are of a complex tuple, the first non-variable fragment must be a tuple
     const isComplexTuple = invalidIndex !== -1 && isTupleOfVariables(rawFragments[invalidIndex]);
@@ -174,9 +192,7 @@ export default abstract class ElementBinder {
       0,
       invalidIndex === -1 ? undefined : invalidIndex,
     ) as (PrimaryExpressionNode & { expression: VariableNode })[];
-    if (fragments.length === 0) {
-      return;
-    }
+    if (fragments.length === 0) return;
 
     const subnameStack: {
       index: NodeSymbolIndex;
@@ -194,7 +210,7 @@ export default abstract class ElementBinder {
 
     while (fragments.length) {
       const fragment = fragments.pop()!;
-      const varname = extractVarNameFromPrimaryVariable(fragment).unwrap();
+      const varname = isPartialInjection ? extractVarNameFromPartialInjection(fragment as PartialInjectionNode).unwrap() : extractVarNameFromPrimaryVariable(fragment).unwrap();
       subnameStack.unshift({
         index: createNodeSymbolIndex(varname, remainingSubnamesSymbolKind!),
         referrer: fragment,
@@ -273,5 +289,30 @@ export default abstract class ElementBinder {
     if (!ignoreError) {
       this.errors.push(new CompileError(CompileErrorCode.BINDING_ERROR, message, node));
     }
+  }
+
+  resolveInjections (symbolFactory: SymbolFactory) {
+    const symbolTable = this.declarationNode.symbol?.symbolTable;
+    if (!symbolTable) return;
+
+    const injectorSymbols = new Map<NodeSymbolIndex, NodeSymbol>();
+
+    symbolTable.forEach((_, nodeSymbolIndex) => {
+      if (!isInjectionIndex(nodeSymbolIndex)) return;
+
+      const nodeSymbol = findSymbol(getInjectorIndex(nodeSymbolIndex)!, this.declarationNode);
+
+      const injectorSymbolTable = nodeSymbol?.declaration?.symbol?.symbolTable;
+      if (!injectorSymbolTable) return;
+
+      injectorSymbolTable.forEach((injectedSymbol, injectedIndex) => {
+        if (!symbolTable.has(injectedIndex)) injectorSymbols.set(injectedIndex, injectedSymbol);
+      });
+    });
+
+    injectorSymbols.forEach((injectedSymbol, injectedIndex) => {
+      const resInjectedSymbol = symbolFactory.create(TablePartialInjectedColumnSymbol, { injectorId: injectedSymbol.id });
+      symbolTable.set(injectedIndex, resInjectedSymbol);
+    });
   }
 }

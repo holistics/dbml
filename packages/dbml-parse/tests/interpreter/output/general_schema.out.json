@@ -115,6 +115,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "headerColor": "#fff"
     },
     {
@@ -209,7 +210,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "products",
@@ -462,7 +464,8 @@
           "unique": true,
           "type": "hash"
         }
-      ]
+      ],
+      "partials": []
     },
     {
       "name": "users",
@@ -645,7 +648,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "merchants",
@@ -781,7 +785,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "countries",
@@ -871,7 +876,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],
@@ -1408,5 +1414,6 @@
     }
   ],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

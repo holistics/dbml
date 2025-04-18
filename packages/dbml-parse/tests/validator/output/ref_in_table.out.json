@@ -3453,7 +3453,7 @@
   },
   "errors": [
     {
-      "code": 3034,
+      "code": 3044,
       "diagnostic": "A Ref must appear top-level",
       "nodeOrToken": {
         "id": 49,
@@ -3962,7 +3962,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3034,
+      "code": 3044,
       "diagnostic": "A Ref must appear top-level",
       "nodeOrToken": {
         "id": 59,

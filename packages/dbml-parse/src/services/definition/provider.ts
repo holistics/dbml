@@ -20,7 +20,11 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       const node = containers.pop()!;
       if (
         node?.referee?.declaration &&
-        [SyntaxNodeKind.PRIMARY_EXPRESSION, SyntaxNodeKind.VARIABLE].includes(node?.kind)
+        [
+          SyntaxNodeKind.PRIMARY_EXPRESSION,
+          SyntaxNodeKind.VARIABLE,
+          SyntaxNodeKind.PARTIAL_INJECTION,
+        ].includes(node?.kind)
       ) {
         const { startPos, endPos } = node.referee.declaration;
 

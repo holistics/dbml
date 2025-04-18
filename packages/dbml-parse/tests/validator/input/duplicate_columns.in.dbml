@@ -3,3 +3,9 @@ Table Users {
     id integer
     id integer
 }
+
+TablePartial userPartial {
+    id int
+    id int
+    id int
+}

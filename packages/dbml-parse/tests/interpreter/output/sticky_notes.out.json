@@ -69,6 +69,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "headerColor": "#3498DB"
     }
   ],
@@ -110,5 +111,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

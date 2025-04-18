@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+/* eslint-disable no-loop-func */
 import _ from 'lodash';
 import {
   convertFuncAppToElem,
@@ -31,11 +33,10 @@ import {
   SyntaxNodeIdGenerator,
   TupleExpressionNode,
   VariableNode,
+  PartialInjectionNode,
 } from './nodes';
 import NodeFactory from './factory';
 import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '../lexer/utils';
-
-/* eslint-disable no-loop-func */
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {
@@ -714,6 +715,12 @@ export default class Parser {
     return this.nodeFactory.create(FunctionExpressionNode, args);
   }
 
+  private variable(): VariableNode {
+    this.consume('Expect a variable', SyntaxTokenKind.IDENTIFIER);
+    const variableToken = this.previous();
+    return this.nodeFactory.create(VariableNode, { variable: variableToken });
+  }
+
   /* Parsing and synchronizing BlockExpression */
 
   private blockExpression = this.contextStack.withContextDo(ParsingContext.BlockExpression, () => {
@@ -740,7 +747,14 @@ export default class Parser {
 
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
       try {
-        args.body.push(this.canBeField() ? this.fieldDeclaration() : this.expression());
+        if (this.match(SyntaxTokenKind.TILDE)) { // Check for partial injection
+          const tildeToken = this.previous();
+          const variable = this.variable();
+          const partialInjection = this.nodeFactory.create(PartialInjectionNode, { op: tildeToken, partial: variable });
+          args.body.push(partialInjection);
+        } else {
+          args.body.push(this.canBeField() ? this.fieldDeclaration() : this.expression());
+        }
       } catch (e) {
         if (!(e instanceof PartialParsingError)) {
           throw e;

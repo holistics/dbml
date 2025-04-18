@@ -258,7 +258,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "cities",
@@ -354,6 +355,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "note": {
         "value": "sasasa",
         "token": {
@@ -434,7 +436,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "citites",
@@ -549,7 +552,8 @@
             }
           }
         }
-      ]
+      ],
+      "partials": []
     }
   ],
   "notes": [],
@@ -557,5 +561,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

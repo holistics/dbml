@@ -29,4 +29,8 @@ export default class SymbolTable {
   entries(): IterableIterator<[NodeSymbolIndex, NodeSymbol]> {
     return this.table.entries();
   }
+
+  forEach (callback: (value: NodeSymbol, key: NodeSymbolIndex) => void) {
+    return this.table.forEach(callback);
+  }
 }

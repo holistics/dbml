@@ -33,6 +33,7 @@ import {
   IdentiferStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
+  PartialInjectionNode,
   PrefixExpressionNode,
   ProgramNode,
   SyntaxNode,
@@ -129,6 +130,9 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         return suggestInAttribute(this.compiler, offset, container);
       } else if (container instanceof TupleExpressionNode) {
         return suggestInTuple(this.compiler, offset);
+      } else if (container instanceof PartialInjectionNode) {
+        return suggestOnPartialInjectionOp(this.compiler, offset, container);
+        // return suggestNamesInScope(this.compiler, offset, this.compiler.container.element(offset), [SymbolKind.TablePartial]);
       } else if (container instanceof FunctionApplicationNode) {
         return suggestInSubField(this.compiler, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
@@ -143,6 +147,15 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     return noSuggestions();
   }
+}
+
+function suggestOnPartialInjectionOp (
+  compiler: Compiler,
+  offset: number,
+  container: PartialInjectionNode,
+) {
+  const parent = compiler.container.element(offset);
+  return suggestNamesInScope(compiler, offset, parent, [SymbolKind.TablePartial]) ;
 }
 
 function suggestOnRelOp(
@@ -441,6 +454,8 @@ function suggestInSubField(
   switch (scopeKind) {
     case ScopeKind.TABLE:
       return suggestInColumn(compiler, offset, container);
+    case ScopeKind.TABLEPARTIAL:
+      return suggestInColumn(compiler, offset, container);
     case ScopeKind.PROJECT:
       return suggestInProjectField(compiler, offset, container);
     case ScopeKind.INDEXES:
@@ -464,7 +479,7 @@ function suggestInSubField(
 
 function suggestTopLevelElementType(): CompletionList {
   return {
-    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref'].map((name) => ({
+    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial'].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
