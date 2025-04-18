@@ -6,5 +6,5 @@
     "outDir": "./lib"                                     /* Specify an output folder for all emitted files. */
   },
   "files": ["package.json"],
-  "include": ["src/**/*", "__test__/**/*"]
+  "include": ["src/**/*", "__tests__/**/*"]
 }
