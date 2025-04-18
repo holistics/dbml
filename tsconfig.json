@@ -106,5 +106,10 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "include": ["packages/*/src/**/*"]
+  "include": [
+    "packages/*/src/**/*",
+    "packages/dbml-connector/*.ts",
+    "packages/dbml-parse/tests/**/*"
+  ],
+  "exclude": ["packages/dbml-connector/**/*.test.ts"]
 }

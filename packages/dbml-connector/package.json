@@ -33,6 +33,8 @@
   },
   "dependencies": {
     "@google-cloud/bigquery": "^7.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.30.1",
+    "@typescript-eslint/parser": "^8.30.1",
     "lodash": "^4.17.21",
     "mssql": "^11.0.1",
     "mysql2": "^3.11.0",
