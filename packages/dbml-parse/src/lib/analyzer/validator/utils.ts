@@ -1,7 +1,9 @@
 import { SyntaxToken, SyntaxTokenKind } from '../../lexer/tokens';
 import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
+  CallExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
   ListExpressionNode,
@@ -22,17 +24,21 @@ import ProjectValidator from './elementValidators/project';
 import RefValidator from './elementValidators/ref';
 import TableValidator from './elementValidators/table';
 import TableGroupValidator from './elementValidators/tableGroup';
+import TableFragmentValidator from './elementValidators/tableFragment';
 import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
 import { SchemaSymbol } from '../symbol/symbols';
 import SymbolTable from '../symbol/symbolTable';
 import SymbolFactory from '../symbol/factory';
-import { extractStringFromIdentifierStream, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode } from '../../parser/utils';
+import {
+  extractStringFromIdentifierStream, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
+  isExpressionAnIdentifierNode,
+} from '../../parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import Report from '../../report';
 import { CompileError, CompileErrorCode } from '../../errors';
-import { ElementKind } from '../types';
+import { ElementKind, SettingName } from '../types';
 
-export function pickValidator(element: ElementDeclarationNode & { type: SyntaxToken }) {
+export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
     case ElementKind.Enum:
       return EnumValidator;
@@ -48,6 +54,8 @@ export function pickValidator(element: ElementDeclarationNode & { type: SyntaxTo
       return NoteValidator;
     case ElementKind.Indexes:
       return IndexesValidator;
+    case ElementKind.TableFragment:
+      return TableFragmentValidator;
     default:
       return CustomValidator;
   }
@@ -224,33 +232,73 @@ export function isTupleOfVariables(value?: SyntaxNode): value is TupleExpression
   return value instanceof TupleExpressionNode && value.elementList.every(isExpressionAVariableNode);
 }
 
-export function aggregateSettingList(settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }, CompileError> {
-  const map: { [index: string]: AttributeNode[]; } = {};
+export function aggregateSettingList (settingList?: ListExpressionNode): Report<Record<SettingName | string, AttributeNode[]>, CompileError> {
+  if (!settingList) return new Report({});
+
+  const map: Record<SettingName | string, AttributeNode[]> = {};
   const errors: CompileError[] = [];
-  if (!settingList) {
-    return new Report({});
-  }
-  for (const attribute of settingList.elementList) {
-    if (!attribute.name) {
-      continue;
-    }
+
+  settingList.elementList.forEach((attribute) => {
+    if (!attribute.name) return;
 
     if (attribute.name instanceof PrimaryExpressionNode) {
       errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'A setting name must be a stream of identifiers', attribute.name));
-      continue;
+      return;
     }
 
     const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined)?.toLowerCase();
-    if (!name) {
-      continue;
-    }
+    if (!name) return;
 
-    if (map[name] === undefined) {
-      map[name] = [attribute]
-    } else {
-      map[name].push(attribute);
-    }
-  }
+    if (map[name] === undefined) map[name] = [attribute];
+    else map[name].push(attribute);
+  });
 
   return new Report(map, errors);
+}
+
+export const isValidColumnType = (type: SyntaxNode): boolean => {
+  if (
+    !(
+      type instanceof CallExpressionNode
+      || isAccessExpression(type)
+      || type instanceof PrimaryExpressionNode
+      || type instanceof ArrayNode
+    )
+  ) {
+    return false;
+  }
+
+  if (type instanceof CallExpressionNode) {
+    if (type.callee === undefined || type.argumentList === undefined) {
+      return false;
+    }
+
+    if (!type.argumentList.elementList.every((e) => isExpressionANumber(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.callee;
+  }
+
+  while (type instanceof ArrayNode) {
+    if (type.array === undefined || type.indexer === undefined) {
+      return false;
+    }
+
+    if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isExpressionANumber(attribute.name))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.array;
+  }
+
+  const variables = destructureComplexVariable(type).unwrap_or(undefined);
+
+  return variables !== undefined && variables.length > 0;
+};
+
+export function generateUnknownSettingErrors (name: string, attrs: AttributeNode[], errorCode: CompileErrorCode) {
+  return attrs.map((attr) => new CompileError(errorCode, `Unknown '${name}' setting`, attr));
 }
