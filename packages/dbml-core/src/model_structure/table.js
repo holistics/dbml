@@ -1,4 +1,4 @@
-import { get, isNil, uniqWith, isEqual } from 'lodash';
+import { get, isNil } from 'lodash';
 import Element from './element';
 import Field from './field';
 import Index from './indexes';
@@ -107,7 +107,7 @@ class Table extends Element {
 
     // insert placeholder into table.fields
     sortedPartials.toReversed().forEach((partial) => {
-      this.fields.splice(partial.order, 0, 'dummy')
+      this.fields.splice(partial.order, 0, 'dummy');
     });
 
     sortedPartials.forEach((partial) => {
@@ -118,23 +118,26 @@ class Table extends Element {
       if (tablePartial.fields) {
         // ignore fields that already exist in the table, or have been added by a later partial
         const rawFields = tablePartial.fields.filter(f => !existingFieldNames.has(f.name));
-        const fields =  rawFields.map((rawField) => {
+        const fields = rawFields.map((rawField) => {
           existingFieldNames.add(rawField.name);
 
           // convert inline_refs from injected fields to refs
           if (rawField.inline_refs) {
             rawField.inline_refs.forEach((iref) => {
-              const ref = { 
+              const ref = {
+                token: rawField.token,
                 endpoints: [{
                   tableName: this.name,
                   schemaName: this.schema.name,
                   fieldNames: [rawField.name],
                   relation: ['-', '<'].includes(iref.relation) ? '1' : '*',
+                  token: rawField.token,
                 }, {
                   tableName: iref.tableName,
                   schemaName: iref.schemaName,
                   fieldNames: iref.fieldNames,
                   relation: ['-', '>'].includes(iref.relation) ? '1' : '*',
+                  token: iref.token,
                 }],
                 injectedPartial: tablePartial,
               };
