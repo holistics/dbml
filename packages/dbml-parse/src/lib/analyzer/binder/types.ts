@@ -35,7 +35,3 @@ export interface ArgumentBinderRule {
 export interface SettingListBinderRule {
   [index: string]: BinderRule;
 }
-
-export interface InjectionBinderRule {
-  injectionBinderRule: BinderRule;
-}
