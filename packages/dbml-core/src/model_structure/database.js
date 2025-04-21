@@ -53,9 +53,11 @@ class Database extends Element {
     this.processSchemaElements(refs, REF);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
 
-    this.injectedRawRefs.forEach((ref) => {
+    this.injectedRawRefs.forEach((rawRef) => {
       const schema = this.findOrCreateSchema(DEFAULT_SCHEMA_NAME);
-      schema.pushRef(new Ref({ ...ref, schema }));
+      const ref = new Ref({ ...rawRef, schema });
+      if (schema.refs.some(r => r.equals(ref))) return;
+      schema.pushRef(ref);
     });
   }
 
@@ -70,7 +72,9 @@ class Database extends Element {
   }
 
   processRecords (rawRecords) {
-    rawRecords.forEach(({ schemaName, tableName, columns, values }) => {
+    rawRecords.forEach(({
+      schemaName, tableName, columns, values,
+    }) => {
       this.records.push({
         id: this.dbState.generateId('recordId'),
         schemaName,
@@ -258,11 +262,13 @@ class Database extends Element {
       indexColumns: {},
       fields: {},
       records: {},
+      tablePartials: {},
     };
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));
     this.notes.forEach((note) => note.normalize(normalizedModel));
-    this.records.forEach((record) => normalizedModel.records[record.id] = { ...record });
+    this.records.forEach((record) => { normalizedModel.records[record.id] = { ...record }; });
+    // this.tablePartials.forEach((tablePartial) => tablePartial.normalize(normalizedModel));
     return normalizedModel;
   }
 }
