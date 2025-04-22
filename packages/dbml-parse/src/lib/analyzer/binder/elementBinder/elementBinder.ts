@@ -292,7 +292,7 @@ export default abstract class ElementBinder {
     const symbolTable = this.declarationNode.symbol?.symbolTable;
     if (!symbolTable) return;
 
-    const injectorSymbols = new Map<NodeSymbolIndex, NodeSymbol>();
+    const injectorSymbols = new Map<NodeSymbolIndex, { injectorFieldSymbol: NodeSymbol, injectorDeclaration: SyntaxNode}>();
 
     symbolTable.forEach((nodeSymbol, nodeSymbolIndex) => {
       if (!isInjectionIndex(nodeSymbolIndex)) return;
@@ -303,15 +303,17 @@ export default abstract class ElementBinder {
       if (!injectorSymbolTable) return;
 
       injectorSymbolTable.forEach((injectorFieldSymbol, injectedIndex) => {
-        if (!symbolTable.has(injectedIndex)) injectorSymbols.set(injectedIndex, injectorFieldSymbol);
+        if (symbolTable.has(injectedIndex)) return;
+
+        injectorSymbols.set(injectedIndex, { injectorFieldSymbol, injectorDeclaration: nodeSymbol.declaration! });
       });
     });
 
-    injectorSymbols.forEach((injectorFieldSymbol, injectedIndex) => {
-      const InjectedSymbol = getInjectedFieldSymbolFromInjectorFieldSymbol(injectorFieldSymbol);
+    injectorSymbols.forEach((value, injectedIndex) => {
+      const InjectedSymbol = getInjectedFieldSymbolFromInjectorFieldSymbol(value.injectorFieldSymbol);
       if (!InjectedSymbol) return;
 
-      const resInjectedSymbol = symbolFactory.create(InjectedSymbol, { injectorId: injectorFieldSymbol.id });
+      const resInjectedSymbol = symbolFactory.create(InjectedSymbol, value);
       symbolTable.set(injectedIndex, resInjectedSymbol);
     });
   }

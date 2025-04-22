@@ -11,24 +11,32 @@ import TableBinder from './elementBinder/table';
 import TableGroupBinder from './elementBinder/tableGroup';
 import TablePartialBinder from './elementBinder/tablePartial';
 
-export function pickBinder(element: ElementDeclarationNode & { type: SyntaxToken }) {
+export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
     case ElementKind.Enum:
       return EnumBinder;
+
     case ElementKind.Table:
       return TableBinder;
+
     case ElementKind.TableGroup:
       return TableGroupBinder;
+
     case ElementKind.Project:
       return ProjectBinder;
+
     case ElementKind.Ref:
       return RefBinder;
+
     case ElementKind.Note:
       return NoteBinder;
+
     case ElementKind.Indexes:
       return IndexesBinder;
+
     case ElementKind.TablePartial:
       return TablePartialBinder;
+
     default:
       return CustomBinder;
   }
