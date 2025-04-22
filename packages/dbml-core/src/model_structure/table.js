@@ -23,8 +23,10 @@ class Table extends Element {
     this.generateId();
 
     this.processFields(fields);
-    this.processIndexes(indexes);
+    // Process partials after fields to get injected fields' orders
+    // Process partials before indexes for indexes to properly check all owned and injected columns
     this.processPartials();
+    this.processIndexes(indexes);
   }
 
   generateId () {
@@ -170,7 +172,7 @@ class Table extends Element {
       });
 
       // uniqWith(this.indexes, (a, b) => {
-      //   return 
+      //   return
       //   isEqual(a.columns, b.columns) &&
       //   a.unique === b.unique &&
       //   a.pk === b.pk &&
