@@ -77,7 +77,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     // Check if we're inside a string
     if ([SyntaxTokenKind.STRING_LITERAL, SyntaxTokenKind.QUOTED_STRING].includes(bOcToken.kind) && isOffsetWithinSpan(offset, bOcToken)) {
-      return noSuggestions(); 
+      return noSuggestions();
     }
 
     const element = this.compiler.container.element(offset);
@@ -131,7 +131,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       } else if (container instanceof TupleExpressionNode) {
         return suggestInTuple(this.compiler, offset);
       } else if (container instanceof PartialInjectionNode) {
-        return suggestOnPartialInjectionOp(this.compiler, offset, container);
+        return suggestOnPartialInjectionOp(this.compiler, offset);
         // return suggestNamesInScope(this.compiler, offset, this.compiler.container.element(offset), [SymbolKind.TablePartial]);
       } else if (container instanceof FunctionApplicationNode) {
         return suggestInSubField(this.compiler, offset, container);
@@ -152,10 +152,9 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 function suggestOnPartialInjectionOp (
   compiler: Compiler,
   offset: number,
-  container: PartialInjectionNode,
 ) {
   const parent = compiler.container.element(offset);
-  return suggestNamesInScope(compiler, offset, parent, [SymbolKind.TablePartial]) ;
+  return suggestNamesInScope(compiler, offset, parent, [SymbolKind.TablePartial]);
 }
 
 function suggestOnRelOp(
