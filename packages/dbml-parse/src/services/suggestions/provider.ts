@@ -157,14 +157,18 @@ function suggestOnPartialInjectionOp (
   return suggestNamesInScope(compiler, offset, parent, [SymbolKind.TablePartial]);
 }
 
-function suggestOnRelOp(
+function suggestOnRelOp (
   compiler: Compiler,
   offset: number,
   container: (PrefixExpressionNode | InfixExpressionNode) & { op: SyntaxToken },
 ): CompletionList {
   const scopeKind = compiler.container.scopeKind(offset);
 
-  if ([ScopeKind.REF, ScopeKind.TABLE].includes(scopeKind)) {
+  if ([
+    ScopeKind.REF,
+    ScopeKind.TABLE,
+    ScopeKind.TABLEPARTIAL,
+  ].includes(scopeKind)) {
     const res = suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
       SymbolKind.Table,
       SymbolKind.Schema,
