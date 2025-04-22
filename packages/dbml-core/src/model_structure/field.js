@@ -22,7 +22,7 @@ class Field extends Element {
     this.increment = increment;
     this.endpoints = [];
     this.table = table;
-    this.injectedPartial = injectedPartial,
+    this.injectedPartial = injectedPartial;
     this.dbState = this.table.dbState;
     this.generateId();
     this.bindType();
