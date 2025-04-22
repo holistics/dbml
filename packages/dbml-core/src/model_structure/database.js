@@ -42,10 +42,10 @@ class Database extends Element {
 
     this.injectedRawRefs = [];
 
+    // The process order is important. Do not change !
     this.processNotes(notes);
     this.processRecords(records);
     this.processTablePartials(tablePartials);
-    // The process order is important. Do not change !
     this.processSchemas(schemas);
     this.processSchemaElements(enums, ENUM);
     this.processSchemaElements(tables, TABLE);
