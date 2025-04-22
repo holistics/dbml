@@ -97,7 +97,7 @@ class TablePartial extends Element {
   }
 
   normalize (model) {
-    model.tables[this.id] = {
+    model.tablePartials[this.id] = {
       id: this.id,
       ...this.shallowExport(),
       ...this.exportChildIds(),

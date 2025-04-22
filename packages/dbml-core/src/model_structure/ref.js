@@ -70,6 +70,7 @@ class Ref extends Element {
       color: this.color,
       onDelete: this.onDelete,
       onUpdate: this.onUpdate,
+      injectedPartialId: this.injectedPartial?.id,
     };
   }
 

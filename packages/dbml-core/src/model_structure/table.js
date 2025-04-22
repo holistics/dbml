@@ -147,7 +147,13 @@ class Table extends Element {
             });
           }
 
-          return new Field({ ...rawField, table: this, injectedPartial: tablePartial });
+          return new Field({
+            ...rawField,
+            noteToken: null,
+            table: this,
+            injectedPartial: tablePartial,
+            injectedToken: partial.token,
+          });
         });
 
         this.fields.splice(partial.order, 1, ...fields);
