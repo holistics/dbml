@@ -54,6 +54,7 @@
     },
     "2": {
       "id": 2,
+      "injectedPartialId": 5,
       "endpointIds": [
         3,
         4
@@ -69,6 +70,7 @@
       "name": "a",
       "alias": null,
       "note": null,
+      "partials": [],
       "fieldIds": [
         1,
         2
@@ -82,6 +84,7 @@
       "name": "a",
       "alias": null,
       "note": null,
+      "partials": [],
       "fieldIds": [
         3,
         4
@@ -96,6 +99,110 @@
       "alias": null,
       "note": null,
       "headerColor": "#ff0000",
+      "partials": [
+        {
+          "order": 7,
+          "token": {
+            "start": {
+              "offset": 823,
+              "line": 55,
+              "column": 3
+            },
+            "end": {
+              "offset": 829,
+              "line": 55,
+              "column": 9
+            }
+          },
+          "name": "test2",
+          "id": 5
+        },
+        {
+          "order": 6,
+          "token": {
+            "start": {
+              "offset": 815,
+              "line": 54,
+              "column": 3
+            },
+            "end": {
+              "offset": 820,
+              "line": 54,
+              "column": 8
+            }
+          },
+          "name": "test",
+          "id": 4
+        },
+        {
+          "order": 4,
+          "token": {
+            "start": {
+              "offset": 759,
+              "line": 52,
+              "column": 3
+            },
+            "end": {
+              "offset": 780,
+              "line": 52,
+              "column": 24
+            }
+          },
+          "name": "soft_delete_template",
+          "id": 2
+        },
+        {
+          "order": 3,
+          "token": {
+            "start": {
+              "offset": 746,
+              "line": 51,
+              "column": 3
+            },
+            "end": {
+              "offset": 756,
+              "line": 51,
+              "column": 13
+            }
+          },
+          "name": "testIndex",
+          "id": 6
+        },
+        {
+          "order": 1,
+          "token": {
+            "start": {
+              "offset": 716,
+              "line": 49,
+              "column": 3
+            },
+            "end": {
+              "offset": 728,
+              "line": 49,
+              "column": 15
+            }
+          },
+          "name": "email_index",
+          "id": 3
+        },
+        {
+          "order": 0,
+          "token": {
+            "start": {
+              "offset": 699,
+              "line": 48,
+              "column": 3
+            },
+            "end": {
+              "offset": 713,
+              "line": 48,
+              "column": 17
+            }
+          },
+          "name": "base_template",
+          "id": 1
+        }
+      ],
       "fieldIds": [
         11,
         12,
@@ -357,6 +464,7 @@
       "pk": false,
       "note": null,
       "increment": false,
+      "injectedPartialId": 5,
       "endpointIds": [
         3
       ],
@@ -376,6 +484,7 @@
       "not_null": true,
       "note": null,
       "increment": false,
+      "injectedPartialId": 2,
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -396,6 +505,7 @@
         "type": "expression"
       },
       "increment": false,
+      "injectedPartialId": 2,
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -412,6 +522,7 @@
       "pk": false,
       "note": null,
       "increment": false,
+      "injectedPartialId": 3,
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -429,6 +540,7 @@
       "not_null": true,
       "note": null,
       "increment": false,
+      "injectedPartialId": 1,
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -449,6 +561,7 @@
         "type": "expression"
       },
       "increment": false,
+      "injectedPartialId": 1,
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -469,10 +582,508 @@
         "type": "expression"
       },
       "increment": false,
+      "injectedPartialId": 1,
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
     }
   },
-  "records": {}
+  "records": {},
+  "tablePartials": {
+    "1": {
+      "id": 1,
+      "name": "base_template",
+      "note": null,
+      "headerColor": "#ff0000",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 120,
+              "line": 12,
+              "column": 3
+            },
+            "end": {
+              "offset": 141,
+              "line": 12,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "not_null": true
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 144,
+              "line": 13,
+              "column": 3
+            },
+            "end": {
+              "offset": 183,
+              "line": 13,
+              "column": 42
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "dbdefault": {
+            "value": "now()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "updated_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 186,
+              "line": 14,
+              "column": 3
+            },
+            "end": {
+              "offset": 225,
+              "line": 14,
+              "column": 42
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "dbdefault": {
+            "value": "now()",
+            "type": "expression"
+          }
+        }
+      ],
+      "indexes": []
+    },
+    "2": {
+      "id": 2,
+      "name": "soft_delete_template",
+      "note": null,
+      "fields": [
+        {
+          "name": "delete_status",
+          "type": {
+            "schemaName": null,
+            "type_name": "boolean",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 267,
+              "line": 18,
+              "column": 3
+            },
+            "end": {
+              "offset": 299,
+              "line": 18,
+              "column": 35
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": true
+        },
+        {
+          "name": "deleted_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 302,
+              "line": 19,
+              "column": 3
+            },
+            "end": {
+              "offset": 341,
+              "line": 19,
+              "column": 42
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "dbdefault": {
+            "value": "now()",
+            "type": "expression"
+          }
+        }
+      ],
+      "indexes": []
+    },
+    "3": {
+      "id": 3,
+      "name": "email_index",
+      "note": null,
+      "fields": [
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 374,
+              "line": 23,
+              "column": 3
+            },
+            "end": {
+              "offset": 396,
+              "line": 23,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": true
+        }
+      ],
+      "indexes": [
+        {
+          "columns": [
+            {
+              "value": "email",
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 414,
+                  "line": 26,
+                  "column": 5
+                },
+                "end": {
+                  "offset": 419,
+                  "line": 26,
+                  "column": 10
+                }
+              }
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 414,
+              "line": 26,
+              "column": 5
+            },
+            "end": {
+              "offset": 428,
+              "line": 26,
+              "column": 19
+            }
+          },
+          "pk": false,
+          "unique": true
+        }
+      ]
+    },
+    "4": {
+      "id": 4,
+      "name": "test",
+      "note": null,
+      "fields": [
+        {
+          "name": "refColumn1",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 458,
+              "line": 31,
+              "column": 3
+            },
+            "end": {
+              "offset": 486,
+              "line": 31,
+              "column": 31
+            }
+          },
+          "inline_refs": [
+            {
+              "schemaName": null,
+              "tableName": "a",
+              "fieldNames": [
+                "id"
+              ],
+              "relation": ">",
+              "token": {
+                "start": {
+                  "offset": 474,
+                  "line": 31,
+                  "column": 19
+                },
+                "end": {
+                  "offset": 485,
+                  "line": 31,
+                  "column": 30
+                }
+              }
+            }
+          ],
+          "pk": false,
+          "increment": false,
+          "unique": false
+        },
+        {
+          "name": "refColumn2",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 489,
+              "line": 32,
+              "column": 3
+            },
+            "end": {
+              "offset": 521,
+              "line": 32,
+              "column": 35
+            }
+          },
+          "inline_refs": [
+            {
+              "schemaName": null,
+              "tableName": "a",
+              "fieldNames": [
+                "id"
+              ],
+              "relation": ">",
+              "token": {
+                "start": {
+                  "offset": 509,
+                  "line": 32,
+                  "column": 23
+                },
+                "end": {
+                  "offset": 520,
+                  "line": 32,
+                  "column": 34
+                }
+              }
+            }
+          ],
+          "pk": false,
+          "increment": false,
+          "unique": false
+        }
+      ],
+      "indexes": []
+    },
+    "5": {
+      "id": 5,
+      "name": "test2",
+      "note": null,
+      "fields": [
+        {
+          "name": "refColumn2",
+          "type": {
+            "schemaName": null,
+            "type_name": "bool",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 548,
+              "line": 36,
+              "column": 3
+            },
+            "end": {
+              "offset": 579,
+              "line": 36,
+              "column": 34
+            }
+          },
+          "inline_refs": [
+            {
+              "schemaName": "a",
+              "tableName": "a",
+              "fieldNames": [
+                "id"
+              ],
+              "relation": ">",
+              "token": {
+                "start": {
+                  "offset": 565,
+                  "line": 36,
+                  "column": 20
+                },
+                "end": {
+                  "offset": 578,
+                  "line": 36,
+                  "column": 33
+                }
+              }
+            }
+          ],
+          "pk": false,
+          "increment": false,
+          "unique": false
+        }
+      ],
+      "indexes": []
+    },
+    "6": {
+      "id": 6,
+      "name": "testIndex",
+      "note": null,
+      "fields": [],
+      "indexes": [
+        {
+          "columns": [
+            {
+              "value": "email",
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 624,
+                  "line": 41,
+                  "column": 5
+                },
+                "end": {
+                  "offset": 629,
+                  "line": 41,
+                  "column": 10
+                }
+              }
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 624,
+              "line": 41,
+              "column": 5
+            },
+            "end": {
+              "offset": 638,
+              "line": 41,
+              "column": 19
+            }
+          },
+          "pk": false,
+          "unique": true
+        },
+        {
+          "columns": [
+            {
+              "value": "id",
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 643,
+                  "line": 42,
+                  "column": 5
+                },
+                "end": {
+                  "offset": 645,
+                  "line": 42,
+                  "column": 7
+                }
+              }
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 643,
+              "line": 42,
+              "column": 5
+            },
+            "end": {
+              "offset": 650,
+              "line": 42,
+              "column": 12
+            }
+          },
+          "pk": true,
+          "unique": false
+        },
+        {
+          "columns": [
+            {
+              "value": "email",
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 656,
+                  "line": 43,
+                  "column": 6
+                },
+                "end": {
+                  "offset": 661,
+                  "line": 43,
+                  "column": 11
+                }
+              }
+            },
+            {
+              "value": "id",
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 663,
+                  "line": 43,
+                  "column": 13
+                },
+                "end": {
+                  "offset": 665,
+                  "line": 43,
+                  "column": 15
+                }
+              }
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 655,
+              "line": 43,
+              "column": 5
+            },
+            "end": {
+              "offset": 675,
+              "line": 43,
+              "column": 25
+            }
+          },
+          "pk": false,
+          "unique": true
+        }
+      ]
+    }
+  }
 }

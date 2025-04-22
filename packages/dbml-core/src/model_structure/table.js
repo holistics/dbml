@@ -89,16 +89,19 @@ class Table extends Element {
 
   processPartials () {
     if (!this.partials?.length) return;
-
     /**
      * When encountering conflicting columns or settings with identical names, the following resolution order is applied:
      * 1. Local Table Definition: If a definition exists within the local table, it takes precedence.
      * 2. Last Partial Definition: If no local definition is found,
-     *  the definition from the most recently processed partial containing the conflicting name is used.
+     *  the definition from the last partial (in dbml source) containing the conflicting name is used.
      *
-     * Indexes with identical column tuples and attributes will be merged into a single index.
+     * each partial has the following structure:
+     * {
+     *   name: string,
+     *   order: number, // determine where the partials fields will be injected in comparison with the table fields and other partials
+     *   token, // token of the partial definition
+     * }
      */
-
     const existingFieldNames = new Set(this.fields.map(f => f.name));
     const existingSettingNames = new Set();
     if (!isNil(this.note)) existingSettingNames.add('note');
@@ -114,8 +117,8 @@ class Table extends Element {
 
     sortedPartials.forEach((partial) => {
       const tablePartial = this.schema.database.findTablePartial(partial.name);
-
       if (!tablePartial) this.error(`Table partial ${partial.name} not found`, partial.token);
+      partial.id = tablePartial.id;
 
       if (tablePartial.fields) {
         // ignore fields that already exist in the table, or have been added by a later partial
@@ -130,7 +133,7 @@ class Table extends Element {
                 token: rawField.token,
                 endpoints: [{
                   tableName: this.name,
-                  schemaName: this.schema.name,
+                  schemaName: this.schema?.name,
                   fieldNames: [rawField.name],
                   relation: ['-', '<'].includes(iref.relation) ? '1' : '*',
                   token: rawField.token,
@@ -176,14 +179,6 @@ class Table extends Element {
       tablePartial.indexes.forEach((index) => {
         this.indexes.push(new Index({ ...index, table: this, injectedPartial: tablePartial }));
       });
-
-      // uniqWith(this.indexes, (a, b) => {
-      //   return
-      //   isEqual(a.columns, b.columns) &&
-      //   a.unique === b.unique &&
-      //   a.pk === b.pk &&
-      //   a.type === b.type
-      // });
     });
   }
 
@@ -221,6 +216,7 @@ class Table extends Element {
       alias: this.alias,
       note: this.note,
       headerColor: this.headerColor,
+      partials: this.partials,
     };
   }
 

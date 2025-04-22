@@ -1,9 +1,5 @@
 import { get } from 'lodash';
 import Element from './element';
-import Field from './field';
-import Index from './indexes';
-import { DEFAULT_SCHEMA_NAME } from './config';
-import { shouldPrintSchema } from './utils';
 
 class TablePartial extends Element {
   constructor ({
@@ -18,73 +14,15 @@ class TablePartial extends Element {
     this.indexes = indexes;
     this.dbState = dbState;
     this.generateId();
-
-    // this.processFields(fields);
-    // this.processIndexes(indexes);
   }
 
   generateId () {
     this.id = this.dbState.generateId('tablePartialId');
   }
 
-  // processFields (rawFields) {
-  //   rawFields.forEach((field) => {
-  //     this.pushField(new Field({ ...field, table: this }));
-  //   });
-  // }
-
-  // pushField (field) {
-  //   this.checkField(field);
-  //   this.fields.push(field);
-  // }
-
-  // checkField (field) {
-  //   if (this.fields.some(f => f.name === field.name)) {
-  //     field.error(`Field "${field.name}" existed in table partial "${this.name}"`);
-  //   }
-  // }
-
-  // processIndexes (rawIndexes) {
-  //   rawIndexes.forEach((index) => {
-  //     this.pushIndex(new Index({ ...index, table: this }));
-  //   });
-  // }
-
-  // pushIndex (index) {
-  //   this.checkIndex(index);
-  //   this.indexes.push(index);
-  // }
-
-  // checkIndex (index) {
-  //   index.columns.forEach((column) => {
-  //     if (column.type === 'column' && !(this.findField(column.value))) {
-  //       index.error(`Column "${column.value}" do not exist in table partial "${this.name}"`);
-  //     }
-  //   });
-  // }
-
-  // findField (fieldName) {
-  //   return this.fields.find(f => f.name === fieldName);
-  // }
-
   export () {
     return {
       ...this.shallowExport(),
-      ...this.exportChild(),
-    };
-  }
-
-  exportChild () {
-    return {
-      fields: this.fields.map(f => f.export()),
-      indexes: this.indexes.map(i => i.export()),
-    };
-  }
-
-  exportChildIds () {
-    return {
-      fieldIds: this.fields.map(f => f.id),
-      indexIds: this.indexes.map(i => i.id),
     };
   }
 
@@ -93,6 +31,8 @@ class TablePartial extends Element {
       name: this.name,
       note: this.note,
       headerColor: this.headerColor,
+      fields: this.fields,
+      indexes: this.indexes,
     };
   }
 
@@ -100,11 +40,7 @@ class TablePartial extends Element {
     model.tablePartials[this.id] = {
       id: this.id,
       ...this.shallowExport(),
-      ...this.exportChildIds(),
     };
-
-    this.fields.forEach((field) => field.normalize(model));
-    this.indexes.forEach((index) => index.normalize(model));
   }
 }
 
