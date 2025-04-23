@@ -19,3 +19,6 @@ export function pushTag () {
 
 export function isTag () {
 }
+
+export function charIsLetter () {
+}
