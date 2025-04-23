@@ -120,43 +120,49 @@ class Table extends Element {
       if (!tablePartial) this.error(`Table partial ${partial.name} not found`, partial.token);
       partial.id = tablePartial.id;
 
-      // ignore fields that already exist in the table, or have been added by a later partial
-      const rawFields = tablePartial.fields.filter(f => !existingFieldNames.has(f.name));
-      const fields = rawFields.map((rawField) => {
-        existingFieldNames.add(rawField.name);
+      if (tablePartial.fields) {
+        // ignore fields that already exist in the table, or have been added by a later partial
+        const rawFields = tablePartial.fields.filter(f => !existingFieldNames.has(f.name));
+        const fields = rawFields.map((rawField) => {
+          existingFieldNames.add(rawField.name);
 
-        // convert inline_refs from injected fields to refs
-        rawField.inline_refs?.forEach((iref) => {
-          const ref = {
-            token: rawField.token,
-            endpoints: [{
-              tableName: this.name,
-              schemaName: this.schema?.name,
-              fieldNames: [rawField.name],
-              relation: ['-', '<'].includes(iref.relation) ? '1' : '*',
-              token: rawField.token,
-            }, {
-              tableName: iref.tableName,
-              schemaName: iref.schemaName,
-              fieldNames: iref.fieldNames,
-              relation: ['-', '>'].includes(iref.relation) ? '1' : '*',
-              token: iref.token,
-            }],
+          // convert inline_refs from injected fields to refs
+          if (rawField.inline_refs) {
+            rawField.inline_refs.forEach((iref) => {
+              const ref = {
+                token: rawField.token,
+                endpoints: [{
+                  tableName: this.name,
+                  schemaName: this.schema?.name,
+                  fieldNames: [rawField.name],
+                  relation: ['-', '<'].includes(iref.relation) ? '1' : '*',
+                  token: rawField.token,
+                }, {
+                  tableName: iref.tableName,
+                  schemaName: iref.schemaName,
+                  fieldNames: iref.fieldNames,
+                  relation: ['-', '>'].includes(iref.relation) ? '1' : '*',
+                  token: iref.token,
+                }],
+                injectedPartial: tablePartial,
+              };
+              this.schema.database.injectedRawRefs.push(ref);
+            });
+          }
+
+          return new Field({
+            ...rawField,
+            noteToken: null,
+            table: this,
             injectedPartial: tablePartial,
-          };
-          this.schema.database.injectedRawRefs.push(ref);
+            injectedToken: partial.token,
+          });
         });
 
-        return new Field({
-          ...rawField,
-          noteToken: null,
-          table: this,
-          injectedPartial: tablePartial,
-          injectedToken: partial.token,
-        });
-      });
-
-      this.fields.splice(partial.order, 1, ...fields);
+        this.fields.splice(partial.order, 1, ...fields);
+      } else {
+        this.fields.splice(partial.order, 1); // still need to remove the dummy element, even when there's no field in the partial
+      }
 
       // merge settings
       if (!existingSettingNames.has('note') && !isNil(tablePartial.note)) {
