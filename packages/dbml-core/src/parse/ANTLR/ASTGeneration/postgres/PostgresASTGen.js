@@ -6,11 +6,11 @@ import { TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TY
 
 const COMMAND_KIND = {
   REF: 'ref',
-}
+};
 
 const COMMENT_OBJECT_TYPE = {
   TABLE: 'table',
-}
+};
 
 const findTable = (tables, schemaName, tableName) => {
   const realSchemaName = schemaName || 'public';
@@ -26,10 +26,9 @@ const escapeStr = (str) => {
     return str.replaceAll("''", "'");
   }
   return str;
-}
+};
 
 export default class PostgresASTGen extends PostgreSQLParserVisitor {
-
   constructor () {
     super();
     this.data = {
@@ -65,6 +64,9 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     if (ctx.createstmt()) {
       const table = ctx.createstmt().accept(this);
 
+      // filter out null table that can cause error in model_structure stage
+      if (!table) return undefined;
+
       return this.data.tables.push(table);
     }
 
@@ -74,29 +76,31 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const { tableName, schemaName } = indexStmt.pathName;
 
       const table = findTable(this.data.tables, schemaName, tableName);
-      if (!table) return;
+      if (!table) return undefined;
       return table.indexes.push(indexStmt.index);
     }
 
     if (ctx.altertablestmt()) {
       ctx.altertablestmt().accept(this);
-      return;
+      return undefined;
     }
 
     if (ctx.commentstmt()) {
       ctx.commentstmt().accept(this);
-      return;
+      return undefined;
     }
 
     if (ctx.definestmt()) {
       ctx.definestmt().accept(this);
-      return;
+      return undefined;
     }
 
     if (ctx.insertstmt()) {
       ctx.insertstmt().accept(this);
-      return;
+      return undefined;
     }
+
+    return undefined;
   }
 
   /*
@@ -130,7 +134,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
         inlineRef.endpoints[0].schemaName = schemaName;
         inlineRef.endpoints[0].fieldNames = [fieldData.field.name];
         return inlineRef;
-      }))
+      })),
     ));
 
     this.data.refs.push(...tableRefs.map(tableRef => {
