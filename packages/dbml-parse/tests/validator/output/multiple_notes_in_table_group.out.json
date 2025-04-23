@@ -2004,7 +2004,7 @@
   },
   "errors": [
     {
-      "code": 3054,
+      "code": 3044,
       "diagnostic": "Duplicate notes are defined",
       "nodeOrToken": {
         "id": 17,
@@ -2235,7 +2235,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3054,
+      "code": 3044,
       "diagnostic": "Duplicate notes are defined",
       "nodeOrToken": {
         "id": 24,
@@ -2466,7 +2466,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3054,
+      "code": 3044,
       "diagnostic": "Duplicate notes are defined",
       "nodeOrToken": {
         "id": 31,

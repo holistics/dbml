@@ -22,10 +22,10 @@ export function generatePossibleIndexes (name: string): NodeSymbolIndex[] {
   return [
     createSchemaSymbolIndex,
     createTableSymbolIndex,
-    createColumnSymbolIndex,
     createEnumSymbolIndex,
-    createEnumFieldSymbolIndex,
     createTableGroupSymbolIndex,
+    createColumnSymbolIndex,
+    createEnumFieldSymbolIndex,
     createTableGroupFieldSymbolIndex,
     createTablePartialSymbolIndex,
     createTablePartialInjectionSymbolIndex,

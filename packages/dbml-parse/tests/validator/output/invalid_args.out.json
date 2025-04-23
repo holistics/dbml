@@ -7255,7 +7255,7 @@
   },
   "errors": [
     {
-      "code": 3029,
+      "code": 3019,
       "diagnostic": "A column must have a type",
       "nodeOrToken": {
         "id": 8,
@@ -7426,7 +7426,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3038,
+      "code": 3028,
       "diagnostic": "An Enum must have only a field and optionally a setting list",
       "nodeOrToken": {
         "id": 17,
@@ -7512,7 +7512,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3038,
+      "code": 3028,
       "diagnostic": "An Enum must have only a field and optionally a setting list",
       "nodeOrToken": {
         "id": 32,
@@ -7598,7 +7598,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3038,
+      "code": 3028,
       "diagnostic": "An Enum must have only a field and optionally a setting list",
       "nodeOrToken": {
         "id": 37,
@@ -7684,7 +7684,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3038,
+      "code": 3028,
       "diagnostic": "An Enum must have only a field and optionally a setting list",
       "nodeOrToken": {
         "id": 39,
@@ -7770,7 +7770,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3038,
+      "code": 3028,
       "diagnostic": "An Enum must have only a field and optionally a setting list",
       "nodeOrToken": {
         "id": 44,
@@ -7856,7 +7856,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3018,
+      "code": 3017,
       "diagnostic": "A TableGroup field should only have a single Table name",
       "nodeOrToken": {
         "id": 53,
@@ -7942,7 +7942,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3018,
+      "code": 3017,
       "diagnostic": "A TableGroup field should only have a single Table name",
       "nodeOrToken": {
         "id": 58,
@@ -8028,7 +8028,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3018,
+      "code": 3017,
       "diagnostic": "A TableGroup field should only have a single Table name",
       "nodeOrToken": {
         "id": 60,
@@ -8114,7 +8114,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3049,
+      "code": 3039,
       "diagnostic": "A Ref field should only have a single binary relationship",
       "nodeOrToken": {
         "id": 81,
@@ -8200,7 +8200,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3049,
+      "code": 3039,
       "diagnostic": "A Ref field should only have a single binary relationship",
       "nodeOrToken": {
         "id": 97,
@@ -8286,7 +8286,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3049,
+      "code": 3039,
       "diagnostic": "A Ref field should only have a single binary relationship",
       "nodeOrToken": {
         "id": 118,
@@ -8372,7 +8372,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3049,
+      "code": 3039,
       "diagnostic": "A Ref field should only have a single binary relationship",
       "nodeOrToken": {
         "id": 134,
@@ -8458,7 +8458,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3049,
+      "code": 3039,
       "diagnostic": "A Ref field should only have a single binary relationship",
       "nodeOrToken": {
         "id": 136,

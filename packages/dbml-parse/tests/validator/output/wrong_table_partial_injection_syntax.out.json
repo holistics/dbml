@@ -1155,7 +1155,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3029,
+      "code": 3019,
       "diagnostic": "A column must have a type",
       "nodeOrToken": {
         "id": 15,
@@ -1666,7 +1666,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3030,
+      "code": 3020,
       "diagnostic": "A column name must be an identifier or a quoted identifier",
       "nodeOrToken": {
         "id": 15,

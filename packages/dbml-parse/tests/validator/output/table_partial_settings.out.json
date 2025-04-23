@@ -6513,7 +6513,7 @@
   },
   "errors": [
     {
-      "code": 3023,
+      "code": 3064,
       "diagnostic": "'note' can only appear once",
       "nodeOrToken": {
         "id": 9,
@@ -6764,7 +6764,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3023,
+      "code": 3064,
       "diagnostic": "'note' can only appear once",
       "nodeOrToken": {
         "id": 13,
@@ -7037,7 +7037,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3034,
+      "code": 3024,
       "diagnostic": "'note' can only appear once",
       "nodeOrToken": {
         "id": 42,
@@ -7203,7 +7203,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3034,
+      "code": 3024,
       "diagnostic": "'note' can only appear once",
       "nodeOrToken": {
         "id": 46,
@@ -7369,7 +7369,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3035,
+      "code": 3025,
       "diagnostic": "'default' must be a string literal, number literal, function expression, true, false or null",
       "nodeOrToken": {
         "id": 64,

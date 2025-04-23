@@ -457,16 +457,12 @@ function suggestInSubField (
     case ScopeKind.TABLE:
     case ScopeKind.TABLEPARTIAL:
       return suggestInColumn(compiler, offset, container);
-
     case ScopeKind.PROJECT:
       return suggestInProjectField(compiler, offset, container);
-
     case ScopeKind.INDEXES:
       return suggestInIndex(compiler, offset);
-
     case ScopeKind.ENUM:
       return suggestInEnumField(compiler, offset, container);
-
     case ScopeKind.REF: {
       const suggestions = suggestInRefField(compiler, offset);
 
@@ -477,10 +473,8 @@ function suggestInSubField (
         ? prependSpace(suggestions)
         : suggestions;
     }
-
     case ScopeKind.TABLEGROUP:
       return suggestInTableGroupField(compiler);
-
     default:
       return noSuggestions();
   }
