@@ -1351,7 +1351,7 @@
   },
   "errors": [
     {
-      "code": 3028,
+      "code": 3018,
       "diagnostic": "A Table must have at least one column",
       "nodeOrToken": {
         "id": 5,
@@ -1835,7 +1835,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3028,
+      "code": 3018,
       "diagnostic": "A Table must have at least one column",
       "nodeOrToken": {
         "id": 11,
@@ -2341,7 +2341,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3028,
+      "code": 3018,
       "diagnostic": "A Table must have at least one column",
       "nodeOrToken": {
         "id": 17,

@@ -53,25 +53,18 @@ export default class Interpreter {
       switch (getElementKind(element).unwrap_or(undefined)) {
         case ElementKind.Table:
           return (new TableInterpreter(element, this.env)).interpret();
-
         case ElementKind.Note:
           return (new StickyNoteInterpreter(element, this.env)).interpret();
-
         case ElementKind.Ref:
           return (new RefInterpreter(element, this.env)).interpret();
-
         case ElementKind.TableGroup:
           return (new TableGroupInterpreter(element, this.env)).interpret();
-
         case ElementKind.TablePartial:
           return (new TablePartialInterpreter(element, this.env)).interpret();
-
         case ElementKind.Enum:
           return (new EnumInterpreter(element, this.env)).interpret();
-
         case ElementKind.Project:
           return (new ProjectInterpreter(element, this.env)).interpret();
-
         default:
           return [];
       }

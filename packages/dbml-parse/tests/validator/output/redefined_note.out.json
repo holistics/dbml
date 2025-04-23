@@ -1727,7 +1727,7 @@
   },
   "errors": [
     {
-      "code": 3028,
+      "code": 3018,
       "diagnostic": "A Table must have at least one column",
       "nodeOrToken": {
         "id": 15,
@@ -2853,7 +2853,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3054,
+      "code": 3044,
       "diagnostic": "Duplicate notes are defined",
       "nodeOrToken": {
         "id": 5,
@@ -3126,7 +3126,7 @@
       "name": "CompileError"
     },
     {
-      "code": 3054,
+      "code": 3044,
       "diagnostic": "Duplicate notes are defined",
       "nodeOrToken": {
         "id": 12,
