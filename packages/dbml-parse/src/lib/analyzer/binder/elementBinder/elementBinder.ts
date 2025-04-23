@@ -288,6 +288,7 @@ export default abstract class ElementBinder {
     }
   }
 
+  // Resolve fields from partial injections into current element's symbol table so binder will have fields when binding
   resolveInjections (symbolFactory: SymbolFactory) {
     const symbolTable = this.declarationNode.symbol?.symbolTable;
     if (!symbolTable) return;

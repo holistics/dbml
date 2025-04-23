@@ -1,4 +1,5 @@
-import _, { forIn } from 'lodash';
+/* eslint-disable class-methods-use-this */
+import _, { forIn, last } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -36,6 +37,7 @@ import {
 } from '../../../parser/utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import SymbolTable from '../../symbol/symbolTable';
+import { ElementKind, SettingName } from '../../types';
 
 function isValidColumnType (type: SyntaxNode): boolean {
   if (
@@ -157,23 +159,23 @@ export default class TablePartialValidator implements ElementValidator {
 
     forIn(settingMap, (attrs, name) => {
       switch (name) {
-        case 'headercolor':
+        case SettingName.HeaderColor:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, '\'headercolor\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING, '\'headercolor\' must be a color literal', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING, `'${name}' must be a color literal`, attr.value || attr.name!));
             }
           });
           break;
-        case 'note':
+        case SettingName.Note:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, '\'note\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING, '\'note\' must be a string literal', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING, `'${name}' must be a string literal`, attr.value || attr.name!));
             }
           });
           break;
@@ -188,30 +190,32 @@ export default class TablePartialValidator implements ElementValidator {
     const { name } = this.declarationNode;
     this.declarationNode.symbol = this.symbolFactory.create(TablePartialSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
     const maybeNamePartials = destructureComplexVariable(name);
-    if (maybeNamePartials.isOk()) {
-      const namePartials = maybeNamePartials.unwrap();
-      const tablePartialName = namePartials.pop()!;
-      const symbolTable = registerSchemaStack(namePartials, this.publicSymbolTable, this.symbolFactory);
-      const tablePartialId = createTablePartialSymbolIndex(tablePartialName);
-      if (symbolTable.has(tablePartialId)) {
-        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial name '${tablePartialName}' already exists`, name!)];
-      }
-      symbolTable.set(tablePartialId, this.declarationNode.symbol!);
+    if (!maybeNamePartials.isOk()) return [];
+
+    const namePartials = maybeNamePartials.unwrap();
+    const tablePartialName = namePartials.pop()!;
+    const symbolTable = registerSchemaStack(namePartials, this.publicSymbolTable, this.symbolFactory);
+    const tablePartialId = createTablePartialSymbolIndex(tablePartialName);
+    if (symbolTable.has(tablePartialId)) {
+      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial name '${tablePartialName}' already exists`, name!)];
     }
+    symbolTable.set(tablePartialId, this.declarationNode.symbol!);
 
     return [];
   }
 
   validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
-    if (!body) {
-      return [];
-    }
+    if (!body) return [];
+
     if (body instanceof FunctionApplicationNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A TablePartial\'s body must be a block', body)];
     }
 
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -232,44 +236,47 @@ export default class TablePartialValidator implements ElementValidator {
       }
 
       const remains = field.args.slice(1);
-      errors.push(...this.validateFieldSetting(remains));
-
-      errors.push(...this.registerField(field));
+      errors.push(
+        ...this.validateFieldSetting(remains),
+        ...this.registerField(field),
+      );
 
       return errors;
     });
   }
 
   registerField (field: FunctionApplicationNode): CompileError[] {
-    if (field.callee && isExpressionAVariableNode(field.callee)) {
-      const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
-      const columnId = createColumnSymbolIndex(columnName);
+    if (!field.callee || !isExpressionAVariableNode(field.callee)) return [];
 
-      const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
-      field.symbol = columnSymbol;
+    const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
+    const columnId = createColumnSymbolIndex(columnName);
 
-      const symbolTable = this.declarationNode.symbol!.symbolTable!;
-      if (symbolTable.has(columnId)) {
-        const symbol = symbolTable.get(columnId);
-        return [
-          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, field),
-          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, symbol!.declaration!),
-        ];
-      }
-      symbolTable.set(columnId, columnSymbol);
+    const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
+    field.symbol = columnSymbol;
+
+    const symbolTable = this.declarationNode.symbol!.symbolTable!;
+    if (symbolTable.has(columnId)) {
+      const symbol = symbolTable.get(columnId);
+      return [
+        new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, field),
+        new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, symbol!.declaration!),
+      ];
     }
+    symbolTable.set(columnId, columnSymbol);
     return [];
   }
 
   // This is needed to support legacy inline settings
   validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
-    if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
+    const lastPart = last(parts);
+    if (
+      !parts.slice(0, -1).every(isExpressionAnIdentifierNode)
+      || !(isExpressionAnIdentifierNode(lastPart) || lastPart instanceof ListExpressionNode)
+    ) {
       return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
     }
 
-    if (parts.length === 0) {
-      return [];
-    }
+    if (parts.length === 0) return [];
 
     let settingList: ListExpressionNode | undefined;
     if (_.last(parts) instanceof ListExpressionNode) {
@@ -287,7 +294,7 @@ export default class TablePartialValidator implements ElementValidator {
 
     parts.forEach((part) => {
       const name = extractVarNameFromPrimaryVariable(part as any).unwrap_or('').toLowerCase();
-      if (name !== 'pk' && name !== 'unique') {
+      if (name !== SettingName.PK && name !== SettingName.Unique) {
         errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
         return;
       }
@@ -298,8 +305,8 @@ export default class TablePartialValidator implements ElementValidator {
       }
     });
 
-    const pkAttrs = settingMap['pk'] || [];
-    const pkeyAttrs = settingMap['primary key'] || [];
+    const pkAttrs = settingMap[SettingName.PK] || [];
+    const pkeyAttrs = settingMap[SettingName.PKey] || [];
     if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
       errors.push(...[...pkAttrs, ...pkeyAttrs].map((attr) => new CompileError(
         CompileErrorCode.DUPLICATE_COLUMN_SETTING,
@@ -310,48 +317,52 @@ export default class TablePartialValidator implements ElementValidator {
 
     forIn(settingMap, (attrs, name) => {
       switch (name) {
-        case 'note':
+        case SettingName.Note:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'note can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'note\' must be a quoted string', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must be a quoted string`, attr.value || attr.name!));
             }
           });
           break;
-        case 'ref':
+
+        case SettingName.Ref:
           attrs.forEach((attr) => {
             if (!isUnaryRelationship(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'ref\' must be a valid unary relationship', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must be a valid unary relationship`, attr.value || attr.name!));
             }
           });
           break;
-        case 'primary key':
+
+        case SettingName.PKey:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'primary key\' must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
           break;
-        case 'pk':
+
+        case SettingName.PK:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'pk\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (attr instanceof AttributeNode && !isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'pk\' must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
           break;
-        case 'not null':
+
+        case SettingName.NotNull: {
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'not null\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
-          const nullAttrs = settingMap['null'] || [];
+          const nullAttrs = settingMap[SettingName.Null] || [];
           if (attrs.length >= 1 && nullAttrs.length >= 1) {
             errors.push(...[...attrs, ...nullAttrs].map((attr) => new CompileError(
               CompileErrorCode.CONFLICTING_SETTING,
@@ -361,54 +372,60 @@ export default class TablePartialValidator implements ElementValidator {
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'not null\' must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
           break;
-        case 'null':
+        }
+
+        case SettingName.Null:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'null\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'null\' must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
           break;
-        case 'unique':
+
+        case SettingName.Unique:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'unique\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (attr instanceof AttributeNode && !isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'unique\' must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
           break;
-        case 'increment':
+
+        case SettingName.Increment:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'increment\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (attr instanceof AttributeNode && !isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'increment\' must not have a value', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, `'${name}' must not have a value`, attr.value || attr.name!));
             }
           });
           break;
-        case 'default':
+
+        case SettingName.Default:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'default\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isValidDefaultValue(attr.value)) {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
-                '\'default\' must be a string literal, number literal, function expression, true, false or null',
+                `'${name}' must be a string literal, number literal, function expression, true, false or null`,
                 attr.value || attr.name!,
               ));
             }
           });
           break;
+
         default:
           attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
       }
@@ -427,7 +444,7 @@ export default class TablePartialValidator implements ElementValidator {
       return validator.validate();
     });
 
-    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
+    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === ElementKind.Note);
     if (notes.length > 1) {
       errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
     }

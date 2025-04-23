@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -37,15 +38,14 @@ import {
   isExpressionAnIdentifierNode,
 } from '../../../parser/utils';
 import { SyntaxToken } from '../../../lexer/tokens';
-import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import _ from 'lodash';
+import SymbolTable from '../../symbol/symbolTable';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken};
   private symbolFactory: SymbolFactory;
   private publicSymbolTable: SymbolTable;
 
-  constructor(
+  constructor (
     declarationNode: ElementDeclarationNode & { type: SyntaxToken },
     publicSymbolTable: SymbolTable,
     symbolFactory: SymbolFactory,
@@ -55,44 +55,51 @@ export default class TableValidator implements ElementValidator {
     this.publicSymbolTable = publicSymbolTable;
   }
 
-  validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.registerElement(), ...this.validateBody(this.declarationNode.body)];
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.registerElement(),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
-  private validateContext(): CompileError[] {
+  private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
       return [new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level', this.declarationNode)];
     }
     return [];
   }
 
-  private validateName(nameNode?: SyntaxNode): CompileError[] {
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
-      return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', this.declarationNode)]
+      return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', this.declarationNode)];
     }
     if (nameNode instanceof ArrayNode) {
       return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid array as Table name, maybe you forget to add a space between the name and the setting list?', nameNode)];
     }
     if (!isValidName(nameNode)) {
       return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Table name must be of the form <table> or <schema>.<table>', nameNode)];
-    };
+    }
 
     return [];
   }
 
-  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (!aliasNode) {
       return [];
     }
 
     if (!isValidAlias(aliasNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_ALIAS, 'Table aliases can only contains alphanumeric and underscore unless surrounded by double quotes', aliasNode)]
+      return [new CompileError(CompileErrorCode.INVALID_ALIAS, 'Table aliases can only contains alphanumeric and underscore unless surrounded by double quotes', aliasNode)];
     }
 
     return [];
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -102,7 +109,7 @@ export default class TableValidator implements ElementValidator {
       switch (name) {
         case 'headercolor':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'headercolor\' can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'headercolor\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
@@ -112,7 +119,7 @@ export default class TableValidator implements ElementValidator {
           break;
         case 'note':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'note\' can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'note\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
@@ -121,16 +128,16 @@ export default class TableValidator implements ElementValidator {
           });
           break;
         default:
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown \'${name}\' setting`, attr)))
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
       }
     }
     return errors;
   }
 
-  registerElement(): CompileError[] {
+  registerElement (): CompileError[] {
     const errors: CompileError[] = [];
     this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
-    
+
     const { name, alias } = this.declarationNode;
 
     const maybeNameFragments = destructureComplexVariable(name);
@@ -140,21 +147,21 @@ export default class TableValidator implements ElementValidator {
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableSymbolIndex(tableName);
       if (symbolTable.has(tableId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${tableName}' already exists in schema '${nameFragments.join('.') || 'public'}'`, name!))
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${tableName}' already exists in schema '${nameFragments.join('.') || 'public'}'`, name!));
       }
       symbolTable.set(tableId, this.declarationNode.symbol!);
     }
-  
+
     if (
-        alias && isSimpleName(alias) &&
-        !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
+      alias && isSimpleName(alias)
+      && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
     ) {
       const aliasName = extractVarNameFromPrimaryVariable(alias as any).unwrap();
       const aliasId = createTableSymbolIndex(aliasName);
       if (this.publicSymbolTable.has(aliasId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists`, name!))
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists`, name!));
       }
-      this.publicSymbolTable.set(aliasId, this.declarationNode.symbol!)
+      this.publicSymbolTable.set(aliasId, this.declarationNode.symbol!);
     }
 
     return errors;
@@ -187,23 +194,23 @@ export default class TableValidator implements ElementValidator {
   }
 
   registerInjection (injection: PartialInjectionNode) {
-    if (injection.partial?.variable?.value) {
-      const injectionName = injection.partial.variable?.value;
-      const injectionId = createTablePartialInjectionSymbolIndex(injectionName);
+    if (!injection.partial?.variable?.value) return [];
 
-      const injectionSymbol = this.symbolFactory.create(TablePartialInjectionSymbol, { declaration: injection });
-      injection.symbol = injectionSymbol;
+    const injectionName = injection.partial.variable?.value;
+    const injectionId = createTablePartialInjectionSymbolIndex(injectionName);
 
-      const symbolTable = this.declarationNode.symbol!.symbolTable!;
-      const duplicateSymbol = symbolTable.get(injectionId);
-      if (duplicateSymbol) {
-        return [
-          new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate injection ${injectionName}`, injection),
-          new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate injection ${injectionName}`, duplicateSymbol.declaration!),
-        ];
-      }
-      symbolTable.set(injectionId, injectionSymbol);
+    const injectionSymbol = this.symbolFactory.create(TablePartialInjectionSymbol, { declaration: injection });
+    injection.symbol = injectionSymbol;
+
+    const symbolTable = this.declarationNode.symbol!.symbolTable!;
+    const duplicateSymbol = symbolTable.get(injectionId);
+    if (duplicateSymbol) {
+      return [
+        new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate injection ${injectionName}`, injection),
+        new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate injection ${injectionName}`, duplicateSymbol.declaration!),
+      ];
     }
+    symbolTable.set(injectionId, injectionSymbol);
     return [];
   }
 
