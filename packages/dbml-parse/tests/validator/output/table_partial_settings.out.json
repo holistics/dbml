@@ -7038,7 +7038,7 @@
     },
     {
       "code": 3034,
-      "diagnostic": "note can only appear once",
+      "diagnostic": "'note' can only appear once",
       "nodeOrToken": {
         "id": 42,
         "kind": "<attribute>",
@@ -7204,7 +7204,7 @@
     },
     {
       "code": 3034,
-      "diagnostic": "note can only appear once",
+      "diagnostic": "'note' can only appear once",
       "nodeOrToken": {
         "id": 46,
         "kind": "<attribute>",
