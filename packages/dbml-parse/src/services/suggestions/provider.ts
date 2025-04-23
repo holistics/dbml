@@ -41,6 +41,7 @@ import {
 } from '../../lib/parser/nodes';
 import { getOffsetFromMonacoPosition } from '../utils';
 import { isComment } from '../../lib/lexer/utils';
+import { SettingName } from '../../lib/analyzer/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -69,7 +70,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       ].find((token) => isComment(token) && isOffsetWithinSpan(offset, token))
     ) {
       return noSuggestions();
-    } 
+    }
 
     if (bOcTokenId === undefined) {
       return suggestTopLevelElementType();
@@ -132,7 +133,6 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         return suggestInTuple(this.compiler, offset);
       } else if (container instanceof PartialInjectionNode) {
         return suggestOnPartialInjectionOp(this.compiler, offset);
-        // return suggestNamesInScope(this.compiler, offset, this.compiler.container.element(offset), [SymbolKind.TablePartial]);
       } else if (container instanceof FunctionApplicationNode) {
         return suggestInSubField(this.compiler, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
@@ -286,11 +286,11 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
     switch (scopeKind) {
       case ScopeKind.TABLE:
       case ScopeKind.TABLEPARTIAL:
-        attributes = ['headercolor', 'note'];
+        attributes = [SettingName.HeaderColor, SettingName.Note];
         break;
 
       case ScopeKind.TABLEGROUP:
-        attributes = ['color', 'note'];
+        attributes = [SettingName.Color, SettingName.Note];
         break;
 
       default:
@@ -315,52 +315,52 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
     case ScopeKind.TABLEPARTIAL:
       return {
         suggestions: [
-          ...['primary key', 'null', 'not null', 'increment', 'pk', 'unique'].map((name) => ({
+          ...[
+            SettingName.PK,
+            SettingName.PKey,
+            SettingName.Null,
+            SettingName.NotNull,
+            SettingName.Increment,
+            SettingName.Unique,
+          ].map((name) => ({
             label: name,
             insertText: name,
             kind: CompletionItemKind.Property,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             range: undefined as any,
           })),
-          ...['ref', 'default'].map((name) => ({
+          ...[SettingName.Ref, SettingName.Default, SettingName.Note].map((name) => ({
             label: name,
             insertText: `${name}: `,
             kind: CompletionItemKind.Property,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             range: undefined as any,
           })),
-          {
-            label: 'note',
-            insertText: 'note: ',
-            kind: CompletionItemKind.Property,
-            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            range: undefined as any,
-          },
         ],
       };
     case ScopeKind.ENUM:
       return {
         suggestions: [
-          {
-            label: 'note',
-            insertText: 'note: ',
+          ...[SettingName.Note].map((name) => ({
+            label: name,
+            insertText: `${name}: `,
             kind: CompletionItemKind.Property,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             range: undefined as any,
-          },
+          })),
         ],
       };
     case ScopeKind.INDEXES:
       return {
         suggestions: [
-          ...['unique', 'pk'].map((name) => ({
+          ...[SettingName.Unique, SettingName.PK].map((name) => ({
             label: name,
             insertText: name,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             kind: CompletionItemKind.Property,
             range: undefined as any,
           })),
-          ...['note', 'name', 'type'].map((name) => ({
+          ...[SettingName.Note, SettingName.Name, SettingName.Type].map((name) => ({
             label: name,
             insertText: `${name}: `,
             kind: CompletionItemKind.Property,
@@ -371,7 +371,7 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
       };
     case ScopeKind.REF:
       return {
-        suggestions: ['update', 'delete'].map((name) => ({
+        suggestions: [SettingName.Update, SettingName.Delete].map((name) => ({
           label: name,
           insertText: `${name}: `,
           kind: CompletionItemKind.Property,

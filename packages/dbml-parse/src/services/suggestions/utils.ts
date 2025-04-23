@@ -4,7 +4,7 @@ import { SyntaxToken, SyntaxTokenKind } from '../../lib/lexer/tokens';
 import { hasTrailingSpaces } from '../../lib/lexer/utils';
 import { isAlphaOrUnderscore } from '../../lib/utils';
 
-export function pickCompletionItemKind(symbolKind: SymbolKind): CompletionItemKind {
+export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
     case SymbolKind.Schema:
       return CompletionItemKind.Module;

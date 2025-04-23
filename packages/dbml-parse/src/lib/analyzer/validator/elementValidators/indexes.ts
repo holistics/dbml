@@ -31,27 +31,28 @@ export default class IndexesValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
   private validateContext (): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NOTE_CONTEXT,
-        'An Indexes can only appear inside a Table or a TablePartial',
-        this.declarationNode,
-      )];
-    }
+    const invalidContextError = new CompileError(
+      CompileErrorCode.INVALID_INDEXES_CONTEXT,
+      'An Indexes can only appear inside a Table or a TablePartial',
+      this.declarationNode,
+    );
+    if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
 
     const elementKind = getElementKind(this.declarationNode.parent).unwrap_or(undefined);
     return (elementKind && [ElementKind.Table, ElementKind.TablePartial].includes(elementKind))
       ? []
-      : [new CompileError(
-        CompileErrorCode.INVALID_NOTE_CONTEXT,
-        'An Indexes can only appear inside a Table or a TablePartial',
-        this.declarationNode,
-      )];
+      : [invalidContextError];
   }
 
   private validateName(nameNode?: SyntaxNode): CompileError[] {

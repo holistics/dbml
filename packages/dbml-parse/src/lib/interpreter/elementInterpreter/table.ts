@@ -1,14 +1,28 @@
-import { Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table, TablePartialInjection } from '../types';
-import { ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PartialInjectionNode, PrefixExpressionNode, SyntaxNode } from '../../parser/nodes';
-import { extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent } from '../utils';
-import { destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression } from '../../analyzer/utils';
+import _ from 'lodash';
+import {
+  Column, ColumnType, ElementInterpreter, Index,
+  InlineRef, InterpreterDatabase, Table, TablePartialInjection,
+} from '../types';
+import {
+  ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode,
+  ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode,
+  PartialInjectionNode, PrefixExpressionNode, SyntaxNode,
+} from '../../parser/nodes';
+import {
+  extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities,
+  getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent,
+} from '../utils';
+import {
+  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
+  extractVariableFromExpression,
+} from '../../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../../errors';
 import { aggregateSettingList, isExpressionANumber } from '../../analyzer/validator/utils';
 import { isExpressionAQuotedString, isExpressionAnIdentifierNode } from '../../parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import { ColumnSymbol } from '../../analyzer/symbol/symbols';
-import _ from 'lodash';
 import Report from '../../report';
+import { ElementKind } from '../../analyzer/types';
 
 export class TableInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -16,14 +30,22 @@ export class TableInterpreter implements ElementInterpreter {
   private table: Partial<Table>;
   private pkColumns: Column[];
 
-  constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.table = { name: undefined, schemaName: undefined, alias: null, fields: [], token: undefined, indexes: [], partials: [] };
+    this.table = {
+      name: undefined,
+      schemaName: undefined,
+      alias: null,
+      fields: [],
+      token: undefined,
+      indexes: [],
+      partials: [],
+    };
     this.pkColumns = [];
   }
 
-  interpret(): CompileError[] {
+  interpret (): CompileError[] {
     this.table.token = getTokenPosition(this.declarationNode);
     this.env.tables.set(this.declarationNode, this.table as Table);
 
@@ -102,7 +124,7 @@ export class TableInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretBody(body: BlockExpressionNode): CompileError[] {
+  private interpretBody (body: BlockExpressionNode): CompileError[] {
     const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode || e instanceof PartialInjectionNode);
     return [
       ...this.interpretFields(fields as (FunctionApplicationNode | PartialInjectionNode)[]),
@@ -110,21 +132,27 @@ export class TableInterpreter implements ElementInterpreter {
     ];
   }
 
-  private interpretSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       switch (sub.type?.value.toLowerCase()) {
-        case 'note':
+        case ElementKind.Note:
           this.table.note = {
-            value: extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? (sub.body.body[0] as FunctionApplicationNode).callee : sub.body!.callee).map(normalizeNoteContent).unwrap(),
+            value: extractQuotedStringToken(
+              sub.body instanceof BlockExpressionNode
+                ? (sub.body.body[0] as FunctionApplicationNode).callee
+                : sub.body!.callee,
+            ).map(normalizeNoteContent).unwrap(),
             token: getTokenPosition(sub),
-          }
+          };
           return [];
-        case 'indexes':
-          return this.interpretIndexes(sub);
-      }
 
-      return [];
-    })
+        case ElementKind.Indexes:
+          return this.interpretIndexes(sub);
+
+        default:
+          return [];
+      }
+    });
   }
 
   private interpretInjection (injection: PartialInjectionNode, order: number) {
@@ -134,9 +162,11 @@ export class TableInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretFields(fields: (FunctionApplicationNode | PartialInjectionNode)[]): CompileError[] {
+  private interpretFields (fields: (FunctionApplicationNode | PartialInjectionNode)[]): CompileError[] {
     return fields.flatMap((field, order) => {
-      return field instanceof FunctionApplicationNode ? this.interpretColumn(field) : this.interpretInjection(field, order);
+      return field instanceof FunctionApplicationNode
+        ? this.interpretColumn(field)
+        : this.interpretInjection(field, order);
     });
   }
 
