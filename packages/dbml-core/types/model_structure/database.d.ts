@@ -11,6 +11,7 @@ import { NormalizedEnumValue } from './enumValue';
 import { NormalizedField } from './field';
 import { NormalizedIndexColumn } from './indexColumn';
 import { NormalizedIndex } from './indexes';
+import TablePartial, { NormalizedTablePartial } from './tablePartial';
 export interface Project {
     note: RawNote;
     database_type: string;
@@ -44,6 +45,7 @@ export interface RawDatabase {
     tableGroups: TableGroup[];
     project: Project;
     records: RawTableRecord[];
+    tablePartials: TablePartial[];
 }
 declare class Database extends Element {
     dbState: DbState;
@@ -65,6 +67,8 @@ declare class Database extends Element {
     processSchemaElements(elements: Schema[] | Table[] | Enum[] | TableGroup[] | Ref[], elementType: any): void;
     findOrCreateSchema(schemaName: string): Schema;
     findTable(rawTable: any): Table;
+    processTablePartials(rawTablePartials: any[]): TablePartial[];
+    findTablePartial(partialName: string): TablePartial;
     export(): {
         schemas: {
             tables: {
@@ -140,6 +144,33 @@ declare class Database extends Element {
                 type: string;
             }[][];
         }[];
+        tablePartials: {
+            name: string;
+            note: string;
+            headerColor: string;
+            fields: {
+                name: string;
+                type: any;
+                unique: boolean;
+                pk: boolean;
+                not_null: boolean;
+                note: string;
+                dbdefault: any;
+                increment: boolean;
+                injectedPartialId: number | undefined,
+            }[];
+            indexes: {
+                columns: {
+                    type: any;
+                    value: any;
+                }[];
+                name: string;
+                type: any;
+                unique: boolean;
+                pk: string;
+                note: string;
+            }[];
+        }[];
     };
     shallowExport(): {
         hasDefaultSchema: boolean;
@@ -212,6 +243,33 @@ declare class Database extends Element {
             content: string;
             headerColor: string;
         }[];
+        tablePartials: {
+            name: string;
+            note: string;
+            headerColor: string;
+            fields: {
+                name: string;
+                type: any;
+                unique: boolean;
+                pk: boolean;
+                not_null: boolean;
+                note: string;
+                dbdefault: any;
+                increment: boolean;
+                injectedPartialId: number | undefined,
+            }[];
+            indexes: {
+                columns: {
+                    type: any;
+                    value: any;
+                }[];
+                name: string;
+                type: any;
+                unique: boolean;
+                pk: string;
+                note: string;
+            }[];
+        }[];
     };
     exportChildIds(): {
         schemaIds: number[];
@@ -243,5 +301,6 @@ export interface NormalizedDatabase {
     indexColumns: NormalizedIndexColumn;
     fields: NormalizedField;
     records: NormalizedRecords;
+    tablePartials: NormalizedTablePartial;
 }
 export default Database;
