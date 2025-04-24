@@ -1,7 +1,5 @@
-import _ from 'lodash';
 import Database from '../../src/model_structure/database';
 import jsonDb from './table_partial.json';
-import { DEFAULT_SCHEMA_NAME } from '../../src/model_structure/config';
 
 describe('@dbml/core - model_structure', () => {
   let database;
@@ -25,12 +23,13 @@ describe('@dbml/core - model_structure', () => {
       test('table "users" has all fields and in correct order after merged with the partials', () => {
         const table = database.schemas[0].findTable('users');
         const fields = table.fields.map(f => f.name);
-  
+
         expect(fields).toEqual(['id', 'id2', 'name', 'email', 'created_at', 'updated_at', 'a', 'b']);
       });
 
       test('table "users" has inline_refs from table partial', () => {
         const table = database.schemas[0].findTable('users');
+        expect(table).toHaveProperty('name', 'users');
         expect(database.schemas[0].refs.length).toEqual(1);
         const ref0 = database.schemas[0].refs[0];
         expect(ref0.endpoints.length).toEqual(2);
