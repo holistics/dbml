@@ -17,18 +17,11 @@
 #### :house_with_garden: Internal
 * `dbml-connector`
   * [#714](https://github.com/holistics/dbml/pull/714) Fix flaky db2dbml/mssql test cause by inconsistent table ordering ([@NQPhuc](https://github.com/NQPhuc))
-
-#### Committers: 1
-- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
-
-
-## v3.13.0-alpha.2 (2025-04-22)
-
-#### :house_with_garden: Internal
 * `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
   * [#708](https://github.com/holistics/dbml/pull/708) Add Eslint and TSConfig ([@xuantho573](https://github.com/xuantho573))
 
-#### Committers: 1
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
 - Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
 
 ## v3.12.0 (2025-04-08)
