@@ -74,6 +74,7 @@ class Index extends Element {
       unique: this.unique,
       pk: this.pk,
       note: this.note,
+      injectedPartialId: this.injectedPartial?.id,
     };
   }
 
