@@ -7,16 +7,31 @@ import { RefInterpreter } from './elementInterpreter/ref';
 import { TableGroupInterpreter } from './elementInterpreter/tableGroup';
 import { EnumInterpreter } from './elementInterpreter/enum';
 import { ProjectInterpreter } from './elementInterpreter/project';
+import { TablePartialInterpreter } from './elementInterpreter/tablePartial';
 import Report from '../report';
 import { getElementKind } from '../analyzer/utils';
 import { ElementKind } from '../analyzer/types';
+
+function convertEnvToDb (env: InterpreterDatabase): Database {
+  return {
+    schemas: [],
+    tables: Array.from(env.tables.values()),
+    notes: Array.from(env.notes.values()),
+    refs: Array.from(env.ref.values()),
+    enums: Array.from(env.enums.values()),
+    tableGroups: Array.from(env.tableGroups.values()),
+    aliases: env.aliases,
+    project: Array.from(env.project.values())[0] || {},
+    tablePartials: Array.from(env.tablePartials.values()),
+  };
+}
 
 // The interpreted format follows the old parser
 export default class Interpreter {
   ast: ProgramNode;
   env: InterpreterDatabase;
 
-  constructor(ast: ProgramNode) {
+  constructor (ast: ProgramNode) {
     this.ast = ast;
     this.env = {
       schema: [],
@@ -29,10 +44,11 @@ export default class Interpreter {
       groupOfTable: { },
       aliases: [],
       project: new Map(),
+      tablePartials: new Map(),
     };
   }
 
-  interpret(): Report<Database, CompileError> {
+  interpret (): Report<Database, CompileError> {
     const errors = this.ast.body.flatMap((element) => {
       switch (getElementKind(element).unwrap_or(undefined)) {
         case ElementKind.Table:
@@ -43,6 +59,8 @@ export default class Interpreter {
           return (new RefInterpreter(element, this.env)).interpret();
         case ElementKind.TableGroup:
           return (new TableGroupInterpreter(element, this.env)).interpret();
+        case ElementKind.TablePartial:
+          return (new TablePartialInterpreter(element, this.env)).interpret();
         case ElementKind.Enum:
           return (new EnumInterpreter(element, this.env)).interpret();
         case ElementKind.Project:
@@ -54,17 +72,4 @@ export default class Interpreter {
 
     return new Report(convertEnvToDb(this.env), errors);
   }
-}
-
-function convertEnvToDb(env: InterpreterDatabase): Database {
-  return {
-    schemas: [],
-    tables: Array.from(env.tables.values()),
-    notes: Array.from(env.notes.values()),
-    refs: Array.from(env.ref.values()),
-    enums: Array.from(env.enums.values()),
-    tableGroups: Array.from(env.tableGroups.values()),
-    aliases: env.aliases,
-    project: Array.from(env.project.values())[0] || {},
-  };
 }

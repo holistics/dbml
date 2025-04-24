@@ -43,7 +43,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "table2",
@@ -87,7 +88,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],
@@ -201,5 +203,6 @@
     }
   ],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

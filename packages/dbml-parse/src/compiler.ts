@@ -61,6 +61,7 @@ export const enum ScopeKind {
   PROJECT,
   CUSTOM,
   TOPLEVEL,
+  TABLEPARTIAL,
 }
 
 export default class Compiler {
@@ -337,6 +338,8 @@ export default class Compiler {
           return ScopeKind.NOTE;
         case 'project':
           return ScopeKind.PROJECT;
+        case 'tablepartial':
+          return ScopeKind.TABLEPARTIAL;
         default:
           return ScopeKind.CUSTOM;
       }

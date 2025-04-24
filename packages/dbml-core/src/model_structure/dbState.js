@@ -13,6 +13,7 @@ export default class DbState {
     this.fieldId = 1;
     this.indexColumnId = 1;
     this.recordId = 1;
+    this.tablePartialId = 1;
   }
 
   generateId (el) {
