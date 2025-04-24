@@ -215,6 +215,7 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
   const tablesAndFieldsSql = `
     WITH tables_and_fields AS (
       SELECT
+        t.object_id AS table_id,
         s.name AS table_schema,
         t.name AS table_name,
         t.create_date as table_create_date,
@@ -280,7 +281,6 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
         constraints_with_nulls
     )
     SELECT
-      object_id,
       table_schema,
       table_name,
       column_name,
@@ -307,7 +307,7 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
       ${buildSchemaQuery('table_schema', schemas)}
     ORDER BY
       table_schema,
-      object_id,
+      table_id,
       column_id;
   `;
 
