@@ -65,7 +65,6 @@ class Endpoint extends Element {
       tableName: this.tableName,
       fieldNames: this.fieldNames,
       relation: this.relation,
-      injectedPartialId: this.injectedPartial?.id,
     };
   }
 
