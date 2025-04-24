@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable consistent-return */
 /* eslint-disable class-methods-use-this */
 import { last, flatten, flattenDepth } from 'lodash';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
@@ -6,11 +8,11 @@ import { TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TY
 
 const COMMAND_KIND = {
   REF: 'ref',
-}
+};
 
 const COMMENT_OBJECT_TYPE = {
   TABLE: 'table',
-}
+};
 
 const findTable = (tables, schemaName, tableName) => {
   const realSchemaName = schemaName || 'public';
@@ -26,10 +28,9 @@ const escapeStr = (str) => {
     return str.replaceAll("''", "'");
   }
   return str;
-}
+};
 
 export default class PostgresASTGen extends PostgreSQLParserVisitor {
-
   constructor () {
     super();
     this.data = {
@@ -65,7 +66,9 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     if (ctx.createstmt()) {
       const table = ctx.createstmt().accept(this);
 
-      return this.data.tables.push(table);
+      // filter out null table that can cause error in model_structure stage
+      if (table) this.data.tables.push(table);
+      return;
     }
 
     if (ctx.indexstmt()) {
@@ -74,8 +77,8 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const { tableName, schemaName } = indexStmt.pathName;
 
       const table = findTable(this.data.tables, schemaName, tableName);
-      if (!table) return;
-      return table.indexes.push(indexStmt.index);
+      if (table) table.indexes.push(indexStmt.index);
+      return;
     }
 
     if (ctx.altertablestmt()) {
@@ -95,7 +98,6 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     if (ctx.insertstmt()) {
       ctx.insertstmt().accept(this);
-      return;
     }
   }
 
@@ -130,7 +132,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
         inlineRef.endpoints[0].schemaName = schemaName;
         inlineRef.endpoints[0].fieldNames = [fieldData.field.name];
         return inlineRef;
-      }))
+      })),
     ));
 
     this.data.refs.push(...tableRefs.map(tableRef => {
@@ -144,7 +146,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       schemaName,
       fields: fieldsData.map(fd => fd.field),
       indexes,
-    })
+    });
   }
 
   // tableelementlist
@@ -157,7 +159,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   visitTableelementlist (ctx) {
     return ctx.tableelement().map((element) => {
       return element.accept(this);
-    })
+    });
   }
 
   // tableconstraint | tablelikeclause | columnDef
@@ -196,7 +198,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
         //   type: 'PrimaryKey',
         //   columns:
         // },
-      }
+      };
     }
 
     if (ctx.FOREIGN()) {
@@ -225,8 +227,8 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
           }],
           onDelete: actions.onDelete,
           onUpdate: actions.onUpdate,
-        }
-      }
+        },
+      };
     }
 
     if (ctx.UNIQUE()) {
@@ -236,7 +238,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
           unique: true,
           columns: ctx.columnlist().accept(this),
         }),
-      }
+      };
     }
   }
 
@@ -391,34 +393,36 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     return {
       value: ctx.getText(),
       type: DATA_TYPE.EXPRESSION,
-    }
+    };
   }
 
   // check PostgresSQLParser.g4 line 3640
   visitC_expr_expr (ctx) {
     if (ctx.aexprconst()) return ctx.aexprconst().accept(this);
-    if (ctx.a_expr()) return {
-      value: ctx.a_expr().getText(),
-      type: DATA_TYPE.EXPRESSION
+    if (ctx.a_expr()) {
+      return {
+        value: ctx.a_expr().getText(),
+        type: DATA_TYPE.EXPRESSION,
+      };
     }
     return {
       value: ctx.getText(),
       type: DATA_TYPE.EXPRESSION,
-    }
+    };
   }
 
   visitC_expr_exists (ctx) {
     return {
       value: ctx.getText(),
       type: DATA_TYPE.EXPRESSION,
-    }
+    };
   }
 
   visitC_expr_case (ctx) {
     return {
       value: ctx.getText(),
       type: DATA_TYPE.EXPRESSION,
-    }
+    };
   }
 
   // iconst | fconst | sconst | bconst | xconst | func_name (sconst | OPEN_PAREN func_arg_list opt_sort_clause CLOSE_PAREN sconst) | consttypename sconst | constinterval (sconst opt_interval | OPEN_PAREN iconst CLOSE_PAREN sconst) | TRUE_P | FALSE_P | NULL_P
@@ -540,10 +544,6 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     return ctx.getChild(0).getText();
   }
 
-  visitUnreserved_keyword (ctx) {
-    return ctx.getChild(0).getText();
-  }
-
   visitCol_name_keyword (ctx) {
     return ctx.getChild(0).getText();
   }
@@ -598,7 +598,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       return {
         type_name: type.type + arrayExtension,
         schemaName: type.schemaName,
-      }
+      };
     }
   }
 
@@ -613,25 +613,31 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   visitSimpletypename (ctx) {
     if (ctx.generictype()) return ctx.generictype().accept(this);
 
-    if (ctx.character()) return {
-      type: ctx.character().accept(this),
-      schemaName: null,
+    if (ctx.character()) {
+      return {
+        type: ctx.character().accept(this),
+        schemaName: null,
+      };
     }
 
-    if (ctx.numeric()) return {
-      type: ctx.numeric().accept(this),
-      schemaName: null,
+    if (ctx.numeric()) {
+      return {
+        type: ctx.numeric().accept(this),
+        schemaName: null,
+      };
     }
 
-    if (ctx.constdatetime()) return {
-      type: ctx.constdatetime().accept(this),
-      schemaName: null,
+    if (ctx.constdatetime()) {
+      return {
+        type: ctx.constdatetime().accept(this),
+        schemaName: null,
+      };
     }
 
     return {
       type: ctx.getText(),
       schemaName: null,
-    }
+    };
   }
 
   // (TIMESTAMP | TIME) (OPEN_PAREN iconst CLOSE_PAREN)? opt_timezone
@@ -654,7 +660,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       return {
         type: enumName,
         schemaName,
-      }
+      };
     }
     let type = '';
     if (ctx.type_function_name()) type = ctx.type_function_name().accept(this);
@@ -726,7 +732,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
           unique: ctx.opt_unique().accept(this),
           type: ctx.access_method_clause().accept(this),
           columns: ctx.index_params().accept(this),
-        })
+        }),
       };
       return r;
     }
@@ -768,12 +774,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       return {
         value: ctx.colid().accept(this),
         type: CONSTRAINT_TYPE.STRING,
-      }
+      };
     }
     return {
       value: ctx.getText(),
       type: CONSTRAINT_TYPE.EXPRESSION,
-    }
+    };
   }
 
   // UNIQUE |
@@ -886,8 +892,6 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
    | COMMENT ON CAST OPEN_PAREN typename AS typename CLOSE_PAREN IS comment_text
    */
   visitCommentstmt (ctx) {
-    const note = ctx.comment_text().accept(this);
-
     if (ctx.object_type_any_name()) {
       const objectType = ctx.object_type_any_name().accept(this);
       if (!objectType) return;
