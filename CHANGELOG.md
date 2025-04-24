@@ -1,3 +1,29 @@
+## v3.13.0 (2025-04-24)
+
+#### :memo: Documentation
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#709](https://github.com/holistics/dbml/pull/709) ft: support table partial ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :bug: Bug Fix
+* `dbml-connector`
+  * [#714](https://github.com/holistics/dbml/pull/714) Fix flaky db2dbml/mssql test cause by inconsistent table ordering ([@NQPhuc](https://github.com/NQPhuc))
+* `dbml-core`
+  * [#713](https://github.com/holistics/dbml/pull/713) fix(antlr.pg): filter null table when importing postgresql ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#709](https://github.com/holistics/dbml/pull/709) ft: support table partial ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :house_with_garden: Internal
+* `dbml-connector`
+  * [#714](https://github.com/holistics/dbml/pull/714) Fix flaky db2dbml/mssql test cause by inconsistent table ordering ([@NQPhuc](https://github.com/NQPhuc))
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#708](https://github.com/holistics/dbml/pull/708) Add Eslint and TSConfig ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
 ## v3.12.0 (2025-04-08)
 
 #### :memo: Documentation
