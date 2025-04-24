@@ -146,6 +146,7 @@ class Table extends Element {
                 }],
                 injectedPartial: tablePartial,
               };
+              // The global array containing references with 1 endpoint being a field injected from a partial to a table
               this.schema.database.injectedRawRefs.push(ref);
             });
           }

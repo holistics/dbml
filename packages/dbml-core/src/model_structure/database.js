@@ -40,6 +40,8 @@ class Database extends Element {
     this.records = [];
     this.tablePartials = [];
 
+    // The global array containing references with 1 endpoint being a field injected from a partial to a table
+    // These refs are add to this array when resolving partials in tables (`Table.processPartials()`)
     this.injectedRawRefs = [];
 
     // The process order is important. Do not change !
