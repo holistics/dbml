@@ -307,6 +307,7 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
       ${buildSchemaQuery('table_schema', schemas)}
     ORDER BY
       table_schema,
+      table_create_date,
       table_id,
       column_id;
   `;
