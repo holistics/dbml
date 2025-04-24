@@ -14,7 +14,7 @@ function isEqualPair (pair1, pair2) {
 
 class Ref extends Element {
   constructor ({
-    name, color, endpoints, onDelete, onUpdate, token, schema = {},
+    name, color, endpoints, onDelete, onUpdate, token, schema = {}, injectedPartial = null,
   } = {}) {
     super(token);
     this.name = name;
@@ -23,6 +23,7 @@ class Ref extends Element {
     this.onUpdate = onUpdate;
     this.endpoints = [];
     this.schema = schema;
+    this.injectedPartial = injectedPartial;
     this.dbState = this.schema.dbState;
     this.generateId();
 
@@ -69,6 +70,7 @@ class Ref extends Element {
       color: this.color,
       onDelete: this.onDelete,
       onUpdate: this.onUpdate,
+      injectedPartialId: this.injectedPartial?.id,
     };
   }
 

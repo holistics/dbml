@@ -128,7 +128,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "order_items",
@@ -217,7 +218,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "products",
@@ -402,7 +404,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],
@@ -410,5 +413,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

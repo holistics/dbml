@@ -550,6 +550,81 @@ TableGroup e_commerce [color: #345] {
 }
 ```
 
+## Table Partial
+
+Table partial is a way to define a table with a set of fields and settings that can be reused in other tables. To define a table partial, you can use the following syntax:
+
+```text
+TablePartial partial_name [table_setting] {
+  field_name field_type [field_settings]
+  indexes {
+    (column_name) [index_settings]
+  }
+}
+```
+
+To use a table partial, you can reference (also called injection) it in the table definition using the `~` prefix:
+
+```text
+Table table_name {
+  ~partial_name
+  field_name field_type
+  ~another_partial
+}
+```
+
+Note: the order of table own fields and partial injections in the table definition determine their relative fields order in the final output.  
+
+### Conflict Resolution order
+When there're multiple conflicting columns or settings with identical names due to partial injection, the following resolution order is applied:
+1. Local Table Definition: If a definition exists within the local table, it takes precedence.
+2. Last Partial Referenced: If no local definition is found, the definition from the last partial (in dbml source) containing the conflicting name is used.
+
+### Example usage
+
+```text
+TablePartial base_template [headerColor: #ff0000] {
+  id int [pk, not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+TablePartial soft_delete_template {
+  delete_status boolean [not null]
+  deleted_at timestamp [default: `now()`]
+}
+
+TablePartial email_index {
+  email varchar [unique]
+
+  indexes {
+    email [unique]
+  }
+}
+
+Table users {
+  ~base_template
+  ~email_index
+  name varchar
+  ~soft_delete_template
+}
+
+// result
+Table users [headerColor: #ff0000] {
+  id int [pk, not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  email varchar [unique]
+  name varchar
+  delete_status boolean [not null]
+  deleted_at timestamp [default: `now()`]
+
+  indexes {
+    email [unique]
+  }
+}
+```
+
 ## Multi-line String
 
 Multiline string will be defined between triple single quote `'''`

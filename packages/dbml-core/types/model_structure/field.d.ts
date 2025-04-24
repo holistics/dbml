@@ -4,6 +4,7 @@ import Element, { Token, RawNote } from './element';
 import Endpoint from './endpoint';
 import Enum from './enum';
 import Table from './table';
+import TablePartial from './tablePartial';
 interface RawField {
     name: string;
     type: any;
@@ -30,6 +31,8 @@ declare class Field extends Element {
     table: Table;
     endpoints: Endpoint[];
     _enum: Enum;
+    injectedPartial?: TablePartial;
+    injectedToken: Token;
     constructor({ name, type, unique, pk, token, not_null, note, dbdefault, increment, table }: RawField);
     generateId(): void;
     pushEndpoint(endpoint: any): void;
@@ -42,6 +45,7 @@ declare class Field extends Element {
         note: string;
         dbdefault: any;
         increment: boolean;
+        injectedPartialId?: number;
     };
     exportParentIds(): {
         tableId: number;
@@ -59,6 +63,7 @@ declare class Field extends Element {
         note: string;
         dbdefault: any;
         increment: boolean;
+        injectedPartialId?: number;
     };
     normalize(model: NormalizedDatabase): void;
 }
@@ -76,6 +81,7 @@ export interface NormalizedField {
         tableId: number;
         endpointIds: number[];
         enumId: number;
+        injectedPartialId?: number;
     };
 }
 export default Field;

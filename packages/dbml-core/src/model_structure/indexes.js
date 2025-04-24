@@ -3,7 +3,7 @@ import IndexColumn from './indexColumn';
 
 class Index extends Element {
   constructor ({
-    columns, type, unique, pk, token, name, note, table = {},
+    columns, type, unique, pk, token, name, note, table = {}, injectedPartial = null,
   } = {}) {
     super(token);
     this.name = name;
@@ -14,6 +14,7 @@ class Index extends Element {
     this.pk = pk;
     this.columns = [];
     this.table = table;
+    this.injectedPartial = injectedPartial;
     this.dbState = this.table.dbState;
     this.generateId();
 
@@ -73,6 +74,7 @@ class Index extends Element {
       unique: this.unique,
       pk: this.pk,
       note: this.note,
+      injectedPartialId: this.injectedPartial?.id,
     };
   }
 
