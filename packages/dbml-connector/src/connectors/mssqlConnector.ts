@@ -215,6 +215,7 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
   const tablesAndFieldsSql = `
     WITH tables_and_fields AS (
       SELECT
+        t.object_id AS table_id,
         s.name AS table_schema,
         t.name AS table_name,
         t.create_date as table_create_date,
@@ -307,6 +308,7 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
     ORDER BY
       table_schema,
       table_create_date,
+      table_id,
       column_id;
   `;
 
