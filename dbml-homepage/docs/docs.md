@@ -110,7 +110,7 @@ Table schema_name.table_name {
 - `column_name` can be stated in just plain text, or wrapped in a `double quote as "column name"`
 
 :::tip
-Use [TablePartial](#tablepartial) to reuse common fields, table settings and indexes across multiple tables. Inject partials into a table using the `~partial_name` syntax.
+Use [TablePartial](#tablepartial) to reuse common fields, settings and indexes across multiple tables. Inject partials into a table using the `~partial_name` syntax.
 :::
 
 ### Table Alias
@@ -557,13 +557,13 @@ TableGroup e_commerce [color: #345] {
 
 ## TablePartial
 
-`TablePartial` allows you to define reusable sets of fields, table settings, and indexes. You can then inject these partials into multiple table definitions to promote consistency and reduce repetition.
+`TablePartial` allows you to define reusable sets of fields, settings, and indexes. You can then inject these partials into multiple table definitions to promote consistency and reduce repetition.
 
 **Syntax**
 
 To define a table partial:
 ```text
-TablePartial partial_name [table_setting] {
+TablePartial partial_name [table_settings] {
   field_name field_type [field_settings]
   indexes {
     (column_name) [index_settings]
@@ -631,9 +631,9 @@ Table users [headerColor: #ff0000] {
 
 **Conflict Resolution**
 
-When multiple partials define the same field, table setting or index, DBML resolves conflicts based on the following priority:
+When multiple partials define the same field, setting or index, DBML resolves conflicts based on the following priority:
 
-1. Local Table Definition: Fields, table settings and indexes defined directly in the table override those from partials.
+1. Local Table Definition: Fields, settings and indexes defined directly in the table override those from partials.
 2. Last Injected Partial: If a conflict exists between partials, the definition from the last-injected partial (in source order) takes precedence.
 
 ## Multi-line String
