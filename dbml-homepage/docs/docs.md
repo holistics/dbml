@@ -32,6 +32,7 @@ outlines the full syntax documentations of DBML.
 - [TableGroup](#tablegroup)
     - [TableGroup Notes](#tablegroup-notes-1)
     - [TableGroup Settings](#tablegroup-settings)
+- [TablePartial](#tablepartial)
 - [Multi-line String](#multi-line-string)
 - [Comments](#comments)
 - [Syntax Consistency](#syntax-consistency)
@@ -107,6 +108,10 @@ Table schema_name.table_name {
 - settings are wrapped in `square brackets []`
 - string value is be wrapped in a `single quote as 'string'`
 - `column_name` can be stated in just plain text, or wrapped in a `double quote as "column name"`
+
+:::tip
+Use [TablePartial](#tablepartial) to reuse common fields, table settings and indexes across multiple tables. Inject partials into a table using the `~partial_name` syntax.
+:::
 
 ### Table Alias
 
@@ -550,10 +555,13 @@ TableGroup e_commerce [color: #345] {
 }
 ```
 
-## Table Partial
+## TablePartial
 
-Table partial is a way to define a table with a set of fields and settings that can be reused in other tables. To define a table partial, you can use the following syntax:
+`TablePartial` allows you to define reusable sets of fields, table settings, and indexes. You can then inject these partials into multiple table definitions to promote consistency and reduce repetition.
 
+**Syntax**
+
+To define a table partial:
 ```text
 TablePartial partial_name [table_setting] {
   field_name field_type [field_settings]
@@ -573,14 +581,7 @@ Table table_name {
 }
 ```
 
-Note: the order of table own fields and partial injections in the table definition determine their relative fields order in the final output.  
-
-### Conflict Resolution order
-When there're multiple conflicting columns or settings with identical names due to partial injection, the following resolution order is applied:
-1. Local Table Definition: If a definition exists within the local table, it takes precedence.
-2. Last Partial Referenced: If no local definition is found, the definition from the last partial (in dbml source) containing the conflicting name is used.
-
-### Example usage
+**Example**
 
 ```text
 TablePartial base_template [headerColor: #ff0000] {
@@ -608,8 +609,11 @@ Table users {
   name varchar
   ~soft_delete_template
 }
+```
 
-// result
+Final result:
+
+```text
 Table users [headerColor: #ff0000] {
   id int [pk, not null]
   created_at timestamp [default: `now()`]
@@ -624,6 +628,13 @@ Table users [headerColor: #ff0000] {
   }
 }
 ```
+
+**Conflict Resolution**
+
+When multiple partials define the same field, table setting or index, DBML resolves conflicts based on the following priority:
+
+1. Local Table Definition: Fields, table settings and indexes defined directly in the table override those from partials.
+2. Last Injected Partial: If a conflict exists between partials, the definition from the last-injected partial (in source order) takes precedence.
 
 ## Multi-line String
 
