@@ -32,6 +32,9 @@ outlines the full syntax documentations of DBML.
 - [TableGroup](#tablegroup)
     - [TableGroup Notes](#tablegroup-notes-1)
     - [TableGroup Settings](#tablegroup-settings)
+- [Table Partial](#table-partial)
+  - [Conflict Resolution order](#conflict-resolution-order)
+  - [Table Partial example usage](#table-partial-example-usage)
 - [Multi-line String](#multi-line-string)
 - [Comments](#comments)
 - [Syntax Consistency](#syntax-consistency)
@@ -580,7 +583,7 @@ When there're multiple conflicting columns or settings with identical names due 
 1. Local Table Definition: If a definition exists within the local table, it takes precedence.
 2. Last Partial Referenced: If no local definition is found, the definition from the last partial (in dbml source) containing the conflicting name is used.
 
-### Example usage
+### Table Partial example usage
 
 ```text
 TablePartial base_template [headerColor: #ff0000] {
