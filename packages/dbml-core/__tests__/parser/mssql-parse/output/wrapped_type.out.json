@@ -1,0 +1,38 @@
+{
+  "tables": [
+    {
+      "name": "products",
+      "fields": [
+        {
+          "type": {
+            "type_name": "varchar(MAX)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "type": "string",
+            "value": "Tea"
+          },
+          "name": "name"
+        },
+        {
+          "type": {
+            "type_name": "varchar(255)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "type": "boolean",
+            "value": "NULL"
+          },
+          "name": "status"
+        },
+        {
+          "type": {
+            "type_name": "double precision",
+            "schemaName": null
+          },
+          "name": "price"
+        }
+      ]
+    }
+  ]
+}
