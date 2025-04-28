@@ -153,8 +153,8 @@
           "name": "name",
           "type": {
             "schemaName": null,
-            "type_name": "string",
-            "args": null
+            "type_name": "char(255)",
+            "args": "255"
           },
           "token": {
             "start": {
@@ -163,9 +163,9 @@
               "column": 3
             },
             "end": {
-              "offset": 630,
+              "offset": 633,
               "line": 34,
-              "column": 27
+              "column": 30
             }
           },
           "inline_refs": [],
@@ -182,7 +182,7 @@
           "column": 1
         },
         "end": {
-          "offset": 632,
+          "offset": 635,
           "line": 35,
           "column": 2
         }
@@ -252,12 +252,12 @@
           },
           "token": {
             "start": {
-              "offset": 716,
+              "offset": 719,
               "line": 39,
               "column": 3
             },
             "end": {
-              "offset": 729,
+              "offset": 732,
               "line": 39,
               "column": 16
             }
@@ -275,12 +275,12 @@
           },
           "token": {
             "start": {
-              "offset": 732,
+              "offset": 735,
               "line": 40,
               "column": 3
             },
             "end": {
-              "offset": 758,
+              "offset": 761,
               "line": 40,
               "column": 29
             }
@@ -294,12 +294,12 @@
       ],
       "token": {
         "start": {
-          "offset": 634,
+          "offset": 637,
           "line": 37,
           "column": 1
         },
         "end": {
-          "offset": 779,
+          "offset": 782,
           "line": 42,
           "column": 2
         }
@@ -310,12 +310,12 @@
           "order": 0,
           "token": {
             "start": {
-              "offset": 710,
+              "offset": 713,
               "line": 38,
               "column": 3
             },
             "end": {
-              "offset": 713,
+              "offset": 716,
               "line": 38,
               "column": 6
             }
@@ -326,12 +326,12 @@
           "order": 3,
           "token": {
             "start": {
-              "offset": 761,
+              "offset": 764,
               "line": 41,
               "column": 3
             },
             "end": {
-              "offset": 777,
+              "offset": 780,
               "line": 41,
               "column": 19
             }
@@ -344,12 +344,12 @@
         "value": "product must have price",
         "token": {
           "start": {
-            "offset": 673,
+            "offset": 676,
             "line": 37,
             "column": 40
           },
           "end": {
-            "offset": 704,
+            "offset": 707,
             "line": 37,
             "column": 71
           }
@@ -370,12 +370,12 @@
           },
           "token": {
             "start": {
-              "offset": 861,
+              "offset": 864,
               "line": 46,
               "column": 3
             },
             "end": {
-              "offset": 874,
+              "offset": 877,
               "line": 46,
               "column": 16
             }
@@ -393,12 +393,12 @@
           },
           "token": {
             "start": {
-              "offset": 877,
+              "offset": 880,
               "line": 47,
               "column": 3
             },
             "end": {
-              "offset": 893,
+              "offset": 896,
               "line": 47,
               "column": 19
             }
@@ -416,12 +416,12 @@
           },
           "token": {
             "start": {
-              "offset": 915,
+              "offset": 918,
               "line": 49,
               "column": 3
             },
             "end": {
-              "offset": 931,
+              "offset": 934,
               "line": 49,
               "column": 19
             }
@@ -433,12 +433,12 @@
       ],
       "token": {
         "start": {
-          "offset": 781,
+          "offset": 784,
           "line": 44,
           "column": 1
         },
         "end": {
-          "offset": 933,
+          "offset": 936,
           "line": 50,
           "column": 2
         }
@@ -449,12 +449,12 @@
           "order": 0,
           "token": {
             "start": {
-              "offset": 855,
+              "offset": 858,
               "line": 45,
               "column": 3
             },
             "end": {
-              "offset": 858,
+              "offset": 861,
               "line": 45,
               "column": 6
             }
@@ -465,12 +465,12 @@
           "order": 3,
           "token": {
             "start": {
-              "offset": 896,
+              "offset": 899,
               "line": 48,
               "column": 3
             },
             "end": {
-              "offset": 912,
+              "offset": 915,
               "line": 48,
               "column": 19
             }
@@ -483,12 +483,12 @@
         "value": "merchants sell a lot",
         "token": {
           "start": {
-            "offset": 821,
+            "offset": 824,
             "line": 44,
             "column": 41
           },
           "end": {
-            "offset": 849,
+            "offset": 852,
             "line": 44,
             "column": 69
           }
@@ -509,12 +509,12 @@
           },
           "token": {
             "start": {
-              "offset": 988,
+              "offset": 991,
               "line": 54,
               "column": 3
             },
             "end": {
-              "offset": 1097,
+              "offset": 1100,
               "line": 54,
               "column": 112
             }
@@ -529,12 +529,12 @@
               "relation": "-",
               "token": {
                 "start": {
-                  "offset": 1004,
+                  "offset": 1007,
                   "line": 54,
                   "column": 19
                 },
                 "end": {
-                  "offset": 1021,
+                  "offset": 1024,
                   "line": 54,
                   "column": 36
                 }
@@ -548,12 +548,12 @@
             "value": "the ref of this column should be bound and interpret successfully",
             "token": {
               "start": {
-                "offset": 1023,
+                "offset": 1026,
                 "line": 54,
                 "column": 38
               },
               "end": {
-                "offset": 1096,
+                "offset": 1099,
                 "line": 54,
                 "column": 111
               }
@@ -563,14 +563,14 @@
       ],
       "token": {
         "start": {
-          "offset": 935,
+          "offset": 938,
           "line": 52,
           "column": 1
         },
         "end": {
-          "offset": 1101,
+          "offset": 1102,
           "line": 55,
-          "column": 4
+          "column": 2
         }
       },
       "indexes": [],
@@ -579,12 +579,12 @@
         "value": "a customer is a user?",
         "token": {
           "start": {
-            "offset": 956,
+            "offset": 959,
             "line": 53,
             "column": 3
           },
           "end": {
-            "offset": 985,
+            "offset": 988,
             "line": 53,
             "column": 32
           }
@@ -599,12 +599,12 @@
       "schemaName": null,
       "token": {
         "start": {
-          "offset": 1004,
+          "offset": 1007,
           "line": 54,
           "column": 19
         },
         "end": {
-          "offset": 1021,
+          "offset": 1024,
           "line": 54,
           "column": 36
         }
@@ -619,12 +619,12 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 1004,
+              "offset": 1007,
               "line": 54,
               "column": 19
             },
             "end": {
-              "offset": 1021,
+              "offset": 1024,
               "line": 54,
               "column": 36
             }
@@ -638,12 +638,12 @@
           ],
           "token": {
             "start": {
-              "offset": 988,
+              "offset": 991,
               "line": 54,
               "column": 3
             },
             "end": {
-              "offset": 1097,
+              "offset": 1100,
               "line": 54,
               "column": 112
             }
@@ -655,12 +655,12 @@
     {
       "token": {
         "start": {
-          "offset": 1103,
+          "offset": 1104,
           "line": 57,
           "column": 1
         },
         "end": {
-          "offset": 1141,
+          "offset": 1142,
           "line": 57,
           "column": 39
         }
@@ -677,12 +677,12 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 1107,
+              "offset": 1108,
               "line": 57,
               "column": 5
             },
             "end": {
-              "offset": 1118,
+              "offset": 1119,
               "line": 57,
               "column": 16
             }
@@ -697,12 +697,12 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 1121,
+              "offset": 1122,
               "line": 57,
               "column": 19
             },
             "end": {
-              "offset": 1141,
+              "offset": 1142,
               "line": 57,
               "column": 39
             }
@@ -713,12 +713,12 @@
     {
       "token": {
         "start": {
-          "offset": 1143,
+          "offset": 1144,
           "line": 59,
           "column": 1
         },
         "end": {
-          "offset": 1187,
+          "offset": 1188,
           "line": 59,
           "column": 45
         }
@@ -735,12 +735,12 @@
           "relation": "1",
           "token": {
             "start": {
-              "offset": 1147,
+              "offset": 1148,
               "line": 59,
               "column": 5
             },
             "end": {
-              "offset": 1161,
+              "offset": 1162,
               "line": 59,
               "column": 19
             }
@@ -755,12 +755,12 @@
           "relation": "*",
           "token": {
             "start": {
-              "offset": 1164,
+              "offset": 1165,
               "line": 59,
               "column": 22
             },
             "end": {
-              "offset": 1187,
+              "offset": 1188,
               "line": 59,
               "column": 45
             }
