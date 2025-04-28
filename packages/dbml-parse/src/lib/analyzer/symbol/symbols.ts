@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import SymbolTable from './symbolTable';
 import { SyntaxNode } from '../../parser/nodes';
 
@@ -5,11 +6,12 @@ export type NodeSymbolId = number;
 export class NodeSymbolIdGenerator {
   private id = 0;
 
-  reset() {
+  reset () {
     this.id = 0;
   }
 
-  nextId(): NodeSymbolId {
+  nextId (): NodeSymbolId {
+    // eslint-disable-next-line no-plusplus
     return this.id++;
   }
 }
@@ -21,6 +23,7 @@ export interface NodeSymbol {
   symbolTable?: SymbolTable;
   declaration?: SyntaxNode;
   references: SyntaxNode[];
+  injectorDeclaration?: SyntaxNode;
 }
 
 // A symbol for a schema, contains the schema's symbol table
@@ -31,7 +34,7 @@ export class SchemaSymbol implements NodeSymbol {
 
   references: SyntaxNode[] = [];
 
-  constructor({ symbolTable }: { symbolTable: SymbolTable }, id: NodeSymbolId) {
+  constructor ({ symbolTable }: { symbolTable: SymbolTable }, id: NodeSymbolId) {
     this.id = id;
     this.symbolTable = symbolTable;
   }
@@ -48,7 +51,7 @@ export class EnumSymbol implements NodeSymbol {
 
   references: SyntaxNode[] = [];
 
-  constructor(
+  constructor (
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
@@ -66,14 +69,14 @@ export class EnumFieldSymbol implements NodeSymbol {
 
   references: SyntaxNode[] = [];
 
-  constructor({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.declaration = declaration;
   }
 }
 
 // A symbol for a table, contains the table's symbol table
-// which is used to hold all the column symbols of the table
+// which is used to hold all the column and table partial symbols of the table
 export class TableSymbol implements NodeSymbol {
   id: NodeSymbolId;
 
@@ -83,7 +86,7 @@ export class TableSymbol implements NodeSymbol {
 
   references: SyntaxNode[] = [];
 
-  constructor(
+  constructor (
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
@@ -101,7 +104,7 @@ export class ColumnSymbol implements NodeSymbol {
 
   references: SyntaxNode[] = [];
 
-  constructor({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.declaration = declaration;
   }
@@ -118,7 +121,7 @@ export class TableGroupSymbol implements NodeSymbol {
 
   references: SyntaxNode[] = [];
 
-  constructor(
+  constructor (
     { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
@@ -136,8 +139,60 @@ export class TableGroupFieldSymbol implements NodeSymbol {
 
   references: SyntaxNode[] = [];
 
-  constructor({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.declaration = declaration;
+  }
+}
+
+// A symbol for a table partial, contains the table partial's symbol table
+// which is used to hold all the column symbols of the table partial
+export class TablePartialSymbol implements NodeSymbol {
+  id: NodeSymbolId;
+
+  symbolTable: SymbolTable;
+
+  declaration: SyntaxNode;
+
+  references: SyntaxNode[] = [];
+
+  constructor (
+    { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
+    id: NodeSymbolId,
+  ) {
+    this.id = id;
+    this.symbolTable = symbolTable;
+    this.declaration = declaration;
+  }
+}
+
+// A symbol for a table partial injection inside tables
+export class TablePartialInjectionSymbol implements NodeSymbol {
+  id: NodeSymbolId;
+
+  declaration: SyntaxNode;
+
+  references: SyntaxNode[] = [];
+
+  constructor (
+    { declaration }: { declaration: SyntaxNode },
+    id: NodeSymbolId,
+  ) {
+    this.id = id;
+    this.declaration = declaration;
+  }
+}
+
+// A symbol for a column field
+export class TablePartialInjectedColumnSymbol implements NodeSymbol {
+  id: NodeSymbolId;
+  injectorDeclaration: SyntaxNode;
+  injectorFieldSymbol: NodeSymbol;
+  references: SyntaxNode[] = [];
+
+  constructor ({ injectorFieldSymbol, injectorDeclaration }: { injectorFieldSymbol: NodeSymbol, injectorDeclaration: SyntaxNode }, id: NodeSymbolId) {
+    this.id = id;
+    this.injectorDeclaration = injectorDeclaration;
+    this.injectorFieldSymbol = injectorFieldSymbol;
   }
 }

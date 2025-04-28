@@ -1,0 +1,56 @@
+Table a {
+  id int
+  id2 int
+}
+
+Table a.a {
+  id int
+  id2 int
+}
+
+TablePartial base_template [headerColor: #ff0000] {
+  id int [pk, not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+TablePartial soft_delete_template {
+  delete_status boolean [not null]
+  deleted_at timestamp [default: `now()`]
+}
+
+TablePartial email_index {
+  email varchar [unique]
+
+  indexes {
+    email [unique]
+  }
+}
+
+TablePartial test {
+  refColumn1 int [ref: > a.id]
+  refColumn2 varchar [ref: > a.id]
+}
+
+TablePartial test2 {
+  refColumn2 bool [ref: > a.a.id]
+}
+
+TablePartial testIndex {
+  indexes {
+    email [unique]
+    id [pk]
+    (email, id) [unique]
+  }
+}
+
+Table users {
+  ~base_template
+  ~email_index
+  name varchar
+  ~testIndex
+  ~soft_delete_template
+  refColumn1 bit [ref: > a.id2]
+  ~test
+  ~test2
+}

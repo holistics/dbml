@@ -1,3 +1,155 @@
+## v3.13.1 (2025-04-28)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#718](https://github.com/holistics/dbml/pull/718) MSSQL: fix cannot parse varchar(max) and double precision ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :robot: Dependencies Update
+* [#694](https://github.com/holistics/dbml/pull/694) chore(deps): bump @babel/runtime-corejs3 from 7.26.0 to 7.27.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#688](https://github.com/holistics/dbml/pull/688) build(deps): bump @babel/runtime from 7.24.4 to 7.26.10 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#695](https://github.com/holistics/dbml/pull/695) chore(deps): bump @babel/helpers from 7.24.5 to 7.27.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#711](https://github.com/holistics/dbml/pull/711) chore(deps): bump http-proxy-middleware from 2.0.7 to 2.0.9 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#701](https://github.com/holistics/dbml/pull/701) chore(deps): bump image-size from 1.1.1 to 1.2.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v3.13.0 (2025-04-24)
+
+#### :memo: Documentation
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#709](https://github.com/holistics/dbml/pull/709) ft: support table partial ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :bug: Bug Fix
+* `dbml-connector`
+  * [#714](https://github.com/holistics/dbml/pull/714) Fix flaky db2dbml/mssql test cause by inconsistent table ordering ([@NQPhuc](https://github.com/NQPhuc))
+* `dbml-core`
+  * [#713](https://github.com/holistics/dbml/pull/713) fix(antlr.pg): filter null table when importing postgresql ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#709](https://github.com/holistics/dbml/pull/709) ft: support table partial ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :house_with_garden: Internal
+* `dbml-connector`
+  * [#714](https://github.com/holistics/dbml/pull/714) Fix flaky db2dbml/mssql test cause by inconsistent table ordering ([@NQPhuc](https://github.com/NQPhuc))
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#708](https://github.com/holistics/dbml/pull/708) Add Eslint and TSConfig ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
+## v3.12.0 (2025-04-08)
+
+#### :memo: Documentation
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#690](https://github.com/holistics/dbml/pull/690) Support parse insert from SQL DDL and new parser for MSSQL ([@huyleminh01](https://github.com/huyleminh01))
+* Other
+  * [#702](https://github.com/holistics/dbml/pull/702) Update README.md ([@nielsbosma](https://github.com/nielsbosma))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#690](https://github.com/holistics/dbml/pull/690) Support parse insert from SQL DDL and new parser for MSSQL ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Niels Bosma ([@nielsbosma](https://github.com/nielsbosma))
+
+## v3.11.0 (2025-04-01)
+
+#### :memo: Documentation
+* [#689](https://github.com/holistics/dbml/pull/689) Doc: fix wrong double quote character ([@nguyenalter](https://github.com/nguyenalter))
+* [#471](https://github.com/holistics/dbml/pull/471) docs: add treesitter parser ([@dynamotn](https://github.com/dynamotn))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`
+  * [#692](https://github.com/holistics/dbml/pull/692) [DBX-5925] Add key pair authentication for Snowflake connector ([@xuantho573](https://github.com/xuantho573))
+
+#### :robot: Dependencies Update
+* `dbml-cli`, `dbml-connector`
+  * [#692](https://github.com/holistics/dbml/pull/692) [DBX-5925] Add key pair authentication for Snowflake connector ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 4
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+- Trần Đức Nam ([@dynamotn](https://github.com/dynamotn))
+
+## v3.10.2 (2025-03-03)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#670](https://github.com/holistics/dbml/pull/670) Fix duplicated enums refs mssql connector ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :robot: Dependencies Update
+* [#673](https://github.com/holistics/dbml/pull/673) Bump vite from 4.5.5 to 4.5.6 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v3.10.1 (2025-02-28)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#683](https://github.com/holistics/dbml/pull/683) fix: Incorrect Ref color settings position ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#678](https://github.com/holistics/dbml/pull/678) ft: support color and name for short & long forms of the relationship ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 1
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v3.9.6 (2025-02-20)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#677](https://github.com/holistics/dbml/pull/677) DBX-5750: Fix an issue where tab characters are not recognized as white-space characters ([@xuantho573](https://github.com/xuantho573))
+* `dbml-core`, `dbml-parse`
+  * [#679](https://github.com/holistics/dbml/pull/679) Fix: Unset not_null if null or not_null setting is not specified ([@nguyenalter](https://github.com/nguyenalter))
+* `dbml-connector`
+  * [#671](https://github.com/holistics/dbml/pull/671) Fix missing FROM-clause entry for table "t" ([@g4b1nagy](https://github.com/g4b1nagy))
+
+#### Committers: 4
+- Gabi Nagy ([@g4b1nagy](https://github.com/g4b1nagy))
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
+## v3.9.5 (2024-12-13)
+
+#### :memo: Documentation
+* [#667](https://github.com/holistics/dbml/pull/667) Homepage - Upgrade docusaurus to 3.6.3 ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#664](https://github.com/holistics/dbml/pull/664) Update type definition for Parser.js ([@nguyenalter](https://github.com/nguyenalter))
+
+#### :robot: Dependencies Update
+* [#667](https://github.com/holistics/dbml/pull/667) Homepage - Upgrade docusaurus to 3.6.3 ([@huyleminh01](https://github.com/huyleminh01))
+* [#640](https://github.com/holistics/dbml/pull/640) Bump vite from 4.5.3 to 4.5.5 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#643](https://github.com/holistics/dbml/pull/643) Bump rollup from 3.29.4 to 3.29.5 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#665](https://github.com/holistics/dbml/pull/665) Bump nanoid from 3.3.6 to 3.3.8 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#666](https://github.com/holistics/dbml/pull/666) Bump nanoid from 3.3.7 to 3.3.8 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#651](https://github.com/holistics/dbml/pull/651) Bump http-proxy-middleware from 2.0.6 to 2.0.7 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#662](https://github.com/holistics/dbml/pull/662) Bump cross-spawn from 7.0.3 to 7.0.6 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+## v3.9.4 (2024-12-05)
+
+#### :bug: Bug Fix
+* `dbml-connector`
+  * [#660](https://github.com/holistics/dbml/pull/660) fix: db2dbml bigquery connector's query ([@kenzht](https://github.com/kenzht))
+
+#### :robot: Dependencies Update
+* [#661](https://github.com/holistics/dbml/pull/661) Bump cross-spawn from 7.0.3 to 7.0.6 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- [@kenzht](https://github.com/kenzht)
+
 ## v3.9.3 (2024-10-30)
 
 #### :bug: Bug Fix

@@ -88,6 +88,17 @@ export enum CompileErrorCode {
 
   INVALID_ELEMENT_IN_SIMPLE_BODY,
 
+  INVALID_TABLE_PARTIAL_CONTEXT,
+  INVALID_TABLE_PARTIAL_ELEMENT_NAME,
+  INVALID_TABLE_PARTIAL_SETTING,
+  DUPLICATE_TABLE_PARTIAL_ELEMENT_NAME,
+  DUPLICATE_TABLE_PARTIAL_SETTING,
+
+  INVALID_TABLE_PARTIAL_INJECTION,
+  INVALID_TABLE_PARTIAL_INJECTION_OP,
+  INVALID_TABLE_PARTIAL_INJECTION_NAME,
+  DUPLICATE_TABLE_PARTIAL_INJECTION_NAME,
+
   BINDING_ERROR = 4000,
 
   UNSUPPORTED = 5000,
@@ -109,7 +120,7 @@ export class CompileError extends Error {
 
   end: Readonly<number>;
 
-  constructor(code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
     this.diagnostic = message;

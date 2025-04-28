@@ -12,11 +12,13 @@ global.scanTestNames = (dirname, subpath) => {
 };
 
 global.getFileExtension = (format) => {
-  if (format === 'mysql' || format === 'postgres' || format === 'mssql' || format === 'oracle' || format === 'snowflake') {
-    return 'sql';
-  }
   if (format === 'schemarb') {
     return 'rb';
+  }
+
+  const SQL_FORMATS = ['mysql', 'postgres', 'mssql', 'oracle', 'snowflake'];
+  if (SQL_FORMATS.includes(format)) {
+    return 'sql';
   }
   return format;
 };

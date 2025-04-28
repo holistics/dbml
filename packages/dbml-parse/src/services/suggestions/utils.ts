@@ -4,13 +4,15 @@ import { SyntaxToken, SyntaxTokenKind } from '../../lib/lexer/tokens';
 import { hasTrailingSpaces } from '../../lib/lexer/utils';
 import { isAlphaOrUnderscore } from '../../lib/utils';
 
-export function pickCompletionItemKind(symbolKind: SymbolKind): CompletionItemKind {
+export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
     case SymbolKind.Schema:
       return CompletionItemKind.Module;
     case SymbolKind.Table:
+    case SymbolKind.TablePartial:
       return CompletionItemKind.Class;
     case SymbolKind.Column:
+    case SymbolKind.TableGroupField:
       return CompletionItemKind.Field;
     case SymbolKind.Enum:
       return CompletionItemKind.Enum;
@@ -18,8 +20,6 @@ export function pickCompletionItemKind(symbolKind: SymbolKind): CompletionItemKi
       return CompletionItemKind.EnumMember;
     case SymbolKind.TableGroup:
       return CompletionItemKind.Struct;
-    case SymbolKind.TableGroupField:
-      return CompletionItemKind.Field;
     default:
       return CompletionItemKind.Text;
   }
