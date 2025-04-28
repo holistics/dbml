@@ -1,3 +1,20 @@
+## v3.13.1 (2025-04-28)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#718](https://github.com/holistics/dbml/pull/718) MSSQL: fix cannot parse varchar(max) and double precision ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :robot: Dependencies Update
+* [#694](https://github.com/holistics/dbml/pull/694) chore(deps): bump @babel/runtime-corejs3 from 7.26.0 to 7.27.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#688](https://github.com/holistics/dbml/pull/688) build(deps): bump @babel/runtime from 7.24.4 to 7.26.10 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#695](https://github.com/holistics/dbml/pull/695) chore(deps): bump @babel/helpers from 7.24.5 to 7.27.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#711](https://github.com/holistics/dbml/pull/711) chore(deps): bump http-proxy-middleware from 2.0.7 to 2.0.9 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#701](https://github.com/holistics/dbml/pull/701) chore(deps): bump image-size from 1.1.1 to 1.2.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
 ## v3.13.0 (2025-04-24)
 
 #### :memo: Documentation
