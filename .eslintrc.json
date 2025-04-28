@@ -7,20 +7,18 @@
   },
   "extends": [
     "airbnb-base",
-    "plugin:jest/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:jest/recommended"
   ],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2020,
     "project": "./tsconfig.json"
   },
-  "plugins": ["jest", "@typescript-eslint"],
+  "plugins": ["jest"],
   "rules": {
     "space-before-function-paren": ["error", "always"],
     "no-underscore-dangle": "off",
@@ -51,6 +49,17 @@
         ]
       }
     ],
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "ts": "never"
+      }
+    ],
+    "max-classes-per-file": "off",
+    "lines-between-class-members": "off"
   }
 }

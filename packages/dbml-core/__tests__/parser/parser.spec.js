@@ -4,10 +4,11 @@ import Parser from '../../src/parse/Parser';
 describe('@dbml/core', () => {
   describe('parser', () => {
     /**
-     * @param {string} format = [json|mysql|postgres|dbml|schemarb]
+     * @param {string} format = [json|mysql|postgres|dbml|schemarb|mssql]
      */
     const runTest = (fileName, testDir, format, parseFuncName) => {
       const fileExtension = getFileExtension(format);
+
       const input = require(`./${testDir}/input/${fileName}.in.${fileExtension}`);
       const output = require(`./${testDir}/output/${fileName}.out.json`);
       const jsonSchema = Parser[parseFuncName](input);
@@ -27,7 +28,7 @@ describe('@dbml/core', () => {
     });
 
     test.each(scanTestNames(__dirname, 'mssql-parse/input'))('mssql-parse/%s', (name) => {
-      runTest(name, 'mssql-parse', 'mssql', 'parseMSSQLToJSON');
+      runTest(name, 'mssql-parse', 'mssql', 'parseMSSQLToJSONv2');
     });
   });
 });

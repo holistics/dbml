@@ -11,5 +11,6 @@ export default class DbState {
     indexId: number;
     fieldId: number;
     indexColumnId: number;
+    tablePartialId: number;
     generateId(el: string): any;
 }

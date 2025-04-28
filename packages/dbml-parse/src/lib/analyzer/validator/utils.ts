@@ -31,6 +31,7 @@ import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import Report from '../../report';
 import { CompileError, CompileErrorCode } from '../../errors';
 import { ElementKind } from '../types';
+import TablePartialValidator from './elementValidators/tablePartial';
 
 export function pickValidator(element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -48,6 +49,8 @@ export function pickValidator(element: ElementDeclarationNode & { type: SyntaxTo
       return NoteValidator;
     case ElementKind.Indexes:
       return IndexesValidator;
+    case ElementKind.TablePartial:
+      return TablePartialValidator;
     default:
       return CustomValidator;
   }

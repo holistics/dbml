@@ -4,8 +4,7 @@ CREATE TABLE [products] (
   [merchant_id] int NOT NULL,
   [price] float DEFAULT (123.12),
   [status] varchar(255) DEFAULT (NULL),
-  [created_at] varchar(255) DEFAULT (now()),
-  [stock] boolean DEFAULT ('true'),
-  [expiration] date DEFAULT (current_date())
+  [created_at] date DEFAULT GETDATE(),
+  [expiration] date DEFAULT GETDATE()
 )
 GO

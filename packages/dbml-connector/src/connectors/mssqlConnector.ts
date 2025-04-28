@@ -14,6 +14,7 @@ import {
   RefEndpoint,
   Table,
   TableConstraintsDictionary,
+  EnumValuesDict,
 } from './types';
 
 // https://learn.microsoft.com/en-us/sql/t-sql/data-types/date-and-time-types?view=sql-server-ver15
@@ -111,7 +112,7 @@ const getDbdefault = (data_type: string, column_default: string, default_type: D
   };
 };
 
-const getEnumValues = (definition: string): EnumValue[] | null => {
+const getEnumValues = (definition: string, constraint_name: string): EnumValuesDict[] => {
   // Use the example below to understand the regex:
   // ([quantity]>(0))
   // ([unit_price]>(0))
@@ -124,15 +125,51 @@ const getEnumValues = (definition: string): EnumValue[] | null => {
   // ([gender]='Other' OR [gender]='Female' OR [gender]='Male')
   // ([date_of_birth]<=dateadd(year,(-13),getdate()))
   // ([email] like '%_@_%._%')
-  if (!definition) return null;
+  if (!definition) return [];
   const values = definition.match(/\[([^\]]+)\]='([^']+)'/g); // Extracting the enum values when the definition contains ]='
-  if (!values) return null;
+  if (!values) return [];
 
-  const enumValues = values.map((value) => {
-    const enumValue = value.split("]='")[1];
-    return { name: enumValue.slice(0, -1) };
+  const colMap: { [key: string]: string[] } = {};
+  values.forEach((value) => {
+    const [columnName, enumValue] = value.split("]='");
+    const cleanColumnName = columnName.slice(1); // Remove the leading '['
+    const cleanEnumValue = enumValue.slice(0, -1); // Remove the trailing "'"
+    if (!colMap[cleanColumnName]) {
+      colMap[cleanColumnName] = [cleanEnumValue];
+    } else {
+      colMap[cleanColumnName].push(cleanEnumValue);
+    }
   });
-  return enumValues;
+
+  const arraysEqual = (a: string[], b: string[]): boolean => {
+    if (a.length !== b.length) return false;
+    const sortedA = [...a].sort();
+    const sortedB = [...b].sort();
+    return sortedA.every((value, index) => value === sortedB[index]);
+  };
+
+  // Please check the comments of the EnumValuesDict type in types.ts to understand the structure
+  const result: EnumValuesDict[] = [];
+  const processedKeys = new Set<string>();
+
+  Object.keys(colMap).forEach((key) => {
+    if (processedKeys.has(key)) return;
+
+    let mergedColumns = [key];
+    const values = colMap[key];
+
+    Object.keys(colMap).forEach((innerKey) => {
+      if (key !== innerKey && arraysEqual(values, colMap[innerKey])) {
+        mergedColumns.push(innerKey);
+        processedKeys.add(innerKey);
+      }
+    });
+    const enumValues = values.map((value) => ({ name: value }));
+    result.push({ columns: mergedColumns, enumValues, constraint_name: `${constraint_name}_${mergedColumns.join('_')}` });
+    processedKeys.add(key);
+  });
+
+  return result;
 };
 
 const generateField = (row: Record<string, any>): Field => {
@@ -171,11 +208,14 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
   fields: FieldsDictionary,
   enums: Enum[],
 }> => {
+  const checkConstraintDefinitionDedup: { [key: string]: EnumValuesDict[] } = {};
+
   const fields: FieldsDictionary = {};
   const enums: Enum[] = [];
   const tablesAndFieldsSql = `
     WITH tables_and_fields AS (
       SELECT
+        t.object_id AS table_id,
         s.name AS table_schema,
         t.name AS table_name,
         t.create_date as table_create_date,
@@ -268,6 +308,7 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
     ORDER BY
       table_schema,
       table_create_date,
+      table_id,
       column_id;
   `;
 
@@ -290,23 +331,32 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
       };
     }
 
-    const enumValues = getEnumValues(check_constraint_definition);
-    if (enumValues) {
-      enums.push({
-        name: check_constraint_name,
-        schemaName: table_schema,
-        values: enumValues,
-      });
-    }
-
     if (!fields[key]) fields[key] = [];
     const field = generateField(row);
-    if (enumValues) {
-      field.type = {
-        type_name: check_constraint_name,
-        schemaName: table_schema,
-      };
+
+    if (check_constraint_definition && !checkConstraintDefinitionDedup[check_constraint_name]) {
+      const enumValuesByColumns = getEnumValues(check_constraint_definition, check_constraint_name);
+      enumValuesByColumns.forEach((item) => {
+        enums.push({
+          name: item.constraint_name,
+          schemaName: table_schema,
+          values: item.enumValues,
+        });
+      });
+      checkConstraintDefinitionDedup[check_constraint_name] = enumValuesByColumns;
     }
+
+    if (checkConstraintDefinitionDedup[check_constraint_name]) {
+      const enumValuesByColumns = checkConstraintDefinitionDedup[check_constraint_name];
+      const columnEnumValues = enumValuesByColumns.find((item) => item.columns.includes(field.name));
+      if (columnEnumValues) {
+        field.type = {
+          type_name: columnEnumValues.constraint_name,
+          schemaName: table_schema,
+        };
+      }
+    }
+
     fields[key].push(field);
 
     return acc;
@@ -357,6 +407,17 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
   `;
 
   const refsQueryResult = await client.query(refsListSql);
+
+  const endpointsEqual = (ep1: RefEndpoint[], ep2: RefEndpoint[]): boolean => {
+    if (ep1.length !== ep2.length) return false;
+    return ep1.every((endpoint, index) => 
+      endpoint.tableName === ep2[index].tableName &&
+      endpoint.schemaName === ep2[index].schemaName &&
+      endpoint.fieldNames.length === ep2[index].fieldNames.length &&
+      endpoint.fieldNames.every((field, fieldIndex) => field === ep2[index].fieldNames[fieldIndex])
+    );
+  };
+
   refsQueryResult.recordset.forEach((refRow) => {
     const {
       table_schema,
@@ -384,12 +445,18 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
       relation: '1',
     };
 
-    refs.push({
+    const newRef = {
       name: fk_constraint_name,
       endpoints: [ep1, ep2],
       onDelete: on_delete === 'NO_ACTION' ? null : on_delete,
       onUpdate: on_update === 'NO_ACTION' ? null : on_update,
-    });
+    };
+
+    const isDuplicate = refs.some(ref => endpointsEqual(ref.endpoints, newRef.endpoints));
+
+    if (!isDuplicate) {
+      refs.push(newRef);
+    }
   });
 
   return refs;

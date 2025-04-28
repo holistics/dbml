@@ -71,6 +71,10 @@ class Parser {
     return mssqlParser.parseWithPegError(str);
   }
 
+  static parseMSSQLToJSONv2 (str) {
+    return parse(str, 'mssql');
+  }
+
   static parseSnowflakeToJSON (str) {
     return parse(str, 'snowflake');
   }
@@ -115,8 +119,12 @@ class Parser {
           rawDatabase = Parser.parseSchemaRbToJSON(str);
           break;
 
-        case 'mssql':
+        case 'mssqlLegacy':
           rawDatabase = Parser.parseMSSQLToJSON(str);
+          break;
+
+        case 'mssql':
+          rawDatabase = Parser.parseMSSQLToJSONv2(str);
           break;
 
         case 'json':

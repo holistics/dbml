@@ -37,6 +37,7 @@ function sql2dbml (args) {
     .option('--postgres')
     .option('--postgres-legacy')
     .option('--mssql')
+    .option('--mssql-legacy')
     .option('--snowflake')
     .option('-o, --out-file <pathspec>', 'compile all input files into a single files');
   // .option('-d, --out-dir <pathspec>', 'compile an input directory of sql files into an output directory');
@@ -56,7 +57,12 @@ function db2dbml (args) {
                         - postgres: 'postgresql://user:password@localhost:5432/dbname?schemas=schema1,schema2,schema3'
                         - mysql: 'mysql://user:password@localhost:3306/dbname'
                         - mssql: 'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;Schemas=schema1,schema2,schema3;'
-                        - snowflake: 'SERVER=<account_identifier>.<region>;UID=<your_username>;PWD=<your_password>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;SCHEMAS=schema1,schema2,schema3;'
+                        - snowflake:
+                          - password-based authentication: 'SERVER=<account_identifier>.<region>;UID=<your_username>;PWD=<your_password>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;SCHEMAS=schema1,schema2,schema3;'
+                          - key pair authentication: 'SERVER=<account_identifier>.<region>;UID=<your_username>;AUTHENTICATOR=SNOWFLAKE_JWT;PRIVATE_KEY_PATH=<path_to_your_private_key.p8>;PASSPHRASE=<your_private_key_passphrase>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;SCHEMAS=schema1,schema2,schema3;'
+
+                          Note: If you did not use passphrase to encrypt your private key, you can leave the "PASSPHRASE" empty.
+
                         - bigquery: /path_to_json_credential.json
 
                         For BigQuery, your JSON credential file must contain the following keys:

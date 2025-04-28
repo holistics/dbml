@@ -32,6 +32,7 @@ outlines the full syntax documentations of DBML.
 - [TableGroup](#tablegroup)
     - [TableGroup Notes](#tablegroup-notes-1)
     - [TableGroup Settings](#tablegroup-settings)
+- [TablePartial](#tablepartial)
 - [Multi-line String](#multi-line-string)
 - [Comments](#comments)
 - [Syntax Consistency](#syntax-consistency)
@@ -108,6 +109,10 @@ Table schema_name.table_name {
 - string value is be wrapped in a `single quote as 'string'`
 - `column_name` can be stated in just plain text, or wrapped in a `double quote as "column name"`
 
+:::tip
+Use [TablePartial](#tablepartial) to reuse common fields, settings and indexes across multiple tables. Inject partials into a table using the `~partial_name` syntax.
+:::
+
 ### Table Alias
 
 You can alias the table, and use them in the references later on.
@@ -168,12 +173,12 @@ The list of column settings you can use:
 
 - `note: 'string to add notes'`: add a metadata note to this column
 - `primary key` or `pk`: mark a column as primary key. For composite primary key, refer to the 'Indexes' section
-- `null` or `not null`: mark a column null or not null
+- `null` or `not null`: mark a column null or not null. If you ommit this setting, the column will be null by default
 - `unique`: mark the column unique
 - `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below
 - `increment`: mark the column as auto-increment
 
-**Note:** You can use a workaround for un-supported settings by adding the setting name into the column type name, such as `id “bigint unsigned” [pk]`
+**Note:** You can use a workaround for un-supported settings by adding the setting name into the column type name, such as `id "bigint unsigned" [pk]`
 
 ### Default Value
 
@@ -224,8 +229,8 @@ Table bookings {
 
 There are 3 types of index definitions:
 
-- Index with single field (with index name): `CREATE INDEX created_at_index on users (created_at)`
-- Index with multiple fields (composite index): `CREATE INDEX on users (created_at, country)`
+- Index with single column (with index name): `CREATE INDEX created_at_index on users (created_at)`
+- Index with multiple columns (composite index): `CREATE INDEX on users (created_at, country)`
 - Index with an expression: `CREATE INDEX ON films ( first_name + last_name )`
 - (bonus) Composite index with expression: `CREATE INDEX ON users ( country, (lower(name)) )`
 
@@ -254,12 +259,25 @@ Table users {
 // The space after '<' is optional
 ```
 
-There are 4 types of relationships: one-to-one, one-to-many, many-to-one and many-to-many
+There are 4 types of relationships: **one-to-one**, **one-to-many**, **many-to-one** and **many-to-many**
 
 - `<`: one-to-many. E.g: `users.id < posts.user_id`
 - `>`: many-to-one. E.g: `posts.user_id > users.id`
 - `-`: one-to-one. E.g: `users.id - user_infos.user_id`
 - `<>`: many-to-many. E.g: `authors.id <> books.id`
+
+**Zero-to-(one/many)** or **(one/many)-to-zero** relationships will be automatically detected when you combine the relationship with foreign key’s nullable constraint. Like this example:
+```text
+Table follows {
+  following_user_id int [ref: > users.id] // many-to-zero
+  followed_user_id int [ref: > users.id, null] // many-to-zero
+}
+
+Table posts {
+  id int [pk]
+  user_id int [ref: > users.id, not null] // many-to-one
+}
+```
 
 In DBML, there are 3 syntaxes to define relationships:
 
@@ -269,7 +287,7 @@ Ref name_optional {
   schema1.table1.column1 < schema2.table2.column2
 }
 
-// Short form:
+// Short form
 Ref name_optional: schema1.table1.column1 < schema2.table2.column2
 
 // Inline form
@@ -279,7 +297,22 @@ Table schema2.table2 {
 }
 ```
 
-**Note:** if `schema_name` prefix is omitted, it'll default to `public` schema
+:::note
+* When defining one-to-one relationships, ensure columns are listed in the correct order:
+  * With long & short form, the second column will be treated as a foreign key.
+
+    E.g: `users.id - user_infos.user_id`, *user_infos.user_id* will be the foreign key.
+  * With inline form, the column that have the `ref` definition will be treated as a foreign key.
+
+    E.g:
+    ```text
+    Table user_infos {
+      user_id integer [ref: - users.id]
+    }
+    ```
+    *user_infos.user_id* will be the foreign key.
+* If `schema_name` prefix is omitted, it'll default to `public` schema.
+:::
 
 **Composite foreign keys:**
 
@@ -306,13 +339,20 @@ Ref: blogging.posts.user_id > core.users.id
 ### Relationship settings
 
 ```text
-Ref: products.merchant_id > merchants.id [delete: cascade, update: no action]
+// short form
+Ref: products.merchant_id > merchants.id [delete: cascade, update: no action, color: #79AD51]
+
+// long form
+Ref {
+  products.merchant_id > merchants.id [delete: cascade, update: no action, color: #79AD51]
+}
 ```
 
 - `delete / update: cascade | restrict | set null | set default | no action`
 Define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
+- `color: <color_code>`: change the relationship color.
 
-*Relationship settings are not supported for inline form ref.*
+*Relationship settings and names are not supported for inline form ref.*
 
 ### Many-to-many relationship
 
@@ -320,7 +360,7 @@ There're two ways to represent many-to-many relationship:
 
 - Using a single many-to-many relationship (`<>`).
 
-- Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/](https://www.holistics.io/blog/dbdiagram-io-many-to-many-relationship-diagram-generator-script/)
+- Using 2 many-to-one relationships (`>` and `<`). For more information, please refer to [https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412](https://community.dbdiagram.io/t/tutorial-many-to-many-relationships/412)
 
 Beside presentation aspect, the main differece between these two approaches is how the relationship will be mapped into physical design when exporting to SQL.
 
@@ -514,6 +554,87 @@ TableGroup e_commerce [color: #345] {
   countries
 }
 ```
+
+## TablePartial
+
+`TablePartial` allows you to define reusable sets of fields, settings, and indexes. You can then inject these partials into multiple table definitions to promote consistency and reduce repetition.
+
+**Syntax**
+
+To define a table partial:
+```text
+TablePartial partial_name [table_settings] {
+  field_name field_type [field_settings]
+  indexes {
+    (column_name) [index_settings]
+  }
+}
+```
+
+To use a table partial, you can reference (also called injection) it in the table definition using the `~` prefix:
+
+```text
+Table table_name {
+  ~partial_name
+  field_name field_type
+  ~another_partial
+}
+```
+
+**Example**
+
+```text
+TablePartial base_template [headerColor: #ff0000] {
+  id int [pk, not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+TablePartial soft_delete_template {
+  delete_status boolean [not null]
+  deleted_at timestamp [default: `now()`]
+}
+
+TablePartial email_index {
+  email varchar [unique]
+
+  indexes {
+    email [unique]
+  }
+}
+
+Table users {
+  ~base_template
+  ~email_index
+  name varchar
+  ~soft_delete_template
+}
+```
+
+Final result:
+
+```text
+Table users [headerColor: #ff0000] {
+  id int [pk, not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  email varchar [unique]
+  name varchar
+  delete_status boolean [not null]
+  deleted_at timestamp [default: `now()`]
+
+  indexes {
+    email [unique]
+  }
+}
+```
+
+**Conflict Resolution**
+
+When multiple partials define the same field, setting or index, DBML resolves conflicts based on the following priority:
+
+1. Local Table Definition: Fields, settings and indexes defined directly in the table override those from partials.
+2. Last Injected Partial: If a conflict exists between partials, the definition from the last-injected partial (in source order) takes precedence.
 
 ## Multi-line String
 

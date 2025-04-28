@@ -133,7 +133,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "null",
             "type": "boolean"
@@ -241,7 +240,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "CURRENT_TIMESTAMP",
             "type": "expression"
@@ -260,7 +258,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "cities",
@@ -289,8 +288,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "name",
@@ -315,7 +313,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "hello",
             "type": "string"
@@ -358,6 +355,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "note": {
         "value": "sasasa",
         "token": {
@@ -438,7 +436,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "citites",
@@ -553,7 +552,8 @@
             }
           }
         }
-      ]
+      ],
+      "partials": []
     }
   ],
   "notes": [],
@@ -561,5 +561,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

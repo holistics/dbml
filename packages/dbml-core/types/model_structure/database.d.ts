@@ -11,11 +11,31 @@ import { NormalizedEnumValue } from './enumValue';
 import { NormalizedField } from './field';
 import { NormalizedIndexColumn } from './indexColumn';
 import { NormalizedIndex } from './indexes';
+import TablePartial, { NormalizedTablePartial } from './tablePartial';
 export interface Project {
     note: RawNote;
     database_type: string;
     name: string;
 }
+
+interface RawTableRecord {
+    schemaName: string | undefined;
+    tableName: string;
+    columns: string[];
+    values: {
+        value: any;
+        type: string;
+    }[][];
+}
+
+export interface TableRecord extends RawTableRecord {
+    id: number;
+}
+
+export interface NormalizedRecords {
+    [_id: number]: TableRecord;
+}
+
 export interface RawDatabase {
     schemas: Schema[];
     tables: Table[];
@@ -24,6 +44,8 @@ export interface RawDatabase {
     refs: Ref[];
     tableGroups: TableGroup[];
     project: Project;
+    records: RawTableRecord[];
+    tablePartials: TablePartial[];
 }
 declare class Database extends Element {
     dbState: DbState;
@@ -34,15 +56,19 @@ declare class Database extends Element {
     noteToken: Token;
     databaseType: string;
     name: string;
+    records: TableRecord[];
     id: number;
-    constructor({ schemas, tables, enums, refs, tableGroups, project }: RawDatabase);
+    constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
     generateId(): void;
+    processRecords(rawRecords: RawTableRecord[]): void;
     processSchemas(rawSchemas: RawSchema[]): void;
     pushSchema(schema: Schema): void;
     checkSchema(schema: Schema): void;
     processSchemaElements(elements: Schema[] | Table[] | Enum[] | TableGroup[] | Ref[], elementType: any): void;
     findOrCreateSchema(schemaName: string): Schema;
     findTable(rawTable: any): Table;
+    processTablePartials(rawTablePartials: any[]): TablePartial[];
+    findTablePartial(partialName: string): TablePartial;
     export(): {
         schemas: {
             tables: {
@@ -107,6 +133,43 @@ declare class Database extends Element {
             name: string;
             content: string;
             headerColor: string;
+        }[];
+        records: {
+            id: number;
+            schemaName: string;
+            tableName: string;
+            columns: string[];
+            values: {
+                value: any;
+                type: string;
+            }[][];
+        }[];
+        tablePartials: {
+            name: string;
+            note: string;
+            headerColor: string;
+            fields: {
+                name: string;
+                type: any;
+                unique: boolean;
+                pk: boolean;
+                not_null: boolean;
+                note: string;
+                dbdefault: any;
+                increment: boolean;
+                injectedPartialId: number | undefined,
+            }[];
+            indexes: {
+                columns: {
+                    type: any;
+                    value: any;
+                }[];
+                name: string;
+                type: any;
+                unique: boolean;
+                pk: string;
+                note: string;
+            }[];
         }[];
     };
     shallowExport(): {
@@ -180,6 +243,33 @@ declare class Database extends Element {
             content: string;
             headerColor: string;
         }[];
+        tablePartials: {
+            name: string;
+            note: string;
+            headerColor: string;
+            fields: {
+                name: string;
+                type: any;
+                unique: boolean;
+                pk: boolean;
+                not_null: boolean;
+                note: string;
+                dbdefault: any;
+                increment: boolean;
+                injectedPartialId: number | undefined,
+            }[];
+            indexes: {
+                columns: {
+                    type: any;
+                    value: any;
+                }[];
+                name: string;
+                type: any;
+                unique: boolean;
+                pk: string;
+                note: string;
+            }[];
+        }[];
     };
     exportChildIds(): {
         schemaIds: number[];
@@ -210,5 +300,7 @@ export interface NormalizedDatabase {
     indexes: NormalizedIndex;
     indexColumns: NormalizedIndexColumn;
     fields: NormalizedField;
+    records: NormalizedRecords;
+    tablePartials: NormalizedTablePartial;
 }
 export default Database;
