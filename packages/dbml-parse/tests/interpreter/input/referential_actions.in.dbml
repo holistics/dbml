@@ -1,5 +1,13 @@
-Table "orders" {
+TablePartial increment_id {
   "id" int [pk, increment]
+}
+
+TablePartial name {
+  "name" varchar(255)
+}
+
+Table "orders" {
+  ~increment_id
   "user_id" int [unique, not null]
   "status" orders_status_enum
   "created_at" varchar(255)
@@ -14,7 +22,7 @@ Table "order_items" {
 
 Table "products" {
   "id" int
-  "name" varchar(255)
+  ~name
   "price" decimal(10,4)
   "created_at" datetime [default: `now()`]
 
@@ -24,8 +32,8 @@ Table "products" {
 }
 
 Table "users" {
-  "id" int [pk, increment]
-  "name" varchar(255)
+  ~increment_id
+  ~name
   "email" varchar(255) [unique]
   "date_of_birth" datetime
   "created_at" datetime [default: `now()`]
@@ -34,7 +42,7 @@ Table "users" {
 
 Table "countries" {
   "code" int [pk]
-  "name" varchar(255)
+  ~name
   "continent_name" varchar(255)
 }
 
