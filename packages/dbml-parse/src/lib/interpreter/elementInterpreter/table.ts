@@ -20,7 +20,7 @@ import {
 import { CompileError, CompileErrorCode } from '../../errors';
 import { aggregateSettingList } from '../../analyzer/validator/utils';
 import { ColumnSymbol } from '../../analyzer/symbol/symbols';
-import { ElementKind } from '../../analyzer/types';
+import { ElementKind, SettingName } from '../../analyzer/types';
 
 export class TableInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -111,11 +111,11 @@ export class TableInterpreter implements ElementInterpreter {
   private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.table.headerColor = settingMap.headercolor?.length
-      ? extractColor(settingMap.headercolor?.at(0)?.value as any)
+    this.table.headerColor = settingMap[SettingName.HeaderColor]?.length
+      ? extractColor(settingMap[SettingName.HeaderColor]?.at(0)?.value as any)
       : undefined;
 
-    const [noteNode] = settingMap.note || [];
+    const [noteNode] = settingMap[SettingName.Note] || [];
     this.table.note = noteNode && {
       value: extractQuotedStringToken(noteNode?.value).map(normalizeNoteContent).unwrap(),
       token: getTokenPosition(noteNode),
@@ -187,22 +187,22 @@ export class TableInterpreter implements ElementInterpreter {
     const settings = field.args.slice(1);
     if (_.last(settings) instanceof ListExpressionNode) {
       const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
-      column.pk = !!settingMap.pk?.length || !!settingMap['primary key']?.length;
-      column.increment = !!settingMap.increment?.length;
-      column.unique = !!settingMap.unique?.length;
+      column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PKey]?.length;
+      column.increment = !!settingMap[SettingName.Increment]?.length;
+      column.unique = !!settingMap[SettingName.Unique]?.length;
       // eslint-disable-next-line no-nested-ternary
-      column.not_null = settingMap['not null']?.length
+      column.not_null = settingMap[SettingName.NotNull]?.length
         ? true
-        : settingMap.null?.length
+        : settingMap[SettingName.Null]?.length
           ? false
           : undefined;
-      column.dbdefault = processDefaultValue(settingMap.default?.at(0)?.value);
-      const noteNode = settingMap.note?.at(0);
+      column.dbdefault = processDefaultValue(settingMap[SettingName.Default]?.at(0)?.value);
+      const noteNode = settingMap[SettingName.Note]?.at(0);
       column.note = noteNode && {
         value: extractQuotedStringToken(noteNode.value).map(normalizeNoteContent).unwrap(),
         token: getTokenPosition(noteNode),
       };
-      const refs = settingMap.ref || [];
+      const refs = settingMap[SettingName.Ref] || [];
       column.inline_refs = refs.flatMap((ref) => {
         const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
 
@@ -283,15 +283,15 @@ export class TableInterpreter implements ElementInterpreter {
       const args = [indexField.callee!, ...indexField.args];
       if (_.last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
-        index.pk = !!settingMap.pk?.length;
-        index.unique = !!settingMap.unique?.length;
-        index.name = extractQuotedStringToken(settingMap.name?.at(0)?.value).unwrap_or(undefined);
-        const noteNode = settingMap.note?.at(0);
+        index.pk = !!settingMap[SettingName.PK]?.length;
+        index.unique = !!settingMap[SettingName.Unique]?.length;
+        index.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
+        const noteNode = settingMap[SettingName.Note]?.at(0);
         index.note = noteNode && {
           value: extractQuotedStringToken(noteNode.value).unwrap(),
           token: getTokenPosition(noteNode),
         };
-        index.type = extractVariableFromExpression(settingMap.type?.at(0)?.value).unwrap_or(undefined);
+        index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value).unwrap_or(undefined);
       }
 
       args.flatMap((arg) => {
