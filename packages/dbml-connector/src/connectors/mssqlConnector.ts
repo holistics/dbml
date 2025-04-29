@@ -6,7 +6,6 @@ import {
   DefaultInfo,
   DefaultType,
   Enum,
-  EnumValue,
   Field,
   FieldsDictionary,
   IndexesDictionary,
@@ -155,16 +154,16 @@ const getEnumValues = (definition: string, constraint_name: string): EnumValuesD
   Object.keys(colMap).forEach((key) => {
     if (processedKeys.has(key)) return;
 
-    let mergedColumns = [key];
-    const values = colMap[key];
+    const mergedColumns = [key];
+    const colValues = colMap[key];
 
     Object.keys(colMap).forEach((innerKey) => {
-      if (key !== innerKey && arraysEqual(values, colMap[innerKey])) {
+      if (key !== innerKey && arraysEqual(colValues, colMap[innerKey])) {
         mergedColumns.push(innerKey);
         processedKeys.add(innerKey);
       }
     });
-    const enumValues = values.map((value) => ({ name: value }));
+    const enumValues = colValues.map((value) => ({ name: value }));
     result.push({ columns: mergedColumns, enumValues, constraint_name: `${constraint_name}_${mergedColumns.join('_')}` });
     processedKeys.add(key);
   });
@@ -243,11 +242,11 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
         JOIN sys.columns c ON t.object_id = c.object_id
         JOIN sys.types ty ON c.user_type_id = ty.user_type_id
         LEFT JOIN sys.extended_properties p ON p.major_id = t.object_id
-          AND p.name = 'MS_Description_Table'
+          AND p.name like '%description%'
           AND p.minor_id = 0 -- Ensure minor_id is 0 for table comments
         LEFT JOIN sys.extended_properties ep ON ep.major_id = c.object_id
           AND ep.minor_id = c.column_id
-          AND ep.name = 'MS_Description'
+          AND ep.name like '%description%'
       WHERE
         t.type = 'U' -- User-defined tables
     ),
@@ -410,11 +409,11 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
 
   const endpointsEqual = (ep1: RefEndpoint[], ep2: RefEndpoint[]): boolean => {
     if (ep1.length !== ep2.length) return false;
-    return ep1.every((endpoint, index) => 
-      endpoint.tableName === ep2[index].tableName &&
-      endpoint.schemaName === ep2[index].schemaName &&
-      endpoint.fieldNames.length === ep2[index].fieldNames.length &&
-      endpoint.fieldNames.every((field, fieldIndex) => field === ep2[index].fieldNames[fieldIndex])
+    return ep1.every(
+      (endpoint, index) => endpoint.tableName === ep2[index].tableName
+      && endpoint.schemaName === ep2[index].schemaName
+      && endpoint.fieldNames.length === ep2[index].fieldNames.length
+      && endpoint.fieldNames.every((field, fieldIndex) => field === ep2[index].fieldNames[fieldIndex]),
     );
   };
 
@@ -651,5 +650,5 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
 };
 
 export {
-  fetchSchemaJson
+  fetchSchemaJson,
 };
