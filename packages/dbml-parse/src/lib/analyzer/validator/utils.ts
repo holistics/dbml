@@ -11,6 +11,8 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
+  CallExpressionNode,
+  ArrayNode,
 } from '../../parser/nodes';
 import { isHexChar } from '../../utils';
 import { destructureComplexVariable } from '../utils';
@@ -26,7 +28,7 @@ import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
 import { SchemaSymbol } from '../symbol/symbols';
 import SymbolTable from '../symbol/symbolTable';
 import SymbolFactory from '../symbol/factory';
-import { extractStringFromIdentifierStream, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode } from '../../parser/utils';
+import { extractStringFromIdentifierStream, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode } from '../../parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import Report from '../../report';
 import { CompileError, CompileErrorCode } from '../../errors';
@@ -197,9 +199,13 @@ export function isValidDefaultValue(value?: SyntaxNode): boolean {
   return false;
 }
 
-export function isExpressionANumber(value?: SyntaxNode): value is PrimaryExpressionNode & {
-  expression: LiteralNode & { literal: { kind: SyntaxTokenKind.NUMERIC_LITERAL } };
+export function isExpressionANumber (value?: SyntaxNode): value is PrimaryExpressionNode | PrefixExpressionNode & {
+  op?: SyntaxToken, expression: LiteralNode & { literal: { kind: SyntaxTokenKind.NUMERIC_LITERAL } };
 } {
+  if (value instanceof PrefixExpressionNode) {
+    if (value.op?.value !== '-' && value.op?.value !== '+') return false;
+    return isExpressionANumber(value.expression);
+  }
   return (
     value instanceof PrimaryExpressionNode &&
     value.expression instanceof LiteralNode &&
@@ -225,6 +231,49 @@ export function isTupleOfVariables(value?: SyntaxNode): value is TupleExpression
   elementList: (PrimaryExpressionNode & { expression: VariableNode })[];
 } {
   return value instanceof TupleExpressionNode && value.elementList.every(isExpressionAVariableNode);
+}
+
+export function isValidColumnType (type: SyntaxNode): boolean {
+  if (
+    !(
+      type instanceof CallExpressionNode
+      || isAccessExpression(type)
+      || type instanceof PrimaryExpressionNode
+      || type instanceof ArrayNode
+    )
+  ) {
+    return false;
+  }
+
+  if (type instanceof CallExpressionNode) {
+    if (type.callee === undefined || type.argumentList === undefined) {
+      return false;
+    }
+
+    if (!type.argumentList.elementList.every((e) => isExpressionANumber(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.callee;
+  }
+
+  while (type instanceof ArrayNode) {
+    if (type.array === undefined || type.indexer === undefined) {
+      return false;
+    }
+
+    if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isExpressionANumber(attribute.name))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.array;
+  }
+
+  const variables = destructureComplexVariable(type).unwrap_or(undefined);
+
+  return variables !== undefined && variables.length > 0;
 }
 
 export function aggregateSettingList(settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }, CompileError> {
