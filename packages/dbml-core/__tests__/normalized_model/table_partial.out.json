@@ -19,7 +19,8 @@
       "tableIds": [
         1,
         3,
-        4
+        4,
+        5
       ],
       "enumIds": [],
       "tableGroupIds": [],
@@ -226,6 +227,39 @@
     },
     "4": {
       "id": 4,
+      "name": "testColWithTypeHaveArgs",
+      "alias": null,
+      "note": null,
+      "partials": [
+        {
+          "order": 1,
+          "token": {
+            "start": {
+              "offset": 1133,
+              "line": 65,
+              "column": 3
+            },
+            "end": {
+              "offset": 1157,
+              "line": 65,
+              "column": 27
+            }
+          },
+          "name": "testColWithTypeHaveArgs",
+          "id": 7
+        }
+      ],
+      "fieldIds": [
+        14,
+        15,
+        16
+      ],
+      "indexIds": [],
+      "schemaId": 1,
+      "groupId": null
+    },
+    "5": {
+      "id": 5,
       "name": "table_no_column_with_partial",
       "alias": null,
       "note": null,
@@ -234,13 +268,13 @@
           "order": 0,
           "token": {
             "start": {
-              "offset": 872,
-              "line": 59,
+              "offset": 1200,
+              "line": 69,
               "column": 3
             },
             "end": {
-              "offset": 884,
-              "line": 59,
+              "offset": 1212,
+              "line": 69,
               "column": 15
             }
           },
@@ -249,7 +283,7 @@
         }
       ],
       "fieldIds": [
-        14
+        17
       ],
       "indexIds": [
         5
@@ -368,7 +402,7 @@
       "columnIds": [
         6
       ],
-      "tableId": 4
+      "tableId": 5
     }
   },
   "indexColumns": {
@@ -644,6 +678,59 @@
     },
     "14": {
       "id": 14,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "endpointIds": [],
+      "tableId": 4,
+      "enumId": null
+    },
+    "15": {
+      "id": 15,
+      "name": "callExpColInTest1",
+      "type": {
+        "schemaName": null,
+        "type_name": "int(4)",
+        "args": "4"
+      },
+      "unique": false,
+      "pk": false,
+      "note": "simple column with call expression as type",
+      "increment": false,
+      "injectedPartialId": 7,
+      "endpointIds": [],
+      "tableId": 4,
+      "enumId": null
+    },
+    "16": {
+      "id": 16,
+      "name": "callExpColInTest2",
+      "type": {
+        "schemaName": null,
+        "type_name": "decimal(10,2)",
+        "args": "10,2"
+      },
+      "unique": false,
+      "pk": false,
+      "note": "column with type that have arguments and default value being a float number",
+      "dbdefault": {
+        "type": "number",
+        "value": 0.1
+      },
+      "increment": false,
+      "injectedPartialId": 7,
+      "endpointIds": [],
+      "tableId": 4,
+      "enumId": null
+    },
+    "17": {
+      "id": 17,
       "name": "email",
       "type": {
         "schemaName": null,
@@ -656,7 +743,7 @@
       "increment": false,
       "injectedPartialId": 3,
       "endpointIds": [],
-      "tableId": 4,
+      "tableId": 5,
       "enumId": null
     }
   },
@@ -1156,6 +1243,96 @@
           "unique": true
         }
       ]
+    },
+    "7": {
+      "id": 7,
+      "name": "testColWithTypeHaveArgs",
+      "note": null,
+      "fields": [
+        {
+          "name": "callExpColInTest1",
+          "type": {
+            "schemaName": null,
+            "type_name": "int(4)",
+            "args": "4"
+          },
+          "token": {
+            "start": {
+              "offset": 874,
+              "line": 59,
+              "column": 3
+            },
+            "end": {
+              "offset": 951,
+              "line": 59,
+              "column": 80
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "note": {
+            "value": "simple column with call expression as type",
+            "token": {
+              "start": {
+                "offset": 900,
+                "line": 59,
+                "column": 29
+              },
+              "end": {
+                "offset": 950,
+                "line": 59,
+                "column": 79
+              }
+            }
+          }
+        },
+        {
+          "name": "callExpColInTest2",
+          "type": {
+            "schemaName": null,
+            "type_name": "decimal(10,2)",
+            "args": "10,2"
+          },
+          "token": {
+            "start": {
+              "offset": 954,
+              "line": 60,
+              "column": 3
+            },
+            "end": {
+              "offset": 1086,
+              "line": 60,
+              "column": 135
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "dbdefault": {
+            "type": "number",
+            "value": 0.1
+          },
+          "note": {
+            "value": "column with type that have arguments and default value being a float number",
+            "token": {
+              "start": {
+                "offset": 1002,
+                "line": 60,
+                "column": 51
+              },
+              "end": {
+                "offset": 1085,
+                "line": 60,
+                "column": 134
+              }
+            }
+          }
+        }
+      ],
+      "indexes": []
     }
   }
 }
