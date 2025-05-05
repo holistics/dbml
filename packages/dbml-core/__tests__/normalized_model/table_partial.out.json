@@ -19,7 +19,8 @@
       "tableIds": [
         1,
         3,
-        4
+        4,
+        5
       ],
       "enumIds": [],
       "tableGroupIds": [],
@@ -256,6 +257,39 @@
       "indexIds": [],
       "schemaId": 1,
       "groupId": null
+    },
+    "5": {
+      "id": 5,
+      "name": "table_no_column_with_partial",
+      "alias": null,
+      "note": null,
+      "partials": [
+        {
+          "order": 0,
+          "token": {
+            "start": {
+              "offset": 1200,
+              "line": 69,
+              "column": 3
+            },
+            "end": {
+              "offset": 1212,
+              "line": 69,
+              "column": 15
+            }
+          },
+          "name": "email_index",
+          "id": 3
+        }
+      ],
+      "fieldIds": [
+        17
+      ],
+      "indexIds": [
+        5
+      ],
+      "schemaId": 1,
+      "groupId": null
     }
   },
   "endpoints": {
@@ -358,6 +392,17 @@
         5
       ],
       "tableId": 3
+    },
+    "5": {
+      "id": 5,
+      "unique": true,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": 3,
+      "columnIds": [
+        6
+      ],
+      "tableId": 5
     }
   },
   "indexColumns": {
@@ -390,6 +435,12 @@
       "type": "column",
       "value": "email",
       "indexId": 4
+    },
+    "6": {
+      "id": 6,
+      "type": "column",
+      "value": "email",
+      "indexId": 5
     }
   },
   "fields": {
@@ -676,6 +727,23 @@
       "injectedPartialId": 7,
       "endpointIds": [],
       "tableId": 4,
+      "enumId": null
+    },
+    "17": {
+      "id": 17,
+      "name": "email",
+      "type": {
+        "schemaName": null,
+        "type_name": "varchar",
+        "args": null
+      },
+      "unique": true,
+      "pk": false,
+      "note": null,
+      "increment": false,
+      "injectedPartialId": 3,
+      "endpointIds": [],
+      "tableId": 5,
       "enumId": null
     }
   },
