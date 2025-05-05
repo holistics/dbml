@@ -1,7 +1,9 @@
 import { SyntaxToken, SyntaxTokenKind } from '../../lexer/tokens';
 import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
+  CallExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
   ListExpressionNode,
@@ -26,14 +28,20 @@ import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
 import { SchemaSymbol } from '../symbol/symbols';
 import SymbolTable from '../symbol/symbolTable';
 import SymbolFactory from '../symbol/factory';
-import { extractStringFromIdentifierStream, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode } from '../../parser/utils';
+import {
+  extractStringFromIdentifierStream,
+  isAccessExpression,
+  isExpressionAQuotedString,
+  isExpressionAVariableNode,
+  isExpressionAnIdentifierNode,
+} from '../../parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
 import Report from '../../report';
 import { CompileError, CompileErrorCode } from '../../errors';
 import { ElementKind } from '../types';
 import TablePartialValidator from './elementValidators/tablePartial';
 
-export function pickValidator(element: ElementDeclarationNode & { type: SyntaxToken }) {
+export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
     case ElementKind.Enum:
       return EnumValidator;
@@ -57,53 +65,54 @@ export function pickValidator(element: ElementDeclarationNode & { type: SyntaxTo
 }
 
 // Is the name valid (either simple or complex)
-export function isValidName(nameNode: SyntaxNode): boolean {
+export function isValidName (nameNode: SyntaxNode): boolean {
   return !!destructureComplexVariable(nameNode).unwrap_or(false);
 }
 
-// Is the alias valid (only simple name is allowed)
-export function isValidAlias(
-  aliasNode: SyntaxNode,
-): aliasNode is PrimaryExpressionNode & { expression: VariableNode } {
-  return isSimpleName(aliasNode);
-}
-
 // Is the name valid and simple
-export function isSimpleName(
+export function isSimpleName (
   nameNode: SyntaxNode,
 ): nameNode is PrimaryExpressionNode & { expression: VariableNode } {
   return nameNode instanceof PrimaryExpressionNode && nameNode.expression instanceof VariableNode;
 }
 
+// Is the alias valid (only simple name is allowed)
+export function isValidAlias (
+  aliasNode: SyntaxNode,
+): aliasNode is PrimaryExpressionNode & { expression: VariableNode } {
+  return isSimpleName(aliasNode);
+}
+
 // Is the argument a ListExpression
-export function isValidSettingList(
+export function isValidSettingList (
   settingListNode: SyntaxNode,
 ): settingListNode is ListExpressionNode {
   return settingListNode instanceof ListExpressionNode;
 }
 
 // Does the element has complex body
-export function hasComplexBody(
+export function hasComplexBody (
   node: ElementDeclarationNode,
 ): node is ElementDeclarationNode & { body: BlockExpressionNode; bodyColon: undefined } {
   return node.body instanceof BlockExpressionNode && !node.bodyColon;
 }
 
 // Does the element has simple body
-export function hasSimpleBody(
+export function hasSimpleBody (
   node: ElementDeclarationNode,
 ): node is ElementDeclarationNode & { bodyColon: SyntaxToken } {
   return !!node.bodyColon;
 }
 
 // Register the `variables` array as a stack of schema, the following nested within the former
-export function registerSchemaStack(
+export function registerSchemaStack (
   variables: string[],
   globalSchema: SymbolTable,
   symbolFactory: SymbolFactory,
 ): SymbolTable {
-  // public schema is already global schema 
+  // public schema is already global schema
   if (variables[0] === 'public') {
+    // eslint-disable-next-line no-param-reassign
     variables = variables.slice(1);
   }
 
@@ -129,15 +138,15 @@ export function registerSchemaStack(
   return prevSchema;
 }
 
-export function isRelationshipOp(op?: string): boolean {
+export function isRelationshipOp (op?: string): boolean {
   return op === '-' || op === '<>' || op === '>' || op === '<';
 }
 
-export function isValidColor(value?: SyntaxNode): boolean {
+export function isValidColor (value?: SyntaxNode): boolean {
   if (
-    !(value instanceof PrimaryExpressionNode) ||
-    !(value.expression instanceof LiteralNode) ||
-    !(value.expression.literal?.kind === SyntaxTokenKind.COLOR_LITERAL)
+    !(value instanceof PrimaryExpressionNode)
+    || !(value.expression instanceof LiteralNode)
+    || !(value.expression.literal?.kind === SyntaxTokenKind.COLOR_LITERAL)
   ) {
     return false;
   }
@@ -163,13 +172,23 @@ export function isValidColor(value?: SyntaxNode): boolean {
 }
 
 // Is the value non-existent
-export function isVoid(value?: SyntaxNode): boolean {
+export function isVoid (value?: SyntaxNode): boolean {
   return value === undefined;
+}
+
+export function isExpressionANumber (value?: SyntaxNode): value is PrimaryExpressionNode & {
+  expression: LiteralNode & { literal: { kind: SyntaxTokenKind.NUMERIC_LITERAL } };
+} {
+  return (
+    value instanceof PrimaryExpressionNode
+    && value.expression instanceof LiteralNode
+    && value.expression.literal?.kind === SyntaxTokenKind.NUMERIC_LITERAL
+  );
 }
 
 // Is the `value` a valid value for a column's `default` setting
 // It's a valid only if it's a literal or a complex variable (potentially an enum member)
-export function isValidDefaultValue(value?: SyntaxNode): boolean {
+export function isValidDefaultValue (value?: SyntaxNode): boolean {
   if (isExpressionAQuotedString(value)) {
     return true;
   }
@@ -183,9 +202,9 @@ export function isValidDefaultValue(value?: SyntaxNode): boolean {
   }
 
   if (
-    value instanceof PrefixExpressionNode &&
-    NUMERIC_LITERAL_PREFIX.includes(value.op?.value as any) &&
-    isExpressionANumber(value.expression)
+    value instanceof PrefixExpressionNode
+    && NUMERIC_LITERAL_PREFIX.includes(value.op?.value as any)
+    && isExpressionANumber(value.expression)
   ) {
     return true;
   }
@@ -197,17 +216,7 @@ export function isValidDefaultValue(value?: SyntaxNode): boolean {
   return false;
 }
 
-export function isExpressionANumber(value?: SyntaxNode): value is PrimaryExpressionNode & {
-  expression: LiteralNode & { literal: { kind: SyntaxTokenKind.NUMERIC_LITERAL } };
-} {
-  return (
-    value instanceof PrimaryExpressionNode &&
-    value.expression instanceof LiteralNode &&
-    value.expression.literal?.kind === SyntaxTokenKind.NUMERIC_LITERAL
-  );
-}
-
-export function isUnaryRelationship(value?: SyntaxNode): value is PrefixExpressionNode {
+export function isUnaryRelationship (value?: SyntaxNode): value is PrefixExpressionNode {
   if (!(value instanceof PrefixExpressionNode)) {
     return false;
   }
@@ -221,39 +230,86 @@ export function isUnaryRelationship(value?: SyntaxNode): value is PrefixExpressi
   return variables !== undefined && variables.length > 0;
 }
 
-export function isTupleOfVariables(value?: SyntaxNode): value is TupleExpressionNode & {
+export function isTupleOfVariables (value?: SyntaxNode): value is TupleExpressionNode & {
   elementList: (PrimaryExpressionNode & { expression: VariableNode })[];
 } {
   return value instanceof TupleExpressionNode && value.elementList.every(isExpressionAVariableNode);
 }
 
-export function aggregateSettingList(settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }, CompileError> {
+export function aggregateSettingList (settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }, CompileError> {
   const map: { [index: string]: AttributeNode[]; } = {};
   const errors: CompileError[] = [];
   if (!settingList) {
     return new Report({});
   }
-  for (const attribute of settingList.elementList) {
+  settingList.elementList.forEach((attribute) => {
     if (!attribute.name) {
-      continue;
+      return;
     }
 
     if (attribute.name instanceof PrimaryExpressionNode) {
       errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'A setting name must be a stream of identifiers', attribute.name));
-      continue;
+      return;
     }
 
     const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined)?.toLowerCase();
     if (!name) {
-      continue;
+      return;
     }
 
     if (map[name] === undefined) {
-      map[name] = [attribute]
+      map[name] = [attribute];
     } else {
       map[name].push(attribute);
     }
-  }
+  });
 
   return new Report(map, errors);
+}
+
+export function isValidColumnType (type: SyntaxNode): boolean {
+  if (
+    !(
+      type instanceof CallExpressionNode
+      || isAccessExpression(type)
+      || type instanceof PrimaryExpressionNode
+      || type instanceof ArrayNode
+    )
+  ) {
+    return false;
+  }
+
+  if (type instanceof CallExpressionNode) {
+    if (type.callee === undefined || type.argumentList === undefined) {
+      return false;
+    }
+
+    if (!type.argumentList.elementList.every((e) => isExpressionANumber(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.callee;
+  }
+
+  while (type instanceof ArrayNode) {
+    if (type.array === undefined || type.indexer === undefined) {
+      return false;
+    }
+
+    if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isExpressionANumber(attribute.name))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.array;
+  }
+
+  const variables = destructureComplexVariable(type).unwrap_or(undefined);
+
+  return variables !== undefined && variables.length > 0;
+}
+
+export function isAliasSameAsName (alias: string, nameFragments: string[]): boolean {
+  return nameFragments.length === 1 && alias === nameFragments[0];
 }
