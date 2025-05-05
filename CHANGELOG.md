@@ -1,3 +1,13 @@
+## v3.13.2 (2025-05-05)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#657](https://github.com/holistics/dbml/pull/657) PR: Bug Closes [#655](https://github.com/holistics/dbml/issues/655) - DB2DBML - SQL Server - No description on Table ([@MisterGeek](https://github.com/MisterGeek))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- [@MisterGeek](https://github.com/MisterGeek)
+
 ## v3.13.1 (2025-04-28)
 
 #### :bug: Bug Fix
