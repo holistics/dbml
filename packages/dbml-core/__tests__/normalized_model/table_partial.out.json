@@ -18,7 +18,8 @@
       "note": "Default Public Schema",
       "tableIds": [
         1,
-        3
+        3,
+        4
       ],
       "enumIds": [],
       "tableGroupIds": [],
@@ -222,6 +223,39 @@
       ],
       "schemaId": 1,
       "groupId": null
+    },
+    "4": {
+      "id": 4,
+      "name": "testColWithTypeHaveArgs",
+      "alias": null,
+      "note": null,
+      "partials": [
+        {
+          "order": 1,
+          "token": {
+            "start": {
+              "offset": 1133,
+              "line": 65,
+              "column": 3
+            },
+            "end": {
+              "offset": 1157,
+              "line": 65,
+              "column": 27
+            }
+          },
+          "name": "testColWithTypeHaveArgs",
+          "id": 7
+        }
+      ],
+      "fieldIds": [
+        14,
+        15,
+        16
+      ],
+      "indexIds": [],
+      "schemaId": 1,
+      "groupId": null
     }
   },
   "endpoints": {
@@ -285,45 +319,45 @@
       "unique": true,
       "pk": false,
       "note": null,
+      "injectedPartialId": 6,
       "columnIds": [
         1
       ],
-      "tableId": 3,
-      "injectedPartialId": 6
+      "tableId": 3
     },
     "2": {
       "id": 2,
       "unique": false,
       "pk": true,
       "note": null,
+      "injectedPartialId": 6,
       "columnIds": [
         2
       ],
-      "tableId": 3,
-      "injectedPartialId": 6
+      "tableId": 3
     },
     "3": {
       "id": 3,
       "unique": true,
       "pk": false,
       "note": null,
+      "injectedPartialId": 6,
       "columnIds": [
         3,
         4
       ],
-      "tableId": 3,
-      "injectedPartialId": 6
+      "tableId": 3
     },
     "4": {
       "id": 4,
       "unique": true,
       "pk": false,
       "note": null,
+      "injectedPartialId": 3,
       "columnIds": [
         5
       ],
-      "tableId": 3,
-      "injectedPartialId": 3
+      "tableId": 3
     }
   },
   "indexColumns": {
@@ -589,6 +623,59 @@
       "injectedPartialId": 1,
       "endpointIds": [],
       "tableId": 3,
+      "enumId": null
+    },
+    "14": {
+      "id": 14,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "endpointIds": [],
+      "tableId": 4,
+      "enumId": null
+    },
+    "15": {
+      "id": 15,
+      "name": "callExpColInTest1",
+      "type": {
+        "schemaName": null,
+        "type_name": "int(4)",
+        "args": "4"
+      },
+      "unique": false,
+      "pk": false,
+      "note": "simple column with call expression as type",
+      "increment": false,
+      "injectedPartialId": 7,
+      "endpointIds": [],
+      "tableId": 4,
+      "enumId": null
+    },
+    "16": {
+      "id": 16,
+      "name": "callExpColInTest2",
+      "type": {
+        "schemaName": null,
+        "type_name": "decimal(10,2)",
+        "args": "10,2"
+      },
+      "unique": false,
+      "pk": false,
+      "note": "column with type that have arguments and default value being a float number",
+      "dbdefault": {
+        "type": "number",
+        "value": 0.1
+      },
+      "increment": false,
+      "injectedPartialId": 7,
+      "endpointIds": [],
+      "tableId": 4,
       "enumId": null
     }
   },
@@ -1088,6 +1175,96 @@
           "unique": true
         }
       ]
+    },
+    "7": {
+      "id": 7,
+      "name": "testColWithTypeHaveArgs",
+      "note": null,
+      "fields": [
+        {
+          "name": "callExpColInTest1",
+          "type": {
+            "schemaName": null,
+            "type_name": "int(4)",
+            "args": "4"
+          },
+          "token": {
+            "start": {
+              "offset": 874,
+              "line": 59,
+              "column": 3
+            },
+            "end": {
+              "offset": 951,
+              "line": 59,
+              "column": 80
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "note": {
+            "value": "simple column with call expression as type",
+            "token": {
+              "start": {
+                "offset": 900,
+                "line": 59,
+                "column": 29
+              },
+              "end": {
+                "offset": 950,
+                "line": 59,
+                "column": 79
+              }
+            }
+          }
+        },
+        {
+          "name": "callExpColInTest2",
+          "type": {
+            "schemaName": null,
+            "type_name": "decimal(10,2)",
+            "args": "10,2"
+          },
+          "token": {
+            "start": {
+              "offset": 954,
+              "line": 60,
+              "column": 3
+            },
+            "end": {
+              "offset": 1086,
+              "line": 60,
+              "column": 135
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "dbdefault": {
+            "type": "number",
+            "value": 0.1
+          },
+          "note": {
+            "value": "column with type that have arguments and default value being a float number",
+            "token": {
+              "start": {
+                "offset": 1002,
+                "line": 60,
+                "column": 51
+              },
+              "end": {
+                "offset": 1085,
+                "line": 60,
+                "column": 134
+              }
+            }
+          }
+        }
+      ],
+      "indexes": []
     }
   }
 }

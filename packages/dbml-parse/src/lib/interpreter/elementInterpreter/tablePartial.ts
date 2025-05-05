@@ -1,128 +1,24 @@
 import _, { head, partition } from 'lodash';
 import {
-  Column, ColumnType, ElementInterpreter, Index,
-  InlineRef, InterpreterDatabase, TablePartial,
+  Column, ElementInterpreter, Index, InlineRef,
+  InterpreterDatabase, TablePartial,
 } from '../types';
 import {
-  ArrayNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
-  FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
-  SyntaxNode,
+  BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
+  ListExpressionNode, PrefixExpressionNode, SyntaxNode,
 } from '../../parser/nodes';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getTokenPosition,
-  isSameEndpoint, normalizeNoteContent,
+  isSameEndpoint, normalizeNoteContent, processColumnType, processDefaultValue,
 } from '../utils';
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '../../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../../errors';
-import { aggregateSettingList, isExpressionANumber } from '../../analyzer/validator/utils';
-import { isExpressionAQuotedString, isExpressionAnIdentifierNode } from '../../parser/utils';
-import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
+import { aggregateSettingList } from '../../analyzer/validator/utils';
 import { ColumnSymbol } from '../../analyzer/symbol/symbols';
-import Report from '../../report';
 import { ElementKind, SettingName } from '../../analyzer/types';
-
-function processColumnType (typeNode: SyntaxNode): Report<ColumnType, CompileError> {
-  let typeArgs: string | null = null;
-  let typeNodePtr = typeNode;
-  if (typeNodePtr instanceof CallExpressionNode) {
-    typeArgs = typeNodePtr
-      .argumentList!.elementList.map((e) => {
-        if (isExpressionANumber(e)) {
-          return e.expression.literal.value;
-        }
-        if (isExpressionAQuotedString(e)) {
-          return extractQuotedStringToken(e).unwrap();
-        }
-        // e can only be an identifier here
-        return extractVariableFromExpression(e).unwrap();
-      })
-      .join(',');
-    typeNodePtr = typeNodePtr.callee!;
-  }
-  let typeIndexer: string = '';
-  while (typeNodePtr instanceof ArrayNode) {
-    typeIndexer = `[${
-      typeNodePtr
-        .indexer!.elementList.map((e) => (e.name as any).expression.literal.value)
-        .join(',')
-    }]${typeIndexer}`;
-    typeNodePtr = typeNodePtr.array!;
-  }
-
-  const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
-  if (typeSchemaName.length > 1) {
-    return new Report(
-      {
-        schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
-        type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
-        args: typeArgs,
-      },
-      [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)]
-    );
-  }
-
-  return new Report({
-    schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
-    type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
-    args: typeArgs,
-  });
-}
-
-function processDefaultValue (valueNode?: SyntaxNode):
-  {
-    type: 'string' | 'number' | 'boolean' | 'expression';
-    value: string | number;
-  } | undefined {
-  if (!valueNode) {
-    return undefined;
-  }
-
-  if (isExpressionAQuotedString(valueNode)) {
-    return {
-      value: extractQuotedStringToken(valueNode).unwrap(),
-      type: 'string',
-    };
-  }
-
-  if (isExpressionANumber(valueNode)) {
-    return {
-      type: 'number',
-      value: Number.parseFloat(valueNode.expression.literal.value),
-    };
-  }
-
-  if (isExpressionAnIdentifierNode(valueNode)) {
-    const value = valueNode.expression.variable.value.toLowerCase();
-    return {
-      value,
-      type: 'boolean',
-    };
-  }
-
-  if (
-    valueNode instanceof PrefixExpressionNode
-    && NUMERIC_LITERAL_PREFIX.includes(valueNode.op?.value as any)
-    && isExpressionANumber(valueNode.expression)
-  ) {
-    const number = Number.parseFloat(valueNode.expression.expression.literal.value);
-    return {
-      value: valueNode.op?.value === '-' ? 0 - number : number,
-      type: 'number',
-    };
-  }
-
-  if (valueNode instanceof FunctionExpressionNode && valueNode.value) {
-    return {
-      value: valueNode.value.value,
-      type: 'expression',
-    };
-  }
-
-  throw new Error('Unreachable');
-}
 
 export class TablePartialInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -275,32 +171,32 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
         let inlineRef: InlineRef | undefined;
         if (fragments.length === 2) {
-          const [table, column] = fragments;
+          const [table, columnName] = fragments;
           inlineRef = {
             schemaName: null,
             tableName: table,
-            fieldNames: [column],
+            fieldNames: [columnName],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
         } else if (fragments.length === 3) {
-          const [schema, table, column] = fragments;
+          const [schema, table, columnName] = fragments;
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [column],
+            fieldNames: [columnName],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
         } else {
           errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Unsupported', ref));
-          const column = fragments.pop()!;
+          const columnName = fragments.pop()!;
           const table = fragments.pop()!;
           const schema = fragments.join('.');
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [column],
+            fieldNames: [columnName],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
