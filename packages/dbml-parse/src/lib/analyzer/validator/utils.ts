@@ -199,9 +199,7 @@ export function isValidDefaultValue(value?: SyntaxNode): boolean {
   return false;
 }
 
-export function isExpressionANumber (value?: SyntaxNode): value is PrimaryExpressionNode | PrefixExpressionNode & {
-  op?: SyntaxToken, expression: LiteralNode & { literal: { kind: SyntaxTokenKind.NUMERIC_LITERAL } };
-} {
+export function isExpressionANumber (value?: SyntaxNode): boolean {
   if (value instanceof PrefixExpressionNode) {
     if (value.op?.value !== '-' && value.op?.value !== '+') return false;
     return isExpressionANumber(value.expression);
