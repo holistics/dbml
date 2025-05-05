@@ -20,7 +20,6 @@ import {
 import { CompileError, CompileErrorCode } from '../../errors';
 import { aggregateSettingList } from '../../analyzer/validator/utils';
 import { ColumnSymbol } from '../../analyzer/symbol/symbols';
-import Report from '../../report';
 import { destructureIndex, SymbolKind } from '../../analyzer/symbol/symbolIndex';
 import { ElementKind, SettingName } from '../../analyzer/types';
 
