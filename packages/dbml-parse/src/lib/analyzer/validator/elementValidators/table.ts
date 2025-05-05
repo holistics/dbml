@@ -214,11 +214,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
-    if (fields.length === 0) {
-      return [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
-    }
-
+  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       if (!field.callee) {
         return [];
@@ -228,7 +224,7 @@ export default class TableValidator implements ElementValidator {
       if (field.args.length === 0) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', field.callee!));
       }
-  
+
       if (!isExpressionAVariableNode(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
       }
@@ -241,7 +237,7 @@ export default class TableValidator implements ElementValidator {
       errors.push(...this.validateFieldSetting(remains));
 
       errors.push(...this.registerField(field));
-  
+
       return errors;
     });
   }
