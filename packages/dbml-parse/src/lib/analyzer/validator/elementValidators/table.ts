@@ -6,6 +6,7 @@ import {
   ArrayNode,
   AttributeNode,
   BlockExpressionNode,
+  CallExpressionNode,
   ElementDeclarationNode,
   ExpressionNode,
   FunctionApplicationNode,
@@ -17,12 +18,11 @@ import {
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import {
   aggregateSettingList,
-  isAliasSameAsName,
+  isExpressionANumber,
   isSimpleName,
   isUnaryRelationship,
   isValidAlias,
   isValidColor,
-  isValidColumnType,
   isValidDefaultValue,
   isValidName,
   isVoid,
@@ -33,6 +33,7 @@ import { ElementValidator } from '../types';
 import { ColumnSymbol, TablePartialInjectionSymbol, TableSymbol } from '../../symbol/symbols';
 import { createColumnSymbolIndex, createTablePartialInjectionSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
 import {
+  isAccessExpression,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
@@ -154,6 +155,7 @@ export default class TableValidator implements ElementValidator {
 
     if (
       alias && isSimpleName(alias)
+      // eslint-disable-next-line no-use-before-define
       && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
     ) {
       const aliasName = extractVarNameFromPrimaryVariable(alias as any).unwrap();
@@ -229,6 +231,7 @@ export default class TableValidator implements ElementValidator {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
       }
 
+      // eslint-disable-next-line no-use-before-define
       if (field.args[0] && !isValidColumnType(field.args[0])) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', field.args[0]));
       }
@@ -435,4 +438,53 @@ export default class TableValidator implements ElementValidator {
 
     return errors;
   }
+}
+
+/* eslint-disable space-before-function-paren */
+/* eslint-disable operator-linebreak */
+function isValidColumnType(type: SyntaxNode): boolean {
+  if (
+    !(
+      type instanceof CallExpressionNode ||
+      isAccessExpression(type) ||
+      type instanceof PrimaryExpressionNode ||
+      type instanceof ArrayNode
+    )
+  ) {
+    return false;
+  }
+
+  if (type instanceof CallExpressionNode) {
+    if (type.callee === undefined || type.argumentList === undefined) {
+      return false;
+    }
+
+    if (!type.argumentList.elementList.every((e) => isExpressionANumber(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.callee;
+  }
+
+  while (type instanceof ArrayNode) {
+    if (type.array === undefined || type.indexer === undefined) {
+      return false;
+    }
+
+    if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isExpressionANumber(attribute.name))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.array;
+  }
+
+  const variables = destructureComplexVariable(type).unwrap_or(undefined);
+
+  return variables !== undefined && variables.length > 0;
+}
+
+function isAliasSameAsName(alias: string, nameFragments: string[]): boolean {
+  return nameFragments.length === 1 && alias === nameFragments[0];
 }
