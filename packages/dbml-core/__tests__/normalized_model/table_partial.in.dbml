@@ -54,3 +54,7 @@ Table users {
   ~test
   ~test2
 }
+
+Table table_no_column_with_partial {
+  ~email_index
+}
