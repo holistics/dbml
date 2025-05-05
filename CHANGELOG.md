@@ -1,3 +1,12 @@
+## v3.13.3 (2025-05-05)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#720](https://github.com/holistics/dbml/pull/720) Fix not handling column type with arguments in TablePartial ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 1
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
 ## v3.13.2 (2025-05-05)
 
 #### :bug: Bug Fix
