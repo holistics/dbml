@@ -20,6 +20,7 @@ import {
 import { CompileError, CompileErrorCode } from '../../errors';
 import { aggregateSettingList } from '../../analyzer/validator/utils';
 import { ColumnSymbol } from '../../analyzer/symbol/symbols';
+import { destructureIndex, SymbolKind } from '../../analyzer/symbol/symbolIndex';
 import { ElementKind, SettingName } from '../../analyzer/types';
 
 export class TableInterpreter implements ElementInterpreter {
@@ -163,11 +164,28 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretFields (fields: (FunctionApplicationNode | PartialInjectionNode)[]): CompileError[] {
-    return fields.flatMap((field, order) => {
+    const symbolTableEntries = this.declarationNode.symbol?.symbolTable
+      ? [...this.declarationNode.symbol.symbolTable.entries()]
+      : [];
+    const columnEntries = symbolTableEntries.filter(([index]) => {
+      const res = destructureIndex(index).unwrap_or(null);
+      return res?.kind === SymbolKind.Column;
+    });
+
+    const columnCountErrors = columnEntries.length
+      ? []
+      : [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
+
+    const interpretFieldErrors = fields.flatMap((field, order) => {
       return field instanceof FunctionApplicationNode
         ? this.interpretColumn(field)
         : this.interpretInjection(field, order);
     });
+
+    return [
+      ...columnCountErrors,
+      ...interpretFieldErrors,
+    ];
   }
 
   private interpretColumn (field: FunctionApplicationNode): CompileError[] {

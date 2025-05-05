@@ -1,4 +1,5 @@
-import _ from 'lodash';
+/* eslint-disable class-methods-use-this */
+import _, { forIn } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -37,6 +38,7 @@ import {
 } from '../../../parser/utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import SymbolTable from '../../symbol/symbolTable';
+import { SettingName } from '../../types';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken};
@@ -102,10 +104,9 @@ export default class TableValidator implements ElementValidator {
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    for (const name in settingMap) {
-      const attrs = settingMap[name];
+    forIn(settingMap, (attrs, name) => {
       switch (name) {
-        case 'headercolor':
+        case SettingName.HeaderColor:
           if (attrs.length > 1) {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'headercolor\' can only appear once', attr)));
           }
@@ -115,7 +116,7 @@ export default class TableValidator implements ElementValidator {
             }
           });
           break;
-        case 'note':
+        case SettingName.Note:
           if (attrs.length > 1) {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'note\' can only appear once', attr)));
           }
@@ -128,7 +129,7 @@ export default class TableValidator implements ElementValidator {
         default:
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
       }
-    }
+    });
     return errors;
   }
 
@@ -152,6 +153,7 @@ export default class TableValidator implements ElementValidator {
 
     if (
       alias && isSimpleName(alias)
+      // eslint-disable-next-line no-use-before-define
       && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
     ) {
       const aliasName = extractVarNameFromPrimaryVariable(alias as any).unwrap();
@@ -212,11 +214,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
-    if (fields.length === 0) {
-      return [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
-    }
-
+  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       if (!field.callee) {
         return [];
@@ -226,11 +224,12 @@ export default class TableValidator implements ElementValidator {
       if (field.args.length === 0) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', field.callee!));
       }
-  
+
       if (!isExpressionAVariableNode(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
       }
 
+      // eslint-disable-next-line no-use-before-define
       if (field.args[0] && !isValidColumnType(field.args[0])) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', field.args[0]));
       }
@@ -239,17 +238,17 @@ export default class TableValidator implements ElementValidator {
       errors.push(...this.validateFieldSetting(remains));
 
       errors.push(...this.registerField(field));
-  
+
       return errors;
     });
   }
 
-  registerField(field: FunctionApplicationNode): CompileError[] {
+  registerField (field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
       const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const columnId = createColumnSymbolIndex(columnName);
-      
-      const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field })
+
+      const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
       field.symbol = columnSymbol;
 
       const symbolTable = this.declarationNode.symbol!.symbolTable!;
@@ -257,8 +256,8 @@ export default class TableValidator implements ElementValidator {
         const symbol = symbolTable.get(columnId);
         return [
           new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, field),
-          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, symbol!.declaration!)
-        ]
+          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, symbol!.declaration!),
+        ];
       }
       symbolTable.set(columnId, columnSymbol);
     }
@@ -266,11 +265,11 @@ export default class TableValidator implements ElementValidator {
   }
 
   // This is needed to support legacy inline settings
-  validateFieldSetting(parts: ExpressionNode[]): CompileError[] {
+  validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
     if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
       return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
     }
-    
+
     if (parts.length === 0) {
       return [];
     }
@@ -282,33 +281,40 @@ export default class TableValidator implements ElementValidator {
 
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
-    const settingMap: { [index: string]: AttributeNode[]; } & { pk?: (AttributeNode | PrimaryExpressionNode)[], unique?: (AttributeNode | PrimaryExpressionNode)[] } = aggReport.getValue();
+    const settingMap: {
+      [index: string]: AttributeNode[];
+    } & {
+      pk?: (AttributeNode | PrimaryExpressionNode)[],
+      unique?: (AttributeNode | PrimaryExpressionNode)[],
+    } = aggReport.getValue();
 
-    for (const part of parts) {
+    parts.forEach((part) => {
       const name = extractVarNameFromPrimaryVariable(part as any).unwrap_or('').toLowerCase();
       if (name !== 'pk' && name !== 'unique') {
         errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
-        continue;
+        return;
       }
       if (settingMap[name] === undefined) {
         settingMap[name] = [part as PrimaryExpressionNode];
       } else {
         settingMap[name]!.push(part as PrimaryExpressionNode);
       }
-    }
+    });
 
-    const pkAttrs = settingMap['pk'] || [];
-    const pkeyAttrs = settingMap['primary key'] || [];
+    const pkAttrs = settingMap[SettingName.PK] || [];
+    const pkeyAttrs = settingMap[SettingName.PKey] || [];
     if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
-      errors.push(...[...pkAttrs, ...pkeyAttrs].map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'Either one of \'primary key\' and \'pk\' can appear', attr)));
+      errors.push(
+        ...[...pkAttrs, ...pkeyAttrs]
+          .map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'Either one of \'primary key\' and \'pk\' can appear', attr)),
+      );
     }
 
-    for (const name in settingMap) {
-      const attrs = settingMap[name]; 
+    forIn(settingMap, (attrs, name) => {
       switch (name) {
-        case 'note':
+        case SettingName.Note:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'note can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'note can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
@@ -316,16 +322,16 @@ export default class TableValidator implements ElementValidator {
             }
           });
           break;
-        case 'ref':
+        case SettingName.Ref:
           attrs.forEach((attr) => {
             if (!isUnaryRelationship(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'ref\' must be a valid unary relationship', attr.value || attr.name!));
             }
           });
           break;
-        case 'primary key':
+        case SettingName.PKey:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
@@ -333,9 +339,9 @@ export default class TableValidator implements ElementValidator {
             }
           });
           break;
-        case 'pk':
+        case SettingName.PK:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'pk\' can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'pk\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (attr instanceof AttributeNode && !isVoid(attr.value)) {
@@ -343,13 +349,16 @@ export default class TableValidator implements ElementValidator {
             }
           });
           break;
-        case 'not null':
+        case SettingName.NotNull: {
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'not null\' can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'not null\' can only appear once', attr)));
           }
-          const nullAttrs = settingMap['null'] || [];
+          const nullAttrs = settingMap[SettingName.Null] || [];
           if (attrs.length >= 1 && nullAttrs.length >= 1) {
-            errors.push(...[...attrs, ...nullAttrs].map((attr) => new CompileError(CompileErrorCode.CONFLICTING_SETTING, '\'not null\' and \'null\' can not be set at the same time', attr)));
+            errors.push(
+              ...[...attrs, ...nullAttrs]
+                .map((attr) => new CompileError(CompileErrorCode.CONFLICTING_SETTING, '\'not null\' and \'null\' can not be set at the same time', attr)),
+            );
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
@@ -357,9 +366,10 @@ export default class TableValidator implements ElementValidator {
             }
           });
           break;
-        case 'null':
+        }
+        case SettingName.Null:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'null\' can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'null\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
@@ -367,9 +377,9 @@ export default class TableValidator implements ElementValidator {
             }
           });
           break;
-        case 'unique':
+        case SettingName.Unique:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'unique\' can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'unique\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (attr instanceof AttributeNode && !isVoid(attr.value)) {
@@ -377,9 +387,9 @@ export default class TableValidator implements ElementValidator {
             }
           });
           break;
-        case 'increment':
+        case SettingName.Increment:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'increment\' can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'increment\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (attr instanceof AttributeNode && !isVoid(attr.value)) {
@@ -387,24 +397,28 @@ export default class TableValidator implements ElementValidator {
             }
           });
           break;
-        case 'default':
+        case SettingName.Default:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'default\' can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'default\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isValidDefaultValue(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'default\' must be a string literal, number literal, function expression, true, false or null', attr.value || attr.name!));
+              errors.push(new CompileError(
+                CompileErrorCode.INVALID_TABLE_SETTING,
+                '\'default\' must be a string literal, number literal, function expression, true, false or null',
+                attr.value || attr.name!,
+              ));
             }
-          })
+          });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting \'${name}\'`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
       }
-    }
+    });
     return errors;
   }
 
-  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     const errors = subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {
@@ -414,7 +428,7 @@ export default class TableValidator implements ElementValidator {
       const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
       return validator.validate();
     });
-    
+
     const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
     if (notes.length > 1) {
       errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
