@@ -5,7 +5,6 @@ import {
   ArrayNode,
   AttributeNode,
   BlockExpressionNode,
-  CallExpressionNode,
   ElementDeclarationNode,
   ExpressionNode,
   FunctionApplicationNode,
@@ -17,11 +16,11 @@ import {
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import {
   aggregateSettingList,
-  isExpressionANumber,
   isSimpleName,
   isUnaryRelationship,
   isValidAlias,
   isValidColor,
+  isValidColumnType,
   isValidDefaultValue,
   isValidName,
   isVoid,
@@ -32,7 +31,6 @@ import { ElementValidator } from '../types';
 import { ColumnSymbol, TablePartialInjectionSymbol, TableSymbol } from '../../symbol/symbols';
 import { createColumnSymbolIndex, createTablePartialInjectionSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
 import {
-  isAccessExpression,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
@@ -424,49 +422,6 @@ export default class TableValidator implements ElementValidator {
 
     return errors;
   }
-}
-
-function isValidColumnType(type: SyntaxNode): boolean {
-  if (
-    !(
-      type instanceof CallExpressionNode ||
-      isAccessExpression(type) ||
-      type instanceof PrimaryExpressionNode ||
-      type instanceof ArrayNode
-    )
-  ) {
-    return false;
-  }
-
-  if (type instanceof CallExpressionNode) {
-    if (type.callee === undefined || type.argumentList === undefined) {
-      return false;
-    }
-
-    if (!type.argumentList.elementList.every((e) => isExpressionANumber(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
-      return false;
-    }
-
-    // eslint-disable-next-line no-param-reassign
-    type = type.callee;
-  }
-  
-  while (type instanceof ArrayNode) {
-    if (type.array === undefined || type.indexer === undefined) {
-      return false;
-    }
-
-    if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isExpressionANumber(attribute.name))) {
-      return false;
-    }
-
-    // eslint-disable-next-line no-param-reassign
-    type = type.array;
-  }
-
-  const variables = destructureComplexVariable(type).unwrap_or(undefined);
-
-  return variables !== undefined && variables.length > 0;
 }
 
 function isAliasSameAsName(alias: string, nameFragments: string[]): boolean {

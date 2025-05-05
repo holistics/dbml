@@ -89,3 +89,21 @@ Ref short_ref: b.id < c.id [color: #aabbcc]
 Ref long_ref {
   c.id < b.c_id [color: #123456]
 }
+
+// Test numbers with unlimited sign
+Table unary_expression {
+  id int(-1) [default: -2]
+  id2 int(--1) [default: +-2]
+  id3 int (+-+---+0.1) [default: --++7.2225] // positive
+}
+
+TablePartial P_unary_expression {
+  id int(-1) [default: -2]
+  id2 int(--1) [default: +-2]
+  id3 int (+-+---+0.1) [default: --++-+--7.2225] // negative
+}
+
+Table injected_unary_expression {
+  id int
+  ~P_unary_expression
+}
