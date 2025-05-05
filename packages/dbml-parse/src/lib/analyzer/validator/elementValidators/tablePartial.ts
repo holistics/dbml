@@ -3,8 +3,10 @@ import _, { forIn, last } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
+  CallExpressionNode,
   ElementDeclarationNode,
   ExpressionNode,
   FunctionApplicationNode,
@@ -15,10 +17,10 @@ import {
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
 import {
   aggregateSettingList,
+  isExpressionANumber,
   isSimpleName,
   isUnaryRelationship,
   isValidColor,
-  isValidColumnType,
   isValidDefaultValue,
   isVoid,
   pickValidator,
@@ -28,6 +30,7 @@ import { ElementValidator } from '../types';
 import { ColumnSymbol, TablePartialSymbol } from '../../symbol/symbols';
 import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '../../symbol/symbolIndex';
 import {
+  isAccessExpression,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
@@ -35,6 +38,49 @@ import {
 import { SyntaxToken } from '../../../lexer/tokens';
 import SymbolTable from '../../symbol/symbolTable';
 import { ElementKind, SettingName } from '../../types';
+
+function isValidColumnType (type: SyntaxNode): boolean {
+  if (
+    !(
+      type instanceof CallExpressionNode
+      || isAccessExpression(type)
+      || type instanceof PrimaryExpressionNode
+      || type instanceof ArrayNode
+    )
+  ) {
+    return false;
+  }
+
+  if (type instanceof CallExpressionNode) {
+    if (type.callee === undefined || type.argumentList === undefined) {
+      return false;
+    }
+
+    if (!type.argumentList.elementList.every((e) => isExpressionANumber(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.callee;
+  }
+
+  while (type instanceof ArrayNode) {
+    if (type.array === undefined || type.indexer === undefined) {
+      return false;
+    }
+
+    if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isExpressionANumber(attribute.name))) {
+      return false;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    type = type.array;
+  }
+
+  const variables = destructureComplexVariable(type).unwrap_or(undefined);
+
+  return variables !== undefined && variables.length > 0;
+}
 
 export default class TablePartialValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken};
