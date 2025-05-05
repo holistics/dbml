@@ -111,6 +111,13 @@
       "note": {
         "value": ""
       }
+    },
+    {
+      "name": "TestDescriptionTable",
+      "schemaName": "dbo",
+      "note": {
+        "value": "This is the custom comment name on table."
+      }
     }
   ],
   "fields": {
@@ -1609,6 +1616,34 @@
         "increment": false,
         "note": {
           "value": ""
+        }
+      }
+    ],
+    "dbo.TestDescriptionTable": [
+      {
+        "name": "Id",
+        "type": {
+          "type_name": "int(10)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": "Primary key identifier."
+        }
+      },
+      {
+        "name": "Name",
+        "type": {
+          "type_name": "nvarchar(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": "Name of the entity."
         }
       }
     ]
