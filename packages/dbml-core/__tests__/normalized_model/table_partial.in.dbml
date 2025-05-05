@@ -55,6 +55,16 @@ Table users {
   ~test2
 }
 
+TablePartial testColWithTypeHaveArgs {
+  callExpColInTest1 int(4) [note: 'simple column with call expression as type']
+  callExpColInTest2 decimal(10, 2) [default: 0.1, note: 'column with type that have arguments and default value being a float number']
+}
+
+Table testColWithTypeHaveArgs {
+  id int
+  ~testColWithTypeHaveArgs
+}
+
 Table table_no_column_with_partial {
   ~email_index
 }

@@ -1,11 +1,24 @@
 import _ from 'lodash';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
-import { destructureComplexTuple, destructureComplexVariable, destructureMemberAccessExpression } from '../analyzer/utils';
-import { LiteralNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode } from '../parser/nodes';
-import { RelationCardinality, Table, TokenPosition } from './types';
+import {
+  destructureComplexTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
+  extractVariableFromExpression,
+} from '../analyzer/utils';
+import {
+  ArrayNode, CallExpressionNode, FunctionExpressionNode, LiteralNode,
+  PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
+} from '../parser/nodes';
+import {
+  ColumnType, RelationCardinality, Table, TokenPosition,
+} from './types';
 import { SyntaxTokenKind } from '../lexer/tokens';
+import { isExpressionAnIdentifierNode, isExpressionAQuotedString } from '../parser/utils';
+import { isExpressionANumber } from '../analyzer/validator/utils';
+import { NUMERIC_LITERAL_PREFIX } from '../../constants';
+import Report from '../report';
+import { CompileError, CompileErrorCode } from '../errors';
 
-export function extractNamesFromRefOperand(operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
+export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
   const { variables, tupleElements } = destructureComplexTuple(operand).unwrap();
 
   if (tupleElements) {
@@ -14,12 +27,12 @@ export function extractNamesFromRefOperand(operand: SyntaxNode, owner?: Table): 
         schemaName: owner!.schemaName,
         tableName: owner!.name,
         fieldNames: tupleElements,
-      }
+      };
     }
     return {
       tableName: variables.pop()!,
       schemaName: variables.pop() || null,
-      fieldNames: tupleElements
+      fieldNames: tupleElements,
     };
   }
 
@@ -28,7 +41,7 @@ export function extractNamesFromRefOperand(operand: SyntaxNode, owner?: Table): 
       schemaName: owner!.schemaName,
       tableName: owner!.name,
       fieldNames: [variables[0]],
-    }
+    };
   }
 
   return {
@@ -38,7 +51,7 @@ export function extractNamesFromRefOperand(operand: SyntaxNode, owner?: Table): 
   };
 }
 
-export function getMultiplicities(
+export function getMultiplicities (
   op: string,
 ): [RelationCardinality, RelationCardinality] {
   switch (op) {
@@ -50,30 +63,35 @@ export function getMultiplicities(
       return ['*', '1'];
     case '-':
       return ['1', '1'];
+    default:
+      throw new Error('Invalid relation op');
   }
-  throw new Error('Invalid relation op');
 }
 
-export function getTokenPosition(node: SyntaxNode): TokenPosition {
+export function getTokenPosition (node: SyntaxNode): TokenPosition {
   return {
     start: {
       offset: node.startPos.offset,
       line: node.startPos.line + 1,
       column: node.startPos.column + 1,
     },
-    end: { offset: node.endPos.offset, line: node.endPos.line + 1, column: node.endPos.column + 1 },
+    end: {
+      offset: node.endPos.offset,
+      line: node.endPos.line + 1,
+      column: node.endPos.column + 1,
+    },
   };
 }
 
-export function getColumnSymbolsOfRefOperand(ref: SyntaxNode): ColumnSymbol[] {
+export function getColumnSymbolsOfRefOperand (ref: SyntaxNode): ColumnSymbol[] {
   const colNode = destructureMemberAccessExpression(ref).unwrap_or(undefined)?.pop();
   if (colNode instanceof TupleExpressionNode) {
     return colNode.elementList.map((e) => e.referee as ColumnSymbol);
-  };
+  }
   return [colNode!.referee as ColumnSymbol];
 }
 
-export function extractElementName(nameNode: SyntaxNode): { schemaName: string[]; name: string } {
+export function extractElementName (nameNode: SyntaxNode): { schemaName: string[]; name: string } {
   const fragments = destructureComplexVariable(nameNode).unwrap();
   const name = fragments.pop()!;
   return {
@@ -82,13 +100,13 @@ export function extractElementName(nameNode: SyntaxNode): { schemaName: string[]
   };
 }
 
-export function extractColor(node: PrimaryExpressionNode & { expression: LiteralNode } & { literal: { kind: SyntaxTokenKind.COLOR_LITERAL }}): string {
+export function extractColor (node: PrimaryExpressionNode & { expression: LiteralNode } & { literal: { kind: SyntaxTokenKind.COLOR_LITERAL }}): string {
   return node.expression.literal!.value;
 }
 
 export function getRefId(sym1: ColumnSymbol, sym2: ColumnSymbol): string;
 export function getRefId(sym1: ColumnSymbol[], sym2: ColumnSymbol[]): string;
-export function getRefId(sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): string {
+export function getRefId (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): string {
   if (Array.isArray(sym1)) {
     const firstIds = sym1.map(({ id }) => id).sort().join(',');
     const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort().join(',');
@@ -102,7 +120,7 @@ export function getRefId(sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol
 
 export function isSameEndpoint(sym1: ColumnSymbol, sym2: ColumnSymbol): boolean;
 export function isSameEndpoint(sym1: ColumnSymbol[], sym2: ColumnSymbol[]): boolean;
-export function isSameEndpoint(sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): boolean {
+export function isSameEndpoint (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): boolean {
   if (Array.isArray(sym1)) {
     const firstIds = sym1.map(({ id }) => id).sort();
     const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort();
@@ -114,7 +132,7 @@ export function isSameEndpoint(sym1: ColumnSymbol | ColumnSymbol[], sym2: Column
   return firstId === secondId;
 }
 
-export function normalizeNoteContent(content: string): string {
+export function normalizeNoteContent (content: string): string {
   const lines = content.split('\n');
 
   // Top empty lines are trimmed
@@ -126,3 +144,104 @@ export function normalizeNoteContent(content: string): string {
 
   return trimmedTopEmptyLines.map((line) => line.slice(minIndent)).join('\n');
 }
+
+export function processDefaultValue (valueNode?: SyntaxNode):
+  {
+    type: 'string' | 'number' | 'boolean' | 'expression';
+    value: string | number;
+  } | undefined {
+  if (!valueNode) {
+    return undefined;
+  }
+
+  if (isExpressionAQuotedString(valueNode)) {
+    return {
+      value: extractQuotedStringToken(valueNode).unwrap(),
+      type: 'string',
+    };
+  }
+
+  if (isExpressionANumber(valueNode)) {
+    return {
+      type: 'number',
+      value: Number.parseFloat(valueNode.expression.literal.value),
+    };
+  }
+
+  if (isExpressionAnIdentifierNode(valueNode)) {
+    const value = valueNode.expression.variable.value.toLowerCase();
+    return {
+      value,
+      type: 'boolean',
+    };
+  }
+
+  if (
+    valueNode instanceof PrefixExpressionNode
+    && NUMERIC_LITERAL_PREFIX.includes(valueNode.op?.value as any)
+    && isExpressionANumber(valueNode.expression)
+  ) {
+    const number = Number.parseFloat(valueNode.expression.expression.literal.value);
+    return {
+      value: valueNode.op?.value === '-' ? 0 - number : number,
+      type: 'number',
+    };
+  }
+
+  if (valueNode instanceof FunctionExpressionNode && valueNode.value) {
+    return {
+      value: valueNode.value.value,
+      type: 'expression',
+    };
+  }
+
+  throw new Error('Unreachable');
+}
+
+/* eslint-disable no-param-reassign */
+export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, CompileError> {
+  let typeArgs: string | null = null;
+  if (typeNode instanceof CallExpressionNode) {
+    typeArgs = typeNode
+      .argumentList!.elementList.map((e) => {
+        if (isExpressionANumber(e)) {
+          return e.expression.literal.value;
+        }
+        if (isExpressionAQuotedString(e)) {
+          return extractQuotedStringToken(e).unwrap();
+        }
+        // e can only be an identifier here
+        return extractVariableFromExpression(e).unwrap();
+      })
+      .join(',');
+    typeNode = typeNode.callee!;
+  }
+  let typeIndexer: string = '';
+  while (typeNode instanceof ArrayNode) {
+    typeIndexer = `[${
+      typeNode
+        .indexer!.elementList.map((e) => (e.name as any).expression.literal.value)
+        .join(',')
+    }]${typeIndexer}`;
+    typeNode = typeNode.array!;
+  }
+
+  const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
+  if (typeSchemaName.length > 1) {
+    return new Report(
+      {
+        schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
+        type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
+        args: typeArgs,
+      },
+      [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)],
+    );
+  }
+
+  return new Report({
+    schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
+    type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
+    args: typeArgs,
+  });
+}
+/* eslint-enable no-param-reassign */
