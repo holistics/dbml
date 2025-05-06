@@ -5,7 +5,7 @@ import { DEFAULT_SCHEMA_NAME } from './config';
 class Field extends Element {
   constructor ({
     name, type, unique, pk, token, not_null: notNull, note, dbdefault,
-    increment, table = {}, noteToken = null,
+    increment, table = {}, noteToken = null, injectedPartial = null, injectedToken = null,
   } = {}) {
     super(token);
     if (!name) { this.error('Field must have a name'); }
@@ -22,6 +22,8 @@ class Field extends Element {
     this.increment = increment;
     this.endpoints = [];
     this.table = table;
+    this.injectedPartial = injectedPartial;
+    this.injectedToken = injectedToken;
     this.dbState = this.table.dbState;
     this.generateId();
     this.bindType();
@@ -85,18 +87,16 @@ class Field extends Element {
       note: this.note,
       dbdefault: this.dbdefault,
       increment: this.increment,
+      injectedPartialId: this.injectedPartial?.id,
     };
   }
 
   normalize (model) {
-    model.fields = {
-      ...model.fields,
-      [this.id]: {
-        id: this.id,
-        ...this.shallowExport(),
-        ...this.exportChildIds(),
-        ...this.exportParentIds(),
-      },
+    model.fields[this.id] = {
+      id: this.id,
+      ...this.shallowExport(),
+      ...this.exportChildIds(),
+      ...this.exportParentIds(),
     };
   }
 }

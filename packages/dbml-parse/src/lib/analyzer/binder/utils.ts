@@ -9,8 +9,9 @@ import ProjectBinder from './elementBinder/project';
 import RefBinder from './elementBinder/ref';
 import TableBinder from './elementBinder/table';
 import TableGroupBinder from './elementBinder/tableGroup';
+import TablePartialBinder from './elementBinder/tablePartial';
 
-export function pickBinder(element: ElementDeclarationNode & { type: SyntaxToken }) {
+export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
     case ElementKind.Enum:
       return EnumBinder;
@@ -26,6 +27,8 @@ export function pickBinder(element: ElementDeclarationNode & { type: SyntaxToken
       return NoteBinder;
     case ElementKind.Indexes:
       return IndexesBinder;
+    case ElementKind.TablePartial:
+      return TablePartialBinder;
     default:
       return CustomBinder;
   }

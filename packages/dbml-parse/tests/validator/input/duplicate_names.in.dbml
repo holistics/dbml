@@ -1,9 +1,9 @@
 Table Users {
-    id integer
+  id integer
 }
 
 Table Users {
-    name char(255)
+  name char(255)
 }
 
 TableGroup Users {
@@ -11,13 +11,21 @@ TableGroup Users {
 }
 
 TableGroup Users {
-    
+
+}
+
+Enum Users {
+
 }
 
 Enum Users {
 
 }
 
-Enum Users {
-    
+TablePartial Users {
+
+}
+
+TablePartial Users {
+
 }

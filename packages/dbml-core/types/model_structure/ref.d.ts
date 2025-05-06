@@ -3,8 +3,10 @@ import Endpoint from './endpoint';
 import Schema from './schema';
 import DbState from './dbState';
 import Database, { NormalizedDatabase } from './database';
+import TablePartial from './tablePartial';
 interface RawRef {
     name: string;
+    color?: string;
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
@@ -13,6 +15,7 @@ interface RawRef {
 }
 declare class Ref extends Element {
     name: string;
+    color?: string;
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
@@ -20,6 +23,7 @@ declare class Ref extends Element {
     dbState: DbState;
     id: number;
     database: Database;
+    injectedPartial?: TablePartial;
     constructor({ name, endpoints, onDelete, onUpdate, token, schema }: RawRef);
     generateId(): void;
     processEndpoints(rawEndpoints: any): void;
@@ -34,11 +38,13 @@ declare class Ref extends Element {
         name: string;
         onDelete: any;
         onUpdate: any;
+        injectedPartialId?: number;
     };
     shallowExport(): {
         name: string;
         onDelete: any;
         onUpdate: any;
+        injectedPartialId?: number;
     };
     exportChild(): {
         endpoints: {
@@ -59,8 +65,13 @@ declare class Ref extends Element {
 export interface NormalizedRef {
     [_id: number]: {
         id: number;
+        name?: string;
+        color?: string;
+        onUpdate?: string;
+        onDelete?: string;
         endpointIds: number[];
         schemaId: number;
+        injectedPartialId?: number;
     };
 }
 export default Ref;

@@ -7,7 +7,7 @@ import {
   isExpressionAVariableNode,
 } from '../../../parser/utils';
 import { ElementValidator } from '../types';
-import { aggregateSettingList, isSimpleName, pickValidator } from '../utils';
+import { aggregateSettingList, isSimpleName, isValidColor, pickValidator } from '../utils';
 import _ from 'lodash';
 import { getElementKind, isBinaryRelationship, isEqualTupleOperands } from '../../../analyzer/utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
@@ -96,7 +96,8 @@ export default class RefValidator implements ElementValidator {
 
       const args = [...field.args];
       if (_.last(args) instanceof ListExpressionNode) {
-        this.validateFieldSettings(_.last(args) as ListExpressionNode);
+        const errs = this.validateFieldSettings(_.last(args) as ListExpressionNode);
+        errors.push(...errs);
         args.pop();
       } else if (args[0] instanceof ListExpressionNode) {
         errors.push(...this.validateFieldSettings(args[0]));
@@ -126,6 +127,16 @@ export default class RefValidator implements ElementValidator {
           attrs.forEach((attr) => {
             if (!isValidPolicy(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `\'${name}\' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
+            }
+          });
+          break;
+        case 'color':
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)))
+          }
+          attrs.forEach((attr) => {
+            if (!isValidColor(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!));
             }
           });
           break;

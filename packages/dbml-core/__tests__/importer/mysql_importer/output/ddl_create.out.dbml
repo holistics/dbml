@@ -92,7 +92,7 @@ Table "boolean_table" {
 Table "default_table" {
   "c1" int [default: 42]
   "c2" int [default: `-42`]
-  "c3" varchar(256) [default: "utf8mb3'xxx"]
+  "c3" varchar(256) [default: 'utf8mb3'xxx']
 }
 
 Table "ts_table" {
@@ -106,7 +106,7 @@ Table "ts_table" {
   "ts8" TIMESTAMP(6) [not null]
   "ts9" TIMESTAMP(6) [not null, default: `NOW(6)`]
   "ts10" TIMESTAMP [default: NULL]
-  "ts11" TIMESTAMP [not null, default: "2038-01-01 00:00:00"]
+  "ts11" TIMESTAMP [not null, default: '2038-01-01 00:00:00']
 }
 
 Table "dt_table" {
@@ -118,7 +118,7 @@ Table "dt_table" {
   "dt6" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
   "dt7" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
   "dt10" DATETIME [default: NULL]
-  "dt11" DATETIME [default: "2038-01-01 00:00:00"]
+  "dt11" DATETIME [default: '2038-01-01 00:00:00']
 }
 
 Table "with_check" {
@@ -438,7 +438,7 @@ Table "daily_intelligences" {
 }
 
 Table "auth_realm_clients" {
-  "pk_realm" int [pk, not null, default: "0"]
+  "pk_realm" int [pk, not null, default: '0']
   "fk_realm" int [default: NULL]
   "client_id" varchar(150) [not null]
   "client_secret" blob [not null]
@@ -476,9 +476,9 @@ Table "\\test\\_table\\" {
 }
 
 Table "global_priv" {
-  "Host" CHAR(60) [not null, default: ""]
-  "User" CHAR(80) [not null, default: ""]
-  "Privilege" LONGTEXT [not null, default: "{}"]
+  "Host" CHAR(60) [not null, default: '']
+  "User" CHAR(80) [not null, default: '']
+  "Privilege" LONGTEXT [not null, default: '{}']
 
   Indexes {
     (Host, User) [pk]

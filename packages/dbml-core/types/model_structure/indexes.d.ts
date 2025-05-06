@@ -3,6 +3,7 @@ import DbState from './dbState';
 import Element, { RawNote, Token } from './element';
 import IndexColumn from './indexColumn';
 import Table from './table';
+import TablePartial from './tablePartial';
 interface RawIndex {
     columns: IndexColumn;
     type: any;
@@ -23,6 +24,7 @@ declare class Index extends Element {
     noteToken: Token;
     table: Table;
     dbState: DbState;
+    injectedPartial: TablePartial;
     constructor({ columns, type, unique, pk, token, name, note, table }: RawIndex);
     generateId(): void;
     processIndexColumns(rawColumns: any): void;
@@ -38,6 +40,7 @@ declare class Index extends Element {
         unique: boolean;
         pk: string;
         note: string;
+        injectedPartialId?: number;
     };
     exportChild(): {
         columns: {
@@ -57,6 +60,7 @@ declare class Index extends Element {
         unique: boolean;
         pk: string;
         note: string;
+        injectedPartialId?: number;
     };
     normalize(model: NormalizedDatabase): void;
 }

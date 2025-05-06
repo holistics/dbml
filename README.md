@@ -43,8 +43,8 @@ Example of a database definition of a simple blogging site:
 
 ## Community Contributions
 
-* [Emacs Mode for DBML (Contributed by ccod)](https://github.com/ccod/dbd-mode)
-* [Vim Plugin for DBML (Contributed by jidn)](https://github.com/jidn/vim-dbml)
+* [Emacs Mode for DBML by ccod](https://github.com/ccod/dbd-mode)
+* [Vim Plugin for DBML by jidn](https://github.com/jidn/vim-dbml)
 * [VSCode Plugin for DBML by duynvu](https://marketplace.visualstudio.com/items?itemName=duynvu.dbml-language)
 * [Python parser for DBML by Vanderhoof](https://github.com/Vanderhoof/PyDBML)
 * [FloorPlan: Android's Room to DBML by julioz](https://github.com/julioz/FloorPlan)
@@ -54,8 +54,11 @@ Example of a database definition of a simple blogging site:
 * [dbml-renderer: A DBML CLI renderer](https://github.com/softwaretechnik-berlin/dbml-renderer)
 * [dbml-parser: A DBML parser written on PHP8 by Butschster](https://github.com/butschster/dbml-parser)
 * [Kacher: Laravel's Database Schemas to DBML by Arsanandha Aphisitworachorch](https://github.com/aphisitworachorch/kacher)
-* [d365fo-entity-schema: Generate DBML from Dynamics 365 Finance and Operations ](https://github.com/noakesey/d365fo-entity-schema)
+* [d365fo-entity-schema: Generate DBML from Dynamics 365 Finance and Operations](https://github.com/noakesey/d365fo-entity-schema)
+* [Treesitter for DBML](https://github.com/dynamotn/tree-sitter-dbml)
 * [DB2Code: Generate DBML from Maven](https://github.com/alberlau/DB2Code)
 * [dbml-java: A DBML parser written on Java 17 by Nils Wende](https://github.com/nilswende/dbml-java)
 * [SchemaToDbml: A gem that generates DBML from Rails schema.rb by Ricardo Ribeiro](https://github.com/ricardojcribeiro/schema_to_dbml)
-* [Snowflake DBML Generator by 	Ryan Rozich](https://github.com/ryanrozich/snowflake-dbml-generator)
+* [Snowflake DBML Generator by Ryan Rozich](https://github.com/ryanrozich/snowflake-dbml-generator)
+* [prisma-dbml-generator: Generate DBML schema from Prisma Schema by Marc Stammerjohann](https://github.com/notiz-dev/prisma-dbml-generator)
+* [C# parser for Dbml by Niels Bosma](https://github.com/Ivy-Interactive/Ivy.Dbml.Parser)

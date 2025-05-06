@@ -28,8 +28,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "name",
@@ -68,6 +67,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "headerColor": "#555"
     },
     {
@@ -97,8 +97,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "name",
@@ -139,6 +138,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "note": {
         "value": "name is required",
         "token": {
@@ -182,8 +182,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "name",
@@ -247,6 +246,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "headerColor": "#17DACC",
       "note": {
         "value": "product must have price",
@@ -291,8 +291,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "user_id",
@@ -377,6 +376,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "headerColor": "#08DAFF",
       "note": {
         "value": "merchants sell a lot",
@@ -517,5 +517,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

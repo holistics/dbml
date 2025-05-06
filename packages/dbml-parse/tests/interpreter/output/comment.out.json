@@ -28,8 +28,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "user_id",
@@ -79,7 +78,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "note": {
             "value": "Status of an order",
             "token": {
@@ -119,7 +117,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "note": {
             "value": "When order created",
             "token": {
@@ -171,14 +168,14 @@
           ],
           "token": {
             "start": {
-              "offset": 351,
-              "line": 23,
-              "column": 3
+              "offset": 372,
+              "line": 24,
+              "column": 5
             },
             "end": {
-              "offset": 420,
-              "line": 26,
-              "column": 4
+              "offset": 387,
+              "line": 24,
+              "column": 20
             }
           },
           "pk": false,
@@ -206,18 +203,19 @@
           ],
           "token": {
             "start": {
-              "offset": 351,
-              "line": 23,
-              "column": 3
+              "offset": 399,
+              "line": 25,
+              "column": 5
             },
             "end": {
-              "offset": 420,
-              "line": 26,
-              "column": 4
+              "offset": 409,
+              "line": 25,
+              "column": 15
             }
           }
         }
-      ]
+      ],
+      "partials": []
     }
   ],
   "notes": [],
@@ -397,5 +395,6 @@
   ],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

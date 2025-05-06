@@ -1,0 +1,45 @@
+Table b [headercolor: #aaaaaa] {
+  id int
+  c_id int
+  id2 int
+  id3 int
+  id4 int
+  id5 int
+  id6 int
+  id7 int
+}
+
+Table c {
+  id int
+  b_id int
+  id2 int
+  id3 int
+  id4 int
+  id5 int
+  id6 int
+  id7 int
+}
+
+// Short form
+Ref short_ref: b.id < c.id [color: #aabbcc, update: set null]
+
+// Long form
+Ref long_ref {
+  c.id < b.c_id [color: #123456, delete: cascade]
+}
+
+Ref error_ref2 [color: #123456] {
+  c.id2 < b.id2
+}
+
+Ref error_ref3 {
+  c.id3 < b.id3 [color: #not_a_color]
+}
+
+Ref error_ref4 {
+  c.id4 < b.id4 [hello: goodbye]
+}
+
+Ref error_shortref2 [color: #123456]: c.id5 < b.id5
+Ref error_shortref3: c.id6 < b.id6 [color: #not_a_color]
+Ref error_shortref4: c.id7 < b.id7 [hello: goodbye]

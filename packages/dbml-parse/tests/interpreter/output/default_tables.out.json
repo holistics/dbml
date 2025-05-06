@@ -29,7 +29,6 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "type": "number",
             "value": 123
@@ -83,7 +82,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "Completed",
             "type": "string"
@@ -112,7 +110,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "now()",
             "type": "expression"
@@ -131,7 +128,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "order_items",
@@ -220,7 +218,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "products",
@@ -249,8 +248,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "name",
@@ -275,7 +273,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "null",
             "type": "boolean"
@@ -306,8 +303,8 @@
           "unique": false,
           "not_null": true,
           "dbdefault": {
-            "value": -1,
-            "type": "number"
+            "type": "number",
+            "value": -1
           }
         },
         {
@@ -333,10 +330,9 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
-            "value": -123.12,
-            "type": "number"
+            "type": "number",
+            "value": -123.12
           }
         },
         {
@@ -362,7 +358,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "true",
             "type": "boolean"
@@ -391,7 +386,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "current_date + interval 1 year",
             "type": "expression"
@@ -410,7 +404,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],
@@ -418,5 +413,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

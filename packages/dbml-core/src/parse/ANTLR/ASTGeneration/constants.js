@@ -4,6 +4,7 @@ export const TABLE_CONSTRAINT_KIND = {
   FK: 'fk',
   UNIQUE: 'unique',
   PK: 'pk',
+  DEFAULT: 'default',
 };
 
 export const COLUMN_CONSTRAINT_KIND = {
@@ -14,6 +15,7 @@ export const COLUMN_CONSTRAINT_KIND = {
   INCREMENT: 'increment',
   INLINE_REF: 'inline_ref',
   NOTE: 'note',
+  CHECK: 'check',
 };
 
 export const DATA_TYPE = {

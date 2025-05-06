@@ -5,7 +5,7 @@ import antlr4 from 'antlr4';
 
 
 
-import PostgreSQLLexerBase, { checkLA, HandleLessLessGreaterGreater, pushTag, isTag } from '../../ASTGeneration/postgres/PostgreSQLLexerBase.js';
+import PostgreSQLLexerBase, { checkLA, HandleLessLessGreaterGreater, pushTag, isTag, charIsLetter } from '../../ASTGeneration/postgres/PostgreSQLLexerBase.js';
 
 const serializedATN = [4,0,679,6791,6,-1,6,-1,6,-1,6,-1,6,-1,2,0,7,0,2,1,
 7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,

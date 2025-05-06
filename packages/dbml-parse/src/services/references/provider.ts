@@ -2,17 +2,17 @@ import { getOffsetFromMonacoPosition } from '../utils';
 import Compiler from '../../compiler';
 import { SyntaxNodeKind } from '../../lib/parser/nodes';
 import {
- Location, ReferenceProvider, TextModel, Position,
+  Location, ReferenceProvider, TextModel, Position,
 } from '../types';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;
 
-  constructor(compiler: Compiler) {
+  constructor (compiler: Compiler) {
     this.compiler = compiler;
   }
 
-  provideReferences(model: TextModel, position: Position): Location[] {
+  provideReferences (model: TextModel, position: Position): Location[] {
     const { uri } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
 
@@ -20,8 +20,8 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
     while (containers.length !== 0) {
       const node = containers.pop();
       if (
-        node &&
-        [
+        node
+        && [
           SyntaxNodeKind.ELEMENT_DECLARATION,
           SyntaxNodeKind.FUNCTION_APPLICATION,
           SyntaxNodeKind.PRIMARY_EXPRESSION,

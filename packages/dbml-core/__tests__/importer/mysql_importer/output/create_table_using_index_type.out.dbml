@@ -12,7 +12,7 @@ Table "booking" {
   "id" int(11) [pk, not null, increment]
   "user_id_one" int(11) [default: NULL]
   "user_id_two" int(11) [default: NULL]
-  "timezone" varchar(512) [not null, default: ""]
+  "timezone" varchar(512) [not null, default: '']
   "date" varchar(255) [default: NULL]
   "spot" varchar(255) [default: NULL]
   "address" text
@@ -21,17 +21,17 @@ Table "booking" {
   "message_id" text
   "channel_id" text
   "privateChat" varchar(255) [default: NULL]
-  "cron_status_before" int(11) [default: "0"]
-  "cron_status_during" int(11) [default: "0"]
-  "cron_status_after" int(11) [default: "0"]
+  "cron_status_before" int(11) [default: '0']
+  "cron_status_during" int(11) [default: '0']
+  "cron_status_after" int(11) [default: '0']
   "before_time_3hrs" varchar(100) [default: NULL]
   "before_time_20mins" varchar(100) [default: NULL]
   "after_time_8hrs" varchar(100) [default: NULL]
-  "user_one_status" tinyint(2) [not null, default: "0"]
-  "user_two_status" tinyint(2) [not null, default: "0"]
-  "feedback_notification" int(11) [not null, default: "0"]
-  "feedback_notification_two" int(11) [not null, default: "0"]
-  "Created_at" varchar(255) [not null, default: ""]
+  "user_one_status" tinyint(2) [not null, default: '0']
+  "user_two_status" tinyint(2) [not null, default: '0']
+  "feedback_notification" int(11) [not null, default: '0']
+  "feedback_notification_two" int(11) [not null, default: '0']
+  "Created_at" varchar(255) [not null, default: '']
 
   Indexes {
     user_id_two [type: btree, name: "venue"]

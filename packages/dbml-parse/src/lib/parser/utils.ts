@@ -18,6 +18,7 @@ import {
   ListExpressionNode,
   LiteralNode,
   NormalExpressionNode,
+  PartialInjectionNode,
   PostfixExpressionNode,
   PrefixExpressionNode,
   PrimaryExpressionNode,
@@ -269,6 +270,8 @@ export function getMemberChain(node: SyntaxNode): Readonly<(SyntaxNode | SyntaxT
       node.indexer,
     )
   }
+
+  if (node instanceof PartialInjectionNode) return filterUndefined(node.partial);
 
   if (node instanceof GroupExpressionNode) {
     throw new Error('This case is already handled by TupleExpressionNode');

@@ -19,7 +19,7 @@ CREATE TABLE [products] (
   [merchant_id] int NOT NULL,
   [price] int,
   [status] nvarchar(255) NOT NULL CHECK ([status] IN ('Out of Stock', 'In Stock')),
-  [created_at] datetime DEFAULT (now())
+  [created_at] datetime DEFAULT (GETDATE())
 )
 GO
 

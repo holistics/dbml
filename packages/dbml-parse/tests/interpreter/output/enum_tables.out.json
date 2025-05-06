@@ -28,8 +28,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "status",
@@ -54,7 +53,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "note": {
             "value": "This is a column note",
             "token": {
@@ -84,7 +82,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "orders",
@@ -173,7 +172,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],
@@ -413,5 +413,6 @@
   ],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }
