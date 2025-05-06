@@ -28,8 +28,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": true,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "user_id",
@@ -116,6 +115,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "headerColor": "#fff"
     },
     {
@@ -192,7 +192,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "type": "number",
             "value": 1
@@ -211,7 +210,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "products",
@@ -240,8 +240,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "name",
@@ -360,7 +359,6 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false,
           "dbdefault": {
             "value": "now()",
             "type": "expression"
@@ -417,14 +415,14 @@
           ],
           "token": {
             "start": {
-              "offset": 699,
-              "line": 46,
-              "column": 3
+              "offset": 713,
+              "line": 47,
+              "column": 5
             },
             "end": {
-              "offset": 791,
-              "line": 49,
-              "column": 4
+              "offset": 759,
+              "line": 47,
+              "column": 51
             }
           },
           "pk": false,
@@ -452,21 +450,22 @@
           ],
           "token": {
             "start": {
-              "offset": 699,
-              "line": 46,
-              "column": 3
+              "offset": 764,
+              "line": 48,
+              "column": 5
             },
             "end": {
-              "offset": 791,
-              "line": 49,
-              "column": 4
+              "offset": 787,
+              "line": 48,
+              "column": 28
             }
           },
           "pk": false,
           "unique": true,
           "type": "hash"
         }
-      ]
+      ],
+      "partials": []
     },
     {
       "name": "users",
@@ -495,8 +494,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "full_name",
@@ -543,8 +541,7 @@
           "inline_refs": [],
           "pk": false,
           "increment": false,
-          "unique": true,
-          "not_null": false
+          "unique": true
         },
         {
           "name": "gender",
@@ -651,7 +648,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "merchants",
@@ -680,8 +678,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "merchant_name",
@@ -788,7 +785,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "countries",
@@ -817,8 +815,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "name",
@@ -879,7 +876,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],
@@ -1421,6 +1419,7 @@
     "refs": [],
     "tableGroups": [],
     "tables": [],
+    "tablePartials": [],
     "token": {
       "start": {
         "offset": 0,
@@ -1450,5 +1449,6 @@
       }
     },
     "database_type": "PostgreSQL"
-  }
+  },
+  "tablePartials": []
 }

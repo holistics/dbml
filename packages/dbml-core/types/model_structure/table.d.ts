@@ -4,7 +4,9 @@ import Index from './indexes';
 import Schema from './schema';
 import DbState from './dbState';
 import TableGroup from './tableGroup';
+import TablePartial from './tablePartial';
 import { NormalizedDatabase } from './database';
+
 interface RawTable {
     name: string;
     alias: string;
@@ -14,7 +16,9 @@ interface RawTable {
     schema: Schema;
     token: Token;
     headerColor: string;
+    partials: TablePartial[];
 }
+
 declare class Table extends Element {
     name: string;
     alias: string;
@@ -27,6 +31,8 @@ declare class Table extends Element {
     dbState: DbState;
     id: number;
     group: TableGroup;
+    partials: TablePartial[];
+
     constructor({ name, alias, note, fields, indexes, schema, token, headerColor }: RawTable);
     generateId(): void;
     processFields(rawFields: any): void;
@@ -37,6 +43,7 @@ declare class Table extends Element {
     checkIndex(index: any): void;
     findField(fieldName: any): Field;
     checkSameId(table: any): boolean;
+    processPartials(): void;
     export(): {
         fields: {
             name: string;
@@ -63,6 +70,7 @@ declare class Table extends Element {
         alias: string;
         note: string;
         headerColor: string;
+        partials: TablePartial[];
     };
     exportChild(): {
         fields: {
@@ -100,9 +108,11 @@ declare class Table extends Element {
         alias: string;
         note: string;
         headerColor: string;
+        partials: TablePartial[];
     };
     normalize(model: NormalizedDatabase): void;
 }
+
 export interface NormalizedTable {
     [id: number]: {
         id: number;
@@ -114,6 +124,8 @@ export interface NormalizedTable {
         indexIds: number[];
         schemaId: number;
         groupId: number;
+        partials: TablePartial[];
     };
 }
+
 export default Table;

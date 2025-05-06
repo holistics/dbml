@@ -111,7 +111,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "merchants",
@@ -253,8 +254,7 @@
           ],
           "pk": false,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         }
       ],
       "token": {
@@ -269,7 +269,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],
@@ -372,5 +373,6 @@
       }
     }
   ],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

@@ -25,14 +25,17 @@
           "name": "status",
           "type": {
             "type_name": "orders_status_enum",
-            "args": null
+            "args": [
+              "'fulfilled'",
+              "'pending'",
+              "'new'"
+            ]
           }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         }
       ],
@@ -58,8 +61,7 @@
         {
           "name": "product_name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
@@ -69,7 +71,7 @@
             "args": null
           },
           "dbdefault": {
-            "value": 1,
+            "value": "1",
             "type": "number"
           }
         }
@@ -89,15 +91,13 @@
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "price",
           "type": {
-            "type_name": "decimal(10,4)",
-            "args": "10,4"
+            "type_name": "decimal(10,4)"
           }
         },
         {
@@ -143,15 +143,13 @@
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "email",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "unique": true
         },
@@ -198,15 +196,13 @@
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "continent_name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         }
       ],
@@ -232,7 +228,7 @@
           "relation": "1"
         }
       ],
-      "onDelete": "restrict"
+      "onDelete": "RESTRICT"
     },
     {
       "name": null,
@@ -252,7 +248,7 @@
           "relation": "1"
         }
       ],
-      "onDelete": "cascade"
+      "onDelete": "CASCADE"
     },
     {
       "name": null,
@@ -274,7 +270,7 @@
           "relation": "1"
         }
       ],
-      "onDelete": "set null"
+      "onDelete": "SET NULL"
     },
     {
       "name": null,
@@ -294,8 +290,17 @@
           "relation": "1"
         }
       ],
-      "onDelete": "no action"
+      "onDelete": "NO ACTION"
     }
   ],
-  "enums": []
+  "enums": [
+    {
+      "name": "orders_status_enum",
+      "values": [
+        { "name": "fulfilled" },
+        { "name": "pending" },
+        { "name": "new" }
+      ]
+    }
+  ]
 }

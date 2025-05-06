@@ -1,0 +1,12 @@
+Table table1 {
+  id int [pk]
+}
+
+TableGroup group1 [
+  note: '''
+  note inside setting list of a table group
+  ''',
+  color: #06c
+] {
+  table1
+}

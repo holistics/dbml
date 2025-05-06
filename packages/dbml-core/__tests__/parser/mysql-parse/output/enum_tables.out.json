@@ -15,7 +15,13 @@
           "name": "status",
           "type": {
             "type_name": "jobs_status_enum",
-            "args": "'created','running','done','failed','wait for validation'"
+            "args": [
+              "'created'",
+              "'running'",
+              "'done'",
+              "'failed'",
+              "'wait for validation'"
+            ]
           }
         }
       ],
@@ -35,22 +41,29 @@
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "priority",
           "type": {
             "type_name": "orders_priority_enum",
-            "args": "'low','medium','high'"
+            "args": [
+              "'low'",
+              "'medium'",
+              "'high'"
+            ]
           }
         },
         {
           "name": "status",
           "type": {
             "type_name": "orders_status_enum",
-            "args": "'pending','processing','done'"
+            "args": [
+              "'pending'",
+              "'processing'",
+              "'done'"
+            ]
           }
         }
       ],

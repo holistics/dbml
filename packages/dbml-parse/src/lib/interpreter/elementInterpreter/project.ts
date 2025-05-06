@@ -7,6 +7,7 @@ import { EnumInterpreter } from "./enum";
 import { RefInterpreter } from "./ref";
 import { TableInterpreter } from "./table";
 import { TableGroupInterpreter } from "./tableGroup";
+import { TablePartialInterpreter } from "./tablePartial";
 
 export class ProjectInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -16,7 +17,7 @@ export class ProjectInterpreter implements ElementInterpreter {
   constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.project = { enums: [], refs: [], tableGroups: [], tables: [] };
+    this.project = { enums: [], refs: [], tableGroups: [], tables: [], tablePartials: [] };
   }
 
   interpret(): CompileError[] {
@@ -68,6 +69,11 @@ export class ProjectInterpreter implements ElementInterpreter {
             token: getTokenPosition(sub),
           }
           return [];
+        }
+        case 'tablepartial': {
+          const errors = (new TablePartialInterpreter(sub, this.env)).interpret();
+          this.project.tablePartials!.push(this.env.tablePartials.get(sub)!);
+          return errors;
         }
         default: {
           (this.project as any)[sub.type!.value.toLowerCase()] = extractQuotedStringToken((sub.body as FunctionApplicationNode).callee).unwrap();

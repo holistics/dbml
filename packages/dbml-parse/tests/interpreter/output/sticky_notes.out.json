@@ -28,8 +28,7 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false,
-          "not_null": false
+          "unique": false
         },
         {
           "name": "username",
@@ -70,6 +69,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "headerColor": "#3498DB"
     }
   ],
@@ -111,5 +111,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

@@ -50,7 +50,7 @@ Enum post_status {
 Ref: posts.user_id > users.id // many-to-one
 ```
 
-_See the above dbml doc [visualized on dbdiagram](https://dbdiagram.io/d/5d5cb582ced98361d6ddc5ab)_
+_See the above dbml doc visualized on [dbdiagram](https://dbdiagram.io/d/e-commerce-database-schema-6320585c0911f91ba59a41d4) and [dbdocs](https://dbdocs.io/Holistics/Ecommerce)_
 
 For full DBML syntax documentation, refer to the [Syntax](/docs) section.
 
@@ -60,8 +60,8 @@ _Note: DBML is not to be confused with Microsoft's DBML file extension (XML form
 
 DBML is born to solve the frustrations of developers working on large, complex software projects:
 
-* Difficulty building up a mental "big picture" of an entire project's database structure
-* Trouble understanding tables and what their fields mean, and which feature are they related to;
+* Difficulty building up a mental "big picture" of an entire project's database structure.
+* Trouble understanding tables and what their fields mean, and which feature are they related to.
 * The existing ER diagram and/or SQL DDL code is poorly written and hard to read (and usually outdated).
 
 Our recommended best practices is to have a `database.dbml` file in your root repository
@@ -89,10 +89,11 @@ instead of low-level database creation.
 
 DBML comes with:
 
-1. A free database visualiser at [dbdiagram.io](https://dbdiagram.io)
-2. A free database documentation builder at [dbdocs.io](https://dbdocs.io)
-3. A command-line tool to help to convert SQL to DBML files and vice versa.
-4. An [open-source JS library](/js-module) (NPM package) for you to programmatically convert between DBML and SQL DDL.
+1. A free database visualiser at [dbdiagram.io](https://dbdiagram.io?utm_source=dbml).
+2. A free database documentation builder at [dbdocs.io](https://dbdocs.io?utm_source=dbml).
+3. A free SQL playground at [runsql.com](https://runsql.com?utm_source=dbml).
+4. A command-line tool to help to convert SQL to DBML files and vice versa.
+5. An [open-source JS library](/js-module/core) (NPM package) for you to programmatically convert between DBML and SQL DDL.
 
 ### dbdiagram
 
@@ -106,6 +107,14 @@ DBML comes with:
 
 <video width="100%" height="auto" controls autoPlay muted loop>
   <source src="https://cdn.holistics.io/dbdocs/dbdocs-tour.mp4" type="video/mp4"></source>
+</video>
+
+### RunSQL
+
+[runsql.com](https://runsql.com?utm_source=dbml) is a free & simple tool to create mock database environments to validate your SQL queries.
+
+<video width="100%" height="auto" controls autoPlay muted loop>
+  <source src="https://runsql.com/assets/hero-video-DsrQvnnA.webm" type="video/mp4"></source>
 </video>
 
 ### Command-line Tool (CLI)
@@ -122,8 +131,8 @@ After 1 year and over 100k diagrams created by 60k internet users later, we real
 
 ## DBML Statistics
 
-* 110k DBML docs created via dbdiagram.io (as of July 2019)
-* 59.5k users using DBML (as of July 2019)
+* 2.5M DBML docs created via dbdiagram.io and dbdocs.io (as of Feb 2025).
+* 1.4M users using DBML (as of Feb 2025).
 
 ## Who's behind DBML?
 
@@ -131,8 +140,8 @@ DBML is created and maintained by [Holistics](https://holistics.io?utm_source=db
 
 ## Community
 
-* DBML is [being open-sourced on Github](https://github.com/holistics/dbml/)
-* Have a question, suggestion or want to contribute? Use [the dbml issues page](https://github.com/holistics/dbml/issues)
+* DBML is [being open-sourced on Github](https://github.com/holistics/dbml/).
+* Have a question, suggestion or want to contribute? Use [the dbml issues page](https://github.com/holistics/dbml/issues).
 
 ## Community Contributions
 
@@ -148,7 +157,10 @@ DBML is created and maintained by [Holistics](https://holistics.io?utm_source=db
 * [dbml-parser: A DBML parser written on PHP8 by Butschster](https://github.com/butschster/dbml-parser)
 * [Kacher: Laravel's Database Schemas to DBML by Arsanandha Aphisitworachorch](https://github.com/aphisitworachorch/kacher)
 * [d365fo-entity-schema: Generate DBML from Dynamics 365 Finance and Operations](https://github.com/noakesey/d365fo-entity-schema)
+* [Treesitter for DBML](https://github.com/dynamotn/tree-sitter-dbml)
 * [DB2Code: Generate DBML from Maven](https://github.com/alberlau/DB2Code)
 * [dbml-java: A DBML parser written on Java 17 by Nils Wende](https://github.com/nilswende/dbml-java)
 * [SchemaToDbml: A gem that generates DBML from Rails schema.rb by Ricardo Ribeiro](https://github.com/ricardojcribeiro/schema_to_dbml)
 * [Snowflake DBML Generator by Ryan Rozich](https://github.com/ryanrozich/snowflake-dbml-generator)
+* [prisma-dbml-generator: Generate DBML schema from Prisma Schema by Marc Stammerjohann](https://github.com/notiz-dev/prisma-dbml-generator)
+* [C# parser for Dbml by Niels Bosma](https://github.com/Ivy-Interactive/Ivy.Dbml.Parser)

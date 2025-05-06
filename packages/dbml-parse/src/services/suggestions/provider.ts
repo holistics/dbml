@@ -33,6 +33,7 @@ import {
   IdentiferStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
+  PartialInjectionNode,
   PrefixExpressionNode,
   ProgramNode,
   SyntaxNode,
@@ -40,6 +41,7 @@ import {
 } from '../../lib/parser/nodes';
 import { getOffsetFromMonacoPosition } from '../utils';
 import { isComment } from '../../lib/lexer/utils';
+import { SettingName } from '../../lib/analyzer/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -68,7 +70,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       ].find((token) => isComment(token) && isOffsetWithinSpan(offset, token))
     ) {
       return noSuggestions();
-    } 
+    }
 
     if (bOcTokenId === undefined) {
       return suggestTopLevelElementType();
@@ -76,7 +78,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     // Check if we're inside a string
     if ([SyntaxTokenKind.STRING_LITERAL, SyntaxTokenKind.QUOTED_STRING].includes(bOcToken.kind) && isOffsetWithinSpan(offset, bOcToken)) {
-      return noSuggestions(); 
+      return noSuggestions();
     }
 
     const element = this.compiler.container.element(offset);
@@ -129,6 +131,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         return suggestInAttribute(this.compiler, offset, container);
       } else if (container instanceof TupleExpressionNode) {
         return suggestInTuple(this.compiler, offset);
+      } else if (container instanceof PartialInjectionNode) {
+        return suggestOnPartialInjectionOp(this.compiler, offset);
       } else if (container instanceof FunctionApplicationNode) {
         return suggestInSubField(this.compiler, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
@@ -145,14 +149,26 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
   }
 }
 
-function suggestOnRelOp(
+function suggestOnPartialInjectionOp (
+  compiler: Compiler,
+  offset: number,
+) {
+  const parent = compiler.container.element(offset);
+  return suggestNamesInScope(compiler, offset, parent, [SymbolKind.TablePartial]);
+}
+
+function suggestOnRelOp (
   compiler: Compiler,
   offset: number,
   container: (PrefixExpressionNode | InfixExpressionNode) & { op: SyntaxToken },
 ): CompletionList {
   const scopeKind = compiler.container.scopeKind(offset);
 
-  if ([ScopeKind.REF, ScopeKind.TABLE].includes(scopeKind)) {
+  if ([
+    ScopeKind.REF,
+    ScopeKind.TABLE,
+    ScopeKind.TABLEPARTIAL,
+  ].includes(scopeKind)) {
     const res = suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
       SymbolKind.Table,
       SymbolKind.Schema,
@@ -259,88 +275,92 @@ function suggestInAttribute(
   return noSuggestions();
 }
 
-function suggestAttributeName(compiler: Compiler, offset: number): CompletionList {
+function suggestAttributeName (compiler: Compiler, offset: number): CompletionList {
   const element = compiler.container.element(offset);
+  if (element instanceof ProgramNode) return noSuggestions();
+
   const scopeKind = compiler.container.scopeKind(offset);
-  if (element instanceof ProgramNode) {
-    return noSuggestions();
-  }
   if (element.body && !isOffsetWithinSpan(offset, (element as ElementDeclarationNode).body!)) {
+    let attributes: string[];
+
     switch (scopeKind) {
       case ScopeKind.TABLE:
-        return {
-          suggestions: [
-            {
-              label: 'headercolor',
-              insertText: 'headercolor: ',
-              kind: CompletionItemKind.Field,
-              insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-              range: undefined as any,
-            },
-            {
-              label: 'note',
-              insertText: 'note: ',
-              kind: CompletionItemKind.Field,
-              insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-              range: undefined as any,
-            },
-          ],
-        };
+      case ScopeKind.TABLEPARTIAL:
+        attributes = [SettingName.HeaderColor, SettingName.Note];
+        break;
+
+      case ScopeKind.TABLEGROUP:
+        attributes = [SettingName.Color, SettingName.Note];
+        break;
+
       default:
-        return noSuggestions();
+        attributes = [];
     }
+
+    return {
+      suggestions: attributes.map((name) => {
+        return {
+          label: name,
+          insertText: `${name}: `,
+          kind: CompletionItemKind.Field,
+          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+          range: undefined as any,
+        };
+      }),
+    };
   }
 
   switch (scopeKind) {
     case ScopeKind.TABLE:
+    case ScopeKind.TABLEPARTIAL:
       return {
         suggestions: [
-          ...['primary key', 'null', 'not null', 'increment', 'pk', 'unique'].map((name) => ({
+          ...[
+            SettingName.PK,
+            SettingName.PKey,
+            SettingName.Null,
+            SettingName.NotNull,
+            SettingName.Increment,
+            SettingName.Unique,
+          ].map((name) => ({
             label: name,
             insertText: name,
             kind: CompletionItemKind.Property,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             range: undefined as any,
           })),
-          ...['ref', 'default'].map((name) => ({
+          ...[SettingName.Ref, SettingName.Default, SettingName.Note].map((name) => ({
             label: name,
             insertText: `${name}: `,
             kind: CompletionItemKind.Property,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             range: undefined as any,
           })),
-          {
-            label: 'note',
-            insertText: 'note: ',
-            kind: CompletionItemKind.Property,
-            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            range: undefined as any,
-          },
         ],
       };
     case ScopeKind.ENUM:
       return {
         suggestions: [
-          {
-            label: 'note',
-            insertText: 'note: ',
+          ...[SettingName.Note].map((name) => ({
+            label: name,
+            insertText: `${name}: `,
             kind: CompletionItemKind.Property,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             range: undefined as any,
-          },
+          })),
         ],
       };
     case ScopeKind.INDEXES:
       return {
         suggestions: [
-          ...['unique', 'pk'].map((name) => ({
+          ...[SettingName.Unique, SettingName.PK].map((name) => ({
             label: name,
             insertText: name,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             kind: CompletionItemKind.Property,
             range: undefined as any,
           })),
-          ...['note', 'name', 'type'].map((name) => ({
+          ...[SettingName.Note, SettingName.Name, SettingName.Type].map((name) => ({
             label: name,
             insertText: `${name}: `,
             kind: CompletionItemKind.Property,
@@ -351,7 +371,7 @@ function suggestAttributeName(compiler: Compiler, offset: number): CompletionLis
       };
     case ScopeKind.REF:
       return {
-        suggestions: ['update', 'delete'].map((name) => ({
+        suggestions: [SettingName.Update, SettingName.Delete].map((name) => ({
           label: name,
           insertText: `${name}: `,
           kind: CompletionItemKind.Property,
@@ -426,7 +446,7 @@ function suggestMembers(
   });
 }
 
-function suggestInSubField(
+function suggestInSubField (
   compiler: Compiler,
   offset: number,
   container?: FunctionApplicationNode,
@@ -435,6 +455,7 @@ function suggestInSubField(
 
   switch (scopeKind) {
     case ScopeKind.TABLE:
+    case ScopeKind.TABLEPARTIAL:
       return suggestInColumn(compiler, offset, container);
     case ScopeKind.PROJECT:
       return suggestInProjectField(compiler, offset, container);
@@ -445,10 +466,12 @@ function suggestInSubField(
     case ScopeKind.REF: {
       const suggestions = suggestInRefField(compiler, offset);
 
-      return compiler.container.token(offset).token?.kind === SyntaxTokenKind.COLON &&
-        shouldPrependSpace(compiler.container.token(offset).token, offset) ?
-        prependSpace(suggestions) :
-        suggestions;
+      return (
+        compiler.container.token(offset).token?.kind === SyntaxTokenKind.COLON
+        && shouldPrependSpace(compiler.container.token(offset).token, offset)
+      )
+        ? prependSpace(suggestions)
+        : suggestions;
     }
     case ScopeKind.TABLEGROUP:
       return suggestInTableGroupField(compiler);
@@ -457,9 +480,9 @@ function suggestInSubField(
   }
 }
 
-function suggestTopLevelElementType(): CompletionList {
+function suggestTopLevelElementType (): CompletionList {
   return {
-    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref'].map((name) => ({
+    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial'].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -490,14 +513,15 @@ function suggestInEnumField(
   return noSuggestions();
 }
 
-function suggestInColumn(
+function suggestInColumn (
   compiler: Compiler,
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
+  const elements = ['Note', 'indexes'];
   if (!container?.callee) {
     return {
-      suggestions: ['Note', 'indexes'].map((name) => ({
+      suggestions: elements.map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -511,7 +535,7 @@ function suggestInColumn(
 
   if (containerArgId === 0) {
     return {
-      suggestions: ['Note', 'indexes'].map((name) => ({
+      suggestions: elements.map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -527,14 +551,15 @@ function suggestInColumn(
   return noSuggestions();
 }
 
-function suggestInProjectField(
+function suggestInProjectField (
   compiler: Compiler,
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
+  const elements = ['Table', 'TableGroup', 'Enum', 'Note', 'Ref', 'TablePartial'];
   if (!container?.callee) {
     return {
-      suggestions: ['Table', 'TableGroup', 'Enum', 'Note', 'Ref'].map((name) => ({
+      suggestions: elements.map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -548,7 +573,7 @@ function suggestInProjectField(
 
   if (containerArgId === 0) {
     return {
-      suggestions: ['Table', 'TableGroup', 'Enum', 'Note', 'Ref'].map((name) => ({
+      suggestions: elements.map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -570,26 +595,33 @@ function suggestInRefField(compiler: Compiler, offset: number): CompletionList {
 }
 
 function suggestInTableGroupField(compiler: Compiler): CompletionList {
-  return addQuoteIfNeeded({
-    suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
-      const res = destructureIndex(index).unwrap_or(undefined);
-      if (res === undefined) {
-        return [];
-      }
-      const { kind, name } = res;
-      if (kind !== SymbolKind.Table && kind !== SymbolKind.Schema) {
-        return [];
-      }
+  return {
+    suggestions: [
+      ...addQuoteIfNeeded({
+        suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
+          const res = destructureIndex(index).unwrap_or(undefined);
+          if (res === undefined) return [];
+          const { kind, name } = res;
+          if (kind !== SymbolKind.Table && kind !== SymbolKind.Schema) return [];
 
-      return {
+          return {
+            label: name,
+            insertText: name,
+            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+            kind: pickCompletionItemKind(kind),
+            range: undefined as any,
+          };
+        }),
+      }).suggestions,
+      ...['Note'].map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: pickCompletionItemKind(kind),
+        kind: CompletionItemKind.Keyword,
         range: undefined as any,
-      };
-    }),
-  });
+      })),
+    ]
+  }
 }
 
 function suggestInIndex(compiler: Compiler, offset: number): CompletionList {

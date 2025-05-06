@@ -14,7 +14,12 @@
 - https://github.com/antlr/antlr4/blob/master/doc/javascript-target.md
 ## Setup a new parser
 1. Create a new folder inside the `packages/dbml-core/src/parse/ANTLR/parsers` folder (e.g. `postgresql`)
-2. Go to https://github.com/antlr/grammars-v4/tree/master/sql and clone the `<lang>Lexer.G4` and `<lang>Parser.G4` to the newly created folder.
+2. Get the grammar:
+
+- Go to https://github.com/antlr/grammars-v4/tree/master/sql and clone the `<lang>Lexer.G4` and `<lang>Parser.G4` to the newly created folder.
+
+- **Remember to add the original link to `<lang>Lexer.G4` and `<lang>Parser.G4`**
+
 3. Go to the folder:
     ```
     cd packages/dbml-core/src/parse/ANTLR/parsers/postgresql

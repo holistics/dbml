@@ -25,14 +25,18 @@
           "name": "status",
           "type": {
             "type_name": "orders_status_enum",
-            "args": "'created','running','done','failure'"
+            "args": [
+              "'created'",
+              "'running'",
+              "'done'",
+              "'failure'"
+            ]
           }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         }
       ],
@@ -62,7 +66,7 @@
             "args": null
           },
           "dbdefault": {
-            "value": 1,
+            "value": "1",
             "type": "number"
           }
         }
@@ -83,8 +87,7 @@
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
@@ -106,7 +109,10 @@
           "name": "status",
           "type": {
             "type_name": "products_status_enum",
-            "args": "'Out of Stock','In Stock'"
+            "args": [
+              "'Out of Stock'",
+              "'In Stock'"
+            ]
           }
         },
         {
@@ -126,20 +132,21 @@
           "columns": [
             {
               "value": "merchant_id",
-              "type": "string"
+              "type": "column"
             },
             {
               "value": "status",
-              "type": "string"
+              "type": "column"
             }
           ],
-          "name": "product_status"
+          "name": "product_status",
+          "unique": false
         },
         {
           "columns": [
             {
               "value": "id",
-              "type": "string"
+              "type": "column"
             }
           ],
           "name": "products_index_1",
@@ -162,37 +169,32 @@
         {
           "name": "full_name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "email",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           },
           "unique": true
         },
         {
           "name": "gender",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "date_of_birth",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
@@ -219,8 +221,7 @@
         {
           "name": "merchant_name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
@@ -233,8 +234,7 @@
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
@@ -261,15 +261,13 @@
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         },
         {
           "name": "continent_name",
           "type": {
-            "type_name": "varchar(255)",
-            "args": "255"
+            "type_name": "varchar(255)"
           }
         }
       ],

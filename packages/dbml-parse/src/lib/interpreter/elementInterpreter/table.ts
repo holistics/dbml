@@ -1,14 +1,27 @@
-import { Column, ColumnType, ElementInterpreter, Index, InlineRef, InterpreterDatabase, Table } from '../types';
-import { ArrayNode, AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode } from '../../parser/nodes';
-import { extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent } from '../utils';
-import { destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression } from '../../analyzer/utils';
-import { CompileError, CompileErrorCode } from '../../errors';
-import { aggregateSettingList, isExpressionANumber } from '../../analyzer/validator/utils';
-import { isExpressionAQuotedString, isExpressionAnIdentifierNode } from '../../parser/utils';
-import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
-import { ColumnSymbol } from '../../analyzer/symbol/symbols';
 import _ from 'lodash';
-import Report from '../../report';
+import {
+  Column, ElementInterpreter, Index, InlineRef,
+  InterpreterDatabase, Table, TablePartialInjection,
+} from '../types';
+import {
+  AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
+  FunctionApplicationNode, ListExpressionNode, PartialInjectionNode, PrefixExpressionNode,
+  SyntaxNode,
+} from '../../parser/nodes';
+import {
+  extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities,
+  getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent,
+  processColumnType, processDefaultValue,
+} from '../utils';
+import {
+  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
+  extractVariableFromExpression,
+} from '../../analyzer/utils';
+import { CompileError, CompileErrorCode } from '../../errors';
+import { aggregateSettingList } from '../../analyzer/validator/utils';
+import { ColumnSymbol } from '../../analyzer/symbol/symbols';
+import { destructureIndex, SymbolKind } from '../../analyzer/symbol/symbolIndex';
+import { ElementKind, SettingName } from '../../analyzer/types';
 
 export class TableInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -16,17 +29,25 @@ export class TableInterpreter implements ElementInterpreter {
   private table: Partial<Table>;
   private pkColumns: Column[];
 
-  constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.table = { name: undefined, schemaName: undefined, alias: null, fields: [], token: undefined, indexes: [] };
+    this.table = {
+      name: undefined,
+      schemaName: undefined,
+      alias: null,
+      fields: [],
+      token: undefined,
+      indexes: [],
+      partials: [],
+    };
     this.pkColumns = [];
   }
 
-  interpret(): CompileError[] {
+  interpret (): CompileError[] {
     this.table.token = getTokenPosition(this.declarationNode);
     this.env.tables.set(this.declarationNode, this.table as Table);
-  
+
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
       ...this.interpretAlias(this.declarationNode.alias),
@@ -39,22 +60,22 @@ export class TableInterpreter implements ElementInterpreter {
     // and a new pk composite index is added
     if (this.pkColumns.length >= 2) {
       this.table.indexes!.push({
-        columns: this.pkColumns.map(({ name }) => ({ value: name, type: 'column' })),
+        columns: this.pkColumns.map(({ name, token }) => ({ value: name, type: 'column', token })),
         token: {
           start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
           end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
         },
         pk: true,
       });
-      this.pkColumns.forEach((column) => column.pk = false);
+      this.pkColumns.forEach((column) => { column.pk = false; });
     }
 
     return errors;
   }
 
-  private interpretName(nameNode: SyntaxNode): CompileError[] {
+  private interpretName (nameNode: SyntaxNode): CompileError[] {
     const { name, schemaName } = extractElementName(nameNode);
-    
+
     if (schemaName.length > 1) {
       this.table.name = name;
       this.table.schemaName = schemaName.join('.');
@@ -67,7 +88,7 @@ export class TableInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private interpretAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (!aliasNode) {
       return [];
     }
@@ -88,12 +109,14 @@ export class TableInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretSettingList(settings?: ListExpressionNode): CompileError[] {
+  private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.table.headerColor = settingMap['headercolor']?.length ? extractColor(settingMap['headercolor']?.at(0)?.value as any) : undefined;
-    
-    const [noteNode] = settingMap['note'] || [];
+    this.table.headerColor = settingMap[SettingName.HeaderColor]?.length
+      ? extractColor(settingMap[SettingName.HeaderColor]?.at(0)?.value as any)
+      : undefined;
+
+    const [noteNode] = settingMap[SettingName.Note] || [];
     this.table.note = noteNode && {
       value: extractQuotedStringToken(noteNode?.value).map(normalizeNoteContent).unwrap(),
       token: getTokenPosition(noteNode),
@@ -102,37 +125,74 @@ export class TableInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretBody(body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];   
+  private interpretBody (body: BlockExpressionNode): CompileError[] {
+    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode || e instanceof PartialInjectionNode);
+    return [
+      ...this.interpretFields(fields as (FunctionApplicationNode | PartialInjectionNode)[]),
+      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
-  private interpretSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       switch (sub.type?.value.toLowerCase()) {
-        case 'note':
+        case ElementKind.Note:
           this.table.note = {
-            value: extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? (sub.body.body[0] as FunctionApplicationNode).callee : sub.body!.callee).map(normalizeNoteContent).unwrap(),
+            value: extractQuotedStringToken(
+              sub.body instanceof BlockExpressionNode
+                ? (sub.body.body[0] as FunctionApplicationNode).callee
+                : sub.body!.callee,
+            ).map(normalizeNoteContent).unwrap(),
             token: getTokenPosition(sub),
-          }
+          };
           return [];
-        case 'indexes':
+
+        case ElementKind.Indexes:
           return this.interpretIndexes(sub);
+
+        default:
+          return [];
       }
-
-      return [];
-    })
+    });
   }
 
-  private interpretFields(fields: FunctionApplicationNode[]): CompileError[] {
-    return fields.flatMap((field) => this.interpretColumn(field));
+  private interpretInjection (injection: PartialInjectionNode, order: number) {
+    const partial: Partial<TablePartialInjection> = { order, token: getTokenPosition(injection) };
+    partial.name = injection.partial!.variable!.value;
+    this.table.partials!.push(partial as TablePartialInjection);
+    return [];
   }
 
-  private interpretColumn(field: FunctionApplicationNode): CompileError[] {
+  private interpretFields (fields: (FunctionApplicationNode | PartialInjectionNode)[]): CompileError[] {
+    const symbolTableEntries = this.declarationNode.symbol?.symbolTable
+      ? [...this.declarationNode.symbol.symbolTable.entries()]
+      : [];
+    const columnEntries = symbolTableEntries.filter(([index]) => {
+      const res = destructureIndex(index).unwrap_or(null);
+      return res?.kind === SymbolKind.Column;
+    });
+
+    const columnCountErrors = columnEntries.length
+      ? []
+      : [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
+
+    const interpretFieldErrors = fields.flatMap((field, order) => {
+      return field instanceof FunctionApplicationNode
+        ? this.interpretColumn(field)
+        : this.interpretInjection(field, order);
+    });
+
+    return [
+      ...columnCountErrors,
+      ...interpretFieldErrors,
+    ];
+  }
+
+  private interpretColumn (field: FunctionApplicationNode): CompileError[] {
     const errors: CompileError[] = [];
 
     const column: Partial<Column> = {};
-    
+
     column.name = extractVarNameFromPrimaryVariable(field.callee as any).unwrap();
 
     const typeReport = processColumnType(field.args[0]);
@@ -141,23 +201,29 @@ export class TableInterpreter implements ElementInterpreter {
 
     column.token = getTokenPosition(field);
     column.inline_refs = [];
-    
+
     const settings = field.args.slice(1);
     if (_.last(settings) instanceof ListExpressionNode) {
       const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
-      column.pk = !!settingMap['pk']?.length || !!settingMap['primary key']?.length;
-      column.increment = !!settingMap['increment']?.length;
-      column.unique = !!settingMap['unique']?.length;
-      column.not_null = !!settingMap['not null']?.length && true;
-      column.dbdefault = processDefaultValue(settingMap['default']?.at(0)?.value);
-      const noteNode = settingMap['note']?.at(0);
+      column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PKey]?.length;
+      column.increment = !!settingMap[SettingName.Increment]?.length;
+      column.unique = !!settingMap[SettingName.Unique]?.length;
+      // eslint-disable-next-line no-nested-ternary
+      column.not_null = settingMap[SettingName.NotNull]?.length
+        ? true
+        : settingMap[SettingName.Null]?.length
+          ? false
+          : undefined;
+      column.dbdefault = processDefaultValue(settingMap[SettingName.Default]?.at(0)?.value);
+      const noteNode = settingMap[SettingName.Note]?.at(0);
       column.note = noteNode && {
         value: extractQuotedStringToken(noteNode.value).map(normalizeNoteContent).unwrap(),
         token: getTokenPosition(noteNode),
-      }
-      const refs = settingMap['ref'] || [];
+      };
+      const refs = settingMap[SettingName.Ref] || [];
       column.inline_refs = refs.flatMap((ref) => {
         const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
+
         if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
           return [];
@@ -165,45 +231,45 @@ export class TableInterpreter implements ElementInterpreter {
 
         const op = (ref.value as PrefixExpressionNode).op!;
         const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression).unwrap();
-        
+
         let inlineRef: InlineRef | undefined;
         if (fragments.length === 1) {
-          const [column] = fragments;
+          const [columnName] = fragments;
 
           inlineRef = {
             schemaName: this.table.schemaName!,
             tableName: this.table.name!,
-            fieldNames: [column],
+            fieldNames: [columnName],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
         } else if (fragments.length === 2) {
-          const [table, column] = fragments;
+          const [table, columnName] = fragments;
           inlineRef = {
             schemaName: null,
             tableName: table,
-            fieldNames: [column],
+            fieldNames: [columnName],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
         } else if (fragments.length === 3) {
-          const [schema, table, column] = fragments;
+          const [schema, table, columnName] = fragments;
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [column],
+            fieldNames: [columnName],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
         } else {
           errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref));
-          const column = fragments.pop()!;
+          const columnName = fragments.pop()!;
           const table = fragments.pop()!;
           const schema = fragments.join('.');
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [column],
+            fieldNames: [columnName],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
@@ -213,7 +279,7 @@ export class TableInterpreter implements ElementInterpreter {
         errors.push(...errs);
 
         return errs.length === 0 ? inlineRef : [];
-      })
+      });
     }
 
     column.pk ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'pk');
@@ -226,24 +292,24 @@ export class TableInterpreter implements ElementInterpreter {
     return errors;
   }
 
-  private interpretIndexes(indexes: ElementDeclarationNode): CompileError[] {
+  private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
     this.table.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
-      const index: Partial<Index> = { columns: [], };
+      const index: Partial<Index> = { columns: [] };
 
       const indexField = _indexField as FunctionApplicationNode;
-      index.token = getTokenPosition(indexes);
+      index.token = getTokenPosition(indexField);
       const args = [indexField.callee!, ...indexField.args];
       if (_.last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
-        index.pk = !!settingMap['pk']?.length;
-        index.unique = !!settingMap['unique']?.length;
-        index.name = extractQuotedStringToken(settingMap['name']?.at(0)?.value).unwrap_or(undefined);
-        const noteNode = settingMap['note']?.at(0);
+        index.pk = !!settingMap[SettingName.PK]?.length;
+        index.unique = !!settingMap[SettingName.Unique]?.length;
+        index.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
+        const noteNode = settingMap[SettingName.Note]?.at(0);
         index.note = noteNode && {
           value: extractQuotedStringToken(noteNode.value).unwrap(),
           token: getTokenPosition(noteNode),
         };
-        index.type = extractVariableFromExpression(settingMap['type']?.at(0)?.value).unwrap_or(undefined); 
+        index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value).unwrap_or(undefined);
       }
 
       args.flatMap((arg) => {
@@ -256,11 +322,12 @@ export class TableInterpreter implements ElementInterpreter {
         const fragments: SyntaxNode[] = [];
         while (arg instanceof CallExpressionNode) {
           fragments.push(arg.argumentList!);
+          // eslint-disable-next-line no-param-reassign
           arg = arg.callee!;
         }
         fragments.push(arg);
         return fragments;
-      }).forEach((arg) => { 
+      }).forEach((arg) => {
         const { functional, nonFunctional } = destructureIndexNode(arg).unwrap();
         index.columns!.push(
           ...functional.map((s) => ({
@@ -275,14 +342,14 @@ export class TableInterpreter implements ElementInterpreter {
           })),
         );
       });
-       
+
       return index as Index;
     }));
-    
+
     return [];
   }
 
-  private registerInlineRefToEnv(column: FunctionApplicationNode, referredSymbol: ColumnSymbol, inlineRef: InlineRef, ref: AttributeNode): CompileError[] {
+  private registerInlineRefToEnv (column: FunctionApplicationNode, referredSymbol: ColumnSymbol, inlineRef: InlineRef, ref: AttributeNode): CompileError[] {
     const refId = getRefId(column.symbol as ColumnSymbol, referredSymbol);
     if (this.env.refIds[refId]) {
       return [
@@ -297,7 +364,7 @@ export class TableInterpreter implements ElementInterpreter {
       name: null,
       schemaName: null,
       token: inlineRef.token,
-      endpoints: [ 
+      endpoints: [
         {
           ...inlineRef,
           relation: multiplicities[1],
@@ -309,108 +376,9 @@ export class TableInterpreter implements ElementInterpreter {
           token: getTokenPosition(column),
           relation: multiplicities[0],
         },
-      ]
+      ],
     });
 
     return [];
   }
-}
-
-function processColumnType(typeNode: SyntaxNode): Report<ColumnType, CompileError> {
-  let typeArgs: string | null = null;
-  if (typeNode instanceof CallExpressionNode) {
-      typeArgs = typeNode
-          .argumentList!.elementList.map((e) => {
-            if (isExpressionANumber(e)) {
-              return e.expression.literal.value;
-            }
-            if (isExpressionAQuotedString(e)) {
-              return extractQuotedStringToken(e).unwrap();
-            }
-            // e can only be an identifier here
-            return extractVariableFromExpression(e).unwrap();
-          })
-          .join(',');
-      typeNode = typeNode.callee!;
-    }
-  let typeIndexer: string = '';
-  while (typeNode instanceof ArrayNode) {
-    typeIndexer = `[${
-      typeNode
-        .indexer!.elementList.map((e) => (e.name as any).expression.literal.value)
-        .join(',')
-    }]${typeIndexer}`;
-    typeNode = typeNode.array!;
-  }
-
-  const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
-  if (typeSchemaName.length > 1) {
-    return new Report(
-      {
-        schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
-        type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
-        args: typeArgs,
-      },
-      [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)]
-    );
-  }
-
-  return new Report({
-    schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
-    type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
-    args: typeArgs,
-  });
-}
-
-function processDefaultValue(valueNode?: SyntaxNode):
-  {
-    type: "string" | "number" | "boolean" | "expression";
-    value: string | number;
-  } | undefined {
-  if (!valueNode) {
-    return undefined;
-  }
-  
-  if (isExpressionAQuotedString(valueNode)) {
-    return {
-      value: extractQuotedStringToken(valueNode).unwrap(),
-      type: "string",
-    };
-  }
-
-  if (isExpressionANumber(valueNode)) {
-    return {
-      type: "number",
-      value: Number.parseFloat(valueNode.expression.literal.value),
-    }
-  }
-
-  if (isExpressionAnIdentifierNode(valueNode)) {
-    const value = valueNode.expression.variable.value.toLowerCase();
-    return {
-      value, 
-      type: 'boolean',
-    };
-  }
-
-  if (
-    valueNode instanceof PrefixExpressionNode &&
-    NUMERIC_LITERAL_PREFIX.includes(valueNode.op?.value as any) &&
-    isExpressionANumber(valueNode.expression)
-  ) {
-    const number = Number.parseFloat(valueNode.expression.expression.literal.value);
-    return {
-      value: valueNode.op?.value === '-' ? 0 - number : number, 
-      type: 'number',
-    };
-  }
-
-  if (valueNode instanceof FunctionExpressionNode) {
-    return {
-      value: valueNode.value?.value!,
-      type: 'expression',
-    }
-  }
-
-  throw new Error('Unreachable');
 }

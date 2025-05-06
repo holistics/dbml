@@ -1,4 +1,6 @@
-import { ElementDeclarationNode, ProgramNode } from '../parser/nodes';
+/* eslint-disable no-use-before-define */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ElementDeclarationNode } from '../parser/nodes';
 import { Position } from '../types';
 import { CompileError } from '../errors';
 
@@ -22,6 +24,7 @@ export interface InterpreterDatabase {
   // for keeping track of the owner table group of a table
   groupOfTable: { [tableid: string]: ElementDeclarationNode };
   tableGroups: Map<ElementDeclarationNode, TableGroup>;
+  tablePartials: Map<ElementDeclarationNode, TablePartial>;
   aliases: Alias[];
   project: Map<ElementDeclarationNode, Project>;
 }
@@ -35,6 +38,7 @@ export interface Database {
   tableGroups: TableGroup[];
   aliases: Alias[];
   project: Project;
+  tablePartials: TablePartial[];
 }
 
 export interface Table {
@@ -42,6 +46,7 @@ export interface Table {
   schemaName: null | string;
   alias: string | null;
   fields: Column[];
+  partials: TablePartialInjection[];
   token: TokenPosition;
   indexes: Index[];
   headerColor?: string;
@@ -112,6 +117,7 @@ export interface Ref {
   schemaName: string | null;
   name: string | null;
   endpoints: RefEndpointPair;
+  color?: string;
   onDelete?: string;
   onUpdate?: string;
   token: TokenPosition;
@@ -150,6 +156,11 @@ export interface TableGroup {
   schemaName: string | null;
   tables: TableGroupField[];
   token: TokenPosition;
+  color?: string;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
 }
 
 export interface TableGroupField {
@@ -166,6 +177,24 @@ export interface Alias {
   };
 }
 
+export interface TablePartial {
+  name: string;
+  fields: Column[];
+  token: TokenPosition;
+  indexes: Index[];
+  headerColor?: string;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+}
+
+export interface TablePartialInjection {
+  name: string;
+  order: number;
+  token: TokenPosition;
+}
+
 export type Project =
   | Record<string, never>
   | {
@@ -174,12 +203,13 @@ export type Project =
       refs: Ref[];
       enums: Enum[];
       tableGroups: TableGroup[];
+      tablePartials: TablePartial[];
       note?: {
         value: string;
         token: TokenPosition;
       };
       token: TokenPosition;
       [
-        index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note'>
+        index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials'>
       ]: string;
     };

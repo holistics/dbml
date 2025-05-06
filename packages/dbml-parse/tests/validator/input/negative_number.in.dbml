@@ -1,0 +1,16 @@
+Table a {
+  id int(-1) [default: -2]
+  id2 int(--1) [default: +-2]
+  id3 int (+-+---+0.1) [default: --++7.2225] // positive
+}
+
+TablePartial P1 {
+  id int(-1) [default: -2]
+  id2 int(--1) [default: +-2]
+  id3 int (+-+---+0.1) [default: --++-+--7.2225] // negative
+}
+
+Table b {
+  id int
+  ~P1
+}
