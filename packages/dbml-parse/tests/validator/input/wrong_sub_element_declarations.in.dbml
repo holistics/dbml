@@ -1,0 +1,5 @@
+Table A {
+    Indexes wrong index alias {} // this indexes is treated as Table column
+    Indexes 2 args {} // this is also treated as column
+    Indexes wrong number of args {} // this is also treated as column
+}
