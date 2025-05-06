@@ -168,12 +168,12 @@ export default class Lexer {
           } else if (this.match('*')) {
             this.multilineComment();
           } else {
-            this.operator();
+            this.operator(c);
           }
           break;
         default:
           if (isOp(c)) {
-            this.operator();
+            this.operator(c);
             break;
           }
           if (isAlphaOrUnderscore(c)) {
@@ -368,9 +368,22 @@ export default class Lexer {
     this.addToken(SyntaxTokenKind.IDENTIFIER);
   }
 
-  operator() {
-    while (isOp(this.peek())) {
-      this.advance();
+  operator (c: string) {
+    switch (c) {
+      case '<':
+        if (['>', '='].includes(this.peek()!)) this.advance(); // <, >, <=
+        break;
+      case '>':
+        if (this.peek() === '=') this.advance(); // >, >=
+        break;
+      case '=':
+        if (this.peek() === '=') this.advance(); // =, ==
+        break;
+      case '!':
+        if (this.peek() === '=') this.advance(); // !, !=
+        break;
+      default:
+        break;
     }
     this.addToken(SyntaxTokenKind.OP);
   }

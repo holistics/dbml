@@ -1,5 +1,5 @@
-import { SyntaxToken } from './lexer/tokens';
-import { SyntaxNode } from './parser/nodes';
+import { SyntaxToken, SyntaxTokenKind } from './lexer/tokens';
+import { LiteralNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode } from './parser/nodes';
 import { getTokenFullEnd, getTokenFullStart } from './lexer/utils';
 
 export function isAlphaOrUnderscore(char: string): boolean {
@@ -74,4 +74,20 @@ export function returnIfIsOffsetWithinFullSpan(
   }
 
   return isOffsetWithinFullSpan(offset, nodeOrToken) ? nodeOrToken : undefined;
+}
+
+export function getNumberTextFromExpression (node: PrimaryExpressionNode | PrefixExpressionNode): string {
+  if (node instanceof PrefixExpressionNode) {
+    return `${node.op?.value}${getNumberTextFromExpression(node.expression!)}`;
+  }
+  return (node.expression as LiteralNode).literal!.value;
+}
+
+export function parseNumber (node: PrefixExpressionNode | PrimaryExpressionNode): number {
+  if (node instanceof PrefixExpressionNode) {
+    const op = node.op?.value;
+    if (op === '-') return -parseNumber(node.expression!);
+    return parseNumber(node.expression!);
+  }
+  return Number.parseFloat((node.expression as LiteralNode).literal!.value);
 }

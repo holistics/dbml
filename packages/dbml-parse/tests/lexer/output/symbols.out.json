@@ -808,7 +808,29 @@
       },
       "value": ".",
       "leadingTrivia": [],
-      "trailingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 49,
+            "line": 6,
+            "column": 2
+          },
+          "endPos": {
+            "offset": 50,
+            "line": 7,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 49,
+          "end": 50
+        }
+      ],
       "leadingInvalid": [],
       "trailingInvalid": [],
       "isInvalid": false,
@@ -816,15 +838,165 @@
       "end": 48
     },
     {
+      "kind": "<op>",
+      "startPos": {
+        "offset": 50,
+        "line": 7,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 51,
+        "line": 7,
+        "column": 1
+      },
+      "value": ">",
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "startPos": {
+            "offset": 51,
+            "line": 7,
+            "column": 1
+          },
+          "endPos": {
+            "offset": 52,
+            "line": 7,
+            "column": 2
+          },
+          "value": " ",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 51,
+          "end": 52
+        }
+      ],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 50,
+      "end": 51
+    },
+    {
+      "kind": "<op>",
+      "startPos": {
+        "offset": 52,
+        "line": 7,
+        "column": 2
+      },
+      "endPos": {
+        "offset": 53,
+        "line": 7,
+        "column": 3
+      },
+      "value": "<",
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<space>",
+          "startPos": {
+            "offset": 53,
+            "line": 7,
+            "column": 3
+          },
+          "endPos": {
+            "offset": 54,
+            "line": 7,
+            "column": 4
+          },
+          "value": " ",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 53,
+          "end": 54
+        }
+      ],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 52,
+      "end": 53
+    },
+    {
+      "kind": "<op>",
+      "startPos": {
+        "offset": 54,
+        "line": 7,
+        "column": 4
+      },
+      "endPos": {
+        "offset": 56,
+        "line": 7,
+        "column": 6
+      },
+      "value": "<>",
+      "leadingTrivia": [],
+      "trailingTrivia": [
+        {
+          "kind": "<newline>",
+          "startPos": {
+            "offset": 57,
+            "line": 7,
+            "column": 7
+          },
+          "endPos": {
+            "offset": 58,
+            "line": 8,
+            "column": 0
+          },
+          "value": "\n",
+          "leadingTrivia": [],
+          "trailingTrivia": [],
+          "leadingInvalid": [],
+          "trailingInvalid": [],
+          "isInvalid": false,
+          "start": 57,
+          "end": 58
+        }
+      ],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 54,
+      "end": 56
+    },
+    {
+      "kind": "<tilde>",
+      "startPos": {
+        "offset": 58,
+        "line": 8,
+        "column": 0
+      },
+      "endPos": {
+        "offset": 59,
+        "line": 8,
+        "column": 1
+      },
+      "value": "~",
+      "leadingTrivia": [],
+      "trailingTrivia": [],
+      "leadingInvalid": [],
+      "trailingInvalid": [],
+      "isInvalid": false,
+      "start": 58,
+      "end": 59
+    },
+    {
       "kind": "<eof>",
       "startPos": {
-        "offset": 48,
-        "line": 6,
+        "offset": 59,
+        "line": 8,
         "column": 1
       },
       "endPos": {
-        "offset": 48,
-        "line": 6,
+        "offset": 59,
+        "line": 8,
         "column": 1
       },
       "value": "",
@@ -833,8 +1005,8 @@
       "leadingInvalid": [],
       "trailingInvalid": [],
       "isInvalid": false,
-      "start": 48,
-      "end": 48
+      "start": 59,
+      "end": 59
     }
   ],
   "errors": []

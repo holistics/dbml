@@ -17,6 +17,7 @@ import { isExpressionANumber } from '../analyzer/validator/utils';
 import { NUMERIC_LITERAL_PREFIX } from '../../constants';
 import Report from '../report';
 import { CompileError, CompileErrorCode } from '../errors';
+import { getNumberTextFromExpression, parseNumber } from '../utils';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
   const { variables, tupleElements } = destructureComplexTuple(operand).unwrap();
@@ -164,7 +165,7 @@ export function processDefaultValue (valueNode?: SyntaxNode):
   if (isExpressionANumber(valueNode)) {
     return {
       type: 'number',
-      value: Number.parseFloat(valueNode.expression.literal.value),
+      value: parseNumber(valueNode),
     };
   }
 
@@ -173,18 +174,6 @@ export function processDefaultValue (valueNode?: SyntaxNode):
     return {
       value,
       type: 'boolean',
-    };
-  }
-
-  if (
-    valueNode instanceof PrefixExpressionNode
-    && NUMERIC_LITERAL_PREFIX.includes(valueNode.op?.value as any)
-    && isExpressionANumber(valueNode.expression)
-  ) {
-    const number = Number.parseFloat(valueNode.expression.expression.literal.value);
-    return {
-      value: valueNode.op?.value === '-' ? 0 - number : number,
-      type: 'number',
     };
   }
 
@@ -205,7 +194,7 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
     typeArgs = typeNode
       .argumentList!.elementList.map((e) => {
         if (isExpressionANumber(e)) {
-          return e.expression.literal.value;
+          return getNumberTextFromExpression(e);
         }
         if (isExpressionAQuotedString(e)) {
           return extractQuotedStringToken(e).unwrap();
