@@ -26,10 +26,6 @@ export class Some<T> {
     return new Some(callback(this.value));
   }
 
-  is_some_and(callback: (_: T) => boolean): boolean {
-    return callback(this.value);
-  }
-
   // eslint-disable-next-line class-methods-use-this
   isOk(): boolean {
     return true;
@@ -55,11 +51,6 @@ export class None<T> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
   map<S>(callback: (_: T) => S): Option<S> {
     return new None();
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  is_some_and(callback: (_: T) => boolean): boolean {
-    return false;
   }
 
   // eslint-disable-next-line class-methods-use-this
