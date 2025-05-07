@@ -51,7 +51,7 @@ export function convertFuncAppToElem (
     : undefined;
 
   if (cpArgs.length === 3) {
-    const asKeywordNode = extractVariableNode(cpArgs[1]).unwrap_or(undefined);
+    const asKeywordNode = extractVariableNode(cpArgs[1]).value;
     // If cpArgs = [sth, 'as', sth] then it's a valid element declaration
     return (!asKeywordNode || !isAsKeyword(asKeywordNode))
       ? new None()
