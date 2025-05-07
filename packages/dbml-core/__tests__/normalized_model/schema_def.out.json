@@ -25,7 +25,9 @@
         2,
         3,
         6,
-        7
+        7,
+        8,
+        9
       ],
       "enumIds": [
         1,
@@ -220,6 +222,7 @@
       "name": "users",
       "alias": "EU",
       "note": null,
+      "partials": [],
       "fieldIds": [
         1,
         2,
@@ -237,6 +240,7 @@
       "name": "users",
       "alias": null,
       "note": null,
+      "partials": [],
       "fieldIds": [
         7,
         8,
@@ -254,6 +258,7 @@
       "name": "products",
       "alias": null,
       "note": null,
+      "partials": [],
       "fieldIds": [
         13,
         14
@@ -267,6 +272,7 @@
       "name": "products",
       "alias": "A",
       "note": null,
+      "partials": [],
       "fieldIds": [
         15,
         16
@@ -280,6 +286,7 @@
       "name": "locations",
       "alias": null,
       "note": null,
+      "partials": [],
       "fieldIds": [
         17,
         18
@@ -294,6 +301,7 @@
       "alias": null,
       "note": null,
       "headerColor": "#aaaaaa",
+      "partials": [],
       "fieldIds": [
         19,
         20
@@ -307,9 +315,58 @@
       "name": "c",
       "alias": null,
       "note": null,
+      "partials": [],
       "fieldIds": [
         21,
         22
+      ],
+      "indexIds": [],
+      "schemaId": 1,
+      "groupId": null
+    },
+    "8": {
+      "id": 8,
+      "name": "unary_expression",
+      "alias": null,
+      "note": null,
+      "partials": [],
+      "fieldIds": [
+        23,
+        24,
+        25
+      ],
+      "indexIds": [],
+      "schemaId": 1,
+      "groupId": null
+    },
+    "9": {
+      "id": 9,
+      "name": "injected_unary_expression",
+      "alias": null,
+      "note": null,
+      "partials": [
+        {
+          "order": 1,
+          "token": {
+            "start": {
+              "offset": 1520,
+              "line": 108,
+              "column": 3
+            },
+            "end": {
+              "offset": 1539,
+              "line": 108,
+              "column": 22
+            }
+          },
+          "name": "P_unary_expression",
+          "id": 1
+        }
+      ],
+      "fieldIds": [
+        26,
+        27,
+        28
       ],
       "indexIds": [],
       "schemaId": 1,
@@ -883,6 +940,218 @@
       "endpointIds": [],
       "tableId": 7,
       "enumId": null
+    },
+    "23": {
+      "id": 23,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int(-1)",
+        "args": "-1"
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "dbdefault": {
+        "type": "number",
+        "value": -2
+      },
+      "increment": false,
+      "endpointIds": [],
+      "tableId": 8,
+      "enumId": null
+    },
+    "24": {
+      "id": 24,
+      "name": "id2",
+      "type": {
+        "schemaName": null,
+        "type_name": "int(--1)",
+        "args": "--1"
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "dbdefault": {
+        "type": "number",
+        "value": -2
+      },
+      "increment": false,
+      "endpointIds": [],
+      "tableId": 8,
+      "enumId": null
+    },
+    "25": {
+      "id": 25,
+      "name": "id3",
+      "type": {
+        "schemaName": null,
+        "type_name": "int(+-+---+0.1)",
+        "args": "+-+---+0.1"
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "dbdefault": {
+        "type": "number",
+        "value": 7.2225
+      },
+      "increment": false,
+      "endpointIds": [],
+      "tableId": 8,
+      "enumId": null
+    },
+    "26": {
+      "id": 26,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "endpointIds": [],
+      "tableId": 9,
+      "enumId": null
+    },
+    "27": {
+      "id": 27,
+      "name": "id2",
+      "type": {
+        "schemaName": null,
+        "type_name": "int(--1)",
+        "args": "--1"
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "dbdefault": {
+        "type": "number",
+        "value": -2
+      },
+      "increment": false,
+      "injectedPartialId": 1,
+      "endpointIds": [],
+      "tableId": 9,
+      "enumId": null
+    },
+    "28": {
+      "id": 28,
+      "name": "id3",
+      "type": {
+        "schemaName": null,
+        "type_name": "int(+-+---+0.1)",
+        "args": "+-+---+0.1"
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "dbdefault": {
+        "type": "number",
+        "value": -7.2225
+      },
+      "increment": false,
+      "injectedPartialId": 1,
+      "endpointIds": [],
+      "tableId": 9,
+      "enumId": null
+    }
+  },
+  "records": {},
+  "tablePartials": {
+    "1": {
+      "id": 1,
+      "name": "P_unary_expression",
+      "note": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int(-1)",
+            "args": "-1"
+          },
+          "token": {
+            "start": {
+              "offset": 1356,
+              "line": 101,
+              "column": 3
+            },
+            "end": {
+              "offset": 1380,
+              "line": 101,
+              "column": 27
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "dbdefault": {
+            "type": "number",
+            "value": -2
+          }
+        },
+        {
+          "name": "id2",
+          "type": {
+            "schemaName": null,
+            "type_name": "int(--1)",
+            "args": "--1"
+          },
+          "token": {
+            "start": {
+              "offset": 1383,
+              "line": 102,
+              "column": 3
+            },
+            "end": {
+              "offset": 1410,
+              "line": 102,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "dbdefault": {
+            "type": "number",
+            "value": -2
+          }
+        },
+        {
+          "name": "id3",
+          "type": {
+            "schemaName": null,
+            "type_name": "int(+-+---+0.1)",
+            "args": "+-+---+0.1"
+          },
+          "token": {
+            "start": {
+              "offset": 1413,
+              "line": 103,
+              "column": 3
+            },
+            "end": {
+              "offset": 1459,
+              "line": 103,
+              "column": 49
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "dbdefault": {
+            "type": "number",
+            "value": -7.2225
+          }
+        }
+      ],
+      "indexes": []
     }
   }
 }
