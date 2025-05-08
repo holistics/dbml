@@ -7,3 +7,7 @@ Project {
         
     }
 }
+
+Table wrong_nested_element [] {
+    Indexes wrong nested element {} // parsed successfully as function application
+}
