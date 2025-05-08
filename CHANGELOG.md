@@ -1,3 +1,15 @@
+## v3.13.5 (2025-05-08)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#598](https://github.com/holistics/dbml/pull/598) Fix/unwrap none in convert funcAppToElem ([@Huy-DNA](https://github.com/Huy-DNA))
+* `dbml-parse`
+  * [#717](https://github.com/holistics/dbml/pull/717) Fix missing suggestion for ref color ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 2
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
 ## v3.13.4 (2025-05-06)
 
 #### :bug: Bug Fix
