@@ -371,7 +371,11 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
       };
     case ScopeKind.REF:
       return {
-        suggestions: [SettingName.Update, SettingName.Delete].map((name) => ({
+        suggestions: [
+          SettingName.Update,
+          SettingName.Delete,
+          SettingName.Color,
+        ].map((name) => ({
           label: name,
           insertText: `${name}: `,
           kind: CompletionItemKind.Property,
