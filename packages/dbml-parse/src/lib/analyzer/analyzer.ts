@@ -22,7 +22,7 @@ export default class Analyzer {
     return validator.validate().chain((program) => {
       const binder = new Binder(program);
 
-      return binder.resolve();
+      return binder.resolve(this.symbolFactory);
     });
   }
 

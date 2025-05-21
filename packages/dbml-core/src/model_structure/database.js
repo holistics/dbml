@@ -10,6 +10,7 @@ import {
   DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, NOTE,
 } from './config';
 import DbState from './dbState';
+import TablePartial from './tablePartial';
 
 class Database extends Element {
   constructor ({
@@ -21,6 +22,8 @@ class Database extends Element {
     tableGroups = [],
     project = {},
     aliases = [],
+    records = [],
+    tablePartials = [],
   }) {
     super();
     this.dbState = new DbState();
@@ -34,15 +37,30 @@ class Database extends Element {
     this.name = project.name;
     this.token = project.token;
     this.aliases = aliases;
+    this.records = [];
+    this.tablePartials = [];
 
-    this.processNotes(notes);
+    // The global array containing references with 1 endpoint being a field injected from a partial to a table
+    // These refs are add to this array when resolving partials in tables (`Table.processPartials()`)
+    this.injectedRawRefs = [];
+
     // The process order is important. Do not change !
+    this.processNotes(notes);
+    this.processRecords(records);
+    this.processTablePartials(tablePartials);
     this.processSchemas(schemas);
     this.processSchemaElements(enums, ENUM);
     this.processSchemaElements(tables, TABLE);
     this.processSchemaElements(notes, NOTE);
     this.processSchemaElements(refs, REF);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
+
+    this.injectedRawRefs.forEach((rawRef) => {
+      const schema = this.findOrCreateSchema(DEFAULT_SCHEMA_NAME);
+      const ref = new Ref({ ...rawRef, schema });
+      if (schema.refs.some(r => r.equals(ref))) return;
+      schema.pushRef(ref);
+    });
   }
 
   generateId () {
@@ -52,6 +70,26 @@ class Database extends Element {
   processNotes (rawNotes) {
     rawNotes.forEach((note) => {
       this.pushNote(new StickyNote({ ...note, database: this }));
+    });
+  }
+
+  processRecords (rawRecords) {
+    rawRecords.forEach(({
+      schemaName, tableName, columns, values,
+    }) => {
+      this.records.push({
+        id: this.dbState.generateId('recordId'),
+        schemaName,
+        tableName,
+        columns,
+        values,
+      });
+    });
+  }
+
+  processTablePartials (rawTablePartials) {
+    rawTablePartials.forEach((rawTablePartial) => {
+      this.tablePartials.push(new TablePartial({ ...rawTablePartial, dbState: this.dbState }));
     });
   }
 
@@ -171,6 +209,10 @@ class Database extends Element {
     return _enum;
   }
 
+  findTablePartial (name) {
+    return this.tablePartials.find(tp => tp.name === name);
+  }
+
   export () {
     return {
       ...this.exportChild(),
@@ -190,6 +232,7 @@ class Database extends Element {
     return {
       schemas: this.schemas.map(s => s.export()),
       notes: this.notes.map(n => n.export()),
+      records: this.records.map(r => ({ ...r })),
     };
   }
 
@@ -220,10 +263,14 @@ class Database extends Element {
       indexes: {},
       indexColumns: {},
       fields: {},
+      records: {},
+      tablePartials: {},
     };
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));
     this.notes.forEach((note) => note.normalize(normalizedModel));
+    this.records.forEach((record) => { normalizedModel.records[record.id] = { ...record }; });
+    this.tablePartials.forEach((tablePartial) => tablePartial.normalize(normalizedModel));
     return normalizedModel;
   }
 }

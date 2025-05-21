@@ -105,6 +105,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "note": {
         "value": "Note on table orders",
         "token": {
@@ -577,7 +578,8 @@
             }
           }
         }
-      ]
+      ],
+      "partials": []
     }
   ],
   "notes": [],
@@ -684,6 +686,7 @@
     "refs": [],
     "tableGroups": [],
     "tables": [],
+    "tablePartials": [],
     "token": {
       "start": {
         "offset": 0,
@@ -713,5 +716,6 @@
       }
     },
     "database_type": "PostgreSQL"
-  }
+  },
+  "tablePartials": []
 }

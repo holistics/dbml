@@ -92,7 +92,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "tictactoe",
@@ -135,7 +136,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],
@@ -143,5 +145,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

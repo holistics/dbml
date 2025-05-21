@@ -32,6 +32,7 @@ outlines the full syntax documentations of DBML.
 - [TableGroup](#tablegroup)
     - [TableGroup Notes](#tablegroup-notes-1)
     - [TableGroup Settings](#tablegroup-settings)
+- [TablePartial](#tablepartial)
 - [Multi-line String](#multi-line-string)
 - [Comments](#comments)
 - [Syntax Consistency](#syntax-consistency)
@@ -107,6 +108,10 @@ Table schema_name.table_name {
 - settings are wrapped in `square brackets []`
 - string value is be wrapped in a `single quote as 'string'`
 - `column_name` can be stated in just plain text, or wrapped in a `double quote as "column name"`
+
+:::tip
+Use [TablePartial](#tablepartial) to reuse common fields, settings and indexes across multiple tables. Inject partials into a table using the `~partial_name` syntax.
+:::
 
 ### Table Alias
 
@@ -549,6 +554,87 @@ TableGroup e_commerce [color: #345] {
   countries
 }
 ```
+
+## TablePartial
+
+`TablePartial` allows you to define reusable sets of fields, settings, and indexes. You can then inject these partials into multiple table definitions to promote consistency and reduce repetition.
+
+**Syntax**
+
+To define a table partial:
+```text
+TablePartial partial_name [table_settings] {
+  field_name field_type [field_settings]
+  indexes {
+    (column_name) [index_settings]
+  }
+}
+```
+
+To use a table partial, you can reference (also called injection) it in the table definition using the `~` prefix:
+
+```text
+Table table_name {
+  ~partial_name
+  field_name field_type
+  ~another_partial
+}
+```
+
+**Example**
+
+```text
+TablePartial base_template [headerColor: #ff0000] {
+  id int [pk, not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+TablePartial soft_delete_template {
+  delete_status boolean [not null]
+  deleted_at timestamp [default: `now()`]
+}
+
+TablePartial email_index {
+  email varchar [unique]
+
+  indexes {
+    email [unique]
+  }
+}
+
+Table users {
+  ~base_template
+  ~email_index
+  name varchar
+  ~soft_delete_template
+}
+```
+
+Final result:
+
+```text
+Table users [headerColor: #ff0000] {
+  id int [pk, not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  email varchar [unique]
+  name varchar
+  delete_status boolean [not null]
+  deleted_at timestamp [default: `now()`]
+
+  indexes {
+    email [unique]
+  }
+}
+```
+
+**Conflict Resolution**
+
+When multiple partials define the same field, setting or index, DBML resolves conflicts based on the following priority:
+
+1. Local Table Definition: Fields, settings and indexes defined directly in the table override those from partials.
+2. Last Injected Partial: If a conflict exists between partials, the definition from the last-injected partial (in source order) takes precedence.
 
 ## Multi-line String
 
