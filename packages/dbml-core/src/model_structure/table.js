@@ -26,6 +26,7 @@ class Table extends Element {
     // Process partials after fields to get injected fields' orders
     // Process partials before indexes for indexes to properly check all owned and injected columns
     this.processPartials();
+    this.checkFieldCount();
     this.processIndexes(indexes);
   }
 
@@ -33,11 +34,13 @@ class Table extends Element {
     this.id = this.dbState.generateId('tableId');
   }
 
-  processFields (rawFields) {
-    if (rawFields.length === 0) {
+  checkFieldCount () {
+    if (this.fields.length === 0) {
       this.error('Table must have at least one field');
     }
+  }
 
+  processFields (rawFields) {
     rawFields.forEach((field) => {
       this.pushField(new Field({ ...field, table: this }));
     });
