@@ -164,3 +164,4 @@ DBML is created and maintained by [Holistics](https://holistics.io?utm_source=db
 * [Snowflake DBML Generator by Ryan Rozich](https://github.com/ryanrozich/snowflake-dbml-generator)
 * [prisma-dbml-generator: Generate DBML schema from Prisma Schema by Marc Stammerjohann](https://github.com/notiz-dev/prisma-dbml-generator)
 * [C# parser for Dbml by Niels Bosma](https://github.com/Ivy-Interactive/Ivy.Dbml.Parser)
+* [Scafoldr: DBML-Powered Code Scaffolding Tool](https://scafoldr.com/code-generator)
