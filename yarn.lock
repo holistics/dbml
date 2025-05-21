@@ -5188,10 +5188,10 @@ aws-ssl-profiles@^1.1.1:
   resolved "https://registry.npmjs.org/aws-ssl-profiles/-/aws-ssl-profiles-1.1.1.tgz"
   integrity sha512-+H+kuK34PfMaI9PNU/NSjBKL5hh/KDM9J72kwYeYEm0A8B1AC4fuCy3qsjnA7lxklgyXsB68yn8Z2xoZEjgwCQ==
 
-axios@^1.0.0, axios@^1.7.7:
-  version "1.8.4"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.8.4.tgz#78990bb4bc63d2cae072952d374835950a82f447"
-  integrity sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==
+axios@^1.0.0, axios@^1.8.3:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.9.0.tgz#25534e3b72b54540077d33046f77e3b8d7081901"
+  integrity sha512-re4CqKTJaURpzbLHtIi6XpDv20/CnpXOtjRY5/CU32L8gU8ek9UIivcfvSWvmKEngmVbrUtPpdDwWDWL7DNHvg==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
@@ -11631,9 +11631,9 @@ smart-buffer@^4.2.0:
   integrity sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==
 
 snowflake-sdk@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/snowflake-sdk/-/snowflake-sdk-2.0.3.tgz#0ae6cb2068e851c0e4b4053e07ad2fe16df43083"
-  integrity sha512-17mkapCBVLAPCzI6TZwcyUFOpje1Nd42KUfIzDT36CYCbw9JuOBoCP9Cs49XmQ38TRhOT3a+Mz9P9Vx1q/7riw==
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/snowflake-sdk/-/snowflake-sdk-2.0.4.tgz#0bb3bd4fefcaeddb22459b3e1120feb2f5f0f6de"
+  integrity sha512-YXvR05MQA2HCokqVj1mI720RGh3k/1ITZ+/Ggqe7AE4u39nPtbKI07IUMPo5IY0Hjt2iwPGwt4fTsapfosmmPg==
   dependencies:
     "@aws-sdk/client-s3" "^3.726.0"
     "@azure/storage-blob" "12.26.x"
@@ -11642,7 +11642,7 @@ snowflake-sdk@^2.0.3:
     "@techteamer/ocsp" "1.0.1"
     asn1.js-rfc2560 "^5.0.0"
     asn1.js-rfc5280 "^3.0.0"
-    axios "^1.7.7"
+    axios "^1.8.3"
     big-integer "^1.6.43"
     bignumber.js "^9.1.2"
     binascii "0.0.2"
