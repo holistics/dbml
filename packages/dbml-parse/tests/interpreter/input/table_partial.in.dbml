@@ -31,7 +31,7 @@ Table "user" {
 Table "country" [note: 'name is required'] {
   ~id
   ~sameHeaderColor
-  "name" string [not null]
+  "name" char(255) [not null]
 }
 
 Table "product" [headerColor: #17DACC, note: 'product must have price'] {
@@ -52,7 +52,7 @@ Table "merchant" [headerColor: #08DAFF, note: 'merchants sell a lot'] {
 Table "customer" {
   note: 'a customer is a user?'
   "email" string [ref: - user.email, note: 'the ref of this column should be bound and interpret successfully']
-  }
+}
 
 Ref:"user"."id" < "merchant"."user_id"
 
