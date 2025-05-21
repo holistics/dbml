@@ -1,3 +1,101 @@
+## v3.13.5 (2025-05-08)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#598](https://github.com/holistics/dbml/pull/598) Fix/unwrap none in convert funcAppToElem ([@Huy-DNA](https://github.com/Huy-DNA))
+* `dbml-parse`
+  * [#717](https://github.com/holistics/dbml/pull/717) Fix missing suggestion for ref color ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 2
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+- Đỗ Nguyễn An Huy ([@Huy-DNA](https://github.com/Huy-DNA))
+
+## v3.13.4 (2025-05-06)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#728](https://github.com/holistics/dbml/pull/728) Feat: allow unlimited prefix expression in column type with argument and default value ([@NQPhuc](https://github.com/NQPhuc))
+  * [#720](https://github.com/holistics/dbml/pull/720) Fix not handling column type with arguments in TablePartial ([@xuantho573](https://github.com/xuantho573))
+* `dbml-core`, `dbml-parse`
+  * [#727](https://github.com/holistics/dbml/pull/727) Fix table must define column when have partials with columns ([@xuantho573](https://github.com/xuantho573))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#728](https://github.com/holistics/dbml/pull/728) Feat: allow unlimited prefix expression in column type with argument and default value ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
+## v3.13.2 (2025-05-05)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`
+  * [#657](https://github.com/holistics/dbml/pull/657) PR: Bug Closes [#655](https://github.com/holistics/dbml/issues/655) - DB2DBML - SQL Server - No description on Table ([@MisterGeek](https://github.com/MisterGeek))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- [@MisterGeek](https://github.com/MisterGeek)
+
+## v3.13.1 (2025-04-28)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#718](https://github.com/holistics/dbml/pull/718) MSSQL: fix cannot parse varchar(max) and double precision ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :robot: Dependencies Update
+* [#694](https://github.com/holistics/dbml/pull/694) chore(deps): bump @babel/runtime-corejs3 from 7.26.0 to 7.27.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#688](https://github.com/holistics/dbml/pull/688) build(deps): bump @babel/runtime from 7.24.4 to 7.26.10 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#695](https://github.com/holistics/dbml/pull/695) chore(deps): bump @babel/helpers from 7.24.5 to 7.27.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#711](https://github.com/holistics/dbml/pull/711) chore(deps): bump http-proxy-middleware from 2.0.7 to 2.0.9 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#701](https://github.com/holistics/dbml/pull/701) chore(deps): bump image-size from 1.1.1 to 1.2.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v3.13.0 (2025-04-24)
+
+#### :memo: Documentation
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#709](https://github.com/holistics/dbml/pull/709) ft: support table partial ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :bug: Bug Fix
+* `dbml-connector`
+  * [#714](https://github.com/holistics/dbml/pull/714) Fix flaky db2dbml/mssql test cause by inconsistent table ordering ([@NQPhuc](https://github.com/NQPhuc))
+* `dbml-core`
+  * [#713](https://github.com/holistics/dbml/pull/713) fix(antlr.pg): filter null table when importing postgresql ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#709](https://github.com/holistics/dbml/pull/709) ft: support table partial ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :house_with_garden: Internal
+* `dbml-connector`
+  * [#714](https://github.com/holistics/dbml/pull/714) Fix flaky db2dbml/mssql test cause by inconsistent table ordering ([@NQPhuc](https://github.com/NQPhuc))
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#708](https://github.com/holistics/dbml/pull/708) Add Eslint and TSConfig ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 2
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
+## v3.12.0 (2025-04-08)
+
+#### :memo: Documentation
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#690](https://github.com/holistics/dbml/pull/690) Support parse insert from SQL DDL and new parser for MSSQL ([@huyleminh01](https://github.com/huyleminh01))
+* Other
+  * [#702](https://github.com/holistics/dbml/pull/702) Update README.md ([@nielsbosma](https://github.com/nielsbosma))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#690](https://github.com/holistics/dbml/pull/690) Support parse insert from SQL DDL and new parser for MSSQL ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 2
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Niels Bosma ([@nielsbosma](https://github.com/nielsbosma))
+
 ## v3.11.0 (2025-04-01)
 
 #### :memo: Documentation

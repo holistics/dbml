@@ -92,11 +92,11 @@ $ sql2dbml --mysql dump.sql -o mydatabase.dbml
 
 ```bash
 $ sql2dbml <path-to-sql-file>
-           [--mysql|--postgres|--mssql|--postgres-legacy|--mysql-legacy|--snowflake]
+           [--mysql|--postgres|--mssql|--postgres-legacy|--mysql-legacy|--mssql-legacy|--snowflake]
            [-o|--out-file <output-filepath>]
 ```
 
-Note: The `--postgres-legacy` and `--mysql-legacy` options import PostgreSQL/MySQL to dbml using the old parsers. It's quicker but less accurate.
+Note: The `--postgres-legacy`, `--mysql-legacy` and `mssql-legacy` options import PostgreSQL/MySQL/MSSQL to dbml using the old parsers. It's quicker but less accurate.
 
 ## Generate DBML directly from a database
 

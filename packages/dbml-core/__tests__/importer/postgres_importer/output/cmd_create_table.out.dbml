@@ -1,0 +1,47 @@
+Table "a" {
+  "id" integer [unique, pk, default: 1]
+  "name" varchar(255)
+}
+
+Table "b" {
+  "id" uuid
+  "name" varchar [not null]
+  "email" varchar(55)
+
+  Indexes {
+    email [pk, name: "b_pk"]
+    name [unique]
+  }
+}
+
+Table "c" {
+  "index" "CHARACTER VARYING(255)" [unique]
+  "phone" SERIAL [increment]
+  "time" timestamp
+}
+
+Table "circles" {
+  "c" circle
+}
+
+Table "foo" {
+  "bar" "text[]"
+  "bar2" "int[1]"
+  "bar3" "int[2][3]"
+  "bar4" "int[]"
+  "bar5" "int[2]"
+  "bar6" "text[8]"
+  "bar7" "text[100]"
+  "bar8" "time(2)[]"
+  "bar9" "time(1)[1]"
+  "bar10" "time(1)[]"
+  "bar11" "time[5]"
+  "bar12" "timestamp(2)[10][2][5]"
+  "bar13" "character varying[]"
+  "bar14" "character varying(25)[][2][]"
+  "bar15" "character varying[76]"
+}
+
+Ref:"a"."id" < "b"."id" [delete: no action]
+
+Ref "c_time_constraint":"a"."name" < "c"."time"

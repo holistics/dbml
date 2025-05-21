@@ -1,9 +1,9 @@
 Table "UserMaster" {
-  "UserMasterKey" BIGINT [not null, increment]
+  "UserMasterKey" "BIGINT IDENTITY(1,1)" [not null]
 }
 
 Table "CodeDef" {
-  "CdKey" BIGINT [not null, increment]
+  "CdKey" "BIGINT IDENTITY(1,1)" [not null]
   "Category" NVARCHAR(50) [not null]
   "Description" NVARCHAR(100)
   "Code" NVARCHAR(50) [not null]
@@ -16,7 +16,7 @@ Table "CodeDef" {
   "EffectiveThruDtTm" DATETIMEOFFSET(7)
 
   Indexes {
-    CdKey [pk]
+    CdKey [pk, name: "PK__CodeDef__4922449ECDD244C3"]
   }
 }
 

@@ -333,3 +333,28 @@ CREATE TABLE AddressInfo2 (
     )
 );
 GO
+
+CREATE TABLE TestDescriptionTable (
+  Id INT,
+  Name NVARCHAR(100)
+);
+
+EXEC sp_addextendedproperty
+@name = N'MS_Description_Table',
+@value = N'This is the custom comment name on table.',
+@level0type = N'SCHEMA', @level0name = 'dbo',
+@level1type = N'TABLE',  @level1name = 'TestDescriptionTable';
+
+EXEC sp_addextendedproperty
+@name = N'MS_Description_Column',
+@value = N'Primary key identifier.',
+@level0type = N'SCHEMA', @level0name = 'dbo',
+@level1type = N'TABLE',  @level1name = 'TestDescriptionTable',
+@level2type = N'COLUMN', @level2name = 'Id';
+
+EXEC sp_addextendedproperty
+@name = N'MS_Description_Custom',
+@value = N'Name of the entity.',
+@level0type = N'SCHEMA', @level0name = 'dbo',
+@level1type = N'TABLE',  @level1name = 'TestDescriptionTable',
+@level2type = N'COLUMN', @level2name = 'Name';

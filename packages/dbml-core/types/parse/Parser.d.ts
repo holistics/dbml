@@ -5,7 +5,7 @@ declare type ParseFormat = 'json'
     | 'mysql' | 'mysqlLegacy'
     | 'postgres' | 'postgresLegacy'
     | 'dbml' | 'dbmlv2'
-    | 'mssql'
+    | 'mssql' | 'mssqlLegacy'
     | 'schemarb'
     | 'snowflake';
 
@@ -21,6 +21,7 @@ declare class Parser {
     static parseDBMLToJSONv2(str: string, dbmlCompiler?: Compiler): RawDatabase;
     static parseSchemaRbToJSON(str: string): RawDatabase;
     static parseMSSQLToJSON(str: string): RawDatabase;
+    static parseMSSQLToJSONv2(str: string): RawDatabase;
     static parseSnowflakeToJSON(str: string): RawDatabase;
     /**
      * Should use parse() instance method instead of this static method whenever possible

@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get, isNil } from 'lodash';
 import Element from './element';
 import Field from './field';
 import Index from './indexes';
@@ -7,7 +7,7 @@ import { shouldPrintSchema } from './utils';
 
 class Table extends Element {
   constructor ({
-    name, alias, note, fields = [], indexes = [], schema = {}, token, headerColor, noteToken = null,
+    name, alias, note, fields = [], indexes = [], schema = {}, token, headerColor, noteToken = null, partials = [],
   } = {}) {
     super(token);
     this.name = name;
@@ -18,10 +18,15 @@ class Table extends Element {
     this.fields = [];
     this.indexes = [];
     this.schema = schema;
+    this.partials = partials;
     this.dbState = this.schema.dbState;
     this.generateId();
 
     this.processFields(fields);
+    // Process partials after fields to get injected fields' orders
+    // Process partials before indexes for indexes to properly check all owned and injected columns
+    this.processPartials();
+    this.checkFieldCount();
     this.processIndexes(indexes);
   }
 
@@ -29,11 +34,13 @@ class Table extends Element {
     this.id = this.dbState.generateId('tableId');
   }
 
-  processFields (rawFields) {
-    if (rawFields.length === 0) {
+  checkFieldCount () {
+    if (this.fields.length === 0) {
       this.error('Table must have at least one field');
     }
+  }
 
+  processFields (rawFields) {
     rawFields.forEach((field) => {
       this.pushField(new Field({ ...field, table: this }));
     });
@@ -83,6 +90,102 @@ class Table extends Element {
         || (this.alias && this.alias === table.alias));
   }
 
+  processPartials () {
+    if (!this.partials?.length) return;
+    /**
+     * When encountering conflicting columns or settings with identical names, the following resolution order is applied:
+     * 1. Local Table Definition: If a definition exists within the local table, it takes precedence.
+     * 2. Last Partial Definition: If no local definition is found,
+     *  the definition from the last partial (in dbml source) containing the conflicting name is used.
+     *
+     * each partial has the following structure:
+     * {
+     *   name: string,
+     *   order: number, // determine where the partials fields will be injected in comparison with the table fields and other partials
+     *   token, // token of the partial definition
+     * }
+     */
+    const existingFieldNames = new Set(this.fields.map(f => f.name));
+    const existingSettingNames = new Set();
+    if (!isNil(this.note)) existingSettingNames.add('note');
+    if (!isNil(this.headerColor)) existingSettingNames.add('headerColor');
+
+    // descending order, we'll inserted the partial fields from tail to head
+    const sortedPartials = this.partials.sort((a, b) => b.order - a.order);
+
+    // insert placeholder into table.fields
+    sortedPartials.toReversed().forEach((partial) => {
+      this.fields.splice(partial.order, 0, 'dummy');
+    });
+
+    sortedPartials.forEach((partial) => {
+      const tablePartial = this.schema.database.findTablePartial(partial.name);
+      if (!tablePartial) this.error(`Table partial ${partial.name} not found`, partial.token);
+      partial.id = tablePartial.id;
+
+      if (tablePartial.fields) {
+        // ignore fields that already exist in the table, or have been added by a later partial
+        const rawFields = tablePartial.fields.filter(f => !existingFieldNames.has(f.name));
+        const fields = rawFields.map((rawField) => {
+          existingFieldNames.add(rawField.name);
+
+          // convert inline_refs from injected fields to refs
+          if (rawField.inline_refs) {
+            rawField.inline_refs.forEach((iref) => {
+              const ref = {
+                token: rawField.token,
+                endpoints: [{
+                  tableName: this.name,
+                  schemaName: this.schema?.name,
+                  fieldNames: [rawField.name],
+                  relation: ['-', '<'].includes(iref.relation) ? '1' : '*',
+                  token: rawField.token,
+                }, {
+                  tableName: iref.tableName,
+                  schemaName: iref.schemaName,
+                  fieldNames: iref.fieldNames,
+                  relation: ['-', '>'].includes(iref.relation) ? '1' : '*',
+                  token: iref.token,
+                }],
+                injectedPartial: tablePartial,
+              };
+              // The global array containing references with 1 endpoint being a field injected from a partial to a table
+              this.schema.database.injectedRawRefs.push(ref);
+            });
+          }
+
+          return new Field({
+            ...rawField,
+            noteToken: null,
+            table: this,
+            injectedPartial: tablePartial,
+            injectedToken: partial.token,
+          });
+        });
+
+        this.fields.splice(partial.order, 1, ...fields);
+      } else {
+        this.fields.splice(partial.order, 1); // still need to remove the dummy element, even when there's no field in the partial
+      }
+
+      // merge settings
+      if (!existingSettingNames.has('note') && !isNil(tablePartial.note)) {
+        this.noteToken = null;
+        this.note = tablePartial.note;
+        existingSettingNames.add('note');
+      }
+      if (!existingSettingNames.has('headerColor') && !isNil(tablePartial.headerColor)) {
+        this.headerColor = tablePartial.headerColor;
+        existingSettingNames.add('headerColor');
+      }
+
+      // merge indexes
+      tablePartial.indexes.forEach((index) => {
+        this.indexes.push(new Index({ ...index, table: this, injectedPartial: tablePartial }));
+      });
+    });
+  }
+
   export () {
     return {
       ...this.shallowExport(),
@@ -117,6 +220,7 @@ class Table extends Element {
       alias: this.alias,
       note: this.note,
       headerColor: this.headerColor,
+      partials: this.partials,
     };
   }
 

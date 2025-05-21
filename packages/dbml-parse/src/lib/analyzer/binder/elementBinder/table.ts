@@ -1,6 +1,5 @@
 import { SymbolKind } from '../../symbol/symbolIndex';
 import ElementBinder from './elementBinder';
-import { KEYWORDS_OF_DEFAULT_SETTING } from '../../../../constants';
 
 export default class TableBinder extends ElementBinder {
   protected subfield = {
@@ -28,4 +27,11 @@ export default class TableBinder extends ElementBinder {
     },
   };
   protected settingList = {};
+
+  protected injectionBinderRule = {
+    shouldBind: true as const,
+    topSubnamesSymbolKind: [],
+    remainingSubnamesSymbolKind: SymbolKind.TablePartial,
+    ignoreNameNotFound: false,
+  };
 }

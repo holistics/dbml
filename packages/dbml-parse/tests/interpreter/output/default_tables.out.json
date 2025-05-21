@@ -128,7 +128,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "order_items",
@@ -217,7 +218,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     },
     {
       "name": "products",
@@ -301,8 +303,8 @@
           "unique": false,
           "not_null": true,
           "dbdefault": {
-            "value": -1,
-            "type": "number"
+            "type": "number",
+            "value": -1
           }
         },
         {
@@ -329,8 +331,8 @@
           "increment": false,
           "unique": false,
           "dbdefault": {
-            "value": -123.12,
-            "type": "number"
+            "type": "number",
+            "value": -123.12
           }
         },
         {
@@ -402,7 +404,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "partials": []
     }
   ],
   "notes": [],
@@ -410,5 +413,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

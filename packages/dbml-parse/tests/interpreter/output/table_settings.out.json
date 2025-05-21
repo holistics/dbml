@@ -67,6 +67,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "headerColor": "#555"
     },
     {
@@ -137,6 +138,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "note": {
         "value": "name is required",
         "token": {
@@ -244,6 +246,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "headerColor": "#17DACC",
       "note": {
         "value": "product must have price",
@@ -373,6 +376,7 @@
         }
       },
       "indexes": [],
+      "partials": [],
       "headerColor": "#08DAFF",
       "note": {
         "value": "merchants sell a lot",
@@ -513,5 +517,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "tablePartials": []
 }

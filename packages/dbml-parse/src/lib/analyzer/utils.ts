@@ -4,6 +4,7 @@ import {
   ElementDeclarationNode,
   FunctionExpressionNode,
   InfixExpressionNode,
+  PartialInjectionNode,
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
@@ -31,6 +32,7 @@ export function getElementKind(node?: ElementDeclarationNode): Option<ElementKin
     case ElementKind.Project:
     case ElementKind.Ref:
     case ElementKind.TableGroup:
+    case ElementKind.TablePartial:
       return new Some(kind as ElementKind);
     default:
       return new None();
@@ -157,6 +159,11 @@ export function extractVarNameFromPrimaryVariable(
 ): Option<string> {
   const value = node?.expression.variable?.value;
 
+  return value === undefined ? new None() : new Some(value);
+}
+
+export function extractVarNameFromPartialInjection (node?: PartialInjectionNode): Option<string> {
+  const value = node?.partial?.variable?.value;
   return value === undefined ? new None() : new Some(value);
 }
 
