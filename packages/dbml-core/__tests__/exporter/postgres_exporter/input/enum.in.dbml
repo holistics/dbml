@@ -1,0 +1,28 @@
+enum UserRoleEnum {
+  User
+  Admin
+}
+
+enum SchemaName.UserRoleEnum {
+  User
+  Admin
+}
+
+enum "Schema Name".UserRoleEnum {
+  User
+  Admin
+}
+
+enum "Schema Name"."User Role Enum" {
+  User
+  Admin
+}
+
+table accounts {
+  id int
+  name "Var Char"
+  role "UserRoleEnum"
+  role3 "Schema Name".UserRoleEnum
+  role4 SchemaName.UserRoleEnum
+  role5 "Schema Name"."User Role Enum"
+}
