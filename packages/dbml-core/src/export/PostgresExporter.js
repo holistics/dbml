@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {
-  hasWhiteSpace,
+  hasWhiteSpaceOrUpperCase,
   shouldPrintSchema,
   buildJunctionFields1,
   buildJunctionFields2,
@@ -47,9 +47,9 @@ class PostgresExporter {
       } else {
         let schemaName = '';
         if (field.type.schemaName && field.type.schemaName !== DEFAULT_SCHEMA_NAME) {
-          schemaName = hasWhiteSpace(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
+          schemaName = hasWhiteSpaceOrUpperCase(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
         }
-        const typeName = hasWhiteSpace(field.type.type_name) ? `"${field.type.type_name}"` : field.type.type_name;
+        const typeName = hasWhiteSpaceOrUpperCase(field.type.type_name) ? `"${field.type.type_name}"` : field.type.type_name;
         line = `"${field.name}" ${schemaName}${typeName}`;
       }
 
