@@ -4,6 +4,10 @@ export function hasWhiteSpace (s) {
   return /\s/g.test(s);
 }
 
+export function hasWhiteSpaceOrUpperCase (s) {
+  return /[\sA-Z]/g.test(s);
+}
+
 export function shouldPrintSchema (schema, model) {
   return schema.name !== DEFAULT_SCHEMA_NAME || (schema.name === DEFAULT_SCHEMA_NAME && model.database['1'].hasDefaultSchema);
 }
