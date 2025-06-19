@@ -1,3 +1,22 @@
+## v3.13.6 (2025-06-19)
+
+#### :memo: Documentation
+* [#732](https://github.com/holistics/dbml/pull/732) Docs: Add Scafoldr to Community Contributions ([@DimitrijeGlibic](https://github.com/DimitrijeGlibic))
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-core`
+  * [#735](https://github.com/holistics/dbml/pull/735) DBX-4495 Surround column type with quotes when export if it contain uppercase character ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :robot: Dependencies Update
+* [#733](https://github.com/holistics/dbml/pull/733) DBX-6028 Bump express and prismjs to fix vulnerability issues ([@nguyenalter](https://github.com/nguyenalter))
+* [#721](https://github.com/holistics/dbml/pull/721) chore(deps): bump snowflake-sdk from 2.0.3 to 2.0.4 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 4
+- Dimitrije Glibic ([@DimitrijeGlibic](https://github.com/DimitrijeGlibic))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
 ## v3.13.5 (2025-05-08)
 
 #### :bug: Bug Fix
