@@ -26,7 +26,7 @@ CREATE TABLE "users" (
   "name" varchar,
   "pjs" job_status,
   "pjs2" job_status,
-  "pg" schemaB.gender,
+  "pg" "schemaB".gender,
   "pg2" gender
 );
 
@@ -40,7 +40,7 @@ CREATE TABLE "ecommerce"."users" (
   "name" varchar,
   "ejs" job_status,
   "ejs2" job_status,
-  "eg" schemaB.gender,
+  "eg" "schemaB".gender,
   "eg2" gender
 );
 
