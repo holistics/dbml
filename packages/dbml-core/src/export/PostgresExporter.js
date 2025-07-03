@@ -6,13 +6,19 @@ import {
   buildJunctionFields2,
   buildNewTableName,
 } from './utils';
+
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
+import { shouldPrintSchemaName } from '../model_structure/utils';
+
 class PostgresExporter {
-  static exportEnums (enumIds, model) {
+  static exportEnums (enumIds, model, enumSet) {
     const enumArr = enumIds.map((enumId) => {
       const _enum = model.enums[enumId];
       const schema = model.schemas[_enum.schemaId];
+
+      const enumName = `${shouldPrintSchema(schema, model) ? `"${schema.name}".` : ''}"${_enum.name}"`;
+      enumSet.add(enumName);
 
       const enumValueArr = _enum.valueIds.map((valueId) => {
         const value = model.enumValues[valueId];
@@ -20,15 +26,14 @@ class PostgresExporter {
       });
       const enumValueStr = enumValueArr.join(',\n');
 
-      const line = `CREATE TYPE ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".` : ''}"${_enum.name}" AS ENUM (\n${enumValueStr}\n);\n`;
+      const line = `CREATE TYPE ${enumName} AS ENUM (\n${enumValueStr}\n);\n`;
       return line;
     });
 
     return enumArr;
   }
 
-  static getFieldLines (tableId, model) {
+  static getFieldLines (tableId, model, enumSet) {
     const table = model.tables[tableId];
 
     const lines = table.fieldIds.map((fieldId) => {
@@ -50,7 +55,10 @@ class PostgresExporter {
           schemaName = hasWhiteSpaceOrUpperCase(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
         }
         const typeName = hasWhiteSpaceOrUpperCase(field.type.type_name) ? `"${field.type.type_name}"` : field.type.type_name;
-        line = `"${field.name}" ${schemaName}${typeName}`;
+        let typeWithSchema = `${schemaName}${typeName}`;
+        const typeAsEnum = `${field.type.schemaName && shouldPrintSchemaName(field.type.schemaName) ? `"${field.type.schemaName}".` : ''}"${field.type.type_name}"`;
+        if (!enumSet.has(typeAsEnum)) typeWithSchema = typeWithSchema.replaceAll('"', '');
+        line = `"${field.name}" ${typeWithSchema}`;
       }
 
       if (field.unique) {
@@ -106,9 +114,9 @@ class PostgresExporter {
     return lines;
   }
 
-  static getTableContentArr (tableIds, model) {
+  static getTableContentArr (tableIds, model, enumSet) {
     const tableContentArr = tableIds.map((tableId) => {
-      const fieldContents = PostgresExporter.getFieldLines(tableId, model);
+      const fieldContents = PostgresExporter.getFieldLines(tableId, model, enumSet);
       const compositePKs = PostgresExporter.getCompositePKs(tableId, model);
 
       return {
@@ -121,8 +129,8 @@ class PostgresExporter {
     return tableContentArr;
   }
 
-  static exportTables (tableIds, model) {
-    const tableContentArr = PostgresExporter.getTableContentArr(tableIds, model);
+  static exportTables (tableIds, model, enumSet) {
+    const tableContentArr = PostgresExporter.getTableContentArr(tableIds, model, enumSet);
 
     const tableStrs = tableContentArr.map((tableContent) => {
       const content = [...tableContent.fieldContents, ...tableContent.compositePKs];
@@ -292,20 +300,36 @@ class PostgresExporter {
 
     const usedTableNames = new Set(Object.values(model.tables).map(table => table.name));
 
-    const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
+    const enumSet = new Set();
+
+    const schemaEnumStatements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
-      const { tableIds, enumIds, refIds } = schema;
+      const { enumIds } = schema;
 
       if (shouldPrintSchema(schema, model)) {
         prevStatements.schemas.push(`CREATE SCHEMA "${schema.name}";\n`);
       }
 
       if (!_.isEmpty(enumIds)) {
-        prevStatements.enums.push(...PostgresExporter.exportEnums(enumIds, model));
+        prevStatements.enums.push(...PostgresExporter.exportEnums(enumIds, model, enumSet));
       }
 
+      return prevStatements;
+    }, {
+      schemas: [],
+      enums: [],
+      tables: [],
+      indexes: [],
+      comments: [],
+      refs: [],
+    });
+
+    const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
+      const schema = model.schemas[schemaId];
+      const { tableIds, refIds } = schema;
+
       if (!_.isEmpty(tableIds)) {
-        prevStatements.tables.push(...PostgresExporter.exportTables(tableIds, model));
+        prevStatements.tables.push(...PostgresExporter.exportTables(tableIds, model, enumSet));
       }
 
       const indexIds = _.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
@@ -329,14 +353,7 @@ class PostgresExporter {
       }
 
       return prevStatements;
-    }, {
-      schemas: [],
-      enums: [],
-      tables: [],
-      indexes: [],
-      comments: [],
-      refs: [],
-    });
+    }, schemaEnumStatements);
 
     const res = _.concat(
       statements.schemas,
