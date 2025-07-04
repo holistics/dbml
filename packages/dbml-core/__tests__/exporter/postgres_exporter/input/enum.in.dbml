@@ -21,6 +21,7 @@ enum "Schema Name"."User Role Enum" {
 table accounts {
   id int
   name "Var Char"
+  email VarChar
   role "UserRoleEnum"
   role3 "Schema Name".UserRoleEnum
   role4 SchemaName.UserRoleEnum

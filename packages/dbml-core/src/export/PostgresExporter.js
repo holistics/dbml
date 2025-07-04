@@ -5,10 +5,9 @@ import {
   buildJunctionFields1,
   buildJunctionFields2,
   buildNewTableName,
+  hasWhiteSpace,
 } from './utils';
-
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
-
 import { shouldPrintSchemaName } from '../model_structure/utils';
 
 class PostgresExporter {
@@ -57,7 +56,7 @@ class PostgresExporter {
         const typeName = hasWhiteSpaceOrUpperCase(field.type.type_name) ? `"${field.type.type_name}"` : field.type.type_name;
         let typeWithSchema = `${schemaName}${typeName}`;
         const typeAsEnum = `${field.type.schemaName && shouldPrintSchemaName(field.type.schemaName) ? `"${field.type.schemaName}".` : ''}"${field.type.type_name}"`;
-        if (!enumSet.has(typeAsEnum)) typeWithSchema = typeWithSchema.replaceAll('"', '');
+        if (!enumSet.has(typeAsEnum) && !hasWhiteSpace(typeAsEnum)) typeWithSchema = typeWithSchema.replaceAll('"', '');
         line = `"${field.name}" ${typeWithSchema}`;
       }
 
