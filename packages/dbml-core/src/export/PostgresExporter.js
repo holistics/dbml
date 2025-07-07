@@ -11,25 +11,22 @@ import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import { shouldPrintSchemaName } from '../model_structure/utils';
 
 class PostgresExporter {
-  static exportEnums (enumIds, model, enumSet) {
-    const enumArr = enumIds.map((enumId) => {
+  static exportEnums (enumIds, model) {
+    return enumIds.map((enumId) => {
       const _enum = model.enums[enumId];
       const schema = model.schemas[_enum.schemaId];
 
       const enumName = `${shouldPrintSchema(schema, model) ? `"${schema.name}".` : ''}"${_enum.name}"`;
-      enumSet.add(enumName);
 
       const enumValueArr = _enum.valueIds.map((valueId) => {
         const value = model.enumValues[valueId];
         return `  '${value.name}'`;
       });
       const enumValueStr = enumValueArr.join(',\n');
+      const enumLine = `CREATE TYPE ${enumName} AS ENUM (\n${enumValueStr}\n);\n`;
 
-      const line = `CREATE TYPE ${enumName} AS ENUM (\n${enumValueStr}\n);\n`;
-      return line;
+      return [enumName, enumLine];
     });
-
-    return enumArr;
   }
 
   static getFieldLines (tableId, model, enumSet) {
@@ -299,6 +296,8 @@ class PostgresExporter {
 
     const usedTableNames = new Set(Object.values(model.tables).map(table => table.name));
 
+    // Pre-collect all user-defined enum names to distinguish them from built-in PostgreSQL types
+    // This prevents built-in types like VARCHAR, INTEGER from being quoted unnecessarily
     const enumSet = new Set();
 
     const schemaEnumStatements = database.schemaIds.reduce((prevStatements, schemaId) => {
@@ -310,7 +309,13 @@ class PostgresExporter {
       }
 
       if (!_.isEmpty(enumIds)) {
-        prevStatements.enums.push(...PostgresExporter.exportEnums(enumIds, model, enumSet));
+        const enumPairs = PostgresExporter.exportEnums(enumIds, model);
+
+        enumPairs.forEach((enumPair) => {
+          const [enumName, enumLine] = enumPair;
+          prevStatements.enums.push(enumLine);
+          enumSet.add(enumName);
+        });
       }
 
       return prevStatements;
