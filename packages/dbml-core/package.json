@@ -57,6 +57,9 @@
     "transform": {
       "^.+\\.js$": "babel-jest",
       "\\.(?!json$)[^.]*$": "@glen/jest-raw-loader"
+    },
+    "moduleNameMapper": {
+      "^lodash-es$": "lodash"
     }
   },
   "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556",
