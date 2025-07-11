@@ -29,7 +29,7 @@ CREATE TABLE "products" (
   "merchant_id" int NOT NULL,
   "price" int,
   "status" "product status",
-  "created_at" timestamp DEFAULT (now()),
+  "created_at" datetime DEFAULT (now()),
   PRIMARY KEY ("id", "name")
 );
 
