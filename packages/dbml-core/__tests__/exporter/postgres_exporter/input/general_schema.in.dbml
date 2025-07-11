@@ -31,7 +31,7 @@ Table "products" {
   "merchant_id" int [not null]
   "price" int
   "status" "product status"
-  "created_at" timestamp [default: `now()`]
+  "created_at" datetime [default: `now()`]
 
   Indexes {
     (id, name) [pk]
