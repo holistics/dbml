@@ -24,10 +24,10 @@ CREATE TYPE "schemaB"."gender" AS ENUM (
 CREATE TABLE "users" (
   "id" int PRIMARY KEY,
   "name" varchar,
-  "pjs" job_status,
-  "pjs2" job_status,
+  "pjs" "job_status",
+  "pjs2" "job_status",
   "pg" "schemaB".gender,
-  "pg2" gender
+  "pg2" "gender"
 );
 
 CREATE TABLE "products" (
@@ -38,10 +38,10 @@ CREATE TABLE "products" (
 CREATE TABLE "ecommerce"."users" (
   "id" int PRIMARY KEY,
   "name" varchar,
-  "ejs" job_status,
-  "ejs2" job_status,
+  "ejs" "job_status",
+  "ejs2" "job_status",
   "eg" "schemaB".gender,
-  "eg2" gender
+  "eg2" "gender"
 );
 
 CREATE TABLE "schemaA"."products" (
