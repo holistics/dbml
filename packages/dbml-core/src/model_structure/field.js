@@ -42,6 +42,7 @@ class Field extends Element {
         // SQL allow definition of non-enum type to be used as column type, which we don't have equivalent dbml counterpart.
         // So instead of throwing errors on those type, we can view the type as plain text for the purpose of importing to dbml.
         this.type.type_name = `${typeSchemaName}.${typeName}`;
+        this.type.originalTypeName = typeName;
         return;
       }
       this._enum = _enum;

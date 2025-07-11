@@ -7,8 +7,130 @@ import {
   buildNewTableName,
   hasWhiteSpace,
 } from './utils';
-import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import { shouldPrintSchemaName } from '../model_structure/utils';
+
+// PostgreSQL built-in data types
+// Generated from PostgreSQLParser.g4 and PostgreSQLLexer.g4
+
+const POSTGRES_BUILTIN_TYPES = [
+  // Numeric types
+  'SMALLINT',
+  'INTEGER',
+  'INT',
+  'BIGINT',
+  'DECIMAL',
+  'NUMERIC',
+  'REAL',
+  'DOUBLE PRECISION',
+  'SMALLSERIAL',
+  'SERIAL',
+  'BIGSERIAL',
+
+  // Monetary types
+  'MONEY',
+
+  // Character types
+  'CHARACTER',
+  'CHAR',
+  'CHARACTER VARYING',
+  'VARCHAR',
+  'TEXT',
+  'NAME',
+  'BPCHAR',
+
+  // Binary data types
+  'BYTEA',
+
+  // Date/time types
+  'TIMESTAMP',
+  'TIMESTAMP WITH TIME ZONE',
+  'TIMESTAMP WITHOUT TIME ZONE',
+  'DATE',
+  'TIME',
+  'TIME WITH TIME ZONE',
+  'TIME WITHOUT TIME ZONE',
+  'INTERVAL',
+
+  // Boolean type
+  'BOOLEAN',
+  'BOOL',
+
+  // Geometric types
+  'POINT',
+  'LINE',
+  'LSEG',
+  'BOX',
+  'PATH',
+  'POLYGON',
+  'CIRCLE',
+
+  // Network address types
+  'CIDR',
+  'INET',
+  'MACADDR',
+  'MACADDR8',
+
+  // Bit string types
+  'BIT',
+  'BIT VARYING',
+  'VARBIT',
+
+  // UUID type
+  'UUID',
+
+  // XML type
+  'XML',
+
+  // JSON types
+  'JSON',
+  'JSONB',
+
+  // Range types
+  'INT4RANGE',
+  'INT8RANGE',
+  'NUMRANGE',
+  'TSRANGE',
+  'TSTZRANGE',
+  'DATERANGE',
+
+  // Object identifier types
+  'OID',
+  'REGCLASS',
+  'REGCOLLATION',
+  'REGCONFIG',
+  'REGDICTIONARY',
+  'REGNAMESPACE',
+  'REGOPER',
+  'REGOPERATOR',
+  'REGPROC',
+  'REGPROCEDURE',
+  'REGROLE',
+  'REGTYPE',
+
+  // pg_lsn type
+  'PG_LSN',
+
+  // Special types
+  'VOID',
+  'RECORD',
+  'TRIGGER',
+  'EVENT_TRIGGER',
+  'PG_DDL_COMMAND',
+  'UNKNOWN',
+  'ANYELEMENT',
+  'ANYARRAY',
+  'ANYNONARRAY',
+  'ANYENUM',
+  'ANYRANGE',
+  'ANY',
+  'CSTRING',
+  'INTERNAL',
+  'LANGUAGE_HANDLER',
+  'FDW_HANDLER',
+  'INDEX_AM_HANDLER',
+  'TSM_HANDLER',
+  'OPAQUE',
+];
 
 class PostgresExporter {
   static exportEnums (enumIds, model) {
@@ -45,16 +167,21 @@ class PostgresExporter {
         else if (incrementIntergers.has(typeRaw)) type = typeRaw;
         else type = 'SERIAL';
         line = `"${field.name}" ${type}`;
+      } else if (!field.type.schemaName || !shouldPrintSchemaName(field.type.schemaName)) {
+        const upperCaseTypeName = field.type.type_name.toUpperCase();
+        const typeName = POSTGRES_BUILTIN_TYPES.includes(upperCaseTypeName) ? field.type.type_name : `"${field.type.type_name}"`;
+        line = `"${field.name}" ${typeName}`;
       } else {
-        let schemaName = '';
-        if (field.type.schemaName && field.type.schemaName !== DEFAULT_SCHEMA_NAME) {
-          schemaName = hasWhiteSpaceOrUpperCase(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
-        }
+        const { originalTypeName } = field.type;
+        const schemaName = hasWhiteSpaceOrUpperCase(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
         const typeName = hasWhiteSpaceOrUpperCase(field.type.type_name) ? `"${field.type.type_name}"` : field.type.type_name;
         let typeWithSchema = `${schemaName}${typeName}`;
         const typeAsEnum = `${field.type.schemaName && shouldPrintSchemaName(field.type.schemaName) ? `"${field.type.schemaName}".` : ''}"${field.type.type_name}"`;
         if (!enumSet.has(typeAsEnum) && !hasWhiteSpace(typeAsEnum)) typeWithSchema = typeWithSchema.replaceAll('"', '');
         line = `"${field.name}" ${typeWithSchema}`;
+        if (originalTypeName) {
+          line = `"${field.name}" "${field.type.schemaName}"."${originalTypeName}"`;
+        }
       }
 
       if (field.unique) {
