@@ -25,6 +25,7 @@ const POSTGRES_BUILTIN_TYPES = [
   'SMALLSERIAL',
   'SERIAL',
   'BIGSERIAL',
+  'FLOAT',
 
   // Monetary types
   'MONEY',
@@ -132,6 +133,10 @@ const POSTGRES_BUILTIN_TYPES = [
   'OPAQUE',
 ];
 
+const POSTGRES_PRESERVED_KEYWORDS = [
+  'USER',
+];
+
 class PostgresExporter {
   static exportEnums (enumIds, model) {
     return enumIds.map((enumId) => {
@@ -169,7 +174,10 @@ class PostgresExporter {
         line = `"${field.name}" ${type}`;
       } else if (!field.type.schemaName || !shouldPrintSchemaName(field.type.schemaName)) {
         const upperCaseTypeName = field.type.type_name.toUpperCase();
-        const typeName = POSTGRES_BUILTIN_TYPES.includes(upperCaseTypeName) ? field.type.type_name : `"${field.type.type_name}"`;
+        let typeName = '';
+        if (POSTGRES_BUILTIN_TYPES.includes(upperCaseTypeName)) typeName = field.type.type_name;
+        else if (hasWhiteSpaceOrUpperCase(field.type.type_name) || POSTGRES_PRESERVED_KEYWORDS.includes(upperCaseTypeName)) typeName = `"${field.type.type_name}"`;
+        else typeName = field.type.type_name;
         line = `"${field.name}" ${typeName}`;
       } else {
         const { originalTypeName } = field.type;
