@@ -133,7 +133,7 @@ const POSTGRES_BUILTIN_TYPES = [
   'OPAQUE',
 ];
 
-const POSTGRES_PRESERVED_KEYWORDS = [
+const POSTGRES_RESERVED_KEYWORDS = [
   'USER',
 ];
 
@@ -172,24 +172,24 @@ class PostgresExporter {
         else if (incrementIntergers.has(typeRaw)) type = typeRaw;
         else type = 'SERIAL';
         line = `"${field.name}" ${type}`;
-      } else if (!field.type.schemaName || !shouldPrintSchemaName(field.type.schemaName)) {
-        const upperCaseTypeName = field.type.type_name.toUpperCase();
-        let typeName = '';
-        if (POSTGRES_BUILTIN_TYPES.includes(upperCaseTypeName)) typeName = field.type.type_name;
-        else if (hasWhiteSpaceOrUpperCase(field.type.type_name) || POSTGRES_PRESERVED_KEYWORDS.includes(upperCaseTypeName)) typeName = `"${field.type.type_name}"`;
-        else typeName = field.type.type_name;
+      } else if (!field.type.schemaName || !shouldPrintSchemaName(field.type.schemaName)) { // The result type will only has the type part, no schema part (e.g. `int` or `dollars`)
+        const originalTypeName = field.type.type_name;
+        const upperCaseTypeName = originalTypeName.toUpperCase();
+
+        const shouldDoubleQuote = !POSTGRES_BUILTIN_TYPES.includes(upperCaseTypeName)
+          && (hasWhiteSpaceOrUpperCase(originalTypeName) || POSTGRES_RESERVED_KEYWORDS.includes(upperCaseTypeName));
+
+        const typeName = shouldDoubleQuote ? `"${originalTypeName}"` : originalTypeName;
         line = `"${field.name}" ${typeName}`;
+      } else if (field.type.originalTypeName) { // A custom Postgres type that is not defined as enum in DBML content
+        line = `"${field.name}" "${field.type.schemaName}"."${field.type.originalTypeName}"`;
       } else {
-        const { originalTypeName } = field.type;
         const schemaName = hasWhiteSpaceOrUpperCase(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
         const typeName = hasWhiteSpaceOrUpperCase(field.type.type_name) ? `"${field.type.type_name}"` : field.type.type_name;
         let typeWithSchema = `${schemaName}${typeName}`;
-        const typeAsEnum = `${field.type.schemaName && shouldPrintSchemaName(field.type.schemaName) ? `"${field.type.schemaName}".` : ''}"${field.type.type_name}"`;
+        const typeAsEnum = `"${field.type.schemaName}"."${field.type.type_name}"`;
         if (!enumSet.has(typeAsEnum) && !hasWhiteSpace(typeAsEnum)) typeWithSchema = typeWithSchema.replaceAll('"', '');
         line = `"${field.name}" ${typeWithSchema}`;
-        if (originalTypeName) {
-          line = `"${field.name}" "${field.type.schemaName}"."${originalTypeName}"`;
-        }
       }
 
       if (field.unique) {
