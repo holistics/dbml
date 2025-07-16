@@ -43,6 +43,7 @@ class Field extends Element {
         // So instead of throwing errors on those type, we can view the type as plain text for the purpose of importing to dbml.
         this.type.type_name = `${typeSchemaName}.${typeName}`;
         // We set this field to avoid doubling schema name when exporting this type to SQL
+        // e.g. to avoid `schema.schema.type`
         this.type.originalTypeName = typeName;
         return;
       }
