@@ -1,3 +1,16 @@
+## v3.13.7 (2025-07-16)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#738](https://github.com/holistics/dbml/pull/738) Fix builtin data types with uppercase characters are double-quoted when export DBML to Postgres ([@xuantho573](https://github.com/xuantho573))
+
+#### :robot: Dependencies Update
+* [#737](https://github.com/holistics/dbml/pull/737) DBX-6165 - chore(deps): bump brace-expansion from 1.1.11 to 1.1.12 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
 ## v3.13.6 (2025-06-19)
 
 #### :memo: Documentation
