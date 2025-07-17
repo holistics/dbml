@@ -5,7 +5,7 @@
 
 ## TLDR
 
-The DBML to JSON parser transforms DBML (Database Markup Language) syntax into a structured JSON representation of database schemas, enabling programmatic manipulation and export to various database formats. This system implements a modern hand-written parser with generic grammar constructs that replaced the legacy PEG.js-based parser to support advanced IDE features and language extensibility.
+The DBML to JSON parser transforms DBML (Database Markup Language) syntax into a structured JSON representation of database schemas, enabling programmatic manipulation and export to various database formats. This system implements a new hand-written parser with generic grammar constructs that replaced the legacy PEG.js-based parser to support advanced IDE features and language extensibility.
 
 ## Concepts
 
@@ -32,7 +32,7 @@ graph LR
     C --> D[Database Model]
 ```
 
-### Modern Parser (@dbml/parse)
+### New Parser (@dbml/parse)
 ```mermaid
 graph LR
     A[DBML Source] --> B[Lexer]
@@ -41,6 +41,13 @@ graph LR
     D --> E[Interpreter]
     E --> F[JSON Database Model]
 ```
+
+**Pipeline Stages:**
+
+- **Lexer**: Converts raw DBML text into typed tokens with position tracking and error recovery
+- **Parser**: Transforms tokens into generic AST using universal `<type> <name> <block>` grammar pattern
+- **Analyzer**: Performs semantic analysis through validation and binding, builds symbol table for IDE services
+- **Interpreter**: Converts analyzed AST into specific database JSON format compatible with legacy output
 
 **Design Decisions:**
 
@@ -111,11 +118,11 @@ class Parser {
 }
 ```
 
-### Modern DBML Parser (@dbml/parse)
+### New DBML Parser (@dbml/parse)
 
 **Location**: `packages/dbml-parse/src/`
 
-The modern parser implements the generic grammar approach where common syntactic patterns are identified and parsed generically, with semantic analysis happening in later phases.
+The new parser implements the generic grammar approach where common syntactic patterns are identified and parsed generically, with semantic analysis happening in later phases.
 
 #### 1. Lexical Analysis (`src/lib/lexer/`)
 
@@ -323,7 +330,7 @@ The final JSON structure follows this normalized format:
 
 **Legacy Parser**: Basic syntax errors with limited context
 
-**Modern Parser**: Structured error reporting:
+**New Parser**: Structured error reporting:
 ```javascript
 class CompileError {
   constructor(
@@ -362,15 +369,15 @@ const jsonOutput = database.export();
 
 **Memory Usage**:
 - Legacy parser: Single-pass with minimal memory overhead
-- Modern parser: Higher memory usage due to AST construction but enables incremental parsing
+- New parser: Higher memory usage due to AST construction but enables incremental parsing
 
 **Parse Speed**:
 - Legacy: ~1000 lines/second for typical schemas
-- Modern: ~500 lines/second but with better error recovery
+- New: ~500 lines/second but with better error recovery
 
 **Error Recovery**:
 - Legacy: Fails on first syntax error
-- Modern: Continues parsing and reports multiple errors
+- New: Continues parsing and reports multiple errors
 
 ### Testing Strategy
 
@@ -433,3 +440,6 @@ describe('#interpreter', () => {
 
 ## Related RFCs
 - [RFC-20250115: DBML Lexer Implementation](rfc-20250115-dbml-lexer.md)
+- [RFC-20250115: DBML Parser Implementation](rfc-20250115-dbml-parser.md)
+- [RFC-20250115: DBML Analyzer Implementation](rfc-20250115-dbml-analyzer.md)
+- [RFC-20250115: DBML Interpreter Implementation](rfc-20250115-dbml-interpreter.md)

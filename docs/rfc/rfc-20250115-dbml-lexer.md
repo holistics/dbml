@@ -739,3 +739,4 @@ describe('Lexer', () => {
 
 ## Related RFCs
 - [RFC-20250115: DBML to JSON Database Model Parser](rfc-20250115-dbml-to-json-parser.md)
+- [RFC-20250115: DBML Parser Implementation](rfc-20250115-dbml-parser.md)
