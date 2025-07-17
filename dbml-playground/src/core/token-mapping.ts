@@ -124,9 +124,10 @@ export class TokenMappingService {
 
     this.tokens.forEach((token, index) => {
       const tokenStart = token.position
+      const tokenLength = this.calculateTokenLength(token)
       const tokenEnd = {
         line: token.position.line,
-        column: token.position.column + token.value.length
+        column: token.position.column + tokenLength
       }
 
       // Check if token overlaps with the selected range
@@ -176,6 +177,7 @@ export class TokenMappingService {
   private buildLexerToDbmlMap(): void {
     this.tokens.forEach((token, index) => {
       const range = this.calculateTokenRange(token)
+      const tokenLength = this.calculateTokenLength(token)
       const metadata: TokenMetadata = {
         tokenIndex: index,
         kind: token.kind,
@@ -183,7 +185,7 @@ export class TokenMappingService {
         startPosition: token.position,
         endPosition: {
           line: token.position.line,
-          column: token.position.column + token.value.length
+          column: token.position.column + tokenLength
         },
         monacoRange: range
       }
@@ -207,7 +209,8 @@ export class TokenMappingService {
     this.tokens.forEach((token, index) => {
       const line = token.position.line
       const startColumn = token.position.column
-      const endColumn = token.position.column + token.value.length
+      const tokenLength = this.calculateTokenLength(token)
+      const endColumn = token.position.column + tokenLength
 
       if (!tokensByLine.has(line)) {
         tokensByLine.set(line, [])
@@ -239,12 +242,32 @@ export class TokenMappingService {
    * Calculate Monaco Range for a token
    */
   private calculateTokenRange(token: Token): monaco.Range {
+    const tokenLength = this.calculateTokenLength(token)
     return new monaco.Range(
       token.position.line,
       token.position.column,
       token.position.line,
-      token.position.column + token.value.length
+      token.position.column + tokenLength
     )
+  }
+
+  /**
+   * Calculate the actual length of a token in the DBML source
+   * Accounts for quotes around certain token types
+   */
+  private calculateTokenLength(token: Token): number {
+    // These token types are always wrapped in quotes in the DBML source:
+    // - <variable>: double-quoted values like "schema name"
+    // - <string>: single-quoted values like 'string value' or '''multiline'''
+    // - Any value containing spaces gets quoted regardless of type
+    if (
+      token.kind === '<variable>' ||
+      token.kind === '<string>' ||
+      token.value.includes(' ')
+    ) {
+      return token.value.length + 2
+    }
+    return token.value.length
   }
 
   /**
