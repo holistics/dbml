@@ -51,6 +51,11 @@ export class TokenNavigationCoordinator {
   private lexerViewer: any = null // Will be set by the JsonViewer component
   private isNavigating = false // Prevent circular navigation
 
+  // Injected functions to check application state
+  private getCurrentStage: (() => string) | null = null
+  private getLexerViewMode: (() => string) | null = null
+  private setLexerViewMode: ((mode: string) => void) | null = null
+
   constructor(tokenMapping: TokenMappingService) {
     this.eventBus = new TokenNavigationEventBus()
     this.tokenMapping = tokenMapping
@@ -73,7 +78,27 @@ export class TokenNavigationCoordinator {
   }
 
   /**
-   * Get the event bus for components to use
+   * Set application state accessors for view mode checking
+   */
+  public setAppStateAccessors(
+    getCurrentStage: () => string,
+    getLexerViewMode: () => string,
+    setLexerViewMode: (mode: string) => void
+  ): void {
+    this.getCurrentStage = getCurrentStage
+    this.getLexerViewMode = getLexerViewMode
+    this.setLexerViewMode = setLexerViewMode
+  }
+
+  /**
+   * Update token mapping with new tokens
+   */
+  public updateTokenMapping(tokens: Token[]): void {
+    this.tokenMapping.buildMaps(tokens)
+  }
+
+  /**
+   * Get the event bus for external use
    */
   public getEventBus(): TokenNavigationEventBus {
     return this.eventBus
@@ -90,6 +115,21 @@ export class TokenNavigationCoordinator {
    * Navigate from DBML position to token (triggered by Cmd+Click in DBML)
    */
   public navigateToTokenFromDbml(line: number, column: number, modifier: 'cmd' | 'ctrl' = 'cmd'): void {
+    // Only allow navigation if we're in the lexer stage
+    if (!this.isInLexerStage()) {
+      return
+    }
+
+    // If in JSON mode, switch to Cards mode first and wait for the transition
+    if (this.isInLexerJsonMode()) {
+      this.switchToCardsMode()
+      // Wait for view mode transition to complete before navigating
+      setTimeout(() => {
+        this.eventBus.emit('navigate:dbml-to-token', { line, column, modifier })
+      }, 50) // Small delay to ensure view mode switch completes
+      return
+    }
+
     this.eventBus.emit('navigate:dbml-to-token', { line, column, modifier })
   }
 
@@ -97,14 +137,43 @@ export class TokenNavigationCoordinator {
    * Navigate from DBML range to tokens (triggered by Cmd+Selection in DBML)
    */
   public navigateToTokensFromRange(startLine: number, startCol: number, endLine: number, endCol: number): void {
+    // Only allow navigation if we're in the lexer stage
+    if (!this.isInLexerStage()) {
+      return
+    }
+
+    // If in JSON mode, switch to Cards mode first and wait for the transition
+    if (this.isInLexerJsonMode()) {
+      this.switchToCardsMode()
+      // Wait for view mode transition to complete before navigating
+      setTimeout(() => {
+        this.eventBus.emit('navigate:range-to-tokens', { startLine, startCol, endLine, endCol })
+      }, 50) // Small delay to ensure view mode switch completes
+      return
+    }
+
     this.eventBus.emit('navigate:range-to-tokens', { startLine, startCol, endLine, endCol })
   }
 
   /**
-   * Update token mapping when lexer output changes
+   * Check if currently in lexer stage
    */
-  public updateTokenMapping(tokens: Token[]): void {
-    this.tokenMapping.buildMaps(tokens)
+  private isInLexerStage(): boolean {
+    return this.getCurrentStage?.() === 'lexer'
+  }
+
+  /**
+   * Check if currently in lexer JSON mode
+   */
+  private isInLexerJsonMode(): boolean {
+    return this.getLexerViewMode?.() === 'json'
+  }
+
+  /**
+   * Switch lexer to Cards mode
+   */
+  private switchToCardsMode(): void {
+    this.setLexerViewMode?.('cards')
   }
 
   /**
@@ -278,7 +347,7 @@ export class TokenNavigationCoordinator {
 
     // Track modifier keys to show navigation mode
     document.addEventListener('keydown', (e) => {
-      if (e.metaKey || e.ctrlKey) {
+      if ((e.metaKey || e.ctrlKey) && this.shouldShowNavigationMode()) {
         editorDomNode.classList.add('token-navigation-mode')
       }
     })
@@ -291,6 +360,13 @@ export class TokenNavigationCoordinator {
 
     // Add CSS for navigation mode
     this.addNavigationStyles()
+  }
+
+  /**
+   * Check if navigation mode visual feedback should be shown
+   */
+  private shouldShowNavigationMode(): boolean {
+    return this.isInLexerStage()
   }
 
   /**

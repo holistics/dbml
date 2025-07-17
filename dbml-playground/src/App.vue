@@ -206,6 +206,21 @@ watch(lexerViewer, (newViewer) => {
 })
 
 /**
+ * Setup app state accessors for token navigation coordinator
+ */
+tokenNavigationCoordinator.setAppStateAccessors(
+  () => activeStage.value,
+  () => {
+    // Get lexer view mode from the parser output viewer component
+    return lexerViewer.value?.getViewMode?.() || 'cards'
+  },
+  (mode: string) => {
+    // Set lexer view mode on the parser output viewer component
+    lexerViewer.value?.setViewMode?.(mode as 'cards' | 'json')
+  }
+)
+
+/**
  * Update token mapping when lexer output changes
  */
 watch(() => parser.tokens.value, (newTokens) => {

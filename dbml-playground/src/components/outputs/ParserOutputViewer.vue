@@ -143,11 +143,32 @@ const highlightTokens = (tokenIndices: number[]) => {
   }
 }
 
+/**
+ * Get current view mode from LexerView (called from navigation coordinator)
+ */
+const getViewMode = (): 'cards' | 'json' => {
+  if (lexerViewRef.value && isLexerData.value) {
+    return lexerViewRef.value.getViewMode?.() || 'cards'
+  }
+  return 'cards'
+}
+
+/**
+ * Set view mode on LexerView (called from navigation coordinator)
+ */
+const setViewMode = (mode: 'cards' | 'json'): void => {
+  if (lexerViewRef.value && isLexerData.value) {
+    lexerViewRef.value.setViewMode?.(mode)
+  }
+}
+
 // Expose methods for the navigation coordinator
 defineExpose({
   scrollToToken,
   highlightToken,
-  highlightTokens
+  highlightTokens,
+  getViewMode,
+  setViewMode
 })
 </script>
 

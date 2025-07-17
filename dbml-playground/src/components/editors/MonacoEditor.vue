@@ -1,5 +1,19 @@
 <template>
-  <div ref="editorContainer" class="w-full h-full border border-gray-200 rounded-md"></div>
+  <div class="monaco-editor-wrapper w-full h-full border border-gray-200 rounded-md flex flex-col">
+    <div ref="editorContainer" class="flex-1 min-h-0"></div>
+    <div class="status-bar bg-gray-50 border-t border-gray-200 px-3 py-1 text-xs text-gray-600 flex justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <span>{{ props.language.toUpperCase() }}</span>
+        <span v-if="!props.readOnly">UTF-8</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span>Ln {{ cursorPosition.line }}, Col {{ cursorPosition.column }}</span>
+        <span v-if="selectionInfo.hasSelection">
+          ({{ selectionInfo.selectedChars }} selected)
+        </span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -44,6 +58,19 @@ const editorContainer = ref<HTMLElement>()
 let editor: monaco.editor.IStandaloneCodeEditor | null = null
 
 /**
+ * Reactive cursor position tracking
+ */
+const cursorPosition = ref({ line: 1, column: 1 })
+
+/**
+ * Reactive selection info tracking
+ */
+const selectionInfo = ref({
+  hasSelection: false,
+  selectedChars: 0
+})
+
+/**
  * Get the appropriate theme for the given language
  * Use DBML theme for both DBML and JSON to maintain consistency
  */
@@ -64,12 +91,20 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   scrollBeyondLastLine: false,
   fontSize: 14,
   lineHeight: 20,
+  lineNumbers: 'on',
+  lineNumbersMinChars: 3,
+  lineDecorationsWidth: 10,
+  columnSelection: false,
   padding: { top: 10, bottom: 10 },
   renderWhitespace: 'boundary',
   renderControlCharacters: true,
   smoothScrolling: true,
   cursorSmoothCaretAnimation: 'on',
   automaticLayout: true,
+  glyphMargin: true,
+  folding: true,
+  showFoldingControls: 'always',
+  foldingStrategy: 'indentation',
   scrollbar: {
     vertical: 'visible',
     horizontal: 'visible',
@@ -104,15 +139,73 @@ const initializeEditor = async (): Promise<void> => {
 }
 
 /**
+ * Update cursor position tracking
+ */
+const updateCursorPosition = (): void => {
+  if (!editor) return
+
+  const position = editor.getPosition()
+  if (position) {
+    cursorPosition.value = {
+      line: position.lineNumber,
+      column: position.column
+    }
+  }
+}
+
+/**
+ * Update selection info tracking
+ */
+const updateSelectionInfo = (): void => {
+  if (!editor) return
+
+  const selection = editor.getSelection()
+  if (selection) {
+    const hasSelection = !selection.isEmpty()
+    let selectedChars = 0
+
+    if (hasSelection) {
+      const model = editor.getModel()
+      if (model) {
+        const selectedText = model.getValueInRange(selection)
+        selectedChars = selectedText.length
+      }
+    }
+
+    selectionInfo.value = {
+      hasSelection,
+      selectedChars
+    }
+  }
+}
+
+/**
  * Set up editor event listeners
  */
 const setupEventListeners = (): void => {
-  if (!editor || props.readOnly) return
+  if (!editor) return
 
-  editor.onDidChangeModelContent(() => {
-    const value = editor?.getValue() || ''
-    emit('update:modelValue', value)
+  // Content change listener (only for non-readonly editors)
+  if (!props.readOnly) {
+    editor.onDidChangeModelContent(() => {
+      const value = editor?.getValue() || ''
+      emit('update:modelValue', value)
+    })
+  }
+
+  // Cursor position change listener
+  editor.onDidChangeCursorPosition(() => {
+    updateCursorPosition()
   })
+
+  // Selection change listener
+  editor.onDidChangeCursorSelection(() => {
+    updateSelectionInfo()
+  })
+
+  // Initial position and selection update
+  updateCursorPosition()
+  updateSelectionInfo()
 }
 
 /**
@@ -163,9 +256,22 @@ watch(() => props.language, (newLanguage) => {
 </script>
 
 <style scoped>
-/* Ensure the container takes full height */
-.monaco-editor-container {
+/* Monaco Editor Wrapper Styles */
+.monaco-editor-wrapper {
   height: 100%;
   width: 100%;
+}
+
+/* Status Bar Styles */
+.status-bar {
+  height: 22px;
+  min-height: 22px;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.status-bar span {
+  white-space: nowrap;
 }
 </style>
