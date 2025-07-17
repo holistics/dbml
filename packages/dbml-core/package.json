@@ -1,6 +1,6 @@
 {
   "name": "@dbml/core",
-  "version": "3.13.7",
+  "version": "3.13.8-alpha.0",
   "description": "> TODO: description",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -32,7 +32,7 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "@dbml/parse": "^3.13.7",
+    "@dbml/parse": "^3.13.8-alpha.0",
     "antlr4": "^4.13.1",
     "lodash": "^4.17.15",
     "parsimmon": "^1.13.0",
@@ -57,6 +57,9 @@
     "transform": {
       "^.+\\.js$": "babel-jest",
       "\\.(?!json$)[^.]*$": "@glen/jest-raw-loader"
+    },
+    "moduleNameMapper": {
+      "^lodash-es$": "lodash"
     }
   },
   "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556",

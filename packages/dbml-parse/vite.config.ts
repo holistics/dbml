@@ -8,6 +8,11 @@ export default defineConfig({
   plugins: [
     dts(),
   ],
+  resolve: {
+    alias: {
+      lodash: 'lodash-es',
+    },
+  },
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
@@ -18,8 +23,8 @@ export default defineConfig({
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: ['monaco-editor-core', 'lodash'],
-    }
+      external: ['monaco-editor-core', 'lodash-es'],
+    },
   },
   test: {
     globals: true,
