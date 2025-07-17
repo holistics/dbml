@@ -149,12 +149,13 @@ const DBML_TOKEN_PROVIDER: monaco.languages.IMonarchLanguage = {
 }
 
 /**
- * DBML Theme Definition
+ * DBML Theme Definition - Extends the default 'vs' theme
  */
 const DBML_THEME: monaco.editor.IStandaloneThemeData = {
   base: 'vs',
   inherit: true,
   rules: [
+    // Override default rules to add DBML-specific styling
     { token: 'keyword', foreground: '0000ff', fontStyle: 'bold' },
     { token: 'type', foreground: '008000', fontStyle: 'bold' },
     { token: 'string', foreground: 'a31515' },
@@ -165,7 +166,13 @@ const DBML_THEME: monaco.editor.IStandaloneThemeData = {
     { token: 'operator', foreground: '000000' },
     { token: 'delimiter', foreground: '000000' },
     { token: 'annotation', foreground: '808080' },
-    { token: 'identifier', foreground: '000000' }
+    { token: 'identifier', foreground: '000000' },
+
+    // Ensure JSON tokens also use consistent styling
+    { token: 'string.key.json', foreground: '0451a5' },
+    { token: 'string.value.json', foreground: 'a31515' },
+    { token: 'number.json', foreground: '098658' },
+    { token: 'keyword.json', foreground: '0000ff' }
   ],
   colors: {}
 }
@@ -201,7 +208,7 @@ export class DBMLLanguageService {
       // Set language configuration
       monaco.languages.setLanguageConfiguration(this.LANGUAGE_ID, DBML_LANGUAGE_CONFIG)
 
-      // Define theme
+      // Define DBML theme
       monaco.editor.defineTheme(this.THEME_NAME, DBML_THEME)
 
       this.isRegistered = true
@@ -209,6 +216,8 @@ export class DBMLLanguageService {
       console.warn('Failed to register DBML language:', error)
     }
   }
+
+
 
   /**
    * Get the DBML language identifier
