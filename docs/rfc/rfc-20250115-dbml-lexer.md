@@ -33,10 +33,83 @@ graph LR
 **Design Decisions:**
 
 1. **Hand-Written Scanner**: Provides precise control over tokenization and error handling
-2. **Position Tracking**: Maintains exact source locations for IDE features and error reporting
+2. **Position Tracking**: Maintains exact source locations for IDE features and error reporting  
 3. **Trivia Attachment**: Associates whitespace and comments with adjacent meaningful tokens
 4. **Error Recovery**: Continues tokenization after errors to find multiple issues
 5. **Lookahead Support**: Enables complex token recognition patterns
+
+## Pipeline Architecture Deep Dive
+
+Understanding how the lexer transforms raw text into structured tokens:
+
+### Character Scanning
+**Purpose**: Convert raw text into positioned character stream.
+
+**Key Features**:
+- Tracks precise position (line, column, offset)
+- Handles encoding and line endings
+- Provides lookahead capability
+
+### Token Recognition
+**Purpose**: Group characters into meaningful lexical units.
+
+**Key Features**:
+- Pattern matching for identifiers, numbers, strings
+- Multi-character operator recognition (`<=`, `>=`, `<>`)
+- Context-aware string literal handling
+
+```javascript
+// "Table users {" → ['Table', ' ', 'users', ' ', '{']
+```
+
+### Token Creation
+**Purpose**: Transform text fragments into structured token objects.
+
+**Key Features**:
+- Rich metadata (type, position, value)
+- Precise source location tracking
+- Error state management
+
+```javascript
+{
+  kind: 'IDENTIFIER',
+  value: 'Table',
+  startPos: { line: 0, column: 0, offset: 0 },
+  endPos: { line: 0, column: 5, offset: 5 }
+}
+```
+
+### Trivia Attachment
+**Purpose**: Preserve formatting information for IDE features.
+
+**Key Features**:
+- Associates whitespace and comments with meaningful tokens
+- Maintains original code formatting
+- Enables format-preserving transformations
+
+```javascript
+// [Table] [space] [space] [users] → [Table{trailingTrivia: [space, space]}] [users]
+```
+
+### Error Recovery
+**Purpose**: Handle malformed tokens without stopping processing.
+
+**Key Features**:
+- Continues after encountering invalid tokens
+- Reports multiple errors in single pass
+- Maintains context for better error messages
+
+```javascript
+// "Table users { id @#$%invalid }" → continues past @#$% to find more errors
+```
+
+### Final Token Stream
+**Purpose**: Provide clean, organized token sequence for the parser.
+
+**Key Features**:
+- Well-formed token sequence with EOF marker
+- Metadata preserved but organized
+- Clean interface for syntax analysis
 
 ## Detailed Implementation
 
@@ -61,7 +134,7 @@ export default class Lexer {
 The lexer recognizes 25 distinct token types:
 
 #### Structural Tokens
-- **Delimiters**: `(`, `)`, `{`, `}`, `[`, `]`, `<`, `>`
+- **Delimiters**: `(`, `)`, `{`, `}`, `[`, `]`
 - **Separators**: `,`, `;`, `:`
 - **Special**: `~` (tilde for partial injection)
 
@@ -74,7 +147,7 @@ The lexer recognizes 25 distinct token types:
 
 #### Identifier and Operator Tokens
 - **IDENTIFIER**: Alphanumeric identifiers (`table_name`, `user_id`)
-- **OP**: Operators (`<`, `>`, `<=`, `>=`, `=`, `!=`, etc.)
+- **OP**: Operators and relationship symbols (`<`, `>`, `<=`, `>=`, `=`, `!=`, `<>`, `-`, etc.)
 
 #### Trivia Tokens
 - **SPACE**, **TAB**, **NEWLINE**: Whitespace
@@ -83,6 +156,145 @@ The lexer recognizes 25 distinct token types:
 
 #### Control Token
 - **EOF**: End of file marker
+
+### Tokenization Example
+
+To understand how the lexer works, let's trace through a complete DBML example:
+
+```dbml
+Table schema1.users {
+  id int [pk, increment] // Primary key
+  name varchar(255) [not null]
+  email text [unique, note: 'User email address']
+  status user_status [default: 'active']
+  created_at timestamp [default: `now()`]
+
+  Indexes {
+    (name, email) [name: "user_lookup"]
+  }
+}
+
+Table posts {
+  id int [pk, increment]
+  title varchar(500) [not null]
+  content text
+  user_id int [not null, note: 'Foreign key to users table']
+  created_at timestamp [default: `now()`]
+}
+
+Enum user_status {
+  active
+  inactive [note: 'Disabled users']
+}
+
+Ref: schema1.users.id < posts.user_id
+```
+
+**Token Stream Output (Partial - showing key patterns):**
+
+```javascript
+[
+  // Table declaration
+  { kind: 'IDENTIFIER', value: 'Table', startPos: {line: 0, column: 0} },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'IDENTIFIER', value: 'schema1' },
+  { kind: 'OP', value: '.' },  // Note: dot is an operator
+  { kind: 'IDENTIFIER', value: 'users' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'LBRACE', value: '{' },
+  { kind: 'NEWLINE', value: '\n' },
+
+  // Field: id int [pk, increment]
+  { kind: 'SPACE', value: '  ' },  // Leading indentation
+  { kind: 'IDENTIFIER', value: 'id' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'IDENTIFIER', value: 'int' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'LBRACKET', value: '[' },
+  { kind: 'IDENTIFIER', value: 'pk' },
+  { kind: 'COMMA', value: ',' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'IDENTIFIER', value: 'increment' },
+  { kind: 'RBRACKET', value: ']' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'SINGLE_LINE_COMMENT', value: '// Primary key' },
+  { kind: 'NEWLINE', value: '\n' },
+
+  // Field: name varchar(255) [not null]
+  { kind: 'SPACE', value: '  ' },
+  { kind: 'IDENTIFIER', value: 'name' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'IDENTIFIER', value: 'varchar' },
+  { kind: 'LPAREN', value: '(' },
+  { kind: 'NUMERIC_LITERAL', value: '255' },
+  { kind: 'RPAREN', value: ')' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'LBRACKET', value: '[' },
+  { kind: 'IDENTIFIER', value: 'not' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'IDENTIFIER', value: 'null' },
+  { kind: 'RBRACKET', value: ']' },
+  { kind: 'NEWLINE', value: '\n' },
+
+  // Field with note: email text [unique, note: 'User email address']
+  { kind: 'SPACE', value: '  ' },
+  { kind: 'IDENTIFIER', value: 'email' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'IDENTIFIER', value: 'text' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'LBRACKET', value: '[' },
+  { kind: 'IDENTIFIER', value: 'unique' },
+  { kind: 'COMMA', value: ',' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'IDENTIFIER', value: 'note' },
+  { kind: 'COLON', value: ':' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'STRING_LITERAL', value: 'User email address' },  // Single quotes consumed
+  { kind: 'RBRACKET', value: ']' },
+  { kind: 'NEWLINE', value: '\n' },
+
+  // Field with function expression: created_at timestamp [default: `now()`]
+  { kind: 'SPACE', value: '  ' },
+  { kind: 'IDENTIFIER', value: 'created_at' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'IDENTIFIER', value: 'timestamp' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'LBRACKET', value: '[' },
+  { kind: 'IDENTIFIER', value: 'default' },
+  { kind: 'COLON', value: ':' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'FUNCTION_EXPRESSION', value: 'now()' },  // Backticks consumed
+  { kind: 'RBRACKET', value: ']' },
+  { kind: 'NEWLINE', value: '\n' },
+
+    // ... more tokens for Indexes block, posts table definition, Enum, and Ref
+
+  // Relationship: Ref: schema1.users.id < posts.user_id
+  { kind: 'IDENTIFIER', value: 'Ref' },
+  { kind: 'COLON', value: ':' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'IDENTIFIER', value: 'schema1' },
+  { kind: 'OP', value: '.' },
+  { kind: 'IDENTIFIER', value: 'users' },
+  { kind: 'OP', value: '.' },
+  { kind: 'IDENTIFIER', value: 'id' },
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'OP', value: '<' },  // Relationship operator (not delimiter!)
+  { kind: 'SPACE', value: ' ' },
+  { kind: 'IDENTIFIER', value: 'posts' },
+  { kind: 'OP', value: '.' },
+  { kind: 'IDENTIFIER', value: 'user_id' },
+  { kind: 'EOF', value: '' }
+]
+```
+
+**Key Observations:**
+
+1. **Position Tracking**: Each token includes precise start/end positions for IDE features
+2. **Trivia Preservation**: Whitespace and comments are captured but attached to meaningful tokens
+3. **Context-Independent**: The lexer doesn't distinguish between `.` as schema separator vs. table.field reference
+4. **String Processing**: Quote characters are consumed, only content is preserved
+5. **Relationship Operators**: `<`, `>` are always tokenized as `OP`, never as delimiters
 
 ### Tokenization Process
 
@@ -442,6 +654,70 @@ describe('Lexer', () => {
   });
 });
 ```
+
+## Limitations and Known Issues
+
+### 1. Inconsistent Angle Bracket Handling
+
+**Issue**: The lexer defines `LANGLE` and `RANGLE` token types but never produces them.
+
+**Details**:
+- Token definitions include `LANGLE = '<langle>'` and `RANGLE = '<rangle>'`
+- In practice, `<` and `>` are always tokenized as `OP` tokens through the `isOp()` function
+- This creates dead code and misleading documentation
+
+**Impact**:
+- Confusing for developers reading the token definitions
+- Dead code that should be removed
+- Documentation incorrectly lists them as delimiters
+
+**Current Workaround**: Parser handles `<` and `>` as operators, which works correctly for DBML's relationship syntax
+
+**Recommended Fix**: Remove unused `LANGLE` and `RANGLE` token types from the enum
+
+### 2. Context-Independent Tokenization
+
+**Issue**: The lexer cannot distinguish between different uses of the same character.
+
+**Examples**:
+- `.` used as schema separator (`schema1.table1`) vs. decimal point (`3.14`)
+- `<` and `>` used in relationships vs. potential future generic type syntax
+
+**Impact**:
+- Parser must handle disambiguation, increasing complexity
+- Some language features may be harder to implement
+
+**Current Approach**: Parser performs context-sensitive interpretation of operator tokens
+
+### 3. Limited Unicode Support
+
+**Issue**: The lexer primarily handles ASCII characters with basic Unicode escape sequences.
+
+**Details**:
+- Unicode identifiers are not fully supported
+- Only `\uHHHH` escape sequences are implemented
+- No support for Unicode categories or normalization
+
+**Impact**:
+- Limited internationalization support
+- Cannot handle non-ASCII table/column names from some databases
+
+### 4. No Streaming Support
+
+**Issue**: The lexer requires the entire source text in memory.
+
+**Impact**:
+- Cannot handle extremely large DBML files efficiently
+- Not suitable for streaming or incremental parsing scenarios
+
+### 5. Rigid Comment Attachment
+
+**Issue**: Trivia attachment rules are fixed and may not match all formatting preferences.
+
+**Details**:
+- Comments are attached to the next non-trivia token
+- No way to customize trivia attachment behavior
+- May not preserve intended comment associations in all cases
 
 ## Design Evolution
 

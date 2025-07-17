@@ -31,6 +31,12 @@ Each RFC should follow this standardized format:
 - **Security considerations**: Authentication, authorization, validation
 - **Performance implications**: Scalability and optimization notes
 
+### 5. Limitations and Known Issues
+- **Current limitations**: Known constraints or issues in the implementation
+- **Technical debt**: Areas that need future improvement
+- **Edge cases**: Scenarios that are not fully handled
+- **Workarounds**: Temporary solutions or mitigations
+
 ## RFC Naming Convention
 
 RFCs use date-based naming: `rfc-YYYYMMDD-feature-name.md`
@@ -124,6 +130,9 @@ Description of the overall design approach.
 
 ## Detailed Implementation
 Specific implementation details, code organization, and technical considerations.
+
+## Limitations and Known Issues
+Current limitations, technical debt, and areas for future improvement.
 
 ## Design Evolution (if applicable)
 Document significant changes from original design to final implementation.
