@@ -1,0 +1,26 @@
+// This file contains intentional syntax errors for testing
+
+Table users {
+  id int [pk
+  username varchar [not null]
+  email varchar [unique]
+  invalid_field missing_type
+  created_at timestamp [default: `now()`]
+}
+
+Table posts {
+  id int [pk]
+  title varchar [not null]
+  user_id int [ref: > users.nonexistent_field]
+  // Missing closing brace
+
+Enum status {
+  active
+  inactive
+  // Missing closing brace
+
+Table products
+  // Missing opening brace
+  id int [pk]
+  name varchar
+} 
