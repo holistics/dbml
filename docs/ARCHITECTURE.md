@@ -277,4 +277,4 @@ Potential for extending functionality through:
 Support for:
 - Large schema processing
 - Parallel format conversion
-- Cloud-based schema validation 
+- Cloud-based schema validation
