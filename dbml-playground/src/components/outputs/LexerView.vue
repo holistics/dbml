@@ -241,11 +241,27 @@ const copyToClipboard = async () => {
   }
 }
 
+/**
+ * Get current view mode
+ */
+const getViewMode = (): 'cards' | 'json' => {
+  return viewMode.value
+}
+
+/**
+ * Set view mode externally
+ */
+const setViewMode = (mode: 'cards' | 'json'): void => {
+  viewMode.value = mode
+}
+
 // Expose methods for the navigation coordinator
 defineExpose({
   scrollToToken,
   highlightToken,
-  highlightTokens
+  highlightTokens,
+  getViewMode,
+  setViewMode
 })
 </script>
 
