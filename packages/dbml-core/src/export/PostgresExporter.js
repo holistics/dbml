@@ -5,30 +5,158 @@ import {
   buildJunctionFields1,
   buildJunctionFields2,
   buildNewTableName,
+  hasWhiteSpace,
 } from './utils';
-import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
+import { shouldPrintSchemaName } from '../model_structure/utils';
+
+// PostgreSQL built-in data types
+// Generated from PostgreSQLParser.g4 and PostgreSQLLexer.g4
+
+const POSTGRES_BUILTIN_TYPES = [
+  // Numeric types
+  'SMALLINT',
+  'INTEGER',
+  'INT',
+  'BIGINT',
+  'DECIMAL',
+  'NUMERIC',
+  'REAL',
+  'DOUBLE PRECISION',
+  'SMALLSERIAL',
+  'SERIAL',
+  'BIGSERIAL',
+  'FLOAT',
+
+  // Monetary types
+  'MONEY',
+
+  // Character types
+  'CHARACTER',
+  'CHAR',
+  'CHARACTER VARYING',
+  'VARCHAR',
+  'TEXT',
+  'NAME',
+  'BPCHAR',
+
+  // Binary data types
+  'BYTEA',
+
+  // Date/time types
+  'TIMESTAMP',
+  'TIMESTAMP WITH TIME ZONE',
+  'TIMESTAMP WITHOUT TIME ZONE',
+  'DATE',
+  'TIME',
+  'TIME WITH TIME ZONE',
+  'TIME WITHOUT TIME ZONE',
+  'INTERVAL',
+
+  // Boolean type
+  'BOOLEAN',
+  'BOOL',
+
+  // Geometric types
+  'POINT',
+  'LINE',
+  'LSEG',
+  'BOX',
+  'PATH',
+  'POLYGON',
+  'CIRCLE',
+
+  // Network address types
+  'CIDR',
+  'INET',
+  'MACADDR',
+  'MACADDR8',
+
+  // Bit string types
+  'BIT',
+  'BIT VARYING',
+  'VARBIT',
+
+  // UUID type
+  'UUID',
+
+  // XML type
+  'XML',
+
+  // JSON types
+  'JSON',
+  'JSONB',
+
+  // Range types
+  'INT4RANGE',
+  'INT8RANGE',
+  'NUMRANGE',
+  'TSRANGE',
+  'TSTZRANGE',
+  'DATERANGE',
+
+  // Object identifier types
+  'OID',
+  'REGCLASS',
+  'REGCOLLATION',
+  'REGCONFIG',
+  'REGDICTIONARY',
+  'REGNAMESPACE',
+  'REGOPER',
+  'REGOPERATOR',
+  'REGPROC',
+  'REGPROCEDURE',
+  'REGROLE',
+  'REGTYPE',
+
+  // pg_lsn type
+  'PG_LSN',
+
+  // Special types
+  'VOID',
+  'RECORD',
+  'TRIGGER',
+  'EVENT_TRIGGER',
+  'PG_DDL_COMMAND',
+  'UNKNOWN',
+  'ANYELEMENT',
+  'ANYARRAY',
+  'ANYNONARRAY',
+  'ANYENUM',
+  'ANYRANGE',
+  'ANY',
+  'CSTRING',
+  'INTERNAL',
+  'LANGUAGE_HANDLER',
+  'FDW_HANDLER',
+  'INDEX_AM_HANDLER',
+  'TSM_HANDLER',
+  'OPAQUE',
+];
+
+const POSTGRES_RESERVED_KEYWORDS = [
+  'USER',
+];
 
 class PostgresExporter {
   static exportEnums (enumIds, model) {
-    const enumArr = enumIds.map((enumId) => {
+    return enumIds.map((enumId) => {
       const _enum = model.enums[enumId];
       const schema = model.schemas[_enum.schemaId];
+
+      const enumName = `${shouldPrintSchema(schema, model) ? `"${schema.name}".` : ''}"${_enum.name}"`;
 
       const enumValueArr = _enum.valueIds.map((valueId) => {
         const value = model.enumValues[valueId];
         return `  '${value.name}'`;
       });
       const enumValueStr = enumValueArr.join(',\n');
+      const enumLine = `CREATE TYPE ${enumName} AS ENUM (\n${enumValueStr}\n);\n`;
 
-      const line = `CREATE TYPE ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".` : ''}"${_enum.name}" AS ENUM (\n${enumValueStr}\n);\n`;
-      return line;
+      return [enumName, enumLine];
     });
-
-    return enumArr;
   }
 
-  static getFieldLines (tableId, model) {
+  static getFieldLines (tableId, model, enumSet) {
     const table = model.tables[tableId];
 
     const lines = table.fieldIds.map((fieldId) => {
@@ -44,13 +172,24 @@ class PostgresExporter {
         else if (incrementIntergers.has(typeRaw)) type = typeRaw;
         else type = 'SERIAL';
         line = `"${field.name}" ${type}`;
+      } else if (!field.type.schemaName || !shouldPrintSchemaName(field.type.schemaName)) { // The result type will only has the type part, no schema part (e.g. `int` or `dollars`)
+        const originalTypeName = field.type.type_name;
+        const upperCaseTypeName = originalTypeName.toUpperCase();
+
+        const shouldDoubleQuote = !POSTGRES_BUILTIN_TYPES.includes(upperCaseTypeName)
+          && (hasWhiteSpaceOrUpperCase(originalTypeName) || POSTGRES_RESERVED_KEYWORDS.includes(upperCaseTypeName));
+
+        const typeName = shouldDoubleQuote ? `"${originalTypeName}"` : originalTypeName;
+        line = `"${field.name}" ${typeName}`;
+      } else if (field.type.originalTypeName) { // A custom Postgres type that is not defined as enum in DBML content
+        line = `"${field.name}" "${field.type.schemaName}"."${field.type.originalTypeName}"`;
       } else {
-        let schemaName = '';
-        if (field.type.schemaName && field.type.schemaName !== DEFAULT_SCHEMA_NAME) {
-          schemaName = hasWhiteSpaceOrUpperCase(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
-        }
+        const schemaName = hasWhiteSpaceOrUpperCase(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
         const typeName = hasWhiteSpaceOrUpperCase(field.type.type_name) ? `"${field.type.type_name}"` : field.type.type_name;
-        line = `"${field.name}" ${schemaName}${typeName}`;
+        let typeWithSchema = `${schemaName}${typeName}`;
+        const typeAsEnum = `"${field.type.schemaName}"."${field.type.type_name}"`;
+        if (!enumSet.has(typeAsEnum) && !hasWhiteSpace(typeAsEnum)) typeWithSchema = typeWithSchema.replaceAll('"', '');
+        line = `"${field.name}" ${typeWithSchema}`;
       }
 
       if (field.unique) {
@@ -106,9 +245,9 @@ class PostgresExporter {
     return lines;
   }
 
-  static getTableContentArr (tableIds, model) {
+  static getTableContentArr (tableIds, model, enumSet) {
     const tableContentArr = tableIds.map((tableId) => {
-      const fieldContents = PostgresExporter.getFieldLines(tableId, model);
+      const fieldContents = PostgresExporter.getFieldLines(tableId, model, enumSet);
       const compositePKs = PostgresExporter.getCompositePKs(tableId, model);
 
       return {
@@ -121,8 +260,8 @@ class PostgresExporter {
     return tableContentArr;
   }
 
-  static exportTables (tableIds, model) {
-    const tableContentArr = PostgresExporter.getTableContentArr(tableIds, model);
+  static exportTables (tableIds, model, enumSet) {
+    const tableContentArr = PostgresExporter.getTableContentArr(tableIds, model, enumSet);
 
     const tableStrs = tableContentArr.map((tableContent) => {
       const content = [...tableContent.fieldContents, ...tableContent.compositePKs];
@@ -292,20 +431,44 @@ class PostgresExporter {
 
     const usedTableNames = new Set(Object.values(model.tables).map(table => table.name));
 
-    const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
+    // Pre-collect all user-defined enum names to distinguish them from built-in PostgreSQL types
+    // This prevents built-in types like VARCHAR, INTEGER from being quoted unnecessarily
+    const enumSet = new Set();
+
+    const schemaEnumStatements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];
-      const { tableIds, enumIds, refIds } = schema;
+      const { enumIds } = schema;
 
       if (shouldPrintSchema(schema, model)) {
         prevStatements.schemas.push(`CREATE SCHEMA "${schema.name}";\n`);
       }
 
       if (!_.isEmpty(enumIds)) {
-        prevStatements.enums.push(...PostgresExporter.exportEnums(enumIds, model));
+        const enumPairs = PostgresExporter.exportEnums(enumIds, model);
+
+        enumPairs.forEach((enumPair) => {
+          const [enumName, enumLine] = enumPair;
+          prevStatements.enums.push(enumLine);
+          enumSet.add(enumName);
+        });
       }
 
+      return prevStatements;
+    }, {
+      schemas: [],
+      enums: [],
+      tables: [],
+      indexes: [],
+      comments: [],
+      refs: [],
+    });
+
+    const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
+      const schema = model.schemas[schemaId];
+      const { tableIds, refIds } = schema;
+
       if (!_.isEmpty(tableIds)) {
-        prevStatements.tables.push(...PostgresExporter.exportTables(tableIds, model));
+        prevStatements.tables.push(...PostgresExporter.exportTables(tableIds, model, enumSet));
       }
 
       const indexIds = _.flatten(tableIds.map((tableId) => model.tables[tableId].indexIds));
@@ -329,14 +492,7 @@ class PostgresExporter {
       }
 
       return prevStatements;
-    }, {
-      schemas: [],
-      enums: [],
-      tables: [],
-      indexes: [],
-      comments: [],
-      refs: [],
-    });
+    }, schemaEnumStatements);
 
     const res = _.concat(
       statements.schemas,
