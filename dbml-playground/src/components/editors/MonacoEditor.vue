@@ -45,9 +45,10 @@ let editor: monaco.editor.IStandaloneCodeEditor | null = null
 
 /**
  * Get the appropriate theme for the given language
+ * Use DBML theme for both DBML and JSON to maintain consistency
  */
 const getThemeForLanguage = (language: string): string => {
-  return language === 'dbml' ? DBMLLanguageService.getThemeName() : 'vs'
+  return DBMLLanguageService.getThemeName()
 }
 
 /**

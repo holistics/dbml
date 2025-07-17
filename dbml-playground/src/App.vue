@@ -122,22 +122,12 @@
                 </div>
               </div>
 
-              <!-- Interpreter Output with Monaco Editor -->
-              <div v-else-if="activeStage === 'interpreter'" class="h-full flex flex-col">
-                <div class="flex-shrink-0 p-4 border-b border-gray-200 bg-gray-50">
-                  <div class="flex items-center">
-                    <h3 class="text-sm font-medium text-gray-700">Interpreter Output (Database JSON Model)</h3>
-                  </div>
-                </div>
-                <div class="flex-1 overflow-hidden">
-                  <MonacoEditor
-                    :model-value="getCurrentStageOutputString()"
-                    language="json"
-                    :read-only="true"
-                    :minimap="false"
-                    word-wrap="on"
-                  />
-                </div>
+              <!-- Interpreter Output with JSON Viewer -->
+              <div v-else-if="activeStage === 'interpreter'" class="h-full">
+                <JsonOutputViewer
+                  :json-content="getCurrentStageOutputString()"
+                  title="Interpreter Output (Database JSON Model)"
+                />
               </div>
 
               <!-- Lexer stage with ParserOutputViewer for token navigation -->
@@ -148,14 +138,11 @@
                 />
               </div>
 
-              <!-- Other stages with Monaco Editor for JSON -->
+              <!-- Other stages with JSON Viewer -->
               <div v-else class="h-full">
-                <MonacoEditor
-                  :model-value="getCurrentStageOutputString()"
-                  language="json"
-                  :read-only="true"
-                  :minimap="false"
-                  word-wrap="on"
+                <JsonOutputViewer
+                  :json-content="getCurrentStageOutputString()"
+                  :title="`${getStageTitle(activeStage)} Output`"
                 />
               </div>
             </div>
@@ -169,11 +156,11 @@
 <script setup lang="ts">
 /**
  * DBML Playground Application
- * 
+ *
  * Main application component that orchestrates the playground interface.
  * This component focuses solely on UI concerns and delegates complex logic
  * to specialized modules.
- * 
+ *
  * Design Principles Applied:
  * - Single Responsibility: Only handles UI orchestration
  * - Information Hiding: Business logic hidden in composables and services
@@ -183,6 +170,7 @@ import { ref, provide, watch } from 'vue'
 import { useParser, type PipelineStage } from '@/composables/useParser'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
 import ParserOutputViewer from '@/components/outputs/ParserOutputViewer.vue'
+import JsonOutputViewer from '@/components/outputs/JsonOutputViewer.vue'
 import * as monaco from 'monaco-editor'
 import { TokenMappingService } from '@/core/token-mapping'
 import { TokenNavigationCoordinator } from '@/core/token-navigation'
@@ -267,6 +255,16 @@ const getCurrentStageOutputString = () => {
   }
   return parser.getStageOutputString(activeStage.value)
 }
+
+/**
+ * Get title for the current active stage
+ */
+const getStageTitle = (stage: PipelineStage) => {
+  const stageInfo = PIPELINE_STAGES.find(s => s.id === stage)
+  return stageInfo ? stageInfo.name : stage
+}
+
+
 </script>
 
 <style>
