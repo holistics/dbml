@@ -5,6 +5,9 @@
       <div class="flex items-center space-x-4">
         <span>{{ props.language.toUpperCase() }}</span>
         <span v-if="!props.readOnly">UTF-8</span>
+        <span v-if="props.vimMode" class="vim-mode-indicator bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs font-medium">
+          -- {{ vimModeStatus }} --
+        </span>
       </div>
       <div class="flex items-center space-x-4">
         <span>Ln {{ cursorPosition.line }}, Col {{ cursorPosition.column }}</span>
@@ -38,6 +41,7 @@ interface Props {
   readOnly?: boolean
   minimap?: boolean
   wordWrap?: 'on' | 'off' | 'wordWrapColumn' | 'bounded'
+  vimMode?: boolean
 }
 
 interface Emits {
@@ -49,7 +53,8 @@ const props = withDefaults(defineProps<Props>(), {
   language: 'dbml',
   readOnly: false,
   minimap: true,
-  wordWrap: 'on'
+  wordWrap: 'on',
+  vimMode: false
 })
 
 const emit = defineEmits<Emits>()
@@ -69,6 +74,12 @@ const selectionInfo = ref({
   hasSelection: false,
   selectedChars: 0
 })
+
+/**
+ * Vim mode state
+ */
+let vimMode: any = null
+const vimModeStatus = ref('NORMAL')
 
 /**
  * Get the appropriate theme for the given language
@@ -117,6 +128,40 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
 })
 
 /**
+ * Setup vim mode using monaco-vim
+ */
+const setupVimMode = async (): Promise<void> => {
+  if (!editor || !props.vimMode) return
+
+    try {
+    // Dynamically import monaco-vim
+    const { initVimMode } = await import('monaco-vim' as any)
+
+    // Initialize vim mode with status tracking
+    vimMode = initVimMode(editor)
+
+    // Track vim mode status changes
+    if (vimMode && vimMode.on) {
+      vimMode.on('vim-mode-change', (mode: any) => {
+        vimModeStatus.value = mode.mode?.toUpperCase() || 'NORMAL'
+      })
+    }
+  } catch (error) {
+    console.warn('Failed to initialize vim mode:', error)
+  }
+}
+
+/**
+ * Clear vim mode
+ */
+const clearVimMode = (): void => {
+  if (vimMode && typeof vimMode.dispose === 'function') {
+    vimMode.dispose()
+    vimMode = null
+  }
+}
+
+/**
  * Initialize the Monaco Editor
  */
 const initializeEditor = async (): Promise<void> => {
@@ -133,6 +178,9 @@ const initializeEditor = async (): Promise<void> => {
 
   // Set up event listeners
   setupEventListeners()
+
+  // Setup vim mode if enabled
+  setupVimMode()
 
   // Emit editor-mounted event
   emit('editor-mounted', editor)
@@ -212,6 +260,7 @@ const setupEventListeners = (): void => {
  * Clean up editor resources
  */
 const cleanup = (): void => {
+  clearVimMode()
   if (editor) {
     editor.dispose()
     editor = null
@@ -250,6 +299,17 @@ watch(() => props.language, (newLanguage) => {
       editor.updateOptions({
         theme: getThemeForLanguage(newLanguage)
       })
+    }
+  }
+})
+
+// Watch for vim mode changes
+watch(() => props.vimMode, (newVimMode) => {
+  if (editor) {
+    if (newVimMode) {
+      setupVimMode()
+    } else {
+      clearVimMode()
     }
   }
 })

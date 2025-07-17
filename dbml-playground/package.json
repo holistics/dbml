@@ -24,11 +24,13 @@
   },
   "dependencies": {
     "@dbml/parse": "3.13.7",
-    "vue": "^3.4.0",
+    "lodash": "^4.17.21",
     "monaco-editor": "^0.52.2",
-    "lodash": "^4.17.21"
+    "monaco-vim": "^0.4.2",
+    "vue": "^3.4.0"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.11",
     "@types/lodash": "^4.14.200",
     "@types/node": "^24.0.14",
     "@typescript-eslint/eslint-plugin": "^8.30.1",
@@ -39,7 +41,6 @@
     "eslint-plugin-vue": "^10.3.0",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.11",
-    "@tailwindcss/vite": "^4.1.11",
     "typescript": "^5.7.3",
     "vite": "^7.0.5",
     "vue-tsc": "^3.0.1"
