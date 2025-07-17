@@ -23,7 +23,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@dbml/parse": "workspace:*",
+    "@dbml/parse": "3.13.7",
     "vue": "^3.4.0",
     "monaco-editor": "^0.52.2",
     "lodash": "^4.17.21",

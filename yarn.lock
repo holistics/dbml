@@ -1813,13 +1813,6 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
-"@dbml/parse@workspace:*":
-  version "3.13.8-alpha.0"
-  resolved "https://registry.yarnpkg.com/@dbml/parse/-/parse-3.13.8-alpha.0.tgz#7bd1aa8f8296bd6af726d247512e73a5211cfb0e"
-  integrity sha512-QPR9lM1Ukg8YbrQSY7AxYJE0nOfryl7ZH60V3VM2gAkNiTzggwILqjGvXGe3C1nCksfl+esNNIvOG6QJ9/PZDQ==
-  dependencies:
-    lodash-es "^4.17.21"
-
 "@emnapi/core@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@emnapi/core/-/core-1.4.0.tgz#8844b02d799198158ac1fea21ae2bc81b881da9a"
@@ -9842,11 +9835,6 @@ locate-path@^6.0.0:
   integrity sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==
   dependencies:
     p-locate "^5.0.0"
-
-lodash-es@^4.17.21:
-  version "4.17.21"
-  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
-  integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
 
 lodash.debounce@^4.0.8:
   version "4.0.8"
