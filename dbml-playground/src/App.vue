@@ -37,8 +37,23 @@
         <!-- Input Section -->
         <div class="w-1/2 flex flex-col border-r border-gray-200">
           <div class="bg-white px-6 py-4 border-b border-gray-200 flex-shrink-0">
-            <h2 class="text-lg font-semibold text-gray-900">DBML Input</h2>
-            <p class="text-sm text-gray-500 mt-1">Enter your DBML schema code below</p>
+            <div class="flex justify-between items-start">
+              <div>
+                <h2 class="text-lg font-semibold text-gray-900">DBML Input</h2>
+                <p class="text-sm text-gray-500 mt-1">Enter your DBML schema code below</p>
+              </div>
+              <!-- Vim Mode Toggle for DBML Editor -->
+              <div class="flex items-center space-x-2">
+                <label class="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    v-model="vimModeEnabled"
+                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  />
+                  <span class="text-sm text-gray-600">Vim Mode</span>
+                </label>
+              </div>
+            </div>
           </div>
           <div class="flex-1 p-6 overflow-hidden bg-gray-50">
             <div class="h-full bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
@@ -47,6 +62,7 @@
                 language="dbml"
                 :minimap="false"
                 word-wrap="on"
+                :vim-mode="vimModeEnabled"
                 @editor-mounted="onDbmlEditorMounted"
               />
             </div>
@@ -166,8 +182,9 @@
  * - Information Hiding: Business logic hidden in composables and services
  * - Shallow Module: Simple interface that coordinates deeper modules
  */
-import { ref, provide, watch } from 'vue'
+import { ref, provide, watch, onMounted } from 'vue'
 import { useParser, type PipelineStage } from '@/composables/useParser'
+import { useUserData } from '@/composables/useUserData'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
 import ParserOutputViewer from '@/components/outputs/ParserOutputViewer.vue'
 import JsonOutputViewer from '@/components/outputs/JsonOutputViewer.vue'
@@ -178,6 +195,13 @@ import packageJson from '../package.json'
 
 // Initialize parser with clean interface
 const parser = useParser()
+
+// Initialize user data management
+const { userData, updateUserData, saveDbml } = useUserData()
+
+// Reactive state derived from user data
+const vimModeEnabled = ref(userData.value.isVim)
+const activeStage = ref<PipelineStage | 'errors'>(userData.value.openingTab)
 
 // Initialize token navigation system
 const tokenMapping = new TokenMappingService()
@@ -193,6 +217,13 @@ const lexerViewer = ref<InstanceType<typeof ParserOutputViewer> | null>(null)
 const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
   dbmlEditor = editor
   tokenNavigationCoordinator.setDbmlEditor(editor)
+
+  // Add Cmd/Ctrl+S shortcut for manual save
+  editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+    saveDbml(parser.dbmlInput.value)
+    // Show brief save indicator
+    console.log('DBML content saved to localStorage')
+  })
 }
 
 /**
@@ -203,6 +234,57 @@ watch(lexerViewer, (newViewer) => {
     // The ParserOutputViewer will delegate to LexerView when appropriate
     tokenNavigationCoordinator.setLexerViewer(newViewer)
   }
+})
+
+/**
+ * Sync reactive state with user data
+ */
+watch(vimModeEnabled, (newValue) => {
+  updateUserData('isVim', newValue)
+})
+
+watch(activeStage, (newValue) => {
+  if (newValue !== 'errors') {
+    updateUserData('openingTab', newValue)
+  }
+})
+
+// Watch for changes in lexer view mode and save to user data
+watch(() => lexerViewer.value?.getViewMode?.(), (newMode) => {
+  if (newMode) {
+    updateUserData('isRawJson', newMode === 'json')
+  }
+})
+
+/**
+ * Initialize DBML content from user data
+ */
+onMounted(() => {
+  // Set initial DBML content from user data
+  parser.dbmlInput.value = userData.value.dbml
+
+  // Setup auto-save for DBML content
+  let autoSaveTimeout: number | null = null
+
+  watch(parser.dbmlInput, (newContent) => {
+    // Clear existing timeout
+    if (autoSaveTimeout) {
+      clearTimeout(autoSaveTimeout)
+    }
+
+    // Set new timeout for auto-save (1 second delay)
+    autoSaveTimeout = window.setTimeout(() => {
+      updateUserData('dbml', newContent)
+    }, 1000)
+  })
+
+  // Initialize lexer view mode from user data
+  watch(lexerViewer, (newViewer) => {
+    if (newViewer) {
+      const initialViewMode = userData.value.isRawJson ? 'json' : 'cards'
+      newViewer.setViewMode?.(initialViewMode)
+    }
+  }, { immediate: true })
 })
 
 /**
@@ -237,7 +319,6 @@ provide('getDbmlEditor', () => dbmlEditor)
 provide('tokenNavigationCoordinator', tokenNavigationCoordinator)
 
 // UI state management
-const activeStage = ref<PipelineStage | 'errors'>('lexer')
 const version = packageJson.version
 
 /**

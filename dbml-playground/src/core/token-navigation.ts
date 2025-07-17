@@ -213,7 +213,7 @@ export class TokenNavigationCoordinator {
           this.navigateToTokenFromDbml(
             position.lineNumber,
             position.column,
-            e.event.metaKey ? 'cmd' : 'ctrl'
+            this.getPlatformModifierKey()
           )
         }
       }
@@ -331,9 +331,19 @@ export class TokenNavigationCoordinator {
 
   /**
    * Check if the event is an intentional navigation action
+   * Uses Cmd on macOS and Ctrl on Windows/Linux
    */
   private isIntentionalNavigation(event: any): boolean {
-    return event.metaKey || event.ctrlKey
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
+    return isMac ? event.metaKey : event.ctrlKey
+  }
+
+  /**
+   * Get the appropriate modifier key name for the current platform
+   */
+  private getPlatformModifierKey(): 'cmd' | 'ctrl' {
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
+    return isMac ? 'cmd' : 'ctrl'
   }
 
   /**
@@ -345,15 +355,19 @@ export class TokenNavigationCoordinator {
     const editorDomNode = this.dbmlEditor.getDomNode()
     if (!editorDomNode) return
 
-    // Track modifier keys to show navigation mode
+    // Track modifier keys to show navigation mode (platform-specific)
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
+
     document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && this.shouldShowNavigationMode()) {
+      const isModifierPressed = isMac ? e.metaKey : e.ctrlKey
+      if (isModifierPressed && this.shouldShowNavigationMode()) {
         editorDomNode.classList.add('token-navigation-mode')
       }
     })
 
     document.addEventListener('keyup', (e) => {
-      if (!e.metaKey && !e.ctrlKey) {
+      const isModifierPressed = isMac ? e.metaKey : e.ctrlKey
+      if (!isModifierPressed) {
         editorDomNode.classList.remove('token-navigation-mode')
       }
     })
@@ -375,6 +389,9 @@ export class TokenNavigationCoordinator {
   private addNavigationStyles(): void {
     const existingStyle = document.getElementById('token-navigation-styles')
     if (existingStyle) return
+
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
+    const modifierKey = isMac ? '⌘' : 'Ctrl'
 
     const style = document.createElement('style')
     style.id = 'token-navigation-styles'
@@ -414,7 +431,7 @@ export class TokenNavigationCoordinator {
 
       /* Hover hint */
       .monaco-editor.token-navigation-mode::after {
-        content: "⌘+Click to navigate to token";
+        content: "${modifierKey}+Click to navigate to token";
         position: absolute;
         top: 10px;
         right: 10px;
@@ -425,12 +442,6 @@ export class TokenNavigationCoordinator {
         font-size: 11px;
         pointer-events: none;
         z-index: 1000;
-      }
-
-      @media (platform: windows) {
-        .monaco-editor.token-navigation-mode::after {
-          content: "Ctrl+Click to navigate to token";
-        }
       }
     `
     document.head.appendChild(style)
