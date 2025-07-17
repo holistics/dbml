@@ -5,7 +5,7 @@
     </div>
     <div v-else class="p-4">
       <JsonViewer
-        :value="data"
+        :value="transformedData"
         :expand-depth="2"
         copyable
         sort
@@ -18,37 +18,56 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * JSON Viewer Component
+ *
+ * A simple wrapper around vue-json-viewer that provides data formatting
+ * and consistent styling. This component focuses only on JSON display concerns.
+ *
+ * Design Principles Applied:
+ * - Single Responsibility: Only handles JSON data display
+ * - Information Hiding: Data transformation logic is encapsulated
+ * - Obvious Code: Clear data transformation with explicit cases
+ */
 import { computed } from 'vue'
 // @ts-ignore: No type definitions available for vue-json-viewer
 import JsonViewer from 'vue-json-viewer'
 import 'vue-json-viewer/style.css'
 
 interface Props {
-  data: any
-  title?: string
+  readonly data: unknown
+  readonly title?: string
 }
 
 const props = defineProps<Props>()
 
-// Ensure data is properly formatted for the JSON viewer
-const data = computed(() => {
-  if (!props.data) return null
-  
-  // If it's already an object, return as-is
+/**
+ * Transform data for optimal JSON viewer display
+ *
+ * Handles various data types and ensures the viewer receives
+ * properly formatted data in all cases.
+ */
+const transformedData = computed(() => {
+  if (props.data === null || props.data === undefined) {
+    return null
+  }
+
+  // Objects and arrays can be displayed directly
   if (typeof props.data === 'object') {
     return props.data
   }
-  
-  // If it's a string, try to parse as JSON
+
+  // Attempt to parse strings as JSON
   if (typeof props.data === 'string') {
     try {
       return JSON.parse(props.data)
     } catch {
+      // If parsing fails, wrap in an object for consistent display
       return { value: props.data }
     }
   }
-  
-  // For other types, wrap in an object
+
+  // For primitive types, wrap in an object for consistent structure
   return { value: props.data }
 })
 </script>
@@ -150,4 +169,4 @@ const data = computed(() => {
 .json-viewer::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
-</style> 
+</style>
