@@ -5,10 +5,10 @@
 <script setup lang="ts">
 /**
  * Monaco Editor Component
- * 
+ *
  * A clean wrapper around Monaco Editor that focuses solely on editor concerns.
  * Complex language registration is delegated to specialized services.
- * 
+ *
  * Design Principles Applied:
  * - Single Responsibility: Only handles editor lifecycle and events
  * - Information Hiding: Language setup complexity is hidden in services
@@ -28,6 +28,7 @@ interface Props {
 
 interface Emits {
   (e: 'update:modelValue', value: string): void
+  (e: 'editor-mounted', editor: monaco.editor.IStandaloneCodeEditor): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -96,6 +97,9 @@ const initializeEditor = async (): Promise<void> => {
 
   // Set up event listeners
   setupEventListeners()
+
+  // Emit editor-mounted event
+  emit('editor-mounted', editor)
 }
 
 /**
@@ -163,4 +167,4 @@ watch(() => props.language, (newLanguage) => {
   height: 100%;
   width: 100%;
 }
-</style> 
+</style>

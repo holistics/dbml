@@ -47,6 +47,7 @@
                 language="dbml"
                 :minimap="false"
                 word-wrap="on"
+                @editor-mounted="onDbmlEditorMounted"
               />
             </div>
           </div>
@@ -139,6 +140,14 @@
                 </div>
               </div>
 
+              <!-- Lexer stage with ParserOutputViewer for token navigation -->
+              <div v-else-if="activeStage === 'lexer'" class="h-full">
+                <ParserOutputViewer
+                  :data="getCurrentStageOutput()"
+                  ref="lexerViewer"
+                />
+              </div>
+
               <!-- Other stages with Monaco Editor for JSON -->
               <div v-else class="h-full">
                 <MonacoEditor
@@ -170,13 +179,59 @@
  * - Information Hiding: Business logic hidden in composables and services
  * - Shallow Module: Simple interface that coordinates deeper modules
  */
-import { ref } from 'vue'
+import { ref, provide, watch } from 'vue'
 import { useParser, type PipelineStage } from '@/composables/useParser'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
+import ParserOutputViewer from '@/components/outputs/ParserOutputViewer.vue'
+import * as monaco from 'monaco-editor'
+import { TokenMappingService } from '@/core/token-mapping'
+import { TokenNavigationCoordinator } from '@/core/token-navigation'
 import packageJson from '../package.json'
 
 // Initialize parser with clean interface
 const parser = useParser()
+
+// Initialize token navigation system
+const tokenMapping = new TokenMappingService()
+const tokenNavigationCoordinator = new TokenNavigationCoordinator(tokenMapping)
+
+// Reference to components
+let dbmlEditor: monaco.editor.IStandaloneCodeEditor | null = null
+const lexerViewer = ref<InstanceType<typeof ParserOutputViewer> | null>(null)
+
+/**
+ * Handle DBML editor mounted event
+ */
+const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
+  dbmlEditor = editor
+  tokenNavigationCoordinator.setDbmlEditor(editor)
+}
+
+/**
+ * Setup lexer viewer when it's mounted
+ */
+watch(lexerViewer, (newViewer) => {
+  if (newViewer) {
+    // The ParserOutputViewer will delegate to LexerView when appropriate
+    tokenNavigationCoordinator.setLexerViewer(newViewer)
+  }
+})
+
+/**
+ * Update token mapping when lexer output changes
+ */
+watch(() => parser.tokens.value, (newTokens) => {
+  if (newTokens && Array.isArray(newTokens)) {
+    tokenNavigationCoordinator.updateTokenMapping(newTokens)
+  }
+}, { immediate: true })
+
+/**
+ * Provide services to child components
+ */
+provide('tokenNavigationBus', tokenNavigationCoordinator.getEventBus())
+provide('getDbmlEditor', () => dbmlEditor)
+provide('tokenNavigationCoordinator', tokenNavigationCoordinator)
 
 // UI state management
 const activeStage = ref<PipelineStage | 'errors'>('lexer')
