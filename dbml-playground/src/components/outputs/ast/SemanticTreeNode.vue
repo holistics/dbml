@@ -41,10 +41,7 @@
       <span
         v-if="node.sourcePosition"
         class="ml-2 px-2 py-0.5 text-xs bg-gray-200 text-gray-600 rounded"
-        :title="`Line ${node.sourcePosition.start.line}, Column ${node.sourcePosition.start.column}
-Offset: ${node.sourcePosition.start.offset}-${node.sourcePosition.end.offset}
-Node ID: ${node.sourcePosition.raw?.id || 'N/A'}
-Kind: ${node.sourcePosition.raw?.kind || 'N/A'}`"
+        :title="getTooltipText(node.sourcePosition)"
       >
         {{ node.sourcePosition.start.line }}:{{ node.sourcePosition.start.column }}
       </span>
@@ -109,6 +106,20 @@ const toggleExpanded = () => {
     id: props.node.id,
     expanded: !isExpanded.value
   })
+}
+
+const getTooltipText = (sourcePosition: any) => {
+  let tooltip = `Line ${sourcePosition.start.line}, Column ${sourcePosition.start.column}\nOffset: ${sourcePosition.start.offset}-${sourcePosition.end.offset}`
+  
+  // Only add parser node info if it actually exists
+  if (sourcePosition.raw?.id) {
+    tooltip += `\nParser Node ID: ${sourcePosition.raw.id}`
+  }
+  if (sourcePosition.raw?.kind) {
+    tooltip += `\nParser Node Kind: ${sourcePosition.raw.kind}`
+  }
+  
+  return tooltip
 }
 
 // Removed property-related functions - no longer needed

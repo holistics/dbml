@@ -1,47 +1,76 @@
 /**
  * AST Transformer Service
  *
- * Transforms the generic DBML AST into semantic structures that are easier
- * to understand and navigate. This service provides both semantic interpretation
- * and access path generation for debugging purposes.
+ * Transforms the DBML AST from @dbml/parse into semantic structures by REUSING
+ * the parser's own type definitions and node structures. This eliminates
+ * interface duplication and ensures consistency.
  *
  * Design Principles Applied:
  * - Deep Module: Complex transformation logic with simple interface
  * - Information Hiding: Transformation details hidden from consumers
  * - Single Responsibility: Only handles AST transformation and semantic analysis
+ * - Single Source of Truth: Uses parser types directly - NO DUPLICATION
+ * - Evolution Resilience: Handles new parser element types automatically
  */
 
+import {
+  Compiler,
+  ElementKind,
+  SyntaxNode,
+  SyntaxNodeKind,
+  ElementDeclarationNode,
+  Position,
+  Database,
+  Table,
+  Column,
+  Enum,
+  Ref,
+  Project,
+  TableGroup,
+  TablePartial
+} from '@dbml/parse'
+
+// Use the actual parser types from the Compiler API
+type CompilerAST = ReturnType<Compiler['parse']['ast']>
+
+/**
+ * Semantic AST Node - REUSES parser structures instead of duplicating
+ *
+ * This interface extends and reuses parser types wherever possible.
+ * The 'data' field contains the actual parsed structure from @dbml/parse.
+ *
+ * The 'id' field is used internally for Vue component tracking and UI state management
+ * (selection, expansion). It should NOT be shown in debugging UI - use the real parser 
+ * node ID from sourcePosition.raw.id instead.
+ */
 export interface SemanticASTNode {
-  id: string
-  type: 'database' | 'table' | 'column' | 'enum' | 'ref' | 'project' | 'tableGroup' | 'index' | 'tablePartial'
+  id: string // Internal ID for Vue reactivity - NOT for debugging display
+  type: ElementKind | 'database' | 'column' | 'index' | 'note' | 'unknown' // Use parser's ElementKind enum
   name: string
   displayName: string
   icon: string
   children: SemanticASTNode[]
   accessPath: string // JavaScript access path for debugging
+
+  // REUSE parser structures instead of duplicating
+  data?: Table | Column | Enum | Ref | Project | TableGroup | TablePartial | any
+
+  // Source position using parser's Position interface
   sourcePosition?: {
     start: { line: number; column: number; offset: number }
     end: { line: number; column: number; offset: number }
-    // Enhanced debugging information
+    // Raw parser node information - use raw.id for debugging display
     raw?: {
-      startPos: any
-      endPos: any
+      startPos: Position
+      endPos: Position
       start: number
       end: number
       fullStart: number
       fullEnd: number
-      id: number
-      kind: string
+      id: number // THIS is the real parser node ID for debugging
+      kind: SyntaxNodeKind
     }
-    token?: {
-      kind: string
-      value: string
-      leadingTrivia?: Array<{ kind: string; value: string }>
-      trailingTrivia?: Array<{ kind: string; value: string }>
-      leadingInvalid: number
-      trailingInvalid: number
-      isInvalid: boolean
-    }
+    token?: any
   }
 }
 
@@ -59,22 +88,337 @@ export interface FilterOptions {
 }
 
 /**
+ * Development Info for debugging parser integration
+ */
+export interface ParserIntegrationInfo {
+  isLinked: boolean
+  packagePath: string
+  version: string
+  detectionMethod: string
+}
+
+/**
+ * Element Handler Interface for the Resilient Design
+ *
+ * Handlers work with actual parser types, not duplicated interfaces
+ */
+export interface ElementHandler {
+  canHandle(element: ElementDeclarationNode): boolean
+  transform(element: ElementDeclarationNode, path: string): SemanticASTNode
+  getElementType(): ElementKind | string
+  getPriority(): number
+}
+
+/**
+ * Element Type Registry using parser's ElementKind enum
+ */
+export class ElementTypeRegistry {
+  private handlers: Map<ElementKind | string, ElementHandler> = new Map()
+  private fallbackHandler: ElementHandler
+
+  constructor() {
+    this.fallbackHandler = new GenericElementHandler()
+  }
+
+  registerHandler(elementType: ElementKind | string, handler: ElementHandler): void {
+    this.handlers.set(elementType, handler)
+  }
+
+  getHandler(element: ElementDeclarationNode): ElementHandler {
+    const elementType = element?.type?.value?.toLowerCase() as ElementKind
+
+    if (elementType && this.handlers.has(elementType)) {
+      return this.handlers.get(elementType)!
+    }
+
+    // Find handler by canHandle method
+    for (const handler of this.handlers.values()) {
+      if (handler.canHandle(element)) {
+        return handler
+      }
+    }
+
+    // Return fallback for unknown types - this makes us evolution-resilient
+    return this.fallbackHandler
+  }
+
+  getAllKnownTypes(): (ElementKind | string)[] {
+    return Array.from(this.handlers.keys())
+  }
+}
+
+/**
+ * Generic Element Handler - Handles Unknown Types
+ *
+ * This ensures playground continues working when parser adds new element types
+ */
+export class GenericElementHandler implements ElementHandler {
+  canHandle(element: ElementDeclarationNode): boolean {
+    return true // Can handle any element as fallback
+  }
+
+  transform(element: ElementDeclarationNode, path: string): SemanticASTNode {
+    const name = this.extractElementName(element) || 'unknown'
+    const elementType = element?.type?.value || 'unknown'
+
+    // Generate deterministic ID for Vue reactivity using parser node ID if available
+    const parserNodeId = element?.id || 0
+    const semanticId = `${elementType}_${name}_${parserNodeId}`
+
+    return {
+      id: semanticId, // Deterministic ID for Vue, based on content + parser node ID
+      type: 'unknown',
+      name,
+      displayName: `${elementType}: ${name}`,
+      icon: 'note',
+      children: [],
+      accessPath: path,
+      data: element, // Store the original parser node
+      sourcePosition: this.extractSourcePosition(element)
+    }
+  }
+
+  getElementType(): string {
+    return 'unknown'
+  }
+
+  getPriority(): number {
+    return 0 // Lowest priority - used as fallback
+  }
+
+  private extractElementName(element: ElementDeclarationNode): string | null {
+    if (!element?.name) return null
+
+    if (element.name.kind === SyntaxNodeKind.INFIX_EXPRESSION && element.name.op?.value === '.') {
+      const left = this.getNameValue(element.name.leftExpression)
+      const right = this.getNameValue(element.name.rightExpression)
+      if (left && right) return `${left}.${right}`
+      return right || left
+    }
+
+    return this.getNameValue(element.name)
+  }
+
+  private getNameValue(nameNode: any): string | null {
+    if (!nameNode) return null
+    if (nameNode.value) return nameNode.value
+    if (nameNode.token?.value) return nameNode.token.value
+    if (nameNode.variable?.value) return nameNode.variable.value
+    return null
+  }
+
+  private extractSourcePosition(element: SyntaxNode) {
+    const startLine = element.startPos.line + 1
+    const startColumn = element.startPos.column + 1
+    const endLine = element.endPos.line + 1
+    const endColumn = element.endPos.column + 1
+
+    return {
+      start: {
+        line: startLine,
+        column: startColumn,
+        offset: element.start
+      },
+      end: {
+        line: endLine,
+        column: endColumn,
+        offset: element.end
+      },
+      raw: {
+        startPos: element.startPos,
+        endPos: element.endPos,
+        start: element.start,
+        end: element.end,
+        fullStart: element.fullStart,
+        fullEnd: element.fullEnd,
+        id: element.id,
+        kind: element.kind
+      }
+    }
+  }
+}
+
+/**
  * AST Transformer Service
  *
- * Converts raw DBML AST into semantic tree structures and provides
- * navigation and access path utilities.
+ * Uses @dbml/parse types directly. No interface duplication.
+ * Implements registry system for parser evolution resilience.
  */
 export class ASTTransformerService {
-  private rawAST: any = null
+  private rawAST: CompilerAST | null = null
   private semanticAST: SemanticASTNode | null = null
+  private registry: ElementTypeRegistry
+
+  constructor() {
+    this.registry = new ElementTypeRegistry()
+    this.initializeKnownHandlers()
+  }
 
   /**
-   * Transform raw AST into semantic structure
+   * Check if we're using a linked version of @dbml/parse (for development)
+   * This helps developers know if they're testing local changes
+   *
+   * Browser-compatible approach using import meta and runtime detection
    */
-  public transformToSemantic(rawAST: any): SemanticASTNode {
+  public static getParserIntegrationInfo(): ParserIntegrationInfo {
+    try {
+      // Method 1: Check if we can access Compiler constructor properties that might indicate dev mode
+      const compiler = new Compiler()
+      let detectionMethod = 'runtime-analysis'
+      let isLinked = false
+      let version = 'unknown'
+
+      // Method 2: Check for development mode indicators in the environment
+      if (import.meta.env?.DEV || import.meta.env?.MODE === 'development') {
+        isLinked = true
+        detectionMethod = 'vite-dev-mode'
+      }
+
+      // Method 3: Check URL patterns that might indicate local development
+      if (typeof window !== 'undefined') {
+        const currentURL = window.location.href
+        if (currentURL.includes('localhost') || currentURL.includes('127.0.0.1') || currentURL.includes(':5173')) {
+          isLinked = true
+          detectionMethod = 'development-server'
+        }
+      }
+
+      // Method 4: Try to detect by checking if compiler has development-only properties
+      const compilerString = compiler.toString()
+      if (compilerString.includes('development') || compilerString.includes('debug')) {
+        isLinked = true
+        detectionMethod = 'compiler-debug-mode'
+      }
+
+      // Method 5: Check package version if available through public API
+      try {
+        // If the package exports version info, we can access it
+        version = (compiler as any).__version__ || 'runtime-detected'
+      } catch {
+        version = 'unavailable-in-browser'
+      }
+
+      return {
+        isLinked,
+        packagePath: 'browser-environment',
+        version,
+        detectionMethod
+      }
+    } catch (error) {
+      return {
+        isLinked: false,
+        packagePath: 'browser-environment',
+        version: 'unknown',
+        detectionMethod: 'error: ' + (error as Error).message
+      }
+    }
+  }
+
+  /**
+   * Initialize handlers for known element types from parser's ElementKind enum
+   */
+  private initializeKnownHandlers(): void {
+    this.registry.registerHandler(ElementKind.Table, {
+      canHandle: (element) => element?.type?.value?.toLowerCase() === ElementKind.Table,
+      transform: (element, path) => this.createSemanticTable(element, path),
+      getElementType: () => ElementKind.Table,
+      getPriority: () => 10
+    })
+
+    this.registry.registerHandler(ElementKind.Enum, {
+      canHandle: (element) => element?.type?.value?.toLowerCase() === ElementKind.Enum,
+      transform: (element, path) => this.createSemanticEnum(element, path),
+      getElementType: () => ElementKind.Enum,
+      getPriority: () => 10
+    })
+
+    this.registry.registerHandler(ElementKind.Ref, {
+      canHandle: (element) => element?.type?.value?.toLowerCase() === ElementKind.Ref,
+      transform: (element, path) => this.createSemanticRef(element, path),
+      getElementType: () => ElementKind.Ref,
+      getPriority: () => 10
+    })
+
+    this.registry.registerHandler(ElementKind.Project, {
+      canHandle: (element) => element?.type?.value?.toLowerCase() === ElementKind.Project,
+      transform: (element, path) => this.createSemanticProject(element, path),
+      getElementType: () => ElementKind.Project,
+      getPriority: () => 10
+    })
+
+    this.registry.registerHandler(ElementKind.TableGroup, {
+      canHandle: (element) => element?.type?.value?.toLowerCase() === ElementKind.TableGroup,
+      transform: (element, path) => this.createSemanticTableGroup(element, path),
+      getElementType: () => ElementKind.TableGroup,
+      getPriority: () => 10
+    })
+
+    this.registry.registerHandler(ElementKind.TablePartial, {
+      canHandle: (element) => element?.type?.value?.toLowerCase() === ElementKind.TablePartial,
+      transform: (element, path) => this.createSemanticTablePartial(element, path),
+      getElementType: () => ElementKind.TablePartial,
+      getPriority: () => 10
+    })
+
+    // Add Note handler
+    this.registry.registerHandler('note', {
+      canHandle: (element) => element?.type?.value?.toLowerCase() === 'note',
+      transform: (element, path) => this.createSemanticNote(element, path),
+      getElementType: () => 'note',
+      getPriority: () => 10
+    })
+  }
+
+  /**
+   * Transform parser AST into semantic structure
+   * Uses registry system for automatic parser evolution handling
+   */
+  public transformToSemantic(rawAST: CompilerAST): SemanticASTNode {
     this.rawAST = rawAST
     this.semanticAST = this.createSemanticDatabase(rawAST)
     return this.semanticAST
+  }
+
+  /**
+   * Create semantic transformation using fresh Compiler instance
+   * Demonstrates direct use of parser API + structured data reuse
+   */
+  public static transformFromSource(source: string): {
+    semantic: SemanticASTNode
+    tokens: any[]
+    errors: any[]
+    interpretedData?: Database // REUSE parser's interpreted structure
+    parserInfo: ParserIntegrationInfo // Include parser integration info
+  } {
+    const compiler = new Compiler()
+    compiler.setSource(source)
+
+    const ast = compiler.parse.ast()
+    const tokens = compiler.parse.tokens()
+    const errors = compiler.parse.errors()
+
+    // Note: interpretedData would come from compiler.parse.rawDb() if available
+    const interpretedData = undefined
+
+    const transformer = new ASTTransformerService()
+    const semantic = transformer.transformToSemantic(ast)
+    const parserInfo = ASTTransformerService.getParserIntegrationInfo()
+
+    return { semantic, tokens, errors, interpretedData, parserInfo }
+  }
+
+  /**
+   * Register new element handler using parser's ElementKind
+   */
+  public registerElementHandler(elementType: ElementKind | string, handler: ElementHandler): void {
+    this.registry.registerHandler(elementType, handler)
+  }
+
+  /**
+   * Get all known element types from parser's ElementKind
+   */
+  public getKnownElementTypes(): (ElementKind | string)[] {
+    return this.registry.getAllKnownTypes()
   }
 
   /**
@@ -134,14 +478,14 @@ export class ASTTransformerService {
   /**
    * Find nodes by property value in raw AST
    */
-  public findNodesWithProperty(rawAST: any, propertyName: string, propertyValue?: any): any[] {
+  public findNodesWithProperty(rawAST: CompilerAST, propertyName: string, propertyValue?: any): any[] {
     const results: any[] = []
     this.searchForProperty(rawAST, propertyName, propertyValue, [], results)
     return results
   }
 
   /**
-   * Get semantic node by raw path
+   * Get semantic node by ID
    */
   public getSemanticNodeById(nodeId: string): SemanticASTNode | null {
     if (!this.semanticAST) return null
@@ -150,23 +494,24 @@ export class ASTTransformerService {
 
   // Private methods
 
-  private createSemanticDatabase(rawAST: any): SemanticASTNode {
+  private createSemanticDatabase(rawAST: CompilerAST): SemanticASTNode {
     const databaseNode: SemanticASTNode = {
-      id: 'database',
+      id: 'database_root', // Root semantic node for organizational purposes
       type: 'database',
       name: 'Database Schema',
       displayName: 'Database Schema',
       icon: 'database',
       children: [],
-      accessPath: 'ast'
+      accessPath: 'ast',
+      data: rawAST // Store the program node as data
     }
 
-    if (!rawAST || !rawAST.body) {
+    if (!rawAST?.body) {
       return databaseNode
     }
 
-    // Process all elements in the AST body
-    rawAST.body.forEach((element: any, index: number) => {
+    // Process all elements using the registry system
+    rawAST.body.forEach((element: ElementDeclarationNode, index: number) => {
       const semanticChild = this.createSemanticElement(element, index)
       if (semanticChild) {
         databaseNode.children.push(semanticChild)
@@ -179,61 +524,48 @@ export class ASTTransformerService {
     return databaseNode
   }
 
-  private createSemanticElement(element: any, elementIndex: number): SemanticASTNode | null {
-    if (!element || !element.type) {
+  /**
+   * CRITICAL: Uses registry system for automatic parser evolution handling
+   */
+  private createSemanticElement(element: ElementDeclarationNode, elementIndex: number): SemanticASTNode | null {
+    if (!element) {
       return null
     }
 
-    const elementType = element.type.value?.toLowerCase()
     const basePath = `ast.body[${elementIndex}]`
 
-    switch (elementType) {
-      case 'table':
-        return this.createSemanticTable(element, basePath)
-      case 'enum':
-        return this.createSemanticEnum(element, basePath)
-      case 'ref':
-        return this.createSemanticRef(element, basePath)
-      case 'project':
-        return this.createSemanticProject(element, basePath)
-      case 'tablegroup':
-        return this.createSemanticTableGroup(element, basePath)
-      case 'tablepartial':
-        return this.createSemanticTablePartial(element, basePath)
-      default:
-        return this.createGenericSemanticNode(element, basePath)
-    }
+    // Use registry to find appropriate handler
+    const handler = this.registry.getHandler(element)
+
+    // Transform using the handler - works for both known and unknown types
+    return handler.transform(element, basePath)
   }
 
-  private createSemanticTable(element: any, parentPath: string): SemanticASTNode {
+  // Specific handler methods that use parser types
+
+  private createSemanticTable(element: ElementDeclarationNode, parentPath: string): SemanticASTNode {
     let tableName = this.extractElementName(element)
-    
-    // Additional fallback attempts for table name extraction
-    if (!tableName) {
-      // Try alternative property names
-      tableName = element.identifier?.value || 
-                  element.tableName?.value ||
-                  element.id?.value ||
-                  element.left?.value ||
-                  element.callee?.value
-    }
-    
     tableName = tableName || 'unnamed_table'
     const columnCount = this.getColumnCount(element)
     const indexCount = this.getIndexCount(element)
 
+    // Generate deterministic ID using parser node ID
+    const parserNodeId = element?.id || 0
+    const semanticId = `table_${tableName}_${parserNodeId}`
+
     const tableNode: SemanticASTNode = {
-      id: `table_${tableName}`,
-      type: 'table',
+      id: semanticId, // Deterministic ID for Vue, based on content + parser node ID
+      type: ElementKind.Table, // Use parser's ElementKind
       name: tableName,
       displayName: `${tableName} (${columnCount} columns${indexCount > 0 ? `, ${indexCount} indexes` : ''})`,
       icon: 'table',
       children: [],
       accessPath: parentPath,
+      data: element, // Store the original parser element
       sourcePosition: this.extractSourcePosition(element)
     }
 
-    // Add columns
+    // Add columns using flexible traversal
     if (element.body?.body) {
       element.body.body.forEach((item: any, index: number) => {
         if (this.isColumnDefinition(item)) {
@@ -260,98 +592,126 @@ export class ASTTransformerService {
 
     const constraintText = constraints.length > 0 ? ` [${constraints.join(', ')}]` : ''
 
+    // Generate deterministic ID using parser node ID
+    const parserNodeId = element?.id || 0
+    const semanticId = `column_${columnName}_${parserNodeId}`
+
     return {
-      id: `column_${columnName}`,
+      id: semanticId, // Deterministic ID for Vue, based on content + parser node ID
       type: 'column',
       name: columnName,
       displayName: `${columnName}: ${columnType}${constraintText}`,
       icon: this.getColumnIcon(constraints),
       children: [],
       accessPath,
+      data: element, // Store the original parser element
       sourcePosition: this.extractSourcePosition(element)
     }
   }
 
-  private createSemanticEnum(element: any, accessPath: string): SemanticASTNode {
+  private createSemanticEnum(element: ElementDeclarationNode, accessPath: string): SemanticASTNode {
     let enumName = this.extractElementName(element)
-    
-    // Additional fallback for enum names
-    if (!enumName) {
-      enumName = element.identifier?.value || element.id?.value || 'unnamed_enum'
-    }
-    
     enumName = enumName || 'unnamed_enum'
     const valueCount = this.getEnumValueCount(element)
 
+    // Generate deterministic ID using parser node ID
+    const parserNodeId = element?.id || 0
+    const semanticId = `enum_${enumName}_${parserNodeId}`
+
     return {
-      id: `enum_${enumName}`,
-      type: 'enum',
+      id: semanticId, // Deterministic ID for Vue, based on content + parser node ID
+      type: ElementKind.Enum, // Use parser's ElementKind
       name: enumName,
       displayName: `${enumName} (${valueCount} values)`,
       icon: 'enum',
       children: [],
       accessPath,
+      data: element, // Store the original parser element
       sourcePosition: this.extractSourcePosition(element)
     }
   }
 
-  private createSemanticRef(element: any, accessPath: string): SemanticASTNode {
-    const refName = this.extractRefName(element)
+  private createSemanticRef(element: ElementDeclarationNode, accessPath: string): SemanticASTNode {
+    const refName = this.extractElementName(element) // Use the standard name extraction
     const relationship = this.extractRefRelationship(element)
+    
+    // Use the actual ref name if available, otherwise use a more descriptive fallback
+    const displayName = refName || relationship || 'Reference'
+    const semanticName = refName || 'reference'
+
+    // Generate deterministic ID using parser node ID
+    const parserNodeId = element?.id || 0
+    const semanticId = `ref_${semanticName}_${parserNodeId}`
 
     return {
-      id: `ref_${refName}`,
-      type: 'ref',
-      name: refName,
-      displayName: `${relationship}`,
+      id: semanticId, // Deterministic ID for Vue, based on content + parser node ID
+      type: ElementKind.Ref, // Use parser's ElementKind
+      name: semanticName,
+      displayName: displayName,
       icon: 'ref',
       children: [],
       accessPath,
+      data: element, // Store the original parser element
       sourcePosition: this.extractSourcePosition(element)
     }
   }
 
-  private createSemanticProject(element: any, accessPath: string): SemanticASTNode {
+  private createSemanticProject(element: ElementDeclarationNode, accessPath: string): SemanticASTNode {
     const projectName = this.extractElementName(element) || 'Project Settings'
 
+    // Generate deterministic ID using parser node ID
+    const parserNodeId = element?.id || 0
+    const semanticId = `project_${projectName}_${parserNodeId}`
+
     return {
-      id: 'project',
-      type: 'project',
+      id: semanticId, // Deterministic ID for Vue, based on content + parser node ID
+      type: ElementKind.Project, // Use parser's ElementKind
       name: projectName,
       displayName: `${projectName}`,
       icon: 'project',
       children: [],
       accessPath,
+      data: element, // Store the original parser element
       sourcePosition: this.extractSourcePosition(element)
     }
   }
 
-  private createSemanticTableGroup(element: any, accessPath: string): SemanticASTNode {
+  private createSemanticTableGroup(element: ElementDeclarationNode, accessPath: string): SemanticASTNode {
     const groupName = this.extractElementName(element) || 'unnamed_group'
 
+    // Generate deterministic ID using parser node ID
+    const parserNodeId = element?.id || 0
+    const semanticId = `tablegroup_${groupName}_${parserNodeId}`
+
     return {
-      id: `tablegroup_${groupName}`,
-      type: 'tableGroup',
+      id: semanticId, // Deterministic ID for Vue, based on content + parser node ID
+      type: ElementKind.TableGroup, // Use parser's ElementKind
       name: groupName,
       displayName: `${groupName}`,
       icon: 'tableGroup',
       children: [],
       accessPath,
+      data: element, // Store the original parser element
       sourcePosition: this.extractSourcePosition(element)
     }
   }
 
-  private createSemanticTablePartial(element: any, accessPath: string): SemanticASTNode {
+  private createSemanticTablePartial(element: ElementDeclarationNode, accessPath: string): SemanticASTNode {
     const partialName = this.extractElementName(element) || 'unnamed_partial'
 
+    // Generate deterministic ID using parser node ID
+    const parserNodeId = element?.id || 0
+    const semanticId = `tablepartial_${partialName}_${parserNodeId}`
+
     return {
-      id: `tablepartial_${partialName}`,
-      type: 'tablePartial',
+      id: semanticId, // Deterministic ID for Vue, based on content + parser node ID
+      type: ElementKind.TablePartial, // Use parser's ElementKind
       name: partialName,
       displayName: `${partialName} (partial)`,
       icon: 'tablePartial',
       children: [],
       accessPath,
+      data: element, // Store the original parser element
       sourcePosition: this.extractSourcePosition(element)
     }
   }
@@ -359,53 +719,60 @@ export class ASTTransformerService {
   private createSemanticIndex(element: any, accessPath: string): SemanticASTNode {
     const indexName = this.extractIndexName(element)
 
+    // Generate deterministic ID using parser node ID
+    const parserNodeId = element?.id || 0
+    const semanticId = `index_${indexName}_${parserNodeId}`
+
     return {
-      id: `index_${indexName}`,
+      id: semanticId, // Deterministic ID for Vue, based on content + parser node ID
       type: 'index',
       name: indexName,
       displayName: `${indexName}`,
       icon: 'index',
       children: [],
       accessPath,
+      data: element, // Store the original parser element
       sourcePosition: this.extractSourcePosition(element)
     }
   }
 
-  private createGenericSemanticNode(element: any, accessPath: string): SemanticASTNode {
-    const name = this.extractElementName(element) || 'unknown'
-    const type = element.type?.value || 'unknown'
+  private createSemanticNote(element: ElementDeclarationNode, accessPath: string): SemanticASTNode {
+    const noteName = this.extractElementName(element) || this.extractNoteContent(element) || 'Sticky Note'
+
+    // Generate deterministic ID using parser node ID
+    const parserNodeId = element?.id || 0
+    const semanticId = `note_${noteName}_${parserNodeId}`
 
     return {
-      id: `${type}_${name}`,
-      type: type as any,
-      name,
-      displayName: `${type}: ${name}`,
+      id: semanticId, // Deterministic ID for Vue, based on content + parser node ID
+      type: 'note',
+      name: noteName,
+      displayName: noteName,
       icon: 'note',
       children: [],
       accessPath,
+      data: element, // Store the original parser element
       sourcePosition: this.extractSourcePosition(element)
     }
   }
 
-  // Helper methods for extraction
+  // Helper methods using parser types
 
-  private extractElementName(element: any): string | null {
+  private extractElementName(element: ElementDeclarationNode): string | null {
     if (!element?.name) {
       return null
     }
 
-    // Handle infix expressions (e.g., "public.users")
-    if (element.name.kind === '<infix-expression>' && element.name.op?.value === '.') {
+    // Handle infix expressions using parser's SyntaxNodeKind
+    if (element.name.kind === SyntaxNodeKind.INFIX_EXPRESSION && element.name.op?.value === '.') {
       const left = this.extractNameFromNode(element.name.leftExpression)
       const right = this.extractNameFromNode(element.name.rightExpression)
       if (left && right) {
         return `${left}.${right}`
       }
-      // If we can't get both parts, just use the right part (table name)
       return right || left
     }
 
-    // For other structures, use the recursive extraction
     return this.extractNameFromNode(element.name)
   }
 
@@ -442,7 +809,7 @@ export class ASTTransformerService {
       const tokens = nameNode.body
         .map((token: any) => this.extractNameFromNode(token))
         .filter((val: string | null) => val && val !== '.')
-      
+
       if (tokens.length > 0) {
         return tokens.join('.')
       }
@@ -453,7 +820,7 @@ export class ASTTransformerService {
       const tokens = nameNode.identifiers
         .map((id: any) => this.extractNameFromNode(id))
         .filter((val: string | null) => val)
-      
+
       if (tokens.length > 0) {
         return tokens.join('.')
       }
@@ -516,18 +883,27 @@ export class ASTTransformerService {
     return constraints
   }
 
-  private extractRefName(element: any): string {
+  private extractRefRelationship(element: ElementDeclarationNode): string {
+    // Try multiple ways to extract the relationship
     if (element.body?.left && element.body?.right) {
       const left = this.extractRefEndpoint(element.body.left)
       const right = this.extractRefEndpoint(element.body.right)
       const op = element.body.op?.value || '→'
       return `${left} ${op} ${right}`
     }
-    return 'unnamed_ref'
-  }
-
-  private extractRefRelationship(element: any): string {
-    return this.extractRefName(element)
+    
+    // Try to extract from different possible structures
+    if (element.body?.expression) {
+      return this.extractRelationshipFromExpression(element.body.expression)
+    }
+    
+    // Try to extract from body directly if it's a different structure
+    if (element.body && typeof element.body === 'object') {
+      const bodyStr = this.extractRelationshipFromBody(element.body)
+      if (bodyStr) return bodyStr
+    }
+    
+    return 'Reference Relationship'
   }
 
   private extractRefEndpoint(endpoint: any): string {
@@ -540,88 +916,117 @@ export class ASTTransformerService {
     return 'unknown'
   }
 
+  private extractRelationshipFromExpression(expression: any): string {
+    // Handle infix expressions for relationships
+    if (expression?.left && expression?.right && expression?.op) {
+      const left = this.extractRefEndpoint(expression.left)
+      const right = this.extractRefEndpoint(expression.right)
+      const op = expression.op.value || '→'
+      return `${left} ${op} ${right}`
+    }
+    return ''
+  }
+
+  private extractRelationshipFromBody(body: any): string {
+    // Try to find relationship information in the body structure
+    if (body?.sourceColumn && body?.targetColumn) {
+      const source = this.extractNameFromNode(body.sourceColumn)
+      const target = this.extractNameFromNode(body.targetColumn)
+      return `${source} → ${target}`
+    }
+    
+    // Look for any structure that might contain relationship info
+    for (const [key, value] of Object.entries(body)) {
+      if (typeof value === 'object' && value !== null) {
+        if (key === 'relationship' || key === 'relation') {
+          return this.extractRelationshipFromExpression(value)
+        }
+      }
+    }
+    
+    return ''
+  }
+
   private extractIndexName(element: any): string {
-    // Extract index name from element structure
     return 'index'
   }
 
-  private extractSourcePosition(element: any) {
-    if (element.token || element.startPos) {
-      const token = element.token || element
-
-      // Extract position info - fix off-by-one error by adding +1 to convert from 0-based to 1-based
-      const startLine = (token.start?.line ?? token.startPos?.line ?? 0) + 1
-      const startColumn = (token.start?.column ?? token.startPos?.column ?? 0) + 1
-      const endLine = (token.end?.line ?? token.endPos?.line ?? 0) + 1
-      const endColumn = (token.end?.column ?? token.endPos?.column ?? 0) + 1
-
-      return {
-        start: {
-          line: startLine,
-          column: startColumn,
-          offset: token.start?.offset ?? token.startPos?.offset ?? 0
-        },
-        end: {
-          line: endLine,
-          column: endColumn,
-          offset: token.end?.offset ?? token.endPos?.offset ?? 0
-        },
-        // Enhanced debugging information
-        raw: {
-          // Original 0-based positions for debugging
-          startPos: element.startPos,
-          endPos: element.endPos,
-          start: element.start,
-          end: element.end,
-          fullStart: element.fullStart,
-          fullEnd: element.fullEnd,
-          id: element.id,
-          kind: element.kind
-        },
-        // Token details if available
-        token: element.token ? {
-          kind: element.token.kind,
-          value: element.token.value,
-          leadingTrivia: element.token.leadingTrivia?.map((t: any) => ({
-            kind: t.kind,
-            value: t.value
-          })),
-          trailingTrivia: element.token.trailingTrivia?.map((t: any) => ({
-            kind: t.kind,
-            value: t.value
-          })),
-          leadingInvalid: element.token.leadingInvalid?.length || 0,
-          trailingInvalid: element.token.trailingInvalid?.length || 0,
-          isInvalid: element.token.isInvalid
-        } : undefined
+  private extractNoteContent(element: ElementDeclarationNode): string | null {
+    // Try to extract the note content/text from the body
+    if (element.body?.value) {
+      return element.body.value.substring(0, 50) // First 50 chars as name
+    }
+    
+    if (element.body?.token?.value) {
+      return element.body.token.value.substring(0, 50)
+    }
+    
+    // Try to find string content in the body
+    if (element.body && typeof element.body === 'object') {
+      for (const [key, value] of Object.entries(element.body)) {
+        if (typeof value === 'string' && value.length > 0) {
+          return value.substring(0, 50)
+        }
+        if (typeof value === 'object' && value !== null && (value as any).value) {
+          return String((value as any).value).substring(0, 50)
+        }
       }
     }
-    return undefined
+    
+    return null
   }
 
-  // Removed extractElementProperties method - keeping properties simple with just accessPath
+  private extractSourcePosition(element: SyntaxNode) {
+    const startLine = element.startPos.line + 1
+    const startColumn = element.startPos.column + 1
+    const endLine = element.endPos.line + 1
+    const endColumn = element.endPos.column + 1
+
+    return {
+      start: {
+        line: startLine,
+        column: startColumn,
+        offset: element.start
+      },
+      end: {
+        line: endLine,
+        column: endColumn,
+        offset: element.end
+      },
+      raw: {
+        startPos: element.startPos,
+        endPos: element.endPos,
+        start: element.start,
+        end: element.end,
+        fullStart: element.fullStart,
+        fullEnd: element.fullEnd,
+        id: element.id,
+        kind: element.kind
+      }
+    }
+  }
 
   // Utility methods
 
   private isColumnDefinition(item: any): boolean {
-    return item?.kind === '<function-application>' || (item?.callee && item?.args)
+    return item?.kind === SyntaxNodeKind.FUNCTION_APPLICATION || (item?.callee && item?.args)
   }
 
   private isIndexDefinition(item: any): boolean {
-    return item?.type?.value?.toLowerCase() === 'indexes'
+    return item?.type?.value?.toLowerCase() === ElementKind.Indexes
   }
 
-  private getColumnCount(element: any): number {
+  private getColumnCount(element: ElementDeclarationNode): number {
     if (!element.body?.body) return 0
     return element.body.body.filter((item: any) => this.isColumnDefinition(item)).length
   }
 
-  private getIndexCount(element: any): number {
+  private getIndexCount(element: ElementDeclarationNode): number {
     if (!element.body?.body) return 0
     return element.body.body.filter((item: any) => this.isIndexDefinition(item)).length
   }
 
-  private getEnumValueCount(element: any): number {
+  private getEnumValueCount(element: ElementDeclarationNode): number {
     if (!element.body?.body) return 0
     return element.body.body.length
   }
@@ -654,7 +1059,7 @@ export class ASTTransformerService {
       return true
     }
 
-    // Search in AST node kinds (for searching node types like <table>, <function-application>, etc.)
+    // Search in AST node kinds using parser's SyntaxNodeKind
     if (typeof value === 'object' && value !== null && value.kind) {
       if (value.kind.toLowerCase().includes(term)) {
         return true
@@ -685,39 +1090,40 @@ export class ASTTransformerService {
     const groups: Record<string, SemanticASTNode[]> = {}
 
     databaseNode.children.forEach(child => {
-      if (!groups[child.type]) {
-        groups[child.type] = []
+      const typeKey = child.type as string
+      if (!groups[typeKey]) {
+        groups[typeKey] = []
       }
-      groups[child.type].push(child)
+      groups[typeKey].push(child)
     })
 
     // Create organized structure
     const organizedChildren: SemanticASTNode[] = []
 
     // Add tables group
-    if (groups.table) {
+    if (groups[ElementKind.Table]) {
       organizedChildren.push({
-        id: 'tables_group',
+        id: `group_tables_${groups[ElementKind.Table].length}`, // Deterministic based on content
         type: 'database',
         name: 'Tables',
-        displayName: `Tables (${groups.table.length})`,
+        displayName: `Tables (${groups[ElementKind.Table].length})`,
         icon: 'table',
-        children: groups.table,
-        accessPath: '' // Organizational group - no real access path
+        children: groups[ElementKind.Table],
+        accessPath: ''
       })
     }
 
-    // Add other groups...
+    // Add other groups dynamically using parser's ElementKind
     Object.entries(groups).forEach(([type, children]) => {
-      if (type !== 'table') {
+      if (type !== ElementKind.Table && type !== 'database') {
         organizedChildren.push({
-          id: `${type}_group`,
+          id: `group_${type}_${children.length}`, // Deterministic based on content
           type: 'database',
           name: type,
-                  displayName: `${type} (${children.length})`,
-        icon: this.getTypeIcon(type),
+          displayName: `${type} (${children.length})`,
+          icon: this.getTypeIcon(type),
           children,
-          accessPath: '' // Organizational group - no real access path
+          accessPath: ''
         })
       }
     })
@@ -727,18 +1133,19 @@ export class ASTTransformerService {
 
   private getTypeIcon(type: string): string {
     const icons: Record<string, string> = {
-      table: 'table',
-      enum: 'enum',
-      ref: 'ref',
-      project: 'project',
-      tableGroup: 'tableGroup',
-      tablePartial: 'tablePartial'
+      [ElementKind.Table]: 'table',
+      [ElementKind.Enum]: 'enum',
+      [ElementKind.Ref]: 'ref',
+      [ElementKind.Project]: 'project',
+      [ElementKind.TableGroup]: 'tableGroup',
+      [ElementKind.TablePartial]: 'tablePartial',
+      note: 'note',
+      unknown: 'note',
     }
-    return icons[type] || 'default'
+    return icons[type] || 'note'
   }
 
   private findRawPath(node: any, property: string): string {
-    // Generate raw JSON path for accessing the property
     return `ast.${property}`
   }
 

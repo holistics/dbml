@@ -5,22 +5,21 @@
 
 ## TLDR
 
-The DBML Playground is an interactive web application for debugging and visualizing the DBML parser pipeline. It provides real-time parsing with syntax highlighting, pipeline stage visualization, and comprehensive error reporting. The system is built using Vue 3 with a modular architecture that separates concerns and follows software design principles for maintainability and extensibility.
+Interactive web application for debugging and visualizing the DBML parser pipeline using the new `@dbml/parse` package. Provides real-time parsing with syntax highlighting, semantic AST visualization, and comprehensive debugging features through a modular Vue 3 architecture.
 
 ## Concepts
 
 - **Parser Pipeline Visualization**: Real-time display of all four parsing stages (Lexer → Parser → Analyzer → Interpreter)
-- **Reactive Parsing**: Automatic parsing with debouncing as users type DBML content
+- **Semantic AST Transformation**: Converts raw parser AST into user-friendly semantic trees with navigation support
+- **Bidirectional Navigation**: Click between source code and parsed tokens/AST nodes for debugging
 - **Stage Output Inspection**: Interactive viewing of intermediate results from each pipeline stage
-- **Syntax Highlighting**: Custom DBML language support in Monaco Editor with full tokenization
-- **Error Visualization**: Comprehensive error reporting with precise location information
-- **Deep Modules**: Architectural pattern where modules have simple interfaces but powerful internal functionality
-- **Information Hiding**: Design principle where implementation details are hidden from consumers
-- **Single Responsibility**: Each module handles exactly one concern or abstraction level
+- **Access Path Generation**: Debug-friendly JavaScript paths for navigating raw AST structures
+- **Deep Modules**: Complex functionality hidden behind simple interfaces (ParserService, ASTTransformerService)
+- **Shallow Modules**: UI components that delegate to deep modules (App.vue, useParser composable)
 
 ## High-level Architecture
 
-The playground follows a layered architecture with clear separation of concerns:
+Layered architecture with clear separation between UI, business logic, and parser integration:
 
 ```mermaid
 graph TB
@@ -30,13 +29,18 @@ graph TB
     D --> E[@dbml/parse - DBML Compiler]
 
     F[MonacoEditor] --> G[DBMLLanguageService]
-    H[JsonViewer] --> I[Data Transformation]
+    H[ParserOutputViewer] --> I[ASTTransformerService]
+    I --> J[SemanticTreeView]
 
-    J[SampleContent] --> C
+    K[TokenNavigationCoordinator] --> L[TokenMappingService]
+    M[ASTDetailsPanel] --> I
 
     subgraph "Deep Modules"
         D
         G
+        I
+        K
+        L
     end
 
     subgraph "Shallow Modules"
@@ -44,295 +48,174 @@ graph TB
         B
         F
         H
+        J
+        M
     end
 ```
 
-**Design Principles Applied:**
-
-1. **Modular Architecture**: Clear separation between UI, business logic, and services
-2. **Deep Modules**: Core services (ParserService, DBMLLanguageService) encapsulate complexity
-3. **Shallow Modules**: UI components have simple interfaces that delegate to deep modules
-4. **Information Hiding**: Implementation details are hidden behind well-defined interfaces
-5. **Single Responsibility**: Each module handles exactly one concern
-6. **General Purpose**: Services are designed to be reusable and extensible
+**Key Design Decisions:**
+- **Deep modules** (ParserService, ASTTransformerService) encapsulate complexity with simple interfaces
+- **Shallow modules** (UI components) delegate to deep modules and focus on presentation
+- **Information hiding** prevents parser implementation details from leaking to UI
+- **Reactive state management** using Vue 3 Composition API with debounced parsing
 
 ## Detailed Implementation
 
-### Core Architecture Components
+### Core Parser Integration (`src/core/`)
 
-#### 1. Parser Service Layer (`src/core/`)
-
-**ParserService** - Deep module for DBML parsing:
+**ParserService** - Deep module wrapping `@dbml/parse`:
 ```typescript
 export class ParserService {
   public parse(input: string): ParserResult
-  // All complexity hidden internally
+  // Hides all Compiler complexity internally
 }
 ```
+- Encapsulates all interaction with `@dbml/parse` Compiler
+- Handles stage-specific formatting (tokens, AST, analyzer, interpreter)
+- Provides immutable results with structured error information
 
-- Encapsulates all interaction with `@dbml/parse`
-- Handles error management and output formatting
-- Provides simple interface hiding complex parsing logic
-- Immutable result objects with readonly properties
-
-**ReactiveParser** - Reactive wrapper for Vue integration:
+**ReactiveParser** - Vue reactivity wrapper:
 ```typescript
 export class ReactiveParser {
   public readonly input: Ref<string>
-  public readonly isLoading: Ref<boolean>
-  // Computed reactive outputs for each stage
+  public readonly lexerOutput: ComputedRef<unknown>
+  public readonly parserOutput: ComputedRef<unknown>
+  public readonly analyzerOutput: ComputedRef<unknown>
+  public readonly interpreterOutput: ComputedRef<unknown>
 }
 ```
-
-- Manages debouncing and reactive state
+- Manages debounced parsing (300ms) and reactive state
 - Separates reactive concerns from core parsing logic
-- Provides Vue-compatible reactive interface
 
-**SampleContent** - Centralized content management:
+**ASTTransformerService** - Semantic transformation:
 ```typescript
-export const SAMPLE_CATEGORIES: readonly SampleCategory[]
-export function getSampleContent(categoryName: string): string | null
-```
-
-- Manages all sample DBML content
-- Provides extensible interface for adding new examples
-- Hides content details from consumers
-
-#### 2. Component Layer (`src/components/`)
-
-**MonacoEditor** - Clean editor wrapper:
-```vue
-<MonacoEditor
-  v-model="content"
-  language="dbml"
-  :read-only="false"
-/>
-```
-
-- Delegates language support to `DBMLLanguageService`
-- Focuses only on editor lifecycle and events
-- Simple prop-based interface
-
-**DBMLLanguageService** - Monaco language support:
-```typescript
-export class DBMLLanguageService {
-  public static registerLanguage(): void
-  public static getLanguageId(): string
-  public static getThemeName(): string
+export class ASTTransformerService {
+  public transformToSemantic(rawAST: any): SemanticASTNode
+  public generateAccessPath(node: any, property: string): AccessPath
+  public filterRawAST(rawAST: any, options: FilterOptions): any
 }
 ```
+- Converts raw parser AST into user-friendly semantic trees
+- Extracts table/column/enum information with proper metadata
+- Generates JavaScript access paths for debugging
+- Handles source position mapping for navigation
 
-- Encapsulates all Monaco Editor language complexity
-- Provides idempotent registration
-- Hides tokenization and theme details
+### UI Component Layer (`src/components/`)
 
-**JsonViewer** - Data display component:
+**MonacoEditor** - Professional code editor:
 ```vue
-<JsonViewer :data="stageOutput" />
+<MonacoEditor v-model="content" language="dbml" :vim-mode="vimModeEnabled" />
 ```
+- Custom DBML language support through DBMLLanguageService
+- Vim mode toggle, syntax highlighting, error indicators
+- Integrated with navigation system for cursor positioning
 
-- Handles data transformation for optimal display
-- Encapsulates vue-json-viewer complexity
-- Provides consistent styling
+**ParserOutputViewer** - Smart stage-aware viewer:
+```vue
+<ParserOutputViewer :data="stageOutput" @navigate-to-source="handleNavigation" />
+```
+- Automatically detects data type (tokens, AST, JSON)
+- Delegates to specialized viewers (LexerView, ParserASTView, JsonOutputViewer)
+- Handles navigation events between components
 
-#### 3. Application Layer (`src/`)
+**ParserASTView** - Dual-mode AST visualization:
+- **Semantic view**: User-friendly tree with icons, descriptions, and metadata
+- **Raw JSON view**: Direct AST inspection with Monaco editor
+- Interactive node selection, expansion, and source navigation
+- Advanced filtering and search capabilities
 
-**useParser** - Vue composable:
+### Application Coordination (`src/`)
+
+**useParser** - Vue composable interface:
 ```typescript
 export function useParser() {
   return {
     dbmlInput: ReactiveRef,
     isLoading: ComputedRef,
+    tokens: ComputedRef,
+    ast: ComputedRef,
     getStageOutput: (stage) => unknown,
-    // Simple interface delegating to services
+    // All complex logic delegated to ReactiveParser
   }
 }
 ```
 
-- Shallow module that coordinates deep modules
-- Provides Vue-friendly interface
-- Minimal logic, maximum delegation
-
-**App.vue** - UI orchestration:
-- Focuses solely on UI layout and user interactions
+**App.vue** - UI orchestration only:
+- Manages panel resizing, navigation state, and user preferences
+- Provides dependency injection for child components
 - Delegates all business logic to composables and services
-- Uses clear separation between presentation and logic
 
-### Key Design Decisions
+### Advanced Features
 
-#### 1. Deep vs Shallow Module Strategy
+**Token Navigation System**:
+- **TokenNavigationCoordinator**: Manages bidirectional navigation between source and tokens
+- **TokenMappingService**: Maps source positions to token positions
+- Click on tokens to highlight source code, click on source to highlight tokens
 
-**Deep Modules** (High functionality, Simple interface):
-- `ParserService`: Complex parsing logic, simple `parse()` method
-- `DBMLLanguageService`: Complex language definition, simple registration
-- `ReactiveParser`: Complex reactivity management, simple reactive properties
+**User Data Persistence**:
+- Auto-saves DBML content to localStorage with debouncing
+- Persists user preferences (vim mode, panel layouts, view modes)
+- Restores state on page reload
 
-**Shallow Modules** (Simple interface, delegates to deep modules):
-- `useParser`: Thin wrapper providing Vue-compatible interface
-- UI Components: Focus on presentation, delegate logic to services
-
-#### 2. Information Hiding Implementation
-
-```typescript
-// Hidden: Complex parser interaction
-private formatTokensForDisplay(tokens: any[]): unknown
-private formatASTForDisplay(ast: any): unknown
-private formatJSONForDisplay(json: any): unknown
-
-// Exposed: Simple, typed interface
-public parse(input: string): ParserResult
-```
-
-#### 3. Error Handling Strategy
-
-- Structured error types with precise location information
-- Graceful degradation for parsing failures
-- Error boundaries prevent cascade failures
-- User-friendly error display with technical details
-
-#### 4. Performance Considerations
-
-- Debounced parsing (300ms) to avoid excessive computation
-- Lazy language registration in Monaco Editor
-- Efficient reactive updates using Vue's computed properties
-- Memory cleanup in component lifecycle hooks
-
-### Technology Integration
-
-#### Vue 3 + TypeScript
-- Composition API for better logic organization
-- TypeScript for type safety and documentation
-- Reactive system for automatic UI updates
-
-#### Monaco Editor Integration
-- Custom DBML language with full tokenization
-- Professional code editing experience
-- Configurable themes and settings
-
-#### Tailwind CSS
-- Utility-first styling approach
-- Consistent design system
-- Responsive layout support
-
-#### Vite Build System
-- Fast development with HMR
-- Optimized production builds
-- Modern ES modules support
-
-### Testing Strategy
-
-The modular architecture enables targeted testing:
-
-```typescript
-// Unit tests for core services
-describe('ParserService', () => {
-  it('should parse valid DBML', () => {
-    const service = new ParserService()
-    const result = service.parse('Table users { id int [pk] }')
-    expect(result.success).toBe(true)
-  })
-})
-
-// Integration tests for reactive layer
-describe('ReactiveParser', () => {
-  it('should debounce input changes', async () => {
-    // Test debouncing behavior
-  })
-})
-
-// Component tests for UI
-describe('MonacoEditor', () => {
-  it('should register DBML language', () => {
-    // Test component integration
-  })
-})
-```
+**Comprehensive Error Display**:
+- Structured error reporting with precise location information
+- User-friendly error messages with technical details
+- Navigation from errors to source code positions
 
 ## Limitations and Known Issues
 
-### Current Limitations
+### Current Implementation Issues
 
-1. **Monaco Editor Bundle Size**: Large bundle impact, but necessary for professional editing experience
-2. **Memory Usage**: AST objects can be large for complex schemas, but this is inherent to the parsing process
+1. **Parser Evolution Brittleness**: Hardcoded element type detection breaks when parser adds new syntax types
+2. **Limited Symbol Integration**: Doesn't leverage symbol table information from analyzer stage
+3. **Monaco Bundle Size**: Large bundle impact (~2MB) but necessary for professional editing
+4. **No Advanced Parser Features**: Doesn't use container queries, scope resolution, or Monaco services
+
+### Technical Constraints
+
+1. **Hardcoded AST Structure Assumptions**: Semantic transformer assumes specific element.type.value structure
+2. **No Fallback Handling**: Unknown element types cause transformation to fail
 3. **Browser Compatibility**: Requires modern browsers supporting ES2020+ features
+4. **Memory Usage**: Large AST objects for complex schemas without virtualization
 
-### Technical Debt
+### Known Technical Debt
 
-1. **Type Definitions**: Some dependencies (vue-json-viewer) lack complete TypeScript definitions
-2. **Error Recovery**: Limited parser error recovery compared to production parsers
-3. **Performance**: No virtualization for very large DBML files (>10,000 lines)
-
-### Future Enhancements
-
-1. **Export Functionality**: Add ability to export parsed results in various formats
-2. **Import Samples**: Allow users to load external DBML files
-3. **Collaborative Editing**: Real-time collaborative features
-4. **Advanced Error Analysis**: More sophisticated error explanations and suggestions
-5. **Performance Profiling**: Add timing information for each pipeline stage
+1. **Type Definitions**: Some Monaco Editor integrations need stricter typing
+2. **Error Recovery**: Limited parser error recovery for syntax errors
+3. **Performance**: No virtualization for extremely large DBML files (>50,000 lines)
 
 ## Design Evolution
 
-### Original Architecture Issues
+### Architecture Success
 
-The initial implementation suffered from several design problems:
+The implemented architecture successfully follows "A Philosophy of Software Design" principles:
 
-1. **Shallow Modules**: Components had complex interfaces but limited functionality
-2. **Information Leakage**: Parser logic scattered across multiple files
-3. **Special-General Mixture**: Formatting logic mixed with business logic
-4. **Temporal Decomposition**: Structure followed execution order rather than abstractions
+**Deep Modules Achievement**:
+- `ParserService`: Complex `@dbml/parse` integration with simple `parse()` interface
+- `ASTTransformerService`: Complex semantic transformation with simple transformation methods
+- `TokenNavigationCoordinator`: Complex navigation logic with simple event-based interface
 
-### Refactoring Process
+**Information Hiding Success**:
+- Parser implementation details completely hidden from UI components
+- Reactive state management separated from parsing logic
+- Complex error handling and formatting encapsulated in services
 
-**Step 1: Created Deep Modules**
-- `ParserService`: Encapsulated all parsing complexity
-- `DBMLLanguageService`: Centralized Monaco Editor language support
-- Each module provides simple interface with powerful internal functionality
+**Shallow Modules Working Well**:
+- `useParser` composable: 50 lines of delegation vs 200+ lines of complex logic
+- UI components focus on presentation, delegate business logic to services
+- Clean separation enables independent testing and development
 
-**Step 2: Separated Concerns**
-- Reactive logic separated from core parsing
-- UI components separated from business logic
-- Sample content management separated from parsing
+### Key Insights
 
-**Step 3: Applied Information Hiding**
-- Internal implementation details hidden behind clean interfaces
-- Complex error handling and formatting logic encapsulated
-- Monaco Editor complexity hidden behind service interface
+1. **Modular Architecture Wins**: Clear boundaries make debugging and feature addition straightforward
+2. **Deep Module Investment**: Powerful internal functionality with simple interfaces dramatically improves maintainability
+3. **Vue 3 Composition API**: Enables clean separation between reactive and business logic
+4. **Parser Integration Strategy**: Wrapping complex parser in simple service interface works well
 
-**Step 4: Eliminated Information Leakage**
-- All parser knowledge centralized in `ParserService`
-- Language definition centralized in `DBMLLanguageService`
-- No cross-cutting concerns requiring knowledge in multiple modules
+### Future Architecture Needs
 
-### Lessons Learned
-
-1. **Deep Modules Principle**: Investing in powerful internal functionality with simple interfaces dramatically improves maintainability
-2. **Information Hiding Value**: Hiding implementation details enables independent evolution of modules
-3. **Single Responsibility Benefits**: Clear module boundaries make debugging and testing much easier
-4. **General Purpose Design**: Designing for reusability leads to cleaner, more flexible architecture
-
-### Architecture Benefits
-
-**Before Refactoring:**
-- 200+ lines of complex logic in `useParser` composable
-- Language definition mixed with component logic
-- Difficult to test individual components
-- High coupling between modules
-
-**After Refactoring:**
-- 50 lines in simplified `useParser` composable
-- Clean separation of concerns across modules
-- Each module easily testable in isolation
-- Low coupling, high cohesion architecture
-
-The refactored architecture follows "A Philosophy of Software Design" principles:
-- Deep modules that hide complexity
-- Information hiding preventing design decisions from leaking
-- Clear abstractions that remain consistent across layers
-- Pull complexity downwards to benefit module users
-
-## Related RFCs
-- [RFC-20250115: DBML to JSON Database Model Parser](rfc-20250115-dbml-to-json-parser.md)
-- [RFC-20250115: DBML Lexer Implementation](rfc-20250115-dbml-lexer.md)
-- [RFC-20250115: DBML Parser Implementation](rfc-20250115-dbml-parser.md)
-- [RFC-20250115: DBML Analyzer Implementation](rfc-20250115-dbml-analyzer.md)
-- [RFC-20250115: DBML Interpreter Implementation](rfc-20250115-dbml-interpreter.md)
+The current implementation provides a solid foundation but needs evolution to handle:
+- Parser syntax evolution without breaking changes
+- Advanced symbol table integration for richer debugging
+- Enhanced semantic relationship visualization
+- Better integration with parser's advanced features (container queries, Monaco services)
