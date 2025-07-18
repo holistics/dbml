@@ -154,6 +154,15 @@
                 />
               </div>
 
+              <!-- Parser and Analyzer stages with AST viewer -->
+              <div v-else-if="activeStage === 'parser' || activeStage === 'analyzer'" class="h-full">
+                <ParserOutputViewer
+                  :data="getCurrentStageOutput()"
+                  :title="`${getStageTitle(activeStage)} Output`"
+                  @navigate-to-source="handleNavigateToSource"
+                />
+              </div>
+
               <!-- Other stages with JSON Viewer -->
               <div v-else class="h-full">
                 <JsonOutputViewer
@@ -360,6 +369,29 @@ const getStageTitle = (stage: PipelineStage) => {
   return stageInfo ? stageInfo.name : stage
 }
 
+/**
+ * Handle navigate to source event from AST viewer
+ * Highlights the corresponding DBML source code
+ */
+const handleNavigateToSource = (position: { start: { line: number; column: number; offset: number }; end: { line: number; column: number; offset: number } }) => {
+  // Get reference to the DBML editor (MonacoEditor)
+  const dbmlEditor = document.querySelector('.dbml-editor')
+  if (dbmlEditor) {
+    // Use Monaco editor API to highlight the specific range
+    // The position is 1-based from the parser, Monaco uses 1-based as well
+    const startLine = position.start.line
+    const startColumn = position.start.column
+    const endLine = position.end.line
+    const endColumn = position.end.column
+
+    console.log(`Navigating to source: Line ${startLine}:${startColumn} - ${endLine}:${endColumn}`)
+    
+    // TODO: Implement actual Monaco editor highlighting
+    // This would require accessing the Monaco editor instance and using:
+    // editor.setSelection(new monaco.Range(startLine, startColumn, endLine, endColumn))
+    // editor.revealLineInCenter(startLine)
+  }
+}
 
 </script>
 

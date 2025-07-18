@@ -12,6 +12,15 @@
       />
     </div>
 
+    <!-- AST view with specialized component -->
+    <div v-else-if="isASTData" class="h-full">
+      <ParserASTView
+        :ast="transformedData"
+        ref="astViewRef"
+        @navigate-to-source="handleNavigateToSource"
+      />
+    </div>
+
     <!-- Regular JSON display for other parser stages -->
     <div v-else class="h-full">
       <MonacoEditor
@@ -42,6 +51,7 @@
 import { computed, ref } from 'vue'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
 import LexerView from './LexerView.vue'
+import ParserASTView from './ParserASTView.vue'
 
 interface Props {
   readonly data: unknown
@@ -59,8 +69,16 @@ interface Token {
 
 const props = defineProps<Props>()
 
+// Define emits for navigation events
+const emit = defineEmits<{
+  'navigate-to-source': [position: { start: { line: number; column: number; offset: number }; end: { line: number; column: number; offset: number } }]
+}>()
+
 // Reference to LexerView component for navigation coordination
 const lexerViewRef = ref<InstanceType<typeof LexerView> | null>(null)
+
+// Reference to ParserASTView component for AST navigation
+const astViewRef = ref<InstanceType<typeof ParserASTView> | null>(null)
 
 /**
  * Transform data for display
@@ -96,6 +114,17 @@ const isLexerData = computed(() => {
          'kind' in data[0] &&
          'value' in data[0] &&
          'position' in data[0]
+})
+
+/**
+ * Check if data contains AST structure
+ */
+const isASTData = computed(() => {
+  const data = transformedData.value
+  return typeof data === 'object' &&
+         data !== null &&
+         !Array.isArray(data) &&
+         ('body' in data || 'kind' in data)
 })
 
 /**
@@ -160,6 +189,13 @@ const setViewMode = (mode: 'cards' | 'json'): void => {
   if (lexerViewRef.value && isLexerData.value) {
     lexerViewRef.value.setViewMode?.(mode)
   }
+}
+
+/**
+ * Handle navigate to source event from AST view
+ */
+const handleNavigateToSource = (position: { start: { line: number; column: number; offset: number }; end: { line: number; column: number; offset: number } }) => {
+  emit('navigate-to-source', position)
 }
 
 // Expose methods for the navigation coordinator
