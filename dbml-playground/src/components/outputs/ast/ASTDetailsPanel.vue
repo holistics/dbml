@@ -20,7 +20,11 @@
           <!-- Basic Info -->
           <div class="text-xs text-gray-600 space-y-1">
             <div><span class="font-medium">Type:</span> {{ selectedNode.type }}</div>
-            <div><span class="font-medium">ID:</span> {{ selectedNode.id }}</div>
+            <!-- Only show Parser Node ID if it actually exists in the real AST -->
+            <div v-if="realParserNodeId !== null">
+              <span class="font-medium">Parser Node ID:</span> {{ realParserNodeId }}
+            </div>
+            <!-- Don't show anything if no real parser node ID - this is just organizational -->
           </div>
 
           <!-- Position & Debug Information -->
@@ -37,12 +41,12 @@
                 {{ selectedNode.sourcePosition.start.offset }}-{{ selectedNode.sourcePosition.end.offset }}
               </div>
 
-              <!-- Raw AST Node Info -->
-              <div v-if="selectedNode.sourcePosition.raw">
-                <span class="font-medium">Node ID:</span> {{ selectedNode.sourcePosition.raw.id || 'N/A' }}
+              <!-- Raw AST Node Info - Only show if values actually exist -->
+              <div v-if="selectedNode.sourcePosition.raw?.id">
+                <span class="font-medium">Node ID:</span> {{ selectedNode.sourcePosition.raw.id }}
               </div>
-              <div v-if="selectedNode.sourcePosition.raw">
-                <span class="font-medium">Kind:</span> {{ selectedNode.sourcePosition.raw.kind || 'N/A' }}
+              <div v-if="selectedNode.sourcePosition.raw?.kind">
+                <span class="font-medium">Kind:</span> {{ selectedNode.sourcePosition.raw.kind }}
               </div>
 
               <!-- Token Info -->
@@ -85,15 +89,17 @@
             <span>{{ copyAccessPathSuccess ? 'Copied!' : 'Copy' }}</span>
           </button>
         </div>
-        <div class="bg-gray-900 rounded-lg p-3">
-          <code class="font-mono text-xs text-green-400 break-all">{{ selectedNode.accessPath }}</code>
+        <div class="bg-slate-100 rounded-lg p-4 border border-slate-300 shadow-inner">
+          <code class="font-mono text-sm text-slate-700 break-all leading-relaxed select-all">{{ selectedNode.accessPath }}</code>
         </div>
       </div>
 
-      <!-- Node JSON -->
-      <div v-if="selectedNode && selectedNode.accessPath && selectedNode.type !== 'database'" class="section">
+      <!-- Raw AST Data -->
+      <div v-if="selectedNode && (selectedNode.data || selectedNode.accessPath) && selectedNode.type !== 'database'" class="section">
         <div class="flex items-center justify-between mb-2">
-          <h4 class="text-xs font-medium text-gray-700">Node JSON</h4>
+          <h4 class="text-xs font-medium text-gray-700">
+            {{ selectedNode.data ? 'Parser AST Data' : 'Node JSON' }}
+          </h4>
           <button
             @click="copyNodeJson"
             class="flex items-center space-x-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
@@ -109,7 +115,7 @@
             <span>{{ copyJsonSuccess ? 'Copied!' : 'Copy' }}</span>
           </button>
         </div>
-        <div class="bg-gray-50 rounded-lg overflow-hidden" :style="{ height: `${jsonViewerHeight}px` }">
+        <div class="bg-slate-50 rounded-lg overflow-hidden border border-slate-200 shadow-sm" :style="{ height: `${jsonViewerHeight}px` }">
           <MonacoEditor
             :model-value="nodeJson"
             language="json"
@@ -117,12 +123,17 @@
             :minimap="false"
             word-wrap="on"
             :options="{
-              fontSize: 11,
-              lineNumbers: 'off',
+              fontSize: 12,
+              lineNumbers: 'on',
               folding: true,
               wordWrap: 'on',
               scrollBeyondLastLine: false,
-              automaticLayout: true
+              automaticLayout: true,
+              theme: 'vs',
+              padding: { top: 8, bottom: 8 },
+              lineNumbersMinChars: 3,
+              glyphMargin: false,
+              renderLineHighlight: 'none'
             }"
           />
         </div>
@@ -182,7 +193,12 @@ const emit = defineEmits<{
 const nodeJson = computed(() => {
   if (!props.selectedNode) return ''
   
-  // For nodes with access paths, show the raw AST node
+  // Priority 1: Show the raw parser data stored in the semantic node
+  if (props.selectedNode.data) {
+    return JSON.stringify(props.selectedNode.data, null, 2)
+  }
+  
+  // Priority 2: For nodes with access paths, show the raw AST node
   if (props.selectedNode.accessPath && props.rawAst) {
     const rawNode = getRawASTNode(props.rawAst, props.selectedNode.accessPath)
     if (rawNode) {
@@ -190,8 +206,21 @@ const nodeJson = computed(() => {
     }
   }
   
-  // Fallback to semantic node for organizational nodes
-  return JSON.stringify(props.selectedNode, null, 2)
+  // Priority 3: For organizational nodes (like group nodes), show minimal semantic info
+  // but exclude internal Vue-specific fields
+  const cleanSemanticNode = {
+    type: props.selectedNode.type,
+    name: props.selectedNode.name,
+    displayName: props.selectedNode.displayName,
+    accessPath: props.selectedNode.accessPath,
+    childrenCount: props.selectedNode.children.length
+  }
+  return JSON.stringify(cleanSemanticNode, null, 2)
+})
+
+const realParserNodeId = computed(() => {
+  if (!props.selectedNode?.sourcePosition?.raw?.id) return null
+  return props.selectedNode.sourcePosition.raw.id
 })
 
 // JSON viewer resize state
@@ -221,23 +250,9 @@ const copyNodeJson = async () => {
   if (!props.selectedNode) return
 
   try {
-    // If the node has an access path, try to get the raw AST node
-    if (props.selectedNode.accessPath && props.rawAst) {
-      const rawNode = getRawASTNode(props.rawAst, props.selectedNode.accessPath)
-      if (rawNode) {
-        const json = JSON.stringify(rawNode, null, 2)
-        await navigator.clipboard.writeText(json)
-        copyJsonSuccess.value = true
-        setTimeout(() => {
-          copyJsonSuccess.value = false
-        }, 2000)
-        return
-      }
-    }
-
-    // Fallback to semantic node (for organizational nodes or if raw node not found)
-    const json = JSON.stringify(props.selectedNode, null, 2)
-    await navigator.clipboard.writeText(json)
+    // Use the same logic as nodeJson computed property
+    const jsonToCopy = nodeJson.value
+    await navigator.clipboard.writeText(jsonToCopy)
     copyJsonSuccess.value = true
     setTimeout(() => {
       copyJsonSuccess.value = false
