@@ -35,7 +35,7 @@
       <!-- Parser Content -->
       <div class="flex-1 flex overflow-hidden w-full">
         <!-- Input Section -->
-        <div class="w-1/2 flex flex-col border-r border-gray-200">
+        <div class="flex flex-col border-r border-gray-200" :style="{ width: `${mainPanelWidth}%` }">
           <div class="bg-white px-6 py-4 border-b border-gray-200 flex-shrink-0">
             <div class="flex justify-between items-start">
               <div>
@@ -69,8 +69,14 @@
           </div>
         </div>
 
+        <!-- Resize Handle -->
+        <div
+          class="w-1 bg-gray-300 hover:bg-gray-400 cursor-col-resize transition-colors flex-shrink-0"
+          @mousedown="startMainResize"
+        ></div>
+
         <!-- Output Section -->
-        <div class="w-1/2 flex flex-col">
+        <div class="flex flex-col" :style="{ width: `${100 - mainPanelWidth}%` }">
           <div class="bg-white px-6 py-4 border-b border-gray-200 flex-shrink-0">
             <div class="flex items-center justify-between">
               <div>
@@ -330,6 +336,10 @@ provide('tokenNavigationCoordinator', tokenNavigationCoordinator)
 // UI state management
 const version = packageJson.version
 
+// Main panel resize state
+const mainPanelWidth = ref(50) // Default 50% width for DBML editor
+const isMainResizing = ref(false)
+
 /**
  * Available pipeline stages for visualization
  */
@@ -370,6 +380,37 @@ const getStageTitle = (stage: PipelineStage) => {
 }
 
 /**
+ * Main panel resize functionality
+ */
+const startMainResize = (event: MouseEvent) => {
+  isMainResizing.value = true
+  const startX = event.clientX
+  const startWidth = mainPanelWidth.value
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isMainResizing.value) return
+
+    const containerWidth = window.innerWidth
+    const deltaX = e.clientX - startX
+    const deltaPercent = (deltaX / containerWidth) * 100
+
+    // Calculate new width (moving right increases panel width, moving left decreases it)
+    const newWidth = Math.max(20, Math.min(80, startWidth + deltaPercent))
+    mainPanelWidth.value = newWidth
+  }
+
+  const handleMouseUp = () => {
+    isMainResizing.value = false
+    document.removeEventListener('mousemove', handleMouseMove)
+    document.removeEventListener('mouseup', handleMouseUp)
+  }
+
+  document.addEventListener('mousemove', handleMouseMove)
+  document.addEventListener('mouseup', handleMouseUp)
+  event.preventDefault()
+}
+
+/**
  * Handle navigate to source event from AST viewer
  * Highlights the corresponding DBML source code
  */
@@ -385,7 +426,7 @@ const handleNavigateToSource = (position: { start: { line: number; column: numbe
     const endColumn = position.end.column
 
     console.log(`Navigating to source: Line ${startLine}:${startColumn} - ${endLine}:${endColumn}`)
-    
+
     // TODO: Implement actual Monaco editor highlighting
     // This would require accessing the Monaco editor instance and using:
     // editor.setSelection(new monaco.Range(startLine, startColumn, endLine, endColumn))

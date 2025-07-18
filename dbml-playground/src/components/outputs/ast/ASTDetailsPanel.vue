@@ -72,13 +72,17 @@
           <h4 class="text-xs font-medium text-gray-700">JavaScript Access Path</h4>
           <button
             @click="copySelectedNodeAccessPath"
-            class="flex items-center px-2 py-1 text-xs text-white bg-blue-600 hover:bg-blue-700 rounded transition-colors"
+            class="flex items-center space-x-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+            :class="{ 'text-green-700 border-green-300 bg-green-50': copyAccessPathSuccess }"
             title="Copy JavaScript access path"
           >
-            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg v-if="!copyAccessPathSuccess" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
-            Copy
+            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{{ copyAccessPathSuccess ? 'Copied!' : 'Copy' }}</span>
           </button>
         </div>
         <div class="bg-gray-50 rounded-lg p-3">
@@ -92,13 +96,17 @@
           <h4 class="text-xs font-medium text-gray-700">Semantic Node JSON</h4>
           <button
             @click="copyNodeJson"
-            class="flex items-center px-2 py-1 text-xs text-white bg-blue-600 hover:bg-blue-700 rounded transition-colors"
+            class="flex items-center space-x-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+            :class="{ 'text-green-700 border-green-300 bg-green-50': copyJsonSuccess }"
             title="Copy node as JSON"
           >
-            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg v-if="!copyJsonSuccess" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
-            Copy
+            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{{ copyJsonSuccess ? 'Copied!' : 'Copy' }}</span>
           </button>
         </div>
         <div class="bg-gray-50 rounded-lg overflow-hidden" :style="{ height: `${jsonViewerHeight}px` }">
@@ -180,12 +188,20 @@ const semanticNodeJson = computed(() => {
 const jsonViewerHeight = ref(360) // Default height - increased for better JSON viewing
 const isJsonResizing = ref(false)
 
+// Copy success states
+const copyAccessPathSuccess = ref(false)
+const copyJsonSuccess = ref(false)
+
 // Removed currentValue, nodeProperties, shouldShowProperty, getValueType, and formatValue - no longer needed
 
 const copySelectedNodeAccessPath = async () => {
   if (!props.selectedNode?.accessPath) return
   try {
     await navigator.clipboard.writeText(props.selectedNode.accessPath)
+    copyAccessPathSuccess.value = true
+    setTimeout(() => {
+      copyAccessPathSuccess.value = false
+    }, 2000)
   } catch (err) {
     console.error('Failed to copy access path:', err)
   }
@@ -201,6 +217,10 @@ const copyNodeJson = async () => {
       if (rawNode) {
         const json = JSON.stringify(rawNode, null, 2)
         await navigator.clipboard.writeText(json)
+        copyJsonSuccess.value = true
+        setTimeout(() => {
+          copyJsonSuccess.value = false
+        }, 2000)
         return
       }
     }
@@ -208,6 +228,10 @@ const copyNodeJson = async () => {
     // Fallback to semantic node (for organizational nodes or if raw node not found)
     const json = JSON.stringify(props.selectedNode, null, 2)
     await navigator.clipboard.writeText(json)
+    copyJsonSuccess.value = true
+    setTimeout(() => {
+      copyJsonSuccess.value = false
+    }, 2000)
   } catch (err) {
     console.error('Failed to copy node JSON:', err)
   }
