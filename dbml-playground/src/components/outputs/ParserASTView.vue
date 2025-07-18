@@ -57,31 +57,16 @@
 
       <!-- Filter Panel -->
       <div v-if="showFilters" class="mt-3 pt-3 border-t border-gray-200">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Search -->
           <div>
             <label class="block text-xs font-medium text-gray-700 mb-1">Search</label>
             <input
               v-model="searchTerm"
               type="text"
-              placeholder="Property name or value..."
+              placeholder="Table names, column names, types..."
               class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             />
-          </div>
-
-          <!-- Filters -->
-          <div>
-            <label class="block text-xs font-medium text-gray-700 mb-1">Hide</label>
-            <div class="space-y-1">
-              <label class="flex items-center">
-                <input v-model="hidePositions" type="checkbox" class="mr-2 text-xs">
-                <span class="text-xs text-gray-600">Position info</span>
-              </label>
-              <label class="flex items-center">
-                <input v-model="hideInternals" type="checkbox" class="mr-2 text-xs">
-                <span class="text-xs text-gray-600">Internal props</span>
-              </label>
-            </div>
           </div>
 
           <!-- Quick Actions -->
@@ -113,14 +98,17 @@
         <!-- Semantic View -->
         <div v-if="viewMode === 'semantic'" class="p-4">
           <SemanticTreeView
-            v-if="semanticAST"
-            :node="semanticAST"
+            v-if="filteredSemanticAST"
+            :node="filteredSemanticAST"
             :selected-node="selectedNode"
             :expanded-nodes="expandedNodes"
             @node-click="handleNodeClick"
             @node-expand="handleNodeExpand"
             @property-click="handlePropertyClick"
           />
+          <div v-else-if="semanticAST && searchTerm.trim()" class="text-center text-gray-500 py-8">
+            No matches found for "{{ searchTerm }}"
+          </div>
           <div v-else class="text-center text-gray-500 py-8">
             No semantic data available
           </div>
@@ -219,13 +207,11 @@ const expandedNodes = ref<Set<string>>(new Set())
 const copySuccess = ref(false)
 
 // Resize state
-const detailsPanelWidth = ref(35) // Default 35% width
+const detailsPanelWidth = ref(50) // Default 50% width for better usability
 const isResizing = ref(false)
 
-// Filter state
+// Search state
 const searchTerm = ref('')
-const hidePositions = ref(true)
-const hideInternals = ref(true)
 
 // Computed properties
 const rawAST = computed(() => props.ast)
@@ -240,16 +226,11 @@ const semanticAST = computed(() => {
   }
 })
 
-const filterOptions = computed((): FilterOptions => ({
-  hidePositions: hidePositions.value,
-  hideInternalProps: hideInternals.value,
-  showOnlyNodeTypes: [],
-  searchTerm: searchTerm.value
-}))
+const filteredSemanticAST = computed(() => {
+  if (!semanticAST.value) return null
+  if (!searchTerm.value.trim()) return semanticAST.value
 
-const filteredRawAST = computed(() => {
-  if (!rawAST.value) return null
-  return transformer.filterRawAST(rawAST.value, filterOptions.value)
+  return filterSemanticAST(semanticAST.value, searchTerm.value.toLowerCase())
 })
 
 const rawASTJson = computed(() => {
@@ -258,8 +239,9 @@ const rawASTJson = computed(() => {
 })
 
 const nodeCount = computed(() => {
-  if (viewMode.value === 'semantic' && semanticAST.value) {
-    return countSemanticNodes(semanticAST.value)
+  if (viewMode.value === 'semantic') {
+    const astToCount = filteredSemanticAST.value || semanticAST.value
+    return astToCount ? countSemanticNodes(astToCount) : 0
   } else if (rawAST.value) {
     return countRawNodes(rawAST.value)
   }
@@ -314,8 +296,8 @@ const collapseAll = () => {
 const copyCurrentView = async () => {
   try {
     const dataToCopy = viewMode.value === 'semantic'
-      ? JSON.stringify(semanticAST.value, null, 2)
-      : JSON.stringify(filteredRawAST.value, null, 2)
+      ? JSON.stringify(filteredSemanticAST.value || semanticAST.value, null, 2)
+      : JSON.stringify(rawAST.value, null, 2)
 
     await navigator.clipboard.writeText(dataToCopy)
     copySuccess.value = true
@@ -383,6 +365,29 @@ const countSemanticNodes = (node: SemanticASTNode): number => {
     count += countSemanticNodes(child)
   })
   return count
+}
+
+const filterSemanticAST = (node: SemanticASTNode, searchTerm: string): SemanticASTNode | null => {
+  // Check if current node matches search term
+  const nodeMatches =
+    node.displayName.toLowerCase().includes(searchTerm) ||
+    node.name.toLowerCase().includes(searchTerm) ||
+    node.type.toLowerCase().includes(searchTerm)
+
+  // Filter children recursively
+  const filteredChildren = node.children
+    .map(child => filterSemanticAST(child, searchTerm))
+    .filter(child => child !== null) as SemanticASTNode[]
+
+  // Include node if it matches or has matching children
+  if (nodeMatches || filteredChildren.length > 0) {
+    return {
+      ...node,
+      children: filteredChildren
+    }
+  }
+
+  return null
 }
 
 const countRawNodes = (obj: any): number => {
