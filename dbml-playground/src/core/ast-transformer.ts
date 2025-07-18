@@ -185,27 +185,40 @@ export class ASTTransformerService {
     }
 
     const elementType = element.type.value?.toLowerCase()
+    const basePath = `ast.body[${elementIndex}]`
 
     switch (elementType) {
       case 'table':
-        return this.createSemanticTable(element, `body[${elementIndex}]`)
+        return this.createSemanticTable(element, basePath)
       case 'enum':
-        return this.createSemanticEnum(element, `body[${elementIndex}]`)
+        return this.createSemanticEnum(element, basePath)
       case 'ref':
-        return this.createSemanticRef(element, `body[${elementIndex}]`)
+        return this.createSemanticRef(element, basePath)
       case 'project':
-        return this.createSemanticProject(element, `body[${elementIndex}]`)
+        return this.createSemanticProject(element, basePath)
       case 'tablegroup':
-        return this.createSemanticTableGroup(element, `body[${elementIndex}]`)
+        return this.createSemanticTableGroup(element, basePath)
       case 'tablepartial':
-        return this.createSemanticTablePartial(element, `body[${elementIndex}]`)
+        return this.createSemanticTablePartial(element, basePath)
       default:
-        return this.createGenericSemanticNode(element, `body[${elementIndex}]`)
+        return this.createGenericSemanticNode(element, basePath)
     }
   }
 
   private createSemanticTable(element: any, parentPath: string): SemanticASTNode {
-    const tableName = this.extractElementName(element) || 'unnamed_table'
+    let tableName = this.extractElementName(element)
+    
+    // Additional fallback attempts for table name extraction
+    if (!tableName) {
+      // Try alternative property names
+      tableName = element.identifier?.value || 
+                  element.tableName?.value ||
+                  element.id?.value ||
+                  element.left?.value ||
+                  element.callee?.value
+    }
+    
+    tableName = tableName || 'unnamed_table'
     const columnCount = this.getColumnCount(element)
     const indexCount = this.getIndexCount(element)
 
@@ -260,7 +273,14 @@ export class ASTTransformerService {
   }
 
   private createSemanticEnum(element: any, accessPath: string): SemanticASTNode {
-    const enumName = this.extractElementName(element) || 'unnamed_enum'
+    let enumName = this.extractElementName(element)
+    
+    // Additional fallback for enum names
+    if (!enumName) {
+      enumName = element.identifier?.value || element.id?.value || 'unnamed_enum'
+    }
+    
+    enumName = enumName || 'unnamed_enum'
     const valueCount = this.getEnumValueCount(element)
 
     return {
@@ -374,36 +394,80 @@ export class ASTTransformerService {
       return null
     }
 
-    // Check for direct value
-    if (element.name.value) {
-      return element.name.value
+    // Handle infix expressions (e.g., "public.users")
+    if (element.name.kind === '<infix-expression>' && element.name.op?.value === '.') {
+      const left = this.extractNameFromNode(element.name.leftExpression)
+      const right = this.extractNameFromNode(element.name.rightExpression)
+      if (left && right) {
+        return `${left}.${right}`
+      }
+      // If we can't get both parts, just use the right part (table name)
+      return right || left
     }
 
-    // Check for string type
-    if (typeof element.name === 'string') {
-      return element.name
+    // For other structures, use the recursive extraction
+    return this.extractNameFromNode(element.name)
+  }
+
+  private extractNameFromNode(nameNode: any): string | null {
+    if (!nameNode) return null
+
+    // Direct value
+    if (nameNode.value) {
+      return nameNode.value
     }
 
-    // For DBML parser AST - primary expression with variable
-    if (element.name.kind === '<primary-expression>' && element.name.expression) {
-      const expr = element.name.expression
-      if (expr.kind === '<variable>' && expr.variable?.value) {
-        return expr.variable.value
+    // String type
+    if (typeof nameNode === 'string') {
+      return nameNode
+    }
+
+    // Variable with value
+    if (nameNode.variable?.value) {
+      return nameNode.variable.value
+    }
+
+    // Token with value
+    if (nameNode.token?.value) {
+      return nameNode.token.value
+    }
+
+    // Expression with nested structure
+    if (nameNode.expression) {
+      return this.extractNameFromNode(nameNode.expression)
+    }
+
+    // Body with multiple tokens (identifier stream)
+    if (nameNode.body && Array.isArray(nameNode.body)) {
+      const tokens = nameNode.body
+        .map((token: any) => this.extractNameFromNode(token))
+        .filter((val: string | null) => val && val !== '.')
+      
+      if (tokens.length > 0) {
+        return tokens.join('.')
       }
     }
 
-    // For identifier stream (multiple tokens)
-    if (element.name.kind === '<identifier-stream>' && element.name.body) {
-      return element.name.body.map((token: any) => token.value).join('')
+    // Identifiers array (for identifier streams)
+    if (nameNode.identifiers && Array.isArray(nameNode.identifiers)) {
+      const tokens = nameNode.identifiers
+        .map((id: any) => this.extractNameFromNode(id))
+        .filter((val: string | null) => val)
+      
+      if (tokens.length > 0) {
+        return tokens.join('.')
+      }
     }
 
-    // For direct variable node
-    if (element.name.kind === '<variable>') {
-      if (element.name.variable?.value) {
-        return element.name.variable.value
-      }
-      if (element.name.token?.value) {
-        return element.name.token.value
+    // For complex nested structures, try to find any meaningful name
+    if (typeof nameNode === 'object') {
+      for (const [key, value] of Object.entries(nameNode)) {
+        if (key === 'value' && typeof value === 'string') {
+          return value
+        }
+        if (key === 'name' && value) {
+          return this.extractNameFromNode(value)
+        }
       }
     }
 
@@ -415,30 +479,7 @@ export class ASTTransformerService {
       return null
     }
 
-    // Check for direct value
-    if (element.callee.value) {
-      return element.callee.value
-    }
-
-    // For DBML parser AST - primary expression with variable
-    if (element.callee.kind === '<primary-expression>' && element.callee.expression) {
-      const expr = element.callee.expression
-      if (expr.kind === '<variable>' && expr.variable?.value) {
-        return expr.variable.value
-      }
-    }
-
-    // For direct variable node
-    if (element.callee.kind === '<variable>') {
-      if (element.callee.variable?.value) {
-        return element.callee.variable.value
-      }
-      if (element.callee.token?.value) {
-        return element.callee.token.value
-      }
-    }
-
-    return null
+    return this.extractNameFromNode(element.callee)
   }
 
   private extractColumnType(element: any): string | null {
@@ -451,30 +492,7 @@ export class ASTTransformerService {
       return null
     }
 
-    // Check for direct value
-    if (typeArg.value) {
-      return typeArg.value
-    }
-
-    // For DBML parser AST - primary expression with variable
-    if (typeArg.kind === '<primary-expression>' && typeArg.expression) {
-      const expr = typeArg.expression
-      if (expr.kind === '<variable>' && expr.variable?.value) {
-        return expr.variable.value
-      }
-    }
-
-    // For direct variable node
-    if (typeArg.kind === '<variable>') {
-      if (typeArg.variable?.value) {
-        return typeArg.variable.value
-      }
-      if (typeArg.token?.value) {
-        return typeArg.token.value
-      }
-    }
-
-    return null
+    return this.extractNameFromNode(typeArg)
   }
 
   private extractColumnConstraints(element: any): string[] {

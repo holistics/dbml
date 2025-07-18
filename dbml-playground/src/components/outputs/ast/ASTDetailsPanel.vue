@@ -85,15 +85,15 @@
             <span>{{ copyAccessPathSuccess ? 'Copied!' : 'Copy' }}</span>
           </button>
         </div>
-        <div class="bg-gray-50 rounded-lg p-3">
-          <div class="font-mono text-xs text-gray-800 break-all">{{ selectedNode.accessPath }}</div>
+        <div class="bg-gray-900 rounded-lg p-3">
+          <code class="font-mono text-xs text-green-400 break-all">{{ selectedNode.accessPath }}</code>
         </div>
       </div>
 
-      <!-- Semantic Node JSON -->
-      <div v-if="selectedNode" class="section">
+      <!-- Node JSON -->
+      <div v-if="selectedNode && selectedNode.accessPath && selectedNode.type !== 'database'" class="section">
         <div class="flex items-center justify-between mb-2">
-          <h4 class="text-xs font-medium text-gray-700">Semantic Node JSON</h4>
+          <h4 class="text-xs font-medium text-gray-700">Node JSON</h4>
           <button
             @click="copyNodeJson"
             class="flex items-center space-x-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
@@ -111,7 +111,7 @@
         </div>
         <div class="bg-gray-50 rounded-lg overflow-hidden" :style="{ height: `${jsonViewerHeight}px` }">
           <MonacoEditor
-            :model-value="semanticNodeJson"
+            :model-value="nodeJson"
             language="json"
             :read-only="true"
             :minimap="false"
@@ -179,8 +179,18 @@ const emit = defineEmits<{
   'navigate-to-source': [position: any]
 }>()
 
-const semanticNodeJson = computed(() => {
+const nodeJson = computed(() => {
   if (!props.selectedNode) return ''
+  
+  // For nodes with access paths, show the raw AST node
+  if (props.selectedNode.accessPath && props.rawAst) {
+    const rawNode = getRawASTNode(props.rawAst, props.selectedNode.accessPath)
+    if (rawNode) {
+      return JSON.stringify(rawNode, null, 2)
+    }
+  }
+  
+  // Fallback to semantic node for organizational nodes
   return JSON.stringify(props.selectedNode, null, 2)
 })
 
