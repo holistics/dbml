@@ -678,6 +678,13 @@ export class ASTTransformerService {
 
   private createSemanticTableGroup(element: ElementDeclarationNode, accessPath: string): SemanticASTNode {
     const groupName = this.extractElementName(element) || 'unnamed_group'
+    const tableNames = this.extractTableGroupMembers(element)
+    
+    // Create display name with table details
+    let displayName = groupName
+    if (tableNames.length > 0) {
+      displayName = `${groupName} [${tableNames.join(', ')}]`
+    }
 
     // Generate deterministic ID using parser node ID
     const parserNodeId = element?.id || 0
@@ -687,7 +694,7 @@ export class ASTTransformerService {
       id: semanticId, // Deterministic ID for Vue, based on content + parser node ID
       type: ElementKind.TableGroup, // Use parser's ElementKind
       name: groupName,
-      displayName: `${groupName}`,
+      displayName: displayName,
       icon: 'tableGroup',
       children: [],
       accessPath,
@@ -809,7 +816,7 @@ export class ASTTransformerService {
       const tokens = nameNode.body
         .map((token: any) => this.extractNameFromNode(token))
         .filter((val: string | null) => val && val !== '.')
-
+      
       if (tokens.length > 0) {
         return tokens.join('.')
       }
@@ -820,7 +827,7 @@ export class ASTTransformerService {
       const tokens = nameNode.identifiers
         .map((id: any) => this.extractNameFromNode(id))
         .filter((val: string | null) => val)
-
+      
       if (tokens.length > 0) {
         return tokens.join('.')
       }
@@ -976,32 +983,56 @@ export class ASTTransformerService {
     return null
   }
 
+  private extractTableGroupMembers(element: ElementDeclarationNode): string[] {
+    const tableNames: string[] = []
+    
+    // Try to extract table names from the table group body
+    if (element.body?.body && Array.isArray(element.body.body)) {
+      element.body.body.forEach((item: any) => {
+        let tableName = this.extractNameFromNode(item)
+        
+        // If standard extraction fails, try more specific methods for table names
+        if (!tableName) {
+          if (item?.variable?.value) tableName = item.variable.value
+          if (item?.callee?.value) tableName = item.callee.value
+          if (item?.callee?.token?.value) tableName = item.callee.token.value
+        }
+        
+        if (tableName) {
+          tableNames.push(tableName)
+        }
+      })
+    }
+    
+    return tableNames
+  }
+
   private extractSourcePosition(element: SyntaxNode) {
     const startLine = element.startPos.line + 1
     const startColumn = element.startPos.column + 1
     const endLine = element.endPos.line + 1
     const endColumn = element.endPos.column + 1
 
-    return {
-      start: {
-        line: startLine,
-        column: startColumn,
+      return {
+        start: {
+          line: startLine,
+          column: startColumn,
         offset: element.start
-      },
-      end: {
-        line: endLine,
-        column: endColumn,
+        },
+        end: {
+          line: endLine,
+          column: endColumn,
         offset: element.end
-      },
-      raw: {
-        startPos: element.startPos,
-        endPos: element.endPos,
-        start: element.start,
-        end: element.end,
-        fullStart: element.fullStart,
-        fullEnd: element.fullEnd,
-        id: element.id,
-        kind: element.kind
+        },
+        raw: {
+          startPos: element.startPos,
+          endPos: element.endPos,
+          start: element.start,
+          end: element.end,
+          fullStart: element.fullStart,
+          fullEnd: element.fullEnd,
+          id: element.id,
+          kind: element.kind
       }
     }
   }
@@ -1105,8 +1136,8 @@ export class ASTTransformerService {
       organizedChildren.push({
         id: `group_tables_${groups[ElementKind.Table].length}`, // Deterministic based on content
         type: 'database',
-        name: 'Tables',
-        displayName: `Tables (${groups[ElementKind.Table].length})`,
+        name: 'tables',
+        displayName: `tables (${groups[ElementKind.Table].length})`,
         icon: 'table',
         children: groups[ElementKind.Table],
         accessPath: ''
@@ -1120,8 +1151,8 @@ export class ASTTransformerService {
           id: `group_${type}_${children.length}`, // Deterministic based on content
           type: 'database',
           name: type,
-          displayName: `${type} (${children.length})`,
-          icon: this.getTypeIcon(type),
+                  displayName: `${type} (${children.length})`,
+        icon: this.getTypeIcon(type),
           children,
           accessPath: ''
         })

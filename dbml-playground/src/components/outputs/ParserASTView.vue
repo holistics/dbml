@@ -4,39 +4,30 @@
     <div class="flex-shrink-0 p-3 border-b border-gray-200 bg-gray-50">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <h3 class="text-sm font-medium text-gray-700">Parser AST</h3>
+          <h3 class="text-sm font-medium text-gray-700">AST Debugger</h3>
           <div class="text-xs text-gray-500">
             {{ nodeCount }} nodes
           </div>
         </div>
 
         <div class="flex items-center space-x-3">
-          <!-- View Mode Toggle -->
-          <div class="flex items-center space-x-2">
-            <span class="text-xs text-gray-600">Semantic</span>
+          <!-- View Mode Toggle (2-way) -->
+          <div class="flex items-center space-x-1">
             <button
-              @click="toggleViewMode"
-              class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              :class="viewMode === 'json' ? 'bg-blue-600' : 'bg-gray-200'"
+              @click="setViewMode('ast')"
+              class="px-2 py-1 text-xs font-medium rounded transition-colors"
+              :class="viewMode === 'ast' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'"
             >
-              <span
-                class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                :class="viewMode === 'json' ? 'translate-x-6' : 'translate-x-1'"
-              />
+              AST Tree
             </button>
-            <span class="text-xs text-gray-600">JSON</span>
+            <button
+              @click="setViewMode('json')"
+              class="px-2 py-1 text-xs font-medium rounded transition-colors"
+              :class="viewMode === 'json' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'"
+            >
+              Raw JSON
+            </button>
           </div>
-
-          <!-- Filter Button -->
-          <button
-            @click="showFilters = !showFilters"
-            class="flex items-center space-x-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
-            </svg>
-            <span>Filter</span>
-          </button>
 
           <!-- Copy Button -->
           <button
@@ -54,67 +45,22 @@
           </button>
         </div>
       </div>
-
-      <!-- Filter Panel -->
-      <div v-if="showFilters" class="mt-3 pt-3 border-t border-gray-200">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Search -->
-          <div>
-            <label class="block text-xs font-medium text-gray-700 mb-1">Search</label>
-            <input
-              v-model="searchTerm"
-              type="text"
-              placeholder="Table names, column names, types..."
-              class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <!-- Quick Actions -->
-          <div>
-            <label class="block text-xs font-medium text-gray-700 mb-1">Quick Actions</label>
-            <div class="space-y-1">
-              <button
-                @click="expandAll"
-                class="block w-full text-left px-2 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded"
-              >
-                Expand All
-              </button>
-              <button
-                @click="collapseAll"
-                class="block w-full text-left px-2 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded"
-              >
-                Collapse All
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Main Content Area -->
     <div class="flex-1 flex overflow-hidden">
       <!-- Tree View -->
-      <div class="flex-1 overflow-auto" :style="{ width: `${100 - detailsPanelWidth}%` }">
-        <!-- Semantic View -->
-        <div v-if="viewMode === 'semantic'" class="p-4">
-          <SemanticTreeView
-            v-if="filteredSemanticAST"
-            :node="filteredSemanticAST"
-            :selected-node="selectedNode"
-            :expanded-nodes="expandedNodes"
-            @node-click="handleNodeClick"
-            @node-expand="handleNodeExpand"
-            @property-click="handlePropertyClick"
+      <div class="flex-1 overflow-auto">
+        <!-- AST Tree View -->
+        <div v-if="viewMode === 'ast'" class="p-4">
+          <RawASTTreeView
+            :raw-a-s-t="rawAST"
+            @node-click="handleRawNodeClick"
+            @position-click="handleRawPositionClick"
           />
-          <div v-else-if="semanticAST && searchTerm.trim()" class="text-center text-gray-500 py-8">
-            No matches found for "{{ searchTerm }}"
-          </div>
-          <div v-else class="text-center text-gray-500 py-8">
-            No semantic data available
-          </div>
         </div>
 
-        <!-- Raw AST View -->
+        <!-- Raw JSON View -->
         <div v-else class="h-full flex flex-col">
           <!-- Raw JSON Header -->
           <div class="flex-shrink-0 p-3 border-b border-gray-200 bg-gray-50">
@@ -140,28 +86,7 @@
         </div>
       </div>
 
-      <!-- Resize Handle -->
-      <div
-        v-if="selectedNode || selectedPath"
-        class="w-1 bg-gray-300 hover:bg-gray-400 cursor-col-resize transition-colors"
-        @mousedown="startResize"
-      ></div>
 
-      <!-- Details Panel -->
-      <div
-        v-if="selectedNode || selectedPath"
-        class="bg-gray-50 overflow-auto"
-        :style="{ width: `${detailsPanelWidth}%`, minWidth: '250px', maxWidth: '50%' }"
-      >
-        <ASTDetailsPanel
-          :selected-node="selectedNode"
-          :selected-path="selectedPath"
-          :raw-ast="rawAST"
-          :access-path="currentAccessPath"
-          @copy-path="copyAccessPath"
-          @navigate-to-source="navigateToSource"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -170,19 +95,18 @@
 /**
  * Parser AST View Component
  *
- * Provides dual-mode AST visualization with semantic and raw views.
- * Includes interactive navigation, filtering, and access path generation.
+ * Provides AST visualization for debugging parser and analyzer stages.
+ * Focuses on raw AST structure inspection with tree view and JSON view.
  *
  * Design Principles Applied:
  * - Deep Module: Rich functionality with simple interface
- * - Information Hiding: Complex AST transformation hidden from consumers
  * - Single Responsibility: Only handles AST visualization and navigation
+ * - Maintainable: Generic structure that adapts to parser evolution
  */
-import { computed, ref, watch, onMounted } from 'vue'
-import { ASTTransformerService, type SemanticASTNode, type AccessPath, type FilterOptions } from '@/core/ast-transformer'
-import SemanticTreeView from './ast/SemanticTreeView.vue'
-import ASTDetailsPanel from './ast/ASTDetailsPanel.vue'
+import { computed, ref, inject } from 'vue'
+import RawASTTreeView from './ast/RawASTTreeView.vue'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
+import type { TokenNavigationEventBus } from '@/core/token-navigation'
 
 interface Props {
   readonly ast: unknown
@@ -195,109 +119,115 @@ const emit = defineEmits<{
   'navigate-to-source': [position: { start: { line: number; column: number; offset: number }; end: { line: number; column: number; offset: number } }]
 }>()
 
-// Services
-const transformer = new ASTTransformerService()
+// Inject services
+const tokenNavigationBus = inject<TokenNavigationEventBus>('tokenNavigationBus')
+const tokenNavigationCoordinator = inject<any>('tokenNavigationCoordinator')
+
+// No services needed for simple AST view
 
 // Component state
-const viewMode = ref<'semantic' | 'json'>('semantic')
-const showFilters = ref(false)
-const selectedNode = ref<SemanticASTNode | null>(null)
-const selectedPath = ref<string | null>(null)
-const expandedNodes = ref<Set<string>>(new Set())
+const viewMode = ref<'ast' | 'json'>('ast')
 const copySuccess = ref(false)
-
-// Resize state
-const detailsPanelWidth = ref(50) // Default 50% width for better usability
-const isResizing = ref(false)
-
-// Search state
-const searchTerm = ref('')
 
 // Computed properties
 const rawAST = computed(() => props.ast)
 
-const semanticAST = computed(() => {
-  if (!rawAST.value) return null
-  try {
-    return transformer.transformToSemantic(rawAST.value)
-  } catch (error) {
-    console.error('Error transforming AST to semantic:', error)
-    return null
-  }
-})
-
-const filteredSemanticAST = computed(() => {
-  if (!semanticAST.value) return null
-  if (!searchTerm.value.trim()) return semanticAST.value
-
-  return filterSemanticAST(semanticAST.value, searchTerm.value.toLowerCase())
-})
-
 const rawASTJson = computed(() => {
-  // In JSON mode, show the truly raw, unfiltered AST (like other stages)
   return rawAST.value ? JSON.stringify(rawAST.value, null, 2) : ''
 })
 
 const nodeCount = computed(() => {
-  if (viewMode.value === 'semantic') {
-    const astToCount = filteredSemanticAST.value || semanticAST.value
-    return astToCount ? countSemanticNodes(astToCount) : 0
-  } else if (rawAST.value) {
+  if (rawAST.value) {
     return countRawNodes(rawAST.value)
   }
   return 0
 })
 
-const currentAccessPath = computed((): AccessPath | null => {
-  if (selectedNode.value && selectedPath.value) {
-    return transformer.generateAccessPath(selectedNode.value, selectedPath.value, null)
-  }
-  return null
-})
-
 // Methods
-const toggleViewMode = () => {
-  viewMode.value = viewMode.value === 'semantic' ? 'json' : 'semantic'
-  // Clear selection when switching modes
-  selectedNode.value = null
-  selectedPath.value = null
+const setViewMode = (mode: 'ast' | 'json') => {
+  viewMode.value = mode
 }
 
-const handleNodeClick = (node: SemanticASTNode) => {
-  selectedNode.value = node
-  selectedPath.value = node.accessPath || ''
-}
+// Navigate to source position using direct Monaco editor approach
+const navigateToSourcePosition = (position: any) => {
+  if (!position) return
 
-const handleNodeExpand = (nodeId: string, expanded: boolean) => {
-  if (expanded) {
-    expandedNodes.value.add(nodeId)
+  const startLine = position.start.line
+  const startColumn = position.start.column
+  const endLine = position.end.line
+  const endColumn = position.end.column
+
+  // Use direct navigation approach
+  if (tokenNavigationCoordinator?.dbmlEditor) {
+    try {
+      // Create Monaco range for full selection
+      const range = { 
+        startLineNumber: startLine, 
+        startColumn: startColumn, 
+        endLineNumber: endLine, 
+        endColumn: endColumn
+      }
+      
+      // Set selection to the full range
+      tokenNavigationCoordinator.dbmlEditor.setSelection(range)
+      
+      // Reveal and center the range
+      tokenNavigationCoordinator.dbmlEditor.revealRangeInCenter(range)
+      
+      // Add temporary highlight for the entire range
+      const decorations = tokenNavigationCoordinator.dbmlEditor.createDecorationsCollection([
+        {
+          range: range,
+          options: {
+            className: 'token-navigation-highlight',
+            inlineClassName: 'token-navigation-highlight-inline'
+          }
+        }
+      ])
+      
+      // Clear highlight after 2 seconds
+      setTimeout(() => {
+        decorations.clear()
+      }, 2000)
+      
+    } catch (error) {
+      console.warn('Direct navigation failed:', error)
+      // Fallback to emit
+      emit('navigate-to-source', position)
+    }
   } else {
-    expandedNodes.value.delete(nodeId)
+    // Fallback to old method if coordinator not available
+    emit('navigate-to-source', position)
   }
 }
 
-const handlePropertyClick = (node: SemanticASTNode, property: string, value: any) => {
-  selectedNode.value = node
-  selectedPath.value = `${node.accessPath}.${property}`
-}
-
-
-
-const expandAll = () => {
-  if (viewMode.value === 'semantic' && semanticAST.value) {
-    expandAllSemanticNodes(semanticAST.value, expandedNodes.value)
+// Raw AST handlers - just for navigation, no selection/details
+const handleRawNodeClick = (node: any) => {
+  // Just navigate to position if available
+  if (node.rawData?.startPos) {
+    const position = {
+      start: { 
+        line: node.rawData.startPos.line + 1, 
+        column: node.rawData.startPos.column + 1,
+        offset: node.rawData.start || 0
+      },
+      end: { 
+        line: node.rawData.endPos?.line + 1 || node.rawData.startPos.line + 1, 
+        column: node.rawData.endPos?.column + 1 || node.rawData.startPos.column + 1,
+        offset: node.rawData.end || node.rawData.start || 0
+      }
+    }
+    navigateToSourcePosition(position)
   }
 }
 
-const collapseAll = () => {
-  expandedNodes.value.clear()
+const handleRawPositionClick = (event: { node: any; position: any }) => {
+  navigateToSourcePosition(event.position)
 }
 
 const copyCurrentView = async () => {
   try {
-    const dataToCopy = viewMode.value === 'semantic'
-      ? JSON.stringify(filteredSemanticAST.value || semanticAST.value, null, 2)
-      : JSON.stringify(rawAST.value, null, 2)
+    const dataToCopy = JSON.stringify(rawAST.value, null, 2)
 
     await navigator.clipboard.writeText(dataToCopy)
     copySuccess.value = true
@@ -309,157 +239,63 @@ const copyCurrentView = async () => {
   }
 }
 
-const copyAccessPath = async (path: AccessPath) => {
-  try {
-    const pathText = `Raw: ${path.raw}\nValue: ${JSON.stringify(path.value)}`
-    await navigator.clipboard.writeText(pathText)
-    copySuccess.value = true
-    setTimeout(() => {
-      copySuccess.value = false
-    }, 2000)
-  } catch (err) {
-    console.error('Failed to copy access path:', err)
-  }
-}
-
-const navigateToSource = (position: any) => {
-  // Emit event for parent component to handle source navigation
-  if (position && position.start && position.end) {
-    emit('navigate-to-source', position)
-  }
-}
-
-// Resize functionality
-const startResize = (event: MouseEvent) => {
-  isResizing.value = true
-  const startX = event.clientX
-  const startWidth = detailsPanelWidth.value
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isResizing.value) return
-
-    const containerWidth = (event.target as HTMLElement).parentElement?.clientWidth || 1000
-    const deltaX = e.clientX - startX
-    const deltaPercent = (deltaX / containerWidth) * 100
-
-    // Calculate new width (moving right increases panel width, moving left decreases it)
-    const newWidth = Math.max(15, Math.min(50, startWidth - deltaPercent))
-    detailsPanelWidth.value = newWidth
-  }
-
-  const handleMouseUp = () => {
-    isResizing.value = false
-    document.removeEventListener('mousemove', handleMouseMove)
-    document.removeEventListener('mouseup', handleMouseUp)
-  }
-
-  document.addEventListener('mousemove', handleMouseMove)
-  document.addEventListener('mouseup', handleMouseUp)
-  event.preventDefault()
-}
-
 // Utility functions
-const countSemanticNodes = (node: SemanticASTNode): number => {
-  let count = 1
-  node.children.forEach(child => {
-    count += countSemanticNodes(child)
-  })
-  return count
-}
-
-const filterSemanticAST = (node: SemanticASTNode, searchTerm: string): SemanticASTNode | null => {
-  // Check if current node matches search term
-  const nodeMatches =
-    node.displayName.toLowerCase().includes(searchTerm) ||
-    node.name.toLowerCase().includes(searchTerm) ||
-    node.type.toLowerCase().includes(searchTerm)
-
-  // Filter children recursively
-  const filteredChildren = node.children
-    .map(child => filterSemanticAST(child, searchTerm))
-    .filter(child => child !== null) as SemanticASTNode[]
-
-  // Include node if it matches or has matching children
-  if (nodeMatches || filteredChildren.length > 0) {
-    return {
-      ...node,
-      children: filteredChildren
-    }
-  }
-
-  return null
-}
-
 const countRawNodes = (obj: any): number => {
-  if (typeof obj !== 'object' || obj === null) return 0
+  if (!obj || typeof obj !== 'object') return 0
 
-  let count = 1
-  Object.values(obj).forEach(value => {
-    if (typeof value === 'object' && value !== null) {
+  let count = 1 // Count this node
+  
+  for (const value of Object.values(obj)) {
+    if (Array.isArray(value)) {
+      count += value.reduce((sum, item) => sum + countRawNodes(item), 0)
+    } else if (typeof value === 'object' && value !== null) {
       count += countRawNodes(value)
     }
-  })
+  }
+  
   return count
 }
 
-const expandAllSemanticNodes = (node: SemanticASTNode, expandedSet: Set<string>) => {
-  expandedSet.add(node.id)
-  node.children.forEach(child => {
-    expandAllSemanticNodes(child, expandedSet)
-  })
+const getRawASTValue = (ast: any, path: string): any => {
+  try {
+    const pathParts = path.split('.').filter(part => part !== 'ast')
+    let current = ast
+    
+    for (const part of pathParts) {
+      if (part.includes('[') && part.includes(']')) {
+        const [property, indexStr] = part.split('[')
+        const index = parseInt(indexStr.replace(']', ''))
+        current = current[property][index]
+      } else {
+        current = current[part]
+      }
+    }
+    
+    return current
+  } catch (error) {
+    return null
+  }
 }
-
-
-
-// Initialize with some default expanded nodes
-onMounted(() => {
-  if (semanticAST.value) {
-    expandedNodes.value.add(semanticAST.value.id)
-  }
-})
-
-// Watch for AST changes and auto-expand root
-watch(semanticAST, (newAST) => {
-  if (newAST) {
-    expandedNodes.value.add(newAST.id)
-  }
-})
 
 // Expose methods for external access
 defineExpose({
-  toggleViewMode,
-  expandAll,
-  collapseAll,
-  getSelectedNode: () => selectedNode.value,
-  getSelectedPath: () => selectedPath.value
+  setViewMode,
+  copyCurrentView
 })
 </script>
 
 <style scoped>
-/* Tree view styling */
-.tree-node {
-  transition: all 0.2s ease-in-out;
+/* Component styling */
+.h-full {
+  height: 100%;
 }
 
-.tree-node:hover {
-  background-color: rgba(59, 130, 246, 0.05);
+.overflow-hidden {
+  overflow: hidden;
 }
 
-.tree-node.selected {
-  background-color: rgba(59, 130, 246, 0.1);
-  border-left: 3px solid #3b82f6;
-}
-
-/* Filter panel animations */
-.filter-panel-enter-active,
-.filter-panel-leave-active {
-  transition: all 0.3s ease;
-}
-
-.filter-panel-enter-from,
-.filter-panel-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
+.overflow-auto {
+  overflow: auto;
 }
 
 /* Scrollbar styling */

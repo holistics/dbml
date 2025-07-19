@@ -11,20 +11,22 @@
         </div>
 
         <div class="flex items-center space-x-3">
-          <!-- View Toggle Switch -->
-          <div class="flex items-center space-x-2">
-            <span class="text-xs text-gray-600">Cards</span>
+          <!-- View Mode Toggle -->
+          <div class="flex items-center space-x-1">
             <button
-              @click="viewMode = viewMode === 'cards' ? 'json' : 'cards'"
-              class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              :class="viewMode === 'json' ? 'bg-blue-600' : 'bg-gray-200'"
+              @click="setViewMode('cards')"
+              class="px-2 py-1 text-xs font-medium rounded transition-colors"
+              :class="viewMode === 'cards' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'"
             >
-              <span
-                class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                :class="viewMode === 'json' ? 'translate-x-6' : 'translate-x-1'"
-              />
+              Token Cards
             </button>
-            <span class="text-xs text-gray-600">JSON</span>
+            <button
+              @click="setViewMode('json')"
+              class="px-2 py-1 text-xs font-medium rounded transition-colors"
+              :class="viewMode === 'json' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'"
+            >
+              Raw JSON
+            </button>
           </div>
 
           <!-- Copy Button -->
@@ -249,7 +251,7 @@ const getViewMode = (): 'cards' | 'json' => {
 }
 
 /**
- * Set view mode externally
+ * Set view mode (both internally and externally)
  */
 const setViewMode = (mode: 'cards' | 'json'): void => {
   viewMode.value = mode

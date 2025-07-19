@@ -11,13 +11,8 @@
  * - Pull Complexity Downwards: Complex event filtering handled internally
  */
 import * as monaco from 'monaco-editor'
-import { TokenMappingService, type Token } from './token-mapping'
-
-export interface TokenNavigationEvents {
-  'navigate:token-to-dbml': { tokenIndex: number; modifier: 'cmd' | 'ctrl' | 'button' }
-  'navigate:dbml-to-token': { line: number; column: number; modifier: 'cmd' | 'ctrl' }
-  'navigate:range-to-tokens': { startLine: number; startCol: number; endLine: number; endCol: number }
-}
+import { TokenMappingService } from './token-mapping'
+import type { Token, TokenNavigationEvents } from '@/types'
 
 export type TokenNavigationEventType = keyof TokenNavigationEvents
 

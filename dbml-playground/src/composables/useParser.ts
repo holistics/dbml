@@ -13,12 +13,7 @@
 import { computed } from 'vue'
 import { ReactiveParser } from '@/core/reactive-parser'
 import { DEFAULT_SAMPLE_CONTENT } from '@/core/sample-content'
-import type { ParserError } from '@/core/parser-service'
-
-/**
- * Pipeline stage identifiers
- */
-export type PipelineStage = 'lexer' | 'parser' | 'analyzer' | 'interpreter'
+import type { ParserError, PipelineStage } from '@/types'
 
 /**
  * DBML Parser Composable

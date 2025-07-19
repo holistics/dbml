@@ -10,56 +10,29 @@
  * - Single Responsibility: Only handles token-position mapping
  */
 import * as monaco from 'monaco-editor'
+import type { Token, TokenMetadata } from '@/types'
 
-export interface Token {
-  kind: string
-  value: string
-  position: {
-    line: number
-    column: number
-  }
-}
-
-export interface TokenMetadata {
-  tokenIndex: number
-  kind: string
-  value: string
-  startPosition: { line: number; column: number }
-  endPosition: { line: number; column: number }
-  monacoRange: monaco.Range
-}
-
-export interface LexerToDbmlMap {
+// Implementation-specific map interfaces (different from the centralized types)
+interface LexerToDbmlMapInternal {
   // Maps token index to Monaco editor range
   tokenToRange: Map<number, monaco.Range>
   // Maps token index to additional metadata
   tokenMetadata: Map<number, TokenMetadata>
 }
 
-export interface DbmlToLexerMap {
-  // Maps position key to token index
-  // Key format: "line:column" (e.g., "1:5" for line 1, column 5)
-  positionToToken: Map<string, number>
-  // Efficient range lookup for cursor position
-  positionLookup: Array<{
-    line: number
-    ranges: Array<{
-      startColumn: number
-      endColumn: number
-      tokenIndex: number
-    }>
-  }>
+interface DbmlToLexerMapInternal {
+  // Maps position key "line:column" to array of token metadata
+  positionToTokens: Map<string, TokenMetadata[]>
 }
 
 export class TokenMappingService {
   private tokens: Token[] = []
-  private lexerToDbml: LexerToDbmlMap = {
+  private lexerToDbml: LexerToDbmlMapInternal = {
     tokenToRange: new Map(),
     tokenMetadata: new Map()
   }
-  private dbmlToLexer: DbmlToLexerMap = {
-    positionToToken: new Map(),
-    positionLookup: []
+  private dbmlToLexer: DbmlToLexerMapInternal = {
+    positionToTokens: new Map()
   }
 
   /**
@@ -92,19 +65,19 @@ export class TokenMappingService {
   public getTokenAtPosition(line: number, column: number): number | null {
     // Try exact position lookup first
     const positionKey = this.createPositionKey(line, column)
-    const exactMatch = this.dbmlToLexer.positionToToken.get(positionKey)
+    const exactMatch = this.dbmlToLexer.positionToTokens.get(positionKey)
     if (exactMatch !== undefined) {
-      return exactMatch
+      return exactMatch[0].tokenIndex // Assuming the first token in the array is the one at this position
     }
 
     // Search for token containing this position
-    const lineData = this.dbmlToLexer.positionLookup.find(l => l.line === line)
+    const lineData = this.dbmlToLexer.positionToTokens.get(positionKey)
     if (!lineData) return null
 
-    // Find the range that contains this column
-    for (const range of lineData.ranges) {
-      if (column >= range.startColumn && column < range.endColumn) {
-        return range.tokenIndex
+    // Find the token that contains this column
+    for (const tokenMeta of lineData) {
+      if (column >= tokenMeta.startPosition.column && column < tokenMeta.endPosition.column) {
+        return tokenMeta.tokenIndex
       }
     }
 
@@ -167,8 +140,7 @@ export class TokenMappingService {
   private clearMaps(): void {
     this.lexerToDbml.tokenToRange.clear()
     this.lexerToDbml.tokenMetadata.clear()
-    this.dbmlToLexer.positionToToken.clear()
-    this.dbmlToLexer.positionLookup = []
+    this.dbmlToLexer.positionToTokens.clear()
   }
 
   /**
@@ -200,11 +172,7 @@ export class TokenMappingService {
    */
   private buildDbmlToLexerMap(): void {
     // Group tokens by line for efficient lookup
-    const tokensByLine = new Map<number, Array<{
-      startColumn: number
-      endColumn: number
-      tokenIndex: number
-    }>>()
+    const tokensByLine = new Map<number, TokenMetadata[]>()
 
     this.tokens.forEach((token, index) => {
       const line = token.position.line
@@ -212,30 +180,33 @@ export class TokenMappingService {
       const tokenLength = this.calculateTokenLength(token)
       const endColumn = token.position.column + tokenLength
 
+      const tokenMetadata: TokenMetadata = {
+        tokenIndex: index,
+        kind: token.kind,
+        value: token.value,
+        startPosition: token.position,
+        endPosition: {
+          line: token.position.line,
+          column: token.position.column + tokenLength
+        },
+        monacoRange: this.calculateTokenRange(token)
+      }
+
       if (!tokensByLine.has(line)) {
         tokensByLine.set(line, [])
       }
 
-      tokensByLine.get(line)!.push({
-        startColumn,
-        endColumn,
-        tokenIndex: index
-      })
+      tokensByLine.get(line)!.push(tokenMetadata)
 
       // Create position mappings for each character in the token
       for (let col = startColumn; col < endColumn; col++) {
         const positionKey = this.createPositionKey(line, col)
-        this.dbmlToLexer.positionToToken.set(positionKey, index)
+        if (!this.dbmlToLexer.positionToTokens.has(positionKey)) {
+          this.dbmlToLexer.positionToTokens.set(positionKey, [])
+        }
+        this.dbmlToLexer.positionToTokens.get(positionKey)!.push(tokenMetadata)
       }
     })
-
-    // Create sorted position lookup table
-    this.dbmlToLexer.positionLookup = Array.from(tokensByLine.entries())
-      .map(([line, ranges]) => ({
-        line,
-        ranges: ranges.sort((a, b) => a.startColumn - b.startColumn)
-      }))
-      .sort((a, b) => a.line - b.line)
   }
 
   /**
