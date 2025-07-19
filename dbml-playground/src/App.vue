@@ -5,6 +5,7 @@
       <div class="w-full px-6">
         <div class="flex justify-between items-center py-4">
           <div class="flex items-center">
+            <img src="/dbml-logo.png" alt="DBML Logo" class="h-8 w-auto mr-3" />
             <h1 class="text-2xl font-bold text-gray-900">DBML Playground</h1>
             <span class="ml-3 px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
               v{{ version }}
