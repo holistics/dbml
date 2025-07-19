@@ -110,7 +110,8 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   renderWhitespace: 'boundary',
   renderControlCharacters: true,
   smoothScrolling: true,
-  cursorSmoothCaretAnimation: 'on',
+  cursorSmoothCaretAnimation: 'off', // Disable for better vim performance
+  cursorBlinking: 'solid', // Use solid cursor for vim mode
   automaticLayout: true,
   glyphMargin: true,
   folding: true,
@@ -124,7 +125,20 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
     horizontalHasArrows: false,
     verticalScrollbarSize: 14,
     horizontalScrollbarSize: 14
-  }
+  },
+  // Performance optimizations for vim mode
+  disableLayerHinting: true, // Disable GPU acceleration that can interfere with vim
+  selectOnLineNumbers: false, // Disable line number selection for vim compatibility
+  cursorWidth: props.vimMode ? 2 : 1, // Slightly wider cursor for vim visibility
+  quickSuggestions: false, // Disable auto-suggestions for vim mode compatibility
+  parameterHints: { enabled: false }, // Disable parameter hints for cleaner vim experience
+  suggestOnTriggerCharacters: false, // Disable suggestion popup on typing
+  acceptSuggestionOnEnter: 'off', // Prevent Enter from accepting suggestions
+  tabCompletion: 'off', // Disable tab completion to avoid conflicts with vim
+  wordBasedSuggestions: 'off', // Disable word-based suggestions
+  // Reduce rendering frequency for better performance
+  mouseWheelScrollSensitivity: 1,
+  fastScrollSensitivity: 5
 })
 
 /**
