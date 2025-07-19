@@ -119,7 +119,7 @@
                     <svg class="w-12 h-12 mx-auto text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
-                    <p class="text-sm text-gray-500">No parse errors! 🎉</p>
+                    <p class="text-sm text-gray-500">No parse errors</p>
                   </div>
                   <div v-else class="space-y-3">
                     <div
