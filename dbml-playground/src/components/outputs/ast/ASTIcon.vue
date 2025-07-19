@@ -57,6 +57,23 @@
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 011-1h1a2 2 0 100-4H7a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" stroke="currentColor"/>
     </svg>
 
+    <!-- Array Icon - Square brackets [] -->
+    <svg v-else-if="type === 'array'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
+      <path d="M15,3h2a1,1,0,0,1,1,1V20a1,1,0,0,1-1,1H15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" fill="none"/>
+      <path d="M9,3H7A1,1,0,0,0,6,4V20a1,1,0,0,0,1,1H9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" fill="none"/>
+    </svg>
+
+    <!-- Object Icon - Curly braces {} -->
+    <svg v-else-if="type === 'object'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
+      <path d="M15,3h2a1,1,0,0,1,1,1v6a2,2,0,0,0,2,2h0a2,2,0,0,0-2,2v6a1,1,0,0,1-1,1H15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" fill="none"/>
+      <path d="M9,3H7A1,1,0,0,0,6,4v6a2,2,0,0,1-2,2H4a2,2,0,0,1,2,2v6a1,1,0,0,0,1,1H9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" fill="none"/>
+    </svg>
+
+    <!-- Data Inspector Icon -->
+    <svg v-else-if="type === 'data-inspector'" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke="currentColor"/>
+    </svg>
+
     <!-- Note Icon -->
     <svg v-else-if="type === 'note'" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke="currentColor"/>
@@ -66,7 +83,7 @@
     <svg v-else viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
       <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
       <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" stroke="currentColor" stroke-width="2"/>
-    </svg>
+  </svg>
   </span>
 </template>
 

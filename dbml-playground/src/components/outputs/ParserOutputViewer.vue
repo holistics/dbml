@@ -12,12 +12,19 @@
       />
     </div>
 
-    <!-- AST view with specialized component -->
+    <!-- AST view for parser/analyzer stages -->
     <div v-else-if="isASTData" class="h-full">
       <ParserASTView
         :ast="transformedData"
         ref="astViewRef"
         @navigate-to-source="handleNavigateToSource"
+      />
+    </div>
+
+    <!-- Semantic view for interpreter output -->
+    <div v-else-if="isInterpreterData" class="h-full">
+      <InterpreterView
+        :interpreter-output="transformedData"
       />
     </div>
 
@@ -52,26 +59,14 @@ import { computed, ref } from 'vue'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
 import LexerView from './LexerView.vue'
 import ParserASTView from './ParserASTView.vue'
+import InterpreterView from './InterpreterView.vue'
+import type { Token, ParserOutputViewerProps, NavigationPosition } from '@/types'
 
-interface Props {
-  readonly data: unknown
-  readonly title?: string
-}
-
-interface Token {
-  kind: string
-  value: string
-  position: {
-    line: number
-    column: number
-  }
-}
-
-const props = defineProps<Props>()
+const props = defineProps<ParserOutputViewerProps>()
 
 // Define emits for navigation events
 const emit = defineEmits<{
-  'navigate-to-source': [position: { start: { line: number; column: number; offset: number }; end: { line: number; column: number; offset: number } }]
+  'navigate-to-source': [position: NavigationPosition]
 }>()
 
 // Reference to LexerView component for navigation coordination
@@ -125,6 +120,20 @@ const isASTData = computed(() => {
          data !== null &&
          !Array.isArray(data) &&
          ('body' in data || 'kind' in data)
+})
+
+/**
+ * Check if data contains interpreter output (Database JSON Model)
+ */
+const isInterpreterData = computed(() => {
+  const data = transformedData.value
+  return typeof data === 'object' &&
+         data !== null &&
+         !Array.isArray(data) &&
+         // Interpreter output has database model structure
+         ('tables' in data || 'enums' in data || 'refs' in data || 'project' in data) &&
+         // Make sure it's not AST data
+         !('body' in data || 'kind' in data)
 })
 
 /**

@@ -11,28 +11,7 @@
  * - Pull Complexity Downwards: Complex logic handled internally
  */
 import { Compiler } from '@dbml/parse'
-
-export interface ParserStageOutput {
-  readonly lexer: unknown
-  readonly parser: unknown
-  readonly analyzer: unknown
-  readonly interpreter: unknown
-}
-
-export interface ParserError {
-  readonly code: number
-  readonly message: string
-  readonly location: {
-    readonly line: number
-    readonly column: number
-  }
-}
-
-export interface ParserResult {
-  readonly success: boolean
-  readonly outputs: ParserStageOutput
-  readonly errors: readonly ParserError[]
-}
+import type { ParserStageOutput, ParserError, ParserResult } from '@/types'
 
 /**
  * DBML Parser Service
@@ -65,7 +44,8 @@ export class ParserService {
       let json = null
       if (errors.length === 0) {
         try {
-          json = this.compiler.parse.rawDb()
+          // Use type assertion to access rawDb method that exists at runtime
+          json = (this.compiler.parse as any).rawDb()
         } catch (err) {
           // Silent failure for JSON generation - errors will be captured separately
           console.warn('JSON generation failed:', err)
@@ -119,32 +99,15 @@ export class ParserService {
   }
 
   /**
-   * Format JSON output for display with clean structure
+   * Format JSON output for display with NO FILTERING
+   * Playground should show the raw interpreter output exactly as it is
    */
   private formatJSONForDisplay(json: any): unknown {
     if (!json) return null
 
-    return {
-      schemas: json.schemas || [],
-      tables: (json.tables || []).map((table: any) => ({
-        name: table.name,
-        schemaName: table.schemaName,
-        fields: (table.fields || []).map((field: any) => ({
-          name: field.name,
-          type: field.type,
-          pk: field.pk,
-          unique: field.unique,
-          not_null: field.not_null,
-          increment: field.increment,
-          default: field.default
-        })),
-        indexes: table.indexes || []
-      })),
-      refs: json.refs || [],
-      enums: json.enums || [],
-      tableGroups: json.tableGroups || [],
-      project: json.project || {}
-    }
+    // Return the raw JSON exactly as the interpreter provides it
+    // NO FILTERING - playground needs to show everything for debugging
+    return json
   }
 
   /**

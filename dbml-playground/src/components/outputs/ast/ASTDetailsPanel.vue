@@ -70,6 +70,8 @@
         </div>
       </div>
 
+
+
       <!-- Access Path -->
       <div v-if="selectedNode?.accessPath" class="section">
         <div class="flex items-center justify-between mb-2">
@@ -94,13 +96,26 @@
         </div>
       </div>
 
-      <!-- Raw AST Data -->
+      <!-- Raw AST Data - Collapsible -->
       <div v-if="selectedNode && (selectedNode.data || selectedNode.accessPath) && selectedNode.type !== 'database'" class="section">
         <div class="flex items-center justify-between mb-2">
-          <h4 class="text-xs font-medium text-gray-700">
-            {{ selectedNode.data ? 'Parser AST Data' : 'Node JSON' }}
-          </h4>
           <button
+            @click="showRawAst = !showRawAst"
+            class="flex items-center space-x-2 text-xs font-medium text-gray-700 hover:text-gray-900"
+          >
+            <svg 
+              class="w-3 h-3 transition-transform" 
+              :class="{ 'rotate-90': showRawAst }"
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <span>{{ selectedNode.data ? 'Parser AST Data' : 'Node JSON' }}</span>
+          </button>
+          <button
+            v-if="showRawAst"
             @click="copyNodeJson"
             class="flex items-center space-x-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             :class="{ 'text-green-700 border-green-300 bg-green-50': copyJsonSuccess }"
@@ -115,7 +130,7 @@
             <span>{{ copyJsonSuccess ? 'Copied!' : 'Copy' }}</span>
           </button>
         </div>
-        <div class="bg-slate-50 rounded-lg overflow-hidden border border-slate-200 shadow-sm" :style="{ height: `${jsonViewerHeight}px` }">
+        <div v-if="showRawAst" class="bg-slate-50 rounded-lg overflow-hidden border border-slate-200 shadow-sm" :style="{ height: `${jsonViewerHeight}px` }">
           <MonacoEditor
             :model-value="nodeJson"
             language="json"
@@ -136,12 +151,12 @@
               renderLineHighlight: 'none'
             }"
           />
-        </div>
         <!-- Resize Handle for JSON Viewer -->
         <div
           class="w-full h-1 bg-gray-300 hover:bg-gray-400 cursor-row-resize transition-colors"
           @mousedown="startJsonResize"
         ></div>
+        </div>
       </div>
 
       <!-- Source Navigation -->
@@ -158,9 +173,31 @@
         </button>
       </div>
 
-      <!-- Removed Properties section - no longer needed -->
-
-      <!-- Removed Quick Actions section - Copy button moved to JSON title -->
+      <!-- AST Statistics & Debugging Info -->
+      <div v-if="selectedNode?.type === 'database'" class="section">
+        <h4 class="text-xs font-medium text-gray-700 mb-2">AST Statistics</h4>
+        <div class="bg-slate-50 rounded-lg p-3 text-xs text-gray-600 space-y-2">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <span class="font-medium">Total Elements:</span>
+              <span class="ml-1">{{ getASTStats().totalElements }}</span>
+            </div>
+            <div>
+              <span class="font-medium">Element Types:</span>
+              <span class="ml-1">{{ getASTStats().uniqueTypes }}</span>
+            </div>
+          </div>
+          <div class="border-t border-gray-200 pt-2">
+            <div class="font-medium mb-1">Element Breakdown:</div>
+            <div class="space-y-1">
+              <div v-for="[type, count] in getASTStats().typeBreakdown" :key="type" class="flex justify-between">
+                <span class="capitalize">{{ type }}:</span>
+                <span>{{ count }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -172,9 +209,10 @@
  * Shows detailed information about selected AST nodes including
  * access paths, properties, and navigation options.
  */
-import { computed, ref } from 'vue'
+import { computed, ref, inject } from 'vue'
 import type { SemanticASTNode, AccessPath } from '@/core/ast-transformer'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
+import type { TokenNavigationEventBus } from '@/core/token-navigation'
 
 interface Props {
   readonly selectedNode: SemanticASTNode | null
@@ -189,6 +227,11 @@ const emit = defineEmits<{
   'copy-path': [path: AccessPath]
   'navigate-to-source': [position: any]
 }>()
+
+// Inject the token navigation system (like in LexerView)
+const tokenNavigationBus = inject<TokenNavigationEventBus>('tokenNavigationBus')
+// Also inject the coordinator for direct navigation
+const tokenNavigationCoordinator = inject<any>('tokenNavigationCoordinator')
 
 const nodeJson = computed(() => {
   if (!props.selectedNode) return ''
@@ -230,6 +273,9 @@ const isJsonResizing = ref(false)
 // Copy success states
 const copyAccessPathSuccess = ref(false)
 const copyJsonSuccess = ref(false)
+
+// UI state
+const showRawAst = ref(false) // Collapsed by default
 
 // Removed currentValue, nodeProperties, shouldShowProperty, getValueType, and formatValue - no longer needed
 
@@ -335,6 +381,172 @@ const navigateToSource = () => {
     emit('navigate-to-source', props.selectedNode.sourcePosition)
   }
 }
+
+// Handle clicking on position/location text to navigate to source
+const handleLocationClick = (locationText: string) => {
+  // Extract range from text like "line 1:2 → 5:10 (click to navigate)" or "line 1:2 (click to navigate)"
+  const rangeMatch = locationText.match(/line (\d+):(\d+) → (\d+):(\d+)/)
+  const singleMatch = locationText.match(/line (\d+):(\d+)/)
+  
+  if (rangeMatch) {
+    // Handle full range navigation
+    const startLine = parseInt(rangeMatch[1])
+    const startColumn = parseInt(rangeMatch[2])
+    const endLine = parseInt(rangeMatch[3])
+    const endColumn = parseInt(rangeMatch[4])
+    
+    navigateToRange(startLine, startColumn, endLine, endColumn)
+  } else if (singleMatch) {
+    // Handle single position navigation
+    const line = parseInt(singleMatch[1])
+    const column = parseInt(singleMatch[2])
+    
+    navigateToPosition(line, column)
+  }
+}
+
+// Navigate to a single position
+const navigateToPosition = (line: number, column: number) => {
+  // Direct navigation approach using the coordinator's methods
+  if (tokenNavigationCoordinator?.dbmlEditor) {
+    try {
+      // Create Monaco position (1-indexed)
+      const position = { lineNumber: line, column: column }
+      
+      // Set cursor position
+      tokenNavigationCoordinator.dbmlEditor.setPosition(position)
+      
+      // Reveal and center the position
+      const range = { 
+        startLineNumber: line, 
+        startColumn: column, 
+        endLineNumber: line, 
+        endColumn: column + 1
+      }
+      tokenNavigationCoordinator.dbmlEditor.revealRangeInCenter(range)
+      
+      // Add temporary highlight
+      const decorations = tokenNavigationCoordinator.dbmlEditor.createDecorationsCollection([
+        {
+          range: range,
+          options: {
+            className: 'token-navigation-highlight',
+            inlineClassName: 'token-navigation-highlight-inline'
+          }
+        }
+      ])
+      
+      // Clear highlight after 1.5 seconds
+      setTimeout(() => {
+        decorations.clear()
+      }, 1500)
+      
+    } catch (error) {
+      console.warn('Direct navigation failed:', error)
+      // Fallback to emit
+      const position = {
+        start: { line, column, offset: 0 },
+        end: { line, column, offset: 0 }
+      }
+      emit('navigate-to-source', position)
+    }
+  } else {
+    // Fallback to old method if coordinator not available
+    const position = {
+      start: { line, column, offset: 0 },
+      end: { line, column, offset: 0 }
+    }
+    emit('navigate-to-source', position)
+  }
+}
+
+// Navigate to a full range (multi-line selection)
+const navigateToRange = (startLine: number, startColumn: number, endLine: number, endColumn: number) => {
+  // Direct navigation approach using the coordinator's methods
+  if (tokenNavigationCoordinator?.dbmlEditor) {
+    try {
+      // Create Monaco range for full selection
+      const range = { 
+        startLineNumber: startLine, 
+        startColumn: startColumn, 
+        endLineNumber: endLine, 
+        endColumn: endColumn
+      }
+      
+      // Set selection to the full range
+      tokenNavigationCoordinator.dbmlEditor.setSelection(range)
+      
+      // Reveal and center the range
+      tokenNavigationCoordinator.dbmlEditor.revealRangeInCenter(range)
+      
+      // Add temporary highlight for the entire range
+      const decorations = tokenNavigationCoordinator.dbmlEditor.createDecorationsCollection([
+        {
+          range: range,
+          options: {
+            className: 'token-navigation-highlight',
+            inlineClassName: 'token-navigation-highlight-inline'
+          }
+        }
+      ])
+      
+      // Clear highlight after 2 seconds (longer for ranges)
+      setTimeout(() => {
+        decorations.clear()
+      }, 2000)
+      
+    } catch (error) {
+      console.warn('Direct range navigation failed:', error)
+      // Fallback to emit
+      const position = {
+        start: { line: startLine, column: startColumn, offset: 0 },
+        end: { line: endLine, column: endColumn, offset: 0 }
+      }
+      emit('navigate-to-source', position)
+    }
+  } else {
+    // Fallback to old method if coordinator not available
+    const position = {
+      start: { line: startLine, column: startColumn, offset: 0 },
+      end: { line: endLine, column: endColumn, offset: 0 }
+    }
+    emit('navigate-to-source', position)
+  }
+}
+
+// AST Statistics for debugging
+const getASTStats = () => {
+  if (!props.rawAst?.body) {
+    return { totalElements: 0, uniqueTypes: 0, typeBreakdown: [] }
+  }
+
+  const typeCounts: Record<string, number> = {}
+  let totalElements = 0
+
+  const countElements = (elements: any[]) => {
+    elements.forEach((element: any) => {
+      if (element?.type?.value) {
+        const type = element.type.value.toLowerCase()
+        typeCounts[type] = (typeCounts[type] || 0) + 1
+        totalElements++
+      }
+    })
+  }
+
+  countElements(props.rawAst.body)
+
+  const typeBreakdown = Object.entries(typeCounts).sort(([,a], [,b]) => b - a)
+
+  return {
+    totalElements,
+    uniqueTypes: Object.keys(typeCounts).length,
+    typeBreakdown
+  }
+}
+
+
+
+
 </script>
 
 <style scoped>

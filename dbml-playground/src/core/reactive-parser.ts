@@ -10,17 +10,8 @@
  * - General Purpose: Can be used with any reactive framework
  */
 import { ref, computed, watch, type Ref } from 'vue'
-import { ParserService, type ParserResult, type ParserError } from './parser-service'
-
-/**
- * Configuration for reactive parser behavior
- */
-export interface ReactiveParserOptions {
-  /** Debounce delay in milliseconds */
-  readonly debounceMs: number
-  /** Initial DBML content */
-  readonly initialContent: string
-}
+import { ParserService } from './parser-service'
+import type { ReactiveParserOptions, ParserResult, ParserError } from '@/types'
 
 /**
  * Reactive DBML Parser

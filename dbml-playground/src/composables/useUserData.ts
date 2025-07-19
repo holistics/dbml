@@ -10,15 +10,7 @@
  * - Deep Module: Complex persistence logic with simple interface
  */
 import { ref, watch, type Ref } from 'vue'
-
-export type PipelineStage = 'lexer' | 'parser' | 'analyzer' | 'interpreter'
-
-export interface UserData {
-  openingTab: PipelineStage
-  isRawJson: boolean
-  isVim: boolean
-  dbml: string
-}
+import type { UserData, PipelineStage } from '@/types'
 
 const defaultUserData: UserData = {
   openingTab: 'lexer',

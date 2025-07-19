@@ -144,11 +144,11 @@
                 </div>
               </div>
 
-              <!-- Interpreter Output with JSON Viewer -->
+              <!-- Interpreter stage with semantic view -->
               <div v-else-if="activeStage === 'interpreter'" class="h-full">
-                <JsonOutputViewer
-                  :json-content="getCurrentStageOutputString()"
-                  title="Interpreter Output (Database JSON Model)"
+                <ParserOutputViewer
+                  :data="getCurrentStageOutput()"
+                  :title="`${getStageTitle(activeStage)} Semantic View`"
                 />
               </div>
 
@@ -160,11 +160,11 @@
                 />
               </div>
 
-              <!-- Parser and Analyzer stages with AST viewer -->
+              <!-- Parser and Analyzer stages with AST debugger -->
               <div v-else-if="activeStage === 'parser' || activeStage === 'analyzer'" class="h-full">
                 <ParserOutputViewer
                   :data="getCurrentStageOutput()"
-                  :title="`${getStageTitle(activeStage)} Output`"
+                  :title="`${getStageTitle(activeStage)} AST Debugger`"
                   @navigate-to-source="handleNavigateToSource"
                 />
               </div>
@@ -198,7 +198,7 @@
  * - Shallow Module: Simple interface that coordinates deeper modules
  */
 import { ref, provide, watch, onMounted } from 'vue'
-import { useParser, type PipelineStage } from '@/composables/useParser'
+import { useParser } from '@/composables/useParser'
 import { useUserData } from '@/composables/useUserData'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
 import ParserOutputViewer from '@/components/outputs/ParserOutputViewer.vue'
@@ -207,6 +207,7 @@ import * as monaco from 'monaco-editor'
 import { TokenMappingService } from '@/core/token-mapping'
 import { TokenNavigationCoordinator } from '@/core/token-navigation'
 import packageJson from '../package.json'
+import type { PipelineStage } from '@/types'
 
 // Initialize parser with clean interface
 const parser = useParser()
