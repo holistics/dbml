@@ -63,7 +63,7 @@
         </div>
 
         <!-- Tree View -->
-        <div class="flex-1 overflow-hidden">
+        <div class="flex-1 overflow-auto">
           <InterpreterTreeView
             v-if="databaseModel"
             :interpreter-output="databaseModel"

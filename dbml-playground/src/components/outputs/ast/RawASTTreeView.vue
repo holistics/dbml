@@ -203,8 +203,5 @@ defineExpose({
   font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   font-size: 13px;
   line-height: 1.4;
-  background: #fafafa;
-  border-radius: 4px;
-  padding: 8px;
 }
 </style>

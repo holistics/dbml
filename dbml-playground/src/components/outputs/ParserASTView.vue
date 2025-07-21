@@ -52,7 +52,7 @@
       <!-- Tree View -->
       <div class="flex-1 overflow-auto">
         <!-- AST Tree View -->
-        <div v-if="viewMode === 'ast'" class="p-4">
+        <div v-if="viewMode === 'ast'" class="p-3">
           <RawASTTreeView
             :raw-a-s-t="rawAST"
             @node-click="handleRawNodeClick"
