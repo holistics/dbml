@@ -1,5 +1,5 @@
 <template>
-  <div class="interpreter-tree">
+  <div class="interpreter-tree p-3">
     <InterpreterTreeNode
       :node="rootNode"
       :selected-node="selectedNode"
@@ -185,6 +185,5 @@ function formatPrimitiveValue(value: any): string {
   font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   font-size: 13px;
   line-height: 1.4;
-  padding: 0.5rem;
 }
 </style>
