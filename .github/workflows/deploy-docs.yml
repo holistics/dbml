@@ -6,10 +6,6 @@ jobs:
   build:
     name: Build Docusaurus
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: dbml-homepage
-
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -18,32 +14,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
-          # cache: yarn
-          # cache-dependency-path: ./dbml-homepage/yarn.lock
 
-      - name: Check env
-        run: |
-          node -v
-          yarn -v
-
-      - name: Install playground dependencies
-        working-directory: dbml-playground
+      - name: Install dependencies (root)
         run: yarn install --frozen-lockfile
 
       - name: Build playground
-        working-directory: dbml-playground
-        run: yarn build
+        run: yarn workspace @dbml/playground build
 
       - name: Clean up old playground build
-        run: rm -rf static/playground
+        run: rm -rf dbml-homepage/static/playground
 
       - name: Copy playground to homepage static
-        run: cp -r ../dbml-playground/dist static/playground
+        run: cp -r dbml-playground/dist dbml-homepage/static/playground
 
-      - name: Install homepage dependencies
-        run: yarn install --frozen-lockfile
+      - name: Check playground
+        run: ls -la dbml-homepage/static/playground
 
       - name: Build homepage
+        working-directory: dbml-homepage
         run: yarn build
 
       - name: Upload build artifact
