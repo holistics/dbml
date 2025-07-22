@@ -6,10 +6,12 @@
         <div class="flex justify-between items-center py-4">
           <div class="flex items-center">
             <img src="/dbml-logo.png" alt="DBML Logo" class="h-8 w-auto mr-3" />
-            <h1 class="text-2xl font-bold text-gray-900">DBML Playground</h1>
-            <span class="ml-3 px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-              v{{ version }}
-            </span>
+            <div class="flex items-center gap-3">
+              <span class="text-2xl font-bold text-gray-900">DBML Parser Playground</span>
+              <span class="px-3 py-1.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                {{ displayVersion === 'development' ? 'development' : `v${displayVersion}` }}
+              </span>
+            </div>
           </div>
           <div class="flex items-center space-x-6">
             <a
@@ -337,6 +339,11 @@ provide('tokenNavigationCoordinator', tokenNavigationCoordinator)
 
 // UI state management
 const version = packageJson.version
+
+// Check if using workspace version (local development)
+const isUsingWorkspaceVersion = packageJson.dependencies['@dbml/parse'].startsWith('workspace:')
+
+const displayVersion = isUsingWorkspaceVersion ? 'development' : version
 
 // Main panel resize state
 const mainPanelWidth = ref(50) // Default 50% width for DBML editor
