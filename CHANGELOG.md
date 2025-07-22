@@ -1,3 +1,12 @@
+## v3.13.8 (2025-07-22)
+
+#### :robot: Dependencies Update
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#739](https://github.com/holistics/dbml/pull/739) perf(dbml-parse): Migrate lodash to lodash-es to reduce bundle size and fix indirect import issue ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 1
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
 ## v3.13.7 (2025-07-16)
 
 #### :bug: Bug Fix
