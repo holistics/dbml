@@ -1,10 +1,10 @@
+import { partition } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '../../../parser/nodes';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
 import { isSimpleName, pickValidator } from '../utils';
-import _ from 'lodash';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
 
 export default class ProjectValidator implements ElementValidator {
@@ -66,7 +66,7 @@ export default class ProjectValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Project\'s body must be a block', body)];
     }
 
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)),
       ...this.validateSubElements(subs as ElementDeclarationNode[])

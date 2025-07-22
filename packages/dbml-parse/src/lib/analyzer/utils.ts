@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { last } from 'lodash';
 import { None, Option, Some } from '../option';
 import {
   ElementDeclarationNode,
@@ -97,7 +97,7 @@ export function destructureComplexTuple(
   const variables: string[] = [];
   let tupleElements: string[] | undefined;
 
-  if (!isExpressionAVariableNode(_.last(fragments))) {
+  if (!isExpressionAVariableNode(last(fragments))) {
     const topFragment = fragments.pop()!;
     if (isTupleOfVariables(topFragment)) {
       tupleElements = topFragment.elementList.map((e) =>

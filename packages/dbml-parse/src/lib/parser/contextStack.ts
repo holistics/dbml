@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { last } from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 
 export const enum ParsingContext {
@@ -45,7 +45,7 @@ export class ParsingContextStack {
   }
 
   top(): ParsingContext | undefined {
-    return _.last(this.stack);
+    return last(this.stack);
   }
 
   isWithinGroupExpressionContext(): boolean {

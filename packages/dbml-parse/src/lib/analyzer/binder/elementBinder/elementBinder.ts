@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { last } from 'lodash';
 import { isTupleOfVariables } from '../../validator/utils';
 import {
   BlockExpressionNode,
@@ -108,7 +108,7 @@ export default abstract class ElementBinder {
 
   private bindSubfield (sub: FunctionApplicationNode) {
     const args = [sub.callee, ...sub.args];
-    const maybeSettingList = _.last(args);
+    const maybeSettingList = last(args);
     if (maybeSettingList instanceof ListExpressionNode) {
       args.pop();
       this.bindSettingList(maybeSettingList, this.subfield.settingList);

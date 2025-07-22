@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import _, { forIn, last } from 'lodash';
+import { partition, forIn, last } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -165,7 +165,7 @@ export default class TablePartialValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A TablePartial\'s body must be a block', body)];
     }
 
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -233,7 +233,7 @@ export default class TablePartialValidator implements ElementValidator {
     if (parts.length === 0) return [];
 
     let settingList: ListExpressionNode | undefined;
-    if (_.last(parts) instanceof ListExpressionNode) {
+    if (last(parts) instanceof ListExpressionNode) {
       settingList = parts.pop() as ListExpressionNode;
     }
 

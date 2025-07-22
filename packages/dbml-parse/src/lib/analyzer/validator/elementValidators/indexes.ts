@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { last, partition } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -87,7 +87,7 @@ export default class IndexesValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'An Indexes must have a complex body', body)];
     }
 
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
   }
 
@@ -99,7 +99,7 @@ export default class IndexesValidator implements ElementValidator {
 
       const errors: CompileError[] = [];
       const args = [field.callee, ...field.args];
-      if (_.last(args) instanceof ListExpressionNode) {
+      if (last(args) instanceof ListExpressionNode) {
         errors.push(...this.validateFieldSetting(args.pop() as ListExpressionNode));
       }
 

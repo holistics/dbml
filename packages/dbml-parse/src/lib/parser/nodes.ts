@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { flatten, zip } from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
 import { Position } from '../types';
@@ -533,7 +533,7 @@ function interleave(
   const [e1] = arr1;
   const [e2] = arr2;
 
-  return (e1.start < e2.start ? _.flatten(_.zip(arr1, arr2)) : _.flatten(_.zip(arr2, arr1))).filter(
+  return (e1.start < e2.start ? flatten(zip(arr1, arr2)) : flatten(zip(arr2, arr1))).filter(
     (e) => e !== null,
   ) as (SyntaxNode | SyntaxToken)[];
 }
