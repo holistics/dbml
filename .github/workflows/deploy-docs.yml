@@ -18,8 +18,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
-          cache: yarn
-          cache-dependency-path: ./dbml-homepage/yarn.lock
+          # cache: yarn
+          # cache-dependency-path: ./dbml-homepage/yarn.lock
 
       - name: Build playground
         working-directory: dbml-playground
