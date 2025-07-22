@@ -1,3 +1,12 @@
+## v3.13.9 (2025-07-22)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#743](https://github.com/holistics/dbml/pull/743) fix: remove `lodash-es` from external config and update lodash import to have better tree shaking ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 1
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
 ## v3.13.8 (2025-07-22)
 
 #### :robot: Dependencies Update
