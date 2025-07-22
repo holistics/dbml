@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-loop-func */
-import _ from 'lodash';
+import { last } from 'lodash';
 import {
   convertFuncAppToElem,
   isAsKeyword,
@@ -76,7 +76,7 @@ export default class Parser {
 
   private advance(): SyntaxToken {
     if (this.isAtEnd()) {
-      return _.last(this.tokens)!; // The EOF
+      return last(this.tokens)!; // The EOF
     }
 
     // eslint-disable-next-line no-plusplus
@@ -85,7 +85,7 @@ export default class Parser {
 
   private peek(lookahead: number = 0): SyntaxToken {
     if (lookahead + this.current >= this.tokens.length) {
-      return _.last(this.tokens)!; // The EOF
+      return last(this.tokens)!; // The EOF
     }
 
     return this.tokens[this.current + lookahead];

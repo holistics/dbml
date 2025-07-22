@@ -1,4 +1,4 @@
-import _, { head, partition } from 'lodash';
+import { last, head, partition } from 'lodash';
 import {
   Column, ElementInterpreter, Index, InlineRef,
   InterpreterDatabase, TablePartial,
@@ -138,7 +138,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
     column.inline_refs = [];
 
     const settings = field.args.slice(1);
-    if (_.last(settings) instanceof ListExpressionNode) {
+    if (last(settings) instanceof ListExpressionNode) {
       const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
       column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PKey]?.length;
       column.increment = !!settingMap[SettingName.Increment]?.length;
@@ -223,7 +223,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexField);
       const args = [indexField.callee!, ...indexField.args];
-      if (_.last(args) instanceof ListExpressionNode) {
+      if (last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
         index.pk = !!settingMap[SettingName.PK]?.length;
         index.unique = !!settingMap[SettingName.Unique]?.length;

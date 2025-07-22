@@ -1,3 +1,4 @@
+import { partition, last } from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../../../lexer/tokens';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
@@ -8,10 +9,8 @@ import {
 } from '../../../parser/utils';
 import { ElementValidator } from '../types';
 import { aggregateSettingList, isSimpleName, isValidColor, pickValidator } from '../utils';
-import _ from 'lodash';
-import { getElementKind, isBinaryRelationship, isEqualTupleOperands } from '../../../analyzer/utils';
+import { isBinaryRelationship, isEqualTupleOperands } from '../../../analyzer/utils';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { ElementKind } from '../../../analyzer/types';
 
 export default class RefValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
@@ -71,7 +70,7 @@ export default class RefValidator implements ElementValidator {
       return this.validateFields([body]);
     }
 
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
   }
 
@@ -95,8 +94,8 @@ export default class RefValidator implements ElementValidator {
       }
 
       const args = [...field.args];
-      if (_.last(args) instanceof ListExpressionNode) {
-        const errs = this.validateFieldSettings(_.last(args) as ListExpressionNode);
+      if (last(args) instanceof ListExpressionNode) {
+        const errs = this.validateFieldSettings(last(args) as ListExpressionNode);
         errors.push(...errs);
         args.pop();
       } else if (args[0] instanceof ListExpressionNode) {

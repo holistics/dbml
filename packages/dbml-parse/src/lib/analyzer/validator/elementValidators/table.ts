@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import _, { forIn } from 'lodash';
+import { last, forIn } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -275,7 +275,7 @@ export default class TableValidator implements ElementValidator {
     }
 
     let settingList: ListExpressionNode | undefined;
-    if (_.last(parts) instanceof ListExpressionNode) {
+    if (last(parts) instanceof ListExpressionNode) {
       settingList = parts.pop() as ListExpressionNode;
     }
 

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { zip } from 'lodash';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import {
   destructureComplexTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
@@ -6,7 +6,7 @@ import {
 } from '../analyzer/utils';
 import {
   ArrayNode, CallExpressionNode, FunctionExpressionNode, LiteralNode,
-  PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
+  PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
 } from '../parser/nodes';
 import {
   ColumnType, RelationCardinality, Table, TokenPosition,
@@ -14,7 +14,6 @@ import {
 import { SyntaxTokenKind } from '../lexer/tokens';
 import { isExpressionAnIdentifierNode, isExpressionAQuotedString } from '../parser/utils';
 import { isExpressionANumber } from '../analyzer/validator/utils';
-import { NUMERIC_LITERAL_PREFIX } from '../../constants';
 import Report from '../report';
 import { CompileError, CompileErrorCode } from '../errors';
 import { getNumberTextFromExpression, parseNumber } from '../utils';
@@ -125,7 +124,7 @@ export function isSameEndpoint (sym1: ColumnSymbol | ColumnSymbol[], sym2: Colum
   if (Array.isArray(sym1)) {
     const firstIds = sym1.map(({ id }) => id).sort();
     const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort();
-    return _.zip(firstIds, secondIds).every(([first, second]) => first === second);
+    return zip(firstIds, secondIds).every(([first, second]) => first === second);
   }
 
   const firstId = sym1.id;

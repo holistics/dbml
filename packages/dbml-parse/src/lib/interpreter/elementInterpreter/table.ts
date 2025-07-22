@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { partition, last } from 'lodash';
 import {
   Column, ElementInterpreter, Index, InlineRef,
   InterpreterDatabase, Table, TablePartialInjection,
@@ -126,7 +126,7 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode || e instanceof PartialInjectionNode);
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode || e instanceof PartialInjectionNode);
     return [
       ...this.interpretFields(fields as (FunctionApplicationNode | PartialInjectionNode)[]),
       ...this.interpretSubElements(subs as ElementDeclarationNode[]),
@@ -203,7 +203,7 @@ export class TableInterpreter implements ElementInterpreter {
     column.inline_refs = [];
 
     const settings = field.args.slice(1);
-    if (_.last(settings) instanceof ListExpressionNode) {
+    if (last(settings) instanceof ListExpressionNode) {
       const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
       column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PKey]?.length;
       column.increment = !!settingMap[SettingName.Increment]?.length;
@@ -299,7 +299,7 @@ export class TableInterpreter implements ElementInterpreter {
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexField);
       const args = [indexField.callee!, ...indexField.args];
-      if (_.last(args) instanceof ListExpressionNode) {
+      if (last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
         index.pk = !!settingMap[SettingName.PK]?.length;
         index.unique = !!settingMap[SettingName.Unique]?.length;
