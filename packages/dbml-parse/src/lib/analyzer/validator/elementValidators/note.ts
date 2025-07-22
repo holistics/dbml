@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import _ from 'lodash';
+import { partition } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
@@ -112,7 +112,7 @@ export default class NoteValidator implements ElementValidator {
       return this.validateFields([body]);
     }
 
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
