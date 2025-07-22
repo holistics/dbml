@@ -21,16 +21,24 @@ jobs:
           # cache: yarn
           # cache-dependency-path: ./dbml-homepage/yarn.lock
 
+      - name: Check env
+        run: |
+          node -v
+          yarn -v
+
+      - name: Install playground dependencies
+        working-directory: dbml-playground
+        run: yarn install --frozen-lockfile
+
       - name: Build playground
         working-directory: dbml-playground
-        run: |
-          yarn install --frozen-lockfile
-          yarn build
+        run: yarn build
+
+      - name: Clean up old playground build
+        run: rm -rf static/playground
 
       - name: Copy playground to homepage static
-        run: |
-          rm -rf static/playground
-          cp -r ../dbml-playground/dist static/playground
+        run: cp -r ../dbml-playground/dist static/playground
 
       - name: Install homepage dependencies
         run: yarn install --frozen-lockfile
