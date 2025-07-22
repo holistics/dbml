@@ -30,6 +30,10 @@ jobs:
       - name: Check playground
         run: ls -la dbml-homepage/static/playground
 
+      - name: Install homepage dependencies
+        working-directory: dbml-homepage
+        run: yarn install --frozen-lockfile
+
       - name: Build homepage
         working-directory: dbml-homepage
         run: yarn build
