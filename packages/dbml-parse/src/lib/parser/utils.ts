@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { last } from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 import { None, Option, Some } from '../option';
 import { alternateLists } from '../utils';
@@ -46,7 +46,7 @@ export function convertFuncAppToElem (
     return new None();
   }
 
-  const attributeList = _.last(cpArgs) instanceof ListExpressionNode
+  const attributeList = last(cpArgs) instanceof ListExpressionNode
     ? (cpArgs.pop() as ListExpressionNode)
     : undefined;
 

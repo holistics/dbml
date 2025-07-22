@@ -23,7 +23,8 @@ export default defineConfig({
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: ['monaco-editor-core', 'lodash-es'],
+      // Note: Don't externalize `lodash-es` since using Node lower than 22.12.0 cannot import it in `cjs` format
+      external: ['monaco-editor-core'],
     },
   },
   test: {

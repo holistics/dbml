@@ -1,3 +1,4 @@
+import { last, partition } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode } from '../../../parser/nodes';
@@ -7,7 +8,6 @@ import { ElementValidator } from '../types';
 import { aggregateSettingList, isValidName, pickValidator, registerSchemaStack } from '../utils';
 import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '../../../analyzer/symbol/symbolIndex';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../../analyzer/utils';
-import _ from 'lodash';
 import SymbolTable from '../../../analyzer/symbol/symbolTable';
 import { EnumFieldSymbol, EnumSymbol } from '../../../analyzer/symbol/symbols';
 
@@ -89,7 +89,7 @@ export default class EnumValidator implements ElementValidator {
       return this.validateFields([body]);
     }
 
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
   }
 
@@ -106,8 +106,8 @@ export default class EnumValidator implements ElementValidator {
       }
       
       const args = [...field.args];
-      if (_.last(args) instanceof ListExpressionNode) {
-        errors.push(...this.validateFieldSettings(_.last(args) as ListExpressionNode));
+      if (last(args) instanceof ListExpressionNode) {
+        errors.push(...this.validateFieldSettings(last(args) as ListExpressionNode));
         args.pop();
       } else if (args[0] instanceof ListExpressionNode) {
         errors.push(...this.validateFieldSettings(args[0]));

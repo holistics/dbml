@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import _ from 'lodash';
+import { forIn, partition } from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
   isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList, isValidColor
@@ -102,7 +102,7 @@ export default class TableGroupValidator implements ElementValidator {
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    _.forIn(settingMap, (attrs, name) => {
+    forIn(settingMap, (attrs, name) => {
       switch (name) {
         case 'color':
           if (attrs.length > 1) {
@@ -163,7 +163,7 @@ export default class TableGroupValidator implements ElementValidator {
       )];
     }
 
-    const [fields, subs] = _.partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
