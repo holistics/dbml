@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'dbml-homepage/**'
+      - 'dbml-playground/**'
 
 jobs:
   build:
@@ -26,8 +27,19 @@ jobs:
           cache: yarn
           cache-dependency-path: ./dbml-homepage/yarn.lock
 
-      - name: Install dependencies
+      - name: Build playground
+        working-directory: dbml-playground
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+
+      - name: Copy playground to homepage static
+        run: |
+          rm -rf static/playground
+          cp -r ../dbml-playground/dist static/playground
+
+      - name: Install homepage dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build source code
+      - name: Build homepage
         run: yarn build
