@@ -1,0 +1,6 @@
+Table users {
+  id int [pk]
+  username varchar [not null]
+  email varchar [unique]
+  created_at timestamp [default: `now()`]
+} 
