@@ -1,15 +1,11 @@
-name: Deploy DBML docs to Github Pages
+name: Deploy DBML Homepage with Playground to GitHub Pages
 
 on: workflow_dispatch
 
 jobs:
   build:
-    name: Build Docusaurus
+    name: Build Homepage and Playground
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: dbml-homepage
-
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -18,13 +14,48 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
-          cache: yarn
-          cache-dependency-path: ./dbml-homepage/yarn.lock
 
-      - name: Install dependencies
+      - name: Cache root node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            .yarn/cache
+          key: ${{ runner.os }}-yarn-root-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-root-
+
+      - name: Install dependencies (root)
         run: yarn install --frozen-lockfile
 
-      - name: Build source code
+      - name: Build the @dbml/parse package
+        run: yarn workspace @dbml/parse build
+
+      - name: Build playground
+        run: yarn workspace @dbml/playground build
+
+      - name: Clean up old playground build
+        run: rm -rf dbml-homepage/static/playground
+
+      - name: Copy playground dist to homepage static
+        run: cp -r dbml-playground/dist dbml-homepage/static/playground
+
+      - name: Cache homepage node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            dbml-homepage/node_modules
+            dbml-homepage/.yarn/cache
+          key: ${{ runner.os }}-yarn-homepage-${{ hashFiles('dbml-homepage/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-homepage-
+
+      - name: Install homepage dependencies
+        working-directory: dbml-homepage
+        run: yarn install --frozen-lockfile
+
+      - name: Build homepage
+        working-directory: dbml-homepage
         run: yarn build
 
       - name: Upload build artifact

@@ -1,0 +1,105 @@
+Project ecommerce_db {
+  database_type: 'PostgreSQL'
+  Note: 'E-commerce database schema'
+}
+
+Table users {
+  id int [pk, increment]
+  username varchar(50) [not null, unique]
+  email varchar(255) [not null, unique]
+  password_hash varchar(255) [not null]
+  first_name varchar(100)
+  last_name varchar(100)
+  status user_status [default: 'active']
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  
+  indexes {
+    email [unique]
+    (first_name, last_name)
+    status
+  }
+  
+  Note: 'Stores user account information'
+}
+
+Table products {
+  id int [pk, increment]
+  name varchar(255) [not null]
+  description text
+  price decimal(10,2) [not null]
+  category_id int [ref: > categories.id]
+  status product_status [default: 'active']
+  created_at timestamp [default: `now()`]
+  
+  indexes {
+    name
+    category_id
+    status
+    price
+  }
+}
+
+Table categories {
+  id int [pk, increment]
+  name varchar(100) [not null, unique]
+  description text
+  parent_id int [ref: > categories.id]
+  created_at timestamp [default: `now()`]
+}
+
+Table orders {
+  id int [pk, increment]
+  user_id int [ref: > users.id, not null]
+  status order_status [default: 'pending']
+  total_amount decimal(10,2) [not null]
+  shipping_address text [not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  
+  indexes {
+    user_id
+    status
+    created_at
+  }
+}
+
+Table order_items {
+  id int [pk, increment]
+  order_id int [ref: > orders.id, not null]
+  product_id int [ref: > products.id, not null]
+  quantity int [not null, default: 1]
+  unit_price decimal(10,2) [not null]
+  
+  indexes {
+    (order_id, product_id) [unique]
+  }
+}
+
+Enum user_status {
+  active
+  inactive
+  suspended
+}
+
+Enum product_status {
+  active
+  inactive
+  discontinued
+}
+
+Enum order_status {
+  pending [note: 'Order placed but not confirmed']
+  confirmed [note: 'Order confirmed and being processed']
+  shipped [note: 'Order has been shipped']
+  delivered [note: 'Order delivered successfully']
+  cancelled [note: 'Order was cancelled']
+}
+
+TableGroup ecommerce_core {
+  users
+  products
+  categories
+  orders
+  order_items
+} 
