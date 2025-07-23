@@ -15,6 +15,12 @@ const NavbarConfigs: Navbar = {
       label: 'Docs',
     },
     {
+      href: '/playground',
+      label: 'Playground',
+      position: 'left',
+      target: '_blank',
+    },
+    {
       type: 'dropdown',
       label: 'dbx',
       position: 'right',
