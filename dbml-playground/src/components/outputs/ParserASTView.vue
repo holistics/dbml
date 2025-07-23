@@ -107,6 +107,7 @@ import { computed, ref, inject } from 'vue'
 import RawASTTreeView from './ast/RawASTTreeView.vue'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
 import type { TokenNavigationEventBus } from '@/core/token-navigation'
+import consoleLogger from '@/utils/logger'
 
 interface Props {
   readonly ast: unknown
@@ -161,19 +162,19 @@ const navigateToSourcePosition = (position: any) => {
   if (tokenNavigationCoordinator?.dbmlEditor) {
     try {
       // Create Monaco range for full selection
-      const range = { 
-        startLineNumber: startLine, 
-        startColumn: startColumn, 
-        endLineNumber: endLine, 
+      const range = {
+        startLineNumber: startLine,
+        startColumn: startColumn,
+        endLineNumber: endLine,
         endColumn: endColumn
       }
-      
+
       // Set selection to the full range
       tokenNavigationCoordinator.dbmlEditor.setSelection(range)
-      
+
       // Reveal and center the range
       tokenNavigationCoordinator.dbmlEditor.revealRangeInCenter(range)
-      
+
       // Add temporary highlight for the entire range
       const decorations = tokenNavigationCoordinator.dbmlEditor.createDecorationsCollection([
         {
@@ -184,14 +185,14 @@ const navigateToSourcePosition = (position: any) => {
           }
         }
       ])
-      
+
       // Clear highlight after 2 seconds
       setTimeout(() => {
         decorations.clear()
       }, 2000)
-      
+
     } catch (error) {
-      console.warn('Direct navigation failed:', error)
+      consoleLogger.warn('Direct navigation failed:', error)
       // Fallback to emit
       emit('navigate-to-source', position)
     }
@@ -206,13 +207,13 @@ const handleRawNodeClick = (node: any) => {
   // Just navigate to position if available
   if (node.rawData?.startPos) {
     const position = {
-      start: { 
-        line: node.rawData.startPos.line + 1, 
+      start: {
+        line: node.rawData.startPos.line + 1,
         column: node.rawData.startPos.column + 1,
         offset: node.rawData.start || 0
       },
-      end: { 
-        line: node.rawData.endPos?.line + 1 || node.rawData.startPos.line + 1, 
+      end: {
+        line: node.rawData.endPos?.line + 1 || node.rawData.startPos.line + 1,
         column: node.rawData.endPos?.column + 1 || node.rawData.startPos.column + 1,
         offset: node.rawData.end || node.rawData.start || 0
       }
@@ -235,7 +236,7 @@ const copyCurrentView = async () => {
       copySuccess.value = false
     }, 2000)
   } catch (err) {
-    console.error('Failed to copy to clipboard:', err)
+    consoleLogger.error('Failed to copy to clipboard:', err)
   }
 }
 
@@ -244,7 +245,7 @@ const countRawNodes = (obj: any): number => {
   if (!obj || typeof obj !== 'object') return 0
 
   let count = 1 // Count this node
-  
+
   for (const value of Object.values(obj)) {
     if (Array.isArray(value)) {
       count += value.reduce((sum, item) => sum + countRawNodes(item), 0)
@@ -252,7 +253,7 @@ const countRawNodes = (obj: any): number => {
       count += countRawNodes(value)
     }
   }
-  
+
   return count
 }
 
@@ -260,7 +261,7 @@ const getRawASTValue = (ast: any, path: string): any => {
   try {
     const pathParts = path.split('.').filter(part => part !== 'ast')
     let current = ast
-    
+
     for (const part of pathParts) {
       if (part.includes('[') && part.includes(']')) {
         const [property, indexStr] = part.split('[')
@@ -270,7 +271,7 @@ const getRawASTValue = (ast: any, path: string): any => {
         current = current[part]
       }
     }
-    
+
     return current
   } catch (error) {
     return null

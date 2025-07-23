@@ -11,7 +11,8 @@
  */
 import { ref, computed, watch, type Ref } from 'vue'
 import { ParserService } from './parser-service'
-import type { ReactiveParserOptions, ParserResult, ParserError } from '@/types'
+import type { ReactiveParserOptions, ParserResult } from '@/types'
+import consoleLogger from '@/utils/logger'
 
 /**
  * Reactive DBML Parser
@@ -102,7 +103,7 @@ export class ReactiveParser {
         this.isLoading.value = false
       })
     } catch (error) {
-      console.error('Unexpected parsing error:', error)
+      consoleLogger.error('Unexpected parsing error:', error)
       this.parseResult.value = this.createErrorResult(error)
       this.isLoading.value = false
     }

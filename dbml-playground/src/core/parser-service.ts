@@ -11,7 +11,8 @@
  * - Pull Complexity Downwards: Complex logic handled internally
  */
 import { Compiler } from '@dbml/parse'
-import type { ParserStageOutput, ParserError, ParserResult } from '@/types'
+import type { ParserError, ParserResult } from '@/types'
+import consoleLogger from '@/utils/logger'
 
 /**
  * DBML Parser Service
@@ -48,7 +49,7 @@ export class ParserService {
           json = (this.compiler.parse as any).rawDb()
         } catch (err) {
           // Silent failure for JSON generation - errors will be captured separately
-          console.warn('JSON generation failed:', err)
+          consoleLogger.warn('JSON generation failed:', err)
         }
       }
 

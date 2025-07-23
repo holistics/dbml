@@ -11,6 +11,7 @@
  * - Single Responsibility: Only handles DBML language support
  * - Pull Complexity Downwards: All Monaco complexity handled internally
  */
+import consoleLogger from '@/utils/logger'
 import * as monaco from 'monaco-editor'
 
 /**
@@ -213,7 +214,7 @@ export class DBMLLanguageService {
 
       this.isRegistered = true
     } catch (error) {
-      console.warn('Failed to register DBML language:', error)
+      consoleLogger.warn('Failed to register DBML language:', error)
     }
   }
 

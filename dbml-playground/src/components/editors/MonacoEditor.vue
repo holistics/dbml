@@ -34,6 +34,7 @@
 import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import * as monaco from 'monaco-editor'
 import { DBMLLanguageService } from '@/components/monaco/dbml-language'
+import consoleLogger from '@/utils/logger'
 
 interface Props {
   modelValue: string
@@ -161,7 +162,7 @@ const setupVimMode = async (): Promise<void> => {
       })
     }
   } catch (error) {
-    console.warn('Failed to initialize vim mode:', error)
+    consoleLogger.warn('Failed to initialize vim mode:', error)
   }
 }
 
@@ -284,7 +285,7 @@ const cleanup = (): void => {
 // Lifecycle hooks
 onMounted(() => {
   initializeEditor().catch(error => {
-    console.error('Failed to initialize Monaco Editor:', error)
+    consoleLogger.error('Failed to initialize Monaco Editor:', error)
   })
 })
 
