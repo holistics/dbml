@@ -2,7 +2,8 @@
   "name": "root",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "dbml-playground"
   ],
   "scripts": {
     "test": "npx lerna run test",
