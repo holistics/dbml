@@ -18,6 +18,9 @@ jobs:
       - name: Install dependencies (root)
         run: yarn install --frozen-lockfile
 
+      - name: Build the @dbml/parse package
+        run: yarn workspace @dbml/parse build
+
       - name: Build playground
         run: yarn workspace @dbml/playground build
 
