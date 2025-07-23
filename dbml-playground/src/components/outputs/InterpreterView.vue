@@ -119,6 +119,7 @@ import { computed, ref } from 'vue'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
 import InterpreterTreeView from './ast/InterpreterTreeView.vue'
 import type { Database, InterpreterViewProps } from '@/types'
+import consoleLogger from '@/utils/logger';
 
 const props = defineProps<InterpreterViewProps>()
 
@@ -153,17 +154,17 @@ const copyCurrentView = async () => {
       copySuccess.value = false
     }, 2000)
   } catch (err) {
-    console.error('Failed to copy to clipboard:', err)
+    consoleLogger.error('Failed to copy to clipboard:', err)
   }
 }
 
 // Tree view handlers
 const handleTreeNodeClick = (node: any) => {
-  console.log('Tree node clicked:', node)
+  consoleLogger.log('Tree node clicked:', node)
 }
 
 const handleTreePositionClick = (event: { node: any; position: any }) => {
-  console.log('Tree position clicked:', event)
+  consoleLogger.log('Tree position clicked:', event)
 }
 </script>
 

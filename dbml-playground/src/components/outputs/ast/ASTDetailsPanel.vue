@@ -103,11 +103,11 @@
             @click="showRawAst = !showRawAst"
             class="flex items-center space-x-2 text-xs font-medium text-gray-700 hover:text-gray-900"
           >
-            <svg 
-              class="w-3 h-3 transition-transform" 
+            <svg
+              class="w-3 h-3 transition-transform"
               :class="{ 'rotate-90': showRawAst }"
-              fill="none" 
-              stroke="currentColor" 
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -213,6 +213,7 @@ import { computed, ref, inject } from 'vue'
 import type { SemanticASTNode, AccessPath } from '@/core/ast-transformer'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
 import type { TokenNavigationEventBus } from '@/core/token-navigation'
+import consoleLogger from '@/utils/logger'
 
 interface Props {
   readonly selectedNode: SemanticASTNode | null
@@ -235,12 +236,12 @@ const tokenNavigationCoordinator = inject<any>('tokenNavigationCoordinator')
 
 const nodeJson = computed(() => {
   if (!props.selectedNode) return ''
-  
+
   // Priority 1: Show the raw parser data stored in the semantic node
   if (props.selectedNode.data) {
     return JSON.stringify(props.selectedNode.data, null, 2)
   }
-  
+
   // Priority 2: For nodes with access paths, show the raw AST node
   if (props.selectedNode.accessPath && props.rawAst) {
     const rawNode = getRawASTNode(props.rawAst, props.selectedNode.accessPath)
@@ -248,7 +249,7 @@ const nodeJson = computed(() => {
       return JSON.stringify(rawNode, null, 2)
     }
   }
-  
+
   // Priority 3: For organizational nodes (like group nodes), show minimal semantic info
   // but exclude internal Vue-specific fields
   const cleanSemanticNode = {
@@ -288,7 +289,7 @@ const copySelectedNodeAccessPath = async () => {
       copyAccessPathSuccess.value = false
     }, 2000)
   } catch (err) {
-    console.error('Failed to copy access path:', err)
+    consoleLogger.error('Failed to copy access path:', err)
   }
 }
 
@@ -304,7 +305,7 @@ const copyNodeJson = async () => {
       copyJsonSuccess.value = false
     }, 2000)
   } catch (err) {
-    console.error('Failed to copy node JSON:', err)
+    consoleLogger.error('Failed to copy node JSON:', err)
   }
 }
 
@@ -345,7 +346,7 @@ const getRawASTNode = (rawAst: any, accessPath: string): any => {
 
     return current
   } catch (err) {
-    console.error('Failed to parse access path:', accessPath, err)
+    consoleLogger.error('Failed to parse access path:', accessPath, err)
     return null
   }
 }
@@ -387,20 +388,20 @@ const handleLocationClick = (locationText: string) => {
   // Extract range from text like "line 1:2 → 5:10 (click to navigate)" or "line 1:2 (click to navigate)"
   const rangeMatch = locationText.match(/line (\d+):(\d+) → (\d+):(\d+)/)
   const singleMatch = locationText.match(/line (\d+):(\d+)/)
-  
+
   if (rangeMatch) {
     // Handle full range navigation
     const startLine = parseInt(rangeMatch[1])
     const startColumn = parseInt(rangeMatch[2])
     const endLine = parseInt(rangeMatch[3])
     const endColumn = parseInt(rangeMatch[4])
-    
+
     navigateToRange(startLine, startColumn, endLine, endColumn)
   } else if (singleMatch) {
     // Handle single position navigation
     const line = parseInt(singleMatch[1])
     const column = parseInt(singleMatch[2])
-    
+
     navigateToPosition(line, column)
   }
 }
@@ -412,19 +413,19 @@ const navigateToPosition = (line: number, column: number) => {
     try {
       // Create Monaco position (1-indexed)
       const position = { lineNumber: line, column: column }
-      
+
       // Set cursor position
       tokenNavigationCoordinator.dbmlEditor.setPosition(position)
-      
+
       // Reveal and center the position
-      const range = { 
-        startLineNumber: line, 
-        startColumn: column, 
-        endLineNumber: line, 
+      const range = {
+        startLineNumber: line,
+        startColumn: column,
+        endLineNumber: line,
         endColumn: column + 1
       }
       tokenNavigationCoordinator.dbmlEditor.revealRangeInCenter(range)
-      
+
       // Add temporary highlight
       const decorations = tokenNavigationCoordinator.dbmlEditor.createDecorationsCollection([
         {
@@ -435,14 +436,14 @@ const navigateToPosition = (line: number, column: number) => {
           }
         }
       ])
-      
+
       // Clear highlight after 1.5 seconds
       setTimeout(() => {
         decorations.clear()
       }, 1500)
-      
+
     } catch (error) {
-      console.warn('Direct navigation failed:', error)
+      consoleLogger.warn('Direct navigation failed:', error)
       // Fallback to emit
       const position = {
         start: { line, column, offset: 0 },
@@ -466,19 +467,19 @@ const navigateToRange = (startLine: number, startColumn: number, endLine: number
   if (tokenNavigationCoordinator?.dbmlEditor) {
     try {
       // Create Monaco range for full selection
-      const range = { 
-        startLineNumber: startLine, 
-        startColumn: startColumn, 
-        endLineNumber: endLine, 
+      const range = {
+        startLineNumber: startLine,
+        startColumn: startColumn,
+        endLineNumber: endLine,
         endColumn: endColumn
       }
-      
+
       // Set selection to the full range
       tokenNavigationCoordinator.dbmlEditor.setSelection(range)
-      
+
       // Reveal and center the range
       tokenNavigationCoordinator.dbmlEditor.revealRangeInCenter(range)
-      
+
       // Add temporary highlight for the entire range
       const decorations = tokenNavigationCoordinator.dbmlEditor.createDecorationsCollection([
         {
@@ -489,14 +490,14 @@ const navigateToRange = (startLine: number, startColumn: number, endLine: number
           }
         }
       ])
-      
+
       // Clear highlight after 2 seconds (longer for ranges)
       setTimeout(() => {
         decorations.clear()
       }, 2000)
-      
+
     } catch (error) {
-      console.warn('Direct range navigation failed:', error)
+      consoleLogger.warn('Direct range navigation failed:', error)
       // Fallback to emit
       const position = {
         start: { line: startLine, column: startColumn, offset: 0 },

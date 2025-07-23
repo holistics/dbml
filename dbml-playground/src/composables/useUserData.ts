@@ -10,7 +10,8 @@
  * - Deep Module: Complex persistence logic with simple interface
  */
 import { ref, watch, type Ref } from 'vue'
-import type { UserData, PipelineStage } from '@/types'
+import type { UserData } from '@/types'
+import consoleLogger from '@/utils/logger'
 
 const defaultUserData: UserData = {
   openingTab: 'lexer',
@@ -52,7 +53,7 @@ const loadUserData = (): UserData => {
       return { ...defaultUserData, ...parsed }
     }
   } catch (error) {
-    console.warn('Failed to load user data from localStorage:', error)
+    consoleLogger.warn('Failed to load user data from localStorage:', error)
   }
   return { ...defaultUserData }
 }
@@ -64,7 +65,7 @@ const saveUserData = (data: UserData): void => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
   } catch (error) {
-    console.warn('Failed to save user data to localStorage:', error)
+    consoleLogger.warn('Failed to save user data to localStorage:', error)
   }
 }
 

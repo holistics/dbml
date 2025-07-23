@@ -86,6 +86,7 @@ import { computed, inject } from 'vue'
 import ASTIcon from './ASTIcon.vue'
 import type { TokenNavigationEventBus } from '@/core/token-navigation'
 import type { InterpreterTreeNode, InterpreterTreeNodeProps } from '@/types'
+import consoleLogger from '@/utils/logger';
 
 const props = defineProps<InterpreterTreeNodeProps>()
 
@@ -142,8 +143,8 @@ const toggleExpanded = () => {
 }
 
 const handleDataClick = () => {
-  console.log('Raw interpreter data:', props.node.rawData)
-  console.log('Access path:', props.node.accessPath)
+  consoleLogger.log('Raw interpreter data:', props.node.rawData)
+  consoleLogger.log('Access path:', props.node.accessPath)
 }
 
 const handlePositionClick = () => {

@@ -49,6 +49,7 @@
  */
 import { ref } from 'vue'
 import MonacoEditor from '@/components/editors/MonacoEditor.vue'
+import consoleLogger from '@/utils/logger';
 
 interface Props {
   readonly jsonContent: string
@@ -71,7 +72,7 @@ const copyToClipboard = async () => {
       copySuccess.value = false
     }, 2000)
   } catch (err) {
-    console.error('Failed to copy JSON to clipboard:', err)
+    consoleLogger.error('Failed to copy JSON to clipboard:', err)
   }
 }
 </script>

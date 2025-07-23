@@ -211,6 +211,7 @@ import { TokenMappingService } from '@/core/token-mapping'
 import { TokenNavigationCoordinator } from '@/core/token-navigation'
 import packageJson from '../package.json'
 import type { PipelineStage } from '@/types'
+import consoleLogger from './utils/logger'
 
 // Initialize parser with clean interface
 const parser = useParser()
@@ -241,7 +242,7 @@ const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
   editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
     saveDbml(parser.dbmlInput.value)
     // Show brief save indicator
-    console.log('DBML content saved to localStorage')
+    consoleLogger.log('DBML content saved to localStorage')
   })
 }
 
@@ -434,7 +435,7 @@ const handleNavigateToSource = (position: { start: { line: number; column: numbe
     const endLine = position.end.line
     const endColumn = position.end.column
 
-    console.log(`Navigating to source: Line ${startLine}:${startColumn} - ${endLine}:${endColumn}`)
+    consoleLogger.log(`Navigating to source: Line ${startLine}:${startColumn} - ${endLine}:${endColumn}`)
 
     // TODO: Implement actual Monaco editor highlighting
     // This would require accessing the Monaco editor instance and using:
