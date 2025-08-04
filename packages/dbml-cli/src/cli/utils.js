@@ -34,14 +34,18 @@ function getFormatOpt (opts) {
 }
 
 function getConnectionOpt (args) {
-  const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery'];
+  const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery', 'sqlite'];
   const defaultConnectionOpt = {
     connection: args[0],
     databaseType: 'unknown',
   };
 
-  return reduce(args, (connectionOpt, arg) => {
+  return reduce(args, (connectionOpt, arg, idx) => {
     if (supportedDatabases.includes(arg)) connectionOpt.databaseType = arg;
+    if (connectionOpt.databaseType === 'sqlite' && idx === 1) {
+      connectionOpt.connection = arg;
+      return connectionOpt;
+    }
     // Check if the arg is a connection string using regex
     const connectionStringRegex = /^.*[:;]/;
     if (connectionStringRegex.test(arg)) {

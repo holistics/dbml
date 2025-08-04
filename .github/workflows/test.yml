@@ -69,6 +69,10 @@ jobs:
     - name: Import DDL to MSSQL
       run: |
         sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__test__/db2dbml/mssql/schema.sql
+    - name: Generate SQLite database from schema
+      run: |
+        sqlite3 schema.db < schema.sql
+      working-directory: packages/dbml-cli/__test__/db2dbml/sqlite/
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
