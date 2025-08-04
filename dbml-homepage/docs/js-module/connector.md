@@ -11,6 +11,8 @@ This package is responsible for connecting to a database on your local environme
 - PostgreSQL
 - MySQL
 - MSSQL
+- BigQuery
+- Snowflake
 
 ## Prerequisites
 
