@@ -1,6 +1,20 @@
-Table "main"."Brands" {
-  "brand_id" INTEGER [pk, increment]
-  "brand_name" VARCHAR(50) [not null]
+Table "main"."Customers" {
+  "customer_id" INTEGER [pk, increment]
+  "first_name" VARCHAR(50) [not null]
+  "last_name" VARCHAR(50) [not null]
+  "gender" STRING
+  "household_income" INTEGER
+  "birthdate" DATE [not null]
+  "phone_number" INTEGER [not null]
+  "email" VARCHAR(128)
+}
+
+Table "main"."Car_Vins" {
+  "vin" INTEGER [pk, increment]
+  "model_id" INTEGER [not null]
+  "option_set_id" INTEGER [not null]
+  "manufactured_date" DATE [not null]
+  "manufactured_plant_id" INTEGER [not null]
 }
 
 Table "main"."Car_Options" {
@@ -23,12 +37,16 @@ Table "main"."Car_Parts" {
   "part_recall" INTEGER [default: 0]
 }
 
-Table "main"."Car_Vins" {
-  "vin" INTEGER [pk, increment]
-  "model_id" INTEGER [not null]
-  "option_set_id" INTEGER [not null]
-  "manufactured_date" DATE [not null]
-  "manufactured_plant_id" INTEGER [not null]
+Table "main"."Brands" {
+  "brand_id" INTEGER [pk, increment]
+  "brand_name" VARCHAR(50) [not null]
+}
+
+Table "main"."Models" {
+  "model_id" INTEGER [pk, increment]
+  "model_name" VARCHAR(50) [not null]
+  "model_base_price" INTEGER [not null]
+  "brand_id" INTEGER [not null]
 }
 
 Table "main"."Customer_Ownership" {
@@ -40,28 +58,6 @@ Table "main"."Customer_Ownership" {
   "dealer_id" INTEGER [not null]
 }
 
-Table "main"."Customers" {
-  "customer_id" INTEGER [pk, increment]
-  "first_name" VARCHAR(50) [not null]
-  "last_name" VARCHAR(50) [not null]
-  "gender" STRING
-  "household_income" INTEGER
-  "birthdate" DATE [not null]
-  "phone_number" INTEGER [not null]
-  "email" VARCHAR(128)
-}
-
-Table "main"."Dealer_Brand" {
-  "dealer_id" INTEGER [pk, not null, increment]
-  "brand_id" INTEGER [not null]
-}
-
-Table "main"."Dealers" {
-  "dealer_id" INTEGER [pk, increment]
-  "dealer_name" VARCHAR(50) [not null]
-  "dealer_address" VARCHAR(100)
-}
-
 Table "main"."Manufacture_Plant" {
   "manufacture_plant_id" INTEGER [pk, increment]
   "plant_name" VARCHAR(50) [not null]
@@ -70,10 +66,14 @@ Table "main"."Manufacture_Plant" {
   "company_owned" INTEGER
 }
 
-Table "main"."Models" {
-  "model_id" INTEGER [pk, increment]
-  "model_name" VARCHAR(50) [not null]
-  "model_base_price" INTEGER [not null]
+Table "main"."Dealers" {
+  "dealer_id" INTEGER [pk, increment]
+  "dealer_name" VARCHAR(50) [not null]
+  "dealer_address" VARCHAR(100)
+}
+
+Table "main"."Dealer_Brand" {
+  "dealer_id" INTEGER [pk, not null, increment]
   "brand_id" INTEGER [not null]
 }
 
