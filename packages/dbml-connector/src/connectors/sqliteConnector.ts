@@ -1,5 +1,5 @@
-import type {Database} from 'better-sqlite3';
-import DatabaseConstructor from 'better-sqlite3'
+import type { Database } from 'better-sqlite3';
+import DatabaseConstructor, { SqliteError } from 'better-sqlite3';
 import {
   DatabaseSchema,
   DefaultInfo,
@@ -14,14 +14,25 @@ import {
   Table,
   TableConstraint,
   TableConstraintsDictionary,
-  TypeInfo
+  TypeInfo,
 } from './types';
 
-function connectSQLite(connection: string): Database {
-  return new DatabaseConstructor(connection);
+const SCHEMA_NAME = 'main';
+
+const getFullColumnName = (tbName: string, colName: string) => `${SCHEMA_NAME}.${tbName}.${colName}`;
+
+function connectSQLite (connection: string): Database {
+  try {
+    return new DatabaseConstructor(connection, { readonly: true, fileMustExist: true });
+  } catch (err) {
+    if (err instanceof SqliteError) {
+      throw new Error(`SQLite connection error: ${err.message}`);
+    }
+    throw err; // Rethrow error if you want the calling code to handle it
+  }
 }
 
-function getDbDefault(columnDefault: string | null, defaultValueType: DefaultType): DefaultInfo | null {
+function getDbDefault (columnDefault: string | null, defaultValueType: DefaultType): DefaultInfo | null {
   if (columnDefault === null) {
     return null;
   }
@@ -32,45 +43,49 @@ function getDbDefault(columnDefault: string | null, defaultValueType: DefaultTyp
   };
 }
 
-function getFieldType(columnType: string): TypeInfo {
+function getFieldType (columnType: string): TypeInfo {
   return {
     type_name: columnType.toUpperCase(),
     schemaName: null,
   };
 }
 
-function generateField(tableName: string, columnsWithEnum: { [key: string]: Enum }, row: any): Field {
+function generateField (tableName: string, columnsWithEnum: { [key: string]: Enum }, row: any): Field {
   const {
     name,
     type,
     notnull,
-    dflt_value,
+    dflt_value: dfltValue,
     pk,
   } = row;
 
-  const defaultValueType: DefaultType = dflt_value && dflt_value.startsWith("'") && dflt_value.endsWith("'")
-    ? 'string'
-    : dflt_value === 'true' || dflt_value === 'false'
-      ? 'boolean'
-      : !isNaN(Number(dflt_value))
-        ? 'number'
-        : 'expression';
+  let defaultValueType: DefaultType;
+
+  if (dfltValue && dfltValue.startsWith("'") && dfltValue.endsWith("'")) {
+    defaultValueType = 'string';
+  } else if (['true', 'false'].includes(dfltValue)) {
+    defaultValueType = 'boolean';
+  } else if (!Number.isNaN(dfltValue)) {
+    defaultValueType = 'number';
+  } else {
+    defaultValueType = 'expression';
+  }
 
   // Either SQLite type or an Enum type
-  let actualType = getFieldType(type)
+  let actualType = getFieldType(type);
 
-  const key = `${tableName}.${name}`;
+  const key = getFullColumnName(tableName, name);
   if (columnsWithEnum[key]) {
     actualType = {
       type_name: columnsWithEnum[key].name,
-      schemaName: 'main',
-    }
+      schemaName: SCHEMA_NAME,
+    };
   }
 
   return {
     name,
     type: actualType,
-    dbdefault: getDbDefault(dflt_value, defaultValueType),
+    dbdefault: getDbDefault(dfltValue, defaultValueType),
     not_null: notnull === 1,
     increment: type.toLowerCase() === 'integer' && pk === 1,
     pk: pk === 1,
@@ -78,7 +93,7 @@ function generateField(tableName: string, columnsWithEnum: { [key: string]: Enum
   };
 }
 
-export function getEnumValues(definition: string, constraint_name: string): EnumValuesDict[] {
+export function getEnumValues (definition: string, constraintName: string): EnumValuesDict[] {
   if (!definition) return [];
 
   // Extract column names and their enum values from CHECK constraints
@@ -86,7 +101,7 @@ export function getEnumValues(definition: string, constraint_name: string): Enum
 
   // First, try to match the IN clause pattern
   const inClausePattern = /(\w+)\s+IN\s*\(([^)]+)\)/gi;
-  let inMatches = [...definition.matchAll(inClausePattern)];
+  const inMatches = [...definition.matchAll(inClausePattern)];
 
   // Second, try to match the OR pattern
   const orPattern = /(\w+)\s*=\s*'([^']+)'/gi;
@@ -101,7 +116,7 @@ export function getEnumValues(definition: string, constraint_name: string): Enum
       const valuesString = match[2];
       // Extract values from the string, handling quoted values
       const values = valuesString.split(',')
-          .map(v => v.trim().replace(/^'|'$/g, ''));
+        .map(v => v.trim().replace(/^'|'$/g, ''));
 
       colMap[columnName] = values;
     });
@@ -152,7 +167,7 @@ export function getEnumValues(definition: string, constraint_name: string): Enum
     result.push({
       columns: mergedColumns,
       enumValues,
-      constraint_name: `${constraint_name}_${mergedColumns.join('_')}`
+      constraint_name: `${constraintName}_${mergedColumns.join('_')}`,
     });
 
     processedKeys.add(key);
@@ -161,12 +176,11 @@ export function getEnumValues(definition: string, constraint_name: string): Enum
   return result;
 }
 
-function generateTablesAndEnums(db: Database): { tableList: Table[], enumList: Enum[], columnsWithEnum: { [key: string]: Enum } } {
+function generateTablesAndEnums (db: Database): { tableList: Table[], enumList: Enum[], columnsWithEnum: { [key: string]: Enum } } {
   // Query to get all tables and their CREATE statements
   const tablesQuery = `
     SELECT name, sql FROM sqlite_master
-    WHERE type='table' AND name NOT LIKE 'sqlite_%'
-    ORDER BY name;
+    WHERE type='table' AND name NOT LIKE 'sqlite_%';
   `;
 
   const tables = db.prepare(tablesQuery).all();
@@ -178,7 +192,7 @@ function generateTablesAndEnums(db: Database): { tableList: Table[], enumList: E
     const tableName = table.name;
     tableList.push({
       name: tableName,
-      schemaName: 'main',
+      schemaName: SCHEMA_NAME,
       note: { value: '' },
     });
 
@@ -204,16 +218,16 @@ function generateTablesAndEnums(db: Database): { tableList: Table[], enumList: E
         enumValuesByColumns.forEach(item => {
           const enumEle: Enum = {
             name: item.constraint_name,
-            schemaName: 'main',
+            schemaName: SCHEMA_NAME,
             values: item.enumValues,
-          }
+          };
 
           enumList.push(enumEle);
 
           item.columns.forEach(col => {
-            const key = `${tableName}.${col}`;
+            const key = getFullColumnName(tableName, col);
             columnsWithEnum[key] = enumEle;
-          })
+          });
         });
       }
     });
@@ -222,7 +236,8 @@ function generateTablesAndEnums(db: Database): { tableList: Table[], enumList: E
   return { tableList, enumList, columnsWithEnum };
 }
 
-function generateFieldsAndConstraints(tables: Table[], columnsWithEnum: { [key: string]: Enum }, db: Database): { fieldMap: FieldsDictionary; constraintMap: TableConstraintsDictionary } {
+function generateFieldsAndConstraints (tables: Table[], columnsWithEnum: { [key: string]: Enum }, db: Database):
+    { fieldMap: FieldsDictionary; constraintMap: TableConstraintsDictionary } {
   const fieldMap: FieldsDictionary = {};
   const constraintMap: TableConstraintsDictionary = {};
 
@@ -249,7 +264,7 @@ function generateFieldsAndConstraints(tables: Table[], columnsWithEnum: { [key: 
   return { fieldMap, constraintMap };
 }
 
-function generateIndexes(tables: Table[], db: Database): IndexesDictionary {
+function generateIndexes (tables: Table[], db: Database): IndexesDictionary {
   const indexMap: IndexesDictionary = {};
 
   tables.forEach((table: any) => {
@@ -292,7 +307,7 @@ function generateIndexes(tables: Table[], db: Database): IndexesDictionary {
   return indexMap;
 }
 
-function generateForeignKeys(tables: Table[], db: Database): Ref[] {
+function generateForeignKeys (tables: Table[], db: Database): Ref[] {
   const foreignKeyList: Ref[] = [];
 
   tables.forEach((table: any) => {
@@ -311,10 +326,8 @@ function generateForeignKeys(tables: Table[], db: Database): Ref[] {
       } = fk;
 
       // Group foreign keys by id to handle composite foreign keys
-      const existingRef = foreignKeyList.find(ref =>
-        ref.name === `fk_${tableName}_${id}` &&
-        ref.endpoints[0].tableName === tableName
-      );
+      const existingRef = foreignKeyList.find(ref => ref.name === `fk_${tableName}_${id}`
+        && ref.endpoints[0].tableName === tableName);
 
       if (existingRef) {
         // Add column to existing foreign key
@@ -324,14 +337,14 @@ function generateForeignKeys(tables: Table[], db: Database): Ref[] {
         // Create new foreign key
         const endpoint1 = {
           tableName,
-          schemaName: 'main',
+          schemaName: SCHEMA_NAME,
           fieldNames: [foreignColumnName],
           relation: '*' as const,
         };
 
         const endpoint2 = {
           tableName: refTableName,
-          schemaName: 'main',
+          schemaName: SCHEMA_NAME,
           fieldNames: [refColumnName],
           relation: '1' as const,
         };
@@ -349,11 +362,11 @@ function generateForeignKeys(tables: Table[], db: Database): Ref[] {
   return foreignKeyList;
 }
 
-async function fetchSchemaJson(connection: string): Promise<DatabaseSchema> {
+async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
   const db = connectSQLite(connection);
 
   try {
-    const {tableList, enumList, columnsWithEnum} = generateTablesAndEnums(db);
+    const { tableList, enumList, columnsWithEnum } = generateTablesAndEnums(db);
     const { fieldMap, constraintMap } = generateFieldsAndConstraints(tableList, columnsWithEnum, db);
     const indexMap = generateIndexes(tableList, db);
     const foreignKeyList = generateForeignKeys(tableList, db);

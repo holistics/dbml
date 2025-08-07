@@ -15,7 +15,7 @@ import {
 } from './types';
 import { getEnumValues } from './sqliteConnector';
 
-async function connectOracle(connection: string): Promise<oracledb.Connection> {
+async function connectOracle (connection: string): Promise<oracledb.Connection> {
   // Parse connection string to extract connection details
   // Expected format: user/password@hostname/servicename
   const regex = /^(.*?)\/(.*)@(.*)$/;
@@ -38,7 +38,7 @@ async function connectOracle(connection: string): Promise<oracledb.Connection> {
   return oracledb.getConnection(connectionConfig);
 }
 
-function getDbDefault(columnDefault: string | null, defaultValueType: DefaultType): DefaultInfo | null {
+function getDbDefault (columnDefault: string | null, defaultValueType: DefaultType): DefaultInfo | null {
   if (columnDefault === null) {
     return null;
   }
@@ -49,7 +49,7 @@ function getDbDefault(columnDefault: string | null, defaultValueType: DefaultTyp
   };
 }
 
-function getFieldType(dataType: string, dataLength: number | null, dataPrecision: number | null, dataScale: number | null): TypeInfo {
+function getFieldType (dataType: string, dataLength: number | null, dataPrecision: number | null, dataScale: number | null): TypeInfo {
   let typeName = dataType;
 
   // Add precision and scale for numeric types
@@ -62,7 +62,7 @@ function getFieldType(dataType: string, dataLength: number | null, dataPrecision
   }
 
   // Add length for character types
-  if ((["VARCHAR2", "CHAR", "NCHAR", "NVARCHAR2", "RAW"].includes(dataType)) && dataLength !== null) {
+  if ((['VARCHAR2', 'CHAR', 'NCHAR', 'NVARCHAR2', 'RAW'].includes(dataType)) && dataLength !== null) {
     typeName = `${dataType}(${dataLength})`;
   }
 
@@ -72,7 +72,7 @@ function getFieldType(dataType: string, dataLength: number | null, dataPrecision
   };
 }
 
-function determineDefaultValueType(dataDefault: string): DefaultType {
+function determineDefaultValueType (dataDefault: string): DefaultType {
   if (dataDefault.startsWith("'") && dataDefault.endsWith("'")) {
     return 'string';
   }
@@ -81,14 +81,14 @@ function determineDefaultValueType(dataDefault: string): DefaultType {
     return 'boolean';
   }
 
-  if (!isNaN(Number(dataDefault))) {
+  if (!Number.isNaN(dataDefault)) {
     return 'number';
   }
 
   return 'expression';
 }
 
-function generateField(row: any, tableName: string, columnsWithEnum: { [key: string]: Enum }): Field {
+function generateField (row: any, tableName: string, columnsWithEnum: { [key: string]: Enum }): Field {
   const {
     COLUMN_NAME,
     DATA_TYPE,
@@ -124,7 +124,8 @@ function generateField(row: any, tableName: string, columnsWithEnum: { [key: str
   };
 }
 
-async function generateTablesAndFields(client: oracledb.Connection, schemaName: string, columnsWithEnum: { [key: string]: Enum }): Promise<{ tableList: Table[]; fieldMap: FieldsDictionary }> {
+async function generateTablesAndFields (client: oracledb.Connection, schemaName: string, columnsWithEnum: { [key: string]: Enum }):
+    Promise<{ tableList: Table[]; fieldMap: FieldsDictionary }> {
   // Query to get all tables in the schema with comments
   const tableQuery = `
     SELECT 
@@ -180,7 +181,7 @@ async function generateTablesAndFields(client: oracledb.Connection, schemaName: 
   return { tableList, fieldMap };
 }
 
-async function generateIndexes(client: oracledb.Connection, schemaName: string): Promise<IndexesDictionary> {
+async function generateIndexes (client: oracledb.Connection, schemaName: string): Promise<IndexesDictionary> {
   const indexMap: IndexesDictionary = {};
 
   // Query to get all indexes in the schema
@@ -205,7 +206,9 @@ async function generateIndexes(client: oracledb.Connection, schemaName: string):
   const indexesByTable: Record<string, Record<string, { unique: boolean; type: string; columns: IndexColumn[] }>> = {};
 
   for (const row of indexRows) {
-    const { TABLE_NAME, INDEX_NAME, INDEX_TYPE, UNIQUENESS, COLUMN_NAME } = row as any;
+    const {
+      TABLE_NAME, INDEX_NAME, INDEX_TYPE, UNIQUENESS, COLUMN_NAME,
+    } = row as any;
 
     if (!indexesByTable[TABLE_NAME]) {
       indexesByTable[TABLE_NAME] = {};
@@ -250,7 +253,7 @@ async function generateIndexes(client: oracledb.Connection, schemaName: string):
   return indexMap;
 }
 
-async function generatePrimaryKeys(client: oracledb.Connection, schemaName: string): Promise<TableConstraintsDictionary> {
+async function generatePrimaryKeys (client: oracledb.Connection, schemaName: string): Promise<TableConstraintsDictionary> {
   const constraintMap: TableConstraintsDictionary = {};
 
   // Query to get all primary key constraints
@@ -282,7 +285,7 @@ async function generatePrimaryKeys(client: oracledb.Connection, schemaName: stri
   return constraintMap;
 }
 
-async function generateForeignKeys(client: oracledb.Connection, schemaName: string): Promise<Ref[]> {
+async function generateForeignKeys (client: oracledb.Connection, schemaName: string): Promise<Ref[]> {
   const foreignKeyList: Ref[] = [];
 
   // Query to get all foreign key constraints
@@ -374,7 +377,7 @@ async function generateForeignKeys(client: oracledb.Connection, schemaName: stri
   return foreignKeyList;
 }
 
-async function generateEnums(client: oracledb.Connection, schemaName: string): Promise<{ enumList: Enum[], columnsWithEnum: { [key: string]: Enum } }> {
+async function generateEnums (client: oracledb.Connection, schemaName: string): Promise<{ enumList: Enum[], columnsWithEnum: { [key: string]: Enum } }> {
   // Oracle doesn't have native enum types, but we can check for check constraints that might represent enums
   const enumList: Enum[] = [];
   const columnsWithEnum: { [key: string]: Enum } = {};
@@ -395,7 +398,9 @@ async function generateEnums(client: oracledb.Connection, schemaName: string): P
   const checkRows = checkResult.rows || [];
 
   for (const row of checkRows) {
-    const { TABLE_NAME, COLUMN_NAME, SEARCH_CONDITION, CONSTRAINT_NAME } = row as any;
+    const {
+      TABLE_NAME, COLUMN_NAME, SEARCH_CONDITION, CONSTRAINT_NAME,
+    } = row as any;
 
     // Use getEnumValues from sqliteConnector to extract enum values
     const enumValuesByColumns = getEnumValues(SEARCH_CONDITION, CONSTRAINT_NAME);
@@ -424,7 +429,7 @@ async function generateEnums(client: oracledb.Connection, schemaName: string): P
   return { enumList, columnsWithEnum };
 }
 
-async function fetchSchemaJson(connection: string): Promise<DatabaseSchema> {
+async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
   let client: oracledb.Connection | null = null;
 
   try {
