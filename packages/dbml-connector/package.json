@@ -37,11 +37,11 @@
     "@google-cloud/bigquery": "^7.9.0",
     "@typescript-eslint/eslint-plugin": "^8.30.1",
     "@typescript-eslint/parser": "^8.30.1",
-    "better-sqlite3": "^9.4.3",
+    "better-sqlite3": "^12.2.0",
     "lodash": "^4.17.21",
     "mssql": "^11.0.1",
     "mysql2": "^3.11.0",
-    "oracledb": "^6.5.0",
+    "oracledb": "^6.9.0",
     "pg": "^8.12.0",
     "snowflake-sdk": "^2.0.3"
   },
