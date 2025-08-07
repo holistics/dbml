@@ -1,0 +1,8 @@
+{
+  "args": [
+    "sqlite",
+    "schema.db",
+    "-o",
+    "./out-files/schema.dbml"
+  ]
+}
