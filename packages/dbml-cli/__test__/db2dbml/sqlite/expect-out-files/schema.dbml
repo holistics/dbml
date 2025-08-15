@@ -77,6 +77,12 @@ Table "main"."Dealer_Brand" {
   "brand_id" INTEGER [not null]
 }
 
+Ref "fk_Car_Vins_0":"main"."Car_Options"."option_set_id" < "main"."Car_Vins"."option_set_id"
+
+Ref "fk_Car_Vins_1":"main"."Manufacture_Plant"."manufacture_plant_id" < "main"."Car_Vins"."manufactured_plant_id"
+
+Ref "fk_Car_Vins_2":"main"."Models"."model_id" < "main"."Car_Vins"."model_id"
+
 Ref "fk_Car_Options_0":"main"."Car_Parts"."part_id" < "main"."Car_Options"."chassis_id"
 
 Ref "fk_Car_Options_1":"main"."Car_Parts"."part_id" < "main"."Car_Options"."transmission_id"
@@ -89,11 +95,7 @@ Ref "fk_Car_Options_4":"main"."Models"."model_id" < "main"."Car_Options"."model_
 
 Ref "fk_Car_Parts_0":"main"."Manufacture_Plant"."manufacture_plant_id" < "main"."Car_Parts"."manufacture_plant_id"
 
-Ref "fk_Car_Vins_0":"main"."Car_Options"."option_set_id" < "main"."Car_Vins"."option_set_id"
-
-Ref "fk_Car_Vins_1":"main"."Manufacture_Plant"."manufacture_plant_id" < "main"."Car_Vins"."manufactured_plant_id"
-
-Ref "fk_Car_Vins_2":"main"."Models"."model_id" < "main"."Car_Vins"."model_id"
+Ref "fk_Models_0":"main"."Brands"."brand_id" < "main"."Models"."brand_id"
 
 Ref "fk_Customer_Ownership_0":"main"."Dealers"."dealer_id" < "main"."Customer_Ownership"."dealer_id"
 
@@ -104,5 +106,3 @@ Ref "fk_Customer_Ownership_2":"main"."Customers"."customer_id" < "main"."Custome
 Ref "fk_Dealer_Brand_0":"main"."Brands"."brand_id" < "main"."Dealer_Brand"."brand_id"
 
 Ref "fk_Dealer_Brand_1":"main"."Dealers"."dealer_id" < "main"."Dealer_Brand"."dealer_id"
-
-Ref "fk_Models_0":"main"."Brands"."brand_id" < "main"."Models"."brand_id"
