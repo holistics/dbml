@@ -1,0 +1,39 @@
+Table "TEST"."category" {
+  "cat_id" NUMBER [pk, not null, increment]
+  "cat_name" NVARCHAR2(100) [not null]
+  "super_cat_id" NUMBER
+  "created_date" TIMESTAMP(6) [default: `current_timestamp`]
+  Note: 'Category is stored as tree like structure'
+}
+
+Table "TEST"."product" {
+  "product_id" NUMBER [pk, not null, increment]
+  "product_name" NVARCHAR2(510) [not null]
+  "current_price" FLOAT [not null]
+  "cat_id" NUMBER [not null]
+  "is_sold" NUMBER(1)
+  "created_date" TIMESTAMP(6) [default: `current_timestamp`]
+  "is_allow_all" NUMBER(1)
+}
+
+Table "TEST"."user" {
+  "user_id" NUMBER [pk, not null, increment]
+  "username" VARCHAR2(40) [unique, not null]
+  "password" VARCHAR2(255) [not null]
+  "email" NVARCHAR2(80) [unique, not null]
+  "role" NUMBER [default: 0]
+  "created_date" TIMESTAMP(6) [default: `current_timestamp`]
+}
+
+Table "TEST"."wishlist" {
+  "user_id" NUMBER [pk, not null]
+  "product_id" NUMBER [pk, not null]
+}
+
+Ref "FK_CATEGORY_SUPER":"TEST"."category"."cat_id" < "TEST"."category"."super_cat_id"
+
+Ref "FK_PRODUCT_CATEGORY":"TEST"."category"."cat_id" < "TEST"."product"."cat_id"
+
+Ref "FK_WISHLIST_PRODUCT":"TEST"."product"."product_id" < "TEST"."wishlist"."product_id"
+
+Ref "FK_WISHLIST_USER":"TEST"."user"."user_id" < "TEST"."wishlist"."user_id"
