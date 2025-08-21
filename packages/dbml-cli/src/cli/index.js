@@ -50,7 +50,7 @@ function sql2dbml (args) {
 
 function db2dbml (args) {
   program.version(projectInfo.version);
-
+  // TODO: Update description to add `oracle` and `sqlite`
   const description = `Generate DBML directly from a database
     <database-type>     your database format (postgres, mysql, mssql, snowflake, bigquery)
     <connection-string> your database connection string:
