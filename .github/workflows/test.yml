@@ -94,7 +94,7 @@ jobs:
       uses: iamazeem/setup-oracle-instant-client-action@v2
     - name: Import DDL to Oracle
       run: |
-        sqlplus dbml_test/test@//localhost/FREEPDB1 schema.sql
+        sqlplus -s dbml_test/test@localhost:1521/FREEPDB1 schema.sql
       working-directory: packages/dbml-cli/__test__/db2dbml/oracle/
     - name: Generate SQLite database from schema
       run: |
