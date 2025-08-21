@@ -89,6 +89,9 @@ jobs:
     - name: Import DDL to MSSQL
       run: |
         sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__test__/db2dbml/mssql/schema.sql
+    # This step will install `sqlplus` command
+    - name: Setup Oracle Instant Client
+      uses: iamazeem/setup-oracle-instant-client-action@v2
     - name: Import DDL to Oracle
       run: |
         sqlplus dbml_test/test@//localhost/FREEPDB1 schema.sql
