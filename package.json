@@ -25,6 +25,9 @@
     "lerna": "^7.1.4",
     "lerna-changelog": "^2.2.0"
   },
+    "resolutions": {
+    "**/tmp": "0.2.5"
+  },
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
