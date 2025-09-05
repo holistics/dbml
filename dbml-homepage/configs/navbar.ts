@@ -36,7 +36,7 @@ const NavbarConfigs: Navbar = {
         },
         {
           label: 'RunSQL - SQL Query Testing Tool',
-          href: 'https://dbdocs.io/?utm_source=dbml',
+          href: 'https://runsql.com/?utm_source=dbml',
         },
         {
           label: 'Holistics.io - BI Reporting As Code',
