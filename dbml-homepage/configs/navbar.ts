@@ -35,6 +35,10 @@ const NavbarConfigs: Navbar = {
           href: 'https://dbdocs.io/?utm_source=dbml',
         },
         {
+          label: 'RunSQL - SQL Query Testing Tool',
+          href: 'https://dbdocs.io/?utm_source=dbml',
+        },
+        {
           label: 'Holistics.io - BI Reporting As Code',
           href: 'https://www.holistics.io/?utm_source=dbml&utm_medium=topnav&utm_campaign=landing',
         },
