@@ -1,0 +1,86 @@
+table "A"."a" {
+  "AB" integer [pk]
+  "BA" integer [pk]
+}
+
+table "B"."b" {
+  "BC" integer [pk]
+  "CB" integer [pk]
+}
+
+table "C"."c" {
+  "CD" integer [pk, ref: <> "D"."d"."DE"]
+  "DC" integer
+}
+
+table "D"."d" {
+  "DE" integer [pk]
+  "ED" integer
+}
+
+table "E"."e" {
+  "EF" integer [pk]
+  "FE" integer [pk]
+  "DE" integer 
+  "ED" integer 
+}
+
+table "G"."g" {
+  "GH" integer [pk]
+  "HG" integer [pk]
+  "EH" integer 
+  "HE" integer 
+}
+
+ref:  "A"."a".("AB","BA") <>  "B"."b".("BC","CB")
+ref:  "E"."e".("EF","FE") <>  "G"."g".("GH","HG")
+
+
+table t1 {
+  a int [pk]
+  b int [unique]
+}
+
+table t2 {
+  a int [pk]
+  b int [unique]
+}
+
+table t1_t2 {
+  a int
+}
+
+ref: t1.a <> t2.a
+ref: t1.b <> t2.b
+
+Table schema.image {
+    id integer [pk]
+    url varchar
+}
+
+Table schema.content_item {
+    id integer [pk]
+    heading varchar
+    description varchar
+}
+
+Ref: schema.image.id <> schema.content_item.id
+
+Table schema.footer_item {
+    id integer [pk]
+    left varchar
+    centre varchar
+    right varchar
+}
+
+Table "schema1"."customers" {
+  "id" integer [pk]
+  "full_name" varchar
+}
+
+Table "schema2"."orders" {
+  "id" integer [pk]
+  "total_price" integer
+}
+
+Ref: "schema1"."customers"."id" <> "schema2"."orders"."id"
