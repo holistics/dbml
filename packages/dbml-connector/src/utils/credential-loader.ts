@@ -25,33 +25,38 @@ export function parseBigQueryCredential(credentialString: string): BigQueryCrede
       datasets,
     } = credentialJson;
 
-    if (typeof projectId !== 'string' || !projectId || !projectId.trim()) {
-      throw new Error('project_id must be a non-empty string');
-    }
-
-    if (typeof clientEmail !== 'string' || !clientEmail || !clientEmail.trim()) {
-      throw new Error('client_email must be a non-empty string');
-    }
-
-    if (typeof privateKey !== 'string' || !privateKey || !privateKey.trim()) {
-      throw new Error('private_key must be a non-empty string');
-    }
-
-    if (typeof clientEmail !== 'string' || !clientEmail || !clientEmail.trim()) {
-      throw new Error('client_email must be a non-empty string');
-    }
-
     // valid datasets: ['dataset_1', 'dataset_2']
     const parsedDatasets = !Array.isArray(datasets)
       ? []
       : datasets.filter((dataset) => typeof dataset === 'string');
 
+    if (projectId || clientEmail || privateKey) {
+      if (typeof projectId !== 'string' || !projectId || !projectId.trim()) {
+        throw new Error('project_id must be a non-empty string');
+      }
+
+      if (typeof clientEmail !== 'string' || !clientEmail || !clientEmail.trim()) {
+        throw new Error('client_email must be a non-empty string');
+      }
+
+      if (typeof privateKey !== 'string' || !privateKey || !privateKey.trim()) {
+        throw new Error('private_key must be a non-empty string');
+      }
+
+      if (typeof clientEmail !== 'string' || !clientEmail || !clientEmail.trim()) {
+        throw new Error('client_email must be a non-empty string');
+      }
+
+      return {
+        projectId,
+        credentials: {
+          clientEmail,
+          privateKey,
+        },
+        datasets: parsedDatasets,
+      };
+    }
     return {
-      projectId,
-      credentials: {
-        clientEmail,
-        privateKey,
-      },
       datasets: parsedDatasets,
     };
   } catch (error) {
