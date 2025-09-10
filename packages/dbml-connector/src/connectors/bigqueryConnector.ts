@@ -21,14 +21,18 @@ import {
   TableConstraintsDictionary,
 } from './types';
 
-async function connectBigQuery(credential: BigQueryCredentials): Promise<BigQuery> {
-  const client = new BigQuery({
-    projectId: credential.projectId,
-    credentials: {
-      private_key: credential.credentials.privateKey,
-      client_email: credential.credentials.clientEmail,
-    },
-  });
+async function connectBigQuery (credential: BigQueryCredentials): Promise<BigQuery> {
+  const client = credential?.credentials?.clientEmail && credential?.credentials?.privateKey
+    ? new BigQuery({
+      projectId: credential.projectId,
+      credentials: {
+        client_email: credential.credentials.clientEmail,
+        private_key: credential.credentials.privateKey,
+      },
+    })
+    : new BigQuery({
+      projectId: credential.projectId,
+    });
 
   try {
     const query = `SELECT CURRENT_DATE() as today`;
