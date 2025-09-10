@@ -22,7 +22,7 @@ import {
 } from './types';
 
 async function connectBigQuery (credential: BigQueryCredentials): Promise<BigQuery> {
-  const client = credential?.credentials?.clientEmail && credential?.credentials?.privateKey
+  const client = credential?.projectId && credential?.credentials?.clientEmail && credential?.credentials?.privateKey
     ? new BigQuery({
       projectId: credential.projectId,
       credentials: {
@@ -30,9 +30,7 @@ async function connectBigQuery (credential: BigQueryCredentials): Promise<BigQue
         private_key: credential.credentials.privateKey,
       },
     })
-    : new BigQuery({
-      projectId: credential.projectId,
-    });
+    : new BigQuery();
 
   try {
     const query = `SELECT CURRENT_DATE() as today`;
