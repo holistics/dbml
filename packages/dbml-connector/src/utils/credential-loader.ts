@@ -30,35 +30,36 @@ export function parseBigQueryCredential (credentialString: string): BigQueryCred
       ? []
       : datasets.filter((dataset) => typeof dataset === 'string');
 
-    if (projectId || clientEmail || privateKey) {
-      if (typeof projectId !== 'string' || !projectId || !projectId.trim()) {
-        throw new Error('project_id must be a non-empty string');
-      }
-
-      if (typeof clientEmail !== 'string' || !clientEmail || !clientEmail.trim()) {
-        throw new Error('client_email must be a non-empty string');
-      }
-
-      if (typeof privateKey !== 'string' || !privateKey || !privateKey.trim()) {
-        throw new Error('private_key must be a non-empty string');
-      }
-
-      if (typeof clientEmail !== 'string' || !clientEmail || !clientEmail.trim()) {
-        throw new Error('client_email must be a non-empty string');
-      }
-
-      return {
-        projectId,
-        credentials: {
-          clientEmail,
-          privateKey,
-        },
-        datasets: parsedDatasets,
-      };
-    }
-    return {
+    const parsedCredentials: BigQueryCredentials = {
       datasets: parsedDatasets,
     };
+
+    // Validate and add projectId if provided
+    if (projectId !== undefined) {
+      if (typeof projectId !== 'string' || !projectId || !projectId.trim()) {
+        throw new Error('project_id must be a non-empty string when provided');
+      }
+      parsedCredentials.projectId = projectId;
+    }
+
+    // Validate and add credentials if provided
+    // Note: If one credential field is provided, both must be provided
+    if (clientEmail !== undefined || privateKey !== undefined) {
+      if (!clientEmail || typeof clientEmail !== 'string' || !clientEmail.trim()) {
+        throw new Error('client_email must be a non-empty string when credentials are provided');
+      }
+
+      if (!privateKey || typeof privateKey !== 'string' || !privateKey.trim()) {
+        throw new Error('private_key must be a non-empty string when credentials are provided');
+      }
+
+      parsedCredentials.credentials = {
+        clientEmail,
+        privateKey,
+      };
+    }
+
+    return parsedCredentials;
   } catch (error) {
     if (error instanceof SyntaxError) {
       throw new Error('Credentials must be in JSON format');

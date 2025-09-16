@@ -1,4 +1,4 @@
-import { BigQuery } from '@google-cloud/bigquery';
+import { BigQuery, BigQueryOptions } from '@google-cloud/bigquery';
 import { loadCredentialFromFile, parseBigQueryCredential } from '../utils/credential-loader';
 import {
   getIntersection,
@@ -21,16 +21,33 @@ import {
   TableConstraintsDictionary,
 } from './types';
 
+// BigQuery client authentication strategy:
+// 1. Start with environment/default authentication:
+//    - GOOGLE_APPLICATION_CREDENTIALS env variable (service account key file)
+//    - Application Default Credentials (gcloud auth application-default login)
+//
+// 2. Override with explicitly provided properties:
+//    - If projectId is provided, override the default project
+//    - If credentials (clientEmail + privateKey) provided, override auth method
+//    - If datasets specified in config, fetch only those datasets
 async function connectBigQuery (credential: BigQueryCredentials): Promise<BigQuery> {
-  const client = credential?.projectId && credential?.credentials?.clientEmail && credential?.credentials?.privateKey
-    ? new BigQuery({
-      projectId: credential.projectId,
-      credentials: {
-        client_email: credential.credentials.clientEmail,
-        private_key: credential.credentials.privateKey,
-      },
-    })
-    : new BigQuery();
+  const config: BigQueryOptions = {};
+
+  // Override project if explicitly provided
+  if (credential?.projectId) {
+    config.projectId = credential.projectId;
+  }
+
+  // Override credentials if both email and key are provided
+  if (credential?.credentials?.clientEmail && credential?.credentials?.privateKey) {
+    config.credentials = {
+      client_email: credential.credentials.clientEmail,
+      private_key: credential.credentials.privateKey,
+    };
+  }
+
+  // Create client with merged config
+  const client = new BigQuery(config);
 
   try {
     const query = 'SELECT CURRENT_DATE() as today';
@@ -204,7 +221,9 @@ async function generateIndexes (
   const indexMap: IndexesDictionary = {};
 
   queryResult.forEach((row) => {
-    const { indexSchema, tableName, indexName, indexColumnNames } = row;
+    const {
+      indexSchema, tableName, indexName, indexColumnNames,
+    } = row;
 
     const indexColumns = indexColumnNames.split(', ').map((column: string) => {
       return {
