@@ -1,11 +1,12 @@
 {
   "name": "@dbml/playground",
-  "version": "3.13.7",
+  "version": "3.14.0",
   "description": "Interactive playground for debugging and visualizing the DBML parser pipeline",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
   "homepage": "https://dbml.dbdiagram.io/playground",
   "repository": "https://github.com/holistics/dbml/tree/master/dbml-playground",
+  "private": true,
   "keywords": [
     "dbml",
     "parser",
@@ -23,7 +24,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@dbml/parse": "3.13.7",
+    "@dbml/parse": "^3.14.0",
     "lodash": "^4.17.21",
     "monaco-editor": "^0.52.2",
     "monaco-vim": "^0.4.2",

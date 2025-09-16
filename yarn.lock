@@ -1813,13 +1813,6 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
-"@dbml/parse@3.13.7":
-  version "3.13.7"
-  resolved "https://registry.yarnpkg.com/@dbml/parse/-/parse-3.13.7.tgz#fde3313ba7a773e9a1cd5050f29d2a6aa0c1d044"
-  integrity sha512-EL4UIlMa278OL0oTwmwGfdqyLSk+1Ztq3c7aFbB17sEEAcz3oQqbTPV8XZ2mTgiJRFsboaFjCKmBF2q/EaylrQ==
-  dependencies:
-    lodash "^4.17.21"
-
 "@emnapi/core@^1.4.3":
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/@emnapi/core/-/core-1.4.4.tgz#76620673f3033626c6d79b1420d69f06a6bb153c"
