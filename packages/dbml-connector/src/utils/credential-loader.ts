@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises';
 import { BigQueryCredentials } from '../connectors/types';
 
-export async function loadCredentialFromFile(filename: string): Promise<string> {
+export async function loadCredentialFromFile (filename: string): Promise<string> {
   try {
     const data = await readFile(filename, { encoding: 'utf8' });
     return data;
@@ -14,7 +14,7 @@ export async function loadCredentialFromFile(filename: string): Promise<string> 
   }
 }
 
-export function parseBigQueryCredential(credentialString: string): BigQueryCredentials {
+export function parseBigQueryCredential (credentialString: string): BigQueryCredentials {
   try {
     const credentialJson = JSON.parse(credentialString);
 

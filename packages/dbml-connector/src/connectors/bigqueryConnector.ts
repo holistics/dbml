@@ -33,7 +33,7 @@ async function connectBigQuery (credential: BigQueryCredentials): Promise<BigQue
     : new BigQuery();
 
   try {
-    const query = `SELECT CURRENT_DATE() as today`;
+    const query = 'SELECT CURRENT_DATE() as today';
     await client.query(query);
     return client;
   } catch (error) {
@@ -45,9 +45,9 @@ async function connectBigQuery (credential: BigQueryCredentials): Promise<BigQue
   }
 }
 
-function getDbDefault(
+function getDbDefault (
   columnDefault: string,
-  defaultValueType: DefaultType | null
+  defaultValueType: DefaultType | null,
 ): DefaultInfo | null {
   if (defaultValueType === null) {
     return null;
@@ -55,13 +55,14 @@ function getDbDefault(
 
   if (defaultValueType === 'string') {
     // bigquery store the double qoutes and quotes at the end and the beginning of the string: "string" or 'string'
-    return { value: columnDefault.slice(1, -1).replaceAll("'", "\'"), type: defaultValueType }
+    // eslint-disable-next-line no-useless-escape
+    return { value: columnDefault.slice(1, -1).replaceAll("'", "\'"), type: defaultValueType };
   }
 
   return { value: columnDefault, type: defaultValueType };
 }
 
-function generateField(row: any): Field {
+function generateField (row: any): Field {
   const {
     columnName,
     isNullable,
@@ -90,26 +91,26 @@ function generateField(row: any): Field {
   return field;
 }
 
-async function generateTablesAndFields(
+async function generateTablesAndFields (
   client: BigQuery,
   projectId: string,
-  datasetId: string
+  datasetId: string,
 ): Promise<{
   tables: Table[];
   fieldMap: FieldsDictionary;
 }> {
-  const tableName = `${projectId}.${datasetId}`;
+  const tableNameToFetch = `${projectId}.${datasetId}`;
 
   const query = `
     with
       table_comments as (
         select table_schema, table_name, option_value as description
-        from ${tableName}.INFORMATION_SCHEMA.TABLE_OPTIONS
+        from ${tableNameToFetch}.INFORMATION_SCHEMA.TABLE_OPTIONS
         where option_name = 'description'
       ),
       column_comments as (
         select column_name, table_schema, table_name, description
-        from ${tableName}.INFORMATION_SCHEMA.COLUMN_FIELD_PATHS
+        from ${tableNameToFetch}.INFORMATION_SCHEMA.COLUMN_FIELD_PATHS
         where column_name = field_path
       )
     select
@@ -133,8 +134,8 @@ async function generateTablesAndFields(
         WHEN c.column_default = "NULL" THEN NULL
         ELSE 'expression'
       END AS columnDefaultType
-    from ${tableName}.INFORMATION_SCHEMA.TABLES t
-    join ${tableName}.INFORMATION_SCHEMA.COLUMNS c
+    from ${tableNameToFetch}.INFORMATION_SCHEMA.TABLES t
+    join ${tableNameToFetch}.INFORMATION_SCHEMA.COLUMNS c
     on
       t.table_schema = c.table_schema
       and t.table_name = c.table_name
@@ -174,12 +175,12 @@ async function generateTablesAndFields(
   };
 }
 
-async function generateIndexes(
+async function generateIndexes (
   client: BigQuery,
   projectId: string,
-  datasetId: string
+  datasetId: string,
 ): Promise<IndexesDictionary> {
-  const tableName = `${projectId}.${datasetId}`;
+  const tableNameToFetch = `${projectId}.${datasetId}`;
 
   const query = `
     select
@@ -187,8 +188,8 @@ async function generateIndexes(
       s.table_name as tableName,
       s.index_name as indexName,
       string_agg(sc.index_column_name, ', ') as indexColumnNames
-    from ${tableName}.INFORMATION_SCHEMA.SEARCH_INDEXES s
-    join ${tableName}.INFORMATION_SCHEMA.SEARCH_INDEX_COLUMNS sc
+    from ${tableNameToFetch}.INFORMATION_SCHEMA.SEARCH_INDEXES s
+    join ${tableNameToFetch}.INFORMATION_SCHEMA.SEARCH_INDEX_COLUMNS sc
     on
       s.index_schema = sc.index_schema
       and s.table_name = sc.table_name
@@ -229,15 +230,15 @@ async function generateIndexes(
   return indexMap;
 }
 
-async function generateTableConstraints(
+async function generateTableConstraints (
   client: BigQuery,
   projectId: string,
-  datasetId: string
+  datasetId: string,
 ): Promise<{
   inlinePrimaryKeyMap: TableConstraintsDictionary;
   compositePrimaryKeyMap: IndexesDictionary;
 }> {
-  const tableName = `${projectId}.${datasetId}`;
+  const tableNameToFetch = `${projectId}.${datasetId}`;
 
   const query = `
     select
@@ -246,8 +247,8 @@ async function generateTableConstraints(
       tc.constraint_name as constraintName,
       string_agg(kcu.column_name, ', ') as columnNames,
       count(kcu.column_name) as columnCount,
-    from ${tableName}.INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
-    join ${tableName}.INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
+    from ${tableNameToFetch}.INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+    join ${tableNameToFetch}.INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
     on
       tc.table_schema = kcu.table_schema
       and tc.table_name = kcu.table_name
@@ -260,10 +261,10 @@ async function generateTableConstraints(
   const [queryResult] = await client.query(query);
 
   const inlinePrimaryKeyList = queryResult.filter(
-    (row) => row.columnCount && row.columnCount === 1
+    (row) => row.columnCount && row.columnCount === 1,
   );
   const compositePrimaryKeyList = queryResult.filter(
-    (row) => row.columnCount && row.columnCount > 1
+    (row) => row.columnCount && row.columnCount > 1,
   );
 
   const inlinePrimaryKeyMap: TableConstraintsDictionary = {};
@@ -285,7 +286,9 @@ async function generateTableConstraints(
 
   const compositePrimaryKeyMap: IndexesDictionary = {};
   compositePrimaryKeyList.forEach((compositeKey) => {
-    const { tableSchema, tableName, constraintName, columnNames } = compositeKey;
+    const {
+      tableSchema, tableName, constraintName, columnNames,
+    } = compositeKey;
 
     const indexColumns = columnNames.split(', ').map((column: string) => {
       return {
@@ -316,7 +319,7 @@ async function generateTableConstraints(
   };
 }
 
-async function validateDatasetIdList(client: BigQuery, datasetIdList: string[]): Promise<string[]> {
+async function validateDatasetIdList (client: BigQuery, datasetIdList: string[]): Promise<string[]> {
   const [datasets] = await client.getDatasets();
 
   const rawDatasetIdList = datasets.map((dataset) => dataset.id).filter((id) => id) as string[];
@@ -328,10 +331,10 @@ async function validateDatasetIdList(client: BigQuery, datasetIdList: string[]):
   return getIntersection(datasetIdList, rawDatasetIdList);
 }
 
-async function fetchSchemaJsonByDataset(
+async function fetchSchemaJsonByDataset (
   client: BigQuery,
   projectId: string,
-  datasetId: string
+  datasetId: string,
 ): Promise<DatabaseSchema> {
   const res = await Promise.all([
     generateTablesAndFields(client, projectId, datasetId),
@@ -353,7 +356,7 @@ async function fetchSchemaJsonByDataset(
   };
 }
 
-async function fetchSchemaJson(keyFilename: string): Promise<DatabaseSchema> {
+async function fetchSchemaJson (keyFilename: string): Promise<DatabaseSchema> {
   const rawCredential = await loadCredentialFromFile(keyFilename);
   const credentialJson = parseBigQueryCredential(rawCredential);
   const client = await connectBigQuery(credentialJson);
@@ -361,14 +364,15 @@ async function fetchSchemaJson(keyFilename: string): Promise<DatabaseSchema> {
   const projectId = await client.getProjectId();
   const datasetIdList = await validateDatasetIdList(client, credentialJson.datasets);
 
-  const querySchemaPromises = datasetIdList.map((dataset) =>
-    fetchSchemaJsonByDataset(client, projectId, dataset)
-  );
+  const querySchemaPromises = datasetIdList.map((dataset) => fetchSchemaJsonByDataset(client, projectId, dataset));
 
   const databaseSchemaRes = await Promise.all(querySchemaPromises);
 
-  const res = databaseSchemaRes.reduce((acc, dbSchema) => {
-      const { tables, fields, indexes, tableConstraints } = dbSchema;
+  const res = databaseSchemaRes.reduce(
+    (acc, dbSchema) => {
+      const {
+        tables, fields, indexes, tableConstraints,
+      } = dbSchema;
 
       acc.tables = mergeTables(acc.tables, tables);
       acc.fields = mergeFieldDictionary(acc.fields, fields);
@@ -377,7 +381,9 @@ async function fetchSchemaJson(keyFilename: string): Promise<DatabaseSchema> {
 
       return acc;
     },
-    { tables: [], fields: {}, tableConstraints: {}, indexes: {}, refs: [], enums: [] }
+    {
+      tables: [], fields: {}, tableConstraints: {}, indexes: {}, refs: [], enums: [],
+    },
   );
 
   return res;
