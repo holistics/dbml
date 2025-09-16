@@ -100,8 +100,8 @@ interface DatabaseSchema {
 }
 
 interface BigQueryCredentials {
-  projectId: string,
-  credentials: {
+  projectId?: string,
+  credentials?: {
     clientEmail: string,
     privateKey: string,
   },

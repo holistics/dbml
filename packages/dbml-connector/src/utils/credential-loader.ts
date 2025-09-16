@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises';
 import { BigQueryCredentials } from '../connectors/types';
 
-export async function loadCredentialFromFile(filename: string): Promise<string> {
+export async function loadCredentialFromFile (filename: string): Promise<string> {
   try {
     const data = await readFile(filename, { encoding: 'utf8' });
     return data;
@@ -14,7 +14,7 @@ export async function loadCredentialFromFile(filename: string): Promise<string> 
   }
 }
 
-export function parseBigQueryCredential(credentialString: string): BigQueryCredentials {
+export function parseBigQueryCredential (credentialString: string): BigQueryCredentials {
   try {
     const credentialJson = JSON.parse(credentialString);
 
@@ -25,35 +25,41 @@ export function parseBigQueryCredential(credentialString: string): BigQueryCrede
       datasets,
     } = credentialJson;
 
-    if (typeof projectId !== 'string' || !projectId || !projectId.trim()) {
-      throw new Error('project_id must be a non-empty string');
-    }
-
-    if (typeof clientEmail !== 'string' || !clientEmail || !clientEmail.trim()) {
-      throw new Error('client_email must be a non-empty string');
-    }
-
-    if (typeof privateKey !== 'string' || !privateKey || !privateKey.trim()) {
-      throw new Error('private_key must be a non-empty string');
-    }
-
-    if (typeof clientEmail !== 'string' || !clientEmail || !clientEmail.trim()) {
-      throw new Error('client_email must be a non-empty string');
-    }
-
     // valid datasets: ['dataset_1', 'dataset_2']
     const parsedDatasets = !Array.isArray(datasets)
       ? []
       : datasets.filter((dataset) => typeof dataset === 'string');
 
-    return {
-      projectId,
-      credentials: {
-        clientEmail,
-        privateKey,
-      },
+    const parsedCredentials: BigQueryCredentials = {
       datasets: parsedDatasets,
     };
+
+    // Validate and add projectId if provided
+    if (projectId !== undefined) {
+      if (typeof projectId !== 'string' || !projectId || !projectId.trim()) {
+        throw new Error('project_id must be a non-empty string when provided');
+      }
+      parsedCredentials.projectId = projectId;
+    }
+
+    // Validate and add credentials if provided
+    // Note: If one credential field is provided, both must be provided
+    if (clientEmail !== undefined || privateKey !== undefined) {
+      if (!clientEmail || typeof clientEmail !== 'string' || !clientEmail.trim()) {
+        throw new Error('client_email must be a non-empty string when credentials are provided');
+      }
+
+      if (!privateKey || typeof privateKey !== 'string' || !privateKey.trim()) {
+        throw new Error('private_key must be a non-empty string when credentials are provided');
+      }
+
+      parsedCredentials.credentials = {
+        clientEmail,
+        privateKey,
+      };
+    }
+
+    return parsedCredentials;
   } catch (error) {
     if (error instanceof SyntaxError) {
       throw new Error('Credentials must be in JSON format');
