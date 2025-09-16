@@ -136,7 +136,16 @@ Connection string examples:
 - snowflake: `'SERVER=<account_identifier>.<region>;UID=<your_username>;PWD=<your_password>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;SCHEMAS=schema1,schema2,schema3;'`
 - bigquery: `/path_to_json_credential.json`
 
-For BigQuery, your JSON credential file must contain the following keys:
+For BigQuery, the credential file supports flexible authentication:
+
+**1. Application Default Credentials (ADC):**
+
+- Empty file: `{}` - uses environment authentication
+- Override specific fields: `{"project_id": "my-project", "datasets": [...]}`
+
+For more information about ADC, see [How Application Default Credentials works](https://cloud.google.com/docs/authentication/application-default-credentials)
+
+**2. Explicit Service Account (bypasses ADC):**
 
 ```json
 {
@@ -147,4 +156,7 @@ For BigQuery, your JSON credential file must contain the following keys:
 }
 ```
 
-*Note: If the "datasets" key is not provided or is an empty array, it will fetch information from all datasets.*
+:::note
+
+- Both `client_email` and `private_key` must be provided together.
+- If `datasets` is not specified or is empty, all accessible datasets will be fetched.
