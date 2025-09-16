@@ -20,4 +20,7 @@ export default {
   snowflake: {
     name: 'Snowflake',
   },
+  sqlite: {
+    name: 'SQLite'
+  }
 };
