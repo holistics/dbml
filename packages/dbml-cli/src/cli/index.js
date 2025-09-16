@@ -71,6 +71,8 @@ function db2dbml (args) {
                            - Empty file: {} - uses environment authentication
                            - Override specific fields: {"project_id": "my-project", "datasets": [...]}
 
+                          For more information about ADC, see https://cloud.google.com/docs/authentication/application-default-credentials
+
                         2. Explicit Service Account (bypasses ADC):
                            {
                              "project_id": "your-project-id",
