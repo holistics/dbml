@@ -1,3 +1,27 @@
+## v3.14.0 (2025-09-16)
+
+#### :memo: Documentation
+* Other
+  * [#746](https://github.com/holistics/dbml/pull/746) DBX-6222 Remove docs, use dbx-rfc instead ([@huyphung1602](https://github.com/huyphung1602))
+* `dbml-parse`
+  * [#741](https://github.com/holistics/dbml/pull/741) Add dbml playground and basic RFCs ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :bug: Bug Fix
+* [#745](https://github.com/holistics/dbml/pull/745) DBX-6210 misc: bump form-data v4 to 4.0.4 and v2 to 2.5.5 to fix security issues ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`
+  * [#755](https://github.com/holistics/dbml/pull/755) BigQuery ADC (Application Default Credentials) support ([@StephaneBischoffVasco](https://github.com/StephaneBischoffVasco))
+
+#### :robot: Dependencies Update
+* [#747](https://github.com/holistics/dbml/pull/747) DBX-6287: chore(deps): bump @eslint/plugin-kit from 0.3.3 to 0.3.4 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 4
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Stephane Bischoff ([@StephaneBischoffVasco](https://github.com/StephaneBischoffVasco))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v3.13.9 (2025-07-22)
 
 #### :bug: Bug Fix
