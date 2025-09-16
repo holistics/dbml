@@ -1,6 +1,8 @@
 ## v3.14.0 (2025-09-16)
 
 #### :memo: Documentation
+* `dbml-cli`
+  * [#758](https://github.com/holistics/dbml/pull/758) misc: update bigquery connector cli description on homepage ([@huyleminh01](https://github.com/huyleminh01))
 * Other
   * [#746](https://github.com/holistics/dbml/pull/746) DBX-6222 Remove docs, use dbx-rfc instead ([@huyphung1602](https://github.com/huyphung1602))
 * `dbml-parse`
@@ -16,7 +18,8 @@
 #### :robot: Dependencies Update
 * [#747](https://github.com/holistics/dbml/pull/747) DBX-6287: chore(deps): bump @eslint/plugin-kit from 0.3.3 to 0.3.4 ([@dependabot[bot]](https://github.com/apps/dependabot))
 
-#### Committers: 4
+#### Committers: 5
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
 - NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
 - Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
 - Stephane Bischoff ([@StephaneBischoffVasco](https://github.com/StephaneBischoffVasco))
