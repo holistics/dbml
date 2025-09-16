@@ -65,15 +65,22 @@ function db2dbml (args) {
 
                         - bigquery: /path_to_json_credential.json
 
-                        For BigQuery, your JSON credential file must contain the following keys:
-                          {
-                            "project_id": "your-project-id",
-                            "client_email": "your-client-email",
-                            "private_key": "your-private-key",
-                            "datasets": ["dataset_1", "dataset_2", ...]
-                          }
+                        For BigQuery, the credential file supports flexible authentication:
 
-                        Note: If the "datasets" key is not provided or is an empty array, it will fetch information from all datasets.
+                        1. Application Default Credentials (ADC):
+                           - Empty file: {} - uses environment authentication
+                           - Override specific fields: {"project_id": "my-project", "datasets": [...]}
+
+                        2. Explicit Service Account (bypasses ADC):
+                           {
+                             "project_id": "your-project-id",
+                             "client_email": "your-client-email",
+                             "private_key": "your-private-key",
+                             "datasets": ["dataset_1", "dataset_2", ...]
+                           }
+                           Note: Both client_email and private_key must be provided together.
+
+                        If "datasets" is not specified or is empty, all accessible datasets will be fetched.
   `;
   program
     .usage('<database-type> <connection-string> [options]')
