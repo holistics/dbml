@@ -1,3 +1,15 @@
+## v3.14.1 (2025-09-22)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#759](https://github.com/holistics/dbml/pull/759) fix: export dbml to oracle - export default value before inline constraint ([@huyleminh01](https://github.com/huyleminh01))
+
+#### :robot: Dependencies Update
+* [#753](https://github.com/holistics/dbml/pull/753) chore(deps-dev): bump vite from 6.3.5 to 6.3.6 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 1
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+
 ## v3.14.0 (2025-09-16)
 
 #### :memo: Documentation
