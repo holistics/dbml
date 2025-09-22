@@ -1,6 +1,5 @@
 Table "employees" {
   "employee_id" number [pk, increment]
-  "email" varchar2(100) [unique, not null]
   "first_name" nvarchar2(50) [not null, default: 'Unknown']
   "last_name" nvarchar2(50) [not null]
   "middle_name" varchar2(50) [default: '']
@@ -25,4 +24,14 @@ Table "projects" {
   "end_date" date
   "status" varchar2(20) [default: 'PLANNED', not null]
   "priority" integer [default: 999, unique]
+}
+
+Table "constraint_orderings" {
+  "field1" varchar2(50) [not null, unique, default: 'test1']
+  "field2" varchar2(50) [unique, default: 'test2', not null]
+  "field3" varchar2(50) [default: 'test3', not null, unique]
+  "field4" varchar2(50) [not null, default: 'test4', unique]
+  "field5" varchar2(50) [not null, default: 'test5']
+  "field6" varchar2(50) [unique, default: 'test6']
+  "field7" int [not null, pk, default: 1]
 }

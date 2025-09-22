@@ -26,3 +26,13 @@ CREATE TABLE "projects" (
   "status" varchar2(20) DEFAULT 'PLANNED' NOT NULL,
   "priority" integer DEFAULT 999 UNIQUE
 );
+
+CREATE TABLE "constraint_orderings" (
+  "field1" varchar2(50) DEFAULT 'test1' UNIQUE NOT NULL,
+  "field2" varchar2(50) DEFAULT 'test2' UNIQUE NOT NULL,
+  "field3" varchar2(50) DEFAULT 'test3' UNIQUE NOT NULL,
+  "field4" varchar2(50) DEFAULT 'test4' UNIQUE NOT NULL,
+  "field5" varchar2(50) DEFAULT 'test5' NOT NULL,
+  "field6" varchar2(50) DEFAULT 'test6' UNIQUE,
+  "field7" int DEFAULT 1 PRIMARY KEY NOT NULL
+);
