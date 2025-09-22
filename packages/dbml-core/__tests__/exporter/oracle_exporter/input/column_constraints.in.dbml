@@ -1,0 +1,37 @@
+Table "employees" {
+  "employee_id" number [pk, increment]
+  "first_name" nvarchar2(50) [not null, default: 'Unknown']
+  "last_name" nvarchar2(50) [not null]
+  "middle_name" varchar2(50) [default: '']
+  "department" varchar2(30) [unique, default: 'General', not null]
+  "years_of_service" integer [default: 0, not null]
+  "employee_rank" number(2) [unique, not null, default: 1]
+  "hire_date" date [not null, default: `SYSDATE`]
+  "last_review_date" timestamp [default: `current_timestamp`]
+  "termination_date" date
+  "birth_date" date [not null]
+  "is_active" number(1) [default: 1, not null]
+  "is_manager" number(1) [default: 0]
+  "notes" clob
+  "profile_data" nclob [default: '{}']
+}
+
+Table "projects" {
+  "project_id" int [pk, increment]
+  "project_code" varchar2(20) [unique, not null]
+  "project_name" nvarchar2(100) [not null, default: 'Unnamed Project']
+  "start_date" date [not null, default: `SYSDATE`]
+  "end_date" date
+  "status" varchar2(20) [default: 'PLANNED', not null]
+  "priority" integer [default: 999, unique]
+}
+
+Table "constraint_orderings" {
+  "field1" varchar2(50) [not null, unique, default: 'test1']
+  "field2" varchar2(50) [unique, default: 'test2', not null]
+  "field3" varchar2(50) [default: 'test3', not null, unique]
+  "field4" varchar2(50) [not null, default: 'test4', unique]
+  "field5" varchar2(50) [not null, default: 'test5']
+  "field6" varchar2(50) [unique, default: 'test6']
+  "field7" int [not null, pk, default: 1]
+}
