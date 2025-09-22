@@ -74,6 +74,17 @@ class OracleExporter {
         cloneField.not_null = false;
       }
 
+      // default value must be placed before the inline constraint expression
+      // See column definition syntax https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/CREATE-TABLE.html#GUID-F9CE0CC3-13AE-4744-A43C-EAC7A71AAAB6__CEGEDHJE
+      // See constraint syntax https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/constraint.html#GUID-1055EA97-BA6F-4764-A15F-1024FD5B6DFE__CJAEDFIB
+      if (cloneField.dbdefault) {
+        if (cloneField.dbdefault.type === 'string') {
+          line += ` DEFAULT '${cloneField.dbdefault.value}'`;
+        } else {
+          line += ` DEFAULT ${cloneField.dbdefault.value}`;
+        }
+      }
+
       if (cloneField.unique) {
         line += ' UNIQUE';
       }
@@ -83,14 +94,6 @@ class OracleExporter {
 
       if (cloneField.not_null) {
         line += ' NOT NULL';
-      }
-
-      if (cloneField.dbdefault) {
-        if (cloneField.dbdefault.type === 'string') {
-          line += ` DEFAULT '${cloneField.dbdefault.value}'`;
-        } else {
-          line += ` DEFAULT ${cloneField.dbdefault.value}`;
-        }
       }
 
       return line;
