@@ -1,6 +1,5 @@
 CREATE TABLE "employees" (
   "employee_id" number GENERATED AS IDENTITY PRIMARY KEY,
-  "email" varchar2(100) UNIQUE NOT NULL,
   "first_name" nvarchar2(50) DEFAULT 'Unknown' NOT NULL,
   "last_name" nvarchar2(50) NOT NULL,
   "middle_name" varchar2(50) DEFAULT '',
