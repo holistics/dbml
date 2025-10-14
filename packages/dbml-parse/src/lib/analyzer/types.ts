@@ -24,6 +24,7 @@ export enum SettingName {
   Default = 'default',
   Name = 'name',
   Type = 'type',
+  Constraint = 'constraint',
 
   Update = 'update',
   Delete = 'delete',
