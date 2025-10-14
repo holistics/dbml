@@ -29,7 +29,8 @@
     "test:watch": "vitest tests",
     "coverage": "vitest run --coverage",
     "prepublish": "npm run build",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@types/lodash": "^4.14.200",
