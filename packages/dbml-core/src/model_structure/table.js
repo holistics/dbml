@@ -221,6 +221,7 @@ class Table extends Element {
     return {
       fieldIds: this.fields.map(f => f.id),
       indexIds: this.indexes.map(i => i.id),
+      constraintIds: this.constraints.map(c => c.id),
     };
   }
 
