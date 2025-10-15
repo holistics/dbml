@@ -29,7 +29,7 @@ export enum CompileErrorCode {
   UNEXPECTED_COMPLEX_BODY,
 
   INVALID_TABLE_CONTEXT,
-  INVALID_TABLE_SETTING,
+  UNKNOWN_TABLE_SETTING,
   DUPLICATE_TABLE_SETTING,
 
   INVALID_TABLEGROUP_CONTEXT,
@@ -90,7 +90,7 @@ export enum CompileErrorCode {
 
   INVALID_TABLE_PARTIAL_CONTEXT,
   INVALID_TABLE_PARTIAL_ELEMENT_NAME,
-  INVALID_TABLE_PARTIAL_SETTING,
+  INVALID_TABLE_PARTIAL_SETTING_VALUE,
   DUPLICATE_TABLE_PARTIAL_ELEMENT_NAME,
   DUPLICATE_TABLE_PARTIAL_SETTING,
 
@@ -98,6 +98,9 @@ export enum CompileErrorCode {
   INVALID_TABLE_PARTIAL_INJECTION_OP,
   INVALID_TABLE_PARTIAL_INJECTION_NAME,
   DUPLICATE_TABLE_PARTIAL_INJECTION_NAME,
+  UNKNOWN_TABLE_PARTIAL_SETTING,
+
+  INVALID_TABLE_SETTING_VALUE,
 
   BINDING_ERROR = 4000,
 
@@ -120,7 +123,7 @@ export class CompileError extends Error {
 
   end: Readonly<number>;
 
-  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+  constructor(code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
     this.diagnostic = message;

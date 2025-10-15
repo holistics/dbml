@@ -113,7 +113,7 @@ export default class TableValidator implements ElementValidator {
           }
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'headercolor\' must be a color literal', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'headercolor\' must be a color literal', attr.value || attr.name!));
             }
           });
           break;
@@ -123,18 +123,12 @@ export default class TableValidator implements ElementValidator {
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'note\' must be a string literal', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'note\' must be a string literal', attr.value || attr.name!));
             }
           });
           break;
-        case SettingName.Constraint:
-          attrs.forEach((attr) => {
-            if (!(attr.value instanceof FunctionExpressionNode)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'constraint\' must be a function expression', attr.value || attr.name!));
-            }
-          });
         default:
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
       }
     });
     return errors;
@@ -406,18 +400,24 @@ export default class TableValidator implements ElementValidator {
           break;
         case SettingName.Default:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'default\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'default\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isValidDefaultValue(attr.value)) {
               errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_SETTING,
+                CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
                 '\'default\' must be a string literal, number literal, function expression, true, false or null',
                 attr.value || attr.name!,
               ));
             }
           });
           break;
+        case SettingName.Constraint:
+          attrs.forEach((attr) => {
+            if (!(attr.value instanceof FunctionExpressionNode)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'constraint\' must be a function expression', attr.value || attr.name!));
+            }
+          });
         default:
           attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
       }
