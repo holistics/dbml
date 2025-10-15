@@ -37,6 +37,21 @@ class MySQLExporter {
       if (field.increment) {
         line += ' AUTO_INCREMENT';
       }
+      if (field.constraints && field.constraints.length > 0) {
+        if (field.constraints.length === 1) {
+          const constraint = model.constraints[field.constraints[0]];
+          if (constraint.name) {
+            line += ` CONSTRAINT \`${constraint.name}\``;
+          }
+          line += ` CHECK (${constraint.expression})`;
+        } else {
+          const constraintExpressions = field.constraints.map(constraintId => {
+            const constraint = model.constraints[constraintId];
+            return `(${constraint.expression})`;
+          });
+          line += ` CHECK (${constraintExpressions.join(' AND ')})`;
+        }
+      }
       if (field.dbdefault) {
         if (field.dbdefault.type === 'expression') {
           line += ` DEFAULT (${field.dbdefault.value})`;
@@ -84,14 +99,39 @@ class MySQLExporter {
     return lines;
   }
 
+  static getConstraintLines (tableId, model) {
+    const table = model.tables[tableId];
+  
+    if (!table.constraintIds || table.constraintIds.length === 0) {
+      return [];
+    }
+
+    const lines = table.constraintIds.map((constraintId) => {
+      const constraint = model.constraints[constraintId];
+      let line = '';
+      
+      if (constraint.name) {
+        line = `CONSTRAINT \`${constraint.name}\` `;
+      }
+      
+      line += `CHECK (${constraint.expression})`;
+      
+      return line;
+    });
+
+    return lines;
+  }
+
   static getTableContentArr (tableIds, model) {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = MySQLExporter.getFieldLines(tableId, model);
+      const constraintContents = MySQLExporter.getConstraintLines(tableId, model);
       const compositePKs = MySQLExporter.getCompositePKs(tableId, model);
 
       return {
         tableId,
         fieldContents,
+        constraintContents,
         compositePKs,
       };
     });
@@ -103,7 +143,7 @@ class MySQLExporter {
     const tableContentArr = MySQLExporter.getTableContentArr(tableIds, model);
 
     const tableStrs = tableContentArr.map((tableContent) => {
-      const content = [...tableContent.fieldContents, ...tableContent.compositePKs];
+      const content = [...tableContent.fieldContents, ...tableContent.constraintContents, ...tableContent.compositePKs];
       const table = model.tables[tableContent.tableId];
       const schema = model.schemas[table.schemaId];
       const tableStr = `CREATE TABLE ${shouldPrintSchema(schema, model)
