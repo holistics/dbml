@@ -29,7 +29,8 @@
           "pk": false,
           "increment": false,
           "unique": true,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         },
         {
           "name": "status",
@@ -108,7 +109,8 @@
           },
           "name": "increment_id"
         }
-      ]
+      ],
+      "constraints": []
     },
     {
       "name": "order_items",
@@ -210,7 +212,8 @@
           "dbdefault": {
             "type": "number",
             "value": 1
-          }
+          },
+          "constraints": []
         }
       ],
       "token": {
@@ -226,7 +229,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     },
     {
       "name": "products",
@@ -305,7 +309,8 @@
           "dbdefault": {
             "value": "now()",
             "type": "expression"
-          }
+          },
+          "constraints": []
         }
       ],
       "token": {
@@ -389,7 +394,8 @@
           },
           "name": "name"
         }
-      ]
+      ],
+      "constraints": []
     },
     {
       "name": "users",
@@ -418,7 +424,8 @@
           "inline_refs": [],
           "pk": false,
           "increment": false,
-          "unique": true
+          "unique": true,
+          "constraints": []
         },
         {
           "name": "date_of_birth",
@@ -469,7 +476,8 @@
           "dbdefault": {
             "value": "now()",
             "type": "expression"
-          }
+          },
+          "constraints": []
         },
         {
           "name": "country_code",
@@ -494,7 +502,8 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         }
       ],
       "token": {
@@ -543,7 +552,8 @@
           },
           "name": "name"
         }
-      ]
+      ],
+      "constraints": []
     },
     {
       "name": "countries",
@@ -572,7 +582,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         },
         {
           "name": "continent_name",
@@ -628,7 +639,8 @@
           },
           "name": "name"
         }
-      ]
+      ],
+      "constraints": []
     }
   ],
   "notes": [],
@@ -902,7 +914,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": true,
-          "unique": false
+          "unique": false,
+          "constraints": []
         }
       ],
       "token": {
@@ -917,7 +930,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "constraints": []
     },
     {
       "name": "name",
@@ -958,7 +972,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "constraints": []
     }
   ]
 }

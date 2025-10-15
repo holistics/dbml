@@ -32,7 +32,8 @@
           "dbdefault": {
             "type": "number",
             "value": -2
-          }
+          },
+          "constraints": []
         },
         {
           "name": "id2",
@@ -60,7 +61,8 @@
           "dbdefault": {
             "type": "number",
             "value": -2
-          }
+          },
+          "constraints": []
         },
         {
           "name": "id3",
@@ -88,7 +90,8 @@
           "dbdefault": {
             "type": "number",
             "value": 7.2225
-          }
+          },
+          "constraints": []
         }
       ],
       "token": {
@@ -104,7 +107,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     },
     {
       "name": "b",
@@ -165,7 +169,8 @@
           },
           "name": "P1"
         }
-      ]
+      ],
+      "constraints": []
     }
   ],
   "notes": [],
@@ -204,7 +209,8 @@
           "dbdefault": {
             "type": "number",
             "value": -2
-          }
+          },
+          "constraints": []
         },
         {
           "name": "id2",
@@ -232,7 +238,8 @@
           "dbdefault": {
             "type": "number",
             "value": -2
-          }
+          },
+          "constraints": []
         },
         {
           "name": "id3",
@@ -260,7 +267,8 @@
           "dbdefault": {
             "type": "number",
             "value": -7.2225
-          }
+          },
+          "constraints": []
         }
       ],
       "token": {
@@ -275,7 +283,8 @@
           "column": 2
         }
       },
-      "indexes": []
+      "indexes": [],
+      "constraints": []
     }
   ]
 }

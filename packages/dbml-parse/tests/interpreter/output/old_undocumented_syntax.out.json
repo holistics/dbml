@@ -29,7 +29,8 @@
           "pk": true,
           "increment": true,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         },
         {
           "name": "store_id",
@@ -54,7 +55,8 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         },
         {
           "name": "first_name",
@@ -79,7 +81,8 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         },
         {
           "name": "last_name",
@@ -108,7 +111,8 @@
           "dbdefault": {
             "value": "false",
             "type": "boolean"
-          }
+          },
+          "constraints": []
         },
         {
           "name": "email",
@@ -136,7 +140,8 @@
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          }
+          },
+          "constraints": []
         },
         {
           "name": "address_id",
@@ -161,7 +166,8 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         },
         {
           "name": "active",
@@ -190,7 +196,8 @@
           "dbdefault": {
             "value": "true",
             "type": "boolean"
-          }
+          },
+          "constraints": []
         },
         {
           "name": "create_date",
@@ -215,7 +222,8 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         },
         {
           "name": "last_update",
@@ -243,7 +251,8 @@
           "dbdefault": {
             "value": "CURRENT_TIMESTAMP",
             "type": "expression"
-          }
+          },
+          "constraints": []
         }
       ],
       "token": {
@@ -259,7 +268,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     },
     {
       "name": "cities",
@@ -288,7 +298,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         },
         {
           "name": "name",
@@ -316,7 +327,8 @@
           "dbdefault": {
             "value": "hello",
             "type": "string"
-          }
+          },
+          "constraints": []
         },
         {
           "name": "country_id",
@@ -356,6 +368,7 @@
       },
       "indexes": [],
       "partials": [],
+      "constraints": [],
       "note": {
         "value": "sasasa",
         "token": {
@@ -437,7 +450,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     },
     {
       "name": "citites",
@@ -553,7 +567,8 @@
           }
         }
       ],
-      "partials": []
+      "partials": [],
+      "constraints": []
     }
   ],
   "notes": [],

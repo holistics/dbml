@@ -28,7 +28,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         },
         {
           "name": "full_name",
@@ -75,7 +76,8 @@
           "inline_refs": [],
           "pk": false,
           "increment": false,
-          "unique": true
+          "unique": true,
+          "constraints": []
         },
         {
           "name": "gender",
@@ -192,7 +194,8 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         }
       ],
       "token": {
@@ -504,7 +507,8 @@
           }
         }
       ],
-      "partials": []
+      "partials": [],
+      "constraints": []
     }
   ],
   "notes": [],
