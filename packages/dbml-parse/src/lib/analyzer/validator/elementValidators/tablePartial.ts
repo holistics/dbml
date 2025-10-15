@@ -37,13 +37,13 @@ import SymbolTable from '../../symbol/symbolTable';
 import { ElementKind, SettingName } from '../../types';
 
 export default class TablePartialValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken};
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
 
   private symbolFactory: SymbolFactory;
 
   private publicSymbolTable: SymbolTable;
 
-  constructor (
+  constructor(
     declarationNode: ElementDeclarationNode & { type: SyntaxToken },
     publicSymbolTable: SymbolTable,
     symbolFactory: SymbolFactory,
@@ -53,7 +53,7 @@ export default class TablePartialValidator implements ElementValidator {
     this.publicSymbolTable = publicSymbolTable;
   }
 
-  validate (): CompileError[] {
+  validate(): CompileError[] {
     return [
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
@@ -64,7 +64,7 @@ export default class TablePartialValidator implements ElementValidator {
     ];
   }
 
-  private validateContext (): CompileError[] {
+  private validateContext(): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
       return [new CompileError(
         CompileErrorCode.INVALID_TABLE_PARTIAL_CONTEXT,
@@ -75,7 +75,7 @@ export default class TablePartialValidator implements ElementValidator {
     return [];
   }
 
-  private validateName (nameNode?: SyntaxNode): CompileError[] {
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [new CompileError(
         CompileErrorCode.NAME_NOT_FOUND,
@@ -94,7 +94,7 @@ export default class TablePartialValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [new CompileError(
         CompileErrorCode.UNEXPECTED_ALIAS,
@@ -106,7 +106,7 @@ export default class TablePartialValidator implements ElementValidator {
     return [];
   }
 
-  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -119,7 +119,7 @@ export default class TablePartialValidator implements ElementValidator {
           }
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING, `'${name}' must be a color literal`, attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a color literal`, attr.value || attr.name!));
             }
           });
           break;
@@ -129,18 +129,18 @@ export default class TablePartialValidator implements ElementValidator {
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING, `'${name}' must be a string literal`, attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a string literal`, attr.value || attr.name!));
             }
           });
           break;
         default:
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_PARTIAL_SETTING, `Unknown '${name}' setting`, attr)));
       }
     });
     return errors;
   }
 
-  registerElement (): CompileError[] {
+  registerElement(): CompileError[] {
     const { name } = this.declarationNode;
     this.declarationNode.symbol = this.symbolFactory.create(TablePartialSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
     const maybeNamePartials = destructureComplexVariable(name);
@@ -158,7 +158,7 @@ export default class TablePartialValidator implements ElementValidator {
     return [];
   }
 
-  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) return [];
 
     if (body instanceof FunctionApplicationNode) {
@@ -172,7 +172,7 @@ export default class TablePartialValidator implements ElementValidator {
     ];
   }
 
-  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       if (!field.callee) return [];
 
@@ -199,7 +199,7 @@ export default class TablePartialValidator implements ElementValidator {
     });
   }
 
-  registerField (field: FunctionApplicationNode): CompileError[] {
+  registerField(field: FunctionApplicationNode): CompileError[] {
     if (!field.callee || !isExpressionAVariableNode(field.callee)) return [];
 
     const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
@@ -221,7 +221,7 @@ export default class TablePartialValidator implements ElementValidator {
   }
 
   // This is needed to support legacy inline settings
-  validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
+  validateFieldSetting(parts: ExpressionNode[]): CompileError[] {
     const lastPart = last(parts);
     if (
       !parts.slice(0, -1).every(isExpressionAnIdentifierNode)
@@ -387,7 +387,7 @@ export default class TablePartialValidator implements ElementValidator {
     return errors;
   }
 
-  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
     const errors = subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {
