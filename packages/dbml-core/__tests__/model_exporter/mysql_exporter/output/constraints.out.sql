@@ -1,6 +1,6 @@
 CREATE TABLE `User` (
-  `balance` int,
-  `name` TEXT,
+  `balance` int CHECK (balance > 0),
+  `name` TEXT CHECK (LEN(name) > 0),
   `email` TEXT,
   CONSTRAINT `not_too_much_money` CHECK (balance < 10000000),
   CONSTRAINT `name_not_too_long` CHECK (LEN(name) < 256),
