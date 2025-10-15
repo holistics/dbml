@@ -262,6 +262,7 @@ class Database extends Element {
       enumValues: {},
       indexes: {},
       indexColumns: {},
+      constraints: {},
       fields: {},
       records: {},
       tablePartials: {},
