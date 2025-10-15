@@ -23,3 +23,7 @@ Table User2 {
   
   balance int
 }
+
+Table User3 {
+  balance int [constraint: `balance > 0`, constraint: `balance < 10000000`]
+}
