@@ -43,7 +43,8 @@
                 "column": 40
               }
             }
-          }
+          },
+          "constraints": []
         },
         {
           "name": "status",
@@ -106,6 +107,7 @@
       },
       "indexes": [],
       "partials": [],
+      "constraints": [],
       "note": {
         "value": "Note on table orders",
         "token": {
@@ -579,7 +581,8 @@
           }
         }
       ],
-      "partials": []
+      "partials": [],
+      "constraints": []
     }
   ],
   "notes": [],

@@ -112,7 +112,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     },
     {
       "name": "merchants",
@@ -254,7 +255,8 @@
           ],
           "pk": false,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         }
       ],
       "token": {
@@ -270,7 +272,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     }
   ],
   "notes": [],

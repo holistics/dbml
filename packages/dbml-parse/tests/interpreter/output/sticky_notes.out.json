@@ -28,7 +28,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         },
         {
           "name": "username",
@@ -53,7 +54,8 @@
           "pk": false,
           "increment": false,
           "unique": true,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         }
       ],
       "token": {
@@ -70,6 +72,7 @@
       },
       "indexes": [],
       "partials": [],
+      "constraints": [],
       "headerColor": "#3498DB"
     }
   ],
