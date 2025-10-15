@@ -1,11 +1,12 @@
 import { get } from 'lodash';
 import Element from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
+import Constraint from './constraint';
 
 class Field extends Element {
   constructor ({
     name, type, unique, pk, token, not_null: notNull, note, dbdefault,
-    increment, table = {}, noteToken = null, injectedPartial = null, injectedToken = null,
+    increment, constraints = [], table = {}, noteToken = null, injectedPartial = null, injectedToken = null,
   } = {}) {
     super(token);
     if (!name) { this.error('Field must have a name'); }
@@ -20,6 +21,7 @@ class Field extends Element {
     this.noteToken = note ? get(note, 'token', noteToken) : null;
     this.dbdefault = dbdefault;
     this.increment = increment;
+    this.constraints = [];
     this.endpoints = [];
     this.table = table;
     this.injectedPartial = injectedPartial;
@@ -27,6 +29,8 @@ class Field extends Element {
     this.dbState = this.table.dbState;
     this.generateId();
     this.bindType();
+    
+    this.processConstraints(constraints);
   }
 
   generateId () {
@@ -91,6 +95,7 @@ class Field extends Element {
       dbdefault: this.dbdefault,
       increment: this.increment,
       injectedPartialId: this.injectedPartial?.id,
+      constraintIds: this.constraints.map((constraint) => constraint.id), 
     };
   }
 
@@ -101,6 +106,14 @@ class Field extends Element {
       ...this.exportChildIds(),
       ...this.exportParentIds(),
     };
+
+    this.constraints.forEach((constraint) => constraint.normalize(model));
+  }
+
+  processConstraints (constraints) {
+    constraints.forEach((constraint) => {
+      this.constraints.push(new Constraint({ ...constraint, table: this.table, column: this }));
+    });
   }
 }
 
