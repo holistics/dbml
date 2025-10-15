@@ -11,3 +11,7 @@ CREATE TABLE `User2` (
   `balance` int,
   CONSTRAINT `not_too_much_money` CHECK (balance < 10000000)
 );
+
+CREATE TABLE `User3` (
+  `balance` int CHECK ((balance > 0) AND (balance < 10000000))
+);

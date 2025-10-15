@@ -37,15 +37,15 @@ class MySQLExporter {
       if (field.increment) {
         line += ' AUTO_INCREMENT';
       }
-      if (field.constraints && field.constraints.length > 0) {
-        if (field.constraints.length === 1) {
-          const constraint = model.constraints[field.constraints[0]];
+      if (field.constraintIds && field.constraintIds.length > 0) {
+        if (field.constraintIds.length === 1) {
+          const constraint = model.constraints[field.constraintIds[0]];
           if (constraint.name) {
             line += ` CONSTRAINT \`${constraint.name}\``;
           }
           line += ` CHECK (${constraint.expression})`;
         } else {
-          const constraintExpressions = field.constraints.map(constraintId => {
+          const constraintExpressions = field.constraintIds.map(constraintId => {
             const constraint = model.constraints[constraintId];
             return `(${constraint.expression})`;
           });
