@@ -317,7 +317,7 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
         suggestions: [
           ...[
             SettingName.PK,
-            SettingName.PKey,
+            SettingName.PrimaryKey,
             SettingName.Null,
             SettingName.NotNull,
             SettingName.Increment,

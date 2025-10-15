@@ -260,7 +260,7 @@ export default class TablePartialValidator implements ElementValidator {
     });
 
     const pkAttrs = settingMap[SettingName.PK] || [];
-    const pkeyAttrs = settingMap[SettingName.PKey] || [];
+    const pkeyAttrs = settingMap[SettingName.PrimaryKey] || [];
     if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
       errors.push(...[...pkAttrs, ...pkeyAttrs].map((attr) => new CompileError(
         CompileErrorCode.DUPLICATE_COLUMN_SETTING,
@@ -290,7 +290,7 @@ export default class TablePartialValidator implements ElementValidator {
           });
           break;
 
-        case SettingName.PKey:
+        case SettingName.PrimaryKey:
           if (attrs.length > 1) {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, `'${name}' can only appear once`, attr)));
           }
