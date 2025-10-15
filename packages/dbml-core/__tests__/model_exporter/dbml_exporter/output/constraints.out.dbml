@@ -4,7 +4,7 @@ Table "User" {
   "email" TEXT
 
   Constraints {
-    `balance < 10000000` [name: 'not_too_much_money']
+    `balance < 10000000` [name: 'User.not_too_much_money']
     `LEN(name) < 256` [name: 'name_not_too_long']
     `REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')`
   }
@@ -14,7 +14,7 @@ Table "User2" {
   "balance" int
 
   Constraints {
-    `balance < 10000000` [name: 'not_too_much_money']
+    `balance < 10000000` [name: 'User2.not_too_much_money']
   }
 }
 
