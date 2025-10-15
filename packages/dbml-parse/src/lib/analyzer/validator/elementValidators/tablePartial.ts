@@ -8,6 +8,7 @@ import {
   ElementDeclarationNode,
   ExpressionNode,
   FunctionApplicationNode,
+  FunctionExpressionNode,
   ListExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
@@ -376,6 +377,14 @@ export default class TablePartialValidator implements ElementValidator {
                 `'${name}' must be a string literal, number literal, function expression, true, false or null`,
                 attr.value || attr.name!,
               ));
+            }
+          });
+          break;
+
+        case SettingName.Constraint:
+          attrs.forEach((attr) => {
+            if (!(attr.value instanceof FunctionExpressionNode)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'constraint\' must be a function expression', attr.value || attr.name!));
             }
           });
           break;
