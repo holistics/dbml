@@ -205,7 +205,7 @@ export class TableInterpreter implements ElementInterpreter {
     const settings = field.args.slice(1);
     if (last(settings) instanceof ListExpressionNode) {
       const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
-      column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PKey]?.length;
+      column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PrimaryKey]?.length;
       column.increment = !!settingMap[SettingName.Increment]?.length;
       column.unique = !!settingMap[SettingName.Unique]?.length;
       // eslint-disable-next-line no-nested-ternary

@@ -16,7 +16,7 @@ export enum SettingName {
   Note = 'note',
 
   PK = 'pk',
-  PKey = 'primary key',
+  PrimaryKey = 'primary key',
   Unique = 'unique',
   Ref = 'ref',
   NotNull = 'not null',
