@@ -197,6 +197,84 @@
         }
       ],
       "constraints": []
+    },
+    {
+      "name": "User3",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "balance",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 442,
+              "line": 28,
+              "column": 3
+            },
+            "end": {
+              "offset": 515,
+              "line": 28,
+              "column": 76
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "constraints": [
+            {
+              "token": {
+                "start": {
+                  "offset": 455,
+                  "line": 28,
+                  "column": 16
+                },
+                "end": {
+                  "offset": 480,
+                  "line": 28,
+                  "column": 41
+                }
+              },
+              "expression": "balance > 0"
+            },
+            {
+              "token": {
+                "start": {
+                  "offset": 482,
+                  "line": 28,
+                  "column": 43
+                },
+                "end": {
+                  "offset": 514,
+                  "line": 28,
+                  "column": 75
+                }
+              },
+              "expression": "balance < 10000000"
+            }
+          ]
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 426,
+          "line": 27,
+          "column": 1
+        },
+        "end": {
+          "offset": 517,
+          "line": 29,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "constraints": []
     }
   ],
   "notes": [],

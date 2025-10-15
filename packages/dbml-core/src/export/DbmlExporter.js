@@ -70,8 +70,8 @@ class DbmlExporter {
       if (field.increment) {
         constraints.push('increment');
       }
-      if (field.constraints) {
-        constraints.push(...field.constraints.map((cons) => `constraint: ${cons.expression}`));
+      if (field.constraintIds) {
+        constraints.push(...field.constraintIds.map((id) => `constraint: \`${model.constraints[id].expression}\``));
       }
       if (field.dbdefault) {
         let value = 'default: ';

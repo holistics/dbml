@@ -1,6 +1,6 @@
 Table "User" {
-  "balance" int
-  "name" TEXT
+  "balance" int [constraint: `balance > 0`]
+  "name" TEXT [constraint: `LEN(name) > 0`]
   "email" TEXT
 
   Constraints {
@@ -16,4 +16,8 @@ Table "User2" {
   Constraints {
     `balance < 10000000` [name: 'not_too_much_money']
   }
+}
+
+Table "User3" {
+  "balance" int [constraint: `balance > 0`, constraint: `balance < 10000000`]
 }
