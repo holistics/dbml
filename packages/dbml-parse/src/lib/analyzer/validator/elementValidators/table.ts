@@ -418,6 +418,8 @@ export default class TableValidator implements ElementValidator {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'constraint\' must be a function expression', attr.value || attr.name!));
             }
           });
+          break;
+
         default:
           attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
       }
