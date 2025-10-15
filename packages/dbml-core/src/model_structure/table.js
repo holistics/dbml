@@ -198,7 +198,12 @@ class Table extends Element {
       });
 
       tablePartial.constraints.forEach((constraint) => {
-        this.constraints.push(new Constraint({ ...constraint, table: this, injectedPartial: tablePartial }));
+        this.constraints.push(new Constraint({
+          ...constraint,
+          name: constraint.name && `${this.name}.${constraint.name}`, // deduplicate constraint names when instantiated to tables
+          table: this,
+          injectedPartial: tablePartial,
+        }));
       });
     });
   }
