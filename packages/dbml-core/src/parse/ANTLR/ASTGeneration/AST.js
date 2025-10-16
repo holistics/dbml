@@ -51,10 +51,11 @@ export class Field {
    *  dbdefault: {value: string, type: 'string' | 'number' | 'boolean' | 'expression'},
    *  unique: boolean,
    *  pk: boolean,
-   *  note: {value: string}
+   *  note: {value: string},
+   *  constraints: {expression: string, name?: string}[]
    * }} param0
    */
-  constructor ({ name, type, not_null, increment, dbdefault, unique, pk, note }) {
+  constructor ({ name, type, not_null, increment, dbdefault, unique, pk, note, constraints }) {
     /** @type {string} */
     this.name = name;
 
@@ -78,6 +79,9 @@ export class Field {
 
     /** @type {{value: string}} */
     this.note = note;
+
+    /** @type {{expression: string, name?: string}[]} */
+    this.constraints = constraints;
   }
 
   toJSON () {
@@ -90,6 +94,7 @@ export class Field {
       unique: this.unique,
       pk: this.pk,
       note: this.note,
+      constraints: this.constraints,
     };
   }
 }
@@ -101,10 +106,11 @@ export class Table {
    *  schemaName: string,
    *  fields: Field[],
    *  indexes: Index[],
-   *  note: {value: string}
+   *  note: {value: string},
+   *  constraints: {expression: string, name?: string}[]
    * }} param0
    */
-  constructor ({ name, schemaName, fields, indexes, note }) {
+  constructor ({ name, schemaName, fields, indexes, note, constraints }) {
     /** @type {string} */
     this.name = name;
 
@@ -119,6 +125,9 @@ export class Table {
 
     /** @type {{value: string}} */
     this.note = note;
+
+    /** @type {{expression: string, name?: string}[]} */
+    this.constraints = constraints || [];
   }
 
   toJSON () {
@@ -128,6 +137,7 @@ export class Table {
       fields: this.fields?.map(f => f.toJSON()),
       indexes: this.indexes?.map(i => i.toJSON()),
       note: this.note,
+      constraints: this.constraints,
     };
   }
 }
