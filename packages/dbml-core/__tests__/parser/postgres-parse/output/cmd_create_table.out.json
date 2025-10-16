@@ -15,7 +15,8 @@
             "type": "number"
           },
           "unique": true,
-          "pk": true
+          "pk": true,
+          "constraints": []
         },
         {
           "name": "name",
@@ -23,10 +24,16 @@
             "type_name": "varchar(255)",
             "schemaName": null
           },
-          "not_null": false
+          "not_null": false,
+          "constraints": [
+            {
+              "expression": "\"id\" > -1"
+            }
+          ]
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "constraints": []
     },
     {
       "name": "b",
@@ -36,7 +43,8 @@
           "type": {
             "type_name": "uuid",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "name",
@@ -44,14 +52,20 @@
             "type_name": "varchar",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "constraints": [
+            {
+              "expression": "name <> ''"
+            }
+          ]
         },
         {
           "name": "email",
           "type": {
             "type_name": "varchar(55)",
             "schemaName": null
-          }
+          },
+          "constraints": []
         }
       ],
       "indexes": [
@@ -74,7 +88,8 @@
             }
           ]
         }
-      ]
+      ],
+      "constraints": []
     },
     {
       "name": "c",
@@ -85,7 +100,8 @@
             "type_name": "CHARACTER VARYING(255)",
             "schemaName": null
           },
-          "unique": true
+          "unique": true,
+          "constraints": []
         },
         {
           "name": "phone",
@@ -93,17 +109,20 @@
             "type_name": "SERIAL",
             "schemaName": null
           },
-          "increment": true
+          "increment": true,
+          "constraints": []
         },
         {
           "name": "time",
           "type": {
             "type_name": "timestamp",
             "schemaName": null
-          }
+          },
+          "constraints": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "constraints": []
     },
     {
       "name": "circles",
@@ -113,10 +132,12 @@
           "type": {
             "type_name": "circle",
             "schemaName": null
-          }
+          },
+          "constraints": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "constraints": []
     },
     {
       "name": "foo",
@@ -126,108 +147,124 @@
           "type": {
             "type_name": "text[]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar2",
           "type": {
             "type_name": "int[1]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar3",
           "type": {
             "type_name": "int[2][3]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar4",
           "type": {
             "type_name": "int[]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar5",
           "type": {
             "type_name": "int[2]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar6",
           "type": {
             "type_name": "text[8]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar7",
           "type": {
             "type_name": "text[100]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar8",
           "type": {
             "type_name": "time(2)[]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar9",
           "type": {
             "type_name": "time(1)[1]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar10",
           "type": {
             "type_name": "time(1)[]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar11",
           "type": {
             "type_name": "time[5]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar12",
           "type": {
             "type_name": "timestamp(2)[10][2][5]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar13",
           "type": {
             "type_name": "character varying[]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar14",
           "type": {
             "type_name": "character varying(25)[][2][]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         },
         {
           "name": "bar15",
           "type": {
             "type_name": "character varying[76]",
             "schemaName": null
-          }
+          },
+          "constraints": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "constraints": []
     }
   ],
   "refs": [
@@ -276,5 +313,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "records": []
 }
