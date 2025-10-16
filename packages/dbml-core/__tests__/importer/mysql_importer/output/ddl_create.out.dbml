@@ -69,6 +69,10 @@ Table "parent_table" {
   "id" int [pk]
   "column1" varchar(30)
 
+  Constraints {
+    `char_length(column1)>10`
+  }
+
   Indexes {
     column1 [name: "parent_table_i1"]
   }
@@ -124,6 +128,10 @@ Table "dt_table" {
 Table "with_check" {
   "c1" integer [not null]
   "c2" varchar(22)
+
+  Constraints {
+    `c2 in ('a', 'b', 'c')` [name: 'c1']
+  }
 }
 
 Table "genvalue1" {
@@ -418,6 +426,10 @@ Table "T10" {
   "ID" BIGINT
   "S" VARCHAR(100)
   "I" INT
+
+  Constraints {
+    `ID < 5` [name: 'ABC']
+  }
 }
 
 Table "tbl_signed_unsigned" {
@@ -478,7 +490,7 @@ Table "\\test\\_table\\" {
 Table "global_priv" {
   "Host" CHAR(60) [not null, default: '']
   "User" CHAR(80) [not null, default: '']
-  "Privilege" LONGTEXT [not null, default: '{}']
+  "Privilege" LONGTEXT [not null, constraint: `json_valid(`Privilege`)`, default: '{}']
 
   Indexes {
     (Host, User) [pk]
@@ -488,6 +500,20 @@ Table "global_priv" {
 
 Table "geo" {
   "coordinate" JSON
+
+  Constraints {
+    `JSON_SCHEMA_VALID(
+           '{
+               "type":"object",
+               "properties":{
+                 "latitude":{"type":"number", "minimum":-90, "maximum":90},
+                 "longitude":{"type":"number", "minimum":-180, "maximum":180}
+               },
+               "required": ["latitude", "longitude"]
+           }',
+           coordinate
+        )`
+  }
 }
 
 Table "tab1" {
