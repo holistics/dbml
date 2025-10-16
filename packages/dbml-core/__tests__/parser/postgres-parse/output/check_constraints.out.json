@@ -1,0 +1,493 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "products",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "decimal(10,4)",
+            "schemaName": null
+          },
+          "constraints": [
+            {
+              "expression": "price > 0"
+            }
+          ]
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "constraints": [
+            {
+              "expression": "quantity >= 0"
+            }
+          ]
+        },
+        {
+          "name": "discount",
+          "type": {
+            "type_name": "decimal(5,2)",
+            "schemaName": null
+          },
+          "constraints": [
+            {
+              "expression": "discount >= 0 AND discount <= 100"
+            }
+          ]
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "varchar(20)",
+            "schemaName": null
+          },
+          "constraints": [
+            {
+              "expression": "status IN ('active', 'inactive', 'pending')"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "constraints": []
+    },
+    {
+      "name": "orders",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "order_date",
+          "type": {
+            "type_name": "timestamp",
+            "schemaName": null
+          },
+          "constraints": []
+        },
+        {
+          "name": "delivery_date",
+          "type": {
+            "type_name": "timestamp",
+            "schemaName": null
+          },
+          "constraints": []
+        },
+        {
+          "name": "total",
+          "type": {
+            "type_name": "decimal(10,2)",
+            "schemaName": null
+          },
+          "constraints": []
+        }
+      ],
+      "indexes": [],
+      "constraints": [
+        {
+          "expression": "delivery_date > order_date"
+        },
+        {
+          "expression": "total >= 0"
+        }
+      ]
+    },
+    {
+      "name": "employees",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "age",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "constraints": []
+        },
+        {
+          "name": "salary",
+          "type": {
+            "type_name": "decimal(10,2)",
+            "schemaName": null
+          },
+          "constraints": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null
+          },
+          "constraints": []
+        }
+      ],
+      "indexes": [],
+      "constraints": [
+        {
+          "expression": "age >= 18 AND age <= 65",
+          "name": "chk_age"
+        },
+        {
+          "expression": "salary > 0",
+          "name": "chk_salary"
+        }
+      ]
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "stock",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "constraints": [
+            {
+              "expression": "stock >= 0"
+            },
+            {
+              "expression": "stock <= 10000"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "constraints": []
+    },
+    {
+      "name": "users",
+      "fields": [
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "varchar(50)",
+            "schemaName": null
+          },
+          "constraints": []
+        },
+        {
+          "name": "role",
+          "type": {
+            "type_name": "varchar(20)",
+            "schemaName": null
+          },
+          "constraints": [
+            {
+              "expression": "role NOT IN ('banned', 'suspended')"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "constraints": []
+    },
+    {
+      "name": "accounts",
+      "fields": [
+        {
+          "name": "account_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "balance",
+          "type": {
+            "type_name": "decimal(15,2)",
+            "schemaName": null
+          },
+          "constraints": []
+        }
+      ],
+      "indexes": [],
+      "constraints": [
+        {
+          "expression": "balance >= 0",
+          "name": "chk_balance_positive"
+        },
+        {
+          "expression": "balance <= 1000000"
+        }
+      ]
+    },
+    {
+      "name": "transactions",
+      "fields": [
+        {
+          "name": "txn_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "decimal(10,2)",
+            "schemaName": null
+          },
+          "constraints": []
+        },
+        {
+          "name": "fee",
+          "type": {
+            "type_name": "decimal(10,2)",
+            "schemaName": null
+          },
+          "constraints": []
+        },
+        {
+          "name": "type",
+          "type": {
+            "type_name": "varchar(20)",
+            "schemaName": null
+          },
+          "constraints": []
+        }
+      ],
+      "indexes": [],
+      "constraints": [
+        {
+          "expression": "amount + fee > 0"
+        },
+        {
+          "expression": "type IN ('debit', 'credit')"
+        }
+      ]
+    },
+    {
+      "name": "settings",
+      "fields": [
+        {
+          "name": "setting_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "constraints": []
+        }
+      ],
+      "indexes": [],
+      "constraints": [
+        {
+          "expression": "value = 0 OR value = 1 OR value = -1"
+        }
+      ]
+    },
+    {
+      "name": "contacts",
+      "fields": [
+        {
+          "name": "contact_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null
+          },
+          "constraints": [
+            {
+              "expression": "email LIKE '%@%.%'"
+            }
+          ]
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "varchar(20)",
+            "schemaName": null
+          },
+          "constraints": [
+            {
+              "expression": "phone ~ '^[0-9]{3}-[0-9]{3}-[0-9]{4}$'"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "constraints": []
+    },
+    {
+      "name": "ranges",
+      "fields": [
+        {
+          "name": "range_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "min_val",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "constraints": []
+        },
+        {
+          "name": "max_val",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "constraints": []
+        }
+      ],
+      "indexes": [],
+      "constraints": [
+        {
+          "expression": "(min_val >= 0) AND (max_val <= 100) AND (min_val < max_val)"
+        }
+      ]
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "shipment_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "varchar(20)",
+            "schemaName": null
+          },
+          "constraints": []
+        },
+        {
+          "name": "carrier",
+          "type": {
+            "type_name": "varchar(50)",
+            "schemaName": null
+          },
+          "constraints": []
+        }
+      ],
+      "indexes": [],
+      "constraints": [
+        {
+          "expression": "priority IN ('low', 'medium', 'high', 'urgent')"
+        }
+      ]
+    },
+    {
+      "name": "workflow",
+      "fields": [
+        {
+          "name": "workflow_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null
+          },
+          "pk": true,
+          "constraints": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "varchar(20)",
+            "schemaName": null
+          },
+          "constraints": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "varchar(50)",
+            "schemaName": null
+          },
+          "constraints": []
+        }
+      ],
+      "indexes": [],
+      "constraints": [
+        {
+          "expression": "status IN ('draft', 'pending') AND status IN ('active', 'inactive')"
+        }
+      ]
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}
