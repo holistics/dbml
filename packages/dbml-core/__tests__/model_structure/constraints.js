@@ -28,7 +28,7 @@ describe('@dbml/core - model_structure', () => {
 
         expect(table.constraints.length).toEqual(3);
 
-        expect(table.constraints[0].name).toEqual('not_too_much_money');
+        expect(table.constraints[0].name).toEqual('User.not_too_much_money');
         expect(table.constraints[0].expression).toEqual('balance < 10000000');
         expect(table.constraints[0].table).toEqual(table);
         expect(table.constraints[0].injectedPartial).toEqual(database.tablePartials[0]);
@@ -58,7 +58,7 @@ describe('@dbml/core - model_structure', () => {
 
         expect(table.constraints.length).toEqual(1);
 
-        expect(table.constraints[0].name).toEqual('not_too_much_money');
+        expect(table.constraints[0].name).toEqual('User2.not_too_much_money');
         expect(table.constraints[0].expression).toEqual('balance < 10000000');
         expect(table.constraints[0].table).toEqual(table);
         expect(table.constraints[0].injectedPartial).toEqual(database.tablePartials[0]);
