@@ -8,6 +8,7 @@ import {
 import {
   TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE,
 } from '../constants';
+import { getOriginalText } from '../helpers';
 
 const TABLE_OPTIONS_KIND = {
   NOTE: 'note',
@@ -16,6 +17,7 @@ const TABLE_OPTIONS_KIND = {
 const ALTER_KIND = {
   ADD_PK: 'add_pk',
   ADD_FK: 'add_fk',
+  ADD_CHECK: 'add_check',
 };
 
 const INDEX_OPTION_KIND = {
@@ -109,11 +111,12 @@ export default class MySQLASTGen extends MySQLParserVisitor {
         options,
       } = createTableResult;
 
-      const [fieldsData, indexes, tableRefs, singlePkIndex] = definitions.reduce((acc, ele) => {
+      const [fieldsData, indexes, tableRefs, singlePkIndex, tableConstraints] = definitions.reduce((acc, ele) => {
         if (ele.kind === TABLE_CONSTRAINT_KIND.FIELD) acc[0].push(ele.value);
         else if (ele.kind === TABLE_CONSTRAINT_KIND.INDEX) acc[1].push(ele.value);
         else if (ele.kind === TABLE_CONSTRAINT_KIND.UNIQUE) acc[1].push(ele.value);
         else if (ele.kind === TABLE_CONSTRAINT_KIND.FK) acc[2].push(ele.value);
+        else if (ele.kind === TABLE_CONSTRAINT_KIND.CHECK) acc[4].push(ele.value);
         else if (ele.kind === TABLE_CONSTRAINT_KIND.PK) {
           /** @type {Index} */
           const index = ele.value;
@@ -121,7 +124,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
           else acc[3] = index;
         }
         return acc;
-      }, [[], [], [], null]);
+      }, [[], [], [], null, []]);
 
       const inlineRefsOfFields = fieldsData.map(fieldData => {
         const { field, inlineRefs } = fieldData;
@@ -172,6 +175,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
         schemaName,
         fields: fieldsData.map(fd => fd.field),
         indexes,
+        constraints: tableConstraints,
         ...tableOptions,
       });
 
@@ -337,7 +341,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   visitColumnDefinition (ctx) {
     const type = ctx.dataType().accept(this);
 
-    const constraints = { inlineRefs: [] };
+    const constraints = { inlineRefs: [], constraints: [] };
 
     ctx.columnConstraint().forEach(c => {
       const constraint = c.accept(this);
@@ -345,6 +349,11 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
       if (constraint.kind === COLUMN_CONSTRAINT_KIND.INLINE_REF) {
         constraints.inlineRefs.push(constraint.value);
+        return;
+      }
+
+      if (constraint.kind === COLUMN_CONSTRAINT_KIND.CHECK) {
+        constraints.constraints.push(constraint.value);
         return;
       }
 
@@ -567,6 +576,19 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     return {
       kind: COLUMN_CONSTRAINT_KIND.INLINE_REF,
       value,
+    };
+  }
+
+  // checkColumnConstraint: (CONSTRAINT name = uid?)? CHECK '(' expression ')'
+  visitCheckColumnConstraint (ctx) {
+    const name = ctx.name?.accept(this);
+    const expression = getOriginalText(ctx.expression());
+    return {
+      kind: COLUMN_CONSTRAINT_KIND.CHECK,
+      value: {
+        expression,
+        name,
+      },
     };
   }
 
@@ -819,8 +841,17 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     };
   }
 
-  visitCheckTableConstraint () {
-    // ignored
+  // checkTableConstraint: (CONSTRAINT name = uid?)? CHECK '(' expression ')'
+  visitCheckTableConstraint (ctx) {
+    const name = ctx.name?.accept(this);
+    const expression = getOriginalText(ctx.expression());
+    return {
+      kind: TABLE_CONSTRAINT_KIND.CHECK,
+      value: {
+        expression,
+        name,
+      },
+    };
   }
 
   // USING (BTREE | HASH)
@@ -915,6 +946,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
         ref.endpoints[0].tableName = tableName;
 
         this.data.refs.push(ref);
+      } else if (alter.kind === ALTER_KIND.ADD_CHECK) {
+        table.constraints.push(alter.value);
       }
       return null;
     });
@@ -957,6 +990,19 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     return {
       kind: ALTER_KIND.ADD_FK,
       value: ref,
+    };
+  }
+
+  // ADD (CONSTRAINT name = uid?)? CHECK '(' expression ')'
+  visitAlterByAddCheckTableConstraint (ctx) {
+    const name = ctx.name?.accept(this);
+    const expression = getOriginalText(ctx.expression());
+    return {
+      kind: ALTER_KIND.ADD_CHECK,
+      value: {
+        expression,
+        name,
+      },
     };
   }
 

@@ -5,6 +5,7 @@ export const TABLE_CONSTRAINT_KIND = {
   UNIQUE: 'unique',
   PK: 'pk',
   DEFAULT: 'default',
+  CHECK: 'check',
 };
 
 export const COLUMN_CONSTRAINT_KIND = {
