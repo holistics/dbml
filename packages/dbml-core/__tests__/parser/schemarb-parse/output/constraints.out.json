@@ -1,0 +1,678 @@
+{
+  "tables": [
+    {
+      "name": "products",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "decimal"
+          }
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "discount",
+          "type": {
+            "type_name": "decimal"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "price > 0",
+          "name": "price_positive"
+        },
+        {
+          "expression": "quantity >= 0"
+        }
+      ]
+    },
+    {
+      "name": "employees",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "age",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "salary",
+          "type": {
+            "type_name": "decimal"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "age >= 18 AND age <= 65",
+          "name": "chk_age"
+        },
+        {
+          "expression": "salary > 0",
+          "name": "chk_salary"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "order_date",
+          "type": {
+            "type_name": "timestamp"
+          }
+        },
+        {
+          "name": "delivery_date",
+          "type": {
+            "type_name": "timestamp"
+          }
+        },
+        {
+          "name": "total",
+          "type": {
+            "type_name": "decimal"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "delivery_date > order_date"
+        },
+        {
+          "expression": "total >= 0"
+        }
+      ]
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "shipment_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "weight",
+          "type": {
+            "type_name": "decimal"
+          }
+        },
+        {
+          "name": "cost",
+          "type": {
+            "type_name": "decimal"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "weight > 0",
+          "name": "chk_weight"
+        },
+        {
+          "expression": "cost >= 0",
+          "name": "chk_cost"
+        }
+      ]
+    },
+    {
+      "name": "payments",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "payment_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "decimal"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "amount > 0"
+        }
+      ]
+    },
+    {
+      "name": "users",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "role",
+          "type": {
+            "type_name": "string"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "role NOT IN ('banned', 'deleted', 'suspended')"
+        }
+      ]
+    },
+    {
+      "name": "ranges",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "range_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "min_val",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "max_val",
+          "type": {
+            "type_name": "integer"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "(min_val >= 0) AND (max_val <= 100) AND (min_val < max_val)"
+        }
+      ]
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "stock",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "string"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "CASE WHEN status = 'active' THEN stock WHEN status = 'discontinued' THEN 0 ELSE 1 END >= 0"
+        }
+      ]
+    },
+    {
+      "name": "accounts",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "account_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "balance",
+          "type": {
+            "type_name": "decimal"
+          }
+        },
+        {
+          "name": "overdraft_limit",
+          "type": {
+            "type_name": "decimal"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "balance + overdraft_limit >= 0",
+          "name": "chk_balance_overdraft"
+        }
+      ]
+    },
+    {
+      "name": "transactions",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "txn_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "decimal"
+          }
+        },
+        {
+          "name": "fee",
+          "type": {
+            "type_name": "decimal"
+          }
+        },
+        {
+          "name": "total",
+          "type": {
+            "type_name": "decimal"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "total = amount + fee"
+        },
+        {
+          "expression": "amount > 0 OR fee > 0"
+        }
+      ]
+    },
+    {
+      "name": "contacts",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "contact_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "string"
+          }
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "string"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "email LIKE '%@%'"
+        }
+      ]
+    },
+    {
+      "name": "settings",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "setting_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "integer"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "value = 0 OR value = 1 OR value = -1"
+        }
+      ]
+    },
+    {
+      "name": "pricing",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "price_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "base_price",
+          "type": {
+            "type_name": "decimal"
+          }
+        },
+        {
+          "name": "discount_pct",
+          "type": {
+            "type_name": "decimal"
+          }
+        },
+        {
+          "name": "final_price",
+          "type": {
+            "type_name": "decimal"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "final_price = base_price * (1 - discount_pct / 100)"
+        }
+      ]
+    },
+    {
+      "name": "limits",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "varchar"
+          }
+        },
+        {
+          "name": "limit_id",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "min_value",
+          "type": {
+            "type_name": "integer"
+          }
+        },
+        {
+          "name": "max_value",
+          "type": {
+            "type_name": "integer"
+          }
+        }
+      ],
+      "constraints": [
+        {
+          "expression": "max_value > min_value"
+        },
+        {
+          "expression": "min_value >= 0",
+          "name": "chk_min_positive"
+        }
+      ]
+    }
+  ],
+  "refs": [
+    {
+      "name": "fk_rails_orders_orders",
+      "endpoints": [
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "1"
+        },
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_rails_shipments_shipments",
+      "endpoints": [
+        {
+          "tableName": "shipments",
+          "fieldNames": [
+            "shipment_id"
+          ],
+          "relation": "1"
+        },
+        {
+          "tableName": "shipments",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_rails_payments_payments",
+      "endpoints": [
+        {
+          "tableName": "payments",
+          "fieldNames": [
+            "payment_id"
+          ],
+          "relation": "1"
+        },
+        {
+          "tableName": "payments",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_rails_users_users",
+      "endpoints": [
+        {
+          "tableName": "users",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "1"
+        },
+        {
+          "tableName": "users",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_rails_ranges_ranges",
+      "endpoints": [
+        {
+          "tableName": "ranges",
+          "fieldNames": [
+            "range_id"
+          ],
+          "relation": "1"
+        },
+        {
+          "tableName": "ranges",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_rails_accounts_accounts",
+      "endpoints": [
+        {
+          "tableName": "accounts",
+          "fieldNames": [
+            "account_id"
+          ],
+          "relation": "1"
+        },
+        {
+          "tableName": "accounts",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_rails_contacts_contacts",
+      "endpoints": [
+        {
+          "tableName": "contacts",
+          "fieldNames": [
+            "contact_id"
+          ],
+          "relation": "1"
+        },
+        {
+          "tableName": "contacts",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_rails_settings_settings",
+      "endpoints": [
+        {
+          "tableName": "settings",
+          "fieldNames": [
+            "setting_id"
+          ],
+          "relation": "1"
+        },
+        {
+          "tableName": "settings",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_rails_limits_limits",
+      "endpoints": [
+        {
+          "tableName": "limits",
+          "fieldNames": [
+            "limit_id"
+          ],
+          "relation": "1"
+        },
+        {
+          "tableName": "limits",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    }
+  ]
+}
