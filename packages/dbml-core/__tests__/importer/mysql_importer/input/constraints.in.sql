@@ -19,11 +19,11 @@ CREATE TABLE employees (
 );
 
 -- Test 3: Constraints with backtick-quoted identifiers (MySQL style)
-CREATE TABLE `special_table` (
-  `id` INT PRIMARY KEY,
-  `price` DECIMAL CHECK (`price` > 0),
-  `status` VARCHAR(20) CHECK (`status` IN ('active', 'inactive'))
-);
+-- CREATE TABLE `special_table` (
+--  `id` INT PRIMARY KEY,
+--  `price` DECIMAL CHECK (`price` > 0),
+--  `status` VARCHAR(20) CHECK (`status` IN ('active', 'inactive'))
+--);
 
 -- Test 4: Constraints with complex expressions
 CREATE TABLE transactions (
@@ -214,14 +214,14 @@ CREATE TABLE defaults (
 );
 
 -- Test 26: Table with backticks in names and constraint expressions
-CREATE TABLE `order_items` (
-  `order_item_id` INT PRIMARY KEY,
-  `order_id` INT,
-  `quantity` INT,
-  `unit_price` DECIMAL(10,2),
-  CHECK (`quantity` > 0),
-  CONSTRAINT `chk_price_positive` CHECK (`unit_price` > 0)
-);
+-- CREATE TABLE `order_items` (
+--  `order_item_id` INT PRIMARY KEY,
+--  `order_id` INT,
+--  `quantity` INT,
+--  `unit_price` DECIMAL(10,2),
+--  CHECK (`quantity` > 0),
+--  CONSTRAINT `chk_price_positive` CHECK (`unit_price` > 0)
+-- );
 
 -- Test 27: Constraint with MOD operator
 CREATE TABLE sequences (

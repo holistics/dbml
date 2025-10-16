@@ -18,7 +18,7 @@ CREATE TABLE employees (
   CONSTRAINT chk_salary CHECK (salary > 0)
 );
 
--- Test 3: Constraints with backtick-quoted identifiers (should be preserved)
+-- Test 3: Constraints with quoted identifiers (should be preserved)
 CREATE TABLE "special_table" (
   "id" INT PRIMARY KEY,
   "price" DECIMAL CHECK ("price" > 0),
