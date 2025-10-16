@@ -5401,7 +5401,7 @@ plsql_unreserved_keyword
    //| COLUMN_NAME
    | COMMIT
    | CONSTANT
-   | CONSTRAINT
+   //| CONSTRAINT
    //| CONSTRAINT_NAME
    | CONTINUE_P
    | CURRENT_P
