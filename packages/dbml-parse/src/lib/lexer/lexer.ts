@@ -478,6 +478,8 @@ export default class Lexer {
         return "'";
       case '"':
         return '"';
+      case '`':
+        return '`';
       case '0':
         return '\0';
       case 'b':

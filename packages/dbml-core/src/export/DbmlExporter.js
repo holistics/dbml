@@ -29,6 +29,14 @@ class DbmlExporter {
     return `'''${newStr}'''`;
   }
 
+  static escapeFunctionExpression (str) {
+    if (str === null) {
+      return '';
+    }
+    newStr = newStr.replaceAll("`", "\\`");
+    return newStr;
+  }
+
   static exportEnums (enumIds, model) {
     const enumStrs = enumIds.map(enumId => {
       const _enum = model.enums[enumId];
@@ -71,7 +79,7 @@ class DbmlExporter {
         constraints.push('increment');
       }
       if (field.constraintIds) {
-        constraints.push(...field.constraintIds.map((id) => `constraint: \`${model.constraints[id].expression}\``));
+        constraints.push(...field.constraintIds.map((id) => `constraint: \`${DbmlExporter.escapeFunctionExpression(model.constraints[id].expression)}\``));
       }
       if (field.dbdefault) {
         let value = 'default: ';
@@ -88,7 +96,7 @@ class DbmlExporter {
           }
 
           case 'expression':
-            value += `\`${field.dbdefault.value}\``;
+            value += `\`${this.escapeFunctionExpression(field.dbdefault.value)}\``;
             break;
 
           default:
@@ -120,14 +128,14 @@ class DbmlExporter {
         line = `(${index.columnIds.map((columnId) => {
           const column = model.indexColumns[columnId];
           if (column.type === 'expression') {
-            return `\`${column.value}\``;
+            return `\`${DbmlExporter.escapeFunctionExpression(column.value.toString())}\``;
           }
           return column.value;
         }).join(', ')})`;
       } else if (index.columnIds.length === 1) {
         const column = model.indexColumns[index.columnIds[0]];
         line = column.type === 'expression'
-          ? `\`${column.value}\`` : column.value;
+          ? `\`${DbmlExporter.escapeFunctionExpression(column.value.toString())}\`` : column.value;
       }
 
       const indexSettings = [];
@@ -161,7 +169,7 @@ class DbmlExporter {
     const lines = table.constraintIds.map((constraintId) => {
       let line = '';
       const { expression, name } = model.constraints[constraintId];
-      line += `\`${expression}\``;
+      line += `\`${DbmlExporter.escapeFunctionExpression(expression)}\``;
       if (name) {
         line += ` [name: '${name}']`
       }
