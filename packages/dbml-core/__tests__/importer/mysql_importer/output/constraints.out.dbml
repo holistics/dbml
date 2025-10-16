@@ -16,12 +16,6 @@ Table "employees" {
   }
 }
 
-Table "special_table" {
-  "id" INT [pk]
-  "price" DECIMAL [constraint: `\`price\` > 0`]
-  "status" VARCHAR(20) [constraint: `\`status\` IN ('active', 'inactive')`]
-}
-
 Table "transactions" {
   "txn_id" INT [pk]
   "amount" DECIMAL(10,2)
@@ -237,18 +231,6 @@ Table "defaults" {
 
   Constraints {
     `IFNULL(value1, 0) + IFNULL(value2, 0) > 0`
-  }
-}
-
-Table "order_items" {
-  "order_item_id" INT [pk]
-  "order_id" INT
-  "quantity" INT
-  "unit_price" DECIMAL(10,2)
-
-  Constraints {
-    `\`quantity\` > 0`
-    `\`unit_price\` > 0` [name: 'chk_price_positive']
   }
 }
 

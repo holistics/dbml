@@ -503,137 +503,51 @@
         "column": 0
       },
       "endPos": {
-        "offset": 249,
-        "line": 14,
-        "column": 23
+        "offset": 250,
+        "line": 17,
+        "column": 1
       },
-      "value": "This is single line \\",
+      "value": "This is single line\n\n\n",
       "leadingTrivia": [],
       "trailingTrivia": [
         {
-          "kind": "<space>",
+          "kind": "<newline>",
           "startPos": {
-            "offset": 249,
-            "line": 14,
-            "column": 23
+            "offset": 250,
+            "line": 17,
+            "column": 1
           },
           "endPos": {
-            "offset": 250,
-            "line": 14,
-            "column": 24
+            "offset": 251,
+            "line": 18,
+            "column": 0
           },
-          "value": " ",
+          "value": "\n",
           "leadingTrivia": [],
           "trailingTrivia": [],
           "leadingInvalid": [],
           "trailingInvalid": [],
           "isInvalid": false,
-          "start": 249,
-          "end": 250
+          "start": 250,
+          "end": 251
         }
       ],
       "leadingInvalid": [],
-      "trailingInvalid": [
-        {
-          "kind": "<op>",
-          "startPos": {
-            "offset": 250,
-            "line": 14,
-            "column": 24
-          },
-          "endPos": {
-            "offset": 251,
-            "line": 14,
-            "column": 25
-          },
-          "value": "\\",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": true,
-          "start": 250,
-          "end": 251
-        },
-        {
-          "kind": "<op>",
-          "startPos": {
-            "offset": 251,
-            "line": 14,
-            "column": 25
-          },
-          "endPos": {
-            "offset": 252,
-            "line": 14,
-            "column": 26
-          },
-          "value": "\\",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": true,
-          "start": 251,
-          "end": 252
-        },
-        {
-          "kind": "<function-expression>",
-          "startPos": {
-            "offset": 252,
-            "line": 14,
-            "column": 26
-          },
-          "endPos": {
-            "offset": 253,
-            "line": 14,
-            "column": 27
-          },
-          "value": "`",
-          "leadingTrivia": [],
-          "trailingTrivia": [
-            {
-              "kind": "<newline>",
-              "startPos": {
-                "offset": 253,
-                "line": 14,
-                "column": 27
-              },
-              "endPos": {
-                "offset": 254,
-                "line": 15,
-                "column": 0
-              },
-              "value": "\n",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 253,
-              "end": 254
-            }
-          ],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": true,
-          "start": 252,
-          "end": 253
-        }
-      ],
+      "trailingInvalid": [],
       "isInvalid": false,
       "start": 226,
-      "end": 249
+      "end": 250
     },
     {
       "kind": "<eof>",
       "startPos": {
-        "offset": 254,
-        "line": 15,
+        "offset": 251,
+        "line": 18,
         "column": 0
       },
       "endPos": {
-        "offset": 254,
-        "line": 15,
+        "offset": 251,
+        "line": 18,
         "column": 0
       },
       "value": "",
@@ -642,116 +556,9 @@
       "leadingInvalid": [],
       "trailingInvalid": [],
       "isInvalid": false,
-      "start": 254,
-      "end": 254
+      "start": 251,
+      "end": 251
     }
   ],
-  "errors": [
-    {
-      "code": 1000,
-      "diagnostic": "Unexpected token '\\'",
-      "nodeOrToken": {
-        "kind": "<op>",
-        "startPos": {
-          "offset": 250,
-          "line": 14,
-          "column": 24
-        },
-        "endPos": {
-          "offset": 251,
-          "line": 14,
-          "column": 25
-        },
-        "value": "\\",
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": [],
-        "isInvalid": true,
-        "start": 250,
-        "end": 251
-      },
-      "start": 250,
-      "end": 251,
-      "name": "CompileError"
-    },
-    {
-      "code": 1000,
-      "diagnostic": "Unexpected token '\\'",
-      "nodeOrToken": {
-        "kind": "<op>",
-        "startPos": {
-          "offset": 251,
-          "line": 14,
-          "column": 25
-        },
-        "endPos": {
-          "offset": 252,
-          "line": 14,
-          "column": 26
-        },
-        "value": "\\",
-        "leadingTrivia": [],
-        "trailingTrivia": [],
-        "leadingInvalid": [],
-        "trailingInvalid": [],
-        "isInvalid": true,
-        "start": 251,
-        "end": 252
-      },
-      "start": 251,
-      "end": 252,
-      "name": "CompileError"
-    },
-    {
-      "code": 1003,
-      "diagnostic": "Invalid newline encountered while parsing",
-      "nodeOrToken": {
-        "kind": "<function-expression>",
-        "startPos": {
-          "offset": 252,
-          "line": 14,
-          "column": 26
-        },
-        "endPos": {
-          "offset": 253,
-          "line": 14,
-          "column": 27
-        },
-        "value": "`",
-        "leadingTrivia": [],
-        "trailingTrivia": [
-          {
-            "kind": "<newline>",
-            "startPos": {
-              "offset": 253,
-              "line": 14,
-              "column": 27
-            },
-            "endPos": {
-              "offset": 254,
-              "line": 15,
-              "column": 0
-            },
-            "value": "\n",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 253,
-            "end": 254
-          }
-        ],
-        "leadingInvalid": [],
-        "trailingInvalid": [],
-        "isInvalid": true,
-        "start": 252,
-        "end": 253
-      },
-      "start": 252,
-      "end": 253,
-      "name": "CompileError"
-    }
-  ]
+  "errors": []
 }

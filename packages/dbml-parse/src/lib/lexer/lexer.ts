@@ -330,7 +330,7 @@ export default class Lexer {
 
   functionExpression() {
     this.consumeUntil(SyntaxTokenKind.FUNCTION_EXPRESSION, '`', {
-      allowNewline: false,
+      allowNewline: true,
       allowEof: false,
       raw: true,
     });
