@@ -11,6 +11,7 @@ import { NormalizedEnumValue } from './enumValue';
 import { NormalizedField } from './field';
 import { NormalizedIndexColumn } from './indexColumn';
 import { NormalizedIndex } from './indexes';
+import { NormalizedConstraint } from './constraint';
 import TablePartial, { NormalizedTablePartial } from './tablePartial';
 export interface Project {
     note: RawNote;
@@ -299,6 +300,7 @@ export interface NormalizedDatabase {
     enumValues: NormalizedEnumValue;
     indexes: NormalizedIndex;
     indexColumns: NormalizedIndexColumn;
+    constraints: NormalizedConstraint;
     fields: NormalizedField;
     records: NormalizedRecords;
     tablePartials: NormalizedTablePartial;
