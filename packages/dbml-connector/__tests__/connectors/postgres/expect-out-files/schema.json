@@ -1547,73 +1547,309 @@
   },
   "tableConstraints": {
     "public.all_default_values": {
-      "id": {
-        "pk": true
-      }
+      "fields": {
+        "id": {
+          "checks": [],
+          "pk": true
+        }
+      },
+      "checks": [
+        {
+          "name": "all_default_values_id_not_null",
+          "expression": "id IS NOT NULL"
+        }
+      ]
     },
     "public.books": {
-      "bookid": {
-        "pk": true
+      "fields": {
+        "bookid": {
+          "checks": [],
+          "pk": true
+        },
+        "isbn": {
+          "checks": [],
+          "unique": true
+        }
       },
-      "isbn": {
-        "unique": true
-      }
+      "checks": [
+        {
+          "name": "books_bookid_not_null",
+          "expression": "bookid IS NOT NULL"
+        }
+      ]
     },
     "public.order_items": {
-      "order_item_id": {
-        "pk": true
-      }
+      "fields": {
+        "order_item_id": {
+          "checks": [],
+          "pk": true
+        }
+      },
+      "checks": [
+        {
+          "name": "chk_unit_price_positive",
+          "expression": "(unit_price > (0)::numeric)"
+        },
+        {
+          "name": "chk_quantity_positive",
+          "expression": "(quantity > 0)"
+        },
+        {
+          "name": "order_items_order_item_id_not_null",
+          "expression": "order_item_id IS NOT NULL"
+        },
+        {
+          "name": "order_items_order_id_not_null",
+          "expression": "order_id IS NOT NULL"
+        },
+        {
+          "name": "order_items_product_id_not_null",
+          "expression": "product_id IS NOT NULL"
+        },
+        {
+          "name": "order_items_quantity_not_null",
+          "expression": "quantity IS NOT NULL"
+        },
+        {
+          "name": "order_items_unit_price_not_null",
+          "expression": "unit_price IS NOT NULL"
+        }
+      ]
     },
     "public.orders": {
-      "order_id": {
-        "pk": true
-      }
+      "fields": {
+        "order_id": {
+          "checks": [],
+          "pk": true
+        }
+      },
+      "checks": [
+        {
+          "name": "chk_status",
+          "expression": "((status)::text = ANY ((ARRAY['pending'::character varying, 'processing'::character varying, 'shipped'::character varying, 'delivered'::character varying, 'cancelled'::character varying])::text[]))"
+        },
+        {
+          "name": "chk_total_amount_positive",
+          "expression": "(total_amount > (0)::numeric)"
+        },
+        {
+          "name": "orders_order_id_not_null",
+          "expression": "order_id IS NOT NULL"
+        },
+        {
+          "name": "orders_user_id_not_null",
+          "expression": "user_id IS NOT NULL"
+        },
+        {
+          "name": "orders_total_amount_not_null",
+          "expression": "total_amount IS NOT NULL"
+        },
+        {
+          "name": "orders_shipping_address_not_null",
+          "expression": "shipping_address IS NOT NULL"
+        },
+        {
+          "name": "orders_billing_address_not_null",
+          "expression": "billing_address IS NOT NULL"
+        }
+      ]
     },
     "public.products": {
-      "product_id": {
-        "pk": true
-      }
+      "fields": {
+        "product_id": {
+          "checks": [],
+          "pk": true
+        }
+      },
+      "checks": [
+        {
+          "name": "chk_stock_non_negative",
+          "expression": "(stock_quantity >= 0)"
+        },
+        {
+          "name": "chk_price_positive",
+          "expression": "(price > (0)::numeric)"
+        },
+        {
+          "name": "products_product_id_not_null",
+          "expression": "product_id IS NOT NULL"
+        },
+        {
+          "name": "products_name_not_null",
+          "expression": "name IS NOT NULL"
+        },
+        {
+          "name": "products_price_not_null",
+          "expression": "price IS NOT NULL"
+        },
+        {
+          "name": "products_stock_quantity_not_null",
+          "expression": "stock_quantity IS NOT NULL"
+        }
+      ]
     },
     "public.table1": {
-      "id": {
-        "pk": true
-      }
+      "fields": {
+        "id": {
+          "checks": [],
+          "pk": true
+        }
+      },
+      "checks": [
+        {
+          "name": "table1_id_not_null",
+          "expression": "id IS NOT NULL"
+        },
+        {
+          "name": "table1_id_not_null",
+          "expression": "id IS NOT NULL"
+        }
+      ]
     },
     "dbml_test.table1": {
-      "id": {
-        "pk": true
-      }
+      "fields": {
+        "id": {
+          "checks": [],
+          "pk": true
+        }
+      },
+      "checks": [
+        {
+          "name": "table1_id_not_null",
+          "expression": "id IS NOT NULL"
+        },
+        {
+          "name": "table1_id_not_null",
+          "expression": "id IS NOT NULL"
+        }
+      ]
     },
     "public.table2": {
-      "id": {
-        "pk": true
-      }
+      "fields": {
+        "id": {
+          "checks": [],
+          "pk": true
+        }
+      },
+      "checks": [
+        {
+          "name": "table2_id_not_null",
+          "expression": "id IS NOT NULL"
+        }
+      ]
     },
     "dbml_test.table3": {
-      "id": {
-        "pk": true
-      }
+      "fields": {
+        "id": {
+          "checks": [],
+          "pk": true
+        }
+      },
+      "checks": [
+        {
+          "name": "table3_id_not_null",
+          "expression": "id IS NOT NULL"
+        }
+      ]
     },
     "public.table_with_comments": {
-      "id": {
-        "pk": true
-      }
+      "fields": {
+        "id": {
+          "checks": [],
+          "pk": true
+        }
+      },
+      "checks": [
+        {
+          "name": "table_with_comments_id_not_null",
+          "expression": "id IS NOT NULL"
+        }
+      ]
     },
     "public.user_define_data_types": {
-      "id": {
-        "pk": true
-      }
+      "fields": {
+        "id": {
+          "checks": [],
+          "pk": true
+        }
+      },
+      "checks": [
+        {
+          "name": "user_define_data_types_id_not_null",
+          "expression": "id IS NOT NULL"
+        }
+      ]
     },
     "public.users": {
-      "user_id": {
-        "pk": true
+      "fields": {
+        "user_id": {
+          "checks": [],
+          "pk": true
+        },
+        "email": {
+          "checks": [],
+          "unique": true
+        },
+        "username": {
+          "checks": [],
+          "unique": true
+        }
       },
-      "email": {
-        "unique": true
+      "checks": [
+        {
+          "name": "chk_age",
+          "expression": "(date_of_birth <= (CURRENT_DATE - '13 years'::interval))"
+        },
+        {
+          "name": "chk_email_format",
+          "expression": "((email)::text ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$'::text)"
+        },
+        {
+          "name": "users_user_id_not_null",
+          "expression": "user_id IS NOT NULL"
+        },
+        {
+          "name": "users_username_not_null",
+          "expression": "username IS NOT NULL"
+        },
+        {
+          "name": "users_email_not_null",
+          "expression": "email IS NOT NULL"
+        },
+        {
+          "name": "users_password_hash_not_null",
+          "expression": "password_hash IS NOT NULL"
+        }
+      ]
+    },
+    "public.all_string_types": {
+      "fields": {
+        "null": {
+          "checks": [
+            {
+              "expression": null
+            }
+          ]
+        }
       },
-      "username": {
-        "unique": true
-      }
+      "checks": [
+        {
+          "expression": null
+        }
+      ]
+    },
+    "public.authors": {
+      "fields": {},
+      "checks": [
+        {
+          "name": "authors_authorid_not_null",
+          "expression": "authorid IS NOT NULL"
+        },
+        {
+          "name": "authors_nationalityid_not_null",
+          "expression": "nationalityid IS NOT NULL"
+        }
+      ]
     }
   }
 }
