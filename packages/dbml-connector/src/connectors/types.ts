@@ -38,11 +38,20 @@ interface FieldsDictionary {
   [key: string]: Field[]; // Represents fields within tables, indexed by schemaName.tableName
 }
 
+interface CheckConstraint {
+  name?: string;
+  expression: string;
+}
+
 interface TableConstraint {
-  [fieldName: string]: {
-    pk?: boolean;
-    unique?: boolean;
+  fields: {
+    [fieldName: string]: {
+      pk?: boolean;
+      unique?: boolean;
+      checks: CheckConstraint[];
+    };
   };
+  checks: CheckConstraint[];
 }
 
 interface TableConstraintsDictionary {
