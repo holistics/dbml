@@ -321,9 +321,9 @@ async function generatePrimaryAndUniqueConstraint (client: Connection, schemaNam
   const rows: any = queryResponse[0];
 
   const inlineConstraintList = rows.filter((constraint: Record<string, any>) => constraint.columnCount === 1);
-  const outOfConstraintList = rows.filter((constraint: Record<string, any>) => constraint.columnCount > 1);
+  const outOfLineConstraintList = rows.filter((constraint: Record<string, any>) => constraint.columnCount > 1);
 
-  const compositeTableConstraintMap = outOfConstraintList.reduce((acc: any, row: Record<string, any>) => {
+  const compositeTableConstraintMap = outOfLineConstraintList.reduce((acc: any, row: Record<string, any>) => {
     const {
       tableName, constraintName, columnNames, constraintType,
     } = row;
