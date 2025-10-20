@@ -14,10 +14,13 @@ create table users (
 
 create table products (
   id int unsigned primary key auto_increment,
-  price decimal(10,2) not null,
+  price decimal(10,2) not null check (price > 0 AND price < 1000000),
   quantity int not null,
   total_value decimal(10,2) generated always as ((price * quantity)) stored,
-  updated_at timestamp default current_timestamp on update current_timestamp
+  updated_at timestamp default current_timestamp on update current_timestamp,
+
+  constraint max_quantity check (quantity < 10000),
+  check (total_value > 0)
 );
 
 create table orders (

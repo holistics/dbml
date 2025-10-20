@@ -1344,47 +1344,73 @@
   "tableConstraints": {
     "categories": {
       "cat_id": {
+        "checks": [],
         "pk": true
       }
     },
     "default_example": {
       "id": {
+        "checks": [],
         "pk": true
       }
     },
     "hash_index_example": {
       "id": {
+        "checks": [],
         "pk": true
       }
     },
     "index_example": {
       "email": {
+        "checks": [],
         "unique": true
       },
       "id": {
+        "checks": [],
         "pk": true
       }
     },
     "orders": {
       "order_id": {
+        "checks": [],
         "pk": true
       }
     },
     "products": {
       "id": {
+        "checks": [],
         "pk": true
       }
     },
     "users": {
       "email": {
+        "checks": [],
         "unique": true
       },
       "user_id": {
+        "checks": [],
         "pk": true
       },
       "username": {
+        "checks": [],
         "unique": true
       }
     }
+  },
+  "checks": {
+    "products": [
+      {
+        "name": "products_chk_1",
+        "expression": "((`price` > 0) and (`price` < 1000000))"
+      },
+      {
+        "name": "max_quantity",
+        "expression": "(`quantity` < 10000)"
+      },
+      {
+        "name": "products_chk_2",
+        "expression": "(`total_value` > 0)"
+      }
+    ]
   }
 }

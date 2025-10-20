@@ -297,7 +297,7 @@ async function generateTableConstraints (
     }
 
     if (!inlinePrimaryKeyMap[key][columnNames]) {
-      inlinePrimaryKeyMap[key][columnNames] = {};
+      inlinePrimaryKeyMap[key][columnNames] = { checks: [] };
     }
 
     inlinePrimaryKeyMap[key][columnNames].pk = true;
@@ -372,6 +372,8 @@ async function fetchSchemaJsonByDataset (
     enums: [],
     indexes: mergeIndexDictionary(indexMap, compositePrimaryKeyMap),
     tableConstraints: inlinePrimaryKeyMap,
+    // Checks are not supported in BigQuery
+    checks: {},
   };
 }
 
@@ -401,7 +403,7 @@ async function fetchSchemaJson (keyFilename: string): Promise<DatabaseSchema> {
       return acc;
     },
     {
-      tables: [], fields: {}, tableConstraints: {}, indexes: {}, refs: [], enums: [],
+      tables: [], fields: {}, tableConstraints: {}, indexes: {}, refs: [], enums: [], checks: {},
     },
   );
 

@@ -2,6 +2,7 @@
 import { Client } from 'pg';
 import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
 import {
+  CheckConstraintDictionary,
   DatabaseSchema,
   DefaultInfo,
   DefaultType,
@@ -431,16 +432,16 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
       constraint_type,
     } = row;
     const key = `${table_schema}.${table_name}`;
-    if (!tableConstraints[key]) tableConstraints[key] = { fields: {}, checks: [] };
+    if (!tableConstraints[key]) tableConstraints[key] = {};
 
     const columnNames = index_columns.split(',').map((column: string) => column.trim());
     columnNames.forEach((columnName: string) => {
-      if (!tableConstraints[key].fields[columnName]) tableConstraints[key].fields[columnName] = { checks: [] };
+      if (!tableConstraints[key][columnName]) tableConstraints[key][columnName] = { checks: [] };
       if (constraint_type === 'PRIMARY KEY') {
-        tableConstraints[key].fields[columnName].pk = true;
+        tableConstraints[key][columnName].pk = true;
       }
-      if (constraint_type === 'UNIQUE' && !tableConstraints[key].fields[columnName].pk) {
-        tableConstraints[key].fields[columnName].unique = true;
+      if (constraint_type === 'UNIQUE' && !tableConstraints[key][columnName].pk) {
+        tableConstraints[key][columnName].unique = true;
       }
     });
   }, {});
@@ -493,6 +494,7 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
     ${buildSchemaQuery('ut.tableschema', schemas)}
   `;
   const checkListResult = await client.query(checkListSql);
+  const checks: CheckConstraintDictionary = {};
   checkListResult.rows.forEach((row) => {
     const {
       table_schema,
@@ -502,16 +504,17 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
       column_name,
     } = row;
     const key = `${table_schema}.${table_name}`;
-    if (!tableConstraints[key]) tableConstraints[key] = { fields: {}, checks: [] };
-    if (!column_name) {
-      if (!tableConstraints[key].fields[column_name]) tableConstraints[key].fields[column_name] = { checks: [] };
-      tableConstraints[key].fields[column_name].checks.push({
+    if (column_name) {
+      if (!tableConstraints[key]) tableConstraints[key] = {};
+      if (!tableConstraints[key][column_name]) tableConstraints[key][column_name] = { checks: [] };
+      tableConstraints[key][column_name].checks.push({
         name: check_name || undefined,
         expression: check_expression,
       });
       return;
     }
-    tableConstraints[key].checks.push({
+    if (!checks[key]) checks[key] = [];
+    checks[key].push({
       name: check_name || undefined,
       expression: check_expression,
     });
@@ -520,6 +523,7 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
   return {
     indexes,
     tableConstraints,
+    checks,
   };
 };
 
@@ -582,7 +586,7 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   client.end();
 
   const { tables, fields } = res[0];
-  const { indexes, tableConstraints } = res[1];
+  const { indexes, tableConstraints, checks } = res[1];
   const refs = res[2];
   const enums = res[3];
 
@@ -593,9 +597,10 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
     enums,
     indexes,
     tableConstraints,
+    checks,
   };
 };
 
 export {
-  fetchSchemaJson
+  fetchSchemaJson,
 };
