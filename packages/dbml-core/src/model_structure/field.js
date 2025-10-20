@@ -29,7 +29,7 @@ class Field extends Element {
     this.dbState = this.table.dbState;
     this.generateId();
     this.bindType();
-    
+
     this.processConstraints(constraints);
   }
 
@@ -95,7 +95,7 @@ class Field extends Element {
       dbdefault: this.dbdefault,
       increment: this.increment,
       injectedPartialId: this.injectedPartial?.id,
-      constraintIds: this.constraints.map((constraint) => constraint.id), 
+      constraintIds: this.constraints.map((constraint) => constraint.id),
     };
   }
 

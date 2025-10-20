@@ -1,7 +1,9 @@
 import Element from './element';
 
 class IndexColumn extends Element {
-  constructor ({ type, value, index, token }) {
+  constructor ({
+    type, value, index, token,
+  }) {
     super();
     this.type = type;
     this.value = value;
