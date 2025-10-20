@@ -4,7 +4,7 @@ import { DefaultInfo, DatabaseSchema, DefaultType, Field, IndexColumn, FieldsDic
 
 const NUMBER_REGEX = '^-?[0-9]+(.[0-9]+)?$';
 
-async function connectMySQL (connection: string): Promise<Connection> {
+async function connectMySQL(connection: string): Promise<Connection> {
   const client = await createConnection(connection);
   try {
     await client.connect();
@@ -21,11 +21,11 @@ async function connectMySQL (connection: string): Promise<Connection> {
   }
 }
 
-function getEnumName (tableName: string, columnName: string): string {
+function getEnumName(tableName: string, columnName: string): string {
   return `${tableName}_${columnName}_enum`;
 }
 
-function getGenerationExpression (extraType: string, generationExpression: string) {
+function getGenerationExpression(extraType: string, generationExpression: string) {
   if (extraType === 'VIRTUAL GENERATED') {
     return `GENERATED ALWAYS AS (${generationExpression}) VIRTUAL`;
   }
@@ -43,7 +43,7 @@ function getGenerationExpression (extraType: string, generationExpression: strin
   return '';
 }
 
-function getDbDefault (columnDefault: string, defaultValueType: DefaultType): DefaultInfo | null {
+function getDbDefault(columnDefault: string, defaultValueType: DefaultType): DefaultInfo | null {
   if (columnDefault === null) {
     return null;
   }
@@ -51,7 +51,7 @@ function getDbDefault (columnDefault: string, defaultValueType: DefaultType): De
   return { value: columnDefault, type: defaultValueType };
 }
 
-function getFieldType (tableName: string, columnName: string, columnType: string, columnDataType: string, columnExtra: string, generationExpression: string) {
+function getFieldType(tableName: string, columnName: string, columnType: string, columnDataType: string, columnExtra: string, generationExpression: string) {
   if (columnDataType === 'enum') {
     // enum must have static value -> no need to check the generation expression
     return getEnumName(tableName, columnName);
@@ -65,7 +65,7 @@ function getFieldType (tableName: string, columnName: string, columnType: string
   return columnType;
 }
 
-function generateField (row: Record<string, any>): Field {
+function generateField(row: Record<string, any>): Field {
   const {
     tableName,
     columnName,
@@ -103,7 +103,7 @@ function generateField (row: Record<string, any>): Field {
 }
 
 // Do not get the index sub part since in DBML, it is impossible to create index on part of column.
-function getIndexColumn (columnName: string, idxExpression: string, idxSubPart: any): IndexColumn | null {
+function getIndexColumn(columnName: string, idxExpression: string, idxSubPart: any): IndexColumn | null {
   if (idxExpression) {
     return { value: idxExpression, type: 'expression' };
   }
@@ -119,7 +119,7 @@ function getIndexColumn (columnName: string, idxExpression: string, idxSubPart: 
   return null;
 }
 
-async function generateTablesAndFields (client: Connection, schemaName: string): Promise<{
+async function generateTablesAndFields(client: Connection, schemaName: string): Promise<{
   tableList: Table[];
   fieldMap: FieldsDictionary;
 }> {
@@ -182,7 +182,7 @@ async function generateTablesAndFields (client: Connection, schemaName: string):
   };
 }
 
-async function generateEnums (client: Connection, schemaName: string): Promise<Enum[]> {
+async function generateEnums(client: Connection, schemaName: string): Promise<Enum[]> {
   const query = `
     select
       t.table_name as tableName,
@@ -223,7 +223,7 @@ async function generateEnums (client: Connection, schemaName: string): Promise<E
 /**
  * Mysql automatically creates index for primary keys, foreign keys, unique constraint. -> Ignore
  */
-async function generateIndexes (client: Connection, schemaName: string): Promise<IndexesDictionary> {
+async function generateIndexes(client: Connection, schemaName: string): Promise<IndexesDictionary> {
   const query = `
     with
       pk_fk_uniques as (
@@ -296,7 +296,7 @@ async function generateIndexes (client: Connection, schemaName: string): Promise
   return indexMap;
 }
 
-async function generatePrimaryAndUniqueConstraint (client: Connection, schemaName: string) {
+async function generatePrimaryAndUniqueConstraint(client: Connection, schemaName: string) {
   const query = `
     select
       tc.table_name as tableName,
@@ -355,32 +355,32 @@ async function generatePrimaryAndUniqueConstraint (client: Connection, schemaNam
     return acc;
   }, {});
 
-  const compositeConstraintMap: any = {};
+  const compositeConstraintMap: IndexesDictionary = {};
   Object.keys(compositeTableConstraintMap).forEach((tableName) => {
     compositeConstraintMap[tableName] = flatten(Object.values(compositeTableConstraintMap[tableName]));
   });
 
-  const constraintMap = inlineConstraintList.reduce((acc: any, row: Record<string, any>) => {
+  const constraintMap = inlineConstraintList.reduce((acc: TableConstraintsDictionary, row: Record<string, any>) => {
     const { tableName, columnNames, constraintType } = row;
 
     const key = tableName;
     if (!acc[key]) {
-      acc[key] = {};
+      acc[key] = { fields: {}, checks: [] };
     }
 
     const columnList = columnNames.split(',');
 
     columnList.forEach((columnName: string) => {
-      if (!acc[key][columnName]) {
-        acc[key][columnName] = {};
+      if (!acc[key].fields[columnName]) {
+        acc[key].fields[columnName] = { checks: [] };
       }
 
       if (constraintType === 'PRIMARY KEY') {
-        acc[key][columnName].pk = true;
+        acc[key].fields[columnName].pk = true;
       }
 
-      if (constraintType === 'UNIQUE' && !acc[key][columnName].pk) {
-        acc[key][columnName].unique = true;
+      if (constraintType === 'UNIQUE' && !acc[key].fields[columnName].pk) {
+        acc[key].fields[columnName].unique = true;
       }
     });
     return acc;
@@ -389,7 +389,7 @@ async function generatePrimaryAndUniqueConstraint (client: Connection, schemaNam
   return { compositeConstraintMap, constraintMap };
 }
 
-async function generateForeignKeys (client: Connection, schemaName: string): Promise<Ref[]> {
+async function generateForeignKeys(client: Connection, schemaName: string): Promise<Ref[]> {
   const query = `
     select
       rc.constraint_name as constraintName,
@@ -453,7 +453,7 @@ async function generateForeignKeys (client: Connection, schemaName: string): Pro
   return foreignKeyList;
 }
 
-function combineIndexAndCompositeConstraint (userDefinedIndexMap: any, compositeConstraintMap: any) {
+function combineIndexAndCompositeConstraint(userDefinedIndexMap: IndexesDictionary, compositeConstraintMap: IndexesDictionary): IndexesDictionary {
   const indexMap = Object.assign(userDefinedIndexMap, {});
 
   Object.keys(compositeConstraintMap).forEach((tableName) => {
@@ -469,7 +469,7 @@ function combineIndexAndCompositeConstraint (userDefinedIndexMap: any, composite
   return indexMap;
 }
 
-async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
+async function fetchSchemaJson(connection: string): Promise<DatabaseSchema> {
   const client = await connectMySQL(connection);
 
   // In MySQL, a schema is equal database
