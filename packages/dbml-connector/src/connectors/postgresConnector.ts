@@ -509,6 +509,7 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
         name: check_name || undefined,
         expression: check_expression,
       });
+      return;
     }
     tableConstraints[key].checks.push({
       name: check_name || undefined,
