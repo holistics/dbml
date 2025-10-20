@@ -3,8 +3,12 @@
 /* eslint-disable class-methods-use-this */
 import { last, flatten, flattenDepth } from 'lodash';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
-import { Enum, Field, Index, TableRecord, Table } from '../AST';
-import { TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TYPE } from '../constants';
+import {
+  Enum, Field, Index, TableRecord, Table,
+} from '../AST';
+import {
+  TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TYPE,
+} from '../constants';
 import { getOriginalText } from '../helpers';
 
 const COMMAND_KIND = {

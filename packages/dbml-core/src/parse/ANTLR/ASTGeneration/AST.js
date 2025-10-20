@@ -10,7 +10,9 @@ export class Index {
    *  columns: {value: string, type: 'column' | 'string' | 'expression'}[],
    * }} param0
    */
-  constructor ({ name, unique, pk, type, columns }) {
+  constructor ({
+    name, unique, pk, type, columns,
+  }) {
     /** @type {string} */
     this.name = name;
 
@@ -55,7 +57,9 @@ export class Field {
    *  constraints: {expression: string, name?: string}[]
    * }} param0
    */
-  constructor ({ name, type, not_null, increment, dbdefault, unique, pk, note, constraints }) {
+  constructor ({
+    name, type, not_null, increment, dbdefault, unique, pk, note, constraints,
+  }) {
     /** @type {string} */
     this.name = name;
 
@@ -110,7 +114,9 @@ export class Table {
    *  constraints: {expression: string, name?: string}[]
    * }} param0
    */
-  constructor ({ name, schemaName, fields, indexes, note, constraints }) {
+  constructor ({
+    name, schemaName, fields, indexes, note, constraints,
+  }) {
     /** @type {string} */
     this.name = name;
 
@@ -151,7 +157,9 @@ export class Endpoint {
    *  relation: '*' | '1'
    * }} param0
    */
-  constructor ({ tableName, schemaName, fieldNames, relation }) {
+  constructor ({
+    tableName, schemaName, fieldNames, relation,
+  }) {
     /** @type {string} */
     this.tableName = tableName;
 
@@ -184,7 +192,9 @@ export class Ref {
    *  onUpdate: string
    * }} param0
    */
-  constructor ({ name, endpoints, onDelete, onUpdate }) {
+  constructor ({
+    name, endpoints, onDelete, onUpdate,
+  }) {
     /** @type {string} */
     this.name = name;
 
@@ -241,7 +251,9 @@ export class TableRecord {
    *  schemaName?: string,
    * }} param0
    */
-  constructor({ tableName, columns, values, schemaName = undefined }) {
+  constructor ({
+    tableName, columns, values, schemaName = undefined,
+  }) {
     /** @type {string} */
     this.tableName = tableName;
 
