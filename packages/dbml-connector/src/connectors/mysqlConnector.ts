@@ -221,7 +221,7 @@ async function generateEnums (client: Connection, schemaName: string): Promise<E
 }
 
 /**
- * Mysql is automatically create index for primary keys, foreign keys, unique constraint. -> Ignore
+ * Mysql automatically creates index for primary keys, foreign keys, unique constraint. -> Ignore
  */
 async function generateIndexes (client: Connection, schemaName: string): Promise<IndexesDictionary> {
   const query = `
