@@ -301,7 +301,7 @@ const generateRawRefs = async (client: Client, schemas: string[]): Promise<Ref[]
   return refs;
 };
 
-const generateIndexes = async (client: Client, schemas: string[]) => {
+const generateIndexesAndConstraints = async (client: Client, schemas: string[]) => {
   const indexListSql = `
     WITH user_tables AS (
       SELECT
@@ -348,8 +348,8 @@ const generateIndexes = async (client: Client, schemas: string[]) => {
       ii.is_unique,
       ii.is_primary,
       ii.index_type,
-      ii.columns,
-      ii.expressions,
+      ii.columns AS index_columns,
+      ii.expressions AS index_expressions,
       ii.constraint_type  -- Retained constraint type here
     FROM
       user_tables ut
@@ -364,38 +364,38 @@ const generateIndexes = async (client: Client, schemas: string[]) => {
     ;
   `;
   const indexListResult = await client.query(indexListSql);
-  const { outOfLineConstraints, inlineConstraints } = indexListResult.rows.reduce((acc, row) => {
-    const { constraint_type, columns } = row;
+  const { outOfLineIndexes, inlineIndexes } = indexListResult.rows.reduce((acc, row) => {
+    const { constraint_type, index_columns } = row;
 
-    if (columns === 'null' || columns.trim() === '') return acc;
+    if (index_columns === 'null' || index_columns.trim() === '') return acc;
 
-    const isSingleColumn = columns.split(',').length === 1;
-    const isInlineConstraint = isSingleColumn && (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE');
-    if (isInlineConstraint) {
-      acc.inlineConstraints.push(row);
+    const isSingleColumn = index_columns.split(',').length === 1;
+    const isInlineIndex = isSingleColumn && (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE');
+    if (isInlineIndex) {
+      acc.inlineIndexes.push(row);
     } else {
-      acc.outOfLineConstraints.push(row);
+      acc.outOfLineIndexes.push(row);
     }
     return acc;
-  }, { outOfLineConstraints: [], inlineConstraints: [] });
+  }, { outOfLineIndexes: [], inlineIndexes: [] });
 
-  const indexes = outOfLineConstraints.reduce((acc: IndexesDictionary, indexRow: Record<string, any>) => {
+  const indexes = outOfLineIndexes.reduce((acc: IndexesDictionary, indexRow: Record<string, any>) => {
     const {
       table_schema,
       table_name,
       index_name,
       index_type,
-      columns,
-      expressions,
+      index_columns,
+      index_expressions,
     } = indexRow;
-    const indexColumns = columns.split(',').map((column: string) => {
+    const indexColumns = index_columns.split(',').map((column: string) => {
       return {
         type: 'column',
         value: column.trim(),
       };
     });
 
-    const indexExpressions = expressions ? expressions.split(',').map((expression: string) => {
+    const indexExpressions = index_expressions ? index_expressions.split(',').map((expression: string) => {
       return {
         type: 'expression',
         value: expression,
@@ -421,28 +421,100 @@ const generateIndexes = async (client: Client, schemas: string[]) => {
     return acc;
   }, {});
 
-  const tableConstraints = inlineConstraints.reduce((acc: TableConstraintsDictionary, row: Record<string, any>) => {
+  const tableConstraints: TableConstraintsDictionary = {};
+
+  inlineIndexes.forEach((row: Record<string, any>) => {
     const {
       table_schema,
       table_name,
-      columns,
+      index_columns,
       constraint_type,
     } = row;
     const key = `${table_schema}.${table_name}`;
-    if (!acc[key]) acc[key] = {};
+    if (!tableConstraints[key]) tableConstraints[key] = { fields: {}, checks: [] };
 
-    const columnNames = columns.split(',').map((column: string) => column.trim());
+    const columnNames = index_columns.split(',').map((column: string) => column.trim());
     columnNames.forEach((columnName: string) => {
-      if (!acc[key][columnName]) acc[key][columnName] = {};
+      if (!tableConstraints[key].fields[columnName]) tableConstraints[key].fields[columnName] = { checks: [] };
       if (constraint_type === 'PRIMARY KEY') {
-        acc[key][columnName].pk = true;
+        tableConstraints[key].fields[columnName].pk = true;
       }
-      if (constraint_type === 'UNIQUE' && !acc[key][columnName].pk) {
-        acc[key][columnName].unique = true;
+      if (constraint_type === 'UNIQUE' && !tableConstraints[key].fields[columnName].pk) {
+        tableConstraints[key].fields[columnName].unique = true;
       }
     });
-    return acc;
   }, {});
+
+  const checkListSql = `
+    WITH user_tables AS (
+      SELECT
+        schemaname AS tableschema,
+        tablename
+      FROM pg_tables
+      WHERE schemaname NOT IN ('pg_catalog', 'information_schema')  -- Exclude system schemas
+        AND tablename NOT LIKE 'pg_%'  -- Exclude PostgreSQL system tables
+        AND tablename NOT LIKE 'sql_%'  -- Exclude SQL standard tables
+    ),
+    check_info AS (
+      SELECT
+        cc.constraint_name AS check_name,
+        cc.check_clause AS check_expression,
+        CASE
+          WHEN tc.table_schema IS NOT NULL THEN tc.table_schema
+          WHEN ccu.table_schema IS NOT NULL THEN ccu.table_schema
+        END AS table_schema,
+        CASE
+          WHEN tc.table_name IS NOT NULL THEN tc.table_name
+          WHEN ccu.table_name IS NOT NULL THEN ccu.table_name
+        END AS table_name,
+        ccu.column_name
+      FROM
+        information_schema.check_constraints cc
+        LEFT JOIN information_schema.constraint_column_usage ccu
+          ON cc.constraint_name = ccu.constraint_name
+          AND ccu.table_schema NOT IN ('pg_catalog', 'information_schema')
+        LEFT JOIN information_schema.table_constraints tc
+          ON cc.constraint_schema = tc.constraint_schema
+          AND cc.constraint_name = tc.constraint_name
+          AND tc.constraint_type = 'CHECK'
+          AND tc.table_schema NOT IN ('pg_catalog', 'information_schema')
+    )
+    SELECT
+      ut.tableschema AS table_schema,
+      ut.tablename AS table_name,
+      ci.check_name,
+      ci.check_expression,
+      ci.column_name
+    FROM
+      user_tables ut
+    LEFT JOIN
+      check_info ci ON ut.tableschema = ci.table_schema AND ut.tablename = ci.table_name
+    WHERE TRUE
+    ${buildSchemaQuery('ut.tableschema', schemas)}
+  `;
+  const checkListResult = await client.query(checkListSql);
+  checkListResult.rows.forEach((row) => {
+    const {
+      table_schema,
+      table_name,
+      check_name,
+      check_expression,
+      column_name,
+    } = row;
+    const key = `${table_schema}.${table_name}`;
+    if (!tableConstraints[key]) tableConstraints[key] = { fields: {}, checks: [] };
+    if (!column_name) {
+      if (!tableConstraints[key].fields[column_name]) tableConstraints[key].fields[column_name] = { checks: [] };
+      tableConstraints[key].fields[column_name].checks.push({
+        name: check_name || undefined,
+        expression: check_expression,
+      });
+    }
+    tableConstraints[key].checks.push({
+      name: check_name || undefined,
+      expression: check_expression,
+    });
+  });
 
   return {
     indexes,
@@ -496,7 +568,7 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   const client = await getValidatedClient(connectionString);
 
   const tablesAndFieldsRes = generateTablesAndFields(client, schemas);
-  const indexesRes = generateIndexes(client, schemas);
+  const indexesRes = generateIndexesAndConstraints(client, schemas);
   const refsRes = generateRawRefs(client, schemas);
   const enumsRes = generateRawEnums(client, schemas);
 
