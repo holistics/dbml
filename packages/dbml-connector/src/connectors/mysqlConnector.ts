@@ -417,7 +417,7 @@ async function generateCheckConstraints (client: Connection, schemaName: string)
     }
     acc[key].push({
       name: constraintName,
-      expression: checkClause,
+      expression: checkClause.slice(1, -1),
     });
     return acc;
   }, {});
