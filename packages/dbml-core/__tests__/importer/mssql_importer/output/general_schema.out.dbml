@@ -1,19 +1,7 @@
-Enum "orders_status_enum" {
-  "created"
-  "running"
-  "done"
-  "failure"
-}
-
-Enum "products_status_enum" {
-  "Out of Stock"
-  "In Stock"
-}
-
 Table "orders" {
   "id" int [pk, increment]
   "user_id" int [unique, not null]
-  "status" orders_status_enum [not null]
+  "status" nvarchar(255) [not null, constraint: `[status] IN ('created', 'running', 'done', 'failure')`]
   "created_at" varchar(255) [note: 'When order created']
   Note: 'This is a note in table "orders"'
 }
@@ -29,7 +17,7 @@ Table "products" {
   "name" varchar(255)
   "merchant_id" int [not null]
   "price" int
-  "status" products_status_enum [not null]
+  "status" nvarchar(255) [not null, constraint: `[status] IN ('Out of Stock', 'In Stock')`]
   "created_at" datetime [default: `GETDATE()`]
 
   Indexes {

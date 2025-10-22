@@ -1,27 +1,16 @@
-Enum "sample_table_status_enum" {
-  "active"
-  "inactive"
-  "pending"
-}
-
 Table "sample_table" {
-  "status" sample_table_status_enum
+  "status" VARCHAR(20) [constraint: `[status] IN ('active', 'inactive', 'pending')`]
   "email" VARCHAR(100) [constraint: `[email] LIKE '%@%.%'`]
   "user_type" VARCHAR(20) [constraint: `[user_type] NOT IN ('banned', 'suspended')`]
 }
 
-Enum "myschema"."sample_table_status_enum" {
-  "active"
-  "inactive"
-  "pending"
-}
-
 Table "myschema"."sample_table" {
-  "status" myschema.sample_table_status_enum
+  "status" VARCHAR(20)
   "email" VARCHAR(100)
   "user_type" VARCHAR(20)
 
   Constraints {
+    `status IN ('active', 'inactive', 'pending')` [name: 'chk_status']
     `email LIKE '%@%.%'` [name: 'chk_email']
     `user_type NOT IN ('banned', 'suspended')` [name: 'chk_user_type']
   }
