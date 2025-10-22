@@ -25,7 +25,7 @@
   function addCheckConstraintToTable(tableName, expression, name) {
     const table = data.tables.find(t => t.name === tableName);
     if (!table) {
-      error("Table " + tableName + " not found");
+      error("Table ${tableName} not found");
     }
     if (!table.constraints) {
       table.constraints = [];
