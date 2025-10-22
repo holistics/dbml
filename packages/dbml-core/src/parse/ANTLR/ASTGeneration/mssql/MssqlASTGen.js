@@ -6,15 +6,10 @@ import TSqlParserVisitor from '../../parsers/mssql/TSqlParserVisitor';
 import { COLUMN_CONSTRAINT_KIND, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../constants';
 import { getOriginalText } from '../helpers';
 import {
-  Field, Index, Table, TableRecord, Enum,
+  Field, Index, Table, TableRecord,
 } from '../AST';
 
 const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
-
-const CHECK_CONSTRAINT_CONDITION_TYPE = {
-  RAW: 'raw',
-  ENUM: 'enum',
-};
 
 const getSchemaAndTableName = (names) => {
   const tableName = last(names);
@@ -85,7 +80,7 @@ const splitColumnDefTableConstraints = (columnDefTableConstraints) => {
 };
 
 const parseFieldsAndInlineRefsFromFieldsData = (fieldsData, tableName, schemaName) => {
-  const [resInlineRefs, fields, enumCheckConstraints] = fieldsData.reduce((acc, fieldData) => {
+  const [resInlineRefs, fields] = fieldsData.reduce((acc, fieldData) => {
     const inlineRefs = fieldData.inline_refs.map(inlineRef => {
       inlineRef.endpoints[0].tableName = tableName;
       inlineRef.endpoints[0].schemaName = schemaName;
@@ -95,11 +90,10 @@ const parseFieldsAndInlineRefsFromFieldsData = (fieldsData, tableName, schemaNam
 
     acc[0].push(inlineRefs);
     acc[1].push(fieldData.field);
-    acc[2].push(...fieldData.enumCheckConstraints);
     return acc;
   }, [[], [], []]);
 
-  return { inlineRefs: resInlineRefs, fields, enumCheckConstraints };
+  return { inlineRefs: resInlineRefs, fields };
 };
 
 export default class MssqlASTGen extends TSqlParserVisitor {
@@ -527,7 +521,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       fieldsData, indexes, tableRefs, checkConstraints: tableCheckConstraints,
     } = splitColumnDefTableConstraints(columnDefTableConstraints);
 
-    const { inlineRefs, fields, enumCheckConstraints: columnEnumCheckConstraints } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
+    const { inlineRefs, fields } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
 
     this.data.refs.push(...flatten(inlineRefs));
 
@@ -537,40 +531,12 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       return tableRef;
     }));
 
-    const allCheckConstraints = columnEnumCheckConstraints.concat(tableCheckConstraints);
-    const rawTableConstraints = [];
-
-    allCheckConstraints.forEach((checkConstraint) => {
-      if (checkConstraint.isRaw) {
-        const constraintObj = { expression: checkConstraint.expression };
-        if (checkConstraint.name) {
-          constraintObj.name = checkConstraint.name;
-        }
-        rawTableConstraints.push(constraintObj);
-        return;
-      }
-
-      const field = fields.find((fieldItem) => fieldItem.name === checkConstraint.column);
-      if (!field) return;
-
-      const enumObject = new Enum({
-        name: `${tableName}_${field.name}_enum`,
-        values: checkConstraint.columnValues.map((value) => ({ name: value })),
-        schemaName,
-      });
-
-      this.data.enums.push(enumObject);
-      // TODO: Handle multiple enums for the same field
-      field.type.type_name = enumObject.name;
-      field.type.schemaName = enumObject.schemaName;
-    });
-
     const table = new Table({
       name: tableName,
       schemaName,
       fields,
       indexes: tableIndices.concat(indexes),
-      constraints: rawTableConstraints,
+      constraints: tableCheckConstraints,
     });
 
     this.data.tables.push(table);
@@ -643,7 +609,6 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       value: {
         field,
         inline_refs: [],
-        enumCheckConstraints: [],
       },
     };
 
@@ -677,22 +642,15 @@ export default class MssqlASTGen extends TSqlParserVisitor {
             definition.value.inline_refs.push(columnDef.value);
             break;
           case COLUMN_CONSTRAINT_KIND.CHECK: {
-            const { type: columnDefType, value, name } = columnDef.value;
-
-            if (columnDefType === CHECK_CONSTRAINT_CONDITION_TYPE.ENUM) {
-              // If it's an ENUM type (simple IN clause without NOT), queue it for enum extraction
-              definition.value.enumCheckConstraints.push(value);
-            } else if (columnDefType === CHECK_CONSTRAINT_CONDITION_TYPE.RAW) {
-              // For RAW constraints (complex expressions), add directly to field.constraints array
-              if (!field.constraints) {
-                field.constraints = [];
-              }
-              const constraintObj = { expression: value };
-              if (name) {
-                constraintObj.name = name;
-              }
-              field.constraints.push(constraintObj);
+            const { expression, name } = columnDef.value;
+            if (!field.constraints) {
+              field.constraints = [];
             }
+            const constraintObj = { expression };
+            if (name) {
+              constraintObj.name = name;
+            }
+            field.constraints.push(constraintObj);
             break;
           }
           default:
@@ -807,7 +765,6 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       };
     }
 
-    // we do not handle check constraint since it is complicated and hard to extract enum from it
     if (ctx.check_constraint()) {
       const constraintName = ctx.id_() ? ctx.id_().accept(this) : null;
       const checkConstraintResult = ctx.check_constraint().accept(this);
@@ -837,27 +794,8 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   //   | search_condition OR search_condition
   //   ;
   visitSearch_condition (ctx) {
-    // we will parse the enum from the most basic condition - map to the old behavior
-    // others, we will get the check constraint to ensure the constraint is applied - enhance the old behavior
-    if (!ctx.predicate() || ctx.NOT().length) {
-      return {
-        type: CHECK_CONSTRAINT_CONDITION_TYPE.RAW,
-        value: getOriginalText(ctx),
-      };
-    }
-
-    const predicate = ctx.predicate().accept(this);
-
-    if (!predicate) {
-      return {
-        type: CHECK_CONSTRAINT_CONDITION_TYPE.RAW,
-        value: getOriginalText(ctx),
-      };
-    }
-
     return {
-      type: CHECK_CONSTRAINT_CONDITION_TYPE.ENUM,
-      value: predicate,
+      expression: getOriginalText(ctx),
     };
   }
 
@@ -1042,21 +980,11 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     if (ctx.check_constraint()) {
       const checkConstraint = ctx.check_constraint().accept(this);
 
-      // If it's an ENUM type (simple IN clause), return for enum extraction
-      if (checkConstraint.type === CHECK_CONSTRAINT_CONDITION_TYPE.ENUM) {
-        return {
-          kind: TABLE_CONSTRAINT_KIND.CHECK,
-          value: checkConstraint.value,
-        };
-      }
-
-      // For RAW constraints, return them too so they can be added to table.constraints
       return {
         kind: TABLE_CONSTRAINT_KIND.CHECK,
         value: {
-          expression: checkConstraint.value,
+          expression: checkConstraint.expression,
           name,
-          isRaw: true, // Mark as raw constraint
         },
       };
     }
@@ -1143,31 +1071,11 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     });
 
     checkConstraints.forEach((checkConstraint) => {
-      // Handle RAW table-level constraints (complex expressions that won't become enums)
-      if (checkConstraint.isRaw) {
-        const constraintObj = { expression: checkConstraint.expression };
-        if (checkConstraint.name) {
-          constraintObj.name = checkConstraint.name;
-        }
-        table.constraints.push(constraintObj);
-        return;
+      const constraintObj = { expression: checkConstraint.expression };
+      if (checkConstraint.name) {
+        constraintObj.name = checkConstraint.name;
       }
-
-      // Handle ENUM constraints: simple IN clauses like CHECK (status IN ('a', 'b', 'c'))
-      // These get converted to actual Enum objects and the field type is updated
-      const field = table.fields.find((fieldItem) => fieldItem.name === checkConstraint.column);
-      if (!field) return;
-
-      const enumObject = new Enum({
-        name: `${tableName}_${field.name}_enum`,
-        values: checkConstraint.columnValues.map((value) => ({ name: value })),
-        schemaName,
-      });
-
-      this.data.enums.push(enumObject);
-      // TODO: handle multiple enums for the same field
-      field.type.type_name = enumObject.name;
-      field.type.schemaName = enumObject.schemaName;
+      table.constraints.push(constraintObj);
     });
   }
 
