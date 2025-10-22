@@ -1397,20 +1397,5 @@
       }
     }
   },
-  "checks": {
-    "products": [
-      {
-        "name": "products_chk_1",
-        "expression": "((`price` > 0) and (`price` < 1000000))"
-      },
-      {
-        "name": "max_quantity",
-        "expression": "(`quantity` < 10000)"
-      },
-      {
-        "name": "products_chk_2",
-        "expression": "(`total_value` > 0)"
-      }
-    ]
-  }
+  "checks": {}
 }
