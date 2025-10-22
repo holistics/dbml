@@ -1,24 +1,3 @@
-Enum "special_table_status_enum" {
-  "active"
-  "inactive"
-}
-
-Enum "orders_status_enum" {
-  "pending"
-  "processing"
-  "shipped"
-  "delivered"
-  "cancelled"
-}
-
-Enum "orders_priority_enum" {
-  "1"
-  "2"
-  "3"
-  "4"
-  "5"
-}
-
 Table "products" {
   "id" INT [pk]
   "price" DECIMAL(10,2) [constraint: `price > 0`]
@@ -40,7 +19,7 @@ Table "employees" {
 Table "special_table" {
   "id" INT [pk]
   "price" DECIMAL [constraint: `[price] > 0`]
-  "status" special_table_status_enum
+  "status" VARCHAR(20) [constraint: `[status] IN ('active', 'inactive')`]
 }
 
 Table "transactions" {
@@ -63,8 +42,8 @@ Table "contacts" {
 
 Table "orders" {
   "order_id" INT [pk]
-  "status" orders_status_enum
-  "priority" orders_priority_enum
+  "status" VARCHAR(20) [constraint: `status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled')`]
+  "priority" INT [constraint: `priority IN (1, 2, 3, 4, 5)`]
 }
 
 Table "users" {
