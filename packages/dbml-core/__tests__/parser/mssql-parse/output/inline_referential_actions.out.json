@@ -4,54 +4,48 @@
       "name": "users",
       "fields": [
         {
+          "name": "user_id",
           "type": {
-            "type_name": "int",
-            "schemaName": null
+            "type_name": "int"
           },
-          "pk": true,
           "increment": true,
-          "name": "user_id"
+          "pk": true
         },
         {
+          "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "schemaName": null
+            "type_name": "varchar(255)"
+          }
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "varchar(255)"
           },
-          "name": "name"
+          "unique": true
         },
         {
+          "name": "date_of_birth",
           "type": {
-            "type_name": "varchar(255)",
-            "schemaName": null
-          },
-          "unique": true,
-          "name": "email"
+            "type_name": "datetime"
+          }
         },
         {
+          "name": "created_at",
           "type": {
-            "type_name": "datetime",
-            "schemaName": null
-          },
-          "name": "date_of_birth"
-        },
-        {
-          "type": {
-            "type_name": "datetime",
-            "schemaName": null
+            "type_name": "datetime"
           },
           "dbdefault": {
-            "type": "expression",
-            "value": "GETDATE()"
-          },
-          "name": "created_at"
+            "value": "GETDATE()",
+            "type": "expression"
+          }
         },
         {
+          "name": "country_code",
           "type": {
-            "type_name": "int",
-            "schemaName": null
+            "type_name": "int"
           },
-          "not_null": true,
-          "name": "country_code"
+          "not_null": true
         }
       ]
     },
@@ -59,29 +53,26 @@
       "name": "orders",
       "fields": [
         {
+          "name": "id",
           "type": {
-            "type_name": "int",
-            "schemaName": null
+            "type_name": "int"
           },
-          "pk": true,
           "increment": true,
-          "name": "id"
+          "pk": true
         },
         {
+          "name": "user_id",
           "type": {
-            "type_name": "int",
-            "schemaName": null
+            "type_name": "int"
           },
-          "unique": true,
           "not_null": true,
-          "name": "user_id"
+          "unique": true
         },
         {
+          "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "schemaName": null
-          },
-          "name": "created_at"
+            "type_name": "varchar(255)"
+          }
         }
       ]
     },
@@ -89,36 +80,32 @@
       "name": "products",
       "fields": [
         {
+          "name": "id",
           "type": {
-            "type_name": "int",
-            "schemaName": null
-          },
-          "name": "id"
+            "type_name": "int"
+          }
         },
         {
+          "name": "name",
           "type": {
-            "type_name": "varchar(255)",
-            "schemaName": null
-          },
-          "name": "name"
+            "type_name": "varchar(255)"
+          }
         },
         {
+          "name": "price",
           "type": {
-            "type_name": "decimal(10,4)",
-            "schemaName": null
-          },
-          "name": "price"
+            "type_name": "decimal(10,4)"
+          }
         },
         {
+          "name": "created_at",
           "type": {
-            "type_name": "datetime",
-            "schemaName": null
+            "type_name": "datetime"
           },
           "dbdefault": {
-            "type": "expression",
-            "value": "GETDATE()"
-          },
-          "name": "created_at"
+            "value": "GETDATE()",
+            "type": "expression"
+          }
         }
       ],
       "indexes": [
@@ -137,43 +124,38 @@
       "name": "order_items",
       "fields": [
         {
+          "name": "order_id",
           "type": {
-            "type_name": "int",
-            "schemaName": null
-          },
-          "name": "order_id"
+            "type_name": "int"
+          }
         },
         {
+          "name": "product_id",
           "type": {
-            "type_name": "int",
-            "schemaName": null
-          },
-          "name": "product_id"
+            "type_name": "int"
+          }
         },
         {
+          "name": "product_name",
           "type": {
-            "type_name": "varchar(255)",
-            "schemaName": null
-          },
-          "name": "product_name"
+            "type_name": "varchar(255)"
+          }
         },
         {
+          "name": "quantity",
           "type": {
-            "type_name": "int",
-            "schemaName": null
+            "type_name": "int"
           },
           "dbdefault": {
-            "type": "number",
-            "value": "1"
-          },
-          "name": "quantity"
+            "value": "1",
+            "type": "number"
+          }
         }
       ]
     }
   ],
   "refs": [
     {
-      "onDelete": "NO ACTION",
       "endpoints": [
         {
           "tableName": "orders",
@@ -189,10 +171,10 @@
           ],
           "relation": "1"
         }
-      ]
+      ],
+      "onDelete": "NO ACTION"
     },
     {
-      "onDelete": "CASCADE",
       "endpoints": [
         {
           "tableName": "order_items",
@@ -208,10 +190,10 @@
           ],
           "relation": "1"
         }
-      ]
+      ],
+      "onDelete": "CASCADE"
     },
     {
-      "onDelete": "SET NULL",
       "endpoints": [
         {
           "tableName": "order_items",
@@ -227,7 +209,8 @@
           ],
           "relation": "1"
         }
-      ]
+      ],
+      "onDelete": "SET NULL"
     }
   ]
 }

@@ -4,79 +4,72 @@
       "name": "products",
       "fields": [
         {
+          "name": "id",
           "type": {
-            "type_name": "int",
-            "schemaName": null
-          },
-          "pk": true,
-          "dbdefault": {
-            "type": "number",
-            "value": "123"
-          },
-          "name": "id"
-        },
-        {
-          "type": {
-            "type_name": "varchar(255)",
-            "schemaName": null
+            "type_name": "int"
           },
           "dbdefault": {
-            "type": "string",
-            "value": "Tea"
+            "value": "123",
+            "type": "number"
           },
-          "name": "name"
+          "pk": true
         },
         {
+          "name": "name",
           "type": {
-            "type_name": "int",
-            "schemaName": null
-          },
-          "not_null": true,
-          "name": "merchant_id"
-        },
-        {
-          "type": {
-            "type_name": "float",
-            "schemaName": null
+            "type_name": "varchar(255)"
           },
           "dbdefault": {
-            "type": "number",
-            "value": "123.12"
-          },
-          "name": "price"
+            "value": "Tea",
+            "type": "string"
+          }
         },
         {
+          "name": "merchant_id",
           "type": {
-            "type_name": "varchar(255)",
-            "schemaName": null
+            "type_name": "int"
           },
-          "dbdefault": {
-            "type": "boolean",
-            "value": "NULL"
-          },
-          "name": "status"
+          "not_null": true
         },
         {
+          "name": "price",
           "type": {
-            "type_name": "date",
-            "schemaName": null
+            "type_name": "float"
           },
           "dbdefault": {
-            "type": "expression",
-            "value": "GETDATE()"
-          },
-          "name": "created_at"
+            "value": "123.12",
+            "type": "number"
+          }
         },
         {
+          "name": "status",
           "type": {
-            "type_name": "date",
-            "schemaName": null
+            "type_name": "varchar(255)"
           },
           "dbdefault": {
-            "type": "expression",
-            "value": "GETDATE()"
+            "value": "NULL",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "date"
           },
-          "name": "expiration"
+          "dbdefault": {
+            "value": "GETDATE()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "expiration",
+          "type": {
+            "type_name": "date"
+          },
+          "dbdefault": {
+            "value": "GETDATE()",
+            "type": "expression"
+          }
         }
       ]
     }

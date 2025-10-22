@@ -4,19 +4,23 @@
       "name": "jobs",
       "fields": [
         {
+          "name": "id",
           "type": {
-            "type_name": "integer",
-            "schemaName": null
+            "type_name": "integer"
           },
-          "pk": true,
-          "name": "id"
+          "pk": true
         },
         {
+          "name": "status",
           "type": {
-            "type_name": "jobs_status_enum"
+            "type_name": "nvarchar(255)"
           },
           "not_null": true,
-          "name": "status"
+          "constraints": [
+            {
+              "expression": "[status] IN ('created', 'running', 'done', 'failed', 'wait for validation')"
+            }
+          ]
         }
       ]
     },
@@ -24,85 +28,41 @@
       "name": "orders",
       "fields": [
         {
+          "name": "id",
           "type": {
-            "type_name": "int",
-            "schemaName": null
+            "type_name": "int"
           },
-          "pk": true,
-          "name": "id"
+          "pk": true
         },
         {
+          "name": "created_at",
           "type": {
-            "type_name": "varchar(255)",
-            "schemaName": null
-          },
-          "name": "created_at"
+            "type_name": "varchar(255)"
+          }
         },
         {
+          "name": "priority",
           "type": {
-            "type_name": "orders_priority_enum",
-            "schemaName": null
+            "type_name": "nvarchar(255)"
           },
           "not_null": true,
-          "name": "priority"
+          "constraints": [
+            {
+              "expression": "[priority] IN ('low', 'medium', 'high')"
+            }
+          ]
         },
         {
+          "name": "status",
           "type": {
-            "type_name": "orders_status_enum",
-            "schemaName": null
+            "type_name": "nvarchar(255)"
           },
           "not_null": true,
-          "name": "status"
-        }
-      ]
-    }
-  ],
-  "enums": [
-    {
-      "name": "jobs_status_enum",
-      "values": [
-        {
-          "name": "created"
-        },
-        {
-          "name": "running"
-        },
-        {
-          "name": "done"
-        },
-        {
-          "name": "failed"
-        },
-        {
-          "name": "wait for validation"
-        }
-      ]
-    },
-    {
-      "name": "orders_priority_enum",
-      "values": [
-        {
-          "name": "low"
-        },
-        {
-          "name": "medium"
-        },
-        {
-          "name": "high"
-        }
-      ]
-    },
-    {
-      "name": "orders_status_enum",
-      "values": [
-        {
-          "name": "pending"
-        },
-        {
-          "name": "processing"
-        },
-        {
-          "name": "done"
+          "constraints": [
+            {
+              "expression": "[status] IN ('pending', 'processing', 'done')"
+            }
+          ]
         }
       ]
     }
