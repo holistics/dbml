@@ -6,7 +6,6 @@ import {
   DatabaseSchema,
   DefaultInfo,
   DefaultType,
-  Enum,
   Field,
   FieldsDictionary,
   IndexesDictionary,
@@ -14,7 +13,6 @@ import {
   RefEndpoint,
   Table,
   TableConstraintsDictionary,
-  EnumValue,
 } from './types';
 
 // https://learn.microsoft.com/en-us/sql/t-sql/data-types/date-and-time-types?view=sql-server-ver15
@@ -143,23 +141,11 @@ const generateField = (row: Record<string, any>): Field => {
   };
 };
 
-const getEnumValues = (check_constraint_definition: string): EnumValue[] => {
-  // Match [col]='(captured value)'
-  const matches = check_constraint_definition.matchAll(/\[[^\]]*\]='(?:''|[^'])*'/g) || [];
-  const enumValues = [...matches].map((match) => match.toString().split(']=')[1].slice(1, -1)).map((value) => ({ name: value }));
-  return enumValues;
-}
-
-const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas: string[]): Promise<{
+const generateTablesFields = async (client: sql.ConnectionPool, schemas: string[]): Promise<{
   tables: Table[],
   fields: FieldsDictionary,
-  enums: Enum[],
-  enumConstraintNames: Set<string>,
 }> => {
-  const enumConstraintNames = new Set<string>();
-
   const fields: FieldsDictionary = {};
-  const enums: Enum[] = [];
   const tablesAndFieldsSql = `
     WITH tables_and_fields AS (
       SELECT
@@ -198,32 +184,6 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
           AND ep.name like '%description%'
       WHERE
         t.type = 'U' -- User-defined tables
-    ),
-    constraints_with_nulls AS (
-      SELECT
-        tf.*,
-        cc.name AS check_constraint_name,
-        cc.definition AS check_constraint_definition
-      FROM
-        tables_and_fields AS tf
-      LEFT JOIN sys.check_constraints cc
-        ON cc.parent_object_id = OBJECT_ID(tf.table_schema + '.' + tf.table_name)
-        AND REGEXP_LIKE(cc.definition, '^\\(\\[' + tf.column_name + '\\]=''(''''|[^''])*''' + '( OR \\[' + tf.column_name + '\\]=''(''''|[^''])*'')*\\)$')
-    ),
-    constraints_with_row_number AS (
-      SELECT
-        *,
-        ROW_NUMBER() OVER (
-          PARTITION BY table_schema, table_name, column_name
-          ORDER BY
-            CASE
-              WHEN check_constraint_definition IS NOT NULL THEN 1
-              ELSE 2
-            END,
-            check_constraint_name
-        ) AS rn
-      FROM
-        constraints_with_nulls
     )
     SELECT
       table_schema,
@@ -238,15 +198,13 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
       column_default,
       table_comment,
       column_comment,
-      check_constraint_name,
-      check_constraint_definition,
       CASE
         WHEN column_default LIKE '((%))' THEN 'number'
         WHEN column_default LIKE '(''%'')' THEN 'string'
         ELSE 'expression'
       END AS default_type
     FROM
-      constraints_with_row_number
+      tables_and_fields
     WHERE
       rn = 1
       ${buildSchemaQuery('table_schema', schemas)}
@@ -263,8 +221,6 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
       table_schema,
       table_name,
       table_comment,
-      check_constraint_name,
-      check_constraint_definition,
     } = row;
     const key = `${table_schema}.${table_name}`;
 
@@ -278,21 +234,6 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
 
     if (!fields[key]) fields[key] = [];
     const field = generateField(row);
-
-    if (check_constraint_definition) {
-      enumConstraintNames.add(check_constraint_name);
-      const enumValues = getEnumValues(check_constraint_definition);
-      enums.push({
-        name: check_constraint_name,
-        schemaName: table_schema,
-        values: enumValues,
-      });
-      field.type = {
-        type_name: check_constraint_name,
-        schemaName: table_schema,
-      };
-    }
-
     fields[key].push(field);
 
     return acc;
@@ -301,8 +242,6 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
   return {
     tables: Object.values(tables),
     fields,
-    enums,
-    enumConstraintNames,
   };
 };
 
@@ -399,7 +338,7 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
   return refs;
 };
 
-const generateIndexesAndConstraints = async (client: sql.ConnectionPool, enumConstraintNames: Set<string>, schemas: string[]) => {
+const generateIndexesAndConstraints = async (client: sql.ConnectionPool, schemas: string[]) => {
   const indexListSql = `
     WITH user_tables AS (
       SELECT
@@ -578,9 +517,6 @@ const generateIndexesAndConstraints = async (client: sql.ConnectionPool, enumCon
       check_name,
       check_expression,
     } = row;
-    if (enumConstraintNames.has(check_name)) {
-      return;
-    }
     const key = `${table_schema}.${table_name}`;
     if (column_name) {
       if (!tableConstraints[key]) tableConstraints[key] = {};
@@ -603,14 +539,24 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   const { connectionString, schemas } = parseConnectionString(connection, 'odbc');
   const client = await getValidatedClient(connectionString);
 
-  const { tables, fields, enums, enumConstraintNames } = await generateTablesFieldsAndEnums(client, schemas);
-  const { indexes, tableConstraints, checks } = await generateIndexesAndConstraints(client, enumConstraintNames, schemas);
-  const refs = await generateRefs(client, schemas);
+  const tablesRes = generateTablesFields(client, schemas);
+  const indexesAndConstraintsRes = generateIndexesAndConstraints(client, schemas);
+  const refsRes = generateRefs(client, schemas);
+
+  const res = await Promise.all([
+    tablesRes,
+    indexesAndConstraintsRes,
+    refsRes,
+  ]);
+
+  const { tables, fields } = res[0];
+  const { indexes, tableConstraints, checks } = res[1];
+  const refs = res[2];
 
   return {
     tables,
     fields,
-    enums,
+    enums: [],
     refs,
     indexes,
     tableConstraints,
