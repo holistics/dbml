@@ -525,7 +525,7 @@ const generateIndexesAndConstraints = async (client: sql.ConnectionPool, schemas
       return;
     }
     if (!checks[key]) checks[key] = [];
-    checks[key].push({ name: check_name, expression: check_expression });
+    checks[key].push({ name: check_name, expression: check_expression.slice(1, -1) });
   });
 
   return {

@@ -447,51 +447,25 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
   }, {});
 
   const checkListSql = `
-    WITH user_tables AS (
-      SELECT
-        schemaname AS tableschema,
-        tablename
-      FROM pg_tables
-      WHERE schemaname NOT IN ('pg_catalog', 'information_schema')  -- Exclude system schemas
-        AND tablename NOT LIKE 'pg_%'  -- Exclude PostgreSQL system tables
-        AND tablename NOT LIKE 'sql_%'  -- Exclude SQL standard tables
-    ),
-    check_info AS (
-      SELECT
-        cc.constraint_name AS check_name,
-        cc.check_clause AS check_expression,
-        CASE
-          WHEN tc.table_schema IS NOT NULL THEN tc.table_schema
-          WHEN ccu.table_schema IS NOT NULL THEN ccu.table_schema
-        END AS table_schema,
-        CASE
-          WHEN tc.table_name IS NOT NULL THEN tc.table_name
-          WHEN ccu.table_name IS NOT NULL THEN ccu.table_name
-        END AS table_name,
-        ccu.column_name
-      FROM
-        information_schema.check_constraints cc
-        LEFT JOIN information_schema.constraint_column_usage ccu
-          ON cc.constraint_name = ccu.constraint_name
-          AND ccu.table_schema NOT IN ('pg_catalog', 'information_schema')
-        LEFT JOIN information_schema.table_constraints tc
-          ON cc.constraint_schema = tc.constraint_schema
-          AND cc.constraint_name = tc.constraint_name
-          AND tc.constraint_type = 'CHECK'
-          AND tc.table_schema NOT IN ('pg_catalog', 'information_schema')
-    )
     SELECT
-      ut.tableschema AS table_schema,
-      ut.tablename AS table_name,
-      ci.check_name,
-      ci.check_expression,
-      ci.column_name
+      n.nspname AS table_schema,
+      c.relname AS table_name,
+      a.attname AS column_name,
+      con.conname AS check_name,
+      pg_get_constraintdef(con.oid) AS check_definition
     FROM
-      user_tables ut
+      pg_catalog.pg_constraint AS con
+    JOIN
+      pg_catalog.pg_class AS c
+      ON con.conrelid = c.oid
     LEFT JOIN
-      check_info ci ON ut.tableschema = ci.table_schema AND ut.tablename = ci.table_name
-    WHERE TRUE
-    ${buildSchemaQuery('ut.tableschema', schemas)}
+      pg_catalog.pg_namespace AS n
+      ON c.relnamespace = n.oid
+    LEFT JOIN
+      pg_catalog.pg_attribute AS a
+      ON a.attrelid = c.oid AND a.attnum = ANY(con.conkey)
+    WHERE con.contype = 'c' -- 'c' for CHECK constraints
+    ${buildSchemaQuery('n.nspname', schemas)}
   `;
   const checkListResult = await client.query(checkListSql);
   const checks: CheckConstraintDictionary = {};
@@ -500,7 +474,7 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
       table_schema,
       table_name,
       check_name,
-      check_expression,
+      check_definition,
       column_name,
     } = row;
     const key = `${table_schema}.${table_name}`;
@@ -509,14 +483,14 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
       if (!tableConstraints[key][column_name]) tableConstraints[key][column_name] = { checks: [] };
       tableConstraints[key][column_name].checks.push({
         name: check_name || undefined,
-        expression: check_expression,
+        expression: check_definition.slice(8, -2),
       });
       return;
     }
     if (!checks[key]) checks[key] = [];
     checks[key].push({
       name: check_name || undefined,
-      expression: check_expression,
+      expression: check_definition.slice(8, -2),
     });
   });
 

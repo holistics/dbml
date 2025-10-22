@@ -2045,19 +2045,19 @@
     "dbo.user_define_data_types": [
       {
         "name": "chk_age_range",
-        "expression": "([age_start]<=[age_end])"
+        "expression": "[age_start]<=[age_end]"
       }
     ],
     "dbo.AddressInfo": [
       {
         "name": "CK_Address_Valid",
-        "expression": "(([AddressID]='176029FA-D6D3-49E1-A48C-000000000002' OR [AddressID]='176029FA-D6D3-49E1-A48C-000000000001') AND ([AddressFormatID]='176029FA-D6D3-49E1-A48C-000000000002' OR [AddressFormatID]='176029FA-D6D3-49E1-A48C-000000000001'))"
+        "expression": "([AddressID]='176029FA-D6D3-49E1-A48C-000000000002' OR [AddressID]='176029FA-D6D3-49E1-A48C-000000000001') AND ([AddressFormatID]='176029FA-D6D3-49E1-A48C-000000000002' OR [AddressFormatID]='176029FA-D6D3-49E1-A48C-000000000001')"
       }
     ],
     "dbo.AddressInfo2": [
       {
         "name": "CK_Address_Valid2",
-        "expression": "(([A1]='333' OR [A1]='2222' OR [A1]='1111') AND ([A2]='2222' OR [A2]='1111') AND ([A3]='1111' OR [A3]='2222') AND ([A4]='3333' OR [A4]='2222'))"
+        "expression": "([A1]='333' OR [A1]='2222' OR [A1]='1111') AND ([A2]='2222' OR [A2]='1111') AND ([A3]='1111' OR [A3]='2222') AND ([A4]='3333' OR [A4]='2222')"
       }
     ]
   }
