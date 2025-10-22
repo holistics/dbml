@@ -475,8 +475,8 @@
       {
         "name": "status",
         "type": {
-          "type_name": "chk_status",
-          "schemaName": "dbo"
+          "type_name": "varchar(20)",
+          "schemaName": null
         },
         "dbdefault": {
           "type": "string",
@@ -1296,8 +1296,8 @@
       {
         "name": "gender",
         "type": {
-          "type_name": "chk_gender",
-          "schemaName": "dbo"
+          "type_name": "nvarchar(10)",
+          "schemaName": null
         },
         "dbdefault": null,
         "not_null": false,
@@ -1648,44 +1648,7 @@
       }
     ]
   },
-  "enums": [
-    {
-      "name": "chk_status",
-      "schemaName": "dbo",
-      "values": [
-        {
-          "name": "cancelled"
-        },
-        {
-          "name": "delivered"
-        },
-        {
-          "name": "shipped"
-        },
-        {
-          "name": "processing"
-        },
-        {
-          "name": "pending"
-        }
-      ]
-    },
-    {
-      "name": "chk_gender",
-      "schemaName": "dbo",
-      "values": [
-        {
-          "name": "Other"
-        },
-        {
-          "name": "Female"
-        },
-        {
-          "name": "Male"
-        }
-      ]
-    }
-  ],
+  "enums": [],
   "refs": [
     {
       "name": "FK_AuthorNationality",
@@ -1992,6 +1955,14 @@
             "expression": "[total_amount]>(0)"
           }
         ]
+      },
+      "status": {
+        "checks": [
+          {
+            "name": "chk_status",
+            "expression": "[status]='cancelled' OR [status]='delivered' OR [status]='shipped' OR [status]='processing' OR [status]='pending'"
+          }
+        ]
       }
     },
     "dbo.products": {
@@ -2032,6 +2003,14 @@
       "id": {
         "checks": [],
         "pk": true
+      },
+      "gender": {
+        "checks": [
+          {
+            "name": "chk_gender",
+            "expression": "[gender]='Other' OR [gender]='Female' OR [gender]='Male'"
+          }
+        ]
       }
     },
     "dbo.users": {
