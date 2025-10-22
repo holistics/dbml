@@ -206,7 +206,7 @@ const generateTablesFields = async (client: sql.ConnectionPool, schemas: string[
     FROM
       tables_and_fields
     WHERE
-      rn = 1
+      1 = 1
       ${buildSchemaQuery('table_schema', schemas)}
     ORDER BY
       table_schema,
