@@ -7,7 +7,7 @@ import TablePartial from './tablePartial';
 interface RawConstraint {
     token: Token;
     name: string;
-    expression: any;
+    expression: string;
     table: Table;
     column?: Field | null;
     injectedPartial?: TablePartial | null;
@@ -15,7 +15,7 @@ interface RawConstraint {
 
 declare class Constraint extends Element {
     name: string;
-    expression: any;
+    expression: string;
     table: Table;
     column: Field | null;
     injectedPartial: TablePartial | null;
@@ -24,7 +24,7 @@ declare class Constraint extends Element {
     generateId(): void;
     export(): {
         name: string;
-        expression: any;
+        expression: string;
     };
     exportParentIds(): {
         tableId: number;
@@ -33,7 +33,7 @@ declare class Constraint extends Element {
     };
     shallowExport(): {
         name: string;
-        expression: any;
+        expression: string;
     };
     normalize(model: NormalizedDatabase): void;
 }
@@ -42,7 +42,7 @@ export interface NormalizedConstraint {
     [_id: number]: {
         id: number;
         name: string;
-        expression: any;
+        expression: string;
         tableId: number;
         columnId: number | null;
         injectedPartialId: number | null;
