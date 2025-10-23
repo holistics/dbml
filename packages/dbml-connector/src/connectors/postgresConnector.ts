@@ -450,9 +450,13 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
     SELECT
       n.nspname AS table_schema,
       c.relname AS table_name,
-      a.attname AS column_name,
+      MAX(a.attname) AS column_name,
       con.conname AS check_name,
-      pg_get_constraintdef(con.oid) AS check_definition
+      pg_get_constraintdef(con.oid) AS check_definition,
+      CASE
+        WHEN COUNT(*) = 1 THEN TRUE
+        ELSE FALSE
+      END AS is_column_constraint 
     FROM
       pg_catalog.pg_constraint AS con
     JOIN
@@ -466,6 +470,11 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
       ON a.attrelid = c.oid AND a.attnum = ANY(con.conkey)
     WHERE con.contype = 'c' -- 'c' for CHECK constraints
     ${buildSchemaQuery('n.nspname', schemas)}
+    GROUP BY
+      con.conname,
+      n.nspname,
+      c.relname,
+      con.oid
   `;
   const checkListResult = await client.query(checkListSql);
   const checks: CheckConstraintDictionary = {};
@@ -476,9 +485,10 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
       check_name,
       check_definition,
       column_name,
+      is_column_constraint,
     } = row;
     const key = `${table_schema}.${table_name}`;
-    if (column_name) {
+    if (is_column_constraint) {
       if (!tableConstraints[key]) tableConstraints[key] = {};
       if (!tableConstraints[key][column_name]) tableConstraints[key][column_name] = { checks: [] };
       tableConstraints[key][column_name].checks.push({
