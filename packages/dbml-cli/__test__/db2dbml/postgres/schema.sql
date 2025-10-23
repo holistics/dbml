@@ -117,8 +117,8 @@ CREATE TABLE user_define_data_types (
   name VARCHAR(50),
   gender gender_type,
   age int4range,  -- Using built-in int4range for age range
-  height FLOAT,
-  weight FLOAT
+  height FLOAT CHECK (height > 0),
+  weight FLOAT CONSTRAINT chk_positive_weight CHECK (weight > 0)
 );
 
 -- Create table with comments
