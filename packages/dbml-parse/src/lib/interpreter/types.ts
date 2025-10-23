@@ -46,6 +46,7 @@ export interface Table {
   schemaName: null | string;
   alias: string | null;
   fields: Column[];
+  constraints: Constraint[];
   partials: TablePartialInjection[];
   token: TokenPosition;
   indexes: Index[];
@@ -74,6 +75,7 @@ export interface Column {
   type: ColumnType;
   token: TokenPosition;
   inline_refs: InlineRef[];
+  constraints: Constraint[];
   pk?: boolean;
   dbdefault?: {
     type: 'number' | 'string' | 'boolean' | 'expression';
@@ -103,6 +105,12 @@ export interface Index {
     token: TokenPosition;
   };
   type?: string;
+}
+
+export interface Constraint {
+  token: TokenPosition;
+  expression: string;
+  name?: string;
 }
 
 export interface InlineRef {
@@ -183,6 +191,7 @@ export interface TablePartial {
   token: TokenPosition;
   indexes: Index[];
   headerColor?: string;
+  constraints: Constraint[];
   note?: {
     value: string;
     token: TokenPosition;
@@ -198,18 +207,18 @@ export interface TablePartialInjection {
 export type Project =
   | Record<string, never>
   | {
-      name: string | null;
-      tables: Table[];
-      refs: Ref[];
-      enums: Enum[];
-      tableGroups: TableGroup[];
-      tablePartials: TablePartial[];
-      note?: {
-        value: string;
-        token: TokenPosition;
-      };
+    name: string | null;
+    tables: Table[];
+    refs: Ref[];
+    enums: Enum[];
+    tableGroups: TableGroup[];
+    tablePartials: TablePartial[];
+    note?: {
+      value: string;
       token: TokenPosition;
-      [
-        index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials'>
-      ]: string;
     };
+    token: TokenPosition;
+    [
+    index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials'>
+    ]: string;
+  };

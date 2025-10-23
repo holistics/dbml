@@ -33,6 +33,7 @@ export function getElementKind(node?: ElementDeclarationNode): Option<ElementKin
     case ElementKind.Ref:
     case ElementKind.TableGroup:
     case ElementKind.TablePartial:
+    case ElementKind.Constraints:
       return new Some(kind as ElementKind);
     default:
       return new None();

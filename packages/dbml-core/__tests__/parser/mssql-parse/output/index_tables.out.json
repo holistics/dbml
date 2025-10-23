@@ -4,53 +4,53 @@
       "name": "users",
       "fields": [
         {
+          "name": "id",
           "type": {
             "type_name": "int"
-          },
-          "name": "id"
+          }
         },
         {
+          "name": "full_name",
+          "type": {
+            "type_name": "nvarchar(255)"
+          }
+        },
+        {
+          "name": "email",
           "type": {
             "type_name": "nvarchar(255)"
           },
-          "name": "full_name"
+          "unique": true
         },
         {
+          "name": "gender",
           "type": {
             "type_name": "nvarchar(255)"
-          },
-          "unique": true,
-          "name": "email"
+          }
         },
         {
+          "name": "date_of_birth",
           "type": {
             "type_name": "nvarchar(255)"
-          },
-          "name": "gender"
+          }
         },
         {
+          "name": "created_at",
           "type": {
             "type_name": "nvarchar(255)"
-          },
-          "name": "date_of_birth"
+          }
         },
         {
-          "type": {
-            "type_name": "nvarchar(255)"
-          },
-          "name": "created_at"
-        },
-        {
+          "name": "country_code",
           "type": {
             "type_name": "int"
-          },
-          "name": "country_code"
+          }
         },
         {
+          "name": "active",
           "type": {
             "type_name": "boolean"
-          },
-          "name": "active"
+          }
         }
       ],
       "indexes": [

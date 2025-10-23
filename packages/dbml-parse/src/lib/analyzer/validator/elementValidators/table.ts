@@ -9,6 +9,7 @@ import {
   ElementDeclarationNode,
   ExpressionNode,
   FunctionApplicationNode,
+  FunctionExpressionNode,
   ListExpressionNode,
   PartialInjectionNode,
   PrimaryExpressionNode,
@@ -41,11 +42,11 @@ import SymbolTable from '../../symbol/symbolTable';
 import { SettingName } from '../../types';
 
 export default class TableValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken};
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private symbolFactory: SymbolFactory;
   private publicSymbolTable: SymbolTable;
 
-  constructor (
+  constructor(
     declarationNode: ElementDeclarationNode & { type: SyntaxToken },
     publicSymbolTable: SymbolTable,
     symbolFactory: SymbolFactory,
@@ -55,7 +56,7 @@ export default class TableValidator implements ElementValidator {
     this.publicSymbolTable = publicSymbolTable;
   }
 
-  validate (): CompileError[] {
+  validate(): CompileError[] {
     return [
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
@@ -66,14 +67,14 @@ export default class TableValidator implements ElementValidator {
     ];
   }
 
-  private validateContext (): CompileError[] {
+  private validateContext(): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
       return [new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level', this.declarationNode)];
     }
     return [];
   }
 
-  private validateName (nameNode?: SyntaxNode): CompileError[] {
+  private validateName(nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', this.declarationNode)];
     }
@@ -87,7 +88,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
     if (!aliasNode) {
       return [];
     }
@@ -99,7 +100,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -112,7 +113,7 @@ export default class TableValidator implements ElementValidator {
           }
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'headercolor\' must be a color literal', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'headercolor\' must be a color literal', attr.value || attr.name!));
             }
           });
           break;
@@ -122,18 +123,18 @@ export default class TableValidator implements ElementValidator {
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, '\'note\' must be a string literal', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'note\' must be a string literal', attr.value || attr.name!));
             }
           });
           break;
         default:
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.INVALID_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
       }
     });
     return errors;
   }
 
-  registerElement (): CompileError[] {
+  registerElement(): CompileError[] {
     const errors: CompileError[] = [];
     this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
 
@@ -167,7 +168,7 @@ export default class TableValidator implements ElementValidator {
     return errors;
   }
 
-  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -189,11 +190,11 @@ export default class TableValidator implements ElementValidator {
     ];
   }
 
-  validateInjections (injections: PartialInjectionNode[]) {
+  validateInjections(injections: PartialInjectionNode[]) {
     return injections.flatMap((injection) => this.registerInjection(injection));
   }
 
-  registerInjection (injection: PartialInjectionNode) {
+  registerInjection(injection: PartialInjectionNode) {
     if (!injection.partial?.variable?.value) return [];
 
     const injectionName = injection.partial.variable?.value;
@@ -214,7 +215,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       if (!field.callee) {
         return [];
@@ -243,7 +244,7 @@ export default class TableValidator implements ElementValidator {
     });
   }
 
-  registerField (field: FunctionApplicationNode): CompileError[] {
+  registerField(field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
       const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const columnId = createColumnSymbolIndex(columnName);
@@ -265,7 +266,7 @@ export default class TableValidator implements ElementValidator {
   }
 
   // This is needed to support legacy inline settings
-  validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
+  validateFieldSetting(parts: ExpressionNode[]): CompileError[] {
     if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
       return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
     }
@@ -302,7 +303,7 @@ export default class TableValidator implements ElementValidator {
     });
 
     const pkAttrs = settingMap[SettingName.PK] || [];
-    const pkeyAttrs = settingMap[SettingName.PKey] || [];
+    const pkeyAttrs = settingMap[SettingName.PrimaryKey] || [];
     if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
       errors.push(
         ...[...pkAttrs, ...pkeyAttrs]
@@ -329,7 +330,7 @@ export default class TableValidator implements ElementValidator {
             }
           });
           break;
-        case SettingName.PKey:
+        case SettingName.PrimaryKey:
           if (attrs.length > 1) {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key can only appear once', attr)));
           }
@@ -399,18 +400,26 @@ export default class TableValidator implements ElementValidator {
           break;
         case SettingName.Default:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'default\' can only appear once', attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'default\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isValidDefaultValue(attr.value)) {
               errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_SETTING,
+                CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
                 '\'default\' must be a string literal, number literal, function expression, true, false or null',
                 attr.value || attr.name!,
               ));
             }
           });
           break;
+        case SettingName.Constraint:
+          attrs.forEach((attr) => {
+            if (!(attr.value instanceof FunctionExpressionNode)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'constraint\' must be a function expression', attr.value || attr.name!));
+            }
+          });
+          break;
+
         default:
           attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
       }
@@ -418,7 +427,7 @@ export default class TableValidator implements ElementValidator {
     return errors;
   }
 
-  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
     const errors = subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {

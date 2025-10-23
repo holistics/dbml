@@ -28,7 +28,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         },
         {
           "name": "name",
@@ -68,6 +69,7 @@
       },
       "indexes": [],
       "partials": [],
+      "constraints": [],
       "headerColor": "#555"
     },
     {
@@ -97,7 +99,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         },
         {
           "name": "name",
@@ -122,7 +125,8 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         }
       ],
       "token": {
@@ -139,6 +143,7 @@
       },
       "indexes": [],
       "partials": [],
+      "constraints": [],
       "note": {
         "value": "name is required",
         "token": {
@@ -182,7 +187,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         },
         {
           "name": "name",
@@ -230,7 +236,8 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         }
       ],
       "token": {
@@ -247,6 +254,7 @@
       },
       "indexes": [],
       "partials": [],
+      "constraints": [],
       "headerColor": "#17DACC",
       "note": {
         "value": "product must have price",
@@ -291,7 +299,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         },
         {
           "name": "user_id",
@@ -377,6 +386,7 @@
       },
       "indexes": [],
       "partials": [],
+      "constraints": [],
       "headerColor": "#08DAFF",
       "note": {
         "value": "merchants sell a lot",

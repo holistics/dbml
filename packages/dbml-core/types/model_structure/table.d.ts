@@ -1,6 +1,7 @@
 import Element, { RawNote, Token } from './element';
 import Field from './field';
 import Index from './indexes';
+import Constraint from './constraint';
 import Schema from './schema';
 import DbState from './dbState';
 import TableGroup from './tableGroup';
@@ -13,6 +14,7 @@ interface RawTable {
     note: RawNote;
     fields: Field[];
     indexes: Index[];
+    constraints?: any[];
     schema: Schema;
     token: Token;
     headerColor: string;
@@ -26,6 +28,7 @@ declare class Table extends Element {
     noteToken: Token;
     fields: Field[];
     indexes: Index[];
+    constraints: Constraint[];
     schema: Schema;
     headerColor: string;
     dbState: DbState;
@@ -33,7 +36,7 @@ declare class Table extends Element {
     group: TableGroup;
     partials: TablePartial[];
 
-    constructor({ name, alias, note, fields, indexes, schema, token, headerColor }: RawTable);
+    constructor({ name, alias, note, fields, indexes, constraints, schema, token, headerColor }: RawTable);
     generateId(): void;
     processFields(rawFields: any): void;
     pushField(field: any): void;
@@ -41,6 +44,8 @@ declare class Table extends Element {
     processIndexes(rawIndexes: any): void;
     pushIndex(index: any): void;
     checkIndex(index: any): void;
+    processConstraints(constraints: any[]): void;
+    pushConstraint(constraint: any): void;
     findField(fieldName: any): Field;
     checkSameId(table: any): boolean;
     processPartials(): void;
@@ -98,6 +103,7 @@ declare class Table extends Element {
     exportChildIds(): {
         fieldIds: number[];
         indexIds: number[];
+        constraintIds: number[];
     };
     exportParentIds(): {
         schemaId: number;
@@ -122,6 +128,7 @@ export interface NormalizedTable {
         headerColor: string;
         fieldIds: number[];
         indexIds: number[];
+        constraintIds: number[];
         schemaId: number;
         groupId: number;
         partials: TablePartial[];

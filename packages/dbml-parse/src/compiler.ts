@@ -62,6 +62,7 @@ export const enum ScopeKind {
   CUSTOM,
   TOPLEVEL,
   TABLEPARTIAL,
+  CONSTRAINTS,
 }
 
 export default class Compiler {
@@ -340,6 +341,8 @@ export default class Compiler {
           return ScopeKind.PROJECT;
         case 'tablepartial':
           return ScopeKind.TABLEPARTIAL;
+        case 'constraints':
+          return ScopeKind.CONSTRAINTS;
         default:
           return ScopeKind.CUSTOM;
       }

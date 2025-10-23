@@ -96,6 +96,22 @@ class OracleExporter {
         line += ' NOT NULL';
       }
 
+      if (cloneField.constraintIds && cloneField.constraintIds.length > 0) {
+        if (cloneField.constraintIds.length === 1) {
+          const constraint = model.constraints[cloneField.constraintIds[0]];
+          if (constraint.name) {
+            line += ` CONSTRAINT "${constraint.name}"`;
+          }
+          line += ` CHECK (${constraint.expression})`;
+        } else {
+          const constraintExpressions = cloneField.constraintIds.map(constraintId => {
+            const constraint = model.constraints[constraintId];
+            return `(${constraint.expression})`;
+          });
+          line += ` CHECK (${constraintExpressions.join(' AND ')})`;
+        }
+      }
+
       return line;
     });
 
@@ -130,14 +146,39 @@ class OracleExporter {
     return lines;
   }
 
+  static getConstraintLines (tableId, model) {
+    const table = model.tables[tableId];
+  
+    if (!table.constraintIds || table.constraintIds.length === 0) {
+      return [];
+    }
+
+    const lines = table.constraintIds.map((constraintId) => {
+      const constraint = model.constraints[constraintId];
+      let line = '';
+      
+      if (constraint.name) {
+        line = `CONSTRAINT "${constraint.name}" `;
+      }
+      
+      line += `CHECK (${constraint.expression})`;
+      
+      return line;
+    });
+
+    return lines;
+  }
+
   static getTableContents (tableIds, model) {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = this.getFieldLines(tableId, model);
+      const constraintContents = this.getConstraintLines(tableId, model);
       const compositePKs = this.getCompositePKs(tableId, model);
 
       return {
         tableId,
         fieldContents,
+        constraintContents,
         compositePKs,
       };
     });
@@ -149,7 +190,7 @@ class OracleExporter {
     const tableContentList = this.getTableContents(tableIds, model);
 
     const tableStrs = tableContentList.map((tableContent) => {
-      const content = [...tableContent.fieldContents, ...tableContent.compositePKs];
+      const content = [...tableContent.fieldContents, ...tableContent.constraintContents, ...tableContent.compositePKs];
       const table = model.tables[tableContent.tableId];
       const schema = model.schemas[table.schemaId];
 

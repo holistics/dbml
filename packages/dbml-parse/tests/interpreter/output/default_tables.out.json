@@ -32,7 +32,8 @@
           "dbdefault": {
             "type": "number",
             "value": 123
-          }
+          },
+          "constraints": []
         },
         {
           "name": "user_id",
@@ -57,7 +58,8 @@
           "pk": false,
           "increment": false,
           "unique": true,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         },
         {
           "name": "status",
@@ -85,7 +87,8 @@
           "dbdefault": {
             "value": "Completed",
             "type": "string"
-          }
+          },
+          "constraints": []
         },
         {
           "name": "created_at",
@@ -113,7 +116,8 @@
           "dbdefault": {
             "value": "now()",
             "type": "expression"
-          }
+          },
+          "constraints": []
         }
       ],
       "token": {
@@ -129,7 +133,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     },
     {
       "name": "order_items",
@@ -219,7 +224,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     },
     {
       "name": "products",
@@ -248,7 +254,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         },
         {
           "name": "name",
@@ -276,7 +283,8 @@
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          }
+          },
+          "constraints": []
         },
         {
           "name": "merchant_id",
@@ -305,7 +313,8 @@
           "dbdefault": {
             "type": "number",
             "value": -1
-          }
+          },
+          "constraints": []
         },
         {
           "name": "price",
@@ -333,7 +342,8 @@
           "dbdefault": {
             "type": "number",
             "value": -123.12
-          }
+          },
+          "constraints": []
         },
         {
           "name": "stock",
@@ -361,7 +371,8 @@
           "dbdefault": {
             "value": "true",
             "type": "boolean"
-          }
+          },
+          "constraints": []
         },
         {
           "name": "expiration",
@@ -389,7 +400,8 @@
           "dbdefault": {
             "value": "current_date + interval 1 year",
             "type": "expression"
-          }
+          },
+          "constraints": []
         }
       ],
       "token": {
@@ -405,7 +417,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     }
   ],
   "notes": [],

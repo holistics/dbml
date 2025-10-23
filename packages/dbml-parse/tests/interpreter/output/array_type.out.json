@@ -52,7 +52,8 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         },
         {
           "name": "schedule",
@@ -77,7 +78,8 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "not_null": false
+          "not_null": false,
+          "constraints": []
         }
       ],
       "token": {
@@ -93,7 +95,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     },
     {
       "name": "tictactoe",
@@ -137,7 +140,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     }
   ],
   "notes": [],

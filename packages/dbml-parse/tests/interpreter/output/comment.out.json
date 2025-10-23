@@ -28,7 +28,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         },
         {
           "name": "user_id",
@@ -53,7 +54,8 @@
           "pk": false,
           "increment": false,
           "unique": true,
-          "not_null": true
+          "not_null": true,
+          "constraints": []
         },
         {
           "name": "status",
@@ -92,7 +94,8 @@
                 "column": 45
               }
             }
-          }
+          },
+          "constraints": []
         },
         {
           "name": "created_at",
@@ -131,7 +134,8 @@
                 "column": 49
               }
             }
-          }
+          },
+          "constraints": []
         }
       ],
       "token": {
@@ -215,7 +219,8 @@
           }
         }
       ],
-      "partials": []
+      "partials": [],
+      "constraints": []
     }
   ],
   "notes": [],

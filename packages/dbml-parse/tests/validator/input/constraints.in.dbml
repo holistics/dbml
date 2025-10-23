@@ -1,0 +1,24 @@
+constraints {}
+
+Table Users {
+  balance int
+
+
+  constraints {
+    `balance > 0` [name: 'positive_balance']
+    
+    `duplicate name` [name: 'dup', name: 'dup']
+    `invalid setting` [invalid]
+  }
+}
+
+TablePartial Users {
+  balance int
+
+  constraints {
+    `balance > 0` [name: 'positive_balance']
+    
+    `duplicate name` [name: 'dup', name: 'dup']
+    `invalid setting` [invalid]
+  }
+}

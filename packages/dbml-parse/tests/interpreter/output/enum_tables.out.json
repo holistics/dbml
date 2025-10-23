@@ -28,7 +28,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         },
         {
           "name": "status",
@@ -67,7 +68,8 @@
                 "column": 51
               }
             }
-          }
+          },
+          "constraints": []
         }
       ],
       "token": {
@@ -83,7 +85,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     },
     {
       "name": "orders",
@@ -173,7 +176,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     }
   ],
   "notes": [],
