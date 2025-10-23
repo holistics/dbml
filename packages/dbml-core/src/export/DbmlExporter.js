@@ -92,6 +92,7 @@ class DbmlExporter {
             break;
 
           default:
+            value += `\`${field.dbdefault.value}\``;
             break;
         }
         constraints.push(value);
