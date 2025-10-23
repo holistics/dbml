@@ -38,7 +38,8 @@ CREATE TABLE products (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   is_available BOOLEAN DEFAULT TRUE,
   CONSTRAINT chk_price_positive CHECK (price > 0),
-  CONSTRAINT chk_stock_non_negative CHECK (stock_quantity >= 0)
+  CONSTRAINT chk_stock_non_negative CHECK (stock_quantity >= 0),
+  CONSTRAINT chk_created_at CHECK (created_at <= updated_at)
 );
 
 -- Create an index on the category column for faster filtering
