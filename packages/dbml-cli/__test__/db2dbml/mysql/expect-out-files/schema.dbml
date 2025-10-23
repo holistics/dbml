@@ -139,6 +139,10 @@ Table "products" {
   "quantity" int [not null]
   "total_value" "decimal(10,2) GENERATED ALWAYS AS ((`price` * `quantity`)) STORED"
   "updated_at" "timestamp on update CURRENT_TIMESTAMP" [default: `CURRENT_TIMESTAMP`]
+
+  Constraints {
+    `(`price` > 0) and (`price` < 1000000)` [name: 'products_chk_1']
+  }
 }
 
 Table "sqrt_triangle" {
@@ -169,6 +173,10 @@ Table "users" {
   "created_at" timestamp [default: `CURRENT_TIMESTAMP`]
   "last_login" timestamp [default: `CURRENT_TIMESTAMP`]
   "is_active" tinyint(1) [default: 1]
+
+  Constraints {
+    ``created_at` <= `last_login`` [name: 'chk_last_login']
+  }
 }
 
 Ref "fk_test_composite":"composite_key_2".("id2_1", "id2_2") < "composite_key_1".("id1_1", "id1_2")
