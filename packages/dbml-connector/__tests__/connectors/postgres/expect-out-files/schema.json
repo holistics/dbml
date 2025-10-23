@@ -1567,19 +1567,19 @@
         "checks": [],
         "pk": true
       },
-      "unit_price": {
-        "checks": [
-          {
-            "name": "chk_unit_price_positive",
-            "expression": "unit_price > (0)::numeric"
-          }
-        ]
-      },
       "quantity": {
         "checks": [
           {
             "name": "chk_quantity_positive",
             "expression": "quantity > 0"
+          }
+        ]
+      },
+      "unit_price": {
+        "checks": [
+          {
+            "name": "chk_unit_price_positive",
+            "expression": "unit_price > (0)::numeric"
           }
         ]
       }
@@ -1589,19 +1589,19 @@
         "checks": [],
         "pk": true
       },
-      "status": {
-        "checks": [
-          {
-            "name": "chk_status",
-            "expression": "(status)::text = ANY ((ARRAY['pending'::character varying, 'processing'::character varying, 'shipped'::character varying, 'delivered'::character varying, 'cancelled'::character varying])::text[])"
-          }
-        ]
-      },
       "total_amount": {
         "checks": [
           {
             "name": "chk_total_amount_positive",
             "expression": "total_amount > (0)::numeric"
+          }
+        ]
+      },
+      "status": {
+        "checks": [
+          {
+            "name": "chk_status",
+            "expression": "(status)::text = ANY ((ARRAY['pending'::character varying, 'processing'::character varying, 'shipped'::character varying, 'delivered'::character varying, 'cancelled'::character varying])::text[])"
           }
         ]
       }
@@ -1611,19 +1611,19 @@
         "checks": [],
         "pk": true
       },
-      "stock_quantity": {
-        "checks": [
-          {
-            "name": "chk_stock_non_negative",
-            "expression": "stock_quantity >= 0"
-          }
-        ]
-      },
       "price": {
         "checks": [
           {
             "name": "chk_price_positive",
             "expression": "price > (0)::numeric"
+          }
+        ]
+      },
+      "stock_quantity": {
+        "checks": [
+          {
+            "name": "chk_stock_non_negative",
+            "expression": "stock_quantity >= 0"
           }
         ]
       }
@@ -1663,19 +1663,19 @@
         "checks": [],
         "pk": true
       },
-      "weight": {
-        "checks": [
-          {
-            "name": "chk_positive_weight",
-            "expression": "weight > (0)::double precision"
-          }
-        ]
-      },
       "height": {
         "checks": [
           {
             "name": "user_define_data_types_height_check",
             "expression": "height > (0)::double precision"
+          }
+        ]
+      },
+      "weight": {
+        "checks": [
+          {
+            "name": "chk_positive_weight",
+            "expression": "weight > (0)::double precision"
           }
         ]
       }
@@ -1708,5 +1708,12 @@
       }
     }
   },
-  "checks": {}
+  "checks": {
+    "public.products": [
+      {
+        "name": "chk_created_at",
+        "expression": "created_at <= updated_at"
+      }
+    ]
+  }
 }
