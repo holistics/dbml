@@ -65,6 +65,10 @@ Table "products" {
   "updated_at" timestamptz [default: `CURRENT_TIMESTAMP`]
   "is_available" bool [default: true]
 
+  Constraints {
+    `created_at <= updated_at` [name: 'chk_created_at']
+  }
+
   Indexes {
     category [type: btree, name: "idx_products_category"]
   }
