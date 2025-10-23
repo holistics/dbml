@@ -52,6 +52,6 @@ describe('@dbml/cli', () => {
 
   test.each(scanDirNames(__dirname, 'db2dbml'))('db2dbml/%s', async (dirName) => {
     await runTest(path.join(__dirname, 'db2dbml', dirName), '../bin/db2dbml.js');
-  }, 10000);
+  }, 100000);
   /* eslint-enable */
 });

@@ -1,38 +1,3 @@
-Enum "dbo"."chk_status_status" {
-  "cancelled"
-  "delivered"
-  "shipped"
-  "processing"
-  "pending"
-}
-
-Enum "dbo"."chk_gender_gender" {
-  "Other"
-  "Female"
-  "Male"
-}
-
-Enum "dbo"."CK_Address_Valid_AddressID_AddressFormatID" {
-  "176029FA-D6D3-49E1-A48C-000000000002"
-  "176029FA-D6D3-49E1-A48C-000000000001"
-}
-
-Enum "dbo"."CK_Address_Valid2_A1" {
-  "333"
-  "2222"
-  "1111"
-}
-
-Enum "dbo"."CK_Address_Valid2_A2_A3" {
-  "2222"
-  "1111"
-}
-
-Enum "dbo"."CK_Address_Valid2_A4" {
-  "3333"
-  "2222"
-}
-
 Table "dbo"."users" {
   "user_id" int(10) [pk, not null, increment]
   "username" varchar(50) [unique, not null]
@@ -75,7 +40,7 @@ Table "dbo"."orders" {
   "user_id" int(10) [not null]
   "order_date" datetime2 [default: `getdate()`]
   "total_amount" decimal(12,2) [not null]
-  "status" dbo.chk_status_status [default: 'pending']
+  "status" varchar(20) [default: 'pending']
   "shipping_address" text [not null]
   "billing_address" text [not null]
 
@@ -183,11 +148,15 @@ Table "dbo"."gender_reference" {
 Table "dbo"."user_define_data_types" {
   "id" int(10) [pk, not null, increment]
   "name" nvarchar(50)
-  "gender" dbo.chk_gender_gender
+  "gender" nvarchar(10)
   "age_start" int(10)
   "age_end" int(10)
   "height" float(53)
   "weight" float(53)
+
+  Constraints {
+    `[age_start]<=[age_end]` [name: 'chk_age_range']
+  }
 }
 
 Table "dbo"."table_with_comments" {
@@ -214,15 +183,23 @@ Table "dbo"."Books" {
 }
 
 Table "dbo"."AddressInfo" {
-  "AddressID" dbo.CK_Address_Valid_AddressID_AddressFormatID [not null]
-  "AddressFormatID" dbo.CK_Address_Valid_AddressID_AddressFormatID [not null]
+  "AddressID" uniqueidentifier(16) [not null]
+  "AddressFormatID" uniqueidentifier(16) [not null]
+
+  Constraints {
+    `([AddressID]='176029FA-D6D3-49E1-A48C-000000000002' OR [AddressID]='176029FA-D6D3-49E1-A48C-000000000001') AND ([AddressFormatID]='176029FA-D6D3-49E1-A48C-000000000002' OR [AddressFormatID]='176029FA-D6D3-49E1-A48C-000000000001')` [name: 'CK_Address_Valid']
+  }
 }
 
 Table "dbo"."AddressInfo2" {
-  "A1" dbo.CK_Address_Valid2_A1 [not null]
-  "A2" dbo.CK_Address_Valid2_A2_A3 [not null]
-  "A3" dbo.CK_Address_Valid2_A2_A3 [not null]
-  "A4" dbo.CK_Address_Valid2_A4 [not null]
+  "A1" uniqueidentifier(16) [not null]
+  "A2" uniqueidentifier(16) [not null]
+  "A3" uniqueidentifier(16) [not null]
+  "A4" uniqueidentifier(16) [not null]
+
+  Constraints {
+    `([A1]='333' OR [A1]='2222' OR [A1]='1111') AND ([A2]='2222' OR [A2]='1111') AND ([A3]='1111' OR [A3]='2222') AND ([A4]='3333' OR [A4]='2222')` [name: 'CK_Address_Valid2']
+  }
 }
 
 Table "dbo"."TestDescriptionTable" {
