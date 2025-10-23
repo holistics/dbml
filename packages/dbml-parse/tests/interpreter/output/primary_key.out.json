@@ -28,7 +28,8 @@
           "inline_refs": [],
           "pk": true,
           "increment": false,
-          "unique": false
+          "unique": false,
+          "constraints": []
         }
       ],
       "token": {
@@ -44,7 +45,8 @@
         }
       },
       "indexes": [],
-      "partials": []
+      "partials": [],
+      "constraints": []
     }
   ],
   "notes": [],

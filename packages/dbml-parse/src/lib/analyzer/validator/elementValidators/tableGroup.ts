@@ -115,7 +115,7 @@ export default class TableGroupValidator implements ElementValidator {
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
               errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_SETTING,
+                CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
                 '\'color\' must be a color literal',
                 attr.value || attr.name!,
               ));
@@ -134,7 +134,7 @@ export default class TableGroupValidator implements ElementValidator {
             .filter((attr) => !isExpressionAQuotedString(attr.value))
             .forEach((attr) => {
               errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_SETTING,
+                CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
                 '\'note\' must be a string literal',
                 attr.value || attr.name!,
               ));
@@ -142,7 +142,7 @@ export default class TableGroupValidator implements ElementValidator {
           break;
         default:
           errors.push(...attrs.map((attr) => new CompileError(
-            CompileErrorCode.INVALID_TABLE_SETTING,
+            CompileErrorCode.UNKNOWN_TABLE_SETTING,
             `Unknown '${name}' setting`,
             attr,
           )));

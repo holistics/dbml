@@ -1,4 +1,4 @@
-// Generated from .\src\parse\ANTLR\postgresql\PostgreSQLParser.g4 by ANTLR 4.13.0
+// Generated from PostgreSQLParser.g4 by ANTLR 4.13.2
 // jshint ignore: start
 import antlr4 from 'antlr4';
 

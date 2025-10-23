@@ -70,6 +70,9 @@ class DbmlExporter {
       if (field.increment) {
         constraints.push('increment');
       }
+      if (field.constraintIds) {
+        constraints.push(...field.constraintIds.map((id) => `constraint: \`${model.constraints[id].expression}\``));
+      }
       if (field.dbdefault) {
         let value = 'default: ';
         switch (field.dbdefault.type) {
@@ -152,14 +155,32 @@ class DbmlExporter {
     return lines;
   }
 
+  static getConstraintLines (tableId, model) {
+    const table = model.tables[tableId];
+
+    const lines = table.constraintIds.map((constraintId) => {
+      let line = '';
+      const { expression, name } = model.constraints[constraintId];
+      line += `\`${expression}\``;
+      if (name) {
+        line += ` [name: '${name}']`
+      }
+      return line;
+    })
+
+    return lines;
+  }
+
   static getTableContentArr (tableIds, model) {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = DbmlExporter.getFieldLines(tableId, model);
+      const constraintContents = DbmlExporter.getConstraintLines(tableId, model);
       const indexContents = DbmlExporter.getIndexLines(tableId, model);
 
       return {
         tableId,
         fieldContents,
+        constraintContents,
         indexContents,
       };
     });
@@ -192,6 +213,12 @@ class DbmlExporter {
 
       const fieldStr = tableContent.fieldContents.map(field => `  ${field}\n`).join('');
 
+      let constraintStr = '';
+      if (!isEmpty(tableContent.constraintContents)) {
+        const constraintBody = tableContent.constraintContents.map(constraintLine => `    ${constraintLine}\n`).join('');
+        constraintStr = `\n  Constraints {\n${constraintBody}  }\n`;
+      }
+
       let indexStr = '';
       if (!isEmpty(tableContent.indexContents)) {
         const indexBody = tableContent.indexContents.map(indexLine => `    ${indexLine}\n`).join('');
@@ -200,7 +227,7 @@ class DbmlExporter {
 
       const noteStr = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note)}\n`: '';
 
-      return `Table ${tableName}${tableSettingStr} {\n${fieldStr}${indexStr}${noteStr}}\n`;
+      return `Table ${tableName}${tableSettingStr} {\n${fieldStr}${constraintStr}${indexStr}${noteStr}}\n`;
     });
 
     return tableStrs.length ? tableStrs.join('\n') : '';

@@ -17,6 +17,8 @@ outlines the full syntax documentations of DBML.
 - [Column Definition](#column-definition)
   - [Column Settings](#column-settings)
   - [Default Value](#default-value)
+- [Constraint Definition](#constraint-definition)
+  - [Constraint Settings](#constraint-settings)
 - [Index Definition](#index-definition)
   - [Index Settings](#index-settings)
 - [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
@@ -177,6 +179,7 @@ The list of column settings you can use:
 - `unique`: mark the column unique
 - `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below
 - `increment`: mark the column as auto-increment
+- ``constraint: `check expression` ``: add a check expression to this column. Multiple constraints can be defined on a column. For constraints involving multiple columns, refer to the 'Constraints' section
 
 **Note:** You can use a workaround for un-supported settings by adding the setting name into the column type name, such as `id "bigint unsigned" [pk]`
 
@@ -202,6 +205,25 @@ Table users {
   rating integer [default: 10]
 }
 ```
+## Constraint Definition
+
+Constraints allow users to specify custom checks on one or many columns. These checks can be used to enforce constraints on the possible values of one or many columns, which are otherwise impossible to express.
+
+```text
+Table users {
+  id integer
+  wealth integer
+  debt integer
+
+  constraints {
+    `debt + wealth >= 0` [name: 'chk_positive_money']
+  }
+}
+```
+
+### Constraint Settings
+
+- `name`: name of constraint
 
 ## Index Definition
 

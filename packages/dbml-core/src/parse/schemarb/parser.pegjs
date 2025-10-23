@@ -22,6 +22,21 @@
     }
   }
 
+  function addCheckConstraintToTable(tableName, expression, name) {
+    const table = data.tables.find(t => t.name === tableName);
+    if (!table) {
+      error("Table ${tableName} not found");
+    }
+    if (!table.constraints) {
+      table.constraints = [];
+    }
+    const constraint = { expression };
+    if (name) {
+      constraint.name = name;
+    }
+    table.constraints.push(constraint);
+  }
+
   function addPrimaryKey(fields = [], props = []) {
     const primaryKey = props.find(prop => prop.name === 'primary_key');
     if (!primaryKey) return fields;
@@ -264,7 +279,14 @@ rule = tableData:create_table_syntax {
 / r:add_foreign_key_syntax {
     pushRef(r);
   }
+/ add_check_constraint_syntax
 / other_class_prop
+
+add_check_constraint_syntax
+  = sp* add_check_constraint sp* tableName:(symbol / name) "," sp* expression:name props:check_constraint_props* {
+    const constraintName = props.find(p => p.name)?.name;
+    addCheckConstraintToTable(tableName, expression, constraintName);
+  }
 
 add_foreign_key_syntax
   = sp* add_foreign_key sp* fromTable:name","sp* toTable:name props:add_foreign_key_props_syntax* {
@@ -297,6 +319,9 @@ create_table_syntax
       fields: addPrimaryKey(body.fields),
       // index: _.union(...body.index)
     })
+    if (body.constraints && body.constraints.length > 0) {
+      table.constraints = body.constraints;
+    }
     return {
       table,
       refs: createRefFromTableWithReference(table, body.references)
@@ -308,6 +333,7 @@ table_body = fields:field* {
       fields: fields.filter(field => field.isField).map(field => field.field),
       index: fields.filter(field => field.isIndex).map(field => field.index),
       references: fields.filter(field => field.isReferences).map(field => field.reference),
+      constraints: fields.filter(field => field.isConstraint).map(field => field.constraint),
     });
   }
 
@@ -316,11 +342,21 @@ field = whitespace* field:table_field_syntax whatever* endline { return field }
 table_field_syntax
   = field_index_syntax
   / reference: field_reference_syntax { return ({ reference, isReferences: true })}
+  / constraint: field_check_constraint_syntax { return ({ constraint, isConstraint: true })}
   / field:field_type_syntax { return ({ field, isField: true }) }
 
 field_index_syntax = index sp+ whateters
 field_reference_syntax = references sp+ reference:reference_value {
     return reference;
+  }
+field_check_constraint_syntax = check_constraint sp+ expression:name props:check_constraint_props* {
+    const constraint = { expression };
+    for (let i = 0; i < props.length; i++) {
+      if (props[i].name) {
+        constraint.name = props[i].name;
+      }
+    }
+    return constraint;
   }
 field_type_syntax = type:field_type sp+ name:name {
     return ({
@@ -332,6 +368,9 @@ field_type_syntax = type:field_type sp+ name:name {
 reference_value = ":"reference:variable { return reference }
   / reference:name { return reference }
 
+check_constraint_props
+  = "," sp* "name"i":" sp* constraintName:name { return ({ name: constraintName }) }
+
 referential_actions = "on_delete"i / "on_update"i
 
 // Keywords
@@ -341,6 +380,8 @@ create_table "create table" = "create_table"i
 end_create_table "do |t|" = do sp+ abs character abs endline
 index "index" = character ".index"
 references "references" = character ".references"
+check_constraint "check constraint" = character ".check_constraint"
+add_check_constraint "add check constraint" = "add_check_constraint"i
 add_foreign_key "add foreign key" = "add_foreign_key"i
 column "column" = "column"
 primary_key "primary key" = "primary_key"

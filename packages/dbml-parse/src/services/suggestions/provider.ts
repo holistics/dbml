@@ -317,7 +317,7 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
         suggestions: [
           ...[
             SettingName.PK,
-            SettingName.PKey,
+            SettingName.PrimaryKey,
             SettingName.Null,
             SettingName.NotNull,
             SettingName.Increment,
@@ -329,7 +329,7 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             range: undefined as any,
           })),
-          ...[SettingName.Ref, SettingName.Default, SettingName.Note].map((name) => ({
+          ...[SettingName.Ref, SettingName.Default, SettingName.Note, SettingName.Constraint].map((name) => ({
             label: name,
             insertText: `${name}: `,
             kind: CompletionItemKind.Property,
@@ -375,6 +375,18 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
           SettingName.Update,
           SettingName.Delete,
           SettingName.Color,
+        ].map((name) => ({
+          label: name,
+          insertText: `${name}: `,
+          kind: CompletionItemKind.Property,
+          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+          range: undefined as any,
+        })),
+      };
+    case ScopeKind.CONSTRAINTS:
+      return {
+        suggestions: [
+          SettingName.Name,
         ].map((name) => ({
           label: name,
           insertText: `${name}: `,
@@ -522,7 +534,7 @@ function suggestInColumn (
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const elements = ['Note', 'indexes'];
+  const elements = ['Note', 'indexes', 'constraints'];
   if (!container?.callee) {
     return {
       suggestions: elements.map((name) => ({

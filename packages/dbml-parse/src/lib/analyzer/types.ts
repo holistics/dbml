@@ -7,6 +7,7 @@ export enum ElementKind {
   Indexes = 'indexes',
   TableGroup = 'tablegroup',
   TablePartial = 'tablepartial',
+  Constraints = 'constraints'
 }
 
 export enum SettingName {
@@ -15,7 +16,7 @@ export enum SettingName {
   Note = 'note',
 
   PK = 'pk',
-  PKey = 'primary key',
+  PrimaryKey = 'primary key',
   Unique = 'unique',
   Ref = 'ref',
   NotNull = 'not null',
@@ -24,6 +25,7 @@ export enum SettingName {
   Default = 'default',
   Name = 'name',
   Type = 'type',
+  Constraint = 'constraint',
 
   Update = 'update',
   Delete = 'delete',

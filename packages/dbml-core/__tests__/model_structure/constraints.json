@@ -1,0 +1,287 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "User",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "TEXT",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 174,
+              "line": 12,
+              "column": 3
+            },
+            "end": {
+              "offset": 213,
+              "line": 12,
+              "column": 42
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "constraints": [
+            {
+              "token": {
+                "start": {
+                  "offset": 185,
+                  "line": 12,
+                  "column": 14
+                },
+                "end": {
+                  "offset": 212,
+                  "line": 12,
+                  "column": 41
+                }
+              },
+              "expression": "LEN(name) > 0"
+            }
+          ]
+        },
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "TEXT",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 216,
+              "line": 13,
+              "column": 3
+            },
+            "end": {
+              "offset": 226,
+              "line": 13,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 145,
+          "line": 9,
+          "column": 1
+        },
+        "end": {
+          "offset": 377,
+          "line": 19,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [
+        {
+          "order": 0,
+          "token": {
+            "start": {
+              "offset": 160,
+              "line": 10,
+              "column": 3
+            },
+            "end": {
+              "offset": 170,
+              "line": 10,
+              "column": 13
+            }
+          },
+          "name": "WithMoney"
+        }
+      ],
+      "constraints": [
+        {
+          "token": {
+            "start": {
+              "offset": 248,
+              "line": 16,
+              "column": 5
+            },
+            "end": {
+              "offset": 293,
+              "line": 16,
+              "column": 50
+            }
+          },
+          "name": "name_not_too_long",
+          "expression": "LEN(name) < 256"
+        },
+        {
+          "token": {
+            "start": {
+              "offset": 298,
+              "line": 17,
+              "column": 5
+            },
+            "end": {
+              "offset": 371,
+              "line": 17,
+              "column": 78
+            }
+          },
+          "expression": "REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}$')"
+        }
+      ]
+    },
+    {
+      "name": "User2",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "balance",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 411,
+              "line": 24,
+              "column": 3
+            },
+            "end": {
+              "offset": 422,
+              "line": 24,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 379,
+          "line": 21,
+          "column": 1
+        },
+        "end": {
+          "offset": 424,
+          "line": 25,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [
+        {
+          "order": 0,
+          "token": {
+            "start": {
+              "offset": 395,
+              "line": 22,
+              "column": 3
+            },
+            "end": {
+              "offset": 405,
+              "line": 22,
+              "column": 13
+            }
+          },
+          "name": "WithMoney"
+        }
+      ],
+      "constraints": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "tablePartials": [
+    {
+      "name": "WithMoney",
+      "fields": [
+        {
+          "name": "balance",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 27,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 66,
+              "line": 2,
+              "column": 42
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "constraints": [
+            {
+              "token": {
+                "start": {
+                  "offset": 40,
+                  "line": 2,
+                  "column": 16
+                },
+                "end": {
+                  "offset": 65,
+                  "line": 2,
+                  "column": 41
+                }
+              },
+              "expression": "balance > 0"
+            }
+          ]
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 143,
+          "line": 7,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "constraints": [
+        {
+          "token": {
+            "start": {
+              "offset": 88,
+              "line": 5,
+              "column": 5
+            },
+            "end": {
+              "offset": 137,
+              "line": 5,
+              "column": 54
+            }
+          },
+          "name": "not_too_much_money",
+          "expression": "balance < 10000000"
+        }
+      ]
+    }
+  ]
+}

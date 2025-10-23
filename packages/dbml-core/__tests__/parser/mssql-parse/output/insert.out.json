@@ -1,4 +1,24 @@
 {
+  "tables": [
+    {
+      "name": "T1",
+      "schemaName": "dbo",
+      "fields": [
+        {
+          "name": "column_1",
+          "type": {
+            "type_name": "int IDENTITY"
+          }
+        },
+        {
+          "name": "column_2",
+          "type": {
+            "type_name": "VARCHAR(30)"
+          }
+        }
+      ]
+    }
+  ],
   "records": [
     {
       "tableName": "UnitMeasure",
@@ -145,7 +165,6 @@
     {
       "tableName": "UnitMeasure",
       "schemaName": "Production",
-      "columns": [],
       "values": [
         [
           {
@@ -210,28 +229,6 @@
           }
         ]
       ]
-    }
-  ],
-  "tables": [
-    {
-      "fields": [
-        {
-          "name": "column_1",
-          "type": {
-            "type_name": "int IDENTITY",
-            "schemaName": null
-          }
-        },
-        {
-          "name": "column_2",
-          "type": {
-            "type_name": "VARCHAR(30)",
-            "schemaName": null
-          }
-        }
-      ],
-      "name": "T1",
-      "schemaName": "dbo"
     }
   ]
 }

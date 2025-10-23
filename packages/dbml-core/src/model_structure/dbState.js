@@ -10,6 +10,7 @@ export default class DbState {
     this.enumValueId = 1;
     this.endpointId = 1;
     this.indexId = 1;
+    this.constraintId = 1;
     this.fieldId = 1;
     this.indexColumnId = 1;
     this.recordId = 1;

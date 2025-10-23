@@ -4,6 +4,7 @@ import JsonExporter from '../../src/export/JsonExporter';
 import MysqlExporter from '../../src/export/MysqlExporter';
 import PostgresExporter from '../../src/export/PostgresExporter';
 import SqlServerExporter from '../../src/export/SqlServerExporter';
+import OracleExporter from '../../src/export/OracleExporter';
 
 describe('@dbml/core - model_exporter', () => {
   /**
@@ -54,6 +55,10 @@ describe('@dbml/core - model_exporter', () => {
 
   test.each(scanTestNames(__dirname, 'mssql_exporter/input'))('mssql_exporter/%s', (name) => {
     runTest(name, 'mssql_exporter', 'mssql', SqlServerExporter);
+  });
+
+  test.each(scanTestNames(__dirname, 'oracle_exporter/input'))('oracle_exporter/%s', (name) => {
+    runTest(name, 'oracle_exporter', 'oracle', OracleExporter);
   });
   /* eslint-enable */
 });

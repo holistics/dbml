@@ -34,6 +34,7 @@ import Report from '../../report';
 import { CompileError, CompileErrorCode } from '../../errors';
 import { ElementKind } from '../types';
 import TablePartialValidator from './elementValidators/tablePartial';
+import ConstraintsValidator from './elementValidators/constraints';
 
 export function pickValidator(element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -53,6 +54,8 @@ export function pickValidator(element: ElementDeclarationNode & { type: SyntaxTo
       return IndexesValidator;
     case ElementKind.TablePartial:
       return TablePartialValidator;
+    case ElementKind.Constraints:
+      return ConstraintsValidator;
     default:
       return CustomValidator;
   }
@@ -199,7 +202,7 @@ export function isValidDefaultValue(value?: SyntaxNode): boolean {
   return false;
 }
 
-export function isExpressionANumber (value?: SyntaxNode): boolean {
+export function isExpressionANumber(value?: SyntaxNode): boolean {
   if (value instanceof PrefixExpressionNode) {
     if (value.op?.value !== '-' && value.op?.value !== '+') return false;
     return isExpressionANumber(value.expression);
@@ -231,7 +234,7 @@ export function isTupleOfVariables(value?: SyntaxNode): value is TupleExpression
   return value instanceof TupleExpressionNode && value.elementList.every(isExpressionAVariableNode);
 }
 
-export function isValidColumnType (type: SyntaxNode): boolean {
+export function isValidColumnType(type: SyntaxNode): boolean {
   if (
     !(
       type instanceof CallExpressionNode

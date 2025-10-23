@@ -24,6 +24,9 @@ export default class TableBinder extends ElementBinder {
       default: {
         shouldBind: false as const,
       },
+      constraint: {
+        shouldBind: false as const,
+      }
     },
   };
   protected settingList = {};
