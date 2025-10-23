@@ -2039,6 +2039,16 @@
           }
         ]
       }
+    },
+    "dbo.TestDescriptionTable": {
+      "Name": {
+        "checks": [
+          {
+            "name": "CK__TestDescri__Name__1F98B2C1",
+            "expression": "len([Name])>(6)"
+          }
+        ]
+      }
     }
   },
   "checks": {
