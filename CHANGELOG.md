@@ -1,3 +1,16 @@
+## v4.0.0 (2025-10-23)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#765](https://github.com/holistics/dbml/pull/765) feat: Support check constraint ([@H-DNA](https://github.com/H-DNA))
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#765](https://github.com/holistics/dbml/pull/765) fix!: Remove `CONSTRAINT` from `pl_unreserved_keywords` in PostgreSQL ANTLR syntax ([@H-DNA](https://github.com/H-DNA))
+
+#### Committers: 1
+- DNA ([@H-DNA](https://github.com/H-DNA))
+
 ## v3.14.1 (2025-09-22)
 
 #### :bug: Bug Fix
