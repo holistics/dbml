@@ -2044,7 +2044,7 @@
       "Name": {
         "checks": [
           {
-            "name": "CK__TestDescri__Name__1F98B2C1",
+            "name": "chk_name_len",
             "expression": "len([Name])>(6)"
           }
         ]
