@@ -136,8 +136,8 @@ Table "orders" {
 Table "products" {
   "id" "int unsigned" [pk, not null, increment]
   "price" decimal(10,2) [not null]
-  "quantity" int [not null]
-  "total_value" "decimal(10,2) GENERATED ALWAYS AS ((`price` * `quantity`)) STORED"
+  "quantity" int [not null, constraint: ``quantity` < 10000`]
+  "total_value" "decimal(10,2) GENERATED ALWAYS AS ((`price` * `quantity`)) STORED" [constraint: ``total_value` > 0`]
   "updated_at" "timestamp on update CURRENT_TIMESTAMP" [default: `CURRENT_TIMESTAMP`]
 
   Constraints {

@@ -1,13 +1,13 @@
 Table "dbo"."users" {
   "user_id" int(10) [pk, not null, increment]
   "username" varchar(50) [unique, not null]
-  "email" varchar(100) [unique, not null]
+  "email" varchar(100) [unique, not null, constraint: `[email] like '%_@_%._%'`]
   "password_hash" varchar(255) [not null]
   "first_name" varchar(50)
   "last_name" varchar(50)
   "full_name" varchar(100)
   "full_name_lower" varchar(100)
-  "date_of_birth" date
+  "date_of_birth" date [constraint: `[date_of_birth]<=dateadd(year,(-13),getdate())`]
   "created_at" datetime2 [default: `getdate()`]
   "last_login" datetime2
   "is_active" bit [default: 1]
@@ -23,8 +23,8 @@ Table "dbo"."products" {
   "product_id" int(10) [pk, not null, increment]
   "name" varchar(100) [not null]
   "description" text
-  "price" decimal(10,2) [not null]
-  "stock_quantity" int(10) [not null, default: 0]
+  "price" decimal(10,2) [not null, constraint: `[price]>(0)`]
+  "stock_quantity" int(10) [not null, constraint: `[stock_quantity]>=(0)`, default: 0]
   "category" varchar(50)
   "created_at" datetime2 [default: `getdate()`]
   "updated_at" datetime2 [default: `getdate()`]
@@ -39,8 +39,8 @@ Table "dbo"."orders" {
   "order_id" int(10) [pk, not null, increment]
   "user_id" int(10) [not null]
   "order_date" datetime2 [default: `getdate()`]
-  "total_amount" decimal(12,2) [not null]
-  "status" varchar(20) [default: 'pending']
+  "total_amount" decimal(12,2) [not null, constraint: `[total_amount]>(0)`]
+  "status" varchar(20) [constraint: `[status]='cancelled' OR [status]='delivered' OR [status]='shipped' OR [status]='processing' OR [status]='pending'`, default: 'pending']
   "shipping_address" text [not null]
   "billing_address" text [not null]
 
@@ -53,8 +53,8 @@ Table "dbo"."order_items" {
   "order_item_id" int(10) [pk, not null, increment]
   "order_id" int(10) [unique, not null]
   "product_id" int(10) [unique, not null]
-  "quantity" int(10) [not null]
-  "unit_price" decimal(10,2) [not null]
+  "quantity" int(10) [not null, constraint: `[quantity]>(0)`]
+  "unit_price" decimal(10,2) [not null, constraint: `[unit_price]>(0)`]
 
   Indexes {
     (order_id, product_id) [type: nonclustered, name: "idx_order_items_order_product"]
@@ -148,7 +148,7 @@ Table "dbo"."gender_reference" {
 Table "dbo"."user_define_data_types" {
   "id" int(10) [pk, not null, increment]
   "name" nvarchar(50)
-  "gender" nvarchar(10)
+  "gender" nvarchar(10) [constraint: `[gender]='Other' OR [gender]='Female' OR [gender]='Male'`]
   "age_start" int(10)
   "age_end" int(10)
   "height" float(53)
@@ -204,7 +204,7 @@ Table "dbo"."AddressInfo2" {
 
 Table "dbo"."TestDescriptionTable" {
   "Id" int(10) [note: 'Primary key identifier.']
-  "Name" nvarchar(100) [note: 'Name of the entity.']
+  "Name" nvarchar(100) [constraint: `len([Name])>(6)`, note: 'Name of the entity.']
   Note: 'This is the custom comment name on table.'
 }
 
