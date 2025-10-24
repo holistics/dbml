@@ -336,7 +336,7 @@ GO
 
 CREATE TABLE TestDescriptionTable (
   Id INT,
-  Name NVARCHAR(100) CHECK (LEN(Name) > 6)
+  Name NVARCHAR(100) CONSTRAINT chk_name_len CHECK (LEN(Name) > 6)
 );
 
 EXEC sp_addextendedproperty
