@@ -336,7 +336,7 @@ GO
 
 CREATE TABLE TestDescriptionTable (
   Id INT,
-  Name NVARCHAR(100)
+  Name NVARCHAR(100) CONSTRAINT chk_name_len CHECK (LEN(Name) > 6)
 );
 
 EXEC sp_addextendedproperty
@@ -358,3 +358,4 @@ EXEC sp_addextendedproperty
 @level0type = N'SCHEMA', @level0name = 'dbo',
 @level1type = N'TABLE',  @level1name = 'TestDescriptionTable',
 @level2type = N'COLUMN', @level2name = 'Name';
+GO

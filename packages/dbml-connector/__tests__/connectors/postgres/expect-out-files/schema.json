@@ -1548,72 +1548,172 @@
   "tableConstraints": {
     "public.all_default_values": {
       "id": {
+        "checks": [],
         "pk": true
       }
     },
     "public.books": {
       "bookid": {
+        "checks": [],
         "pk": true
       },
       "isbn": {
+        "checks": [],
         "unique": true
       }
     },
     "public.order_items": {
       "order_item_id": {
+        "checks": [],
         "pk": true
+      },
+      "quantity": {
+        "checks": [
+          {
+            "name": "chk_quantity_positive",
+            "expression": "quantity > 0"
+          }
+        ]
+      },
+      "unit_price": {
+        "checks": [
+          {
+            "name": "chk_unit_price_positive",
+            "expression": "unit_price > (0)::numeric"
+          }
+        ]
       }
     },
     "public.orders": {
       "order_id": {
+        "checks": [],
         "pk": true
+      },
+      "total_amount": {
+        "checks": [
+          {
+            "name": "chk_total_amount_positive",
+            "expression": "total_amount > (0)::numeric"
+          }
+        ]
+      },
+      "status": {
+        "checks": [
+          {
+            "name": "chk_status",
+            "expression": "(status)::text = ANY ((ARRAY['pending'::character varying, 'processing'::character varying, 'shipped'::character varying, 'delivered'::character varying, 'cancelled'::character varying])::text[])"
+          }
+        ]
       }
     },
     "public.products": {
       "product_id": {
+        "checks": [],
         "pk": true
+      },
+      "price": {
+        "checks": [
+          {
+            "name": "chk_price_positive",
+            "expression": "price > (0)::numeric"
+          }
+        ]
+      },
+      "stock_quantity": {
+        "checks": [
+          {
+            "name": "chk_stock_non_negative",
+            "expression": "stock_quantity >= 0"
+          }
+        ]
       }
     },
     "public.table1": {
       "id": {
+        "checks": [],
         "pk": true
       }
     },
     "dbml_test.table1": {
       "id": {
+        "checks": [],
         "pk": true
       }
     },
     "public.table2": {
       "id": {
+        "checks": [],
         "pk": true
       }
     },
     "dbml_test.table3": {
       "id": {
+        "checks": [],
         "pk": true
       }
     },
     "public.table_with_comments": {
       "id": {
+        "checks": [],
         "pk": true
       }
     },
     "public.user_define_data_types": {
       "id": {
+        "checks": [],
         "pk": true
+      },
+      "height": {
+        "checks": [
+          {
+            "name": "user_define_data_types_height_check",
+            "expression": "height > (0)::double precision"
+          }
+        ]
+      },
+      "weight": {
+        "checks": [
+          {
+            "name": "chk_positive_weight",
+            "expression": "weight > (0)::double precision"
+          }
+        ]
       }
     },
     "public.users": {
       "user_id": {
+        "checks": [],
         "pk": true
       },
       "email": {
+        "checks": [
+          {
+            "name": "chk_email_format",
+            "expression": "(email)::text ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$'::text"
+          }
+        ],
         "unique": true
       },
       "username": {
+        "checks": [],
         "unique": true
+      },
+      "date_of_birth": {
+        "checks": [
+          {
+            "name": "chk_age",
+            "expression": "date_of_birth <= (CURRENT_DATE - '13 years'::interval)"
+          }
+        ]
       }
     }
+  },
+  "checks": {
+    "public.products": [
+      {
+        "name": "chk_created_at",
+        "expression": "created_at <= updated_at"
+      }
+    ]
   }
 }

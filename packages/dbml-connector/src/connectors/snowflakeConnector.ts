@@ -43,12 +43,11 @@ const parseConnectionString = (connectionString: string): Record<string, string>
   let match;
 
   while ((match = regex.exec(connectionString)) !== null) {
-      params[match[1].trim()] = match[2].trim();
+    params[match[1].trim()] = match[2].trim();
   }
 
   return params;
-}
-
+};
 
 const connect = async (connection: Connection): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -61,13 +60,13 @@ const connect = async (connection: Connection): Promise<void> => {
       }
     });
   });
-}
+};
 
 const executeQuery = (connection: Connection, sqlText: string): Promise<any[]> => {
   return new Promise((resolve, reject) => {
     console.log('Executing query...');
     connection.execute({
-      sqlText: sqlText,
+      sqlText,
       complete: (err, stmt, rows) => {
         if (err) {
           reject(err);
@@ -77,14 +76,14 @@ const executeQuery = (connection: Connection, sqlText: string): Promise<any[]> =
             resolve(rows);
           }
         }
-      }
+      },
     });
   });
-}
+};
 
 const isLogLevel = (value: string): value is LogLevel => {
-  return ['ERROR', 'WARN', 'INFO', 'DEBUG', 'TRACE'].includes(value as LogLevel)
-}
+  return ['ERROR', 'WARN', 'INFO', 'DEBUG', 'TRACE'].includes(value as LogLevel);
+};
 
 const connectToSnowflake = async (config: Record<string, string>): Promise<Connection> => {
   const logLevel = isLogLevel(config.LOG_LEVEL) ? config.LOG_LEVEL : 'INFO';
@@ -266,14 +265,16 @@ const generateTablesAndFields = async (conn: Connection, schemas: string[]): Pro
 
 const createConstraintKeysMap = (keys: Record<string, string>[], schemas: string[], constraintType: 'primary' | 'unique'): Record<string, ConstraintRow> => {
   return keys.reduce((acc: Record<string, ConstraintRow>, row: Record<string, string>) => {
-    const { schema_name, table_name, column_name, constraint_name } = row;
+    const {
+      schema_name, table_name, column_name, constraint_name,
+    } = row;
     const selectedSchema = schemas.length > 0 ? schemas.includes(schema_name) : true;
     if (!selectedSchema) { return acc; }
 
     const key = `${schema_name}.${table_name}.${constraint_name}`;
 
     if (acc[key]) {
-      const columnNames = acc[key].columnNames;
+      const { columnNames } = acc[key];
       columnNames.push(column_name);
       return acc;
     }
@@ -291,8 +292,6 @@ const createConstraintKeysMap = (keys: Record<string, string>[], schemas: string
   }, {});
 };
 const generateIndexes = async (conn: Connection, databaseName: string, schemas: string[]) => {
-
-
   const getPrimaryKeysSql = `
     SHOW PRIMARY KEYS IN DATABASE ${databaseName};
   `;
@@ -309,7 +308,9 @@ const generateIndexes = async (conn: Connection, databaseName: string, schemas: 
 
   const allConstraints: ConstraintRow[] = [Object.values(primaryKeysByConstraint), Object.values(uniqueKeysByConstraint)].flat();
   const { indexes, tableConstraints } = allConstraints.reduce((acc: GeneratedIndexes, row: ConstraintRow): GeneratedIndexes => {
-    const { schemaName, tableName, constraintName, columnNames, type, primary, unique } = row;
+    const {
+      schemaName, tableName, constraintName, columnNames, type, primary, unique,
+    } = row;
     const key = `${schemaName}.${tableName}`;
 
     if (columnNames.length < 2) {
@@ -317,6 +318,7 @@ const generateIndexes = async (conn: Connection, databaseName: string, schemas: 
         [columnNames[0]]: {
           pk: primary,
           unique,
+          checks: [],
         },
       };
       return acc;
@@ -340,7 +342,7 @@ const generateIndexes = async (conn: Connection, databaseName: string, schemas: 
     }
 
     return acc;
-  }, { indexes: {}, tableConstraints: {}});
+  }, { indexes: {}, tableConstraints: {} });
 
   return {
     indexes,
@@ -384,6 +386,8 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
     enums: [],
     indexes,
     tableConstraints,
+    // Checks are not supported in snowflake
+    checks: {},
   };
 };
 

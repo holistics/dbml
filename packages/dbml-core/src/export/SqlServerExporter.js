@@ -98,7 +98,7 @@ class SqlServerExporter {
 
   static getConstraintLines (tableId, model) {
     const table = model.tables[tableId];
-  
+
     if (!table.constraintIds || table.constraintIds.length === 0) {
       return [];
     }
@@ -106,13 +106,13 @@ class SqlServerExporter {
     const lines = table.constraintIds.map((constraintId) => {
       const constraint = model.constraints[constraintId];
       let line = '';
-      
+
       if (constraint.name) {
         line = `CONSTRAINT [${constraint.name}] `;
       }
-      
+
       line += `CHECK (${constraint.expression})`;
-      
+
       return line;
     });
 
@@ -280,7 +280,7 @@ class SqlServerExporter {
 
       switch (comment.type) {
         case 'table': {
-          line += `@name = N\'Table_Description\',\n`;
+          line += '@name = N\'Table_Description\',\n';
           line += `@value = '${table.note.replace(/'/g, "''")}',\n`;
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
           line += `@level1type = N'Table',  @level1name = '${table.name}';\n`;
@@ -288,7 +288,7 @@ class SqlServerExporter {
         }
         case 'column': {
           const field = model.fields[comment.fieldId];
-          line += `@name = N\'Column_Description\',\n`;
+          line += '@name = N\'Column_Description\',\n';
           line += `@value = '${field.note.replace(/'/g, "''")}',\n`;
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
           line += `@level1type = N'Table',  @level1name = '${table.name}',\n`;
