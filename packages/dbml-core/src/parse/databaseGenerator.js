@@ -50,7 +50,7 @@ const createFields = (rawFields, fieldsConstraints) => {
       pk: constraints.pk || field.pk,
       unique: constraints.unique || field.unique,
       note: field.note,
-      constraints: fieldsConstraints.checks,
+      constraints: constraints.checks,
     });
     return f;
   });
