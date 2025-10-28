@@ -1,0 +1,10 @@
+Table Users {
+  balance int [check: `balance > 0`]
+  dependents int [check: `dependents >= 0`, check: `dependents < 10`]
+  
+  invalid_col invalid_type [check: "invalid check 1",
+                            check: 'invalid check 2',
+                            check: 3,
+                            check: false,
+                            check: null]
+}

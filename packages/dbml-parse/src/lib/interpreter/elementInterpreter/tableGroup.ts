@@ -5,7 +5,9 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
 } from '../../parser/nodes';
 import { ElementInterpreter, InterpreterDatabase, TableGroup } from '../types';
-import { extractElementName, getTokenPosition, normalizeNoteContent, extractColor } from '../utils';
+import {
+  extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
+} from '../utils';
 import { aggregateSettingList } from '../../analyzer/validator/utils';
 
 export class TableGroupInterpreter implements ElementInterpreter {
@@ -13,13 +15,13 @@ export class TableGroupInterpreter implements ElementInterpreter {
   private env: InterpreterDatabase;
   private tableGroup: Partial<TableGroup>;
 
-  constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
     this.tableGroup = { tables: [] };
   }
 
-  interpret(): CompileError[] {
+  interpret (): CompileError[] {
     const errors: CompileError[] = [];
     this.tableGroup.token = getTokenPosition(this.declarationNode);
     this.env.tableGroups.set(this.declarationNode, this.tableGroup as TableGroup);
@@ -33,7 +35,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
     return errors;
   }
 
-  private interpretName(nameNode: SyntaxNode): CompileError[] {
+  private interpretName (nameNode: SyntaxNode): CompileError[] {
     const errors: CompileError[] = [];
 
     const { name, schemaName } = extractElementName(nameNode);
@@ -48,7 +50,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
     return errors;
   }
 
-  private interpretBody(body: BlockExpressionNode): CompileError[] {
+  private interpretBody (body: BlockExpressionNode): CompileError[] {
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.interpretFields(fields as FunctionApplicationNode[]),
@@ -56,7 +58,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
     ];
   }
 
-  private interpretSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       switch (sub.type?.value.toLowerCase()) {
         case 'note':
@@ -80,7 +82,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
     });
   }
 
-  private interpretFields(fields: FunctionApplicationNode[]): CompileError[] {
+  private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
     const errors: CompileError[] = [];
     this.tableGroup.tables = fields.map((field) => {
       const fragments = destructureComplexVariable((field as FunctionApplicationNode).callee).unwrap();
@@ -108,11 +110,11 @@ export class TableGroupInterpreter implements ElementInterpreter {
     return errors;
   }
 
-  private interpretSettingList(settings?: ListExpressionNode): CompileError[] {
+  private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.tableGroup.color = settingMap['color']?.length
-      ? extractColor(settingMap['color']?.at(0)?.value as any)
+    this.tableGroup.color = settingMap.color?.length
+      ? extractColor(settingMap.color?.at(0)?.value as any)
       : undefined;
 
     const [noteNode] = settingMap.note || [];

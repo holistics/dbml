@@ -1,6 +1,6 @@
 import { last, head, partition } from 'lodash';
 import {
-  Column, Constraint, ElementInterpreter, Index, InlineRef,
+  Column, Check, ElementInterpreter, Index, InlineRef,
   InterpreterDatabase, TablePartial,
 } from '../types';
 import {
@@ -27,16 +27,16 @@ export class TablePartialInterpreter implements ElementInterpreter {
   private tablePartial: Partial<TablePartial>;
   private pkColumns: Column[];
 
-  constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
     this.tablePartial = {
-      name: undefined, fields: [], token: undefined, indexes: [], constraints: [],
+      name: undefined, fields: [], token: undefined, indexes: [], checks: [],
     };
     this.pkColumns = [];
   }
 
-  interpret(): CompileError[] {
+  interpret (): CompileError[] {
     this.tablePartial.token = getTokenPosition(this.declarationNode);
     this.env.tablePartials.set(this.declarationNode, this.tablePartial as TablePartial);
 
@@ -64,7 +64,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
     return errors;
   }
 
-  private interpretName(nameNode: SyntaxNode): CompileError[] {
+  private interpretName (nameNode: SyntaxNode): CompileError[] {
     const { name } = extractElementName(nameNode);
 
     this.tablePartial.name = name;
@@ -72,7 +72,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretSettingList(settings?: ListExpressionNode): CompileError[] {
+  private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
     const firstHeaderColor = head(settingMap[SettingName.HeaderColor]);
@@ -89,7 +89,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretBody(body: BlockExpressionNode): CompileError[] {
+  private interpretBody (body: BlockExpressionNode): CompileError[] {
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.interpretFields(fields as FunctionApplicationNode[]),
@@ -97,7 +97,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
     ];
   }
 
-  private interpretSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       switch (sub.type?.value.toLowerCase()) {
         case ElementKind.Note:
@@ -114,8 +114,8 @@ export class TablePartialInterpreter implements ElementInterpreter {
         case ElementKind.Indexes:
           return this.interpretIndexes(sub);
 
-        case ElementKind.Constraints:
-          return this.interpretConstraints(sub);
+        case ElementKind.Check:
+          return this.interpretChecks(sub);
 
         default:
           return [];
@@ -123,11 +123,11 @@ export class TablePartialInterpreter implements ElementInterpreter {
     });
   }
 
-  private interpretFields(fields: FunctionApplicationNode[]): CompileError[] {
+  private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => this.interpretColumn(field));
   }
 
-  private interpretColumn(field: FunctionApplicationNode): CompileError[] {
+  private interpretColumn (field: FunctionApplicationNode): CompileError[] {
     const errors: CompileError[] = [];
 
     const column: Partial<Column> = {};
@@ -212,10 +212,10 @@ export class TablePartialInterpreter implements ElementInterpreter {
         return inlineRef;
       });
 
-      const constraintNodes = settingMap[SettingName.Constraint] || [];
-      column.constraints = constraintNodes.map((constraintNode) => {
-        const token = getTokenPosition(constraintNode);
-        const expression = (constraintNode.value as FunctionExpressionNode).value?.value!;
+      const checkNodes = settingMap[SettingName.Check] || [];
+      column.checks = checkNodes.map((checkNode) => {
+        const token = getTokenPosition(checkNode);
+        const expression = (checkNode.value as FunctionExpressionNode).value!.value!;
         return {
           token,
           expression,
@@ -233,7 +233,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
     return errors;
   }
 
-  private interpretIndexes(indexes: ElementDeclarationNode): CompileError[] {
+  private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
     this.tablePartial.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
       const index: Partial<Index> = { columns: [] };
 
@@ -290,20 +290,20 @@ export class TablePartialInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretConstraints(constraints: ElementDeclarationNode): CompileError[] {
-    this.tablePartial.constraints!.push(...(constraints.body as BlockExpressionNode).body.map((_constraintField) => {
-      const constraint: Partial<Constraint> = {};
-      const constraintField = _constraintField as FunctionApplicationNode;
-      constraint.token = getTokenPosition(constraintField);
+  private interpretChecks (checks: ElementDeclarationNode): CompileError[] {
+    this.tablePartial.checks!.push(...(checks.body as BlockExpressionNode).body.map((_checkField) => {
+      const check: Partial<Check> = {};
+      const checkField = _checkField as FunctionApplicationNode;
+      check.token = getTokenPosition(checkField);
 
-      if (constraintField.args[0] instanceof ListExpressionNode) {
-        const settingMap = aggregateSettingList(constraintField.args[0] as ListExpressionNode).getValue();
-        constraint.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
+      if (checkField.args[0] instanceof ListExpressionNode) {
+        const settingMap = aggregateSettingList(checkField.args[0] as ListExpressionNode).getValue();
+        check.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
       }
 
-      constraint.expression = (constraintField.callee as FunctionExpressionNode).value?.value!;
+      check.expression = (checkField.callee as FunctionExpressionNode).value!.value!;
 
-      return constraint as Constraint;
+      return check as Check;
     }));
 
     return [];

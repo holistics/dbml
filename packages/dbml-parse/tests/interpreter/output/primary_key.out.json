@@ -29,7 +29,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -46,7 +46,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],

@@ -2,7 +2,7 @@
 import { forIn, partition } from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
-  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList, isValidColor
+  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList, isValidColor,
 } from '../utils';
 import { ElementValidator } from '../types';
 import SymbolTable from '../../symbol/symbolTable';
@@ -21,13 +21,13 @@ export default class TableGroupValidator implements ElementValidator {
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 
-  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;
   }
 
-  validate(): CompileError[] {
+  validate (): CompileError[] {
     return [
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
@@ -38,7 +38,7 @@ export default class TableGroupValidator implements ElementValidator {
     ];
   }
 
-  private validateContext(): CompileError[] {
+  private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
       return [new CompileError(
         CompileErrorCode.INVALID_TABLEGROUP_CONTEXT,
@@ -49,7 +49,7 @@ export default class TableGroupValidator implements ElementValidator {
     return [];
   }
 
-  private validateName(nameNode?: SyntaxNode): CompileError[] {
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [new CompileError(
         CompileErrorCode.NAME_NOT_FOUND,
@@ -67,7 +67,7 @@ export default class TableGroupValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [new CompileError(
         CompileErrorCode.UNEXPECTED_ALIAS,
@@ -79,7 +79,7 @@ export default class TableGroupValidator implements ElementValidator {
     return [];
   }
 
-  registerElement(): CompileError[] {
+  registerElement (): CompileError[] {
     const { name } = this.declarationNode;
     this.declarationNode.symbol = this.symbolFactory.create(TableGroupSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
     const maybeNameFragments = destructureComplexVariable(name);
@@ -97,7 +97,7 @@ export default class TableGroupValidator implements ElementValidator {
     return [];
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -152,7 +152,7 @@ export default class TableGroupValidator implements ElementValidator {
     return errors;
   }
 
-  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) return [];
 
     if (body instanceof FunctionApplicationNode) {
@@ -170,7 +170,7 @@ export default class TableGroupValidator implements ElementValidator {
     ];
   }
 
-  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
+  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       const errors: CompileError[] = [];
       if (field.callee && !destructureComplexVariable(field.callee).isOk()) {
@@ -187,7 +187,7 @@ export default class TableGroupValidator implements ElementValidator {
     });
   }
 
-  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     const errors = subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {
@@ -203,7 +203,7 @@ export default class TableGroupValidator implements ElementValidator {
     return errors;
   }
 
-  registerField(field: FunctionApplicationNode): CompileError[] {
+  registerField (field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
       const tableGroupField = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const tableGroupFieldId = createTableGroupFieldSymbolIndex(tableGroupField);

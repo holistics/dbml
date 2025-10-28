@@ -1,11 +1,17 @@
-import _ from "lodash";
-import { destructureComplexVariable, extractVariableFromExpression } from "../../analyzer/utils";
-import { aggregateSettingList } from "../../analyzer/validator/utils";
-import { CompileError, CompileErrorCode } from "../../errors";
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode } from "../../parser/nodes";
-import { ElementInterpreter, InterpreterDatabase, Ref, Table } from "../types";
-import { extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint } from "../utils";
-import { extractStringFromIdentifierStream } from "../../parser/utils";
+import _ from 'lodash';
+import { destructureComplexVariable, extractVariableFromExpression } from '../../analyzer/utils';
+import { aggregateSettingList } from '../../analyzer/validator/utils';
+import { CompileError, CompileErrorCode } from '../../errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
+} from '../../parser/nodes';
+import {
+  ElementInterpreter, InterpreterDatabase, Ref, Table,
+} from '../types';
+import {
+  extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
+} from '../utils';
+import { extractStringFromIdentifierStream } from '../../parser/utils';
 
 export class RefInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -13,14 +19,14 @@ export class RefInterpreter implements ElementInterpreter {
   private container: Partial<Table> | undefined;
   private ref: Partial<Ref>;
 
-  constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
     this.container = this.declarationNode.parent instanceof ElementDeclarationNode ? this.env.tables.get(this.declarationNode.parent) : undefined;
     this.ref = { };
   }
 
-  interpret(): CompileError[] {
+  interpret (): CompileError[] {
     this.ref.token = getTokenPosition(this.declarationNode);
     this.env.ref.set(this.declarationNode, this.ref as Ref);
     const errors = [
@@ -29,9 +35,9 @@ export class RefInterpreter implements ElementInterpreter {
     return errors;
   }
 
-  private interpretName(nameNode: SyntaxNode): CompileError[] {
+  private interpretName (nameNode: SyntaxNode): CompileError[] {
     const errors: CompileError[] = [];
-  
+
     const fragments = destructureComplexVariable(this.declarationNode.name!).unwrap_or([]);
     this.ref.name = fragments.pop() || null;
     if (fragments.length > 1) {
@@ -42,19 +48,19 @@ export class RefInterpreter implements ElementInterpreter {
     return errors;
   }
 
-  private interpretBody(body: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  private interpretBody (body: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (body instanceof FunctionApplicationNode) {
       return this.interpretField(body);
     }
-    
+
     return this.interpretField(body.body[0] as FunctionApplicationNode);
   }
 
-  private interpretField(field: FunctionApplicationNode): CompileError[] {    
+  private interpretField (field: FunctionApplicationNode): CompileError[] {
     const op = (field.callee as InfixExpressionNode).op!.value;
     const { leftExpression, rightExpression } = field.callee as InfixExpressionNode;
-    
-    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!);  
+
+    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!);
     const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!);
 
     if (isSameEndpoint(leftSymbols, rightSymbols)) {
@@ -65,26 +71,26 @@ export class RefInterpreter implements ElementInterpreter {
     if (this.env.refIds[refId]) {
       return [
         new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode),
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),  
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
       ];
     }
 
     if (field.args[0]) {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
 
-      const deleteSetting = settingMap['delete']?.at(0)?.value;
+      const deleteSetting = settingMap.delete?.at(0)?.value;
       this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode
-        ? extractStringFromIdentifierStream(deleteSetting).unwrap_or(undefined) 
+        ? extractStringFromIdentifierStream(deleteSetting).unwrap_or(undefined)
         : extractVariableFromExpression(deleteSetting).unwrap_or(undefined) as string;
 
-      const updateSetting = settingMap['update']?.at(0)?.value;
+      const updateSetting = settingMap.update?.at(0)?.value;
       this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode
         ? extractStringFromIdentifierStream(updateSetting).unwrap_or(undefined)
         : extractVariableFromExpression(updateSetting).unwrap_or(undefined) as string;
 
-      this.ref.color = settingMap['color']?.length ? extractColor(settingMap['color']?.at(0)?.value as any) : undefined;
+      this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value as any) : undefined;
     }
-    
+
     const multiplicities = getMultiplicities(op);
 
     this.ref.endpoints = [

@@ -15,7 +15,7 @@
           "type": {
             "type_name": "decimal(10,4)"
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "[price] > 0"
             }
@@ -26,7 +26,7 @@
           "type": {
             "type_name": "int"
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "[quantity] >= 0"
             }
@@ -37,7 +37,7 @@
           "type": {
             "type_name": "decimal(5,2)"
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "[discount] >= 0 AND [discount] <= 100"
             }
@@ -48,7 +48,7 @@
           "type": {
             "type_name": "varchar(20)"
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "[status] IN ('active', 'inactive', 'pending')"
             }
@@ -85,7 +85,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "[delivery_date] > [order_date]"
         },
@@ -123,7 +123,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "[age] >= 18 AND [age] <= 65",
           "name": "chk_age"
@@ -149,7 +149,7 @@
           "type": {
             "type_name": "int"
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "[stock] >= 0"
             },
@@ -181,7 +181,7 @@
           "type": {
             "type_name": "varchar(20)"
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "[role] NOT IN ('banned', 'suspended')"
             }
@@ -206,7 +206,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "[balance] >= 0",
           "name": "chk_balance_positive"
@@ -245,7 +245,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "[amount] + [fee] > 0"
         },
@@ -271,7 +271,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "[value] = 0 OR [value] = 1 OR [value] = -1"
         }
@@ -292,7 +292,7 @@
           "type": {
             "type_name": "varchar(100)"
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "[email] LIKE '%@%.%'"
             }
@@ -303,7 +303,7 @@
           "type": {
             "type_name": "varchar(20)"
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "[phone] LIKE '[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]'"
             }
@@ -334,7 +334,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "([min_val] >= 0) AND ([max_val] <= 100) AND ([min_val] < [max_val])"
         }
@@ -363,7 +363,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "[priority] IN ('low', 'medium', 'high', 'urgent')"
         }
@@ -392,7 +392,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "[status] IN ('draft', 'pending') AND [status] IN ('active', 'inactive')"
         }

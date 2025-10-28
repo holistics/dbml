@@ -29,7 +29,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "name",
@@ -69,7 +69,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "headerColor": "#555"
     },
     {
@@ -100,7 +100,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "name",
@@ -126,7 +126,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -143,7 +143,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "note": {
         "value": "name is required",
         "token": {
@@ -188,7 +188,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "name",
@@ -237,7 +237,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -254,7 +254,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "headerColor": "#17DACC",
       "note": {
         "value": "product must have price",
@@ -300,7 +300,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "user_id",
@@ -386,7 +386,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "headerColor": "#08DAFF",
       "note": {
         "value": "merchants sell a lot",

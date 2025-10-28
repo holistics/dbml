@@ -46,7 +46,7 @@ export default class TableValidator implements ElementValidator {
   private symbolFactory: SymbolFactory;
   private publicSymbolTable: SymbolTable;
 
-  constructor(
+  constructor (
     declarationNode: ElementDeclarationNode & { type: SyntaxToken },
     publicSymbolTable: SymbolTable,
     symbolFactory: SymbolFactory,
@@ -56,7 +56,7 @@ export default class TableValidator implements ElementValidator {
     this.publicSymbolTable = publicSymbolTable;
   }
 
-  validate(): CompileError[] {
+  validate (): CompileError[] {
     return [
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
@@ -67,14 +67,14 @@ export default class TableValidator implements ElementValidator {
     ];
   }
 
-  private validateContext(): CompileError[] {
+  private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
       return [new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level', this.declarationNode)];
     }
     return [];
   }
 
-  private validateName(nameNode?: SyntaxNode): CompileError[] {
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', this.declarationNode)];
     }
@@ -88,7 +88,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (!aliasNode) {
       return [];
     }
@@ -100,7 +100,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -134,7 +134,7 @@ export default class TableValidator implements ElementValidator {
     return errors;
   }
 
-  registerElement(): CompileError[] {
+  registerElement (): CompileError[] {
     const errors: CompileError[] = [];
     this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
 
@@ -168,7 +168,7 @@ export default class TableValidator implements ElementValidator {
     return errors;
   }
 
-  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -190,11 +190,11 @@ export default class TableValidator implements ElementValidator {
     ];
   }
 
-  validateInjections(injections: PartialInjectionNode[]) {
+  validateInjections (injections: PartialInjectionNode[]) {
     return injections.flatMap((injection) => this.registerInjection(injection));
   }
 
-  registerInjection(injection: PartialInjectionNode) {
+  registerInjection (injection: PartialInjectionNode) {
     if (!injection.partial?.variable?.value) return [];
 
     const injectionName = injection.partial.variable?.value;
@@ -215,7 +215,7 @@ export default class TableValidator implements ElementValidator {
     return [];
   }
 
-  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
+  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       if (!field.callee) {
         return [];
@@ -244,7 +244,7 @@ export default class TableValidator implements ElementValidator {
     });
   }
 
-  registerField(field: FunctionApplicationNode): CompileError[] {
+  registerField (field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
       const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
       const columnId = createColumnSymbolIndex(columnName);
@@ -266,7 +266,7 @@ export default class TableValidator implements ElementValidator {
   }
 
   // This is needed to support legacy inline settings
-  validateFieldSetting(parts: ExpressionNode[]): CompileError[] {
+  validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
     if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
       return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
     }
@@ -412,10 +412,10 @@ export default class TableValidator implements ElementValidator {
             }
           });
           break;
-        case SettingName.Constraint:
+        case SettingName.Check:
           attrs.forEach((attr) => {
             if (!(attr.value instanceof FunctionExpressionNode)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'constraint\' must be a function expression', attr.value || attr.name!));
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'check\' must be a function expression', attr.value || attr.name!));
             }
           });
           break;
@@ -427,7 +427,7 @@ export default class TableValidator implements ElementValidator {
     return errors;
   }
 
-  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     const errors = subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {
@@ -447,6 +447,6 @@ export default class TableValidator implements ElementValidator {
   }
 }
 
-function isAliasSameAsName(alias: string, nameFragments: string[]): boolean {
+function isAliasSameAsName (alias: string, nameFragments: string[]): boolean {
   return nameFragments.length === 1 && alias === nameFragments[0];
 }

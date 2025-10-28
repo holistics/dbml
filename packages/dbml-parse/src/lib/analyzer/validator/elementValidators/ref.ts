@@ -2,39 +2,49 @@ import { partition, last } from 'lodash';
 import { SyntaxToken, SyntaxTokenKind } from '../../../lexer/tokens';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode } from '../../../parser/nodes';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode,
+} from '../../../parser/nodes';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
 } from '../../../parser/utils';
 import { ElementValidator } from '../types';
-import { aggregateSettingList, isSimpleName, isValidColor, pickValidator } from '../utils';
-import { isBinaryRelationship, isEqualTupleOperands } from '../../../analyzer/utils';
-import SymbolTable from '../../../analyzer/symbol/symbolTable';
+import {
+  aggregateSettingList, isSimpleName, isValidColor, pickValidator,
+} from '../utils';
+import { isBinaryRelationship, isEqualTupleOperands } from '../../utils';
+import SymbolTable from '../../symbol/symbolTable';
 
 export default class RefValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 
-  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;
   }
 
-  validate(): CompileError[] {
-    return [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)];
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
-  private validateContext(): CompileError[] {
+  private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ProgramNode) {
       return [];
     }
     return [new CompileError(CompileErrorCode.INVALID_REF_CONTEXT, 'A Ref must appear top-level', this.declarationNode)];
   }
 
-  private validateName(nameNode?: SyntaxNode): CompileError[] {
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [];
     }
@@ -46,7 +56,7 @@ export default class RefValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
     }
@@ -54,15 +64,15 @@ export default class RefValidator implements ElementValidator {
     return [];
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref shouldn\'t have a setting list', settingList)]
+      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref shouldn\'t have a setting list', settingList)];
     }
 
     return [];
   }
 
-  validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -71,10 +81,10 @@ export default class RefValidator implements ElementValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
-  validateFields(fields: FunctionApplicationNode[]): CompileError[] {
+  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     if (fields.length === 0) {
       return [new CompileError(CompileErrorCode.EMPTY_REF, 'A Ref must have at least one field', this.declarationNode)];
     }
@@ -101,7 +111,7 @@ export default class RefValidator implements ElementValidator {
       } else if (args[0] instanceof ListExpressionNode) {
         errors.push(...this.validateFieldSettings(args[0]));
         args.shift();
-      } 
+      }
 
       if (args.length > 0) {
         errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg)));
@@ -111,7 +121,7 @@ export default class RefValidator implements ElementValidator {
     return errors;
   }
 
-  validateFieldSettings(settings: ListExpressionNode): CompileError[] {
+  validateFieldSettings (settings: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settings);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -131,7 +141,7 @@ export default class RefValidator implements ElementValidator {
           break;
         case 'color':
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)))
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
@@ -146,7 +156,7 @@ export default class RefValidator implements ElementValidator {
     return errors;
   }
 
-  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {
@@ -159,13 +169,13 @@ export default class RefValidator implements ElementValidator {
   }
 }
 
-function isValidPolicy(value?: SyntaxNode): boolean {
+function isValidPolicy (value?: SyntaxNode): boolean {
   if (
     !(
-      isExpressionAVariableNode(value) &&
-      value.expression.variable.kind !== SyntaxTokenKind.QUOTED_STRING
-    ) &&
-    !(value instanceof IdentiferStreamNode)
+      isExpressionAVariableNode(value)
+      && value.expression.variable.kind !== SyntaxTokenKind.QUOTED_STRING
+    )
+    && !(value instanceof IdentiferStreamNode)
   ) {
     return false;
   }

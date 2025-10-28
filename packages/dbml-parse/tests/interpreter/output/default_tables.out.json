@@ -33,7 +33,7 @@
             "type": "number",
             "value": 123
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "user_id",
@@ -59,7 +59,7 @@
           "increment": false,
           "unique": true,
           "not_null": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "status",
@@ -88,7 +88,7 @@
             "value": "Completed",
             "type": "string"
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "created_at",
@@ -117,7 +117,7 @@
             "value": "now()",
             "type": "expression"
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -134,7 +134,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "order_items",
@@ -225,7 +225,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "products",
@@ -255,7 +255,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "name",
@@ -284,7 +284,7 @@
             "value": "null",
             "type": "boolean"
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "merchant_id",
@@ -314,7 +314,7 @@
             "type": "number",
             "value": -1
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "price",
@@ -343,7 +343,7 @@
             "type": "number",
             "value": -123.12
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "stock",
@@ -372,7 +372,7 @@
             "value": "true",
             "type": "boolean"
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "expiration",
@@ -401,7 +401,7 @@
             "value": "current_date + interval 1 year",
             "type": "expression"
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -418,7 +418,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],

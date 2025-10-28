@@ -1,7 +1,7 @@
 Table "orders" {
   "id" int [pk, increment]
   "user_id" int [unique, not null]
-  "status" nvarchar(255) [not null, constraint: `[status] IN ('created', 'running', 'done', 'failure')`]
+  "status" nvarchar(255) [not null, check: `[status] IN ('created', 'running', 'done', 'failure')`]
   "created_at" varchar(255) [note: 'When order created']
   Note: 'This is a note in table "orders"'
 }
@@ -17,7 +17,7 @@ Table "products" {
   "name" varchar(255)
   "merchant_id" int [not null]
   "price" int
-  "status" nvarchar(255) [not null, constraint: `[status] IN ('Out of Stock', 'In Stock')`]
+  "status" nvarchar(255) [not null, check: `[status] IN ('Out of Stock', 'In Stock')`]
   "created_at" datetime [default: `GETDATE()`]
 
   Indexes {

@@ -1,11 +1,11 @@
 Table "a" {
   "id" integer [unique, pk, default: 1]
-  "name" varchar(255) [constraint: `"id" > -1`]
+  "name" varchar(255) [check: `"id" > -1`]
 }
 
 Table "b" {
   "id" uuid
-  "name" varchar [not null, constraint: `name <> ''`]
+  "name" varchar [not null, check: `name <> ''`]
   "email" varchar(55)
 
   Indexes {

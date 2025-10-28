@@ -29,7 +29,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "user_id",
@@ -55,7 +55,7 @@
           "increment": false,
           "unique": true,
           "not_null": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "status",
@@ -95,7 +95,7 @@
               }
             }
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "created_at",
@@ -135,7 +135,7 @@
               }
             }
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -220,7 +220,7 @@
         }
       ],
       "partials": [],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],

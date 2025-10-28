@@ -44,7 +44,7 @@
               }
             }
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "status",
@@ -107,7 +107,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "note": {
         "value": "Note on table orders",
         "token": {
@@ -582,7 +582,7 @@
         }
       ],
       "partials": [],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],

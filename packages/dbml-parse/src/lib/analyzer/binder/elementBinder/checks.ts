@@ -1,6 +1,6 @@
 import ElementBinder from './elementBinder';
 
-export default class ConstraintsBinder extends ElementBinder {
+export default class ChecksBinder extends ElementBinder {
   protected subfield = {
     arg: {
       argBinderRules: [

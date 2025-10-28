@@ -143,7 +143,7 @@
           "name": "sameHeaderColor"
         }
       ],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "country",
@@ -174,7 +174,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -224,7 +224,7 @@
           "name": "sameHeaderColor"
         }
       ],
-      "constraints": [],
+      "checks": [],
       "note": {
         "value": "name is required",
         "token": {
@@ -293,7 +293,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -343,7 +343,7 @@
           "name": "sameHeaderColor"
         }
       ],
-      "constraints": [],
+      "checks": [],
       "headerColor": "#17DACC",
       "note": {
         "value": "product must have price",
@@ -483,7 +483,7 @@
           "name": "sameHeaderColor"
         }
       ],
-      "constraints": [],
+      "checks": [],
       "headerColor": "#08DAFF",
       "note": {
         "value": "merchants sell a lot",
@@ -565,7 +565,7 @@
               }
             }
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -582,7 +582,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "note": {
         "value": "a customer is a user?",
         "token": {
@@ -808,7 +808,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "to_table_ref",
@@ -854,7 +854,7 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -920,7 +920,7 @@
           }
         }
       ],
-      "constraints": [],
+      "checks": [],
       "note": {
         "value": "this table is injected with TablePartial \"id\"",
         "token": {
@@ -953,7 +953,7 @@
         }
       },
       "indexes": [],
-      "constraints": [],
+      "checks": [],
       "headerColor": "#ccc",
       "note": {
         "value": "This TablePartial only used to inject headerColor for some tables",
@@ -1011,7 +1011,7 @@
         }
       },
       "indexes": [],
-      "constraints": []
+      "checks": []
     }
   ]
 }

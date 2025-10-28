@@ -29,7 +29,7 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "constraints": [
+          "checks": [
             {
               "token": {
                 "start": {
@@ -102,7 +102,7 @@
           "name": "WithMoney"
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "token": {
             "start": {
@@ -196,7 +196,7 @@
           "name": "WithMoney"
         }
       ],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],
@@ -232,7 +232,7 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "constraints": [
+          "checks": [
             {
               "token": {
                 "start": {
@@ -264,7 +264,7 @@
         }
       },
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "token": {
             "start": {

@@ -1,8 +1,8 @@
 Table "products" {
   "id" INT [pk]
-  "price" DECIMAL(10,2) [constraint: `price > 0`]
-  "quantity" INT [constraint: `quantity >= 0`]
-  "discount" DECIMAL(5,2) [constraint: `discount >= 0 AND discount <= 100`]
+  "price" DECIMAL(10,2) [check: `price > 0`]
+  "quantity" INT [check: `quantity >= 0`]
+  "discount" DECIMAL(5,2) [check: `discount >= 0 AND discount <= 100`]
 }
 
 Table "employees" {
@@ -10,7 +10,7 @@ Table "employees" {
   "age" INT
   "salary" DECIMAL(10,2)
 
-  Constraints {
+  Checks {
     `age >= 18 AND age <= 65` [name: 'chk_age']
     `salary > 0` [name: 'chk_salary']
   }
@@ -22,7 +22,7 @@ Table "transactions" {
   "fee" DECIMAL(10,2)
   "total" DECIMAL(10,2)
 
-  Constraints {
+  Checks {
     `total = amount + fee`
     `amount > 0 OR fee > 0`
   }
@@ -30,19 +30,19 @@ Table "transactions" {
 
 Table "contacts" {
   "contact_id" INT [pk]
-  "email" VARCHAR(100) [constraint: `email LIKE '%@%'`]
-  "phone" VARCHAR(20) [constraint: `phone REGEXP '^[0-9]{3}-[0-9]{3}-[0-9]{4}$'`]
+  "email" VARCHAR(100) [check: `email LIKE '%@%'`]
+  "phone" VARCHAR(20) [check: `phone REGEXP '^[0-9]{3}-[0-9]{3}-[0-9]{4}$'`]
 }
 
 Table "orders" {
   "order_id" INT [pk]
-  "status" VARCHAR(20) [constraint: `status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled')`]
-  "priority" INT [constraint: `priority IN (1, 2, 3, 4, 5)`]
+  "status" VARCHAR(20) [check: `status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled')`]
+  "priority" INT [check: `priority IN (1, 2, 3, 4, 5)`]
 }
 
 Table "users" {
   "user_id" INT [pk]
-  "role" VARCHAR(20) [constraint: `role NOT IN ('banned', 'deleted', 'suspended')`]
+  "role" VARCHAR(20) [check: `role NOT IN ('banned', 'deleted', 'suspended')`]
 }
 
 Table "ranges" {
@@ -50,7 +50,7 @@ Table "ranges" {
   "min_val" INT
   "max_val" INT
 
-  Constraints {
+  Checks {
     `(min_val >= 0) AND (max_val <= 100) AND (min_val < max_val)`
   }
 }
@@ -60,7 +60,7 @@ Table "inventory" {
   "stock" INT
   "status" VARCHAR(20)
 
-  Constraints {
+  Checks {
     `CASE
       WHEN status = 'active' THEN stock >= 0
       WHEN status = 'discontinued' THEN stock = 0
@@ -71,10 +71,10 @@ Table "inventory" {
 
 Table "accounts" {
   "account_id" INT [pk]
-  "balance" DECIMAL(15,2) [constraint: `balance >= 0`]
-  "overdraft_limit" DECIMAL(15,2) [constraint: `overdraft_limit >= 0`]
+  "balance" DECIMAL(15,2) [check: `balance >= 0`]
+  "overdraft_limit" DECIMAL(15,2) [check: `overdraft_limit >= 0`]
 
-  Constraints {
+  Checks {
     `balance + overdraft_limit >= 0` [name: 'chk_balance_overdraft']
   }
 }
@@ -84,7 +84,7 @@ Table "shipments" {
   "weight" DECIMAL(10,2)
   "cost" DECIMAL(10,2)
 
-  Constraints {
+  Checks {
     `weight > 0` [name: 'chk_weight']
     `cost >= 0` [name: 'chk_cost']
   }
@@ -94,7 +94,7 @@ Table "payments" {
   "payment_id" INT [pk]
   "amount" DECIMAL(10,2)
 
-  Constraints {
+  Checks {
     `amount > 0`
   }
 }
@@ -105,7 +105,7 @@ Table "pricing" {
   "discount_pct" DECIMAL(5,2)
   "final_price" DECIMAL(10,2)
 
-  Constraints {
+  Checks {
     `final_price = base_price * (1 - discount_pct / 100)`
   }
 }
@@ -115,7 +115,7 @@ Table "settings" {
   "value" VARCHAR(100)
   "default_value" VARCHAR(100)
 
-  Constraints {
+  Checks {
     `COALESCE(value, default_value) IS NOT NULL`
   }
 }
@@ -125,7 +125,7 @@ Table "bookings" {
   "check_in" DATE
   "check_out" DATE
 
-  Constraints {
+  Checks {
     `check_out > check_in`
     `check_in >= CURDATE()`
   }
@@ -136,7 +136,7 @@ Table "documents" {
   "title" VARCHAR(200)
   "content" TEXT
 
-  Constraints {
+  Checks {
     `CHAR_LENGTH(title) > 0`
     `CHAR_LENGTH(content) >= 10`
   }
@@ -147,7 +147,7 @@ Table "events" {
   "status" VARCHAR(20)
   "cancelled" BOOLEAN
 
-  Constraints {
+  Checks {
     `status = 'active' OR status = 'completed' OR cancelled = TRUE`
   }
 }
@@ -156,7 +156,7 @@ Table "grades" {
   "grade_id" INT [pk]
   "score" INT
 
-  Constraints {
+  Checks {
     `score BETWEEN 0 AND 100`
   }
 }
@@ -165,7 +165,7 @@ Table "products_special" {
   "product_id" INT [pk]
   "code" VARCHAR(50)
 
-  Constraints {
+  Checks {
     `code REGEXP '^[A-Z]{3}-[0-9]{4}$'` [name: 'chk_code_format']
   }
 }
@@ -175,7 +175,7 @@ Table "features" {
   "is_enabled" BOOLEAN
   "is_premium" BOOLEAN
 
-  Constraints {
+  Checks {
     `is_enabled = TRUE OR is_premium = FALSE`
   }
 }
@@ -184,7 +184,7 @@ Table "configs" {
   "config_id" INT [pk]
   "settings" JSON
 
-  Constraints {
+  Checks {
     `JSON_VALID(settings)`
   }
 }
@@ -194,7 +194,7 @@ Table "audit_log" {
   "severity" INT
   "message" TEXT
 
-  Constraints {
+  Checks {
     `severity BETWEEN 1 AND 5` [name: 'chk_severity_range']
     `CHAR_LENGTH(message) > 0` [name: 'chk_message_length']
     `severity > 0`
@@ -206,7 +206,7 @@ Table "limits" {
   "min_value" INT
   "max_value" INT
 
-  Constraints {
+  Checks {
     `max_value > min_value`
     `min_value >= 0`
     `max_value <= 1000`
@@ -218,7 +218,7 @@ Table "statuses" {
   "current_status" VARCHAR(20)
   "previous_status" VARCHAR(20)
 
-  Constraints {
+  Checks {
     `current_status != previous_status`
     `current_status <> ''`
   }
@@ -229,7 +229,7 @@ Table "defaults" {
   "value1" INT
   "value2" INT
 
-  Constraints {
+  Checks {
     `IFNULL(value1, 0) + IFNULL(value2, 0) > 0`
   }
 }
@@ -238,7 +238,7 @@ Table "sequences" {
   "seq_id" INT [pk]
   "value" INT
 
-  Constraints {
+  Checks {
     `MOD(value, 2) = 0`
   }
 }
@@ -247,7 +247,7 @@ Table "temperatures" {
   "temp_id" INT [pk]
   "celsius" DECIMAL(5,2)
 
-  Constraints {
+  Checks {
     `ABS(celsius) < 100`
   }
 }

@@ -11,7 +11,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "price",
@@ -19,11 +19,11 @@
             "type_name": "DECIMAL(10,4)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "expression": "price > 0"
         },
@@ -43,7 +43,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "age",
@@ -51,7 +51,7 @@
             "type_name": "INT",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "salary",
@@ -59,11 +59,11 @@
             "type_name": "DECIMAL(10,2)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "expression": "age >= 18 AND age <= 65",
           "name": "chk_age"

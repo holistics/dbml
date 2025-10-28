@@ -33,7 +33,7 @@
             "type": "number",
             "value": -2
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "id2",
@@ -62,7 +62,7 @@
             "type": "number",
             "value": -2
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "id3",
@@ -91,7 +91,7 @@
             "type": "number",
             "value": 7.2225
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -108,7 +108,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "b",
@@ -170,7 +170,7 @@
           "name": "P1"
         }
       ],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],
@@ -210,7 +210,7 @@
             "type": "number",
             "value": -2
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "id2",
@@ -239,7 +239,7 @@
             "type": "number",
             "value": -2
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "id3",
@@ -268,7 +268,7 @@
             "type": "number",
             "value": -7.2225
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -284,7 +284,7 @@
         }
       },
       "indexes": [],
-      "constraints": []
+      "checks": []
     }
   ]
 }
