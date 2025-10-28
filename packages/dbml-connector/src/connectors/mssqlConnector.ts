@@ -1,4 +1,9 @@
 /* eslint-disable camelcase */
+/* TDD 72
+ * - In MSSQL, there's no notion of ENUM.
+ * - MSSQL connector used to extract ENUMS from CHECK constraints, for example: `CHECK ([col]=value1 OR [col]=value2)` would be translated to an enum with 2 values, `value1` and `value2`.
+ * - Since DBML 4.0.0, we have supported CHECK constraints, so we no longer extract ENUMS out from CHECK constraints but rather keep them as CHECK constraints.
+ * */
 import sql from 'mssql';
 import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
 import {
@@ -560,6 +565,7 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   return {
     tables,
     fields,
+    // MSSQL doesn't support the notion of enums
     enums: [],
     refs,
     indexes,
