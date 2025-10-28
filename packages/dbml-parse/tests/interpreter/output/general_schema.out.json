@@ -29,7 +29,7 @@
           "pk": true,
           "increment": true,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "user_id",
@@ -55,7 +55,7 @@
           "increment": false,
           "unique": true,
           "not_null": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "status",
@@ -118,7 +118,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "headerColor": "#fff"
     },
     {
@@ -199,7 +199,7 @@
             "type": "number",
             "value": 1
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -216,7 +216,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "products",
@@ -246,7 +246,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "name",
@@ -295,7 +295,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "price",
@@ -370,7 +370,7 @@
             "value": "now()",
             "type": "expression"
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -474,7 +474,7 @@
         }
       ],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "users",
@@ -504,7 +504,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "full_name",
@@ -552,7 +552,7 @@
           "pk": false,
           "increment": false,
           "unique": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "gender",
@@ -661,7 +661,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "merchants",
@@ -691,7 +691,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "merchant_name",
@@ -800,7 +800,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "countries",
@@ -830,7 +830,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "name",
@@ -893,7 +893,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],

@@ -46,7 +46,7 @@ export interface Table {
   schemaName: null | string;
   alias: string | null;
   fields: Column[];
-  constraints: Constraint[];
+  checks: Check[];
   partials: TablePartialInjection[];
   token: TokenPosition;
   indexes: Index[];
@@ -75,7 +75,7 @@ export interface Column {
   type: ColumnType;
   token: TokenPosition;
   inline_refs: InlineRef[];
-  constraints: Constraint[];
+  checks: Check[];
   pk?: boolean;
   dbdefault?: {
     type: 'number' | 'string' | 'boolean' | 'expression';
@@ -107,7 +107,7 @@ export interface Index {
   type?: string;
 }
 
-export interface Constraint {
+export interface Check {
   token: TokenPosition;
   expression: string;
   name?: string;
@@ -191,7 +191,7 @@ export interface TablePartial {
   token: TokenPosition;
   indexes: Index[];
   headerColor?: string;
-  constraints: Constraint[];
+  checks: Check[];
   note?: {
     value: string;
     token: TokenPosition;

@@ -96,19 +96,19 @@ class OracleExporter {
         line += ' NOT NULL';
       }
 
-      if (cloneField.constraintIds && cloneField.constraintIds.length > 0) {
-        if (cloneField.constraintIds.length === 1) {
-          const constraint = model.constraints[cloneField.constraintIds[0]];
-          if (constraint.name) {
-            line += ` CONSTRAINT "${constraint.name}"`;
+      if (cloneField.checkIds && cloneField.checkIds.length > 0) {
+        if (cloneField.checkIds.length === 1) {
+          const check = model.checks[cloneField.checkIds[0]];
+          if (check.name) {
+            line += ` CONSTRAINT "${check.name}"`;
           }
-          line += ` CHECK (${constraint.expression})`;
+          line += ` CHECK (${check.expression})`;
         } else {
-          const constraintExpressions = cloneField.constraintIds.map(constraintId => {
-            const constraint = model.constraints[constraintId];
-            return `(${constraint.expression})`;
+          const checkExpressions = cloneField.checkIds.map(checkId => {
+            const check = model.checks[checkId];
+            return `(${check.expression})`;
           });
-          line += ` CHECK (${constraintExpressions.join(' AND ')})`;
+          line += ` CHECK (${checkExpressions.join(' AND ')})`;
         }
       }
 
@@ -146,23 +146,23 @@ class OracleExporter {
     return lines;
   }
 
-  static getConstraintLines (tableId, model) {
+  static getCheckLines (tableId, model) {
     const table = model.tables[tableId];
-  
-    if (!table.constraintIds || table.constraintIds.length === 0) {
+
+    if (!table.checkIds || table.checkIds.length === 0) {
       return [];
     }
 
-    const lines = table.constraintIds.map((constraintId) => {
-      const constraint = model.constraints[constraintId];
+    const lines = table.checkIds.map((checkId) => {
+      const check = model.checks[checkId];
       let line = '';
-      
-      if (constraint.name) {
-        line = `CONSTRAINT "${constraint.name}" `;
+
+      if (check.name) {
+        line = `CONSTRAINT "${check.name}" `;
       }
-      
-      line += `CHECK (${constraint.expression})`;
-      
+
+      line += `CHECK (${check.expression})`;
+
       return line;
     });
 
@@ -172,13 +172,13 @@ class OracleExporter {
   static getTableContents (tableIds, model) {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = this.getFieldLines(tableId, model);
-      const constraintContents = this.getConstraintLines(tableId, model);
+      const checkContents = this.getCheckLines(tableId, model);
       const compositePKs = this.getCompositePKs(tableId, model);
 
       return {
         tableId,
         fieldContents,
-        constraintContents,
+        checkContents,
         compositePKs,
       };
     });
@@ -190,7 +190,7 @@ class OracleExporter {
     const tableContentList = this.getTableContents(tableIds, model);
 
     const tableStrs = tableContentList.map((tableContent) => {
-      const content = [...tableContent.fieldContents, ...tableContent.constraintContents, ...tableContent.compositePKs];
+      const content = [...tableContent.fieldContents, ...tableContent.checkContents, ...tableContent.compositePKs];
       const table = model.tables[tableContent.tableId];
       const schema = model.schemas[table.schemaId];
 

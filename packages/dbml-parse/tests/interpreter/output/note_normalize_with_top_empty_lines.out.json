@@ -90,7 +90,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "note": {
         "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 1\n",
         "token": {
@@ -135,7 +135,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "username",
@@ -221,7 +221,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "note": {
         "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n",
         "token": {
@@ -266,7 +266,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "title",
@@ -329,7 +329,7 @@
               }
             }
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "user_id",
@@ -415,7 +415,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "note": {
         "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n    * 1.1\n    * 1.2\n  * 2\n",
         "token": {

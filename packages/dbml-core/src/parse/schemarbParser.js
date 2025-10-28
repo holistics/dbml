@@ -157,8 +157,8 @@ function peg$parse(input, options) {
       peg$c3 = ",",
       peg$c4 = peg$literalExpectation(",", false),
       peg$c5 = function(tableName, expression, props) {
-          const constraintName = props.find(p => p.name)?.name;
-          addCheckConstraintToTable(tableName, expression, constraintName);
+          const checkName = props.find(p => p.name)?.name;
+          addCheckConstraintToTable(tableName, expression, checkName);
         },
       peg$c6 = function(fromTable, toTable, props) {
           const foreign = refactorForeign(createForeign(fromTable, toTable, props));
@@ -186,8 +186,8 @@ function peg$parse(input, options) {
             fields: addPrimaryKey(body.fields),
             // index: _.union(...body.index)
           })
-          if (body.constraints && body.constraints.length > 0) {
-            table.constraints = body.constraints;
+          if (body.checks && body.checks.length > 0) {
+            table.checks = body.checks;
           }
           return {
             table,
@@ -199,24 +199,24 @@ function peg$parse(input, options) {
             fields: fields.filter(field => field.isField).map(field => field.field),
             index: fields.filter(field => field.isIndex).map(field => field.index),
             references: fields.filter(field => field.isReferences).map(field => field.reference),
-            constraints: fields.filter(field => field.isConstraint).map(field => field.constraint),
+            checks: fields.filter(field => field.isCheck).map(field => field.check),
           });
         },
       peg$c14 = function(field) { return field },
       peg$c15 = function(reference) { return ({ reference, isReferences: true })},
-      peg$c16 = function(constraint) { return ({ constraint, isConstraint: true })},
+      peg$c16 = function(check) { return ({ check, isCheck: true })},
       peg$c17 = function(field) { return ({ field, isField: true }) },
       peg$c18 = function(reference) {
           return reference;
         },
       peg$c19 = function(expression, props) {
-          const constraint = { expression };
+          const check = { expression };
           for (let i = 0; i < props.length; i++) {
             if (props[i].name) {
-              constraint.name = props[i].name;
+              check.name = props[i].name;
             }
           }
-          return constraint;
+          return check;
         },
       peg$c20 = function(type, name) {
           return ({
@@ -2483,14 +2483,14 @@ function peg$parse(input, options) {
       if (!table) {
         error("Table ${tableName} not found");
       }
-      if (!table.constraints) {
-        table.constraints = [];
+      if (!table.checks) {
+        table.checks = [];
       }
-      const constraint = { expression };
+      const check = { expression };
       if (name) {
-        constraint.name = name;
+        check.name = name;
       }
-      table.constraints.push(constraint);
+      table.checks.push(check);
     }
 
     function addPrimaryKey(fields = [], props = []) {

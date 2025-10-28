@@ -29,7 +29,7 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "constraints": [
+          "checks": [
             {
               "token": {
                 "start": {
@@ -102,7 +102,7 @@
           "name": "WithMoney"
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "token": {
             "start": {
@@ -196,7 +196,7 @@
           "name": "WithMoney"
         }
       ],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "User3",
@@ -226,7 +226,7 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "constraints": [
+          "checks": [
             {
               "token": {
                 "start": {
@@ -274,7 +274,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],
@@ -310,7 +310,7 @@
           "pk": false,
           "increment": false,
           "unique": false,
-          "constraints": [
+          "checks": [
             {
               "token": {
                 "start": {
@@ -342,7 +342,7 @@
         }
       },
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "token": {
             "start": {

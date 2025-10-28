@@ -1,10 +1,10 @@
 Table "users" {
   "id" int [pk]
   "name" nvarchar(255)
-  "pjs" nvarchar(255) [not null, constraint: `[pjs] IN ('created2', 'running2', 'done2', 'failure2')`]
-  "pjs2" nvarchar(255) [not null, constraint: `[pjs2] IN ('created2', 'running2', 'done2', 'failure2')`]
-  "pg" nvarchar(255) [not null, constraint: `[pg] IN ('male', 'female')`]
-  "pg2" nvarchar(255) [not null, constraint: `[pg2] IN ('male2', 'female2')`]
+  "pjs" nvarchar(255) [not null, check: `[pjs] IN ('created2', 'running2', 'done2', 'failure2')`]
+  "pjs2" nvarchar(255) [not null, check: `[pjs2] IN ('created2', 'running2', 'done2', 'failure2')`]
+  "pg" nvarchar(255) [not null, check: `[pg] IN ('male', 'female')`]
+  "pg2" nvarchar(255) [not null, check: `[pg2] IN ('male2', 'female2')`]
 }
 
 Table "products" {
@@ -27,10 +27,10 @@ Ref:"users"."id" < "schemaA"."locations"."name"
 Table "ecommerce"."users" {
   "id" int [pk]
   "name" nvarchar(255)
-  "ejs" nvarchar(255) [not null, constraint: `[ejs] IN ('created2', 'running2', 'done2', 'failure2')`]
-  "ejs2" nvarchar(255) [not null, constraint: `[ejs2] IN ('created2', 'running2', 'done2', 'failure2')`]
-  "eg" nvarchar(255) [not null, constraint: `[eg] IN ('male', 'female')`]
-  "eg2" nvarchar(255) [not null, constraint: `[eg2] IN ('male2', 'female2')`]
+  "ejs" nvarchar(255) [not null, check: `[ejs] IN ('created2', 'running2', 'done2', 'failure2')`]
+  "ejs2" nvarchar(255) [not null, check: `[ejs2] IN ('created2', 'running2', 'done2', 'failure2')`]
+  "eg" nvarchar(255) [not null, check: `[eg] IN ('male', 'female')`]
+  "eg2" nvarchar(255) [not null, check: `[eg2] IN ('male2', 'female2')`]
 
   Indexes {
     (name, ejs) [name: "idx_1"]

@@ -28,7 +28,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "price > 0",
           "name": "price_positive"
@@ -66,7 +66,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "age >= 18 AND age <= 65",
           "name": "chk_age"
@@ -111,7 +111,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "delivery_date > order_date"
         },
@@ -148,7 +148,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "weight > 0",
           "name": "chk_weight"
@@ -181,7 +181,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "amount > 0"
         }
@@ -209,7 +209,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "role NOT IN ('banned', 'deleted', 'suspended')"
         }
@@ -243,7 +243,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "(min_val >= 0) AND (max_val <= 100) AND (min_val < max_val)"
         }
@@ -277,7 +277,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "CASE WHEN status = 'active' THEN stock WHEN status = 'discontinued' THEN 0 ELSE 1 END >= 0"
         }
@@ -311,7 +311,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "balance + overdraft_limit >= 0",
           "name": "chk_balance_overdraft"
@@ -352,7 +352,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "total = amount + fee"
         },
@@ -389,7 +389,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "email LIKE '%@%'"
         }
@@ -417,7 +417,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "value = 0 OR value = 1 OR value = -1"
         }
@@ -457,7 +457,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "final_price = base_price * (1 - discount_pct / 100)"
         }
@@ -491,7 +491,7 @@
           }
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "max_value > min_value"
         },

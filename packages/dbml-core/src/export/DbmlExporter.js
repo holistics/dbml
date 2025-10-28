@@ -70,8 +70,8 @@ class DbmlExporter {
       if (field.increment) {
         constraints.push('increment');
       }
-      if (field.constraintIds) {
-        constraints.push(...field.constraintIds.map((id) => `constraint: \`${model.constraints[id].expression}\``));
+      if (field.checkIds) {
+        constraints.push(...field.checkIds.map((id) => `check: \`${model.checks[id].expression}\``));
       }
       if (field.dbdefault) {
         let value = 'default: ';
@@ -155,18 +155,18 @@ class DbmlExporter {
     return lines;
   }
 
-  static getConstraintLines (tableId, model) {
+  static getCheckLines (tableId, model) {
     const table = model.tables[tableId];
 
-    const lines = table.constraintIds.map((constraintId) => {
+    const lines = table.checkIds.map((checkId) => {
       let line = '';
-      const { expression, name } = model.constraints[constraintId];
+      const { expression, name } = model.checks[checkId];
       line += `\`${expression}\``;
       if (name) {
-        line += ` [name: '${name}']`
+        line += ` [name: '${name}']`;
       }
       return line;
-    })
+    });
 
     return lines;
   }
@@ -174,13 +174,13 @@ class DbmlExporter {
   static getTableContentArr (tableIds, model) {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = DbmlExporter.getFieldLines(tableId, model);
-      const constraintContents = DbmlExporter.getConstraintLines(tableId, model);
+      const checkContents = DbmlExporter.getCheckLines(tableId, model);
       const indexContents = DbmlExporter.getIndexLines(tableId, model);
 
       return {
         tableId,
         fieldContents,
-        constraintContents,
+        checkContents,
         indexContents,
       };
     });
@@ -213,10 +213,10 @@ class DbmlExporter {
 
       const fieldStr = tableContent.fieldContents.map(field => `  ${field}\n`).join('');
 
-      let constraintStr = '';
-      if (!isEmpty(tableContent.constraintContents)) {
-        const constraintBody = tableContent.constraintContents.map(constraintLine => `    ${constraintLine}\n`).join('');
-        constraintStr = `\n  Constraints {\n${constraintBody}  }\n`;
+      let checkStr = '';
+      if (!isEmpty(tableContent.checkContents)) {
+        const checkBody = tableContent.checkContents.map(checkLine => `    ${checkLine}\n`).join('');
+        checkStr = `\n  Checks {\n${checkBody}  }\n`;
       }
 
       let indexStr = '';
@@ -225,9 +225,9 @@ class DbmlExporter {
         indexStr = `\n  Indexes {\n${indexBody}  }\n`;
       }
 
-      const noteStr = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note)}\n`: '';
+      const noteStr = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note)}\n` : '';
 
-      return `Table ${tableName}${tableSettingStr} {\n${fieldStr}${constraintStr}${indexStr}${noteStr}}\n`;
+      return `Table ${tableName}${tableSettingStr} {\n${fieldStr}${checkStr}${indexStr}${noteStr}}\n`;
     });
 
     return tableStrs.length ? tableStrs.join('\n') : '';
@@ -307,7 +307,7 @@ class DbmlExporter {
       const groupSchema = model.schemas[group.schemaId];
       const groupSettingStr = DbmlExporter.getTableGroupSettings(group);
 
-      const groupNote = group.note ? `  Note: ${DbmlExporter.escapeNote(group.note)}\n`: '';
+      const groupNote = group.note ? `  Note: ${DbmlExporter.escapeNote(group.note)}\n` : '';
       const groupSchemaName = shouldPrintSchema(groupSchema, model) ? `"${groupSchema.name}".` : '';
       const groupName = `${groupSchemaName}"${group.name}"`;
 
@@ -316,7 +316,7 @@ class DbmlExporter {
           const table = model.tables[tableId];
           const tableSchema = model.schemas[table.schemaId];
           const tableName = `  ${shouldPrintSchema(tableSchema, model) ? `"${tableSchema.name}".` : ''}"${table.name}"`;
-          return result + `${tableName}\n`;
+          return `${result}${tableName}\n`;
         }, '');
 
       return `TableGroup ${groupName}${groupSettingStr} {\n${tableNames}${groupNote}}\n`;
@@ -331,7 +331,7 @@ class DbmlExporter {
       const stickyNote = `Note ${note.name} {\n${escapedContent}\n}\n`;
 
       // Add a blank line between note elements
-      return result ? result + '\n' + stickyNote : stickyNote;
+      return result ? `${result}\n${stickyNote}` : stickyNote;
     }, '');
   }
 
@@ -350,7 +350,7 @@ class DbmlExporter {
       if (!isEmpty(refIds)) elementStrs.push(DbmlExporter.exportRefs(refIds, model));
     });
 
-    if(!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));
+    if (!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));
 
     // all elements already end with 1 '\n', so join('\n') to separate them with 1 blank line
     return elementStrs.join('\n');

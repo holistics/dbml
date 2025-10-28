@@ -25,7 +25,7 @@
             "type_name": "nvarchar(255)"
           },
           "not_null": true,
-          "constraints": [
+          "checks": [
             {
               "expression": "[status] IN ('created', 'running', 'done', 'failure')"
             }
@@ -139,7 +139,7 @@
           ]
         }
       ],
-      "constraints": [
+      "checks": [
         {
           "expression": "[status] IN ('Out of Stock', 'In Stock')"
         }

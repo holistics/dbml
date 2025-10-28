@@ -10,13 +10,13 @@ export default class Analyzer {
   private ast: ProgramNode;
   private symbolFactory: SymbolFactory;
 
-  constructor(ast: ProgramNode, symbolIdGenerator: NodeSymbolIdGenerator) {
+  constructor (ast: ProgramNode, symbolIdGenerator: NodeSymbolIdGenerator) {
     this.ast = ast;
     this.symbolFactory = new SymbolFactory(symbolIdGenerator);
   }
 
   // Analyzing: Invoking both the validator and binder
-  analyze(): Report<ProgramNode, CompileError> {
+  analyze (): Report<ProgramNode, CompileError> {
     const validator = new Validator(this.ast, this.symbolFactory);
 
     return validator.validate().chain((program) => {
@@ -27,7 +27,7 @@ export default class Analyzer {
   }
 
   // For invoking the validator only
-  validate(): Report<ProgramNode, CompileError> {
+  validate (): Report<ProgramNode, CompileError> {
     const validator = new Validator(this.ast, this.symbolFactory);
 
     return validator.validate().chain((program) => new Report(program, []));

@@ -48,12 +48,12 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
   triggerCharacters: string[];
 
-  constructor(compiler: Compiler, triggerCharacters: string[] = []) {
+  constructor (compiler: Compiler, triggerCharacters: string[] = []) {
     this.compiler = compiler;
     this.triggerCharacters = triggerCharacters;
   }
 
-  provideCompletionItems(model: TextModel, position: Position): CompletionList {
+  provideCompletionItems (model: TextModel, position: Position): CompletionList {
     const offset = getOffsetFromMonacoPosition(model, position);
     const flatStream = this.compiler.token.flatStream();
     // bOc: before-or-contain
@@ -83,11 +83,11 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     const element = this.compiler.container.element(offset);
     if (
-      this.compiler.container.scopeKind(offset) === ScopeKind.TOPLEVEL ||
-      (element instanceof ElementDeclarationNode &&
-        element.type &&
-        element.type.start <= offset &&
-        element.type.end >= offset)
+      this.compiler.container.scopeKind(offset) === ScopeKind.TOPLEVEL
+      || (element instanceof ElementDeclarationNode
+        && element.type
+        && element.type.start <= offset
+        && element.type.end >= offset)
     ) {
       return suggestTopLevelElementType();
     }
@@ -137,8 +137,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         return suggestInSubField(this.compiler, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
         if (
-          (container.bodyColon && offset >= container.bodyColon.end) ||
-          (container.body && isOffsetWithinSpan(offset, container.body))
+          (container.bodyColon && offset >= container.bodyColon.end)
+          || (container.body && isOffsetWithinSpan(offset, container.body))
         ) {
           return suggestInSubField(this.compiler, offset, undefined);
         }
@@ -181,7 +181,7 @@ function suggestOnRelOp (
   return noSuggestions();
 }
 
-function suggestNamesInScope(
+function suggestNamesInScope (
   compiler: Compiler,
   offset: number,
   parent: ElementDeclarationNode | ProgramNode | undefined,
@@ -216,7 +216,7 @@ function suggestNamesInScope(
   return addQuoteIfNeeded(res);
 }
 
-function suggestInTuple(compiler: Compiler, offset: number): CompletionList {
+function suggestInTuple (compiler: Compiler, offset: number): CompletionList {
   const scopeKind = compiler.container.scopeKind(offset);
   switch (scopeKind) {
     case ScopeKind.INDEXES:
@@ -244,7 +244,7 @@ function suggestInTuple(compiler: Compiler, offset: number): CompletionList {
   return noSuggestions();
 }
 
-function suggestInAttribute(
+function suggestInAttribute (
   compiler: Compiler,
   offset: number,
   container: AttributeNode,
@@ -253,9 +253,9 @@ function suggestInAttribute(
   if ([SyntaxTokenKind.COMMA, SyntaxTokenKind.LBRACKET].includes(token?.kind as any)) {
     const res = suggestAttributeName(compiler, offset);
 
-    return token?.kind === SyntaxTokenKind.COMMA && shouldPrependSpace(token, offset) ?
-      prependSpace(res) :
-      res;
+    return token?.kind === SyntaxTokenKind.COMMA && shouldPrependSpace(token, offset)
+      ? prependSpace(res)
+      : res;
   }
 
   if (container.name && container.name.start <= offset && container.name.end >= offset) {
@@ -329,7 +329,7 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             range: undefined as any,
           })),
-          ...[SettingName.Ref, SettingName.Default, SettingName.Note, SettingName.Constraint].map((name) => ({
+          ...[SettingName.Ref, SettingName.Default, SettingName.Note, SettingName.Check].map((name) => ({
             label: name,
             insertText: `${name}: `,
             kind: CompletionItemKind.Property,
@@ -383,7 +383,7 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
           range: undefined as any,
         })),
       };
-    case ScopeKind.CONSTRAINTS:
+    case ScopeKind.CHECKS:
       return {
         suggestions: [
           SettingName.Name,
@@ -402,7 +402,7 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
   return noSuggestions();
 }
 
-function suggestAttributeValue(
+function suggestAttributeValue (
   compiler: Compiler,
   offset: number,
   settingName: string,
@@ -436,7 +436,7 @@ function suggestAttributeValue(
   return noSuggestions();
 }
 
-function suggestMembers(
+function suggestMembers (
   compiler: Compiler,
   offset: number,
   container: InfixExpressionNode & { op: SyntaxToken },
@@ -508,7 +508,7 @@ function suggestTopLevelElementType (): CompletionList {
   };
 }
 
-function suggestInEnumField(
+function suggestInEnumField (
   compiler: Compiler,
   offset: number,
   container?: FunctionApplicationNode,
@@ -534,7 +534,7 @@ function suggestInColumn (
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const elements = ['Note', 'indexes', 'constraints'];
+  const elements = ['Note', 'indexes', 'checks'];
   if (!container?.callee) {
     return {
       suggestions: elements.map((name) => ({
@@ -602,7 +602,7 @@ function suggestInProjectField (
   return noSuggestions();
 }
 
-function suggestInRefField(compiler: Compiler, offset: number): CompletionList {
+function suggestInRefField (compiler: Compiler, offset: number): CompletionList {
   return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
     SymbolKind.Schema,
     SymbolKind.Table,
@@ -610,7 +610,7 @@ function suggestInRefField(compiler: Compiler, offset: number): CompletionList {
   ]);
 }
 
-function suggestInTableGroupField(compiler: Compiler): CompletionList {
+function suggestInTableGroupField (compiler: Compiler): CompletionList {
   return {
     suggestions: [
       ...addQuoteIfNeeded({
@@ -636,15 +636,15 @@ function suggestInTableGroupField(compiler: Compiler): CompletionList {
         kind: CompletionItemKind.Keyword,
         range: undefined as any,
       })),
-    ]
-  }
+    ],
+  };
 }
 
-function suggestInIndex(compiler: Compiler, offset: number): CompletionList {
+function suggestInIndex (compiler: Compiler, offset: number): CompletionList {
   return suggestColumnNameInIndexes(compiler, offset);
 }
 
-function suggestColumnType(compiler: Compiler, offset: number): CompletionList {
+function suggestColumnType (compiler: Compiler, offset: number): CompletionList {
   return {
     suggestions: [
       ...[
@@ -720,7 +720,7 @@ function suggestColumnType(compiler: Compiler, offset: number): CompletionList {
   };
 }
 
-function suggestColumnNameInIndexes(compiler: Compiler, offset: number): CompletionList {
+function suggestColumnNameInIndexes (compiler: Compiler, offset: number): CompletionList {
   const indexesNode = compiler.container.element(offset);
   const tableNode = (indexesNode as any)?.parent;
   if (!(tableNode?.symbol instanceof TableSymbol)) {
@@ -749,7 +749,7 @@ function suggestColumnNameInIndexes(compiler: Compiler, offset: number): Complet
 }
 
 // Return the index of the argument we're at in an element's subfield
-function findContainerArg(offset: number, node: FunctionApplicationNode): number {
+function findContainerArg (offset: number, node: FunctionApplicationNode): number {
   if (!node.callee) return -1;
   const args = [node.callee, ...node.args];
 

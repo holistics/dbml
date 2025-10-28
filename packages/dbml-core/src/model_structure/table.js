@@ -4,11 +4,11 @@ import Field from './field';
 import Index from './indexes';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
-import Constraint from './constraint';
+import Check from './check';
 
 class Table extends Element {
   constructor ({
-    name, alias, note, fields = [], indexes = [], constraints = [], schema = {}, token, headerColor, noteToken = null, partials = [],
+    name, alias, note, fields = [], indexes = [], checks = [], schema = {}, token, headerColor, noteToken = null, partials = [],
   } = {}) {
     super(token);
     this.name = name;
@@ -18,7 +18,7 @@ class Table extends Element {
     this.headerColor = headerColor;
     this.fields = [];
     this.indexes = [];
-    this.constraints = [];
+    this.checks = [];
     this.schema = schema;
     this.partials = partials;
     this.dbState = this.schema.dbState;
@@ -30,7 +30,7 @@ class Table extends Element {
     this.processPartials();
     this.checkFieldCount();
     this.processIndexes(indexes);
-    this.processConstraints(constraints);
+    this.processChecks(checks);
   }
 
   generateId () {
@@ -81,14 +81,14 @@ class Table extends Element {
     });
   }
 
-  processConstraints (constraints) {
-    constraints.forEach((constraint) => {
-      this.pushConstraint(new Constraint({ ...constraint, table: this }));
+  processChecks (checks) {
+    checks.forEach((check) => {
+      this.pushCheck(new Check({ ...check, table: this }));
     });
   }
 
-  pushConstraint (constraint) {
-    this.constraints.push(constraint);
+  pushCheck (check) {
+    this.checks.push(check);
   }
 
   findField (fieldName) {
@@ -197,10 +197,10 @@ class Table extends Element {
         this.indexes.push(new Index({ ...index, table: this, injectedPartial: tablePartial }));
       });
 
-      tablePartial.constraints.forEach((constraint) => {
-        this.constraints.push(new Constraint({
-          ...constraint,
-          name: constraint.name && `${this.name}.${constraint.name}`, // deduplicate constraint names when instantiated to tables
+      tablePartial.checks.forEach((check) => {
+        this.checks.push(new Check({
+          ...check,
+          name: check.name && `${this.name}.${check.name}`, // deduplicate check names when instantiated to tables
           table: this,
           injectedPartial: tablePartial,
         }));
@@ -226,7 +226,7 @@ class Table extends Element {
     return {
       fieldIds: this.fields.map(f => f.id),
       indexIds: this.indexes.map(i => i.id),
-      constraintIds: this.constraints.map(c => c.id),
+      checkIds: this.checks.map(c => c.id),
     };
   }
 
@@ -257,7 +257,7 @@ class Table extends Element {
 
     this.fields.forEach((field) => field.normalize(model));
     this.indexes.forEach((index) => index.normalize(model));
-    this.constraints.forEach((constraint) => constraint.normalize(model));
+    this.checks.forEach((check) => check.normalize(model));
   }
 }
 

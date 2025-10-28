@@ -536,7 +536,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       schemaName,
       fields,
       indexes: tableIndices.concat(indexes),
-      constraints: tableCheckConstraints,
+      checks: tableCheckConstraints,
     });
 
     this.data.tables.push(table);
@@ -643,14 +643,14 @@ export default class MssqlASTGen extends TSqlParserVisitor {
             break;
           case COLUMN_CONSTRAINT_KIND.CHECK: {
             const { expression, name } = columnDef.value;
-            if (!field.constraints) {
-              field.constraints = [];
+            if (!field.checks) {
+              field.checks = [];
             }
-            const constraintObj = { expression };
+            const checkObj = { expression };
             if (name) {
-              constraintObj.name = name;
+              checkObj.name = name;
             }
-            field.constraints.push(constraintObj);
+            field.checks.push(checkObj);
             break;
           }
           default:
@@ -1071,11 +1071,11 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     });
 
     checkConstraints.forEach((checkConstraint) => {
-      const constraintObj = { expression: checkConstraint.expression };
+      const checkObj = { expression: checkConstraint.expression };
       if (checkConstraint.name) {
-        constraintObj.name = checkConstraint.name;
+        checkObj.name = checkConstraint.name;
       }
-      table.constraints.push(constraintObj);
+      table.checks.push(checkObj);
     });
   }
 

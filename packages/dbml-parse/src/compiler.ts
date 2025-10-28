@@ -62,7 +62,7 @@ export const enum ScopeKind {
   CUSTOM,
   TOPLEVEL,
   TABLEPARTIAL,
-  CONSTRAINTS,
+  CHECKS,
 }
 
 export default class Compiler {
@@ -78,7 +78,7 @@ export default class Compiler {
     queryCallback: (arg: U) => V,
     toKey?: (arg: U) => K,
   ): (arg: U) => V;
-  private createQuery<V, U, K>(
+  private createQuery<V, U, K> (
     kind: Query,
     queryCallback: (arg: U | undefined) => V,
     toKey?: (arg: U) => K,
@@ -113,7 +113,7 @@ export default class Compiler {
     };
   }
 
-  setSource(source: string) {
+  setSource (source: string) {
     this.source = source;
     this.cache = new Array(Query.TOTAL_QUERY_COUNT).fill(null);
     this.nodeIdGenerator.reset();
@@ -122,15 +122,11 @@ export default class Compiler {
 
   // A namespace for token-related queries
   readonly token = {
-    invalidStream: this.createQuery(Query.Token_InvalidStream, (): readonly SyntaxToken[] =>
-      this.parse.tokens().filter(isInvalidToken),
-    ),
+    invalidStream: this.createQuery(Query.Token_InvalidStream, (): readonly SyntaxToken[] => this.parse.tokens().filter(isInvalidToken)),
     // Valid + Invalid tokens (which are guarenteed to be non-trivials) are included in the stream
-    flatStream: this.createQuery(Query.Token_FlatStream, (): readonly SyntaxToken[] =>
-      this.parse
-        .tokens()
-        .flatMap((token) => [...token.leadingInvalid, token, ...token.trailingInvalid]),
-    ),
+    flatStream: this.createQuery(Query.Token_FlatStream, (): readonly SyntaxToken[] => this.parse
+      .tokens()
+      .flatMap((token) => [...token.leadingInvalid, token, ...token.trailingInvalid])),
   };
 
   // A namespace for parsing-related utility
@@ -231,8 +227,8 @@ export default class Compiler {
               }
             }
           } else if (
-            lastContainer instanceof PrefixExpressionNode ||
-            lastContainer instanceof InfixExpressionNode
+            lastContainer instanceof PrefixExpressionNode
+            || lastContainer instanceof InfixExpressionNode
           ) {
             if (this.container.token(offset).token !== lastContainer.op) {
               res.pop();
@@ -312,8 +308,7 @@ export default class Compiler {
 
     scope: this.createQuery(
       Query.Container_Scope,
-      (offset: number): Readonly<SymbolTable> | undefined =>
-        this.container.element(offset)?.symbol?.symbolTable,
+      (offset: number): Readonly<SymbolTable> | undefined => this.container.element(offset)?.symbol?.symbolTable,
     ),
 
     scopeKind: this.createQuery(Query.Container_Scope_Kind, (offset: number): ScopeKind => {
@@ -341,8 +336,8 @@ export default class Compiler {
           return ScopeKind.PROJECT;
         case 'tablepartial':
           return ScopeKind.TABLEPARTIAL;
-        case 'constraints':
-          return ScopeKind.CONSTRAINTS;
+        case 'checks':
+          return ScopeKind.CHECKS;
         default:
           return ScopeKind.CUSTOM;
       }
@@ -373,8 +368,7 @@ export default class Compiler {
         for (
           let currentOwner: ElementDeclarationNode | ProgramNode | undefined = owner;
           currentOwner;
-          currentOwner =
-            currentOwner instanceof ElementDeclarationNode ? currentOwner.parent : undefined
+          currentOwner = currentOwner instanceof ElementDeclarationNode ? currentOwner.parent : undefined
         ) {
           if (!currentOwner.symbol?.symbolTable) {
             continue;
@@ -384,17 +378,13 @@ export default class Compiler {
           let currentPossibleSymbols: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
           // eslint-disable-next-line no-restricted-syntax
           for (const name of nameStack) {
-            currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) =>
-              generatePossibleIndexes(name).flatMap((index) => {
-                const symbol = st.get(index);
-                const desRes = destructureIndex(index).unwrap_or(undefined);
+            currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) => generatePossibleIndexes(name).flatMap((index) => {
+              const symbol = st.get(index);
+              const desRes = destructureIndex(index).unwrap_or(undefined);
 
-                return !symbol || !desRes ? [] : { ...desRes, symbol };
-              }),
-            );
-            currentPossibleSymbolTables = currentPossibleSymbols.flatMap((e) =>
-              (e.symbol.symbolTable ? e.symbol.symbolTable : []),
-            );
+              return !symbol || !desRes ? [] : { ...desRes, symbol };
+            }));
+            currentPossibleSymbolTables = currentPossibleSymbols.flatMap((e) => (e.symbol.symbolTable ? e.symbol.symbolTable : []));
           }
 
           res.push(...currentPossibleSymbols);
@@ -408,17 +398,16 @@ export default class Compiler {
       Query.Symbol_Members,
       (
         ownerSymbol: NodeSymbol,
-      ): readonly Readonly<{ symbol: NodeSymbol; kind: SymbolKind; name: string }>[] =>
-        (ownerSymbol.symbolTable ?
-          [...ownerSymbol.symbolTable.entries()].map(([index, symbol]) => ({
-              ...destructureIndex(index).unwrap(),
-              symbol,
-            })) :
-          []),
+      ): readonly Readonly<{ symbol: NodeSymbol; kind: SymbolKind; name: string }>[] => (ownerSymbol.symbolTable
+        ? [...ownerSymbol.symbolTable.entries()].map(([index, symbol]) => ({
+          ...destructureIndex(index).unwrap(),
+          symbol,
+        }))
+        : []),
     ),
   };
 
-  initMonacoServices() {
+  initMonacoServices () {
     return {
       definitionProvider: new DBMLDefinitionProvider(this),
       referenceProvider: new DBMLReferencesProvider(this),

@@ -69,7 +69,7 @@ Table "parent_table" {
   "id" int [pk]
   "column1" varchar(30)
 
-  Constraints {
+  Checks {
     `char_length(column1)>10`
   }
 
@@ -129,7 +129,7 @@ Table "with_check" {
   "c1" integer [not null]
   "c2" varchar(22)
 
-  Constraints {
+  Checks {
     `c2 in ('a', 'b', 'c')` [name: 'c1']
   }
 }
@@ -427,7 +427,7 @@ Table "T10" {
   "S" VARCHAR(100)
   "I" INT
 
-  Constraints {
+  Checks {
     `ID < 5` [name: 'ABC']
   }
 }
@@ -490,7 +490,7 @@ Table "\\test\\_table\\" {
 Table "global_priv" {
   "Host" CHAR(60) [not null, default: '']
   "User" CHAR(80) [not null, default: '']
-  "Privilege" LONGTEXT [not null, constraint: `json_valid(`Privilege`)`, default: '{}']
+  "Privilege" LONGTEXT [not null, check: `json_valid(`Privilege`)`, default: '{}']
 
   Indexes {
     (Host, User) [pk]
@@ -501,7 +501,7 @@ Table "global_priv" {
 Table "geo" {
   "coordinate" JSON
 
-  Constraints {
+  Checks {
     `JSON_SCHEMA_VALID(
            '{
                "type":"object",

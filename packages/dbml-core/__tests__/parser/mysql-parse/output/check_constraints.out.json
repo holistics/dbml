@@ -11,7 +11,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "price",
@@ -19,7 +19,7 @@
             "type_name": "decimal(10,4)",
             "schemaName": null
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "`price` > 0"
             }
@@ -31,7 +31,7 @@
             "type_name": "int",
             "schemaName": null
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "`quantity` >= 0"
             }
@@ -43,7 +43,7 @@
             "type_name": "decimal(5,2)",
             "schemaName": null
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "`discount` >= 0 AND `discount` <= 100"
             }
@@ -55,7 +55,7 @@
             "type_name": "varchar(20)",
             "schemaName": null
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "`status` IN ('active', 'inactive', 'pending')"
             }
@@ -63,7 +63,7 @@
         }
       ],
       "indexes": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "orders",
@@ -75,7 +75,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "order_date",
@@ -83,7 +83,7 @@
             "type_name": "datetime",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "delivery_date",
@@ -91,7 +91,7 @@
             "type_name": "datetime",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "total",
@@ -99,11 +99,11 @@
             "type_name": "decimal(10,2)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "expression": "`delivery_date` > `order_date`"
         },
@@ -122,7 +122,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "age",
@@ -130,7 +130,7 @@
             "type_name": "int",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "salary",
@@ -138,7 +138,7 @@
             "type_name": "decimal(10,2)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "email",
@@ -146,11 +146,11 @@
             "type_name": "varchar(100)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "expression": "`age` >= 18 AND `age` <= 65",
           "name": "chk_age"
@@ -171,7 +171,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "stock",
@@ -179,7 +179,7 @@
             "type_name": "int",
             "schemaName": null
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "`stock` >= 0"
             },
@@ -190,7 +190,7 @@
         }
       ],
       "indexes": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "users",
@@ -202,7 +202,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "username",
@@ -210,7 +210,7 @@
             "type_name": "varchar(50)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "role",
@@ -218,7 +218,7 @@
             "type_name": "varchar(20)",
             "schemaName": null
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "`role` NOT IN ('banned', 'suspended')"
             }
@@ -226,7 +226,7 @@
         }
       ],
       "indexes": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "accounts",
@@ -238,7 +238,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "balance",
@@ -246,11 +246,11 @@
             "type_name": "decimal(15,2)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "expression": "`balance` >= 0",
           "name": "chk_balance_positive"
@@ -270,7 +270,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "amount",
@@ -278,7 +278,7 @@
             "type_name": "decimal(10,2)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "fee",
@@ -286,7 +286,7 @@
             "type_name": "decimal(10,2)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "type",
@@ -294,11 +294,11 @@
             "type_name": "varchar(20)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "expression": "`amount` + `fee` > 0"
         },
@@ -317,7 +317,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "value",
@@ -325,11 +325,11 @@
             "type_name": "int",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "expression": "`value` = 0 OR `value` = 1 OR `value` = -1"
         }
@@ -345,7 +345,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "email",
@@ -353,7 +353,7 @@
             "type_name": "varchar(100)",
             "schemaName": null
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "`email` LIKE '%@%.%'"
             }
@@ -365,7 +365,7 @@
             "type_name": "varchar(20)",
             "schemaName": null
           },
-          "constraints": [
+          "checks": [
             {
               "expression": "`phone` REGEXP '^[0-9]{3}-[0-9]{3}-[0-9]{4}$'"
             }
@@ -373,7 +373,7 @@
         }
       ],
       "indexes": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "ranges",
@@ -385,7 +385,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "min_val",
@@ -393,7 +393,7 @@
             "type_name": "int",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "max_val",
@@ -401,11 +401,11 @@
             "type_name": "int",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "expression": "(`min_val` >= 0) AND (`max_val` <= 100) AND (`min_val` < `max_val`)"
         }
@@ -421,7 +421,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "priority",
@@ -429,7 +429,7 @@
             "type_name": "varchar(20)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "carrier",
@@ -437,11 +437,11 @@
             "type_name": "varchar(50)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "expression": "`priority` IN ('low', 'medium', 'high', 'urgent')"
         }
@@ -457,7 +457,7 @@
             "schemaName": null
           },
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "status",
@@ -465,7 +465,7 @@
             "type_name": "varchar(20)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "category",
@@ -473,11 +473,11 @@
             "type_name": "varchar(50)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": [
+      "checks": [
         {
           "expression": "`status` IN ('draft', 'pending') AND `status` IN ('active', 'inactive')"
         }
