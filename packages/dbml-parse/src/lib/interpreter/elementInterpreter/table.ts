@@ -1,6 +1,6 @@
 import { partition, last } from 'lodash';
 import {
-  Column, Constraint, ElementInterpreter, Index, InlineRef,
+  Column, Check, ElementInterpreter, Index, InlineRef,
   InterpreterDatabase, Table, TablePartialInjection,
 } from '../types';
 import {
@@ -29,7 +29,7 @@ export class TableInterpreter implements ElementInterpreter {
   private table: Partial<Table>;
   private pkColumns: Column[];
 
-  constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
     this.table = {
@@ -40,12 +40,12 @@ export class TableInterpreter implements ElementInterpreter {
       token: undefined,
       indexes: [],
       partials: [],
-      constraints: [],
+      checks: [],
     };
     this.pkColumns = [];
   }
 
-  interpret(): CompileError[] {
+  interpret (): CompileError[] {
     this.table.token = getTokenPosition(this.declarationNode);
     this.env.tables.set(this.declarationNode, this.table as Table);
 
@@ -74,7 +74,7 @@ export class TableInterpreter implements ElementInterpreter {
     return errors;
   }
 
-  private interpretName(nameNode: SyntaxNode): CompileError[] {
+  private interpretName (nameNode: SyntaxNode): CompileError[] {
     const { name, schemaName } = extractElementName(nameNode);
 
     if (schemaName.length > 1) {
@@ -89,7 +89,7 @@ export class TableInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private interpretAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (!aliasNode) {
       return [];
     }
@@ -110,7 +110,7 @@ export class TableInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretSettingList(settings?: ListExpressionNode): CompileError[] {
+  private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
     this.table.headerColor = settingMap[SettingName.HeaderColor]?.length
@@ -126,7 +126,7 @@ export class TableInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretBody(body: BlockExpressionNode): CompileError[] {
+  private interpretBody (body: BlockExpressionNode): CompileError[] {
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode || e instanceof PartialInjectionNode);
     return [
       ...this.interpretFields(fields as (FunctionApplicationNode | PartialInjectionNode)[]),
@@ -134,7 +134,7 @@ export class TableInterpreter implements ElementInterpreter {
     ];
   }
 
-  private interpretSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       switch (sub.type?.value.toLowerCase()) {
         case ElementKind.Note:
@@ -152,7 +152,7 @@ export class TableInterpreter implements ElementInterpreter {
           return this.interpretIndexes(sub);
 
         case ElementKind.Check:
-          return this.interpretConstraints(sub);
+          return this.interpretChecks(sub);
 
         default:
           return [];
@@ -160,14 +160,14 @@ export class TableInterpreter implements ElementInterpreter {
     });
   }
 
-  private interpretInjection(injection: PartialInjectionNode, order: number) {
+  private interpretInjection (injection: PartialInjectionNode, order: number) {
     const partial: Partial<TablePartialInjection> = { order, token: getTokenPosition(injection) };
     partial.name = injection.partial!.variable!.value;
     this.table.partials!.push(partial as TablePartialInjection);
     return [];
   }
 
-  private interpretFields(fields: (FunctionApplicationNode | PartialInjectionNode)[]): CompileError[] {
+  private interpretFields (fields: (FunctionApplicationNode | PartialInjectionNode)[]): CompileError[] {
     const symbolTableEntries = this.declarationNode.symbol?.symbolTable
       ? [...this.declarationNode.symbol.symbolTable.entries()]
       : [];
@@ -192,7 +192,7 @@ export class TableInterpreter implements ElementInterpreter {
     ];
   }
 
-  private interpretColumn(field: FunctionApplicationNode): CompileError[] {
+  private interpretColumn (field: FunctionApplicationNode): CompileError[] {
     const errors: CompileError[] = [];
 
     const column: Partial<Column> = {};
@@ -288,10 +288,10 @@ export class TableInterpreter implements ElementInterpreter {
         return errs.length === 0 ? inlineRef : [];
       });
 
-      const constraintNodes = settingMap[SettingName.Check] || [];
-      column.constraints = constraintNodes.map((constraintNode) => {
-        const token = getTokenPosition(constraintNode);
-        const expression = (constraintNode.value as FunctionExpressionNode).value?.value!;
+      const checkNodes = settingMap[SettingName.Check] || [];
+      column.checks = checkNodes.map((checkNode) => {
+        const token = getTokenPosition(checkNode);
+        const expression = (checkNode.value as FunctionExpressionNode).value!.value!;
         return {
           token,
           expression,
@@ -309,7 +309,7 @@ export class TableInterpreter implements ElementInterpreter {
     return errors;
   }
 
-  private interpretIndexes(indexes: ElementDeclarationNode): CompileError[] {
+  private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
     this.table.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
       const index: Partial<Index> = { columns: [] };
 
@@ -366,26 +366,26 @@ export class TableInterpreter implements ElementInterpreter {
     return [];
   }
 
-  private interpretConstraints(constraints: ElementDeclarationNode): CompileError[] {
-    this.table.constraints!.push(...(constraints.body as BlockExpressionNode).body.map((_constraintField) => {
-      const constraint: Partial<Constraint> = {};
-      const constraintField = _constraintField as FunctionApplicationNode;
-      constraint.token = getTokenPosition(constraintField);
+  private interpretChecks (checks: ElementDeclarationNode): CompileError[] {
+    this.table.checks!.push(...(checks.body as BlockExpressionNode).body.map((_checkField) => {
+      const check: Partial<Check> = {};
+      const checkField = _checkField as FunctionApplicationNode;
+      check.token = getTokenPosition(checkField);
 
-      if (constraintField.args[0] instanceof ListExpressionNode) {
-        const settingMap = aggregateSettingList(constraintField.args[0] as ListExpressionNode).getValue();
-        constraint.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
+      if (checkField.args[0] instanceof ListExpressionNode) {
+        const settingMap = aggregateSettingList(checkField.args[0] as ListExpressionNode).getValue();
+        check.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
       }
 
-      constraint.expression = (constraintField.callee as FunctionExpressionNode).value?.value!;
+      check.expression = (checkField.callee as FunctionExpressionNode).value!.value!;
 
-      return constraint as Constraint;
+      return check as Check;
     }));
 
     return [];
   }
 
-  private registerInlineRefToEnv(column: FunctionApplicationNode, referredSymbol: ColumnSymbol, inlineRef: InlineRef, ref: AttributeNode): CompileError[] {
+  private registerInlineRefToEnv (column: FunctionApplicationNode, referredSymbol: ColumnSymbol, inlineRef: InlineRef, ref: AttributeNode): CompileError[] {
     const refId = getRefId(column.symbol as ColumnSymbol, referredSymbol);
     if (this.env.refIds[refId]) {
       return [

@@ -1,45 +1,49 @@
-import { extractQuotedStringToken } from "../../analyzer/utils";
-import { CompileError } from "../../errors";
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from "../../parser/nodes";
-import { ElementInterpreter, InterpreterDatabase, Project } from "../types";
-import { extractElementName, getTokenPosition, normalizeNoteContent } from "../utils";
-import { EnumInterpreter } from "./enum";
-import { RefInterpreter } from "./ref";
-import { TableInterpreter } from "./table";
-import { TableGroupInterpreter } from "./tableGroup";
-import { TablePartialInterpreter } from "./tablePartial";
+import { extractQuotedStringToken } from '../../analyzer/utils';
+import { CompileError } from '../../errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
+} from '../../parser/nodes';
+import { ElementInterpreter, InterpreterDatabase, Project } from '../types';
+import { extractElementName, getTokenPosition, normalizeNoteContent } from '../utils';
+import { EnumInterpreter } from './enum';
+import { RefInterpreter } from './ref';
+import { TableInterpreter } from './table';
+import { TableGroupInterpreter } from './tableGroup';
+import { TablePartialInterpreter } from './tablePartial';
 
 export class ProjectInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private project: Partial<Project>;
 
-  constructor(declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.project = { enums: [], refs: [], tableGroups: [], tables: [], tablePartials: [] };
+    this.project = {
+      enums: [], refs: [], tableGroups: [], tables: [], tablePartials: [],
+    };
   }
 
-  interpret(): CompileError[] {
+  interpret (): CompileError[] {
     this.env.project.set(this.declarationNode, this.project as Project);
     this.project.token = getTokenPosition(this.declarationNode);
     const errors = [...this.interpretName(this.declarationNode.name), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
     return errors;
   }
 
-  private interpretName(nameNode?: SyntaxNode): CompileError[] {
+  private interpretName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       this.project.name = null;
       return [];
     }
-  
+
     const { name } = extractElementName(nameNode);
     this.project.name = name;
-    
+
     return [];
   }
 
-  private interpretBody(body: BlockExpressionNode): CompileError[] {
+  private interpretBody (body: BlockExpressionNode): CompileError[] {
     return body.body.flatMap((_sub) => {
       const sub = _sub as ElementDeclarationNode;
       switch (sub.type?.value.toLowerCase()) {
@@ -67,7 +71,7 @@ export class ProjectInterpreter implements ElementInterpreter {
           this.project.note = {
             value: extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? (sub.body.body[0] as FunctionApplicationNode).callee : sub.body!.callee).map(normalizeNoteContent).unwrap(),
             token: getTokenPosition(sub),
-          }
+          };
           return [];
         }
         case 'tablepartial': {
@@ -80,6 +84,6 @@ export class ProjectInterpreter implements ElementInterpreter {
           return [];
         }
       }
-    })
+    });
   }
 }
