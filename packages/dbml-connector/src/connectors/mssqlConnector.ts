@@ -521,10 +521,14 @@ const generateIndexesAndConstraints = async (client: sql.ConnectionPool, schemas
     if (column_name) {
       if (!tableConstraints[key]) tableConstraints[key] = {};
       if (!tableConstraints[key][column_name]) tableConstraints[key][column_name] = { checks: [] };
+      // The check definition has the form: `(expr)`
+      // The expression starts at 1 and ends at -1
       tableConstraints[key][column_name].checks.push({ name: check_name, expression: check_expression.slice(1, -1) });
       return;
     }
     if (!checks[key]) checks[key] = [];
+    // The check definition has the form: `(expr)`
+    // The expression starts at 1 and ends at -1
     checks[key].push({ name: check_name, expression: check_expression.slice(1, -1) });
   });
 

@@ -425,6 +425,8 @@ async function generateCheckConstraints (client: Connection, schemaName: string)
       if (!tableConstraints[key][col]) tableConstraints[key][col] = { checks: [] };
       tableConstraints[key][col].checks.push({
         name: constraintName,
+        // The check definition has the form: `(expr)`
+        // The expression starts at 1 and ends at -1
         expression: checkClause.slice(1, -1),
       });
       return;
@@ -432,6 +434,8 @@ async function generateCheckConstraints (client: Connection, schemaName: string)
     if (!checks[key]) checks[key] = [];
     checks[key].push({
       name: constraintName,
+      // The check definition has the form: `(expr)`
+      // The expression starts at 1 and ends at -1
       expression: checkClause.slice(1, -1),
     });
   });
