@@ -329,7 +329,7 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             range: undefined as any,
           })),
-          ...[SettingName.Ref, SettingName.Default, SettingName.Note, SettingName.Constraint].map((name) => ({
+          ...[SettingName.Ref, SettingName.Default, SettingName.Note, SettingName.Check].map((name) => ({
             label: name,
             insertText: `${name}: `,
             kind: CompletionItemKind.Property,
