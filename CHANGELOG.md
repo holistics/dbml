@@ -1,3 +1,12 @@
+## v5.0.0 (2025-10-28)
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#770](https://github.com/holistics/dbml/pull/770) Breaking change: Change `constraint` keyword to `check` ([@H-DNA](https://github.com/H-DNA))
+
+#### Committers: 1
+- DNA ([@H-DNA](https://github.com/H-DNA))
+
 ## v4.0.0 (2025-10-23)
 
 #### :rocket: New Feature
