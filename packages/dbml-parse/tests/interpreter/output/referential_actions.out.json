@@ -30,7 +30,7 @@
           "increment": false,
           "unique": true,
           "not_null": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "status",
@@ -110,7 +110,7 @@
           "name": "increment_id"
         }
       ],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "order_items",
@@ -213,7 +213,7 @@
             "type": "number",
             "value": 1
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -230,7 +230,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "products",
@@ -310,7 +310,7 @@
             "value": "now()",
             "type": "expression"
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -395,7 +395,7 @@
           "name": "name"
         }
       ],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "users",
@@ -425,7 +425,7 @@
           "pk": false,
           "increment": false,
           "unique": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "date_of_birth",
@@ -477,7 +477,7 @@
             "value": "now()",
             "type": "expression"
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "country_code",
@@ -503,7 +503,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -553,7 +553,7 @@
           "name": "name"
         }
       ],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "countries",
@@ -583,7 +583,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "continent_name",
@@ -640,7 +640,7 @@
           "name": "name"
         }
       ],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],
@@ -915,7 +915,7 @@
           "pk": true,
           "increment": true,
           "unique": false,
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -931,7 +931,7 @@
         }
       },
       "indexes": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "name",
@@ -973,7 +973,7 @@
         }
       },
       "indexes": [],
-      "constraints": []
+      "checks": []
     }
   ]
 }

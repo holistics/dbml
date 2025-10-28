@@ -29,7 +29,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "status",
@@ -69,7 +69,7 @@
               }
             }
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -86,7 +86,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "orders",
@@ -177,7 +177,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],
