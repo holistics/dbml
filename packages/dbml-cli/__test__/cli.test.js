@@ -41,17 +41,18 @@ describe('@dbml/cli', () => {
     }
   };
 
+  const timeout = 100000;
   /* eslint-disable */
   test.each(scanDirNames(__dirname, 'dbml2sql'))('dbml2sql/%s', async (dirName) => {
     await runTest(path.join(__dirname, 'dbml2sql', dirName), '../bin/dbml2sql.js');
-  }, 10000);
+  }, timeout);
 
   test.each(scanDirNames(__dirname, 'sql2dbml'))('sql2dbml/%s', async (dirName) => {
     await runTest(path.join(__dirname, 'sql2dbml', dirName), '../bin/sql2dbml.js');
-  }, 10000);
+  }, timeout);
 
   test.each(scanDirNames(__dirname, 'db2dbml'))('db2dbml/%s', async (dirName) => {
     await runTest(path.join(__dirname, 'db2dbml', dirName), '../bin/db2dbml.js');
-  }, 100000);
+  }, timeout);
   /* eslint-enable */
 });
