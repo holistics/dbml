@@ -493,6 +493,8 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
       if (!tableConstraints[key][column_name]) tableConstraints[key][column_name] = { checks: [] };
       tableConstraints[key][column_name].checks.push({
         name: check_name || undefined,
+        // The check definition has the form: ` CHECK (expr) `
+        // The expression starts at 8 and ends at -2
         expression: check_definition.slice(8, -2),
       });
       return;
@@ -500,6 +502,8 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
     if (!checks[key]) checks[key] = [];
     checks[key].push({
       name: check_name || undefined,
+      // The check definition has the form: ` CHECK (expr) `
+      // The expression starts at 8 and ends at -2
       expression: check_definition.slice(8, -2),
     });
   });
