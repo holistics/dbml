@@ -1,4 +1,6 @@
-import type { Position as IPosition, editor, languages, IRange, IDisposable, CancellationToken as ICancellationToken } from 'monaco-editor-core';
+import type {
+  Position as IPosition, editor, languages, IRange, IDisposable, CancellationToken as ICancellationToken,
+} from 'monaco-editor-core';
 
 export type Position = IPosition
 export type TextModel = editor.ITextModel;

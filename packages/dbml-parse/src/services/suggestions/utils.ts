@@ -27,7 +27,7 @@ export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemK
 
 // To determine if autocompletion should insert an additional space before
 // inserting other tokens
-export function shouldPrependSpace(token: SyntaxToken | undefined, offset: number): boolean {
+export function shouldPrependSpace (token: SyntaxToken | undefined, offset: number): boolean {
   if (!token) {
     return false;
   }
@@ -49,13 +49,13 @@ export function shouldPrependSpace(token: SyntaxToken | undefined, offset: numbe
   return true;
 }
 
-export function noSuggestions(): CompletionList {
+export function noSuggestions (): CompletionList {
   return {
     suggestions: [],
   };
 }
 
-export function prependSpace(completionList: CompletionList): CompletionList {
+export function prependSpace (completionList: CompletionList): CompletionList {
   return {
     ...completionList,
     suggestions: completionList.suggestions.map((s) => ({
@@ -65,7 +65,7 @@ export function prependSpace(completionList: CompletionList): CompletionList {
   };
 }
 
-export function addQuoteIfNeeded(completionList: CompletionList): CompletionList {
+export function addQuoteIfNeeded (completionList: CompletionList): CompletionList {
   return {
     ...completionList,
     suggestions: completionList.suggestions.map((s) => ({
