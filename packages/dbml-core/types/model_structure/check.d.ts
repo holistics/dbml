@@ -4,7 +4,7 @@ import Field from './field';
 import Table from './table';
 import TablePartial from './tablePartial';
 
-interface RawConstraint {
+interface RawCheck {
     token: Token;
     name: string;
     expression: string;
@@ -13,14 +13,14 @@ interface RawConstraint {
     injectedPartial?: TablePartial | null;
 }
 
-declare class Constraint extends Element {
+declare class Check extends Element {
     name: string;
     expression: string;
     table: Table;
     column: Field | null;
     injectedPartial: TablePartial | null;
 
-    constructor({ token, name, expression, table, column, injectedPartial }: RawConstraint);
+    constructor({ token, name, expression, table, column, injectedPartial }: RawCheck);
     generateId(): void;
     export(): {
         name: string;
@@ -38,7 +38,7 @@ declare class Constraint extends Element {
     normalize(model: NormalizedDatabase): void;
 }
 
-export interface NormalizedConstraint {
+export interface NormalizedCheck {
     [_id: number]: {
         id: number;
         name: string;
@@ -49,4 +49,4 @@ export interface NormalizedConstraint {
     };
 }
 
-export default Constraint;
+export default Check;

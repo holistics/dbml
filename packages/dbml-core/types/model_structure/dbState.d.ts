@@ -8,6 +8,7 @@ export default class DbState {
     noteId: number;
     enumValueId: number;
     endpointId: number;
+    checkId: number;
     indexId: number;
     fieldId: number;
     indexColumnId: number;

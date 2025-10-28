@@ -38,19 +38,19 @@ class SqlServerExporter {
       if (field.increment) {
         line += ' IDENTITY(1, 1)';
       }
-      if (field.constraintIds && field.constraintIds.length > 0) {
-        if (field.constraintIds.length === 1) {
-          const constraint = model.constraints[field.constraintIds[0]];
-          if (constraint.name) {
-            line += ` CONSTRAINT [${constraint.name}]`;
+      if (field.checkIds && field.checkIds.length > 0) {
+        if (field.checkIds.length === 1) {
+          const check = model.checks[field.checkIds[0]];
+          if (check.name) {
+            line += ` CONSTRAINT [${check.name}]`;
           }
-          line += ` CHECK (${constraint.expression})`;
+          line += ` CHECK (${check.expression})`;
         } else {
-          const constraintExpressions = field.constraintIds.map(constraintId => {
-            const constraint = model.constraints[constraintId];
-            return `(${constraint.expression})`;
+          const checkExpressions = field.checkIds.map(checkId => {
+            const check = model.checks[checkId];
+            return `(${check.expression})`;
           });
-          line += ` CHECK (${constraintExpressions.join(' AND ')})`;
+          line += ` CHECK (${checkExpressions.join(' AND ')})`;
         }
       }
       if (field.dbdefault) {
@@ -96,23 +96,23 @@ class SqlServerExporter {
     return lines;
   }
 
-  static getConstraintLines (tableId, model) {
+  static getCheckLines (tableId, model) {
     const table = model.tables[tableId];
-  
-    if (!table.constraintIds || table.constraintIds.length === 0) {
+
+    if (!table.checkIds || table.checkIds.length === 0) {
       return [];
     }
 
-    const lines = table.constraintIds.map((constraintId) => {
-      const constraint = model.constraints[constraintId];
+    const lines = table.checkIds.map((checkId) => {
+      const check = model.checks[checkId];
       let line = '';
-      
-      if (constraint.name) {
-        line = `CONSTRAINT [${constraint.name}] `;
+
+      if (check.name) {
+        line = `CONSTRAINT [${check.name}] `;
       }
-      
-      line += `CHECK (${constraint.expression})`;
-      
+
+      line += `CHECK (${check.expression})`;
+
       return line;
     });
 
@@ -122,13 +122,13 @@ class SqlServerExporter {
   static getTableContentArr (tableIds, model) {
     const tableContentArr = tableIds.map((tableId) => {
       const fieldContents = SqlServerExporter.getFieldLines(tableId, model);
-      const constraintContents = SqlServerExporter.getConstraintLines(tableId, model);
+      const checkContents = SqlServerExporter.getCheckLines(tableId, model);
       const compositePKs = SqlServerExporter.getCompositePKs(tableId, model);
 
       return {
         tableId,
         fieldContents,
-        constraintContents,
+        checkContents,
         compositePKs,
       };
     });
@@ -140,7 +140,7 @@ class SqlServerExporter {
     const tableContentArr = SqlServerExporter.getTableContentArr(tableIds, model);
 
     const tableStrs = tableContentArr.map((tableContent) => {
-      const content = [...tableContent.fieldContents, ...tableContent.constraintContents, ...tableContent.compositePKs];
+      const content = [...tableContent.fieldContents, ...tableContent.checkContents, ...tableContent.compositePKs];
       const table = model.tables[tableContent.tableId];
       const schema = model.schemas[table.schemaId];
       const tableStr = `CREATE TABLE ${shouldPrintSchema(schema, model)
@@ -280,7 +280,7 @@ class SqlServerExporter {
 
       switch (comment.type) {
         case 'table': {
-          line += `@name = N\'Table_Description\',\n`;
+          line += '@name = N\'Table_Description\',\n';
           line += `@value = '${table.note.replace(/'/g, "''")}',\n`;
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
           line += `@level1type = N'Table',  @level1name = '${table.name}';\n`;
@@ -288,7 +288,7 @@ class SqlServerExporter {
         }
         case 'column': {
           const field = model.fields[comment.fieldId];
-          line += `@name = N\'Column_Description\',\n`;
+          line += '@name = N\'Column_Description\',\n';
           line += `@value = '${field.note.replace(/'/g, "''")}',\n`;
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
           line += `@level1type = N'Table',  @level1name = '${table.name}',\n`;

@@ -111,7 +111,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
         options,
       } = createTableResult;
 
-      const [fieldsData, indexes, tableRefs, singlePkIndex, tableConstraints] = definitions.reduce((acc, ele) => {
+      const [fieldsData, indexes, tableRefs, singlePkIndex, tableChecks] = definitions.reduce((acc, ele) => {
         if (ele.kind === TABLE_CONSTRAINT_KIND.FIELD) acc[0].push(ele.value);
         else if (ele.kind === TABLE_CONSTRAINT_KIND.INDEX) acc[1].push(ele.value);
         else if (ele.kind === TABLE_CONSTRAINT_KIND.UNIQUE) acc[1].push(ele.value);
@@ -175,7 +175,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
         schemaName,
         fields: fieldsData.map(fd => fd.field),
         indexes,
-        constraints: tableConstraints,
+        checks: tableChecks,
         ...tableOptions,
       });
 
@@ -341,7 +341,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   visitColumnDefinition (ctx) {
     const type = ctx.dataType().accept(this);
 
-    const constraints = { inlineRefs: [], constraints: [] };
+    const constraints = { inlineRefs: [], checks: [] };
 
     ctx.columnConstraint().forEach(c => {
       const constraint = c.accept(this);
@@ -353,7 +353,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
       }
 
       if (constraint.kind === COLUMN_CONSTRAINT_KIND.CHECK) {
-        constraints.constraints.push(constraint.value);
+        constraints.checks.push(constraint.value);
         return;
       }
 
@@ -947,7 +947,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
         this.data.refs.push(ref);
       } else if (alter.kind === ALTER_KIND.ADD_CHECK) {
-        table.constraints.push(alter.value);
+        table.checks.push(alter.value);
       }
       return null;
     });

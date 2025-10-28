@@ -1,7 +1,7 @@
 import Element, { RawNote, Token } from './element';
 import Field from './field';
 import Index from './indexes';
-import Constraint from './constraint';
+import Check from './check';
 import DbState from './dbState';
 import { NormalizedDatabase } from './database';
 
@@ -10,7 +10,7 @@ interface RawTablePartial {
     note: RawNote;
     fields: Field[];
     indexes: Index[];
-    constraints?: any[];
+    checks?: any[];
     token: Token;
     headerColor: string;
     dbState: DbState;
@@ -22,12 +22,12 @@ declare class TablePartial extends Element {
     noteToken: Token;
     fields: Field[];
     indexes: Index[];
-    constraints: Constraint[];
+    checks: Check[];
     headerColor: string;
     dbState: DbState;
     id: number;
 
-    constructor({ name, note, fields, indexes, constraints, token, headerColor, dbState }: RawTablePartial);
+    constructor({ name, note, fields, indexes, checks, token, headerColor, dbState }: RawTablePartial);
     generateId(): void;
     export(): {
         name: string;
