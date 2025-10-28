@@ -10,7 +10,7 @@ export default class Binder {
 
   private errors: CompileError[];
 
-  constructor(ast: ProgramNode) {
+  constructor (ast: ProgramNode) {
     this.ast = ast;
     this.errors = [];
   }
