@@ -30,7 +30,7 @@
           "increment": true,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "store_id",
@@ -56,7 +56,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "first_name",
@@ -82,7 +82,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "last_name",
@@ -112,7 +112,7 @@
             "value": "false",
             "type": "boolean"
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "email",
@@ -141,7 +141,7 @@
             "value": "null",
             "type": "boolean"
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "address_id",
@@ -167,7 +167,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "active",
@@ -197,7 +197,7 @@
             "value": "true",
             "type": "boolean"
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "create_date",
@@ -223,7 +223,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "last_update",
@@ -252,7 +252,7 @@
             "value": "CURRENT_TIMESTAMP",
             "type": "expression"
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -269,7 +269,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "cities",
@@ -299,7 +299,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "name",
@@ -328,7 +328,7 @@
             "value": "hello",
             "type": "string"
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "country_id",
@@ -368,7 +368,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "note": {
         "value": "sasasa",
         "token": {
@@ -451,7 +451,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "citites",
@@ -568,7 +568,7 @@
         }
       ],
       "partials": [],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],

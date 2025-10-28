@@ -53,7 +53,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "schedule",
@@ -79,7 +79,7 @@
           "increment": false,
           "unique": false,
           "not_null": false,
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -96,7 +96,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "tictactoe",
@@ -141,7 +141,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],

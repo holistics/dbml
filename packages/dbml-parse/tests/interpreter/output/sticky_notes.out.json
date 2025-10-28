@@ -29,7 +29,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "username",
@@ -55,7 +55,7 @@
           "increment": false,
           "unique": true,
           "not_null": true,
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -72,7 +72,7 @@
       },
       "indexes": [],
       "partials": [],
-      "constraints": [],
+      "checks": [],
       "headerColor": "#3498DB"
     }
   ],

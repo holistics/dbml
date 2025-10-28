@@ -29,7 +29,7 @@
           "pk": true,
           "increment": false,
           "unique": false,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "full_name",
@@ -77,7 +77,7 @@
           "pk": false,
           "increment": false,
           "unique": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "gender",
@@ -195,7 +195,7 @@
           "increment": false,
           "unique": false,
           "not_null": true,
-          "constraints": []
+          "checks": []
         }
       ],
       "token": {
@@ -508,7 +508,7 @@
         }
       ],
       "partials": [],
-      "constraints": []
+      "checks": []
     }
   ],
   "notes": [],

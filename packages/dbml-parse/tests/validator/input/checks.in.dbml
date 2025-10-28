@@ -1,10 +1,10 @@
-constraints {}
+checks {}
 
 Table Users {
   balance int
 
 
-  constraints {
+  checks {
     `balance > 0` [name: 'positive_balance']
     
     `duplicate name` [name: 'dup', name: 'dup']
@@ -15,7 +15,7 @@ Table Users {
 TablePartial Users {
   balance int
 
-  constraints {
+  checks {
     `balance > 0` [name: 'positive_balance']
     
     `duplicate name` [name: 'dup', name: 'dup']
