@@ -487,6 +487,12 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
       column_name,
       is_column_constraint,
     } = row;
+    if (typeof table_schema !== 'string' || typeof table_name !== 'string' || typeof check_definition !== 'string') {
+      return;
+    }
+    if (is_column_constraint && typeof column_name !== 'string') {
+      return;
+    }
     const key = `${table_schema}.${table_name}`;
     if (is_column_constraint) {
       if (!tableConstraints[key]) tableConstraints[key] = {};
