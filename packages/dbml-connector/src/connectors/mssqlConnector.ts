@@ -1,11 +1,16 @@
 /* eslint-disable camelcase */
+/* TDD 72
+ * - In MSSQL, there's no notion of ENUM.
+ * - MSSQL connector used to extract ENUMS from CHECK constraints, for example: `CHECK ([col]=value1 OR [col]=value2)` would be translated to an enum with 2 values, `value1` and `value2`.
+ * - Since DBML 4.0.0, we have supported CHECK constraints, so we no longer extract ENUMS out from CHECK constraints but rather keep them as CHECK constraints.
+ * */
 import sql from 'mssql';
 import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
 import {
+  CheckConstraintDictionary,
   DatabaseSchema,
   DefaultInfo,
   DefaultType,
-  Enum,
   Field,
   FieldsDictionary,
   IndexesDictionary,
@@ -13,7 +18,6 @@ import {
   RefEndpoint,
   Table,
   TableConstraintsDictionary,
-  EnumValuesDict,
 } from './types';
 
 // https://learn.microsoft.com/en-us/sql/t-sql/data-types/date-and-time-types?view=sql-server-ver15
@@ -111,66 +115,6 @@ const getDbdefault = (data_type: string, column_default: string, default_type: D
   };
 };
 
-const getEnumValues = (definition: string, constraint_name: string): EnumValuesDict[] => {
-  // Use the example below to understand the regex:
-  // ([quantity]>(0))
-  // ([unit_price]>(0))
-  // ([status]='cancelled' OR [status]='delivered' OR [status]='shipped' OR [status]='processing' OR [status]='pending')
-  // ([total_amount]>(0))
-  // ([price]>(0))
-  // ([stock_quantity]>=(0))
-  // ([age_start]<=[age_end])
-  // ([age_start]<=[age_end])
-  // ([gender]='Other' OR [gender]='Female' OR [gender]='Male')
-  // ([date_of_birth]<=dateadd(year,(-13),getdate()))
-  // ([email] like '%_@_%._%')
-  if (!definition) return [];
-  const values = definition.match(/\[([^\]]+)\]='([^']+)'/g); // Extracting the enum values when the definition contains ]='
-  if (!values) return [];
-
-  const colMap: { [key: string]: string[] } = {};
-  values.forEach((value) => {
-    const [columnName, enumValue] = value.split("]='");
-    const cleanColumnName = columnName.slice(1); // Remove the leading '['
-    const cleanEnumValue = enumValue.slice(0, -1); // Remove the trailing "'"
-    if (!colMap[cleanColumnName]) {
-      colMap[cleanColumnName] = [cleanEnumValue];
-    } else {
-      colMap[cleanColumnName].push(cleanEnumValue);
-    }
-  });
-
-  const arraysEqual = (a: string[], b: string[]): boolean => {
-    if (a.length !== b.length) return false;
-    const sortedA = [...a].sort();
-    const sortedB = [...b].sort();
-    return sortedA.every((value, index) => value === sortedB[index]);
-  };
-
-  // Please check the comments of the EnumValuesDict type in types.ts to understand the structure
-  const result: EnumValuesDict[] = [];
-  const processedKeys = new Set<string>();
-
-  Object.keys(colMap).forEach((key) => {
-    if (processedKeys.has(key)) return;
-
-    const mergedColumns = [key];
-    const colValues = colMap[key];
-
-    Object.keys(colMap).forEach((innerKey) => {
-      if (key !== innerKey && arraysEqual(colValues, colMap[innerKey])) {
-        mergedColumns.push(innerKey);
-        processedKeys.add(innerKey);
-      }
-    });
-    const enumValues = colValues.map((value) => ({ name: value }));
-    result.push({ columns: mergedColumns, enumValues, constraint_name: `${constraint_name}_${mergedColumns.join('_')}` });
-    processedKeys.add(key);
-  });
-
-  return result;
-};
-
 const generateField = (row: Record<string, any>): Field => {
   const {
     column_name,
@@ -202,15 +146,11 @@ const generateField = (row: Record<string, any>): Field => {
   };
 };
 
-const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas: string[]): Promise<{
+const generateTablesFields = async (client: sql.ConnectionPool, schemas: string[]): Promise<{
   tables: Table[],
   fields: FieldsDictionary,
-  enums: Enum[],
 }> => {
-  const checkConstraintDefinitionDedup: { [key: string]: EnumValuesDict[] } = {};
-
   const fields: FieldsDictionary = {};
-  const enums: Enum[] = [];
   const tablesAndFieldsSql = `
     WITH tables_and_fields AS (
       SELECT
@@ -249,35 +189,6 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
           AND ep.name like '%description%'
       WHERE
         t.type = 'U' -- User-defined tables
-    ),
-    constraints_with_nulls AS (
-      SELECT
-        tf.*,
-        cc.name AS check_constraint_name,
-        CASE
-          WHEN cc.definition LIKE '%[' + tf.column_name + ']%=''%' THEN cc.definition
-          ELSE NULL
-        END AS check_constraint_definition
-      FROM
-        tables_and_fields AS tf
-      LEFT JOIN sys.check_constraints cc
-        ON cc.parent_object_id = OBJECT_ID(tf.table_schema + '.' + tf.table_name)
-        AND cc.definition LIKE '%' + tf.column_name + '%' -- Ensure the constraint references the column
-    ),
-    constraints_with_row_number AS (
-      SELECT
-        *,
-        ROW_NUMBER() OVER (
-          PARTITION BY table_schema, table_name, column_name
-          ORDER BY
-            CASE
-              WHEN check_constraint_definition IS NOT NULL THEN 1
-              ELSE 2
-            END,
-            check_constraint_name
-        ) AS rn
-      FROM
-        constraints_with_nulls
     )
     SELECT
       table_schema,
@@ -292,17 +203,15 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
       column_default,
       table_comment,
       column_comment,
-      check_constraint_name,
-      check_constraint_definition,
       CASE
         WHEN column_default LIKE '((%))' THEN 'number'
         WHEN column_default LIKE '(''%'')' THEN 'string'
         ELSE 'expression'
       END AS default_type
     FROM
-      constraints_with_row_number
+      tables_and_fields
     WHERE
-      rn = 1
+      1 = 1
       ${buildSchemaQuery('table_schema', schemas)}
     ORDER BY
       table_schema,
@@ -317,8 +226,6 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
       table_schema,
       table_name,
       table_comment,
-      check_constraint_name,
-      check_constraint_definition,
     } = row;
     const key = `${table_schema}.${table_name}`;
 
@@ -332,30 +239,6 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
 
     if (!fields[key]) fields[key] = [];
     const field = generateField(row);
-
-    if (check_constraint_definition && !checkConstraintDefinitionDedup[check_constraint_name]) {
-      const enumValuesByColumns = getEnumValues(check_constraint_definition, check_constraint_name);
-      enumValuesByColumns.forEach((item) => {
-        enums.push({
-          name: item.constraint_name,
-          schemaName: table_schema,
-          values: item.enumValues,
-        });
-      });
-      checkConstraintDefinitionDedup[check_constraint_name] = enumValuesByColumns;
-    }
-
-    if (checkConstraintDefinitionDedup[check_constraint_name]) {
-      const enumValuesByColumns = checkConstraintDefinitionDedup[check_constraint_name];
-      const columnEnumValues = enumValuesByColumns.find((item) => item.columns.includes(field.name));
-      if (columnEnumValues) {
-        field.type = {
-          type_name: columnEnumValues.constraint_name,
-          schemaName: table_schema,
-        };
-      }
-    }
-
     fields[key].push(field);
 
     return acc;
@@ -364,7 +247,6 @@ const generateTablesFieldsAndEnums = async (client: sql.ConnectionPool, schemas:
   return {
     tables: Object.values(tables),
     fields,
-    enums,
   };
 };
 
@@ -461,7 +343,7 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
   return refs;
 };
 
-const generateIndexes = async (client: sql.ConnectionPool, schemas: string[]) => {
+const generateIndexesAndConstraints = async (client: sql.ConnectionPool, schemas: string[]) => {
   const indexListSql = `
     WITH user_tables AS (
       SELECT
@@ -537,19 +419,19 @@ const generateIndexes = async (client: sql.ConnectionPool, schemas: string[]) =>
       ii.index_name;
   `;
   const indexListResult = await client.query(indexListSql);
-  const { outOfLineConstraints, inlineConstraints } = indexListResult.recordset.reduce((acc, row) => {
+  const { outOfLineIndexes, inlineIndexes } = indexListResult.recordset.reduce((acc, row) => {
     const { constraint_type, columns } = row;
 
     if (columns === 'null' || columns.trim() === '') return acc;
     if (constraint_type === 'PRIMARY KEY' || constraint_type === 'UNIQUE') {
-      acc.inlineConstraints.push(row);
+      acc.inlineIndexes.push(row);
     } else {
-      acc.outOfLineConstraints.push(row);
+      acc.outOfLineIndexes.push(row);
     }
     return acc;
-  }, { outOfLineConstraints: [], inlineConstraints: [] });
+  }, { inlineIndexes: [], outOfLineIndexes: [] });
 
-  const indexes = outOfLineConstraints.reduce((acc: IndexesDictionary, indexRow: Record<string, any>) => {
+  const indexes = outOfLineIndexes.reduce((acc: IndexesDictionary, indexRow: Record<string, any>) => {
     const {
       table_schema,
       table_name,
@@ -591,7 +473,9 @@ const generateIndexes = async (client: sql.ConnectionPool, schemas: string[]) =>
     return acc;
   }, {});
 
-  const tableConstraints = inlineConstraints.reduce((acc: TableConstraintsDictionary, row: Record<string, any>) => {
+  const tableConstraints: TableConstraintsDictionary = {};
+
+  inlineIndexes.forEach((row: Record<string, any>) => {
     const {
       table_schema,
       table_name,
@@ -599,24 +483,64 @@ const generateIndexes = async (client: sql.ConnectionPool, schemas: string[]) =>
       constraint_type,
     } = row;
     const key = `${table_schema}.${table_name}`;
-    if (!acc[key]) acc[key] = {};
+    if (!tableConstraints[key]) tableConstraints[key] = {};
 
     const columnNames = columns.split(',').map((column: string) => column.trim());
     columnNames.forEach((columnName: string) => {
-      if (!acc[key][columnName]) acc[key][columnName] = {};
+      if (!tableConstraints[key][columnName]) tableConstraints[key][columnName] = { checks: [] };
       if (constraint_type === 'PRIMARY KEY') {
-        acc[key][columnName].pk = true;
+        tableConstraints[key][columnName].pk = true;
       }
-      if (constraint_type === 'UNIQUE' && !acc[key][columnName].pk) {
-        acc[key][columnName].unique = true;
+      if (constraint_type === 'UNIQUE' && !tableConstraints[key][columnName].pk) {
+        tableConstraints[key][columnName].unique = true;
       }
     });
-    return acc;
-  }, {});
+  });
+
+  const checkListSql = `
+    SELECT
+      OBJECT_SCHEMA_NAME(cc.parent_object_id) AS table_schema,
+      OBJECT_NAME(cc.parent_object_id) AS table_name,
+      c.name AS column_name,
+      cc.name AS check_name,
+      cc.definition AS check_expression
+    FROM
+      sys.check_constraints cc
+    LEFT JOIN
+      sys.columns c ON cc.parent_object_id = c.object_id AND cc.parent_column_id = c.column_id
+    WHERE 1 = 1
+      ${buildSchemaQuery('OBJECT_SCHEMA_NAME(cc.parent_object_id)', schemas)}
+  `;
+
+  const checkListResult = await client.query(checkListSql);
+  const checks: CheckConstraintDictionary = {};
+  checkListResult.recordset.forEach((row) => {
+    const {
+      table_schema,
+      table_name,
+      column_name,
+      check_name,
+      check_expression,
+    } = row;
+    const key = `${table_schema}.${table_name}`;
+    if (column_name) {
+      if (!tableConstraints[key]) tableConstraints[key] = {};
+      if (!tableConstraints[key][column_name]) tableConstraints[key][column_name] = { checks: [] };
+      // The check definition has the form: `(expr)`
+      // The expression starts at 1 and ends at -1
+      tableConstraints[key][column_name].checks.push({ name: check_name, expression: check_expression.slice(1, -1) });
+      return;
+    }
+    if (!checks[key]) checks[key] = [];
+    // The check definition has the form: `(expr)`
+    // The expression starts at 1 and ends at -1
+    checks[key].push({ name: check_name, expression: check_expression.slice(1, -1) });
+  });
 
   return {
     indexes,
     tableConstraints,
+    checks,
   };
 };
 
@@ -624,28 +548,29 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   const { connectionString, schemas } = parseConnectionString(connection, 'odbc');
   const client = await getValidatedClient(connectionString);
 
-  const tablesFieldsAndEnumsRes = generateTablesFieldsAndEnums(client, schemas);
-  const indexesRes = generateIndexes(client, schemas);
+  const tablesRes = generateTablesFields(client, schemas);
+  const indexesAndConstraintsRes = generateIndexesAndConstraints(client, schemas);
   const refsRes = generateRefs(client, schemas);
 
   const res = await Promise.all([
-    tablesFieldsAndEnumsRes,
-    indexesRes,
+    tablesRes,
+    indexesAndConstraintsRes,
     refsRes,
   ]);
-  client.close();
 
-  const { tables, fields, enums } = res[0];
-  const { indexes, tableConstraints } = res[1];
+  const { tables, fields } = res[0];
+  const { indexes, tableConstraints, checks } = res[1];
   const refs = res[2];
 
   return {
     tables,
     fields,
-    enums,
+    // MSSQL doesn't support the notion of enums
+    enums: [],
     refs,
     indexes,
     tableConstraints,
+    checks,
   };
 };
 

@@ -50,6 +50,7 @@ const createFields = (rawFields, fieldsConstraints) => {
       pk: constraints.pk || field.pk,
       unique: constraints.unique || field.unique,
       note: field.note,
+      checks: constraints.checks,
     });
     return f;
   });
@@ -71,7 +72,7 @@ const createIndexes = (rawIndexes) => {
   });
 };
 
-const createTables = (rawTables, rawFields, rawIndexes, tableConstraints) => {
+const createTables = (rawTables, rawFields, rawIndexes, rawTableChecks, tableConstraints) => {
   return rawTables.map((rawTable) => {
     const { name, schemaName, note } = rawTable;
     const key = schemaName ? `${schemaName}.${name}` : `${name}`;
@@ -85,6 +86,7 @@ const createTables = (rawTables, rawFields, rawIndexes, tableConstraints) => {
       fields,
       indexes,
       note,
+      checks: rawTableChecks[key],
     });
   });
 };
@@ -97,10 +99,11 @@ const generateDatabase = (schemaJson) => {
     refs: rawRefs,
     enums: rawEnums,
     tableConstraints,
+    checks: rawTableChecks,
   } = schemaJson;
 
   try {
-    const tables = createTables(rawTables, rawFields, rawIndexes, tableConstraints);
+    const tables = createTables(rawTables, rawFields, rawIndexes, rawTableChecks, tableConstraints);
     const enums = createEnums(rawEnums);
     const refs = createRefs(rawRefs);
 

@@ -38,7 +38,8 @@ CREATE TABLE products (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   is_available BOOLEAN DEFAULT TRUE,
   CONSTRAINT chk_price_positive CHECK (price > 0),
-  CONSTRAINT chk_stock_non_negative CHECK (stock_quantity >= 0)
+  CONSTRAINT chk_stock_non_negative CHECK (stock_quantity >= 0),
+  CONSTRAINT chk_created_at CHECK (created_at <= updated_at)
 );
 
 -- Create an index on the category column for faster filtering
@@ -117,8 +118,8 @@ CREATE TABLE user_define_data_types (
   name VARCHAR(50),
   gender gender_type,
   age int4range,  -- Using built-in int4range for age range
-  height FLOAT,
-  weight FLOAT
+  height FLOAT CHECK (height > 0),
+  weight FLOAT CONSTRAINT chk_positive_weight CHECK (weight > 0)
 );
 
 -- Create table with comments

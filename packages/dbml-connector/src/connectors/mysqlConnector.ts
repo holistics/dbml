@@ -1,6 +1,8 @@
 import { createConnection, Connection } from 'mysql2/promise';
 import { flatten } from 'lodash';
-import { DefaultInfo, DatabaseSchema, DefaultType, Field, IndexColumn, FieldsDictionary, Table, Enum, IndexesDictionary, TableConstraintsDictionary, Index, TableConstraint, Ref } from './types';
+import {
+  CheckConstraintDictionary, DefaultInfo, DatabaseSchema, DefaultType, Field, IndexColumn, FieldsDictionary, Table, Enum, IndexesDictionary, TableConstraintsDictionary, Index, Ref,
+} from './types';
 
 const NUMBER_REGEX = '^-?[0-9]+(.[0-9]+)?$';
 
@@ -221,7 +223,7 @@ async function generateEnums (client: Connection, schemaName: string): Promise<E
 }
 
 /**
- * Mysql is automatically create index for primary keys, foreign keys, unique constraint. -> Ignore
+ * Mysql automatically creates index for primary keys, foreign keys, unique constraint. -> Ignore
  */
 async function generateIndexes (client: Connection, schemaName: string): Promise<IndexesDictionary> {
   const query = `
@@ -321,9 +323,9 @@ async function generatePrimaryAndUniqueConstraint (client: Connection, schemaNam
   const rows: any = queryResponse[0];
 
   const inlineConstraintList = rows.filter((constraint: Record<string, any>) => constraint.columnCount === 1);
-  const outOfConstraintList = rows.filter((constraint: Record<string, any>) => constraint.columnCount > 1);
+  const outOfLineConstraintList = rows.filter((constraint: Record<string, any>) => constraint.columnCount > 1);
 
-  const compositeTableConstraintMap = outOfConstraintList.reduce((acc: any, row: Record<string, any>) => {
+  const compositeTableConstraintMap = outOfLineConstraintList.reduce((acc: any, row: Record<string, any>) => {
     const {
       tableName, constraintName, columnNames, constraintType,
     } = row;
@@ -355,12 +357,12 @@ async function generatePrimaryAndUniqueConstraint (client: Connection, schemaNam
     return acc;
   }, {});
 
-  const compositeConstraintMap: any = {};
+  const compositeConstraintMap: IndexesDictionary = {};
   Object.keys(compositeTableConstraintMap).forEach((tableName) => {
     compositeConstraintMap[tableName] = flatten(Object.values(compositeTableConstraintMap[tableName]));
   });
 
-  const constraintMap = inlineConstraintList.reduce((acc: any, row: Record<string, any>) => {
+  const constraintMap = inlineConstraintList.reduce((acc: TableConstraintsDictionary, row: Record<string, any>) => {
     const { tableName, columnNames, constraintType } = row;
 
     const key = tableName;
@@ -372,7 +374,7 @@ async function generatePrimaryAndUniqueConstraint (client: Connection, schemaNam
 
     columnList.forEach((columnName: string) => {
       if (!acc[key][columnName]) {
-        acc[key][columnName] = {};
+        acc[key][columnName] = { checks: [] };
       }
 
       if (constraintType === 'PRIMARY KEY') {
@@ -386,7 +388,58 @@ async function generatePrimaryAndUniqueConstraint (client: Connection, schemaNam
     return acc;
   }, {});
 
-  return { compositeConstraintMap, constraintMap };
+  return { compositeConstraintMap, primaryAndUniqueConstraintMap: constraintMap };
+}
+
+function extractColumnsFromCheckConstraint (checkClause: string): string[] {
+  return [...checkClause.matchAll(/`(?:``|[^`])*`/g)].map((col) => col.toString().slice(1, -1));
+}
+
+async function generateCheckConstraints (client: Connection, schemaName: string): Promise<{ checks: CheckConstraintDictionary, tableConstraints: TableConstraintsDictionary }> {
+  const query = `
+    select
+      cc.constraint_name as constraintName,
+      tc.table_name as tableName,
+      cc.check_clause as checkClause
+    from information_schema.check_constraints cc
+    join information_schema.table_constraints tc
+      on cc.constraint_name = tc.constraint_name
+    where cc.constraint_schema = ?
+  `;
+
+  const queryResponse = await client.query(query, [schemaName]);
+  const rows: any = queryResponse[0];
+  const checks: CheckConstraintDictionary = {};
+  const tableConstraints: TableConstraintsDictionary = {};
+  rows.forEach((row: any) => {
+    const {
+      constraintName,
+      tableName,
+      checkClause,
+    } = row;
+    const key = tableName;
+    const cols = extractColumnsFromCheckConstraint(checkClause);
+    if (cols.length === 1) {
+      const col = cols[0];
+      if (!tableConstraints[key]) tableConstraints[key] = {};
+      if (!tableConstraints[key][col]) tableConstraints[key][col] = { checks: [] };
+      tableConstraints[key][col].checks.push({
+        name: constraintName,
+        // The check definition has the form: `(expr)`
+        // The expression starts at 1 and ends at -1
+        expression: checkClause.slice(1, -1),
+      });
+      return;
+    }
+    if (!checks[key]) checks[key] = [];
+    checks[key].push({
+      name: constraintName,
+      // The check definition has the form: `(expr)`
+      // The expression starts at 1 and ends at -1
+      expression: checkClause.slice(1, -1),
+    });
+  });
+  return { checks, tableConstraints };
 }
 
 async function generateForeignKeys (client: Connection, schemaName: string): Promise<Ref[]> {
@@ -453,7 +506,7 @@ async function generateForeignKeys (client: Connection, schemaName: string): Pro
   return foreignKeyList;
 }
 
-function combineIndexAndCompositeConstraint (userDefinedIndexMap: any, compositeConstraintMap: any) {
+function combineIndexAndCompositeConstraint (userDefinedIndexMap: IndexesDictionary, compositeConstraintMap: IndexesDictionary): IndexesDictionary {
   const indexMap = Object.assign(userDefinedIndexMap, {});
 
   Object.keys(compositeConstraintMap).forEach((tableName) => {
@@ -484,6 +537,7 @@ async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
     generateIndexes(client, schemaName),
     generatePrimaryAndUniqueConstraint(client, schemaName),
     generateForeignKeys(client, schemaName),
+    generateCheckConstraints(client, schemaName),
   ]);
   client.end();
 
@@ -491,12 +545,22 @@ async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
     { tableList, fieldMap },
     enumList,
     rawIndexMap,
-    { constraintMap, compositeConstraintMap },
+    { primaryAndUniqueConstraintMap, compositeConstraintMap },
     foreignKeyList,
+    { checks: tableCheckConstraintMap, tableConstraints: columnCheckConstraintMap },
   ] = result;
 
   // combine normal index and composite key
   const indexMap = combineIndexAndCompositeConstraint(rawIndexMap, compositeConstraintMap);
+
+  const tableConstraints: TableConstraintsDictionary = { ...primaryAndUniqueConstraintMap };
+  Object.keys(columnCheckConstraintMap).forEach((tableName) => {
+    if (!tableConstraints[tableName]) tableConstraints[tableName] = {};
+    Object.keys(columnCheckConstraintMap[tableName]).forEach((colName) => {
+      if (!tableConstraints[tableName][colName]) tableConstraints[tableName][colName] = { checks: [] };
+      tableConstraints[tableName][colName].checks.push(...columnCheckConstraintMap[tableName][colName].checks);
+    });
+  });
 
   return {
     tables: tableList,
@@ -504,7 +568,8 @@ async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
     refs: foreignKeyList,
     enums: enumList,
     indexes: indexMap,
-    tableConstraints: constraintMap,
+    tableConstraints,
+    checks: tableCheckConstraintMap,
   };
 }
 

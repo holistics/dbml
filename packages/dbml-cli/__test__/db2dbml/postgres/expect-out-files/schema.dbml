@@ -37,12 +37,12 @@ Enum "gender_type" {
 Table "users" {
   "user_id" int4 [pk, not null, increment]
   "username" varchar(50) [unique, not null]
-  "email" varchar(100) [unique, not null]
+  "email" varchar(100) [unique, not null, check: `(email)::text ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$'::text`]
   "password_hash" varchar(255) [not null]
   "first_name" varchar(50)
   "last_name" varchar(50)
   "full_name" varchar(100)
-  "date_of_birth" date
+  "date_of_birth" date [check: `date_of_birth <= (CURRENT_DATE - '13 years'::interval)`]
   "created_at" timestamptz [default: `CURRENT_TIMESTAMP`]
   "last_login" timestamptz
   "is_active" bool [default: true]
@@ -58,12 +58,16 @@ Table "products" {
   "product_id" int4 [pk, not null, increment]
   "name" varchar(100) [not null]
   "description" text
-  "price" numeric(10,2) [not null]
-  "stock_quantity" int4 [not null, default: 0]
+  "price" numeric(10,2) [not null, check: `price > (0)::numeric`]
+  "stock_quantity" int4 [not null, check: `stock_quantity >= 0`, default: 0]
   "category" varchar(50)
   "created_at" timestamptz [default: `CURRENT_TIMESTAMP`]
   "updated_at" timestamptz [default: `CURRENT_TIMESTAMP`]
   "is_available" bool [default: true]
+
+  Checks {
+    `created_at <= updated_at` [name: 'chk_created_at']
+  }
 
   Indexes {
     category [type: btree, name: "idx_products_category"]
@@ -74,8 +78,8 @@ Table "orders" {
   "order_id" int4 [pk, not null, increment]
   "user_id" int4 [not null]
   "order_date" timestamptz [default: `CURRENT_TIMESTAMP`]
-  "total_amount" numeric(12,2) [not null]
-  "status" varchar(20) [default: 'pending']
+  "total_amount" numeric(12,2) [not null, check: `total_amount > (0)::numeric`]
+  "status" varchar(20) [check: `(status)::text = ANY ((ARRAY['pending'::character varying, 'processing'::character varying, 'shipped'::character varying, 'delivered'::character varying, 'cancelled'::character varying])::text[])`, default: 'pending']
   "shipping_address" text [not null]
   "billing_address" text [not null]
 
@@ -88,8 +92,8 @@ Table "order_items" {
   "order_item_id" int4 [pk, not null, increment]
   "order_id" int4 [not null]
   "product_id" int4 [not null]
-  "quantity" int4 [not null]
-  "unit_price" numeric(10,2) [not null]
+  "quantity" int4 [not null, check: `quantity > 0`]
+  "unit_price" numeric(10,2) [not null, check: `unit_price > (0)::numeric`]
 
   Indexes {
     (order_id, product_id) [type: btree, name: "uq_order_product"]
@@ -130,8 +134,8 @@ Table "user_define_data_types" {
   "name" varchar(50)
   "gender" gender_type
   "age" int4range
-  "height" float8
-  "weight" float8
+  "height" float8 [check: `height > (0)::double precision`]
+  "weight" float8 [check: `weight > (0)::double precision`]
 }
 
 Table "table_with_comments" {

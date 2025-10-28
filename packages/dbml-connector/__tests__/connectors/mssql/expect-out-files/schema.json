@@ -475,8 +475,8 @@
       {
         "name": "status",
         "type": {
-          "type_name": "chk_status_status",
-          "schemaName": "dbo"
+          "type_name": "varchar(20)",
+          "schemaName": null
         },
         "dbdefault": {
           "type": "string",
@@ -1162,7 +1162,7 @@
         },
         "dbdefault": {
           "type": "string",
-          "value": "<Books>\r\n    <Book>\r\n      <Title>The Great Gatsby</Title>\r\n      <Author>F. Scott Fitzgerald</Author>\r\n      <Year>1925</Year>\r\n      <Price>10.99</Price>\r\n      <Publisher>Scribner</Publisher>\r\n      <Location>New York</Location>\r\n      <Genre>Fiction</Genre>\r\n      <Subgenre>Classic</Subgenre>\r\n    </Book>\r\n    <Book>\r\n      <Title>1984</Title>\r\n      <Author>George Orwell</Author>\r\n      <Year>1949</Year>\r\n      <Price>8.99</Price>\r\n      <Publisher>Secker & Warburg</Publisher>\r\n      <Location>London</Location>\r\n      <Genre>Dystopian</Genre>\r\n      <Subgenre>Political Fiction</Subgenre>\r\n    </Book>\r\n  </Books>"
+          "value": "<Books>\n    <Book>\n      <Title>The Great Gatsby</Title>\n      <Author>F. Scott Fitzgerald</Author>\n      <Year>1925</Year>\n      <Price>10.99</Price>\n      <Publisher>Scribner</Publisher>\n      <Location>New York</Location>\n      <Genre>Fiction</Genre>\n      <Subgenre>Classic</Subgenre>\n    </Book>\n    <Book>\n      <Title>1984</Title>\n      <Author>George Orwell</Author>\n      <Year>1949</Year>\n      <Price>8.99</Price>\n      <Publisher>Secker & Warburg</Publisher>\n      <Location>London</Location>\n      <Genre>Dystopian</Genre>\n      <Subgenre>Political Fiction</Subgenre>\n    </Book>\n  </Books>"
         },
         "not_null": false,
         "increment": false,
@@ -1296,8 +1296,8 @@
       {
         "name": "gender",
         "type": {
-          "type_name": "chk_gender_gender",
-          "schemaName": "dbo"
+          "type_name": "nvarchar(10)",
+          "schemaName": null
         },
         "dbdefault": null,
         "not_null": false,
@@ -1541,8 +1541,8 @@
       {
         "name": "AddressID",
         "type": {
-          "type_name": "CK_Address_Valid_AddressID_AddressFormatID",
-          "schemaName": "dbo"
+          "type_name": "uniqueidentifier(16)",
+          "schemaName": null
         },
         "dbdefault": null,
         "not_null": true,
@@ -1554,8 +1554,8 @@
       {
         "name": "AddressFormatID",
         "type": {
-          "type_name": "CK_Address_Valid_AddressID_AddressFormatID",
-          "schemaName": "dbo"
+          "type_name": "uniqueidentifier(16)",
+          "schemaName": null
         },
         "dbdefault": null,
         "not_null": true,
@@ -1569,8 +1569,8 @@
       {
         "name": "A1",
         "type": {
-          "type_name": "CK_Address_Valid2_A1",
-          "schemaName": "dbo"
+          "type_name": "uniqueidentifier(16)",
+          "schemaName": null
         },
         "dbdefault": null,
         "not_null": true,
@@ -1582,8 +1582,8 @@
       {
         "name": "A2",
         "type": {
-          "type_name": "CK_Address_Valid2_A2_A3",
-          "schemaName": "dbo"
+          "type_name": "uniqueidentifier(16)",
+          "schemaName": null
         },
         "dbdefault": null,
         "not_null": true,
@@ -1595,8 +1595,8 @@
       {
         "name": "A3",
         "type": {
-          "type_name": "CK_Address_Valid2_A2_A3",
-          "schemaName": "dbo"
+          "type_name": "uniqueidentifier(16)",
+          "schemaName": null
         },
         "dbdefault": null,
         "not_null": true,
@@ -1608,8 +1608,8 @@
       {
         "name": "A4",
         "type": {
-          "type_name": "CK_Address_Valid2_A4",
-          "schemaName": "dbo"
+          "type_name": "uniqueidentifier(16)",
+          "schemaName": null
         },
         "dbdefault": null,
         "not_null": true,
@@ -1648,95 +1648,7 @@
       }
     ]
   },
-  "enums": [
-    {
-      "name": "chk_status_status",
-      "schemaName": "dbo",
-      "values": [
-        {
-          "name": "cancelled"
-        },
-        {
-          "name": "delivered"
-        },
-        {
-          "name": "shipped"
-        },
-        {
-          "name": "processing"
-        },
-        {
-          "name": "pending"
-        }
-      ]
-    },
-    {
-      "name": "chk_gender_gender",
-      "schemaName": "dbo",
-      "values": [
-        {
-          "name": "Other"
-        },
-        {
-          "name": "Female"
-        },
-        {
-          "name": "Male"
-        }
-      ]
-    },
-    {
-      "name": "CK_Address_Valid_AddressID_AddressFormatID",
-      "schemaName": "dbo",
-      "values": [
-        {
-          "name": "176029FA-D6D3-49E1-A48C-000000000002"
-        },
-        {
-          "name": "176029FA-D6D3-49E1-A48C-000000000001"
-        }
-      ]
-    },
-    {
-      "name": "CK_Address_Valid2_A1",
-      "schemaName": "dbo",
-      "values": [
-        {
-          "name": "333"
-        },
-        {
-          "name": "2222"
-        },
-        {
-          "name": "1111"
-        }
-      ]
-    },
-    {
-      "name": "CK_Address_Valid2_A2_A3",
-      "schemaName": "dbo",
-      "values": [
-        {
-          "name": "2222"
-        },
-        {
-          "name": "1111"
-        }
-      ]
-    },
-    {
-      "name": "CK_Address_Valid2_A4",
-      "schemaName": "dbo",
-      "values": [
-        {
-          "name": "3333"
-        },
-        {
-          "name": "2222"
-        }
-      ]
-    }
-  ],
+  "enums": [],
   "refs": [
     {
       "name": "FK_AuthorNationality",
@@ -1941,100 +1853,222 @@
   "tableConstraints": {
     "dbo.Authors": {
       "AuthorID": {
+        "checks": [],
         "pk": true
       },
       "NationalityID": {
+        "checks": [],
         "pk": true
       },
       "AuthorName": {
+        "checks": [],
         "unique": true
       },
       "BirthYear": {
+        "checks": [],
         "unique": true
       }
     },
     "dbo.Books": {
       "BookID": {
+        "checks": [],
         "pk": true
       },
       "AuthorID": {
+        "checks": [],
         "pk": true
       },
       "ISBN": {
+        "checks": [],
         "unique": true
       }
     },
     "dbo.DatetimeTypes": {
       "ID": {
+        "checks": [],
         "pk": true
       }
     },
     "dbo.gender_reference": {
       "value": {
+        "checks": [],
         "pk": true
       }
     },
     "dbo.NumberTypes": {
       "ID": {
+        "checks": [],
         "pk": true
       }
     },
     "dbo.NumberTypesNoDefault": {
       "ID": {
+        "checks": [],
         "pk": true
       }
     },
     "dbo.ObjectTypes": {
       "Id": {
+        "checks": [],
         "pk": true
       }
     },
     "dbo.order_items": {
       "order_item_id": {
+        "checks": [],
         "pk": true
       },
       "order_id": {
+        "checks": [],
         "unique": true
       },
       "product_id": {
+        "checks": [],
         "unique": true
+      },
+      "quantity": {
+        "checks": [
+          {
+            "name": "chk_quantity_positive",
+            "expression": "[quantity]>(0)"
+          }
+        ]
+      },
+      "unit_price": {
+        "checks": [
+          {
+            "name": "chk_unit_price_positive",
+            "expression": "[unit_price]>(0)"
+          }
+        ]
       }
     },
     "dbo.orders": {
       "order_id": {
+        "checks": [],
         "pk": true
+      },
+      "total_amount": {
+        "checks": [
+          {
+            "name": "chk_total_amount_positive",
+            "expression": "[total_amount]>(0)"
+          }
+        ]
+      },
+      "status": {
+        "checks": [
+          {
+            "name": "chk_status",
+            "expression": "[status]='cancelled' OR [status]='delivered' OR [status]='shipped' OR [status]='processing' OR [status]='pending'"
+          }
+        ]
       }
     },
     "dbo.products": {
       "product_id": {
+        "checks": [],
         "pk": true
+      },
+      "price": {
+        "checks": [
+          {
+            "name": "chk_price_positive",
+            "expression": "[price]>(0)"
+          }
+        ]
+      },
+      "stock_quantity": {
+        "checks": [
+          {
+            "name": "chk_stock_non_negative",
+            "expression": "[stock_quantity]>=(0)"
+          }
+        ]
       }
     },
     "dbo.StringTypes": {
       "Id": {
+        "checks": [],
         "pk": true
       }
     },
     "dbo.table_with_comments": {
       "id": {
+        "checks": [],
         "pk": true
       }
     },
     "dbo.user_define_data_types": {
       "id": {
+        "checks": [],
         "pk": true
+      },
+      "gender": {
+        "checks": [
+          {
+            "name": "chk_gender",
+            "expression": "[gender]='Other' OR [gender]='Female' OR [gender]='Male'"
+          }
+        ]
       }
     },
     "dbo.users": {
       "user_id": {
+        "checks": [],
         "pk": true
       },
       "email": {
+        "checks": [
+          {
+            "name": "chk_email_format",
+            "expression": "[email] like '%_@_%._%'"
+          }
+        ],
         "unique": true
       },
       "username": {
+        "checks": [],
         "unique": true
+      },
+      "date_of_birth": {
+        "checks": [
+          {
+            "name": "chk_age",
+            "expression": "[date_of_birth]<=dateadd(year,(-13),getdate())"
+          }
+        ]
+      }
+    },
+    "dbo.TestDescriptionTable": {
+      "Name": {
+        "checks": [
+          {
+            "name": "chk_name_len",
+            "expression": "len([Name])>(6)"
+          }
+        ]
       }
     }
+  },
+  "checks": {
+    "dbo.user_define_data_types": [
+      {
+        "name": "chk_age_range",
+        "expression": "[age_start]<=[age_end]"
+      }
+    ],
+    "dbo.AddressInfo": [
+      {
+        "name": "CK_Address_Valid",
+        "expression": "([AddressID]='176029FA-D6D3-49E1-A48C-000000000002' OR [AddressID]='176029FA-D6D3-49E1-A48C-000000000001') AND ([AddressFormatID]='176029FA-D6D3-49E1-A48C-000000000002' OR [AddressFormatID]='176029FA-D6D3-49E1-A48C-000000000001')"
+      }
+    ],
+    "dbo.AddressInfo2": [
+      {
+        "name": "CK_Address_Valid2",
+        "expression": "([A1]='333' OR [A1]='2222' OR [A1]='1111') AND ([A2]='2222' OR [A2]='1111') AND ([A3]='1111' OR [A3]='2222') AND ([A4]='3333' OR [A4]='2222')"
+      }
+    ]
   }
 }
