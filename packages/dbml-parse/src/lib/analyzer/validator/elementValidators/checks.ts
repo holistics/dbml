@@ -128,7 +128,7 @@ export default class ChecksValidator implements ElementValidator {
           });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_CONSTRAINT_SETTING, `Unknown check setting \'${name}\'`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_CHECK_SETTING, `Unknown check setting \'${name}\'`, attr)));
       }
     }
     return errors;
