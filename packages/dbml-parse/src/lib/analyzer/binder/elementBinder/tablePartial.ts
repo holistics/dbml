@@ -24,6 +24,9 @@ export default class TablePartialBinder extends ElementBinder {
       default: {
         shouldBind: false as const,
       },
+      check: {
+        shouldBind: false as const,
+      },
     },
   };
   protected settingList = {};

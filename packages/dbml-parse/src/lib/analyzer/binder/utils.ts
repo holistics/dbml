@@ -1,6 +1,7 @@
 import { SyntaxToken } from '../../lexer/tokens';
 import { ElementDeclarationNode } from '../../parser/nodes';
 import { ElementKind } from '../types';
+import ChecksBinder from './elementBinder/checks';
 import CustomBinder from './elementBinder/custom';
 import EnumBinder from './elementBinder/enum';
 import IndexesBinder from './elementBinder/indexes';
@@ -29,6 +30,8 @@ export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToke
       return IndexesBinder;
     case ElementKind.TablePartial:
       return TablePartialBinder;
+    case ElementKind.Check:
+      return ChecksBinder;
     default:
       return CustomBinder;
   }
