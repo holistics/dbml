@@ -151,7 +151,7 @@ export class TableInterpreter implements ElementInterpreter {
         case ElementKind.Indexes:
           return this.interpretIndexes(sub);
 
-        case ElementKind.Constraints:
+        case ElementKind.Check:
           return this.interpretConstraints(sub);
 
         default:
@@ -288,7 +288,7 @@ export class TableInterpreter implements ElementInterpreter {
         return errs.length === 0 ? inlineRef : [];
       });
 
-      const constraintNodes = settingMap[SettingName.Constraint] || [];
+      const constraintNodes = settingMap[SettingName.Check] || [];
       column.constraints = constraintNodes.map((constraintNode) => {
         const token = getTokenPosition(constraintNode);
         const expression = (constraintNode.value as FunctionExpressionNode).value?.value!;

@@ -16,16 +16,16 @@ import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../p
 import { aggregateSettingList, isVoid, pickValidator } from '../utils';
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementValidator } from '../types';
-import { destructureIndexNode, getElementKind } from '../../../analyzer/utils';
-import SymbolTable from '../../../analyzer/symbol/symbolTable';
-import { ElementKind } from '../../../analyzer/types';
+import { destructureIndexNode, getElementKind } from '../../utils';
+import SymbolTable from '../../symbol/symbolTable';
+import { ElementKind } from '../../types';
 
 export default class IndexesValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 
-  constructor(declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.publicSymbolTable = publicSymbolTable;
     this.symbolFactory = symbolFactory;
@@ -55,7 +55,7 @@ export default class IndexesValidator implements ElementValidator {
       : [invalidContextError];
   }
 
-  private validateName(nameNode?: SyntaxNode): CompileError[] {
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', nameNode)];
     }
@@ -63,7 +63,7 @@ export default class IndexesValidator implements ElementValidator {
     return [];
   }
 
-  private validateAlias(aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', aliasNode)];
     }
@@ -71,7 +71,7 @@ export default class IndexesValidator implements ElementValidator {
     return [];
   }
 
-  private validateSettingList(settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
       return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Indexes shouldn\'t have a setting list', settingList)];
     }
@@ -79,7 +79,7 @@ export default class IndexesValidator implements ElementValidator {
     return [];
   }
 
-  private validateBody(body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  private validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -88,10 +88,10 @@ export default class IndexesValidator implements ElementValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])]
+    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
   }
 
-  private validateFields(fields: FunctionApplicationNode[]): CompileError[] {
+  private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       if (!field.callee) {
         return [];
@@ -108,22 +108,22 @@ export default class IndexesValidator implements ElementValidator {
         // (id, name) (age, weight)
         // which is parsed as a call expression
         while (sub instanceof CallExpressionNode) {
-          if (sub.argumentList && !destructureIndexNode(sub.argumentList).isOk()) { 
+          if (sub.argumentList && !destructureIndexNode(sub.argumentList).isOk()) {
             errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList));
           }
           sub = sub.callee!;
         }
 
-        if (!destructureIndexNode(sub).isOk()) { 
+        if (!destructureIndexNode(sub).isOk()) {
           errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
         }
       });
 
       return errors;
-    })
+    });
   }
 
-  private validateFieldSetting(settings: ListExpressionNode): CompileError[] {
+  private validateFieldSetting (settings: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settings);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -170,7 +170,7 @@ export default class IndexesValidator implements ElementValidator {
     return errors;
   }
 
-  private validateSubElements(subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       sub.parent = this.declarationNode;
       if (!sub.type) {
@@ -183,7 +183,7 @@ export default class IndexesValidator implements ElementValidator {
   }
 }
 
-export function isValidIndexesType(value?: SyntaxNode): boolean {
+export function isValidIndexesType (value?: SyntaxNode): boolean {
   if (!(value instanceof PrimaryExpressionNode) || !(value.expression instanceof VariableNode)) {
     return false;
   }

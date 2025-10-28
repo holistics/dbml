@@ -7,7 +7,7 @@ export enum ElementKind {
   Indexes = 'indexes',
   TableGroup = 'tablegroup',
   TablePartial = 'tablepartial',
-  Constraints = 'constraints'
+  Check = 'checks',
 }
 
 export enum SettingName {
@@ -25,7 +25,7 @@ export enum SettingName {
   Default = 'default',
   Name = 'name',
   Type = 'type',
-  Constraint = 'constraint',
+  Check = 'check',
 
   Update = 'update',
   Delete = 'delete',
