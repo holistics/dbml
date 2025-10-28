@@ -490,6 +490,9 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
     if (typeof table_schema !== 'string' || typeof table_name !== 'string' || typeof check_definition !== 'string') {
       return;
     }
+    if (!check_definition.match(/CHECK \(\(.*\)\)/)) {
+      return;
+    }
     if (is_column_constraint && typeof column_name !== 'string') {
       return;
     }
