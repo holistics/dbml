@@ -41,7 +41,7 @@ export default class ChecksValidator implements ElementValidator {
 
   private validateContext (): CompileError[] {
     const invalidContextError = new CompileError(
-      CompileErrorCode.INVALID_CONSTRAINTS_CONTEXT,
+      CompileErrorCode.INVALID_CHECKS_CONTEXT,
       'A Checks can only appear inside a Table or a TablePartial',
       this.declarationNode,
     );
@@ -102,7 +102,7 @@ export default class ChecksValidator implements ElementValidator {
       }
 
       if (args.length > 1 || !(args[0] instanceof FunctionExpressionNode)) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_CONSTRAINTS_FIELD, 'A check field must be a function expression', field));
+        errors.push(new CompileError(CompileErrorCode.INVALID_CHECKS_FIELD, 'A check field must be a function expression', field));
       }
 
       return errors;
@@ -119,11 +119,11 @@ export default class ChecksValidator implements ElementValidator {
       switch (name) {
         case 'name':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_CONSTRAINT_SETTING, `\'${name}\' can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_CHECK_SETTING, `\'${name}\' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_CONSTRAINT_SETTING_VALUE, `\'${name}\' must be a string`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_CHECK_SETTING_VALUE, `\'${name}\' must be a string`, attr));
             }
           });
           break;
