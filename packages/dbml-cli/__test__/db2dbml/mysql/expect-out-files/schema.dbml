@@ -136,11 +136,11 @@ Table "orders" {
 Table "products" {
   "id" "int unsigned" [pk, not null, increment]
   "price" decimal(10,2) [not null]
-  "quantity" int [not null, constraint: ``quantity` < 10000`]
-  "total_value" "decimal(10,2) GENERATED ALWAYS AS ((`price` * `quantity`)) STORED" [constraint: ``total_value` > 0`]
+  "quantity" int [not null, check: ``quantity` < 10000`]
+  "total_value" "decimal(10,2) GENERATED ALWAYS AS ((`price` * `quantity`)) STORED" [check: ``total_value` > 0`]
   "updated_at" "timestamp on update CURRENT_TIMESTAMP" [default: `CURRENT_TIMESTAMP`]
 
-  Constraints {
+  Checks {
     `(`price` > 0) and (`price` < 1000000)` [name: 'products_chk_1']
   }
 }
@@ -174,7 +174,7 @@ Table "users" {
   "last_login" timestamp [default: `CURRENT_TIMESTAMP`]
   "is_active" tinyint(1) [default: 1]
 
-  Constraints {
+  Checks {
     ``created_at` <= `last_login`` [name: 'chk_last_login']
   }
 }
