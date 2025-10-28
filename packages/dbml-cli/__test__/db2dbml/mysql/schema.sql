@@ -9,15 +9,21 @@ create table users (
   date_of_birth date,
   created_at timestamp default current_timestamp,
   last_login timestamp default now(),
-  is_active tinyint(1) default 1
+  is_active tinyint(1) default 1,
+
+  constraint chk_last_login
+  check (created_at <= last_login)
 );
 
 create table products (
   id int unsigned primary key auto_increment,
-  price decimal(10,2) not null,
+  price decimal(10,2) not null check (price > 0 AND price < 1000000),
   quantity int not null,
   total_value decimal(10,2) generated always as ((price * quantity)) stored,
-  updated_at timestamp default current_timestamp on update current_timestamp
+  updated_at timestamp default current_timestamp on update current_timestamp,
+  
+  constraint max_quantity check (quantity < 10000),
+  check (total_value > 0)
 );
 
 create table orders (

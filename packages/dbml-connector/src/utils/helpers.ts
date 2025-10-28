@@ -1,15 +1,16 @@
 import {
+  CheckConstraintDictionary,
   FieldsDictionary,
   IndexesDictionary,
   Table,
   TableConstraintsDictionary,
 } from '../connectors/types';
 
-export function getIntersection<T>(firstList: T[], secondList: T[]): T[] {
+export function getIntersection<T> (firstList: T[], secondList: T[]): T[] {
   return firstList.filter((item) => secondList.includes(item));
 }
 
-export function getTableSchemaKey(schemaName: string, tableName: string) {
+export function getTableSchemaKey (schemaName: string, tableName: string) {
   if (!tableName || !tableName.trim()) {
     throw new Error('Table name must be a non-empty string');
   }
@@ -17,15 +18,15 @@ export function getTableSchemaKey(schemaName: string, tableName: string) {
   return schemaName ? `${schemaName}.${tableName}` : `${tableName}`;
 }
 
-export function mergeTables(firstTableList: Table[], secondTable: Table[]): Table[] {
+export function mergeTables (firstTableList: Table[], secondTable: Table[]): Table[] {
   return firstTableList.concat(secondTable);
 }
 
-export function mergeFieldDictionary(
+export function mergeFieldDictionary (
   firstDict: FieldsDictionary,
-  secondDict: FieldsDictionary
+  secondDict: FieldsDictionary,
 ): FieldsDictionary {
-  const result: FieldsDictionary = Object.assign({}, firstDict);
+  const result: FieldsDictionary = { ...firstDict };
 
   Object.keys(secondDict).forEach((key) => {
     if (!result[key]) {
@@ -38,11 +39,11 @@ export function mergeFieldDictionary(
   return result;
 }
 
-export function mergeIndexDictionary(
+export function mergeIndexDictionary (
   firstDict: IndexesDictionary,
-  secondDict: IndexesDictionary
+  secondDict: IndexesDictionary,
 ): IndexesDictionary {
-  const result: IndexesDictionary = Object.assign({}, firstDict);
+  const result: IndexesDictionary = { ...firstDict };
 
   Object.keys(secondDict).forEach((key) => {
     if (!result[key]) {
@@ -55,11 +56,11 @@ export function mergeIndexDictionary(
   return result;
 }
 
-export function mergeTableConstraintDictionary(
+export function mergeTableConstraintDictionary (
   firstDict: TableConstraintsDictionary,
-  secondDict: TableConstraintsDictionary
+  secondDict: TableConstraintsDictionary,
 ): TableConstraintsDictionary {
-  const result: TableConstraintsDictionary = Object.assign({}, firstDict);
+  const result: TableConstraintsDictionary = { ...firstDict };
 
   Object.keys(secondDict).forEach((key) => {
     if (!result[key]) {
@@ -67,6 +68,23 @@ export function mergeTableConstraintDictionary(
     }
 
     result[key] = secondDict[key];
+  });
+
+  return result;
+}
+
+export function mergeCheckConstraintDictionary (
+  firstDict: CheckConstraintDictionary,
+  secondDict: CheckConstraintDictionary,
+): CheckConstraintDictionary {
+  const result: CheckConstraintDictionary = { ...firstDict };
+
+  Object.keys(secondDict).forEach((key) => {
+    if (!result[key]) {
+      result[key] = [];
+    }
+
+    result[key] = result[key].concat(secondDict[key]);
   });
 
   return result;
