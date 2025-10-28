@@ -16,7 +16,7 @@
             "type_name": "nvarchar(255)"
           },
           "not_null": true,
-          "constraints": [
+          "checks": [
             {
               "expression": "[status] IN ('created', 'running', 'done', 'failed', 'wait for validation')"
             }
@@ -46,7 +46,7 @@
             "type_name": "nvarchar(255)"
           },
           "not_null": true,
-          "constraints": [
+          "checks": [
             {
               "expression": "[priority] IN ('low', 'medium', 'high')"
             }
@@ -58,7 +58,7 @@
             "type_name": "nvarchar(255)"
           },
           "not_null": true,
-          "constraints": [
+          "checks": [
             {
               "expression": "[status] IN ('pending', 'processing', 'done')"
             }

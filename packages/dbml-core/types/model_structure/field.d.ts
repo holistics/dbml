@@ -5,7 +5,7 @@ import Endpoint from './endpoint';
 import Enum from './enum';
 import Table from './table';
 import TablePartial from './tablePartial';
-import Constraint from './constraint';
+import Check from './check';
 interface RawField {
     name: string;
     type: any;
@@ -16,7 +16,7 @@ interface RawField {
     note: RawNote;
     dbdefault: any;
     increment: boolean;
-    constraints?: any[];
+    checks?: any[];
     table: Table;
 }
 declare class Field extends Element {
@@ -30,16 +30,16 @@ declare class Field extends Element {
     noteToken: Token;
     dbdefault: any;
     increment: boolean;
-    constraints: Constraint[];
+    checks: Check[];
     table: Table;
     endpoints: Endpoint[];
     _enum: Enum;
     injectedPartial?: TablePartial;
     injectedToken: Token;
-    constructor({ name, type, unique, pk, token, not_null, note, dbdefault, increment, constraints, table }: RawField);
+    constructor({ name, type, unique, pk, token, not_null, note, dbdefault, increment, checks, table }: RawField);
     generateId(): void;
     pushEndpoint(endpoint: any): void;
-    processConstraints(constraints: any[]): void;
+    processChecks(checks: any[]): void;
     export(): {
         name: string;
         type: any;
@@ -68,7 +68,7 @@ declare class Field extends Element {
         dbdefault: any;
         increment: boolean;
         injectedPartialId?: number;
-        constraintIds: number[];
+        checkIds: number[];
     };
     normalize(model: NormalizedDatabase): void;
 }
@@ -87,7 +87,7 @@ export interface NormalizedField {
         endpointIds: number[];
         enumId: number;
         injectedPartialId?: number;
-        constraintIds: number[];
+        checkIds: number[];
     };
 }
 export default Field;

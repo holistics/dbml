@@ -123,7 +123,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     const tableElements = ctx.opttableelementlist().accept(this).filter(e => e);
 
-    const [fieldsData, indexes, tableRefs, tableConstraints] = tableElements.reduce((acc, ele) => {
+    const [fieldsData, indexes, tableRefs, tableChecks] = tableElements.reduce((acc, ele) => {
       if (ele.kind === TABLE_CONSTRAINT_KIND.FIELD) acc[0].push(ele.value);
       else if (ele.kind === TABLE_CONSTRAINT_KIND.INDEX) acc[1].push(ele.value);
       else if (ele.kind === TABLE_CONSTRAINT_KIND.FK) acc[2].push(ele.value);
@@ -152,7 +152,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       schemaName,
       fields: fieldsData.map(fd => fd.field),
       indexes,
-      constraints: tableConstraints,
+      checks: tableChecks,
     });
   }
 
@@ -303,7 +303,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
   // colconstraint*
   visitColquallist (ctx) {
-    const r = { inline_refs: [], constraints: [] };
+    const r = { inline_refs: [], checks: [] };
     ctx.colconstraint().forEach(c => {
       const constraint = c.accept(this);
       if (!constraint) return;
@@ -314,7 +314,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       }
 
       if (constraint.kind === COLUMN_CONSTRAINT_KIND.CHECK) {
-        r.constraints.push(constraint.value);
+        r.checks.push(constraint.value);
         return;
       }
 
@@ -851,8 +851,8 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
           case TABLE_CONSTRAINT_KIND.CHECK: {
             const table = findTable(this.data.tables, schemaName, tableName);
             if (!table) break;
-            if (!table.constraints) table.constraints = [];
-            table.constraints.push(cmd.value);
+            if (!table.checks) table.checks = [];
+            table.checks.push(cmd.value);
             break;
           }
           case TABLE_CONSTRAINT_KIND.UNIQUE:

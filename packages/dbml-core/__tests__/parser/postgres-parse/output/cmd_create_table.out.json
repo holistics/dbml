@@ -16,7 +16,7 @@
           },
           "unique": true,
           "pk": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "name",
@@ -25,7 +25,7 @@
             "schemaName": null
           },
           "not_null": false,
-          "constraints": [
+          "checks": [
             {
               "expression": "\"id\" > -1"
             }
@@ -33,7 +33,7 @@
         }
       ],
       "indexes": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "b",
@@ -44,7 +44,7 @@
             "type_name": "uuid",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "name",
@@ -53,7 +53,7 @@
             "schemaName": null
           },
           "not_null": true,
-          "constraints": [
+          "checks": [
             {
               "expression": "name <> ''"
             }
@@ -65,7 +65,7 @@
             "type_name": "varchar(55)",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [
@@ -89,7 +89,7 @@
           ]
         }
       ],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "c",
@@ -101,7 +101,7 @@
             "schemaName": null
           },
           "unique": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "phone",
@@ -110,7 +110,7 @@
             "schemaName": null
           },
           "increment": true,
-          "constraints": []
+          "checks": []
         },
         {
           "name": "time",
@@ -118,11 +118,11 @@
             "type_name": "timestamp",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "circles",
@@ -133,11 +133,11 @@
             "type_name": "circle",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": []
+      "checks": []
     },
     {
       "name": "foo",
@@ -148,7 +148,7 @@
             "type_name": "text[]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar2",
@@ -156,7 +156,7 @@
             "type_name": "int[1]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar3",
@@ -164,7 +164,7 @@
             "type_name": "int[2][3]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar4",
@@ -172,7 +172,7 @@
             "type_name": "int[]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar5",
@@ -180,7 +180,7 @@
             "type_name": "int[2]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar6",
@@ -188,7 +188,7 @@
             "type_name": "text[8]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar7",
@@ -196,7 +196,7 @@
             "type_name": "text[100]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar8",
@@ -204,7 +204,7 @@
             "type_name": "time(2)[]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar9",
@@ -212,7 +212,7 @@
             "type_name": "time(1)[1]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar10",
@@ -220,7 +220,7 @@
             "type_name": "time(1)[]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar11",
@@ -228,7 +228,7 @@
             "type_name": "time[5]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar12",
@@ -236,7 +236,7 @@
             "type_name": "timestamp(2)[10][2][5]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar13",
@@ -244,7 +244,7 @@
             "type_name": "character varying[]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar14",
@@ -252,7 +252,7 @@
             "type_name": "character varying(25)[][2][]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         },
         {
           "name": "bar15",
@@ -260,11 +260,11 @@
             "type_name": "character varying[76]",
             "schemaName": null
           },
-          "constraints": []
+          "checks": []
         }
       ],
       "indexes": [],
-      "constraints": []
+      "checks": []
     }
   ],
   "refs": [

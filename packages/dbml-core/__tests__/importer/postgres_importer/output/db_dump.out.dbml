@@ -23,7 +23,7 @@ Table "humanresources"."employee" {
   "modifieddate" timestamp [not null, default: `now()`]
   "organizationnode" "character varying" [default: `'/'::charactervarying`, note: 'Where the employee is located in corporate hierarchy.']
 
-  Constraints {
+  Checks {
     `((birthdate >= '1930-01-01'::date) AND (birthdate <= (now() - '18 years'::interval)))` [name: 'CK_Employee_BirthDate']
     `(upper((gender)::text) = ANY (ARRAY['M'::text, 'F'::text]))` [name: 'CK_Employee_Gender']
     `((hiredate >= '1996-07-01'::date) AND (hiredate <= (now() + '1 day'::interval)))` [name: 'CK_Employee_HireDate']
@@ -42,7 +42,7 @@ Table "humanresources"."employeedepartmenthistory" {
   "enddate" date [note: 'Date the employee left the department. NULL = Current department.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `((enddate >= startdate) OR (enddate IS NULL))` [name: 'CK_EmployeeDepartmentHistory_EndDate']
   }
 
@@ -59,7 +59,7 @@ Table "humanresources"."employeepayhistory" {
   "payfrequency" smallint [not null, note: '1 = Salary received monthly, 2 = Salary received biweekly']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(payfrequency = ANY (ARRAY[1, 2]))` [name: 'CK_EmployeePayHistory_PayFrequency']
     `((rate >= 6.50) AND (rate <= 200.00))` [name: 'CK_EmployeePayHistory_Rate']
   }
@@ -148,7 +148,7 @@ Table "person"."person" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `((emailpromotion >= 0) AND (emailpromotion <= 2))` [name: 'CK_Person_EmailPromotion']
     `((persontype IS NULL) OR (upper((persontype)::text) = ANY (ARRAY['SC'::text, 'VC'::text, 'IN'::text, 'EM'::text, 'SP'::text, 'GC'::text])))` [name: 'CK_Person_PersonType']
   }
@@ -241,7 +241,7 @@ Table "production"."billofmaterials" {
   "perassemblyqty" numeric(8,2) [not null, default: 1.00, note: 'Quantity of the component needed to create the assembly.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(((productassemblyid IS NULL) AND (bomlevel = 0) AND (perassemblyqty = 1.00)) OR ((productassemblyid IS NOT NULL) AND (bomlevel >= 1)))` [name: 'CK_BillOfMaterials_BOMLevel']
     `((enddate > startdate) OR (enddate IS NULL))` [name: 'CK_BillOfMaterials_EndDate']
     `(perassemblyqty >= 1.00)` [name: 'CK_BillOfMaterials_PerAssemblyQty']
@@ -272,7 +272,7 @@ Table "production"."document" {
   "modifieddate" timestamp [not null, default: `now()`]
   "documentnode" "character varying" [pk, not null, default: `'/'::charactervarying`, note: 'Primary key for Document records.']
 
-  Constraints {
+  Checks {
     `((status >= 1) AND (status <= 3))` [name: 'CK_Document_Status']
   }
   Note: 'Product maintenance documents.'
@@ -292,7 +292,7 @@ Table "production"."location" {
   "availability" numeric(8,2) [not null, default: 0.00, note: 'Work capacity (in hours) of the manufacturing location.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(availability >= 0.00)` [name: 'CK_Location_Availability']
     `(costrate >= 0.00)` [name: 'CK_Location_CostRate']
   }
@@ -326,7 +326,7 @@ Table "production"."product" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `((upper((class)::text) = ANY (ARRAY['L'::text, 'M'::text, 'H'::text])) OR (class IS NULL))` [name: 'CK_Product_Class']
     `(daystomanufacture >= 0)` [name: 'CK_Product_DaysToManufacture']
     `(listprice >= 0.00)` [name: 'CK_Product_ListPrice']
@@ -356,7 +356,7 @@ Table "production"."productcosthistory" {
   "standardcost" numeric [not null, note: 'Standard cost of the product.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `((enddate >= startdate) OR (enddate IS NULL))` [name: 'CK_ProductCostHistory_EndDate']
     `(standardcost >= 0.00)` [name: 'CK_ProductCostHistory_StandardCost']
   }
@@ -395,7 +395,7 @@ Table "production"."productinventory" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `((bin >= 0) AND (bin <= 100))` [name: 'CK_ProductInventory_Bin']
   }
 
@@ -412,7 +412,7 @@ Table "production"."productlistpricehistory" {
   "listprice" numeric [not null, note: 'Product list price.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `((enddate >= startdate) OR (enddate IS NULL))` [name: 'CK_ProductListPriceHistory_EndDate']
     `(listprice > 0.00)` [name: 'CK_ProductListPriceHistory_ListPrice']
   }
@@ -489,7 +489,7 @@ Table "production"."productreview" {
 WARNING: can have several lines!''']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `((rating >= 1) AND (rating <= 5))` [name: 'CK_ProductReview_Rating']
   }
   Note: 'Customer reviews of products they have purchased.'
@@ -522,7 +522,7 @@ Table "production"."transactionhistory" {
   "actualcost" numeric [not null, note: 'Product cost.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(upper((transactiontype)::text) = ANY (ARRAY['W'::text, 'S'::text, 'P'::text]))` [name: 'CK_TransactionHistory_TransactionType']
   }
   Note: 'Record of each purchase order, sales order, or work order transaction year to date.'
@@ -539,7 +539,7 @@ Table "production"."transactionhistoryarchive" {
   "actualcost" numeric [not null, note: 'Product cost.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(upper((transactiontype)::text) = ANY (ARRAY['W'::text, 'S'::text, 'P'::text]))` [name: 'CK_TransactionHistoryArchive_TransactionType']
   }
   Note: 'Transactions for previous years.'
@@ -563,7 +563,7 @@ Table "production"."workorder" {
   "scrapreasonid" smallint [note: 'Reason for inspection failure.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `((enddate >= startdate) OR (enddate IS NULL))` [name: 'CK_WorkOrder_EndDate']
     `(orderqty > 0)` [name: 'CK_WorkOrder_OrderQty']
     `(scrappedqty >= 0)` [name: 'CK_WorkOrder_ScrappedQty']
@@ -585,7 +585,7 @@ Table "production"."workorderrouting" {
   "actualcost" numeric [note: 'Actual manufacturing cost.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(actualcost > 0.00)` [name: 'CK_WorkOrderRouting_ActualCost']
     `((actualenddate >= actualstartdate) OR (actualenddate IS NULL) OR (actualstartdate IS NULL))` [name: 'CK_WorkOrderRouting_ActualEndDate']
     `(actualresourcehrs >= 0.0000)` [name: 'CK_WorkOrderRouting_ActualResourceHrs']
@@ -610,7 +610,7 @@ Table "purchasing"."purchaseorderdetail" {
   "rejectedqty" numeric(8,2) [not null, note: 'Quantity rejected during inspection.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(orderqty > 0)` [name: 'CK_PurchaseOrderDetail_OrderQty']
     `(receivedqty >= 0.00)` [name: 'CK_PurchaseOrderDetail_ReceivedQty']
     `(rejectedqty >= 0.00)` [name: 'CK_PurchaseOrderDetail_RejectedQty']
@@ -637,7 +637,7 @@ Table "purchasing"."purchaseorderheader" {
   "freight" numeric [not null, default: 0.00, note: 'Shipping cost.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(freight >= 0.00)` [name: 'CK_PurchaseOrderHeader_Freight']
     `((shipdate >= orderdate) OR (shipdate IS NULL))` [name: 'CK_PurchaseOrderHeader_ShipDate']
     `((status >= 1) AND (status <= 4))` [name: 'CK_PurchaseOrderHeader_Status']
@@ -661,7 +661,7 @@ Table "purchasing"."productvendor" {
   "unitmeasurecode" "character (3)" [not null, note: '''The product\'s unit of measure.''']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(averageleadtime >= 1)` [name: 'CK_ProductVendor_AverageLeadTime']
     `(lastreceiptcost > 0.00)` [name: 'CK_ProductVendor_LastReceiptCost']
     `(maxorderqty >= 1)` [name: 'CK_ProductVendor_MaxOrderQty']
@@ -684,7 +684,7 @@ Table "purchasing"."shipmethod" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(shipbase > 0.00)` [name: 'CK_ShipMethod_ShipBase']
     `(shiprate > 0.00)` [name: 'CK_ShipMethod_ShipRate']
   }
@@ -701,7 +701,7 @@ Table "purchasing"."vendor" {
   "purchasingwebserviceurl" "character varying(1024)" [note: 'Vendor URL.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `((creditrating >= 1) AND (creditrating <= 5))` [name: 'CK_Vendor_CreditRating']
   }
   Note: 'Companies from whom Adventure Works Cycles purchases parts or other goods.'
@@ -785,7 +785,7 @@ Table "sales"."shoppingcartitem" {
   "datecreated" timestamp [not null, default: `now()`, note: 'Date the time the record was created.']
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(quantity >= 1)` [name: 'CK_ShoppingCartItem_Quantity']
   }
   Note: 'Contains online customer orders until the order is submitted or cancelled.'
@@ -804,7 +804,7 @@ Table "sales"."specialoffer" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(discountpct >= 0.00)` [name: 'CK_SpecialOffer_DiscountPct']
     `(enddate >= startdate)` [name: 'CK_SpecialOffer_EndDate']
     `(maxqty >= 0)` [name: 'CK_SpecialOffer_MaxQty']
@@ -825,7 +825,7 @@ Table "sales"."salesorderdetail" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(orderqty > 0)` [name: 'CK_SalesOrderDetail_OrderQty']
     `(unitprice >= 0.00)` [name: 'CK_SalesOrderDetail_UnitPrice']
     `(unitpricediscount >= 0.00)` [name: 'CK_SalesOrderDetail_UnitPriceDiscount']
@@ -864,7 +864,7 @@ Table "sales"."salesorderheader" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(duedate >= orderdate)` [name: 'CK_SalesOrderHeader_DueDate']
     `(freight >= 0.00)` [name: 'CK_SalesOrderHeader_Freight']
     `((shipdate >= orderdate) OR (shipdate IS NULL))` [name: 'CK_SalesOrderHeader_ShipDate']
@@ -909,7 +909,7 @@ Table "sales"."salesperson" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(bonus >= 0.00)` [name: 'CK_SalesPerson_Bonus']
     `(commissionpct >= 0.00)` [name: 'CK_SalesPerson_CommissionPct']
     `(saleslastyear >= 0.00)` [name: 'CK_SalesPerson_SalesLastYear']
@@ -926,7 +926,7 @@ Table "sales"."salespersonquotahistory" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(salesquota > 0.00)` [name: 'CK_SalesPersonQuotaHistory_SalesQuota']
   }
 
@@ -956,7 +956,7 @@ Table "sales"."salesterritory" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `(costlastyear >= 0.00)` [name: 'CK_SalesTerritory_CostLastYear']
     `(costytd >= 0.00)` [name: 'CK_SalesTerritory_CostYTD']
     `(saleslastyear >= 0.00)` [name: 'CK_SalesTerritory_SalesLastYear']
@@ -973,7 +973,7 @@ Table "sales"."salesterritoryhistory" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `((enddate >= startdate) OR (enddate IS NULL))` [name: 'CK_SalesTerritoryHistory_EndDate']
   }
 
@@ -992,7 +992,7 @@ Table "sales"."salestaxrate" {
   "rowguid" uuid [not null, default: `public.uuid_generate_v1()`]
   "modifieddate" timestamp [not null, default: `now()`]
 
-  Constraints {
+  Checks {
     `((taxtype >= 1) AND (taxtype <= 3))` [name: 'CK_SalesTaxRate_TaxType']
   }
   Note: 'Tax rate lookup table.'

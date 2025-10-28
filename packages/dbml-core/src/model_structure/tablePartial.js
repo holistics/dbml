@@ -3,7 +3,7 @@ import Element from './element';
 
 class TablePartial extends Element {
   constructor ({
-    name, note, fields = [], indexes = [], constraints = [], token, headerColor, noteToken = null, dbState,
+    name, note, fields = [], indexes = [], checks = [], token, headerColor, noteToken = null, dbState,
   } = {}) {
     super(token);
     this.name = name;
@@ -12,7 +12,7 @@ class TablePartial extends Element {
     this.headerColor = headerColor;
     this.fields = fields;
     this.indexes = indexes;
-    this.constraints = constraints;
+    this.checks = checks;
     this.dbState = dbState;
     this.generateId();
   }

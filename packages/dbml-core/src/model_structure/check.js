@@ -1,6 +1,6 @@
 import Element from './element';
 
-class Constraint extends Element {
+class Check extends Element {
   constructor ({
     token, name, expression, table, column = null, injectedPartial = null,
   } = {}) {
@@ -15,7 +15,7 @@ class Constraint extends Element {
   }
 
   generateId () {
-    this.id = this.dbState.generateId('constraintId');
+    this.id = this.dbState.generateId('checkId');
   }
 
   export () {
@@ -40,7 +40,7 @@ class Constraint extends Element {
   }
 
   normalize (model) {
-    model.constraints[this.id] = {
+    model.checks[this.id] = {
       id: this.id,
       ...this.shallowExport(),
       ...this.exportParentIds(),
@@ -48,4 +48,4 @@ class Constraint extends Element {
   }
 }
 
-export default Constraint;
+export default Check;
