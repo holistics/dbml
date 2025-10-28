@@ -50,7 +50,7 @@ const createFields = (rawFields, fieldsConstraints) => {
       pk: constraints.pk || field.pk,
       unique: constraints.unique || field.unique,
       note: field.note,
-      constraints: constraints.checks,
+      checks: constraints.checks,
     });
     return f;
   });
@@ -86,7 +86,7 @@ const createTables = (rawTables, rawFields, rawIndexes, rawTableChecks, tableCon
       fields,
       indexes,
       note,
-      constraints: rawTableChecks[key],
+      checks: rawTableChecks[key],
     });
   });
 };
