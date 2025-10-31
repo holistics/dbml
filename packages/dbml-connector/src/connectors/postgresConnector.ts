@@ -416,7 +416,7 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
         ...indexExpressions,
       ],
       pk: !!is_primary,
-      unique: !!is_unique,
+      unique: !is_primary && !!is_unique,
     };
 
     const key = `${table_schema}.${table_name}`;

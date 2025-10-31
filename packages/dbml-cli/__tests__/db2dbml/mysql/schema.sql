@@ -145,3 +145,12 @@ create table date_time_example (
   on_update_1 datetime default now() on update now(),
   on_update_2 datetime default now() on update localtime()
 );
+
+create table table_with_composite_primary_and_unique_indexes (
+  col1 int,
+  col2 int,
+  col3 int,
+  col4 int,
+  primary key (col1, col2),
+  unique (col3, col4)
+);
