@@ -167,6 +167,13 @@ Table "dbo"."table_with_comments" {
   Note: 'This table stores information about various items.'
 }
 
+Table "dbo"."table_with_composite_primary_and_unique_indexes" {
+  "col1" int(10) [pk, not null]
+  "col2" int(10) [pk, not null]
+  "col3" int(10) [unique]
+  "col4" int(10) [unique]
+}
+
 Table "dbo"."Authors" {
   "AuthorID" int(10) [pk, not null]
   "NationalityID" int(10) [pk, not null]

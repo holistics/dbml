@@ -73,6 +73,12 @@
       }
     },
     {
+      "name": "table_with_composite_primary_and_unique_indexes",
+      "note": {
+        "value": ""
+      }
+    },
+    {
       "name": "users",
       "note": {
         "value": ""
@@ -882,6 +888,60 @@
         }
       }
     ],
+    "table_with_composite_primary_and_unique_indexes": [
+      {
+        "name": "col1",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "col2",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "col3",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "col4",
+        "type": {
+          "type_name": "int",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
     "users": [
       {
         "name": "user_id",
@@ -1297,7 +1357,7 @@
     "composite_key_1": [
       {
         "name": "PRIMARY",
-        "primary": true,
+        "pk": true,
         "columns": [
           {
             "type": "column",
@@ -1327,7 +1387,7 @@
     "composite_key_2": [
       {
         "name": "PRIMARY",
-        "primary": true,
+        "pk": true,
         "columns": [
           {
             "type": "column",
@@ -1336,6 +1396,36 @@
           {
             "type": "column",
             "value": "id2_2"
+          }
+        ]
+      }
+    ],
+    "table_with_composite_primary_and_unique_indexes": [
+      {
+        "name": "col3",
+        "unique": true,
+        "columns": [
+          {
+            "type": "column",
+            "value": "col3"
+          },
+          {
+            "type": "column",
+            "value": "col4"
+          }
+        ]
+      },
+      {
+        "name": "PRIMARY",
+        "pk": true,
+        "columns": [
+          {
+            "type": "column",
+            "value": "col1"
+          },
+          {
+            "type": "column",
+            "value": "col2"
           }
         ]
       }
@@ -1381,19 +1471,19 @@
         "checks": [],
         "pk": true
       },
-      "quantity": {
-        "checks": [
-          {
-            "name": "max_quantity",
-            "expression": "`quantity` < 10000"
-          }
-        ]
-      },
       "total_value": {
         "checks": [
           {
             "name": "products_chk_2",
             "expression": "`total_value` > 0"
+          }
+        ]
+      },
+      "quantity": {
+        "checks": [
+          {
+            "name": "max_quantity",
+            "expression": "`quantity` < 10000"
           }
         ]
       }
