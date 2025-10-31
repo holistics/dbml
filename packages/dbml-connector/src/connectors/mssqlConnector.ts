@@ -438,6 +438,8 @@ const generateIndexesAndConstraints = async (client: sql.ConnectionPool, schemas
       index_type,
       columns,
       expressions,
+      is_unique,
+      is_primary,
     } = indexRow;
     const indexColumns = columns.split(',').map((column: string) => {
       return {
@@ -462,6 +464,8 @@ const generateIndexesAndConstraints = async (client: sql.ConnectionPool, schemas
         ...indexColumns,
         ...indexExpressions,
       ],
+      pk: !!is_primary,
+      unique: !!is_unique,
     };
 
     const key = `${table_schema}.${table_name}`;

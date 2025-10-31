@@ -389,6 +389,8 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
       index_type,
       index_columns,
       index_expressions,
+      is_primary,
+      is_unique,
     } = indexRow;
     const indexColumns = index_columns.split(',').map((column: string) => {
       return {
@@ -413,6 +415,8 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
         ...indexColumns,
         ...indexExpressions,
       ],
+      pk: !!is_primary,
+      unique: !!is_unique,
     };
 
     const key = `${table_schema}.${table_name}`;
