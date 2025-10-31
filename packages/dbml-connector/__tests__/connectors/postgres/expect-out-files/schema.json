@@ -97,6 +97,13 @@
       "note": {
         "value": ""
       }
+    },
+    {
+      "name": "table_with_composite_primary_and_unique_indexes",
+      "schemaName": "public",
+      "note": {
+        "value": ""
+      }
     }
   ],
   "fields": {
@@ -1270,6 +1277,60 @@
           "value": ""
         }
       }
+    ],
+    "public.table_with_composite_primary_and_unique_indexes": [
+      {
+        "name": "col1",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "col2",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "col3",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "col4",
+        "type": {
+          "type_name": "int4",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
     ]
   },
   "refs": [
@@ -1447,7 +1508,9 @@
             "type": "column",
             "value": "nationalityid"
           }
-        ]
+        ],
+        "pk": true,
+        "unique": false
       }
     ],
     "public.order_items": [
@@ -1463,7 +1526,9 @@
             "type": "column",
             "value": "product_id"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": true
       },
       {
         "name": "idx_order_items_order_product",
@@ -1477,7 +1542,9 @@
             "type": "column",
             "value": "product_id"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
       }
     ],
     "public.orders": [
@@ -1493,7 +1560,9 @@
             "type": "column",
             "value": "order_date"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
       }
     ],
     "public.products": [
@@ -1505,7 +1574,43 @@
             "type": "column",
             "value": "category"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
+      }
+    ],
+    "public.table_with_composite_primary_and_unique_indexes": [
+      {
+        "name": "table_with_composite_primary_and_unique_indexes_pkey",
+        "type": "btree",
+        "columns": [
+          {
+            "type": "column",
+            "value": "col1"
+          },
+          {
+            "type": "column",
+            "value": "col2"
+          }
+        ],
+        "pk": true,
+        "unique": false
+      },
+      {
+        "name": "table_with_composite_primary_and_unique_indexes_col3_col4_key",
+        "type": "btree",
+        "columns": [
+          {
+            "type": "column",
+            "value": "col3"
+          },
+          {
+            "type": "column",
+            "value": "col4"
+          }
+        ],
+        "pk": false,
+        "unique": true
       }
     ],
     "public.users": [
@@ -1517,7 +1622,9 @@
             "type": "column",
             "value": "full_name"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
       },
       {
         "name": "idx_users_email",
@@ -1527,7 +1634,9 @@
             "type": "column",
             "value": "email"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
       },
       {
         "name": "users_is_active_lower_idx",
@@ -1541,7 +1650,9 @@
             "type": "expression",
             "value": "lower((full_name)::text)"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
       }
     ]
   },

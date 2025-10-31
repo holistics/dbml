@@ -186,3 +186,13 @@ CREATE TABLE dbml_test.table3 (
   id SERIAL PRIMARY KEY,
   status dbml_test.enum_type3
 );
+
+-- Composite primary and unique indexes
+CREATE TABLE table_with_composite_primary_and_unique_indexes (
+  col1 INT,
+  col2 INT,
+  col3 INT,
+  col4 INT,
+  PRIMARY KEY (col1, col2),
+  UNIQUE (col3, col4)
+);
