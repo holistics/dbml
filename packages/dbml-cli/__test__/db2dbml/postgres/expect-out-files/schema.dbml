@@ -96,7 +96,7 @@ Table "order_items" {
   "unit_price" numeric(10,2) [not null, check: `unit_price > (0)::numeric`]
 
   Indexes {
-    (order_id, product_id) [type: btree, name: "uq_order_product"]
+    (order_id, product_id) [type: btree, unique, name: "uq_order_product"]
     (order_id, product_id) [type: btree, name: "idx_order_items_order_product"]
   }
 }
@@ -153,7 +153,7 @@ Table "authors" {
   "birthyear" int4
 
   Indexes {
-    (authorid, nationalityid) [type: btree, name: "authors_pkey"]
+    (authorid, nationalityid) [pk, type: btree, name: "authors_pkey"]
   }
 }
 
@@ -173,6 +173,18 @@ Table "table1" {
 Table "table2" {
   "id" int4 [pk, not null, increment]
   "status" enum_type2
+}
+
+Table "table_with_composite_primary_and_unique_indexes" {
+  "col1" int4 [not null]
+  "col2" int4 [not null]
+  "col3" int4
+  "col4" int4
+
+  Indexes {
+    (col1, col2) [pk, type: btree, name: "table_with_composite_primary_and_unique_indexes_pkey"]
+    (col3, col4) [type: btree, unique, name: "table_with_composite_primary_and_unique_indexes_col3_col4_key"]
+  }
 }
 
 Ref "fk_authornationality":"authors".("authorid", "nationalityid") < "books".("authorid", "nationalityid") [delete: cascade]

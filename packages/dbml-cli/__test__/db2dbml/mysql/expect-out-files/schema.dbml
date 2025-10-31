@@ -162,6 +162,18 @@ Table "status_example_2" {
   "s8" status_example_2_s8_enum [default: '0']
 }
 
+Table "table_with_composite_primary_and_unique_indexes" {
+  "col1" int [not null]
+  "col2" int [not null]
+  "col3" int
+  "col4" int
+
+  Indexes {
+    (col3, col4) [unique, name: "col3"]
+    (col1, col2) [pk, name: "PRIMARY"]
+  }
+}
+
 Table "users" {
   "user_id" "int unsigned" [pk, not null, increment]
   "username" varchar(50) [unique, not null]

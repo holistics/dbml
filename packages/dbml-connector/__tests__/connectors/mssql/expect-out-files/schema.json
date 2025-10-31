@@ -85,6 +85,13 @@
       }
     },
     {
+      "name": "table_with_composite_primary_and_unique_indexes",
+      "schemaName": "dbo",
+      "note": {
+        "value": ""
+      }
+    },
+    {
       "name": "Authors",
       "schemaName": "dbo",
       "note": {
@@ -1416,6 +1423,60 @@
         }
       }
     ],
+    "dbo.table_with_composite_primary_and_unique_indexes": [
+      {
+        "name": "col1",
+        "type": {
+          "type_name": "int(10)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "col2",
+        "type": {
+          "type_name": "int(10)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "col3",
+        "type": {
+          "type_name": "int(10)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "col4",
+        "type": {
+          "type_name": "int(10)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
     "dbo.Authors": [
       {
         "name": "AuthorID",
@@ -1782,7 +1843,9 @@
             "type": "column",
             "value": "product_id"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
       }
     ],
     "dbo.orders": [
@@ -1798,7 +1861,9 @@
             "type": "column",
             "value": "order_date"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
       }
     ],
     "dbo.products": [
@@ -1810,7 +1875,9 @@
             "type": "column",
             "value": "category"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
       }
     ],
     "dbo.users": [
@@ -1822,7 +1889,9 @@
             "type": "column",
             "value": "email"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
       },
       {
         "name": "idx_users_full_name",
@@ -1832,7 +1901,9 @@
             "type": "column",
             "value": "full_name"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
       },
       {
         "name": "idx_users_is_active_full_name",
@@ -1846,7 +1917,9 @@
             "type": "column",
             "value": "full_name_lower"
           }
-        ]
+        ],
+        "pk": false,
+        "unique": false
       }
     ]
   },
@@ -1997,6 +2070,24 @@
       "id": {
         "checks": [],
         "pk": true
+      }
+    },
+    "dbo.table_with_composite_primary_and_unique_indexes": {
+      "col1": {
+        "checks": [],
+        "pk": true
+      },
+      "col2": {
+        "checks": [],
+        "pk": true
+      },
+      "col3": {
+        "checks": [],
+        "unique": true
+      },
+      "col4": {
+        "checks": [],
+        "unique": true
       }
     },
     "dbo.user_define_data_types": {
