@@ -1,0 +1,220 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "manufacturer",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "sku",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "ship_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "ship_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "total_amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "dept_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "suppliers",
+      "fields": [
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "contact",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "ssn",
+          "type": {
+            "type_name": "VARCHAR2(11)"
+          },
+          "checks": []
+        },
+        {
+          "name": "badge_number",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

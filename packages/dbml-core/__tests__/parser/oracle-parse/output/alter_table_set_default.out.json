@@ -1,0 +1,444 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 1,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "email@example.com",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "dbdefault": {
+            "value": null,
+            "type": "boolean"
+          },
+          "checks": []
+        },
+        {
+          "name": "address",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "dbdefault": {
+            "value": "churned",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "reg_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "last_login",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "dbdefault": {
+            "value": "Unknown",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "dbdefault": {
+            "value": 0.99,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "dbdefault": {
+            "value": "Misc",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "sku",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        },
+        {
+          "name": "weight",
+          "type": {
+            "type_name": "NUMBER(8,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "stock_level",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "reorder_level",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "ship_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 1,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "ship_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "total_amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "tracking_number",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "dbdefault": {
+            "value": "SYS_GUID()",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "carrier",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "notes",
+          "type": {
+            "type_name": "VARCHAR2(4000)"
+          },
+          "dbdefault": {
+            "value": "This is a very long default value for testing purposes, exceeding typical lengths to check parser limits and storage implications in Oracle SQL",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": "test_seq.NEXTVAL",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "budget",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "dbdefault": {
+            "value": 10000,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "location",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "dbdefault": {
+            "value": "UPPER(USER) || '_DEPT'",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "established_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "suppliers",
+      "fields": [
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "Anonymous",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "contact",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "N/A",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "ssn",
+          "type": {
+            "type_name": "VARCHAR2(11)"
+          },
+          "checks": []
+        },
+        {
+          "name": "badge_number",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "credit_limit",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "dbdefault": {
+            "value": "5000 + 1000",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_defaults",
+      "fields": [
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "NUMBER"
+          },
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col3",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "col4",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "checks": []
+        },
+        {
+          "name": "col5",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "checks": []
+        },
+        {
+          "name": "col6",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col7",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "checks": []
+        },
+        {
+          "name": "col8",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "checks": []
+        },
+        {
+          "name": "col9",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

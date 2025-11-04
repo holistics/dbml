@@ -1,0 +1,810 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "cust_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "item_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "ship_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "ship_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "total_amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "dept_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "budget",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "suppliers",
+      "fields": [
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "supp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "contact",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "credit_limit",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_raw",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_nchar",
+          "type": {
+            "type_name": "NCHAR(10)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_basic",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_status",
+      "fields": [
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_named",
+      "fields": [
+        {
+          "name": "record_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_dates",
+      "fields": [
+        {
+          "name": "event_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "end_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_enable",
+      "fields": [
+        {
+          "name": "level",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "rating",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_disable",
+      "fields": [
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "rank",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_validate",
+      "fields": [
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "tax",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_novalidate",
+      "fields": [
+        {
+          "name": "discount",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "margin",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_disable_novalidate",
+      "fields": [
+        {
+          "name": "weight",
+          "type": {
+            "type_name": "NUMBER(8,2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "volume",
+          "type": {
+            "type_name": "NUMBER(8,2)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_rely",
+      "fields": [
+        {
+          "name": "code",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "ref_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_norely",
+      "fields": [
+        {
+          "name": "sequence",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "counter",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_enable_rely",
+      "fields": [
+        {
+          "name": "batch_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "lot_number",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_disable_norely",
+      "fields": [
+        {
+          "name": "zone_id",
+          "type": {
+            "type_name": "NUMBER(5)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "area_code",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_deferrable_deferred",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "line_item",
+          "type": {
+            "type_name": "NUMBER(5)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_deferrable_immediate",
+      "fields": [
+        {
+          "name": "invoice_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "payment_status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_not_deferrable",
+      "fields": [
+        {
+          "name": "ticket_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "issue_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes_inline",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_raw",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col_nchar",
+          "type": {
+            "type_name": "NCHAR(10)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_long_name",
+      "fields": [
+        {
+          "name": "identifier",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "record_code",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_complex",
+      "fields": [
+        {
+          "name": "score",
+          "type": {
+            "type_name": "NUMBER(3)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "rating",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

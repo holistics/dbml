@@ -1,0 +1,380 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "test_datatypes",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_raw",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nchar",
+          "type": {
+            "type_name": "NCHAR(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_number",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_number",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "pk_varchar2",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_varchar2",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "pk_char",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_char",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "pk_date",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_date",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "pk_timestamp",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_timestamp",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "pk_clob",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_clob",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "pk_raw",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_raw",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "pk_float",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_float",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "pk_integer",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_integer",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "pk_nvarchar2",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_nvarchar2",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "pk_nchar",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_nchar",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "order_details",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "order_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_order_details",
+          "pk": true,
+          "columns": [
+            {
+              "value": "order_id",
+              "type": "column"
+            },
+            {
+              "value": "item_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "reports",
+      "fields": [
+        {
+          "name": "report_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "report_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "report_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_very_long_constraint_name_for_testing_parser_limits",
+          "pk": true,
+          "columns": [
+            {
+              "value": "report_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "sales",
+      "fields": [
+        {
+          "name": "sale_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "sale_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_sale",
+          "pk": true,
+          "columns": [
+            {
+              "value": "sale_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "accounts",
+      "fields": [
+        {
+          "name": "account_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "account_number",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        },
+        {
+          "name": "balance",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_account",
+          "pk": true,
+          "columns": [
+            {
+              "value": "account_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

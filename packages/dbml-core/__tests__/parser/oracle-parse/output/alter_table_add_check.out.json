@@ -1,0 +1,273 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "employees",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "salary",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "commission_pct",
+          "type": {
+            "type_name": "NUMBER(3,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "hire_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "department_id",
+          "type": {
+            "type_name": "NUMBER(5)"
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        },
+        {
+          "name": "age",
+          "type": {
+            "type_name": "NUMBER(3)"
+          },
+          "checks": []
+        },
+        {
+          "name": "performance_score",
+          "type": {
+            "type_name": "NUMBER(3,1)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_salary_positive",
+          "expression": "salary > 0"
+        },
+        {
+          "name": "chk_commission_range",
+          "expression": "commission_pct BETWEEN 0 AND 1"
+        },
+        {
+          "name": "chk_status_values",
+          "expression": "status IN ('ACTIVE', 'INACTIVE', 'ON_LEAVE', 'TERMINATED')"
+        },
+        {
+          "name": "chk_email_format",
+          "expression": "email LIKE '%@%'"
+        },
+        {
+          "expression": "age >= 18"
+        },
+        {
+          "expression": "salary >= 0"
+        },
+        {
+          "name": "chk_salary_calculation",
+          "expression": "salary * 12 > 0"
+        },
+        {
+          "name": "chk_salary_dept_rules",
+          "expression": "salary > 0 AND department_id IS NOT NULL"
+        },
+        {
+          "name": "chk_commission_or_salary",
+          "expression": "commission_pct > 0 OR salary > 50000"
+        },
+        {
+          "name": "chk_email_required",
+          "expression": "email IS NOT NULL AND LENGTH(email) > 5"
+        },
+        {
+          "name": "chk_salary_by_status",
+          "expression": "CASE \n        WHEN status = 'ACTIVE' THEN salary > 0\n        WHEN status = 'INACTIVE' THEN 1 = 1\n        ELSE 1 = 1\n    END = 1"
+        },
+        {
+          "name": "chk_name_length",
+          "expression": "LENGTH(TRIM(emp_name)) > 0"
+        },
+        {
+          "name": "chk_hire_date_valid",
+          "expression": "hire_date <= SYSDATE"
+        },
+        {
+          "name": "chk_complex_conditions",
+          "expression": "(salary > 30000 AND age >= 21) OR \n    (salary <= 30000 AND age >= 18)"
+        },
+        {
+          "name": "chk_email_lowercase",
+          "expression": "email = LOWER(email)"
+        },
+        {
+          "name": "chk_performance_range",
+          "expression": "performance_score >= 0.0 AND performance_score <= 10.0"
+        },
+        {
+          "name": "chk_email_domain",
+          "expression": "email LIKE '%@%.com' OR email LIKE '%@%.org'"
+        },
+        {
+          "name": "chk_status_not_invalid",
+          "expression": "status NOT IN ('PENDING', 'UNKNOWN')"
+        },
+        {
+          "name": "chk_comprehensive_validation",
+          "expression": "salary > 0 AND \n    salary < 1000000 AND\n    age >= 18 AND \n    age <= 100 AND\n    (commission_pct IS NULL OR (commission_pct >= 0 AND commission_pct <= 1)) AND\n    status IN ('ACTIVE', 'INACTIVE', 'ON_LEAVE', 'TERMINATED')"
+        },
+        {
+          "name": "chk_age_working",
+          "expression": "age BETWEEN 18 AND 70"
+        },
+        {
+          "name": "chk_dept_valid",
+          "expression": "department_id IS NOT NULL AND department_id > 0"
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "fields": [
+        {
+          "name": "product_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "product_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "discount_price",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "stock_quantity",
+          "type": {
+            "type_name": "NUMBER(8)"
+          },
+          "checks": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        },
+        {
+          "name": "weight",
+          "type": {
+            "type_name": "NUMBER(8,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_price_comparison",
+          "expression": "discount_price <= price"
+        },
+        {
+          "expression": "stock_quantity >= 0"
+        },
+        {
+          "expression": "category IS NOT NULL"
+        },
+        {
+          "name": "chk_price_margin",
+          "expression": "(price - discount_price) >= price * 0.05"
+        },
+        {
+          "name": "chk_weight_reasonable",
+          "expression": "weight > 0 AND weight < 10000"
+        },
+        {
+          "name": "chk_price_not_negative",
+          "expression": "NOT (price < 0)"
+        },
+        {
+          "name": "chk_category_uppercase",
+          "expression": "UPPER(category) IN ('ELECTRONICS', 'CLOTHING', 'FOOD', 'BOOKS')"
+        },
+        {
+          "name": "chk_price_calculations",
+          "expression": "price * stock_quantity > 0 AND price / 100 < 100000"
+        },
+        {
+          "name": "chk_discount_rules",
+          "expression": "(price - discount_price) * stock_quantity >= 0"
+        },
+        {
+          "expression": "product_name IS NOT NULL"
+        },
+        {
+          "name": "chk_prod_name_length",
+          "expression": "LENGTH(product_name) <= 200"
+        },
+        {
+          "name": "chk_stock_max",
+          "expression": "stock_quantity <= 1000000"
+        }
+      ]
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}
