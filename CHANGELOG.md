@@ -1,3 +1,12 @@
+## v5.1.0 (2025-10-28)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`
+  * [#766](https://github.com/holistics/dbml/pull/766) Support check constraints in @dbml/connector ([@H-DNA](https://github.com/H-DNA))
+
+#### Committers: 1
+- DNA ([@H-DNA](https://github.com/H-DNA))
+
 ## v5.0.0 (2025-10-28)
 
 #### :boom: Breaking Change
