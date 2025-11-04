@@ -1,4 +1,3 @@
-/* eslint-disable */
 class ElementError extends Error {
   constructor (message, location = { start: { line: 1, column: 1 } }) {
     super(message);
@@ -22,4 +21,3 @@ class Element {
 }
 
 export default Element;
-/* eslint-enable */

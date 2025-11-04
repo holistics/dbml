@@ -1,4 +1,3 @@
-/* eslint-disable import/no-import-module-exports */
 import { createLogger, format, transports } from 'winston';
 import chalk from 'chalk';
 import path from 'path';

@@ -4,7 +4,9 @@
     <div class="flex-shrink-0 p-3 border-b border-gray-200 bg-gray-50">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <h3 class="text-sm font-medium text-gray-700">AST Debugger</h3>
+          <h3 class="text-sm font-medium text-gray-700">
+            AST Debugger
+          </h3>
           <div class="text-xs text-gray-500">
             {{ nodeCount }} nodes
           </div>
@@ -35,11 +37,33 @@
             class="flex items-center space-x-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             :class="{ 'text-green-700 border-green-300 bg-green-50': copySuccess }"
           >
-            <svg v-if="!copySuccess" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            <svg
+              v-if="!copySuccess"
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
             </svg>
-            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            <svg
+              v-else
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
             </svg>
             <span>{{ copySuccess ? 'Copied!' : 'Copy' }}</span>
           </button>
@@ -52,7 +76,10 @@
       <!-- Tree View -->
       <div class="flex-1 overflow-auto">
         <!-- AST Tree View -->
-        <div v-if="viewMode === 'ast'" class="p-3">
+        <div
+          v-if="viewMode === 'ast'"
+          class="p-3"
+        >
           <RawASTTreeView
             :raw-a-s-t="rawAST"
             @node-click="handleRawNodeClick"
@@ -61,7 +88,10 @@
         </div>
 
         <!-- Raw JSON View -->
-        <div v-else class="h-full flex flex-col">
+        <div
+          v-else
+          class="h-full flex flex-col"
+        >
           <!-- Raw JSON Header -->
           <div class="flex-shrink-0 p-3 border-b border-gray-200 bg-gray-50">
             <div class="text-xs text-gray-500">
@@ -79,14 +109,15 @@
               :minimap="false"
               word-wrap="on"
             />
-            <div v-else class="text-center text-gray-500 py-8">
+            <div
+              v-else
+              class="text-center text-gray-500 py-8"
+            >
               No raw AST data available
             </div>
           </div>
         </div>
       </div>
-
-
     </div>
   </div>
 </template>

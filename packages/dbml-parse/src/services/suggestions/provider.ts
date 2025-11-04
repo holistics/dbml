@@ -93,7 +93,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     }
 
     const containers = [...this.compiler.container.stack(offset)].reverse();
-    // eslint-disable-next-line no-restricted-syntax
+
     for (const container of containers) {
       if (container instanceof PrefixExpressionNode) {
         switch (container.op?.value) {
@@ -106,6 +106,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               offset,
               container as PrefixExpressionNode & { op: SyntaxToken },
             );
+          default:
         }
       } else if (container instanceof InfixExpressionNode) {
         switch (container.op?.value) {
@@ -124,6 +125,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               offset,
               container as InfixExpressionNode & { op: SyntaxToken },
             );
+          default:
         }
       } else if (container instanceof AttributeNode) {
         return suggestInAttribute(this.compiler, offset, container);

@@ -35,7 +35,7 @@ export class RefInterpreter implements ElementInterpreter {
     return errors;
   }
 
-  private interpretName (nameNode: SyntaxNode): CompileError[] {
+  private interpretName (_nameNode: SyntaxNode): CompileError[] {
     const errors: CompileError[] = [];
 
     const fragments = destructureComplexVariable(this.declarationNode.name!).unwrap_or([]);

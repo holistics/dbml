@@ -1,6 +1,5 @@
 const { makeTableConstraint } = require('../../../../constraint_definition');
 
-// eslint-disable-next-line no-unused-vars
 function makeDefault (_keyword, constExpression, _for, fieldName, _withValues) {
   const value = {};
   if (constExpression.type) {

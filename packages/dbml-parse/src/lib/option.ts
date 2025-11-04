@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this */
+ 
 // Similar to Rust Option: https://doc.rust-lang.org/std/option/enum.Option.html
 
 export type Option<T> = Some<T> | None<T>;
@@ -54,7 +54,7 @@ export class None<T> {
     return new None();
   }
 
-  // eslint-disable-next-line class-methods-use-this
+   
   isOk (): boolean {
     return false;
   }

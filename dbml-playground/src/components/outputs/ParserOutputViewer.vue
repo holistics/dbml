@@ -1,11 +1,17 @@
 <template>
   <div class="w-full h-full overflow-hidden bg-white border border-gray-200 rounded-md">
-    <div v-if="!data" class="p-4 text-gray-500 text-center">
+    <div
+      v-if="!data"
+      class="p-4 text-gray-500 text-center"
+    >
       No data to display
     </div>
 
     <!-- Lexer view with specialized component -->
-    <div v-else-if="isLexerData" class="h-full">
+    <div
+      v-else-if="isLexerData"
+      class="h-full"
+    >
       <LexerView
         :tokens="tokens"
         ref="lexerViewRef"
@@ -13,7 +19,10 @@
     </div>
 
     <!-- AST view for parser/analyzer stages -->
-    <div v-else-if="isASTData" class="h-full">
+    <div
+      v-else-if="isASTData"
+      class="h-full"
+    >
       <ParserASTView
         :ast="transformedData"
         ref="astViewRef"
@@ -22,14 +31,20 @@
     </div>
 
     <!-- Semantic view for interpreter output -->
-    <div v-else-if="isInterpreterData" class="h-full">
+    <div
+      v-else-if="isInterpreterData"
+      class="h-full"
+    >
       <InterpreterView
         :interpreter-output="transformedData"
       />
     </div>
 
     <!-- Regular JSON display for other parser stages -->
-    <div v-else class="h-full">
+    <div
+      v-else
+      class="h-full"
+    >
       <MonacoEditor
         :model-value="transformedDataString"
         language="json"

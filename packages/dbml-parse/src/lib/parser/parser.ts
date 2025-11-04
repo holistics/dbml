@@ -1,5 +1,5 @@
-/* eslint-disable max-classes-per-file */
-/* eslint-disable no-loop-func */
+ 
+ 
 import { last } from 'lodash';
 import {
   convertFuncAppToElem,
@@ -44,7 +44,7 @@ class PartialParsingError<T extends SyntaxNode> {
   token: Readonly<SyntaxToken>;
   handlerContext: undefined | ParsingContext;
 
-  constructor(token: Readonly<SyntaxToken>, partialNode: T | undefined, handlerContext: undefined | ParsingContext) {
+  constructor (token: Readonly<SyntaxToken>, partialNode: T | undefined, handlerContext: undefined | ParsingContext) {
     this.token = token;
     this.partialNode = partialNode;
     this.handlerContext = handlerContext;
@@ -63,27 +63,27 @@ export default class Parser {
 
   private nodeFactory: NodeFactory;
 
-  constructor(tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
+  constructor (tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
     this.tokens = tokens;
     this.nodeFactory = new NodeFactory(nodeIdGenerator);
   }
 
-  private isAtEnd(): boolean {
+  private isAtEnd (): boolean {
     return (
       this.current >= this.tokens.length || this.tokens[this.current].kind === SyntaxTokenKind.EOF
     );
   }
 
-  private advance(): SyntaxToken {
+  private advance (): SyntaxToken {
     if (this.isAtEnd()) {
       return last(this.tokens)!; // The EOF
     }
 
-    // eslint-disable-next-line no-plusplus
+     
     return this.tokens[this.current++];
   }
 
-  private peek(lookahead: number = 0): SyntaxToken {
+  private peek (lookahead: number = 0): SyntaxToken {
     if (lookahead + this.current >= this.tokens.length) {
       return last(this.tokens)!; // The EOF
     }
@@ -91,7 +91,7 @@ export default class Parser {
     return this.tokens[this.current + lookahead];
   }
 
-  private match(...kind: SyntaxTokenKind[]): boolean {
+  private match (...kind: SyntaxTokenKind[]): boolean {
     const res = this.check(...kind);
     if (res) {
       this.advance();
@@ -100,21 +100,21 @@ export default class Parser {
     return res;
   }
 
-  private check(...kind: SyntaxTokenKind[]): boolean {
+  private check (...kind: SyntaxTokenKind[]): boolean {
     const currentToken = this.peek();
 
     return kind.includes(currentToken.kind);
   }
 
-  private previous(): SyntaxToken {
+  private previous (): SyntaxToken {
     return this.tokens[this.current - 1];
   }
 
-  private canHandle<T extends SyntaxNode>(e: PartialParsingError<T>): boolean {
+  private canHandle<T extends SyntaxNode> (e: PartialParsingError<T>): boolean {
     return e.handlerContext === undefined || e.handlerContext === this.contextStack.top();
   }
 
-  private consume(message: string, ...kind: SyntaxTokenKind[]) {
+  private consume (message: string, ...kind: SyntaxTokenKind[]) {
     if (!this.match(...kind)) {
       this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, message);
       throw new PartialParsingError(
@@ -128,7 +128,7 @@ export default class Parser {
   // Discard tokens until one of `kind` is found
   // If any tokens are discarded, the error message is logged
   // Return whether the token of one of the listed kinds are eventually reached
-  private discardUntil(message: string, ...kind: SyntaxTokenKind[]): boolean {
+  private discardUntil (message: string, ...kind: SyntaxTokenKind[]): boolean {
     if (this.isAtEnd() || !this.check(...kind)) {
       markInvalid(this.peek());
       this.logError(this.advance(), CompileErrorCode.UNEXPECTED_TOKEN, message);
@@ -142,7 +142,7 @@ export default class Parser {
     return true;
   }
 
-  private gatherInvalid() {
+  private gatherInvalid () {
     const tokens: SyntaxToken[] = [];
 
     const firstInvalidList: SyntaxToken[] = [];
@@ -172,7 +172,7 @@ export default class Parser {
     this.tokens = tokens;
   }
 
-  parse(): Report<{ ast: ProgramNode, tokens: SyntaxToken[] } , CompileError> {
+  parse (): Report<{ ast: ProgramNode, tokens: SyntaxToken[] }, CompileError> {
     const body = this.program();
     const eof = this.advance();
     const program = this.nodeFactory.create(ProgramNode, { body, eof });
@@ -183,7 +183,7 @@ export default class Parser {
 
   /* Parsing and synchronizing ProgramNode */
 
-  private program() {
+  private program () {
     const body: ElementDeclarationNode[] = [];
     while (!this.isAtEnd()) {
       try {
@@ -213,7 +213,7 @@ export default class Parser {
 
   /* Parsing and synchronizing top-level ElementDeclarationNode */
 
-  private elementDeclaration(): ElementDeclarationNode {
+  private elementDeclaration (): ElementDeclarationNode {
     const args: {
       type?: SyntaxToken;
       name?: NormalExpressionNode;
@@ -319,8 +319,8 @@ export default class Parser {
     while (!this.isAtEnd()) {
       const token = this.peek();
       if (
-        isAsKeyword(token) ||
-        this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)
+        isAsKeyword(token)
+        || this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)
       ) {
         break;
       }
@@ -347,7 +347,7 @@ export default class Parser {
   //  Table Users {
   //    Note: 'This is a note'  // fieldDeclaration() handles this
   //  }
-  private fieldDeclaration(): ElementDeclarationNode {
+  private fieldDeclaration (): ElementDeclarationNode {
     const args: {
       type?: SyntaxToken;
       name?: NormalExpressionNode;
@@ -398,7 +398,7 @@ export default class Parser {
 
   /* Parsing any ExpressionNode, including non-NormalExpression */
 
-  private expression(): FunctionApplicationNode | ElementDeclarationNode {
+  private expression (): FunctionApplicationNode | ElementDeclarationNode {
     // Since function application expression is the most generic form
     // by default, we'll interpret any expression as a function application
     const args: {
@@ -408,10 +408,9 @@ export default class Parser {
 
     // Try interpreting the function application as an element declaration expression
     // if fail, fall back to the generic function application
-    const buildExpression = () =>
-      convertFuncAppToElem(args.callee, args.args, this.nodeFactory).unwrap_or(
-        this.nodeFactory.create(FunctionApplicationNode, args),
-      );
+    const buildExpression = () => convertFuncAppToElem(args.callee, args.args, this.nodeFactory).unwrap_or(
+      this.nodeFactory.create(FunctionApplicationNode, args),
+    );
 
     try {
       args.callee = this.normalExpression();
@@ -458,7 +457,7 @@ export default class Parser {
     return buildExpression();
   }
 
-  private shouldStopExpression(): boolean {
+  private shouldStopExpression (): boolean {
     if (this.isAtEnd() || hasTrailingNewLines(this.previous())) {
       return true;
     }
@@ -466,20 +465,20 @@ export default class Parser {
     const nextTokenKind = this.peek().kind;
 
     return (
-      nextTokenKind === SyntaxTokenKind.RBRACE ||
-      nextTokenKind === SyntaxTokenKind.RBRACKET ||
-      nextTokenKind === SyntaxTokenKind.RPAREN ||
-      nextTokenKind === SyntaxTokenKind.COMMA ||
-      nextTokenKind === SyntaxTokenKind.COLON
+      nextTokenKind === SyntaxTokenKind.RBRACE
+      || nextTokenKind === SyntaxTokenKind.RBRACKET
+      || nextTokenKind === SyntaxTokenKind.RPAREN
+      || nextTokenKind === SyntaxTokenKind.COMMA
+      || nextTokenKind === SyntaxTokenKind.COLON
     );
   }
 
-  private normalExpression(): NormalExpressionNode {
+  private normalExpression (): NormalExpressionNode {
     return this.expression_bp(0);
   }
 
   // Pratt's parsing algorithm
-  private expression_bp(mbp: number): NormalExpressionNode {
+  private expression_bp (mbp: number): NormalExpressionNode {
     let leftExpression: NormalExpressionNode = this.leftExpression_bp();
 
     while (!this.isAtEnd()) {
@@ -495,9 +494,9 @@ export default class Parser {
           // consider it part of another expression if
           // it's at the start of a new line
           // and we're currently not having unmatched '(' or '['
-          isAtStartOfLine(this.previous(), token) &&
-          !this.contextStack.isWithinGroupExpressionContext() &&
-          !this.contextStack.isWithinListExpressionContext()
+          isAtStartOfLine(this.previous(), token)
+          && !this.contextStack.isWithinGroupExpressionContext()
+          && !this.contextStack.isWithinListExpressionContext()
         ) {
           break;
         }
@@ -581,7 +580,7 @@ export default class Parser {
     return leftExpression;
   }
 
-  private leftExpression_bp(): NormalExpressionNode {
+  private leftExpression_bp (): NormalExpressionNode {
     let leftExpression: NormalExpressionNode | undefined;
 
     if (isOpToken(this.peek())) {
@@ -641,7 +640,7 @@ export default class Parser {
   // e.g (1 + 2) in (1 + 2) * 3
   // e.g [1, 2, 3, 4]
   // e.g { ... }
-  private extractOperand():
+  private extractOperand ():
     | PrimaryExpressionNode
     | ListExpressionNode
     | BlockExpressionNode
@@ -680,7 +679,7 @@ export default class Parser {
       this.logError(
         this.peek(),
         CompileErrorCode.UNEXPECTED_EOF,
-        `Unexpected EOF`,
+        'Unexpected EOF',
       );
     } else {
       this.logError(
@@ -695,7 +694,7 @@ export default class Parser {
 
   /* Parsing FunctionExpression */
 
-  private functionExpression(): FunctionExpressionNode {
+  private functionExpression (): FunctionExpressionNode {
     const args: { value?: SyntaxToken } = {};
     try {
       this.consume('Expect a function expression', SyntaxTokenKind.FUNCTION_EXPRESSION);
@@ -715,7 +714,7 @@ export default class Parser {
     return this.nodeFactory.create(FunctionExpressionNode, args);
   }
 
-  private variable(): VariableNode {
+  private variable (): VariableNode {
     this.consume('Expect a variable', SyntaxTokenKind.IDENTIFIER);
     const variableToken = this.previous();
     return this.nodeFactory.create(VariableNode, { variable: variableToken });
@@ -784,7 +783,7 @@ export default class Parser {
     return buildBlock();
   });
 
-  private canBeField(): boolean {
+  private canBeField (): boolean {
     return (
       this.peek().kind === SyntaxTokenKind.IDENTIFIER && this.peek(1).kind === SyntaxTokenKind.COLON
     );
@@ -815,7 +814,7 @@ export default class Parser {
 
   /* Parsing PrimaryExpression */
 
-  private primaryExpression(): PrimaryExpressionNode {
+  private primaryExpression (): PrimaryExpressionNode {
     // Primary expression containing a nested LiteralNode
     if (
       this.match(
@@ -854,12 +853,11 @@ export default class Parser {
       commaList: SyntaxToken[];
       tupleCloseParen?: SyntaxToken;
     } = { elementList: [], commaList: [] };
-    const buildGroup = () =>
-      this.nodeFactory.create(GroupExpressionNode, {
-        groupOpenParen: args.tupleOpenParen,
-        groupCloseParen: args.tupleCloseParen,
-        expression: args.elementList[0],
-      });
+    const buildGroup = () => this.nodeFactory.create(GroupExpressionNode, {
+      groupOpenParen: args.tupleOpenParen,
+      groupCloseParen: args.tupleCloseParen,
+      expression: args.elementList[0],
+    });
     const buildTuple = () => this.nodeFactory.create(TupleExpressionNode, args);
 
     try {
@@ -1025,7 +1023,7 @@ export default class Parser {
     }
   };
 
-  private attribute(): AttributeNode {
+  private attribute (): AttributeNode {
     const args: {
       name?: IdentiferStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
@@ -1078,14 +1076,13 @@ export default class Parser {
     }
   };
 
-  private attributeValue(): NormalExpressionNode | IdentiferStreamNode {
+  private attributeValue (): NormalExpressionNode | IdentiferStreamNode {
     let value: NormalExpressionNode | IdentiferStreamNode | undefined;
     try {
-      value =
-        this.peek().kind === SyntaxTokenKind.IDENTIFIER &&
-        this.peek(1).kind === SyntaxTokenKind.IDENTIFIER ?
-          this.attributeName() :
-          this.normalExpression();
+      value = this.peek().kind === SyntaxTokenKind.IDENTIFIER
+        && this.peek(1).kind === SyntaxTokenKind.IDENTIFIER
+        ? this.attributeName()
+        : this.normalExpression();
     } catch (e) {
       if (!(e instanceof PartialParsingError) || !this.canHandle(e)) {
         throw e;
@@ -1108,7 +1105,7 @@ export default class Parser {
     }
   };
 
-  private attributeName(): IdentiferStreamNode | PrimaryExpressionNode {
+  private attributeName (): IdentiferStreamNode | PrimaryExpressionNode {
     const identifiers: SyntaxToken[] = [];
 
     if (this.peek().kind !== SyntaxTokenKind.IDENTIFIER) {
@@ -1116,8 +1113,8 @@ export default class Parser {
     }
 
     while (
-      !this.isAtEnd() &&
-      !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.COMMA, SyntaxTokenKind.RBRACKET)
+      !this.isAtEnd()
+      && !this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.COMMA, SyntaxTokenKind.RBRACKET)
     ) {
       try {
         this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
@@ -1137,7 +1134,7 @@ export default class Parser {
     return this.nodeFactory.create(IdentiferStreamNode, { identifiers });
   }
 
-  private logError(nodeOrToken: SyntaxToken | SyntaxNode, code: CompileErrorCode, message: string) {
+  private logError (nodeOrToken: SyntaxToken | SyntaxNode, code: CompileErrorCode, message: string) {
     this.errors.push(new CompileError(code, message, nodeOrToken));
   }
 }
@@ -1161,7 +1158,7 @@ const infixBindingPowerMap: {
   '.': { left: 16, right: 17 },
 };
 
-function infixBindingPower(
+function infixBindingPower (
   token: SyntaxToken,
 ): { left: null; right: null } | { left: number; right: number } {
   const power = infixBindingPowerMap[token.value];
@@ -1180,7 +1177,7 @@ const prefixBindingPowerMap: {
   '!': { left: null, right: 15 },
 };
 
-function prefixBindingPower(token: SyntaxToken): { left: null; right: null | number } {
+function prefixBindingPower (token: SyntaxToken): { left: null; right: null | number } {
   const power = prefixBindingPowerMap[token.value];
 
   return power || { left: null, right: null };
@@ -1192,10 +1189,10 @@ const postfixBindingPowerMap: {
   '(': { left: 14, right: null },
 };
 
-function postfixBindingPower(token: SyntaxToken): { left: null | number; right: null } {
+function postfixBindingPower (token: SyntaxToken): { left: null | number; right: null } {
   const power = postfixBindingPowerMap[token.value];
 
   return power || { left: null, right: null };
 }
 
-/* eslint-enable */
+ 

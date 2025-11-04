@@ -4,6 +4,7 @@ import Element, { Token, RawNote } from './element';
 import EnumValue from './enumValue';
 import Field from './field';
 import Schema from './schema';
+
 interface RawEnum {
     name: string;
     token: Token;
@@ -12,23 +13,25 @@ interface RawEnum {
     schema: Schema;
 }
 declare class Enum extends Element {
-    name: string;
-    token: Token;
-    values: EnumValue[];
-    note: string;
-    noteToken: Token;
-    schema: Schema;
-    fields: Field[];
-    dbState: DbState;
-    id: number;
-    constructor({ name, token, values, note, schema }: RawEnum);
-    generateId(): void;
-    processValues(rawValues: any): void;
-    pushValue(value: any): void;
-    checkValue(value: any): void;
-    pushField(field: any): void;
-    checkField(field: any): void;
-    export(): {
+  name: string;
+  token: Token;
+  values: EnumValue[];
+  note: string;
+  noteToken: Token;
+  schema: Schema;
+  fields: Field[];
+  dbState: DbState;
+  id: number;
+  constructor({
+    name, token, values, note, schema,
+  }: RawEnum);
+  generateId(): void;
+  processValues(rawValues: any): void;
+  pushValue(value: any): void;
+  checkValue(value: any): void;
+  pushField(field: any): void;
+  checkField(field: any): void;
+  export(): {
         values: {
             name: string;
             note: string;
@@ -36,24 +39,24 @@ declare class Enum extends Element {
         name: string;
         note: string;
     };
-    exportChild(): {
+  exportChild(): {
         values: {
             name: string;
             note: string;
         }[];
     };
-    exportChildIds(): {
+  exportChildIds(): {
         valueIds: number[];
         fieldIds: number[];
     };
-    exportParentIds(): {
+  exportParentIds(): {
         schemaId: number;
     };
-    shallowExport(): {
+  shallowExport(): {
         name: string;
         note: string;
     };
-    normalize(model: NormalizedDatabase): void;
+  normalize(model: NormalizedDatabase): void;
 }
 export interface NormalizedEnum {
     [_id: number]: {

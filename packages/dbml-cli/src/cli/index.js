@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import program from 'commander';
 import importHandler from './import';
 import exportHandler from './export';

@@ -15,7 +15,7 @@ function addTableName (tableName, result) {
 function handleAlterTableResult (_keyword, tableName, results) {
   if (!results) return null;
   const fullName = getFullTableName(tableName);
-  // eslint-disable-next-line consistent-return
+
   results.forEach((result) => {
     if (result) {
       switch (result.type) {

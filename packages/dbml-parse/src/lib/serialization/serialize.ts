@@ -3,7 +3,7 @@ import { ProgramNode, SyntaxNode } from '../parser/nodes';
 import Report from '../report';
 import { CompileError } from '../errors';
 
-export function serialize(
+export function serialize (
   report: Readonly<Report<ProgramNode, CompileError>>,
   pretty: boolean = false,
 ): string {

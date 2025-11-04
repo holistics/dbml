@@ -1,4 +1,4 @@
-import * as connector from "./connectors/connector";
+import * as connector from './connectors/connector';
 
 export {
   connector,

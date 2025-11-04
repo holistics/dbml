@@ -68,7 +68,11 @@ function generate (inputPaths, transform, outputPlugin) {
       const content = transform(source);
       outputPlugin.write(content);
     } catch (e) {
-      if (e instanceof CompilerError) throw e.map((diag) => ({ ...diag, message: diag.message, filepath: path.basename(_path), stack: diag.stack }));
+      if (e instanceof CompilerError) {
+        throw e.map((diag) => ({
+          ...diag, message: diag.message, filepath: path.basename(_path), stack: diag.stack,
+        }));
+      }
       throw e;
     }
   });

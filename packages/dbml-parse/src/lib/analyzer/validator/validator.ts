@@ -31,7 +31,7 @@ export default class Validator {
     const errors: CompileError[] = [];
 
     this.ast.body.forEach((element) => {
-      // eslint-disable-next-line no-param-reassign
+       
       element.parent = this.ast;
       if (element.type === undefined) {
         return;

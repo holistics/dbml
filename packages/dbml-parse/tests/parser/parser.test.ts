@@ -1,4 +1,4 @@
-import fs, { readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
 import { scanTestNames } from '../jestHelpers';
@@ -21,7 +21,6 @@ describe('#parser', () => {
       null,
       2,
     );
-    it(testName, () =>
-      expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
+    it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });
 });

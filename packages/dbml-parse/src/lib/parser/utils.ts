@@ -114,7 +114,7 @@ function markInvalidToken (token: SyntaxToken) {
   if (token.kind === SyntaxTokenKind.EOF) {
     return;
   }
-  // eslint-disable-next-line no-param-reassign
+   
   token.isInvalid = true;
 }
 

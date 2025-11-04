@@ -13,7 +13,6 @@
 
 // Import types we need to reference
 import type { Database, ElementKind } from '@dbml/parse'
-import type { Range } from 'monaco-editor'
 
 // Re-export for convenience
 export type { Database, ElementKind } from '@dbml/parse'

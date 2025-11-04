@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 //
 // Description:
 // Snowflake info schema lacks reference direction for relationships.

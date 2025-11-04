@@ -13,6 +13,7 @@ import { NormalizedIndexColumn } from './indexColumn';
 import { NormalizedIndex } from './indexes';
 import { NormalizedCheck } from './check';
 import TablePartial, { NormalizedTablePartial } from './tablePartial';
+
 export interface Project {
     note: RawNote;
     database_type: string;
@@ -49,28 +50,30 @@ export interface RawDatabase {
     tablePartials: TablePartial[];
 }
 declare class Database extends Element {
-    dbState: DbState;
-    hasDefaultSchema: boolean;
-    schemas: Schema[];
-    notes: StickyNote[];
-    note: string;
-    noteToken: Token;
-    databaseType: string;
-    name: string;
-    records: TableRecord[];
-    id: number;
-    constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
-    generateId(): void;
-    processRecords(rawRecords: RawTableRecord[]): void;
-    processSchemas(rawSchemas: RawSchema[]): void;
-    pushSchema(schema: Schema): void;
-    checkSchema(schema: Schema): void;
-    processSchemaElements(elements: Schema[] | Table[] | Enum[] | TableGroup[] | Ref[], elementType: any): void;
-    findOrCreateSchema(schemaName: string): Schema;
-    findTable(rawTable: any): Table;
-    processTablePartials(rawTablePartials: any[]): TablePartial[];
-    findTablePartial(partialName: string): TablePartial;
-    export(): {
+  dbState: DbState;
+  hasDefaultSchema: boolean;
+  schemas: Schema[];
+  notes: StickyNote[];
+  note: string;
+  noteToken: Token;
+  databaseType: string;
+  name: string;
+  records: TableRecord[];
+  id: number;
+  constructor({
+    schemas, tables, enums, refs, tableGroups, project, records,
+  }: RawDatabase);
+  generateId(): void;
+  processRecords(rawRecords: RawTableRecord[]): void;
+  processSchemas(rawSchemas: RawSchema[]): void;
+  pushSchema(schema: Schema): void;
+  checkSchema(schema: Schema): void;
+  processSchemaElements(elements: Schema[] | Table[] | Enum[] | TableGroup[] | Ref[], elementType: any): void;
+  findOrCreateSchema(schemaName: string): Schema;
+  findTable(rawTable: any): Table;
+  processTablePartials(rawTablePartials: any[]): TablePartial[];
+  findTablePartial(partialName: string): TablePartial;
+  export(): {
         schemas: {
             tables: {
                 fields: {
@@ -173,13 +176,13 @@ declare class Database extends Element {
             }[];
         }[];
     };
-    shallowExport(): {
+  shallowExport(): {
         hasDefaultSchema: boolean;
         note: string;
         databaseType: string;
         name: string;
     };
-    exportChild(): {
+  exportChild(): {
         schemas: {
             tables: {
                 fields: {
@@ -272,11 +275,11 @@ declare class Database extends Element {
             }[];
         }[];
     };
-    exportChildIds(): {
+  exportChildIds(): {
         schemaIds: number[];
         noteIds: number[];
     };
-    normalize(): NormalizedDatabase;
+  normalize(): NormalizedDatabase;
 }
 export interface NormalizedDatabase {
     database: {

@@ -63,4 +63,3 @@ export class EnumInterpreter implements ElementInterpreter {
     });
   }
 }
-

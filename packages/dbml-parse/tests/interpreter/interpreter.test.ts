@@ -1,4 +1,4 @@
-import fs, { readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
 import { scanTestNames } from '../jestHelpers';
@@ -16,7 +16,7 @@ describe('#interpreter', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
     const symbolIdGenerator = new NodeSymbolIdGenerator();
     const nodeIdGenerator = new SyntaxNodeIdGenerator();
-    let output: any = undefined;
+    let output: any;
     const report = new Lexer(program)
       .lex()
       .chain((tokens) => {
@@ -29,8 +29,7 @@ describe('#interpreter', () => {
     if (report.getErrors().length !== 0) {
       output = JSON.stringify(
         report.getErrors(),
-        (key, value) =>
-          ['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value,
+        (key, value) => (['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value),
         2,
       );
     } else {
@@ -38,8 +37,7 @@ describe('#interpreter', () => {
       if (res.getErrors().length > 0) {
         output = JSON.stringify(
           res.getErrors(),
-          (key, value) =>
-            ['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value,
+          (key, value) => (['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value),
           2,
         );
       } else {
@@ -51,7 +49,6 @@ describe('#interpreter', () => {
       }
     }
 
-    it(testName, () =>
-      expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
+    it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });
 });

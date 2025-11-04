@@ -69,7 +69,7 @@ export function destructureComplexVariable (node?: SyntaxNode): Option<string[]>
 
   const variables: string[] = [];
 
-  // eslint-disable-next-line no-restricted-syntax
+   
   for (const fragment of fragments) {
     const variable = extractVariableFromExpression(fragment).unwrap_or(undefined);
     if (!variable) {
@@ -107,7 +107,7 @@ export function destructureComplexTuple (
     }
   }
 
-  // eslint-disable-next-line no-restricted-syntax
+   
   for (const fragment of fragments) {
     const variable = extractVariableFromExpression(fragment).unwrap_or(undefined);
     if (!variable) {

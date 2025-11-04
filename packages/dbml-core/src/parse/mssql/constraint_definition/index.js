@@ -9,7 +9,6 @@ const { pColumnConstraintFK, pTableConstraintFK } = require('../fk_definition');
 const { pColumnConstraintIndex, pTableConstraintIndex } = require('../index_definition');
 const A = require('./actions');
 
-
 const Lang = P.createLanguage({
   TableConstraint: (r) => P.seqMap(
     r.ConstraintName.fallback(null),
@@ -38,11 +37,12 @@ const Lang = P.createLanguage({
     r.ConstraintCheckExpr,
   ).map(value => value[2]),
 
-
   ConstraintCheckExpr: (r) => P.alt(
-    P.seq(KP.LParen.fallback(null),
+    P.seq(
+      KP.LParen.fallback(null),
       r.ConstraintCheckEnum,
-      KP.RParen.fallback(null)).map(value => value[1]),
+      KP.RParen.fallback(null),
+    ).map(value => value[1]),
     pExpression.thru(streamline('expression')),
   ),
 
@@ -52,7 +52,6 @@ const Lang = P.createLanguage({
     makeList(pConst.thru(makeNode())),
     A.makeConstraintCheckEnum,
   ).thru(makeNode()),
-
 
   ConstraintDefault: (r) => P.seqMap(
     KP.KeywordDefault,

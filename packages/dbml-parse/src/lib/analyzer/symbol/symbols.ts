@@ -1,4 +1,4 @@
-/* eslint-disable max-classes-per-file */
+ 
 import SymbolTable from './symbolTable';
 import { SyntaxNode } from '../../parser/nodes';
 
@@ -11,7 +11,7 @@ export class NodeSymbolIdGenerator {
   }
 
   nextId (): NodeSymbolId {
-    // eslint-disable-next-line no-plusplus
+     
     return this.id++;
   }
 }

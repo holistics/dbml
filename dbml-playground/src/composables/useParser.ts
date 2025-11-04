@@ -10,7 +10,6 @@
  * - Single Responsibility: Only handles Vue composable concerns
  * - Information Hiding: Complex parsing logic is hidden in services
  */
-import { computed } from 'vue'
 import { ReactiveParser } from '@/core/reactive-parser'
 import { DEFAULT_SAMPLE_CONTENT } from '@/core/sample-content'
 import type { ParserError, PipelineStage } from '@/types'
@@ -61,26 +60,26 @@ export function useParser() {
   return {
     // Reactive inputs
     dbmlInput: reactiveParser.input,
-    
+
     // Reactive state
     isLoading: reactiveParser.isLoading,
-    
+
     // Computed outputs
     success: reactiveParser.success,
     errors: reactiveParser.errors,
     hasErrors: reactiveParser.hasErrors,
-    
+
     // Stage outputs
     tokens: reactiveParser.lexerOutput,
     ast: reactiveParser.parserOutput,
     analyzedAst: reactiveParser.analyzerOutput,
     json: reactiveParser.interpreterOutput,
-    
+
     // Convenience methods
     getStageOutput,
     getStageOutputString,
     formatErrors,
-    
+
     // Direct methods
     parseNow: () => reactiveParser.parseNow()
   }

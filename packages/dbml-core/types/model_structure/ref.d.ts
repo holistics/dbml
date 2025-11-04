@@ -4,6 +4,7 @@ import Schema from './schema';
 import DbState from './dbState';
 import Database, { NormalizedDatabase } from './database';
 import TablePartial from './tablePartial';
+
 interface RawRef {
     name: string;
     color?: string;
@@ -14,21 +15,23 @@ interface RawRef {
     schema: Schema;
 }
 declare class Ref extends Element {
-    name: string;
-    color?: string;
-    endpoints: Endpoint[];
-    onDelete: any;
-    onUpdate: any;
-    schema: Schema;
-    dbState: DbState;
-    id: number;
-    database: Database;
-    injectedPartial?: TablePartial;
-    constructor({ name, endpoints, onDelete, onUpdate, token, schema }: RawRef);
-    generateId(): void;
-    processEndpoints(rawEndpoints: any): void;
-    equals(ref: any): any;
-    export(): {
+  name: string;
+  color?: string;
+  endpoints: Endpoint[];
+  onDelete: any;
+  onUpdate: any;
+  schema: Schema;
+  dbState: DbState;
+  id: number;
+  database: Database;
+  injectedPartial?: TablePartial;
+  constructor({
+    name, endpoints, onDelete, onUpdate, token, schema,
+  }: RawRef);
+  generateId(): void;
+  processEndpoints(rawEndpoints: any): void;
+  equals(ref: any): any;
+  export(): {
         endpoints: {
             schemaName: string;
             tableName: string;
@@ -40,13 +43,13 @@ declare class Ref extends Element {
         onUpdate: any;
         injectedPartialId?: number;
     };
-    shallowExport(): {
+  shallowExport(): {
         name: string;
         onDelete: any;
         onUpdate: any;
         injectedPartialId?: number;
     };
-    exportChild(): {
+  exportChild(): {
         endpoints: {
             schemaName: string;
             tableName: string;
@@ -54,13 +57,13 @@ declare class Ref extends Element {
             relation: any;
         }[];
     };
-    exportChildIds(): {
+  exportChildIds(): {
         endpointIds: number[];
     };
-    exportParentIds(): {
+  exportParentIds(): {
         schemaId: number;
     };
-    normalize(model: NormalizedDatabase): void;
+  normalize(model: NormalizedDatabase): void;
 }
 export interface NormalizedRef {
     [_id: number]: {

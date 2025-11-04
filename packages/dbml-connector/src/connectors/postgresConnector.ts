@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { Client } from 'pg';
 import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
 import {

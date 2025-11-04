@@ -26,17 +26,27 @@
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
         </svg>
       </button>
-      <div v-else class="w-4 h-4 mr-1"></div>
+      <div
+        v-else
+        class="w-4 h-4 mr-1"
+      />
 
       <!-- Property Name and Type Info -->
       <span class="flex-1 flex items-center min-w-0">
         <span class="font-medium text-gray-700 mr-2">{{ node.propertyName }}</span>
         <span class="text-gray-500 text-xs mr-2">{{ getNodeTypeDescription() }}</span>
-        <span v-if="node.value !== undefined && typeof node.value !== 'object'"
-              class="text-green-700 bg-green-50 px-1 rounded text-xs max-w-32 truncate">
+        <span
+          v-if="node.value !== undefined && typeof node.value !== 'object'"
+          class="text-green-700 bg-green-50 px-1 rounded text-xs max-w-32 truncate"
+        >
           {{ String(node.value) }}
         </span>
       </span>
@@ -62,7 +72,10 @@
     </div>
 
     <!-- Children -->
-    <div v-if="isExpanded && hasChildren" class="children">
+    <div
+      v-if="isExpanded && hasChildren"
+      class="children"
+    >
       <RawASTTreeNode
         v-for="child in node.children"
         :key="child.id"

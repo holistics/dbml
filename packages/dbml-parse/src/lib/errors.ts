@@ -130,7 +130,7 @@ export class CompileError extends Error {
 
   end: Readonly<number>;
 
-  constructor(code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
     this.diagnostic = message;

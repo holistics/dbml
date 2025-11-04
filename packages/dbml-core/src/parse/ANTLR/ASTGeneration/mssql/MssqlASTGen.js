@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this */
+ 
 import {
   first, flatten, flattenDepth, last, nth,
 } from 'lodash';

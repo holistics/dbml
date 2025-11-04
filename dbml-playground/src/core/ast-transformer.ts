@@ -153,7 +153,7 @@ export class ElementTypeRegistry {
  * This ensures playground continues working when parser adds new element types
  */
 export class GenericElementHandler implements ElementHandler {
-  canHandle(element: ElementDeclarationNode): boolean {
+  canHandle(_element: ElementDeclarationNode): boolean {
     return true // Can handle any element as fallback
   }
 
@@ -634,7 +634,7 @@ export class ASTTransformerService {
   private createSemanticRef(element: ElementDeclarationNode, accessPath: string): SemanticASTNode {
     const refName = this.extractElementName(element) // Use the standard name extraction
     const relationship = this.extractRefRelationship(element)
-    
+
     // Use the actual ref name if available, otherwise use a more descriptive fallback
     const displayName = refName || relationship || 'Reference'
     const semanticName = refName || 'reference'
@@ -679,7 +679,7 @@ export class ASTTransformerService {
   private createSemanticTableGroup(element: ElementDeclarationNode, accessPath: string): SemanticASTNode {
     const groupName = this.extractElementName(element) || 'unnamed_group'
     const tableNames = this.extractTableGroupMembers(element)
-    
+
     // Create display name with table details
     let displayName = groupName
     if (tableNames.length > 0) {
@@ -816,7 +816,7 @@ export class ASTTransformerService {
       const tokens = nameNode.body
         .map((token: any) => this.extractNameFromNode(token))
         .filter((val: string | null) => val && val !== '.')
-      
+
       if (tokens.length > 0) {
         return tokens.join('.')
       }
@@ -827,7 +827,7 @@ export class ASTTransformerService {
       const tokens = nameNode.identifiers
         .map((id: any) => this.extractNameFromNode(id))
         .filter((val: string | null) => val)
-      
+
       if (tokens.length > 0) {
         return tokens.join('.')
       }
@@ -898,18 +898,18 @@ export class ASTTransformerService {
       const op = element.body.op?.value || '→'
       return `${left} ${op} ${right}`
     }
-    
+
     // Try to extract from different possible structures
     if (element.body?.expression) {
       return this.extractRelationshipFromExpression(element.body.expression)
     }
-    
+
     // Try to extract from body directly if it's a different structure
     if (element.body && typeof element.body === 'object') {
       const bodyStr = this.extractRelationshipFromBody(element.body)
       if (bodyStr) return bodyStr
     }
-    
+
     return 'Reference Relationship'
   }
 
@@ -941,7 +941,7 @@ export class ASTTransformerService {
       const target = this.extractNameFromNode(body.targetColumn)
       return `${source} → ${target}`
     }
-    
+
     // Look for any structure that might contain relationship info
     for (const [key, value] of Object.entries(body)) {
       if (typeof value === 'object' && value !== null) {
@@ -950,11 +950,11 @@ export class ASTTransformerService {
         }
       }
     }
-    
+
     return ''
   }
 
-  private extractIndexName(element: any): string {
+  private extractIndexName(_element: any): string {
     return 'index'
   }
 
@@ -963,14 +963,14 @@ export class ASTTransformerService {
     if (element.body?.value) {
       return element.body.value.substring(0, 50) // First 50 chars as name
     }
-    
+
     if (element.body?.token?.value) {
       return element.body.token.value.substring(0, 50)
     }
-    
+
     // Try to find string content in the body
     if (element.body && typeof element.body === 'object') {
-      for (const [key, value] of Object.entries(element.body)) {
+      for (const [_key, value] of Object.entries(element.body)) {
         if (typeof value === 'string' && value.length > 0) {
           return value.substring(0, 50)
         }
@@ -979,31 +979,31 @@ export class ASTTransformerService {
         }
       }
     }
-    
+
     return null
   }
 
   private extractTableGroupMembers(element: ElementDeclarationNode): string[] {
     const tableNames: string[] = []
-    
+
     // Try to extract table names from the table group body
     if (element.body?.body && Array.isArray(element.body.body)) {
       element.body.body.forEach((item: any) => {
         let tableName = this.extractNameFromNode(item)
-        
+
         // If standard extraction fails, try more specific methods for table names
         if (!tableName) {
           if (item?.variable?.value) tableName = item.variable.value
           if (item?.callee?.value) tableName = item.callee.value
           if (item?.callee?.token?.value) tableName = item.callee.token.value
         }
-        
+
         if (tableName) {
           tableNames.push(tableName)
         }
       })
     }
-    
+
     return tableNames
   }
 
@@ -1013,26 +1013,26 @@ export class ASTTransformerService {
     const endLine = element.endPos.line + 1
     const endColumn = element.endPos.column + 1
 
-      return {
-        start: {
-          line: startLine,
-          column: startColumn,
+    return {
+      start: {
+        line: startLine,
+        column: startColumn,
         offset: element.start
-        },
-        end: {
-          line: endLine,
-          column: endColumn,
+      },
+      end: {
+        line: endLine,
+        column: endColumn,
         offset: element.end
-        },
-        raw: {
-          startPos: element.startPos,
-          endPos: element.endPos,
-          start: element.start,
-          end: element.end,
-          fullStart: element.fullStart,
-          fullEnd: element.fullEnd,
-          id: element.id,
-          kind: element.kind
+      },
+      raw: {
+        startPos: element.startPos,
+        endPos: element.endPos,
+        start: element.start,
+        end: element.end,
+        fullStart: element.fullStart,
+        fullEnd: element.fullEnd,
+        id: element.id,
+        kind: element.kind
       }
     }
   }
@@ -1151,8 +1151,8 @@ export class ASTTransformerService {
           id: `group_${type}_${children.length}`, // Deterministic based on content
           type: 'database',
           name: type,
-                  displayName: `${type} (${children.length})`,
-        icon: this.getTypeIcon(type),
+          displayName: `${type} (${children.length})`,
+          icon: this.getTypeIcon(type),
           children,
           accessPath: ''
         })
@@ -1176,11 +1176,11 @@ export class ASTTransformerService {
     return icons[type] || 'note'
   }
 
-  private findRawPath(node: any, property: string): string {
+  private findRawPath(_node: any, property: string): string {
     return `ast.${property}`
   }
 
-  private generateDescription(node: any, property: string, value: any): string {
+  private generateDescription(node: any, property: string, _value: any): string {
     return `${property} in ${node?.type || 'unknown'} node`
   }
 

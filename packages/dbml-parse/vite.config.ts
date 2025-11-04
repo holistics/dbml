@@ -18,7 +18,7 @@ export default defineConfig({
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'DbmlParser',
       fileName: 'dbml-parse',
-      formats: ['cjs', 'es']
+      formats: ['cjs', 'es'],
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
@@ -31,4 +31,3 @@ export default defineConfig({
     globals: true,
   },
 });
-

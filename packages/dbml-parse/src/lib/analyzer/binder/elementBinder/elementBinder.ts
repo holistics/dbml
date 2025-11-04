@@ -215,7 +215,7 @@ export default abstract class ElementBinder {
       });
     }
 
-    // eslint-disable-next-line consistent-return
+     
     return tuple
       ? tuple.elementList.forEach((e) => this.resolveIndexStack(
         [
@@ -256,7 +256,7 @@ export default abstract class ElementBinder {
 
     let prevScope = accessSymbol.symbolTable!;
     let { kind: prevKind, name: prevName } = destructureIndex(accessSubname.index).unwrap();
-    // eslint-disable-next-line no-restricted-syntax
+     
     for (const subname of remainingSubnames) {
       const { kind: curKind, name: curName } = destructureIndex(subname.index).unwrap();
       const curSymbol = prevScope.get(subname.index);
