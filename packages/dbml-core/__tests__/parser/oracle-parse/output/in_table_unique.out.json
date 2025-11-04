@@ -1,0 +1,380 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "test_datatypes",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_raw",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nchar",
+          "type": {
+            "type_name": "NCHAR(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uk_number",
+          "unique": true,
+          "columns": [
+            {
+              "value": "col_number",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "uk_varchar2",
+          "unique": true,
+          "columns": [
+            {
+              "value": "col_varchar2",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "uk_char",
+          "unique": true,
+          "columns": [
+            {
+              "value": "col_char",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "uk_date",
+          "unique": true,
+          "columns": [
+            {
+              "value": "col_date",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "uk_timestamp",
+          "unique": true,
+          "columns": [
+            {
+              "value": "col_timestamp",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "uk_clob",
+          "unique": true,
+          "columns": [
+            {
+              "value": "col_clob",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "uk_raw",
+          "unique": true,
+          "columns": [
+            {
+              "value": "col_raw",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "uk_float",
+          "unique": true,
+          "columns": [
+            {
+              "value": "col_float",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "uk_integer",
+          "unique": true,
+          "columns": [
+            {
+              "value": "col_integer",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "uk_nvarchar2",
+          "unique": true,
+          "columns": [
+            {
+              "value": "col_nvarchar2",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "uk_nchar",
+          "unique": true,
+          "columns": [
+            {
+              "value": "col_nchar",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "order_details",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "order_ref",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uk_order_ref",
+          "unique": true,
+          "columns": [
+            {
+              "value": "order_id",
+              "type": "column"
+            },
+            {
+              "value": "item_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "reports",
+      "fields": [
+        {
+          "name": "report_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "report_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "report_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "report_code",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uk_very_long_constraint_name_for_testing_parser_limits",
+          "unique": true,
+          "columns": [
+            {
+              "value": "report_code",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "sales",
+      "fields": [
+        {
+          "name": "sale_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "sale_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "sale_code",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uk_sale_code",
+          "unique": true,
+          "columns": [
+            {
+              "value": "sale_code",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "accounts",
+      "fields": [
+        {
+          "name": "account_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "account_number",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        },
+        {
+          "name": "balance",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uk_account_number",
+          "unique": true,
+          "columns": [
+            {
+              "value": "account_number",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

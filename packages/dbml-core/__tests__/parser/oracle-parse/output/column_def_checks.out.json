@@ -1,0 +1,1471 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "cust_id > 0",
+              "name": "chk_cust_id_pos"
+            }
+          ]
+        },
+        {
+          "name": "cust_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(cust_name) <= 100",
+              "name": "chk_cust_name_len"
+            }
+          ]
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "email LIKE '%@%.%'",
+              "name": "chk_email_format"
+            }
+          ]
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(phone) >= 10",
+              "name": "chk_phone_len"
+            }
+          ]
+        },
+        {
+          "name": "address",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "checks": [
+            {
+              "expression": "address IS NOT NULL",
+              "name": "chk_address_not_empty"
+            }
+          ]
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": [
+            {
+              "expression": "status IN ('ACTIVE', 'INACTIVE')",
+              "name": "chk_cust_status"
+            }
+          ]
+        },
+        {
+          "name": "reg_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": [
+            {
+              "expression": "reg_date >= TO_DATE('2000-01-01', 'YYYY-MM-DD')",
+              "name": "chk_reg_date"
+            }
+          ]
+        },
+        {
+          "name": "last_login",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "checks": [
+            {
+              "expression": "last_login <= SYSTIMESTAMP",
+              "name": "chk_last_login"
+            },
+            {
+              "expression": "last_login >= SYSTIMESTAMP",
+              "name": "chk_last_login_2"
+            }
+          ]
+        },
+        {
+          "name": "last_login_2",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "checks": [
+            {
+              "expression": "last_login_2 <= SYSTIMESTAMP"
+            },
+            {
+              "expression": "last_login_2 >= SYSTIMESTAMP"
+            }
+          ]
+        },
+        {
+          "name": "last_login_3",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "checks": [
+            {
+              "expression": "last_login_3 <= SYSTIMESTAMP"
+            },
+            {
+              "expression": "last_login_3 >= SYSTIMESTAMP",
+              "name": "chk_last_login_3"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "item_id > 0",
+              "name": "chk_item_id_pos"
+            }
+          ]
+        },
+        {
+          "name": "item_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "checks": [
+            {
+              "expression": "item_name IS NOT NULL",
+              "name": "chk_item_name"
+            }
+          ]
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": [
+            {
+              "expression": "price >= 0",
+              "name": "chk_price_pos"
+            }
+          ]
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": [
+            {
+              "expression": "category IN ('ELECTRONICS', 'CLOTHING', 'BOOKS')",
+              "name": "chk_category_valid"
+            }
+          ]
+        },
+        {
+          "name": "sku",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(sku) <= 50",
+              "name": "chk_sku_len"
+            }
+          ]
+        },
+        {
+          "name": "weight",
+          "type": {
+            "type_name": "NUMBER(8,2)"
+          },
+          "checks": [
+            {
+              "expression": "weight > 0",
+              "name": "chk_weight_pos"
+            }
+          ]
+        },
+        {
+          "name": "stock_level",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "stock_level >= 0",
+              "name": "chk_stock_level"
+            }
+          ]
+        },
+        {
+          "name": "reorder_level",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "reorder_level >= 0",
+              "name": "chk_reorder_level"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "ship_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "ship_id > 0",
+              "name": "chk_ship_id"
+            }
+          ]
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "customer_id > 0",
+              "name": "chk_cust_id_valid"
+            }
+          ]
+        },
+        {
+          "name": "ship_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": [
+            {
+              "expression": "ship_date >= TRUNC(SYSDATE)",
+              "name": "chk_ship_date"
+            }
+          ]
+        },
+        {
+          "name": "total_amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": [
+            {
+              "expression": "total_amount >= 0",
+              "name": "chk_total_amount"
+            }
+          ]
+        },
+        {
+          "name": "tracking_number",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(tracking_number) <= 50",
+              "name": "chk_tracking_len"
+            }
+          ]
+        },
+        {
+          "name": "carrier",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "carrier IS NOT NULL",
+              "name": "chk_carrier"
+            }
+          ]
+        },
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "checks": [
+            {
+              "expression": "priority BETWEEN 1 AND 5",
+              "name": "chk_priority_range"
+            }
+          ]
+        },
+        {
+          "name": "notes",
+          "type": {
+            "type_name": "VARCHAR2(4000)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(notes) <= 4000",
+              "name": "chk_notes_len"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "dept_id > 0",
+              "name": "chk_dept_id"
+            }
+          ]
+        },
+        {
+          "name": "dept_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "dept_name IS NOT NULL",
+              "name": "chk_dept_name"
+            }
+          ]
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "manager_id > 0",
+              "name": "chk_manager_id"
+            }
+          ]
+        },
+        {
+          "name": "budget",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": [
+            {
+              "expression": "budget >= 0",
+              "name": "chk_budget_pos"
+            }
+          ]
+        },
+        {
+          "name": "location",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": [
+            {
+              "expression": "location IS NOT NULL",
+              "name": "chk_location"
+            }
+          ]
+        },
+        {
+          "name": "established_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": [
+            {
+              "expression": "established_date <= SYSDATE",
+              "name": "chk_est_date"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "suppliers",
+      "fields": [
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "supp_id > 0",
+              "name": "chk_supp_id"
+            }
+          ]
+        },
+        {
+          "name": "supp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "supp_name IS NOT NULL",
+              "name": "chk_supp_name"
+            }
+          ]
+        },
+        {
+          "name": "contact",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(contact) <= 100",
+              "name": "chk_contact_len"
+            }
+          ]
+        },
+        {
+          "name": "ssn",
+          "type": {
+            "type_name": "VARCHAR2(11)"
+          },
+          "checks": [
+            {
+              "expression": "ssn LIKE '___-__-____'",
+              "name": "chk_ssn_format"
+            }
+          ]
+        },
+        {
+          "name": "badge_number",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(badge_number) <= 10",
+              "name": "chk_badge_len"
+            }
+          ]
+        },
+        {
+          "name": "credit_limit",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": [
+            {
+              "expression": "credit_limit >= 0",
+              "name": "chk_credit_limit"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": [
+            {
+              "expression": "col_number >= 0",
+              "name": "chk_number_pos"
+            }
+          ]
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(col_varchar2) <= 100",
+              "name": "chk_varchar2_len"
+            }
+          ]
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(col_char) = 10",
+              "name": "chk_char_len"
+            }
+          ]
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": [
+            {
+              "expression": "col_date >= TO_DATE('2000-01-01', 'YYYY-MM-DD')",
+              "name": "chk_date"
+            }
+          ]
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "checks": [
+            {
+              "expression": "col_timestamp <= SYSTIMESTAMP",
+              "name": "chk_timestamp"
+            }
+          ]
+        },
+        {
+          "name": "col_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "checks": [
+            {
+              "expression": "col_clob IS NOT NULL",
+              "name": "chk_clob_not_null"
+            }
+          ]
+        },
+        {
+          "name": "col_raw",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(col_raw) <= 100",
+              "name": "chk_raw_len"
+            }
+          ]
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "checks": [
+            {
+              "expression": "col_float >= 0",
+              "name": "chk_float_pos"
+            }
+          ]
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "checks": [
+            {
+              "expression": "col_integer >= 0",
+              "name": "chk_integer_pos"
+            }
+          ]
+        },
+        {
+          "name": "col_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(col_nvarchar2) <= 100",
+              "name": "chk_nvarchar2_len"
+            }
+          ]
+        },
+        {
+          "name": "col_nchar",
+          "type": {
+            "type_name": "NCHAR(10)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(col_nchar) = 10",
+              "name": "chk_nchar_len"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_basic",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "id > 0",
+              "name": "chk_id_pos"
+            }
+          ]
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "value BETWEEN 1 AND 1000",
+              "name": "chk_value_range"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_status",
+      "fields": [
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": [
+            {
+              "expression": "status IN ('OPEN', 'CLOSED', 'PENDING')",
+              "name": "chk_status_values"
+            }
+          ]
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(code) <= 10",
+              "name": "chk_code_len"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_not_null",
+      "fields": [
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "name IS NOT NULL",
+              "name": "chk_name_not_null"
+            }
+          ]
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(description) <= 200",
+              "name": "chk_desc_len"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_dates",
+      "fields": [
+        {
+          "name": "event_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": [
+            {
+              "expression": "event_date >= SYSDATE",
+              "name": "chk_event_date"
+            }
+          ]
+        },
+        {
+          "name": "end_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": [
+            {
+              "expression": "end_date > SYSDATE",
+              "name": "chk_end_date"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_compound",
+      "fields": [
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "quantity >= 0",
+              "name": "chk_qty_pos"
+            }
+          ]
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": [
+            {
+              "expression": "quantity * price >= 0",
+              "name": "chk_qty_price"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pattern",
+      "fields": [
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "email LIKE '%@%.%'",
+              "name": "chk_email_pattern"
+            }
+          ]
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": [
+            {
+              "expression": "phone LIKE '[0-9]%'",
+              "name": "chk_phone_pattern"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_multi_condition",
+      "fields": [
+        {
+          "name": "score",
+          "type": {
+            "type_name": "NUMBER(3)"
+          },
+          "checks": [
+            {
+              "expression": "score BETWEEN 0 AND 100",
+              "name": "chk_score_range"
+            }
+          ]
+        },
+        {
+          "name": "grade",
+          "type": {
+            "type_name": "CHAR(1)"
+          },
+          "checks": [
+            {
+              "expression": "grade IN ('A', 'B', 'C', 'D', 'F') AND score > 0",
+              "name": "chk_grade_valid"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_enable",
+      "fields": [
+        {
+          "name": "level",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "checks": [
+            {
+              "expression": "level BETWEEN 1 AND 10",
+              "name": "chk_level_range"
+            }
+          ]
+        },
+        {
+          "name": "rating",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "checks": [
+            {
+              "expression": "rating >= 0",
+              "name": "chk_rating"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_disable",
+      "fields": [
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "checks": [
+            {
+              "expression": "priority BETWEEN 1 AND 5",
+              "name": "chk_priority_range"
+            }
+          ]
+        },
+        {
+          "name": "rank",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "checks": [
+            {
+              "expression": "rank >= 0",
+              "name": "chk_rank"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_validate",
+      "fields": [
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": [
+            {
+              "expression": "amount >= 0",
+              "name": "chk_amount_pos"
+            }
+          ]
+        },
+        {
+          "name": "tax",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": [
+            {
+              "expression": "tax >= 0",
+              "name": "chk_tax_pos"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_novalidate",
+      "fields": [
+        {
+          "name": "discount",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": [
+            {
+              "expression": "discount >= 0",
+              "name": "chk_discount"
+            }
+          ]
+        },
+        {
+          "name": "margin",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": [
+            {
+              "expression": "margin >= 0",
+              "name": "chk_margin"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_disable_novalidate",
+      "fields": [
+        {
+          "name": "weight",
+          "type": {
+            "type_name": "NUMBER(8,2)"
+          },
+          "checks": [
+            {
+              "expression": "weight > 0",
+              "name": "chk_weight"
+            }
+          ]
+        },
+        {
+          "name": "volume",
+          "type": {
+            "type_name": "NUMBER(8,2)"
+          },
+          "checks": [
+            {
+              "expression": "volume > 0",
+              "name": "chk_volume"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_rely",
+      "fields": [
+        {
+          "name": "code",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "code > 0",
+              "name": "chk_code_pos"
+            }
+          ]
+        },
+        {
+          "name": "ref_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "ref_id > 0",
+              "name": "chk_ref_id"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_norely",
+      "fields": [
+        {
+          "name": "sequence",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "sequence > 0",
+              "name": "chk_seq_pos"
+            }
+          ]
+        },
+        {
+          "name": "counter",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "counter >= 0",
+              "name": "chk_counter"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_enable_rely",
+      "fields": [
+        {
+          "name": "batch_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "batch_id > 0",
+              "name": "chk_batch_id"
+            }
+          ]
+        },
+        {
+          "name": "lot_number",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(lot_number) <= 20",
+              "name": "chk_lot_len"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_disable_norely",
+      "fields": [
+        {
+          "name": "zone_id",
+          "type": {
+            "type_name": "NUMBER(5)"
+          },
+          "checks": [
+            {
+              "expression": "zone_id > 0",
+              "name": "chk_zone_id"
+            }
+          ]
+        },
+        {
+          "name": "area_code",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(area_code) <= 10",
+              "name": "chk_area_len"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_deferrable_deferred",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "order_id > 0",
+              "name": "chk_order_id"
+            }
+          ]
+        },
+        {
+          "name": "line_item",
+          "type": {
+            "type_name": "NUMBER(5)"
+          },
+          "checks": [
+            {
+              "expression": "line_item > 0",
+              "name": "chk_line_item"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_deferrable_immediate",
+      "fields": [
+        {
+          "name": "invoice_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "invoice_id > 0",
+              "name": "chk_invoice_id"
+            }
+          ]
+        },
+        {
+          "name": "payment_status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": [
+            {
+              "expression": "payment_status IN ('PAID', 'PENDING')",
+              "name": "chk_payment_status"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_not_deferrable",
+      "fields": [
+        {
+          "name": "ticket_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "ticket_id > 0",
+              "name": "chk_ticket_id"
+            }
+          ]
+        },
+        {
+          "name": "issue_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": [
+            {
+              "expression": "issue_date <= SYSDATE",
+              "name": "chk_issue_date"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes_inline",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": [
+            {
+              "expression": "col_number >= 0",
+              "name": "chk_number"
+            }
+          ]
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(col_varchar2) <= 100",
+              "name": "chk_varchar2"
+            }
+          ]
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(col_char) = 10",
+              "name": "chk_char"
+            }
+          ]
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": [
+            {
+              "expression": "col_date >= TO_DATE('2000-01-01', 'YYYY-MM-DD')",
+              "name": "chk_date_valid"
+            }
+          ]
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "checks": [
+            {
+              "expression": "col_timestamp <= SYSTIMESTAMP",
+              "name": "chk_timestamp_valid"
+            }
+          ]
+        },
+        {
+          "name": "col_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "checks": [
+            {
+              "expression": "col_clob IS NOT NULL",
+              "name": "chk_clob"
+            }
+          ]
+        },
+        {
+          "name": "col_raw",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(col_raw) <= 100",
+              "name": "chk_raw"
+            }
+          ]
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "checks": [
+            {
+              "expression": "col_float >= 0",
+              "name": "chk_float"
+            }
+          ]
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "checks": [
+            {
+              "expression": "col_integer >= 0",
+              "name": "chk_integer"
+            }
+          ]
+        },
+        {
+          "name": "col_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(col_nvarchar2) <= 100",
+              "name": "chk_nvarchar2"
+            }
+          ]
+        },
+        {
+          "name": "col_nchar",
+          "type": {
+            "type_name": "NCHAR(10)"
+          },
+          "checks": [
+            {
+              "expression": "LENGTH(col_nchar) = 10",
+              "name": "chk_nchar"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_complex",
+      "fields": [
+        {
+          "name": "score",
+          "type": {
+            "type_name": "NUMBER(3)"
+          },
+          "checks": [
+            {
+              "expression": "score >= 0 AND MOD(score, 2) = 0",
+              "name": "chk_score_complex"
+            }
+          ]
+        },
+        {
+          "name": "rating",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": [
+            {
+              "expression": "rating IN ('HIGH', 'MEDIUM', 'LOW') AND LENGTH(rating) > 3",
+              "name": "chk_rating_complex"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pattern_match",
+      "fields": [
+        {
+          "name": "zip_code",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "checks": [
+            {
+              "expression": "REGEXP_LIKE(zip_code, '^[0-9]{5}(-[0-9]{4})?$')",
+              "name": "chk_zip_format"
+            }
+          ]
+        },
+        {
+          "name": "serial_number",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": [
+            {
+              "expression": "REGEXP_LIKE(serial_number, '^[A-Z0-9]+$')",
+              "name": "chk_serial_format"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_subquery",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": [
+            {
+              "expression": "dept_id IN (SELECT dept_id FROM departments)",
+              "name": "chk_dept_id_exists"
+            }
+          ]
+        },
+        {
+          "name": "emp_count",
+          "type": {
+            "type_name": "NUMBER(5)"
+          },
+          "checks": [
+            {
+              "expression": "emp_count >= 0",
+              "name": "chk_emp_count"
+            }
+          ]
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

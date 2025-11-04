@@ -1,0 +1,905 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "database_products",
+      "fields": [
+        {
+          "name": "product_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "product_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "vendor_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "release_year",
+          "type": {
+            "type_name": "NUMBER(4)"
+          },
+          "checks": []
+        },
+        {
+          "name": "is_open_source",
+          "type": {
+            "type_name": "NUMBER(1)"
+          },
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "license_cost",
+          "type": {
+            "type_name": "NUMBER(10, 2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "market_share",
+          "type": {
+            "type_name": "NUMBER(5, 2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "latest_version",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "checks": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "dbdefault": {
+            "value": "SYSTIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "updated_at",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "dbdefault": {
+            "value": "SYSTIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "is_active",
+          "type": {
+            "type_name": "NUMBER(1)"
+          },
+          "dbdefault": {
+            "value": 1,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "max_connections",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "CHAR(1)"
+          },
+          "dbdefault": {
+            "value": "A",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": [
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_id",
+        "product_name",
+        "vendor_name",
+        "release_year",
+        "is_open_source",
+        "license_cost",
+        "market_share",
+        "latest_version",
+        "description",
+        "is_active",
+        "max_connections",
+        "status"
+      ],
+      "values": [
+        [
+          {
+            "value": "db_products_seq.NEXTVAL",
+            "type": "expression"
+          },
+          {
+            "value": "Oracle Database",
+            "type": "string"
+          },
+          {
+            "value": "Oracle Corporation",
+            "type": "string"
+          },
+          {
+            "value": 1979,
+            "type": "number"
+          },
+          {
+            "value": 0,
+            "type": "number"
+          },
+          {
+            "value": 47500,
+            "type": "number"
+          },
+          {
+            "value": 28.5,
+            "type": "number"
+          },
+          {
+            "value": "21c",
+            "type": "string"
+          },
+          {
+            "value": "Enterprise relational database management system",
+            "type": "string"
+          },
+          {
+            "value": 1,
+            "type": "number"
+          },
+          {
+            "value": 10000,
+            "type": "number"
+          },
+          {
+            "value": "A",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "vendor_name",
+        "is_open_source",
+        "is_active"
+      ],
+      "values": [
+        [
+          {
+            "value": "MySQL",
+            "type": "string"
+          },
+          {
+            "value": "Oracle Corporation",
+            "type": "string"
+          },
+          {
+            "value": 1,
+            "type": "number"
+          },
+          {
+            "value": 1,
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "vendor_name",
+        "license_cost",
+        "description"
+      ],
+      "values": [
+        [
+          {
+            "value": "PostgreSQL",
+            "type": "string"
+          },
+          {
+            "value": "PostgreSQL Global Development Group",
+            "type": "string"
+          },
+          {
+            "value": null,
+            "type": "boolean"
+          },
+          {
+            "value": null,
+            "type": "boolean"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "release_year",
+        "market_share",
+        "max_connections"
+      ],
+      "values": [
+        [
+          {
+            "value": "SQLite",
+            "type": "string"
+          },
+          {
+            "value": 2000,
+            "type": "number"
+          },
+          {
+            "value": "15.5 + 2.3",
+            "type": "expression"
+          },
+          {
+            "value": "1000 * 10",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "vendor_name",
+        "description",
+        "latest_version"
+      ],
+      "values": [
+        [
+          {
+            "value": "UPPER('microsoft sql server')",
+            "type": "expression"
+          },
+          {
+            "value": "'Microsoft' || ' Corporation'",
+            "type": "expression"
+          },
+          {
+            "value": "TRIM('  Relational database management system  ')",
+            "type": "expression"
+          },
+          {
+            "value": "SUBSTR('2022-CU10', 1, 4)",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "vendor_name",
+        "release_year",
+        "created_at"
+      ],
+      "values": [
+        [
+          {
+            "value": "MariaDB",
+            "type": "string"
+          },
+          {
+            "value": "MariaDB Foundation",
+            "type": "string"
+          },
+          {
+            "value": "EXTRACT(YEAR FROM SYSDATE)",
+            "type": "expression"
+          },
+          {
+            "value": "SYSTIMESTAMP",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "license_cost",
+        "market_share",
+        "max_connections"
+      ],
+      "values": [
+        [
+          {
+            "value": "IBM Db2",
+            "type": "string"
+          },
+          {
+            "value": "1500.00 * 12",
+            "type": "expression"
+          },
+          {
+            "value": "ROUND(5.678, 1)",
+            "type": "expression"
+          },
+          {
+            "value": "POWER(2, 14)",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "vendor_name",
+        "license_cost",
+        "is_open_source"
+      ],
+      "values": [
+        [
+          {
+            "value": "Amazon Aurora",
+            "type": "string"
+          },
+          {
+            "value": "Amazon Web Services",
+            "type": "string"
+          },
+          {
+            "value": "CASE WHEN 1=1 THEN 0.00 ELSE 1000.00 END",
+            "type": "expression"
+          },
+          {
+            "value": 0,
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name"
+      ],
+      "values": [
+        [
+          {
+            "value": "CockroachDB",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "license_cost",
+        "release_year"
+      ],
+      "values": [
+        [
+          {
+            "value": "Test Database",
+            "type": "string"
+          },
+          {
+            "value": "-100.00",
+            "type": "expression"
+          },
+          {
+            "value": 2020,
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "max_connections",
+        "license_cost"
+      ],
+      "values": [
+        [
+          {
+            "value": "Enterprise DB",
+            "type": "string"
+          },
+          {
+            "value": 999999,
+            "type": "number"
+          },
+          {
+            "value": 99999.99,
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "description"
+      ],
+      "values": [
+        [
+          {
+            "value": "Neo4j",
+            "type": "string"
+          },
+          {
+            "value": "'Graph database for connected data' || CHR(10) || 'Supports Cypher query language'",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "release_year",
+        "created_at"
+      ],
+      "values": [
+        [
+          {
+            "value": "Firebird",
+            "type": "string"
+          },
+          {
+            "value": 2000,
+            "type": "number"
+          },
+          {
+            "value": "TO_TIMESTAMP('2000-07-25 10:30:00', 'YYYY-MM-DD HH24:MI:SS')",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "is_active",
+        "product_name",
+        "is_open_source",
+        "vendor_name"
+      ],
+      "values": [
+        [
+          {
+            "value": 1,
+            "type": "number"
+          },
+          {
+            "value": "TimescaleDB",
+            "type": "string"
+          },
+          {
+            "value": 1,
+            "type": "number"
+          },
+          {
+            "value": "Timescale Inc.",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "license_cost",
+        "market_share",
+        "max_connections"
+      ],
+      "values": [
+        [
+          {
+            "value": "MemSQL",
+            "type": "string"
+          },
+          {
+            "value": 0,
+            "type": "number"
+          },
+          {
+            "value": 0,
+            "type": "number"
+          },
+          {
+            "value": 0,
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "release_year",
+        "latest_version",
+        "created_at"
+      ],
+      "values": [
+        [
+          {
+            "value": "InfluxDB",
+            "type": "string"
+          },
+          {
+            "value": "EXTRACT(YEAR FROM SYSDATE)",
+            "type": "expression"
+          },
+          {
+            "value": "'v' || '2.7'",
+            "type": "expression"
+          },
+          {
+            "value": "SYSDATE",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "vendor_name",
+        "license_cost"
+      ],
+      "values": [
+        [
+          {
+            "value": "Vertica",
+            "type": "string"
+          },
+          {
+            "value": "Micro Focus",
+            "type": "string"
+          },
+          {
+            "value": "NVL(NULL, 5000.00)",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "is_open_source",
+        "status"
+      ],
+      "values": [
+        [
+          {
+            "value": "Greenplum",
+            "type": "string"
+          },
+          {
+            "value": "DECODE('yes', 'yes', 1, 'no', 0, 0)",
+            "type": "expression"
+          },
+          {
+            "value": "A",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "max_connections",
+        "vendor_name"
+      ],
+      "values": [
+        [
+          {
+            "value": "SAP HANA",
+            "type": "string"
+          },
+          {
+            "value": "LENGTH('Maximum')",
+            "type": "expression"
+          },
+          {
+            "value": "SAP SE",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "vendor_name"
+      ],
+      "values": [
+        [
+          {
+            "value": "INITCAP('clickhouse')",
+            "type": "expression"
+          },
+          {
+            "value": "INITCAP('clickhouse inc')",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "license_cost",
+        "market_share"
+      ],
+      "values": [
+        [
+          {
+            "value": "Snowflake",
+            "type": "string"
+          },
+          {
+            "value": "COALESCE(NULL, NULL, 2500.00)",
+            "type": "expression"
+          },
+          {
+            "value": 3.5,
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "max_connections",
+        "market_share"
+      ],
+      "values": [
+        [
+          {
+            "value": "Teradata",
+            "type": "string"
+          },
+          {
+            "value": "GREATEST(1000, 5000, 3000)",
+            "type": "expression"
+          },
+          {
+            "value": "LEAST(10.5, 8.2, 15.7)",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "max_connections",
+        "release_year"
+      ],
+      "values": [
+        [
+          {
+            "value": "Informix",
+            "type": "string"
+          },
+          {
+            "value": "MOD(10050, 1000)",
+            "type": "expression"
+          },
+          {
+            "value": "1980 + MOD(45, 20)",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_id",
+        "product_name",
+        "vendor_name"
+      ],
+      "values": [
+        [
+          {
+            "value": "db_products_seq.NEXTVAL",
+            "type": "expression"
+          },
+          {
+            "value": "DynamoDB",
+            "type": "string"
+          },
+          {
+            "value": "Amazon Web Services",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "latest_version"
+      ],
+      "values": [
+        [
+          {
+            "value": "SingleStore",
+            "type": "string"
+          },
+          {
+            "value": "LPAD('8', 3, '0') || '.' || RPAD('5', 2, '0')",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "description"
+      ],
+      "values": [
+        [
+          {
+            "value": "Azure SQL",
+            "type": "string"
+          },
+          {
+            "value": "REPLACE('Microsoft cloud database service', 'cloud', 'managed cloud')",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "license_cost",
+        "market_share"
+      ],
+      "values": [
+        [
+          {
+            "value": "Db2 Warehouse",
+            "type": "string"
+          },
+          {
+            "value": "ABS(-15000)",
+            "type": "expression"
+          },
+          {
+            "value": "ABS(-4.5)",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "market_share",
+        "license_cost"
+      ],
+      "values": [
+        [
+          {
+            "value": "Actian Ingres",
+            "type": "string"
+          },
+          {
+            "value": "TRUNC(7.89456, 2)",
+            "type": "expression"
+          },
+          {
+            "value": "TRUNC(12345.6789, 2)",
+            "type": "expression"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "database_products",
+      "columns": [
+        "product_name",
+        "vendor_name",
+        "latest_version",
+        "release_year"
+      ],
+      "values": [
+        [
+          {
+            "value": "UPPER(SUBSTR('rockset database', 1, 7))",
+            "type": "expression"
+          },
+          {
+            "value": "INITCAP(TRIM('  rockset inc  '))",
+            "type": "expression"
+          },
+          {
+            "value": "'v' || TO_CHAR(ROUND(2.75, 1))",
+            "type": "expression"
+          },
+          {
+            "value": "TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - 5",
+            "type": "expression"
+          }
+        ]
+      ]
+    }
+  ]
+}

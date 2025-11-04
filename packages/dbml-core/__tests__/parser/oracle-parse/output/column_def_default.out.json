@@ -1,0 +1,1509 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "Unknown",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "noemail@example.com",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "dbdefault": {
+            "value": "N/A",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "address",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "dbdefault": {
+            "value": "Unknown Address",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "dbdefault": {
+            "value": "ACTIVE",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "reg_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "last_login",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "dbdefault": {
+            "value": "SYSTIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 1,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "dbdefault": {
+            "value": "Item",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "dbdefault": {
+            "value": "Misc",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "sku",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "dbdefault": {
+            "value": "SKU000",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "weight",
+          "type": {
+            "type_name": "NUMBER(8,2)"
+          },
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "stock_level",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "reorder_level",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 10,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "ship_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": "test_seq.NEXTVAL",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 1,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "ship_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "total_amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "tracking_number",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "dbdefault": {
+            "value": "SYS_GUID()",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "carrier",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "UPS",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "dbdefault": {
+            "value": 1,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "notes",
+          "type": {
+            "type_name": "VARCHAR2(4000)"
+          },
+          "dbdefault": {
+            "value": "No notes",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 100,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "General",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "budget",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "dbdefault": {
+            "value": 10000,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "location",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "dbdefault": {
+            "value": "HQ",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "established_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "suppliers",
+      "fields": [
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 500,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "Supplier",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "contact",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "Contact",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "ssn",
+          "type": {
+            "type_name": "VARCHAR2(11)"
+          },
+          "dbdefault": {
+            "value": "000-00-0000",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "badge_number",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "dbdefault": {
+            "value": "BADGE000",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "credit_limit",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "dbdefault": {
+            "value": 5000,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "dbdefault": {
+            "value": 42,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "Default Text",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "dbdefault": {
+            "value": "CHARDEF   ",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "dbdefault": {
+            "value": "SYSTIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "dbdefault": {
+            "value": "EMPTY_CLOB()",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_raw",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "dbdefault": {
+            "value": "HEXTORAW('00')",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "dbdefault": {
+            "value": 3.14,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "dbdefault": {
+            "value": 100,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "N'Default National'",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nchar",
+          "type": {
+            "type_name": "NCHAR(10)"
+          },
+          "dbdefault": {
+            "value": "N'NCHARDEF  '",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_basic_num",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 100,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_basic_varchar",
+      "fields": [
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "Unknown",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "dbdefault": {
+            "value": "CODE",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_basic_date",
+      "fields": [
+        {
+          "name": "event_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "end_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE + 1",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_expr_sysdate",
+      "fields": [
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "updated_at",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_expr_user",
+      "fields": [
+        {
+          "name": "created_by",
+          "type": {
+            "type_name": "VARCHAR2(30)"
+          },
+          "dbdefault": {
+            "value": "USER",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "modified_by",
+          "type": {
+            "type_name": "VARCHAR2(30)"
+          },
+          "dbdefault": {
+            "value": "USER",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_expr_guid",
+      "fields": [
+        {
+          "name": "unique_id",
+          "type": {
+            "type_name": "VARCHAR2(32)"
+          },
+          "dbdefault": {
+            "value": "SYS_GUID()",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "session_id",
+          "type": {
+            "type_name": "VARCHAR2(32)"
+          },
+          "dbdefault": {
+            "value": "SYS_GUID()",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_expr_seq",
+      "fields": [
+        {
+          "name": "seq_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": "test_seq.NEXTVAL",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "auto_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": "test_seq.NEXTVAL",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_expr_arith",
+      "fields": [
+        {
+          "name": "base_value",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 1000,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "calc_value",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": "1000 + 500",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_on_null_basic",
+      "fields": [
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "noemail@example.com",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "dbdefault": {
+            "value": "N/A",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_on_null_num",
+      "fields": [
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "discount",
+          "type": {
+            "type_name": "NUMBER(5,2)"
+          },
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_on_null_date",
+      "fields": [
+        {
+          "name": "start_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "end_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE + 7",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_default_not_null",
+      "fields": [
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "ACTIVE",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 1,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_on_null_not_null",
+      "fields": [
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "Unknown",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "CODE",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_enable",
+      "fields": [
+        {
+          "name": "level",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 1,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "rating",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 5,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_disable",
+      "fields": [
+        {
+          "name": "rank",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 10,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "score",
+          "type": {
+            "type_name": "NUMBER(3)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_validate",
+      "fields": [
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "tax",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_novalidate",
+      "fields": [
+        {
+          "name": "discount",
+          "type": {
+            "type_name": "NUMBER(5,2)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "margin",
+          "type": {
+            "type_name": "NUMBER(5,2)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 0.1,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_disable_noval",
+      "fields": [
+        {
+          "name": "weight",
+          "type": {
+            "type_name": "NUMBER(8,2)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "volume",
+          "type": {
+            "type_name": "NUMBER(8,2)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_rely",
+      "fields": [
+        {
+          "name": "code",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 100,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "ref_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 200,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_norely",
+      "fields": [
+        {
+          "name": "sequence",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 1,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "counter",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_enable_rely",
+      "fields": [
+        {
+          "name": "batch_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 500,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "lot_number",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "LOT",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_disable_norely",
+      "fields": [
+        {
+          "name": "zone_id",
+          "type": {
+            "type_name": "NUMBER(5)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 1,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "area_code",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "AREA",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_defer_deferred",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 1000,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "line_item",
+          "type": {
+            "type_name": "NUMBER(5)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 1,
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_defer_immediate",
+      "fields": [
+        {
+          "name": "invoice_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 2000,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "payment_status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "PENDING",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_nn_not_defer",
+      "fields": [
+        {
+          "name": "ticket_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": 3000,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "issue_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes_inline",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "Text",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "dbdefault": {
+            "value": "CHAR      ",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "dbdefault": {
+            "value": "SYSDATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "dbdefault": {
+            "value": "SYSTIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "dbdefault": {
+            "value": "CLOB Default",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_raw",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "dbdefault": {
+            "value": "HEXTORAW('0000')",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "dbdefault": {
+            "value": 1.23,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "dbdefault": {
+            "value": 42,
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "dbdefault": {
+            "value": "N'National Text'",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nchar",
+          "type": {
+            "type_name": "NCHAR(10)"
+          },
+          "dbdefault": {
+            "value": "N'NCHAR     '",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_complex_expr",
+      "fields": [
+        {
+          "name": "full_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "dbdefault": {
+            "value": "USER || '_USER'",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "calc_field",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "dbdefault": {
+            "value": "100 * 2",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_long_default",
+      "fields": [
+        {
+          "name": "description",
+          "type": {
+            "type_name": "VARCHAR2(4000)"
+          },
+          "dbdefault": {
+            "value": "This is a very long default value for testing purposes, exceeding typical lengths to check parser limits and storage implications in Oracle SQL",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "comments",
+          "type": {
+            "type_name": "VARCHAR2(4000)"
+          },
+          "dbdefault": {
+            "value": "Another long default string to test maximum lengths and handling in table creation statements",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

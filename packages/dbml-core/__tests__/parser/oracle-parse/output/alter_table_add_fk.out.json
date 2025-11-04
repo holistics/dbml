@@ -1,0 +1,540 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "dept_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "location_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "locations",
+      "fields": [
+        {
+          "name": "location_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "city",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "country_code",
+          "type": {
+            "type_name": "CHAR(2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "countries",
+      "fields": [
+        {
+          "name": "country_code",
+          "type": {
+            "type_name": "CHAR(2)"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "country_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "employees",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "department_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "hire_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "location_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "projects",
+      "fields": [
+        {
+          "name": "project_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "project_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "lead_emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "backup_emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "assignments",
+      "fields": [
+        {
+          "name": "assignment_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "project_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "start_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "project_tasks",
+      "fields": [
+        {
+          "name": "project_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "task_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "task_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "checks": []
+        },
+        {
+          "name": "assigned_emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "pk": true,
+          "columns": [
+            {
+              "value": "project_id",
+              "type": "column"
+            },
+            {
+              "value": "task_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "task_hours",
+      "fields": [
+        {
+          "name": "hour_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "project_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "task_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "hours_worked",
+          "type": {
+            "type_name": "NUMBER(5,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [
+    {
+      "name": "fk_emp_dept",
+      "endpoints": [
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "department_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_dept_location",
+      "endpoints": [
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "location_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "locations",
+          "fieldNames": [
+            "location_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_loc_country",
+      "endpoints": [
+        {
+          "tableName": "locations",
+          "fieldNames": [
+            "country_code"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "countries",
+          "fieldNames": [
+            "country_code"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_emp_manager",
+      "endpoints": [
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "manager_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_dept_manager",
+      "endpoints": [
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "manager_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "projects",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "assignments",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "assignments",
+          "fieldNames": [
+            "project_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "projects",
+          "fieldNames": [
+            "project_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_task_hours_project_task",
+      "endpoints": [
+        {
+          "tableName": "task_hours",
+          "fieldNames": [
+            "project_id",
+            "task_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "project_tasks",
+          "fieldNames": [
+            "project_id",
+            "task_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_proj_lead_emp",
+      "endpoints": [
+        {
+          "tableName": "projects",
+          "fieldNames": [
+            "lead_emp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_proj_backup_emp",
+      "endpoints": [
+        {
+          "tableName": "projects",
+          "fieldNames": [
+            "backup_emp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_task_assigned_emp",
+      "endpoints": [
+        {
+          "tableName": "project_tasks",
+          "fieldNames": [
+            "assigned_emp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

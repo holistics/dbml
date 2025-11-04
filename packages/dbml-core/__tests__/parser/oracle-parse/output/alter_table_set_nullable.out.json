@@ -1,0 +1,450 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "employees",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "salary",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "commission_pct",
+          "type": {
+            "type_name": "NUMBER(3,2)"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "hire_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "department_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "ssn",
+          "type": {
+            "type_name": "VARCHAR2(11)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "badge_number",
+          "type": {
+            "type_name": "VARCHAR2(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "title",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "office_location",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "products",
+      "fields": [
+        {
+          "name": "product_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "product_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "VARCHAR2(4000)"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "manufacturer",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "sku",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "weight",
+          "type": {
+            "type_name": "NUMBER(8,2)"
+          },
+          "not_null": false,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "orders",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "order_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "ship_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "total_amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "tax_amount",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "discount_amount",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "datatype_tests",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "col_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "col_raw",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "col_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "col_nchar",
+          "type": {
+            "type_name": "NCHAR(10)"
+          },
+          "not_null": false,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "complex_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": false,
+          "unique": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "parent_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "not_null": false,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "combo_test",
+      "fields": [
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "not_null": false,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [
+    {
+      "name": "fk_complex_parent",
+      "endpoints": [
+        {
+          "tableName": "complex_test",
+          "fieldNames": [
+            "parent_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "complex_test",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

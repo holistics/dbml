@@ -1,0 +1,528 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        },
+        {
+          "name": "reg_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "region",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        },
+        {
+          "name": "credit_limit",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_cust_id",
+          "unique": false,
+          "columns": [
+            {
+              "value": "cust_id",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "idx_cust_email",
+          "unique": true,
+          "columns": [
+            {
+              "value": "email",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "idx_cust_status",
+          "type": "bitmap",
+          "unique": false,
+          "columns": [
+            {
+              "value": "status",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "idx_cust_name_upper",
+          "unique": false,
+          "columns": [
+            {
+              "value": "UPPER(cust_name)",
+              "type": "expression"
+            }
+          ]
+        },
+        {
+          "name": "idx_cust_email_lower",
+          "unique": true,
+          "columns": [
+            {
+              "value": "LOWER(email)",
+              "type": "expression"
+            }
+          ]
+        },
+        {
+          "name": "idx_very_long_index_name_for_testing_parser_limits",
+          "unique": false,
+          "columns": [
+            {
+              "value": "cust_id",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "idx_cust_id_bitmap",
+          "type": "bitmap",
+          "unique": false,
+          "columns": [
+            {
+              "value": "cust_id",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "idx_cust_complex",
+          "unique": false,
+          "columns": [
+            {
+              "value": "TO_CHAR(reg_date, 'YYYYMM') || cust_name",
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        },
+        {
+          "name": "sku",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        },
+        {
+          "name": "stock_level",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "warehouse_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supplier_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_inv_item_price",
+          "unique": false,
+          "columns": [
+            {
+              "value": "item_name",
+              "type": "column"
+            },
+            {
+              "value": "price",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "idx_inv_category_stock",
+          "type": "bitmap",
+          "unique": false,
+          "columns": [
+            {
+              "value": "category",
+              "type": "column"
+            },
+            {
+              "value": "stock_level",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "idx_inv_name_price",
+          "unique": false,
+          "columns": [
+            {
+              "value": "UPPER(item_name)",
+              "type": "expression"
+            },
+            {
+              "value": "price * 1.1",
+              "type": "expression"
+            }
+          ]
+        },
+        {
+          "name": "idx_inv_hash_like",
+          "unique": false,
+          "columns": [
+            {
+              "value": "ORA_HASH(item_name)",
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "ship_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "ship_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "total_amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "tracking_number",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        },
+        {
+          "name": "carrier",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "NUMBER(2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_ship_cust_date",
+          "unique": true,
+          "columns": [
+            {
+              "value": "customer_id",
+              "type": "column"
+            },
+            {
+              "value": "ship_date",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "name": "idx_ship_nullable",
+          "unique": false,
+          "columns": [
+            {
+              "value": "customer_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "location",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "suppliers",
+      "fields": [
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "contact",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "city",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_raw",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nchar",
+          "type": {
+            "type_name": "NCHAR(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_dt_mixed",
+          "unique": false,
+          "columns": [
+            {
+              "value": "col_number",
+              "type": "column"
+            },
+            {
+              "value": "col_varchar2",
+              "type": "column"
+            },
+            {
+              "value": "col_date",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

@@ -1,0 +1,70 @@
+Table "customers" {
+  "cust_id" NUMBER(10)
+  "cust_name" VARCHAR2(100) [not null]
+  "email" VARCHAR2(100)
+  "phone" VARCHAR2(20)
+  "address" VARCHAR2(200)
+
+  Checks {
+    `cust_id > 0` [name: 'chk_cust_id_pos']
+  }
+}
+
+Table "inventory" {
+  "item_id" NUMBER(10)
+  "item_name" VARCHAR2(200) [not null]
+  "price" NUMBER(10,2) [not null]
+  "category" VARCHAR2(50)
+  "sku" VARCHAR2(50)
+
+  Checks {
+    `price >= 0`
+    `category IN ('ELECTRONICS', 'CLOTHING', 'BOOKS')` [name: 'chk_inv_category']
+  }
+}
+
+Table "shipments" {
+  "ship_id" NUMBER(10)
+  "customer_id" NUMBER(10) [not null]
+  "ship_date" DATE
+  "total_amount" NUMBER(12,2)
+  "tracking_number" VARCHAR2(50)
+
+  Checks {
+    `total_amount >= 0` [name: 'chk_ship_amount']
+    `ship_date >= TRUNC(SYSDATE)` [name: 'chk_ship_date_valid']
+  }
+}
+
+Table "datatype_tests" {
+  "col_number" NUMBER(10,2)
+  "col_varchar2" VARCHAR2(100)
+  "col_char" CHAR(10)
+  "col_date" DATE
+  "col_timestamp" TIMESTAMP
+  "col_clob" CLOB
+  "col_raw" RAW(100)
+  "col_float" FLOAT
+  "col_integer" INTEGER
+  "col_nvarchar2" NVARCHAR2(100)
+  "col_nchar" NCHAR(10)
+}
+
+Table "complex_test" {
+  "id" NUMBER(10)
+  "code" VARCHAR2(20)
+  "name" VARCHAR2(100) [not null]
+  "parent_id" NUMBER(10)
+  "status" VARCHAR2(20)
+
+  Checks {
+    `id IS NOT NULL OR status = 'ACTIVE'` [name: 'chk_id_status']
+  }
+}
+
+Table "combo_test" {
+  "col1" NUMBER(10)
+  "col2" VARCHAR2(50)
+}
+
+Ref "fk_complex_parent":"complex_test"."id" < "complex_test"."parent_id"
