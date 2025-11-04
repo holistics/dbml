@@ -26,40 +26,56 @@
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
         </svg>
       </button>
-      <div v-else class="w-4 h-4 mr-1"></div>
+      <div
+        v-else
+        class="w-4 h-4 mr-1"
+      />
 
-              <!-- Node Icon and Name -->
-        <span class="flex-1 flex items-center min-w-0">
-          <ASTIcon v-if="getIconType()" :type="getIconType()" :icon-class="getIconClass()" class="mr-2" />
-          <span class="text-xs text-gray-500 mr-2">{{ node.propertyName }}:</span>
-          <span class="font-medium text-gray-800 truncate">{{ node.value }}</span>
-        </span>
+      <!-- Node Icon and Name -->
+      <span class="flex-1 flex items-center min-w-0">
+        <ASTIcon
+          v-if="getIconType()"
+          :type="getIconType()"
+          :icon-class="getIconClass()"
+          class="mr-2"
+        />
+        <span class="text-xs text-gray-500 mr-2">{{ node.propertyName }}:</span>
+        <span class="font-medium text-gray-800 truncate">{{ node.value }}</span>
+      </span>
 
-        <!-- Position Navigation Button (right-aligned) -->
-        <span
-          v-if="hasPosition"
-          @click.stop="handlePositionClick"
-          class="ml-auto px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded cursor-pointer hover:bg-blue-200 transition-colors flex-shrink-0"
-          title="Click to navigate to source position"
-        >
-          {{ formatPosition() }}
-        </span>
+      <!-- Position Navigation Button (right-aligned) -->
+      <span
+        v-if="hasPosition"
+        @click.stop="handlePositionClick"
+        class="ml-auto px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded cursor-pointer hover:bg-blue-200 transition-colors flex-shrink-0"
+        title="Click to navigate to source position"
+      >
+        {{ formatPosition() }}
+      </span>
 
-        <!-- Node Type Badge -->
-        <span
-          v-if="node.nodeType && node.nodeType !== 'primitive'"
-          class="ml-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded"
-          :title="`Node type: ${node.nodeType}`"
-        >
-          {{ node.nodeType }}
-        </span>
+      <!-- Node Type Badge -->
+      <span
+        v-if="node.nodeType && node.nodeType !== 'primitive'"
+        class="ml-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded"
+        :title="`Node type: ${node.nodeType}`"
+      >
+        {{ node.nodeType }}
+      </span>
     </div>
 
     <!-- Children -->
-    <div v-if="isExpanded && hasChildren" class="children">
+    <div
+      v-if="isExpanded && hasChildren"
+      class="children"
+    >
       <InterpreterTreeNode
         v-for="child in node.children"
         :key="child.id"

@@ -8,7 +8,9 @@
   "scripts": {
     "test": "npx lerna run test",
     "build": "yarn clean-build && npx lerna run build",
-    "clean-build": "rm -rf ./packages/dbml-cli/lib ./packages/dbml-core/lib ./packages/dbml-parse/dist ./packages/dbml-connector/dist"
+    "clean-build": "rm -rf ./packages/dbml-cli/lib ./packages/dbml-core/lib ./packages/dbml-parse/dist ./packages/dbml-connector/dist",
+    "lint": "npx lerna run lint",
+    "lint:fix": "npx lerna run lint:fix"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
@@ -16,16 +18,11 @@
     "@babel/preset-env": "^7.21.4",
     "@glen/jest-raw-loader": "^2.0.0",
     "babel-jest": "^29.5.0",
-    "eslint": "^8.45.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-import-resolver-typescript": "^4.3.1",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jest": "^27.2.3",
     "jest": "^29.5.0",
     "lerna": "^7.1.4",
     "lerna-changelog": "^2.2.0"
   },
-    "resolutions": {
+  "resolutions": {
     "**/tmp": "0.2.5"
   },
   "license": "Apache-2.0",

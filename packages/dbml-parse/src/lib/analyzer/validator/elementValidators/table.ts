@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this */
+ 
 import { last, forIn } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
@@ -154,7 +154,7 @@ export default class TableValidator implements ElementValidator {
 
     if (
       alias && isSimpleName(alias)
-      // eslint-disable-next-line no-use-before-define
+       
       && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
     ) {
       const aliasName = extractVarNameFromPrimaryVariable(alias as any).unwrap();
@@ -230,7 +230,7 @@ export default class TableValidator implements ElementValidator {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
       }
 
-      // eslint-disable-next-line no-use-before-define
+       
       if (field.args[0] && !isValidColumnType(field.args[0])) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', field.args[0]));
       }

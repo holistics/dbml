@@ -199,7 +199,7 @@ export default class Compiler {
 
         let curNode: Readonly<SyntaxNode> = this.parse.ast();
         const res: SyntaxNode[] = [curNode];
-        // eslint-disable-next-line no-constant-condition
+
         while (true) {
           const memberChain = getMemberChain(curNode);
           const foundMem = memberChain.find((mem) => isOffsetWithinSpan(searchOffset, mem));
@@ -376,7 +376,7 @@ export default class Compiler {
           const { symbolTable } = currentOwner.symbol;
           let currentPossibleSymbolTables: SymbolTable[] = [symbolTable];
           let currentPossibleSymbols: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
-          // eslint-disable-next-line no-restricted-syntax
+
           for (const name of nameStack) {
             currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) => generatePossibleIndexes(name).flatMap((index) => {
               const symbol = st.get(index);

@@ -148,7 +148,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
       column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PrimaryKey]?.length;
       column.increment = !!settingMap[SettingName.Increment]?.length;
       column.unique = !!settingMap[SettingName.Unique]?.length;
-      // eslint-disable-next-line no-nested-ternary
+       
       column.not_null = settingMap[SettingName.NotNull]?.length
         ? true
         : (

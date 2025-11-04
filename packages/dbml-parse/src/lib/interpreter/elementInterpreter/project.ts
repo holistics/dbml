@@ -69,7 +69,11 @@ export class ProjectInterpreter implements ElementInterpreter {
         }
         case 'note': {
           this.project.note = {
-            value: extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? (sub.body.body[0] as FunctionApplicationNode).callee : sub.body!.callee).map(normalizeNoteContent).unwrap(),
+            value: extractQuotedStringToken(
+              sub.body instanceof BlockExpressionNode
+                ? (sub.body.body[0] as FunctionApplicationNode).callee
+                : sub.body!.callee,
+            ).map(normalizeNoteContent).unwrap(),
             token: getTokenPosition(sub),
           };
           return [];

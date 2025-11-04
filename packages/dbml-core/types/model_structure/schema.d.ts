@@ -5,6 +5,7 @@ import TableGroup from './tableGroup';
 import Ref from './ref';
 import Database, { NormalizedDatabase } from './database';
 import DbState from './dbState';
+
 export interface RawSchema {
     name: string;
     alias?: string;
@@ -17,34 +18,36 @@ export interface RawSchema {
     database: Database;
 }
 declare class Schema extends Element {
-    name: string;
-    alias: string;
-    note: string;
-    noteToken: Token;
-    tables: Table[];
-    refs: Ref[];
-    enums: Enum[];
-    tableGroups: TableGroup[];
-    database: Database;
-    dbState: DbState;
-    constructor({ name, alias, note, tables, refs, enums, tableGroups, token, database }: RawSchema);
-    generateId(): void;
-    processTables(rawTables: any): void;
-    pushTable(table: any): void;
-    checkTable(table: any): void;
-    findTable(tableName: string): Table;
-    processEnums(rawEnums: any): void;
-    pushEnum(_enum: any): void;
-    checkEnum(_enum: any): void;
-    bindEnumToField(_enum: any): void;
-    processRefs(rawRefs: any): void;
-    pushRef(ref: any): void;
-    checkRef(ref: any): void;
-    processTableGroups(rawTableGroups: any): void;
-    pushTableGroup(tableGroup: any): void;
-    checkTableGroup(tableGroup: any): void;
-    checkSameId(schema: any): boolean;
-    export(): {
+  name: string;
+  alias: string;
+  note: string;
+  noteToken: Token;
+  tables: Table[];
+  refs: Ref[];
+  enums: Enum[];
+  tableGroups: TableGroup[];
+  database: Database;
+  dbState: DbState;
+  constructor({
+    name, alias, note, tables, refs, enums, tableGroups, token, database,
+  }: RawSchema);
+  generateId(): void;
+  processTables(rawTables: any): void;
+  pushTable(table: any): void;
+  checkTable(table: any): void;
+  findTable(tableName: string): Table;
+  processEnums(rawEnums: any): void;
+  pushEnum(_enum: any): void;
+  checkEnum(_enum: any): void;
+  bindEnumToField(_enum: any): void;
+  processRefs(rawRefs: any): void;
+  pushRef(ref: any): void;
+  checkRef(ref: any): void;
+  processTableGroups(rawTableGroups: any): void;
+  pushTableGroup(tableGroup: any): void;
+  checkTableGroup(tableGroup: any): void;
+  checkSameId(schema: any): boolean;
+  export(): {
         tables: {
             fields: {
                 name: string;
@@ -102,7 +105,7 @@ declare class Schema extends Element {
         note: string;
         alias: string;
     };
-    exportChild(): {
+  exportChild(): {
         tables: {
             fields: {
                 name: string;
@@ -157,22 +160,22 @@ declare class Schema extends Element {
             onUpdate: any;
         }[];
     };
-    exportChildIds(): {
+  exportChildIds(): {
         tableIds: number[];
         noteIds: number[];
         enumIds: number[];
         tableGroupIds: number[];
         refIds: number[];
     };
-    exportParentIds(): {
+  exportParentIds(): {
         databaseId: number;
     };
-    shallowExport(): {
+  shallowExport(): {
         name: string;
         note: string;
         alias: string;
     };
-    normalize(model: NormalizedDatabase): void;
+  normalize(model: NormalizedDatabase): void;
 }
 export interface NormalizedSchema {
     [_id: number]: {

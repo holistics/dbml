@@ -176,13 +176,13 @@ export class TokenNavigationCoordinator {
    */
   private setupEventHandlers(): void {
     // Token → DBML navigation
-    this.eventBus.on('navigate:token-to-dbml', ({ tokenIndex, modifier }) => {
+    this.eventBus.on('navigate:token-to-dbml', ({ tokenIndex }) => {
       if (this.isNavigating) return
       this.highlightTokenInDbml(tokenIndex)
     })
 
     // DBML → Token navigation
-    this.eventBus.on('navigate:dbml-to-token', ({ line, column, modifier }) => {
+    this.eventBus.on('navigate:dbml-to-token', ({ line, column }) => {
       if (this.isNavigating) return
       this.highlightTokenInLexer(line, column)
     })

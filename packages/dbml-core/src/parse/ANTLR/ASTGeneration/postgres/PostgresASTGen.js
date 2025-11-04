@@ -1,6 +1,6 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable consistent-return */
-/* eslint-disable class-methods-use-this */
+ 
+ 
+ 
 import { last, flatten, flattenDepth } from 'lodash';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
 import {
@@ -860,7 +860,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
           case TABLE_CONSTRAINT_KIND.INDEX: {
             if (cmd.value.columns.length === 0) break;
             if (!(cmd.value.pk || cmd.value.unique)) break;
-            // eslint-disable-next-line prefer-destructuring
+             
             kind = cmd.kind;
             const table = findTable(this.data.tables, schemaName, tableName);
             if (!table) break;
@@ -1214,7 +1214,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     //   undefined,
     //   { type_name: 'TIMESTAMPTZ', schemaName: null }
     // ]
-    // eslint-disable-next-line no-unused-vars
+
     const [rawValue, _, rawType = {}] = expressionValueSet;
     const { value, type } = rawValue;
     return {

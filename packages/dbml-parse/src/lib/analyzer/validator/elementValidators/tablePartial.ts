@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this */
+ 
 import { partition, forIn, last } from 'lodash';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';

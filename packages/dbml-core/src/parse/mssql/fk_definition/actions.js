@@ -48,7 +48,7 @@ function makeTableConstraintFK (_keyword1, endpoint1, _keyword2, tableName, endp
 
   if (!endpoint2) {
     // Omits columns list, see: https://docs.microsoft.com/en-us/sql/t-sql/statements/create-table-transact-sql?view=sql-server-ver16#foreign-key-constraints
-    // eslint-disable-next-line no-param-reassign
+     
     endpoint2 = {
       type: 'endpoint',
       value: {
@@ -61,7 +61,6 @@ function makeTableConstraintFK (_keyword1, endpoint1, _keyword2, tableName, endp
   endpoint2.value.relation = '1';
   endpoint2.value.tableName = fullTableName.name;
   endpoint2.value.schemaName = fullTableName.schemaName;
-
 
   value.endpoints = [endpoint1.value, endpoint2.value];
   setOption(value, fkOptions);

@@ -21,7 +21,7 @@ describe('@dbml/core - model_structure', () => {
   describe('multiple_schema', () => {
     describe('normalized_structure', () => {
       test('normalized database - contains all properties', (done) => {
-        // eslint-disable-next-line no-undef
+         
         isEqualExcludeTokenEmpty(normalizedModel, expectedNormalizeModel);
         done();
       });

@@ -30,15 +30,17 @@
     "coverage": "vitest run --coverage",
     "prepublish": "npm run build",
     "prepare": "npm run build",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.8.8",
-    "@typescript-eslint/eslint-plugin": "^8.30.1",
-    "@typescript-eslint/parser": "^8.30.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
+    "@typescript-eslint/parser": "^8.46.3",
+    "eslint": "^9.39.1",
     "monaco-editor-core": "^0.44.0",
-    "typescript": "^5.2.2",
+    "typescript": "^5.9.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^3.1.4"

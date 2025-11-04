@@ -186,7 +186,7 @@ export function processDefaultValue (valueNode?: SyntaxNode):
   throw new Error('Unreachable');
 }
 
-/* eslint-disable no-param-reassign */
+ 
 export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, CompileError> {
   let typeArgs: string | null = null;
   if (typeNode instanceof CallExpressionNode) {
@@ -232,4 +232,4 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
     args: typeArgs,
   });
 }
-/* eslint-enable no-param-reassign */
+ 

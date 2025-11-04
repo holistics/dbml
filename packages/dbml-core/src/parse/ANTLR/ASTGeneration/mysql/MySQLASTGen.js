@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this */
+ 
 import { last, flatten, flattenDepth } from 'lodash';
 import MySQLParserVisitor from '../../parsers/mysql/MySqlParserVisitor';
 import {

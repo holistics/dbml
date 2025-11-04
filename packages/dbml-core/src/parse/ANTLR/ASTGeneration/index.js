@@ -1,5 +1,3 @@
-/* eslint-disable import/no-named-as-default-member */
-/* eslint-disable import/no-named-as-default */
 import antlr4 from 'antlr4';
 import PostgreSQLLexer from '../parsers/postgresql/PostgreSQLLexer';
 import PostgreSQLParser from '../parsers/postgresql/PostgreSQLParser';

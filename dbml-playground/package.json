@@ -20,7 +20,8 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --write src/"
   },
   "dependencies": {
@@ -31,6 +32,7 @@
     "vue": "^3.4.0"
   },
   "devDependencies": {
+    "globals": "^16.5.0",
     "@tailwindcss/vite": "^4.1.11",
     "@types/lodash": "^4.14.200",
     "@types/node": "^24.0.14",
@@ -44,6 +46,7 @@
     "tailwindcss": "^4.1.11",
     "typescript": "^5.7.3",
     "vite": "^7.1.7",
+    "vue-eslint-parser": "^10.2.0",
     "vue-tsc": "^3.0.1"
   },
   "engines": {

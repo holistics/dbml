@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 /* TDD 72
  * - In MSSQL, there's no notion of ENUM.
  * - MSSQL connector used to extract ENUMS from CHECK constraints, for example: `CHECK ([col]=value1 OR [col]=value2)` would be translated to an enum with 2 values, `value1` and `value2`.

@@ -45,7 +45,6 @@ const Lang = P.createLanguage({
   }),
   FKOnOptions: () => P.alt(KP.KeywordNoAction, KP.KeywordCascade, KP.KeywordSetDefault, KP.KeywordSetNull),
 
-
 });
 module.exports = {
   pColumnConstraintFK: Lang.ColumnConstraintFK,

@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this */
+ 
 import { forIn, partition } from 'lodash';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {

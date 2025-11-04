@@ -79,7 +79,6 @@ const Lang = P.createLanguage({
     P.string(']'),
   ).map(value => value[1]).skip(wss),
 
-
   pKeywordPKOrUnique: () => P.alt(
     KP.KeywordPrimaryKey.result({ type: 'pk', value: true }),
     KP.KeywordUnique.result({ type: 'unique', value: true }),

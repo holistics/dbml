@@ -5,7 +5,11 @@
       <div class="w-full px-6">
         <div class="flex justify-between items-center py-4">
           <div class="flex items-center">
-            <img src="/dbml-logo.png" alt="DBML Logo" class="h-8 w-auto mr-3" />
+            <img
+              src="/dbml-logo.png"
+              alt="DBML Logo"
+              class="h-8 w-auto mr-3"
+            >
             <div class="flex items-center gap-3">
               <span class="text-2xl font-bold text-gray-900">DBML Parser Playground</span>
               <span class="px-3 py-1.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
@@ -38,12 +42,19 @@
       <!-- Parser Content -->
       <div class="flex-1 flex overflow-hidden w-full">
         <!-- Input Section -->
-        <div class="flex flex-col border-r border-gray-200" :style="{ width: `${mainPanelWidth}%` }">
+        <div
+          class="flex flex-col border-r border-gray-200"
+          :style="{ width: `${mainPanelWidth}%` }"
+        >
           <div class="bg-white px-6 py-4 border-b border-gray-200 flex-shrink-0">
             <div class="flex justify-between items-start">
               <div>
-                <h2 class="text-lg font-semibold text-gray-900">DBML Input</h2>
-                <p class="text-sm text-gray-500 mt-1">Enter your DBML schema code below</p>
+                <h2 class="text-lg font-semibold text-gray-900">
+                  DBML Input
+                </h2>
+                <p class="text-sm text-gray-500 mt-1">
+                  Enter your DBML schema code below
+                </p>
               </div>
               <!-- Vim Mode Toggle for DBML Editor -->
               <div class="flex items-center space-x-2">
@@ -52,7 +63,7 @@
                     type="checkbox"
                     v-model="vimModeEnabled"
                     class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                  />
+                  >
                   <span class="text-sm text-gray-600">Vim Mode</span>
                 </label>
               </div>
@@ -76,15 +87,22 @@
         <div
           class="w-1 bg-gray-300 hover:bg-gray-400 cursor-col-resize transition-colors flex-shrink-0"
           @mousedown="startMainResize"
-        ></div>
+        />
 
         <!-- Output Section -->
-        <div class="flex flex-col" :style="{ width: `${100 - mainPanelWidth}%` }">
+        <div
+          class="flex flex-col"
+          :style="{ width: `${100 - mainPanelWidth}%` }"
+        >
           <div class="bg-white px-6 py-4 border-b border-gray-200 flex-shrink-0">
             <div class="flex items-center justify-between">
               <div>
-                <h2 class="text-lg font-semibold text-gray-900">Parser Pipeline</h2>
-                <p class="text-sm text-gray-500 mt-1">View the output of each parsing stage</p>
+                <h2 class="text-lg font-semibold text-gray-900">
+                  Parser Pipeline
+                </h2>
+                <p class="text-sm text-gray-500 mt-1">
+                  View the output of each parsing stage
+                </p>
               </div>
               <div class="flex bg-gray-100 rounded-lg p-1">
                 <button
@@ -99,8 +117,10 @@
                   ]"
                 >
                   {{ stage.name }}
-                  <span v-if="stage.id === 'errors' && parser.errors.value.length > 0"
-                        class="ml-1 px-1.5 py-0.5 text-xs bg-red-100 text-red-600 rounded-full">
+                  <span
+                    v-if="stage.id === 'errors' && parser.errors.value.length > 0"
+                    class="ml-1 px-1.5 py-0.5 text-xs bg-red-100 text-red-600 rounded-full"
+                  >
                     {{ parser.errors.value.length }}
                   </span>
                 </button>
@@ -111,35 +131,70 @@
           <div class="flex-1 overflow-hidden bg-gray-50 p-6">
             <div class="h-full bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
               <!-- Error Display -->
-              <div v-if="activeStage === 'errors'" class="h-full flex flex-col">
+              <div
+                v-if="activeStage === 'errors'"
+                class="h-full flex flex-col"
+              >
                 <div class="flex-shrink-0 p-4 border-b border-gray-200 bg-gray-50">
                   <h3 class="text-sm font-medium text-gray-700">
                     Parse Errors ({{ parser.errors.value.length }})
                   </h3>
                 </div>
                 <div class="flex-1 overflow-auto p-4">
-                  <div v-if="parser.errors.value.length === 0" class="text-center py-8">
-                    <svg class="w-12 h-12 mx-auto text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  <div
+                    v-if="parser.errors.value.length === 0"
+                    class="text-center py-8"
+                  >
+                    <svg
+                      class="w-12 h-12 mx-auto text-green-500 mb-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
-                    <p class="text-sm text-gray-500">No parse errors</p>
+                    <p class="text-sm text-gray-500">
+                      No parse errors
+                    </p>
                   </div>
-                  <div v-else class="space-y-3">
+                  <div
+                    v-else
+                    class="space-y-3"
+                  >
                     <div
                       v-for="(error, index) in parser.formatErrors(parser.errors.value)"
                       :key="index"
                       class="bg-red-50 border border-red-200 rounded-lg p-4"
                     >
                       <div class="flex items-start">
-                        <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <svg
+                          class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
                         </svg>
                         <div class="flex-1">
-                          <p class="text-sm font-medium text-red-800">{{ error.message }}</p>
+                          <p class="text-sm font-medium text-red-800">
+                            {{ error.message }}
+                          </p>
                           <p class="text-xs text-red-600 mt-1">
                             Line {{ error.location.line }}, Column {{ error.location.column }}
                           </p>
-                          <p class="text-xs text-red-500 mt-1">Error Code: {{ error.code }}</p>
+                          <p class="text-xs text-red-500 mt-1">
+                            Error Code: {{ error.code }}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -148,7 +203,10 @@
               </div>
 
               <!-- Interpreter stage with semantic view -->
-              <div v-else-if="activeStage === 'interpreter'" class="h-full">
+              <div
+                v-else-if="activeStage === 'interpreter'"
+                class="h-full"
+              >
                 <ParserOutputViewer
                   :data="getCurrentStageOutput()"
                   :title="`${getStageTitle(activeStage)} Semantic View`"
@@ -156,7 +214,10 @@
               </div>
 
               <!-- Lexer stage with ParserOutputViewer for token navigation -->
-              <div v-else-if="activeStage === 'lexer'" class="h-full">
+              <div
+                v-else-if="activeStage === 'lexer'"
+                class="h-full"
+              >
                 <ParserOutputViewer
                   :data="getCurrentStageOutput()"
                   ref="lexerViewer"
@@ -164,7 +225,10 @@
               </div>
 
               <!-- Parser and Analyzer stages with AST debugger -->
-              <div v-else-if="activeStage === 'parser' || activeStage === 'analyzer'" class="h-full">
+              <div
+                v-else-if="activeStage === 'parser' || activeStage === 'analyzer'"
+                class="h-full"
+              >
                 <ParserOutputViewer
                   :data="getCurrentStageOutput()"
                   :title="`${getStageTitle(activeStage)} AST Debugger`"
@@ -173,7 +237,10 @@
               </div>
 
               <!-- Other stages with JSON Viewer -->
-              <div v-else class="h-full">
+              <div
+                v-else
+                class="h-full"
+              >
                 <JsonOutputViewer
                   :json-content="getCurrentStageOutputString()"
                   :title="`${getStageTitle(activeStage)} Output`"

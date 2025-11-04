@@ -115,7 +115,7 @@ export function registerSchemaStack (
   }
 
   let prevSchema = globalSchema;
-  // eslint-disable-next-line no-restricted-syntax
+   
   for (const curName of variables) {
     let curSchema: SymbolTable | undefined;
     const curId = createSchemaSymbolIndex(curName);
@@ -257,7 +257,7 @@ export function isValidColumnType (type: SyntaxNode): boolean {
       return false;
     }
 
-    // eslint-disable-next-line no-param-reassign
+     
     type = type.callee;
   }
 
@@ -270,7 +270,7 @@ export function isValidColumnType (type: SyntaxNode): boolean {
       return false;
     }
 
-    // eslint-disable-next-line no-param-reassign
+     
     type = type.array;
   }
 

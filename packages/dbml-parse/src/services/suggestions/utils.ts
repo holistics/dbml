@@ -36,7 +36,6 @@ export function shouldPrependSpace (token: SyntaxToken | undefined, offset: numb
     return false;
   }
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const trivia of token.trailingTrivia) {
     if (trivia.start > offset) {
       break;

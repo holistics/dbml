@@ -2,14 +2,21 @@
   <div class="ast-details-panel h-full flex flex-col">
     <!-- Header -->
     <div class="flex-shrink-0 p-4 border-b border-gray-200 bg-white">
-      <h3 class="text-sm font-medium text-gray-900">Node Details</h3>
+      <h3 class="text-sm font-medium text-gray-900">
+        Node Details
+      </h3>
     </div>
 
     <!-- Content -->
     <div class="flex-1 overflow-auto p-4 space-y-4">
       <!-- Selected Node Info -->
-      <div v-if="selectedNode" class="section">
-        <h4 class="text-xs font-medium text-gray-700 mb-2">Selected Node</h4>
+      <div
+        v-if="selectedNode"
+        class="section"
+      >
+        <h4 class="text-xs font-medium text-gray-700 mb-2">
+          Selected Node
+        </h4>
         <div class="bg-gray-50 rounded-lg p-3 space-y-3">
           <!-- Node Header -->
           <div class="flex items-center">
@@ -28,8 +35,13 @@
           </div>
 
           <!-- Position & Debug Information -->
-          <div v-if="selectedNode.sourcePosition" class="border-t border-gray-200 pt-2">
-            <div class="text-xs font-medium text-gray-700 mb-2">Position & Debug Info</div>
+          <div
+            v-if="selectedNode.sourcePosition"
+            class="border-t border-gray-200 pt-2"
+          >
+            <div class="text-xs font-medium text-gray-700 mb-2">
+              Position & Debug Info
+            </div>
             <div class="text-xs text-gray-600 space-y-1">
               <!-- Position -->
               <div>
@@ -50,8 +62,13 @@
               </div>
 
               <!-- Token Info -->
-              <div v-if="selectedNode.sourcePosition.token" class="border-t border-gray-300 pt-1 mt-1">
-                <div class="font-medium text-gray-700 mb-1">Token Information</div>
+              <div
+                v-if="selectedNode.sourcePosition.token"
+                class="border-t border-gray-300 pt-1 mt-1"
+              >
+                <div class="font-medium text-gray-700 mb-1">
+                  Token Information
+                </div>
                 <div><span class="font-medium">Token Kind:</span> {{ selectedNode.sourcePosition.token.kind || 'none' }}</div>
                 <div v-if="selectedNode.sourcePosition.token.value">
                   <span class="font-medium">Token Value:</span> "{{ selectedNode.sourcePosition.token.value }}"
@@ -73,20 +90,47 @@
 
 
       <!-- Access Path -->
-      <div v-if="selectedNode?.accessPath" class="section">
+      <div
+        v-if="selectedNode?.accessPath"
+        class="section"
+      >
         <div class="flex items-center justify-between mb-2">
-          <h4 class="text-xs font-medium text-gray-700">JavaScript Access Path</h4>
+          <h4 class="text-xs font-medium text-gray-700">
+            JavaScript Access Path
+          </h4>
           <button
             @click="copySelectedNodeAccessPath"
             class="flex items-center space-x-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             :class="{ 'text-green-700 border-green-300 bg-green-50': copyAccessPathSuccess }"
             title="Copy JavaScript access path"
           >
-            <svg v-if="!copyAccessPathSuccess" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            <svg
+              v-if="!copyAccessPathSuccess"
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
             </svg>
-            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            <svg
+              v-else
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
             </svg>
             <span>{{ copyAccessPathSuccess ? 'Copied!' : 'Copy' }}</span>
           </button>
@@ -97,7 +141,10 @@
       </div>
 
       <!-- Raw AST Data - Collapsible -->
-      <div v-if="selectedNode && (selectedNode.data || selectedNode.accessPath) && selectedNode.type !== 'database'" class="section">
+      <div
+        v-if="selectedNode && (selectedNode.data || selectedNode.accessPath) && selectedNode.type !== 'database'"
+        class="section"
+      >
         <div class="flex items-center justify-between mb-2">
           <button
             @click="showRawAst = !showRawAst"
@@ -110,7 +157,12 @@
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
             </svg>
             <span>{{ selectedNode.data ? 'Parser AST Data' : 'Node JSON' }}</span>
           </button>
@@ -121,16 +173,42 @@
             :class="{ 'text-green-700 border-green-300 bg-green-50': copyJsonSuccess }"
             title="Copy node as JSON"
           >
-            <svg v-if="!copyJsonSuccess" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            <svg
+              v-if="!copyJsonSuccess"
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
             </svg>
-            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            <svg
+              v-else
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
             </svg>
             <span>{{ copyJsonSuccess ? 'Copied!' : 'Copy' }}</span>
           </button>
         </div>
-        <div v-if="showRawAst" class="bg-slate-50 rounded-lg overflow-hidden border border-slate-200 shadow-sm" :style="{ height: `${jsonViewerHeight}px` }">
+        <div
+          v-if="showRawAst"
+          class="bg-slate-50 rounded-lg overflow-hidden border border-slate-200 shadow-sm"
+          :style="{ height: `${jsonViewerHeight}px` }"
+        >
           <MonacoEditor
             :model-value="nodeJson"
             language="json"
@@ -151,31 +229,51 @@
               renderLineHighlight: 'none'
             }"
           />
-        <!-- Resize Handle for JSON Viewer -->
-        <div
-          class="w-full h-1 bg-gray-300 hover:bg-gray-400 cursor-row-resize transition-colors"
-          @mousedown="startJsonResize"
-        ></div>
+          <!-- Resize Handle for JSON Viewer -->
+          <div
+            class="w-full h-1 bg-gray-300 hover:bg-gray-400 cursor-row-resize transition-colors"
+            @mousedown="startJsonResize"
+          />
         </div>
       </div>
 
       <!-- Source Navigation -->
-      <div v-if="selectedNode?.sourcePosition" class="section">
-        <h4 class="text-xs font-medium text-gray-700 mb-2">Source Location</h4>
+      <div
+        v-if="selectedNode?.sourcePosition"
+        class="section"
+      >
+        <h4 class="text-xs font-medium text-gray-700 mb-2">
+          Source Location
+        </h4>
         <button
           @click="navigateToSource"
           class="w-full flex items-center justify-center px-3 py-2 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
         >
-          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          <svg
+            class="w-4 h-4 mr-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+            />
           </svg>
           Go to Source
         </button>
       </div>
 
       <!-- AST Statistics & Debugging Info -->
-      <div v-if="selectedNode?.type === 'database'" class="section">
-        <h4 class="text-xs font-medium text-gray-700 mb-2">AST Statistics</h4>
+      <div
+        v-if="selectedNode?.type === 'database'"
+        class="section"
+      >
+        <h4 class="text-xs font-medium text-gray-700 mb-2">
+          AST Statistics
+        </h4>
         <div class="bg-slate-50 rounded-lg p-3 text-xs text-gray-600 space-y-2">
           <div class="grid grid-cols-2 gap-4">
             <div>
@@ -188,9 +286,15 @@
             </div>
           </div>
           <div class="border-t border-gray-200 pt-2">
-            <div class="font-medium mb-1">Element Breakdown:</div>
+            <div class="font-medium mb-1">
+              Element Breakdown:
+            </div>
             <div class="space-y-1">
-              <div v-for="[type, count] in getASTStats().typeBreakdown" :key="type" class="flex justify-between">
+              <div
+                v-for="[type, count] in getASTStats().typeBreakdown"
+                :key="type"
+                class="flex justify-between"
+              >
                 <span class="capitalize">{{ type }}:</span>
                 <span>{{ count }}</span>
               </div>

@@ -1,5 +1,5 @@
-/* eslint-disable camelcase */
-/* eslint-disable max-classes-per-file */
+ 
+
 export class Index {
   /**
    * @param {{

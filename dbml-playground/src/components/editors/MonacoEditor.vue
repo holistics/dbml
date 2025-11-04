@@ -1,11 +1,17 @@
 <template>
   <div class="monaco-editor-wrapper w-full h-full border border-gray-200 rounded-md flex flex-col">
-    <div ref="editorContainer" class="flex-1 min-h-0"></div>
+    <div
+      ref="editorContainer"
+      class="flex-1 min-h-0"
+    />
     <div class="status-bar bg-gray-50 border-t border-gray-200 px-3 py-1 text-xs text-gray-600 flex justify-between items-center">
       <div class="flex items-center space-x-4">
         <span>{{ props.language.toUpperCase() }}</span>
         <span v-if="!props.readOnly">UTF-8</span>
-        <span v-if="props.vimMode" class="vim-mode-indicator bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs font-medium">
+        <span
+          v-if="props.vimMode"
+          class="vim-mode-indicator bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs font-medium"
+        >
           -- {{ vimModeStatus }} --
         </span>
       </div>
@@ -79,6 +85,7 @@ const selectionInfo = ref({
 /**
  * Vim mode state
  */
+// eslint-disable-next-line vue/no-dupe-keys
 let vimMode: any = null
 const vimModeStatus = ref('NORMAL')
 
@@ -86,7 +93,7 @@ const vimModeStatus = ref('NORMAL')
  * Get the appropriate theme for the given language
  * Use DBML theme for both DBML and JSON to maintain consistency
  */
-const getThemeForLanguage = (language: string): string => {
+const getThemeForLanguage = (_language: string): string => {
   return DBMLLanguageService.getThemeName()
 }
 

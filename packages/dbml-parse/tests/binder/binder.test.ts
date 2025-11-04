@@ -1,4 +1,4 @@
-import fs, { readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
 import { scanTestNames } from '../jestHelpers';
@@ -26,7 +26,6 @@ describe('#binder', () => {
       });
     const output = serialize(report, true);
 
-    it(testName, () =>
-      expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
+    it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });
 });

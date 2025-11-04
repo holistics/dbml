@@ -9,7 +9,6 @@ export default class ParserErrorListener extends antlr4.error.ErrorListener {
     this.errors = [];
   }
 
-  // eslint-disable-next-line no-unused-vars
   syntaxError (recognizer, offendingSymbol, line, column, msg, err) {
     this.errors.push(new SyntaxError(line, column, msg));
   }

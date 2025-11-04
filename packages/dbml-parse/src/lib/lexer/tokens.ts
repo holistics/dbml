@@ -34,7 +34,7 @@ export enum SyntaxTokenKind {
   MULTILINE_COMMENT = '<multiline-comment>',
 }
 
-export function isTriviaToken(token: SyntaxToken): boolean {
+export function isTriviaToken (token: SyntaxToken): boolean {
   switch (token.kind) {
     case SyntaxTokenKind.NEWLINE:
     case SyntaxTokenKind.SPACE:
@@ -47,7 +47,7 @@ export function isTriviaToken(token: SyntaxToken): boolean {
   }
 }
 
-export function isOp(c?: string): boolean {
+export function isOp (c?: string): boolean {
   if (!c) {
     return false;
   }
@@ -71,7 +71,7 @@ export function isOp(c?: string): boolean {
   }
 }
 
-export function isOpToken(token?: SyntaxToken): boolean {
+export function isOpToken (token?: SyntaxToken): boolean {
   return token !== undefined && token.kind === SyntaxTokenKind.OP;
 }
 
@@ -98,7 +98,7 @@ export class SyntaxToken {
 
   isInvalid: boolean;
 
-  protected constructor(
+  protected constructor (
     kind: SyntaxTokenKind,
     startPos: Position,
     endPos: Position,
@@ -119,7 +119,7 @@ export class SyntaxToken {
     this.end = endPos.offset;
   }
 
-  static create(
+  static create (
     kind: SyntaxTokenKind,
     startPos: Position,
     endPos: Position,

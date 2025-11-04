@@ -16,7 +16,7 @@ export class ParsingContextStack {
 
   private numberOfNestedLBraces = 0;
 
-  push(ctx: ParsingContext) {
+  push (ctx: ParsingContext) {
     this.stack.push(ctx);
     if (ctx === ParsingContext.ListExpression) {
       this.numberOfNestedLBrackets += 1;
@@ -29,7 +29,7 @@ export class ParsingContextStack {
     }
   }
 
-  pop(): ParsingContext | undefined {
+  pop (): ParsingContext | undefined {
     const top = this.stack.pop();
     if (top === ParsingContext.ListExpression) {
       this.numberOfNestedLBrackets -= 1;
@@ -44,26 +44,26 @@ export class ParsingContextStack {
     return top;
   }
 
-  top(): ParsingContext | undefined {
+  top (): ParsingContext | undefined {
     return last(this.stack);
   }
 
-  isWithinGroupExpressionContext(): boolean {
+  isWithinGroupExpressionContext (): boolean {
     return this.numberOfNestedLParens > 0;
   }
 
-  isWithinListExpressionContext(): boolean {
+  isWithinListExpressionContext (): boolean {
     return this.numberOfNestedLBrackets > 0;
   }
 
-  isWithinBlockExpressionContext(): boolean {
+  isWithinBlockExpressionContext (): boolean {
     return this.numberOfNestedLBraces > 0;
   }
 
   // Call the passed in callback
   // with the guarantee that the passed in context will be pushed and popped properly
   // even in cases of exceptions
-  withContextDo<T>(context: ParsingContext, callback: () => T): () => T {
+  withContextDo<T> (context: ParsingContext, callback: () => T): () => T {
     return () => {
       this.push(context);
 
@@ -78,11 +78,11 @@ export class ParsingContextStack {
   }
 
   // Return the type of the handler context currently in the context stack to handle `token`
-  findHandlerContext(tokens: SyntaxToken[], curTokenId: number): ParsingContext | undefined {
+  findHandlerContext (tokens: SyntaxToken[], curTokenId: number): ParsingContext | undefined {
     if (
-      this.numberOfNestedLBraces <= 0 &&
-      this.numberOfNestedLBrackets <= 0 &&
-      this.numberOfNestedLParens <= 0
+      this.numberOfNestedLBraces <= 0
+      && this.numberOfNestedLBrackets <= 0
+      && this.numberOfNestedLParens <= 0
     ) {
       return undefined;
     }
@@ -94,9 +94,7 @@ export class ParsingContextStack {
           if (this.isWithinGroupExpressionContext() || this.isWithinListExpressionContext()) {
             return [...this.stack]
               .reverse()
-              .find((c) =>
-                [ParsingContext.GroupExpression, ParsingContext.ListExpression].includes(c),
-              )!;
+              .find((c) => [ParsingContext.GroupExpression, ParsingContext.ListExpression].includes(c))!;
           }
           break;
         case SyntaxTokenKind.RPAREN:

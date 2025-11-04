@@ -18,7 +18,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
     const containers = [...this.compiler.container.stack(offset)];
     while (containers.length !== 0) {
       const node = containers.pop();
-      // eslint-disable-next-line no-continue
+
       if (!node?.referee) continue;
 
       let declaration: SyntaxNode | undefined;

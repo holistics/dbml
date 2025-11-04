@@ -2,7 +2,7 @@ import { CompileError, CompileErrorCode } from '../errors';
 import Report from '../report';
 import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '../utils';
 import {
- SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
+  SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from './tokens';
 import { Position } from '../types';
 import { isInvalidToken } from '../parser/utils';
@@ -26,15 +26,15 @@ export default class Lexer {
 
   private errors: CompileError[] = []; // list of errors during lexing
 
-  constructor(text: string) {
+  constructor (text: string) {
     this.text = text;
   }
 
-  private isAtEnd(): boolean {
+  private isAtEnd (): boolean {
     return this.current.offset >= this.text.length;
   }
 
-  private advance(): string {
+  private advance (): string {
     const c = this.peek();
     this.current = { ...this.current };
     if (c === '\n') {
@@ -48,7 +48,7 @@ export default class Lexer {
     return c!;
   }
 
-  private peek(lookahead: number = 0): string | undefined {
+  private peek (lookahead: number = 0): string | undefined {
     if (this.current.offset + lookahead >= this.text.length) {
       return undefined;
     }
@@ -57,7 +57,7 @@ export default class Lexer {
   }
 
   // Check if the sequence ahead matches `sequence`
-  check(sequence: string): boolean {
+  check (sequence: string): boolean {
     for (let i = 0; i < sequence.length; i += 1) {
       if (sequence[i] !== this.peek(i)) {
         return false;
@@ -68,7 +68,7 @@ export default class Lexer {
   }
 
   // If the sequence ahead matches `sequence`, move `current` past `sequence`
-  match(sequence: string): boolean {
+  match (sequence: string): boolean {
     if (!this.check(sequence)) {
       return false;
     }
@@ -78,11 +78,11 @@ export default class Lexer {
     return true;
   }
 
-  private addToken(kind: SyntaxTokenKind, isInvalid: boolean = false) {
+  private addToken (kind: SyntaxTokenKind, isInvalid: boolean = false) {
     this.tokens.push(this.createToken(kind, isInvalid));
   }
 
-  private createToken(kind: SyntaxTokenKind, isInvalid: boolean = false): SyntaxToken {
+  private createToken (kind: SyntaxTokenKind, isInvalid: boolean = false): SyntaxToken {
     return SyntaxToken.create(
       kind,
       this.start,
@@ -92,7 +92,7 @@ export default class Lexer {
     );
   }
 
-  lex(): Report<SyntaxToken[], CompileError> {
+  lex (): Report<SyntaxToken[], CompileError> {
     this.scanTokens();
     this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, this.current, '', false));
     this.gatherTrivia();
@@ -101,7 +101,7 @@ export default class Lexer {
     return new Report(this.tokens, this.errors);
   }
 
-  scanTokens() {
+  scanTokens () {
     while (!this.isAtEnd()) {
       const c = this.advance();
       switch (c) {
@@ -198,13 +198,13 @@ export default class Lexer {
     }
   }
 
-  gatherTrivia() {
+  gatherTrivia () {
     let startOfLine = true;
     let triviaList: SyntaxToken[] = [];
     let lastNonTrivia: SyntaxToken | undefined;
     const newTokenList: SyntaxToken[] = [];
 
-    // eslint-disable-next-line no-restricted-syntax
+     
     for (const token of this.tokens) {
       if (isTriviaToken(token)) {
         triviaList.push(token);
@@ -221,10 +221,11 @@ export default class Lexer {
 
         // If at start of line
         // then `triviaList` belongs to that non-trivia as `leadingTrivia`
-        // eslint-disable-next-line no-unused-expressions
-        startOfLine ?
-          (token.leadingTrivia = triviaList) :
-          (lastNonTrivia!.trailingTrivia = triviaList);
+        if (startOfLine) {
+          token.leadingTrivia = triviaList;
+        } else {
+          lastNonTrivia!.trailingTrivia = triviaList;
+        }
         newTokenList.push(token);
         triviaList = [];
         lastNonTrivia = token;
@@ -235,7 +236,7 @@ export default class Lexer {
     this.tokens = newTokenList;
   }
 
-  gatherInvalid() {
+  gatherInvalid () {
     let i;
     const newTokenList: SyntaxToken[] = [];
 
@@ -261,7 +262,7 @@ export default class Lexer {
   }
 
   // Consuming characters until the `stopSequence` is encountered
-  consumeUntil(
+  consumeUntil (
     tokenKind: SyntaxTokenKind,
     stopSequence: string,
     {
@@ -312,7 +313,7 @@ export default class Lexer {
     this.tokens.push(SyntaxToken.create(tokenKind, this.start, this.current, string, false));
   }
 
-  singleLineStringLiteral() {
+  singleLineStringLiteral () {
     this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, "'", {
       allowNewline: false,
       allowEof: false,
@@ -320,7 +321,7 @@ export default class Lexer {
     });
   }
 
-  multilineStringLiteral() {
+  multilineStringLiteral () {
     this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, "'''", {
       allowNewline: true,
       allowEof: false,
@@ -328,7 +329,7 @@ export default class Lexer {
     });
   }
 
-  functionExpression() {
+  functionExpression () {
     this.consumeUntil(SyntaxTokenKind.FUNCTION_EXPRESSION, '`', {
       allowNewline: true,
       allowEof: false,
@@ -336,7 +337,7 @@ export default class Lexer {
     });
   }
 
-  quotedVariable() {
+  quotedVariable () {
     this.consumeUntil(SyntaxTokenKind.QUOTED_STRING, '"', {
       allowNewline: false,
       allowEof: false,
@@ -344,7 +345,7 @@ export default class Lexer {
     });
   }
 
-  singleLineComment() {
+  singleLineComment () {
     this.consumeUntil(SyntaxTokenKind.SINGLE_LINE_COMMENT, '\n', {
       allowNewline: true,
       allowEof: true,
@@ -353,7 +354,7 @@ export default class Lexer {
     });
   }
 
-  multilineComment() {
+  multilineComment () {
     this.consumeUntil(SyntaxTokenKind.MULTILINE_COMMENT, '*/', {
       allowNewline: true,
       allowEof: false,
@@ -361,7 +362,7 @@ export default class Lexer {
     });
   }
 
-  identifier() {
+  identifier () {
     while (!this.isAtEnd() && isAlphaNumeric(this.peek()!)) {
       this.advance();
     }
@@ -389,7 +390,7 @@ export default class Lexer {
   }
 
   // we accept identifiers starting with digits but must contain at least one char or underscore
-  numericLiteralOrIdentifier() {
+  numericLiteralOrIdentifier () {
     let nDots = 0;
     if (this.isAtEnd()) {
       return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
@@ -443,16 +444,18 @@ export default class Lexer {
       const token = this.createToken(SyntaxTokenKind.IDENTIFIER, false);
       this.tokens.push(token);
     }
+
+    return;
   }
 
-  colorLiteral() {
+  colorLiteral () {
     while (!this.isAtEnd() && isAlphaNumeric(this.peek()!)) {
       this.advance();
     }
     this.addToken(SyntaxTokenKind.COLOR_LITERAL);
   }
 
-  escapedString(): string {
+  escapedString (): string {
     const prevPos: Position = { column: this.current.column - 1, offset: this.current.offset - 1, line: this.current.line };
     if (this.isAtEnd()) {
       return '\\';
@@ -494,7 +497,11 @@ export default class Lexer {
         let hex = '';
         for (let i = 0; i <= 3; i += 1) {
           if (this.isAtEnd() || !isAlphaNumeric(this.peek()!)) {
-            this.errors.push(new CompileError(CompileErrorCode.INVALID_ESCAPE_SEQUENCE, `Invalid unicode escape sequence '\\u${hex}', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed`, SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, prevPos, this.current, `\\u${hex}`, true)));
+            this.errors.push(new CompileError(
+              CompileErrorCode.INVALID_ESCAPE_SEQUENCE,
+              `Invalid unicode escape sequence '\\u${hex}', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed`,
+              SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, prevPos, this.current, `\\u${hex}`, true),
+            ));
 
             return `\\u${hex}`;
           }

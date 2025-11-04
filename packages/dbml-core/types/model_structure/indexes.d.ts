@@ -4,6 +4,7 @@ import Element, { RawNote, Token } from './element';
 import IndexColumn from './indexColumn';
 import Table from './table';
 import TablePartial from './tablePartial';
+
 interface RawIndex {
     columns: IndexColumn;
     type: any;
@@ -15,22 +16,24 @@ interface RawIndex {
     token: Token;
 }
 declare class Index extends Element {
-    columns: IndexColumn[];
-    type: any;
-    unique: boolean;
-    pk: string;
-    name: string;
-    note: string;
-    noteToken: Token;
-    table: Table;
-    dbState: DbState;
-    injectedPartial: TablePartial;
-    constructor({ columns, type, unique, pk, token, name, note, table }: RawIndex);
-    generateId(): void;
-    processIndexColumns(rawColumns: any): void;
-    pushIndexColumn(column: any): void;
-    checkIndexColumn(column: any): void;
-    export(): {
+  columns: IndexColumn[];
+  type: any;
+  unique: boolean;
+  pk: string;
+  name: string;
+  note: string;
+  noteToken: Token;
+  table: Table;
+  dbState: DbState;
+  injectedPartial: TablePartial;
+  constructor({
+    columns, type, unique, pk, token, name, note, table,
+  }: RawIndex);
+  generateId(): void;
+  processIndexColumns(rawColumns: any): void;
+  pushIndexColumn(column: any): void;
+  checkIndexColumn(column: any): void;
+  export(): {
         columns: {
             type: any;
             value: any;
@@ -42,19 +45,19 @@ declare class Index extends Element {
         note: string;
         injectedPartialId?: number;
     };
-    exportChild(): {
+  exportChild(): {
         columns: {
             type: any;
             value: any;
         }[];
     };
-    exportChildIds(): {
+  exportChildIds(): {
         columnIds: number[];
     };
-    exportParentIds(): {
+  exportParentIds(): {
         tableId: number;
     };
-    shallowExport(): {
+  shallowExport(): {
         name: string;
         type: any;
         unique: boolean;
@@ -62,7 +65,7 @@ declare class Index extends Element {
         note: string;
         injectedPartialId?: number;
     };
-    normalize(model: NormalizedDatabase): void;
+  normalize(model: NormalizedDatabase): void;
 }
 export interface NormalizedIndex {
     [_id: number]: {
