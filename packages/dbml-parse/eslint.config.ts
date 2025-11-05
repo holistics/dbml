@@ -1,3 +1,4 @@
+import airbnbBase from 'eslint-config-airbnb-base';
 import { defineConfig } from 'eslint/config';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
@@ -25,6 +26,7 @@ export default defineConfig([
       '@typescript-eslint': tseslint,
     },
     rules: {
+      ...airbnbBase.rules,
       ...tseslint.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': 'off',
       'no-use-before-define': 'off',
