@@ -1,3 +1,4 @@
+import airbnbBase from 'eslint-config-airbnb-base';
 import { defineConfig } from 'eslint/config';
 
 export default defineConfig([
@@ -7,5 +8,11 @@ export default defineConfig([
       'lib/*',
       'types/*',
     ],
+  },
+  {
+    files: ['**/*.js'],
+    rules: {
+      ...airbnbBase.rules,
+    }
   },
 ]);

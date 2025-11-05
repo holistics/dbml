@@ -1,3 +1,4 @@
+import airbnbBase from 'eslint-config-airbnb-base';
 import globals from 'globals';
 import { defineConfig } from 'eslint/config';
 import js from '@eslint/js';
@@ -40,6 +41,7 @@ export default defineConfig([
     },
     rules: {
       ...js.configs.recommended.rules,
+      ...airbnbBase.rules,
       ...typescriptEslint.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
