@@ -23,6 +23,9 @@ export type BinderRule =
     ignoreNameNotFound: boolean;
     // A list of keywords that, when encountered by the binder as a standalone variable, skipped
     keywords?: readonly string[];
+    // In attribute value, a quoted variables can be sometimes used as a string
+    // This option decides whether it is legal for a standalone quoted variable to be treated as a string and not bound
+    ignoreNameNotFoundForQuotedVariable: boolean;
   }
   | {
     shouldBind: false;

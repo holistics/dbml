@@ -17,6 +17,7 @@ import {
 import {
   extractStringFromIdentifierStream,
   isAccessExpression,
+  isExpressionAQuotedString,
   isExpressionAVariableNode,
 } from '@/lib/parser/utils';
 import { ArgumentBinderRule, BinderRule, SettingListBinderRule } from '@/lib/analyzer/binder/types';
@@ -167,7 +168,6 @@ export default abstract class ElementBinder {
     const isPartialInjection = rawFragments.length === 1 && rawFragments[0] instanceof PartialInjectionNode;
 
     const topSubnamesSymbolKind = [...rule.topSubnamesSymbolKind!];
-    const { remainingSubnamesSymbolKind } = rule;
 
     // Handle cases of binding an incomplete member access expression
 
@@ -211,10 +211,12 @@ export default abstract class ElementBinder {
         : extractVarNameFromPrimaryVariable(fragment).unwrap();
 
       subnameStack.unshift({
-        index: createNodeSymbolIndex(varname, remainingSubnamesSymbolKind!),
+        index: createNodeSymbolIndex(varname, rule.remainingSubnamesSymbolKind!),
         referrer: fragment,
       });
     }
+
+    const isFirstFragmentQuotedVariable = isExpressionAQuotedString(rawFragments[0]);
 
     return tuple
       ? tuple.elementList.forEach((e) => this.resolveIndexStack(
@@ -228,16 +230,22 @@ export default abstract class ElementBinder {
               referrer: e,
             },
           ],
-          rule.ignoreNameNotFound,
+          rule,
+          isFirstFragmentQuotedVariable,
         ))
-      : this.resolveIndexStack(subnameStack, rule.ignoreNameNotFound);
+      : this.resolveIndexStack(
+          subnameStack,
+          rule,
+          isFirstFragmentQuotedVariable,
+        );
   }
 
   // Looking up the indexes in the subname stack from the current declaration node
   // Each time the index resolves to a symbol, the referrer's symbol is bound to it
   private resolveIndexStack (
     subnameStack: { index: NodeSymbolIndex; referrer: SyntaxNode }[],
-    ignoreNameNotFound: boolean,
+    rule: BinderRule & { shouldBind: true },
+    isFirstFragmentQuotedVariable: boolean,
   ) {
     if (subnameStack.length === 0) {
       throw new Error('Unreachable - An unresolved name must have at least one name component');
@@ -246,8 +254,11 @@ export default abstract class ElementBinder {
     const accessSymbol = findSymbol(accessSubname.index, this.declarationNode);
     if (accessSymbol === undefined) {
       const { kind, name } = destructureIndex(accessSubname.index).unwrap();
-      this.logError(accessSubname.referrer, `Can not find ${kind} '${name}'`, ignoreNameNotFound);
-
+      this.logError(
+        accessSubname.referrer,
+        `Can not find ${kind} '${name}'`,
+        rule.ignoreNameNotFound || (rule.ignoreNameNotFoundForQuotedVariable && isFirstFragmentQuotedVariable),
+      );
       return;
     }
 
@@ -265,7 +276,7 @@ export default abstract class ElementBinder {
         this.logError(
           subname.referrer,
           `${prevKind} '${prevName}' does not have ${curKind} '${curName}'`,
-          ignoreNameNotFound,
+          rule.ignoreNameNotFound,
         );
 
         return;
