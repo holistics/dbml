@@ -93,9 +93,9 @@ export function convertFuncAppToElem (
 
 // Check if a token is an `as` keyword
 export function isAsKeyword (
-  token: SyntaxToken,
+  token?: SyntaxToken,
 ): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER; value: 'as' } {
-  return token.kind === SyntaxTokenKind.IDENTIFIER && token.value === 'as';
+  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value === 'as';
 }
 
 export function markInvalid (nodeOrToken?: SyntaxNode | SyntaxToken) {
@@ -355,7 +355,7 @@ type DotDelimitedIdentifier = PrimaryExpressionNode | (AccessExpression & {
   rightExpression: AccessExpression | PrimaryExpressionNode;
 });
 
-export function isAccessExpression (node: SyntaxNode): node is AccessExpression {
+export function isAccessExpression (node?: SyntaxNode): node is AccessExpression {
   return (
     node instanceof InfixExpressionNode
     && node.leftExpression instanceof SyntaxNode
@@ -364,9 +364,9 @@ export function isAccessExpression (node: SyntaxNode): node is AccessExpression 
   );
 }
 
-export function isDotDelimitedIdentifier (node: SyntaxNode): node is DotDelimitedIdentifier {
+export function isDotDelimitedIdentifier (node?: SyntaxNode): node is DotDelimitedIdentifier {
   if (isExpressionAVariableNode(node)) return true;
-  return isAccessExpression(node) && isExpressionAVariableNode(node.leftExpression) && isDotDelimitedIdentifier(node.rightExpression);
+  return isAccessExpression(node) && isExpressionAVariableNode(node.rightExpression) && isDotDelimitedIdentifier(node.leftExpression);
 }
 
 export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode): Option<string> {
