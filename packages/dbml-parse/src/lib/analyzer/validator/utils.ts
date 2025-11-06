@@ -15,7 +15,7 @@ import {
   ArrayNode,
 } from '@/lib/parser/nodes';
 import { isHexChar } from '@/lib/utils';
-import { destructureComplexVariable } from '@/lib/analyzer/utils';
+import { destructureComplexVariable, destructureMemberAccessExpression } from '@/lib/analyzer/utils';
 import CustomValidator from './elementValidators/custom';
 import EnumValidator from './elementValidators/enum';
 import IndexesValidator from './elementValidators/indexes';
@@ -29,7 +29,7 @@ import { SchemaSymbol } from '@/lib/analyzer/symbol/symbols';
 import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
 import SymbolFactory from '@/lib/analyzer/symbol/factory';
 import {
-  extractStringFromIdentifierStream, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
+  extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
 } from '@/lib/parser/utils';
 import { NUMERIC_LITERAL_PREFIX } from '@/constants';
 import Report from '@/lib/report';
@@ -201,7 +201,10 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
     return true;
   }
 
-  return false;
+  if (!value) return false;
+  if (!isDotDelimitedIdentifier(value)) return false;
+  const fragments = destructureMemberAccessExpression(value).unwrap();
+  return fragments.length === 2 || fragments.length === 3;
 }
 
 export function isExpressionANumber (value?: SyntaxNode): boolean {

@@ -345,17 +345,28 @@ export function isExpressionAnIdentifierNode (value?: unknown): value is Primary
   );
 }
 
-export function isAccessExpression (node: SyntaxNode): node is InfixExpressionNode & {
+type AccessExpression = InfixExpressionNode & {
   leftExpression: SyntaxNode;
   rightExpression: SyntaxNode;
   op: SyntaxToken & { value: '.' };
-} {
+};
+
+type DotDelimitedIdentifier = PrimaryExpressionNode | (AccessExpression & {
+  rightExpression: AccessExpression | PrimaryExpressionNode;
+});
+
+export function isAccessExpression (node: SyntaxNode): node is AccessExpression {
   return (
     node instanceof InfixExpressionNode
     && node.leftExpression instanceof SyntaxNode
     && node.rightExpression instanceof SyntaxNode
     && node.op?.value === '.'
   );
+}
+
+export function isDotDelimitedIdentifier (node: SyntaxNode): node is DotDelimitedIdentifier {
+  if (isExpressionAVariableNode(node)) return true;
+  return isAccessExpression(node) && isExpressionAVariableNode(node.leftExpression) && isDotDelimitedIdentifier(node.rightExpression);
 }
 
 export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode): Option<string> {

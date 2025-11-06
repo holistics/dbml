@@ -1,0 +1,11 @@
+Enum status {
+  active
+  churned
+  inactive
+}
+
+Table user {
+  name text
+  id int
+  status status [default: status.active]
+}
