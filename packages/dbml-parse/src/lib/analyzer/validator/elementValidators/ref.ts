@@ -131,11 +131,11 @@ export default class RefValidator implements ElementValidator {
         case 'delete':
         case 'update':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `\'${name}\' can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isValidPolicy(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `\'${name}\' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
             }
           });
           break;
@@ -150,7 +150,7 @@ export default class RefValidator implements ElementValidator {
           });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting \'${name}\'`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
       }
     }
     return errors;
