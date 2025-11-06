@@ -11,6 +11,7 @@ export default class TablePartialBinder extends ElementBinder {
           topSubnamesSymbolKind: [SymbolKind.Enum],
           remainingSubnamesSymbolKind: SymbolKind.Schema,
           ignoreNameNotFound: true,
+          ignoreNameNotFoundForQuotedVariable: false,
         },
       ],
     },
@@ -20,6 +21,7 @@ export default class TablePartialBinder extends ElementBinder {
         topSubnamesSymbolKind: [SymbolKind.Table, SymbolKind.Column],
         remainingSubnamesSymbolKind: SymbolKind.Schema,
         ignoreNameNotFound: false,
+        ignoreNameNotFoundForQuotedVariable: false,
       },
       default: {
         shouldBind: false as const,
