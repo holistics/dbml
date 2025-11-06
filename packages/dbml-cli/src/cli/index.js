@@ -38,6 +38,7 @@ function sql2dbml (args) {
     .option('--mssql')
     .option('--mssql-legacy')
     .option('--snowflake')
+    .option('--oracle')
     .option('-o, --out-file <pathspec>', 'compile all input files into a single files');
   // .option('-d, --out-dir <pathspec>', 'compile an input directory of sql files into an output directory');
 
