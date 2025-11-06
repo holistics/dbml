@@ -16,6 +16,7 @@ export default defineConfig(
         'lib/*',
         'jestHelpers.js',
         'eslint.config.ts',
+        'jest.config.ts',
       ],
     },
     {
