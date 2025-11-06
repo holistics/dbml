@@ -2,8 +2,8 @@ import airbnbBase from 'eslint-config-airbnb-base';
 import globals from 'globals';
 import { defineConfig } from 'eslint/config';
 import js from '@eslint/js';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
 import vueEslintPlugin from 'eslint-plugin-vue';
 import vueParser from 'vue-eslint-parser';
 
@@ -29,7 +29,7 @@ export default defineConfig([
       parser: vueParser,
       parserOptions: {
         parser: {
-          ts: tsParser,
+          ts: tsparser,
         },
         project: './tsconfig.app.json',
         extraFileExtensions: ['.vue'],
@@ -37,12 +37,12 @@ export default defineConfig([
     },
     plugins: {
       vue: vueEslintPlugin,
-      '@typescript-eslint': typescriptEslint,
+      '@typescript-eslint': tseslint,
     },
     rules: {
       ...js.configs.recommended.rules,
       ...airbnbBase.rules,
-      ...typescriptEslint.configs.recommended.rules,
+      ...tseslint.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       'vue/multi-word-component-names': 'off',
