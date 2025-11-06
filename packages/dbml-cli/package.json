@@ -52,7 +52,8 @@
     "eslint": "^9.39.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "jest": "^29.5.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.3"
   },
   "jest": {
     "setupFiles": [
