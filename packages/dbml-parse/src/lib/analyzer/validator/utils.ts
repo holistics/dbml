@@ -111,6 +111,7 @@ export function registerSchemaStack (
 ): SymbolTable {
   // public schema is already global schema
   if (variables[0] === 'public') {
+    // eslint-disable-next-line no-param-reassign
     variables = variables.slice(1);
   }
 
@@ -286,27 +287,23 @@ export function aggregateSettingList (settingList?: ListExpressionNode): Report<
   if (!settingList) {
     return new Report({});
   }
-  for (const attribute of settingList.elementList) {
-    if (!attribute.name) {
-      continue;
-    }
+  settingList.elementList.forEach((attribute) => {
+    if (!attribute.name) return;
 
     if (attribute.name instanceof PrimaryExpressionNode) {
       errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'A setting name must be a stream of identifiers', attribute.name));
-      continue;
+      return;
     }
 
     const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined)?.toLowerCase();
-    if (!name) {
-      continue;
-    }
+    if (!name) return;
 
     if (map[name] === undefined) {
       map[name] = [attribute];
     } else {
       map[name].push(attribute);
     }
-  }
+  });
 
   return new Report(map, errors);
 }

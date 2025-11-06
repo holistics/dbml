@@ -4,8 +4,14 @@ Enum status {
   inactive
 }
 
+Enum demographic.gender {
+  male
+  female
+}
+
 Table user {
   name text
   id int
   status status [default: status.active]
+  gender demographic.gender [default: demographic.gender.male]
 }

@@ -40,7 +40,9 @@ export function getElementKind (node?: ElementDeclarationNode): Option<ElementKi
   }
 }
 
-export function destructureMemberAccessExpression (node: SyntaxNode): Option<SyntaxNode[]> {
+export function destructureMemberAccessExpression (node?: SyntaxNode): Option<SyntaxNode[]> {
+  if (!node) return new None();
+
   if (!isAccessExpression(node)) {
     return new Some([node]);
   }
@@ -129,7 +131,7 @@ export function extractVariableFromExpression (node?: SyntaxNode): Option<string
   return new Some(node.expression.variable.value);
 }
 
-export function destructureIndexNode (node: SyntaxNode): Option<{
+export function destructureIndexNode (node?: SyntaxNode): Option<{
   functional: FunctionExpressionNode[];
   nonFunctional: (PrimaryExpressionNode & { expression: VariableNode })[];
 }> {
