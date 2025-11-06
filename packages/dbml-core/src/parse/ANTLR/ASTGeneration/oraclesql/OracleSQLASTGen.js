@@ -1,4 +1,4 @@
-import { last, flatten, merge } from 'lodash';
+import { last, flatten } from 'lodash';
 import {
   Field,
   Index,
@@ -8,14 +8,39 @@ import {
   Endpoint,
 } from '../AST';
 import {
-  TABLE_CONSTRAINT_KIND,
-  COLUMN_CONSTRAINT_KIND,
   DATA_TYPE,
   CONSTRAINT_TYPE,
 } from '../constants';
 import { getOriginalText } from '../helpers';
 import { CompilerError } from '../../../error';
 import OracleSqlParserVisitor from '../../parsers/oraclesql/OracleSqlParserVisitor';
+
+// We cannot use TABLE_CONSTRAINT_KIND and COLUMN_CONSTRAINT_KIND from '../constants' as their values are indistinguishable from each other
+// For example: TABLE_CONSTRAINT_KIND.UNIQUE === COLUMN_CONSTRAINT_KIND.UNIQUE
+// Therefore, we redefine them to be different
+// TODO: Migrate the other parser to use our version instead
+const TABLE_CONSTRAINT_KIND = {
+  FIELD: 'table_field',
+  INDEX: 'table_index',
+  FK: 'table_fk',
+  UNIQUE: 'table_unique',
+  PK: 'table_pk',
+  DEFAULT: 'table_default',
+  CHECK: 'table_check',
+};
+const COLUMN_CONSTRAINT_KIND = {
+  NOT_NULL: 'col_not_null',
+  NULLABLE: 'col_nullable',
+  UNIQUE: 'col_unique',
+  PK: 'col_pk',
+  DEFAULT: 'col_dbdefault',
+  INCREMENT: 'col_increment',
+  INLINE_REF: 'col_inline_ref',
+  NOTE: 'col_note',
+  CHECK: 'col_check',
+};
+
+
 
 const findTable = (tables, schemaName, tableName) => {
   const realSchemaName = schemaName || null;
