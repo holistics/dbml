@@ -72,7 +72,6 @@ function getDbDefault (
 
   if (defaultValueType === 'string') {
     // bigquery store the double qoutes and quotes at the end and the beginning of the string: "string" or 'string'
-
     return { value: columnDefault.slice(1, -1).replaceAll("'", "\'"), type: defaultValueType };
   }
 
