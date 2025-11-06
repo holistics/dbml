@@ -1,0 +1,83 @@
+Table "departments" {
+  "dept_id" NUMBER(10) [pk]
+  "dept_name" VARCHAR2(100)
+  "location_id" NUMBER(10)
+  "manager_id" NUMBER(10)
+}
+
+Table "locations" {
+  "location_id" NUMBER(10) [pk]
+  "city" VARCHAR2(100)
+  "country_code" CHAR(2)
+}
+
+Table "countries" {
+  "country_code" CHAR(2) [pk]
+  "country_name" VARCHAR2(100)
+}
+
+Table "employees" {
+  "emp_id" NUMBER(10) [pk]
+  "emp_name" VARCHAR2(100)
+  "department_id" NUMBER(10)
+  "manager_id" NUMBER(10)
+  "hire_date" DATE
+  "location_id" NUMBER(10)
+}
+
+Table "projects" {
+  "project_id" NUMBER(10) [pk]
+  "project_name" VARCHAR2(200)
+  "dept_id" NUMBER(10)
+  "lead_emp_id" NUMBER(10)
+  "backup_emp_id" NUMBER(10)
+}
+
+Table "assignments" {
+  "assignment_id" NUMBER(10) [pk]
+  "emp_id" NUMBER(10)
+  "project_id" NUMBER(10)
+  "start_date" DATE
+}
+
+Table "project_tasks" {
+  "project_id" NUMBER(10)
+  "task_id" NUMBER(10)
+  "task_name" VARCHAR2(200)
+  "assigned_emp_id" NUMBER(10)
+
+  Indexes {
+    (project_id, task_id) [pk]
+  }
+}
+
+Table "task_hours" {
+  "hour_id" NUMBER(10) [pk]
+  "project_id" NUMBER(10)
+  "task_id" NUMBER(10)
+  "hours_worked" NUMBER(5,2)
+}
+
+Ref "fk_emp_dept":"departments"."dept_id" < "employees"."department_id"
+
+Ref "fk_dept_location":"locations"."location_id" < "departments"."location_id"
+
+Ref "fk_loc_country":"countries"."country_code" < "locations"."country_code"
+
+Ref "fk_emp_manager":"employees"."emp_id" < "employees"."manager_id"
+
+Ref "fk_dept_manager":"employees"."emp_id" < "departments"."manager_id"
+
+Ref:"departments"."dept_id" < "projects"."dept_id"
+
+Ref:"employees"."emp_id" < "assignments"."emp_id"
+
+Ref:"projects"."project_id" < "assignments"."project_id"
+
+Ref "fk_task_hours_project_task":"project_tasks".("project_id", "task_id") < "task_hours".("project_id", "task_id")
+
+Ref "fk_proj_lead_emp":"employees"."emp_id" < "projects"."lead_emp_id"
+
+Ref "fk_proj_backup_emp":"employees"."emp_id" < "projects"."backup_emp_id"
+
+Ref "fk_task_assigned_emp":"employees"."emp_id" < "project_tasks"."assigned_emp_id"
