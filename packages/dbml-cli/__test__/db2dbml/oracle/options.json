@@ -1,0 +1,8 @@
+{
+  "args": [
+    "oracle",
+    "dbml_test/test@localhost:1521/FREEPDB1",
+    "-o",
+    "./out-files/schema.dbml"
+  ]
+}

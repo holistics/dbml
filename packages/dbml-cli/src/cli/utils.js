@@ -34,15 +34,26 @@ function getFormatOpt (opts) {
 }
 
 function getConnectionOpt (args) {
-  const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery'];
+  const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery', 'sqlite', 'oracle'];
   const defaultConnectionOpt = {
     connection: args[0],
     databaseType: 'unknown',
   };
 
-  return reduce(args, (connectionOpt, arg) => {
+  return reduce(args, (connectionOpt, arg, idx) => {
     if (supportedDatabases.includes(arg)) connectionOpt.databaseType = arg;
+    if (connectionOpt.databaseType === 'sqlite' && idx === 1) {
+      connectionOpt.connection = arg;
+      return connectionOpt;
+    }
     // Check if the arg is a connection string using regex
+    const oracleConnectionRegex = /^.*?\/.*@.*$/;
+    if (connectionOpt.databaseType === 'oracle' && oracleConnectionRegex.test(arg)) {
+      // Example: user/password@localhost:1521/service_name
+      connectionOpt.connection = arg;
+      return connectionOpt;
+    }
+
     const connectionStringRegex = /^.*[:;]/;
     if (connectionStringRegex.test(arg)) {
       // Example: jdbc:mysql://localhost:3306/mydatabase
@@ -68,7 +79,11 @@ function generate (inputPaths, transform, outputPlugin) {
       const content = transform(source);
       outputPlugin.write(content);
     } catch (e) {
-      if (e instanceof CompilerError) throw e.map((diag) => ({ ...diag, message: diag.message, filepath: path.basename(_path), stack: diag.stack }));
+      if (e instanceof CompilerError) {
+        throw e.map((diag) => ({
+          ...diag, message: diag.message, filepath: path.basename(_path), stack: diag.stack,
+        }));
+      }
       throw e;
     }
   });

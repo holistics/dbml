@@ -56,6 +56,26 @@ jobs:
           --health-timeout 5s
           --health-retries 10
 
+      oracle:
+        image: gvenzl/oracle-free:23.9-faststart
+
+        # Provide passwords and other environment variables to container
+        env:
+          ORACLE_RANDOM_PASSWORD: 'true'
+          APP_USER: dbml_test
+          APP_USER_PASSWORD: test
+
+        # Forward Oracle port
+        ports:
+          - 1521:1521
+
+        # Provide healthcheck script options for startup
+        options: >-
+          --health-cmd healthcheck.sh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
     steps:
     - uses: actions/checkout@v3
     - name: Import DDL to Postgres
@@ -69,6 +89,17 @@ jobs:
     - name: Import DDL to MSSQL
       run: |
         sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__test__/db2dbml/mssql/schema.sql
+    # This step will install `sqlplus` command
+    - name: Setup Oracle Instant Client
+      uses: iamazeem/setup-oracle-instant-client-action@v2
+    - name: Import DDL to Oracle
+      run: |
+        sqlplus -s dbml_test/test@localhost:1521/FREEPDB1 schema.sql
+      working-directory: packages/dbml-cli/__test__/db2dbml/oracle/
+    - name: Generate SQLite database from schema
+      run: |
+        sqlite3 schema.db < schema.sql
+      working-directory: packages/dbml-cli/__test__/db2dbml/sqlite/
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:

@@ -1,0 +1,108 @@
+Table "main"."Customers" {
+  "customer_id" INTEGER [pk, increment]
+  "first_name" VARCHAR(50) [not null]
+  "last_name" VARCHAR(50) [not null]
+  "gender" STRING
+  "household_income" INTEGER
+  "birthdate" DATE [not null]
+  "phone_number" INTEGER [not null]
+  "email" VARCHAR(128)
+}
+
+Table "main"."Car_Vins" {
+  "vin" INTEGER [pk, increment]
+  "model_id" INTEGER [not null]
+  "option_set_id" INTEGER [not null]
+  "manufactured_date" DATE [not null]
+  "manufactured_plant_id" INTEGER [not null]
+}
+
+Table "main"."Car_Options" {
+  "option_set_id" INTEGER [pk, increment]
+  "model_id" INTEGER
+  "engine_id" INTEGER [not null]
+  "transmission_id" INTEGER [not null]
+  "chassis_id" INTEGER [not null]
+  "premium_sound_id" INTEGER
+  "color" VARCHAR(30) [not null]
+  "option_set_price" INTEGER [not null]
+}
+
+Table "main"."Car_Parts" {
+  "part_id" INTEGER [pk, increment]
+  "part_name" VARCHAR(100) [not null]
+  "manufacture_plant_id" INTEGER [not null]
+  "manufacture_start_date" DATE [not null]
+  "manufacture_end_date" DATE
+  "part_recall" INTEGER [default: 0]
+}
+
+Table "main"."Brands" {
+  "brand_id" INTEGER [pk, increment]
+  "brand_name" VARCHAR(50) [not null]
+}
+
+Table "main"."Models" {
+  "model_id" INTEGER [pk, increment]
+  "model_name" VARCHAR(50) [not null]
+  "model_base_price" INTEGER [not null]
+  "brand_id" INTEGER [not null]
+}
+
+Table "main"."Customer_Ownership" {
+  "customer_id" INTEGER [pk, not null, increment]
+  "vin" INTEGER [not null]
+  "purchase_date" DATE [not null]
+  "purchase_price" INTEGER [not null]
+  "warantee_expire_date" DATE
+  "dealer_id" INTEGER [not null]
+}
+
+Table "main"."Manufacture_Plant" {
+  "manufacture_plant_id" INTEGER [pk, increment]
+  "plant_name" VARCHAR(50) [not null]
+  "plant_type" "VARCHAR (7)"
+  "plant_location" VARCHAR(100)
+  "company_owned" INTEGER
+}
+
+Table "main"."Dealers" {
+  "dealer_id" INTEGER [pk, increment]
+  "dealer_name" VARCHAR(50) [not null]
+  "dealer_address" VARCHAR(100)
+}
+
+Table "main"."Dealer_Brand" {
+  "dealer_id" INTEGER [pk, not null, increment]
+  "brand_id" INTEGER [not null]
+}
+
+Ref "fk_Car_Vins_0":"main"."Car_Options"."option_set_id" < "main"."Car_Vins"."option_set_id"
+
+Ref "fk_Car_Vins_1":"main"."Manufacture_Plant"."manufacture_plant_id" < "main"."Car_Vins"."manufactured_plant_id"
+
+Ref "fk_Car_Vins_2":"main"."Models"."model_id" < "main"."Car_Vins"."model_id"
+
+Ref "fk_Car_Options_0":"main"."Car_Parts"."part_id" < "main"."Car_Options"."chassis_id"
+
+Ref "fk_Car_Options_1":"main"."Car_Parts"."part_id" < "main"."Car_Options"."transmission_id"
+
+Ref "fk_Car_Options_2":"main"."Car_Parts"."part_id" < "main"."Car_Options"."premium_sound_id"
+
+Ref "fk_Car_Options_3":"main"."Car_Parts"."part_id" < "main"."Car_Options"."engine_id"
+
+Ref "fk_Car_Options_4":"main"."Models"."model_id" < "main"."Car_Options"."model_id"
+
+Ref "fk_Car_Parts_0":"main"."Manufacture_Plant"."manufacture_plant_id" < "main"."Car_Parts"."manufacture_plant_id"
+
+Ref "fk_Models_0":"main"."Brands"."brand_id" < "main"."Models"."brand_id"
+
+Ref "fk_Customer_Ownership_0":"main"."Dealers"."dealer_id" < "main"."Customer_Ownership"."dealer_id"
+
+Ref "fk_Customer_Ownership_1":"main"."Car_Vins"."vin" < "main"."Customer_Ownership"."vin"
+
+Ref "fk_Customer_Ownership_2":"main"."Customers"."customer_id" < "main"."Customer_Ownership"."customer_id"
+
+Ref "fk_Dealer_Brand_0":"main"."Brands"."brand_id" < "main"."Dealer_Brand"."brand_id"
+
+Ref "fk_Dealer_Brand_1":"main"."Dealers"."dealer_id" < "main"."Dealer_Brand"."dealer_id"
