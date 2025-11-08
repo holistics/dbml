@@ -1,0 +1,48 @@
+{
+  "tables": [
+    {
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT"
+          }
+        }
+      ],
+      "name": "Table_1"
+    },
+    {
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT"
+          }
+        }
+      ],
+      "name": "Table_2"
+    },
+    {
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT"
+          }
+        }
+      ],
+      "name": "Table_3"
+    },
+    {
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT"
+          }
+        }
+      ],
+      "name": "Table_4"
+    }
+  ]
+}
