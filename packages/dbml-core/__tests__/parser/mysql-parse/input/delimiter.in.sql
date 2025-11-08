@@ -1,0 +1,23 @@
+DELIMITER ;;
+
+CREATE TABLE Table_1 (
+  id INT
+);;
+
+DELIMITER @@
+
+CREATE TABLE Table_2 (
+  id INT
+)@@
+
+DELIMITER @
+
+CREATE TABLE Table_3 (
+  id INT
+)@
+
+DELIMITER ;
+
+CREATE TABLE Table_4 (
+  id INT
+);
