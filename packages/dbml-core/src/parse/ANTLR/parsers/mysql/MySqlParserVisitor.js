@@ -1,4 +1,4 @@
-// Generated from ./MySqlParser.g4 by ANTLR 4.13.1
+// Generated from MySqlParser.g4 by ANTLR 4.13.2
 // jshint ignore: start
 import antlr4 from 'antlr4';
 
