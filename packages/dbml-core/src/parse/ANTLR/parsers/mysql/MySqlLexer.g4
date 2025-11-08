@@ -43,6 +43,18 @@ channels {
     ERRORCHANNEL
 }
 
+@members {
+  this.currentDelimiter = ";";
+
+  this.setDelimiter = function (delimiter) {
+    this.currentDelimiter = delimiter.trim();
+  };
+
+  this.isCurrentDelimiter = function (text) {
+    return text === this.currentDelimiter;
+  };
+}
+
 // SKIP
 
 SPACE              : [ \t\r\n]+     -> channel(HIDDEN);
@@ -51,6 +63,18 @@ COMMENT_INPUT      : '/*' .*? '*/'  -> channel(HIDDEN);
 LINE_COMMENT:
     (('--' [ \t]* | '#') ~[\r\n]* ('\r'? '\n' | EOF) | '--' ('\r'? '\n' | EOF)) -> channel(HIDDEN)
 ;
+
+
+// SEMI should be preferred over STATEMENT_TERMINATOR, as:
+// - Procedural SQL still uses SEMI regardless of the current STATEMENT_TERMINATOR
+// - If SEMI is below STATEMENT_TERMINATOR, then by default, ';' will never be lexed as a SEMI token
+// Note that this requires the parser to account for both STATEMENT_TERMINATOR
+SEMI               : ';';
+
+// DELIMITER - should override other symbols
+DELIMITER_KEYWORD : 'DELIMITER' [ \t]+ -> pushMode(DELIMITER_MODE), skip;
+
+STATEMENT_TERMINATOR: ~[ \t\r\n]+ {this.isCurrentDelimiter(this.text)}?;
 
 // Keywords
 // Common Keywords
@@ -1244,7 +1268,6 @@ DOT                : '.';
 LR_BRACKET         : '(';
 RR_BRACKET         : ')';
 COMMA              : ',';
-SEMI               : ';';
 AT_SIGN            : '@';
 ZERO_DECIMAL       : '0';
 ONE_DECIMAL        : '1';
@@ -1355,3 +1378,16 @@ fragment IP_ADDRESS        : [0-9]+ '.' [0-9.]+ | [0-9A-F]* ':' [0-9A-F]* ':' [0
 // Last tokens must generate Errors
 
 ERROR_RECONGNIGION: . -> channel(ERRORCHANNEL);
+
+// DELIMITER mode
+mode DELIMITER_MODE;
+
+NEW_DELIMITER
+    : ~[\r\n]+ 
+    {
+        this.setDelimiter(this.text);
+    }
+    -> mode(DEFAULT_MODE), skip
+    ;
+
+DELIMITER_WS: [ \t\r\n]+ -> skip;

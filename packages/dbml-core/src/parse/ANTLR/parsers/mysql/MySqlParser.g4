@@ -44,8 +44,8 @@ root
     ;
 
 sqlStatements
-    : (sqlStatement (MINUS MINUS)? SEMI? | emptyStatement_)* (
-        sqlStatement ((MINUS MINUS)? SEMI)?
+    : (sqlStatement (MINUS MINUS)? (STATEMENT_TERMINATOR | SEMI)? | emptyStatement_)* (
+        sqlStatement ((MINUS MINUS)? (STATEMENT_TERMINATOR | SEMI))?
         | emptyStatement_
     )
     ;
@@ -61,7 +61,7 @@ sqlStatement
     ;
 
 emptyStatement_
-    : SEMI
+    : STATEMENT_TERMINATOR | SEMI
     ;
 
 ddlStatement
