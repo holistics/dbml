@@ -1,13 +1,13 @@
-import Report from '../../report';
-import { CompileError, CompileErrorCode } from '../../errors';
-import { ElementDeclarationNode, ProgramNode } from '../../parser/nodes';
-import { SchemaSymbol } from '../symbol/symbols';
-import SymbolFactory from '../symbol/factory';
-import { pickValidator } from './utils';
-import SymbolTable from '../symbol/symbolTable';
-import { SyntaxToken } from '../../lexer/tokens';
-import { getElementKind } from '../utils';
-import { ElementKind } from '../types';
+import Report from '@lib/report';
+import { CompileError, CompileErrorCode } from '@lib/errors';
+import { ElementDeclarationNode, ProgramNode } from '@parser/nodes';
+import { SchemaSymbol } from '@analyzer/symbol/symbols';
+import SymbolFactory from '@analyzer/symbol/factory';
+import { pickValidator } from '@analyzer/validator/utils';
+import SymbolTable from '@analyzer/symbol/symbolTable';
+import { SyntaxToken } from '@lexer/tokens';
+import { getElementKind } from '@analyzer/utils';
+import { ElementKind } from '@analyzer/types';
 
 export default class Validator {
   private ast: ProgramNode;

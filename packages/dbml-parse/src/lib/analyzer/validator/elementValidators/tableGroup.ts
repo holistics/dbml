@@ -1,19 +1,19 @@
 import { forIn, partition } from 'lodash-es';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { CompileError, CompileErrorCode } from '@lib/errors';
 import {
-  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList, isValidColor,
-} from '../utils';
-import { ElementValidator } from '../types';
-import SymbolTable from '../../symbol/symbolTable';
-import { SyntaxToken } from '../../../lexer/tokens';
+  isSimpleName, pickValidator } from '@analyzer/validator/utils';
+import { isValidColor, registerSchemaStack, aggregateSettingList } from '@analyzer/validator/utils';
+import { ElementValidator } from '@analyzer/validator/types';
+import SymbolTable from '@analyzer/symbol/symbolTable';
+import { SyntaxToken } from '@lexer/tokens';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '../../../parser/nodes';
-import SymbolFactory from '../../symbol/factory';
-import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '../../symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
-import { TableGroupFieldSymbol, TableGroupSymbol } from '../../symbol/symbols';
-import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../parser/utils';
+} from '@parser/nodes';
+import SymbolFactory from '@analyzer/symbol/factory';
+import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '@analyzer/symbol/symbolIndex';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@analyzer/utils';
+import { TableGroupFieldSymbol, TableGroupSymbol } from '@analyzer/symbol/symbols';
+import { isExpressionAVariableNode, isExpressionAQuotedString } from '@parser/utils';
 
 export default class TableGroupValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };

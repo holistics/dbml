@@ -1,6 +1,6 @@
-import { SyntaxToken } from '../../lexer/tokens';
-import { ElementDeclarationNode } from '../../parser/nodes';
-import { ElementKind } from '../types';
+import { SyntaxToken } from '@lexer/tokens';
+import { ElementDeclarationNode } from '@parser/nodes';
+import { ElementKind } from '@analyzer/types';
 import ChecksBinder from './elementBinder/checks';
 import CustomBinder from './elementBinder/custom';
 import EnumBinder from './elementBinder/enum';

@@ -1,13 +1,13 @@
 import { partition, get } from 'lodash-es';
-import { ElementInterpreter, InterpreterDatabase, Note } from '../types';
+import { ElementInterpreter, InterpreterDatabase, Note } from '@interpreter/types';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '../../parser/nodes';
+} from '@parser/nodes';
 import {
   extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
-} from '../utils';
-import { CompileError, CompileErrorCode } from '../../errors';
-import { aggregateSettingList } from '../../analyzer/validator/utils';
+} from '@interpreter/utils';
+import { CompileError, CompileErrorCode } from '@lib/errors';
+import { aggregateSettingList } from '@analyzer/validator/utils';
 
 export class StickyNoteInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

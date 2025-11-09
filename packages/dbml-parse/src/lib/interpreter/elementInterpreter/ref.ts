@@ -1,16 +1,16 @@
-import { destructureComplexVariable, extractVariableFromExpression } from '../../analyzer/utils';
-import { aggregateSettingList } from '../../analyzer/validator/utils';
-import { CompileError, CompileErrorCode } from '../../errors';
+import { destructureComplexVariable, extractVariableFromExpression } from '@analyzer/utils';
+import { aggregateSettingList } from '@analyzer/validator/utils';
+import { CompileError, CompileErrorCode } from '@lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
-} from '../../parser/nodes';
+} from '@parser/nodes';
 import {
   ElementInterpreter, InterpreterDatabase, Ref, Table,
-} from '../types';
+} from '@interpreter/types';
 import {
   extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
-} from '../utils';
-import { extractStringFromIdentifierStream } from '../../parser/utils';
+} from '@interpreter/utils';
+import { extractStringFromIdentifierStream } from '@parser/utils';
 
 export class RefInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

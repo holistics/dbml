@@ -1,22 +1,22 @@
 import { zip } from 'lodash-es';
-import { ColumnSymbol } from '../analyzer/symbol/symbols';
+import { ColumnSymbol } from '@analyzer/symbol/symbols';
 import {
   destructureComplexTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
   extractVariableFromExpression,
-} from '../analyzer/utils';
+} from '@analyzer/utils';
 import {
   ArrayNode, CallExpressionNode, FunctionExpressionNode, LiteralNode,
   PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
-} from '../parser/nodes';
+} from '@parser/nodes';
 import {
   ColumnType, RelationCardinality, Table, TokenPosition,
-} from './types';
-import { SyntaxTokenKind } from '../lexer/tokens';
-import { isExpressionAnIdentifierNode, isExpressionAQuotedString } from '../parser/utils';
-import { isExpressionANumber } from '../analyzer/validator/utils';
-import Report from '../report';
-import { CompileError, CompileErrorCode } from '../errors';
-import { getNumberTextFromExpression, parseNumber } from '../utils';
+} from '@interpreter/types';
+import { SyntaxTokenKind } from '@lexer/tokens';
+import { isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@parser/utils';
+import { isExpressionANumber } from '@analyzer/validator/utils';
+import Report from '@lib/report';
+import { CompileError, CompileErrorCode } from '@lib/errors';
+import { getNumberTextFromExpression, parseNumber } from '@lib/utils';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
   const { variables, tupleElements } = destructureComplexTuple(operand).unwrap();

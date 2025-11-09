@@ -1,8 +1,8 @@
 import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
-import { None, Option, Some } from '../option';
-import { alternateLists } from '../utils';
-import NodeFactory from './factory';
+import { SyntaxToken, SyntaxTokenKind } from '@lexer/tokens';
+import { None, Option, Some } from '@lib/option';
+import { alternateLists } from '@lib/utils';
+import NodeFactory from '@parser/factory';
 import {
   ArrayNode,
   AttributeNode,
@@ -26,7 +26,7 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-} from './nodes';
+} from '@parser/nodes';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (

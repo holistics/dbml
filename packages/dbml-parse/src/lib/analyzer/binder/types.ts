@@ -1,4 +1,4 @@
-import { SymbolKind } from '../symbol/symbolIndex';
+import { SymbolKind } from '@analyzer/symbol/symbolIndex';
 
 export type BinderRule =
   | {

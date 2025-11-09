@@ -1,4 +1,4 @@
-import { SyntaxNode, SyntaxNodeId, SyntaxNodeIdGenerator } from './nodes';
+import { SyntaxNode, SyntaxNodeId, SyntaxNodeIdGenerator } from '@parser/nodes';
 
 export default class NodeFactory {
   private generator: SyntaxNodeIdGenerator;

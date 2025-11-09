@@ -1,9 +1,9 @@
-import { getOffsetFromMonacoPosition } from '../utils';
-import Compiler from '../../compiler';
-import { SyntaxNodeKind } from '../../lib/parser/nodes';
+import { getOffsetFromMonacoPosition } from '@services/utils';
+import Compiler from '@/compiler';
+import { SyntaxNodeKind } from '@parser/nodes';
 import {
   Location, ReferenceProvider, TextModel, Position,
-} from '../types';
+} from '@services/types';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;
