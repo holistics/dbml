@@ -11,7 +11,8 @@
             "schemaName": null
           },
           "increment": true,
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "user_id",
@@ -20,24 +21,28 @@
             "schemaName": null
           },
           "not_null": true,
-          "unique": true
+          "unique": true,
+          "checks": []
         },
         {
           "name": "status",
           "type": {
             "type_name": "orders_status",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     },
     {
       "name": "order_items",
@@ -47,14 +52,16 @@
           "type": {
             "type_name": "int",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "product_id",
           "type": {
             "type_name": "int",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "quantity",
@@ -65,10 +72,12 @@
           "dbdefault": {
             "value": "1",
             "type": "number"
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     },
     {
       "name": "products",
@@ -79,14 +88,16 @@
             "type_name": "int",
             "schemaName": null
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "name",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "merchant_id",
@@ -94,21 +105,24 @@
             "type_name": "int",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "price",
           "type": {
             "type_name": "int",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "status",
           "type": {
             "type_name": "product status",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "created_at",
@@ -119,7 +133,8 @@
           "dbdefault": {
             "value": "now()",
             "type": "expression"
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [
@@ -147,7 +162,8 @@
             }
           ]
         }
-      ]
+      ],
+      "checks": []
     },
     {
       "name": "users",
@@ -158,14 +174,16 @@
             "type_name": "int",
             "schemaName": null
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "full_name",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "email",
@@ -173,38 +191,44 @@
             "type_name": "varchar",
             "schemaName": null
           },
-          "unique": true
+          "unique": true,
+          "checks": []
         },
         {
           "name": "gender",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "date_of_birth",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "country_code",
           "type": {
             "type_name": "int",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     },
     {
       "name": "merchants",
@@ -215,38 +239,44 @@
             "type_name": "int",
             "schemaName": null
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "merchant_name",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "country_code",
           "type": {
             "type_name": "int",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "admin_id",
           "type": {
             "type_name": "int",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     },
     {
       "name": "countries",
@@ -257,24 +287,28 @@
             "type_name": "int",
             "schemaName": null
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "name",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "continent_name",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     }
   ],
   "refs": [
@@ -431,5 +465,6 @@
   ],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "records": []
 }

@@ -1,0 +1,523 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "test_pk_int",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_bigint",
+      "fields": [
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "BIGINT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_varchar",
+      "fields": [
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_serial",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "SERIAL",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_bigserial",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "BIGSERIAL",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_smallserial",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "SMALLSERIAL",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "info",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_identity_always",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_identity_default",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_identity_options",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_not_null",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "not_null": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_uuid",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "UUID",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_text",
+      "fields": [
+        {
+          "name": "code",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_numeric",
+      "fields": [
+        {
+          "name": "account_number",
+          "type": {
+            "type_name": "NUMERIC(20,0)",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "balance",
+          "type": {
+            "type_name": "NUMERIC(12,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_date",
+      "fields": [
+        {
+          "name": "event_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "event_name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_default",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "1",
+            "type": "number"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_uuid_default",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "UUID",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "gen_random_uuid()",
+            "type": "expression"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_multi_col",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col3",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_quoted",
+      "fields": [
+        {
+          "name": "order-id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "order_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_schema",
+      "schemaName": "hr",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_constraint_name",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

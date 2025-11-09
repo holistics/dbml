@@ -11,7 +11,8 @@
             "schemaName": null
           },
           "increment": true,
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "nombre",
@@ -19,20 +20,23 @@
             "type_name": "CHARACTER VARYING",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "descripcion",
           "type": {
             "type_name": "CHARACTER VARYING",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [],
       "note": {
         "value": "Para identificar si es colegio, corporación u otro tipo"
-      }
+      },
+      "checks": []
     },
     {
       "name": "permiso_funcion",
@@ -47,7 +51,8 @@
             "value": "uuid_generate_v4()",
             "type": "expression"
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "nombre",
@@ -55,14 +60,16 @@
             "type_name": "CHARACTER VARYING(255)",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "descripcion",
           "type": {
             "type_name": "CHARACTER VARYING(255)",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "es_categoria",
@@ -73,7 +80,8 @@
           "dbdefault": {
             "value": "FALSE",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "id_aplicacion",
@@ -84,21 +92,24 @@
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "orden",
           "type": {
             "type_name": "INT",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "mostrar_funcion",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "bloquear",
@@ -109,14 +120,16 @@
           "dbdefault": {
             "value": "FALSE",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "uuid_categoria",
           "type": {
             "type_name": "UUID",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "id_tipo_cliente",
@@ -124,41 +137,47 @@
             "type_name": "INT",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "mostrar_crear",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "mostrar_ver",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "mostrar_modificar",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "mostrar_eliminar",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [],
       "note": {
         "value": "Funciones/Categorías globales. Se separan por tipo de cliente."
-      }
+      },
+      "checks": []
     },
     {
       "name": "permiso_perfil",
@@ -173,7 +192,8 @@
             "value": "uuid_generate_v4()",
             "type": "expression"
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "nombre",
@@ -181,7 +201,8 @@
             "type_name": "CHARACTER VARYING",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "descripcion",
@@ -189,7 +210,8 @@
             "type_name": "CHARACTER VARYING",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "mostrar",
@@ -200,7 +222,8 @@
           "dbdefault": {
             "value": "TRUE",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "modificable",
@@ -211,7 +234,8 @@
           "dbdefault": {
             "value": "TRUE",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "id_tipo_cliente",
@@ -219,7 +243,8 @@
             "type_name": "INT",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "uuid_cliente",
@@ -230,7 +255,8 @@
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "uuid_grupo_cliente",
@@ -241,17 +267,20 @@
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "id_aplicacion",
           "type": {
             "type_name": "INT",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     },
     {
       "name": "permiso_perfil_funcion_cliente",
@@ -266,7 +295,8 @@
             "value": "uuid_generate_v4()",
             "type": "expression"
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "uuid_funcion",
@@ -274,7 +304,8 @@
             "type_name": "UUID",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "uuid_perfil",
@@ -282,7 +313,8 @@
             "type_name": "UUID",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "uuid_cliente",
@@ -293,7 +325,8 @@
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "uuid_grupo_cliente",
@@ -304,7 +337,8 @@
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "alias",
@@ -315,41 +349,47 @@
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "habilitar",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "crear",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "modificar",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "eliminar",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [],
       "note": {
         "value": "Son las funciones de los perfiles por cliente"
-      }
+      },
+      "checks": []
     },
     {
       "name": "permiso_funcion_perfil_global",
@@ -364,7 +404,8 @@
             "value": "uuid_generate_v4()",
             "type": "expression"
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "uuid_funcion",
@@ -372,7 +413,8 @@
             "type_name": "UUID",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "uuid_perfil",
@@ -380,41 +422,47 @@
             "type_name": "UUID",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "habilitar",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "crear",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "modificar",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "eliminar",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [],
       "note": {
         "value": "Son las funciones de los perfiles iniciales para cada cliente. Cada cliente nuevo tendrá al menos dicha configuración desde esta tabla"
-      }
+      },
+      "checks": []
     },
     {
       "name": "permiso_usuario_cliente_funcion",
@@ -429,21 +477,24 @@
             "value": "uuid_generate_v4()",
             "type": "expression"
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "uuid_funcion",
           "type": {
             "type_name": "UUID",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "uuid_usuario",
           "type": {
             "type_name": "UUID",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "uuid_cliente",
@@ -454,7 +505,8 @@
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "uuid_grupo_cliente",
@@ -465,7 +517,8 @@
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "funcion_modificada",
@@ -476,41 +529,47 @@
           "dbdefault": {
             "value": "FALSE",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "habilitar",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "crear",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "modificar",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "eliminar",
           "type": {
             "type_name": "BOOLEAN",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [],
       "note": {
         "value": "Son las funciones que el usuario tiene por cliente"
-      }
+      },
+      "checks": []
     },
     {
       "name": "permiso_perfil_tipo_usuario",
@@ -525,34 +584,39 @@
             "value": "uuid_generate_v4()",
             "type": "expression"
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "uuid_perfil",
           "type": {
             "type_name": "UUID",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "tipo_usuario",
           "type": {
             "type_name": "INT",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "descripcion",
           "type": {
             "type_name": "CHARACTER VARYING",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [],
       "note": {
         "value": "Es la tabla que permite agregar permisos por tipos de usuarios."
-      }
+      },
+      "checks": []
     },
     {
       "name": "permiso_usuario_cliente_perfil",
@@ -567,21 +631,24 @@
             "value": "uuid_generate_v4()",
             "type": "expression"
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "uuid_usuario",
           "type": {
             "type_name": "UUID",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "uuid_perfil",
           "type": {
             "type_name": "UUID",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "uuid_cliente",
@@ -592,7 +659,8 @@
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "uuid_grupo_cliente",
@@ -603,13 +671,15 @@
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [],
       "note": {
         "value": "Son los perfiles del usuario según el cliente"
-      }
+      },
+      "checks": []
     }
   ],
   "refs": [
@@ -1037,5 +1107,6 @@
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "records": []
 }

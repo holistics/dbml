@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "users",
@@ -7,144 +8,162 @@
           "name": "id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "full_name",
           "type": {
-            "type_name": "varchar(255)"
-          }
+            "type_name": "varchar(255)",
+            "schemaName": null
+          },
+          "checks": []
         },
         {
           "name": "email",
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "schemaName": null
           },
-          "unique": true
+          "unique": true,
+          "checks": []
         },
         {
           "name": "gender",
           "type": {
-            "type_name": "varchar(255)"
-          }
+            "type_name": "varchar(255)",
+            "schemaName": null
+          },
+          "checks": []
         },
         {
           "name": "date_of_birth",
           "type": {
-            "type_name": "varchar(255)"
-          }
+            "type_name": "varchar(255)",
+            "schemaName": null
+          },
+          "checks": []
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)"
-          }
+            "type_name": "varchar(255)",
+            "schemaName": null
+          },
+          "checks": []
         },
         {
           "name": "country_code",
           "type": {
             "type_name": "int",
-            "args": null
-          }
+            "schemaName": null
+          },
+          "checks": []
         },
         {
           "name": "active",
           "type": {
             "type_name": "boolean",
-            "args": null
+            "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         }
       ],
       "indexes": [
         {
-          "columns": [
-            {
-              "value": "id",
-              "type": "column"
-            }
-          ],
           "name": "index_name",
-          "unique": true
-        },
-        {
+          "unique": true,
           "columns": [
             {
-              "value": "full_name",
-              "type": "column"
+              "type": "column",
+              "value": "id"
             }
-          ],
+          ]
+        },
+        {
           "name": "User Name",
-          "unique": false
-        },
-        {
+          "unique": false,
           "columns": [
             {
-              "value": "email",
-              "type": "column"
-            },
-            {
-              "value": "created_at",
-              "type": "column"
+              "type": "column",
+              "value": "full_name"
             }
-          ],
+          ]
+        },
+        {
           "name": "index_name1",
           "type": "HASH",
-          "unique": false
-        },
-        {
+          "unique": false,
           "columns": [
             {
-              "value": "now()",
-              "type": "expression"
+              "type": "column",
+              "value": "email"
+            },
+            {
+              "type": "column",
+              "value": "created_at"
             }
-          ],
+          ]
+        },
+        {
           "name": "index_name2",
-          "unique": false
-        },
-        {
+          "unique": false,
           "columns": [
             {
-              "value": "active",
-              "type": "column"
-            },
-            {
-              "value": "lower(full_name)",
-              "type": "expression"
+              "type": "expression",
+              "value": "now()"
             }
-          ],
+          ]
+        },
+        {
           "name": "index_name3",
-          "unique": false
-        },
-        {
+          "unique": false,
           "columns": [
             {
-              "value": "getdate()",
-              "type": "expression"
+              "type": "column",
+              "value": "active"
             },
             {
-              "value": "upper(gender)",
-              "type": "expression"
+              "type": "expression",
+              "value": "lower(full_name)"
             }
-          ],
-          "name": "index_name4",
-          "unique": false
+          ]
         },
         {
+          "name": "index_name4",
+          "unique": false,
           "columns": [
             {
-              "value": "reverse(country_code)",
-              "type": "expression"
+              "type": "expression",
+              "value": "getdate()"
+            },
+            {
+              "type": "expression",
+              "value": "upper(gender)"
             }
-          ],
+          ]
+        },
+        {
           "name": "index_name5",
-          "unique": false
+          "unique": false,
+          "columns": [
+            {
+              "type": "expression",
+              "value": "reverse(country_code)"
+            }
+          ]
         }
-      ]
+      ],
+      "checks": []
     }
   ],
   "refs": [],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
 }

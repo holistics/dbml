@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [],
   "refs": [
     {
@@ -18,8 +19,14 @@
           "relation": "1"
         }
       ],
+      "onDelete": null,
+      "onUpdate": null,
       "name": "distfk"
     }
   ],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
 }

@@ -1,0 +1,501 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "test_pk_int",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_bigint",
+      "fields": [
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "BIGINT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "NVARCHAR(50)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_nvarchar",
+      "fields": [
+        {
+          "name": "code",
+          "type": {
+            "type_name": "NVARCHAR(20)",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "NVARCHAR(MAX)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_identity",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT IDENTITY(1,1)",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_identity_seed",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT IDENTITY(1000,1)",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_identity_increment",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT IDENTITY(1,10)",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "info",
+          "type": {
+            "type_name": "NVARCHAR(MAX)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_not_null",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "not_null": true,
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_uniqueidentifier",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "UNIQUEIDENTIFIER",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_varchar",
+      "fields": [
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "NVARCHAR(200)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_numeric",
+      "fields": [
+        {
+          "name": "account_number",
+          "type": {
+            "type_name": "NUMERIC(20,0)",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "balance",
+          "type": {
+            "type_name": "DECIMAL(12,2)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_date",
+      "fields": [
+        {
+          "name": "event_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "event_name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_default",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "1",
+            "type": "number"
+          },
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_guid_default",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "UNIQUEIDENTIFIER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "NEWID()",
+            "type": "expression"
+          },
+          "pk": true
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "NVARCHAR(MAX)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_clustered",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_nonclustered",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_named",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "NVARCHAR(MAX)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_named_clustered",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "info",
+          "type": {
+            "type_name": "NVARCHAR(200)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_multi_col",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "NVARCHAR(50)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col3",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_quoted",
+      "fields": [
+        {
+          "name": "order-id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "order_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_schema",
+      "schemaName": "test_schema",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pk_identity_clustered",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT IDENTITY(1,1)",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "DATETIME",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "GETDATE()",
+            "type": "expression"
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

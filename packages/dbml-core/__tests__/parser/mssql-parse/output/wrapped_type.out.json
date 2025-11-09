@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "products",
@@ -6,7 +7,8 @@
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(MAX)"
+            "type_name": "varchar(MAX)",
+            "schemaName": null
           },
           "dbdefault": {
             "value": "Tea",
@@ -16,7 +18,8 @@
         {
           "name": "status",
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "schemaName": null
           },
           "dbdefault": {
             "value": "NULL",
@@ -26,10 +29,19 @@
         {
           "name": "price",
           "type": {
-            "type_name": "double precision"
+            "type_name": "double precision",
+            "schemaName": null
           }
         }
-      ]
+      ],
+      "indexes": [],
+      "checks": []
     }
-  ]
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
 }

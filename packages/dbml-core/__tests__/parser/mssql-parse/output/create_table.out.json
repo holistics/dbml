@@ -1,0 +1,817 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "cust_name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "employees",
+      "schemaName": "hr",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "INVENTORY",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "item_name",
+          "type": {
+            "type_name": "NVARCHAR(200)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "ship_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "Customer Data",
+      "fields": [
+        {
+          "name": "data_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "data_value",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "order-details$test",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "detail_desc",
+          "type": {
+            "type_name": "NVARCHAR(200)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "sales#report@2023",
+      "fields": [
+        {
+          "name": "report_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "report_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "departments",
+      "schemaName": "sales",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "dept_name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "Employee Records",
+      "schemaName": "hr",
+      "fields": [
+        {
+          "name": "record_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "record_status",
+          "type": {
+            "type_name": "NVARCHAR(20)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "budget_report#2023",
+      "schemaName": "finance",
+      "fields": [
+        {
+          "name": "budget_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "DECIMAL(12,2)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "very_long_table_name_for_testing_parser_limits_1234567890",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "NVARCHAR(MAX)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "Sales Report Data 2023",
+      "fields": [
+        {
+          "name": "sales_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "sales_amount",
+          "type": {
+            "type_name": "DECIMAL(12,2)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "project_tasks#1",
+      "fields": [
+        {
+          "name": "task_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "task_name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "order details",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "order_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "Employee_Contracts_2023",
+      "schemaName": "hr",
+      "fields": [
+        {
+          "name": "contract_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "not_null": true
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          },
+          "not_null": true
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "supplier_data",
+      "fields": [
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "supp_name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "Anonymous",
+            "type": "string"
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "#TempCustomerData",
+      "fields": [
+        {
+          "name": "temp_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "temp_name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "##GlobalTempData",
+      "fields": [
+        {
+          "name": "global_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "global_value",
+          "type": {
+            "type_name": "NVARCHAR(200)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "Test Data Types#2023",
+      "fields": [
+        {
+          "name": "col_int",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "not_null": true
+        },
+        {
+          "name": "col_varchar",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_text",
+          "type": {
+            "type_name": "NVARCHAR(MAX)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "col_datetime",
+          "type": {
+            "type_name": "DATETIME",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_datetime2",
+          "type": {
+            "type_name": "DATETIME2",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_decimal",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_real",
+          "type": {
+            "type_name": "REAL",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_bit",
+          "type": {
+            "type_name": "BIT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_binary",
+          "type": {
+            "type_name": "VARBINARY(MAX)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "logs",
+      "fields": [
+        {
+          "name": "log_id",
+          "type": {
+            "type_name": "INT IDENTITY(1,1)",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "log_message",
+          "type": {
+            "type_name": "NVARCHAR(MAX)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "DATETIME",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "GETDATE()",
+            "type": "expression"
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "accounts",
+      "fields": [
+        {
+          "name": "account_id",
+          "type": {
+            "type_name": "INT IDENTITY(1000,1)",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "account_name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "archive_data",
+      "fields": [
+        {
+          "name": "data_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "data_value",
+          "type": {
+            "type_name": "NVARCHAR(MAX)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "TABLE",
+      "fields": [
+        {
+          "name": "table_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "table_name",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "Sales Report#Data 2023@Prod",
+      "fields": [
+        {
+          "name": "sales_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "sales_amount",
+          "type": {
+            "type_name": "DECIMAL(12,2)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "Order Details#2023",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_order_details",
+          "pk": true,
+          "columns": [
+            {
+              "value": "order_id",
+              "type": "column"
+            },
+            {
+              "value": "item_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "users_table",
+      "schemaName": "dbo",
+      "fields": [
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "NVARCHAR(50)",
+            "schemaName": null
+          },
+          "not_null": true
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "NVARCHAR(100)",
+            "schemaName": null
+          },
+          "unique": true
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "transactions",
+      "fields": [
+        {
+          "name": "trans_id",
+          "type": {
+            "type_name": "INT IDENTITY(1,1)",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": [
+            {
+              "expression": "amount > 0"
+            }
+          ]
+        },
+        {
+          "name": "trans_date",
+          "type": {
+            "type_name": "DATETIME",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "GETDATE()",
+            "type": "expression"
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "orders",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "total",
+          "type": {
+            "type_name": "AS quantity * price",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "invoice_items",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "unit_price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "line_total",
+          "type": {
+            "type_name": "AS quantity * unit_price PERSISTED",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [
+    {
+      "name": "fk_order_cust",
+      "endpoints": [
+        {
+          "tableName": "order details",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

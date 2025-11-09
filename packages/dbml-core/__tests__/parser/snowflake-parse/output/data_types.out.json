@@ -1,0 +1,734 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "test_numeric_types",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_number_precision",
+          "type": {
+            "type_name": "NUMBER(10,2)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_decimal",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_numeric",
+          "type": {
+            "type_name": "NUMERIC(10,2)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_int",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_bigint",
+          "type": {
+            "type_name": "BIGINT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_smallint",
+          "type": {
+            "type_name": "SMALLINT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_tinyint",
+          "type": {
+            "type_name": "TINYINT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_byteint",
+          "type": {
+            "type_name": "BYTEINT",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_number_precision",
+      "fields": [
+        {
+          "name": "col_number_small",
+          "type": {
+            "type_name": "NUMBER(5,2)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_number_medium",
+          "type": {
+            "type_name": "NUMBER(10,4)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_number_large",
+          "type": {
+            "type_name": "NUMBER(20,8)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_number_max",
+          "type": {
+            "type_name": "NUMBER(38,10)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_float_types",
+      "fields": [
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_float4",
+          "type": {
+            "type_name": "FLOAT4",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_float8",
+          "type": {
+            "type_name": "FLOAT8",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_double",
+          "type": {
+            "type_name": "DOUBLE",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_double_precision",
+          "type": {
+            "type_name": "DOUBLE PRECISION",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_real",
+          "type": {
+            "type_name": "REAL",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_string_types",
+      "fields": [
+        {
+          "name": "col_varchar",
+          "type": {
+            "type_name": "VARCHAR(255)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_varchar_max",
+          "type": {
+            "type_name": "VARCHAR",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_character",
+          "type": {
+            "type_name": "CHARACTER(10)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_string",
+          "type": {
+            "type_name": "STRING",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_text",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_string_lengths",
+      "fields": [
+        {
+          "name": "col_varchar_100",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_varchar_16mb",
+          "type": {
+            "type_name": "VARCHAR(16777216)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_char_1",
+          "type": {
+            "type_name": "CHAR(1)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_binary_types",
+      "fields": [
+        {
+          "name": "col_binary",
+          "type": {
+            "type_name": "BINARY",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_varbinary",
+          "type": {
+            "type_name": "VARBINARY",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_binary_sized",
+          "type": {
+            "type_name": "BINARY(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_boolean",
+      "fields": [
+        {
+          "name": "col_boolean",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "is_active",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "is_deleted",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datetime_types",
+      "fields": [
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_datetime",
+          "type": {
+            "type_name": "DATETIME",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_time",
+          "type": {
+            "type_name": "TIME",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_timestamp_ntz",
+          "type": {
+            "type_name": "TIMESTAMP_NTZ",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_timestamp_ltz",
+          "type": {
+            "type_name": "TIMESTAMP_LTZ",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_timestamp_tz",
+          "type": {
+            "type_name": "TIMESTAMP_TZ",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datetime_precision",
+      "fields": [
+        {
+          "name": "col_timestamp_0",
+          "type": {
+            "type_name": "TIMESTAMP(0)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_timestamp_3",
+          "type": {
+            "type_name": "TIMESTAMP(3)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_timestamp_6",
+          "type": {
+            "type_name": "TIMESTAMP(6)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_timestamp_9",
+          "type": {
+            "type_name": "TIMESTAMP(9)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_time_3",
+          "type": {
+            "type_name": "TIME(3)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_semistructured_types",
+      "fields": [
+        {
+          "name": "col_variant",
+          "type": {
+            "type_name": "VARIANT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_object",
+          "type": {
+            "type_name": "OBJECT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_array",
+          "type": {
+            "type_name": "ARRAY",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_spatial_types",
+      "fields": [
+        {
+          "name": "col_geography",
+          "type": {
+            "type_name": "GEOGRAPHY",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_geometry",
+          "type": {
+            "type_name": "GEOMETRY",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_autoincrement",
+      "fields": [
+        {
+          "name": "col_auto",
+          "type": {
+            "type_name": "NUMBER",
+            "schemaName": null
+          },
+          "increment": true
+        },
+        {
+          "name": "col_identity",
+          "type": {
+            "type_name": "NUMBER",
+            "schemaName": null
+          },
+          "increment": true
+        },
+        {
+          "name": "col_identity_options",
+          "type": {
+            "type_name": "NUMBER",
+            "schemaName": null
+          },
+          "increment": true
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_all_types",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_decimal",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_int",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_bigint",
+          "type": {
+            "type_name": "BIGINT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_smallint",
+          "type": {
+            "type_name": "SMALLINT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_double",
+          "type": {
+            "type_name": "DOUBLE",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_real",
+          "type": {
+            "type_name": "REAL",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_varchar",
+          "type": {
+            "type_name": "VARCHAR(255)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_string",
+          "type": {
+            "type_name": "STRING",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_text",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(50)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_binary",
+          "type": {
+            "type_name": "BINARY",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_varbinary",
+          "type": {
+            "type_name": "VARBINARY",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_boolean",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_time",
+          "type": {
+            "type_name": "TIME",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_timestamp_ntz",
+          "type": {
+            "type_name": "TIMESTAMP_NTZ",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_timestamp_ltz",
+          "type": {
+            "type_name": "TIMESTAMP_LTZ",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_timestamp_tz",
+          "type": {
+            "type_name": "TIMESTAMP_TZ",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_variant",
+          "type": {
+            "type_name": "VARIANT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_object",
+          "type": {
+            "type_name": "OBJECT",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_array",
+          "type": {
+            "type_name": "ARRAY",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_geography",
+          "type": {
+            "type_name": "GEOGRAPHY",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_geometry",
+          "type": {
+            "type_name": "GEOMETRY",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_max_sizes",
+      "fields": [
+        {
+          "name": "col_varchar_max",
+          "type": {
+            "type_name": "VARCHAR(16777216)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_number_max",
+          "type": {
+            "type_name": "NUMBER(38,10)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_min_sizes",
+      "fields": [
+        {
+          "name": "col_varchar_min",
+          "type": {
+            "type_name": "VARCHAR(1)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_char_min",
+          "type": {
+            "type_name": "CHAR(1)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "col_number_min",
+          "type": {
+            "type_name": "NUMBER(1,0)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_number_default",
+      "fields": [
+        {
+          "name": "col_number_no_precision",
+          "type": {
+            "type_name": "NUMBER",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {}
+}

@@ -30,5 +30,9 @@ describe('@dbml/core', () => {
     test.each(scanTestNames(__dirname, 'mssql-parse/input'))('mssql-parse/%s', (name) => {
       runTest(name, 'mssql-parse', 'mssql', 'parseMSSQLToJSONv2');
     });
+
+    test.each(scanTestNames(__dirname, 'snowflake-parse/input'))('snowflake-parse/%s', (name) => {
+      runTest(name, 'snowflake-parse', 'snowflake', 'parseSnowflakeToJSON');
+    });
   });
 });

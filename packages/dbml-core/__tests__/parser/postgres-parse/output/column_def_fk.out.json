@@ -1,0 +1,1126 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "cust_name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "products",
+      "fields": [
+        {
+          "name": "product_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "product_name",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "users",
+      "fields": [
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "orders",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "invoices",
+      "fields": [
+        {
+          "name": "invoice_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "payments",
+      "fields": [
+        {
+          "name": "payment_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "shipment_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "reviews",
+      "fields": [
+        {
+          "name": "review_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "product_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "transactions",
+      "fields": [
+        {
+          "name": "trans_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "audit_logs",
+      "fields": [
+        {
+          "name": "log_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "logs",
+      "fields": [
+        {
+          "name": "log_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0",
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "order_details",
+      "fields": [
+        {
+          "name": "detail_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "comments",
+      "fields": [
+        {
+          "name": "comment_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "product_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "sensitive_data",
+      "fields": [
+        {
+          "name": "data_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "employees",
+      "schemaName": "hr",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "projects",
+      "fields": [
+        {
+          "name": "project_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "categories",
+      "fields": [
+        {
+          "name": "category_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "category_name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "parent_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "employees",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_fk_match_simple",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_fk_match_full",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_fk_deferrable",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_fk_deferrable_immediate",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_fk_not_deferrable",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "order-history",
+      "fields": [
+        {
+          "name": "history_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "customer-id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "order_items",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "product_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "complex_fk",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [
+    {
+      "endpoints": [
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "invoices",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "payments",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "shipments",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": "CASCADE"
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "reviews",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "products",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "SET NULL",
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "transactions",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "users",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "RESTRICT",
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "audit_logs",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "users",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "NO ACTION",
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "logs",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "users",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "SET DEFAULT",
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "order_details",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": "CASCADE"
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "comments",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "products",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "SET NULL",
+      "onUpdate": "CASCADE"
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "sensitive_data",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "users",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "RESTRICT",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "projects",
+          "fieldNames": [
+            "manager_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees",
+          "schemaName": "hr",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "categories",
+          "fieldNames": [
+            "parent_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "categories",
+          "fieldNames": [
+            "category_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "manager_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "SET NULL",
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "test_fk_match_simple",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "test_fk_match_full",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "test_fk_deferrable",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "test_fk_deferrable_immediate",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "test_fk_not_deferrable",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "order-history",
+          "fieldNames": [
+            "customer-id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "order_items",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "order_items",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "products",
+          "fieldNames": [
+            "product_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "complex_fk",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": "CASCADE"
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

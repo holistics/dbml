@@ -1,0 +1,1435 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "test_unique_table",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "email"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_named",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq_username",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "username"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_multiple",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "ssn",
+          "type": {
+            "type_name": "VARCHAR(11)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "email"
+            }
+          ]
+        },
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "username"
+            }
+          ]
+        },
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "ssn"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_multiple_named",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "license",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq_email",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "email"
+            }
+          ]
+        },
+        {
+          "name": "uq_phone",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "phone"
+            }
+          ]
+        },
+        {
+          "name": "uq_license",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "license"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_composite_2",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "first_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "last_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "first_name"
+            },
+            {
+              "type": "column",
+              "value": "last_name"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_composite_named",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "country",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "state",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "city",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq_location",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "country"
+            },
+            {
+              "type": "column",
+              "value": "state"
+            },
+            {
+              "type": "column",
+              "value": "city"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_composite_3",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "year",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "month",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "day",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "event",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq_date",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "year"
+            },
+            {
+              "type": "column",
+              "value": "month"
+            },
+            {
+              "type": "column",
+              "value": "day"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_multi_composite",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col3",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col4",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq_comp1",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "col1"
+            },
+            {
+              "type": "column",
+              "value": "col2"
+            }
+          ]
+        },
+        {
+          "name": "uq_comp2",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "col3"
+            },
+            {
+              "type": "column",
+              "value": "col4"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "users",
+      "fields": [
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "user_emails",
+      "fields": [
+        {
+          "name": "email_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "email"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_not_null",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "serial",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq_code",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "code"
+            }
+          ]
+        },
+        {
+          "name": "uq_serial",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "serial"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_default",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "active",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "tracking_code",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "tracking_code"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_check",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "age",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "email"
+            }
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "expression": "age >= 18"
+        }
+      ]
+    },
+    {
+      "name": "test_unique_key_syntax",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "code"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_index_syntax",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "ref_number",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq_ref",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "ref_number"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_mixed_syntax",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq_col1",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "col1"
+            }
+          ]
+        },
+        {
+          "name": "uq_col2",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "col2"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_btree",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "type": "BTREE",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "code"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_hash",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "ref_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "type": "HASH",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "ref_id"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_datatypes",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "int_col",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "bigint_col",
+          "type": {
+            "type_name": "BIGINT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "varchar_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "char_col",
+          "type": {
+            "type_name": "CHAR(10)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "date_col",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "decimal_col",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "int_col"
+            }
+          ]
+        },
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "bigint_col"
+            }
+          ]
+        },
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "varchar_col"
+            }
+          ]
+        },
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "char_col"
+            }
+          ]
+        },
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "date_col"
+            }
+          ]
+        },
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "decimal_col"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_auto",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "sequence_num",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "increment": true,
+          "unique": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test-unique-quoted",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email-address",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq-email",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "email-address"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_schema",
+      "schemaName": "test_schema",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq_code",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "code"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_inline_table",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "unique": true,
+          "checks": []
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq_username",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "username"
+            }
+          ]
+        },
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "phone"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_nullable",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "optional_email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "optional_code",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "optional_email"
+            }
+          ]
+        },
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "optional_code"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_with_all",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_TIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "email"
+            }
+          ]
+        },
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "username"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_long_composite",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col3",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col4",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col5",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uq_long",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "col1"
+            },
+            {
+              "type": "column",
+              "value": "col2"
+            },
+            {
+              "type": "column",
+              "value": "col3"
+            },
+            {
+              "type": "column",
+              "value": "col4"
+            },
+            {
+              "type": "column",
+              "value": "col5"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_unique_table_options",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "code"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    }
+  ],
+  "refs": [
+    {
+      "endpoints": [
+        {
+          "tableName": "user_emails",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "users",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "test_unique_with_all",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "users",
+          "fieldNames": [
+            "user_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

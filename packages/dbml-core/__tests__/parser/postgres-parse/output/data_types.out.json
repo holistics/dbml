@@ -1,0 +1,1216 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "test_integer_types",
+      "fields": [
+        {
+          "name": "col_smallint",
+          "type": {
+            "type_name": "SMALLINT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_int",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_bigint",
+          "type": {
+            "type_name": "BIGINT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_serial_types",
+      "fields": [
+        {
+          "name": "col_smallserial",
+          "type": {
+            "type_name": "SMALLSERIAL",
+            "schemaName": null
+          },
+          "increment": true,
+          "checks": []
+        },
+        {
+          "name": "col_serial",
+          "type": {
+            "type_name": "SERIAL",
+            "schemaName": null
+          },
+          "increment": true,
+          "checks": []
+        },
+        {
+          "name": "col_bigserial",
+          "type": {
+            "type_name": "BIGSERIAL",
+            "schemaName": null
+          },
+          "increment": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_identity_types",
+      "fields": [
+        {
+          "name": "col_identity_always",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "increment": true,
+          "checks": []
+        },
+        {
+          "name": "col_identity_default",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "increment": true,
+          "checks": []
+        },
+        {
+          "name": "col_identity_options",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "increment": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_numeric_types",
+      "fields": [
+        {
+          "name": "col_numeric",
+          "type": {
+            "type_name": "NUMERIC",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_numeric_precision",
+          "type": {
+            "type_name": "NUMERIC(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_decimal",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_numeric_precision",
+      "fields": [
+        {
+          "name": "col_numeric_small",
+          "type": {
+            "type_name": "NUMERIC(5,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_numeric_medium",
+          "type": {
+            "type_name": "NUMERIC(10,4)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_numeric_large",
+          "type": {
+            "type_name": "NUMERIC(20,8)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_numeric_max",
+          "type": {
+            "type_name": "NUMERIC(1000,100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_float_types",
+      "fields": [
+        {
+          "name": "col_real",
+          "type": {
+            "type_name": "REAL",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_double",
+          "type": {
+            "type_name": "DOUBLEPRECISION",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_float8",
+          "type": {
+            "type_name": "FLOAT8",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_float4",
+          "type": {
+            "type_name": "FLOAT4",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_money",
+      "fields": [
+        {
+          "name": "col_money",
+          "type": {
+            "type_name": "MONEY",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_character_types",
+      "fields": [
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR (10)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_character",
+          "type": {
+            "type_name": "CHARACTER (10)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar",
+          "type": {
+            "type_name": "VARCHAR(255)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_character_varying",
+          "type": {
+            "type_name": "CHARACTER VARYING(255)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_text",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_char_lengths",
+      "fields": [
+        {
+          "name": "col_char_1",
+          "type": {
+            "type_name": "CHAR (1)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar_100",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar_max",
+          "type": {
+            "type_name": "VARCHAR(65535)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_binary_types",
+      "fields": [
+        {
+          "name": "col_bytea",
+          "type": {
+            "type_name": "BYTEA",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datetime_types",
+      "fields": [
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_time",
+          "type": {
+            "type_name": "TIME",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_time_tz",
+          "type": {
+            "type_name": "TIME",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp_tz",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamptz",
+          "type": {
+            "type_name": "TIMESTAMPTZ",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_interval",
+          "type": {
+            "type_name": "INTERVAL",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datetime_precision",
+      "fields": [
+        {
+          "name": "col_time_3",
+          "type": {
+            "type_name": "TIME(3)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_time_6",
+          "type": {
+            "type_name": "TIME(6)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp_3",
+          "type": {
+            "type_name": "TIMESTAMP(3)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp_6",
+          "type": {
+            "type_name": "TIMESTAMP(6)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamptz_3",
+          "type": {
+            "type_name": "TIMESTAMPTZ(3)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_boolean",
+      "fields": [
+        {
+          "name": "col_bool",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_bool_alt",
+          "type": {
+            "type_name": "BOOL",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_enum",
+      "fields": [
+        {
+          "name": "col_mood",
+          "type": {
+            "type_name": "mood",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_status",
+          "type": {
+            "type_name": "status_type",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_geometric_types",
+      "fields": [
+        {
+          "name": "col_point",
+          "type": {
+            "type_name": "POINT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_line",
+          "type": {
+            "type_name": "LINE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_lseg",
+          "type": {
+            "type_name": "LSEG",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_box",
+          "type": {
+            "type_name": "BOX",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_path",
+          "type": {
+            "type_name": "PATH",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_polygon",
+          "type": {
+            "type_name": "POLYGON",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_circle",
+          "type": {
+            "type_name": "CIRCLE",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_network_types",
+      "fields": [
+        {
+          "name": "col_cidr",
+          "type": {
+            "type_name": "CIDR",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_inet",
+          "type": {
+            "type_name": "INET",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_macaddr",
+          "type": {
+            "type_name": "MACADDR",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_macaddr8",
+          "type": {
+            "type_name": "MACADDR8",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_bit_types",
+      "fields": [
+        {
+          "name": "col_bit",
+          "type": {
+            "type_name": "BIT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_bit_1",
+          "type": {
+            "type_name": "BIT(1)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_bit_8",
+          "type": {
+            "type_name": "BIT(8)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_bit_varying",
+          "type": {
+            "type_name": "BITVARYING(64)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varbit",
+          "type": {
+            "type_name": "VARBIT(64)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_textsearch_types",
+      "fields": [
+        {
+          "name": "col_tsvector",
+          "type": {
+            "type_name": "TSVECTOR",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_tsquery",
+          "type": {
+            "type_name": "TSQUERY",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_uuid",
+      "fields": [
+        {
+          "name": "col_uuid",
+          "type": {
+            "type_name": "UUID",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_json_types",
+      "fields": [
+        {
+          "name": "col_json",
+          "type": {
+            "type_name": "JSON",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_jsonb",
+          "type": {
+            "type_name": "JSONB",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_array_types",
+      "fields": [
+        {
+          "name": "col_int_array",
+          "type": {
+            "type_name": "INTEGER[]",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_text_array",
+          "type": {
+            "type_name": "TEXT[]",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar_array",
+          "type": {
+            "type_name": "VARCHAR(100)[]",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_int_array_2d",
+          "type": {
+            "type_name": "INTEGER[][]",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_int_array_sized",
+          "type": {
+            "type_name": "INTEGER[5]",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_range_types",
+      "fields": [
+        {
+          "name": "col_int4range",
+          "type": {
+            "type_name": "INT4RANGE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_int8range",
+          "type": {
+            "type_name": "INT8RANGE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_numrange",
+          "type": {
+            "type_name": "NUMRANGE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_tsrange",
+          "type": {
+            "type_name": "TSRANGE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_tstzrange",
+          "type": {
+            "type_name": "TSTZRANGE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_daterange",
+          "type": {
+            "type_name": "DATERANGE",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_xml",
+      "fields": [
+        {
+          "name": "col_xml",
+          "type": {
+            "type_name": "XML",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_composite",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "home_address",
+          "type": {
+            "type_name": "address",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "work_address",
+          "type": {
+            "type_name": "address",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_domain",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "email_type",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "positive_int",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_oid_types",
+      "fields": [
+        {
+          "name": "col_oid",
+          "type": {
+            "type_name": "OID",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_regproc",
+          "type": {
+            "type_name": "REGPROC",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_regprocedure",
+          "type": {
+            "type_name": "REGPROCEDURE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_regoper",
+          "type": {
+            "type_name": "REGOPER",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_regoperator",
+          "type": {
+            "type_name": "REGOPERATOR",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_regclass",
+          "type": {
+            "type_name": "REGCLASS",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_regtype",
+          "type": {
+            "type_name": "REGTYPE",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_pseudo_types",
+      "fields": [
+        {
+          "name": "col_any",
+          "type": {
+            "type_name": "any",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_anyarray",
+          "type": {
+            "type_name": "ANYARRAY",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_all_types",
+      "fields": [
+        {
+          "name": "col_smallint",
+          "type": {
+            "type_name": "SMALLINT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_bigint",
+          "type": {
+            "type_name": "BIGINT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_serial",
+          "type": {
+            "type_name": "SERIAL",
+            "schemaName": null
+          },
+          "increment": true,
+          "checks": []
+        },
+        {
+          "name": "col_numeric",
+          "type": {
+            "type_name": "NUMERIC(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_real",
+          "type": {
+            "type_name": "REAL",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_double",
+          "type": {
+            "type_name": "DOUBLEPRECISION",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_money",
+          "type": {
+            "type_name": "MONEY",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR (50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar",
+          "type": {
+            "type_name": "VARCHAR(255)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_text",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_bytea",
+          "type": {
+            "type_name": "BYTEA",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_time",
+          "type": {
+            "type_name": "TIME",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamptz",
+          "type": {
+            "type_name": "TIMESTAMPTZ",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_interval",
+          "type": {
+            "type_name": "INTERVAL",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_boolean",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_uuid",
+          "type": {
+            "type_name": "UUID",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_json",
+          "type": {
+            "type_name": "JSON",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_jsonb",
+          "type": {
+            "type_name": "JSONB",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_int_array",
+          "type": {
+            "type_name": "INTEGER[]",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_inet",
+          "type": {
+            "type_name": "INET",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_macaddr",
+          "type": {
+            "type_name": "MACADDR",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_point",
+          "type": {
+            "type_name": "POINT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col_polygon",
+          "type": {
+            "type_name": "POLYGON",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [
+    {
+      "name": "mood",
+      "values": [
+        {
+          "name": "sad"
+        },
+        {
+          "name": "ok"
+        },
+        {
+          "name": "happy"
+        }
+      ]
+    },
+    {
+      "name": "status_type",
+      "values": [
+        {
+          "name": "pending"
+        },
+        {
+          "name": "processing"
+        },
+        {
+          "name": "completed"
+        },
+        {
+          "name": "failed"
+        }
+      ]
+    }
+  ],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

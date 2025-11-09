@@ -10,14 +10,16 @@
             "type_name": "int",
             "schemaName": null
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "full_name",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "email",
@@ -25,42 +27,48 @@
             "type_name": "varchar",
             "schemaName": null
           },
-          "unique": true
+          "unique": true,
+          "checks": []
         },
         {
           "name": "gender",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "date_of_birth",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "country_code",
           "type": {
             "type_name": "int",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "active",
           "type": {
             "type_name": "boolean",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [
@@ -141,12 +149,14 @@
             }
           ]
         }
-      ]
+      ],
+      "checks": []
     }
   ],
   "refs": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "records": []
 }

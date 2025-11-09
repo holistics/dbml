@@ -9,14 +9,16 @@
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         },
         {
           "name": "content",
           "type": {
             "type_name": "varchar",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [
@@ -79,7 +81,8 @@
             }
           ]
         }
-      ]
+      ],
+      "checks": []
     },
     {
       "name": "points",
@@ -89,7 +92,8 @@
           "type": {
             "type_name": "varchar(255)",
             "schemaName": null
-          }
+          },
+          "checks": []
         }
       ],
       "indexes": [
@@ -115,12 +119,14 @@
             }
           ]
         }
-      ]
+      ],
+      "checks": []
     }
   ],
   "refs": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "records": []
 }

@@ -14,7 +14,8 @@
             "value": "123",
             "type": "number"
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "name",
@@ -25,7 +26,8 @@
           "dbdefault": {
             "value": "Tea",
             "type": "string"
-          }
+          },
+          "checks": []
         },
         {
           "name": "merchant_id",
@@ -33,7 +35,8 @@
             "type_name": "int",
             "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "price",
@@ -44,7 +47,8 @@
           "dbdefault": {
             "value": "123.12",
             "type": "number"
-          }
+          },
+          "checks": []
         },
         {
           "name": "status",
@@ -55,7 +59,8 @@
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "created_at",
@@ -66,7 +71,8 @@
           "dbdefault": {
             "value": "now()",
             "type": "expression"
-          }
+          },
+          "checks": []
         },
         {
           "name": "stock",
@@ -77,7 +83,8 @@
           "dbdefault": {
             "value": "true",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "expiration",
@@ -88,15 +95,18 @@
           "dbdefault": {
             "value": "current_date+interval'1 year'",
             "type": "expression"
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     }
   ],
   "refs": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
-  "project": {}
+  "project": {},
+  "records": []
 }

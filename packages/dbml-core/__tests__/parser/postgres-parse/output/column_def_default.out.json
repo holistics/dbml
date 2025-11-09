@@ -1,0 +1,940 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "Unknown",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "noemail@example.com",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "N/A",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "address",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "Unknown Address",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "ACTIVE",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "reg_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_DATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "last_login",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_TIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "1",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_name",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "Item",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "NUMERIC(10,2)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0.00",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "Misc",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "sku",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "SKU000",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "weight",
+          "type": {
+            "type_name": "NUMERIC(8,2)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0.0",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "stock_level",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "reorder_level",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "10",
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_basic_num",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "100",
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_basic_varchar",
+      "fields": [
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "Unknown",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(10)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CODE",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_basic_date",
+      "fields": [
+        {
+          "name": "event_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_DATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "end_date",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_TIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_expr_current_date",
+      "fields": [
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_DATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "updated_at",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_DATE",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_expr_user",
+      "fields": [
+        {
+          "name": "created_by",
+          "type": {
+            "type_name": "VARCHAR(30)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_USER",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "modified_by",
+          "type": {
+            "type_name": "VARCHAR(30)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "SESSION_USER",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_expr_uuid",
+      "fields": [
+        {
+          "name": "unique_id",
+          "type": {
+            "type_name": "UUID",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "gen_random_uuid()",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "session_id",
+          "type": {
+            "type_name": "UUID",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "gen_random_uuid()",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_expr_seq",
+      "fields": [
+        {
+          "name": "seq_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "nextval('test_seq')",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "auto_id",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "nextval('test_seq')",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_expr_arith",
+      "fields": [
+        {
+          "name": "base_value",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "1000",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "calc_value",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "1000+500",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_default_not_null",
+      "fields": [
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "ACTIVE",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "1",
+            "type": "number"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes_inline",
+      "fields": [
+        {
+          "name": "col_int",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_bigint",
+          "type": {
+            "type_name": "BIGINT",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_smallint",
+          "type": {
+            "type_name": "SMALLINT",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "Text",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_text",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "Default text",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_DATE",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_TIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamptz",
+          "type": {
+            "type_name": "TIMESTAMPTZ",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_TIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_numeric",
+          "type": {
+            "type_name": "NUMERIC(10,2)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0.00",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_real",
+          "type": {
+            "type_name": "REAL",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "1.23",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_double",
+          "type": {
+            "type_name": "DOUBLEPRECISION",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "3.14159",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_boolean",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "TRUE",
+            "type": "boolean"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_complex_expr",
+      "fields": [
+        {
+          "name": "full_name",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_USER||'_USER'",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "calc_field",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "100*2",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_long_default",
+      "fields": [
+        {
+          "name": "description",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "This is a very long default value for testing purposes, exceeding typical lengths to check parser limits and storage implications in PostgreSQL",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "comments",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "Another long default string to test maximum lengths and handling in table creation statements",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_null_default",
+      "fields": [
+        {
+          "name": "optional_field",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          },
+          "checks": []
+        },
+        {
+          "name": "nullable_int",
+          "type": {
+            "type_name": "INTEGER",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "NULL",
+            "type": "boolean"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_now",
+      "fields": [
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "NOW()",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "updated_at",
+          "type": {
+            "type_name": "TIMESTAMPTZ",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "NOW()",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_localtimestamp",
+      "fields": [
+        {
+          "name": "local_time",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "LOCALTIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "local_time_tz",
+          "type": {
+            "type_name": "TIMESTAMPTZ",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "LOCALTIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_boolean_default",
+      "fields": [
+        {
+          "name": "is_active",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "TRUE",
+            "type": "boolean"
+          },
+          "checks": []
+        },
+        {
+          "name": "is_deleted",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "FALSE",
+            "type": "boolean"
+          },
+          "checks": []
+        },
+        {
+          "name": "flag",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "1=1",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_array_default",
+      "fields": [
+        {
+          "name": "tags",
+          "type": {
+            "type_name": "TEXT[]",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "ARRAY[]::TEXT[]",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "numbers",
+          "type": {
+            "type_name": "INTEGER[]",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "{1,2,3}",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_json_default",
+      "fields": [
+        {
+          "name": "metadata",
+          "type": {
+            "type_name": "JSON",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "{}",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "settings",
+          "type": {
+            "type_name": "JSONB",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "'{}'::JSONB",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_cast_default",
+      "fields": [
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "NUMERIC",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0::NUMERIC",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "ratio",
+          "type": {
+            "type_name": "DOUBLEPRECISION",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0.0::DOUBLEPRECISION",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}
