@@ -1,14 +1,14 @@
-import { serialize } from '../../src/lib/serialization/serialize';
-import fs, { readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
+import { serialize } from '../../../src/lib/serialization/serialize';
 import { scanTestNames } from '../jestHelpers';
-import { NodeSymbolIdGenerator } from '../../src/lib/analyzer/symbol/symbols';
-import { SyntaxNodeIdGenerator } from '../../src/lib/parser/nodes';
-import Lexer from '../../src/lib/lexer/lexer';
-import Parser from '../../src/lib/parser/parser';
-import Validator from '../../src/lib/analyzer/validator/validator';
-import SymbolFactory from '../../src/lib/analyzer/symbol/factory';
+import { NodeSymbolIdGenerator } from '../../../src/lib/analyzer/symbol/symbols';
+import { SyntaxNodeIdGenerator } from '../../../src/lib/parser/nodes';
+import Lexer from '../../../src/lib/lexer/lexer';
+import Parser from '../../../src/lib/parser/parser';
+import Validator from '../../../src/lib/analyzer/validator/validator';
+import SymbolFactory from '../../../src/lib/analyzer/symbol/factory';
 
 describe('#validator', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
@@ -27,7 +27,6 @@ describe('#validator', () => {
       });
     const output = serialize(report, true);
 
-    it(testName, () =>
-      expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
+    it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });
 });

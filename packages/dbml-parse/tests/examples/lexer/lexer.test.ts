@@ -1,8 +1,8 @@
-import fs, { readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
 import { scanTestNames } from '../jestHelpers';
-import Lexer from '../../src/lib/lexer/lexer';
+import Lexer from '../../../src/lib/lexer/lexer';
 
 describe('#lexer', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
