@@ -1,11 +1,10 @@
 name: Run unit test
 on:
   push:
-    branches: [ master]
+    branches: [ master ]
     paths-ignore:
       - 'dbml-homepage/**'
   pull_request:
-    branches: [ master ]
     types: [opened, synchronize]
     paths-ignore:
       - 'dbml-homepage/**'

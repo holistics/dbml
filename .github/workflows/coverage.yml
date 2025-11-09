@@ -1,11 +1,10 @@
-name: coverage
+name: Run coverage test
 on:
   push:
     branches: [ master ]
     paths-ignore:
       - 'dbml-homepage/**'
   pull_request:
-    branches: [ master ]
     types: [opened, synchronize]
     paths-ignore:
       - 'dbml-homepage/**'
