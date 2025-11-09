@@ -2,24 +2,24 @@ import { last, head, partition } from 'lodash-es';
 import {
   Column, Check, ElementInterpreter, Index, InlineRef,
   InterpreterDatabase, TablePartial,
-} from '../types';
+} from '@interpreter/types';
 import {
   BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
   FunctionExpressionNode,
   ListExpressionNode, PrefixExpressionNode, SyntaxNode,
-} from '../../parser/nodes';
+} from '@parser/nodes';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getTokenPosition,
   isSameEndpoint, normalizeNoteContent, processColumnType, processDefaultValue,
-} from '../utils';
+} from '@interpreter/utils';
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
-} from '../../analyzer/utils';
-import { CompileError, CompileErrorCode } from '../../errors';
-import { aggregateSettingList } from '../../analyzer/validator/utils';
-import { ColumnSymbol } from '../../analyzer/symbol/symbols';
-import { ElementKind, SettingName } from '../../analyzer/types';
+} from '@analyzer/utils';
+import { CompileError, CompileErrorCode } from '@lib/errors';
+import { aggregateSettingList } from '@analyzer/validator/utils';
+import { ColumnSymbol } from '@analyzer/symbol/symbols';
+import { ElementKind, SettingName } from '@analyzer/types';
 
 export class TablePartialInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

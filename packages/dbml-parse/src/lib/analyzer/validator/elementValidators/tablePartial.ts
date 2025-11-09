@@ -1,6 +1,6 @@
 import { partition, forIn, last } from 'lodash-es';
-import SymbolFactory from '../../symbol/factory';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import SymbolFactory from '@analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@lib/errors';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -11,8 +11,8 @@ import {
   ListExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
-} from '../../../parser/nodes';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
+} from '@parser/nodes';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@analyzer/utils';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -21,20 +21,20 @@ import {
   isValidColumnType,
   isValidDefaultValue,
   isVoid,
-  pickValidator,
   registerSchemaStack,
-} from '../utils';
-import { ElementValidator } from '../types';
-import { ColumnSymbol, TablePartialSymbol } from '../../symbol/symbols';
-import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '../../symbol/symbolIndex';
+  pickValidator,
+} from '@analyzer/validator/utils';
+import { ElementValidator } from '@analyzer/validator/types';
+import { ColumnSymbol, TablePartialSymbol } from '@analyzer/symbol/symbols';
+import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '@analyzer/symbol/symbolIndex';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
-} from '../../../parser/utils';
-import { SyntaxToken } from '../../../lexer/tokens';
-import SymbolTable from '../../symbol/symbolTable';
-import { ElementKind, SettingName } from '../../types';
+} from '@parser/utils';
+import { SyntaxToken } from '@lexer/tokens';
+import SymbolTable from '@analyzer/symbol/symbolTable';
+import { ElementKind, SettingName } from '@analyzer/types';
 
 export default class TablePartialValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

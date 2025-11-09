@@ -1,19 +1,20 @@
 import { last, partition } from 'lodash-es';
-import SymbolFactory from '../../symbol/factory';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import SymbolFactory from '@analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '../../../parser/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementValidator } from '../types';
+} from '@parser/nodes';
+import { isExpressionAQuotedString, isExpressionAVariableNode } from '@parser/utils';
+import { SyntaxToken } from '@lexer/tokens';
+import { ElementValidator } from '@analyzer/validator/types';
 import {
-  aggregateSettingList, isValidName, pickValidator, registerSchemaStack,
-} from '../utils';
-import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '../../symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
-import SymbolTable from '../../symbol/symbolTable';
-import { EnumFieldSymbol, EnumSymbol } from '../../symbol/symbols';
+  aggregateSettingList } from '@analyzer/validator/utils';
+import { isValidName, pickValidator } from '@analyzer/validator/utils';
+import { registerSchemaStack } from '@analyzer/validator/utils';
+import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@analyzer/symbol/symbolIndex';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@analyzer/utils';
+import SymbolTable from '@analyzer/symbol/symbolTable';
+import { EnumFieldSymbol, EnumSymbol } from '@analyzer/symbol/symbols';
 
 export default class EnumValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };

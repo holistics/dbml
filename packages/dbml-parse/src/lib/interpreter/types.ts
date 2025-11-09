@@ -1,6 +1,6 @@
-import { ElementDeclarationNode } from '../parser/nodes';
-import { Position } from '../types';
-import { CompileError } from '../errors';
+import { ElementDeclarationNode } from '@parser/nodes';
+import { Position } from '@lib/types';
+import { CompileError } from '@lib/errors';
 
 export interface TokenPosition {
   start: Position;

@@ -1,5 +1,5 @@
 import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from './tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@lexer/tokens';
 
 export function hasTrailingNewLines (token: SyntaxToken): boolean {
   return token.trailingTrivia.find(({ kind }) => kind === SyntaxTokenKind.NEWLINE) !== undefined;

@@ -1,13 +1,13 @@
 import { partition } from 'lodash-es';
-import SymbolFactory from '../../symbol/factory';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import SymbolFactory from '@analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '../../../parser/nodes';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementValidator } from '../types';
-import { isSimpleName, pickValidator } from '../utils';
-import SymbolTable from '../../symbol/symbolTable';
+} from '@parser/nodes';
+import { SyntaxToken } from '@lexer/tokens';
+import { ElementValidator } from '@analyzer/validator/types';
+import { isSimpleName, pickValidator } from '@analyzer/validator/utils';
+import SymbolTable from '@analyzer/symbol/symbolTable';
 
 export default class ProjectValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };

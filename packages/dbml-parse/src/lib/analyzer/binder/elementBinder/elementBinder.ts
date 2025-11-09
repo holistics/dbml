@@ -1,5 +1,5 @@
 import { last } from 'lodash-es';
-import { isTupleOfVariables } from '../../validator/utils';
+import { isTupleOfVariables } from '@analyzer/validator/utils';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -13,31 +13,31 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-} from '../../../parser/nodes';
+} from '@parser/nodes';
 import {
   extractStringFromIdentifierStream,
   isAccessExpression,
   isExpressionAVariableNode,
-} from '../../../parser/utils';
-import { ArgumentBinderRule, BinderRule, SettingListBinderRule } from '../types';
+} from '@parser/utils';
+import { ArgumentBinderRule, BinderRule, SettingListBinderRule } from '@analyzer/binder/types';
 import {
   destructureMemberAccessExpression,
   extractVarNameFromPartialInjection,
   extractVarNameFromPrimaryVariable,
   findSymbol,
   getElementKind,
-} from '../../utils';
-import { SyntaxToken } from '../../../lexer/tokens';
+} from '@analyzer/utils';
+import { SyntaxToken } from '@lexer/tokens';
 import {
   NodeSymbolIndex, createNodeSymbolIndex, destructureIndex, getInjectorIndex,
   isInjectionIndex,
-} from '../../symbol/symbolIndex';
-import { CompileError, CompileErrorCode } from '../../../errors';
-import { pickBinder } from '../utils';
-import SymbolFactory from '../../symbol/factory';
-import { NodeSymbol } from '../../symbol/symbols';
-import { ElementKind } from '../../types';
-import { getInjectedFieldSymbolFromInjectorFieldSymbol } from '../../symbol/utils';
+} from '@analyzer/symbol/symbolIndex';
+import { CompileError, CompileErrorCode } from '@lib/errors';
+import { pickBinder } from '@analyzer/binder/utils';
+import SymbolFactory from '@analyzer/symbol/factory';
+import { NodeSymbol } from '@analyzer/symbol/symbols';
+import { ElementKind } from '@analyzer/types';
+import { getInjectedFieldSymbolFromInjectorFieldSymbol } from '@analyzer/symbol/utils';
 
 export default abstract class ElementBinder {
   protected abstract subfield: {

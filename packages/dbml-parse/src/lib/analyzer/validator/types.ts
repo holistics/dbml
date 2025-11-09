@@ -1,4 +1,4 @@
-import { CompileError } from '../../errors';
+import { CompileError } from '@lib/errors';
 
 export interface ElementValidator {
   validate(): CompileError[];

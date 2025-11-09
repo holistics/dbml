@@ -1,4 +1,4 @@
-import { SyntaxToken, SyntaxTokenKind } from '../../lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@lexer/tokens';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -13,9 +13,9 @@ import {
   VariableNode,
   CallExpressionNode,
   ArrayNode,
-} from '../../parser/nodes';
-import { isHexChar } from '../../utils';
-import { destructureComplexVariable } from '../utils';
+} from '@parser/nodes';
+import { isHexChar } from '@lib/utils';
+import { destructureComplexVariable } from '@analyzer/utils';
 import CustomValidator from './elementValidators/custom';
 import EnumValidator from './elementValidators/enum';
 import IndexesValidator from './elementValidators/indexes';
@@ -24,17 +24,17 @@ import ProjectValidator from './elementValidators/project';
 import RefValidator from './elementValidators/ref';
 import TableValidator from './elementValidators/table';
 import TableGroupValidator from './elementValidators/tableGroup';
-import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
-import { SchemaSymbol } from '../symbol/symbols';
-import SymbolTable from '../symbol/symbolTable';
-import SymbolFactory from '../symbol/factory';
+import { createSchemaSymbolIndex } from '@analyzer/symbol/symbolIndex';
+import { SchemaSymbol } from '@analyzer/symbol/symbols';
+import SymbolTable from '@analyzer/symbol/symbolTable';
+import SymbolFactory from '@analyzer/symbol/factory';
 import {
   extractStringFromIdentifierStream, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
-} from '../../parser/utils';
-import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
-import Report from '../../report';
-import { CompileError, CompileErrorCode } from '../../errors';
-import { ElementKind } from '../types';
+} from '@parser/utils';
+import { NUMERIC_LITERAL_PREFIX } from '@/constants';
+import Report from '@lib/report';
+import { CompileError, CompileErrorCode } from '@lib/errors';
+import { ElementKind } from '@analyzer/types';
 import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';
 
