@@ -1,4 +1,4 @@
-import { last } from 'lodash';
+import { last } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 
 export const enum ParsingContext {

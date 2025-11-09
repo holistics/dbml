@@ -1,4 +1,4 @@
-import { partition, get } from 'lodash';
+import { partition, get } from 'lodash-es';
 import { ElementInterpreter, InterpreterDatabase, Note } from '../types';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,

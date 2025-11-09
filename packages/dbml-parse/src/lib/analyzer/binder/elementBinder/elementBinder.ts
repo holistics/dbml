@@ -1,4 +1,4 @@
-import { last } from 'lodash';
+import { last } from 'lodash-es';
 import { isTupleOfVariables } from '../../validator/utils';
 import {
   BlockExpressionNode,

@@ -1,5 +1,3 @@
- 
- 
 import { ElementDeclarationNode } from '../parser/nodes';
 import { Position } from '../types';
 import { CompileError } from '../errors';

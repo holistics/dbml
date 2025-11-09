@@ -1,6 +1,4 @@
- 
- 
-import { last } from 'lodash';
+import { last } from 'lodash-es';
 import {
   convertFuncAppToElem,
   isAsKeyword,

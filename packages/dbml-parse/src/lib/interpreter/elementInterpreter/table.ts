@@ -1,4 +1,4 @@
-import { partition, last } from 'lodash';
+import { partition, last } from 'lodash-es';
 import {
   Column, Check, ElementInterpreter, Index, InlineRef,
   InterpreterDatabase, Table, TablePartialInjection,

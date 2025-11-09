@@ -1,4 +1,4 @@
-import { partition, last } from 'lodash';
+import { partition, last } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '../../../lexer/tokens';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';

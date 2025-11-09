@@ -1,4 +1,4 @@
-import { zip } from 'lodash';
+import { zip } from 'lodash-es';
 import { ColumnSymbol } from '../analyzer/symbol/symbols';
 import {
   destructureComplexTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,

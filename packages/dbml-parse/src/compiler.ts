@@ -1,4 +1,4 @@
-import { findLastIndex, last } from 'lodash';
+import { findLastIndex, last } from 'lodash-es';
 import { SymbolKind, destructureIndex } from './lib/analyzer/symbol/symbolIndex';
 import { generatePossibleIndexes } from './lib/analyzer/symbol/utils';
 import SymbolTable from './lib/analyzer/symbol/symbolTable';

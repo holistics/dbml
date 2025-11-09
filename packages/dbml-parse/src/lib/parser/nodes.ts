@@ -1,4 +1,4 @@
-import { flatten, zip } from 'lodash';
+import { flatten, zip } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from '../lexer/tokens';
 import { NodeSymbol } from '../analyzer/symbol/symbols';
 import { Position } from '../types';

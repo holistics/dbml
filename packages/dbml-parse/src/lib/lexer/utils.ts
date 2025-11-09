@@ -1,4 +1,4 @@
-import { last } from 'lodash';
+import { last } from 'lodash-es';
 import { SyntaxToken, SyntaxTokenKind } from './tokens';
 
 export function hasTrailingNewLines (token: SyntaxToken): boolean {
