@@ -1,4 +1,4 @@
-import { partition } from 'lodash';
+import { partition } from 'lodash-es';
 import { destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken } from '../../analyzer/utils';
 import { CompileError, CompileErrorCode } from '../../errors';
 import {

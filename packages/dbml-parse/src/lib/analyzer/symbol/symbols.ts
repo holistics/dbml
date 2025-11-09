@@ -1,4 +1,3 @@
- 
 import SymbolTable from './symbolTable';
 import { SyntaxNode } from '../../parser/nodes';
 

@@ -1,4 +1,4 @@
-import { partition } from 'lodash';
+import { partition } from 'lodash-es';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
