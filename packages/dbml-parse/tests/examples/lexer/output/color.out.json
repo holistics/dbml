@@ -39,22 +39,22 @@
         {
           "kind": "<newline>",
           "startPos": {
-            "offset": 7,
+            "offset": 6,
             "line": 0,
-            "column": 7
+            "column": 6
           },
           "endPos": {
             "offset": 8,
             "line": 1,
             "column": 0
           },
-          "value": "\n",
+          "value": "\r\n",
           "leadingTrivia": [],
           "trailingTrivia": [],
           "leadingInvalid": [],
           "trailingInvalid": [],
           "isInvalid": false,
-          "start": 7,
+          "start": 6,
           "end": 8
         }
       ],

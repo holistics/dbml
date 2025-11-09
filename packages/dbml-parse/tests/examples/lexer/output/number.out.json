@@ -269,22 +269,22 @@
             {
               "kind": "<newline>",
               "startPos": {
-                "offset": 57,
+                "offset": 56,
                 "line": 2,
-                "column": 1
+                "column": 0
               },
               "endPos": {
                 "offset": 58,
                 "line": 3,
                 "column": 0
               },
-              "value": "\n",
+              "value": "\r\n",
               "leadingTrivia": [],
               "trailingTrivia": [],
               "leadingInvalid": [],
               "trailingInvalid": [],
               "isInvalid": false,
-              "start": 57,
+              "start": 56,
               "end": 58
             }
           ],
@@ -472,22 +472,22 @@
           {
             "kind": "<newline>",
             "startPos": {
-              "offset": 57,
+              "offset": 56,
               "line": 2,
-              "column": 1
+              "column": 0
             },
             "endPos": {
               "offset": 58,
               "line": 3,
               "column": 0
             },
-            "value": "\n",
+            "value": "\r\n",
             "leadingTrivia": [],
             "trailingTrivia": [],
             "leadingInvalid": [],
             "trailingInvalid": [],
             "isInvalid": false,
-            "start": 57,
+            "start": 56,
             "end": 58
           }
         ],

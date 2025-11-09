@@ -82,22 +82,22 @@
         {
           "kind": "<newline>",
           "startPos": {
-            "offset": 15,
+            "offset": 14,
             "line": 0,
-            "column": 15
+            "column": 14
           },
           "endPos": {
             "offset": 16,
             "line": 1,
             "column": 0
           },
-          "value": "\n",
+          "value": "\r\n",
           "leadingTrivia": [],
           "trailingTrivia": [],
           "leadingInvalid": [],
           "trailingInvalid": [],
           "isInvalid": false,
-          "start": 15,
+          "start": 14,
           "end": 16
         }
       ],
@@ -124,22 +124,22 @@
         {
           "kind": "<newline>",
           "startPos": {
-            "offset": 17,
+            "offset": 16,
             "line": 1,
-            "column": 1
+            "column": 0
           },
           "endPos": {
             "offset": 18,
             "line": 2,
             "column": 0
           },
-          "value": "\n",
+          "value": "\r\n",
           "leadingTrivia": [],
           "trailingTrivia": [],
           "leadingInvalid": [],
           "trailingInvalid": [],
           "isInvalid": false,
-          "start": 17,
+          "start": 16,
           "end": 18
         }
       ],
@@ -147,22 +147,22 @@
         {
           "kind": "<newline>",
           "startPos": {
-            "offset": 35,
+            "offset": 34,
             "line": 4,
-            "column": 2
+            "column": 1
           },
           "endPos": {
             "offset": 36,
             "line": 5,
             "column": 0
           },
-          "value": "\n",
+          "value": "\r\n",
           "leadingTrivia": [],
           "trailingTrivia": [],
           "leadingInvalid": [],
           "trailingInvalid": [],
           "isInvalid": false,
-          "start": 35,
+          "start": 34,
           "end": 36
         }
       ],
@@ -189,22 +189,22 @@
         {
           "kind": "<newline>",
           "startPos": {
-            "offset": 37,
+            "offset": 36,
             "line": 5,
-            "column": 1
+            "column": 0
           },
           "endPos": {
             "offset": 38,
             "line": 6,
             "column": 0
           },
-          "value": "\n",
+          "value": "\r\n",
           "leadingTrivia": [],
           "trailingTrivia": [],
           "leadingInvalid": [],
           "trailingInvalid": [],
           "isInvalid": false,
-          "start": 37,
+          "start": 36,
           "end": 38
         }
       ],

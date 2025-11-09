@@ -109,6 +109,10 @@ export default class Lexer {
           this.addToken(SyntaxTokenKind.SPACE);
           break;
         case '\r':
+          if (this.check('\n')) {
+            this.advance();
+            this.addToken(SyntaxTokenKind.NEWLINE);
+          } else this.addToken(SyntaxTokenKind.SPACE);
           break;
         case '\n':
           this.addToken(SyntaxTokenKind.NEWLINE);
