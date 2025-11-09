@@ -69,5 +69,5 @@ jobs:
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
-          name: "@dbml/parse coverage report"
+          name: "dbml-parse-coverage-report"
           path: packages/dbml-parse/coverage/
