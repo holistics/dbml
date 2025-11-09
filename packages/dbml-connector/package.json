@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@dbml/connector",
   "version": "5.1.0",
   "description": "This package was created to fetch the schema JSON from many kind of databases.",
