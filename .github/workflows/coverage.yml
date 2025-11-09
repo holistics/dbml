@@ -1,0 +1,74 @@
+name: coverage
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - 'dbml-homepage/**'
+  pull_request:
+    branches: [ master ]
+    types: [opened, synchronize]
+    paths-ignore:
+      - 'dbml-homepage/**'
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [22.x]
+    services:
+      postgres:
+        image: postgres:15-bullseye
+        env:
+          POSTGRES_USER: dbml
+          POSTGRES_PASSWORD: testtest
+          POSTGRES_DB: dbml_test
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: dbml.123.123
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "exit 0"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      mysql-8.0:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: dbml_test
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run build
+        run: yarn build
+      - name: Run coverage
+        run: yarn coverage
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "@dbml/parse coverage report"
+          path: packages/dbml-parse/coverage/
