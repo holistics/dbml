@@ -7,6 +7,7 @@
   ],
   "scripts": {
     "test": "npx lerna run test",
+    "coverage": "npx lerna run coverage",
     "build": "yarn clean-build && npx lerna run build",
     "clean-build": "rm -rf ./packages/dbml-cli/lib ./packages/dbml-core/lib ./packages/dbml-parse/dist ./packages/dbml-connector/dist"
   },
