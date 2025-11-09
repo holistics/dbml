@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
 import { scanTestNames } from '../jestHelpers';
-import { serialize } from '../../../src/lib/serialization/serialize';
+import { serialize } from '../serialize';
 import Lexer from '../../../src/lib/lexer/lexer';
 import Parser from '../../../src/lib/parser/parser';
 import { NodeSymbolIdGenerator } from '../../../src/lib/analyzer/symbol/symbols';

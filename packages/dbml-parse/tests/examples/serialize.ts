@@ -1,9 +1,9 @@
-import { NodeSymbol } from '../analyzer/symbol/symbols';
-import { ProgramNode, SyntaxNode } from '../parser/nodes';
-import Report from '../report';
-import { CompileError } from '../errors';
+import { NodeSymbol } from '../../src/lib/analyzer/symbol/symbols';
+import { ProgramNode, SyntaxNode } from '../../src/lib/parser/nodes';
+import Report from '../../src/lib/report';
+import { CompileError } from '../../src/lib/errors';
 
-export function serialize(
+export function serialize (
   report: Readonly<Report<ProgramNode, CompileError>>,
   pretty: boolean = false,
 ): string {
