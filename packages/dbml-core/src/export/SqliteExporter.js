@@ -11,41 +11,13 @@ function escapeSingleQuotes(s) {
   return String(s || '').replace(/'/g, "''");
 }
 
-const SQLITE_TYPE_MAP = (() => {
-  const int = new Set(['SMALLINT', 'INT2', 'INTEGER', 'INT', 'INT4', 'BIGINT', 'INT8',
-    'SMALLSERIAL', 'SERIAL', 'BIGSERIAL']);
-  const real = new Set(['REAL', 'FLOAT', 'DOUBLE', 'DOUBLE PRECISION', 'NUMERIC(.*)']);
-  const num = new Set(['DECIMAL', 'NUMERIC']);
-  const text = new Set(['CHAR', 'CHARACTER', 'NCHAR', 'NVARCHAR', 'VARCHAR', 'CHARACTER VARYING', 'TEXT', 'NAME', 'BPCHAR', 'UUID', 'XML', 'JSON', 'JSONB', 'INET', 'CIDR', 'MACADDR', 'MACADDR8']);
-  const blob = new Set(['BYTEA', 'BLOB']);
-  const date = new Set(['DATE', 'TIME', 'TIMESTAMP', 'TIMESTAMP WITH TIME ZONE', 'TIMESTAMP WITHOUT TIME ZONE', 'TIME WITH TIME ZONE', 'TIME WITHOUT TIME ZONE', 'INTERVAL']);
-  const bool = new Set(['BOOLEAN', 'BOOL']);
-  return { int, real, num, text, blob, date, bool };
-})();
+// Minimal boolean type detection - only used to add CHECK (field IN (0,1)) constraints
+// for fields that should be boolean in nature
+const BOOLEAN_TYPES = new Set(['BOOLEAN', 'BOOL']);
 
-function normalizeTypeName(tn) {
-  const t = (tn || '').trim().replace(/\s+/g, ' ').toUpperCase();
-  return t.replace(/\(.*\)$/, '');
-}
-
-function mapTypeToSQLite(originalTypeName) {
-  const t = normalizeTypeName(originalTypeName);
-
-  if (SQLITE_TYPE_MAP.int.has(t)) return 'INTEGER';
-  if (SQLITE_TYPE_MAP.bool.has(t)) return 'INTEGER';
-  if (SQLITE_TYPE_MAP.blob.has(t)) return 'BLOB';
-  if (SQLITE_TYPE_MAP.text.has(t)) return 'TEXT';
-  if (SQLITE_TYPE_MAP.date.has(t)) return 'TEXT';
-  if (SQLITE_TYPE_MAP.num.has(t)) return 'NUMERIC';
-  if (t === 'REAL' || t === 'FLOAT' || t === 'DOUBLE' || t === 'DOUBLE PRECISION') return 'REAL';
-
-  if (/INT/i.test(t)) return 'INTEGER';
-  if (/CHAR|CLOB|TEXT/i.test(t)) return 'TEXT';
-  if (/BLOB/i.test(t)) return 'BLOB';
-  if (/REAL|FLOA|DOUB/i.test(t)) return 'REAL';
-  if (/NUM|DEC|MONEY/i.test(t)) return 'NUMERIC';
-
-  return 'TEXT';
+function isBooleanType(typeName) {
+  const normalized = (typeName || '').trim().toUpperCase();
+  return BOOLEAN_TYPES.has(normalized);
 }
 
 function topoSortTables(allTableIds, dependencyEdges) {
@@ -140,10 +112,10 @@ class SqliteExporter {
         const key2s = [...secondTableFieldsMap.keys()].join('","');
 
         firstTableFieldsMap.forEach((fieldType, fieldName) => {
-          line += `  "${fieldName}" ${mapTypeToSQLite(fieldType)},\n`;
+          line += `  "${fieldName}" ${fieldType},\n`;
         });
         secondTableFieldsMap.forEach((fieldType, fieldName) => {
-          line += `  "${fieldName}" ${mapTypeToSQLite(fieldType)},\n`;
+          line += `  "${fieldName}" ${fieldType},\n`;
         });
 
         line += `  PRIMARY KEY ("${key1s}","${key2s}"),\n`;
@@ -190,13 +162,12 @@ class SqliteExporter {
     const lines = table.fieldIds.map((fieldId) => {
       const field = model.fields[fieldId];
 
-      let affinity;
+      let typeName;
       let isBoolean = false;
       let enumCheck = '';
 
       if (!field.type.schemaName || !shouldPrintSchemaName(field.type.schemaName)) {
         const originalTypeName = field.type.type_name;
-        const upperType = normalizeTypeName(originalTypeName);
 
         const enumKeys = [
           `"${field.type.schemaName}"."${field.type.type_name}"`,
@@ -210,20 +181,20 @@ class SqliteExporter {
         }
 
         if (enumVals && enumVals.length) {
-          affinity = 'TEXT';
+          typeName = 'TEXT';
           enumCheck = ` CHECK ("${field.name}" IN (${enumVals.map(v => `'${escapeSingleQuotes(v)}'`).join(',')}))`;
         } else {
-          affinity = mapTypeToSQLite(originalTypeName);
-          isBoolean = SQLITE_TYPE_MAP.bool.has(upperType);
+          typeName = originalTypeName;
+          isBoolean = isBooleanType(originalTypeName);
         }
       } else {
-        affinity = 'TEXT';
+        typeName = 'TEXT';
       }
 
-      let line = `"${field.name}" ${affinity}`;
+      let line = `"${field.name}" ${typeName}`;
 
       if (field.increment) {
-        if (affinity === 'INTEGER') {
+        if (typeName.toUpperCase().includes('INT')) {
           line = `"${field.name}" INTEGER PRIMARY KEY AUTOINCREMENT`;
         }
       } else {
