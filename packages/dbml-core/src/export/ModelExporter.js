@@ -4,6 +4,7 @@ import PostgresExporter from './PostgresExporter';
 import JsonExporter from './JsonExporter';
 import SqlServerExporter from './SqlServerExporter';
 import OracleExporter from './OracleExporter';
+import SqliteExporter from './SqliteExporter';
 
 class ModelExporter {
   static export (model = {}, format = '', isNormalized = true) {
@@ -32,6 +33,10 @@ class ModelExporter {
 
       case 'oracle':
         res = OracleExporter.export(normalizedModel);
+        break;
+
+      case 'sqlite':
+        res = SqliteExporter.export(normalizedModel);
         break;
 
       default:

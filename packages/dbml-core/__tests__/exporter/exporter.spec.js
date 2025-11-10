@@ -31,5 +31,10 @@ describe('@dbml/core - exporter', () => {
   test.each(scanTestNames(__dirname, 'oracle_exporter/input'))('oracle_exporter/%s', (name) => {
     runTest(name, 'oracle_exporter', 'oracle');
   });
+
+  test.each(scanTestNames(__dirname, 'sqlite_exporter/input'))('sqlite_exporter/%s', (name) => {
+    runTest(name, 'sqlite_exporter', 'sqlite');
+  });
+
   /* eslint-enable */
 });
