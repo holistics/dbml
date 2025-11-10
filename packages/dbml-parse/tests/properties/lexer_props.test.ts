@@ -22,7 +22,7 @@ describe('lexing', () => {
   );
 
   it('should roundtrip', () => {
-    // Process: Source 1 -lex-> Tokens -Serialize-> Source 2
+    // Process: Source 1 -lex-> Tokens -serialize-> Source 2
     // Property: Source 1 == Source 2
     fc.assert(
       fc.property(fc.stringMatching(sourceRegex), (source: string) => {
