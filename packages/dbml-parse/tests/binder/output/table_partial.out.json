@@ -861,7 +861,8 @@
                       "start": 43,
                       "end": 45
                     }
-                  }
+                  },
+                  "referee": 1
                 }
               },
               "args": []
@@ -1119,7 +1120,88 @@
     "symbol": {
       "symbolTable": {
         "TablePartial:p1": {
-          "references": [],
+          "references": [
+            {
+              "id": 12,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 43,
+                "line": 4,
+                "column": 3
+              },
+              "fullStart": 43,
+              "endPos": {
+                "offset": 45,
+                "line": 4,
+                "column": 5
+              },
+              "fullEnd": 46,
+              "start": 43,
+              "end": 45,
+              "expression": {
+                "id": 11,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 43,
+                  "line": 4,
+                  "column": 3
+                },
+                "fullStart": 43,
+                "endPos": {
+                  "offset": 45,
+                  "line": 4,
+                  "column": 5
+                },
+                "fullEnd": 46,
+                "start": 43,
+                "end": 45,
+                "variable": {
+                  "kind": "<identifier>",
+                  "startPos": {
+                    "offset": 43,
+                    "line": 4,
+                    "column": 3
+                  },
+                  "endPos": {
+                    "offset": 45,
+                    "line": 4,
+                    "column": 5
+                  },
+                  "value": "p1",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [
+                    {
+                      "kind": "<newline>",
+                      "startPos": {
+                        "offset": 45,
+                        "line": 4,
+                        "column": 5
+                      },
+                      "endPos": {
+                        "offset": 46,
+                        "line": 5,
+                        "column": 0
+                      },
+                      "value": "\n",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 45,
+                      "end": 46
+                    }
+                  ],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 43,
+                  "end": 45
+                }
+              },
+              "referee": 1
+            }
+          ],
           "id": 1,
           "symbolTable": {},
           "declaration": 3
@@ -1153,5 +1235,92 @@
       "references": []
     }
   },
-  "errors": []
+  "errors": [
+    {
+      "code": 4000,
+      "diagnostic": "TablePartial 'p2' does not exists in Schema 'public'",
+      "nodeOrToken": {
+        "id": 16,
+        "kind": "<primary-expression>",
+        "startPos": {
+          "offset": 49,
+          "line": 5,
+          "column": 3
+        },
+        "fullStart": 49,
+        "endPos": {
+          "offset": 51,
+          "line": 5,
+          "column": 5
+        },
+        "fullEnd": 52,
+        "start": 49,
+        "end": 51,
+        "expression": {
+          "id": 15,
+          "kind": "<variable>",
+          "startPos": {
+            "offset": 49,
+            "line": 5,
+            "column": 3
+          },
+          "fullStart": 49,
+          "endPos": {
+            "offset": 51,
+            "line": 5,
+            "column": 5
+          },
+          "fullEnd": 52,
+          "start": 49,
+          "end": 51,
+          "variable": {
+            "kind": "<identifier>",
+            "startPos": {
+              "offset": 49,
+              "line": 5,
+              "column": 3
+            },
+            "endPos": {
+              "offset": 51,
+              "line": 5,
+              "column": 5
+            },
+            "value": "p2",
+            "leadingTrivia": [],
+            "trailingTrivia": [
+              {
+                "kind": "<newline>",
+                "startPos": {
+                  "offset": 51,
+                  "line": 5,
+                  "column": 5
+                },
+                "endPos": {
+                  "offset": 52,
+                  "line": 6,
+                  "column": 0
+                },
+                "value": "\n",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 51,
+                "end": 52
+              }
+            ],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 49,
+            "end": 51
+          }
+        }
+      },
+      "start": 49,
+      "end": 51,
+      "name": "CompileError"
+    }
+  ]
 }
