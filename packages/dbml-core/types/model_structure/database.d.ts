@@ -5,6 +5,7 @@ import TableGroup, { NormalizedTableGroup } from './tableGroup';
 import Table, { NormalizedTable } from './table';
 import StickyNote, { NormalizedStickyNote } from './stickyNote';
 import Element, { RawNote, Token } from './element';
+import Dep, { NormalizedDep } from './dep';
 import DbState from './dbState';
 import { NormalizedEndpoint } from './endpoint';
 import { NormalizedEnumValue } from './enumValue';
@@ -12,7 +13,7 @@ import { NormalizedField } from './field';
 import { NormalizedIndexColumn } from './indexColumn';
 import { NormalizedIndex } from './indexes';
 import { NormalizedCheck } from './check';
-import TablePartial, { NormalizedTablePartial } from './tablePartial';
+import TablePartial, { RawDep, NormalizedTablePartial } from './tablePartial';
 export interface Project {
     note: RawNote;
     database_type: string;
@@ -47,6 +48,7 @@ export interface RawDatabase {
     project: Project;
     records: RawTableRecord[];
     tablePartials: TablePartial[];
+    deps: RawDep[];
 }
 declare class Database extends Element {
     dbState: DbState;
@@ -58,13 +60,15 @@ declare class Database extends Element {
     databaseType: string;
     name: string;
     records: TableRecord[];
+    deps: Dep[];
     id: number;
-    constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
+    constructor({ schemas, tables, enums, refs, tableGroups, project, records, deps }: RawDatabase);
     generateId(): void;
     processRecords(rawRecords: RawTableRecord[]): void;
     processSchemas(rawSchemas: RawSchema[]): void;
     pushSchema(schema: Schema): void;
     checkSchema(schema: Schema): void;
+    processDeps(rawDeps: RawDep[]): void;
     processSchemaElements(elements: Schema[] | Table[] | Enum[] | TableGroup[] | Ref[], elementType: any): void;
     findOrCreateSchema(schemaName: string): Schema;
     findTable(rawTable: any): Table;
@@ -172,7 +176,29 @@ declare class Database extends Element {
                 note: string;
             }[];
         }[];
-    };
+        deps: {
+          name: string;
+          note: string;
+          downstreamTable: {
+            schema?: string;
+            table: string;
+          };
+          upstreamTables: {
+            schema?: string;
+            table: string;
+          }[];
+          fieldDeps: {
+            downstreamField: string;
+            upstreamFields: {
+              schema?: string;
+              table: string;
+              field: string;
+            }[];
+            note?: string;
+            name?: string;
+          }[] | '*';
+        }[];
+    }
     shallowExport(): {
         hasDefaultSchema: boolean;
         note: string;
@@ -271,10 +297,33 @@ declare class Database extends Element {
                 note: string;
             }[];
         }[];
+        deps: {
+          name: string;
+          note: string;
+          downstreamTable: {
+            schema?: string;
+            table: string;
+          };
+          upstreamTables: {
+            schema?: string;
+            table: string;
+          }[];
+          fieldDeps: {
+            downstreamField: string;
+            upstreamFields: {
+              schema?: string;
+              table: string;
+              field: string;
+            }[];
+            note?: string;
+            name?: string;
+          }[] | '*';
+        }[];
     };
     exportChildIds(): {
         schemaIds: number[];
         noteIds: number[];
+        depIds: number[];
     };
     normalize(): NormalizedDatabase;
 }
@@ -304,5 +353,6 @@ export interface NormalizedDatabase {
     fields: NormalizedField;
     records: NormalizedRecords;
     tablePartials: NormalizedTablePartial;
+    deps: NormalizedDep;
 }
 export default Database;

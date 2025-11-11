@@ -24,6 +24,7 @@ class Database extends Element {
     aliases = [],
     records = [],
     tablePartials = [],
+    tableDeps = [],
   }) {
     super();
     this.dbState = new DbState();
@@ -39,6 +40,7 @@ class Database extends Element {
     this.aliases = aliases;
     this.records = [];
     this.tablePartials = [];
+    this.tableDeps = [];
 
     // The global array containing references with 1 endpoint being a field injected from a partial to a table
     // These refs are add to this array when resolving partials in tables (`Table.processPartials()`)
@@ -54,6 +56,7 @@ class Database extends Element {
     this.processSchemaElements(notes, NOTE);
     this.processSchemaElements(refs, REF);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
+    this.processTableDeps(tableDeps);
 
     this.injectedRawRefs.forEach((rawRef) => {
       const schema = this.findOrCreateSchema(DEFAULT_SCHEMA_NAME);
@@ -90,6 +93,12 @@ class Database extends Element {
   processTablePartials (rawTablePartials) {
     rawTablePartials.forEach((rawTablePartial) => {
       this.tablePartials.push(new TablePartial({ ...rawTablePartial, dbState: this.dbState }));
+    });
+  }
+
+  processTableDeps (rawTableDeps) {
+    rawTableDeps.forEach((rawDep) => {
+      
     });
   }
 

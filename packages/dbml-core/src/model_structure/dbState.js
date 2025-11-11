@@ -15,6 +15,7 @@ export default class DbState {
     this.indexColumnId = 1;
     this.recordId = 1;
     this.tablePartialId = 1;
+    this.depId = 1;
   }
 
   generateId (el) {
