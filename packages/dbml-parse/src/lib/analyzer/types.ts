@@ -8,6 +8,7 @@ export enum ElementKind {
   TableGroup = 'tablegroup',
   TablePartial = 'tablepartial',
   Check = 'checks',
+  Dep = 'dep',
 }
 
 export enum SettingName {

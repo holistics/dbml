@@ -37,6 +37,7 @@ import { CompileError, CompileErrorCode } from '../../errors';
 import { ElementKind } from '../types';
 import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';
+import DepValidator from './elementValidators/dep';
 
 export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -58,6 +59,8 @@ export function pickValidator (element: ElementDeclarationNode & { type: SyntaxT
       return TablePartialValidator;
     case ElementKind.Check:
       return ChecksValidator;
+    case ElementKind.Dep:
+      return DepValidator;
     default:
       return CustomValidator;
   }

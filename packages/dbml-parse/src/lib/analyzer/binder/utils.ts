@@ -1,5 +1,5 @@
 import { CompileError, CompileErrorCode } from '../../errors';
-import { getElementName, isExpressionAVariableNode } from '../../parser/utils';
+import { getElementName, isAccessExpression, isExpressionAVariableNode } from '../../parser/utils';
 import { SyntaxToken } from '../../lexer/tokens';
 import {
   ElementDeclarationNode,
@@ -23,9 +23,10 @@ import RefBinder from './elementBinder/ref';
 import TableBinder from './elementBinder/table';
 import TableGroupBinder from './elementBinder/tableGroup';
 import TablePartialBinder from './elementBinder/tablePartial';
-import { destructureComplexVariableTuple, extractVarNameFromPrimaryVariable } from '../utils';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../utils';
 import { SymbolKind, createNodeSymbolIndex } from '../symbol/symbolIndex';
 import { getSymbolKind } from '../symbol/utils';
+import DepBinder from './elementBinder/dep';
 
 export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -47,6 +48,8 @@ export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToke
       return TablePartialBinder;
     case ElementKind.Check:
       return ChecksBinder;
+    case ElementKind.Dep:
+      return DepBinder;
     default:
       return CustomBinder;
   }
@@ -54,22 +57,30 @@ export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToke
 
 // Scan for variable node and member access expression in the node except ListExpressionNode
 export function scanNonListNodeForBinding (node?: SyntaxNode):
-  { variables: (PrimaryExpressionNode & { expression: VariableNode })[], tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] }[] {
+  { variables: (PrimaryExpressionNode & { expression: VariableNode })[] }[] {
   if (!node) {
     return [];
   }
 
   if (isExpressionAVariableNode(node)) {
-    return [{ variables: [node], tupleElements: [] }];
+    return [{ variables: [node] }];
   }
 
   if (node instanceof InfixExpressionNode) {
-    const fragments = destructureComplexVariableTuple(node).unwrap_or(undefined);
-    if (!fragments) {
+    if (!isAccessExpression(node)) {
       return [...scanNonListNodeForBinding(node.leftExpression), ...scanNonListNodeForBinding(node.rightExpression)];
     }
 
-    return [fragments];
+    if (!destructureComplexVariable(node.leftExpression).unwrap_or(undefined)) {
+      return [...scanNonListNodeForBinding(node.leftExpression), ...scanNonListNodeForBinding(node.rightExpression)];
+    }
+
+    const leftVariables = scanNonListNodeForBinding(node.leftExpression)[0].variables;
+
+    return scanNonListNodeForBinding(node.rightExpression).map(
+      ({ variables }) => (
+        { variables: [...leftVariables as (PrimaryExpressionNode & { expression: VariableNode })[], ...variables] }),
+    );
   }
 
   if (node instanceof PrefixExpressionNode) {
@@ -81,7 +92,7 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
   }
 
   if (node instanceof TupleExpressionNode) {
-    return destructureComplexVariableTuple(node).map((res) => [res]).unwrap_or([]);
+    return node.elementList.flatMap((res) => scanNonListNodeForBinding(res));
   }
 
   // The other cases are not supported as practically they shouldn't arise
@@ -95,7 +106,6 @@ export function lookupAndBindInScope (
   if (!initialScope.symbol?.symbolTable) {
     throw new Error('lookupAndBindInScope should only be called with initial scope having a symbol table');
   }
-
   let curSymbolTable = initialScope.symbol.symbolTable;
   let curKind = getSymbolKind(initialScope.symbol);
   let curName = initialScope instanceof ElementDeclarationNode ? getElementName(initialScope).unwrap_or('<invalid name>') : 'public';

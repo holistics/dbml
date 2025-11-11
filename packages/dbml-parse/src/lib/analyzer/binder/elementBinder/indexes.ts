@@ -65,14 +65,10 @@ export default class IndexesBinder implements ElementBinder {
       const args = [field.callee, ...field.args];
       const bindees = args.flatMap(scanNonListNodeForBinding)
         .flatMap((bindee) => {
-          if (bindee.variables.length + bindee.tupleElements.length > 1) {
+          if (bindee.variables.length > 1) {
             return [];
           }
-          if (bindee.variables.length) {
-            return bindee.variables[0];
-          }
-
-          return bindee.tupleElements;
+          return bindee.variables[0];
         });
 
       return bindees.flatMap((bindee) => {

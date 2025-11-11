@@ -109,6 +109,17 @@ export enum CompileErrorCode {
   DUPLICATE_CHECK_SETTING,
   INVALID_CHECK_SETTING_VALUE,
 
+  INVALID_TABLE_DEP_CONTEXT,
+  INVALID_TABLE_DEP_NAME,
+  INVALID_TABLE_DEP,
+  UNKNOWN_TABLE_DEP_SETTING,
+  INVALID_TABLE_DEP_SETTING_VALUE,
+  INVALID_FIELD_DEP,
+  UNKNOWN_FIELD_DEP_SETTING,
+  INVALID_FIELD_DEP_SETTING_VALUE,
+  DUPLICATE_FIELD_DEP_SETTING,
+  DUPLICATE_TABLE_DEP_SETTING,
+
   BINDING_ERROR = 4000,
 
   UNSUPPORTED = 5000,
@@ -130,7 +141,7 @@ export class CompileError extends Error {
 
   end: Readonly<number>;
 
-  constructor(code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
     this.diagnostic = message;

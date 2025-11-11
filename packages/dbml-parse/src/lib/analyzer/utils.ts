@@ -182,6 +182,27 @@ export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpress
   );
 }
 
+// Accepted deps:
+// schema.table.col < schema.(table.(col, col), table.col)
+export function isValidDependency (value?: SyntaxNode): value is InfixExpressionNode {
+  if (!(value instanceof InfixExpressionNode)) {
+    return false;
+  }
+  if (value.op?.value !== '<' || !value.leftExpression || !value.rightExpression) {
+    return false;
+  }
+  function isValidDependencyRightOperand (operand: SyntaxNode): boolean {
+    if (isExpressionAVariableNode(operand)) return true;
+    if (operand instanceof TupleExpressionNode) return operand.elementList.every(isValidDependencyRightOperand);
+    if (!isAccessExpression(operand)) return false;
+    if (!destructureComplexVariable(operand.leftExpression).unwrap_or(undefined)) return false;
+    if (isExpressionAVariableNode(operand.rightExpression)) return true;
+    if (!(operand.rightExpression instanceof TupleExpressionNode)) return false;
+    return operand.rightExpression.elementList.every(isValidDependencyRightOperand);
+  }
+  return (isExpressionAVariableNode(value.leftExpression) || destructureComplexVariable(value.leftExpression).isOk()) && isValidDependencyRightOperand(value.rightExpression);
+}
+
 export function isEqualTupleOperands (value: InfixExpressionNode): value is InfixExpressionNode {
   const leftRes = destructureComplexVariableTuple(value.leftExpression);
   const rightRes = destructureComplexVariableTuple(value.rightExpression);
