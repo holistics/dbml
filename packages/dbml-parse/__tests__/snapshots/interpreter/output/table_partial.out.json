@@ -1,473 +1,1017 @@
-[
-  {
-    "code": 4000,
-    "diagnostic": "Column 'id' does not exists in Table 'user'",
-    "nodeOrToken": {
-      "id": 23,
-      "kind": "<primary-expression>",
-      "startPos": {
-        "offset": 124,
-        "line": 2,
-        "column": 34
-      },
-      "fullStart": 124,
-      "endPos": {
-        "offset": 126,
-        "line": 2,
-        "column": 36
-      },
-      "fullEnd": 126,
-      "start": 124,
-      "end": 126,
-      "expression": {
-        "id": 22,
-        "kind": "<variable>",
-        "startPos": {
-          "offset": 124,
-          "line": 2,
-          "column": 34
-        },
-        "fullStart": 124,
-        "endPos": {
-          "offset": 126,
-          "line": 2,
-          "column": 36
-        },
-        "fullEnd": 126,
-        "start": 124,
-        "end": 126,
-        "variable": {
-          "kind": "<identifier>",
-          "startPos": {
-            "offset": 124,
-            "line": 2,
-            "column": 34
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "user",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "string",
+            "args": null
           },
-          "endPos": {
-            "offset": 126,
-            "line": 2,
-            "column": 36
+          "token": {
+            "start": {
+              "offset": 415,
+              "line": 22,
+              "column": 3
+            },
+            "end": {
+              "offset": 428,
+              "line": 22,
+              "column": 16
+            }
           },
-          "value": "id",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 124,
-          "end": 126
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
         }
-      }
-    },
-    "start": 124,
-    "end": 126,
-    "name": "CompileError"
-  },
-  {
-    "code": 4000,
-    "diagnostic": "No column named 'email' inside Table 'user'",
-    "nodeOrToken": {
-      "id": 92,
-      "kind": "<primary-expression>",
-      "startPos": {
-        "offset": 481,
-        "line": 26,
-        "column": 4
-      },
-      "fullStart": 477,
-      "endPos": {
-        "offset": 486,
-        "line": 26,
-        "column": 9
-      },
-      "fullEnd": 487,
-      "start": 481,
-      "end": 486,
-      "expression": {
-        "id": 91,
-        "kind": "<variable>",
-        "startPos": {
-          "offset": 481,
-          "line": 26,
-          "column": 4
+      ],
+      "token": {
+        "start": {
+          "offset": 392,
+          "line": 20,
+          "column": 1
         },
-        "fullStart": 477,
-        "endPos": {
-          "offset": 486,
-          "line": 26,
-          "column": 9
-        },
-        "fullEnd": 487,
-        "start": 481,
-        "end": 486,
-        "variable": {
-          "kind": "<identifier>",
-          "startPos": {
-            "offset": 481,
-            "line": 26,
-            "column": 4
-          },
-          "endPos": {
-            "offset": 486,
-            "line": 26,
-            "column": 9
-          },
-          "value": "email",
-          "leadingTrivia": [
+        "end": {
+          "offset": 532,
+          "line": 29,
+          "column": 2
+        }
+      },
+      "indexes": [
+        {
+          "columns": [
             {
-              "kind": "<space>",
-              "startPos": {
-                "offset": 477,
-                "line": 26,
-                "column": 0
-              },
-              "endPos": {
-                "offset": 478,
-                "line": 26,
-                "column": 1
-              },
-              "value": " ",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 477,
-              "end": 478
-            },
-            {
-              "kind": "<space>",
-              "startPos": {
-                "offset": 478,
-                "line": 26,
-                "column": 1
-              },
-              "endPos": {
-                "offset": 479,
-                "line": 26,
-                "column": 2
-              },
-              "value": " ",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 478,
-              "end": 479
-            },
-            {
-              "kind": "<space>",
-              "startPos": {
-                "offset": 479,
-                "line": 26,
-                "column": 2
-              },
-              "endPos": {
-                "offset": 480,
-                "line": 26,
-                "column": 3
-              },
-              "value": " ",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 479,
-              "end": 480
-            },
-            {
-              "kind": "<space>",
-              "startPos": {
-                "offset": 480,
-                "line": 26,
-                "column": 3
-              },
-              "endPos": {
-                "offset": 481,
-                "line": 26,
-                "column": 4
-              },
-              "value": " ",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 480,
-              "end": 481
+              "value": "email",
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 481,
+                  "line": 27,
+                  "column": 5
+                },
+                "end": {
+                  "offset": 486,
+                  "line": 27,
+                  "column": 10
+                }
+              }
             }
           ],
-          "trailingTrivia": [
-            {
-              "kind": "<space>",
-              "startPos": {
-                "offset": 486,
-                "line": 26,
-                "column": 9
-              },
-              "endPos": {
-                "offset": 487,
-                "line": 26,
-                "column": 10
-              },
-              "value": " ",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 486,
-              "end": 487
+          "token": {
+            "start": {
+              "offset": 481,
+              "line": 27,
+              "column": 5
+            },
+            "end": {
+              "offset": 526,
+              "line": 27,
+              "column": 50
             }
-          ],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 481,
-          "end": 486
-        }
-      }
-    },
-    "start": 481,
-    "end": 486,
-    "name": "CompileError"
-  },
-  {
-    "code": 4000,
-    "diagnostic": "Column 'email' does not exists in Table 'user'",
-    "nodeOrToken": {
-      "id": 217,
-      "kind": "<primary-expression>",
-      "startPos": {
-        "offset": 1019,
-        "line": 53,
-        "column": 30
-      },
-      "fullStart": 1019,
-      "endPos": {
-        "offset": 1024,
-        "line": 53,
-        "column": 35
-      },
-      "fullEnd": 1024,
-      "start": 1019,
-      "end": 1024,
-      "expression": {
-        "id": 216,
-        "kind": "<variable>",
-        "startPos": {
-          "offset": 1019,
-          "line": 53,
-          "column": 30
-        },
-        "fullStart": 1019,
-        "endPos": {
-          "offset": 1024,
-          "line": 53,
-          "column": 35
-        },
-        "fullEnd": 1024,
-        "start": 1019,
-        "end": 1024,
-        "variable": {
-          "kind": "<identifier>",
-          "startPos": {
-            "offset": 1019,
-            "line": 53,
-            "column": 30
           },
-          "endPos": {
-            "offset": 1024,
-            "line": 53,
-            "column": 35
-          },
-          "value": "email",
-          "leadingTrivia": [],
-          "trailingTrivia": [],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 1019,
-          "end": 1024
-        }
-      }
-    },
-    "start": 1019,
-    "end": 1024,
-    "name": "CompileError"
-  },
-  {
-    "code": 4000,
-    "diagnostic": "Column 'id' does not exists in Table 'user'",
-    "nodeOrToken": {
-      "id": 232,
-      "kind": "<primary-expression>",
-      "startPos": {
-        "offset": 1115,
-        "line": 56,
-        "column": 11
-      },
-      "fullStart": 1115,
-      "endPos": {
-        "offset": 1119,
-        "line": 56,
-        "column": 15
-      },
-      "fullEnd": 1120,
-      "start": 1115,
-      "end": 1119,
-      "expression": {
-        "id": 231,
-        "kind": "<variable>",
-        "startPos": {
-          "offset": 1115,
-          "line": 56,
-          "column": 11
-        },
-        "fullStart": 1115,
-        "endPos": {
-          "offset": 1119,
-          "line": 56,
-          "column": 15
-        },
-        "fullEnd": 1120,
-        "start": 1115,
-        "end": 1119,
-        "variable": {
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 1115,
-            "line": 56,
-            "column": 11
-          },
-          "endPos": {
-            "offset": 1119,
-            "line": 56,
-            "column": 15
-          },
-          "value": "id",
-          "leadingTrivia": [],
-          "trailingTrivia": [
-            {
-              "kind": "<space>",
-              "startPos": {
-                "offset": 1119,
-                "line": 56,
-                "column": 15
+          "pk": false,
+          "unique": false,
+          "note": {
+            "value": "should interpret successfully",
+            "token": {
+              "start": {
+                "offset": 488,
+                "line": 27,
+                "column": 12
               },
-              "endPos": {
-                "offset": 1120,
-                "line": 56,
-                "column": 16
-              },
-              "value": " ",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 1119,
-              "end": 1120
+              "end": {
+                "offset": 525,
+                "line": 27,
+                "column": 49
+              }
             }
-          ],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 1115,
-          "end": 1119
+          }
         }
-      }
-    },
-    "start": 1115,
-    "end": 1119,
-    "name": "CompileError"
-  },
-  {
-    "code": 4000,
-    "diagnostic": "Column 'id' does not exists in Table 'product'",
-    "nodeOrToken": {
-      "id": 245,
-      "kind": "<primary-expression>",
-      "startPos": {
-        "offset": 1158,
-        "line": 58,
-        "column": 14
-      },
-      "fullStart": 1158,
-      "endPos": {
-        "offset": 1162,
-        "line": 58,
-        "column": 18
-      },
-      "fullEnd": 1163,
-      "start": 1158,
-      "end": 1162,
-      "expression": {
-        "id": 244,
-        "kind": "<variable>",
-        "startPos": {
-          "offset": 1158,
-          "line": 58,
-          "column": 14
-        },
-        "fullStart": 1158,
-        "endPos": {
-          "offset": 1162,
-          "line": 58,
-          "column": 18
-        },
-        "fullEnd": 1163,
-        "start": 1158,
-        "end": 1162,
-        "variable": {
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 1158,
-            "line": 58,
-            "column": 14
+      ],
+      "partials": [
+        {
+          "order": 0,
+          "token": {
+            "start": {
+              "offset": 409,
+              "line": 21,
+              "column": 3
+            },
+            "end": {
+              "offset": 412,
+              "line": 21,
+              "column": 6
+            }
           },
-          "endPos": {
-            "offset": 1162,
-            "line": 58,
+          "name": "id"
+        },
+        {
+          "order": 2,
+          "token": {
+            "start": {
+              "offset": 431,
+              "line": 23,
+              "column": 3
+            },
+            "end": {
+              "offset": 444,
+              "line": 23,
+              "column": 16
+            }
+          },
+          "name": "injectForRef"
+        },
+        {
+          "order": 3,
+          "token": {
+            "start": {
+              "offset": 447,
+              "line": 24,
+              "column": 3
+            },
+            "end": {
+              "offset": 463,
+              "line": 24,
+              "column": 19
+            }
+          },
+          "name": "sameHeaderColor"
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "country",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "char(255)",
+            "args": "255"
+          },
+          "token": {
+            "start": {
+              "offset": 606,
+              "line": 34,
+              "column": 3
+            },
+            "end": {
+              "offset": 633,
+              "line": 34,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 534,
+          "line": 31,
+          "column": 1
+        },
+        "end": {
+          "offset": 635,
+          "line": 35,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [
+        {
+          "order": 0,
+          "token": {
+            "start": {
+              "offset": 581,
+              "line": 32,
+              "column": 3
+            },
+            "end": {
+              "offset": 584,
+              "line": 32,
+              "column": 6
+            }
+          },
+          "name": "id"
+        },
+        {
+          "order": 1,
+          "token": {
+            "start": {
+              "offset": 587,
+              "line": 33,
+              "column": 3
+            },
+            "end": {
+              "offset": 603,
+              "line": 33,
+              "column": 19
+            }
+          },
+          "name": "sameHeaderColor"
+        }
+      ],
+      "checks": [],
+      "note": {
+        "value": "name is required",
+        "token": {
+          "start": {
+            "offset": 551,
+            "line": 31,
             "column": 18
           },
-          "value": "id",
-          "leadingTrivia": [],
-          "trailingTrivia": [
-            {
-              "kind": "<space>",
-              "startPos": {
-                "offset": 1162,
-                "line": 58,
-                "column": 18
-              },
-              "endPos": {
-                "offset": 1163,
-                "line": 58,
-                "column": 19
-              },
-              "value": " ",
-              "leadingTrivia": [],
-              "trailingTrivia": [],
-              "leadingInvalid": [],
-              "trailingInvalid": [],
-              "isInvalid": false,
-              "start": 1162,
-              "end": 1163
-            }
-          ],
-          "leadingInvalid": [],
-          "trailingInvalid": [],
-          "isInvalid": false,
-          "start": 1158,
-          "end": 1162
+          "end": {
+            "offset": 575,
+            "line": 31,
+            "column": 42
+          }
         }
       }
     },
-    "start": 1158,
-    "end": 1162,
-    "name": "CompileError"
-  }
-]
+    {
+      "name": "product",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "string",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 719,
+              "line": 39,
+              "column": 3
+            },
+            "end": {
+              "offset": 732,
+              "line": 39,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "price",
+          "type": {
+            "schemaName": null,
+            "type_name": "decimal",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 735,
+              "line": 40,
+              "column": 3
+            },
+            "end": {
+              "offset": 761,
+              "line": 40,
+              "column": 29
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 637,
+          "line": 37,
+          "column": 1
+        },
+        "end": {
+          "offset": 782,
+          "line": 42,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [
+        {
+          "order": 0,
+          "token": {
+            "start": {
+              "offset": 713,
+              "line": 38,
+              "column": 3
+            },
+            "end": {
+              "offset": 716,
+              "line": 38,
+              "column": 6
+            }
+          },
+          "name": "id"
+        },
+        {
+          "order": 3,
+          "token": {
+            "start": {
+              "offset": 764,
+              "line": 41,
+              "column": 3
+            },
+            "end": {
+              "offset": 780,
+              "line": 41,
+              "column": 19
+            }
+          },
+          "name": "sameHeaderColor"
+        }
+      ],
+      "checks": [],
+      "headerColor": "#17DACC",
+      "note": {
+        "value": "product must have price",
+        "token": {
+          "start": {
+            "offset": 676,
+            "line": 37,
+            "column": 40
+          },
+          "end": {
+            "offset": 707,
+            "line": 37,
+            "column": 71
+          }
+        }
+      }
+    },
+    {
+      "name": "merchant",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 864,
+              "line": 46,
+              "column": 3
+            },
+            "end": {
+              "offset": 877,
+              "line": 46,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "product_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 880,
+              "line": 47,
+              "column": 3
+            },
+            "end": {
+              "offset": 896,
+              "line": 47,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "address",
+          "type": {
+            "schemaName": null,
+            "type_name": "string",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 918,
+              "line": 49,
+              "column": 3
+            },
+            "end": {
+              "offset": 934,
+              "line": 49,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 784,
+          "line": 44,
+          "column": 1
+        },
+        "end": {
+          "offset": 936,
+          "line": 50,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [
+        {
+          "order": 0,
+          "token": {
+            "start": {
+              "offset": 858,
+              "line": 45,
+              "column": 3
+            },
+            "end": {
+              "offset": 861,
+              "line": 45,
+              "column": 6
+            }
+          },
+          "name": "id"
+        },
+        {
+          "order": 3,
+          "token": {
+            "start": {
+              "offset": 899,
+              "line": 48,
+              "column": 3
+            },
+            "end": {
+              "offset": 915,
+              "line": 48,
+              "column": 19
+            }
+          },
+          "name": "sameHeaderColor"
+        }
+      ],
+      "checks": [],
+      "headerColor": "#08DAFF",
+      "note": {
+        "value": "merchants sell a lot",
+        "token": {
+          "start": {
+            "offset": 824,
+            "line": 44,
+            "column": 41
+          },
+          "end": {
+            "offset": 852,
+            "line": 44,
+            "column": 69
+          }
+        }
+      }
+    },
+    {
+      "name": "customer",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "string",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 991,
+              "line": 54,
+              "column": 3
+            },
+            "end": {
+              "offset": 1100,
+              "line": 54,
+              "column": 112
+            }
+          },
+          "inline_refs": [
+            {
+              "schemaName": null,
+              "tableName": "user",
+              "fieldNames": [
+                "email"
+              ],
+              "relation": "-",
+              "token": {
+                "start": {
+                  "offset": 1007,
+                  "line": 54,
+                  "column": 19
+                },
+                "end": {
+                  "offset": 1024,
+                  "line": 54,
+                  "column": 36
+                }
+              }
+            }
+          ],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "note": {
+            "value": "the ref of this column should be bound and interpret successfully",
+            "token": {
+              "start": {
+                "offset": 1026,
+                "line": 54,
+                "column": 38
+              },
+              "end": {
+                "offset": 1099,
+                "line": 54,
+                "column": 111
+              }
+            }
+          },
+          "checks": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 938,
+          "line": 52,
+          "column": 1
+        },
+        "end": {
+          "offset": 1102,
+          "line": 55,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "a customer is a user?",
+        "token": {
+          "start": {
+            "offset": 959,
+            "line": 53,
+            "column": 3
+          },
+          "end": {
+            "offset": 988,
+            "line": 53,
+            "column": 32
+          }
+        }
+      }
+    }
+  ],
+  "notes": [],
+  "refs": [
+    {
+      "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 1007,
+          "line": 54,
+          "column": 19
+        },
+        "end": {
+          "offset": 1024,
+          "line": 54,
+          "column": 36
+        }
+      },
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "user",
+          "fieldNames": [
+            "email"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1007,
+              "line": 54,
+              "column": 19
+            },
+            "end": {
+              "offset": 1024,
+              "line": 54,
+              "column": 36
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "customer",
+          "fieldNames": [
+            "email"
+          ],
+          "token": {
+            "start": {
+              "offset": 991,
+              "line": 54,
+              "column": 3
+            },
+            "end": {
+              "offset": 1100,
+              "line": 54,
+              "column": 112
+            }
+          },
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 1104,
+          "line": 57,
+          "column": 1
+        },
+        "end": {
+          "offset": 1142,
+          "line": 57,
+          "column": 39
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "user",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1108,
+              "line": 57,
+              "column": 5
+            },
+            "end": {
+              "offset": 1119,
+              "line": 57,
+              "column": 16
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "user_id"
+          ],
+          "tableName": "merchant",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 1122,
+              "line": 57,
+              "column": 19
+            },
+            "end": {
+              "offset": 1142,
+              "line": 57,
+              "column": 39
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 1144,
+          "line": 59,
+          "column": 1
+        },
+        "end": {
+          "offset": 1188,
+          "line": 59,
+          "column": 45
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "id"
+          ],
+          "tableName": "product",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1148,
+              "line": 59,
+              "column": 5
+            },
+            "end": {
+              "offset": 1162,
+              "line": 59,
+              "column": 19
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "product_id"
+          ],
+          "tableName": "merchant",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 1165,
+              "line": 59,
+              "column": 22
+            },
+            "end": {
+              "offset": 1188,
+              "line": 59,
+              "column": 45
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "tablePartials": [
+    {
+      "name": "id",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 76,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 89,
+              "line": 2,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "to_table_ref",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 92,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 127,
+              "line": 3,
+              "column": 38
+            }
+          },
+          "inline_refs": [
+            {
+              "schemaName": null,
+              "tableName": "user",
+              "fieldNames": [
+                "id"
+              ],
+              "relation": ">",
+              "token": {
+                "start": {
+                  "offset": 112,
+                  "line": 3,
+                  "column": 23
+                },
+                "end": {
+                  "offset": 126,
+                  "line": 3,
+                  "column": 37
+                }
+              }
+            }
+          ],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 203,
+          "line": 8,
+          "column": 2
+        }
+      },
+      "indexes": [
+        {
+          "columns": [
+            {
+              "value": "name",
+              "type": "column",
+              "token": {
+                "start": {
+                  "offset": 145,
+                  "line": 6,
+                  "column": 5
+                },
+                "end": {
+                  "offset": 149,
+                  "line": 6,
+                  "column": 9
+                }
+              }
+            }
+          ],
+          "token": {
+            "start": {
+              "offset": 145,
+              "line": 6,
+              "column": 5
+            },
+            "end": {
+              "offset": 197,
+              "line": 6,
+              "column": 57
+            }
+          },
+          "pk": false,
+          "unique": false,
+          "note": {
+            "value": "should have error in \"merchant\" table",
+            "token": {
+              "start": {
+                "offset": 151,
+                "line": 6,
+                "column": 11
+              },
+              "end": {
+                "offset": 196,
+                "line": 6,
+                "column": 56
+              }
+            }
+          }
+        }
+      ],
+      "checks": [],
+      "note": {
+        "value": "this table is injected with TablePartial \"id\"",
+        "token": {
+          "start": {
+            "offset": 17,
+            "line": 1,
+            "column": 18
+          },
+          "end": {
+            "offset": 70,
+            "line": 1,
+            "column": 71
+          }
+        }
+      }
+    },
+    {
+      "name": "sameHeaderColor",
+      "fields": [],
+      "token": {
+        "start": {
+          "offset": 205,
+          "line": 10,
+          "column": 1
+        },
+        "end": {
+          "offset": 342,
+          "line": 14,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "checks": [],
+      "headerColor": "#ccc",
+      "note": {
+        "value": "This TablePartial only used to inject headerColor for some tables",
+        "token": {
+          "start": {
+            "offset": 258,
+            "line": 11,
+            "column": 3
+          },
+          "end": {
+            "offset": 340,
+            "line": 13,
+            "column": 4
+          }
+        }
+      }
+    },
+    {
+      "name": "injectForRef",
+      "fields": [
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "string",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 374,
+              "line": 17,
+              "column": 3
+            },
+            "end": {
+              "offset": 388,
+              "line": 17,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 344,
+          "line": 16,
+          "column": 1
+        },
+        "end": {
+          "offset": 390,
+          "line": 18,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "checks": []
+    }
+  ]
+}
