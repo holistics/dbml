@@ -34,34 +34,37 @@ export default class TableBinder implements ElementBinder {
   // Must call this before any bind methods of any binder classes
   resolvePartialInjections (): CompileError[] {
     // Prioritize the later injections
-    return (this.declarationNode.body as BlockExpressionNode).body.filter((i) => isValidPartialInjection(i)).reverse().flatMap((i: PrefixExpressionNode) => {
-      const fragments = destructureComplexVariableTuple(i.expression).unwrap();
-      const tablePartialBindee = fragments.variables.pop();
-      const schemaBindees = fragments.variables;
+    return (this.declarationNode.body as BlockExpressionNode).body
+      .filter((i) => i instanceof FunctionApplicationNode && isValidPartialInjection(i.callee))
+      .reverse()
+      .flatMap((i) => {
+        const fragments = destructureComplexVariableTuple(((i as FunctionApplicationNode).callee as PrefixExpressionNode).expression).unwrap();
+        const tablePartialBindee = fragments.variables.pop();
+        const schemaBindees = fragments.variables;
 
-      if (!tablePartialBindee) {
+        if (!tablePartialBindee) {
+          return [];
+        }
+
+        const errors = lookupAndBindInScope(this.ast, [
+          ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
+          { node: tablePartialBindee, kind: SymbolKind.TablePartial },
+        ]);
+        if (errors.length) return errors;
+        tablePartialBindee.referee?.symbolTable?.forEach((value) => {
+          const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee).unwrap_or(undefined);
+          if (columnName === undefined) return;
+          const injectedColumnSymbol = this.symbolFactory.create(
+            TablePartialInjectedColumnSymbol,
+            { declaration: i, tablePartialSymbol: tablePartialBindee.referee as TablePartialSymbol },
+          );
+          const columnSymbolId = createColumnSymbolIndex(columnName);
+          const symbolTable = this.declarationNode.symbol?.symbolTable;
+          if (symbolTable?.has(columnSymbolId)) return;
+          symbolTable?.set(columnSymbolId, injectedColumnSymbol);
+        });
         return [];
-      }
-
-      const errors = lookupAndBindInScope(this.ast, [
-        ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-        { node: tablePartialBindee, kind: SymbolKind.TablePartial },
-      ]);
-      if (errors.length) return errors;
-      tablePartialBindee.referee?.symbolTable?.forEach((value) => {
-        const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee).unwrap_or(undefined);
-        if (columnName === undefined) return;
-        const injectedColumnSymbol = this.symbolFactory.create(
-          TablePartialInjectedColumnSymbol,
-          { declaration: i, tablePartialSymbol: tablePartialBindee.referee as TablePartialSymbol },
-        );
-        const columnSymbolId = createColumnSymbolIndex(columnName);
-        const symbolTable = this.declarationNode.symbol?.symbolTable;
-        if (symbolTable?.has(columnSymbolId)) return;
-        symbolTable?.set(columnSymbolId, injectedColumnSymbol);
       });
-      return [];
-    });
   }
 
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -81,7 +84,7 @@ export default class TableBinder implements ElementBinder {
   }
 
   private bindFields (fields: FunctionApplicationNode[]): CompileError[] {
-    const columns = fields.filter((f) => !isValidPartialInjection(f));
+    const columns = fields.filter((f) => !isValidPartialInjection(f.callee));
 
     const bindColumns = (cs: FunctionApplicationNode[]): CompileError[] => {
       return cs.flatMap((c) => {
