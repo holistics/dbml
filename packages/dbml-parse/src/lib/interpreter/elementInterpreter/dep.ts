@@ -25,16 +25,21 @@ import {
 } from '../utils';
 import { isAccessExpression, isExpressionAVariableNode } from '../../parser/utils';
 import { SettingName } from '../../analyzer/types';
+import { TableSymbol } from '../../analyzer/symbol/symbols';
 
 export class DepInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private dep: Partial<Dep>;
+  private downstreamTableSymbol: TableSymbol | undefined;
+  private upstreamTableSymbols: TableSymbol[];
 
   constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
     this.dep = { };
+    this.downstreamTableSymbol = undefined;
+    this.upstreamTableSymbols = [];
   }
 
   interpret (): CompileError[] {
@@ -86,6 +91,7 @@ export class DepInterpreter implements ElementInterpreter {
     const errors = [];
     const leftVars = destructureDependencyOperand((tableDepNode as InfixExpressionNode).leftExpression!);
     const leftTableNameNode = leftVars[0].variables.pop();
+    this.downstreamTableSymbol = leftTableNameNode!.referee as TableSymbol;
     const leftSchemaNameNode = leftVars[0].variables.pop();
     if (leftVars[0].variables.length) {
       errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', (tableDepNode as InfixExpressionNode).leftExpression!));
@@ -100,6 +106,7 @@ export class DepInterpreter implements ElementInterpreter {
     const rightVars = destructureDependencyOperand((tableDepNode as InfixExpressionNode).rightExpression!);
     errors.push(...rightVars.flatMap((vars) => {
       const rightTableNameNode = vars.variables.pop();
+      this.upstreamTableSymbols.push(rightTableNameNode!.referee as TableSymbol);
       const rightSchemaNameNode = vars.variables.pop();
       if (vars.variables.length) return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', (tableDepNode as InfixExpressionNode).rightExpression!)];
       this.dep.upstreamTables?.push({
@@ -124,10 +131,7 @@ export class DepInterpreter implements ElementInterpreter {
     const leftColumnNameNode = leftVars[0].variables.pop();
     const leftColumnName = extractVarNameFromPrimaryVariable(leftColumnNameNode).unwrap();
     const leftTableNameNode = leftVars[0].variables.pop();
-    const leftTableName = extractVarNameFromPrimaryVariable(leftTableNameNode).unwrap();
-    const leftSchemaNameNode = leftVars[0].variables.pop();
-    const leftSchemaName = extractVarNameFromPrimaryVariable(leftSchemaNameNode).unwrap_or(undefined);
-    if (this.dep.downstreamTable?.schema !== leftSchemaName && this.dep.downstreamTable?.table !== leftTableName) {
+    if (leftTableNameNode?.referee !== this.downstreamTableSymbol) {
       errors.push(
         new CompileError(
           CompileErrorCode.FIELD_DEP_NOT_REFERENCING_TABLE_DEP,
@@ -136,6 +140,7 @@ export class DepInterpreter implements ElementInterpreter {
         ),
       );
     }
+    leftVars[0].variables.pop();
     if (leftVars[0].variables.length) {
       errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', (fieldDepNode as InfixExpressionNode).leftExpression!));
     } else {
@@ -148,10 +153,8 @@ export class DepInterpreter implements ElementInterpreter {
       const rightColumnNameNode = vars.variables.pop();
       const rightColumnName = extractVarNameFromPrimaryVariable(rightColumnNameNode).unwrap();
       const rightTableNameNode = vars.variables.pop();
-      const rightTableName = extractVarNameFromPrimaryVariable(rightTableNameNode).unwrap();
-      const rightSchemaNameNode = vars.variables.pop();
-      const rightSchemaName = extractVarNameFromPrimaryVariable(rightSchemaNameNode).unwrap_or(undefined);
-      const ownerTableIdx = this.dep.upstreamTables?.findIndex((t) => t.table === rightTableName && t.schema === rightSchemaName);
+      vars.variables.pop();
+      const ownerTableIdx = this.upstreamTableSymbols.findIndex((t) => t === rightTableNameNode?.referee);
       if (ownerTableIdx === -1) {
         return [
           new CompileError(

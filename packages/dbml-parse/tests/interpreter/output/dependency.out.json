@@ -822,13 +822,120 @@
       "indexes": [],
       "partials": [],
       "checks": []
+    },
+    {
+      "name": "silver_alias",
+      "schemaName": "schema",
+      "alias": "sa",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1551,
+              "line": 73,
+              "column": 3
+            },
+            "end": {
+              "offset": 1557,
+              "line": 73,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1515,
+          "line": 72,
+          "column": 1
+        },
+        "end": {
+          "offset": 1559,
+          "line": 74,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    },
+    {
+      "name": "gold_alias",
+      "schemaName": "schema",
+      "alias": "ga",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1595,
+              "line": 77,
+              "column": 3
+            },
+            "end": {
+              "offset": 1601,
+              "line": 77,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1561,
+          "line": 76,
+          "column": 1
+        },
+        "end": {
+          "offset": 1603,
+          "line": 78,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
     }
   ],
   "notes": [],
   "refs": [],
   "enums": [],
   "tableGroups": [],
-  "aliases": [],
+  "aliases": [
+    {
+      "name": "sa",
+      "kind": "table",
+      "value": {
+        "tableName": "silver_alias",
+        "schemaName": "schema"
+      }
+    },
+    {
+      "name": "ga",
+      "kind": "table",
+      "value": {
+        "tableName": "gold_alias",
+        "schemaName": "schema"
+      }
+    }
+  ],
   "project": {},
   "tablePartials": [],
   "deps": [
@@ -1106,6 +1213,74 @@
         {
           "table": "orders",
           "schema": "silver"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 1605,
+          "line": 80,
+          "column": 1
+        },
+        "end": {
+          "offset": 1669,
+          "line": 82,
+          "column": 2
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "id",
+          "upstreamFields": [
+            {
+              "field": "id",
+              "ownerTableIdx": 0
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "sa"
+      },
+      "upstreamTables": [
+        {
+          "table": "ga"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 1671,
+          "line": 84,
+          "column": 1
+        },
+        "end": {
+          "offset": 1735,
+          "line": 86,
+          "column": 2
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "id",
+          "upstreamFields": [
+            {
+              "field": "id",
+              "ownerTableIdx": 0
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "silver_alias",
+        "schema": "schema"
+      },
+      "upstreamTables": [
+        {
+          "table": "gold_alias",
+          "schema": "schema"
         }
       ]
     }

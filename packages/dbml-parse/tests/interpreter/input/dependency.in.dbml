@@ -66,3 +66,21 @@ Dep name: gold.users < (silver.users, silver.orders) {
   gold.users.birthday < silver.users.(id, age)
   gold.users.birthday < silver.(users.id, users.age)
 }
+
+// Another example
+
+Table schema.silver_alias as sa {
+  id int
+}
+
+Table schema.gold_alias as ga {
+  id int
+}
+
+Dep: sa < ga {
+  schema.silver_alias.id < schema.gold_alias.id
+}
+
+Dep: schema.silver_alias < schema.gold_alias {
+  sa.id < ga.id
+}
