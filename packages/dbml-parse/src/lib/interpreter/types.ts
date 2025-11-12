@@ -20,6 +20,7 @@ export interface InterpreterDatabase {
   // for keeping track of circular refs
   refIds: { [refid: string]: ElementDeclarationNode };
   ref: Map<ElementDeclarationNode, Ref>;
+  deps: Map<ElementDeclarationNode, Dep>;
   enums: Map<ElementDeclarationNode, Enum>;
   tableOwnerGroup: { [tableid: string]: ElementDeclarationNode };
   tableGroups: Map<ElementDeclarationNode, TableGroup>;
@@ -38,6 +39,7 @@ export interface Database {
   aliases: Alias[];
   project: Project;
   tablePartials: TablePartial[];
+  deps: Dep[];
 }
 
 export interface Table {
@@ -54,6 +56,37 @@ export interface Table {
     value: string;
     token: TokenPosition;
   };
+}
+
+export interface FieldDep {
+  downstreamField: string;
+  upstreamFields: {
+    ownerTableIdx: number;
+    field: string;
+  }[];
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+  name?: string;
+}
+
+export interface Dep {
+    name?: string;
+    note?: {
+      value: string;
+      token: TokenPosition;
+    };
+    downstreamTable: {
+      schema?: string;
+      table: string;
+    };
+    upstreamTables: {
+      schema?: string;
+      table: string;
+    }[];
+    fieldDeps: FieldDep[] | '*';
+    token: TokenPosition;
 }
 
 export interface Note {

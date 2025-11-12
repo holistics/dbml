@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { destructureComplexVariable, extractVariableFromExpression } from '../../analyzer/utils';
 import { aggregateSettingList } from '../../analyzer/validator/utils';
 import { CompileError, CompileErrorCode } from '../../errors';

@@ -11,6 +11,7 @@ import { TablePartialInterpreter } from './elementInterpreter/tablePartial';
 import Report from '../report';
 import { getElementKind } from '../analyzer/utils';
 import { ElementKind } from '../analyzer/types';
+import { DepInterpreter } from './elementInterpreter/dep';
 
 function convertEnvToDb (env: InterpreterDatabase): Database {
   return {
@@ -23,6 +24,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     aliases: env.aliases,
     project: Array.from(env.project.values())[0] || {},
     tablePartials: Array.from(env.tablePartials.values()),
+    deps: Array.from(env.deps.values()),
   };
 }
 
@@ -39,6 +41,7 @@ export default class Interpreter {
       notes: new Map(),
       refIds: { },
       ref: new Map(),
+      deps: new Map(),
       enums: new Map(),
       tableOwnerGroup: { },
       tableGroups: new Map(),
@@ -65,6 +68,8 @@ export default class Interpreter {
           return (new EnumInterpreter(element, this.env)).interpret();
         case ElementKind.Project:
           return (new ProjectInterpreter(element, this.env)).interpret();
+        case ElementKind.Dep:
+          return (new DepInterpreter(element, this.env)).interpret();
         default:
           return [];
       }

@@ -169,6 +169,16 @@ export default class DepValidator implements ElementValidator {
             }
           });
           break;
+        case SettingName.Name:
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_FIELD_DEP_SETTING, '\'name\' can only appear once', attr)));
+          }
+          attrs.forEach((attr) => {
+            if (!isExpressionAQuotedString(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_FIELD_DEP_SETTING_VALUE, '\'name\' must be a string literal', attr.value || attr.name!));
+            }
+          });
+          break;
         default:
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_FIELD_DEP_SETTING, `Unknown '${name}' setting`, attr)));
       }

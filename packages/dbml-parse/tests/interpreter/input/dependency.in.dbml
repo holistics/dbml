@@ -1,0 +1,68 @@
+Table gold_users {
+  id integer
+  name string
+  age integer
+  birthday date
+  children integer
+  amount integer // sum(quantity * price_each)
+}
+
+Table silver_users {
+  id integer
+  age integer
+  dirty_name string
+  dirty_age integer
+  children integer
+}
+
+Table silver_orders {
+  order_id integer
+  user_id integer
+  quantity integer
+  price_each integer
+}
+
+Dep name: gold_users < (silver_users, silver_orders) [note: 'a dependency'] {
+  gold_users.birthday < (silver_users.id, silver_users.age) [note: '']
+  gold_users.amount < (silver_orders.quantity, silver_orders.price_each)
+}
+
+Dep name [note: 'a dependency']: gold_users < (silver_users, silver_orders) {
+  gold_users.birthday < (silver_users.id, silver_users.age) [note: '']
+  gold_users.amount < (silver_orders.quantity, silver_orders.price_each)
+  gold_users.children < silver_users.children
+}
+
+// Another example
+
+Table gold.users {
+  id integer
+  name string
+  age integer
+  birthday date
+  children integer
+  amount integer // sum(quantity * price_each)
+  price_each integer
+}
+
+Table silver.users {
+  id integer
+  age integer
+  dirty_name string
+  dirty_age integer
+  children integer
+}
+
+Table silver.orders {
+  order_id integer
+  user_id integer
+  quantity integer
+}
+
+Dep name: gold.users < silver.(users, orders)
+
+Dep name: gold.users < (silver.users, silver.orders) {
+  gold.users.birthday < (silver.users.id, silver.users.age)
+  gold.users.birthday < silver.users.(id, age)
+  gold.users.birthday < silver.(users.id, users.age)
+}

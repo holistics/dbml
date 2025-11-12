@@ -21,7 +21,7 @@ interface RawDep {
         ownerTableIdx: number;
         field: string;
       }[];
-      note?: string;
+      note?: RawNote;
       name?: string;
     }[] | '*';
     token: Token;
