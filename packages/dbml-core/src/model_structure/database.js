@@ -11,6 +11,7 @@ import {
 } from './config';
 import DbState from './dbState';
 import TablePartial from './tablePartial';
+import Dep from './dep';
 
 class Database extends Element {
   constructor ({
@@ -24,7 +25,7 @@ class Database extends Element {
     aliases = [],
     records = [],
     tablePartials = [],
-    tableDeps = [],
+    deps = [],
   }) {
     super();
     this.dbState = new DbState();
@@ -40,7 +41,7 @@ class Database extends Element {
     this.aliases = aliases;
     this.records = [];
     this.tablePartials = [];
-    this.tableDeps = [];
+    this.deps = [];
 
     // The global array containing references with 1 endpoint being a field injected from a partial to a table
     // These refs are add to this array when resolving partials in tables (`Table.processPartials()`)
@@ -56,7 +57,7 @@ class Database extends Element {
     this.processSchemaElements(notes, NOTE);
     this.processSchemaElements(refs, REF);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
-    this.processTableDeps(tableDeps);
+    this.processDeps(deps);
 
     this.injectedRawRefs.forEach((rawRef) => {
       const schema = this.findOrCreateSchema(DEFAULT_SCHEMA_NAME);
@@ -96,9 +97,9 @@ class Database extends Element {
     });
   }
 
-  processTableDeps (rawTableDeps) {
-    rawTableDeps.forEach((rawDep) => {
-      
+  processDeps (rawDeps) {
+    rawDeps.forEach((rawDep) => {
+      this.deps.push(new Dep({ ...rawDep, db: this }));
     });
   }
 
@@ -249,6 +250,7 @@ class Database extends Element {
     return {
       schemaIds: this.schemas.map(s => s.id),
       noteIds: this.notes.map(n => n.id),
+      depIds: this.deps.map(d => d.id),
     };
   }
 
@@ -275,12 +277,14 @@ class Database extends Element {
       fields: {},
       records: {},
       tablePartials: {},
+      deps: {},
     };
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));
     this.notes.forEach((note) => note.normalize(normalizedModel));
     this.records.forEach((record) => { normalizedModel.records[record.id] = { ...record }; });
     this.tablePartials.forEach((tablePartial) => tablePartial.normalize(normalizedModel));
+    this.deps.forEach((dep) => dep.normalize(normalizedModel));
     return normalizedModel;
   }
 }

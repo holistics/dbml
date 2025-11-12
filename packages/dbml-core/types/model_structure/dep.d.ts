@@ -1,8 +1,9 @@
 import Element, { RawNote, Token } from './element';
-import DbState from './dbState';
 import { NormalizedDatabase } from './database';
 import Table from './table';
 import Field from './field';
+import Database from 'model_structure/database';
+import DbState from 'model_structure/dbState';
 
 interface RawDep {
     name?: string;
@@ -40,6 +41,7 @@ declare class Dep extends Element {
       noteToken?: Token;
       name?: string;
     }[] | '*';
+    database: Database;
     dbState: DbState;
     id: number;
 
@@ -48,8 +50,8 @@ declare class Dep extends Element {
     processTables(rawTable: any): void;
     processFieldDeps(rawFieldDeps: any): void;
     export(): {
-      name: string;
-      note: string;
+      name?: string;
+      note?: string;
       downstreamTable: {
         schema?: string;
         table: string;
@@ -70,8 +72,8 @@ declare class Dep extends Element {
       }[] | '*';
     };
     shallowExport():  {
-      name: string;
-      note: string;
+      name?: string;
+      note?: string;
       downstreamTable: {
         schema?: string;
         table: string;
@@ -97,6 +99,7 @@ export interface NormalizedDep {
     [_id: number]: {
         id: number;
         note?: string;
+        name?: string;
         downstreamTable: number;
         upstreamTables: number[];
         fieldDeps: {

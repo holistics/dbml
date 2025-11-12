@@ -1,0 +1,82 @@
+Table "gold_users" {
+  "id" integer
+  "name" string
+  "age" integer
+  "birthday" date
+  "children" integer
+  "amount" integer
+}
+
+Table "silver_users" {
+  "id" integer
+  "age" integer
+  "dirty_name" string
+  "dirty_age" integer
+  "children" integer
+}
+
+Table "silver_orders" {
+  "order_id" integer
+  "user_id" integer
+  "quantity" integer
+  "price_each" integer
+}
+
+Table "gold"."users" {
+  "id" integer
+  "name" string
+  "age" integer
+  "birthday" date
+  "children" integer
+  "amount" integer
+  "price_each" integer
+}
+
+Table "silver"."users" {
+  "id" integer
+  "age" integer
+  "dirty_name" string
+  "dirty_age" integer
+  "children" integer
+}
+
+Table "silver"."orders" {
+  "order_id" integer
+  "user_id" integer
+  "quantity" integer
+}
+
+Table "schema"."silver_alias" {
+  "id" int
+}
+
+Table "schema"."gold_alias" {
+  "id" int
+}
+
+Dep "name": "public"."gold_users" < ("public"."silver_users", "public"."silver_orders") [note: 'a dependency'] {
+  "public"."gold_users"."birthday" < ("public"."silver_users"."id", "public"."silver_users"."age")
+  "public"."gold_users"."amount" < ("public"."silver_orders"."quantity", "public"."silver_orders"."price_each")
+ }
+
+Dep "name": "public"."gold_users" < ("public"."silver_users", "public"."silver_orders") [note: 'a dependency'] {
+  "public"."gold_users"."birthday" < ("public"."silver_users"."id", "public"."silver_users"."age")
+  "public"."gold_users"."amount" < ("public"."silver_orders"."quantity", "public"."silver_orders"."price_each")
+  "public"."gold_users"."children" < "public"."silver_users"."children"
+ }
+
+Dep "name": "gold"."users" < ("silver"."users", "silver"."orders")
+
+Dep "name": "gold"."users" < ("silver"."users", "silver"."orders") {
+  "gold"."users"."birthday" < ("silver"."users"."id", "silver"."users"."age")
+  "gold"."users"."birthday" < ("silver"."users"."id", "silver"."users"."age")
+  "gold"."users"."birthday" < ("silver"."users"."id", "silver"."users"."age")
+ }
+
+Dep: "schema"."silver_alias" < "schema"."gold_alias" {
+  "schema"."silver_alias"."id" < "schema"."gold_alias"."id"
+ }
+
+Dep: "schema"."silver_alias" < "schema"."gold_alias" {
+  "schema"."silver_alias"."id" < "schema"."gold_alias"."id"
+ }

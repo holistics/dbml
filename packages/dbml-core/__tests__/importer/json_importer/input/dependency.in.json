@@ -1,0 +1,1288 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "gold_users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 21,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 31,
+              "line": 2,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "string",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 34,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 45,
+              "line": 3,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "age",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 48,
+              "line": 4,
+              "column": 3
+            },
+            "end": {
+              "offset": 59,
+              "line": 4,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "birthday",
+          "type": {
+            "schemaName": null,
+            "type_name": "date",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 62,
+              "line": 5,
+              "column": 3
+            },
+            "end": {
+              "offset": 75,
+              "line": 5,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "children",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 78,
+              "line": 6,
+              "column": 3
+            },
+            "end": {
+              "offset": 94,
+              "line": 6,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "amount",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 97,
+              "line": 7,
+              "column": 3
+            },
+            "end": {
+              "offset": 111,
+              "line": 7,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 143,
+          "line": 8,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    },
+    {
+      "name": "silver_users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 168,
+              "line": 11,
+              "column": 3
+            },
+            "end": {
+              "offset": 178,
+              "line": 11,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "age",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 181,
+              "line": 12,
+              "column": 3
+            },
+            "end": {
+              "offset": 192,
+              "line": 12,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "dirty_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "string",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 195,
+              "line": 13,
+              "column": 3
+            },
+            "end": {
+              "offset": 212,
+              "line": 13,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "dirty_age",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 215,
+              "line": 14,
+              "column": 3
+            },
+            "end": {
+              "offset": 232,
+              "line": 14,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "children",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 235,
+              "line": 15,
+              "column": 3
+            },
+            "end": {
+              "offset": 251,
+              "line": 15,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 145,
+          "line": 10,
+          "column": 1
+        },
+        "end": {
+          "offset": 253,
+          "line": 16,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    },
+    {
+      "name": "silver_orders",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 279,
+              "line": 19,
+              "column": 3
+            },
+            "end": {
+              "offset": 295,
+              "line": 19,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 298,
+              "line": 20,
+              "column": 3
+            },
+            "end": {
+              "offset": 313,
+              "line": 20,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 316,
+              "line": 21,
+              "column": 3
+            },
+            "end": {
+              "offset": 332,
+              "line": 21,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "price_each",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 335,
+              "line": 22,
+              "column": 3
+            },
+            "end": {
+              "offset": 353,
+              "line": 22,
+              "column": 21
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 255,
+          "line": 18,
+          "column": 1
+        },
+        "end": {
+          "offset": 355,
+          "line": 23,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    },
+    {
+      "name": "users",
+      "schemaName": "gold",
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 894,
+              "line": 39,
+              "column": 3
+            },
+            "end": {
+              "offset": 904,
+              "line": 39,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "string",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 907,
+              "line": 40,
+              "column": 3
+            },
+            "end": {
+              "offset": 918,
+              "line": 40,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "age",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 921,
+              "line": 41,
+              "column": 3
+            },
+            "end": {
+              "offset": 932,
+              "line": 41,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "birthday",
+          "type": {
+            "schemaName": null,
+            "type_name": "date",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 935,
+              "line": 42,
+              "column": 3
+            },
+            "end": {
+              "offset": 948,
+              "line": 42,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "children",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 951,
+              "line": 43,
+              "column": 3
+            },
+            "end": {
+              "offset": 967,
+              "line": 43,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "amount",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 970,
+              "line": 44,
+              "column": 3
+            },
+            "end": {
+              "offset": 984,
+              "line": 44,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "price_each",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1017,
+              "line": 45,
+              "column": 3
+            },
+            "end": {
+              "offset": 1035,
+              "line": 45,
+              "column": 21
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 873,
+          "line": 38,
+          "column": 1
+        },
+        "end": {
+          "offset": 1037,
+          "line": 46,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    },
+    {
+      "name": "users",
+      "schemaName": "silver",
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1062,
+              "line": 49,
+              "column": 3
+            },
+            "end": {
+              "offset": 1072,
+              "line": 49,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "age",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1075,
+              "line": 50,
+              "column": 3
+            },
+            "end": {
+              "offset": 1086,
+              "line": 50,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "dirty_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "string",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1089,
+              "line": 51,
+              "column": 3
+            },
+            "end": {
+              "offset": 1106,
+              "line": 51,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "dirty_age",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1109,
+              "line": 52,
+              "column": 3
+            },
+            "end": {
+              "offset": 1126,
+              "line": 52,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "children",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1129,
+              "line": 53,
+              "column": 3
+            },
+            "end": {
+              "offset": 1145,
+              "line": 53,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1039,
+          "line": 48,
+          "column": 1
+        },
+        "end": {
+          "offset": 1147,
+          "line": 54,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    },
+    {
+      "name": "orders",
+      "schemaName": "silver",
+      "alias": null,
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1173,
+              "line": 57,
+              "column": 3
+            },
+            "end": {
+              "offset": 1189,
+              "line": 57,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1192,
+              "line": 58,
+              "column": 3
+            },
+            "end": {
+              "offset": 1207,
+              "line": 58,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1210,
+              "line": 59,
+              "column": 3
+            },
+            "end": {
+              "offset": 1226,
+              "line": 59,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1149,
+          "line": 56,
+          "column": 1
+        },
+        "end": {
+          "offset": 1228,
+          "line": 60,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    },
+    {
+      "name": "silver_alias",
+      "schemaName": "schema",
+      "alias": "sa",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1551,
+              "line": 73,
+              "column": 3
+            },
+            "end": {
+              "offset": 1557,
+              "line": 73,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1515,
+          "line": 72,
+          "column": 1
+        },
+        "end": {
+          "offset": 1559,
+          "line": 74,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    },
+    {
+      "name": "gold_alias",
+      "schemaName": "schema",
+      "alias": "ga",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1595,
+              "line": 77,
+              "column": 3
+            },
+            "end": {
+              "offset": 1601,
+              "line": 77,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1561,
+          "line": 76,
+          "column": 1
+        },
+        "end": {
+          "offset": 1603,
+          "line": 78,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [
+    {
+      "name": "sa",
+      "kind": "table",
+      "value": {
+        "tableName": "silver_alias",
+        "schemaName": "schema"
+      }
+    },
+    {
+      "name": "ga",
+      "kind": "table",
+      "value": {
+        "tableName": "gold_alias",
+        "schemaName": "schema"
+      }
+    }
+  ],
+  "project": {},
+  "tablePartials": [],
+  "deps": [
+    {
+      "token": {
+        "start": {
+          "offset": 357,
+          "line": 25,
+          "column": 1
+        },
+        "end": {
+          "offset": 580,
+          "line": 28,
+          "column": 2
+        }
+      },
+      "name": "name",
+      "fieldDeps": [
+        {
+          "downstreamField": "birthday",
+          "upstreamFields": [
+            {
+              "field": "id",
+              "ownerTableIdx": 0
+            },
+            {
+              "field": "age",
+              "ownerTableIdx": 0
+            }
+          ],
+          "note": {
+            "value": "",
+            "token": {
+              "start": {
+                "offset": 496,
+                "line": 26,
+                "column": 62
+              },
+              "end": {
+                "offset": 504,
+                "line": 26,
+                "column": 70
+              }
+            }
+          }
+        },
+        {
+          "downstreamField": "amount",
+          "upstreamFields": [
+            {
+              "field": "quantity",
+              "ownerTableIdx": 1
+            },
+            {
+              "field": "price_each",
+              "ownerTableIdx": 1
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "gold_users"
+      },
+      "upstreamTables": [
+        {
+          "table": "silver_users"
+        },
+        {
+          "table": "silver_orders"
+        }
+      ],
+      "note": {
+        "value": "a dependency",
+        "token": {
+          "start": {
+            "offset": 411,
+            "line": 25,
+            "column": 55
+          },
+          "end": {
+            "offset": 431,
+            "line": 25,
+            "column": 75
+          }
+        }
+      }
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 582,
+          "line": 30,
+          "column": 1
+        },
+        "end": {
+          "offset": 851,
+          "line": 34,
+          "column": 2
+        }
+      },
+      "name": "name",
+      "note": {
+        "value": "a dependency",
+        "token": {
+          "start": {
+            "offset": 592,
+            "line": 30,
+            "column": 11
+          },
+          "end": {
+            "offset": 612,
+            "line": 30,
+            "column": 31
+          }
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "birthday",
+          "upstreamFields": [
+            {
+              "field": "id",
+              "ownerTableIdx": 0
+            },
+            {
+              "field": "age",
+              "ownerTableIdx": 0
+            }
+          ],
+          "note": {
+            "value": "",
+            "token": {
+              "start": {
+                "offset": 721,
+                "line": 31,
+                "column": 62
+              },
+              "end": {
+                "offset": 729,
+                "line": 31,
+                "column": 70
+              }
+            }
+          }
+        },
+        {
+          "downstreamField": "amount",
+          "upstreamFields": [
+            {
+              "field": "quantity",
+              "ownerTableIdx": 1
+            },
+            {
+              "field": "price_each",
+              "ownerTableIdx": 1
+            }
+          ]
+        },
+        {
+          "downstreamField": "children",
+          "upstreamFields": [
+            {
+              "field": "children",
+              "ownerTableIdx": 0
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "gold_users"
+      },
+      "upstreamTables": [
+        {
+          "table": "silver_users"
+        },
+        {
+          "table": "silver_orders"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 1230,
+          "line": 62,
+          "column": 1
+        },
+        "end": {
+          "offset": 1275,
+          "line": 62,
+          "column": 46
+        }
+      },
+      "name": "name",
+      "fieldDeps": "*",
+      "downstreamTable": {
+        "table": "users",
+        "schema": "gold"
+      },
+      "upstreamTables": [
+        {
+          "table": "users",
+          "schema": "silver"
+        },
+        {
+          "table": "orders",
+          "schema": "silver"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 1277,
+          "line": 64,
+          "column": 1
+        },
+        "end": {
+          "offset": 1493,
+          "line": 68,
+          "column": 2
+        }
+      },
+      "name": "name",
+      "fieldDeps": [
+        {
+          "downstreamField": "birthday",
+          "upstreamFields": [
+            {
+              "field": "id",
+              "ownerTableIdx": 0
+            },
+            {
+              "field": "age",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "birthday",
+          "upstreamFields": [
+            {
+              "field": "id",
+              "ownerTableIdx": 0
+            },
+            {
+              "field": "age",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "birthday",
+          "upstreamFields": [
+            {
+              "field": "id",
+              "ownerTableIdx": 0
+            },
+            {
+              "field": "age",
+              "ownerTableIdx": 0
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "users",
+        "schema": "gold"
+      },
+      "upstreamTables": [
+        {
+          "table": "users",
+          "schema": "silver"
+        },
+        {
+          "table": "orders",
+          "schema": "silver"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 1605,
+          "line": 80,
+          "column": 1
+        },
+        "end": {
+          "offset": 1669,
+          "line": 82,
+          "column": 2
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "id",
+          "upstreamFields": [
+            {
+              "field": "id",
+              "ownerTableIdx": 0
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "sa"
+      },
+      "upstreamTables": [
+        {
+          "table": "ga"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 1671,
+          "line": 84,
+          "column": 1
+        },
+        "end": {
+          "offset": 1735,
+          "line": 86,
+          "column": 2
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "id",
+          "upstreamFields": [
+            {
+              "field": "id",
+              "ownerTableIdx": 0
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "silver_alias",
+        "schema": "schema"
+      },
+      "upstreamTables": [
+        {
+          "table": "gold_alias",
+          "schema": "schema"
+        }
+      ]
+    }
+  ]
+}

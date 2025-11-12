@@ -2,6 +2,18 @@ import { isEmpty, reduce } from 'lodash';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
+function getFieldSchema (model, field) {
+  return model.schemas[model.tables[field.tableId].schemaId];
+}
+
+function getTableSchema (model, table) {
+  return model.schemas[table.schemaId];
+}
+
+function getFieldTable (model, field) {
+  return model.tables[field.tableId];
+}
+
 class DbmlExporter {
   static hasWhiteSpace (str) {
     return /\s/g.test(str);
@@ -326,6 +338,10 @@ class DbmlExporter {
     return tableGroupStrs.length ? tableGroupStrs.join('\n') : '';
   }
 
+  static getMemberAccessString (...fragments) {
+    return fragments.filter(Boolean).map((fragment) => `"${fragment.replaceAll('"', '\\"')}"`).join('.');
+  }
+
   static exportStickyNotes (model) {
     return reduce(model.notes, (result, note) => {
       const escapedContent = `  ${DbmlExporter.escapeNote(note.content)}`;
@@ -334,6 +350,84 @@ class DbmlExporter {
       // Add a blank line between note elements
       return result ? `${result}\n${stickyNote}` : stickyNote;
     }, '');
+  }
+
+  static getTableDependencySettings (dep) {
+    let settingStr = '';
+    if (dep.note) {
+      settingStr += `note: ${DbmlExporter.escapeNote(dep.note)}`;
+    }
+    if (settingStr.endsWith(', ')) {
+      settingStr = settingStr.replace(/,\s$/, '');
+    }
+    return settingStr ? ` [${settingStr}]` : '';
+  }
+
+  static getFieldDependencySettings (dep) {
+    let settingStr = '';
+    const settingSep = ', ';
+    if (dep.name) {
+      settingStr += `name: "${dep.name}"${settingSep}`;
+    }
+    if (dep.note) {
+      settingStr += `note: ${DbmlExporter.escapeNote(dep.note)}`;
+    }
+    if (settingStr.endsWith(', ')) {
+      settingStr = settingStr.replace(/,\s$/, '');
+    }
+    return settingStr ? ` [${settingStr}]` : '';
+  }
+
+  static exportDependencies (model) {
+    return Object.values(model.deps).map((dep) => {
+      const {
+        name,
+        downstreamTable: { table: downstreamTableIdx, schema: downstreamSchemaIdx },
+        upstreamTables: upstreamIdxs,
+        fieldDeps,
+      } = dep;
+      const downstreamTable = model.tables[downstreamTableIdx];
+      const downstreamSchema = model.schemas[downstreamSchemaIdx];
+      const upstreams = upstreamIdxs.map(({ table, schema }) => ({ table: model.tables[table], schema: model.schemas[schema] }));
+      let depLines = 'Dep';
+      if (name !== undefined) {
+        depLines += ` "${name}"`;
+      }
+      depLines += ': ';
+      depLines += DbmlExporter.getMemberAccessString(downstreamSchema.name, downstreamTable.name);
+      depLines += ' < ';
+      depLines
+        += upstreams.length === 1
+          ? DbmlExporter.getMemberAccessString(upstreams[0].schema.name, upstreams[0].table.name)
+          : `(${upstreams.map(({ table, schema }) => DbmlExporter.getMemberAccessString(schema.name, table.name)).join(', ')})`;
+      depLines += this.getTableDependencySettings(dep);
+      if (fieldDeps === '*' || fieldDeps.length === 0) return depLines;
+      depLines += ' {\n';
+      fieldDeps.forEach((d) => {
+        const {
+          downstreamField: downstreamFieldIdx,
+          upstreamFields: upstreamFieldIdxs,
+        } = d;
+        const downstreamField = model.fields[downstreamFieldIdx];
+        const upstreamFields = upstreamFieldIdxs.map((idx) => model.fields[idx]);
+        depLines += `  ${this.getMemberAccessString(downstreamSchema.name, downstreamTable.name, downstreamField.name)} < `;
+        depLines += upstreamFields.length === 1
+          ? this.getMemberAccessString(
+            getFieldSchema(model, upstreamFields[0]).name,
+            getFieldTable(model, upstreamFields[0]).name,
+            upstreamFields[0].name,
+          )
+          : `(${upstreamFields.map((f) => this.getMemberAccessString(
+            getFieldSchema(model, f).name,
+            getFieldTable(model, f).name,
+            f.name,
+          )).join(', ')})`;
+        depLines += DbmlExporter.getFieldDependencySettings(d);
+        depLines += '\n';
+      });
+      depLines += ' }';
+      return depLines;
+    }).join('\n\n');
   }
 
   static export (model) {
@@ -352,6 +446,8 @@ class DbmlExporter {
     });
 
     if (!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));
+
+    if (!isEmpty(model.deps)) elementStrs.push(DbmlExporter.exportDependencies(model));
 
     // all elements already end with 1 '\n', so join('\n') to separate them with 1 blank line
     return elementStrs.join('\n');
