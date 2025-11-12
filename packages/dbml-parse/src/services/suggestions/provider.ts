@@ -172,6 +172,7 @@ function suggestOnRelOp (
     ScopeKind.REF,
     ScopeKind.TABLE,
     ScopeKind.TABLEPARTIAL,
+    ScopeKind.DEP,
   ].includes(scopeKind)) {
     const res = suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
       SymbolKind.Table,
@@ -225,6 +226,12 @@ function suggestInTuple (compiler: Compiler, offset: number): CompletionList {
   switch (scopeKind) {
     case ScopeKind.INDEXES:
       return suggestColumnNameInIndexes(compiler, offset);
+    case ScopeKind.DEP:
+      return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+        SymbolKind.Table,
+        SymbolKind.Schema,
+        SymbolKind.Column,
+      ]);
     case ScopeKind.REF:
       {
         const containers = [...compiler.container.stack(offset)];
@@ -292,7 +299,9 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
       case ScopeKind.TABLEPARTIAL:
         attributes = [SettingName.HeaderColor, SettingName.Note];
         break;
-
+      case ScopeKind.DEP:
+        attributes = [SettingName.Note];
+        break;
       case ScopeKind.TABLEGROUP:
         attributes = [SettingName.Color, SettingName.Note];
         break;
@@ -334,6 +343,18 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
             range: undefined as any,
           })),
           ...[SettingName.Ref, SettingName.Default, SettingName.Note, SettingName.Check].map((name) => ({
+            label: name,
+            insertText: `${name}: `,
+            kind: CompletionItemKind.Property,
+            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+            range: undefined as any,
+          })),
+        ],
+      };
+    case ScopeKind.DEP:
+      return {
+        suggestions: [
+          ...[SettingName.Note].map((name) => ({
             label: name,
             insertText: `${name}: `,
             kind: CompletionItemKind.Property,
@@ -483,6 +504,12 @@ function suggestInSubField (
       return suggestInIndex(compiler, offset);
     case ScopeKind.ENUM:
       return suggestInEnumField(compiler, offset, container);
+    case ScopeKind.DEP:
+      return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+        SymbolKind.Table,
+        SymbolKind.Schema,
+        SymbolKind.Column,
+      ]);
     case ScopeKind.REF: {
       const suggestions = suggestInRefField(compiler, offset);
 
@@ -502,7 +529,7 @@ function suggestInSubField (
 
 function suggestTopLevelElementType (): CompletionList {
   return {
-    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial'].map((name) => ({
+    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Dep'].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,

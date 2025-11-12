@@ -52,6 +52,7 @@ const enum Query {
 type Cache = Map<any, any> | any;
 
 export const enum ScopeKind {
+  DEP,
   TABLE,
   ENUM,
   TABLEGROUP,
@@ -338,6 +339,8 @@ export default class Compiler {
           return ScopeKind.TABLEPARTIAL;
         case 'checks':
           return ScopeKind.CHECKS;
+        case 'dep':
+          return ScopeKind.DEP;
         default:
           return ScopeKind.CUSTOM;
       }
