@@ -4,7 +4,6 @@ import {
   ElementDeclarationNode,
   FunctionExpressionNode,
   InfixExpressionNode,
-  PartialInjectionNode,
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
@@ -152,11 +151,6 @@ export function extractVarNameFromPrimaryVariable (
 ): Option<string> {
   const value = node?.expression.variable?.value;
 
-  return value === undefined ? new None() : new Some(value);
-}
-
-export function extractVarNameFromPartialInjection (node?: PartialInjectionNode): Option<string> {
-  const value = node?.partial?.variable?.value;
   return value === undefined ? new None() : new Some(value);
 }
 
