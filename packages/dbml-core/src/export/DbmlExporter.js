@@ -382,13 +382,13 @@ class DbmlExporter {
     return Object.values(model.deps).map((dep) => {
       const {
         name,
-        downstreamTable: { table: downstreamTableIdx, schema: downstreamSchemaIdx },
-        upstreamTables: upstreamIdxs,
+        downstreamTable: downstreamTableIdx,
+        upstreamTables: upstreamTableIdxs,
         fieldDeps,
       } = dep;
       const downstreamTable = model.tables[downstreamTableIdx];
-      const downstreamSchema = model.schemas[downstreamSchemaIdx];
-      const upstreams = upstreamIdxs.map(({ table, schema }) => ({ table: model.tables[table], schema: model.schemas[schema] }));
+      const downstreamSchema = getTableSchema(model, downstreamTable);
+      const upstreamTables = upstreamTableIdxs.map((upstreamTableIdx) => model.tables[upstreamTableIdx]);
       let depLines = 'Dep';
       if (name !== undefined) {
         depLines += ` "${name}"`;
@@ -397,9 +397,9 @@ class DbmlExporter {
       depLines += DbmlExporter.getMemberAccessString(downstreamSchema.name, downstreamTable.name);
       depLines += ' < ';
       depLines
-        += upstreams.length === 1
-          ? DbmlExporter.getMemberAccessString(upstreams[0].schema.name, upstreams[0].table.name)
-          : `(${upstreams.map(({ table, schema }) => DbmlExporter.getMemberAccessString(schema.name, table.name)).join(', ')})`;
+        += upstreamTables.length === 1
+          ? DbmlExporter.getMemberAccessString(getTableSchema(model, upstreamTables[0]).name, upstreamTables[0].name)
+          : `(${upstreamTables.map((table) => DbmlExporter.getMemberAccessString(getTableSchema(model, table).name, table.name)).join(', ')})`;
       depLines += this.getTableDependencySettings(dep);
       if (fieldDeps === '*' || fieldDeps.length === 0) return depLines;
       depLines += ' {\n';

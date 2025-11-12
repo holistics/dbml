@@ -95,14 +95,8 @@ class Dep extends Element {
       id: this.id,
       name: this.name,
       note: this.note,
-      downstreamTable: {
-        schema: this.downstreamTable.schema.id,
-        table: this.downstreamTable.id,
-      },
-      upstreamTables: this.upstreamTables.map((upstreamTable) => ({
-        schema: upstreamTable.schema.id,
-        table: upstreamTable.id,
-      })),
+      downstreamTable: this.downstreamTable.id,
+      upstreamTables: this.upstreamTables.map((upstreamTable) => upstreamTable.id),
       fieldDeps: this.fieldDeps === '*' ? '*' : this.fieldDeps.map((dep) => ({
         downstreamField: dep.downstreamField.id,
         upstreamFields: dep.upstreamFields.map((field) => field.id),
