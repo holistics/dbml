@@ -33,7 +33,6 @@ import {
   IdentiferStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
-  PartialInjectionNode,
   PrefixExpressionNode,
   ProgramNode,
   SyntaxNode,
@@ -106,6 +105,11 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               offset,
               container as PrefixExpressionNode & { op: SyntaxToken },
             );
+          case '~':
+            return suggestOnPartialInjectionOp(
+              this.compiler,
+              offset,
+            );
           default:
         }
       } else if (container instanceof InfixExpressionNode) {
@@ -133,8 +137,6 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         return suggestInAttribute(this.compiler, offset, container);
       } else if (container instanceof TupleExpressionNode) {
         return suggestInTuple(this.compiler, offset);
-      } else if (container instanceof PartialInjectionNode) {
-        return suggestOnPartialInjectionOp(this.compiler, offset);
       } else if (container instanceof FunctionApplicationNode) {
         return suggestInSubField(this.compiler, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
