@@ -86,7 +86,7 @@ export interface Dep {
       schema?: string;
       table: string;
     }[];
-    fieldDeps: FieldDep[] | '*';
+    fieldDeps: FieldDep[];
     token: TokenPosition;
 }
 

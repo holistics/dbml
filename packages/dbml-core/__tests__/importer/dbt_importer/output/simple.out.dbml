@@ -1,0 +1,19 @@
+Table "customers" [source: "dbt"] {
+  "id" integer [not null, note: 'Customer ID']
+  "name" varchar [note: 'Customer name']
+  "email" varchar [unique]
+  "country_id" integer [note: 'Reference to countries table']
+  Note: '''Customer information
+
+Tags: pii, core
+
+Metadata: {"owner":"analytics_team"}'''
+}
+
+Table "countries" [source: "dbt"] {
+  "id" integer [pk, note: 'Country ID']
+  "name" varchar [not null, note: 'Country name']
+  Note: 'Country reference data'
+}
+
+Ref:"countries"."id" < "customers"."country_id"

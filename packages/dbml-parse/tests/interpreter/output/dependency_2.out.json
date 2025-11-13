@@ -1,0 +1,4459 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "users",
+      "schemaName": "raw",
+      "alias": null,
+      "fields": [
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 570,
+              "line": 33,
+              "column": 3
+            },
+            "end": {
+              "offset": 592,
+              "line": 33,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "full_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 595,
+              "line": 34,
+              "column": 3
+            },
+            "end": {
+              "offset": 616,
+              "line": 34,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 619,
+              "line": 35,
+              "column": 3
+            },
+            "end": {
+              "offset": 640,
+              "line": 35,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 643,
+              "line": 36,
+              "column": 3
+            },
+            "end": {
+              "offset": 666,
+              "line": 36,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 550,
+          "line": 32,
+          "column": 1
+        },
+        "end": {
+          "offset": 756,
+          "line": 43,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: raw\nGrain: 1 row per user\nSource: app POS / user system\n",
+        "token": {
+          "start": {
+            "offset": 670,
+            "line": 38,
+            "column": 3
+          },
+          "end": {
+            "offset": 754,
+            "line": 42,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "products",
+      "schemaName": "raw",
+      "alias": null,
+      "fields": [
+        {
+          "name": "product_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 781,
+              "line": 46,
+              "column": 3
+            },
+            "end": {
+              "offset": 803,
+              "line": 46,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "product_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 806,
+              "line": 47,
+              "column": 3
+            },
+            "end": {
+              "offset": 827,
+              "line": 47,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "unit_price",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 830,
+              "line": 48,
+              "column": 3
+            },
+            "end": {
+              "offset": 851,
+              "line": 48,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "unit_of_measure",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 854,
+              "line": 49,
+              "column": 3
+            },
+            "end": {
+              "offset": 877,
+              "line": 49,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 880,
+              "line": 50,
+              "column": 3
+            },
+            "end": {
+              "offset": 903,
+              "line": 50,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 758,
+          "line": 45,
+          "column": 1
+        },
+        "end": {
+          "offset": 972,
+          "line": 56,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: raw\nGrain: 1 row per product (fruit)\n",
+        "token": {
+          "start": {
+            "offset": 907,
+            "line": 52,
+            "column": 3
+          },
+          "end": {
+            "offset": 970,
+            "line": 55,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "orders",
+      "schemaName": "raw",
+      "alias": null,
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 995,
+              "line": 59,
+              "column": 3
+            },
+            "end": {
+              "offset": 1017,
+              "line": 59,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1020,
+              "line": 60,
+              "column": 3
+            },
+            "end": {
+              "offset": 1037,
+              "line": 60,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "order_ts",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1040,
+              "line": 61,
+              "column": 3
+            },
+            "end": {
+              "offset": 1063,
+              "line": 61,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "status",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1066,
+              "line": 62,
+              "column": 3
+            },
+            "end": {
+              "offset": 1087,
+              "line": 62,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "channel",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1090,
+              "line": 63,
+              "column": 3
+            },
+            "end": {
+              "offset": 1111,
+              "line": 63,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "payment_method",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1114,
+              "line": 64,
+              "column": 3
+            },
+            "end": {
+              "offset": 1136,
+              "line": 64,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 974,
+          "line": 58,
+          "column": 1
+        },
+        "end": {
+          "offset": 1195,
+          "line": 70,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: raw\nGrain: 1 row per order\n",
+        "token": {
+          "start": {
+            "offset": 1140,
+            "line": 66,
+            "column": 3
+          },
+          "end": {
+            "offset": 1193,
+            "line": 69,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "order_items",
+      "schemaName": "raw",
+      "alias": null,
+      "fields": [
+        {
+          "name": "order_item_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1223,
+              "line": 73,
+              "column": 3
+            },
+            "end": {
+              "offset": 1245,
+              "line": 73,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "order_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1248,
+              "line": 74,
+              "column": 3
+            },
+            "end": {
+              "offset": 1265,
+              "line": 74,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "product_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1268,
+              "line": 75,
+              "column": 3
+            },
+            "end": {
+              "offset": 1285,
+              "line": 75,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1288,
+              "line": 76,
+              "column": 3
+            },
+            "end": {
+              "offset": 1309,
+              "line": 76,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "unit_price",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1312,
+              "line": 77,
+              "column": 3
+            },
+            "end": {
+              "offset": 1333,
+              "line": 77,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1197,
+          "line": 72,
+          "column": 1
+        },
+        "end": {
+          "offset": 1470,
+          "line": 83,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: raw\nGrain: 1 row per order item (product in an order)\n",
+        "token": {
+          "start": {
+            "offset": 1388,
+            "line": 79,
+            "column": 3
+          },
+          "end": {
+            "offset": 1468,
+            "line": 82,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "stg_raw__users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1866,
+              "line": 96,
+              "column": 3
+            },
+            "end": {
+              "offset": 1888,
+              "line": 96,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "user_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1891,
+              "line": 97,
+              "column": 3
+            },
+            "end": {
+              "offset": 1912,
+              "line": 97,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1915,
+              "line": 98,
+              "column": 3
+            },
+            "end": {
+              "offset": 1936,
+              "line": 98,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 1939,
+              "line": 99,
+              "column": 3
+            },
+            "end": {
+              "offset": 1962,
+              "line": 99,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 1841,
+          "line": 95,
+          "column": 1
+        },
+        "end": {
+          "offset": 2100,
+          "line": 107,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: staging\nGrain: 1 row per user\nUpstream: raw.users\nPurpose: cleaned, renamed columns, consistent types\n",
+        "token": {
+          "start": {
+            "offset": 1966,
+            "line": 101,
+            "column": 3
+          },
+          "end": {
+            "offset": 2098,
+            "line": 106,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "stg_raw__products",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "product_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2130,
+              "line": 110,
+              "column": 3
+            },
+            "end": {
+              "offset": 2154,
+              "line": 110,
+              "column": 27
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "product_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2157,
+              "line": 111,
+              "column": 3
+            },
+            "end": {
+              "offset": 2180,
+              "line": 111,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "unit_price",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2183,
+              "line": 112,
+              "column": 3
+            },
+            "end": {
+              "offset": 2206,
+              "line": 112,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "unit_of_measure",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2209,
+              "line": 113,
+              "column": 3
+            },
+            "end": {
+              "offset": 2232,
+              "line": 113,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 2102,
+          "line": 109,
+          "column": 1
+        },
+        "end": {
+          "offset": 2322,
+          "line": 120,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: staging\nGrain: 1 row per product\nUpstream: raw.products\n",
+        "token": {
+          "start": {
+            "offset": 2236,
+            "line": 115,
+            "column": 3
+          },
+          "end": {
+            "offset": 2320,
+            "line": 119,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "stg_raw__orders",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2350,
+              "line": 123,
+              "column": 3
+            },
+            "end": {
+              "offset": 2374,
+              "line": 123,
+              "column": 27
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2377,
+              "line": 124,
+              "column": 3
+            },
+            "end": {
+              "offset": 2396,
+              "line": 124,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "order_ts",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2399,
+              "line": 125,
+              "column": 3
+            },
+            "end": {
+              "offset": 2424,
+              "line": 125,
+              "column": 28
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "order_date",
+          "type": {
+            "schemaName": null,
+            "type_name": "date",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2427,
+              "line": 126,
+              "column": 3
+            },
+            "end": {
+              "offset": 2447,
+              "line": 126,
+              "column": 23
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "status",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2450,
+              "line": 127,
+              "column": 3
+            },
+            "end": {
+              "offset": 2473,
+              "line": 127,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "channel",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2476,
+              "line": 128,
+              "column": 3
+            },
+            "end": {
+              "offset": 2499,
+              "line": 128,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "payment_method",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2502,
+              "line": 129,
+              "column": 3
+            },
+            "end": {
+              "offset": 2525,
+              "line": 129,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 2324,
+          "line": 122,
+          "column": 1
+        },
+        "end": {
+          "offset": 2667,
+          "line": 137,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: staging\nGrain: 1 row per order\nUpstream: raw.orders\nDerivations: order_date = date_trunc('day', order_ts)\n",
+        "token": {
+          "start": {
+            "offset": 2529,
+            "line": 131,
+            "column": 3
+          },
+          "end": {
+            "offset": 2665,
+            "line": 136,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "stg_raw__order_items",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "order_item_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2700,
+              "line": 140,
+              "column": 3
+            },
+            "end": {
+              "offset": 2724,
+              "line": 140,
+              "column": 27
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "order_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2727,
+              "line": 141,
+              "column": 3
+            },
+            "end": {
+              "offset": 2746,
+              "line": 141,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "product_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2749,
+              "line": 142,
+              "column": 3
+            },
+            "end": {
+              "offset": 2768,
+              "line": 142,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2771,
+              "line": 143,
+              "column": 3
+            },
+            "end": {
+              "offset": 2794,
+              "line": 143,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "unit_price",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 2797,
+              "line": 144,
+              "column": 3
+            },
+            "end": {
+              "offset": 2820,
+              "line": 144,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 2669,
+          "line": 139,
+          "column": 1
+        },
+        "end": {
+          "offset": 2916,
+          "line": 151,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: staging\nGrain: 1 row per order item\nUpstream: raw.order_items\n",
+        "token": {
+          "start": {
+            "offset": 2824,
+            "line": 146,
+            "column": 3
+          },
+          "end": {
+            "offset": 2914,
+            "line": 150,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "int_order_items_enriched",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "order_item_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3591,
+              "line": 171,
+              "column": 3
+            },
+            "end": {
+              "offset": 3615,
+              "line": 171,
+              "column": 27
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "order_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3618,
+              "line": 172,
+              "column": 3
+            },
+            "end": {
+              "offset": 3637,
+              "line": 172,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "product_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3640,
+              "line": 173,
+              "column": 3
+            },
+            "end": {
+              "offset": 3659,
+              "line": 173,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3662,
+              "line": 174,
+              "column": 3
+            },
+            "end": {
+              "offset": 3681,
+              "line": 174,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "order_date",
+          "type": {
+            "schemaName": null,
+            "type_name": "date",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3696,
+              "line": 177,
+              "column": 3
+            },
+            "end": {
+              "offset": 3716,
+              "line": 177,
+              "column": 23
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "product_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3739,
+              "line": 180,
+              "column": 3
+            },
+            "end": {
+              "offset": 3762,
+              "line": 180,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "unit_of_measure",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3765,
+              "line": 181,
+              "column": 3
+            },
+            "end": {
+              "offset": 3788,
+              "line": 181,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3806,
+              "line": 184,
+              "column": 3
+            },
+            "end": {
+              "offset": 3833,
+              "line": 184,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "unit_price_at_sale",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3836,
+              "line": 185,
+              "column": 3
+            },
+            "end": {
+              "offset": 3863,
+              "line": 185,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "extended_amount",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3866,
+              "line": 186,
+              "column": 3
+            },
+            "end": {
+              "offset": 3893,
+              "line": 186,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "status",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3949,
+              "line": 189,
+              "column": 3
+            },
+            "end": {
+              "offset": 3976,
+              "line": 189,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "channel",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 3979,
+              "line": 190,
+              "column": 3
+            },
+            "end": {
+              "offset": 4006,
+              "line": 190,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "payment_method",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 4009,
+              "line": 191,
+              "column": 3
+            },
+            "end": {
+              "offset": 4036,
+              "line": 191,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 3537,
+          "line": 169,
+          "column": 1
+        },
+        "end": {
+          "offset": 4289,
+          "line": 199,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: intermediate\nGrain: 1 row per order item (product in an order)\nUpstream: stg_raw__order_items, stg_raw__orders, stg_raw__products, stg_raw__users\nPurpose: central \"sales row\" with joined context & calculated measures\n",
+        "token": {
+          "start": {
+            "offset": 4040,
+            "line": 193,
+            "column": 3
+          },
+          "end": {
+            "offset": 4287,
+            "line": 198,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "dim_date",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "date_key",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5525,
+              "line": 222,
+              "column": 3
+            },
+            "end": {
+              "offset": 5547,
+              "line": 222,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "full_date",
+          "type": {
+            "schemaName": null,
+            "type_name": "date",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5574,
+              "line": 223,
+              "column": 3
+            },
+            "end": {
+              "offset": 5592,
+              "line": 223,
+              "column": 21
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "day_of_week",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5595,
+              "line": 224,
+              "column": 3
+            },
+            "end": {
+              "offset": 5612,
+              "line": 224,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "day_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5615,
+              "line": 225,
+              "column": 3
+            },
+            "end": {
+              "offset": 5636,
+              "line": 225,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "month",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5639,
+              "line": 226,
+              "column": 3
+            },
+            "end": {
+              "offset": 5656,
+              "line": 226,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "month_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5659,
+              "line": 227,
+              "column": 3
+            },
+            "end": {
+              "offset": 5680,
+              "line": 227,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "quarter",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5683,
+              "line": 228,
+              "column": 3
+            },
+            "end": {
+              "offset": 5700,
+              "line": 228,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "year",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5703,
+              "line": 229,
+              "column": 3
+            },
+            "end": {
+              "offset": 5720,
+              "line": 229,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 5506,
+          "line": 221,
+          "column": 1
+        },
+        "end": {
+          "offset": 5830,
+          "line": 236,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: mart (dimension)\nGrain: 1 row per calendar date\nUpstream: generated or seed\n",
+        "token": {
+          "start": {
+            "offset": 5724,
+            "line": 231,
+            "column": 3
+          },
+          "end": {
+            "offset": 5828,
+            "line": 235,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "dim_customer",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "customer_key",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5855,
+              "line": 239,
+              "column": 3
+            },
+            "end": {
+              "offset": 5881,
+              "line": 239,
+              "column": 29
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "customer_id_src",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5884,
+              "line": 240,
+              "column": 3
+            },
+            "end": {
+              "offset": 5905,
+              "line": 240,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "customer_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5939,
+              "line": 241,
+              "column": 3
+            },
+            "end": {
+              "offset": 5964,
+              "line": 241,
+              "column": 28
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5967,
+              "line": 242,
+              "column": 3
+            },
+            "end": {
+              "offset": 5992,
+              "line": 242,
+              "column": 28
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "join_date_key",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 5995,
+              "line": 243,
+              "column": 3
+            },
+            "end": {
+              "offset": 6016,
+              "line": 243,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 5832,
+          "line": 238,
+          "column": 1
+        },
+        "end": {
+          "offset": 6153,
+          "line": 250,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: mart (dimension)\nGrain: 1 row per customer\nUpstream: stg_raw__users\n",
+        "token": {
+          "start": {
+            "offset": 6055,
+            "line": 245,
+            "column": 3
+          },
+          "end": {
+            "offset": 6151,
+            "line": 249,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "dim_product",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "product_key",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 6177,
+              "line": 253,
+              "column": 3
+            },
+            "end": {
+              "offset": 6203,
+              "line": 253,
+              "column": 29
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "product_id_src",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 6206,
+              "line": 254,
+              "column": 3
+            },
+            "end": {
+              "offset": 6227,
+              "line": 254,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "product_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 6230,
+              "line": 255,
+              "column": 3
+            },
+            "end": {
+              "offset": 6255,
+              "line": 255,
+              "column": 28
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "unit_of_measure",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 6258,
+              "line": 256,
+              "column": 3
+            },
+            "end": {
+              "offset": 6283,
+              "line": 256,
+              "column": 28
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "current_list_price",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 6286,
+              "line": 257,
+              "column": 3
+            },
+            "end": {
+              "offset": 6312,
+              "line": 257,
+              "column": 29
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 6155,
+          "line": 252,
+          "column": 1
+        },
+        "end": {
+          "offset": 6424,
+          "line": 264,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: mart (dimension)\nGrain: 1 row per product (fruit)\nUpstream: stg_raw__products\n",
+        "token": {
+          "start": {
+            "offset": 6316,
+            "line": 259,
+            "column": 3
+          },
+          "end": {
+            "offset": 6422,
+            "line": 263,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "dim_order",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "order_key",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 6446,
+              "line": 267,
+              "column": 3
+            },
+            "end": {
+              "offset": 6472,
+              "line": 267,
+              "column": 29
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "order_id_src",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 6475,
+              "line": 268,
+              "column": 3
+            },
+            "end": {
+              "offset": 6496,
+              "line": 268,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "status",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 6499,
+              "line": 269,
+              "column": 3
+            },
+            "end": {
+              "offset": 6524,
+              "line": 269,
+              "column": 28
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "channel",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 6527,
+              "line": 270,
+              "column": 3
+            },
+            "end": {
+              "offset": 6552,
+              "line": 270,
+              "column": 28
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "payment_method",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 6555,
+              "line": 271,
+              "column": 3
+            },
+            "end": {
+              "offset": 6580,
+              "line": 271,
+              "column": 28
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 6426,
+          "line": 266,
+          "column": 1
+        },
+        "end": {
+          "offset": 6680,
+          "line": 278,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: mart (dimension)\nGrain: 1 row per order\nUpstream: stg_raw__orders\n",
+        "token": {
+          "start": {
+            "offset": 6584,
+            "line": 273,
+            "column": 3
+          },
+          "end": {
+            "offset": 6678,
+            "line": 277,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "fct_order_item",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "fact_order_item_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7395,
+              "line": 298,
+              "column": 3
+            },
+            "end": {
+              "offset": 7422,
+              "line": 298,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "date_key",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7435,
+              "line": 301,
+              "column": 3
+            },
+            "end": {
+              "offset": 7454,
+              "line": 301,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "customer_key",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7457,
+              "line": 302,
+              "column": 3
+            },
+            "end": {
+              "offset": 7476,
+              "line": 302,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "product_key",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7479,
+              "line": 303,
+              "column": 3
+            },
+            "end": {
+              "offset": 7498,
+              "line": 303,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "order_key",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7501,
+              "line": 304,
+              "column": 3
+            },
+            "end": {
+              "offset": 7520,
+              "line": 304,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "order_item_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7570,
+              "line": 307,
+              "column": 3
+            },
+            "end": {
+              "offset": 7589,
+              "line": 307,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "order_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7592,
+              "line": 308,
+              "column": 3
+            },
+            "end": {
+              "offset": 7611,
+              "line": 308,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "product_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7614,
+              "line": 309,
+              "column": 3
+            },
+            "end": {
+              "offset": 7633,
+              "line": 309,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7636,
+              "line": 310,
+              "column": 3
+            },
+            "end": {
+              "offset": 7655,
+              "line": 310,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7673,
+              "line": 313,
+              "column": 3
+            },
+            "end": {
+              "offset": 7700,
+              "line": 313,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "unit_price_at_sale",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7703,
+              "line": 314,
+              "column": 3
+            },
+            "end": {
+              "offset": 7730,
+              "line": 314,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "extended_amount",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 7733,
+              "line": 315,
+              "column": 3
+            },
+            "end": {
+              "offset": 7760,
+              "line": 315,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 7341,
+          "line": 296,
+          "column": 1
+        },
+        "end": {
+          "offset": 7983,
+          "line": 323,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: mart (fact)\nGrain: 1 row per order item (product in an order)\nUpstream: int_order_items_enriched + dimensions for keys\nTypical queries: daily revenue, product performance, customer value\n",
+        "token": {
+          "start": {
+            "offset": 7764,
+            "line": 317,
+            "column": 3
+          },
+          "end": {
+            "offset": 7981,
+            "line": 322,
+            "column": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "fct_daily_sales",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "date_key",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 9494,
+              "line": 357,
+              "column": 3
+            },
+            "end": {
+              "offset": 9511,
+              "line": 357,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "product_key",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 9514,
+              "line": 358,
+              "column": 3
+            },
+            "end": {
+              "offset": 9531,
+              "line": 358,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "total_quantity",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 9534,
+              "line": 359,
+              "column": 3
+            },
+            "end": {
+              "offset": 9556,
+              "line": 359,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "total_revenue",
+          "type": {
+            "schemaName": null,
+            "type_name": "numeric",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 9559,
+              "line": 360,
+              "column": 3
+            },
+            "end": {
+              "offset": 9581,
+              "line": 360,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 9430,
+          "line": 355,
+          "column": 1
+        },
+        "end": {
+          "offset": 9695,
+          "line": 367,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "note": {
+        "value": "Layer: mart (aggregate fact)\nGrain: 1 row per (date, product)\nUpstream: fct_order_item\n",
+        "token": {
+          "start": {
+            "offset": 9585,
+            "line": 362,
+            "column": 3
+          },
+          "end": {
+            "offset": 9693,
+            "line": 366,
+            "column": 6
+          }
+        }
+      }
+    }
+  ],
+  "notes": [],
+  "refs": [
+    {
+      "token": {
+        "start": {
+          "offset": 1521,
+          "line": 86,
+          "column": 1
+        },
+        "end": {
+          "offset": 1564,
+          "line": 86,
+          "column": 44
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "user_id"
+          ],
+          "tableName": "orders",
+          "schemaName": "raw",
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 1526,
+              "line": 86,
+              "column": 6
+            },
+            "end": {
+              "offset": 1544,
+              "line": 86,
+              "column": 24
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "user_id"
+          ],
+          "tableName": "users",
+          "schemaName": "raw",
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1547,
+              "line": 86,
+              "column": 27
+            },
+            "end": {
+              "offset": 1564,
+              "line": 86,
+              "column": 44
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 1565,
+          "line": 87,
+          "column": 1
+        },
+        "end": {
+          "offset": 1616,
+          "line": 87,
+          "column": 52
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "order_id"
+          ],
+          "tableName": "order_items",
+          "schemaName": "raw",
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 1570,
+              "line": 87,
+              "column": 6
+            },
+            "end": {
+              "offset": 1594,
+              "line": 87,
+              "column": 30
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "order_id"
+          ],
+          "tableName": "orders",
+          "schemaName": "raw",
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1597,
+              "line": 87,
+              "column": 33
+            },
+            "end": {
+              "offset": 1616,
+              "line": 87,
+              "column": 52
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 1617,
+          "line": 88,
+          "column": 1
+        },
+        "end": {
+          "offset": 1674,
+          "line": 88,
+          "column": 58
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "product_id"
+          ],
+          "tableName": "order_items",
+          "schemaName": "raw",
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 1622,
+              "line": 88,
+              "column": 6
+            },
+            "end": {
+              "offset": 1648,
+              "line": 88,
+              "column": 32
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "product_id"
+          ],
+          "tableName": "products",
+          "schemaName": "raw",
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 1651,
+              "line": 88,
+              "column": 35
+            },
+            "end": {
+              "offset": 1674,
+              "line": 88,
+              "column": 58
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 2979,
+          "line": 154,
+          "column": 1
+        },
+        "end": {
+          "offset": 3032,
+          "line": 154,
+          "column": 54
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "user_id"
+          ],
+          "tableName": "stg_raw__orders",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 2984,
+              "line": 154,
+              "column": 6
+            },
+            "end": {
+              "offset": 3007,
+              "line": 154,
+              "column": 29
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "user_id"
+          ],
+          "tableName": "stg_raw__users",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 3010,
+              "line": 154,
+              "column": 32
+            },
+            "end": {
+              "offset": 3032,
+              "line": 154,
+              "column": 54
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 3033,
+          "line": 155,
+          "column": 1
+        },
+        "end": {
+          "offset": 3094,
+          "line": 155,
+          "column": 62
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "order_id"
+          ],
+          "tableName": "stg_raw__order_items",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 3038,
+              "line": 155,
+              "column": 6
+            },
+            "end": {
+              "offset": 3067,
+              "line": 155,
+              "column": 35
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "order_id"
+          ],
+          "tableName": "stg_raw__orders",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 3070,
+              "line": 155,
+              "column": 38
+            },
+            "end": {
+              "offset": 3094,
+              "line": 155,
+              "column": 62
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 3095,
+          "line": 156,
+          "column": 1
+        },
+        "end": {
+          "offset": 3162,
+          "line": 156,
+          "column": 68
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "product_id"
+          ],
+          "tableName": "stg_raw__order_items",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 3100,
+              "line": 156,
+              "column": 6
+            },
+            "end": {
+              "offset": 3131,
+              "line": 156,
+              "column": 37
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "product_id"
+          ],
+          "tableName": "stg_raw__products",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 3134,
+              "line": 156,
+              "column": 40
+            },
+            "end": {
+              "offset": 3162,
+              "line": 156,
+              "column": 68
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 6749,
+          "line": 281,
+          "column": 1
+        },
+        "end": {
+          "offset": 6817,
+          "line": 281,
+          "column": 69
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "customer_id_src"
+          ],
+          "tableName": "dim_customer",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 6754,
+              "line": 281,
+              "column": 6
+            },
+            "end": {
+              "offset": 6782,
+              "line": 281,
+              "column": 34
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "user_id"
+          ],
+          "tableName": "int_order_items_enriched",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 6785,
+              "line": 281,
+              "column": 37
+            },
+            "end": {
+              "offset": 6817,
+              "line": 281,
+              "column": 69
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 6818,
+          "line": 282,
+          "column": 1
+        },
+        "end": {
+          "offset": 6889,
+          "line": 282,
+          "column": 72
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "product_id_src"
+          ],
+          "tableName": "dim_product",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 6823,
+              "line": 282,
+              "column": 6
+            },
+            "end": {
+              "offset": 6849,
+              "line": 282,
+              "column": 32
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "product_id"
+          ],
+          "tableName": "int_order_items_enriched",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 6854,
+              "line": 282,
+              "column": 37
+            },
+            "end": {
+              "offset": 6889,
+              "line": 282,
+              "column": 72
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 6890,
+          "line": 283,
+          "column": 1
+        },
+        "end": {
+          "offset": 6959,
+          "line": 283,
+          "column": 70
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "order_id_src"
+          ],
+          "tableName": "dim_order",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 6895,
+              "line": 283,
+              "column": 6
+            },
+            "end": {
+              "offset": 6917,
+              "line": 283,
+              "column": 28
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "order_id"
+          ],
+          "tableName": "int_order_items_enriched",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 6926,
+              "line": 283,
+              "column": 37
+            },
+            "end": {
+              "offset": 6959,
+              "line": 283,
+              "column": 70
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 8034,
+          "line": 326,
+          "column": 1
+        },
+        "end": {
+          "offset": 8086,
+          "line": 326,
+          "column": 53
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "date_key"
+          ],
+          "tableName": "fct_order_item",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 8039,
+              "line": 326,
+              "column": 6
+            },
+            "end": {
+              "offset": 8062,
+              "line": 326,
+              "column": 29
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "date_key"
+          ],
+          "tableName": "dim_date",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 8069,
+              "line": 326,
+              "column": 36
+            },
+            "end": {
+              "offset": 8086,
+              "line": 326,
+              "column": 53
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 8087,
+          "line": 327,
+          "column": 1
+        },
+        "end": {
+          "offset": 8147,
+          "line": 327,
+          "column": 61
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "customer_key"
+          ],
+          "tableName": "fct_order_item",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 8092,
+              "line": 327,
+              "column": 6
+            },
+            "end": {
+              "offset": 8119,
+              "line": 327,
+              "column": 33
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "customer_key"
+          ],
+          "tableName": "dim_customer",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 8122,
+              "line": 327,
+              "column": 36
+            },
+            "end": {
+              "offset": 8147,
+              "line": 327,
+              "column": 61
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 8148,
+          "line": 328,
+          "column": 1
+        },
+        "end": {
+          "offset": 8206,
+          "line": 328,
+          "column": 59
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "product_key"
+          ],
+          "tableName": "fct_order_item",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 8153,
+              "line": 328,
+              "column": 6
+            },
+            "end": {
+              "offset": 8179,
+              "line": 328,
+              "column": 32
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "product_key"
+          ],
+          "tableName": "dim_product",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 8183,
+              "line": 328,
+              "column": 36
+            },
+            "end": {
+              "offset": 8206,
+              "line": 328,
+              "column": 59
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 8207,
+          "line": 329,
+          "column": 1
+        },
+        "end": {
+          "offset": 8261,
+          "line": 329,
+          "column": 55
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "order_key"
+          ],
+          "tableName": "fct_order_item",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 8212,
+              "line": 329,
+              "column": 6
+            },
+            "end": {
+              "offset": 8236,
+              "line": 329,
+              "column": 30
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "order_key"
+          ],
+          "tableName": "dim_order",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 8242,
+              "line": 329,
+              "column": 36
+            },
+            "end": {
+              "offset": 8261,
+              "line": 329,
+              "column": 55
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 9697,
+          "line": 369,
+          "column": 1
+        },
+        "end": {
+          "offset": 9748,
+          "line": 369,
+          "column": 52
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "date_key"
+          ],
+          "tableName": "fct_daily_sales",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 9702,
+              "line": 369,
+              "column": 6
+            },
+            "end": {
+              "offset": 9726,
+              "line": 369,
+              "column": 30
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "date_key"
+          ],
+          "tableName": "dim_date",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 9731,
+              "line": 369,
+              "column": 35
+            },
+            "end": {
+              "offset": 9748,
+              "line": 369,
+              "column": 52
+            }
+          }
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 9749,
+          "line": 370,
+          "column": 1
+        },
+        "end": {
+          "offset": 9807,
+          "line": 370,
+          "column": 59
+        }
+      },
+      "name": null,
+      "schemaName": null,
+      "endpoints": [
+        {
+          "fieldNames": [
+            "product_key"
+          ],
+          "tableName": "fct_daily_sales",
+          "schemaName": null,
+          "relation": "*",
+          "token": {
+            "start": {
+              "offset": 9754,
+              "line": 370,
+              "column": 6
+            },
+            "end": {
+              "offset": 9781,
+              "line": 370,
+              "column": 33
+            }
+          }
+        },
+        {
+          "fieldNames": [
+            "product_key"
+          ],
+          "tableName": "dim_product",
+          "schemaName": null,
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 9784,
+              "line": 370,
+              "column": 36
+            },
+            "end": {
+              "offset": 9807,
+              "line": 370,
+              "column": 59
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [
+    {
+      "tables": [
+        {
+          "name": "users",
+          "schemaName": "raw"
+        },
+        {
+          "name": "products",
+          "schemaName": "raw"
+        },
+        {
+          "name": "order_items",
+          "schemaName": "raw"
+        },
+        {
+          "name": "orders",
+          "schemaName": "raw"
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 93,
+          "line": 6,
+          "column": 2
+        }
+      },
+      "name": "raw",
+      "schemaName": null,
+      "color": "#CA4242"
+    },
+    {
+      "tables": [
+        {
+          "name": "stg_raw__order_items",
+          "schemaName": ""
+        },
+        {
+          "name": "stg_raw__orders",
+          "schemaName": ""
+        },
+        {
+          "name": "stg_raw__products",
+          "schemaName": ""
+        },
+        {
+          "name": "stg_raw__users",
+          "schemaName": ""
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 95,
+          "line": 8,
+          "column": 1
+        },
+        "end": {
+          "offset": 212,
+          "line": 13,
+          "column": 2
+        }
+      },
+      "name": "staging",
+      "schemaName": null,
+      "color": "#2D6512"
+    },
+    {
+      "tables": [
+        {
+          "name": "dim_customer",
+          "schemaName": ""
+        },
+        {
+          "name": "dim_product",
+          "schemaName": ""
+        },
+        {
+          "name": "dim_date",
+          "schemaName": ""
+        },
+        {
+          "name": "dim_order",
+          "schemaName": ""
+        },
+        {
+          "name": "fct_order_item",
+          "schemaName": ""
+        },
+        {
+          "name": "fct_daily_sales",
+          "schemaName": ""
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 214,
+          "line": 15,
+          "column": 1
+        },
+        "end": {
+          "offset": 320,
+          "line": 22,
+          "column": 2
+        }
+      },
+      "name": "mart",
+      "schemaName": null
+    },
+    {
+      "tables": [
+        {
+          "name": "int_order_items_enriched",
+          "schemaName": ""
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 322,
+          "line": 24,
+          "column": 1
+        },
+        "end": {
+          "offset": 392,
+          "line": 26,
+          "column": 2
+        }
+      },
+      "name": "integration",
+      "schemaName": null,
+      "color": "#24BAB1"
+    }
+  ],
+  "aliases": [],
+  "project": {},
+  "tablePartials": [],
+  "deps": [
+    {
+      "token": {
+        "start": {
+          "offset": 3199,
+          "line": 159,
+          "column": 1
+        },
+        "end": {
+          "offset": 3236,
+          "line": 159,
+          "column": 38
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "user_id",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "user_id"
+            }
+          ]
+        },
+        {
+          "downstreamField": "user_name",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "email",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "email"
+            }
+          ]
+        },
+        {
+          "downstreamField": "created_at",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "created_at"
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "stg_raw__users"
+      },
+      "upstreamTables": [
+        {
+          "table": "users",
+          "schema": "raw"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 3237,
+          "line": 160,
+          "column": 1
+        },
+        "end": {
+          "offset": 3277,
+          "line": 160,
+          "column": 41
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "product_id",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "product_id"
+            }
+          ]
+        },
+        {
+          "downstreamField": "product_name",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "product_name"
+            }
+          ]
+        },
+        {
+          "downstreamField": "unit_price",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "unit_price"
+            }
+          ]
+        },
+        {
+          "downstreamField": "unit_of_measure",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "unit_of_measure"
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "stg_raw__products"
+      },
+      "upstreamTables": [
+        {
+          "table": "products",
+          "schema": "raw"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 3278,
+          "line": 161,
+          "column": 1
+        },
+        "end": {
+          "offset": 3316,
+          "line": 161,
+          "column": 39
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "order_id",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "order_id"
+            }
+          ]
+        },
+        {
+          "downstreamField": "user_id",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "user_id"
+            }
+          ]
+        },
+        {
+          "downstreamField": "order_ts",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "order_ts"
+            }
+          ]
+        },
+        {
+          "downstreamField": "order_date",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "status",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "status"
+            }
+          ]
+        },
+        {
+          "downstreamField": "channel",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "channel"
+            }
+          ]
+        },
+        {
+          "downstreamField": "payment_method",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "payment_method"
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "stg_raw__orders"
+      },
+      "upstreamTables": [
+        {
+          "table": "orders",
+          "schema": "raw"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 3317,
+          "line": 162,
+          "column": 1
+        },
+        "end": {
+          "offset": 3360,
+          "line": 162,
+          "column": 44
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "order_item_id",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "order_item_id"
+            }
+          ]
+        },
+        {
+          "downstreamField": "order_id",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "order_id"
+            }
+          ]
+        },
+        {
+          "downstreamField": "product_id",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "product_id"
+            }
+          ]
+        },
+        {
+          "downstreamField": "quantity",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "quantity"
+            }
+          ]
+        },
+        {
+          "downstreamField": "unit_price",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "unit_price"
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "stg_raw__order_items"
+      },
+      "upstreamTables": [
+        {
+          "table": "order_items",
+          "schema": "raw"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 4337,
+          "line": 202,
+          "column": 1
+        },
+        "end": {
+          "offset": 5325,
+          "line": 214,
+          "column": 4
+        }
+      },
+      "name": "int_order_items_enriched_base",
+      "fieldDeps": [
+        {
+          "downstreamField": "order_id",
+          "upstreamFields": [
+            {
+              "field": "order_id",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "product_id",
+          "upstreamFields": [
+            {
+              "field": "product_id",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "user_id",
+          "upstreamFields": [
+            {
+              "field": "user_id",
+              "ownerTableIdx": 1
+            }
+          ]
+        },
+        {
+          "downstreamField": "order_date",
+          "upstreamFields": [
+            {
+              "field": "order_date",
+              "ownerTableIdx": 1
+            }
+          ]
+        },
+        {
+          "downstreamField": "product_name",
+          "upstreamFields": [
+            {
+              "field": "product_name",
+              "ownerTableIdx": 3
+            }
+          ]
+        },
+        {
+          "downstreamField": "quantity",
+          "upstreamFields": [
+            {
+              "field": "quantity",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "unit_price_at_sale",
+          "upstreamFields": [
+            {
+              "field": "unit_price",
+              "ownerTableIdx": 0
+            },
+            {
+              "field": "unit_price",
+              "ownerTableIdx": 3
+            }
+          ]
+        },
+        {
+          "downstreamField": "extended_amount",
+          "upstreamFields": [
+            {
+              "field": "quantity",
+              "ownerTableIdx": 2
+            },
+            {
+              "field": "unit_price_at_sale",
+              "ownerTableIdx": 2
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "int_order_items_enriched"
+      },
+      "upstreamTables": [
+        {
+          "table": "stg_raw__order_items"
+        },
+        {
+          "table": "stg_raw__orders"
+        },
+        {
+          "table": "int_order_items_enriched"
+        },
+        {
+          "table": "stg_raw__products"
+        },
+        {
+          "table": "stg_raw__users"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 6982,
+          "line": 286,
+          "column": 1
+        },
+        "end": {
+          "offset": 7016,
+          "line": 286,
+          "column": 35
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "customer_key",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "customer_id_src",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "customer_name",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "email",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "email"
+            }
+          ]
+        },
+        {
+          "downstreamField": "join_date_key",
+          "upstreamFields": []
+        }
+      ],
+      "downstreamTable": {
+        "table": "dim_customer"
+      },
+      "upstreamTables": [
+        {
+          "table": "stg_raw__users"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 7017,
+          "line": 287,
+          "column": 1
+        },
+        "end": {
+          "offset": 7054,
+          "line": 287,
+          "column": 38
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "product_key",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "product_id_src",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "product_name",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "product_name"
+            }
+          ]
+        },
+        {
+          "downstreamField": "unit_of_measure",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "unit_of_measure"
+            }
+          ]
+        },
+        {
+          "downstreamField": "current_list_price",
+          "upstreamFields": []
+        }
+      ],
+      "downstreamTable": {
+        "table": "dim_product"
+      },
+      "upstreamTables": [
+        {
+          "table": "stg_raw__products"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 7055,
+          "line": 288,
+          "column": 1
+        },
+        "end": {
+          "offset": 7090,
+          "line": 288,
+          "column": 36
+        }
+      },
+      "fieldDeps": [
+        {
+          "downstreamField": "order_key",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "order_id_src",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "status",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "status"
+            }
+          ]
+        },
+        {
+          "downstreamField": "channel",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "channel"
+            }
+          ]
+        },
+        {
+          "downstreamField": "payment_method",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "payment_method"
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "dim_order"
+      },
+      "upstreamTables": [
+        {
+          "table": "stg_raw__orders"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 8317,
+          "line": 332,
+          "column": 1
+        },
+        "end": {
+          "offset": 9287,
+          "line": 348,
+          "column": 4
+        }
+      },
+      "name": "fct_order_item_build",
+      "fieldDeps": [
+        {
+          "downstreamField": "order_item_id",
+          "upstreamFields": [
+            {
+              "field": "order_item_id",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "order_id",
+          "upstreamFields": [
+            {
+              "field": "order_id",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "product_id",
+          "upstreamFields": [
+            {
+              "field": "product_id",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "user_id",
+          "upstreamFields": [
+            {
+              "field": "user_id",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "quantity",
+          "upstreamFields": [
+            {
+              "field": "quantity",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "unit_price_at_sale",
+          "upstreamFields": [
+            {
+              "field": "unit_price_at_sale",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "extended_amount",
+          "upstreamFields": [
+            {
+              "field": "extended_amount",
+              "ownerTableIdx": 0
+            }
+          ]
+        },
+        {
+          "downstreamField": "date_key",
+          "upstreamFields": [
+            {
+              "field": "date_key",
+              "ownerTableIdx": 1
+            }
+          ]
+        },
+        {
+          "downstreamField": "customer_key",
+          "upstreamFields": [
+            {
+              "field": "customer_key",
+              "ownerTableIdx": 2
+            }
+          ]
+        },
+        {
+          "downstreamField": "product_key",
+          "upstreamFields": [
+            {
+              "field": "product_key",
+              "ownerTableIdx": 3
+            }
+          ]
+        },
+        {
+          "downstreamField": "order_key",
+          "upstreamFields": [
+            {
+              "field": "order_key",
+              "ownerTableIdx": 4
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "fct_order_item"
+      },
+      "upstreamTables": [
+        {
+          "table": "int_order_items_enriched"
+        },
+        {
+          "table": "dim_date"
+        },
+        {
+          "table": "dim_customer"
+        },
+        {
+          "table": "dim_product"
+        },
+        {
+          "table": "dim_order"
+        }
+      ]
+    },
+    {
+      "token": {
+        "start": {
+          "offset": 9809,
+          "line": 372,
+          "column": 1
+        },
+        "end": {
+          "offset": 10075,
+          "line": 376,
+          "column": 4
+        }
+      },
+      "name": "fct_daily_sales_rollup",
+      "fieldDeps": [
+        {
+          "downstreamField": "total_quantity",
+          "upstreamFields": [
+            {
+              "field": "quantity",
+              "ownerTableIdx": 0
+            },
+            {
+              "field": "product_key",
+              "ownerTableIdx": 1
+            }
+          ]
+        },
+        {
+          "downstreamField": "total_revenue",
+          "upstreamFields": [
+            {
+              "field": "extended_amount",
+              "ownerTableIdx": 0
+            },
+            {
+              "field": "product_key",
+              "ownerTableIdx": 1
+            }
+          ]
+        }
+      ],
+      "downstreamTable": {
+        "table": "fct_daily_sales"
+      },
+      "upstreamTables": [
+        {
+          "table": "fct_order_item"
+        },
+        {
+          "table": "dim_product"
+        }
+      ]
+    }
+  ]
+}

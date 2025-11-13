@@ -1130,7 +1130,51 @@
         }
       },
       "name": "name",
-      "fieldDeps": "*",
+      "fieldDeps": [
+        {
+          "downstreamField": "id",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "id"
+            }
+          ]
+        },
+        {
+          "downstreamField": "name",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "age",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "age"
+            }
+          ]
+        },
+        {
+          "downstreamField": "birthday",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "children",
+          "upstreamFields": [
+            {
+              "ownerTableIdx": 0,
+              "field": "children"
+            }
+          ]
+        },
+        {
+          "downstreamField": "amount",
+          "upstreamFields": []
+        },
+        {
+          "downstreamField": "price_each",
+          "upstreamFields": []
+        }
+      ],
       "downstreamTable": {
         "table": "users",
         "schema": "gold"

@@ -1,0 +1,150 @@
+Table "jaffle_shop"."stg_orders" [source: "dbt"] {
+  "order_id" string [unique, not null, note: 'The unique key for each order.']
+  Note: 'Order data with basic cleaning and transformation applied, one row per order.'
+}
+
+Table "jaffle_shop"."stg_products" [source: "dbt"] {
+  "product_id" string [unique, not null, note: 'The unique key for each product.']
+  Note: 'Product (food and drink items that can be ordered) data with basic cleaning and transformation applied, one row per product.'
+}
+
+Table "jaffle_shop"."stg_customers" [source: "dbt"] {
+  "customer_id" string [unique, not null, note: 'The unique key for each customer.']
+  Note: 'Customer data with basic cleaning and transformation applied, one row per customer.'
+}
+
+Table "jaffle_shop"."stg_order_items" [source: "dbt"] {
+  "order_item_id" string [unique, not null, note: 'The unique key for each order item.']
+  "order_id" string [not null, note: 'The corresponding order each order item belongs to']
+  Note: 'Individual food and drink items that make up our orders, one row per item.'
+}
+
+Table "jaffle_shop"."stg_locations" [source: "dbt"] {
+  "location_id" string [unique, not null, note: 'The unique key for each location.']
+  Note: 'List of open locations with basic cleaning and transformation applied, one row per location.'
+}
+
+Table "jaffle_shop"."stg_supplies" [source: "dbt"] {
+  "supply_uuid" string [unique, not null, note: 'The unique key of our supplies per cost.']
+  Note: '''List of our supply expenses data with basic cleaning and transformation applied.
+One row per supply cost, not per supply. As supply costs fluctuate they receive a new row with a new UUID. Thus there can be multiple rows per supply_id.
+'''
+}
+
+Table "jaffle_shop"."supplies" [source: "dbt"] {
+  "supply_uuid" string [note: 'Inferred from SQL']
+}
+
+Table "jaffle_shop"."metricflow_time_spine" [source: "dbt"] {
+  "cast(d.date_day as timestamp)" string [note: 'Inferred from SQL']
+  "cast(date_day as date)" string [note: 'Inferred from SQL']
+}
+
+Table "jaffle_shop"."order_items" [source: "dbt"] {
+  "order_item_id" string [unique, not null]
+  "order_id" string
+}
+
+Table "jaffle_shop"."orders" [source: "dbt"] {
+  "order_id" string [unique, not null, note: 'The unique key of the orders mart.']
+  "customer_id" string [note: 'The foreign key relating to the customer who placed the order.']
+  "order_total" string [note: 'The total amount of the order in USD including tax.']
+  "ordered_at" string [note: 'The timestamp the order was placed at.']
+  "order_cost" string [note: 'The sum of supply expenses to fulfill the order.']
+  "is_food_order" string [note: 'A boolean indicating if this order included any food items.']
+  "is_drink_order" string [note: 'A boolean indicating if this order included any drink items.']
+  Note: '''Order overview data mart, offering key details for each order inlcluding if it\'s a customer\'s first order and a food vs. drink item breakdown. One row per order.'''
+}
+
+Table "jaffle_shop"."customers" [source: "dbt"] {
+  "customer_id" string [unique, not null, note: 'The unique key of the orders mart.']
+  "customer_name" string [note: '''Customers\' full name.''']
+  "count_lifetime_orders" string [note: 'Total number of orders a customer has ever placed.']
+  "first_ordered_at" string [note: 'The timestamp when a customer placed their first order.']
+  "last_ordered_at" string [note: '''The timestamp of a customer\'s most recent order.''']
+  "lifetime_spend_pretax" string [note: 'The sum of all the pre-tax subtotals of every order a customer has placed.']
+  "lifetime_tax_paid" string [note: 'The sum of all the tax portion of every order a customer has placed.']
+  "lifetime_spend" string [note: 'The sum of all the order totals (including tax) that a customer has ever placed.']
+  "customer_type" string [note: '''Options are \'new\' or \'returning\', indicating if a customer has ordered more than once or has only placed their first order to date.''']
+  Note: 'Customer overview data mart, offering key details for each unique customer. One row per customer.'
+}
+
+Table "jaffle_shop"."products" [source: "dbt"] {
+  "product_id" string [note: 'Inferred from SQL']
+}
+
+Table "jaffle_shop"."locations" [source: "dbt"] {
+  "location_id" string [note: 'Inferred from SQL']
+}
+
+Table "raw"."raw_customers" [source: "dbt"] {
+  "__unknown__" string [note: 'Placeholder column - actual schema not available in manifest']
+  Note: 'One record per person who has purchased one or more items'
+}
+
+Table "raw"."raw_orders" [source: "dbt"] {
+  "__unknown__" string [note: 'Placeholder column - actual schema not available in manifest']
+  Note: 'One record per order (consisting of one or more order items)'
+}
+
+Table "raw"."raw_items" [source: "dbt"] {
+  "__unknown__" string [note: 'Placeholder column - actual schema not available in manifest']
+  Note: 'Items included in an order'
+}
+
+Table "raw"."raw_stores" [source: "dbt"] {
+  "__unknown__" string [note: 'Placeholder column - actual schema not available in manifest']
+}
+
+Table "raw"."raw_products" [source: "dbt"] {
+  "__unknown__" string [note: 'Placeholder column - actual schema not available in manifest']
+  Note: 'One record per SKU for items sold in stores'
+}
+
+Table "raw"."raw_supplies" [source: "dbt"] {
+  "__unknown__" string [note: 'Placeholder column - actual schema not available in manifest']
+  Note: 'One record per supply per SKU of items sold in stores'
+}
+
+Ref:"jaffle_shop"."stg_orders"."order_id" < "jaffle_shop"."stg_order_items"."order_id"
+
+Ref:"jaffle_shop"."orders"."order_id" < "jaffle_shop"."order_items"."order_id"
+
+Ref:"jaffle_shop"."stg_customers"."customer_id" < "jaffle_shop"."orders"."customer_id"
+
+Dep "stg_orders_lineage": "jaffle_shop"."stg_orders" < "raw"."raw_orders" [note: 'Auto-generated from model SQL']
+
+Dep "stg_products_lineage": "jaffle_shop"."stg_products" < "raw"."raw_products" [note: 'Auto-generated from model SQL']
+
+Dep "stg_customers_lineage": "jaffle_shop"."stg_customers" < "raw"."raw_customers" [note: 'Auto-generated from model SQL']
+
+Dep "stg_order_items_lineage": "jaffle_shop"."stg_order_items" < "raw"."raw_items" [note: 'Auto-generated from model SQL']
+
+Dep "stg_locations_lineage": "jaffle_shop"."stg_locations" < "raw"."raw_stores" [note: 'Auto-generated from model SQL']
+
+Dep "stg_supplies_lineage": "jaffle_shop"."stg_supplies" < "raw"."raw_supplies" [note: 'Auto-generated from model SQL']
+
+Dep "supplies_lineage": "jaffle_shop"."supplies" < "jaffle_shop"."stg_supplies" [note: 'Auto-generated from model SQL'] {
+  "jaffle_shop"."supplies"."supply_uuid" < ("jaffle_shop"."stg_supplies"."supply_uuid", "jaffle_shop"."stg_supplies"."supply_uuid")
+ }
+
+Dep "order_items_lineage": "jaffle_shop"."order_items" < ("jaffle_shop"."stg_order_items", "jaffle_shop"."stg_orders", "jaffle_shop"."stg_products", "jaffle_shop"."stg_supplies") [note: 'Auto-generated from model SQL'] {
+  "jaffle_shop"."order_items"."order_item_id" < "jaffle_shop"."stg_order_items"."order_item_id"
+  "jaffle_shop"."order_items"."order_id" < ("jaffle_shop"."stg_order_items"."order_id", "jaffle_shop"."stg_orders"."order_id")
+ }
+
+Dep "orders_lineage": "jaffle_shop"."orders" < ("jaffle_shop"."stg_orders", "jaffle_shop"."order_items") [note: 'Auto-generated from model SQL'] {
+  "jaffle_shop"."orders"."order_id" < ("jaffle_shop"."stg_orders"."order_id", "jaffle_shop"."order_items"."order_id")
+ }
+
+Dep "customers_lineage": "jaffle_shop"."customers" < ("jaffle_shop"."stg_customers", "jaffle_shop"."orders") [note: 'Auto-generated from model SQL'] {
+  "jaffle_shop"."customers"."customer_id" < ("jaffle_shop"."stg_customers"."customer_id", "jaffle_shop"."orders"."customer_id")
+ }
+
+Dep "products_lineage": "jaffle_shop"."products" < "jaffle_shop"."stg_products" [note: 'Auto-generated from model SQL'] {
+  "jaffle_shop"."products"."product_id" < ("jaffle_shop"."stg_products"."product_id", "jaffle_shop"."stg_products"."product_id")
+ }
+
+Dep "locations_lineage": "jaffle_shop"."locations" < "jaffle_shop"."stg_locations" [note: 'Auto-generated from model SQL'] {
+  "jaffle_shop"."locations"."location_id" < ("jaffle_shop"."stg_locations"."location_id", "jaffle_shop"."stg_locations"."location_id")
+ }

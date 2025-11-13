@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "adapter_type": "postgres"
+  },
+  "nodes": {
+    "model.my_project.customers": {
+      "resource_type": "model",
+      "name": "customers",
+      "schema": "public",
+      "database": "my_db",
+      "columns": {
+        "id": {
+          "name": "id",
+          "data_type": "integer",
+          "description": "Customer ID"
+        },
+        "name": {
+          "name": "name",
+          "data_type": "varchar",
+          "description": "Customer name"
+        },
+        "email": {
+          "name": "email",
+          "data_type": "varchar"
+        },
+        "country_id": {
+          "name": "country_id",
+          "data_type": "integer",
+          "description": "Reference to countries table"
+        }
+      },
+      "description": "Customer information",
+      "tags": ["pii", "core"],
+      "meta": {
+        "owner": "analytics_team"
+      },
+      "compiled_code": "CREATE TABLE customers (id INTEGER, name VARCHAR, email VARCHAR, country_id INTEGER)"
+    },
+    "model.my_project.countries": {
+      "resource_type": "model",
+      "name": "countries",
+      "schema": "public",
+      "database": "my_db",
+      "columns": {
+        "id": {
+          "name": "id",
+          "data_type": "integer",
+          "description": "Country ID"
+        },
+        "name": {
+          "name": "name",
+          "data_type": "varchar",
+          "description": "Country name"
+        }
+      },
+      "description": "Country reference data",
+      "compiled_code": "CREATE TABLE countries (id INTEGER PRIMARY KEY, name VARCHAR NOT NULL)"
+    },
+    "test.my_project.customers_id_not_null": {
+      "resource_type": "test",
+      "name": "customers_id_not_null",
+      "column_name": "id",
+      "test_metadata": {
+        "name": "not_null"
+      },
+      "depends_on": {
+        "nodes": ["model.my_project.customers"]
+      }
+    },
+    "test.my_project.customers_email_unique": {
+      "resource_type": "test",
+      "name": "customers_email_unique",
+      "column_name": "email",
+      "test_metadata": {
+        "name": "unique"
+      },
+      "depends_on": {
+        "nodes": ["model.my_project.customers"]
+      }
+    },
+    "test.my_project.customers_country_id_fk": {
+      "resource_type": "test",
+      "name": "customers_country_id_fk",
+      "column_name": "country_id",
+      "test_metadata": {
+        "name": "relationships",
+        "kwargs": {
+          "to": "ref('countries')",
+          "field": "id"
+        }
+      },
+      "depends_on": {
+        "nodes": ["model.my_project.customers"]
+      }
+    }
+  },
+  "sources": {}
+}

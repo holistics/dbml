@@ -26,6 +26,7 @@ import {
 import { isAccessExpression, isExpressionAVariableNode } from '../../parser/utils';
 import { SettingName } from '../../analyzer/types';
 import { TableSymbol } from '../../analyzer/symbol/symbols';
+import { SymbolKind, destructureIndex } from '../../analyzer/symbol/symbolIndex';
 
 export class DepInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -78,13 +79,28 @@ export class DepInterpreter implements ElementInterpreter {
     if (body.args[0] instanceof BlockExpressionNode) fieldDeps = body.args[0].body.filter((d) => d instanceof FunctionApplicationNode) as FunctionApplicationNode[];
     else if (body.args[1] instanceof BlockExpressionNode) fieldDeps = body.args[1].body.filter((d) => d instanceof FunctionApplicationNode) as FunctionApplicationNode[];
 
-    if (fieldDeps.length === 0) this.dep.fieldDeps = '*';
-    else this.dep.fieldDeps = [];
-    return [
+    this.dep.fieldDeps = [];
+    const errors = [
       ...this.interpretTableDep(tableDep),
       ...this.interpretSettingList(settingList),
       ...fieldDeps.flatMap((d) => this.interpretFieldDep(d)),
     ];
+    if (fieldDeps.length === 0) {
+      [...(this.downstreamTableSymbol?.symbolTable.entries() || [])].forEach(([downstreamIndex]) => {
+        const { kind: downstreamKind, name: downstreamName } = destructureIndex(downstreamIndex).unwrapOr({ kind: undefined, name: undefined });
+        if (downstreamKind !== SymbolKind.Column || downstreamName === undefined) return;
+        const fieldDep: FieldDep = { downstreamField: downstreamName, upstreamFields: [] };
+        this.upstreamTableSymbols.forEach((symbol, idx) => [...(symbol.symbolTable.entries() || [])].forEach(([upstreamIndex]) => {
+          const { kind: upstreamKind, name: upstreamName } = destructureIndex(upstreamIndex).unwrapOr({ kind: undefined, name: undefined });
+          if (upstreamKind !== SymbolKind.Column || upstreamName === undefined) return;
+          if (downstreamName === upstreamName) {
+            fieldDep.upstreamFields.push({ ownerTableIdx: idx, field: upstreamName });
+          }
+        }));
+        this.dep.fieldDeps?.push(fieldDep);
+      });
+    }
+    return errors;
   }
 
   private interpretTableDep (tableDepNode: ExpressionNode): CompileError[] {

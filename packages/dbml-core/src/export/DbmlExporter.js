@@ -391,7 +391,16 @@ class DbmlExporter {
       } = dep;
       const downstreamTable = model.tables[downstreamTableIdx];
       const downstreamSchema = getTableSchema(model, downstreamTable);
-      const upstreamTables = upstreamTableIdxs.map((upstreamTableIdx) => model.tables[upstreamTableIdx]);
+      const upstreamTables = upstreamTableIdxs
+        .map((upstreamTableIdx) => model.tables[upstreamTableIdx])
+        .filter((table) => table !== undefined && table !== null); // Filter out missing tables
+
+      // Skip deps with no valid upstream tables
+      if (upstreamTables.length === 0) {
+        console.warn(`Skipping dependency ${name || 'unnamed'}: no valid upstream tables`);
+        return null;
+      }
+
       let depLines = 'Dep';
       if (name !== undefined) {
         depLines += ` "${name}"`;
@@ -412,7 +421,13 @@ class DbmlExporter {
           upstreamFields: upstreamFieldIdxs,
         } = d;
         const downstreamField = model.fields[downstreamFieldIdx];
-        const upstreamFields = upstreamFieldIdxs.map((idx) => model.fields[idx]);
+        const upstreamFields = upstreamFieldIdxs
+          .map((idx) => model.fields[idx])
+          .filter((f) => f !== undefined && f !== null); // Filter out missing fields
+
+        // Skip field deps with no valid upstream fields
+        if (upstreamFields.length === 0) return;
+
         depLines += `  ${this.getMemberAccessString(downstreamSchema.name, downstreamTable.name, downstreamField.name)} < `;
         depLines += upstreamFields.length === 1
           ? this.getMemberAccessString(
@@ -430,7 +445,7 @@ class DbmlExporter {
       });
       depLines += ' }';
       return depLines;
-    }).join('\n\n');
+    }).filter((depLine) => depLine !== null).join('\n\n'); // Filter out null deps
   }
 
   static export (model) {

@@ -1,4 +1,4 @@
-declare function _import(str: string, format: 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'postgresLegacy' | 'mssqlLegacy'): string;
+declare function _import(str: string, format: 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'postgresLegacy' | 'mssqlLegacy' | 'dbt'): string;
 
 /**
  * @param {any} schemaJson

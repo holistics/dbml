@@ -1,0 +1,376 @@
+TableGroup raw [color: #CA4242] {
+  raw.users
+  raw.products
+  raw.order_items
+  raw.orders
+}
+
+TableGroup staging [color: #2D6512] {
+  stg_raw__order_items
+  stg_raw__orders
+  stg_raw__products
+  stg_raw__users
+}
+
+TableGroup mart {
+  dim_customer
+  dim_product
+  dim_date
+  dim_order
+  fct_order_item
+  fct_daily_sales
+}
+
+TableGroup integration [color: #24BAB1] {
+  int_order_items_enriched
+}
+
+///////////////////////////////////////////////////////
+// RAW LAYER (already loaded in warehouse)
+///////////////////////////////////////////////////////
+
+Table raw.users {
+  user_id       int [pk]
+  full_name     varchar
+  email         varchar
+  created_at    timestamp
+
+  Note: '''
+  Layer: raw
+  Grain: 1 row per user
+  Source: app POS / user system
+  '''
+}
+
+Table raw.products {
+  product_id    int [pk]
+  product_name  varchar
+  unit_price    numeric
+  unit_of_measure varchar
+  created_at    timestamp
+
+  Note: '''
+  Layer: raw
+  Grain: 1 row per product (fruit)
+  '''
+}
+
+Table raw.orders {
+  order_id      int [pk]
+  user_id       int
+  order_ts      timestamp
+  status        varchar
+  channel       varchar
+  payment_method varchar
+
+  Note: '''
+  Layer: raw
+  Grain: 1 row per order
+  '''
+}
+
+Table raw.order_items {
+  order_item_id int [pk]
+  order_id      int
+  product_id    int
+  quantity      numeric
+  unit_price    numeric      // price captured at time of sale, if present
+
+  Note: '''
+  Layer: raw
+  Grain: 1 row per order item (product in an order)
+  '''
+}
+
+// Physical PK/FK relationships in the raw layer
+Ref: raw.orders.user_id > raw.users.user_id
+Ref: raw.order_items.order_id > raw.orders.order_id
+Ref: raw.order_items.product_id > raw.products.product_id
+
+
+///////////////////////////////////////////////////////
+// STAGING LAYER (dbt: models/staging/fruit_shop/)
+///////////////////////////////////////////////////////
+
+Table stg_raw__users {
+  user_id       int [pk]
+  user_name     varchar
+  email         varchar
+  created_at    timestamp
+
+  Note: '''
+  Layer: staging
+  Grain: 1 row per user
+  Upstream: raw.users
+  Purpose: cleaned, renamed columns, consistent types
+  '''
+}
+
+Table stg_raw__products {
+  product_id      int [pk]
+  product_name    varchar
+  unit_price      numeric
+  unit_of_measure varchar
+
+  Note: '''
+  Layer: staging
+  Grain: 1 row per product
+  Upstream: raw.products
+  '''
+}
+
+Table stg_raw__orders {
+  order_id        int [pk]
+  user_id         int
+  order_ts        timestamp
+  order_date      date
+  status          varchar
+  channel         varchar
+  payment_method  varchar
+
+  Note: '''
+  Layer: staging
+  Grain: 1 row per order
+  Upstream: raw.orders
+  Derivations: order_date = date_trunc('day', order_ts)
+  '''
+}
+
+Table stg_raw__order_items {
+  order_item_id   int [pk]
+  order_id        int
+  product_id      int
+  quantity        numeric
+  unit_price      numeric
+
+  Note: '''
+  Layer: staging
+  Grain: 1 row per order item
+  Upstream: raw.order_items
+  '''
+}
+
+// Physical relationships in staging (optional, for diagram)
+Ref: stg_raw__orders.user_id > stg_raw__users.user_id
+Ref: stg_raw__order_items.order_id > stg_raw__orders.order_id
+Ref: stg_raw__order_items.product_id > stg_raw__products.product_id
+
+// Lineage between raw and staging
+Dep: stg_raw__users       < raw.users
+Dep: stg_raw__products    < raw.products
+Dep: stg_raw__orders      < raw.orders
+Dep: stg_raw__order_items < raw.order_items
+
+
+///////////////////////////////////////////////////////
+// INTERMEDIATE LAYER (dbt: models/intermediate/fruit_shop/)
+///////////////////////////////////////////////////////
+
+Table int_order_items_enriched {
+  // business keys
+  order_item_id   int [pk]
+  order_id        int
+  product_id      int
+  user_id         int
+
+  // dates
+  order_date      date
+
+  // product attrs
+  product_name    varchar
+  unit_of_measure varchar
+
+  // measures
+  quantity            numeric
+  unit_price_at_sale  numeric
+  extended_amount     numeric   // quantity * unit_price_at_sale
+
+  // order attrs
+  status              varchar
+  channel             varchar
+  payment_method      varchar
+
+  Note: '''
+  Layer: intermediate
+  Grain: 1 row per order item (product in an order)
+  Upstream: stg_raw__order_items, stg_raw__orders, stg_raw__products, stg_raw__users
+  Purpose: central "sales row" with joined context & calculated measures
+  '''
+}
+
+// Logical lineage for the intermediate model
+Dep int_order_items_enriched_base:
+  int_order_items_enriched < (stg_raw__order_items, stg_raw__orders, int_order_items_enriched, stg_raw__products, stg_raw__users) {
+    int_order_items_enriched.order_id        < (stg_raw__order_items.order_id)
+    int_order_items_enriched.product_id      < (stg_raw__order_items.product_id)
+    int_order_items_enriched.user_id         < (stg_raw__orders.user_id)
+    int_order_items_enriched.order_date      < (stg_raw__orders.order_date)
+    int_order_items_enriched.product_name    < (stg_raw__products.product_name)
+    int_order_items_enriched.quantity        < (stg_raw__order_items.quantity)
+    int_order_items_enriched.unit_price_at_sale < (stg_raw__order_items.unit_price,
+                                                            stg_raw__products.unit_price)
+    int_order_items_enriched.extended_amount < (int_order_items_enriched.quantity,
+                                                int_order_items_enriched.unit_price_at_sale)
+  }
+
+
+///////////////////////////////////////////////////////
+// MARTS – DIMENSIONS (dbt: models/marts/fruit_shop/dimensions/)
+///////////////////////////////////////////////////////
+
+Table dim_date {
+  date_key      int [pk]        // e.g. 20251113
+  full_date     date
+  day_of_week   int
+  day_name      varchar
+  month         int
+  month_name    varchar
+  quarter       int
+  year          int
+
+  Note: '''
+  Layer: mart (dimension)
+  Grain: 1 row per calendar date
+  Upstream: generated or seed
+  '''
+}
+
+Table dim_customer {
+  customer_key      int [pk]
+  customer_id_src   int         // user_id from source
+  customer_name     varchar
+  email             varchar
+  join_date_key     int         // FK to dim_date.date_key
+
+  Note: '''
+  Layer: mart (dimension)
+  Grain: 1 row per customer
+  Upstream: stg_raw__users
+  '''
+}
+
+Table dim_product {
+  product_key       int [pk]
+  product_id_src    int
+  product_name      varchar
+  unit_of_measure   varchar
+  current_list_price numeric
+
+  Note: '''
+  Layer: mart (dimension)
+  Grain: 1 row per product (fruit)
+  Upstream: stg_raw__products
+  '''
+}
+
+Table dim_order {
+  order_key         int [pk]
+  order_id_src      int
+  status            varchar
+  channel           varchar
+  payment_method    varchar
+
+  Note: '''
+  Layer: mart (dimension)
+  Grain: 1 row per order
+  Upstream: stg_raw__orders
+  '''
+}
+
+// Optional FK relationships between dims & int layer (for visual)
+Ref: dim_customer.customer_id_src < int_order_items_enriched.user_id
+Ref: dim_product.product_id_src   < int_order_items_enriched.product_id
+Ref: dim_order.order_id_src       < int_order_items_enriched.order_id
+
+// Dimension lineage
+Dep: dim_customer < stg_raw__users
+Dep: dim_product  < stg_raw__products
+Dep: dim_order    < stg_raw__orders
+// dim_date often comes from a seed or generator: Dep: dim_date < seed_calendar
+
+
+///////////////////////////////////////////////////////
+// MARTS – FACTS (dbt: models/marts/fruit_shop/facts/)
+///////////////////////////////////////////////////////
+
+Table fct_order_item {
+  // surrogate PK (optional)
+  fact_order_item_id int [pk]
+
+  // FKs
+  date_key        int
+  customer_key    int
+  product_key     int
+  order_key       int
+
+  // business keys (optional for convenience)
+  order_item_id   int
+  order_id        int
+  product_id      int
+  user_id         int
+
+  // measures
+  quantity            numeric
+  unit_price_at_sale  numeric
+  extended_amount     numeric
+
+  Note: '''
+  Layer: mart (fact)
+  Grain: 1 row per order item (product in an order)
+  Upstream: int_order_items_enriched + dimensions for keys
+  Typical queries: daily revenue, product performance, customer value
+  '''
+}
+
+// Fact-to-dimension relationships (star schema)
+Ref: fct_order_item.date_key     > dim_date.date_key
+Ref: fct_order_item.customer_key > dim_customer.customer_key
+Ref: fct_order_item.product_key  > dim_product.product_key
+Ref: fct_order_item.order_key    > dim_order.order_key
+
+// Logical lineage from intermediate + dims into fact
+Dep fct_order_item_build:
+  fct_order_item < (int_order_items_enriched, dim_date, dim_customer, dim_product, dim_order) {
+    fct_order_item.order_item_id      < (int_order_items_enriched.order_item_id)
+    fct_order_item.order_id           < (int_order_items_enriched.order_id)
+    fct_order_item.product_id         < (int_order_items_enriched.product_id)
+    fct_order_item.user_id            < (int_order_items_enriched.user_id)
+
+    fct_order_item.quantity           < (int_order_items_enriched.quantity)
+    fct_order_item.unit_price_at_sale < (int_order_items_enriched.unit_price_at_sale)
+    fct_order_item.extended_amount    < (int_order_items_enriched.extended_amount)
+
+    // key lookups (conceptual)
+    fct_order_item.date_key           < (dim_date.date_key)
+    fct_order_item.customer_key       < (dim_customer.customer_key)
+    fct_order_item.product_key        < (dim_product.product_key)
+    fct_order_item.order_key          < (dim_order.order_key)
+  }
+
+
+///////////////////////////////////////////////////////
+// OPTIONAL AGGREGATE MART
+///////////////////////////////////////////////////////
+
+Table fct_daily_sales {
+  // Grain: 1 row per (date, product)
+  date_key      int
+  product_key   int
+  total_quantity numeric
+  total_revenue  numeric
+
+  Note: '''
+  Layer: mart (aggregate fact)
+  Grain: 1 row per (date, product)
+  Upstream: fct_order_item
+  '''
+}
+
+Ref: fct_daily_sales.date_key   > dim_date.date_key
+Ref: fct_daily_sales.product_key > dim_product.product_key
+
+Dep fct_daily_sales_rollup:
+  fct_daily_sales < (fct_order_item, dim_product) {
+    fct_daily_sales.total_quantity < (fct_order_item.quantity, dim_product.product_key)
+    fct_daily_sales.total_revenue  < (fct_order_item.extended_amount, dim_product.product_key)
+  }

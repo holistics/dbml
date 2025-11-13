@@ -7,7 +7,8 @@ declare type ParseFormat = 'json'
     | 'dbml' | 'dbmlv2'
     | 'mssql' | 'mssqlLegacy'
     | 'schemarb'
-    | 'snowflake';
+    | 'snowflake'
+    | 'dbt';
 
 declare class Parser {
     public DBMLCompiler: Compiler;
@@ -23,6 +24,7 @@ declare class Parser {
     static parseMSSQLToJSON(str: string): RawDatabase;
     static parseMSSQLToJSONv2(str: string): RawDatabase;
     static parseSnowflakeToJSON(str: string): RawDatabase;
+    static parseDbtToJSON(str: string): RawDatabase;
     /**
      * Should use parse() instance method instead of this static method whenever possible
      */

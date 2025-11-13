@@ -1,0 +1,31 @@
+Table "orders" [source: "dbt"] {
+  "order_id" bigint [note: 'Primary key']
+  "customer_id" bigint
+  "order_date" date
+  "status" varchar
+  Note: 'Order transactions'
+}
+
+Table "countries" [source: "dbt"] {
+  "code" varchar
+  "name" varchar
+  Note: 'Country reference seed data'
+}
+
+Table "orders_snapshot" [source: "dbt"] {
+  "order_id" bigint
+  "status" varchar
+  "dbt_updated_at" timestamp
+  "dbt_valid_from" timestamp
+  "dbt_valid_to" timestamp
+  Note: '''Historical order data
+
+Snapshot table (strategy: timestamp)'''
+}
+
+Table "users" [source: "dbt"] {
+  "user_id" integer
+  "username" varchar
+  "created_at" timestamp
+  Note: 'Raw user data from production database'
+}

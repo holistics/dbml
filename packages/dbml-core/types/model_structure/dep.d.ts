@@ -24,7 +24,7 @@ interface RawDep {
       }[];
       note?: RawNote;
       name?: string;
-    }[] | '*';
+    }[];
     token: Token;
 }
 
@@ -40,7 +40,7 @@ declare class Dep extends Element {
       note?: string;
       noteToken?: Token;
       name?: string;
-    }[] | '*';
+    }[];
     database: Database;
     dbState: DbState;
     id: number;
@@ -69,7 +69,7 @@ declare class Dep extends Element {
         }[];
         note?: string;
         name?: string;
-      }[] | '*';
+      }[];
     };
     shallowExport():  {
       name?: string;
@@ -91,7 +91,7 @@ declare class Dep extends Element {
         }[];
         note?: string;
         name?: string;
-      }[] | '*';
+      }[];
     };
     normalize(model: NormalizedDatabase): void;
 }
@@ -107,7 +107,7 @@ export interface NormalizedDep {
           upstreamFields: number[];
           note?: string;
           name?: string;
-        }[] | '*';
+        }[];
     };
 }
 

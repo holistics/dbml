@@ -16,6 +16,10 @@ global.getFileExtension = (format) => {
     return 'rb';
   }
 
+  if (format === 'dbt') {
+    return 'json';
+  }
+
   const SQL_FORMATS = ['mysql', 'postgres', 'mssql', 'oracle', 'snowflake'];
   if (SQL_FORMATS.includes(format)) {
     return 'sql';

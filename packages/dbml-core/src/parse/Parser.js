@@ -79,6 +79,10 @@ class Parser {
     return parse(str, 'snowflake');
   }
 
+  static parseDbtToJSON (str) {
+    return parse(str, 'dbt');
+  }
+
   static parse (str, format) {
     return new Parser().parse(str, format);
   }
@@ -125,6 +129,10 @@ class Parser {
 
         case 'mssql':
           rawDatabase = Parser.parseMSSQLToJSONv2(str);
+          break;
+
+        case 'dbt':
+          rawDatabase = Parser.parseDbtToJSON(str);
           break;
 
         case 'json':

@@ -1,0 +1,102 @@
+{
+  "metadata": {
+    "adapter_type": "postgres"
+  },
+  "nodes": {
+    "model.my_project.orders": {
+      "resource_type": "model",
+      "name": "orders",
+      "schema": "public",
+      "columns": {
+        "order_id": {
+          "name": "order_id",
+          "data_type": "bigint",
+          "description": "Primary key"
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "data_type": "bigint"
+        },
+        "order_date": {
+          "name": "order_date",
+          "data_type": "date"
+        },
+        "status": {
+          "name": "status",
+          "data_type": "varchar"
+        }
+      },
+      "description": "Order transactions"
+    },
+    "seed.my_project.countries": {
+      "resource_type": "seed",
+      "name": "countries",
+      "schema": "public",
+      "columns": {
+        "code": {
+          "name": "code",
+          "data_type": "varchar"
+        },
+        "name": {
+          "name": "name",
+          "data_type": "varchar"
+        }
+      },
+      "description": "Country reference seed data"
+    },
+    "snapshot.my_project.orders_snapshot": {
+      "resource_type": "snapshot",
+      "name": "orders_snapshot",
+      "schema": "public",
+      "columns": {
+        "order_id": {
+          "name": "order_id",
+          "data_type": "bigint"
+        },
+        "status": {
+          "name": "status",
+          "data_type": "varchar"
+        },
+        "dbt_updated_at": {
+          "name": "dbt_updated_at",
+          "data_type": "timestamp"
+        },
+        "dbt_valid_from": {
+          "name": "dbt_valid_from",
+          "data_type": "timestamp"
+        },
+        "dbt_valid_to": {
+          "name": "dbt_valid_to",
+          "data_type": "timestamp"
+        }
+      },
+      "config": {
+        "strategy": "timestamp"
+      },
+      "description": "Historical order data"
+    }
+  },
+  "sources": {
+    "source.my_project.raw.users": {
+      "resource_type": "source",
+      "source_name": "raw",
+      "name": "users",
+      "schema": "public",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "data_type": "integer"
+        },
+        "username": {
+          "name": "username",
+          "data_type": "varchar"
+        },
+        "created_at": {
+          "name": "created_at",
+          "data_type": "timestamp"
+        }
+      },
+      "description": "Raw user data from production database"
+    }
+  }
+}

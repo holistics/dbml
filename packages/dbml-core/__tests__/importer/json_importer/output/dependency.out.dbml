@@ -65,7 +65,11 @@ Dep "name": "public"."gold_users" < ("public"."silver_users", "public"."silver_o
   "public"."gold_users"."children" < "public"."silver_users"."children"
  }
 
-Dep "name": "gold"."users" < ("silver"."users", "silver"."orders")
+Dep "name": "gold"."users" < ("silver"."users", "silver"."orders") {
+  "gold"."users"."id" < "silver"."users"."id"
+  "gold"."users"."age" < "silver"."users"."age"
+  "gold"."users"."children" < "silver"."users"."children"
+ }
 
 Dep "name": "gold"."users" < ("silver"."users", "silver"."orders") {
   "gold"."users"."birthday" < ("silver"."users"."id", "silver"."users"."age")

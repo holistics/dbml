@@ -19,6 +19,8 @@ import TSqlLexer from '../parsers/mssql/TSqlLexer';
 import TSqlParser from '../parsers/mssql/TSqlParser';
 import MssqlASTGen from './mssql/MssqlASTGen';
 
+import DbtASTGen from './dbt/DbtASTGen';
+
 function parse (input, format) {
   const chars = new antlr4.InputStream(input);
   let database = null;
@@ -84,6 +86,12 @@ function parse (input, format) {
       database = parseTree.accept(new SnowflakeASTGen());
 
       if (errorListener.errors.length) throw errorListener.errors;
+      break;
+    }
+    case 'dbt': {
+      // dbt uses JSON manifest, not ANTLR
+      const dbtGen = new DbtASTGen();
+      database = dbtGen.parse(input);
       break;
     }
     default:

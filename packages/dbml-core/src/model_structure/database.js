@@ -42,6 +42,8 @@ class Database extends Element {
     this.records = [];
     this.tablePartials = [];
     this.deps = [];
+    // CTEs are scoped by downstream table: 'schema.table.cteName' -> CTE object
+    this.ctes = {};
 
     // The global array containing references with 1 endpoint being a field injected from a partial to a table
     // These refs are add to this array when resolving partials in tables (`Table.processPartials()`)
@@ -221,6 +223,16 @@ class Database extends Element {
 
   findTablePartial (name) {
     return this.tablePartials.find(tp => tp.name === name);
+  }
+
+  findCte (downstreamSchema, downstreamTable, cteName) {
+    const key = `${downstreamSchema || DEFAULT_SCHEMA_NAME}.${downstreamTable}.${cteName}`;
+    return this.ctes[key];
+  }
+
+  addCte (downstreamSchema, downstreamTable, cteName, cteData) {
+    const key = `${downstreamSchema || DEFAULT_SCHEMA_NAME}.${downstreamTable}.${cteName}`;
+    this.ctes[key] = cteData;
   }
 
   export () {

@@ -196,7 +196,7 @@ declare class Database extends Element {
             }[];
             note?: string;
             name?: string;
-          }[] | '*';
+          }[];
         }[];
     }
     shallowExport(): {
@@ -317,7 +317,7 @@ declare class Database extends Element {
             }[];
             note?: string;
             name?: string;
-          }[] | '*';
+          }[];
         }[];
     };
     exportChildIds(): {
