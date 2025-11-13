@@ -296,6 +296,8 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
 
     switch (scopeKind) {
       case ScopeKind.TABLE:
+        attributes = [SettingName.HeaderColor, SettingName.Note, SettingName.Source];
+        break;
       case ScopeKind.TABLEPARTIAL:
         attributes = [SettingName.HeaderColor, SettingName.Note];
         break;
