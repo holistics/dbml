@@ -15,6 +15,7 @@ export enum SettingName {
   Color = 'color',
   HeaderColor = 'headercolor',
   Note = 'note',
+  Source = 'source',
 
   PK = 'pk',
   PrimaryKey = 'primary key',
@@ -30,4 +31,13 @@ export enum SettingName {
 
   Update = 'update',
   Delete = 'delete',
+}
+
+export enum DataSource {
+  Dbt = 'dbt',
+  Postgres = 'postgres',
+  Snowflake = 'snowflake',
+  Oracle = 'oracle',
+  Mssql = 'mssql',
+  Mysql = 'mysql',
 }

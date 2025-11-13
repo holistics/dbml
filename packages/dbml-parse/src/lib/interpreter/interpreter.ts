@@ -53,7 +53,7 @@ export default class Interpreter {
 
   interpret (): Report<Database, CompileError> {
     const errors = this.ast.body.flatMap((element) => {
-      switch (getElementKind(element).unwrap_or(undefined)) {
+      switch (getElementKind(element).unwrapOr(undefined)) {
         case ElementKind.Table:
           return (new TableInterpreter(element, this.env)).interpret();
         case ElementKind.Note:

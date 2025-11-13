@@ -52,6 +52,7 @@ export interface Table {
   token: TokenPosition;
   indexes: Index[];
   headerColor?: string;
+  source?: string;
   note?: {
     value: string;
     token: TokenPosition;

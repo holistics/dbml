@@ -248,7 +248,7 @@ export default class TablePartialValidator implements ElementValidator {
     } = aggReport.getValue();
 
     parts.forEach((part) => {
-      const name = extractVarNameFromPrimaryVariable(part as any).unwrap_or('').toLowerCase();
+      const name = extractVarNameFromPrimaryVariable(part as any).unwrapOr('').toLowerCase();
       if (name !== SettingName.PK && name !== SettingName.Unique) {
         errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
         return;

@@ -59,7 +59,7 @@ export default class IndexesBinder implements ElementBinder {
         (this.declarationNode.parent! as ElementDeclarationNode).name,
       ).map(
         (fragments) => fragments.join('.'),
-      ).unwrap_or('<unnamed>');
+      ).unwrapOr('<unnamed>');
       const ownerTableSymbolTable = this.declarationNode.parent!.symbol!.symbolTable!;
 
       const args = [field.callee, ...field.args];

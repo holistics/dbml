@@ -3,7 +3,7 @@ import { SyntaxToken, SyntaxTokenKind } from '../../../lexer/tokens';
 import SymbolFactory from '../../symbol/factory';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '../../../parser/nodes';
 import {
   extractStringFromIdentifierStream,
@@ -175,14 +175,14 @@ function isValidPolicy (value?: SyntaxNode): boolean {
       isExpressionAVariableNode(value)
       && value.expression.variable.kind !== SyntaxTokenKind.QUOTED_STRING
     )
-    && !(value instanceof IdentiferStreamNode)
+    && !(value instanceof IdentifierStreamNode)
   ) {
     return false;
   }
 
   let extractedString: string | undefined;
-  if (value instanceof IdentiferStreamNode) {
-    extractedString = extractStringFromIdentifierStream(value).unwrap_or('');
+  if (value instanceof IdentifierStreamNode) {
+    extractedString = extractStringFromIdentifierStream(value).unwrapOr('');
   } else {
     extractedString = value.expression.variable.value;
   }

@@ -54,7 +54,7 @@ export class DepInterpreter implements ElementInterpreter {
   }
 
   private interpretName (nameNode?: SyntaxNode): CompileError[] {
-    this.dep.name = destructureComplexVariable(nameNode).unwrap_or(undefined)?.join('.');
+    this.dep.name = destructureComplexVariable(nameNode).unwrapOr(undefined)?.join('.');
 
     return [];
   }
@@ -98,7 +98,7 @@ export class DepInterpreter implements ElementInterpreter {
     } else {
       this.dep.downstreamTable = {
         table: extractVarNameFromPrimaryVariable(leftTableNameNode).unwrap(),
-        schema: extractVarNameFromPrimaryVariable(leftSchemaNameNode).unwrap_or(undefined),
+        schema: extractVarNameFromPrimaryVariable(leftSchemaNameNode).unwrapOr(undefined),
       };
     }
 
@@ -111,7 +111,7 @@ export class DepInterpreter implements ElementInterpreter {
       if (vars.variables.length) return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', (tableDepNode as InfixExpressionNode).rightExpression!)];
       this.dep.upstreamTables?.push({
         table: extractVarNameFromPrimaryVariable(rightTableNameNode).unwrap(),
-        schema: extractVarNameFromPrimaryVariable(rightSchemaNameNode).unwrap_or(undefined),
+        schema: extractVarNameFromPrimaryVariable(rightSchemaNameNode).unwrapOr(undefined),
       });
       return [];
     }));
@@ -178,7 +178,7 @@ export class DepInterpreter implements ElementInterpreter {
       value: extractQuotedStringToken(noteNode.value).map(normalizeNoteContent).unwrap(),
       token: getTokenPosition(noteNode),
     };
-    const name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
+    const name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrapOr(undefined);
     fieldDep.name = name;
 
     this.dep.fieldDeps.push(fieldDep as FieldDep);
@@ -191,7 +191,7 @@ function destructureDependencyOperand (operand: NormalExpressionNode): { variabl
   if (isExpressionAVariableNode(operand)) return [{ variables: [operand] }];
   if (operand instanceof TupleExpressionNode) return operand.elementList.flatMap((e) => destructureDependencyOperand(e));
   if (!isAccessExpression(operand)) throw new Error('Unreachable in destructureDependencyOperand');
-  const leftVars = destructureMemberAccessExpression(operand.leftExpression).unwrap_or([]) as (PrimaryExpressionNode & { expression: VariableNode })[];
+  const leftVars = destructureMemberAccessExpression(operand.leftExpression).unwrapOr([]) as (PrimaryExpressionNode & { expression: VariableNode })[];
   const rightVars = destructureDependencyOperand(operand.rightExpression).map((r) => r.variables);
   return rightVars.map((v) => ({ variables: [...leftVars, ...v] }));
 }

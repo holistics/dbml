@@ -1,0 +1,151 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "raw_users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 34,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 40,
+              "line": 2,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 42,
+          "line": 3,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "source": "dbt"
+    },
+    {
+      "name": "raw_orders",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 86,
+              "line": 6,
+              "column": 3
+            },
+            "end": {
+              "offset": 92,
+              "line": 6,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 44,
+          "line": 5,
+          "column": 1
+        },
+        "end": {
+          "offset": 94,
+          "line": 7,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "source": "any source"
+    },
+    {
+      "name": "raw_order_items",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 144,
+              "line": 10,
+              "column": 3
+            },
+            "end": {
+              "offset": 150,
+              "line": 10,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 96,
+          "line": 9,
+          "column": 1
+        },
+        "end": {
+          "offset": 152,
+          "line": 11,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": [],
+      "source": "holistics"
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "tablePartials": [],
+  "deps": []
+}

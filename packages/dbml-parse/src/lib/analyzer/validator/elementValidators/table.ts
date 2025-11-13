@@ -34,6 +34,7 @@ import { ElementValidator } from '../types';
 import { ColumnSymbol, PartialInjectionSymbol, TableSymbol } from '../../symbol/symbols';
 import { createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
 import {
+  extractStringFromIdentifierStream,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
@@ -128,6 +129,17 @@ export default class TableValidator implements ElementValidator {
             }
           });
           break;
+        case SettingName.Source:
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'source\' can only appear once', attr)));
+          }
+          attrs.forEach((attr) => {
+            // Accept both quoted strings and identifiers
+            if (!isExpressionAQuotedString(attr.value) && !isExpressionAnIdentifierNode(attr.value) && !extractStringFromIdentifierStream(attr.value).isOk()) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'source\' must be a string literal or identifier', attr.value || attr.name!));
+            }
+          });
+          break;
         default:
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
       }
@@ -156,7 +168,7 @@ export default class TableValidator implements ElementValidator {
     if (
       alias && isSimpleName(alias)
       // eslint-disable-next-line no-use-before-define
-      && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
+      && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrapOr([]))
     ) {
       const aliasName = extractVarNameFromPrimaryVariable(alias as any).unwrap();
       const aliasId = createTableSymbolIndex(aliasName);
@@ -218,7 +230,7 @@ export default class TableValidator implements ElementValidator {
       if (!isValidPartialInjection(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION, 'A partial injection should be of the form ~<table-partial>', field.callee));
       } else {
-        const injectedTablePartialName = extractVariableFromExpression(field.callee.expression).unwrap_or('');
+        const injectedTablePartialName = extractVariableFromExpression(field.callee.expression).unwrapOr('');
         const partialInjectionSymbol = this.symbolFactory.create(PartialInjectionSymbol, { symbolTable: new SymbolTable(), declaration: field });
         const partialInjectionSymbolId = createPartialInjectionSymbolIndex(injectedTablePartialName);
         const symbolTable = this.declarationNode.symbol!.symbolTable!;
@@ -290,7 +302,7 @@ export default class TableValidator implements ElementValidator {
     } = aggReport.getValue();
 
     parts.forEach((part) => {
-      const name = extractVarNameFromPrimaryVariable(part as any).unwrap_or('').toLowerCase();
+      const name = extractVarNameFromPrimaryVariable(part as any).unwrapOr('').toLowerCase();
       if (name !== 'pk' && name !== 'unique') {
         errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
         return;

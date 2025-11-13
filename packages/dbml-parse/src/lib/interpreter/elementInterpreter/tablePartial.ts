@@ -244,13 +244,13 @@ export class TablePartialInterpreter implements ElementInterpreter {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
         index.pk = !!settingMap[SettingName.PK]?.length;
         index.unique = !!settingMap[SettingName.Unique]?.length;
-        index.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
+        index.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrapOr(undefined);
         const noteNode = settingMap[SettingName.Note]?.at(0);
         index.note = noteNode && {
           value: extractQuotedStringToken(noteNode.value).unwrap(),
           token: getTokenPosition(noteNode),
         };
-        index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value).unwrap_or(undefined);
+        index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value).unwrapOr(undefined);
       }
 
       args.flatMap((arg) => {
@@ -298,7 +298,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
       if (checkField.args[0] instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(checkField.args[0] as ListExpressionNode).getValue();
-        check.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
+        check.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrapOr(undefined);
       }
 
       check.expression = (checkField.callee as FunctionExpressionNode).value!.value!;

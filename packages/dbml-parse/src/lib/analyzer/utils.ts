@@ -45,7 +45,7 @@ export function destructureMemberAccessExpression (node: SyntaxNode): Option<Syn
     return new Some([node]);
   }
 
-  const fragments = destructureMemberAccessExpression(node.leftExpression).unwrap_or(undefined);
+  const fragments = destructureMemberAccessExpression(node.leftExpression).unwrapOr(undefined);
 
   if (!fragments) {
     return new None();
@@ -61,7 +61,7 @@ export function destructureComplexVariable (node?: SyntaxNode): Option<string[]>
     return new None();
   }
 
-  const fragments = destructureMemberAccessExpression(node).unwrap_or(undefined);
+  const fragments = destructureMemberAccessExpression(node).unwrapOr(undefined);
 
   if (!fragments) {
     return new None();
@@ -71,7 +71,7 @@ export function destructureComplexVariable (node?: SyntaxNode): Option<string[]>
 
   // eslint-disable-next-line no-restricted-syntax
   for (const fragment of fragments) {
-    const variable = extractVariableFromExpression(fragment).unwrap_or(undefined);
+    const variable = extractVariableFromExpression(fragment).unwrapOr(undefined);
     if (!variable) {
       return new None();
     }
@@ -89,7 +89,7 @@ export function destructureComplexVariableTuple (
     return new None();
   }
 
-  const fragments = destructureMemberAccessExpression(node).unwrap_or(undefined);
+  const fragments = destructureMemberAccessExpression(node).unwrapOr(undefined);
 
   if (!fragments || fragments.length === 0) {
     return new None();
@@ -148,8 +148,9 @@ export function destructureIndexNode (node: SyntaxNode): Option<{
 }
 
 export function extractVarNameFromPrimaryVariable (
-  node?: PrimaryExpressionNode & { expression: VariableNode },
+  node?: SyntaxNode,
 ): Option<string> {
+  if (!isExpressionAVariableNode(node)) return new None();
   const value = node?.expression.variable?.value;
 
   return value === undefined ? new None() : new Some(value);
@@ -178,8 +179,8 @@ export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpress
 
   return (
     destructureComplexVariableTuple(value.leftExpression)
-      .and_then(() => destructureComplexVariableTuple(value.rightExpression))
-      .unwrap_or(undefined) !== undefined
+      .andThen(() => destructureComplexVariableTuple(value.rightExpression))
+      .unwrapOr(undefined) !== undefined
   );
 }
 
@@ -196,7 +197,7 @@ export function isValidDependency (value?: SyntaxNode): value is InfixExpression
     if (isExpressionAVariableNode(operand)) return true;
     if (operand instanceof TupleExpressionNode) return operand.elementList.every(isValidDependencyRightOperand);
     if (!isAccessExpression(operand)) return false;
-    if (!destructureComplexVariable(operand.leftExpression).unwrap_or(undefined)) return false;
+    if (!destructureComplexVariable(operand.leftExpression).unwrapOr(undefined)) return false;
     if (isExpressionAVariableNode(operand.rightExpression)) return true;
     if (!(operand.rightExpression instanceof TupleExpressionNode)) return false;
     return operand.rightExpression.elementList.every(isValidDependencyRightOperand);

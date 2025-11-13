@@ -70,7 +70,7 @@ export default class TablePartialBinder implements ElementBinder {
   }
 
   private tryToBindColumnType (typeNode: SyntaxNode) {
-    const fragments = destructureComplexVariableTuple(typeNode).unwrap_or(undefined);
+    const fragments = destructureComplexVariableTuple(typeNode).unwrapOr(undefined);
     if (!fragments) {
       return;
     }

@@ -20,7 +20,7 @@ import {
   FunctionApplicationNode,
   FunctionExpressionNode,
   GroupExpressionNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
@@ -407,7 +407,7 @@ export default class Parser {
 
     // Try interpreting the function application as an element declaration expression
     // if fail, fall back to the generic function application
-    const buildExpression = () => convertFuncAppToElem(args.callee, args.args, this.nodeFactory).unwrap_or(
+    const buildExpression = () => convertFuncAppToElem(args.callee, args.args, this.nodeFactory).unwrapOr(
       this.nodeFactory.create(FunctionApplicationNode, args),
     );
 
@@ -1011,9 +1011,9 @@ export default class Parser {
 
   private attribute (): AttributeNode {
     const args: {
-      name?: IdentiferStreamNode | PrimaryExpressionNode;
+      name?: IdentifierStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
-      value?: NormalExpressionNode | IdentiferStreamNode;
+      value?: NormalExpressionNode | IdentifierStreamNode;
     } = {};
 
     if (this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.RBRACKET, SyntaxTokenKind.COMMA)) {
@@ -1023,7 +1023,7 @@ export default class Parser {
         CompileErrorCode.EMPTY_ATTRIBUTE_NAME,
         'Expect a non-empty attribute name',
       );
-      args.name = this.nodeFactory.create(IdentiferStreamNode, { identifiers: [] });
+      args.name = this.nodeFactory.create(IdentifierStreamNode, { identifiers: [] });
     } else {
       try {
         args.name = this.attributeName();
@@ -1062,8 +1062,8 @@ export default class Parser {
     }
   };
 
-  private attributeValue (): NormalExpressionNode | IdentiferStreamNode {
-    let value: NormalExpressionNode | IdentiferStreamNode | undefined;
+  private attributeValue (): NormalExpressionNode | IdentifierStreamNode {
+    let value: NormalExpressionNode | IdentifierStreamNode | undefined;
     try {
       value = this.peek().kind === SyntaxTokenKind.IDENTIFIER
         && this.peek(1).kind === SyntaxTokenKind.IDENTIFIER
@@ -1091,7 +1091,7 @@ export default class Parser {
     }
   };
 
-  private attributeName (): IdentiferStreamNode | PrimaryExpressionNode {
+  private attributeName (): IdentifierStreamNode | PrimaryExpressionNode {
     const identifiers: SyntaxToken[] = [];
 
     if (this.peek().kind !== SyntaxTokenKind.IDENTIFIER) {
@@ -1111,13 +1111,13 @@ export default class Parser {
         }
         throw new PartialParsingError(
           e.token,
-          this.nodeFactory.create(IdentiferStreamNode, { identifiers }),
+          this.nodeFactory.create(IdentifierStreamNode, { identifiers }),
           e.handlerContext,
         );
       }
     }
 
-    return this.nodeFactory.create(IdentiferStreamNode, { identifiers });
+    return this.nodeFactory.create(IdentifierStreamNode, { identifiers });
   }
 
   private logError (nodeOrToken: SyntaxToken | SyntaxNode, code: CompileErrorCode, message: string) {

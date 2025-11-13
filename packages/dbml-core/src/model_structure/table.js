@@ -8,7 +8,7 @@ import Check from './check';
 
 class Table extends Element {
   constructor ({
-    name, alias, note, fields = [], indexes = [], checks = [], schema = {}, token, headerColor, noteToken = null, partials = [],
+    name, alias, note, fields = [], indexes = [], checks = [], schema = {}, token, headerColor, source, noteToken = null, partials = [],
   } = {}) {
     super(token);
     this.name = name;
@@ -16,6 +16,7 @@ class Table extends Element {
     this.note = note ? get(note, 'value', note) : null;
     this.noteToken = note ? get(note, 'token', noteToken) : null;
     this.headerColor = headerColor;
+    this.source = source ? source.toLowerCase() : undefined;
     this.fields = [];
     this.indexes = [];
     this.checks = [];
@@ -191,6 +192,10 @@ class Table extends Element {
         this.headerColor = tablePartial.headerColor;
         existingSettingNames.add('headerColor');
       }
+      if (!existingSettingNames.has('source') && !isNil(tablePartial.source)) {
+        this.source = tablePartial.source ? tablePartial.source.toLowerCase() : undefined;
+        existingSettingNames.add('source');
+      }
 
       // merge indexes
       tablePartial.indexes.forEach((index) => {
@@ -243,6 +248,7 @@ class Table extends Element {
       alias: this.alias,
       note: this.note,
       headerColor: this.headerColor,
+      source: this.source,
       partials: this.partials,
     };
   }

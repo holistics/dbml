@@ -207,6 +207,9 @@ class DbmlExporter {
     if (table.headerColor) {
       settingStr += `headerColor: ${table.headerColor}${settingSep}`;
     }
+    if (table.source) {
+      settingStr += `source: "${table.source}"${settingSep}`;
+    }
     if (settingStr.endsWith(', ')) {
       settingStr = settingStr.replace(/,\s$/, '');
     }

@@ -13,6 +13,7 @@ interface RawTablePartial {
     checks?: any[];
     token: Token;
     headerColor: string;
+    source: string;
     dbState: DbState;
 }
 
@@ -24,15 +25,17 @@ declare class TablePartial extends Element {
     indexes: Index[];
     checks: Check[];
     headerColor: string;
+    source: string;
     dbState: DbState;
     id: number;
 
-    constructor({ name, note, fields, indexes, checks, token, headerColor, dbState }: RawTablePartial);
+    constructor({ name, note, fields, indexes, checks, token, headerColor, source, dbState }: RawTablePartial);
     generateId(): void;
     export(): {
         name: string;
         note: string;
         headerColor: string;
+        source: string;
         fields: {
             name: string;
             type: any;
@@ -60,6 +63,7 @@ declare class TablePartial extends Element {
         name: string;
         note: string;
         headerColor: string;
+        source: string;
         fields: {
             name: string;
             type: any;
@@ -92,6 +96,7 @@ export interface NormalizedTablePartial {
         name: string;
         note: string;
         headerColor: string;
+        source: string;
         fieldIds: number[];
         indexIds: number[];
     };

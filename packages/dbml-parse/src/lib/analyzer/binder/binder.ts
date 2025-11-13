@@ -19,7 +19,7 @@ export default class Binder {
   }
 
   private resolvePartialInjections (): CompileError[] {
-    return this.ast.body.filter((e) => getElementKind(e).unwrap_or('') === ElementKind.Table).flatMap((t) => {
+    return this.ast.body.filter((e) => getElementKind(e).unwrapOr('') === ElementKind.Table).flatMap((t) => {
       const binder = new TableBinder(t as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
       return binder.resolvePartialInjections();
     });

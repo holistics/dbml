@@ -52,7 +52,7 @@ export default class TableBinder implements ElementBinder {
         ]);
         if (errors.length) return errors;
         tablePartialBindee.referee?.symbolTable?.forEach((value) => {
-          const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee).unwrap_or(undefined);
+          const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee).unwrapOr(undefined);
           if (columnName === undefined) return;
           const injectedColumnSymbol = this.symbolFactory.create(
             TablePartialInjectedColumnSymbol,
@@ -115,7 +115,7 @@ export default class TableBinder implements ElementBinder {
   }
 
   private tryToBindColumnType (typeNode: SyntaxNode) {
-    const fragments = destructureComplexVariableTuple(typeNode).unwrap_or(undefined);
+    const fragments = destructureComplexVariableTuple(typeNode).unwrapOr(undefined);
     if (!fragments) {
       return;
     }

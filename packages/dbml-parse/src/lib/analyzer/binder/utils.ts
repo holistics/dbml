@@ -71,7 +71,7 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
       return [...scanNonListNodeForBinding(node.leftExpression), ...scanNonListNodeForBinding(node.rightExpression)];
     }
 
-    if (!destructureComplexVariable(node.leftExpression).unwrap_or(undefined)) {
+    if (!destructureComplexVariable(node.leftExpression).unwrapOr(undefined)) {
       return [...scanNonListNodeForBinding(node.leftExpression), ...scanNonListNodeForBinding(node.rightExpression)];
     }
 
@@ -108,11 +108,11 @@ export function lookupAndBindInScope (
   }
   let curSymbolTable = initialScope.symbol.symbolTable;
   let curKind = getSymbolKind(initialScope.symbol);
-  let curName = initialScope instanceof ElementDeclarationNode ? getElementName(initialScope).unwrap_or('<invalid name>') : 'public';
+  let curName = initialScope instanceof ElementDeclarationNode ? getElementName(initialScope).unwrapOr('<invalid name>') : 'public';
 
   if (initialScope instanceof ProgramNode && symbolInfos.length) {
     const { node, kind } = symbolInfos[0];
-    const name = extractVarNameFromPrimaryVariable(node).unwrap_or('<unnamed>');
+    const name = extractVarNameFromPrimaryVariable(node).unwrapOr('<unnamed>');
     if (name === 'public' && kind === SymbolKind.Schema) {
       symbolInfos.shift();
     }
@@ -121,7 +121,7 @@ export function lookupAndBindInScope (
   // eslint-disable-next-line no-restricted-syntax
   for (const curSymbolInfo of symbolInfos) {
     const { node, kind } = curSymbolInfo;
-    const name = extractVarNameFromPrimaryVariable(node).unwrap_or('<unnamed>');
+    const name = extractVarNameFromPrimaryVariable(node).unwrapOr('<unnamed>');
     const index = createNodeSymbolIndex(name, kind);
     const symbol = curSymbolTable.get(index);
 

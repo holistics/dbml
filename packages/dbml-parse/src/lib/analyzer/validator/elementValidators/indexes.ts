@@ -49,7 +49,7 @@ export default class IndexesValidator implements ElementValidator {
     );
     if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
 
-    const elementKind = getElementKind(this.declarationNode.parent).unwrap_or(undefined);
+    const elementKind = getElementKind(this.declarationNode.parent).unwrapOr(undefined);
     return (elementKind && [ElementKind.Table, ElementKind.TablePartial].includes(elementKind))
       ? []
       : [invalidContextError];

@@ -30,7 +30,7 @@ import {
   AttributeNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   PrefixExpressionNode,
@@ -273,11 +273,11 @@ function suggestInAttribute (
     return suggestAttributeName(compiler, offset);
   }
 
-  if (container.name instanceof IdentiferStreamNode) {
+  if (container.name instanceof IdentifierStreamNode) {
     const res = suggestAttributeValue(
       compiler,
       offset,
-      extractStringFromIdentifierStream(container.name).unwrap_or(''),
+      extractStringFromIdentifierStream(container.name).unwrapOr(''),
     );
 
     return (token?.kind === SyntaxTokenKind.COLON && shouldPrependSpace(token, offset)) ? prependSpace(res) : res;
@@ -466,7 +466,7 @@ function suggestMembers (
   offset: number,
   container: InfixExpressionNode & { op: SyntaxToken },
 ): CompletionList {
-  const fragments = destructureMemberAccessExpression(container).unwrap_or([]);
+  const fragments = destructureMemberAccessExpression(container).unwrapOr([]);
   fragments.pop(); // The last fragment is not used in suggestions: v1.table.a<>
   if (fragments.some((f) => !isExpressionAVariableNode(f))) {
     return noSuggestions();
@@ -646,7 +646,7 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
     suggestions: [
       ...addQuoteIfNeeded({
         suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
-          const res = destructureIndex(index).unwrap_or(undefined);
+          const res = destructureIndex(index).unwrapOr(undefined);
           if (res === undefined) return [];
           const { kind, name } = res;
           if (kind !== SymbolKind.Table && kind !== SymbolKind.Schema) return [];
@@ -762,7 +762,7 @@ function suggestColumnNameInIndexes (compiler: Compiler, offset: number): Comple
 
   return addQuoteIfNeeded({
     suggestions: [...symbolTable.entries()].flatMap(([index]) => {
-      const res = destructureIndex(index).unwrap_or(undefined);
+      const res = destructureIndex(index).unwrapOr(undefined);
       if (res === undefined) {
         return [];
       }

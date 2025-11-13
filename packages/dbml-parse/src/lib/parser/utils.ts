@@ -13,7 +13,7 @@ import {
   FunctionApplicationNode,
   FunctionExpressionNode,
   GroupExpressionNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
@@ -127,7 +127,7 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.bodyColon);
     markInvalid(node.attributeList);
     markInvalid(node.body);
-  } else if (node instanceof IdentiferStreamNode) {
+  } else if (node instanceof IdentifierStreamNode) {
     node.identifiers.forEach(markInvalid);
   } else if (node instanceof AttributeNode) {
     markInvalid(node.name);
@@ -209,7 +209,7 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
     return filterUndefined(node.name, node.colon, node.value);
   }
 
-  if (node instanceof IdentiferStreamNode) {
+  if (node instanceof IdentifierStreamNode) {
     return node.identifiers;
   }
 
@@ -356,8 +356,8 @@ export function isAccessExpression (node: SyntaxNode): node is InfixExpressionNo
   );
 }
 
-export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode): Option<string> {
-  if (stream === undefined) {
+export function extractStringFromIdentifierStream (stream?: SyntaxNode): Option<string> {
+  if (!(stream instanceof IdentifierStreamNode)) {
     return new None();
   }
   const name = stream.identifiers.map((identifier) => identifier.value).join(' ');
@@ -368,6 +368,6 @@ export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode)
   return new Some(name);
 }
 
-export function getElementName(element: ElementDeclarationNode): Option<string> {
+export function getElementName (element: ElementDeclarationNode): Option<string> {
   return destructureComplexVariable(element).map((ss) => ss.join('.'));
 }

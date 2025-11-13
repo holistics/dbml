@@ -1,0 +1,11 @@
+Table raw_users [source: dbt] {
+  id int
+}
+
+Table raw_orders [source: any source] {
+  id int
+}
+
+Table raw_order_items [source: 'holistics'] {
+  id int
+}

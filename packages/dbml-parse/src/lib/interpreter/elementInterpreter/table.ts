@@ -23,6 +23,7 @@ import {
 import { ColumnSymbol } from '../../analyzer/symbol/symbols';
 import { destructureIndex, SymbolKind } from '../../analyzer/symbol/symbolIndex';
 import { ElementKind, SettingName } from '../../analyzer/types';
+import { extractStringFromIdentifierStream } from '../../parser/utils';
 
 export class TableInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -96,7 +97,7 @@ export class TableInterpreter implements ElementInterpreter {
       return [];
     }
 
-    const alias = extractVarNameFromPrimaryVariable(aliasNode as any).unwrap_or(null);
+    const alias = extractVarNameFromPrimaryVariable(aliasNode as any).unwrapOr(null);
     if (alias) {
       this.env.aliases.push({
         name: alias,
@@ -124,6 +125,16 @@ export class TableInterpreter implements ElementInterpreter {
       value: extractQuotedStringToken(noteNode?.value).map(normalizeNoteContent).unwrap(),
       token: getTokenPosition(noteNode),
     };
+
+    // Extract and normalize source to lowercase
+    const [sourceNode] = settingMap[SettingName.Source] || [];
+    if (sourceNode) {
+      const sourceValue = extractQuotedStringToken(sourceNode?.value)
+        .orElse(() => extractVarNameFromPrimaryVariable(sourceNode?.value))
+        .orElse(() => extractStringFromIdentifierStream(sourceNode?.value))
+        .unwrapOr(undefined);
+      this.table.source = sourceValue?.toLowerCase();
+    }
 
     return [];
   }
@@ -164,7 +175,7 @@ export class TableInterpreter implements ElementInterpreter {
 
   private interpretInjection (injection: PrefixExpressionNode, order: number) {
     const partial: Partial<TablePartialInjection> = { order, token: getTokenPosition(injection) };
-    partial.name = extractVariableFromExpression(injection.expression).unwrap_or('');
+    partial.name = extractVariableFromExpression(injection.expression).unwrapOr('');
     this.table.partials!.push(partial as TablePartialInjection);
     return [];
   }
@@ -174,7 +185,7 @@ export class TableInterpreter implements ElementInterpreter {
       ? [...this.declarationNode.symbol.symbolTable.entries()]
       : [];
     const columnEntries = symbolTableEntries.filter(([index]) => {
-      const res = destructureIndex(index).unwrap_or(null);
+      const res = destructureIndex(index).unwrapOr(null);
       return res?.kind === SymbolKind.Column;
     });
 
@@ -324,13 +335,13 @@ export class TableInterpreter implements ElementInterpreter {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
         index.pk = !!settingMap[SettingName.PK]?.length;
         index.unique = !!settingMap[SettingName.Unique]?.length;
-        index.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
+        index.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrapOr(undefined);
         const noteNode = settingMap[SettingName.Note]?.at(0);
         index.note = noteNode && {
           value: extractQuotedStringToken(noteNode.value).unwrap(),
           token: getTokenPosition(noteNode),
         };
-        index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value).unwrap_or(undefined);
+        index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value).unwrapOr(undefined);
       }
 
       args.flatMap((arg) => {
@@ -379,7 +390,7 @@ export class TableInterpreter implements ElementInterpreter {
 
       if (checkField.args[0] instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(checkField.args[0] as ListExpressionNode).getValue();
-        check.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
+        check.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrapOr(undefined);
       }
 
       check.expression = (checkField.callee as FunctionExpressionNode).value!.value!;

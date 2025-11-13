@@ -3,13 +3,14 @@ import Element from './element';
 
 class TablePartial extends Element {
   constructor ({
-    name, note, fields = [], indexes = [], checks = [], token, headerColor, noteToken = null, dbState,
+    name, note, fields = [], indexes = [], checks = [], token, headerColor, source, noteToken = null, dbState,
   } = {}) {
     super(token);
     this.name = name;
     this.note = note ? get(note, 'value', note) : null;
     this.noteToken = note ? get(note, 'token', noteToken) : null;
     this.headerColor = headerColor;
+    this.source = source ? source.toLowerCase() : undefined;
     this.fields = fields;
     this.indexes = indexes;
     this.checks = checks;
@@ -32,6 +33,7 @@ class TablePartial extends Element {
       name: this.name,
       note: this.note,
       headerColor: this.headerColor,
+      source: this.source,
       fields: this.fields,
       indexes: this.indexes,
     };

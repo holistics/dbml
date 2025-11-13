@@ -92,7 +92,7 @@ export function destructureIndex (id: NodeSymbolIndex): Option<{ name: string; k
 }
 
 export function isPublicSchemaIndex (id: NodeSymbolIndex): boolean {
-  const res = destructureIndex(id).unwrap_or(undefined);
+  const res = destructureIndex(id).unwrapOr(undefined);
   if (!res) {
     return false;
   }

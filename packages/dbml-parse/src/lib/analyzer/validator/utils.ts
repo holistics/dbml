@@ -68,7 +68,7 @@ export function pickValidator (element: ElementDeclarationNode & { type: SyntaxT
 
 // Is the name valid (either simple or complex)
 export function isValidName (nameNode: SyntaxNode): boolean {
-  return !!destructureComplexVariable(nameNode).unwrap_or(false);
+  return !!destructureComplexVariable(nameNode).unwrapOr(false);
 }
 
 // Is the alias valid (only simple name is allowed)
@@ -236,7 +236,7 @@ export function isUnaryRelationship (value?: SyntaxNode): value is PrefixExpress
     return false;
   }
 
-  const variables = destructureComplexVariable(value.expression).unwrap_or(undefined);
+  const variables = destructureComplexVariable(value.expression).unwrapOr(undefined);
 
   return variables !== undefined && variables.length > 0;
 }
@@ -285,7 +285,7 @@ export function isValidColumnType (type: SyntaxNode): boolean {
     type = type.array;
   }
 
-  const variables = destructureComplexVariable(type).unwrap_or(undefined);
+  const variables = destructureComplexVariable(type).unwrapOr(undefined);
 
   return variables !== undefined && variables.length > 0;
 }
@@ -306,7 +306,7 @@ export function aggregateSettingList (settingList?: ListExpressionNode): Report<
       continue;
     }
 
-    const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined)?.toLowerCase();
+    const name = extractStringFromIdentifierStream(attribute.name).unwrapOr(undefined)?.toLowerCase();
     if (!name) {
       continue;
     }

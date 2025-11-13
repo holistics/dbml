@@ -89,7 +89,7 @@ export function getTokenPosition (node: SyntaxNode): TokenPosition {
 }
 
 export function getColumnSymbolsOfRefOperand (ref: SyntaxNode): ColumnSymbol[] {
-  const colNode = destructureMemberAccessExpression(ref).unwrap_or(undefined)?.pop();
+  const colNode = destructureMemberAccessExpression(ref).unwrapOr(undefined)?.pop();
   if (colNode instanceof TupleExpressionNode) {
     return colNode.elementList.map((e) => e.referee as ColumnSymbol);
   }

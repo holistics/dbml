@@ -111,11 +111,12 @@ export class Table {
    *  fields: Field[],
    *  indexes: Index[],
    *  note: {value: string},
-   *  checks: {expression: string, name?: string}[]
+   *  checks: {expression: string, name?: string}[],
+   *  source: string
    * }} param0
    */
   constructor ({
-    name, schemaName, fields, indexes, note, checks,
+    name, schemaName, fields, indexes, note, checks, source,
   }) {
     /** @type {string} */
     this.name = name;
@@ -134,6 +135,9 @@ export class Table {
 
     /** @type {{expression: string, name?: string}[]} */
     this.checks = checks || [];
+
+    /** @type {string} */
+    this.source = source;
   }
 
   toJSON () {
@@ -144,6 +148,7 @@ export class Table {
       indexes: this.indexes?.map(i => i.toJSON()),
       note: this.note,
       checks: this.checks,
+      source: this.source,
     };
   }
 }

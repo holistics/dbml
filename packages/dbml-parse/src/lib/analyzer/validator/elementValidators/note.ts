@@ -46,7 +46,7 @@ export default class NoteValidator implements ElementValidator {
           ElementKind.Project,
         ] as (ElementKind | undefined)[]
       )
-        .includes(getElementKind(this.declarationNode.parent).unwrap_or(undefined))
+        .includes(getElementKind(this.declarationNode.parent).unwrapOr(undefined))
     ) {
       return [new CompileError(
         CompileErrorCode.INVALID_NOTE_CONTEXT,

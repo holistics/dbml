@@ -8,7 +8,7 @@ import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   PrefixExpressionNode,
@@ -250,7 +250,7 @@ export default class Compiler {
               res.pop();
               popOnce = true;
             }
-          } else if (!(lastContainer instanceof IdentiferStreamNode)) {
+          } else if (!(lastContainer instanceof IdentifierStreamNode)) {
             if (lastContainer.end < offset) {
               res.pop();
               popOnce = true;
@@ -383,7 +383,7 @@ export default class Compiler {
           for (const name of nameStack) {
             currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) => generatePossibleIndexes(name).flatMap((index) => {
               const symbol = st.get(index);
-              const desRes = destructureIndex(index).unwrap_or(undefined);
+              const desRes = destructureIndex(index).unwrapOr(undefined);
 
               return !symbol || !desRes ? [] : { ...desRes, symbol };
             }));

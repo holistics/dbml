@@ -18,6 +18,7 @@ interface RawTable {
     schema: Schema;
     token: Token;
     headerColor: string;
+    source: string;
     partials: TablePartial[];
 }
 
@@ -31,12 +32,13 @@ declare class Table extends Element {
     checks: Check[];
     schema: Schema;
     headerColor: string;
+    source: string;
     dbState: DbState;
     id: number;
     group: TableGroup;
     partials: TablePartial[];
 
-    constructor({ name, alias, note, fields, indexes, checks, schema, token, headerColor }: RawTable);
+    constructor({ name, alias, note, fields, indexes, checks, schema, token, headerColor, source }: RawTable);
     generateId(): void;
     processFields(rawFields: any): void;
     pushField(field: any): void;
@@ -75,6 +77,7 @@ declare class Table extends Element {
         alias: string;
         note: string;
         headerColor: string;
+        source: string;
         partials: TablePartial[];
     };
     exportChild(): {
@@ -114,6 +117,7 @@ declare class Table extends Element {
         alias: string;
         note: string;
         headerColor: string;
+        source: string;
         partials: TablePartial[];
     };
     normalize(model: NormalizedDatabase): void;
@@ -126,6 +130,7 @@ export interface NormalizedTable {
         alias: string;
         note: string;
         headerColor: string;
+        source: string;
         fieldIds: number[];
         indexIds: number[];
         checkIds: number[];

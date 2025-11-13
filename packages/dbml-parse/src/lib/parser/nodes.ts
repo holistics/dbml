@@ -182,7 +182,7 @@ export class ElementDeclarationNode extends SyntaxNode {
   }
 }
 
-export class IdentiferStreamNode extends SyntaxNode {
+export class IdentifierStreamNode extends SyntaxNode {
   identifiers: SyntaxToken[];
 
   constructor ({ identifiers = [] }: { identifiers?: SyntaxToken[] }, id: SyntaxNodeId) {
@@ -192,11 +192,11 @@ export class IdentiferStreamNode extends SyntaxNode {
 }
 
 export class AttributeNode extends SyntaxNode {
-  name?: IdentiferStreamNode | PrimaryExpressionNode;
+  name?: IdentifierStreamNode | PrimaryExpressionNode;
 
   colon?: SyntaxToken;
 
-  value?: NormalExpressionNode | IdentiferStreamNode;
+  value?: NormalExpressionNode | IdentifierStreamNode;
 
   constructor (
     {
@@ -204,9 +204,9 @@ export class AttributeNode extends SyntaxNode {
       colon,
       value,
     }: {
-      name?: IdentiferStreamNode | PrimaryExpressionNode;
+      name?: IdentifierStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
-      value?: NormalExpressionNode | IdentiferStreamNode;
+      value?: NormalExpressionNode | IdentifierStreamNode;
     },
     id: SyntaxNodeId,
   ) {
