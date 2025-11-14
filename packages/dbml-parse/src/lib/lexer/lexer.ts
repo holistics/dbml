@@ -146,8 +146,8 @@ export default class Lexer {
         case '~':
           this.addToken(SyntaxTokenKind.TILDE);
           break;
-        case "'":
-          if (this.match("''")) {
+        case '\'':
+          if (this.match('\'\'')) {
             this.multilineStringLiteral();
           } else {
             this.singleLineStringLiteral();
@@ -204,7 +204,6 @@ export default class Lexer {
     let lastNonTrivia: SyntaxToken | undefined;
     const newTokenList: SyntaxToken[] = [];
 
-     
     for (const token of this.tokens) {
       if (isTriviaToken(token)) {
         triviaList.push(token);
@@ -314,7 +313,7 @@ export default class Lexer {
   }
 
   singleLineStringLiteral () {
-    this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, "'", {
+    this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, '\'', {
       allowNewline: false,
       allowEof: false,
       raw: false,
@@ -322,7 +321,7 @@ export default class Lexer {
   }
 
   multilineStringLiteral () {
-    this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, "'''", {
+    this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, '\'\'\'', {
       allowNewline: true,
       allowEof: false,
       raw: false,
@@ -477,8 +476,8 @@ export default class Lexer {
         return '\\';
       case 'r':
         return '\r';
-      case "'":
-        return "'";
+      case '\'':
+        return '\'';
       case '"':
         return '"';
       case '`':

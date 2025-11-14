@@ -9,8 +9,12 @@ class Field extends Element {
     increment, checks = [], table = {}, noteToken = null, injectedPartial = null, injectedToken = null,
   } = {}) {
     super(token);
-    if (!name) { this.error('Field must have a name'); }
-    if (!type) { this.error('Field must have a type'); }
+    if (!name) {
+      this.error('Field must have a name');
+    }
+    if (!type) {
+      this.error('Field must have a type');
+    }
     this.name = name;
     // type : { type_name, value, schemaName }
     this.type = type;
@@ -80,7 +84,7 @@ class Field extends Element {
 
   exportChildIds () {
     return {
-      endpointIds: this.endpoints.map(e => e.id),
+      endpointIds: this.endpoints.map((e) => e.id),
     };
   }
 

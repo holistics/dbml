@@ -202,21 +202,21 @@ export interface TablePartialInjection {
   token: TokenPosition;
 }
 
-export type Project =
-  | Record<string, never>
-  | {
-    name: string | null;
-    tables: Table[];
-    refs: Ref[];
-    enums: Enum[];
-    tableGroups: TableGroup[];
-    tablePartials: TablePartial[];
-    note?: {
-      value: string;
+export type Project
+  = | Record<string, never>
+    | {
+      name: string | null;
+      tables: Table[];
+      refs: Ref[];
+      enums: Enum[];
+      tableGroups: TableGroup[];
+      tablePartials: TablePartial[];
+      note?: {
+        value: string;
+        token: TokenPosition;
+      };
       token: TokenPosition;
+      [
+      index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials'>
+      ]: string;
     };
-    token: TokenPosition;
-    [
-    index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials'>
-    ]: string;
-  };

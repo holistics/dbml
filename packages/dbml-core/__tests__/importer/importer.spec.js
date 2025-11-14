@@ -5,7 +5,6 @@ describe('@dbml/core - importer', () => {
    * @param {string} format = [json|mysql|postgres]
    */
   const runTest = (fileName, testDir, format) => {
-     
     const fileExtension = getFileExtension(format);
     const input = require(`./${testDir}/input/${fileName}.in.${fileExtension}`);
     const output = require(`./${testDir}/output/${fileName}.out.dbml`);
@@ -13,10 +12,8 @@ describe('@dbml/core - importer', () => {
     const res = importer.import(input, format);
 
     expect(res).toBe(output);
-     
   };
 
-   
   test.each(scanTestNames(__dirname, 'json_importer/input'))('json_importer/%s', (name) => {
     runTest(name, 'json_importer', 'json');
   });
@@ -36,5 +33,4 @@ describe('@dbml/core - importer', () => {
   test.each(scanTestNames(__dirname, 'snowflake_importer/input'))('snowflake_importer/%s', (name) => {
     runTest(name, 'snowflake_importer', 'snowflake');
   });
-   
 });

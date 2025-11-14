@@ -63,7 +63,7 @@ export class ParsingContextStack {
   // Call the passed in callback
   // with the guarantee that the passed in context will be pushed and popped properly
   // even in cases of exceptions
-  withContextDo<T> (context: ParsingContext, callback: () => T): () => T {
+  withContextDo<T>(context: ParsingContext, callback: () => T): () => T {
     return () => {
       this.push(context);
 

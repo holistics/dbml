@@ -333,11 +333,11 @@
 
 <script setup lang="ts">
 interface Props {
-  type: string
-  iconClass?: string
+  type: string;
+  iconClass?: string;
 }
 
 withDefaults(defineProps<Props>(), {
-  iconClass: 'text-gray-600'
-})
+  iconClass: 'text-gray-600',
+});
 </script>

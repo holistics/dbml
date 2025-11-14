@@ -7,5 +7,6 @@ export default class NoteBinder extends ElementBinder {
     },
     settingList: {},
   };
+
   protected settingList = {};
 }

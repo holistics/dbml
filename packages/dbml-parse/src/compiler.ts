@@ -78,7 +78,7 @@ export default class Compiler {
     queryCallback: (arg: U) => V,
     toKey?: (arg: U) => K,
   ): (arg: U) => V;
-  private createQuery<V, U, K> (
+  private createQuery<V, U, K>(
     kind: Query,
     queryCallback: (arg: U | undefined) => V,
     toKey?: (arg: U) => K,
@@ -400,9 +400,9 @@ export default class Compiler {
         ownerSymbol: NodeSymbol,
       ): readonly Readonly<{ symbol: NodeSymbol; kind: SymbolKind; name: string }>[] => (ownerSymbol.symbolTable
         ? [...ownerSymbol.symbolTable.entries()].map(([index, symbol]) => ({
-          ...destructureIndex(index).unwrap(),
-          symbol,
-        }))
+            ...destructureIndex(index).unwrap(),
+            symbol,
+          }))
         : []),
     ),
   };

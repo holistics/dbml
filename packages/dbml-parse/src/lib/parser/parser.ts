@@ -77,7 +77,6 @@ export default class Parser {
       return last(this.tokens)!; // The EOF
     }
 
-     
     return this.tokens[this.current++];
   }
 
@@ -108,7 +107,7 @@ export default class Parser {
     return this.tokens[this.current - 1];
   }
 
-  private canHandle<T extends SyntaxNode> (e: PartialParsingError<T>): boolean {
+  private canHandle<T extends SyntaxNode>(e: PartialParsingError<T>): boolean {
     return e.handlerContext === undefined || e.handlerContext === this.contextStack.top();
   }
 
@@ -170,7 +169,7 @@ export default class Parser {
     this.tokens = tokens;
   }
 
-  parse (): Report<{ ast: ProgramNode, tokens: SyntaxToken[] }, CompileError> {
+  parse (): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }, CompileError> {
     const body = this.program();
     const eof = this.advance();
     const program = this.nodeFactory.create(ProgramNode, { body, eof });
@@ -281,7 +280,7 @@ export default class Parser {
 
     if (
       !this.discardUntil(
-        "Expect an opening brace '{' or a colon ':'",
+        'Expect an opening brace \'{\' or a colon \':\'',
         SyntaxTokenKind.LBRACE,
         SyntaxTokenKind.COLON,
       )
@@ -366,7 +365,7 @@ export default class Parser {
     }
 
     try {
-      this.consume("Expect a colon ':'", SyntaxTokenKind.COLON);
+      this.consume('Expect a colon \':\'', SyntaxTokenKind.COLON);
       args.bodyColon = this.previous();
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
@@ -729,7 +728,7 @@ export default class Parser {
     const buildBlock = () => this.nodeFactory.create(BlockExpressionNode, args);
 
     try {
-      this.consume("Expect an opening brace '{'", SyntaxTokenKind.LBRACE);
+      this.consume('Expect an opening brace \'{\'', SyntaxTokenKind.LBRACE);
       args.blockOpenBrace = this.previous();
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
@@ -765,7 +764,7 @@ export default class Parser {
     }
 
     try {
-      this.consume("Expect a closing brace '}'", SyntaxTokenKind.RBRACE);
+      this.consume('Expect a closing brace \'}\'', SyntaxTokenKind.RBRACE);
       args.blockCloseBrace = this.previous();
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
@@ -859,7 +858,7 @@ export default class Parser {
     const buildTuple = () => this.nodeFactory.create(TupleExpressionNode, args);
 
     try {
-      this.consume("Expect an opening parenthesis '('", SyntaxTokenKind.LPAREN);
+      this.consume('Expect an opening parenthesis \'(\'', SyntaxTokenKind.LPAREN);
       args.tupleOpenParen = this.previous();
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
@@ -889,7 +888,7 @@ export default class Parser {
 
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RPAREN)) {
       try {
-        this.consume("Expect a comma ','", SyntaxTokenKind.COMMA);
+        this.consume('Expect a comma \',\'', SyntaxTokenKind.COMMA);
         args.commaList.push(this.previous());
         args.elementList.push(this.normalExpression());
       } catch (e) {
@@ -907,7 +906,7 @@ export default class Parser {
     }
 
     try {
-      this.consume("Expect a closing parenthesis ')'", SyntaxTokenKind.RPAREN);
+      this.consume('Expect a closing parenthesis \')\'', SyntaxTokenKind.RPAREN);
       args.tupleCloseParen = this.previous();
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
@@ -946,7 +945,7 @@ export default class Parser {
     const buildList = () => this.nodeFactory.create(ListExpressionNode, args);
 
     try {
-      this.consume("Expect an opening bracket '['", SyntaxTokenKind.LBRACKET);
+      this.consume('Expect an opening bracket \'[\'', SyntaxTokenKind.LBRACKET);
       args.listOpenBracket = this.previous();
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
@@ -976,7 +975,7 @@ export default class Parser {
 
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACKET)) {
       try {
-        this.consume("Expect a comma ','", SyntaxTokenKind.COMMA);
+        this.consume('Expect a comma \',\'', SyntaxTokenKind.COMMA);
         args.commaList.push(this.previous());
         args.elementList.push(this.attribute());
       } catch (e) {
@@ -994,7 +993,7 @@ export default class Parser {
     }
 
     try {
-      this.consume("Expect a closing bracket ']'", SyntaxTokenKind.RBRACKET);
+      this.consume('Expect a closing bracket \']\'', SyntaxTokenKind.RBRACKET);
       args.listCloseBracket = this.previous();
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
@@ -1192,5 +1191,3 @@ function postfixBindingPower (token: SyntaxToken): { left: null | number; right:
 
   return power || { left: null, right: null };
 }
-
- 

@@ -21,7 +21,6 @@ describe('@dbml/core - model_structure', () => {
   describe('multiple_schema', () => {
     describe('normalized_structure', () => {
       test('normalized database - contains all properties', (done) => {
-         
         isEqualExcludeTokenEmpty(normalizedModel, expectedNormalizeModel);
         done();
       });

@@ -55,9 +55,10 @@ class Table extends Element {
   }
 
   checkField (field) {
-    if (this.fields.some(f => f.name === field.name)) {
+    if (this.fields.some((f) => f.name === field.name)) {
       field.error(`Field "${field.name}" existed in table ${shouldPrintSchema(this.schema)
-        ? `"${this.schema.name}".` : ''}"${this.name}"`);
+        ? `"${this.schema.name}".`
+        : ''}"${this.name}"`);
     }
   }
 
@@ -76,7 +77,8 @@ class Table extends Element {
     index.columns.forEach((column) => {
       if (column.type === 'column' && !(this.findField(column.value))) {
         index.error(`Column "${column.value}" do not exist in table ${shouldPrintSchema(this.schema)
-          ? `"${this.schema.name}".` : ''}"${this.name}"`);
+          ? `"${this.schema.name}".`
+          : ''}"${this.name}"`);
       }
     });
   }
@@ -92,7 +94,7 @@ class Table extends Element {
   }
 
   findField (fieldName) {
-    return this.fields.find(f => f.name === fieldName);
+    return this.fields.find((f) => f.name === fieldName);
   }
 
   checkSameId (table) {
@@ -118,7 +120,7 @@ class Table extends Element {
      *   token, // token of the partial definition
      * }
      */
-    const existingFieldNames = new Set(this.fields.map(f => f.name));
+    const existingFieldNames = new Set(this.fields.map((f) => f.name));
     const existingSettingNames = new Set();
     if (!isNil(this.note)) existingSettingNames.add('note');
     if (!isNil(this.headerColor)) existingSettingNames.add('headerColor');
@@ -138,7 +140,7 @@ class Table extends Element {
 
       if (tablePartial.fields) {
         // ignore fields that already exist in the table, or have been added by a later partial
-        const rawFields = tablePartial.fields.filter(f => !existingFieldNames.has(f.name));
+        const rawFields = tablePartial.fields.filter((f) => !existingFieldNames.has(f.name));
         const fields = rawFields.map((rawField) => {
           existingFieldNames.add(rawField.name);
 
@@ -217,16 +219,16 @@ class Table extends Element {
 
   exportChild () {
     return {
-      fields: this.fields.map(f => f.export()),
-      indexes: this.indexes.map(i => i.export()),
+      fields: this.fields.map((f) => f.export()),
+      indexes: this.indexes.map((i) => i.export()),
     };
   }
 
   exportChildIds () {
     return {
-      fieldIds: this.fields.map(f => f.id),
-      indexIds: this.indexes.map(i => i.id),
-      checkIds: this.checks.map(c => c.id),
+      fieldIds: this.fields.map((f) => f.id),
+      indexIds: this.indexes.map((i) => i.id),
+      checkIds: this.checks.map((c) => c.id),
     };
   }
 

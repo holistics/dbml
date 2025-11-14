@@ -11,5 +11,6 @@ export default class ChecksBinder extends ElementBinder {
     },
     settingList: {},
   };
+
   protected settingList = {};
 }

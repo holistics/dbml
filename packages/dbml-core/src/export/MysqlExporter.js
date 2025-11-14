@@ -17,7 +17,7 @@ class MySQLExporter {
       if (field.enumId) {
         const _enum = model.enums[field.enumId];
         line = `\`${field.name}\` ENUM (`;
-        const enumValues = _enum.valueIds.map(valueId => {
+        const enumValues = _enum.valueIds.map((valueId) => {
           return `'${model.enumValues[valueId].name}'`;
         });
         line += `${enumValues.join(', ')})`;
@@ -45,7 +45,7 @@ class MySQLExporter {
           }
           line += ` CHECK (${check.expression})`;
         } else {
-          const checkExpressions = field.checkIds.map(checkId => {
+          const checkExpressions = field.checkIds.map((checkId) => {
             const check = model.checks[checkId];
             return `(${check.expression})`;
           });
@@ -62,7 +62,7 @@ class MySQLExporter {
         }
       }
       if (field.note) {
-        line += ` COMMENT '${field.note.replace(/'/g, "''")}'`;
+        line += ` COMMENT '${field.note.replace(/'/g, '\'\'')}'`;
       }
 
       return line;
@@ -74,7 +74,7 @@ class MySQLExporter {
   static getCompositePKs (tableId, model) {
     const table = model.tables[tableId];
 
-    const compositePkIds = table.indexIds ? table.indexIds.filter(indexId => model.indexes[indexId].pk) : [];
+    const compositePkIds = table.indexIds ? table.indexIds.filter((indexId) => model.indexes[indexId].pk) : [];
     const lines = compositePkIds.map((keyId) => {
       const key = model.indexes[keyId];
       let line = 'PRIMARY KEY';
@@ -147,8 +147,9 @@ class MySQLExporter {
       const table = model.tables[tableContent.tableId];
       const schema = model.schemas[table.schemaId];
       const tableStr = `CREATE TABLE ${shouldPrintSchema(schema, model)
-        ? `\`${schema.name}\`.` : ''}\`${table.name}\` (\n${
-        content.map(line => `  ${line}`).join(',\n')}\n);\n`;
+        ? `\`${schema.name}\`.`
+        : ''}\`${table.name}\` (\n${
+        content.map((line) => `  ${line}`).join(',\n')}\n);\n`;
       return tableStr;
     });
 
@@ -156,7 +157,7 @@ class MySQLExporter {
   }
 
   static buildFieldName (fieldIds, model) {
-    const fieldNames = fieldIds.map(fieldId => `\`${model.fields[fieldId].name}\``).join(', ');
+    const fieldNames = fieldIds.map((fieldId) => `\`${model.fields[fieldId].name}\``).join(', ');
     return `(${fieldNames})`;
   }
 
@@ -178,8 +179,10 @@ class MySQLExporter {
   static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, refEndpointSchema, foreignEndpointSchema, model) {
     const refEndpointFields = [...fieldsMap.keys()].join('`, `');
     const line = `ALTER TABLE ${shouldPrintSchema(refEndpointSchema, model)
-      ? `\`${refEndpointSchema.name}\`.` : ''}\`${refEndpointTableName}\` ADD FOREIGN KEY (\`${refEndpointFields}\`) REFERENCES ${shouldPrintSchema(foreignEndpointSchema, model)
-      ? `\`${foreignEndpointSchema.name}\`.` : ''}\`${foreignEndpointTableName}\` ${foreignEndpointFields};\n\n`;
+      ? `\`${refEndpointSchema.name}\`.`
+      : ''}\`${refEndpointTableName}\` ADD FOREIGN KEY (\`${refEndpointFields}\`) REFERENCES ${shouldPrintSchema(foreignEndpointSchema, model)
+      ? `\`${foreignEndpointSchema.name}\`.`
+      : ''}\`${foreignEndpointTableName}\` ${foreignEndpointFields};\n\n`;
     return line;
   }
 
@@ -187,7 +190,7 @@ class MySQLExporter {
     const strArr = refIds.map((refId) => {
       let line = '';
       const ref = model.refs[refId];
-      const refOneIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const refOneIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
       const refEndpointIndex = refOneIndex === -1 ? 0 : refOneIndex;
       const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
       const refEndpointId = ref.endpointIds[refEndpointIndex];
@@ -215,12 +218,14 @@ class MySQLExporter {
         line += this.buildForeignKeyManyToMany(secondTableFieldsMap, foreignEndpointFieldName, newTableName, foreignEndpointTable.name, refEndpointSchema, foreignEndpointSchema, model);
       } else {
         line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
-          ? `\`${foreignEndpointSchema.name}\`.` : ''}\`${foreignEndpointTable.name}\` ADD `;
+          ? `\`${foreignEndpointSchema.name}\`.`
+          : ''}\`${foreignEndpointTable.name}\` ADD `;
         if (ref.name) {
           line += `CONSTRAINT \`${ref.name}\` `;
         }
         line += `FOREIGN KEY ${foreignEndpointFieldName} REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
-          ? `\`${refEndpointSchema.name}\`.` : ''}\`${refEndpointTable.name}\` ${refEndpointFieldName}`;
+          ? `\`${refEndpointSchema.name}\`.`
+          : ''}\`${refEndpointTable.name}\` ${refEndpointFieldName}`;
         if (ref.onDelete) {
           line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
         }
@@ -246,10 +251,14 @@ class MySQLExporter {
       if (index.unique) {
         line += ' UNIQUE';
       }
-      const indexName = index.name ? `\`${index.name}\`` : `\`${shouldPrintSchema(schema, model)
-        ? `\`${schema.name}\`.` : ''}${table.name}_index_${i}\``;
+      const indexName = index.name
+        ? `\`${index.name}\``
+        : `\`${shouldPrintSchema(schema, model)
+          ? `\`${schema.name}\`.`
+          : ''}${table.name}_index_${i}\``;
       line += ` INDEX ${indexName} ON ${shouldPrintSchema(schema, model)
-        ? `\`${schema.name}\`.` : ''}\`${table.name}\``;
+        ? `\`${schema.name}\`.`
+        : ''}\`${table.name}\``;
 
       const columnArr = [];
       index.columnIds.forEach((columnId) => {
@@ -283,7 +292,8 @@ class MySQLExporter {
         const schema = model.schemas[table.schemaId];
 
         line += `ALTER TABLE ${shouldPrintSchema(schema, model)
-          ? `\`${schema.name}\`.` : ''}\`${table.name}\` COMMENT = '${table.note.replace(/'/g, "''")}'`;
+          ? `\`${schema.name}\`.`
+          : ''}\`${table.name}\` COMMENT = '${table.note.replace(/'/g, '\'\'')}'`;
       }
       line += ';\n';
       return line;
@@ -294,7 +304,7 @@ class MySQLExporter {
   static export (model) {
     const database = model.database['1'];
 
-    const usedTableNames = new Set(Object.values(model.tables).map(table => table.name));
+    const usedTableNames = new Set(Object.values(model.tables).map((table) => table.name));
 
     const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];

@@ -76,13 +76,13 @@ class Ref extends Element {
 
   exportChild () {
     return {
-      endpoints: this.endpoints.map(e => e.export()),
+      endpoints: this.endpoints.map((e) => e.export()),
     };
   }
 
   exportChildIds () {
     return {
-      endpointIds: this.endpoints.map(e => e.id),
+      endpointIds: this.endpoints.map((e) => e.id),
     };
   }
 

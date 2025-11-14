@@ -59,11 +59,11 @@ export function isOffsetWithinSpan (offset: number, nodeOrToken: SyntaxNode | Sy
   return offset >= nodeOrToken.start && offset < nodeOrToken.end;
 }
 
-export function returnIfIsOffsetWithinFullSpan(
+export function returnIfIsOffsetWithinFullSpan (
   offset: number,
   node?: SyntaxNode,
 ): SyntaxNode | undefined;
-export function returnIfIsOffsetWithinFullSpan(
+export function returnIfIsOffsetWithinFullSpan (
   offset: number,
   token?: SyntaxToken,
 ): SyntaxToken | undefined;

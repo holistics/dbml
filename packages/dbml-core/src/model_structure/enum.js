@@ -8,7 +8,9 @@ class Enum extends Element {
     name, token, values, note, schema, noteToken = null,
   } = {}) {
     super(token);
-    if (!name) { this.error('Enum must have a name'); }
+    if (!name) {
+      this.error('Enum must have a name');
+    }
     this.name = name;
     this.note = note ? get(note, 'value', note) : null;
     this.noteToken = note ? get(note, 'token', noteToken) : null;
@@ -26,7 +28,7 @@ class Enum extends Element {
   }
 
   processValues (rawValues) {
-    rawValues.forEach(value => {
+    rawValues.forEach((value) => {
       this.pushValue(new EnumValue({ ...value, _enum: this }));
     });
   }
@@ -37,9 +39,10 @@ class Enum extends Element {
   }
 
   checkValue (value) {
-    if (this.values.some(v => v.name === value.name)) {
+    if (this.values.some((v) => v.name === value.name)) {
       value.error(`Enum value "${value.name}" existed in enum ${shouldPrintSchema(this.schema)
-        ? `"${this.schema.name}".` : ''}"${this.name}"`);
+        ? `"${this.schema.name}".`
+        : ''}"${this.name}"`);
     }
   }
 
@@ -49,10 +52,12 @@ class Enum extends Element {
   }
 
   checkField (field) {
-    if (this.fields.some(f => f.id === field.id)) {
+    if (this.fields.some((f) => f.id === field.id)) {
       this.error(`Field ${shouldPrintSchema(field.table.schema)
-        ? `"${field.table.schema.name}".` : ''}"${field.table.name}"."${field.name}" already associated with enum ${shouldPrintSchema(this.schema)
-        ? `"${this.schema.name}".` : ''}${this.name}"`);
+        ? `"${field.table.schema.name}".`
+        : ''}"${field.table.name}"."${field.name}" already associated with enum ${shouldPrintSchema(this.schema)
+        ? `"${this.schema.name}".`
+        : ''}${this.name}"`);
     }
   }
 
@@ -65,14 +70,14 @@ class Enum extends Element {
 
   exportChild () {
     return {
-      values: this.values.map(value => value.export()),
+      values: this.values.map((value) => value.export()),
     };
   }
 
   exportChildIds () {
     return {
-      valueIds: this.values.map(value => value.id),
-      fieldIds: this.fields.map(field => field.id),
+      valueIds: this.values.map((value) => value.id),
+      fieldIds: this.fields.map((field) => field.id),
     };
   }
 
@@ -97,7 +102,7 @@ class Enum extends Element {
       ...this.exportParentIds(),
     };
 
-    this.values.forEach(v => v.normalize(model));
+    this.values.forEach((v) => v.normalize(model));
   }
 }
 

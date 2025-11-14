@@ -2,7 +2,7 @@ const _ = require('lodash');
 
 function findTable (ast, tableName, schemaName) {
   const realSchemaName = schemaName || 'public';
-  const table = ast.tables.find(t => {
+  const table = ast.tables.find((t) => {
     const targetSchemaName = t.schemaName || 'public';
     return targetSchemaName === realSchemaName && t.name === tableName;
   });
@@ -10,7 +10,7 @@ function findTable (ast, tableName, schemaName) {
 }
 
 function findField (table, fieldName) {
-  return table.fields.find(_field => _field.name === fieldName);
+  return table.fields.find((_field) => _field.name === fieldName);
 }
 
 function handleIndexes (index, ast) {
@@ -20,14 +20,14 @@ function handleIndexes (index, ast) {
 }
 
 function pushOut (values, astProp) {
-  values.forEach(value => {
+  values.forEach((value) => {
     astProp.push(value);
   });
 }
 function handleTable (table, ast) {
   pushOut(table.enums, ast.enums);
   pushOut(table.refs, ast.refs);
-  table.enums.forEach(_enum => {
+  table.enums.forEach((_enum) => {
     _enum.fieldName = null;
   });
   table.enums = null;
@@ -49,7 +49,7 @@ function handleEnums (_enum, ast) {
   _enum.fieldName = null;
   _enum.tableName = null;
   field.type.type_name = _enum.name;
-  field.type.args = _enum.values.map(value => `'${value.name}'`).join(', ');
+  field.type.args = _enum.values.map((value) => `'${value.name}'`).join(', ');
 }
 
 function handleTableNote (comment, ast) {
@@ -82,7 +82,7 @@ function handleStatement (_statements) {
     enums: [],
   };
   const statements = _.flatten(_statements);
-  statements.forEach(statement => {
+  statements.forEach((statement) => {
     if (!statement) return;
     switch (statement.type) {
       case 'tables':

@@ -2,7 +2,7 @@ import type {
   Position as IPosition, editor, languages, IRange, IDisposable, CancellationToken as ICancellationToken,
 } from 'monaco-editor-core';
 
-export type Position = IPosition
+export type Position = IPosition;
 export type TextModel = editor.ITextModel;
 export type ProviderResult<T> = languages.ProviderResult<T>;
 export type Range = IRange;
@@ -55,12 +55,12 @@ export enum CompletionItemKind {
   TypeParameter = 24,
   User = 25,
   Issue = 26,
-  Snippet = 27
+  Snippet = 27,
 }
 export enum CompletionItemInsertTextRule {
   None = 0,
   KeepWhitespace = 1,
-  InsertAsSnippet = 4
+  InsertAsSnippet = 4,
 }
 
 // Color provider types

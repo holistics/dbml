@@ -23,7 +23,8 @@ class Endpoint extends Element {
     const table = schema.database.findTable(schemaName, tableName);
     if (!table) {
       this.error(`Can't find table ${shouldPrintSchemaName(schemaName)
-        ? `"${schemaName}".` : ''}"${tableName}"`);
+        ? `"${schemaName}".`
+        : ''}"${tableName}"`);
     }
     this.setFields(fieldNames, table);
   }
@@ -38,8 +39,8 @@ class Endpoint extends Element {
   }
 
   compareFields (endpoint) {
-    const sortedThisFieldIds = this.fields.map(field => field.id).sort();
-    const sortedEndpointFieldIds = endpoint.fields.map(field => field.id).sort();
+    const sortedThisFieldIds = this.fields.map((field) => field.id).sort();
+    const sortedEndpointFieldIds = endpoint.fields.map((field) => field.id).sort();
     for (let i = 0; i < sortedThisFieldIds.length; i += 1) {
       if (sortedThisFieldIds[i] !== sortedEndpointFieldIds[i]) return false;
     }
@@ -55,7 +56,7 @@ class Endpoint extends Element {
   exportParentIds () {
     return {
       refId: this.ref.id,
-      fieldIds: this.fields.map(field => field.id),
+      fieldIds: this.fields.map((field) => field.id),
     };
   }
 
@@ -71,23 +72,24 @@ class Endpoint extends Element {
   setFields (fieldNames, table) {
     let newFieldNames = (fieldNames && fieldNames.length) ? [...fieldNames] : [];
     if (!newFieldNames.length) {
-      const fieldHasPK = table.fields.find(field => field.pk);
+      const fieldHasPK = table.fields.find((field) => field.pk);
       if (fieldHasPK) {
         newFieldNames.push(fieldHasPK.name);
       } else {
-        const indexHasPK = table.indexes.find(index => index.pk);
+        const indexHasPK = table.indexes.find((index) => index.pk);
         if (indexHasPK) {
-          newFieldNames = indexHasPK.columns.map(column => column.value);
+          newFieldNames = indexHasPK.columns.map((column) => column.value);
         } else {
           this.error(`Can't find primary or composite key in table ${shouldPrintSchema(table.schema) ? `"${table.schema.name}".` : ''}"${table.name}"`);
         }
       }
     }
-    newFieldNames.forEach(fieldName => {
+    newFieldNames.forEach((fieldName) => {
       const field = table.findField(fieldName);
       if (!field) {
         this.error(`Can't find field ${shouldPrintSchema(table.schema)
-          ? `"${table.schema.name}".` : ''}"${fieldName}" in table "${table.name}"`);
+          ? `"${table.schema.name}".`
+          : ''}"${fieldName}" in table "${table.name}"`);
       }
       this.fields.push(field);
       field.pushEndpoint(this);

@@ -68,7 +68,9 @@ export class TableInterpreter implements ElementInterpreter {
         },
         pk: true,
       });
-      this.pkColumns.forEach((column) => { column.pk = false; });
+      this.pkColumns.forEach((column) => {
+        column.pk = false;
+      });
     }
 
     return errors;
@@ -213,7 +215,7 @@ export class TableInterpreter implements ElementInterpreter {
       column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PrimaryKey]?.length;
       column.increment = !!settingMap[SettingName.Increment]?.length;
       column.unique = !!settingMap[SettingName.Unique]?.length;
-       
+
       column.not_null = settingMap[SettingName.NotNull]?.length
         ? true
         : settingMap[SettingName.Null]?.length
@@ -339,7 +341,7 @@ export class TableInterpreter implements ElementInterpreter {
         const fragments: SyntaxNode[] = [];
         while (arg instanceof CallExpressionNode) {
           fragments.push(arg.argumentList!);
-           
+
           arg = arg.callee!;
         }
         fragments.push(arg);

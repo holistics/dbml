@@ -1,4 +1,3 @@
- 
 import {
   first, flatten, flattenDepth, last, nth,
 } from 'lodash';
@@ -21,7 +20,7 @@ const getSchemaAndTableName = (names) => {
 };
 
 const getStringFromRawString = (rawString) => {
-  if (rawString.startsWith("N'")) {
+  if (rawString.startsWith('N\'')) {
     return rawString;
   }
 
@@ -81,7 +80,7 @@ const splitColumnDefTableConstraints = (columnDefTableConstraints) => {
 
 const parseFieldsAndInlineRefsFromFieldsData = (fieldsData, tableName, schemaName) => {
   const [resInlineRefs, fields] = fieldsData.reduce((acc, fieldData) => {
-    const inlineRefs = fieldData.inline_refs.map(inlineRef => {
+    const inlineRefs = fieldData.inline_refs.map((inlineRef) => {
       inlineRef.endpoints[0].tableName = tableName;
       inlineRef.endpoints[0].schemaName = schemaName;
       inlineRef.endpoints[0].fieldNames = [fieldData.field.name];
@@ -353,7 +352,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       const value = getStringFromRawString(ctx.getText());
       return {
         value,
-        type: value.startsWith("N'") ? DATA_TYPE.EXPRESSION : DATA_TYPE.STRING,
+        type: value.startsWith('N\'') ? DATA_TYPE.EXPRESSION : DATA_TYPE.STRING,
       };
     }
 
@@ -525,7 +524,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
     this.data.refs.push(...flatten(inlineRefs));
 
-    this.data.refs.push(...tableRefs.map(tableRef => {
+    this.data.refs.push(...tableRefs.map((tableRef) => {
       tableRef.endpoints[0].tableName = tableName;
       tableRef.endpoints[0].schemaName = schemaName;
       return tableRef;
@@ -1054,7 +1053,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const { inlineRefs, fields } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
     this.data.refs.push(...flatten(inlineRefs));
 
-    this.data.refs.push(...tableRefs.map(tableRef => {
+    this.data.refs.push(...tableRefs.map((tableRef) => {
       tableRef.endpoints[0].tableName = tableName;
       tableRef.endpoints[0].schemaName = schemaName;
       return tableRef;
@@ -1286,7 +1285,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
       return {
         value,
-        type: value.startsWith("N'") ? DATA_TYPE.EXPRESSION : DATA_TYPE.STRING,
+        type: value.startsWith('N\'') ? DATA_TYPE.EXPRESSION : DATA_TYPE.STRING,
       };
     }
 

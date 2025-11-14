@@ -2,10 +2,17 @@ import jest from 'eslint-plugin-jest';
 import globals from 'globals';
 import eslint from '@eslint/js';
 import { defineConfig } from 'eslint/config';
-import airbnbBase from 'eslint-config-airbnb-base';
+import stylistic from '@stylistic/eslint-plugin';
 
 export default defineConfig(
   eslint.configs.recommended,
+  stylistic.configs.customize({
+    indent: 2,
+    semi: true,
+    quotes: 'single',
+    arrowParens: true,
+    braceStyle: '1tbs',
+  }),
   [
     {
       ignores: [
@@ -30,8 +37,10 @@ export default defineConfig(
           ...globals.es2022,
         },
       },
+      plugins: {
+        '@stylistic': stylistic,
+      },
       rules: {
-        ...airbnbBase.rules,
         'no-unused-vars': [
           'warn',
           {
@@ -40,6 +49,7 @@ export default defineConfig(
             caughtErrorsIgnorePattern: '^_',
           },
         ],
+        '@stylistic/space-before-function-paren': ['error', 'always'],
       }
     },
     {

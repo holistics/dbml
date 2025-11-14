@@ -3,7 +3,7 @@ const { getFullTableName } = require('../../../utils');
 function makeIndex (_create, isUnique, _clustered, _index, indexName, _on, tableName, columnNames) {
   const fullTableName = getFullTableName(tableName);
   const columns = [];
-  columnNames.forEach(columnName => {
+  columnNames.forEach((columnName) => {
     columns.push({
       value: columnName,
       type: 'column',

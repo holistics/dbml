@@ -40,7 +40,7 @@ const Lang = P.createLanguage({
     r.FKOnOptions,
     A.makeOnSetting,
   ),
-  FKNFR: () => KP.KeywordNFR.map(value => {
+  FKNFR: () => KP.KeywordNFR.map((value) => {
     return { type: value };
   }),
   FKOnOptions: () => P.alt(KP.KeywordNoAction, KP.KeywordCascade, KP.KeywordSetDefault, KP.KeywordSetNull),

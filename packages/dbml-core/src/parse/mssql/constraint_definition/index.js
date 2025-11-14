@@ -22,7 +22,7 @@ const Lang = P.createLanguage({
     r.ConstraintCheck,
   ),
   ColumnConstraint: (r) => P.seq(r.ConstraintName.fallback(null), r.ColumnConstraintOption)
-    .map(value => value[1]),
+    .map((value) => value[1]),
 
   ColumnConstraintOption: (r) => P.alt(
     pColumnConstraintIndex,
@@ -35,14 +35,14 @@ const Lang = P.createLanguage({
     KP.KeywordCheck,
     KP.KeywordNFR.fallback(null),
     r.ConstraintCheckExpr,
-  ).map(value => value[2]),
+  ).map((value) => value[2]),
 
   ConstraintCheckExpr: (r) => P.alt(
     P.seq(
       KP.LParen.fallback(null),
       r.ConstraintCheckEnum,
       KP.RParen.fallback(null),
-    ).map(value => value[1]),
+    ).map((value) => value[1]),
     pExpression.thru(streamline('expression')),
   ),
 
@@ -64,12 +64,12 @@ const Lang = P.createLanguage({
       KP.LParen,
       r.ConstExpr,
       KP.RParen,
-    ).map(value => value[1]),
+    ).map((value) => value[1]),
     pFunction,
     pConst,
     KP.KeywordNull.thru(streamline('boolean')),
   ),
-  ConstraintName: () => P.seq(KP.KeywordConstraint, pIdentifier).map(value => value[1]),
+  ConstraintName: () => P.seq(KP.KeywordConstraint, pIdentifier).map((value) => value[1]),
 });
 
 module.exports = {

@@ -28,7 +28,7 @@ describe('@dbml/core - model_structure', () => {
       test('database - contains all schemas', () => {
         expect(database.schemas).toHaveLength(1);
 
-        expect(database.schemas.map((schema => schema.name))).toEqual(expect.arrayContaining([DEFAULT_SCHEMA_NAME]));
+        expect(database.schemas.map((schema) => schema.name)).toEqual(expect.arrayContaining([DEFAULT_SCHEMA_NAME]));
       });
 
       test('all schemas - contains all properties', () => {
@@ -58,7 +58,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.tables).toHaveLength(6);
 
         const tables = ['merchants', 'users', 'countries', 'order_items', 'orders', 'products'];
-        expect(schema.tables.map(table => table.name)).toEqual(expect.arrayContaining(tables));
+        expect(schema.tables.map((table) => table.name)).toEqual(expect.arrayContaining(tables));
       });
 
       test('schema "public" - contains all enums', () => {
@@ -67,7 +67,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.enums).toHaveLength(1);
 
         const enums = ['products_status'];
-        expect(schema.enums.map(_enum => _enum.name)).toEqual(expect.arrayContaining(enums));
+        expect(schema.enums.map((_enum) => _enum.name)).toEqual(expect.arrayContaining(enums));
       });
 
       test('schema "public" - contains all tableGroups', () => {
@@ -76,7 +76,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.tableGroups).toHaveLength(1);
 
         const tableGroups = ['g1'];
-        expect(schema.tableGroups.map(group => group.name)).toEqual(expect.arrayContaining(tableGroups));
+        expect(schema.tableGroups.map((group) => group.name)).toEqual(expect.arrayContaining(tableGroups));
       });
 
       test('schema "public" - contains all refs', () => {
@@ -90,7 +90,7 @@ describe('@dbml/core - model_structure', () => {
           endpoints: ref.endpoints.map((endpoint) => ({
             schemaName: endpoint.fields[0].table.schema.name,
             tableName: endpoint.fields[0].table.name,
-            fieldNames: endpoint.fields.map(field => field.name),
+            fieldNames: endpoint.fields.map((field) => field.name),
             relation: endpoint.relation,
           })),
         }));
@@ -419,7 +419,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.tableIds).toHaveLength(6);
 
         const tables = ['merchants', 'users', 'countries', 'order_items', 'orders', 'products'];
-         
+
         expect(schema.tableIds.map((tableId) => getEle('tables', tableId).name)).toEqual(expect.arrayContaining(tables));
       });
 
@@ -429,7 +429,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.enumIds).toHaveLength(1);
 
         const enums = ['products_status'];
-         
+
         expect(schema.enumIds.map((enumId) => getEle('enums', enumId).name)).toEqual(expect.arrayContaining(enums));
       });
 
@@ -439,7 +439,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.tableGroupIds).toHaveLength(1);
 
         const tableGroups = ['g1'];
-         
+
         expect(schema.tableGroupIds.map((groupId) => getEle('tableGroups', groupId).name)).toEqual(expect.arrayContaining(tableGroups));
       });
 
@@ -539,7 +539,7 @@ describe('@dbml/core - model_structure', () => {
             note: 'less than 20',
           },
         ];
-         
+
         expect(_enum.valueIds.map((valueId) => ({
           name: getEle('enumValues', valueId).name,
           note: getEle('enumValues', valueId).note ? getEle('enumValues', valueId).note : null,
@@ -553,7 +553,7 @@ describe('@dbml/core - model_structure', () => {
         expect(_enum.fieldIds).toHaveLength(1);
 
         const fields = ['status'];
-         
+
         expect(_enum.fieldIds.map((fieldId) => getEle('fields', fieldId).name)).toEqual(expect.arrayContaining(fields));
       });
 
@@ -578,7 +578,7 @@ describe('@dbml/core - model_structure', () => {
         expect(group.tableIds).toHaveLength(2);
 
         const tables = ['users', 'merchants'];
-         
+
         expect(group.tableIds.map((tableId) => getEle('tables', tableId).name)).toEqual(expect.arrayContaining(tables));
       });
 

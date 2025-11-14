@@ -153,7 +153,7 @@ export default class TableValidator implements ElementValidator {
 
     if (
       alias && isSimpleName(alias)
-       
+
       && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
     ) {
       const aliasName = extractVarNameFromPrimaryVariable(alias as any).unwrap();
@@ -229,7 +229,6 @@ export default class TableValidator implements ElementValidator {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
       }
 
-       
       if (field.args[0] && !isValidColumnType(field.args[0])) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', field.args[0]));
       }
@@ -284,8 +283,8 @@ export default class TableValidator implements ElementValidator {
     const settingMap: {
       [index: string]: AttributeNode[];
     } & {
-      pk?: (AttributeNode | PrimaryExpressionNode)[],
-      unique?: (AttributeNode | PrimaryExpressionNode)[],
+      pk?: (AttributeNode | PrimaryExpressionNode)[];
+      unique?: (AttributeNode | PrimaryExpressionNode)[];
     } = aggReport.getValue();
 
     parts.forEach((part) => {

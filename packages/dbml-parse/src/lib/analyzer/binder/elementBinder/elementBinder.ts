@@ -44,6 +44,7 @@ export default abstract class ElementBinder {
     arg: ArgumentBinderRule;
     settingList: SettingListBinderRule;
   };
+
   protected abstract settingList: SettingListBinderRule;
   protected injectionBinderRule?: BinderRule;
 
@@ -215,21 +216,20 @@ export default abstract class ElementBinder {
       });
     }
 
-     
     return tuple
       ? tuple.elementList.forEach((e) => this.resolveIndexStack(
-        [
-          ...subnameStack,
-          {
-            index: createNodeSymbolIndex(
-              extractVarNameFromPrimaryVariable(e as any).unwrap(),
-              tupleVarSymbolKind!,
-            ),
-            referrer: e,
-          },
-        ],
-        rule.ignoreNameNotFound,
-      ))
+          [
+            ...subnameStack,
+            {
+              index: createNodeSymbolIndex(
+                extractVarNameFromPrimaryVariable(e as any).unwrap(),
+                tupleVarSymbolKind!,
+              ),
+              referrer: e,
+            },
+          ],
+          rule.ignoreNameNotFound,
+        ))
       : this.resolveIndexStack(subnameStack, rule.ignoreNameNotFound);
   }
 
@@ -256,7 +256,7 @@ export default abstract class ElementBinder {
 
     let prevScope = accessSymbol.symbolTable!;
     let { kind: prevKind, name: prevName } = destructureIndex(accessSubname.index).unwrap();
-     
+
     for (const subname of remainingSubnames) {
       const { kind: curKind, name: curName } = destructureIndex(subname.index).unwrap();
       const curSymbol = prevScope.get(subname.index);
@@ -293,7 +293,7 @@ export default abstract class ElementBinder {
     const symbolTable = this.declarationNode.symbol?.symbolTable;
     if (!symbolTable) return;
 
-    const injectorSymbols = new Map<NodeSymbolIndex, { injectorFieldSymbol: NodeSymbol, injectorDeclaration: SyntaxNode}>();
+    const injectorSymbols = new Map<NodeSymbolIndex, { injectorFieldSymbol: NodeSymbol; injectorDeclaration: SyntaxNode }>();
 
     symbolTable.forEach((nodeSymbol, nodeSymbolIndex) => {
       if (!isInjectionIndex(nodeSymbolIndex)) return;

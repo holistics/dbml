@@ -21,7 +21,6 @@ describe('@dbml/core - normalized_structure', () => {
   describe('table_partial', () => {
     describe('normalized_structure', () => {
       test('normalized database - contains all properties', (done) => {
-         
         isEqualExcludeTokenEmpty(normalizedModel, expectedNormalizeModel);
         done();
       });

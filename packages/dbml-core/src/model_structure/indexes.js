@@ -37,7 +37,7 @@ class Index extends Element {
   }
 
   checkIndexColumn (column) {
-    if (this.columns.some(c => c.type === column.type && c.value === column.value)) {
+    if (this.columns.some((c) => c.type === column.type && c.value === column.value)) {
       column.error(`Index column ${column.value} existed`);
     }
   }
@@ -51,13 +51,13 @@ class Index extends Element {
 
   exportChild () {
     return {
-      columns: this.columns.map(c => c.export()),
+      columns: this.columns.map((c) => c.export()),
     };
   }
 
   exportChildIds () {
     return {
-      columnIds: this.columns.map(c => c.id),
+      columnIds: this.columns.map((c) => c.id),
     };
   }
 
@@ -86,7 +86,7 @@ class Index extends Element {
       ...this.exportParentIds(),
     };
 
-    this.columns.forEach(c => c.normalize(model));
+    this.columns.forEach((c) => c.normalize(model));
   }
 }
 

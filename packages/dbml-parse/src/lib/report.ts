@@ -17,14 +17,14 @@ export default class Report<T, E> {
     return this.errors;
   }
 
-  chain<U> (fn: (_: T) => Report<U, E>): Report<U, E> {
+  chain<U>(fn: (_: T) => Report<U, E>): Report<U, E> {
     const res = fn(this.value);
     const errors = [...this.errors, ...res.errors];
 
     return new Report<U, E>(res.value, errors);
   }
 
-  map<U> (fn: (_: T) => U): Report<U, E> {
+  map<U>(fn: (_: T) => U): Report<U, E> {
     return new Report<U, E>(fn(this.value), this.errors);
   }
 }

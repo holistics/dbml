@@ -267,51 +267,51 @@
  * - Information Hiding: Business logic hidden in composables and services
  * - Shallow Module: Simple interface that coordinates deeper modules
  */
-import { ref, provide, watch, onMounted } from 'vue'
-import { useParser } from '@/composables/useParser'
-import { useUserData } from '@/composables/useUserData'
-import MonacoEditor from '@/components/editors/MonacoEditor.vue'
-import ParserOutputViewer from '@/components/outputs/ParserOutputViewer.vue'
-import JsonOutputViewer from '@/components/outputs/JsonOutputViewer.vue'
-import * as monaco from 'monaco-editor'
-import { TokenMappingService } from '@/core/token-mapping'
-import { TokenNavigationCoordinator } from '@/core/token-navigation'
-import packageJson from '../package.json'
-import type { PipelineStage } from '@/types'
-import consoleLogger from './utils/logger'
+import { ref, provide, watch, onMounted } from 'vue';
+import { useParser } from '@/composables/useParser';
+import { useUserData } from '@/composables/useUserData';
+import MonacoEditor from '@/components/editors/MonacoEditor.vue';
+import ParserOutputViewer from '@/components/outputs/ParserOutputViewer.vue';
+import JsonOutputViewer from '@/components/outputs/JsonOutputViewer.vue';
+import * as monaco from 'monaco-editor';
+import { TokenMappingService } from '@/core/token-mapping';
+import { TokenNavigationCoordinator } from '@/core/token-navigation';
+import packageJson from '../package.json';
+import type { PipelineStage } from '@/types';
+import consoleLogger from './utils/logger';
 
 // Initialize parser with clean interface
-const parser = useParser()
+const parser = useParser();
 
 // Initialize user data management
-const { userData, updateUserData, saveDbml } = useUserData()
+const { userData, updateUserData, saveDbml } = useUserData();
 
 // Reactive state derived from user data
-const vimModeEnabled = ref(userData.value.isVim)
-const activeStage = ref<PipelineStage | 'errors'>(userData.value.openingTab)
+const vimModeEnabled = ref(userData.value.isVim);
+const activeStage = ref<PipelineStage | 'errors'>(userData.value.openingTab);
 
 // Initialize token navigation system
-const tokenMapping = new TokenMappingService()
-const tokenNavigationCoordinator = new TokenNavigationCoordinator(tokenMapping)
+const tokenMapping = new TokenMappingService();
+const tokenNavigationCoordinator = new TokenNavigationCoordinator(tokenMapping);
 
 // Reference to components
-let dbmlEditor: monaco.editor.IStandaloneCodeEditor | null = null
-const lexerViewer = ref<InstanceType<typeof ParserOutputViewer> | null>(null)
+let dbmlEditor: monaco.editor.IStandaloneCodeEditor | null = null;
+const lexerViewer = ref<InstanceType<typeof ParserOutputViewer> | null>(null);
 
 /**
  * Handle DBML editor mounted event
  */
 const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
-  dbmlEditor = editor
-  tokenNavigationCoordinator.setDbmlEditor(editor)
+  dbmlEditor = editor;
+  tokenNavigationCoordinator.setDbmlEditor(editor);
 
   // Add Cmd/Ctrl+S shortcut for manual save
   editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-    saveDbml(parser.dbmlInput.value)
+    saveDbml(parser.dbmlInput.value);
     // Show brief save indicator
-    consoleLogger.log('DBML content saved to localStorage')
-  })
-}
+    consoleLogger.log('DBML content saved to localStorage');
+  });
+};
 
 /**
  * Setup lexer viewer when it's mounted
@@ -319,60 +319,60 @@ const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
 watch(lexerViewer, (newViewer) => {
   if (newViewer) {
     // The ParserOutputViewer will delegate to LexerView when appropriate
-    tokenNavigationCoordinator.setLexerViewer(newViewer)
+    tokenNavigationCoordinator.setLexerViewer(newViewer);
   }
-})
+});
 
 /**
  * Sync reactive state with user data
  */
 watch(vimModeEnabled, (newValue) => {
-  updateUserData('isVim', newValue)
-})
+  updateUserData('isVim', newValue);
+});
 
 watch(activeStage, (newValue) => {
   if (newValue !== 'errors') {
-    updateUserData('openingTab', newValue)
+    updateUserData('openingTab', newValue);
   }
-})
+});
 
 // Watch for changes in lexer view mode and save to user data
 watch(() => lexerViewer.value?.getViewMode?.(), (newMode) => {
   if (newMode) {
-    updateUserData('isRawJson', newMode === 'json')
+    updateUserData('isRawJson', newMode === 'json');
   }
-})
+});
 
 /**
  * Initialize DBML content from user data
  */
 onMounted(() => {
   // Set initial DBML content from user data
-  parser.dbmlInput.value = userData.value.dbml
+  parser.dbmlInput.value = userData.value.dbml;
 
   // Setup auto-save for DBML content
-  let autoSaveTimeout: number | null = null
+  let autoSaveTimeout: number | null = null;
 
   watch(parser.dbmlInput, (newContent) => {
     // Clear existing timeout
     if (autoSaveTimeout) {
-      clearTimeout(autoSaveTimeout)
+      clearTimeout(autoSaveTimeout);
     }
 
     // Set new timeout for auto-save (1 second delay)
     autoSaveTimeout = window.setTimeout(() => {
-      updateUserData('dbml', newContent)
-    }, 1000)
-  })
+      updateUserData('dbml', newContent);
+    }, 1000);
+  });
 
   // Initialize lexer view mode from user data
   watch(lexerViewer, (newViewer) => {
     if (newViewer) {
-      const initialViewMode = userData.value.isRawJson ? 'json' : 'cards'
-      newViewer.setViewMode?.(initialViewMode)
+      const initialViewMode = userData.value.isRawJson ? 'json' : 'cards';
+      newViewer.setViewMode?.(initialViewMode);
     }
-  }, { immediate: true })
-})
+  }, { immediate: true });
+});
 
 /**
  * Setup app state accessors for token navigation coordinator
@@ -381,41 +381,41 @@ tokenNavigationCoordinator.setAppStateAccessors(
   () => activeStage.value,
   () => {
     // Get lexer view mode from the parser output viewer component
-    return lexerViewer.value?.getViewMode?.() || 'cards'
+    return lexerViewer.value?.getViewMode?.() || 'cards';
   },
   (mode: string) => {
     // Set lexer view mode on the parser output viewer component
-    lexerViewer.value?.setViewMode?.(mode as 'cards' | 'json')
-  }
-)
+    lexerViewer.value?.setViewMode?.(mode as 'cards' | 'json');
+  },
+);
 
 /**
  * Update token mapping when lexer output changes
  */
 watch(() => parser.tokens.value, (newTokens) => {
   if (newTokens && Array.isArray(newTokens)) {
-    tokenNavigationCoordinator.updateTokenMapping(newTokens)
+    tokenNavigationCoordinator.updateTokenMapping(newTokens);
   }
-}, { immediate: true })
+}, { immediate: true });
 
 /**
  * Provide services to child components
  */
-provide('tokenNavigationBus', tokenNavigationCoordinator.getEventBus())
-provide('getDbmlEditor', () => dbmlEditor)
-provide('tokenNavigationCoordinator', tokenNavigationCoordinator)
+provide('tokenNavigationBus', tokenNavigationCoordinator.getEventBus());
+provide('getDbmlEditor', () => dbmlEditor);
+provide('tokenNavigationCoordinator', tokenNavigationCoordinator);
 
 // UI state management
-const version = packageJson.version
+const version = packageJson.version;
 
 // Check if using workspace version (local development)
-const isUsingWorkspaceVersion = packageJson.dependencies['@dbml/parse'].startsWith('workspace:')
+const isUsingWorkspaceVersion = packageJson.dependencies['@dbml/parse'].startsWith('workspace:');
 
-const displayVersion = isUsingWorkspaceVersion ? 'development' : version
+const displayVersion = isUsingWorkspaceVersion ? 'development' : version;
 
 // Main panel resize state
-const mainPanelWidth = ref(50) // Default 50% width for DBML editor
-const isMainResizing = ref(false)
+const mainPanelWidth = ref(50); // Default 50% width for DBML editor
+const isMainResizing = ref(false);
 
 /**
  * Available pipeline stages for visualization
@@ -425,67 +425,67 @@ const PIPELINE_STAGES = [
   { id: 'parser' as const, name: 'Parser', description: 'Syntax analysis stage' },
   { id: 'analyzer' as const, name: 'Analyzer', description: 'Semantic analysis stage' },
   { id: 'interpreter' as const, name: 'Interpreter', description: 'Code generation stage' },
-  { id: 'errors' as const, name: 'Errors', description: 'Error reports' }
-] as const
+  { id: 'errors' as const, name: 'Errors', description: 'Error reports' },
+] as const;
 
 /**
  * Get output for the currently active stage
  */
 const getCurrentStageOutput = () => {
   if (activeStage.value === 'errors') {
-    return null // Errors are handled separately
+    return null; // Errors are handled separately
   }
-  return parser.getStageOutput(activeStage.value)
-}
+  return parser.getStageOutput(activeStage.value);
+};
 
 /**
  * Get formatted output string for the currently active stage
  */
 const getCurrentStageOutputString = () => {
   if (activeStage.value === 'errors') {
-    return 'View errors in the dedicated errors panel'
+    return 'View errors in the dedicated errors panel';
   }
-  return parser.getStageOutputString(activeStage.value)
-}
+  return parser.getStageOutputString(activeStage.value);
+};
 
 /**
  * Get title for the current active stage
  */
 const getStageTitle = (stage: PipelineStage) => {
-  const stageInfo = PIPELINE_STAGES.find(s => s.id === stage)
-  return stageInfo ? stageInfo.name : stage
-}
+  const stageInfo = PIPELINE_STAGES.find((s) => s.id === stage);
+  return stageInfo ? stageInfo.name : stage;
+};
 
 /**
  * Main panel resize functionality
  */
 const startMainResize = (event: MouseEvent) => {
-  isMainResizing.value = true
-  const startX = event.clientX
-  const startWidth = mainPanelWidth.value
+  isMainResizing.value = true;
+  const startX = event.clientX;
+  const startWidth = mainPanelWidth.value;
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (!isMainResizing.value) return
+    if (!isMainResizing.value) return;
 
-    const containerWidth = window.innerWidth
-    const deltaX = e.clientX - startX
-    const deltaPercent = (deltaX / containerWidth) * 100
+    const containerWidth = window.innerWidth;
+    const deltaX = e.clientX - startX;
+    const deltaPercent = (deltaX / containerWidth) * 100;
 
     // Calculate new width (moving right increases panel width, moving left decreases it)
-    const newWidth = Math.max(20, Math.min(80, startWidth + deltaPercent))
-    mainPanelWidth.value = newWidth
-  }
+    const newWidth = Math.max(20, Math.min(80, startWidth + deltaPercent));
+    mainPanelWidth.value = newWidth;
+  };
 
   const handleMouseUp = () => {
-    isMainResizing.value = false
-    document.removeEventListener('mousemove', handleMouseMove)
-    document.removeEventListener('mouseup', handleMouseUp)
-  }
+    isMainResizing.value = false;
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
 
-  document.addEventListener('mousemove', handleMouseMove)
-  document.addEventListener('mouseup', handleMouseUp)
-  event.preventDefault()
-}
+  document.addEventListener('mousemove', handleMouseMove);
+  document.addEventListener('mouseup', handleMouseUp);
+  event.preventDefault();
+};
 
 /**
  * Handle navigate to source event from AST viewer
@@ -493,23 +493,23 @@ const startMainResize = (event: MouseEvent) => {
  */
 const handleNavigateToSource = (position: { start: { line: number; column: number; offset: number }; end: { line: number; column: number; offset: number } }) => {
   // Get reference to the DBML editor (MonacoEditor)
-  const dbmlEditor = document.querySelector('.dbml-editor')
+  const dbmlEditor = document.querySelector('.dbml-editor');
   if (dbmlEditor) {
     // Use Monaco editor API to highlight the specific range
     // The position is 1-based from the parser, Monaco uses 1-based as well
-    const startLine = position.start.line
-    const startColumn = position.start.column
-    const endLine = position.end.line
-    const endColumn = position.end.column
+    const startLine = position.start.line;
+    const startColumn = position.start.column;
+    const endLine = position.end.line;
+    const endColumn = position.end.column;
 
-    consoleLogger.log(`Navigating to source: Line ${startLine}:${startColumn} - ${endLine}:${endColumn}`)
+    consoleLogger.log(`Navigating to source: Line ${startLine}:${startColumn} - ${endLine}:${endColumn}`);
 
     // TODO: Implement actual Monaco editor highlighting
     // This would require accessing the Monaco editor instance and using:
     // editor.setSelection(new monaco.Range(startLine, startColumn, endLine, endColumn))
     // editor.revealLineInCenter(startLine)
   }
-}
+};
 
 </script>
 

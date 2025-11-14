@@ -17,7 +17,7 @@ class SqlServerExporter {
       if (field.enumId) {
         const _enum = model.enums[field.enumId];
         line = `[${field.name}] nvarchar(255) NOT NULL CHECK ([${field.name}] IN (`;
-        const enumValues = _enum.valueIds.map(valueId => {
+        const enumValues = _enum.valueIds.map((valueId) => {
           const value = model.enumValues[valueId];
           return `'${value.name}'`;
         });
@@ -46,7 +46,7 @@ class SqlServerExporter {
           }
           line += ` CHECK (${check.expression})`;
         } else {
-          const checkExpressions = field.checkIds.map(checkId => {
+          const checkExpressions = field.checkIds.map((checkId) => {
             const check = model.checks[checkId];
             return `(${check.expression})`;
           });
@@ -71,7 +71,7 @@ class SqlServerExporter {
   static getCompositePKs (tableId, model) {
     const table = model.tables[tableId];
 
-    const compositePkIds = table.indexIds ? table.indexIds.filter(indexId => model.indexes[indexId].pk) : [];
+    const compositePkIds = table.indexIds ? table.indexIds.filter((indexId) => model.indexes[indexId].pk) : [];
     const lines = compositePkIds.map((keyId) => {
       const key = model.indexes[keyId];
       let line = 'PRIMARY KEY';
@@ -144,8 +144,9 @@ class SqlServerExporter {
       const table = model.tables[tableContent.tableId];
       const schema = model.schemas[table.schemaId];
       const tableStr = `CREATE TABLE ${shouldPrintSchema(schema, model)
-        ? `[${schema.name}].` : ''}[${table.name}] (\n${
-        content.map(line => `  ${line}`).join(',\n')}\n)\nGO\n`;
+        ? `[${schema.name}].`
+        : ''}[${table.name}] (\n${
+        content.map((line) => `  ${line}`).join(',\n')}\n)\nGO\n`;
       return tableStr;
     });
 
@@ -154,7 +155,8 @@ class SqlServerExporter {
 
   static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName, refEndpointSchema, model) {
     let line = `CREATE TABLE ${shouldPrintSchema(refEndpointSchema, model)
-      ? `[${refEndpointSchema.name}].` : ''}[${tableName}] (\n`;
+      ? `[${refEndpointSchema.name}].`
+      : ''}[${tableName}] (\n`;
     const key1s = [...firstTableFieldsMap.keys()].join('], [');
     const key2s = [...secondTableFieldsMap.keys()].join('], [');
     firstTableFieldsMap.forEach((fieldType, fieldName) => {
@@ -171,13 +173,15 @@ class SqlServerExporter {
   static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, refEndpointSchema, foreignEndpointSchema, model) {
     const refEndpointFields = [...fieldsMap.keys()].join('], [');
     const line = `ALTER TABLE ${shouldPrintSchema(refEndpointSchema, model)
-      ? `[${refEndpointSchema.name}].` : ''}[${refEndpointTableName}] ADD FOREIGN KEY ([${refEndpointFields}]) REFERENCES ${shouldPrintSchema(foreignEndpointSchema, model)
-      ? `[${foreignEndpointSchema.name}].` : ''}[${foreignEndpointTableName}] ${foreignEndpointFields};\nGO\n\n`;
+      ? `[${refEndpointSchema.name}].`
+      : ''}[${refEndpointTableName}] ADD FOREIGN KEY ([${refEndpointFields}]) REFERENCES ${shouldPrintSchema(foreignEndpointSchema, model)
+      ? `[${foreignEndpointSchema.name}].`
+      : ''}[${foreignEndpointTableName}] ${foreignEndpointFields};\nGO\n\n`;
     return line;
   }
 
   static buildFieldName (fieldIds, model) {
-    const fieldNames = fieldIds.map(fieldId => `[${model.fields[fieldId].name}]`).join(', ');
+    const fieldNames = fieldIds.map((fieldId) => `[${model.fields[fieldId].name}]`).join(', ');
     return `(${fieldNames})`;
   }
 
@@ -185,7 +189,7 @@ class SqlServerExporter {
     const strArr = refIds.map((refId) => {
       let line = '';
       const ref = model.refs[refId];
-      const refOneIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const refOneIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
       const refEndpointIndex = refOneIndex === -1 ? 0 : refOneIndex;
       const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
       const refEndpointId = ref.endpointIds[refEndpointIndex];
@@ -213,14 +217,16 @@ class SqlServerExporter {
         line += this.buildForeignKeyManyToMany(secondTableFieldsMap, foreignEndpointFieldName, newTableName, foreignEndpointTable.name, refEndpointSchema, foreignEndpointSchema, model);
       } else {
         line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
-          ? `[${foreignEndpointSchema.name}].` : ''}[${foreignEndpointTable.name}] ADD `;
+          ? `[${foreignEndpointSchema.name}].`
+          : ''}[${foreignEndpointTable.name}] ADD `;
 
         if (ref.name) {
           line += `CONSTRAINT [${ref.name}] `;
         }
 
         line += `FOREIGN KEY ${foreignEndpointFieldName} REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
-          ? `[${refEndpointSchema.name}].` : ''}[${refEndpointTable.name}] ${refEndpointFieldName}`;
+          ? `[${refEndpointSchema.name}].`
+          : ''}[${refEndpointTable.name}] ${refEndpointFieldName}`;
         if (ref.onDelete) {
           line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
         }
@@ -246,10 +252,14 @@ class SqlServerExporter {
       if (index.unique) {
         line += ' UNIQUE';
       }
-      const indexName = index.name ? `[${index.name}]` : `${shouldPrintSchema(schema, model)
-        ? `[${schema.name}].` : ''}[${table.name}_index_${i}]`;
+      const indexName = index.name
+        ? `[${index.name}]`
+        : `${shouldPrintSchema(schema, model)
+          ? `[${schema.name}].`
+          : ''}[${table.name}_index_${i}]`;
       line += ` INDEX ${indexName} ON ${shouldPrintSchema(schema, model)
-        ? `[${schema.name}].` : ''}[${table.name}]`;
+        ? `[${schema.name}].`
+        : ''}[${table.name}]`;
 
       const columnArr = [];
       index.columnIds.forEach((columnId) => {
@@ -281,7 +291,7 @@ class SqlServerExporter {
       switch (comment.type) {
         case 'table': {
           line += '@name = N\'Table_Description\',\n';
-          line += `@value = '${table.note.replace(/'/g, "''")}',\n`;
+          line += `@value = '${table.note.replace(/'/g, '\'\'')}',\n`;
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
           line += `@level1type = N'Table',  @level1name = '${table.name}';\n`;
           break;
@@ -289,7 +299,7 @@ class SqlServerExporter {
         case 'column': {
           const field = model.fields[comment.fieldId];
           line += '@name = N\'Column_Description\',\n';
-          line += `@value = '${field.note.replace(/'/g, "''")}',\n`;
+          line += `@value = '${field.note.replace(/'/g, '\'\'')}',\n`;
           line += `@level0type = N'Schema', @level0name = '${shouldPrintSchema(schema, model) ? `${schema.name}` : 'dbo'}',\n`;
           line += `@level1type = N'Table',  @level1name = '${table.name}',\n`;
           line += `@level2type = N'Column', @level2name = '${field.name}';\n`;
@@ -310,7 +320,7 @@ class SqlServerExporter {
   static export (model) {
     const database = model.database['1'];
 
-    const usedTableNames = new Set(Object.values(model.tables).map(table => table.name));
+    const usedTableNames = new Set(Object.values(model.tables).map((table) => table.name));
 
     const statements = database.schemaIds.reduce((prevStatements, schemaId) => {
       const schema = model.schemas[schemaId];

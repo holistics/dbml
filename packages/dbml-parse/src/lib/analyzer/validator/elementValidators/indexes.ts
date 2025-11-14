@@ -22,7 +22,7 @@ import SymbolTable from '@analyzer/symbol/symbolTable';
 import { ElementKind } from '@analyzer/types';
 
 export default class IndexesValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 

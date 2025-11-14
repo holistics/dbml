@@ -16,7 +16,7 @@ import { TableGroupFieldSymbol, TableGroupSymbol } from '@analyzer/symbol/symbol
 import { isExpressionAVariableNode, isExpressionAQuotedString } from '@parser/utils';
 
 export default class TableGroupValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 

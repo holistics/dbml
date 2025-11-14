@@ -69,7 +69,6 @@ export function destructureComplexVariable (node?: SyntaxNode): Option<string[]>
 
   const variables: string[] = [];
 
-   
   for (const fragment of fragments) {
     const variable = extractVariableFromExpression(fragment).unwrap_or(undefined);
     if (!variable) {
@@ -107,7 +106,6 @@ export function destructureComplexTuple (
     }
   }
 
-   
   for (const fragment of fragments) {
     const variable = extractVariableFromExpression(fragment).unwrap_or(undefined);
     if (!variable) {
