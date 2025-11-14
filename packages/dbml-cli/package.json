@@ -1,6 +1,6 @@
 {
   "name": "@dbml/cli",
-  "version": "5.1.0-test-data-lineage-1",
+  "version": "5.1.0-test-data-lineage-2",
   "description": "",
   "main": "lib/index.js",
   "license": "Apache-2.0",
@@ -26,8 +26,8 @@
   ],
   "dependencies": {
     "@babel/cli": "^7.21.0",
-    "@dbml/connector": "^5.1.0-test-data-lineage-1",
-    "@dbml/core": "^5.1.0-test-data-lineage-1",
+    "@dbml/connector": "^5.1.0-test-data-lineage-2",
+    "@dbml/core": "^5.1.0-test-data-lineage-2",
     "bluebird": "^3.5.5",
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
