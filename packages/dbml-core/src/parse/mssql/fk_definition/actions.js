@@ -11,7 +11,7 @@ function makeEndPoint (tableName, columnName, relation) {
 }
 
 function setOption (value, fkOptions) {
-  fkOptions.forEach(option => {
+  fkOptions.forEach((option) => {
     if (option.type.match(/ON[^\S\r\n]DELETE/i)) {
       value.onDelete = option.setting;
     }
@@ -48,7 +48,7 @@ function makeTableConstraintFK (_keyword1, endpoint1, _keyword2, tableName, endp
 
   if (!endpoint2) {
     // Omits columns list, see: https://docs.microsoft.com/en-us/sql/t-sql/statements/create-table-transact-sql?view=sql-server-ver16#foreign-key-constraints
-     
+
     endpoint2 = {
       type: 'endpoint',
       value: {

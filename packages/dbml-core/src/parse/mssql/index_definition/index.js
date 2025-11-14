@@ -27,7 +27,7 @@ const Lang = P.createLanguage({
 
   ColumnConstraintIndex: (r) => P.seq(
     pKeywordPKOrUnique,
-  ).skip(r.IgnoredIndexOptions).map(value => value[0]),
+  ).skip(r.IgnoredIndexOptions).map((value) => value[0]),
 
   ColumnIndex: (r) => P.seqMap(
     KP.KeywordIndex,

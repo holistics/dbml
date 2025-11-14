@@ -33,5 +33,6 @@ export default class IndexesBinder extends ElementBinder {
     },
     settingList: {},
   };
+
   protected settingList = {};
 }

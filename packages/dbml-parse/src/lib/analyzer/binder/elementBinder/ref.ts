@@ -15,5 +15,6 @@ export default class RefBinder extends ElementBinder {
     },
     settingList: {},
   };
+
   protected settingList = {};
 }

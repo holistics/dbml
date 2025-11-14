@@ -1,4 +1,3 @@
- 
 import { last, flatten, flattenDepth } from 'lodash';
 import MySQLParserVisitor from '../../parsers/mysql/MySqlParserVisitor';
 import {
@@ -63,7 +62,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   // TODO: support configurable default schema name other than 'public'
   findTable (schemaName, tableName) {
     const realSchemaName = schemaName || 'public';
-    const table = this.data.tables.find(t => {
+    const table = this.data.tables.find((t) => {
       const targetSchemaName = t.schemaName || 'public';
       return targetSchemaName === realSchemaName && t.name === tableName;
     });
@@ -78,7 +77,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
   // (sqlStatement (MINUS MINUS)? SEMI? | emptyStatement_)* (sqlStatement ((MINUS MINUS)? SEMI)? | emptyStatement_)
   visitSqlStatements (ctx) {
-    ctx.sqlStatement().forEach(statement => {
+    ctx.sqlStatement().forEach((statement) => {
       statement.accept(this);
     });
   }
@@ -126,11 +125,11 @@ export default class MySQLASTGen extends MySQLParserVisitor {
         return acc;
       }, [[], [], [], null, []]);
 
-      const inlineRefsOfFields = fieldsData.map(fieldData => {
+      const inlineRefsOfFields = fieldsData.map((fieldData) => {
         const { field, inlineRefs } = fieldData;
 
         if (field.type.type_name?.toLowerCase() === 'enum') {
-          const values = field.type.args.map(arg => {
+          const values = field.type.args.map((arg) => {
             const newValue = arg.replace(/'|"|`/g, '').trim();
             return {
               name: newValue,
@@ -159,7 +158,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
       });
       this.data.refs.push(...flatten(inlineRefsOfFields));
 
-      this.data.refs.push(...tableRefs.map(tableRef => {
+      this.data.refs.push(...tableRefs.map((tableRef) => {
         tableRef.endpoints[0].tableName = tableName;
         tableRef.endpoints[0].schemaName = schemaName;
         return tableRef;
@@ -173,14 +172,14 @@ export default class MySQLASTGen extends MySQLParserVisitor {
       const table = new Table({
         name: tableName,
         schemaName,
-        fields: fieldsData.map(fd => fd.field),
+        fields: fieldsData.map((fd) => fd.field),
         indexes,
         checks: tableChecks,
         ...tableOptions,
       });
 
       if (singlePkIndex) {
-        const field = table.fields.find(f => f.name === singlePkIndex.columns[0].value);
+        const field = table.fields.find((f) => f.name === singlePkIndex.columns[0].value);
         if (field) field.pk = true;
       }
 
@@ -206,8 +205,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     if (!ctx.createDefinitions()) return null;
 
-    const definitions = ctx.createDefinitions().accept(this).filter(d => d?.kind);
-    const options = ctx.tableOption()?.map(to => to.accept(this)).filter(o => o?.kind) || [];
+    const definitions = ctx.createDefinitions().accept(this).filter((d) => d?.kind);
+    const options = ctx.tableOption()?.map((to) => to.accept(this)).filter((o) => o?.kind) || [];
 
     return {
       tableName,
@@ -221,8 +220,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     const names = ctx.tableName().accept(this);
     const { tableName, schemaName } = getTableNames(names);
 
-    const definitions = ctx.createDefinitions().accept(this).filter(d => d?.kind);
-    const options = ctx.tableOption().map(to => to.accept(this)).filter(o => o?.kind);
+    const definitions = ctx.createDefinitions().accept(this).filter((d) => d?.kind);
+    const options = ctx.tableOption().map((to) => to.accept(this)).filter((o) => o?.kind);
 
     return {
       tableName,
@@ -279,7 +278,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
   // '(' createDefinition (',' createDefinition)* ')'
   visitCreateDefinitions (ctx) {
-    return ctx.createDefinition().map(cd => cd.accept(this));
+    return ctx.createDefinition().map((cd) => cd.accept(this));
   }
 
   // createDefinition:
@@ -321,7 +320,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     if (ctx.uid()) names.push(ctx.uid().accept(this));
 
-    names.push(...ctx.dottedId().map(dId => dId.accept(this)));
+    names.push(...ctx.dottedId().map((dId) => dId.accept(this)));
 
     return names;
   }
@@ -343,7 +342,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     const constraints = { inlineRefs: [], checks: [] };
 
-    ctx.columnConstraint().forEach(c => {
+    ctx.columnConstraint().forEach((c) => {
       const constraint = c.accept(this);
       if (!constraint) return;
 
@@ -459,7 +458,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
   // '(' STRING_LITERAL (',' STRING_LITERAL)* ')'
   visitCollectionOptions (ctx) {
-    return ctx.STRING_LITERAL().map(s => s.getText());
+    return ctx.STRING_LITERAL().map((s) => s.getText());
   }
 
   // typeName = (GEOMETRYCOLLECTION | GEOMCOLLECTION | LINESTRING | MULTILINESTRING | MULTIPOINT | MULTIPOLYGON | POINT | POLYGON | JSON | GEOMETRY) (SRID decimalLiteral)?
@@ -706,7 +705,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     const actions = ctx.referenceAction()?.accept(this) || {};
 
-    const fieldNames = ctx.indexColumnNames().accept(this).map(icn => icn.value);
+    const fieldNames = ctx.indexColumnNames().accept(this).map((icn) => icn.value);
 
     const endpoint0 = new Endpoint({
       tableName: null,
@@ -734,7 +733,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
   // '(' indexColumnName (',' indexColumnName)* ')'
   visitIndexColumnNames (ctx) {
-    return ctx.indexColumnName().map(indexColumnName => indexColumnName.accept(this));
+    return ctx.indexColumnName().map((indexColumnName) => indexColumnName.accept(this));
   }
 
   // ((uid | STRING_LITERAL) ('(' decimalLiteral ')')? | expression) sortType = (ASC | DESC)?
@@ -789,8 +788,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     let type = ctx.indexType()?.accept(this);
     if (ctx.indexOption()?.length) {
-      const indexOptions = ctx.indexOption().map(io => io.accept(this));
-      const typeOption = indexOptions.find(io => io?.kind === INDEX_OPTION_KIND.TYPE);
+      const indexOptions = ctx.indexOption().map((io) => io.accept(this));
+      const typeOption = indexOptions.find((io) => io?.kind === INDEX_OPTION_KIND.TYPE);
       if (typeOption) type = typeOption.value;
     }
 
@@ -812,8 +811,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     let type = ctx.indexType()?.accept(this);
     if (ctx.indexOption()?.length) {
-      const indexOptions = ctx.indexOption().map(io => io.accept(this));
-      const typeOption = indexOptions.find(io => io?.kind === INDEX_OPTION_KIND.TYPE);
+      const indexOptions = ctx.indexOption().map((io) => io.accept(this));
+      const typeOption = indexOptions.find((io) => io?.kind === INDEX_OPTION_KIND.TYPE);
       if (typeOption) type = typeOption.value;
     }
 
@@ -833,7 +832,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   visitForeignKeyTableConstraint (ctx) {
     const ref = ctx.referenceDefinition().accept(this);
     ref.name = ctx.name?.accept(this) || ctx.index?.accept(this);
-    ref.endpoints[0].fieldNames = ctx.indexColumnNames().accept(this).map(icn => icn.value);
+    ref.endpoints[0].fieldNames = ctx.indexColumnNames().accept(this).map((icn) => icn.value);
 
     return {
       kind: TABLE_CONSTRAINT_KIND.FK,
@@ -879,8 +878,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     let type = ctx.indexType()?.accept(this);
     if (ctx.indexOption()?.length) {
-      const indexOptions = ctx.indexOption().map(io => io.accept(this));
-      const typeOption = indexOptions.find(io => io?.kind === INDEX_OPTION_KIND.TYPE);
+      const indexOptions = ctx.indexOption().map((io) => io.accept(this));
+      const typeOption = indexOptions.find((io) => io?.kind === INDEX_OPTION_KIND.TYPE);
       if (typeOption) type = typeOption.value;
     }
 
@@ -901,8 +900,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     let type = null;
     if (ctx.indexOption()?.length) {
-      const indexOptions = ctx.indexOption().map(io => io.accept(this));
-      const typeOption = indexOptions.find(io => io?.kind === INDEX_OPTION_KIND.TYPE);
+      const indexOptions = ctx.indexOption().map((io) => io.accept(this));
+      const typeOption = indexOptions.find((io) => io?.kind === INDEX_OPTION_KIND.TYPE);
       if (typeOption) type = typeOption.value;
     }
 
@@ -927,16 +926,16 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     const table = this.findTable(schemaName, tableName);
     if (!table) return;
 
-    const alterSpecs = ctx.alterSpecification()?.map(spec => spec.accept(this)).filter(spec => spec?.kind) || [];
+    const alterSpecs = ctx.alterSpecification()?.map((spec) => spec.accept(this)).filter((spec) => spec?.kind) || [];
 
-    alterSpecs.forEach(alter => {
+    alterSpecs.forEach((alter) => {
       if (alter.kind === ALTER_KIND.ADD_PK) {
         /** @type {Index} */
         const index = alter.value;
 
         if (index.columns.length > 1) return table.indexes.push(index);
 
-        const field = table.fields.find(f => f.name === index.columns[0].value);
+        const field = table.fields.find((f) => f.name === index.columns[0].value);
         field.pk = true;
       } else if (alter.kind === ALTER_KIND.ADD_FK) {
         /** @type {Ref} */
@@ -963,8 +962,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     let type = ctx.indexType()?.accept(this);
     if (ctx.indexOption()?.length) {
-      const indexOptions = ctx.indexOption().map(io => io.accept(this));
-      const typeOption = indexOptions.find(io => io?.kind === INDEX_OPTION_KIND.TYPE);
+      const indexOptions = ctx.indexOption().map((io) => io.accept(this));
+      const typeOption = indexOptions.find((io) => io?.kind === INDEX_OPTION_KIND.TYPE);
       if (typeOption) type = typeOption.value;
     }
 
@@ -985,7 +984,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   visitAlterByAddForeignKey (ctx) {
     const ref = ctx.referenceDefinition().accept(this);
     ref.name = ctx.name?.accept(this) || ctx.index?.accept(this);
-    ref.endpoints[0].fieldNames = ctx.indexColumnNames().accept(this).map(icn => icn.value);
+    ref.endpoints[0].fieldNames = ctx.indexColumnNames().accept(this).map((icn) => icn.value);
 
     return {
       kind: ALTER_KIND.ADD_FK,
@@ -1019,8 +1018,8 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
     let type = ctx.indexType()?.accept(this);
     if (ctx.indexOption()?.length) {
-      const indexOptions = ctx.indexOption().map(io => io.accept(this));
-      const typeOption = indexOptions.find(io => io?.kind === INDEX_OPTION_KIND.TYPE);
+      const indexOptions = ctx.indexOption().map((io) => io.accept(this));
+      const typeOption = indexOptions.find((io) => io?.kind === INDEX_OPTION_KIND.TYPE);
       if (typeOption) type = typeOption.value;
     }
 

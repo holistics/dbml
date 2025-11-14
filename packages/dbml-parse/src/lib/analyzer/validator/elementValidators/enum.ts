@@ -17,7 +17,7 @@ import SymbolTable from '@analyzer/symbol/symbolTable';
 import { EnumFieldSymbol, EnumSymbol } from '@analyzer/symbol/symbols';
 
 export default class EnumValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 

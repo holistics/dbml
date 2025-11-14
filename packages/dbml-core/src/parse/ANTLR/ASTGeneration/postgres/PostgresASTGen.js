@@ -1,6 +1,3 @@
- 
- 
- 
 import { last, flatten, flattenDepth } from 'lodash';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
 import {
@@ -21,7 +18,7 @@ const COMMENT_OBJECT_TYPE = {
 
 const findTable = (tables, schemaName, tableName) => {
   const realSchemaName = schemaName || 'public';
-  const table = tables.find(table => {
+  const table = tables.find((table) => {
     const targetSchemaName = table.schemaName || 'public';
     return targetSchemaName === realSchemaName && table.name === tableName;
   });
@@ -30,7 +27,7 @@ const findTable = (tables, schemaName, tableName) => {
 
 const escapeStr = (str) => {
   if (str) {
-    return str.replaceAll("''", "'");
+    return str.replaceAll('\'\'', '\'');
   }
   return str;
 };
@@ -121,7 +118,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     if (!ctx.opttableelementlist()) return;
 
-    const tableElements = ctx.opttableelementlist().accept(this).filter(e => e);
+    const tableElements = ctx.opttableelementlist().accept(this).filter((e) => e);
 
     const [fieldsData, indexes, tableRefs, tableChecks] = tableElements.reduce((acc, ele) => {
       if (ele.kind === TABLE_CONSTRAINT_KIND.FIELD) acc[0].push(ele.value);
@@ -133,7 +130,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     }, [[], [], [], []]);
 
     this.data.refs.push(...flatten(
-      fieldsData.map(fieldData => fieldData.inline_refs.map(inlineRef => {
+      fieldsData.map((fieldData) => fieldData.inline_refs.map((inlineRef) => {
         inlineRef.endpoints[0].tableName = tableName;
         inlineRef.endpoints[0].schemaName = schemaName;
         inlineRef.endpoints[0].fieldNames = [fieldData.field.name];
@@ -141,7 +138,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       })),
     ));
 
-    this.data.refs.push(...tableRefs.map(tableRef => {
+    this.data.refs.push(...tableRefs.map((tableRef) => {
       tableRef.endpoints[0].tableName = tableName;
       tableRef.endpoints[0].schemaName = schemaName;
       return tableRef;
@@ -150,7 +147,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     return new Table({
       name: tableName,
       schemaName,
-      fields: fieldsData.map(fd => fd.field),
+      fields: fieldsData.map((fd) => fd.field),
       indexes,
       checks: tableChecks,
     });
@@ -213,8 +210,8 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const refTableName = last(names);
       const refSchemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
-      const firstFieldNames = ctx.columnlist().accept(this).map(c => c.value);
-      const secondFieldNames = ctx.opt_column_list().accept(this)?.map(c => c.value);
+      const firstFieldNames = ctx.columnlist().accept(this).map((c) => c.value);
+      const secondFieldNames = ctx.opt_column_list().accept(this)?.map((c) => c.value);
 
       const actions = ctx.key_actions().accept(this);
 
@@ -304,7 +301,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   // colconstraint*
   visitColquallist (ctx) {
     const r = { inline_refs: [], checks: [] };
-    ctx.colconstraint().forEach(c => {
+    ctx.colconstraint().forEach((c) => {
       const constraint = c.accept(this);
       if (!constraint) return;
 
@@ -395,7 +392,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const names = ctx.qualified_name().accept(this);
       const refTableName = last(names);
       const refSchemaName = names.length > 1 ? names[names.length - 2] : undefined;
-      const secondFieldNames = ctx.opt_column_list().accept(this)?.map(c => c.value);
+      const secondFieldNames = ctx.opt_column_list().accept(this)?.map((c) => c.value);
 
       const actions = ctx.key_actions().accept(this);
       return {
@@ -586,7 +583,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
   // indirection_el+
   visitIndirection (ctx) {
-    return ctx.indirection_el().map(i => i.accept(this));
+    return ctx.indirection_el().map((i) => i.accept(this));
   }
 
   // DOT (attr_name | STAR)
@@ -793,7 +790,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
   // index_elem (COMMA index_elem)*
   visitIndex_params (ctx) {
-    return ctx.index_elem().map(i => i.accept(this)).filter(col => !!col);
+    return ctx.index_elem().map((i) => i.accept(this)).filter((col) => !!col);
   }
 
   /*
@@ -860,13 +857,13 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
           case TABLE_CONSTRAINT_KIND.INDEX: {
             if (cmd.value.columns.length === 0) break;
             if (!(cmd.value.pk || cmd.value.unique)) break;
-             
+
             kind = cmd.kind;
             const table = findTable(this.data.tables, schemaName, tableName);
             if (!table) break;
             if (cmd.value.columns.length === 1 && (cmd.value.unique || cmd.value.pk)) {
               const key = cmd.value.columns[0].value;
-              const fieldToUpdate = table.fields.find(f => f.name === key);
+              const fieldToUpdate = table.fields.find((f) => f.name === key);
               if (fieldToUpdate) {
                 // If we have an exact match, this is a column, if not, might be an expression
                 fieldToUpdate[cmd.value.unique ? 'unique' : 'pk'] = true;
@@ -893,13 +890,13 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
           kind,
           value: cmd.value,
         };
-      }).filter(c => c);
+      }).filter((c) => c);
     }
   }
 
   // alter_table_cmd (COMMA alter_table_cmd)*
   visitAlter_table_cmds (ctx) {
-    return ctx.alter_table_cmd().map(a => a.accept(this));
+    return ctx.alter_table_cmd().map((a) => a.accept(this));
   }
 
   // check PostgresSQLParser.g4 line 410
@@ -996,7 +993,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
   // (DOT attr_name)+
   visitAttrs (ctx) {
-    return ctx.attr_name().map(a => a.accept(this));
+    return ctx.attr_name().map((a) => a.accept(this));
   }
 
   /*
@@ -1023,7 +1020,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const enumName = last(names);
       const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
-      const values = ctx.opt_enum_val_list().accept(this).map(e => ({ name: e }));
+      const values = ctx.opt_enum_val_list().accept(this).map((e) => ({ name: e }));
       if (!values) return;
 
       // enum is a keyworkd

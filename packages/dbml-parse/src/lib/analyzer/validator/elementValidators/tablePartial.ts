@@ -242,8 +242,8 @@ export default class TablePartialValidator implements ElementValidator {
     const settingMap: {
       [index: string]: AttributeNode[];
     } & {
-      pk?: (AttributeNode | PrimaryExpressionNode)[],
-      unique?: (AttributeNode | PrimaryExpressionNode)[],
+      pk?: (AttributeNode | PrimaryExpressionNode)[];
+      unique?: (AttributeNode | PrimaryExpressionNode)[];
     } = aggReport.getValue();
 
     parts.forEach((part) => {

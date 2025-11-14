@@ -24,11 +24,11 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       let declaration: SyntaxNode | undefined;
       if (
         node.referee?.declaration
-          && [
-            SyntaxNodeKind.PRIMARY_EXPRESSION,
-            SyntaxNodeKind.VARIABLE,
-            SyntaxNodeKind.PARTIAL_INJECTION,
-          ].includes(node?.kind)
+        && [
+          SyntaxNodeKind.PRIMARY_EXPRESSION,
+          SyntaxNodeKind.VARIABLE,
+          SyntaxNodeKind.PARTIAL_INJECTION,
+        ].includes(node?.kind)
       ) {
         ({ declaration } = node.referee);
       } else if (node.referee?.injectorDeclaration) {

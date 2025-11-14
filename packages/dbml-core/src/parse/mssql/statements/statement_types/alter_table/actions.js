@@ -2,7 +2,7 @@ const _ = require('lodash');
 const { getFullTableName } = require('../../../utils');
 
 function handleRef (tableName, result) {
-  const endpointWithNoTableName = result.value.endpoints.find(ele => !ele.tableName);
+  const endpointWithNoTableName = result.value.endpoints.find((ele) => !ele.tableName);
   endpointWithNoTableName.tableName = tableName.name;
   endpointWithNoTableName.schemaName = tableName.schemaName;
 }

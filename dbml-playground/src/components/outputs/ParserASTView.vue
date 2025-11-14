@@ -134,60 +134,60 @@
  * - Single Responsibility: Only handles AST visualization and navigation
  * - Maintainable: Generic structure that adapts to parser evolution
  */
-import { computed, ref, inject } from 'vue'
-import RawASTTreeView from './ast/RawASTTreeView.vue'
-import MonacoEditor from '@/components/editors/MonacoEditor.vue'
-import type { TokenNavigationEventBus } from '@/core/token-navigation'
-import consoleLogger from '@/utils/logger'
+import { computed, ref, inject } from 'vue';
+import RawASTTreeView from './ast/RawASTTreeView.vue';
+import MonacoEditor from '@/components/editors/MonacoEditor.vue';
+import type { TokenNavigationEventBus } from '@/core/token-navigation';
+import consoleLogger from '@/utils/logger';
 
 interface Props {
-  readonly ast: unknown
+  readonly ast: unknown;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 // Define emits for parent component communication
 const emit = defineEmits<{
-  'navigate-to-source': [position: { start: { line: number; column: number; offset: number }; end: { line: number; column: number; offset: number } }]
-}>()
+  'navigate-to-source': [position: { start: { line: number; column: number; offset: number }; end: { line: number; column: number; offset: number } }];
+}>();
 
 // Inject services
-const tokenNavigationBus = inject<TokenNavigationEventBus>('tokenNavigationBus')
-const tokenNavigationCoordinator = inject<any>('tokenNavigationCoordinator')
+const tokenNavigationBus = inject<TokenNavigationEventBus>('tokenNavigationBus');
+const tokenNavigationCoordinator = inject<any>('tokenNavigationCoordinator');
 
 // No services needed for simple AST view
 
 // Component state
-const viewMode = ref<'ast' | 'json'>('ast')
-const copySuccess = ref(false)
+const viewMode = ref<'ast' | 'json'>('ast');
+const copySuccess = ref(false);
 
 // Computed properties
-const rawAST = computed(() => props.ast)
+const rawAST = computed(() => props.ast);
 
 const rawASTJson = computed(() => {
-  return rawAST.value ? JSON.stringify(rawAST.value, null, 2) : ''
-})
+  return rawAST.value ? JSON.stringify(rawAST.value, null, 2) : '';
+});
 
 const nodeCount = computed(() => {
   if (rawAST.value) {
-    return countRawNodes(rawAST.value)
+    return countRawNodes(rawAST.value);
   }
-  return 0
-})
+  return 0;
+});
 
 // Methods
 const setViewMode = (mode: 'ast' | 'json') => {
-  viewMode.value = mode
-}
+  viewMode.value = mode;
+};
 
 // Navigate to source position using direct Monaco editor approach
 const navigateToSourcePosition = (position: any) => {
-  if (!position) return
+  if (!position) return;
 
-  const startLine = position.start.line
-  const startColumn = position.start.column
-  const endLine = position.end.line
-  const endColumn = position.end.column
+  const startLine = position.start.line;
+  const startColumn = position.start.column;
+  const endLine = position.end.line;
+  const endColumn = position.end.column;
 
   // Use direct navigation approach
   if (tokenNavigationCoordinator?.dbmlEditor) {
@@ -197,14 +197,14 @@ const navigateToSourcePosition = (position: any) => {
         startLineNumber: startLine,
         startColumn: startColumn,
         endLineNumber: endLine,
-        endColumn: endColumn
-      }
+        endColumn: endColumn,
+      };
 
       // Set selection to the full range
-      tokenNavigationCoordinator.dbmlEditor.setSelection(range)
+      tokenNavigationCoordinator.dbmlEditor.setSelection(range);
 
       // Reveal and center the range
-      tokenNavigationCoordinator.dbmlEditor.revealRangeInCenter(range)
+      tokenNavigationCoordinator.dbmlEditor.revealRangeInCenter(range);
 
       // Add temporary highlight for the entire range
       const decorations = tokenNavigationCoordinator.dbmlEditor.createDecorationsCollection([
@@ -212,26 +212,25 @@ const navigateToSourcePosition = (position: any) => {
           range: range,
           options: {
             className: 'token-navigation-highlight',
-            inlineClassName: 'token-navigation-highlight-inline'
-          }
-        }
-      ])
+            inlineClassName: 'token-navigation-highlight-inline',
+          },
+        },
+      ]);
 
       // Clear highlight after 2 seconds
       setTimeout(() => {
-        decorations.clear()
-      }, 2000)
-
+        decorations.clear();
+      }, 2000);
     } catch (error) {
-      consoleLogger.warn('Direct navigation failed:', error)
+      consoleLogger.warn('Direct navigation failed:', error);
       // Fallback to emit
-      emit('navigate-to-source', position)
+      emit('navigate-to-source', position);
     }
   } else {
     // Fallback to old method if coordinator not available
-    emit('navigate-to-source', position)
+    emit('navigate-to-source', position);
   }
-}
+};
 
 // Raw AST handlers - just for navigation, no selection/details
 const handleRawNodeClick = (node: any) => {
@@ -241,79 +240,79 @@ const handleRawNodeClick = (node: any) => {
       start: {
         line: node.rawData.startPos.line + 1,
         column: node.rawData.startPos.column + 1,
-        offset: node.rawData.start || 0
+        offset: node.rawData.start || 0,
       },
       end: {
         line: node.rawData.endPos?.line + 1 || node.rawData.startPos.line + 1,
         column: node.rawData.endPos?.column + 1 || node.rawData.startPos.column + 1,
-        offset: node.rawData.end || node.rawData.start || 0
-      }
-    }
-    navigateToSourcePosition(position)
+        offset: node.rawData.end || node.rawData.start || 0,
+      },
+    };
+    navigateToSourcePosition(position);
   }
-}
+};
 
 const handleRawPositionClick = (event: { node: any; position: any }) => {
-  navigateToSourcePosition(event.position)
-}
+  navigateToSourcePosition(event.position);
+};
 
 const copyCurrentView = async () => {
   try {
-    const dataToCopy = JSON.stringify(rawAST.value, null, 2)
+    const dataToCopy = JSON.stringify(rawAST.value, null, 2);
 
-    await navigator.clipboard.writeText(dataToCopy)
-    copySuccess.value = true
+    await navigator.clipboard.writeText(dataToCopy);
+    copySuccess.value = true;
     setTimeout(() => {
-      copySuccess.value = false
-    }, 2000)
+      copySuccess.value = false;
+    }, 2000);
   } catch (err) {
-    consoleLogger.error('Failed to copy to clipboard:', err)
+    consoleLogger.error('Failed to copy to clipboard:', err);
   }
-}
+};
 
 // Utility functions
 const countRawNodes = (obj: any): number => {
-  if (!obj || typeof obj !== 'object') return 0
+  if (!obj || typeof obj !== 'object') return 0;
 
-  let count = 1 // Count this node
+  let count = 1; // Count this node
 
   for (const value of Object.values(obj)) {
     if (Array.isArray(value)) {
-      count += value.reduce((sum, item) => sum + countRawNodes(item), 0)
+      count += value.reduce((sum, item) => sum + countRawNodes(item), 0);
     } else if (typeof value === 'object' && value !== null) {
-      count += countRawNodes(value)
+      count += countRawNodes(value);
     }
   }
 
-  return count
-}
+  return count;
+};
 
 const getRawASTValue = (ast: any, path: string): any => {
   try {
-    const pathParts = path.split('.').filter(part => part !== 'ast')
-    let current = ast
+    const pathParts = path.split('.').filter((part) => part !== 'ast');
+    let current = ast;
 
     for (const part of pathParts) {
       if (part.includes('[') && part.includes(']')) {
-        const [property, indexStr] = part.split('[')
-        const index = parseInt(indexStr.replace(']', ''))
-        current = current[property][index]
+        const [property, indexStr] = part.split('[');
+        const index = parseInt(indexStr.replace(']', ''));
+        current = current[property][index];
       } else {
-        current = current[part]
+        current = current[part];
       }
     }
 
-    return current
+    return current;
   } catch (error) {
-    return null
+    return null;
   }
-}
+};
 
 // Expose methods for external access
 defineExpose({
   setViewMode,
-  copyCurrentView
-})
+  copyCurrentView,
+});
 </script>
 
 <style scoped>

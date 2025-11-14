@@ -14,7 +14,7 @@ export function shouldPrintSchema (schema, model) {
 
 export function buildJunctionFields1 (fieldIds, model) {
   const fieldsMap = new Map();
-  fieldIds.map(fieldId => fieldsMap.set(`${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`, model.fields[fieldId].type.type_name));
+  fieldIds.map((fieldId) => fieldsMap.set(`${model.tables[model.fields[fieldId].tableId].name}_${model.fields[fieldId].name}`, model.fields[fieldId].type.type_name));
   return fieldsMap;
 }
 

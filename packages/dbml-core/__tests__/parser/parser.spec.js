@@ -1,4 +1,3 @@
- 
 import Parser from '../../src/parse/Parser';
 
 describe('@dbml/core', () => {

@@ -10,7 +10,7 @@ const wss = require('./whitespaces');
 const { streamline } = require('./utils');
 
 function tokenizeParen (parser) {
-  return parser.many().map(value => value.join('')).fallback(null).thru(streamline('token'));
+  return parser.many().map((value) => value.join('')).fallback(null).thru(streamline('token'));
 }
 function enclose (parser) {
   const ManyRParen = RParen.thru(tokenizeParen);
@@ -22,9 +22,9 @@ function enclosedOrNot (parser) {
   return P.alt(enclose(parser), parser);
 }
 const Lang = P.createLanguage({
-  ExpressionFinal: (r) => r.Expression.map(values => {
+  ExpressionFinal: (r) => r.Expression.map((values) => {
     const flattened = _.flattenDeep(values);
-    return flattened.map(value => {
+    return flattened.map((value) => {
       return value ? value.value : '';
     }).join('');
   }),
@@ -44,7 +44,7 @@ const Lang = P.createLanguage({
   },
   BinaryExpressionLR: (r) => {
     const pBinaryOp = P.regexp(/[+\-*/%=!<>&^|]{1,2}/)
-      .map(operator => ` ${operator} `)
+      .map((operator) => ` ${operator} `)
       .thru(streamline('binary_operator')).skip(wss);
     const pBinaryExp = P.seq(pBinaryOp, r.Expression).skip(wss);
     return pBinaryExp;
@@ -53,7 +53,7 @@ const Lang = P.createLanguage({
     const pExp = P.alt(pFunction, pConst, r.ExpressionDDN).skip(wss);
     return enclosedOrNot(pExp);
   },
-  ExpressionDDN: () => pDotDelimitedName.map(value => value.join('.')).thru(streamline('identifier')),
+  ExpressionDDN: () => pDotDelimitedName.map((value) => value.join('.')).thru(streamline('identifier')),
 });
 
 module.exports = Lang.ExpressionFinal;

@@ -19,7 +19,7 @@ import SymbolTable from '@analyzer/symbol/symbolTable';
 import { ElementKind } from '@analyzer/types';
 
 export default class ChecksValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 

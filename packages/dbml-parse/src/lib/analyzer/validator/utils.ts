@@ -115,7 +115,7 @@ export function registerSchemaStack (
   }
 
   let prevSchema = globalSchema;
-   
+
   for (const curName of variables) {
     let curSchema: SymbolTable | undefined;
     const curId = createSchemaSymbolIndex(curName);
@@ -257,7 +257,6 @@ export function isValidColumnType (type: SyntaxNode): boolean {
       return false;
     }
 
-     
     type = type.callee;
   }
 
@@ -270,7 +269,6 @@ export function isValidColumnType (type: SyntaxNode): boolean {
       return false;
     }
 
-     
     type = type.array;
   }
 
@@ -280,7 +278,7 @@ export function isValidColumnType (type: SyntaxNode): boolean {
 }
 
 export function aggregateSettingList (settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }, CompileError> {
-  const map: { [index: string]: AttributeNode[]; } = {};
+  const map: { [index: string]: AttributeNode[] } = {};
   const errors: CompileError[] = [];
   if (!settingList) {
     return new Report({});

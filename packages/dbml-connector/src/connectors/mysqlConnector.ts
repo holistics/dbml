@@ -395,7 +395,7 @@ function extractColumnsFromCheckConstraint (checkClause: string): string[] {
   return [...checkClause.matchAll(/`(?:``|[^`])*`/g)].map((col) => col.toString().slice(1, -1));
 }
 
-async function generateCheckConstraints (client: Connection, schemaName: string): Promise<{ checks: CheckConstraintDictionary, tableConstraints: TableConstraintsDictionary }> {
+async function generateCheckConstraints (client: Connection, schemaName: string): Promise<{ checks: CheckConstraintDictionary; tableConstraints: TableConstraintsDictionary }> {
   const query = `
     select
       cc.constraint_name as constraintName,

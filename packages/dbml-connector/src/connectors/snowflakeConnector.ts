@@ -195,8 +195,8 @@ const generateField = (row: Record<string, any>): Field => {
 };
 
 const generateTablesAndFields = async (conn: Connection, schemas: string[]): Promise<{
-  tables: Table[],
-  fields: FieldsDictionary,
+  tables: Table[];
+  fields: FieldsDictionary;
 }> => {
   const fields: FieldsDictionary = {};
   const schemaSql = schemas.length > 0 ? `AND c.table_schema IN (${schemas.map((schema) => `'${schema}'`).join(',')})` : '';
@@ -268,7 +268,9 @@ const createConstraintKeysMap = (keys: Record<string, string>[], schemas: string
       schema_name, table_name, column_name, constraint_name,
     } = row;
     const selectedSchema = schemas.length > 0 ? schemas.includes(schema_name) : true;
-    if (!selectedSchema) { return acc; }
+    if (!selectedSchema) {
+      return acc;
+    }
 
     const key = `${schema_name}.${table_name}.${constraint_name}`;
 

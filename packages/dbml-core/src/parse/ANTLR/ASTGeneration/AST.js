@@ -1,5 +1,3 @@
- 
-
 export class Index {
   /**
    * @param {{
@@ -140,8 +138,8 @@ export class Table {
     return {
       name: this.name,
       schemaName: this.schemaName,
-      fields: this.fields?.map(f => f.toJSON()),
-      indexes: this.indexes?.map(i => i.toJSON()),
+      fields: this.fields?.map((f) => f.toJSON()),
+      indexes: this.indexes?.map((i) => i.toJSON()),
       note: this.note,
       checks: this.checks,
     };
@@ -213,7 +211,7 @@ export class Ref {
       name: this.name,
       onDelete: this.onDelete,
       onUpdate: this.onUpdate,
-      endpoints: this.endpoints.map(e => e.toJSON()),
+      endpoints: this.endpoints.map((e) => e.toJSON()),
     };
   }
 }

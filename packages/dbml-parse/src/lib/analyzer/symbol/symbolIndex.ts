@@ -83,9 +83,9 @@ export function destructureIndex (id: NodeSymbolIndex): Option<{ name: string; k
 
   return Object.values(SymbolKind).includes(kind as SymbolKind)
     ? new Some({
-      name,
-      kind: kind as SymbolKind,
-    })
+        name,
+        kind: kind as SymbolKind,
+      })
     : new None();
 }
 

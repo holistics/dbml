@@ -7,7 +7,6 @@ export class CompilerError {
   }
 
   static create (nestedDiags) {
-     
     return new CompilerError(flattenDiag(nestedDiags));
   }
 

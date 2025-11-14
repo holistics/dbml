@@ -157,57 +157,57 @@
  * Generic design allows it to handle new features added to dbml-parse
  * without breaking when the parser structure evolves.
  */
-import { computed, ref } from 'vue'
-import MonacoEditor from '@/components/editors/MonacoEditor.vue'
-import InterpreterTreeView from './ast/InterpreterTreeView.vue'
-import type { Database, InterpreterViewProps } from '@/types'
+import { computed, ref } from 'vue';
+import MonacoEditor from '@/components/editors/MonacoEditor.vue';
+import InterpreterTreeView from './ast/InterpreterTreeView.vue';
+import type { Database, InterpreterViewProps } from '@/types';
 import consoleLogger from '@/utils/logger';
 
-const props = defineProps<InterpreterViewProps>()
+const props = defineProps<InterpreterViewProps>();
 
 // Component state
-const viewMode = ref<'tree' | 'json'>('tree')
-const copySuccess = ref(false)
+const viewMode = ref<'tree' | 'json'>('tree');
+const copySuccess = ref(false);
 
 // Parse the interpreter output
 const databaseModel = computed(() => {
   if (!props.interpreterOutput || typeof props.interpreterOutput !== 'object') {
-    return null
+    return null;
   }
-  return props.interpreterOutput as Database
-})
+  return props.interpreterOutput as Database;
+});
 
 // View mode and copy functionality
 const jsonString = computed(() => {
-  return databaseModel.value ? JSON.stringify(databaseModel.value, null, 2) : ''
-})
+  return databaseModel.value ? JSON.stringify(databaseModel.value, null, 2) : '';
+});
 
 const setViewMode = (mode: 'tree' | 'json') => {
-  viewMode.value = mode
-}
+  viewMode.value = mode;
+};
 
 const copyCurrentView = async () => {
   try {
-    const dataToCopy = jsonString.value
+    const dataToCopy = jsonString.value;
 
-    await navigator.clipboard.writeText(dataToCopy)
-    copySuccess.value = true
+    await navigator.clipboard.writeText(dataToCopy);
+    copySuccess.value = true;
     setTimeout(() => {
-      copySuccess.value = false
-    }, 2000)
+      copySuccess.value = false;
+    }, 2000);
   } catch (err) {
-    consoleLogger.error('Failed to copy to clipboard:', err)
+    consoleLogger.error('Failed to copy to clipboard:', err);
   }
-}
+};
 
 // Tree view handlers
 const handleTreeNodeClick = (node: any) => {
-  consoleLogger.log('Tree node clicked:', node)
-}
+  consoleLogger.log('Tree node clicked:', node);
+};
 
 const handleTreePositionClick = (event: { node: any; position: any }) => {
-  consoleLogger.log('Tree position clicked:', event)
-}
+  consoleLogger.log('Tree position clicked:', event);
+};
 </script>
 
 <style scoped>

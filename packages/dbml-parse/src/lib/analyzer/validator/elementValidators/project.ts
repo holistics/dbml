@@ -10,7 +10,7 @@ import { isSimpleName, pickValidator } from '@analyzer/validator/utils';
 import SymbolTable from '@analyzer/symbol/symbolTable';
 
 export default class ProjectValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 

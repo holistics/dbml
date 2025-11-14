@@ -56,15 +56,15 @@ export function convertFuncAppToElem (
     return (!asKeywordNode || !isAsKeyword(asKeywordNode))
       ? new None()
       : new Some(
-        factory.create(ElementDeclarationNode, {
-          type,
-          name: cpArgs[0],
-          as: asKeywordNode,
-          alias: cpArgs[2],
-          attributeList,
-          body,
-        }),
-      );
+          factory.create(ElementDeclarationNode, {
+            type,
+            name: cpArgs[0],
+            as: asKeywordNode,
+            alias: cpArgs[2],
+            attributeList,
+            body,
+          }),
+        );
   }
 
   if (cpArgs.length === 1) {
@@ -114,7 +114,7 @@ function markInvalidToken (token: SyntaxToken) {
   if (token.kind === SyntaxTokenKind.EOF) {
     return;
   }
-   
+
   token.isInvalid = true;
 }
 
@@ -296,14 +296,14 @@ export function extractVariableNode (value?: unknown): Option<SyntaxToken> {
 
 // Return true if an expression node is a primary expression
 // with a nested quoted string (", ' or ''')
-export function isExpressionAQuotedString (value?: unknown): value is PrimaryExpressionNode &
-  (
+export function isExpressionAQuotedString (value?: unknown): value is PrimaryExpressionNode
+  & (
     | { expression: VariableNode & { variable: SyntaxToken & { kind: SyntaxTokenKind.QUOTED_STRING } } }
     | {
-        expression: LiteralNode & {
-          literal: SyntaxToken & { kind: SyntaxTokenKind.STRING_LITERAL };
-        };
-      }
+      expression: LiteralNode & {
+        literal: SyntaxToken & { kind: SyntaxTokenKind.STRING_LITERAL };
+      };
+    }
   ) {
   return (
     value instanceof PrimaryExpressionNode

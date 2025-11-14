@@ -10,7 +10,6 @@ export class NodeSymbolIdGenerator {
   }
 
   nextId (): NodeSymbolId {
-     
     return this.id++;
   }
 }
@@ -189,7 +188,7 @@ export class TablePartialInjectedColumnSymbol implements NodeSymbol {
   injectorFieldSymbol: NodeSymbol;
   references: SyntaxNode[] = [];
 
-  constructor ({ injectorFieldSymbol, injectorDeclaration }: { injectorFieldSymbol: NodeSymbol, injectorDeclaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({ injectorFieldSymbol, injectorDeclaration }: { injectorFieldSymbol: NodeSymbol; injectorDeclaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.injectorDeclaration = injectorDeclaration;
     this.injectorFieldSymbol = injectorFieldSymbol;

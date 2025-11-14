@@ -24,20 +24,22 @@ class DbmlExporter {
       // Only safe chars, no simple quotes nor CR/LF
       return `'${newStr}'`;
     }
-    newStr = newStr.replaceAll("'", "\\'");
+    newStr = newStr.replaceAll('\'', '\\\'');
     newStr = newStr.replaceAll('\r\n', '\n'); // turn all CRLF to LF
     return `'''${newStr}'''`;
   }
 
   static exportEnums (enumIds, model) {
-    const enumStrs = enumIds.map(enumId => {
+    const enumStrs = enumIds.map((enumId) => {
       const _enum = model.enums[enumId];
       const schema = model.schemas[_enum.schemaId];
 
       return `Enum ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".` : ''}"${_enum.name}" {\n${
-        _enum.valueIds.map(valueId => `  "${model.enumValues[valueId].name}"${model.enumValues[valueId].note
-          ? ` [note: ${DbmlExporter.escapeNote(model.enumValues[valueId].note)}]` : ''}`).join('\n')}\n}\n`;
+        ? `"${schema.name}".`
+        : ''}"${_enum.name}" {\n${
+        _enum.valueIds.map((valueId) => `  "${model.enumValues[valueId].name}"${model.enumValues[valueId].note
+          ? ` [note: ${DbmlExporter.escapeNote(model.enumValues[valueId].note)}]`
+          : ''}`).join('\n')}\n}\n`;
     });
 
     return enumStrs.length ? enumStrs.join('\n') : '';
@@ -55,7 +57,8 @@ class DbmlExporter {
       }
 
       let line = `"${field.name}" ${schemaName}${DbmlExporter.hasWhiteSpace(field.type.type_name) || DbmlExporter.hasSquareBracket(field.type.type_name)
-        ? `"${field.type.type_name}"` : field.type.type_name}`;
+        ? `"${field.type.type_name}"`
+        : field.type.type_name}`;
 
       const constraints = [];
       if (field.unique) {
@@ -82,7 +85,7 @@ class DbmlExporter {
             break;
 
           case 'string': {
-            const quote = field.dbdefault.value.includes('\n') ? "'''" : "'";
+            const quote = field.dbdefault.value.includes('\n') ? '\'\'\'' : '\'';
             value += `${quote}${field.dbdefault.value}${quote}`;
             break;
           }
@@ -128,7 +131,8 @@ class DbmlExporter {
       } else if (index.columnIds.length === 1) {
         const column = model.indexColumns[index.columnIds[0]];
         line = column.type === 'expression'
-          ? `\`${column.value}\`` : column.value;
+          ? `\`${column.value}\``
+          : column.value;
       }
 
       const indexSettings = [];
@@ -212,17 +216,17 @@ class DbmlExporter {
       let tableName = `"${table.name}"`;
       if (shouldPrintSchema(schema, model)) tableName = `"${schema.name}"."${table.name}"`;
 
-      const fieldStr = tableContent.fieldContents.map(field => `  ${field}\n`).join('');
+      const fieldStr = tableContent.fieldContents.map((field) => `  ${field}\n`).join('');
 
       let checkStr = '';
       if (!isEmpty(tableContent.checkContents)) {
-        const checkBody = tableContent.checkContents.map(checkLine => `    ${checkLine}\n`).join('');
+        const checkBody = tableContent.checkContents.map((checkLine) => `    ${checkLine}\n`).join('');
         checkStr = `\n  Checks {\n${checkBody}  }\n`;
       }
 
       let indexStr = '';
       if (!isEmpty(tableContent.indexContents)) {
-        const indexBody = tableContent.indexContents.map(indexLine => `    ${indexLine}\n`).join('');
+        const indexBody = tableContent.indexContents.map((indexLine) => `    ${indexLine}\n`).join('');
         indexStr = `\n  Indexes {\n${indexBody}  }\n`;
       }
 
@@ -235,14 +239,14 @@ class DbmlExporter {
   }
 
   static buildFieldName (fieldIds, model) {
-    const fieldNames = fieldIds.map(fieldId => `"${model.fields[fieldId].name}"`).join(', ');
+    const fieldNames = fieldIds.map((fieldId) => `"${model.fields[fieldId].name}"`).join(', ');
     return fieldIds.length === 1 ? fieldNames : `(${fieldNames})`;
   }
 
   static exportRefs (refIds, model) {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
-      const oneRelationEndpointIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const oneRelationEndpointIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
       const isManyToMany = oneRelationEndpointIndex === -1;
       const refEndpointIndex = isManyToMany ? 0 : oneRelationEndpointIndex;
       const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
@@ -258,11 +262,13 @@ class DbmlExporter {
 
       if (ref.name) {
         line += ` ${shouldPrintSchema(model.schemas[ref.schemaId], model)
-          ? `"${model.schemas[ref.schemaId].name}".` : ''}"${ref.name}"`;
+          ? `"${model.schemas[ref.schemaId].name}".`
+          : ''}"${ref.name}"`;
       }
       line += ':';
       line += `${shouldPrintSchema(refEndpointSchema, model)
-        ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTable.name}".${refEndpointFieldName} `;
+        ? `"${refEndpointSchema.name}".`
+        : ''}"${refEndpointTable.name}".${refEndpointFieldName} `;
 
       const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
       const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
@@ -274,7 +280,8 @@ class DbmlExporter {
         if (foreignEndpoint.relation === '1') line += '- ';
         else line += '< ';
       line += `${shouldPrintSchema(foreignEndpointSchema, model)
-        ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}".${foreignEndpointFieldName}`;
+        ? `"${foreignEndpointSchema.name}".`
+        : ''}"${foreignEndpointTable.name}".${foreignEndpointFieldName}`;
 
       const refActions = [];
       if (ref.onUpdate) {
@@ -303,7 +310,7 @@ class DbmlExporter {
   }
 
   static exportTableGroups (tableGroupIds, model) {
-    const tableGroupStrs = tableGroupIds.map(groupId => {
+    const tableGroupStrs = tableGroupIds.map((groupId) => {
       const group = model.tableGroups[groupId];
       const groupSchema = model.schemas[group.schemaId];
       const groupSettingStr = DbmlExporter.getTableGroupSettings(group);

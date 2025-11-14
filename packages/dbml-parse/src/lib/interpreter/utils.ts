@@ -100,12 +100,12 @@ export function extractElementName (nameNode: SyntaxNode): { schemaName: string[
   };
 }
 
-export function extractColor (node: PrimaryExpressionNode & { expression: LiteralNode } & { literal: { kind: SyntaxTokenKind.COLOR_LITERAL }}): string {
+export function extractColor (node: PrimaryExpressionNode & { expression: LiteralNode } & { literal: { kind: SyntaxTokenKind.COLOR_LITERAL } }): string {
   return node.expression.literal!.value;
 }
 
-export function getRefId(sym1: ColumnSymbol, sym2: ColumnSymbol): string;
-export function getRefId(sym1: ColumnSymbol[], sym2: ColumnSymbol[]): string;
+export function getRefId (sym1: ColumnSymbol, sym2: ColumnSymbol): string;
+export function getRefId (sym1: ColumnSymbol[], sym2: ColumnSymbol[]): string;
 export function getRefId (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): string {
   if (Array.isArray(sym1)) {
     const firstIds = sym1.map(({ id }) => id).sort().join(',');
@@ -118,8 +118,8 @@ export function getRefId (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbo
   return firstId < secondId ? `${firstId}-${secondId}` : `${secondId}-${firstId}`;
 }
 
-export function isSameEndpoint(sym1: ColumnSymbol, sym2: ColumnSymbol): boolean;
-export function isSameEndpoint(sym1: ColumnSymbol[], sym2: ColumnSymbol[]): boolean;
+export function isSameEndpoint (sym1: ColumnSymbol, sym2: ColumnSymbol): boolean;
+export function isSameEndpoint (sym1: ColumnSymbol[], sym2: ColumnSymbol[]): boolean;
 export function isSameEndpoint (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): boolean {
   if (Array.isArray(sym1)) {
     const firstIds = sym1.map(({ id }) => id).sort();
@@ -186,21 +186,20 @@ export function processDefaultValue (valueNode?: SyntaxNode):
   throw new Error('Unreachable');
 }
 
- 
 export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, CompileError> {
   let typeArgs: string | null = null;
   if (typeNode instanceof CallExpressionNode) {
     typeArgs = typeNode
       .argumentList!.elementList.map((e) => {
-        if (isExpressionANumber(e)) {
-          return getNumberTextFromExpression(e);
-        }
-        if (isExpressionAQuotedString(e)) {
-          return extractQuotedStringToken(e).unwrap();
-        }
-        // e can only be an identifier here
-        return extractVariableFromExpression(e).unwrap();
-      })
+      if (isExpressionANumber(e)) {
+        return getNumberTextFromExpression(e);
+      }
+      if (isExpressionAQuotedString(e)) {
+        return extractQuotedStringToken(e).unwrap();
+      }
+      // e can only be an identifier here
+      return extractVariableFromExpression(e).unwrap();
+    })
       .join(',');
     typeNode = typeNode.callee!;
   }
@@ -232,4 +231,3 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
     args: typeArgs,
   });
 }
- 

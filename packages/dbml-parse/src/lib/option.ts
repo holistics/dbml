@@ -14,15 +14,15 @@ export class Some<T> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  unwrap_or<S> (orValue: S): S | T {
+  unwrap_or<S>(orValue: S): S | T {
     return this.value;
   }
 
-  and_then<S> (callback: (_: T) => Option<S>): Option<S> {
+  and_then<S>(callback: (_: T) => Option<S>): Option<S> {
     return callback(this.value);
   }
 
-  map<S> (callback: (_: T) => S): Option<S> {
+  map<S>(callback: (_: T) => S): Option<S> {
     return new Some(callback(this.value));
   }
 
@@ -39,21 +39,20 @@ export class None<T> {
     throw new Error('Trying to unwrap a None value');
   }
 
-  unwrap_or<S> (orValue: S): S | T {
+  unwrap_or<S>(orValue: S): S | T {
     return orValue;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  and_then<S> (callback: (_: T) => Option<S>): Option<S> {
+  and_then<S>(callback: (_: T) => Option<S>): Option<S> {
     return new None();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  map<S> (callback: (_: T) => S): Option<S> {
+  map<S>(callback: (_: T) => S): Option<S> {
     return new None();
   }
 
-   
   isOk (): boolean {
     return false;
   }

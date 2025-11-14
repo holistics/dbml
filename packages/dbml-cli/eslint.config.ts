@@ -1,7 +1,7 @@
 import globals from 'globals';
 import eslint from '@eslint/js';
 import { defineConfig } from 'eslint/config';
-import airbnbBase from 'eslint-config-airbnb-base';
+import stylistic from '@stylistic/eslint-plugin';
 import tseslint from 'typescript-eslint';
 import tsparser from '@typescript-eslint/parser';
 import jest from 'eslint-plugin-jest';
@@ -9,6 +9,13 @@ import jest from 'eslint-plugin-jest';
 export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommended,
+  stylistic.configs.customize({
+    indent: 2,
+    semi: true,
+    quotes: 'single',
+    arrowParens: true,
+    braceStyle: '1tbs',
+  }),
   [
     {
       ignores: [
@@ -29,15 +36,18 @@ export default defineConfig(
         parser: tsparser,
         parserOptions: {
           sourceType: 'module',
-          ecmaVersion: 2020,
+          ecmaVersion: 2018,
           project: './tsconfig.json',
         },
       },
+      plugins: {
+        '@stylistic': stylistic,
+      },
       rules: {
-        ...airbnbBase.rules,
         '@typescript-eslint/no-explicit-any': 'off',
         'no-use-before-define': 'off',
         'no-continue': 'off',
+        '@stylistic/space-before-function-paren': ['error', 'always'],
         '@typescript-eslint/no-unused-vars': [
           'warn',
           {

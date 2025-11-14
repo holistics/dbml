@@ -29,6 +29,7 @@ export default class TableBinder extends ElementBinder {
       },
     },
   };
+
   protected settingList = {};
 
   protected injectionBinderRule = {

@@ -146,8 +146,8 @@ const generateField = (row: Record<string, any>): Field => {
 };
 
 const generateTablesFields = async (client: sql.ConnectionPool, schemas: string[]): Promise<{
-  tables: Table[],
-  fields: FieldsDictionary,
+  tables: Table[];
+  fields: FieldsDictionary;
 }> => {
   const fields: FieldsDictionary = {};
   const tablesAndFieldsSql = `
@@ -292,9 +292,9 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
     if (ep1.length !== ep2.length) return false;
     return ep1.every(
       (endpoint, index) => endpoint.tableName === ep2[index].tableName
-      && endpoint.schemaName === ep2[index].schemaName
-      && endpoint.fieldNames.length === ep2[index].fieldNames.length
-      && endpoint.fieldNames.every((field, fieldIndex) => field === ep2[index].fieldNames[fieldIndex]),
+        && endpoint.schemaName === ep2[index].schemaName
+        && endpoint.fieldNames.length === ep2[index].fieldNames.length
+        && endpoint.fieldNames.every((field, fieldIndex) => field === ep2[index].fieldNames[fieldIndex]),
     );
   };
 
@@ -332,7 +332,7 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
       onUpdate: on_update === 'NO_ACTION' ? null : on_update,
     };
 
-    const isDuplicate = refs.some(ref => endpointsEqual(ref.endpoints, newRef.endpoints));
+    const isDuplicate = refs.some((ref) => endpointsEqual(ref.endpoints, newRef.endpoints));
 
     if (!isDuplicate) {
       refs.push(newRef);
@@ -446,12 +446,14 @@ const generateIndexesAndConstraints = async (client: sql.ConnectionPool, schemas
       };
     });
 
-    const indexExpressions = expressions ? expressions.split(',').map((expression: string) => {
-      return {
-        type: 'expression',
-        value: expression,
-      };
-    }) : [];
+    const indexExpressions = expressions
+      ? expressions.split(',').map((expression: string) => {
+          return {
+            type: 'expression',
+            value: expression,
+          };
+        })
+      : [];
 
     const index = {
       name: index_name,

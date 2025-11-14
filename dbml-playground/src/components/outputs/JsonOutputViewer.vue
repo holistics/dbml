@@ -71,34 +71,34 @@
  * - Consistency: Provides uniform appearance across all JSON output stages
  * - Deep Module: Rich functionality with simple interface
  */
-import { ref } from 'vue'
-import MonacoEditor from '@/components/editors/MonacoEditor.vue'
+import { ref } from 'vue';
+import MonacoEditor from '@/components/editors/MonacoEditor.vue';
 import consoleLogger from '@/utils/logger';
 
 interface Props {
-  readonly jsonContent: string
-  readonly title: string
+  readonly jsonContent: string;
+  readonly title: string;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 // Component state
-const copySuccess = ref(false)
+const copySuccess = ref(false);
 
 /**
  * Copy JSON content to clipboard
  */
 const copyToClipboard = async () => {
   try {
-    await navigator.clipboard.writeText(props.jsonContent)
-    copySuccess.value = true
+    await navigator.clipboard.writeText(props.jsonContent);
+    copySuccess.value = true;
     setTimeout(() => {
-      copySuccess.value = false
-    }, 2000)
+      copySuccess.value = false;
+    }, 2000);
   } catch (err) {
-    consoleLogger.error('Failed to copy JSON to clipboard:', err)
+    consoleLogger.error('Failed to copy JSON to clipboard:', err);
   }
-}
+};
 </script>
 
 <style scoped>

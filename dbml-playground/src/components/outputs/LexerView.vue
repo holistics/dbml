@@ -174,87 +174,87 @@
  * - Information Hiding: Token navigation complexity is encapsulated
  * - Deep Module: Rich functionality with simple interface
  */
-import { computed, ref, inject } from 'vue'
-import MonacoEditor from '@/components/editors/MonacoEditor.vue'
-import type { TokenNavigationEventBus } from '@/core/token-navigation'
-import consoleLogger from '@/utils/logger'
+import { computed, ref, inject } from 'vue';
+import MonacoEditor from '@/components/editors/MonacoEditor.vue';
+import type { TokenNavigationEventBus } from '@/core/token-navigation';
+import consoleLogger from '@/utils/logger';
 
 interface Props {
-  readonly tokens: Token[]
+  readonly tokens: Token[];
 }
 
 interface Token {
-  kind: string
-  value: string
+  kind: string;
+  value: string;
   position: {
-    line: number
-    column: number
-  }
+    line: number;
+    column: number;
+  };
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 // Inject the token navigation system
-const tokenNavigationBus = inject<TokenNavigationEventBus>('tokenNavigationBus')
+const tokenNavigationBus = inject<TokenNavigationEventBus>('tokenNavigationBus');
 
 // Component state
-const highlightedTokenIndex = ref<number | null>(null)
-const viewMode = ref<'cards' | 'json'>('cards')
-const copySuccess = ref(false)
+const highlightedTokenIndex = ref<number | null>(null);
+const viewMode = ref<'cards' | 'json'>('cards');
+const copySuccess = ref(false);
 
 /**
  * Convert tokens array to formatted JSON string
  */
 const jsonString = computed(() => {
-  return JSON.stringify(props.tokens, null, 2)
-})
+  return JSON.stringify(props.tokens, null, 2);
+});
 
 /**
  * Navigate to a specific token in the DBML editor
  */
 const navigateToToken = (tokenIndex: number) => {
   if (!tokenNavigationBus) {
-    consoleLogger.warn('Token navigation bus not available')
-    return
+    consoleLogger.warn('Token navigation bus not available');
+    return;
   }
 
   tokenNavigationBus.emit('navigate:token-to-dbml', {
     tokenIndex,
-    modifier: 'button'
-  })
+    modifier: 'button',
+  });
 
   // Briefly highlight the clicked token
-  highlightedTokenIndex.value = tokenIndex
+  highlightedTokenIndex.value = tokenIndex;
   setTimeout(() => {
-    highlightedTokenIndex.value = null
-  }, 1500)
-}
+    highlightedTokenIndex.value = null;
+  }, 1500);
+};
 
 /**
  * Scroll to a specific token (called from navigation coordinator)
  */
 const scrollToToken = (tokenIndex: number) => {
-  const tokenElement = document.querySelector(`.token-card:nth-child(${tokenIndex + 1})`)
+  const tokenElement = document.querySelector(`.token-card:nth-child(${tokenIndex + 1})`);
   if (tokenElement) {
     tokenElement.scrollIntoView({
       behavior: 'smooth',
-      block: 'center'
-    })
+      block: 'center',
+    });
   }
-}
+};
 
 /**
  * Highlight a specific token (called from navigation coordinator)
  */
 const highlightToken = (tokenIndex: number) => {
-  highlightedTokenIndex.value = tokenIndex
-  scrollToToken(tokenIndex)
+  highlightedTokenIndex.value = tokenIndex;
+  scrollToToken(tokenIndex);
 
   // Clear highlight after 2 seconds
   setTimeout(() => {
-    highlightedTokenIndex.value = null
-  }, 2000)
-}
+    highlightedTokenIndex.value = null;
+  }, 2000);
+};
 
 /**
  * Highlight multiple tokens (called from navigation coordinator)
@@ -262,41 +262,41 @@ const highlightToken = (tokenIndex: number) => {
 const highlightTokens = (tokenIndices: number[]) => {
   // For multiple tokens, just scroll to the first one
   if (tokenIndices.length > 0) {
-    scrollToToken(tokenIndices[0])
+    scrollToToken(tokenIndices[0]);
 
     // Highlight the first token
-    highlightToken(tokenIndices[0])
+    highlightToken(tokenIndices[0]);
   }
-}
+};
 
 /**
  * Copy JSON string to clipboard
  */
 const copyToClipboard = async () => {
   try {
-    await navigator.clipboard.writeText(jsonString.value)
-    copySuccess.value = true
+    await navigator.clipboard.writeText(jsonString.value);
+    copySuccess.value = true;
     setTimeout(() => {
-      copySuccess.value = false
-    }, 2000)
+      copySuccess.value = false;
+    }, 2000);
   } catch (err) {
-    consoleLogger.error('Failed to copy JSON to clipboard:', err)
+    consoleLogger.error('Failed to copy JSON to clipboard:', err);
   }
-}
+};
 
 /**
  * Get current view mode
  */
 const getViewMode = (): 'cards' | 'json' => {
-  return viewMode.value
-}
+  return viewMode.value;
+};
 
 /**
  * Set view mode (both internally and externally)
  */
 const setViewMode = (mode: 'cards' | 'json'): void => {
-  viewMode.value = mode
-}
+  viewMode.value = mode;
+};
 
 // Expose methods for the navigation coordinator
 defineExpose({
@@ -304,8 +304,8 @@ defineExpose({
   highlightToken,
   highlightTokens,
   getViewMode,
-  setViewMode
-})
+  setViewMode,
+});
 </script>
 
 <style scoped>

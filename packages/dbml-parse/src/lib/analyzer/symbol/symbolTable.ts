@@ -16,8 +16,8 @@ export default class SymbolTable {
     this.table.set(id, value);
   }
 
-  get(id: NodeSymbolIndex): NodeSymbol | undefined;
-  get(id: NodeSymbolIndex, defaultValue: NodeSymbol): NodeSymbol;
+  get (id: NodeSymbolIndex): NodeSymbol | undefined;
+  get (id: NodeSymbolIndex, defaultValue: NodeSymbol): NodeSymbol;
   get (id: NodeSymbolIndex, defaultValue?: NodeSymbol): NodeSymbol | undefined {
     return (
       this.table.get(id)

@@ -31,7 +31,6 @@ export default class Validator {
     const errors: CompileError[] = [];
 
     this.ast.body.forEach((element) => {
-       
       element.parent = this.ast;
       if (element.type === undefined) {
         return;

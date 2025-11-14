@@ -15,7 +15,7 @@ import { isBinaryRelationship, isEqualTupleOperands } from '@analyzer/utils';
 import SymbolTable from '@analyzer/symbol/symbolTable';
 
 export default class RefValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 

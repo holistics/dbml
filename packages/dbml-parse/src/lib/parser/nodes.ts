@@ -13,7 +13,6 @@ export class SyntaxNodeIdGenerator {
   }
 
   nextId (): SyntaxNodeId {
-     
     return this.id++;
   }
 }
@@ -221,23 +220,23 @@ export class AttributeNode extends SyntaxNode {
 // A normal expression is the regular expression we encounter in most programming languages
 // ex. 1 + 2, 1 * 2, (1 / 3) - 4, a.b
 // Function application and literal element expressions are not considered one
-export type NormalExpressionNode =
-  | PrefixExpressionNode
-  | InfixExpressionNode
-  | PostfixExpressionNode
-  | BlockExpressionNode
-  | ListExpressionNode
-  | TupleExpressionNode
-  | CallExpressionNode
-  | PrimaryExpressionNode
-  | FunctionExpressionNode
-  | DummyNode
-  | ArrayNode;
+export type NormalExpressionNode
+  = | PrefixExpressionNode
+    | InfixExpressionNode
+    | PostfixExpressionNode
+    | BlockExpressionNode
+    | ListExpressionNode
+    | TupleExpressionNode
+    | CallExpressionNode
+    | PrimaryExpressionNode
+    | FunctionExpressionNode
+    | DummyNode
+    | ArrayNode;
 
-export type ExpressionNode =
-  | ElementDeclarationNode
-  | NormalExpressionNode
-  | FunctionApplicationNode;
+export type ExpressionNode
+  = | ElementDeclarationNode
+    | NormalExpressionNode
+    | FunctionApplicationNode;
 
 export class PrefixExpressionNode extends SyntaxNode {
   op?: SyntaxToken;
@@ -348,7 +347,7 @@ export class BlockExpressionNode extends SyntaxNode {
 export class PartialInjectionNode extends SyntaxNode {
   partial?: VariableNode;
 
-  constructor ({ op, partial }: { op?: SyntaxToken, partial?: VariableNode }, id: SyntaxNodeId) {
+  constructor ({ op, partial }: { op?: SyntaxToken; partial?: VariableNode }, id: SyntaxNodeId) {
     super(id, SyntaxNodeKind.PARTIAL_INJECTION, [op, partial]); // Need `op` for suggestion service
     this.partial = partial;
   }
@@ -510,7 +509,7 @@ export class ArrayNode extends SyntaxNode {
   array?: NormalExpressionNode;
   indexer?: ListExpressionNode;
 
-  constructor ({ expression, indexer }: { expression?: NormalExpressionNode; indexer: ListExpressionNode; }, id: SyntaxNodeId) {
+  constructor ({ expression, indexer }: { expression?: NormalExpressionNode; indexer: ListExpressionNode }, id: SyntaxNodeId) {
     super(id, SyntaxNodeKind.ARRAY, [expression, indexer]);
     this.array = expression;
     this.indexer = indexer;

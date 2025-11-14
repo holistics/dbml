@@ -27,9 +27,10 @@ function pushOutEnum (linesEnums, fieldValue, tableName) {
     const _enum = fieldValue.enums;
     const fieldType = fieldValue.type;
     _enum.name = `${tableName.schemaName
-      ? `${tableName.schemaName}_` : ''}${tableName.name}_${fieldValue.enums.name}`;
+      ? `${tableName.schemaName}_`
+      : ''}${tableName.name}_${fieldValue.enums.name}`;
     fieldType.type_name = _enum.name;
-    fieldType.args = _enum.values.map(value => `'${value.name}'`).join(', ');
+    fieldType.args = _enum.values.map((value) => `'${value.name}'`).join(', ');
     linesEnums.push(_enum);
     fieldValue.enums = null;
   }
@@ -52,7 +53,7 @@ function getLinesValue (lines, tableName) {
     refs: [],
     indexes: [],
   };
-  lines.forEach(line => {
+  lines.forEach((line) => {
     if (line && value[line.type]) {
       if (line.type === 'fields') {
         pushOutEnum(value.enums, line.value, tableName);

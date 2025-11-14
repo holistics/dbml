@@ -58,7 +58,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
         },
         pk: true,
       });
-      this.pkColumns.forEach((column) => { column.pk = false; });
+      this.pkColumns.forEach((column) => {
+        column.pk = false;
+      });
     }
 
     return errors;
@@ -148,14 +150,14 @@ export class TablePartialInterpreter implements ElementInterpreter {
       column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PrimaryKey]?.length;
       column.increment = !!settingMap[SettingName.Increment]?.length;
       column.unique = !!settingMap[SettingName.Unique]?.length;
-       
+
       column.not_null = settingMap[SettingName.NotNull]?.length
         ? true
         : (
-          settingMap[SettingName.Null]?.length
-            ? false
-            : undefined
-        );
+            settingMap[SettingName.Null]?.length
+              ? false
+              : undefined
+          );
       column.dbdefault = processDefaultValue(settingMap[SettingName.Default]?.at(0)?.value);
 
       const noteNode = settingMap[SettingName.Note]?.at(0);

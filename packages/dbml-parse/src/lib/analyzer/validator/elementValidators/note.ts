@@ -14,7 +14,7 @@ import { destructureComplexVariable, getElementKind } from '@analyzer/utils';
 import { createStickyNoteSymbolIndex } from '@analyzer/symbol/symbolIndex';
 
 export default class NoteValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 

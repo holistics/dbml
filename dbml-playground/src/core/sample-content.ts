@@ -38,15 +38,15 @@ Enum post_status {
   draft
   published
   archived
-}`
+}`;
 
 /**
  * Sample content categories
  */
 export interface SampleCategory {
-  readonly name: string
-  readonly description: string
-  readonly content: string
+  readonly name: string;
+  readonly description: string;
+  readonly content: string;
 }
 
 /**
@@ -56,7 +56,7 @@ export const SAMPLE_CATEGORIES: readonly SampleCategory[] = [
   {
     name: 'Basic Example',
     description: 'Simple tables with relationships',
-    content: DEFAULT_SAMPLE_CONTENT
+    content: DEFAULT_SAMPLE_CONTENT,
   },
   {
     name: 'E-commerce Schema',
@@ -119,7 +119,7 @@ Enum order_status {
   shipped
   delivered
   cancelled
-}`
+}`,
   },
   {
     name: 'Syntax Errors',
@@ -141,21 +141,21 @@ Table posts {
 Enum status {
   active
   inactive
-  // Missing closing brace`
-  }
-] as const
+  // Missing closing brace`,
+  },
+] as const;
 
 /**
  * Get sample content by category name
  */
-export function getSampleContent(categoryName: string): string | null {
-  const category = SAMPLE_CATEGORIES.find(cat => cat.name === categoryName)
-  return category?.content ?? null
+export function getSampleContent (categoryName: string): string | null {
+  const category = SAMPLE_CATEGORIES.find((cat) => cat.name === categoryName);
+  return category?.content ?? null;
 }
 
 /**
  * Get all available sample categories
  */
-export function getSampleCategories(): readonly SampleCategory[] {
-  return SAMPLE_CATEGORIES
+export function getSampleCategories (): readonly SampleCategory[] {
+  return SAMPLE_CATEGORIES;
 }

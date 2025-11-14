@@ -29,5 +29,6 @@ export default class TablePartialBinder extends ElementBinder {
       },
     },
   };
+
   protected settingList = {};
 }

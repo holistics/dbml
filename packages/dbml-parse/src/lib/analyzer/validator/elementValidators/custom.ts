@@ -11,7 +11,7 @@ import { getElementKind } from '@analyzer/utils';
 import { ElementKind } from '@analyzer/types';
 
 export default class CustomValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 

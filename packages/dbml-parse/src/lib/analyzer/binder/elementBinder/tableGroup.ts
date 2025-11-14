@@ -15,5 +15,6 @@ export default class TableGroupBinder extends ElementBinder {
     },
     settingList: {},
   };
+
   protected settingList = {};
 }
