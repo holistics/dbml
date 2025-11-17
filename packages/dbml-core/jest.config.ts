@@ -2,7 +2,7 @@ import { type Config } from 'jest';
 
 const config: Config = {
   preset: 'ts-jest',
-  testMatch: ["**/?(*.)+(spec|test).?([mc])[jt]s?(x)"],
+  testMatch: ['**/?(*.)+(spec|test).?([mc])[jt]s?(x)'],
   transform: {
     '^.+\\.ts$': ['ts-jest', {
       tsconfig: {
@@ -20,8 +20,8 @@ const config: Config = {
     '^lodash-es$': 'lodash',
   },
   collectCoverage: true,
-  coverageReporters: ["json", "json-summary"],
-  coverageDirectory: "coverage",
+  coverageReporters: ['json', 'json-summary'],
+  coverageDirectory: 'coverage',
 };
 
 export default config;

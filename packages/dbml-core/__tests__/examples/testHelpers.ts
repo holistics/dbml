@@ -43,11 +43,11 @@ function omitDeep (obj: any, predicate: (key: string, value: unknown) => boolean
 export function isEqualExcludeTokenEmpty (receivedObj: any, sourceObj: any): void {
   const isTokenEmptyProperty = (key: string, value: unknown) => {
     return (
-      key === 'token' ||
-      value === undefined ||
-      value === null ||
-      (Array.isArray(value) && _.isEmpty(value)) ||
-      (typeof value === 'object' && _.isEmpty(value))
+      key === 'token'
+      || value === undefined
+      || value === null
+      || (Array.isArray(value) && _.isEmpty(value))
+      || (typeof value === 'object' && _.isEmpty(value))
     );
   };
 

@@ -1,12 +1,14 @@
 import exporter from '../../../src/export';
 import { scanTestNames, getFileExtension } from '../testHelpers';
 import { ExportFormatOption } from '../../../types/export/ModelExporter';
+import { readFileSync } from 'fs';
+import path from 'path';
 
 describe('@dbml/core - exporter', () => {
   const runTest = async (fileName: string, testDir: string, format: ExportFormatOption) => {
     const fileExtension = getFileExtension(format);
-    const input = await import(`./${testDir}/input/${fileName}.in.dbml`);
-    const output = await import(`./${testDir}/output/${fileName}.out.${fileExtension}`);
+    const input = readFileSync(path.resolve(__dirname, `./${testDir}/input/${fileName}.in.dbml`), { encoding: 'utf8' });
+    const output = readFileSync(path.resolve(__dirname, `./${testDir}/output/${fileName}.out.${fileExtension}`), { encoding: 'utf8' });
     const res = exporter.export(input, format);
 
     expect(res).toBe(output);

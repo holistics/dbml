@@ -36,7 +36,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "jest",
+    "test": "jest --coverage=false",
     "coverage": "jest --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."

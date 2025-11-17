@@ -25,7 +25,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage=false",
     "coverage": "jest --coverage",
     "benchmark": "jest --projects jest-bench.config.json",
     "build:lib": "babel src --out-dir lib --copy-files",

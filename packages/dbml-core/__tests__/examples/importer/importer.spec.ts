@@ -1,12 +1,14 @@
 import importer from '../../../src/import';
 import { scanTestNames, getFileExtension } from '../testHelpers';
 import { ParseFormat } from '../../../types/parse/Parser';
+import { readFileSync } from 'fs';
+import path from 'path';
 
 describe('@dbml/core - importer', () => {
   const runTest = async (fileName: string, testDir: string, format: ParseFormat) => {
     const fileExtension = getFileExtension(format);
-    const input = await import(`./${testDir}/input/${fileName}.in.${fileExtension}`);
-    const output = await import(`./${testDir}/output/${fileName}.out.dbml`);
+    const input = readFileSync(path.resolve(__dirname, `./${testDir}/input/${fileName}.in.${fileExtension}`), { encoding: 'utf8' });
+    const output = readFileSync(path.resolve(__dirname, `./${testDir}/output/${fileName}.out.dbml`), { encoding: 'utf8' });
 
     const res = importer.import(input, format);
 
