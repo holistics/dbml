@@ -7,7 +7,7 @@ const config: Config = {
     "^.+\\.js$": "babel-jest",
   },
   collectCoverage: true,
-  coverageReporters: ["json", "json-summary"],
+  coverageReporters: ["json", "json-summary", "html", "text"],
   coverageDirectory: "coverage",
 };
 
