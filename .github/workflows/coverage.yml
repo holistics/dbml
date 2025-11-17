@@ -86,86 +86,18 @@ jobs:
 
     - name: Generate coverage report
       id: coverage
-      run: |
-        # Create a markdown report
-        cat > coverage-report.md << 'EOF'
-        ## Coverage Report
+      run: node .github/workflows/scripts/collect-coverage.js
 
-        EOF
-
-        # Process each package
-        for package in dbml-cli dbml-connector dbml-core dbml-parse; do
-          coverage_file="packages/${package}/coverage/coverage-summary.json"
-
-          if [ -f "$coverage_file" ]; then
-            echo "### 📦 @dbml/${package}" >> coverage-report.md
-            echo "" >> coverage-report.md
-
-            # Extract coverage data using node
-            node -e "
-            const fs = require('fs');
-            const data = JSON.parse(fs.readFileSync('${coverage_file}', 'utf8'));
-            const total = data.total;
-
-            // Create summary table
-            console.log('| Metric | Coverage | Files Covered |');
-            console.log('|--------|----------|---------------|');
-            console.log(\`| Lines | \${total.lines.pct}% (\${total.lines.covered}/\${total.lines.total}) | - |\`);
-            console.log(\`| Statements | \${total.statements.pct}% (\${total.statements.covered}/\${total.statements.total}) | - |\`);
-            console.log(\`| Functions | \${total.functions.pct}% (\${total.functions.covered}/\${total.functions.total}) | - |\`);
-            console.log(\`| Branches | \${total.branches.pct}% (\${total.branches.covered}/\${total.branches.total}) | - |\`);
-            console.log('');
-
-            // Find files below 80% coverage threshold
-            const lowCoverageFiles = [];
-            for (const [file, metrics] of Object.entries(data)) {
-              if (file === 'total') continue;
-              if (metrics.lines.pct < 80 || metrics.statements.pct < 80) {
-                lowCoverageFiles.push({ file, metrics });
-              }
-            }
-
-            if (lowCoverageFiles.length > 0) {
-              console.log('#### ⚠️ Files Below 80% Coverage');
-              console.log('');
-              console.log('| File | Lines | Statements | Functions | Branches |');
-              console.log('|------|-------|------------|-----------|----------|');
-
-              lowCoverageFiles.sort((a, b) => a.metrics.lines.pct - b.metrics.lines.pct).forEach(({ file, metrics }) => {
-                const shortFile = file.replace(process.cwd() + '/', '');
-                console.log(\`| \${shortFile} | \${metrics.lines.pct}% | \${metrics.statements.pct}% | \${metrics.functions.pct}% | \${metrics.branches.pct}% |\`);
-              });
-              console.log('');
-            }
-
-            // Show all files with detailed coverage
-            console.log('<details>');
-            console.log('<summary>📄 Detailed File Coverage</summary>');
-            console.log('');
-            console.log('| File | Lines | Statements | Functions | Branches |');
-            console.log('|------|-------|------------|-----------|----------|');
-
-            const files = Object.entries(data)
-              .filter(([file]) => file !== 'total')
-              .sort(([a], [b]) => a.localeCompare(b));
-
-            files.forEach(([file, metrics]) => {
-              const shortFile = file.replace(process.cwd() + '/', '');
-              console.log(\`| \${shortFile} | \${metrics.lines.pct}% | \${metrics.statements.pct}% | \${metrics.functions.pct}% | \${metrics.branches.pct}% |\`);
-            });
-
-            console.log('');
-            console.log('</details>');
-            console.log('');
-            " >> coverage-report.md
-          else
-            echo "⚠️ No coverage data found for @dbml/${package}" >> coverage-report.md
-            echo "" >> coverage-report.md
-          fi
-        done
+    - name: Upload coverage HTML reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-reports
+        path: |
+          packages/*/coverage
 
     - name: Comment PR with coverage report
       uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
       with:
         recreate: true
         path: coverage-report.md

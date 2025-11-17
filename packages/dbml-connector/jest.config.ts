@@ -11,7 +11,7 @@ const config: Config = {
     '\\.(css|less|scss)$': 'identity-obj-proxy',
   },
   collectCoverage: true,
-  coverageReporters: ['json', 'json-summary'],
+  coverageReporters: ['json', 'json-summary', 'html', 'text'],
   coverageDirectory: 'coverage',
 };
 
