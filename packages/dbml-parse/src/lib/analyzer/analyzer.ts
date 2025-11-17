@@ -20,9 +20,9 @@ export default class Analyzer {
     const validator = new Validator(this.ast, this.symbolFactory);
 
     return validator.validate().chain((program) => {
-      const binder = new Binder(program);
+      const binder = new Binder(program, this.symbolFactory);
 
-      return binder.resolve(this.symbolFactory);
+      return binder.resolve();
     });
   }
 

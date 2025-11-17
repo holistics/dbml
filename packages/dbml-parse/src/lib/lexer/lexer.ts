@@ -143,11 +143,8 @@ export default class Lexer {
         case ':':
           this.addToken(SyntaxTokenKind.COLON);
           break;
-        case '~':
-          this.addToken(SyntaxTokenKind.TILDE);
-          break;
-        case '\'':
-          if (this.match('\'\'')) {
+        case "'":
+          if (this.match("''")) {
             this.multilineStringLiteral();
           } else {
             this.singleLineStringLiteral();
