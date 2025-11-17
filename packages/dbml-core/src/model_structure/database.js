@@ -270,7 +270,7 @@ class Database extends Element {
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));
     this.notes.forEach((note) => note.normalize(normalizedModel));
-    this.records.forEach((record) => normalizedModel.records[record.id] = { ...record });
+    this.records.forEach((record) => { normalizedModel.records[record.id] = { ...record }; });
     this.tablePartials.forEach((tablePartial) => tablePartial.normalize(normalizedModel));
     return normalizedModel;
   }
