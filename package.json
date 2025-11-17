@@ -11,7 +11,8 @@
     "build": "yarn clean-build && npx lerna run build",
     "clean-build": "rm -rf ./packages/dbml-cli/lib ./packages/dbml-core/lib ./packages/dbml-parse/dist ./packages/dbml-connector/dist",
     "lint": "npx lerna run lint",
-    "lint:fix": "npx lerna run lint:fix"
+    "lint:fix": "npx lerna run lint:fix",
+    "coverage": "npx lerna run coverage"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
