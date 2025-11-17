@@ -20,6 +20,7 @@ export default defineConfig(
       ignores: [
         'node_modules/*',
         'lib/*',
+        'bin/*',
         'jestHelpers.js',
         'eslint.config.ts',
         'jest.config.ts',
