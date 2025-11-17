@@ -313,7 +313,7 @@ export default class Lexer {
   }
 
   singleLineStringLiteral () {
-    this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, '\'', {
+    this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, "'", {
       allowNewline: false,
       allowEof: false,
       raw: false,
@@ -321,7 +321,7 @@ export default class Lexer {
   }
 
   multilineStringLiteral () {
-    this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, '\'\'\'', {
+    this.consumeUntil(SyntaxTokenKind.STRING_LITERAL, "'''", {
       allowNewline: true,
       allowEof: false,
       raw: false,
