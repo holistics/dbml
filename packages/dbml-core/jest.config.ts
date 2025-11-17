@@ -20,7 +20,7 @@ const config: Config = {
     '^lodash-es$': 'lodash',
   },
   collectCoverage: true,
-  coverageReporters: ['json', 'json-summary'],
+  coverageReporters: ['json', 'json-summary', 'html', 'text'],
   coverageDirectory: 'coverage',
   collectCoverageFrom: [
     'src/**/*.{js,ts}',
