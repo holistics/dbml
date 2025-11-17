@@ -27,7 +27,7 @@ const findTable = (tables, schemaName, tableName) => {
 
 const escapeStr = (str) => {
   if (str) {
-    return str.replaceAll('\'\'', '\'');
+    return str.replaceAll("''", "'");
   }
   return str;
 };
