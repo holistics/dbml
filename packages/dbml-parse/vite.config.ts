@@ -30,7 +30,7 @@ export default defineConfig({
     globals: true,
     coverage: {
       provider: 'v8',
-      reporter: ['json'],
+      reporter: ['json', 'json-summary'],
     },
   },
 });
