@@ -1,4 +1,4 @@
-import { zip } from 'lodash-es';
+import { last, zip } from 'lodash-es';
 import { ColumnSymbol } from '@/lib/analyzer/symbol/symbols';
 import {
   destructureComplexTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
@@ -12,7 +12,7 @@ import {
   ColumnType, RelationCardinality, Table, TokenPosition,
 } from '@/lib/interpreter/types';
 import { SyntaxTokenKind } from '@/lib/lexer/tokens';
-import { isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/lib/parser/utils';
+import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/lib/parser/utils';
 import { isExpressionANumber } from '@/lib/analyzer/validator/utils';
 import Report from '@/lib/report';
 import { CompileError, CompileErrorCode } from '@/lib/errors';
@@ -180,6 +180,13 @@ export function processDefaultValue (valueNode?: SyntaxNode):
     return {
       value: valueNode.value.value,
       type: 'expression',
+    };
+  }
+
+  if (isDotDelimitedIdentifier(valueNode)) {
+    return {
+      value: destructureMemberAccessExpression(valueNode).map(last).and_then(extractVariableFromExpression).unwrap(),
+      type: 'string',
     };
   }
 

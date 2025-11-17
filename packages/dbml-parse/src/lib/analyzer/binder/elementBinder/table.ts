@@ -11,6 +11,7 @@ export default class TableBinder extends ElementBinder {
           topSubnamesSymbolKind: [SymbolKind.Enum],
           remainingSubnamesSymbolKind: SymbolKind.Schema,
           ignoreNameNotFound: true,
+          ignoreNameNotFoundForQuotedVariable: true,
         },
       ],
     },
@@ -20,9 +21,15 @@ export default class TableBinder extends ElementBinder {
         topSubnamesSymbolKind: [SymbolKind.Table, SymbolKind.Column],
         remainingSubnamesSymbolKind: SymbolKind.Schema,
         ignoreNameNotFound: false,
+        ignoreNameNotFoundForQuotedVariable: false,
       },
       default: {
-        shouldBind: false as const,
+        shouldBind: true as const,
+        topSubnamesSymbolKind: [SymbolKind.Enum, SymbolKind.EnumField],
+        remainingSubnamesSymbolKind: SymbolKind.Schema,
+        ignoreNameNotFound: false,
+        keywords: ['false', 'true', 'null'],
+        ignoreNameNotFoundForQuotedVariable: true,
       },
       check: {
         shouldBind: false as const,
@@ -37,5 +44,6 @@ export default class TableBinder extends ElementBinder {
     topSubnamesSymbolKind: [],
     remainingSubnamesSymbolKind: SymbolKind.TablePartial,
     ignoreNameNotFound: false,
+    ignoreNameNotFoundForQuotedVariable: false,
   };
 }

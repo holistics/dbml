@@ -1,0 +1,30 @@
+Enum status {
+  active
+  churned
+  inactive
+}
+
+Enum demographic.gender {
+  male
+  female
+}
+
+Enum demographic."age segment" {
+  toddler
+  children
+  teenager
+  young_adult
+  elder
+}
+
+Table user {
+  name text
+  id int
+  status status [default: status.active]
+  gender demographic.gender [default: demographic.gender.male]
+  age_type demographic."age segment" [default: demographic."age segment".young_adult]
+
+  invalid_validate_col invalid_type [default: invalid_value]
+  invalid_validate_col2 invalid_type [default: field1.field2.field3.field4]
+  invalid_bind_col invalid_type [default: invalid_enum.invalid_field]
+}

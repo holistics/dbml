@@ -10,6 +10,7 @@ export default class TableGroupBinder extends ElementBinder {
           topSubnamesSymbolKind: [SymbolKind.Table],
           remainingSubnamesSymbolKind: SymbolKind.Schema,
           ignoreNameNotFound: false,
+          ignoreNameNotFoundForQuotedVariable: false,
         },
       ],
     },

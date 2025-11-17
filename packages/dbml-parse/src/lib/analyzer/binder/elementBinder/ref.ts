@@ -10,6 +10,7 @@ export default class RefBinder extends ElementBinder {
           topSubnamesSymbolKind: [SymbolKind.Table, SymbolKind.Column],
           remainingSubnamesSymbolKind: SymbolKind.Schema,
           ignoreNameNotFound: false,
+          ignoreNameNotFoundForQuotedVariable: false,
         },
       ],
     },
