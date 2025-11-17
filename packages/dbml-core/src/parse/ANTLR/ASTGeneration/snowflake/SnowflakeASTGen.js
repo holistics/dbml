@@ -1,17 +1,11 @@
-import {
-  isEmpty, flatten, get, values, add,
-} from 'lodash';
+import { isEmpty, flatten, get, values, add } from 'lodash';
 import SnowflakeParserVisitor from '../../parsers/snowflake/SnowflakeParserVisitor';
-import {
-  Endpoint, Enum, Field, Index, Table, Ref,
-} from '../AST';
-import {
-  TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE,
-} from '../constants';
+import { Endpoint, Enum, Field, Index, Table, Ref } from '../AST';
+import { TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE } from '../constants';
 import { getOriginalText } from '../helpers';
 
 const sanitizeComment = (stringContext) => {
-  return getOriginalText(stringContext).replace(/''/g, '\'').slice(1, -1);
+  return getOriginalText(stringContext).replace(/''/g, "'").slice(1, -1);
 };
 
 export default class SnowflakeASTGen extends SnowflakeParserVisitor {

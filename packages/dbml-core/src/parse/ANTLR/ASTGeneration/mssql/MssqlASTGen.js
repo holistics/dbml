@@ -20,7 +20,7 @@ const getSchemaAndTableName = (names) => {
 };
 
 const getStringFromRawString = (rawString) => {
-  if (rawString.startsWith('N\'')) {
+  if (rawString.startsWith("N'")) {
     return rawString;
   }
 
@@ -352,7 +352,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       const value = getStringFromRawString(ctx.getText());
       return {
         value,
-        type: value.startsWith('N\'') ? DATA_TYPE.EXPRESSION : DATA_TYPE.STRING,
+        type: value.startsWith("N'") ? DATA_TYPE.EXPRESSION : DATA_TYPE.STRING,
       };
     }
 
@@ -1285,7 +1285,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
       return {
         value,
-        type: value.startsWith('N\'') ? DATA_TYPE.EXPRESSION : DATA_TYPE.STRING,
+        type: value.startsWith("N'") ? DATA_TYPE.EXPRESSION : DATA_TYPE.STRING,
       };
     }
 
