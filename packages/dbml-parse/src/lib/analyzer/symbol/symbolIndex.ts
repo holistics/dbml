@@ -1,4 +1,4 @@
-import { None, Option, Some } from '@lib/option';
+import { None, Option, Some } from '@/lib/option';
 
 // Used to index a symbol table to obtain a symbol
 export type NodeSymbolIndex = string;

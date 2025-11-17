@@ -2,12 +2,12 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
 import { scanTestNames } from '@/../tests/jestHelpers';
-import { NodeSymbolIdGenerator } from '@analyzer/symbol/symbols';
-import { SyntaxNodeIdGenerator } from '@parser/nodes';
-import Lexer from '@lexer/lexer';
-import Parser from '@parser/parser';
-import Analyzer from '@analyzer/analyzer';
-import Interpreter from '@interpreter/interpreter';
+import { NodeSymbolIdGenerator } from '@/lib/analyzer/symbol/symbols';
+import { SyntaxNodeIdGenerator } from '@/lib/parser/nodes';
+import Lexer from '@/lib/lexer/lexer';
+import Parser from '@/lib/parser/parser';
+import Analyzer from '@/lib/analyzer/analyzer';
+import Interpreter from '@/lib/interpreter/interpreter';
 
 describe('#interpreter', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));

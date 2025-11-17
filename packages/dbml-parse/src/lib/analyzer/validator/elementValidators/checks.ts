@@ -1,6 +1,6 @@
 import { last, partition } from 'lodash-es';
-import SymbolFactory from '@analyzer/symbol/factory';
-import { CompileError, CompileErrorCode } from '@lib/errors';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -9,14 +9,14 @@ import {
   ListExpressionNode,
   ProgramNode,
   SyntaxNode,
-} from '@parser/nodes';
-import { isExpressionAQuotedString } from '@parser/utils';
-import { aggregateSettingList, pickValidator } from '@analyzer/validator/utils';
-import { SyntaxToken } from '@lexer/tokens';
-import { ElementValidator } from '@analyzer/validator/types';
-import { getElementKind } from '@analyzer/utils';
-import SymbolTable from '@analyzer/symbol/symbolTable';
-import { ElementKind } from '@analyzer/types';
+} from '@/lib/parser/nodes';
+import { isExpressionAQuotedString } from '@/lib/parser/utils';
+import { aggregateSettingList, pickValidator } from '@/lib/analyzer/validator/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { getElementKind } from '@/lib/analyzer/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { ElementKind } from '@/lib/analyzer/types';
 
 export default class ChecksValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

@@ -1,6 +1,6 @@
 import { partition, forIn, last } from 'lodash-es';
-import SymbolFactory from '@analyzer/symbol/factory';
-import { CompileError, CompileErrorCode } from '@lib/errors';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -11,8 +11,8 @@ import {
   ListExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
-} from '@parser/nodes';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@analyzer/utils';
+} from '@/lib/parser/nodes';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/lib/analyzer/utils';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -23,18 +23,18 @@ import {
   isVoid,
   registerSchemaStack,
   pickValidator,
-} from '@analyzer/validator/utils';
-import { ElementValidator } from '@analyzer/validator/types';
-import { ColumnSymbol, TablePartialSymbol } from '@analyzer/symbol/symbols';
-import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '@analyzer/symbol/symbolIndex';
+} from '@/lib/analyzer/validator/utils';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { ColumnSymbol, TablePartialSymbol } from '@/lib/analyzer/symbol/symbols';
+import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '@/lib/analyzer/symbol/symbolIndex';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
-} from '@parser/utils';
-import { SyntaxToken } from '@lexer/tokens';
-import SymbolTable from '@analyzer/symbol/symbolTable';
-import { ElementKind, SettingName } from '@analyzer/types';
+} from '@/lib/parser/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { ElementKind, SettingName } from '@/lib/analyzer/types';
 
 export default class TablePartialValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

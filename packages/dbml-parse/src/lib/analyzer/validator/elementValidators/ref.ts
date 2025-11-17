@@ -1,18 +1,18 @@
 import { partition, last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@lexer/tokens';
-import SymbolFactory from '@analyzer/symbol/factory';
-import { CompileError, CompileErrorCode } from '@lib/errors';
+import { SyntaxToken, SyntaxTokenKind } from '@/lib/lexer/tokens';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '@parser/nodes';
+} from '@/lib/parser/nodes';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
-} from '@parser/utils';
-import { ElementValidator } from '@analyzer/validator/types';
-import { isSimpleName, isValidColor, pickValidator, aggregateSettingList } from '@analyzer/validator/utils';
-import { isBinaryRelationship, isEqualTupleOperands } from '@analyzer/utils';
-import SymbolTable from '@analyzer/symbol/symbolTable';
+} from '@/lib/parser/utils';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { isSimpleName, isValidColor, pickValidator, aggregateSettingList } from '@/lib/analyzer/validator/utils';
+import { isBinaryRelationship, isEqualTupleOperands } from '@/lib/analyzer/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
 
 export default class RefValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

@@ -1,8 +1,8 @@
-import { SymbolKind } from '@analyzer/symbol/symbolIndex';
-import { CompletionItemKind, type CompletionList } from '@services/types';
-import { SyntaxToken, SyntaxTokenKind } from '@lexer/tokens';
-import { hasTrailingSpaces } from '@lexer/utils';
-import { isAlphaOrUnderscore } from '@lib/utils';
+import { SymbolKind } from '@/lib/analyzer/symbol/symbolIndex';
+import { CompletionItemKind, type CompletionList } from '@/services/types';
+import { SyntaxToken, SyntaxTokenKind } from '@/lib/lexer/tokens';
+import { hasTrailingSpaces } from '@/lib/lexer/utils';
+import { isAlphaOrUnderscore } from '@/lib/utils';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {

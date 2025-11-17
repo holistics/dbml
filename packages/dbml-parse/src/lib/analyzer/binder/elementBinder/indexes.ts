@@ -1,4 +1,4 @@
-import { SymbolKind } from '@analyzer/symbol/symbolIndex';
+import { SymbolKind } from '@/lib/analyzer/symbol/symbolIndex';
 import ElementBinder from './elementBinder';
 
 export default class IndexesBinder extends ElementBinder {

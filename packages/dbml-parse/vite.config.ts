@@ -11,13 +11,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src/"),
-      "@lib": path.resolve(__dirname, "src/lib/"),
-      "@services": path.resolve(__dirname, "src/services/"),
-      "@lexer": path.resolve(__dirname, "src/lib/lexer/"),
-      "@parser": path.resolve(__dirname, "src/lib/parser/"),
-      "@analyzer": path.resolve(__dirname, "src/lib/analyzer/"),
-      "@interpreter": path.resolve(__dirname, "src/lib/interpreter/"),
-      "@serialization": path.resolve(__dirname, "src/lib/serialization/"),
     },
   },
   build: {

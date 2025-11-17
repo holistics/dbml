@@ -5,27 +5,6 @@
     "paths": {
       "@/*": [
         "src/*"
-      ],
-      "@lib/*": [
-        "src/lib/*"
-      ],
-      "@services/*": [
-        "src/services/*"
-      ],
-      "@lexer/*": [
-        "src/lib/lexer/*"
-      ],
-      "@parser/*": [
-        "src/lib/parser/*"
-      ],
-      "@analyzer/*": [
-        "src/lib/analyzer/*"
-      ],
-      "@interpreter/*": [
-        "src/lib/interpreter/*"
-      ],
-      "@serialization/*": [
-        "src/lib/serialization/*"
       ]
     },
     "baseUrl": "."

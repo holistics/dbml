@@ -1,4 +1,4 @@
-import { Position } from '@lib/types';
+import { Position } from '@/lib/types';
 
 export enum SyntaxTokenKind {
   SPACE = '<space>',

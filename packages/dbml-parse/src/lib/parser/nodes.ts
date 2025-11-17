@@ -1,8 +1,8 @@
 import { flatten, zip } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@lexer/tokens';
-import { NodeSymbol } from '@analyzer/symbol/symbols';
-import { Position } from '@lib/types';
-import { getTokenFullEnd, getTokenFullStart } from '@lexer/utils';
+import { SyntaxToken, SyntaxTokenKind } from '@/lib/lexer/tokens';
+import { NodeSymbol } from '@/lib/analyzer/symbol/symbols';
+import { Position } from '@/lib/types';
+import { getTokenFullEnd, getTokenFullStart } from '@/lib/lexer/utils';
 
 export type SyntaxNodeId = number;
 export class SyntaxNodeIdGenerator {

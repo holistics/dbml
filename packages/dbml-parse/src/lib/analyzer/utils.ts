@@ -1,5 +1,5 @@
 import { last } from 'lodash-es';
-import { None, Option, Some } from '@lib/option';
+import { None, Option, Some } from '@/lib/option';
 import {
   ElementDeclarationNode,
   FunctionExpressionNode,
@@ -10,17 +10,17 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-} from '@parser/nodes';
-import { isRelationshipOp, isTupleOfVariables } from '@analyzer/validator/utils';
-import { NodeSymbolIndex, isPublicSchemaIndex } from '@analyzer/symbol/symbolIndex';
-import { NodeSymbol } from '@analyzer/symbol/symbols';
+} from '@/lib/parser/nodes';
+import { isRelationshipOp, isTupleOfVariables } from '@/lib/analyzer/validator/utils';
+import { NodeSymbolIndex, isPublicSchemaIndex } from '@/lib/analyzer/symbol/symbolIndex';
+import { NodeSymbol } from '@/lib/analyzer/symbol/symbols';
 import {
   isAccessExpression,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
-} from '@parser/utils';
-import { SyntaxToken } from '@lexer/tokens';
-import { ElementKind } from '@analyzer/types';
+} from '@/lib/parser/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import { ElementKind } from '@/lib/analyzer/types';
 
 export function getElementKind (node?: ElementDeclarationNode): Option<ElementKind> {
   const kind = node?.type?.value.toLowerCase();
