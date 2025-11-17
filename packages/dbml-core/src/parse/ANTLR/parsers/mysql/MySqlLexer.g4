@@ -1,3 +1,5 @@
+/* WARNING - MUST READ: Before updating the grammar, check for all the MUST READ below*/
+
 /*
 Original: https://github.com/antlr/grammars-v4/blob/master/sql/mysql/Positive-Technologies/MySqlLexer.g4
 Last updated: 2023-12-05
@@ -43,6 +45,7 @@ channels {
     ERRORCHANNEL
 }
 
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
 @members {
   this.currentDelimiter = ";";
 
@@ -71,9 +74,11 @@ LINE_COMMENT:
 // Note that this requires the parser to account for both STATEMENT_TERMINATOR
 SEMI               : ';';
 
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
 // DELIMITER - should override other symbols
 DELIMITER_KEYWORD : 'DELIMITER' [ \t]+ -> pushMode(DELIMITER_MODE), skip;
 
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
 STATEMENT_TERMINATOR: ~[ \t\r\n]+ {this.isCurrentDelimiter(this.text)}?;
 
 // Keywords
@@ -1379,9 +1384,11 @@ fragment IP_ADDRESS        : [0-9]+ '.' [0-9.]+ | [0-9A-F]* ':' [0-9A-F]* ':' [0
 
 ERROR_RECONGNIGION: . -> channel(ERRORCHANNEL);
 
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
 // DELIMITER mode
 mode DELIMITER_MODE;
 
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
 NEW_DELIMITER
     : ~[\r\n]+ 
     {
@@ -1390,4 +1397,5 @@ NEW_DELIMITER
     -> mode(DEFAULT_MODE), skip
     ;
 
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
 DELIMITER_WS: [ \t\r\n]+ -> skip;
