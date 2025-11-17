@@ -179,7 +179,7 @@ The list of column settings you can use:
 - `unique`: mark the column unique
 - `default: some_value`: set a default value of the column, please refer to the 'Default Value' section below
 - `increment`: mark the column as auto-increment
-- ``check: `check expression` ``: add a check expression to this column. Multiple checks can be defined on a column. For checks involving multiple columns, refer to the 'Checks' section
+- ``check: `check expression`‎``: add a check expression to this column. Multiple checks can be defined on a column. For checks involving multiple columns, refer to the 'Checks' section
 
 **Note:** You can use a workaround for un-supported settings by adding the setting name into the column type name, such as `id "bigint unsigned" [pk]`
 

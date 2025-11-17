@@ -23,15 +23,14 @@ exports.makeNode = function () {
 exports.makeList = function (parser, isZero = false) {
   let seperator = parser.sepBy1(Comma);
   if (isZero) seperator = parser.sepBy(Comma);
-  return P.seq(LParen, seperator, RParen).map(value => {
+  return P.seq(LParen, seperator, RParen).map((value) => {
     return value[1];
   });
 };
 
 exports.streamline = function (type) {
   return function (parser) {
-    return parser.skip(wss).map(value => {
-      // eslint-disable-next-line no-param-reassign
+    return parser.skip(wss).map((value) => {
       if (value !== 0 && !value) value = '';
       return {
         type,

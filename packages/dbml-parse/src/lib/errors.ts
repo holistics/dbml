@@ -116,7 +116,7 @@ export enum CompileErrorCode {
   SAME_ENDPOINT,
   UNEQUAL_FIELDS_BINARY_REF,
   CONFLICTING_SETTING,
-  TABLE_REAPPEAR_IN_TABLEGROUP
+  TABLE_REAPPEAR_IN_TABLEGROUP,
 }
 
 export class CompileError extends Error {
@@ -130,7 +130,7 @@ export class CompileError extends Error {
 
   end: Readonly<number>;
 
-  constructor(code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
     this.diagnostic = message;

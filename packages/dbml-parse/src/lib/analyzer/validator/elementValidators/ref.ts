@@ -1,23 +1,21 @@
-import { partition, last } from 'lodash';
-import { SyntaxToken, SyntaxTokenKind } from '../../../lexer/tokens';
-import SymbolFactory from '../../symbol/factory';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { partition, last } from 'lodash-es';
+import { SyntaxToken, SyntaxTokenKind } from '@/lib/lexer/tokens';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '../../../parser/nodes';
+} from '@/lib/parser/nodes';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
-} from '../../../parser/utils';
-import { ElementValidator } from '../types';
-import {
-  aggregateSettingList, isSimpleName, isValidColor, pickValidator,
-} from '../utils';
-import { isBinaryRelationship, isEqualTupleOperands } from '../../utils';
-import SymbolTable from '../../symbol/symbolTable';
+} from '@/lib/parser/utils';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { isSimpleName, isValidColor, pickValidator, aggregateSettingList } from '@/lib/analyzer/validator/utils';
+import { isBinaryRelationship, isEqualTupleOperands } from '@/lib/analyzer/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
 
 export default class RefValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 
@@ -131,11 +129,11 @@ export default class RefValidator implements ElementValidator {
         case 'delete':
         case 'update':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `\'${name}\' can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isValidPolicy(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `\'${name}\' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
             }
           });
           break;
@@ -150,7 +148,7 @@ export default class RefValidator implements ElementValidator {
           });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting \'${name}\'`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
       }
     }
     return errors;

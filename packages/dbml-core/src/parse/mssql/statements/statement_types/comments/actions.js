@@ -36,7 +36,6 @@ function handleComment ({ note, level }) {
   };
 }
 
-
 module.exports = {
   handleComment,
 };

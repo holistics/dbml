@@ -1,22 +1,22 @@
-import { zip } from 'lodash';
-import { ColumnSymbol } from '../analyzer/symbol/symbols';
+import { zip } from 'lodash-es';
+import { ColumnSymbol } from '@/lib/analyzer/symbol/symbols';
 import {
   destructureComplexTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
   extractVariableFromExpression,
-} from '../analyzer/utils';
+} from '@/lib/analyzer/utils';
 import {
   ArrayNode, CallExpressionNode, FunctionExpressionNode, LiteralNode,
   PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
-} from '../parser/nodes';
+} from '@/lib/parser/nodes';
 import {
   ColumnType, RelationCardinality, Table, TokenPosition,
-} from './types';
-import { SyntaxTokenKind } from '../lexer/tokens';
-import { isExpressionAnIdentifierNode, isExpressionAQuotedString } from '../parser/utils';
-import { isExpressionANumber } from '../analyzer/validator/utils';
-import Report from '../report';
-import { CompileError, CompileErrorCode } from '../errors';
-import { getNumberTextFromExpression, parseNumber } from '../utils';
+} from '@/lib/interpreter/types';
+import { SyntaxTokenKind } from '@/lib/lexer/tokens';
+import { isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/lib/parser/utils';
+import { isExpressionANumber } from '@/lib/analyzer/validator/utils';
+import Report from '@/lib/report';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
+import { getNumberTextFromExpression, parseNumber } from '@/lib/utils';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
   const { variables, tupleElements } = destructureComplexTuple(operand).unwrap();
@@ -100,12 +100,12 @@ export function extractElementName (nameNode: SyntaxNode): { schemaName: string[
   };
 }
 
-export function extractColor (node: PrimaryExpressionNode & { expression: LiteralNode } & { literal: { kind: SyntaxTokenKind.COLOR_LITERAL }}): string {
+export function extractColor (node: PrimaryExpressionNode & { expression: LiteralNode } & { literal: { kind: SyntaxTokenKind.COLOR_LITERAL } }): string {
   return node.expression.literal!.value;
 }
 
-export function getRefId(sym1: ColumnSymbol, sym2: ColumnSymbol): string;
-export function getRefId(sym1: ColumnSymbol[], sym2: ColumnSymbol[]): string;
+export function getRefId (sym1: ColumnSymbol, sym2: ColumnSymbol): string;
+export function getRefId (sym1: ColumnSymbol[], sym2: ColumnSymbol[]): string;
 export function getRefId (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): string {
   if (Array.isArray(sym1)) {
     const firstIds = sym1.map(({ id }) => id).sort().join(',');
@@ -118,8 +118,8 @@ export function getRefId (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbo
   return firstId < secondId ? `${firstId}-${secondId}` : `${secondId}-${firstId}`;
 }
 
-export function isSameEndpoint(sym1: ColumnSymbol, sym2: ColumnSymbol): boolean;
-export function isSameEndpoint(sym1: ColumnSymbol[], sym2: ColumnSymbol[]): boolean;
+export function isSameEndpoint (sym1: ColumnSymbol, sym2: ColumnSymbol): boolean;
+export function isSameEndpoint (sym1: ColumnSymbol[], sym2: ColumnSymbol[]): boolean;
 export function isSameEndpoint (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): boolean {
   if (Array.isArray(sym1)) {
     const firstIds = sym1.map(({ id }) => id).sort();
@@ -186,21 +186,20 @@ export function processDefaultValue (valueNode?: SyntaxNode):
   throw new Error('Unreachable');
 }
 
-/* eslint-disable no-param-reassign */
 export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, CompileError> {
   let typeArgs: string | null = null;
   if (typeNode instanceof CallExpressionNode) {
     typeArgs = typeNode
       .argumentList!.elementList.map((e) => {
-        if (isExpressionANumber(e)) {
-          return getNumberTextFromExpression(e);
-        }
-        if (isExpressionAQuotedString(e)) {
-          return extractQuotedStringToken(e).unwrap();
-        }
-        // e can only be an identifier here
-        return extractVariableFromExpression(e).unwrap();
-      })
+      if (isExpressionANumber(e)) {
+        return getNumberTextFromExpression(e);
+      }
+      if (isExpressionAQuotedString(e)) {
+        return extractQuotedStringToken(e).unwrap();
+      }
+      // e can only be an identifier here
+      return extractVariableFromExpression(e).unwrap();
+    })
       .join(',');
     typeNode = typeNode.callee!;
   }
@@ -232,4 +231,3 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
     args: typeArgs,
   });
 }
-/* eslint-enable no-param-reassign */

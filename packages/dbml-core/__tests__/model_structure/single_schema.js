@@ -28,7 +28,7 @@ describe('@dbml/core - model_structure', () => {
       test('database - contains all schemas', () => {
         expect(database.schemas).toHaveLength(1);
 
-        expect(database.schemas.map((schema => schema.name))).toEqual(expect.arrayContaining([DEFAULT_SCHEMA_NAME]));
+        expect(database.schemas.map((schema) => schema.name)).toEqual(expect.arrayContaining([DEFAULT_SCHEMA_NAME]));
       });
 
       test('all schemas - contains all properties', () => {
@@ -58,7 +58,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.tables).toHaveLength(6);
 
         const tables = ['merchants', 'users', 'countries', 'order_items', 'orders', 'products'];
-        expect(schema.tables.map(table => table.name)).toEqual(expect.arrayContaining(tables));
+        expect(schema.tables.map((table) => table.name)).toEqual(expect.arrayContaining(tables));
       });
 
       test('schema "public" - contains all enums', () => {
@@ -67,7 +67,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.enums).toHaveLength(1);
 
         const enums = ['products_status'];
-        expect(schema.enums.map(_enum => _enum.name)).toEqual(expect.arrayContaining(enums));
+        expect(schema.enums.map((_enum) => _enum.name)).toEqual(expect.arrayContaining(enums));
       });
 
       test('schema "public" - contains all tableGroups', () => {
@@ -76,7 +76,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.tableGroups).toHaveLength(1);
 
         const tableGroups = ['g1'];
-        expect(schema.tableGroups.map(group => group.name)).toEqual(expect.arrayContaining(tableGroups));
+        expect(schema.tableGroups.map((group) => group.name)).toEqual(expect.arrayContaining(tableGroups));
       });
 
       test('schema "public" - contains all refs', () => {
@@ -90,7 +90,7 @@ describe('@dbml/core - model_structure', () => {
           endpoints: ref.endpoints.map((endpoint) => ({
             schemaName: endpoint.fields[0].table.schema.name,
             tableName: endpoint.fields[0].table.name,
-            fieldNames: endpoint.fields.map(field => field.name),
+            fieldNames: endpoint.fields.map((field) => field.name),
             relation: endpoint.relation,
           })),
         }));
@@ -402,7 +402,6 @@ describe('@dbml/core - model_structure', () => {
       test('database - contains all schemas', () => {
         expect(getEle('database', '1').schemaIds).toHaveLength(1);
 
-        // eslint-disable-next-line
         const schemas = getEle('database', '1').schemaIds.map((schemaId) => getEle('schemas', schemaId).name);
         expect(schemas).toEqual(expect.arrayContaining([DEFAULT_SCHEMA_NAME]));
       });
@@ -420,7 +419,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.tableIds).toHaveLength(6);
 
         const tables = ['merchants', 'users', 'countries', 'order_items', 'orders', 'products'];
-        // eslint-disable-next-line
+
         expect(schema.tableIds.map((tableId) => getEle('tables', tableId).name)).toEqual(expect.arrayContaining(tables));
       });
 
@@ -430,7 +429,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.enumIds).toHaveLength(1);
 
         const enums = ['products_status'];
-        // eslint-disable-next-line
+
         expect(schema.enumIds.map((enumId) => getEle('enums', enumId).name)).toEqual(expect.arrayContaining(enums));
       });
 
@@ -440,7 +439,7 @@ describe('@dbml/core - model_structure', () => {
         expect(schema.tableGroupIds).toHaveLength(1);
 
         const tableGroups = ['g1'];
-        // eslint-disable-next-line
+
         expect(schema.tableGroupIds.map((groupId) => getEle('tableGroups', groupId).name)).toEqual(expect.arrayContaining(tableGroups));
       });
 
@@ -448,12 +447,11 @@ describe('@dbml/core - model_structure', () => {
         const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
         expect(schema.refIds).toHaveLength(7);
 
-        // eslint-disable-next-line
         const refs = schema.refIds.map((refId) => ({
           name: getEle('refs', refId).name,
           onDelete: getEle('refs', refId).onDelete,
           onUpdate: getEle('refs', refId).onUpdate,
-          // eslint-disable-next-line
+
           endpoints: getEle('refs', refId).endpointIds.map((endpointId) => ({
             schemaName: getEle('schemas', getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldIds[0]).tableId).schemaId).name,
             tableName: getEle('tables', getEle('fields', getEle('endpoints', endpointId).fieldIds[0]).tableId).name,
@@ -541,7 +539,7 @@ describe('@dbml/core - model_structure', () => {
             note: 'less than 20',
           },
         ];
-        // eslint-disable-next-line
+
         expect(_enum.valueIds.map((valueId) => ({
           name: getEle('enumValues', valueId).name,
           note: getEle('enumValues', valueId).note ? getEle('enumValues', valueId).note : null,
@@ -555,7 +553,7 @@ describe('@dbml/core - model_structure', () => {
         expect(_enum.fieldIds).toHaveLength(1);
 
         const fields = ['status'];
-        // eslint-disable-next-line
+
         expect(_enum.fieldIds.map((fieldId) => getEle('fields', fieldId).name)).toEqual(expect.arrayContaining(fields));
       });
 
@@ -580,7 +578,7 @@ describe('@dbml/core - model_structure', () => {
         expect(group.tableIds).toHaveLength(2);
 
         const tables = ['users', 'merchants'];
-        // eslint-disable-next-line
+
         expect(group.tableIds.map((tableId) => getEle('tables', tableId).name)).toEqual(expect.arrayContaining(tables));
       });
 
@@ -603,7 +601,6 @@ describe('@dbml/core - model_structure', () => {
         const tableId = Object.keys(normalizedModel.tables).find((key) => getEle('tables', key).name === 'users');
         const table = getEle('tables', tableId);
 
-        // eslint-disable-next-line
         const fields = table.fieldIds.map((fieldId) => ({
           name: getEle('fields', fieldId).name,
           type: getEle('fields', fieldId).type,
@@ -656,14 +653,13 @@ describe('@dbml/core - model_structure', () => {
         const tableId = Object.keys(normalizedModel.tables).find((key) => getEle('tables', key).name === 'users');
         const table = getEle('tables', tableId);
 
-        // eslint-disable-next-line
         const indexes = table.indexIds.map((indexId) => ({
           name: getEle('indexes', indexId).name,
           type: getEle('indexes', indexId).type,
           unique: getEle('indexes', indexId).unique,
           pk: getEle('indexes', indexId).pk,
           note: getEle('indexes', indexId).note,
-          // eslint-disable-next-line
+
           columns: getEle('indexes', indexId).columnIds.map((columnId) => ({
             type: getEle('indexColumns', columnId).type,
             value: getEle('indexColumns', columnId).value,

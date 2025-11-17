@@ -1,4 +1,4 @@
-import { SymbolKind } from '../../symbol/symbolIndex';
+import { SymbolKind } from '@/lib/analyzer/symbol/symbolIndex';
 import ElementBinder from './elementBinder';
 
 export default class TableBinder extends ElementBinder {
@@ -29,6 +29,7 @@ export default class TableBinder extends ElementBinder {
       },
     },
   };
+
   protected settingList = {};
 
   protected injectionBinderRule = {

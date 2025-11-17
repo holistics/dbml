@@ -1,7 +1,7 @@
 function makeIndex (columnNames, isUnique, isPk, indexName = null) {
   const columns = [];
 
-  columnNames.forEach(column => {
+  columnNames.forEach((column) => {
     columns.push({
       value: column,
       type: 'column',

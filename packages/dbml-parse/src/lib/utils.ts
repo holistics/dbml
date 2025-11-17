@@ -1,8 +1,10 @@
-import { SyntaxToken, SyntaxTokenKind } from './lexer/tokens';
-import { LiteralNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode } from './parser/nodes';
+import { SyntaxToken } from './lexer/tokens';
+import {
+  LiteralNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode,
+} from './parser/nodes';
 import { getTokenFullEnd, getTokenFullStart } from './lexer/utils';
 
-export function isAlphaOrUnderscore(char: string): boolean {
+export function isAlphaOrUnderscore (char: string): boolean {
   // Match any letters, accents (some characters are denormalized so the accent and the main character are two separate characters) and underscore
   // \p{L} is used to match letters
   // \p{M} is used to match accents
@@ -14,24 +16,24 @@ export function isAlphaOrUnderscore(char: string): boolean {
   return !!char.match(/(\p{L}|_|\p{M})/gu);
 }
 
-export function isDigit(char: string): boolean {
+export function isDigit (char: string): boolean {
   const [c] = char;
 
   return c >= '0' && c <= '9';
 }
 
 // Check if a character is a valid hexadecimal character
-export function isHexChar(char: string): boolean {
+export function isHexChar (char: string): boolean {
   const [c] = char;
 
   return isDigit(c) || (isAlphaOrUnderscore(c) && c.toLowerCase() >= 'a' && c.toLowerCase() <= 'f');
 }
 
-export function isAlphaNumeric(char: string): boolean {
+export function isAlphaNumeric (char: string): boolean {
   return isAlphaOrUnderscore(char) || isDigit(char);
 }
 
-export function alternateLists<T, S>(firstList: T[], secondList: S[]): (T | S)[] {
+export function alternateLists<T, S> (firstList: T[], secondList: S[]): (T | S)[] {
   const res: (T | S)[] = [];
   const minLength = Math.min(firstList.length, secondList.length);
   for (let i = 0; i < minLength; i += 1) {
@@ -42,7 +44,7 @@ export function alternateLists<T, S>(firstList: T[], secondList: S[]): (T | S)[]
   return res;
 }
 
-export function isOffsetWithinFullSpan(
+export function isOffsetWithinFullSpan (
   offset: number,
   nodeOrToken: SyntaxNode | SyntaxToken,
 ): boolean {
@@ -53,19 +55,19 @@ export function isOffsetWithinFullSpan(
   return offset >= nodeOrToken.fullStart && offset < nodeOrToken.fullEnd;
 }
 
-export function isOffsetWithinSpan(offset: number, nodeOrToken: SyntaxNode | SyntaxToken): boolean {
+export function isOffsetWithinSpan (offset: number, nodeOrToken: SyntaxNode | SyntaxToken): boolean {
   return offset >= nodeOrToken.start && offset < nodeOrToken.end;
 }
 
-export function returnIfIsOffsetWithinFullSpan(
+export function returnIfIsOffsetWithinFullSpan (
   offset: number,
   node?: SyntaxNode,
 ): SyntaxNode | undefined;
-export function returnIfIsOffsetWithinFullSpan(
+export function returnIfIsOffsetWithinFullSpan (
   offset: number,
   token?: SyntaxToken,
 ): SyntaxToken | undefined;
-export function returnIfIsOffsetWithinFullSpan(
+export function returnIfIsOffsetWithinFullSpan (
   offset: number,
   nodeOrToken?: SyntaxNode | SyntaxToken,
 ): SyntaxNode | SyntaxToken | undefined {

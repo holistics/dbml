@@ -1,25 +1,25 @@
-import { last, head, partition } from 'lodash';
+import { last, head, partition } from 'lodash-es';
 import {
   Column, Check, ElementInterpreter, Index, InlineRef,
   InterpreterDatabase, TablePartial,
-} from '../types';
+} from '@/lib/interpreter/types';
 import {
   BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
   FunctionExpressionNode,
   ListExpressionNode, PrefixExpressionNode, SyntaxNode,
-} from '../../parser/nodes';
+} from '@/lib/parser/nodes';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getTokenPosition,
   isSameEndpoint, normalizeNoteContent, processColumnType, processDefaultValue,
-} from '../utils';
+} from '@/lib/interpreter/utils';
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
-} from '../../analyzer/utils';
-import { CompileError, CompileErrorCode } from '../../errors';
-import { aggregateSettingList } from '../../analyzer/validator/utils';
-import { ColumnSymbol } from '../../analyzer/symbol/symbols';
-import { ElementKind, SettingName } from '../../analyzer/types';
+} from '@/lib/analyzer/utils';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
+import { aggregateSettingList } from '@/lib/analyzer/validator/utils';
+import { ColumnSymbol } from '@/lib/analyzer/symbol/symbols';
+import { ElementKind, SettingName } from '@/lib/analyzer/types';
 
 export class TablePartialInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -58,7 +58,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
         },
         pk: true,
       });
-      this.pkColumns.forEach((column) => { column.pk = false; });
+      this.pkColumns.forEach((column) => {
+        column.pk = false;
+      });
     }
 
     return errors;
@@ -148,14 +150,14 @@ export class TablePartialInterpreter implements ElementInterpreter {
       column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PrimaryKey]?.length;
       column.increment = !!settingMap[SettingName.Increment]?.length;
       column.unique = !!settingMap[SettingName.Unique]?.length;
-      // eslint-disable-next-line no-nested-ternary
+
       column.not_null = settingMap[SettingName.NotNull]?.length
         ? true
         : (
-          settingMap[SettingName.Null]?.length
-            ? false
-            : undefined
-        );
+            settingMap[SettingName.Null]?.length
+              ? false
+              : undefined
+          );
       column.dbdefault = processDefaultValue(settingMap[SettingName.Default]?.at(0)?.value);
 
       const noteNode = settingMap[SettingName.Note]?.at(0);

@@ -1,9 +1,9 @@
-import { CompileError } from '../../errors';
-import { ElementDeclarationNode, ProgramNode } from '../../parser/nodes';
-import { pickBinder } from './utils';
-import Report from '../../report';
-import { SyntaxToken } from '../../lexer/tokens';
-import SymbolFactory from '../symbol/factory';
+import { CompileError } from '@/lib/errors';
+import { ElementDeclarationNode, ProgramNode } from '@/lib/parser/nodes';
+import { pickBinder } from '@/lib/analyzer/binder/utils';
+import Report from '@/lib/report';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
 
 export default class Binder {
   private ast: ProgramNode;

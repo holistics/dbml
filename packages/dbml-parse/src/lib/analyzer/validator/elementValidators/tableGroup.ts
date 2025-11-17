@@ -1,23 +1,22 @@
-/* eslint-disable class-methods-use-this */
-import { forIn, partition } from 'lodash';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { forIn, partition } from 'lodash-es';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
-  isSimpleName, pickValidator, registerSchemaStack, aggregateSettingList, isValidColor,
-} from '../utils';
-import { ElementValidator } from '../types';
-import SymbolTable from '../../symbol/symbolTable';
-import { SyntaxToken } from '../../../lexer/tokens';
+  isSimpleName, pickValidator } from '@/lib/analyzer/validator/utils';
+import { isValidColor, registerSchemaStack, aggregateSettingList } from '@/lib/analyzer/validator/utils';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { SyntaxToken } from '@/lib/lexer/tokens';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '../../../parser/nodes';
-import SymbolFactory from '../../symbol/factory';
-import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '../../symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
-import { TableGroupFieldSymbol, TableGroupSymbol } from '../../symbol/symbols';
-import { isExpressionAVariableNode, isExpressionAQuotedString } from '../../../parser/utils';
+} from '@/lib/parser/nodes';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '@/lib/analyzer/symbol/symbolIndex';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/lib/analyzer/utils';
+import { TableGroupFieldSymbol, TableGroupSymbol } from '@/lib/analyzer/symbol/symbols';
+import { isExpressionAVariableNode, isExpressionAQuotedString } from '@/lib/parser/utils';
 
 export default class TableGroupValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 

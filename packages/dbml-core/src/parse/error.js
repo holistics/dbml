@@ -7,7 +7,6 @@ export class CompilerError {
   }
 
   static create (nestedDiags) {
-    // eslint-disable-next-line no-use-before-define
     return new CompilerError(flattenDiag(nestedDiags));
   }
 

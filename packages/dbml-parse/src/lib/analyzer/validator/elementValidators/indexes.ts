@@ -1,6 +1,6 @@
-import { last, partition } from 'lodash';
-import SymbolFactory from '../../symbol/factory';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { last, partition } from 'lodash-es';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -11,17 +11,18 @@ import {
   ProgramNode,
   SyntaxNode,
   VariableNode,
-} from '../../../parser/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
-import { aggregateSettingList, isVoid, pickValidator } from '../utils';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementValidator } from '../types';
-import { destructureIndexNode, getElementKind } from '../../utils';
-import SymbolTable from '../../symbol/symbolTable';
-import { ElementKind } from '../../types';
+} from '@/lib/parser/nodes';
+import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/lib/parser/utils';
+import { aggregateSettingList } from '@/lib/analyzer/validator/utils';
+import { isVoid, pickValidator } from '@/lib/analyzer/validator/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { destructureIndexNode, getElementKind } from '@/lib/analyzer/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { ElementKind } from '@/lib/analyzer/types';
 
 export default class IndexesValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 
@@ -134,22 +135,22 @@ export default class IndexesValidator implements ElementValidator {
         case 'note':
         case 'name':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `\'${name}\' can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `\'${name}\' must be a string`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must be a string`, attr));
             }
           });
           break;
         case 'unique':
         case 'pk':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `\'${name}\' can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isVoid(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `\'${name}\' must not have a value`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must not have a value`, attr));
             }
           });
           break;
@@ -164,7 +165,7 @@ export default class IndexesValidator implements ElementValidator {
           });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting \'${name}\'`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting '${name}'`, attr)));
       }
     }
     return errors;

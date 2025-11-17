@@ -1,27 +1,27 @@
-import { partition, last } from 'lodash';
+import { partition, last } from 'lodash-es';
 import {
   Column, Check, ElementInterpreter, Index, InlineRef,
   InterpreterDatabase, Table, TablePartialInjection,
-} from '../types';
+} from '@/lib/interpreter/types';
 import {
   AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
   FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PartialInjectionNode, PrefixExpressionNode,
   SyntaxNode,
-} from '../../parser/nodes';
+} from '@/lib/parser/nodes';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities,
   getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent,
   processColumnType, processDefaultValue,
-} from '../utils';
+} from '@/lib/interpreter/utils';
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
-} from '../../analyzer/utils';
-import { CompileError, CompileErrorCode } from '../../errors';
-import { aggregateSettingList } from '../../analyzer/validator/utils';
-import { ColumnSymbol } from '../../analyzer/symbol/symbols';
-import { destructureIndex, SymbolKind } from '../../analyzer/symbol/symbolIndex';
-import { ElementKind, SettingName } from '../../analyzer/types';
+} from '@/lib/analyzer/utils';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
+import { aggregateSettingList } from '@/lib/analyzer/validator/utils';
+import { ColumnSymbol } from '@/lib/analyzer/symbol/symbols';
+import { destructureIndex, SymbolKind } from '@/lib/analyzer/symbol/symbolIndex';
+import { ElementKind, SettingName } from '@/lib/analyzer/types';
 
 export class TableInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -68,7 +68,9 @@ export class TableInterpreter implements ElementInterpreter {
         },
         pk: true,
       });
-      this.pkColumns.forEach((column) => { column.pk = false; });
+      this.pkColumns.forEach((column) => {
+        column.pk = false;
+      });
     }
 
     return errors;
@@ -213,7 +215,7 @@ export class TableInterpreter implements ElementInterpreter {
       column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PrimaryKey]?.length;
       column.increment = !!settingMap[SettingName.Increment]?.length;
       column.unique = !!settingMap[SettingName.Unique]?.length;
-      // eslint-disable-next-line no-nested-ternary
+
       column.not_null = settingMap[SettingName.NotNull]?.length
         ? true
         : settingMap[SettingName.Null]?.length
@@ -339,7 +341,7 @@ export class TableInterpreter implements ElementInterpreter {
         const fragments: SyntaxNode[] = [];
         while (arg instanceof CallExpressionNode) {
           fragments.push(arg.argumentList!);
-          // eslint-disable-next-line no-param-reassign
+
           arg = arg.callee!;
         }
         fragments.push(arg);

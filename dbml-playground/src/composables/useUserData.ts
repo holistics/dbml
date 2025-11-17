@@ -9,9 +9,9 @@
  * - Information Hiding: Internal storage format is hidden
  * - Deep Module: Complex persistence logic with simple interface
  */
-import { ref, watch, type Ref } from 'vue'
-import type { UserData } from '@/types'
-import consoleLogger from '@/utils/logger'
+import { ref, watch, type Ref } from 'vue';
+import type { UserData } from '@/types';
+import consoleLogger from '@/utils/logger';
 
 const defaultUserData: UserData = {
   openingTab: 'lexer',
@@ -36,76 +36,76 @@ Table posts {
   created_at timestamp
 }
 
-Ref: posts.user_id > users.id // many-to-one`
-}
+Ref: posts.user_id > users.id // many-to-one`,
+};
 
-const STORAGE_KEY = 'userData'
+const STORAGE_KEY = 'userData';
 
 /**
  * Load user data from localStorage
  */
 const loadUserData = (): UserData => {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
+    const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      const parsed = JSON.parse(stored)
+      const parsed = JSON.parse(stored);
       // Merge with defaults to handle missing properties
-      return { ...defaultUserData, ...parsed }
+      return { ...defaultUserData, ...parsed };
     }
   } catch (error) {
-    consoleLogger.warn('Failed to load user data from localStorage:', error)
+    consoleLogger.warn('Failed to load user data from localStorage:', error);
   }
-  return { ...defaultUserData }
-}
+  return { ...defaultUserData };
+};
 
 /**
  * Save user data to localStorage
  */
 const saveUserData = (data: UserData): void => {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch (error) {
-    consoleLogger.warn('Failed to save user data to localStorage:', error)
+    consoleLogger.warn('Failed to save user data to localStorage:', error);
   }
-}
+};
 
 /**
  * Composable for managing user data
  */
-export function useUserData() {
+export function useUserData () {
   // Initialize reactive state from localStorage
-  const userData = ref<UserData>(loadUserData())
+  const userData = ref<UserData>(loadUserData());
 
   // Auto-save when data changes
   watch(userData, (newData) => {
-    saveUserData(newData)
-  }, { deep: true })
+    saveUserData(newData);
+  }, { deep: true });
 
   /**
    * Update a specific property
    */
   const updateUserData = <K extends keyof UserData>(key: K, value: UserData[K]): void => {
-    userData.value[key] = value
-  }
+    userData.value[key] = value;
+  };
 
   /**
    * Reset to default values
    */
   const resetUserData = (): void => {
-    userData.value = { ...defaultUserData }
-  }
+    userData.value = { ...defaultUserData };
+  };
 
   /**
    * Save DBML content manually (for Cmd+S)
    */
   const saveDbml = (content: string): void => {
-    updateUserData('dbml', content)
-  }
+    updateUserData('dbml', content);
+  };
 
   return {
     userData: userData as Ref<UserData>,
     updateUserData,
     resetUserData,
-    saveDbml
-  }
+    saveDbml,
+  };
 }

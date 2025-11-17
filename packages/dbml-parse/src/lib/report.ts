@@ -4,16 +4,16 @@ export default class Report<T, E> {
 
   private errors: E[];
 
-  constructor(value: T, errors?: E[]) {
+  constructor (value: T, errors?: E[]) {
     this.value = value;
     this.errors = errors === undefined ? [] : errors;
   }
 
-  getValue(): T {
+  getValue (): T {
     return this.value;
   }
 
-  getErrors(): E[] {
+  getErrors (): E[] {
     return this.errors;
   }
 

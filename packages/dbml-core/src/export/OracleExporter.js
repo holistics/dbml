@@ -53,7 +53,7 @@ class OracleExporter {
       if (field.enumId) {
         const _enum = model.enums[field.enumId];
 
-        const enumValues = _enum.valueIds.map(valueId => {
+        const enumValues = _enum.valueIds.map((valueId) => {
           const value = model.enumValues[valueId];
           return `'${value.name}'`;
         });
@@ -104,7 +104,7 @@ class OracleExporter {
           }
           line += ` CHECK (${check.expression})`;
         } else {
-          const checkExpressions = cloneField.checkIds.map(checkId => {
+          const checkExpressions = cloneField.checkIds.map((checkId) => {
             const check = model.checks[checkId];
             return `(${check.expression})`;
           });
@@ -121,7 +121,7 @@ class OracleExporter {
   static getCompositePKs (tableId, model) {
     const table = model.tables[tableId];
 
-    const compositePkIds = table.indexIds ? table.indexIds.filter(indexId => model.indexes[indexId].pk) : [];
+    const compositePkIds = table.indexIds ? table.indexIds.filter((indexId) => model.indexes[indexId].pk) : [];
     const lines = compositePkIds.map((keyId) => {
       const key = model.indexes[keyId];
       let line = 'PRIMARY KEY';
@@ -195,7 +195,7 @@ class OracleExporter {
       const schema = model.schemas[table.schemaId];
 
       const tableName = this.buildTableNameWithSchema(model, schema, table);
-      const contentString = content.map(line => `  ${line}`).join(',\n');
+      const contentString = content.map((line) => `  ${line}`).join(',\n');
 
       const tableStr = `CREATE TABLE ${tableName} (\n${contentString}\n);\n`;
       return tableStr;
@@ -205,7 +205,7 @@ class OracleExporter {
   }
 
   static buildReferenceFieldNamesString (fieldIds, model) {
-    const fieldNames = fieldIds.map(fieldId => `"${model.fields[fieldId].name}"`).join(', ');
+    const fieldNames = fieldIds.map((fieldId) => `"${model.fields[fieldId].name}"`).join(', ');
     return `(${fieldNames})`;
   }
 
@@ -240,7 +240,7 @@ class OracleExporter {
       const ref = model.refs[refId];
 
       // find the one relation in one-to-xxx or xxx-to-one relationship
-      const refOneIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const refOneIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
 
       const refEndpointIndex = refOneIndex === -1 ? 0 : refOneIndex;
 
@@ -292,7 +292,8 @@ class OracleExporter {
       }
 
       const escapedNewTableName = `${shouldPrintSchema(refEndpointSchema, model)
-        ? `"${refEndpointSchema.name}".` : ''}"${newTableName}"`;
+        ? `"${refEndpointSchema.name}".`
+        : ''}"${newTableName}"`;
 
       result.tables.push(this.buildTableManyToMany(firstTableFieldsMap, secondTableFieldsMap, escapedNewTableName));
 
@@ -330,7 +331,7 @@ class OracleExporter {
       const ref = model.refs[refId];
 
       // find the one relation in one - many, many - one, one - one relationship
-      const refOneIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const refOneIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
       const refEndpointIndex = refOneIndex === -1 ? 0 : refOneIndex;
 
       const refEndpointId = ref.endpointIds[refEndpointIndex];
@@ -427,12 +428,12 @@ class OracleExporter {
 
       switch (comment.type) {
         case 'table': {
-          line += ` TABLE ${tableName} IS '${table.note.replace(/'/g, "''")}'`;
+          line += ` TABLE ${tableName} IS '${table.note.replace(/'/g, '\'\'')}'`;
           break;
         }
         case 'column': {
           const field = model.fields[comment.fieldId];
-          line += ` COLUMN ${tableName}.${escapeObjectName(field.name, 'oracle')} IS '${field.note.replace(/'/g, "''")}'`;
+          line += ` COLUMN ${tableName}.${escapeObjectName(field.name, 'oracle')} IS '${field.note.replace(/'/g, '\'\'')}'`;
           break;
         }
         default:

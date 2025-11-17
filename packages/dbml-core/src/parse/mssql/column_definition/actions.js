@@ -15,7 +15,7 @@ function makeDataType (typeName, args) {
 function makeColumn (fieldName, dataType, fieldSettings) {
   const value = {};
   value[dataType.type] = dataType.value;
-  fieldSettings.forEach(setting => {
+  fieldSettings.forEach((setting) => {
     if (setting) value[setting.type] = setting.value;
   });
   value.name = fieldName[0];

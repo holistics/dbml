@@ -1,8 +1,6 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { ElementDeclarationNode } from '../parser/nodes';
-import { Position } from '../types';
-import { CompileError } from '../errors';
+import { ElementDeclarationNode } from '@/lib/parser/nodes';
+import { Position } from '@/lib/types';
+import { CompileError } from '@/lib/errors';
 
 export interface TokenPosition {
   start: Position;

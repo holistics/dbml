@@ -11,11 +11,10 @@ describe('@dbml/core - model_exporter', () => {
    * @param {string} format = [json|mysql|dbml|postgres]
    */
   const runTest = (fileName, testDir, format, ExporterClass) => {
-    /* eslint-disable */
     const fileExtension = getFileExtension(format);
     const input = require(`./${testDir}/input/${fileName}.in.json`);
     const output = require(`./${testDir}/output/${fileName}.out.${fileExtension}`);
-    /* eslint-enable */
+
     const database = (new Parser()).parse(input, 'json');
     let res;
     if (format === 'json') {
@@ -26,7 +25,7 @@ describe('@dbml/core - model_exporter', () => {
 
     switch (format) {
       case 'json':
-        // eslint-disable-next-line
+
         isEqualExcludeTokenEmpty(JSON.parse(res), output);
         break;
 
@@ -36,7 +35,6 @@ describe('@dbml/core - model_exporter', () => {
     }
   };
 
-  /* eslint-disable */
   test.each(scanTestNames(__dirname, 'json_exporter/input'))('json_exporter/%s', (name) => {
     runTest(name, 'json_exporter', 'json', JsonExporter);
   });
@@ -60,9 +58,7 @@ describe('@dbml/core - model_exporter', () => {
   test.each(scanTestNames(__dirname, 'oracle_exporter/input'))('oracle_exporter/%s', (name) => {
     runTest(name, 'oracle_exporter', 'oracle', OracleExporter);
   });
-  /* eslint-enable */
 });
-
 
 describe('@dbml/core - model_exporter dbml_exporter.escapeNote', () => {
   /**
@@ -79,7 +75,7 @@ describe('@dbml/core - model_exporter dbml_exporter.escapeNote', () => {
 
   // As soon as we have CRLF or single quotes, we switch to triple quotes
   runTest("hel'lo", "'''hel\\'lo'''");
-  // Only tripe quotes need escaping
+  // Only triple quotes need escaping
   // See https://dbml.dbdiagram.io/docs/#multi-line-string
   runTest("hel'''lo", "'''hel\\'\\'\\'lo'''");
   runTest('hel\nlo', "'''hel\nlo'''");

@@ -7,5 +7,6 @@ export default class CustomBinder extends ElementBinder {
     },
     settingList: {},
   };
+
   protected settingList = {};
 }

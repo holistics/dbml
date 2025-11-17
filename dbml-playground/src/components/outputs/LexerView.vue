@@ -4,7 +4,9 @@
     <div class="flex-shrink-0 p-3 border-b border-gray-200 bg-gray-50">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <h3 class="text-sm font-medium text-gray-700">Lexer Tokens</h3>
+          <h3 class="text-sm font-medium text-gray-700">
+            Lexer Tokens
+          </h3>
           <div class="text-xs text-gray-500">
             {{ tokens.length }} tokens
           </div>
@@ -35,11 +37,33 @@
             class="flex items-center space-x-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             :class="{ 'text-green-700 border-green-300 bg-green-50': copySuccess }"
           >
-            <svg v-if="!copySuccess" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            <svg
+              v-if="!copySuccess"
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
             </svg>
-            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            <svg
+              v-else
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
             </svg>
             <span>{{ copySuccess ? 'Copied!' : 'Copy' }}</span>
           </button>
@@ -50,7 +74,10 @@
     <!-- Content Area -->
     <div class="flex-1 overflow-hidden">
       <!-- Cards View -->
-      <div v-if="viewMode === 'cards'" class="h-full flex flex-col">
+      <div
+        v-if="viewMode === 'cards'"
+        class="h-full flex flex-col"
+      >
         <!-- Cards Header -->
         <div class="flex-shrink-0 p-3 border-b border-gray-200 bg-gray-50">
           <div class="text-xs text-gray-500">
@@ -90,8 +117,18 @@
 
             <!-- Hover indicator -->
             <div class="opacity-0 group-hover:opacity-100 transition-opacity">
-              <svg class="w-4 h-4 text-blue-600 float-right mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              <svg
+                class="w-4 h-4 text-blue-600 float-right mt-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
               </svg>
             </div>
           </div>
@@ -99,7 +136,10 @@
       </div>
 
       <!-- JSON Only View -->
-      <div v-else class="h-full flex flex-col">
+      <div
+        v-else
+        class="h-full flex flex-col"
+      >
         <!-- JSON Header -->
         <div class="flex-shrink-0 p-3 border-b border-gray-200 bg-gray-50">
           <div class="text-xs text-gray-500">
@@ -134,87 +174,87 @@
  * - Information Hiding: Token navigation complexity is encapsulated
  * - Deep Module: Rich functionality with simple interface
  */
-import { computed, ref, inject } from 'vue'
-import MonacoEditor from '@/components/editors/MonacoEditor.vue'
-import type { TokenNavigationEventBus } from '@/core/token-navigation'
-import consoleLogger from '@/utils/logger'
+import { computed, ref, inject } from 'vue';
+import MonacoEditor from '@/components/editors/MonacoEditor.vue';
+import type { TokenNavigationEventBus } from '@/core/token-navigation';
+import consoleLogger from '@/utils/logger';
 
 interface Props {
-  readonly tokens: Token[]
+  readonly tokens: Token[];
 }
 
 interface Token {
-  kind: string
-  value: string
+  kind: string;
+  value: string;
   position: {
-    line: number
-    column: number
-  }
+    line: number;
+    column: number;
+  };
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 // Inject the token navigation system
-const tokenNavigationBus = inject<TokenNavigationEventBus>('tokenNavigationBus')
+const tokenNavigationBus = inject<TokenNavigationEventBus>('tokenNavigationBus');
 
 // Component state
-const highlightedTokenIndex = ref<number | null>(null)
-const viewMode = ref<'cards' | 'json'>('cards')
-const copySuccess = ref(false)
+const highlightedTokenIndex = ref<number | null>(null);
+const viewMode = ref<'cards' | 'json'>('cards');
+const copySuccess = ref(false);
 
 /**
  * Convert tokens array to formatted JSON string
  */
 const jsonString = computed(() => {
-  return JSON.stringify(props.tokens, null, 2)
-})
+  return JSON.stringify(props.tokens, null, 2);
+});
 
 /**
  * Navigate to a specific token in the DBML editor
  */
 const navigateToToken = (tokenIndex: number) => {
   if (!tokenNavigationBus) {
-    consoleLogger.warn('Token navigation bus not available')
-    return
+    consoleLogger.warn('Token navigation bus not available');
+    return;
   }
 
   tokenNavigationBus.emit('navigate:token-to-dbml', {
     tokenIndex,
-    modifier: 'button'
-  })
+    modifier: 'button',
+  });
 
   // Briefly highlight the clicked token
-  highlightedTokenIndex.value = tokenIndex
+  highlightedTokenIndex.value = tokenIndex;
   setTimeout(() => {
-    highlightedTokenIndex.value = null
-  }, 1500)
-}
+    highlightedTokenIndex.value = null;
+  }, 1500);
+};
 
 /**
  * Scroll to a specific token (called from navigation coordinator)
  */
 const scrollToToken = (tokenIndex: number) => {
-  const tokenElement = document.querySelector(`.token-card:nth-child(${tokenIndex + 1})`)
+  const tokenElement = document.querySelector(`.token-card:nth-child(${tokenIndex + 1})`);
   if (tokenElement) {
     tokenElement.scrollIntoView({
       behavior: 'smooth',
-      block: 'center'
-    })
+      block: 'center',
+    });
   }
-}
+};
 
 /**
  * Highlight a specific token (called from navigation coordinator)
  */
 const highlightToken = (tokenIndex: number) => {
-  highlightedTokenIndex.value = tokenIndex
-  scrollToToken(tokenIndex)
+  highlightedTokenIndex.value = tokenIndex;
+  scrollToToken(tokenIndex);
 
   // Clear highlight after 2 seconds
   setTimeout(() => {
-    highlightedTokenIndex.value = null
-  }, 2000)
-}
+    highlightedTokenIndex.value = null;
+  }, 2000);
+};
 
 /**
  * Highlight multiple tokens (called from navigation coordinator)
@@ -222,41 +262,41 @@ const highlightToken = (tokenIndex: number) => {
 const highlightTokens = (tokenIndices: number[]) => {
   // For multiple tokens, just scroll to the first one
   if (tokenIndices.length > 0) {
-    scrollToToken(tokenIndices[0])
+    scrollToToken(tokenIndices[0]);
 
     // Highlight the first token
-    highlightToken(tokenIndices[0])
+    highlightToken(tokenIndices[0]);
   }
-}
+};
 
 /**
  * Copy JSON string to clipboard
  */
 const copyToClipboard = async () => {
   try {
-    await navigator.clipboard.writeText(jsonString.value)
-    copySuccess.value = true
+    await navigator.clipboard.writeText(jsonString.value);
+    copySuccess.value = true;
     setTimeout(() => {
-      copySuccess.value = false
-    }, 2000)
+      copySuccess.value = false;
+    }, 2000);
   } catch (err) {
-    consoleLogger.error('Failed to copy JSON to clipboard:', err)
+    consoleLogger.error('Failed to copy JSON to clipboard:', err);
   }
-}
+};
 
 /**
  * Get current view mode
  */
 const getViewMode = (): 'cards' | 'json' => {
-  return viewMode.value
-}
+  return viewMode.value;
+};
 
 /**
  * Set view mode (both internally and externally)
  */
 const setViewMode = (mode: 'cards' | 'json'): void => {
-  viewMode.value = mode
-}
+  viewMode.value = mode;
+};
 
 // Expose methods for the navigation coordinator
 defineExpose({
@@ -264,8 +304,8 @@ defineExpose({
   highlightToken,
   highlightTokens,
   getViewMode,
-  setViewMode
-})
+  setViewMode,
+});
 </script>
 
 <style scoped>

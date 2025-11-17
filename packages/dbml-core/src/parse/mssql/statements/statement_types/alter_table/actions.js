@@ -2,7 +2,7 @@ const _ = require('lodash');
 const { getFullTableName } = require('../../../utils');
 
 function handleRef (tableName, result) {
-  const endpointWithNoTableName = result.value.endpoints.find(ele => !ele.tableName);
+  const endpointWithNoTableName = result.value.endpoints.find((ele) => !ele.tableName);
   endpointWithNoTableName.tableName = tableName.name;
   endpointWithNoTableName.schemaName = tableName.schemaName;
 }
@@ -15,7 +15,7 @@ function addTableName (tableName, result) {
 function handleAlterTableResult (_keyword, tableName, results) {
   if (!results) return null;
   const fullName = getFullTableName(tableName);
-  // eslint-disable-next-line consistent-return
+
   results.forEach((result) => {
     if (result) {
       switch (result.type) {

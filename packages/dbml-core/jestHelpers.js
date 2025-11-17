@@ -8,7 +8,7 @@ global.scanTestNames = (dirname, subpath) => {
 
   return files.filter((fn) => {
     return fn.match(/\.in\./);
-  }).map(fn => fn.split('.in.')[0]);
+  }).map((fn) => fn.split('.in.')[0]);
 };
 
 global.getFileExtension = (format) => {

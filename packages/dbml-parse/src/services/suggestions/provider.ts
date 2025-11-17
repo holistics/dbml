@@ -1,14 +1,14 @@
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
-} from '../../lib/analyzer/utils';
+} from '@/lib/analyzer/utils';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
-} from '../../lib/parser/utils';
-import Compiler, { ScopeKind } from '../../compiler';
-import { SyntaxToken, SyntaxTokenKind } from '../../lib/lexer/tokens';
-import { isOffsetWithinSpan } from '../../lib/utils';
+} from '@/lib/parser/utils';
+import Compiler, { ScopeKind } from '@/compiler';
+import { SyntaxToken, SyntaxTokenKind } from '@/lib/lexer/tokens';
+import { isOffsetWithinSpan } from '@/lib/utils';
 import {
   type CompletionList,
   type TextModel,
@@ -16,16 +16,16 @@ import {
   type Position,
   CompletionItemKind,
   CompletionItemInsertTextRule,
-} from '../types';
-import { TableSymbol } from '../../lib/analyzer/symbol/symbols';
-import { SymbolKind, destructureIndex } from '../../lib/analyzer/symbol/symbolIndex';
+} from '@/services/types';
+import { TableSymbol } from '@/lib/analyzer/symbol/symbols';
+import { SymbolKind, destructureIndex } from '@/lib/analyzer/symbol/symbolIndex';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
   addQuoteIfNeeded,
   noSuggestions,
   prependSpace,
-} from './utils';
+} from '@/services/suggestions/utils';
 import {
   AttributeNode,
   ElementDeclarationNode,
@@ -38,10 +38,10 @@ import {
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
-} from '../../lib/parser/nodes';
-import { getOffsetFromMonacoPosition } from '../utils';
-import { isComment } from '../../lib/lexer/utils';
-import { SettingName } from '../../lib/analyzer/types';
+} from '@/lib/parser/nodes';
+import { getOffsetFromMonacoPosition } from '@/services/utils';
+import { isComment } from '@/lib/lexer/utils';
+import { SettingName } from '@/lib/analyzer/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -93,7 +93,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     }
 
     const containers = [...this.compiler.container.stack(offset)].reverse();
-    // eslint-disable-next-line no-restricted-syntax
+
     for (const container of containers) {
       if (container instanceof PrefixExpressionNode) {
         switch (container.op?.value) {
@@ -106,6 +106,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               offset,
               container as PrefixExpressionNode & { op: SyntaxToken },
             );
+          default:
         }
       } else if (container instanceof InfixExpressionNode) {
         switch (container.op?.value) {
@@ -124,6 +125,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               offset,
               container as InfixExpressionNode & { op: SyntaxToken },
             );
+          default:
         }
       } else if (container instanceof AttributeNode) {
         return suggestInAttribute(this.compiler, offset, container);

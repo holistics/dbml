@@ -1,9 +1,9 @@
 import {
   Definition, DefinitionProvider, TextModel, Position,
-} from '../types';
-import { getOffsetFromMonacoPosition } from '../utils';
-import Compiler from '../../compiler';
-import { SyntaxNode, SyntaxNodeKind } from '../../lib/parser/nodes';
+} from '@/services/types';
+import { getOffsetFromMonacoPosition } from '@/services/utils';
+import Compiler from '@/compiler';
+import { SyntaxNode, SyntaxNodeKind } from '@/lib/parser/nodes';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
   private compiler: Compiler;
@@ -18,17 +18,17 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
     const containers = [...this.compiler.container.stack(offset)];
     while (containers.length !== 0) {
       const node = containers.pop();
-      // eslint-disable-next-line no-continue
+
       if (!node?.referee) continue;
 
       let declaration: SyntaxNode | undefined;
       if (
         node.referee?.declaration
-          && [
-            SyntaxNodeKind.PRIMARY_EXPRESSION,
-            SyntaxNodeKind.VARIABLE,
-            SyntaxNodeKind.PARTIAL_INJECTION,
-          ].includes(node?.kind)
+        && [
+          SyntaxNodeKind.PRIMARY_EXPRESSION,
+          SyntaxNodeKind.VARIABLE,
+          SyntaxNodeKind.PARTIAL_INJECTION,
+        ].includes(node?.kind)
       ) {
         ({ declaration } = node.referee);
       } else if (node.referee?.injectorDeclaration) {
