@@ -169,13 +169,3 @@ jobs:
       with:
         recreate: true
         path: coverage-report.md
-
-    - name: Upload coverage artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage-reports
-        path: |
-          packages/dbml-cli/coverage/
-          packages/dbml-connector/coverage/
-          packages/dbml-core/coverage/
-          packages/dbml-parse/coverage/
