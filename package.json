@@ -18,10 +18,13 @@
     "@babel/plugin-transform-runtime": "^7.21.4",
     "@babel/preset-env": "^7.21.4",
     "@glen/jest-raw-loader": "^2.0.0",
+    "@vitest/coverage-v8": "^4.0.9",
     "babel-jest": "^29.5.0",
+    "fast-check": "^4.3.0",
     "jest": "^29.5.0",
     "lerna": "^7.1.4",
-    "lerna-changelog": "^2.2.0"
+    "lerna-changelog": "^2.2.0",
+    "vitest": "^4.0.9"
   },
   "resolutions": {
     "**/tmp": "0.2.5"
