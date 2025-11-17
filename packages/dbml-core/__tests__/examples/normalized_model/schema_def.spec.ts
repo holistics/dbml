@@ -1,11 +1,14 @@
 // import * as fs from 'fs';
 import dbml from './schema_def.in.dbml';
 import expectedNormalizeModel from './schema_def.out.json';
-import Parser from '../../src/parse/Parser';
+import Parser from '../../../src/parse/Parser';
+import Database from 'model_structure/database';
+import { NormalizedDatabase } from '../../../types/model_structure/database';
+import { isEqualExcludeTokenEmpty } from '../testHelpers';
 
 describe('@dbml/core - model_structure', () => {
-  let database;
-  let normalizedModel;
+  let database: Database | undefined;
+  let normalizedModel: NormalizedDatabase | undefined;
 
   beforeAll(() => {
     try {

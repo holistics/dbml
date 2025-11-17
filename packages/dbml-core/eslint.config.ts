@@ -55,15 +55,12 @@ export default defineConfig(
       }
     },
     {
-      files: ['**/__tests__/**/*.js', '**/*.test.js', '**/*.spec.js'],
+      files: ['**/__tests__/**/*.js', '**/*.test.js', '**/*.spec.js', '**/__tests__/**/*.ts', '**/*.test.ts', '**/*.spec.ts'],
       ...jest.configs['flat/recommended'],
       languageOptions: {
         globals: {
           ...jest.environments.globals.globals,
         },
-      },
-      rules: {
-        'no-undef': 'warn',
       },
     },
   ],

@@ -1,11 +1,14 @@
 // import * as fs from 'fs';
 import dbml from './table_partial.in.dbml';
 import expectedNormalizeModel from './table_partial.out.json';
-import Parser from '../../src/parse/Parser';
+import Parser from '../../../src/parse/Parser';
+import Database from 'model_structure/database';
+import { NormalizedDatabase } from '../../../types/model_structure/database';
+import { isEqualExcludeTokenEmpty } from '../testHelpers';
 
 describe('@dbml/core - normalized_structure', () => {
-  let database;
-  let normalizedModel;
+  let database: Database | undefined;
+  let normalizedModel: NormalizedDatabase | undefined;
 
   beforeAll(() => {
     try {
