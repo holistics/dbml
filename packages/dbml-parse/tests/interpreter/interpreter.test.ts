@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
-import { scanTestNames } from '@/../tests/jestHelpers';
+import { scanTestNames } from '../jestHelpers';
 import { NodeSymbolIdGenerator } from '@/lib/analyzer/symbol/symbols';
 import { SyntaxNodeIdGenerator } from '@/lib/parser/nodes';
 import Lexer from '@/lib/lexer/lexer';

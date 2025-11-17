@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
-import { scanTestNames } from '@/../tests/jestHelpers';
+import { scanTestNames } from '../jestHelpers';
 import { serialize } from '@/lib/serialization/serialize';
 import Lexer from '@/lib/lexer/lexer';
 import Parser from '@/lib/parser/parser';
