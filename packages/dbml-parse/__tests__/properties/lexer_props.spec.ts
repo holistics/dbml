@@ -2,29 +2,14 @@ import { describe, expect, it } from 'vitest';
 import * as fc from 'fast-check';
 import Lexer from '../../src/lib/lexer/lexer';
 import { SyntaxTokenKind } from '../../src';
-import { chainRegex, colorRegex, functionExpressionRegex, identifierRegex, matchFullRegex, multiLineCommentRegex, multiLineStringRegex, numberRegex, opRegex, orRegex, quotedIdentifierRegex, seppuncRegex, singleLineCommentRegex, singleLineStringRegex, wsRegex } from './testHelpers';
+import { tokenStreamArbitrary } from './arbitraries/tokens';
 
 describe('lexing', () => {
-  const sourceRegex = matchFullRegex(chainRegex(/[ ]/, orRegex(
-    numberRegex,
-    singleLineStringRegex,
-    multiLineStringRegex,
-    quotedIdentifierRegex,
-    functionExpressionRegex,
-    identifierRegex,
-    seppuncRegex,
-    wsRegex,
-    singleLineCommentRegex,
-    multiLineCommentRegex,
-    colorRegex,
-    opRegex,
-  )));
-
   it('should roundtrip', () => {
     // Process: Source 1 -lex-> Tokens -serialize-> Source 2
     // Property: Source 1 == Source 2
     fc.assert(
-      fc.property(fc.stringMatching(sourceRegex), (source: string) => {
+      fc.property(tokenStreamArbitrary, (source: string) => {
         const lexer = new Lexer(source);
         const tokens = lexer.lex().getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia]);
         const newSource = tokens.map((token) => source.slice(token.start, token.end)).join('');
@@ -36,7 +21,7 @@ describe('lexing', () => {
   it('should produce no gap', () => {
     // Property: Lexed tokens should be contiguous
     fc.assert(
-      fc.property(fc.stringMatching(sourceRegex), (source: string) => {
+      fc.property(tokenStreamArbitrary, (source: string) => {
         const lexer = new Lexer(source);
         const tokens = lexer.lex().getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia]);
         tokens.reduce((prevTokenEnd, token) => {
@@ -54,7 +39,7 @@ describe('lexing', () => {
     }
 
     fc.assert(
-      fc.property(fc.stringMatching(sourceRegex), (source: string) => {
+      fc.property(tokenStreamArbitrary, (source: string) => {
         const lexer = new Lexer(source);
         const tokens = lexer.lex().getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia]);
         tokens.forEach((token) => {
@@ -69,7 +54,7 @@ describe('lexing', () => {
   it('should reset column after newline', () => {
     // Property: After a newline token, the column should be reset to 0
     fc.assert(
-      fc.property(fc.stringMatching(sourceRegex), (source: string) => {
+      fc.property(tokenStreamArbitrary, (source: string) => {
         const lexer = new Lexer(source);
         const tokens = lexer.lex().getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia]);
         tokens.reduce((isNewlinePrevious, token) => {
@@ -83,7 +68,7 @@ describe('lexing', () => {
   it('should increase line after newline', () => {
     // Property: After a newline token, the line should increase by 1
     fc.assert(
-      fc.property(fc.stringMatching(sourceRegex), (source: string) => {
+      fc.property(tokenStreamArbitrary, (source: string) => {
         const lexer = new Lexer(source);
         const tokens = lexer.lex().getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia]);
         tokens.reduce(([isNewlinePrevious, previousLine], token) => {
@@ -100,7 +85,7 @@ describe('lexing', () => {
   it('should concatenate', () => {
     // Property: Lexing the concatenated string would be the same as concatenating two lexed strings
     fc.assert(
-      fc.property(fc.stringMatching(sourceRegex), fc.stringMatching(sourceRegex), (source1: string, source2: string) => {
+      fc.property(tokenStreamArbitrary, tokenStreamArbitrary, (source1: string, source2: string) => {
         const tokens1 = (new Lexer(source1)).lex().getValue()
           .flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia])
           .slice(0, -1)
@@ -120,7 +105,7 @@ describe('lexing', () => {
 
   it('should have only whitespaces and comments as trivial tokens', () => {
     fc.assert(
-      fc.property(fc.stringMatching(sourceRegex), (source: string) => {
+      fc.property(tokenStreamArbitrary, (source: string) => {
         const tokens = (new Lexer(source)).lex().getValue()
           .flatMap((token) => [...token.leadingTrivia, ...token.trailingTrivia])
           .map((token) => token.kind);
