@@ -6,7 +6,7 @@
   "main": "lib/index.js",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage=false",
     "coverage": "jest --coverage",
     "build": "babel src --out-dir lib --copy-files",
     "prepublish": "npm run build",

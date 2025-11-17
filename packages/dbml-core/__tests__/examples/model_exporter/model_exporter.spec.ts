@@ -7,6 +7,8 @@ import SqlServerExporter from '../../../src/export/SqlServerExporter';
 import OracleExporter from '../../../src/export/OracleExporter';
 import { scanTestNames, getFileExtension, isEqualExcludeTokenEmpty } from '../testHelpers';
 import { ExportFormatOption } from '../../../types/export/ModelExporter';
+import { readFileSync } from 'fs';
+import path from 'path';
 
 type ExporterClass =
   | typeof DbmlExporter
@@ -21,11 +23,12 @@ describe('@dbml/core - model_exporter', () => {
     fileName: string,
     testDir: string,
     format: ExportFormatOption,
-    ExporterClass: ExporterClass
+    ExporterClass: ExporterClass,
   ): void => {
     const fileExtension = getFileExtension(format);
-    const input = require(`./${testDir}/input/${fileName}.in.json`);
-    const output = require(`./${testDir}/output/${fileName}.out.${fileExtension}`);
+    const input = JSON.parse(readFileSync(path.resolve(__dirname, `./${testDir}/input/${fileName}.in.json`), { encoding: 'utf8' }));
+    const rawOutput = readFileSync(path.resolve(__dirname, `./${testDir}/output/${fileName}.out.${fileExtension}`), { encoding: 'utf8' });
+    const output = fileExtension === 'json' ? JSON.parse(rawOutput) : rawOutput;
 
     const database = (new Parser()).parse(input, 'json');
     let res: string;
