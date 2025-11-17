@@ -40,11 +40,9 @@ const COLUMN_CONSTRAINT_KIND = {
   CHECK: 'col_check',
 };
 
-
-
 const findTable = (tables, schemaName, tableName) => {
   const realSchemaName = schemaName || null;
-  const table = tables.find(table => {
+  const table = tables.find((table) => {
     const targetSchemaName = table.schemaName || null;
     return targetSchemaName === realSchemaName && table.name === tableName;
   });
@@ -52,7 +50,7 @@ const findTable = (tables, schemaName, tableName) => {
 };
 
 const findColumn = (table, columnName) => {
-  const column = table.fields.find(field => field.name === columnName);
+  const column = table.fields.find((field) => field.name === columnName);
   return column;
 };
 
@@ -125,7 +123,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   //  )? EOF
   //  ;
   visitSql_script (ctx) {
-    ctx.unit_statement()?.forEach(stmt => stmt.accept(this));
+    ctx.unit_statement()?.forEach((stmt) => stmt.accept(this));
     return this.data;
   }
 
@@ -184,7 +182,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
       }, [[], [], [], []]);
 
       this.data.refs.push(...flatten(
-        fieldsData.map(fieldData => fieldData.inline_refs.map(inlineRef => {
+        fieldsData.map((fieldData) => fieldData.inline_refs.map((inlineRef) => {
           inlineRef.endpoints[0].tableName = tableName;
           inlineRef.endpoints[0].schemaName = schemaName;
           inlineRef.endpoints[0].fieldNames = [fieldData.field.name];
@@ -192,7 +190,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
         })),
       ));
 
-      this.data.refs.push(...tableRefs.map(tableRef => {
+      this.data.refs.push(...tableRefs.map((tableRef) => {
         tableRef.endpoints[0].tableName = tableName;
         tableRef.endpoints[0].schemaName = schemaName;
         return tableRef;
@@ -201,7 +199,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
       this.data.tables.push(new Table({
         name: tableName,
         schemaName,
-        fields: fieldsData.map(fd => fd.field),
+        fields: fieldsData.map((fd) => fd.field),
         indexes,
         checks: tableChecks,
       }));
@@ -213,7 +211,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   //  ;
   visitRelational_table (ctx) {
     if (ctx.relational_property()) {
-      return ctx.relational_property().map(p => p.accept(this));
+      return ctx.relational_property().map((p) => p.accept(this));
     }
     return [];
   }
@@ -250,7 +248,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     const name = last(ctx.column_name().accept(this));
     const type = ctx.datatype()?.accept(this) || ctx.type_name()?.accept(this);
     if (!type) throw createCompilerError(ctx, 'Importing a column definition without a type is not supported');
-    const constraints = (ctx.inline_constraint() || []).map(c => c.accept(this)).filter(Boolean);
+    const constraints = (ctx.inline_constraint() || []).map((c) => c.accept(this)).filter(Boolean);
     if (ctx.DEFAULT()) {
       const value = ctx.expression().accept(this);
       constraints.push({
@@ -270,7 +268,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     }
 
     const settings = { checks: [], inline_refs: [] };
-    constraints.forEach(constraint => {
+    constraints.forEach((constraint) => {
       switch (constraint.type) {
         case COLUMN_CONSTRAINT_KIND.DEFAULT:
           settings.dbdefault = constraint.value.dbdefault;
@@ -390,7 +388,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   //  ;
   visitOut_of_line_constraint (ctx) {
     if (ctx.UNIQUE()) {
-      const columns = ctx.column_name().map(c => ({ value: last(c.accept(this)), type: CONSTRAINT_TYPE.COLUMN }));
+      const columns = ctx.column_name().map((c) => ({ value: last(c.accept(this)), type: CONSTRAINT_TYPE.COLUMN }));
       return {
         type: TABLE_CONSTRAINT_KIND.UNIQUE,
         value: new Index({
@@ -401,7 +399,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
       };
     }
     if (ctx.PRIMARY()) {
-      const columns = ctx.column_name().map(c => ({ value: last(c.accept(this)), type: CONSTRAINT_TYPE.COLUMN }));
+      const columns = ctx.column_name().map((c) => ({ value: last(c.accept(this)), type: CONSTRAINT_TYPE.COLUMN }));
       return {
         type: TABLE_CONSTRAINT_KIND.PK,
         value: new Index({
@@ -439,7 +437,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   // ;
   visitOut_of_line_ref_constraint (ctx) {
     const refName = ctx.constraint_name()?.accept(this);
-    const firstFieldNames = ctx.regular_id().map(c => c.accept(this));
+    const firstFieldNames = ctx.regular_id().map((c) => c.accept(this));
     const ref = ctx.references_clause().accept(this);
     ref.endpoints[0].fieldNames = firstFieldNames;
     if (refName) {
@@ -455,7 +453,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   //  : FOREIGN KEY paren_column_list references_clause on_delete_clause?
   //  ;
   visitForeign_key_clause (ctx) {
-    const firstFieldNames = ctx.paren_column_list().accept(this).map(c => last(c));
+    const firstFieldNames = ctx.paren_column_list().accept(this).map((c) => last(c));
     const ref = ctx.references_clause().accept(this);
     ref.endpoints[0].fieldNames = firstFieldNames;
     if (ctx.on_delete_clause()) {
@@ -475,7 +473,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     const names = ctx.tableview_name().accept(this);
     const refTableName = last(names);
     const refSchemaName = names.length > 1 ? names[names.length - 2] : undefined;
-    const secondFieldNames = ctx.paren_column_list().accept(this).map(c => last(c));
+    const secondFieldNames = ctx.paren_column_list().accept(this).map((c) => last(c));
 
     return new Ref({
       endpoints: [
@@ -522,7 +520,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   }
 
   visitColumn_list (ctx) {
-    return ctx.column_name().map(c => c.accept(this));
+    return ctx.column_name().map((c) => c.accept(this));
   }
 
   //  tableview_name
@@ -547,7 +545,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   }
 
   visitColumn_name (ctx) {
-    return [ctx.identifier().accept(this)].concat(ctx.id_expression().map(i => i.accept(this)));
+    return [ctx.identifier().accept(this)].concat(ctx.id_expression().map((i) => i.accept(this)));
   }
 
   visitIdentifier (ctx) {
@@ -560,7 +558,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   }
 
   visitType_name (ctx) {
-    const names = ctx.id_expression().map(i => i.accept(this));
+    const names = ctx.id_expression().map((i) => i.accept(this));
     const typeName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
     return {
@@ -679,12 +677,12 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
 
     if (ctx.constraint_clauses() || ctx.column_clauses()) {
       const res = ctx.constraint_clauses() ? [{ column: null, constraints: ctx.constraint_clauses().accept(this) }] : ctx.column_clauses().accept(this);
-      res.forEach(r => {
+      res.forEach((r) => {
         const column = r.column !== null ? findColumn(table, r.column) : null;
         if (r.column !== null && !column) {
           throw new CompilerError(ctx.tableview_name(), `Column ${r.column} not found on Table ${tableName}`);
         }
-        r.constraints.forEach(c => handleConstraint.bind(this)(column, c));
+        r.constraints.forEach((c) => handleConstraint.bind(this)(column, c));
       });
     }
   }
@@ -706,10 +704,10 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   visitAdd_modify_drop_column_clauses (ctx) {
     const constraints = [];
     if (ctx.constraint_clauses()) {
-      constraints.push({ column: null, constraints: ctx.constraint_clauses().flatMap(c => c.accept(this)) });
+      constraints.push({ column: null, constraints: ctx.constraint_clauses().flatMap((c) => c.accept(this)) });
     }
     if (ctx.modify_column_clauses()) {
-      constraints.push(...ctx.modify_column_clauses().flatMap(c => c.accept(this)));
+      constraints.push(...ctx.modify_column_clauses().flatMap((c) => c.accept(this)));
     }
     return constraints;
   }
@@ -724,7 +722,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   //  )
   //  ;
   visitModify_column_clauses (ctx) {
-    return ctx.modify_col_properties().map(c => c.accept(this));
+    return ctx.modify_col_properties().map((c) => c.accept(this));
   }
 
   // modify_col_properties
@@ -742,7 +740,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
         },
       });
     } else if (ctx.inline_constraint()) {
-      constraints.push(...ctx.inline_constraint().map(c => c.accept(this)));
+      constraints.push(...ctx.inline_constraint().map((c) => c.accept(this)));
     }
     return {
       column: columnName,
@@ -757,7 +755,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   //   ;
   visitConstraint_clauses (ctx) {
     if (ctx.out_of_line_constraint()) {
-      return ctx.out_of_line_constraint().map(c => c.accept(this)).filter(Boolean);
+      return ctx.out_of_line_constraint().map((c) => c.accept(this)).filter(Boolean);
     }
     if (ctx.out_of_line_ref_constraint()) {
       return [ctx.out_of_line_ref_constraint().accept(this)];
@@ -805,7 +803,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   //  ;
   visitTable_index_clause (ctx) {
     const names = ctx.tableview_name().accept(this);
-    const columns = ctx.index_expr().map(i => i.accept(this));
+    const columns = ctx.index_expr().map((i) => i.accept(this));
     return {
       names,
       columns,
@@ -880,7 +878,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     const names = ctx.general_table_ref().accept(this);
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
-    const columns = ctx.paren_column_list() ? ctx.paren_column_list().accept(this).map(c => last(c)) : [];
+    const columns = ctx.paren_column_list() ? ctx.paren_column_list().accept(this).map((c) => last(c)) : [];
     return {
       tableName,
       schemaName,
@@ -909,7 +907,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   visitValues_clause (ctx) {
     const expressions = ctx.expressions_().accept(this);
     return {
-      values: [expressions.map(e => ({
+      values: [expressions.map((e) => ({
         value: e.type !== CONSTRAINT_TYPE.COLUMN ? e.value : e.rawValue,
         type: e.type !== CONSTRAINT_TYPE.COLUMN ? e.type : DATA_TYPE.EXPRESSION,
       }))],
@@ -917,7 +915,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   }
 
   visitExpressions_ (ctx) {
-    return ctx.expression().map(e => e.accept(this));
+    return ctx.expression().map((e) => e.accept(this));
   }
 
   visitId_expression (ctx) {
