@@ -43,6 +43,7 @@ root
     : sqlStatements? (MINUS MINUS)? EOF
     ;
 
+// MUST READ: STATEMENT_TERMINATOR is used to detect dynamic DELIMITERs, the original grammar does not have this
 sqlStatements
     : (sqlStatement (MINUS MINUS)? (STATEMENT_TERMINATOR | SEMI)? | emptyStatement_)* (
         sqlStatement ((MINUS MINUS)? (STATEMENT_TERMINATOR | SEMI))?
@@ -60,6 +61,7 @@ sqlStatement
     | utilityStatement
     ;
 
+// MUST READ: STATEMENT_TERMINATOR is used to detect dynamic DELIMITERs, the original grammar does not have this
 emptyStatement_
     : STATEMENT_TERMINATOR | SEMI
     ;
