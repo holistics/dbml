@@ -50,6 +50,7 @@ export default defineConfig(
         ],
         '@stylistic/space-before-function-paren': ['error', 'always'],
         '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
+        '@stylistic/max-statements-per-line': 'off',
       }
     },
     {
