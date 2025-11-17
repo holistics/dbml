@@ -220,23 +220,23 @@ export class AttributeNode extends SyntaxNode {
 // A normal expression is the regular expression we encounter in most programming languages
 // ex. 1 + 2, 1 * 2, (1 / 3) - 4, a.b
 // Function application and literal element expressions are not considered one
-export type NormalExpressionNode
-  = | PrefixExpressionNode
-    | InfixExpressionNode
-    | PostfixExpressionNode
-    | BlockExpressionNode
-    | ListExpressionNode
-    | TupleExpressionNode
-    | CallExpressionNode
-    | PrimaryExpressionNode
-    | FunctionExpressionNode
-    | DummyNode
-    | ArrayNode;
+export type NormalExpressionNode =
+  | PrefixExpressionNode
+  | InfixExpressionNode
+  | PostfixExpressionNode
+  | BlockExpressionNode
+  | ListExpressionNode
+  | TupleExpressionNode
+  | CallExpressionNode
+  | PrimaryExpressionNode
+  | FunctionExpressionNode
+  | DummyNode
+  | ArrayNode;
 
-export type ExpressionNode
-  = | ElementDeclarationNode
-    | NormalExpressionNode
-    | FunctionApplicationNode;
+export type ExpressionNode =
+  | ElementDeclarationNode
+  | NormalExpressionNode
+  | FunctionApplicationNode;
 
 export class PrefixExpressionNode extends SyntaxNode {
   op?: SyntaxToken;
