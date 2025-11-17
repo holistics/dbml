@@ -3,11 +3,11 @@ import {
   convertFuncAppToElem,
   isAsKeyword,
   markInvalid,
-} from '@parser/utils';
-import { CompileError, CompileErrorCode } from '@lib/errors';
-import { SyntaxToken, SyntaxTokenKind, isOpToken } from '@lexer/tokens';
-import Report from '@lib/report';
-import { ParsingContext, ParsingContextStack } from '@parser/contextStack';
+} from '@/lib/parser/utils';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
+import { SyntaxToken, SyntaxTokenKind, isOpToken } from '@/lib/lexer/tokens';
+import Report from '@/lib/report';
+import { ParsingContext, ParsingContextStack } from '@/lib/parser/contextStack';
 import {
   ArrayNode,
   AttributeNode,
@@ -32,9 +32,9 @@ import {
   TupleExpressionNode,
   VariableNode,
   PartialInjectionNode,
-} from '@parser/nodes';
-import NodeFactory from '@parser/factory';
-import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@lexer/utils';
+} from '@/lib/parser/nodes';
+import NodeFactory from '@/lib/parser/factory';
+import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/lib/lexer/utils';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {

@@ -1,14 +1,14 @@
 import { partition } from 'lodash-es';
-import { destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken } from '@analyzer/utils';
-import { CompileError, CompileErrorCode } from '@lib/errors';
+import { destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken } from '@/lib/analyzer/utils';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
-} from '@parser/nodes';
-import { ElementInterpreter, InterpreterDatabase, TableGroup } from '@interpreter/types';
+} from '@/lib/parser/nodes';
+import { ElementInterpreter, InterpreterDatabase, TableGroup } from '@/lib/interpreter/types';
 import {
   extractElementName, getTokenPosition, normalizeNoteContent, extractColor,
-} from '@interpreter/utils';
-import { aggregateSettingList } from '@analyzer/validator/utils';
+} from '@/lib/interpreter/utils';
+import { aggregateSettingList } from '@/lib/analyzer/validator/utils';
 
 export class TableGroupInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

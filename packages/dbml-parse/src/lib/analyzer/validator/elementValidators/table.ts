@@ -1,6 +1,6 @@
 import { last, forIn } from 'lodash-es';
-import SymbolFactory from '@analyzer/symbol/factory';
-import { CompileError, CompileErrorCode } from '@lib/errors';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   ArrayNode,
   AttributeNode,
@@ -13,8 +13,8 @@ import {
   PartialInjectionNode,
   PrimaryExpressionNode,
   SyntaxNode,
-} from '@parser/nodes';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@analyzer/utils';
+} from '@/lib/parser/nodes';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/lib/analyzer/utils';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -27,18 +27,18 @@ import {
   isVoid,
   pickValidator,
   registerSchemaStack,
-} from '@analyzer/validator/utils';
-import { ElementValidator } from '@analyzer/validator/types';
-import { ColumnSymbol, TablePartialInjectionSymbol, TableSymbol } from '@analyzer/symbol/symbols';
-import { createColumnSymbolIndex, createTablePartialInjectionSymbolIndex, createTableSymbolIndex } from '@analyzer/symbol/symbolIndex';
+} from '@/lib/analyzer/validator/utils';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { ColumnSymbol, TablePartialInjectionSymbol, TableSymbol } from '@/lib/analyzer/symbol/symbols';
+import { createColumnSymbolIndex, createTablePartialInjectionSymbolIndex, createTableSymbolIndex } from '@/lib/analyzer/symbol/symbolIndex';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
-} from '@parser/utils';
-import { SyntaxToken } from '@lexer/tokens';
-import SymbolTable from '@analyzer/symbol/symbolTable';
-import { SettingName } from '@analyzer/types';
+} from '@/lib/parser/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { SettingName } from '@/lib/analyzer/types';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

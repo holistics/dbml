@@ -1,9 +1,9 @@
 import { findLastIndex, last } from 'lodash-es';
-import { SymbolKind, destructureIndex } from '@analyzer/symbol/symbolIndex';
-import { generatePossibleIndexes } from '@analyzer/symbol/utils';
-import SymbolTable from '@analyzer/symbol/symbolTable';
-import { isOffsetWithinSpan } from '@lib/utils';
-import { CompileError } from '@lib/errors';
+import { SymbolKind, destructureIndex } from '@/lib/analyzer/symbol/symbolIndex';
+import { generatePossibleIndexes } from '@/lib/analyzer/symbol/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { isOffsetWithinSpan } from '@/lib/utils';
+import { CompileError } from '@/lib/errors';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -16,17 +16,17 @@ import {
   SyntaxNode,
   SyntaxNodeIdGenerator,
   TupleExpressionNode,
-} from '@parser/nodes';
-import { NodeSymbol, NodeSymbolIdGenerator } from '@analyzer/symbol/symbols';
-import Report from '@lib/report';
-import Lexer from '@lexer/lexer';
-import Parser from '@parser/parser';
-import Analyzer from '@analyzer/analyzer';
-import Interpreter from '@interpreter/interpreter';
-import { SyntaxToken, SyntaxTokenKind } from '@lexer/tokens';
-import { getMemberChain, isInvalidToken } from '@parser/utils';
-import { Database } from '@interpreter/types';
-import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from '@services/index';
+} from '@/lib/parser/nodes';
+import { NodeSymbol, NodeSymbolIdGenerator } from '@/lib/analyzer/symbol/symbols';
+import Report from '@/lib/report';
+import Lexer from '@/lib/lexer/lexer';
+import Parser from '@/lib/parser/parser';
+import Analyzer from '@/lib/analyzer/analyzer';
+import Interpreter from '@/lib/interpreter/interpreter';
+import { SyntaxToken, SyntaxTokenKind } from '@/lib/lexer/tokens';
+import { getMemberChain, isInvalidToken } from '@/lib/parser/utils';
+import { Database } from '@/lib/interpreter/types';
+import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from '@/services/index';
 
 const enum Query {
   _Interpret,

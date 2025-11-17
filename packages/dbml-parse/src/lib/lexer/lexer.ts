@@ -1,11 +1,11 @@
-import { CompileError, CompileErrorCode } from '@lib/errors';
-import Report from '@lib/report';
-import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@lib/utils';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
+import Report from '@/lib/report';
+import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/lib/utils';
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
-} from '@lexer/tokens';
-import { Position } from '@lib/types';
-import { isInvalidToken } from '@parser/utils';
+} from '@/lib/lexer/tokens';
+import { Position } from '@/lib/types';
+import { isInvalidToken } from '@/lib/parser/utils';
 
 export default class Lexer {
   private start: Position = {

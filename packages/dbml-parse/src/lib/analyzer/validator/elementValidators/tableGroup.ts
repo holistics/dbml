@@ -1,19 +1,19 @@
 import { forIn, partition } from 'lodash-es';
-import { CompileError, CompileErrorCode } from '@lib/errors';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
-  isSimpleName, pickValidator } from '@analyzer/validator/utils';
-import { isValidColor, registerSchemaStack, aggregateSettingList } from '@analyzer/validator/utils';
-import { ElementValidator } from '@analyzer/validator/types';
-import SymbolTable from '@analyzer/symbol/symbolTable';
-import { SyntaxToken } from '@lexer/tokens';
+  isSimpleName, pickValidator } from '@/lib/analyzer/validator/utils';
+import { isValidColor, registerSchemaStack, aggregateSettingList } from '@/lib/analyzer/validator/utils';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { SyntaxToken } from '@/lib/lexer/tokens';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '@parser/nodes';
-import SymbolFactory from '@analyzer/symbol/factory';
-import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '@analyzer/symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@analyzer/utils';
-import { TableGroupFieldSymbol, TableGroupSymbol } from '@analyzer/symbol/symbols';
-import { isExpressionAVariableNode, isExpressionAQuotedString } from '@parser/utils';
+} from '@/lib/parser/nodes';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex } from '@/lib/analyzer/symbol/symbolIndex';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/lib/analyzer/utils';
+import { TableGroupFieldSymbol, TableGroupSymbol } from '@/lib/analyzer/symbol/symbols';
+import { isExpressionAVariableNode, isExpressionAQuotedString } from '@/lib/parser/utils';
 
 export default class TableGroupValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

@@ -1,5 +1,5 @@
 import SymbolTable from './symbolTable';
-import { SyntaxNode } from '@parser/nodes';
+import { SyntaxNode } from '@/lib/parser/nodes';
 
 export type NodeSymbolId = number;
 export class NodeSymbolIdGenerator {

@@ -1,17 +1,17 @@
 import { partition } from 'lodash-es';
-import SymbolFactory from '@analyzer/symbol/factory';
-import { CompileError, CompileErrorCode } from '@lib/errors';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '@parser/nodes';
-import { SyntaxToken } from '@lexer/tokens';
-import { ElementValidator } from '@analyzer/validator/types';
-import { isExpressionAQuotedString } from '@parser/utils';
-import { pickValidator } from '@analyzer/validator/utils';
-import SymbolTable from '@analyzer/symbol/symbolTable';
-import { ElementKind } from '@analyzer/types';
-import { destructureComplexVariable, getElementKind } from '@analyzer/utils';
-import { createStickyNoteSymbolIndex } from '@analyzer/symbol/symbolIndex';
+} from '@/lib/parser/nodes';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { isExpressionAQuotedString } from '@/lib/parser/utils';
+import { pickValidator } from '@/lib/analyzer/validator/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { ElementKind } from '@/lib/analyzer/types';
+import { destructureComplexVariable, getElementKind } from '@/lib/analyzer/utils';
+import { createStickyNoteSymbolIndex } from '@/lib/analyzer/symbol/symbolIndex';
 
 export default class NoteValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

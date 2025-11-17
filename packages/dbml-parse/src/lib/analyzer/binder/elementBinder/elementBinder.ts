@@ -1,5 +1,5 @@
 import { last } from 'lodash-es';
-import { isTupleOfVariables } from '@analyzer/validator/utils';
+import { isTupleOfVariables } from '@/lib/analyzer/validator/utils';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -13,31 +13,31 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-} from '@parser/nodes';
+} from '@/lib/parser/nodes';
 import {
   extractStringFromIdentifierStream,
   isAccessExpression,
   isExpressionAVariableNode,
-} from '@parser/utils';
-import { ArgumentBinderRule, BinderRule, SettingListBinderRule } from '@analyzer/binder/types';
+} from '@/lib/parser/utils';
+import { ArgumentBinderRule, BinderRule, SettingListBinderRule } from '@/lib/analyzer/binder/types';
 import {
   destructureMemberAccessExpression,
   extractVarNameFromPartialInjection,
   extractVarNameFromPrimaryVariable,
   findSymbol,
   getElementKind,
-} from '@analyzer/utils';
-import { SyntaxToken } from '@lexer/tokens';
+} from '@/lib/analyzer/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
 import {
   NodeSymbolIndex, createNodeSymbolIndex, destructureIndex, getInjectorIndex,
   isInjectionIndex,
-} from '@analyzer/symbol/symbolIndex';
-import { CompileError, CompileErrorCode } from '@lib/errors';
-import { pickBinder } from '@analyzer/binder/utils';
-import SymbolFactory from '@analyzer/symbol/factory';
-import { NodeSymbol } from '@analyzer/symbol/symbols';
-import { ElementKind } from '@analyzer/types';
-import { getInjectedFieldSymbolFromInjectorFieldSymbol } from '@analyzer/symbol/utils';
+} from '@/lib/analyzer/symbol/symbolIndex';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
+import { pickBinder } from '@/lib/analyzer/binder/utils';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { NodeSymbol } from '@/lib/analyzer/symbol/symbols';
+import { ElementKind } from '@/lib/analyzer/types';
+import { getInjectedFieldSymbolFromInjectorFieldSymbol } from '@/lib/analyzer/symbol/utils';
 
 export default abstract class ElementBinder {
   protected abstract subfield: {

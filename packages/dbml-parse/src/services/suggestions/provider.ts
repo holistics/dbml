@@ -1,14 +1,14 @@
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
-} from '@analyzer/utils';
+} from '@/lib/analyzer/utils';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
-} from '@parser/utils';
+} from '@/lib/parser/utils';
 import Compiler, { ScopeKind } from '@/compiler';
-import { SyntaxToken, SyntaxTokenKind } from '@lexer/tokens';
-import { isOffsetWithinSpan } from '@lib/utils';
+import { SyntaxToken, SyntaxTokenKind } from '@/lib/lexer/tokens';
+import { isOffsetWithinSpan } from '@/lib/utils';
 import {
   type CompletionList,
   type TextModel,
@@ -16,16 +16,16 @@ import {
   type Position,
   CompletionItemKind,
   CompletionItemInsertTextRule,
-} from '@services/types';
-import { TableSymbol } from '@analyzer/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@analyzer/symbol/symbolIndex';
+} from '@/services/types';
+import { TableSymbol } from '@/lib/analyzer/symbol/symbols';
+import { SymbolKind, destructureIndex } from '@/lib/analyzer/symbol/symbolIndex';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
   addQuoteIfNeeded,
   noSuggestions,
   prependSpace,
-} from '@services/suggestions/utils';
+} from '@/services/suggestions/utils';
 import {
   AttributeNode,
   ElementDeclarationNode,
@@ -38,10 +38,10 @@ import {
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
-} from '@parser/nodes';
-import { getOffsetFromMonacoPosition } from '@services/utils';
-import { isComment } from '@lexer/utils';
-import { SettingName } from '@analyzer/types';
+} from '@/lib/parser/nodes';
+import { getOffsetFromMonacoPosition } from '@/services/utils';
+import { isComment } from '@/lib/lexer/utils';
+import { SettingName } from '@/lib/analyzer/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;

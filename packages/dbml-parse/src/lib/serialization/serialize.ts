@@ -1,7 +1,7 @@
-import { NodeSymbol } from '@analyzer/symbol/symbols';
-import { ProgramNode, SyntaxNode } from '@parser/nodes';
-import Report from '@lib/report';
-import { CompileError } from '@lib/errors';
+import { NodeSymbol } from '@/lib/analyzer/symbol/symbols';
+import { ProgramNode, SyntaxNode } from '@/lib/parser/nodes';
+import Report from '@/lib/report';
+import { CompileError } from '@/lib/errors';
 
 export function serialize (
   report: Readonly<Report<ProgramNode, CompileError>>,

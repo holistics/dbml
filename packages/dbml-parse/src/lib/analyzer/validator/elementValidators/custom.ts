@@ -1,14 +1,14 @@
-import { CompileError, CompileErrorCode } from '@lib/errors';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '@parser/nodes';
-import SymbolFactory from '@analyzer/symbol/factory';
-import { SyntaxToken } from '@lexer/tokens';
-import { ElementValidator } from '@analyzer/validator/types';
-import { isExpressionAQuotedString } from '@parser/utils';
-import SymbolTable from '@analyzer/symbol/symbolTable';
-import { getElementKind } from '@analyzer/utils';
-import { ElementKind } from '@analyzer/types';
+} from '@/lib/parser/nodes';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { isExpressionAQuotedString } from '@/lib/parser/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { getElementKind } from '@/lib/analyzer/utils';
+import { ElementKind } from '@/lib/analyzer/types';
 
 export default class CustomValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
