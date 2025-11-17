@@ -1,22 +1,34 @@
-import Parser from '../../src/parse/Parser';
-import DbmlExporter from '../../src/export/DbmlExporter';
-import JsonExporter from '../../src/export/JsonExporter';
-import MysqlExporter from '../../src/export/MysqlExporter';
-import PostgresExporter from '../../src/export/PostgresExporter';
-import SqlServerExporter from '../../src/export/SqlServerExporter';
-import OracleExporter from '../../src/export/OracleExporter';
+import Parser from '../../../src/parse/Parser';
+import DbmlExporter from '../../../src/export/DbmlExporter';
+import JsonExporter from '../../../src/export/JsonExporter';
+import MysqlExporter from '../../../src/export/MysqlExporter';
+import PostgresExporter from '../../../src/export/PostgresExporter';
+import SqlServerExporter from '../../../src/export/SqlServerExporter';
+import OracleExporter from '../../../src/export/OracleExporter';
+import { scanTestNames, getFileExtension, isEqualExcludeTokenEmpty } from '../testHelpers';
+import { ExportFormatOption } from '../../../types/export/ModelExporter';
+
+type ExporterClass =
+  | typeof DbmlExporter
+  | typeof JsonExporter
+  | typeof MysqlExporter
+  | typeof PostgresExporter
+  | typeof SqlServerExporter
+  | typeof OracleExporter;
 
 describe('@dbml/core - model_exporter', () => {
-  /**
-   * @param {string} format = [json|mysql|dbml|postgres]
-   */
-  const runTest = (fileName, testDir, format, ExporterClass) => {
+  const runTest = (
+    fileName: string,
+    testDir: string,
+    format: ExportFormatOption,
+    ExporterClass: ExporterClass
+  ): void => {
     const fileExtension = getFileExtension(format);
     const input = require(`./${testDir}/input/${fileName}.in.json`);
     const output = require(`./${testDir}/output/${fileName}.out.${fileExtension}`);
 
     const database = (new Parser()).parse(input, 'json');
-    let res;
+    let res: string;
     if (format === 'json') {
       res = ExporterClass.export(database, false);
     } else {
@@ -25,7 +37,6 @@ describe('@dbml/core - model_exporter', () => {
 
     switch (format) {
       case 'json':
-
         isEqualExcludeTokenEmpty(JSON.parse(res), output);
         break;
 
@@ -61,11 +72,7 @@ describe('@dbml/core - model_exporter', () => {
 });
 
 describe('@dbml/core - model_exporter dbml_exporter.escapeNote', () => {
-  /**
-   * @param {string} inputStr       = input note
-   * @param {string} expectedOutput = expected DBML serialized output
-   */
-  const runTest = (inputStr, expectedOutput) => {
+  const runTest = (inputStr: string, expectedOutput: string): void => {
     expect(DbmlExporter.escapeNote(inputStr)).toBe(expectedOutput);
   };
 

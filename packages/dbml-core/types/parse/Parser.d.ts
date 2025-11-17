@@ -1,7 +1,7 @@
 import { Compiler } from '@dbml/parse';
 import Database, { RawDatabase } from '../model_structure/database';
 
-declare type ParseFormat = 'json'
+export declare type ParseFormat = 'json'
     | 'mysql' | 'mysqlLegacy'
     | 'postgres' | 'postgresLegacy'
     | 'dbml' | 'dbmlv2'
