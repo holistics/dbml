@@ -54,6 +54,7 @@ export default defineConfig(
         'consistent-return': 'off',
         '@typescript-eslint/consistent-return': ['error'],
         '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
+        '@stylistic/max-statements-per-line': 'off',
       },
       settings: {
         'import/resolver': {

@@ -60,6 +60,7 @@ export default defineConfig(
           'error',
         ],
         '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
+        '@stylistic/max-statements-per-line': 'off',
       },
       settings: {
         'import/resolver': {
