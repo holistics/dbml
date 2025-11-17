@@ -1,6 +1,8 @@
+import { readFileSync } from 'fs';
 import Parser from '../../../src/parse/Parser';
 import { scanTestNames, getFileExtension, isEqualExcludeTokenEmpty } from '../testHelpers';
 import { ParseFormat } from '../../../types/parse/Parser';
+import path from 'path';
 
 describe('@dbml/core', () => {
   describe('parser', () => {
@@ -12,8 +14,8 @@ describe('@dbml/core', () => {
     ) => {
       const fileExtension = getFileExtension(format);
 
-      const input = await import(`./${testDir}/input/${fileName}.in.${fileExtension}`);
-      const output = await import(`./${testDir}/output/${fileName}.out.json`);
+      const input = readFileSync(path.resolve(__dirname, `./${testDir}/input/${fileName}.in.${fileExtension}`), { encoding: 'utf8' });
+      const output = JSON.parse(readFileSync(path.resolve(__dirname, `./${testDir}/output/${fileName}.out.json`), { encoding: 'utf8' }));
       const jsonSchema = (Parser as any)[parseFuncName](input);
       isEqualExcludeTokenEmpty(jsonSchema, output);
     };
