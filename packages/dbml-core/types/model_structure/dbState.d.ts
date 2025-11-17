@@ -1,17 +1,17 @@
 export default class DbState {
-  dbId: number;
-  schemaId: number;
-  enumId: number;
-  tableGroupId: number;
-  refId: number;
-  tableId: number;
-  noteId: number;
-  enumValueId: number;
-  endpointId: number;
-  checkId: number;
-  indexId: number;
-  fieldId: number;
-  indexColumnId: number;
-  tablePartialId: number;
-  generateId(el: string): any;
+    dbId: number;
+    schemaId: number;
+    enumId: number;
+    tableGroupId: number;
+    refId: number;
+    tableId: number;
+    noteId: number;
+    enumValueId: number;
+    endpointId: number;
+    checkId: number;
+    indexId: number;
+    fieldId: number;
+    indexColumnId: number;
+    tablePartialId: number;
+    generateId(el: string): any;
 }

@@ -2,7 +2,6 @@ import { NormalizedDatabase } from './database';
 import DbState from './dbState';
 import Element, { Token, RawNote } from './element';
 import Enum from './enum';
-
 interface RawEnumValue {
     name: string;
     token: Token;
@@ -10,27 +9,25 @@ interface RawEnumValue {
     _enum: Enum;
 }
 declare class EnumValue extends Element {
-  name: string;
-  note: string;
-  noteToken: Token;
-  _enum: Enum;
-  dbState: DbState;
-  constructor({
-    name, token, note, _enum,
-  }: RawEnumValue);
-  generateId(): void;
-  export(): {
+    name: string;
+    note: string;
+    noteToken: Token;
+    _enum: Enum;
+    dbState: DbState;
+    constructor({ name, token, note, _enum }: RawEnumValue);
+    generateId(): void;
+    export(): {
         name: string;
         note: string;
     };
-  exportParentIds(): {
+    exportParentIds(): {
         enumId: number;
     };
-  shallowExport(): {
+    shallowExport(): {
         name: string;
         note: string;
     };
-  normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedDatabase): void;
 }
 export interface NormalizedEnumValue {
     [_id: number]: {

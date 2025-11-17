@@ -17,11 +17,11 @@ export interface RawNote {
 }
 
 declare class Element {
-  token: Token;
-  id: number;
-  selection: string;
-  constructor(token: Token);
-  bind(selection: any): void;
-  error(message: string): void;
+    token: Token;
+    id: number;
+    selection: string;
+    constructor(token: Token);
+    bind(selection: any): void;
+    error(message: string): void;
 }
 export default Element;

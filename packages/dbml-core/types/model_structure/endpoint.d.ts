@@ -3,18 +3,15 @@ import Field from './field';
 import Ref from './ref';
 import DbState from './dbState';
 import { NormalizedDatabase } from './database';
-
 declare class Endpoint extends Element {
-  relation: any;
-  schemaName: string;
-  tableName: string;
-  fieldNames: string[];
-  fields: Field[];
-  ref: Ref;
-  dbState: DbState;
-  constructor({
-    tableName, schemaName, fieldNames, relation, token, ref,
-  }: {
+    relation: any;
+    schemaName: string;
+    tableName: string;
+    fieldNames: string[];
+    fields: Field[];
+    ref: Ref;
+    dbState: DbState;
+    constructor({ tableName, schemaName, fieldNames, relation, token, ref }: {
         tableName: any;
         schemaName: any;
         fieldNames: any;
@@ -22,27 +19,27 @@ declare class Endpoint extends Element {
         token: any;
         ref: any;
     });
-  generateId(): void;
-  equals(endpoint: any): boolean;
-  compareFields(endpoint: any): boolean;
-  export(): {
+    generateId(): void;
+    equals(endpoint: any): boolean;
+    compareFields(endpoint: any): boolean;
+    export(): {
         schemaName: string;
         tableName: string;
         fieldNames: string[];
         relation: any;
     };
-  exportParentIds(): {
+    exportParentIds(): {
         refId: number;
         fieldIds: number[];
     };
-  shallowExport(): {
+    shallowExport(): {
         schemaName: string;
         tableName: string;
         fieldNames: string[];
         relation: any;
     };
-  setFields(fieldNames: any, table: any): void;
-  normalize(model: NormalizedDatabase): void;
+    setFields(fieldNames: any, table: any): void;
+    normalize(model: NormalizedDatabase): void;
 }
 export interface NormalizedEndpoint {
     [_id: number]: {
