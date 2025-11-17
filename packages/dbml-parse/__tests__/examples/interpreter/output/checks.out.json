@@ -1,0 +1,365 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "User",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "TEXT",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 164,
+              "line": 12,
+              "column": 3
+            },
+            "end": {
+              "offset": 198,
+              "line": 12,
+              "column": 37
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "checks": [
+            {
+              "token": {
+                "start": {
+                  "offset": 175,
+                  "line": 12,
+                  "column": 14
+                },
+                "end": {
+                  "offset": 197,
+                  "line": 12,
+                  "column": 36
+                }
+              },
+              "expression": "LEN(name) > 0"
+            }
+          ]
+        },
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "TEXT",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 201,
+              "line": 13,
+              "column": 3
+            },
+            "end": {
+              "offset": 211,
+              "line": 13,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 135,
+          "line": 9,
+          "column": 1
+        },
+        "end": {
+          "offset": 357,
+          "line": 19,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [
+        {
+          "order": 0,
+          "token": {
+            "start": {
+              "offset": 150,
+              "line": 10,
+              "column": 3
+            },
+            "end": {
+              "offset": 160,
+              "line": 10,
+              "column": 13
+            }
+          },
+          "name": "WithMoney"
+        }
+      ],
+      "checks": [
+        {
+          "token": {
+            "start": {
+              "offset": 228,
+              "line": 16,
+              "column": 5
+            },
+            "end": {
+              "offset": 273,
+              "line": 16,
+              "column": 50
+            }
+          },
+          "name": "name_not_too_long",
+          "expression": "LEN(name) < 256"
+        },
+        {
+          "token": {
+            "start": {
+              "offset": 278,
+              "line": 17,
+              "column": 5
+            },
+            "end": {
+              "offset": 351,
+              "line": 17,
+              "column": 78
+            }
+          },
+          "expression": "REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}$')"
+        }
+      ]
+    },
+    {
+      "name": "User2",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "balance",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 391,
+              "line": 24,
+              "column": 3
+            },
+            "end": {
+              "offset": 402,
+              "line": 24,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 359,
+          "line": 21,
+          "column": 1
+        },
+        "end": {
+          "offset": 404,
+          "line": 25,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [
+        {
+          "order": 0,
+          "token": {
+            "start": {
+              "offset": 375,
+              "line": 22,
+              "column": 3
+            },
+            "end": {
+              "offset": 385,
+              "line": 22,
+              "column": 13
+            }
+          },
+          "name": "WithMoney"
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "User3",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "balance",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 422,
+              "line": 28,
+              "column": 3
+            },
+            "end": {
+              "offset": 485,
+              "line": 28,
+              "column": 66
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "checks": [
+            {
+              "token": {
+                "start": {
+                  "offset": 435,
+                  "line": 28,
+                  "column": 16
+                },
+                "end": {
+                  "offset": 455,
+                  "line": 28,
+                  "column": 36
+                }
+              },
+              "expression": "balance > 0"
+            },
+            {
+              "token": {
+                "start": {
+                  "offset": 457,
+                  "line": 28,
+                  "column": 38
+                },
+                "end": {
+                  "offset": 484,
+                  "line": 28,
+                  "column": 65
+                }
+              },
+              "expression": "balance < 10000000"
+            }
+          ]
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 406,
+          "line": 27,
+          "column": 1
+        },
+        "end": {
+          "offset": 487,
+          "line": 29,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "tablePartials": [
+    {
+      "name": "WithMoney",
+      "fields": [
+        {
+          "name": "balance",
+          "type": {
+            "schemaName": null,
+            "type_name": "int",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 27,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 61,
+              "line": 2,
+              "column": 37
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "checks": [
+            {
+              "token": {
+                "start": {
+                  "offset": 40,
+                  "line": 2,
+                  "column": 16
+                },
+                "end": {
+                  "offset": 60,
+                  "line": 2,
+                  "column": 36
+                }
+              },
+              "expression": "balance > 0"
+            }
+          ]
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 133,
+          "line": 7,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "checks": [
+        {
+          "token": {
+            "start": {
+              "offset": 78,
+              "line": 5,
+              "column": 5
+            },
+            "end": {
+              "offset": 127,
+              "line": 5,
+              "column": 54
+            }
+          },
+          "name": "not_too_much_money",
+          "expression": "balance < 10000000"
+        }
+      ]
+    }
+  ]
+}
