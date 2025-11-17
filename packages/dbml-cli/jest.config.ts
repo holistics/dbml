@@ -8,6 +8,9 @@ const config: Config = {
   transform: {
     "^.+\\.js$": "babel-jest",
   },
+  collectCoverage: true,
+  coverageReporters: ["json", "json-summary"],
+  coverageDirectory: "coverage",
 };
 
 export default config;
