@@ -77,7 +77,7 @@ describe('@dbml/core - model_exporter dbml_exporter.escapeNote', () => {
   runTest("hel'lo", "'''hel\\'lo'''");
   // Only triple quotes need escaping
   // See https://dbml.dbdiagram.io/docs/#multi-line-string
-  runTest('hel\'\'\'lo', "'''hel\\'\\'\\'lo'''");
+  runTest("hel'''lo", "'''hel\\'\\'\\'lo'''");
   runTest('hel\nlo', "'''hel\nlo'''");
   // CRLF => \n
   runTest('hel\r\nlo', "'''hel\nlo'''");
