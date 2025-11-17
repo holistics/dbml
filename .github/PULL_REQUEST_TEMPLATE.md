@@ -17,6 +17,7 @@
 Please check directly on the box once each of these are done
 
 - [ ] Documentation (if necessary)
+- [ ] Lint checks
 - [ ] Tests (integration test/unit test)
 - [ ] Integration Tests Passed
 - [ ] Code Review

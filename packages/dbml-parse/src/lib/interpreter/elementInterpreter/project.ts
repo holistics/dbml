@@ -1,10 +1,10 @@
-import { extractQuotedStringToken } from '../../analyzer/utils';
-import { CompileError } from '../../errors';
+import { extractQuotedStringToken } from '@/lib/analyzer/utils';
+import { CompileError } from '@/lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
-} from '../../parser/nodes';
-import { ElementInterpreter, InterpreterDatabase, Project } from '../types';
-import { extractElementName, getTokenPosition, normalizeNoteContent } from '../utils';
+} from '@/lib/parser/nodes';
+import { ElementInterpreter, InterpreterDatabase, Project } from '@/lib/interpreter/types';
+import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/lib/interpreter/utils';
 import { EnumInterpreter } from './enum';
 import { RefInterpreter } from './ref';
 import { TableInterpreter } from './table';
@@ -69,7 +69,11 @@ export class ProjectInterpreter implements ElementInterpreter {
         }
         case 'note': {
           this.project.note = {
-            value: extractQuotedStringToken(sub.body instanceof BlockExpressionNode ? (sub.body.body[0] as FunctionApplicationNode).callee : sub.body!.callee).map(normalizeNoteContent).unwrap(),
+            value: extractQuotedStringToken(
+              sub.body instanceof BlockExpressionNode
+                ? (sub.body.body[0] as FunctionApplicationNode).callee
+                : sub.body!.callee,
+            ).map(normalizeNoteContent).unwrap(),
             token: getTokenPosition(sub),
           };
           return [];

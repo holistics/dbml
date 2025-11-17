@@ -45,13 +45,13 @@ class Schema extends Element {
   }
 
   checkTable (table) {
-    if (this.tables.some(t => t.name === table.name)) {
+    if (this.tables.some((t) => t.name === table.name)) {
       table.error(`Table ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${table.name}" existed`);
     }
   }
 
   findTable (tableName) {
-    return this.tables.find(t => t.name === tableName);
+    return this.tables.find((t) => t.name === tableName);
   }
 
   processEnums (rawEnums) {
@@ -66,9 +66,10 @@ class Schema extends Element {
   }
 
   checkEnum (_enum) {
-    if (this.enums.some(e => e.name === _enum.name)) {
+    if (this.enums.some((e) => e.name === _enum.name)) {
       _enum.error(`Enum ${shouldPrintSchema(this)
-        ? `"${this.name}".` : ''}"${_enum.name}" existed`);
+        ? `"${this.name}".`
+        : ''}"${_enum.name}" existed`);
     }
   }
 
@@ -84,7 +85,7 @@ class Schema extends Element {
   }
 
   checkRef (ref) {
-    if (this.refs.some(r => r.equals(ref))) {
+    if (this.refs.some((r) => r.equals(ref))) {
       const endpoint1 = ref.endpoints[0];
       const fieldList1 = endpoint1.fieldNames.map(JSON.stringify).join(', ');
       const endpoint2 = ref.endpoints[1];
@@ -107,7 +108,7 @@ class Schema extends Element {
   }
 
   checkTableGroup (tableGroup) {
-    if (this.tableGroups.some(tg => tg.name === tableGroup.name)) {
+    if (this.tableGroups.some((tg) => tg.name === tableGroup.name)) {
       tableGroup.error(`Table Group ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${tableGroup.name}" existed`);
     }
   }
@@ -128,19 +129,19 @@ class Schema extends Element {
 
   exportChild () {
     return {
-      tables: this.tables.map(t => t.export()),
-      enums: this.enums.map(e => e.export()),
-      tableGroups: this.tableGroups.map(tg => tg.export()),
-      refs: this.refs.map(r => r.export()),
+      tables: this.tables.map((t) => t.export()),
+      enums: this.enums.map((e) => e.export()),
+      tableGroups: this.tableGroups.map((tg) => tg.export()),
+      refs: this.refs.map((r) => r.export()),
     };
   }
 
   exportChildIds () {
     return {
-      tableIds: this.tables.map(t => t.id),
-      enumIds: this.enums.map(e => e.id),
-      tableGroupIds: this.tableGroups.map(tg => tg.id),
-      refIds: this.refs.map(r => r.id),
+      tableIds: this.tables.map((t) => t.id),
+      enumIds: this.enums.map((e) => e.id),
+      tableGroupIds: this.tableGroups.map((tg) => tg.id),
+      refIds: this.refs.map((r) => r.id),
     };
   }
 

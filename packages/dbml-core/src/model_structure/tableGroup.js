@@ -40,14 +40,16 @@ class TableGroup extends Element {
   }
 
   checkTable (table) {
-    if (this.tables.some(t => t.id === table.id)) {
+    if (this.tables.some((t) => t.id === table.id)) {
       this.error(`Table ${shouldPrintSchema(table.schema) ? `"${table.schema.name}".` : ''}.${table.name} is already in the group`);
     }
 
     if (table.group) {
       this.error(`Table ${shouldPrintSchema(table.schema)
-        ? `"${table.schema.name}".` : ''}.${table.name} is already in group ${shouldPrintSchema(table.group.schema)
-        ? `"${table.group.schema.name}".` : ''}${table.group.name}`);
+        ? `"${table.schema.name}".`
+        : ''}.${table.name} is already in group ${shouldPrintSchema(table.group.schema)
+        ? `"${table.group.schema.name}".`
+        : ''}${table.group.name}`);
     }
   }
 
@@ -60,13 +62,13 @@ class TableGroup extends Element {
 
   exportChild () {
     return {
-      tables: this.tables.map(t => ({ tableName: t.name, schemaName: t.schema.name })),
+      tables: this.tables.map((t) => ({ tableName: t.name, schemaName: t.schema.name })),
     };
   }
 
   exportChildIds () {
     return {
-      tableIds: this.tables.map(t => t.id),
+      tableIds: this.tables.map((t) => t.id),
     };
   }
 

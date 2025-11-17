@@ -1,16 +1,16 @@
-import { ProgramNode } from '../parser/nodes';
-import { CompileError } from '../errors';
-import { Database, InterpreterDatabase } from './types';
-import { TableInterpreter } from './elementInterpreter/table';
-import { StickyNoteInterpreter } from './elementInterpreter/sticky_note';
-import { RefInterpreter } from './elementInterpreter/ref';
-import { TableGroupInterpreter } from './elementInterpreter/tableGroup';
-import { EnumInterpreter } from './elementInterpreter/enum';
-import { ProjectInterpreter } from './elementInterpreter/project';
-import { TablePartialInterpreter } from './elementInterpreter/tablePartial';
-import Report from '../report';
-import { getElementKind } from '../analyzer/utils';
-import { ElementKind } from '../analyzer/types';
+import { ProgramNode } from '@/lib/parser/nodes';
+import { CompileError } from '@/lib/errors';
+import { Database, InterpreterDatabase } from '@/lib/interpreter/types';
+import { TableInterpreter } from '@/lib/interpreter/elementInterpreter/table';
+import { StickyNoteInterpreter } from '@/lib/interpreter/elementInterpreter/sticky_note';
+import { RefInterpreter } from '@/lib/interpreter/elementInterpreter/ref';
+import { TableGroupInterpreter } from '@/lib/interpreter/elementInterpreter/tableGroup';
+import { EnumInterpreter } from '@/lib/interpreter/elementInterpreter/enum';
+import { ProjectInterpreter } from '@/lib/interpreter/elementInterpreter/project';
+import { TablePartialInterpreter } from '@/lib/interpreter/elementInterpreter/tablePartial';
+import Report from '@/lib/report';
+import { getElementKind } from '@/lib/analyzer/utils';
+import { ElementKind } from '@/lib/analyzer/types';
 
 function convertEnvToDb (env: InterpreterDatabase): Database {
   return {

@@ -22,7 +22,7 @@ describe('@dbml/core - model_structure', () => {
 
       test('table "users" has all fields and in correct order after merged with the partials', () => {
         const table = database.schemas[0].findTable('users');
-        const fields = table.fields.map(f => f.name);
+        const fields = table.fields.map((f) => f.name);
 
         expect(fields).toEqual(['id', 'id2', 'name', 'email', 'created_at', 'updated_at', 'a', 'b']);
       });

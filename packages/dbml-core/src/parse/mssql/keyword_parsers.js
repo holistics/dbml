@@ -98,7 +98,6 @@ exports.KeywordSP_ADDEXTENDEDPROPERTY = keyword(/sp_addextendedproperty/i);
 exports.LogicalOpIn = keyword(/IN/i);
 exports.LogicalOpAnd = keyword(/AND/i);
 
-
 exports.LessThan = word('<');
 exports.GreaterThan = word('>');
 exports.LParen = word('(');

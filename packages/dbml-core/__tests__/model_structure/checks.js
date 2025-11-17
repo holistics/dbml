@@ -38,7 +38,7 @@ describe('@dbml/core - model_structure', () => {
         expect(table.checks[1].table).toEqual(table);
 
         expect(table.checks[2].name).toEqual(undefined);
-        expect(table.checks[2].expression).toEqual("REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}$')");
+        expect(table.checks[2].expression).toEqual('REGEXP_LIKE(email, \'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}$\')');
         expect(table.checks[2].table).toEqual(table);
 
         const column0 = table.findField('name');

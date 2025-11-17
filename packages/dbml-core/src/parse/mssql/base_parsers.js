@@ -26,7 +26,7 @@ const pIgnore = P((input, i) => {
 
 const Lang = P.createLanguage({
   pIgnore: () => pIgnore,
-  pColumnNames: (r) => makeList(P.seq(r.pIdentifier, r.pKeywordAscOrDesc.fallback(null)).map(value => value[0])).desc('list of column names'),
+  pColumnNames: (r) => makeList(P.seq(r.pIdentifier, r.pKeywordAscOrDesc.fallback(null)).map((value) => value[0])).desc('list of column names'),
 
   pDotDelimitedName: (r) => P.sepBy1(r.pIdentifier, P.string('.')).desc('dot delimited identifier'),
 
@@ -48,13 +48,13 @@ const Lang = P.createLanguage({
   pConst: (r) => P.alt(r.pString, r.pUnicode, r.pBinary, r.pScience, r.pMoney, r.pSigned, r.pNumber).desc('constant'),
 
   pFunction: (r) => P.seq(r.pIdentifier, makeList(r.pFunctionParam, true))
-    .map(value => `${value[0]}(${value[1].join(',')})`).thru(streamline('function')).desc('function constant'),
+    .map((value) => `${value[0]}(${value[1].join(',')})`).thru(streamline('function')).desc('function constant'),
   pFunctionParam: (r) => P.alt(r.pNumber, r.pIdentifier).desc('identifier or number paremeter'),
 
   pMoney: (r) => P.seq(P.regexp(/[+-]\$/), r.pNumber).thru(streamline('money')).desc('money constant'),
   pSigned: (r) => P.seq(P.regexp(/[+-]/), r.pNumber).thru(streamline('signed')).desc('signed constant'),
   pUnicode: (r) => P.seq(P.string('N'), r.pString).thru(streamline('unicode')).desc('unicode constant'),
-  pString: () => P.regexp(/'[^']*'/).thru(streamline('string')).map(value => {
+  pString: () => P.regexp(/'[^']*'/).thru(streamline('string')).map((value) => {
     const stringLiteral = value.value;
     value.value = stringLiteral.slice(1, stringLiteral.length - 1);
     return value;
@@ -72,13 +72,12 @@ const Lang = P.createLanguage({
     P.string('"'),
     P.regexp(/[^"]*/),
     P.string('"'),
-  ).map(value => value[1]).skip(wss),
+  ).map((value) => value[1]).skip(wss),
   pBracketDelimitedIdentifier: () => P.seq(
     P.string('['),
     P.regexp(/[^\]]*/),
     P.string(']'),
-  ).map(value => value[1]).skip(wss),
-
+  ).map((value) => value[1]).skip(wss),
 
   pKeywordPKOrUnique: () => P.alt(
     KP.KeywordPrimaryKey.result({ type: 'pk', value: true }),

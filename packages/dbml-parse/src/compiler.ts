@@ -1,9 +1,9 @@
-import { findLastIndex, last } from 'lodash';
-import { SymbolKind, destructureIndex } from './lib/analyzer/symbol/symbolIndex';
-import { generatePossibleIndexes } from './lib/analyzer/symbol/utils';
-import SymbolTable from './lib/analyzer/symbol/symbolTable';
-import { isOffsetWithinSpan } from './lib/utils';
-import { CompileError } from './lib/errors';
+import { findLastIndex, last } from 'lodash-es';
+import { SymbolKind, destructureIndex } from '@/lib/analyzer/symbol/symbolIndex';
+import { generatePossibleIndexes } from '@/lib/analyzer/symbol/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { isOffsetWithinSpan } from '@/lib/utils';
+import { CompileError } from '@/lib/errors';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -16,17 +16,17 @@ import {
   SyntaxNode,
   SyntaxNodeIdGenerator,
   TupleExpressionNode,
-} from './lib/parser/nodes';
-import { NodeSymbol, NodeSymbolIdGenerator } from './lib/analyzer/symbol/symbols';
-import Report from './lib/report';
-import Lexer from './lib/lexer/lexer';
-import Parser from './lib/parser/parser';
-import Analyzer from './lib/analyzer/analyzer';
-import Interpreter from './lib/interpreter/interpreter';
-import { SyntaxToken, SyntaxTokenKind } from './lib/lexer/tokens';
-import { getMemberChain, isInvalidToken } from './lib/parser/utils';
-import { Database } from './lib/interpreter/types';
-import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from './services/index';
+} from '@/lib/parser/nodes';
+import { NodeSymbol, NodeSymbolIdGenerator } from '@/lib/analyzer/symbol/symbols';
+import Report from '@/lib/report';
+import Lexer from '@/lib/lexer/lexer';
+import Parser from '@/lib/parser/parser';
+import Analyzer from '@/lib/analyzer/analyzer';
+import Interpreter from '@/lib/interpreter/interpreter';
+import { SyntaxToken, SyntaxTokenKind } from '@/lib/lexer/tokens';
+import { getMemberChain, isInvalidToken } from '@/lib/parser/utils';
+import { Database } from '@/lib/interpreter/types';
+import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from '@/services/index';
 
 const enum Query {
   _Interpret,
@@ -78,7 +78,7 @@ export default class Compiler {
     queryCallback: (arg: U) => V,
     toKey?: (arg: U) => K,
   ): (arg: U) => V;
-  private createQuery<V, U, K> (
+  private createQuery<V, U, K>(
     kind: Query,
     queryCallback: (arg: U | undefined) => V,
     toKey?: (arg: U) => K,
@@ -199,7 +199,7 @@ export default class Compiler {
 
         let curNode: Readonly<SyntaxNode> = this.parse.ast();
         const res: SyntaxNode[] = [curNode];
-        // eslint-disable-next-line no-constant-condition
+
         while (true) {
           const memberChain = getMemberChain(curNode);
           const foundMem = memberChain.find((mem) => isOffsetWithinSpan(searchOffset, mem));
@@ -376,7 +376,7 @@ export default class Compiler {
           const { symbolTable } = currentOwner.symbol;
           let currentPossibleSymbolTables: SymbolTable[] = [symbolTable];
           let currentPossibleSymbols: { symbol: NodeSymbol; kind: SymbolKind; name: string }[] = [];
-          // eslint-disable-next-line no-restricted-syntax
+
           for (const name of nameStack) {
             currentPossibleSymbols = currentPossibleSymbolTables.flatMap((st) => generatePossibleIndexes(name).flatMap((index) => {
               const symbol = st.get(index);
@@ -400,9 +400,9 @@ export default class Compiler {
         ownerSymbol: NodeSymbol,
       ): readonly Readonly<{ symbol: NodeSymbol; kind: SymbolKind; name: string }>[] => (ownerSymbol.symbolTable
         ? [...ownerSymbol.symbolTable.entries()].map(([index, symbol]) => ({
-          ...destructureIndex(index).unwrap(),
-          symbol,
-        }))
+            ...destructureIndex(index).unwrap(),
+            symbol,
+          }))
         : []),
     ),
   };

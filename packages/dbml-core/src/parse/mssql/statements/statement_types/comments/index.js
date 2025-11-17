@@ -6,8 +6,8 @@ const { makeNode } = require('../../../utils');
 const Lang = P.createLanguage({
   StartComment: () => P.seq(KP.KeywordExec, KP.KeywordSP_ADDEXTENDEDPROPERTY),
   EndComment: () => P.seq(KP.Semicolon.atMost(1), KP.KeywordGo),
-  StartString: () => P.alt(KP.SingleQuote, P.string("N'")),
-  ManyDoubleSingleQuote: () => P.string("''"),
+  StartString: () => P.alt(KP.SingleQuote, P.string('N\'')),
+  ManyDoubleSingleQuote: () => P.string('\'\''),
   NoSingleQuote: () => P.regex(/[^']/),
   StringType: (r) => P.alt(r.NoSingleQuote, r.ManyDoubleSingleQuote)
     .atLeast(1)

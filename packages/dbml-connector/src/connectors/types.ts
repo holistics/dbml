@@ -10,7 +10,7 @@ interface TypeInfo {
 type DefaultType = 'string' | 'number' | 'boolean' | 'expression';
 
 interface DefaultInfo {
-  type: DefaultType,
+  type: DefaultType;
   value: string;
 }
 
@@ -45,12 +45,12 @@ interface CheckConstraintDictionary {
 }
 
 interface TableConstraint {
- [fieldName: string]: {
-   pk?: boolean;
-   unique?: boolean;
-   checks: CheckConstraint[];
+  [fieldName: string]: {
+    pk?: boolean;
+    unique?: boolean;
+    checks: CheckConstraint[];
   };
- }
+}
 
 interface TableConstraintsDictionary {
   [tableIdentifier: string]: TableConstraint; // Represents constraints within tables, indexed by schemaName.tableName
@@ -88,8 +88,8 @@ interface IndexColumn {
 interface Index {
   name: string;
   type: string;
-  unique?: boolean,
-  pk?: boolean,
+  unique?: boolean;
+  pk?: boolean;
   columns: IndexColumn[];
 }
 
@@ -108,12 +108,12 @@ interface DatabaseSchema {
 }
 
 interface BigQueryCredentials {
-  projectId?: string,
+  projectId?: string;
   credentials?: {
-    clientEmail: string,
-    privateKey: string,
-  },
-  datasets: string[],
+    clientEmail: string;
+    privateKey: string;
+  };
+  datasets: string[];
 }
 
 export {

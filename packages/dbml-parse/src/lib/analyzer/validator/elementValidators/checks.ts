@@ -1,6 +1,6 @@
-import { last, partition } from 'lodash';
-import SymbolFactory from '../../symbol/factory';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { last, partition } from 'lodash-es';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -9,17 +9,17 @@ import {
   ListExpressionNode,
   ProgramNode,
   SyntaxNode,
-} from '../../../parser/nodes';
-import { isExpressionAQuotedString } from '../../../parser/utils';
-import { aggregateSettingList, pickValidator } from '../utils';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementValidator } from '../types';
-import { getElementKind } from '../../utils';
-import SymbolTable from '../../symbol/symbolTable';
-import { ElementKind } from '../../types';
+} from '@/lib/parser/nodes';
+import { isExpressionAQuotedString } from '@/lib/parser/utils';
+import { aggregateSettingList, pickValidator } from '@/lib/analyzer/validator/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { getElementKind } from '@/lib/analyzer/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { ElementKind } from '@/lib/analyzer/types';
 
 export default class ChecksValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 
@@ -119,16 +119,16 @@ export default class ChecksValidator implements ElementValidator {
       switch (name) {
         case 'name':
           if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_CHECK_SETTING, `\'${name}\' can only appear once`, attr)));
+            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_CHECK_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_CHECK_SETTING_VALUE, `\'${name}\' must be a string`, attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_CHECK_SETTING_VALUE, `'${name}' must be a string`, attr));
             }
           });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_CHECK_SETTING, `Unknown check setting \'${name}\'`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_CHECK_SETTING, `Unknown check setting '${name}'`, attr)));
       }
     }
     return errors;

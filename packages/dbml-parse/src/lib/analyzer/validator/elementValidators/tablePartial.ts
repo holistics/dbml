@@ -1,7 +1,6 @@
-/* eslint-disable class-methods-use-this */
-import { partition, forIn, last } from 'lodash';
-import SymbolFactory from '../../symbol/factory';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { partition, forIn, last } from 'lodash-es';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -12,8 +11,8 @@ import {
   ListExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
-} from '../../../parser/nodes';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
+} from '@/lib/parser/nodes';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/lib/analyzer/utils';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -22,20 +21,20 @@ import {
   isValidColumnType,
   isValidDefaultValue,
   isVoid,
-  pickValidator,
   registerSchemaStack,
-} from '../utils';
-import { ElementValidator } from '../types';
-import { ColumnSymbol, TablePartialSymbol } from '../../symbol/symbols';
-import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '../../symbol/symbolIndex';
+  pickValidator,
+} from '@/lib/analyzer/validator/utils';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { ColumnSymbol, TablePartialSymbol } from '@/lib/analyzer/symbol/symbols';
+import { createColumnSymbolIndex, createTablePartialSymbolIndex } from '@/lib/analyzer/symbol/symbolIndex';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
-} from '../../../parser/utils';
-import { SyntaxToken } from '../../../lexer/tokens';
-import SymbolTable from '../../symbol/symbolTable';
-import { ElementKind, SettingName } from '../../types';
+} from '@/lib/parser/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { ElementKind, SettingName } from '@/lib/analyzer/types';
 
 export default class TablePartialValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -243,8 +242,8 @@ export default class TablePartialValidator implements ElementValidator {
     const settingMap: {
       [index: string]: AttributeNode[];
     } & {
-      pk?: (AttributeNode | PrimaryExpressionNode)[],
-      unique?: (AttributeNode | PrimaryExpressionNode)[],
+      pk?: (AttributeNode | PrimaryExpressionNode)[];
+      unique?: (AttributeNode | PrimaryExpressionNode)[];
     } = aggReport.getValue();
 
     parts.forEach((part) => {

@@ -4,8 +4,13 @@
     <div class="flex-shrink-0 p-3 border-b border-gray-200 bg-gray-50">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <h3 class="text-sm font-medium text-gray-700">Interpreter Debugger</h3>
-          <div v-if="databaseModel" class="text-xs text-gray-500">
+          <h3 class="text-sm font-medium text-gray-700">
+            Interpreter Debugger
+          </h3>
+          <div
+            v-if="databaseModel"
+            class="text-xs text-gray-500"
+          >
             Database JSON Model
           </div>
         </div>
@@ -35,11 +40,33 @@
             class="flex items-center space-x-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             :class="{ 'text-green-700 border-green-300 bg-green-50': copySuccess }"
           >
-            <svg v-if="!copySuccess" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            <svg
+              v-if="!copySuccess"
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
             </svg>
-            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            <svg
+              v-else
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
             </svg>
             <span>{{ copySuccess ? 'Copied!' : 'Copy' }}</span>
           </button>
@@ -49,12 +76,18 @@
 
     <!-- Content Area -->
     <div class="flex-1 overflow-hidden">
-      <div v-if="!databaseModel" class="text-center text-gray-500 py-8">
+      <div
+        v-if="!databaseModel"
+        class="text-center text-gray-500 py-8"
+      >
         No data available
       </div>
 
       <!-- Tree Debugger View -->
-      <div v-if="viewMode === 'tree'" class="h-full flex flex-col">
+      <div
+        v-if="viewMode === 'tree'"
+        class="h-full flex flex-col"
+      >
         <!-- Tree Header -->
         <div class="flex-shrink-0 p-3 border-b border-gray-200 bg-gray-50">
           <div class="text-xs text-gray-500">
@@ -70,14 +103,20 @@
             @node-click="handleTreeNodeClick"
             @position-click="handleTreePositionClick"
           />
-          <div v-else class="text-center text-gray-500 py-8">
+          <div
+            v-else
+            class="text-center text-gray-500 py-8"
+          >
             No database model data available
           </div>
         </div>
       </div>
 
       <!-- Raw JSON View -->
-      <div v-else class="h-full flex flex-col">
+      <div
+        v-else
+        class="h-full flex flex-col"
+      >
         <!-- JSON Header -->
         <div class="flex-shrink-0 p-3 border-b border-gray-200 bg-gray-50">
           <div class="text-xs text-gray-500">
@@ -95,7 +134,10 @@
             :minimap="false"
             word-wrap="on"
           />
-          <div v-else class="text-center text-gray-500 py-8">
+          <div
+            v-else
+            class="text-center text-gray-500 py-8"
+          >
             No database model data available
           </div>
         </div>
@@ -115,57 +157,57 @@
  * Generic design allows it to handle new features added to dbml-parse
  * without breaking when the parser structure evolves.
  */
-import { computed, ref } from 'vue'
-import MonacoEditor from '@/components/editors/MonacoEditor.vue'
-import InterpreterTreeView from './ast/InterpreterTreeView.vue'
-import type { Database, InterpreterViewProps } from '@/types'
+import { computed, ref } from 'vue';
+import MonacoEditor from '@/components/editors/MonacoEditor.vue';
+import InterpreterTreeView from './ast/InterpreterTreeView.vue';
+import type { Database, InterpreterViewProps } from '@/types';
 import consoleLogger from '@/utils/logger';
 
-const props = defineProps<InterpreterViewProps>()
+const props = defineProps<InterpreterViewProps>();
 
 // Component state
-const viewMode = ref<'tree' | 'json'>('tree')
-const copySuccess = ref(false)
+const viewMode = ref<'tree' | 'json'>('tree');
+const copySuccess = ref(false);
 
 // Parse the interpreter output
 const databaseModel = computed(() => {
   if (!props.interpreterOutput || typeof props.interpreterOutput !== 'object') {
-    return null
+    return null;
   }
-  return props.interpreterOutput as Database
-})
+  return props.interpreterOutput as Database;
+});
 
 // View mode and copy functionality
 const jsonString = computed(() => {
-  return databaseModel.value ? JSON.stringify(databaseModel.value, null, 2) : ''
-})
+  return databaseModel.value ? JSON.stringify(databaseModel.value, null, 2) : '';
+});
 
 const setViewMode = (mode: 'tree' | 'json') => {
-  viewMode.value = mode
-}
+  viewMode.value = mode;
+};
 
 const copyCurrentView = async () => {
   try {
-    const dataToCopy = jsonString.value
+    const dataToCopy = jsonString.value;
 
-    await navigator.clipboard.writeText(dataToCopy)
-    copySuccess.value = true
+    await navigator.clipboard.writeText(dataToCopy);
+    copySuccess.value = true;
     setTimeout(() => {
-      copySuccess.value = false
-    }, 2000)
+      copySuccess.value = false;
+    }, 2000);
   } catch (err) {
-    consoleLogger.error('Failed to copy to clipboard:', err)
+    consoleLogger.error('Failed to copy to clipboard:', err);
   }
-}
+};
 
 // Tree view handlers
 const handleTreeNodeClick = (node: any) => {
-  consoleLogger.log('Tree node clicked:', node)
-}
+  consoleLogger.log('Tree node clicked:', node);
+};
 
 const handleTreePositionClick = (event: { node: any; position: any }) => {
-  consoleLogger.log('Tree position clicked:', event)
-}
+  consoleLogger.log('Tree position clicked:', event);
+};
 </script>
 
 <style scoped>

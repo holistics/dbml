@@ -9,7 +9,6 @@ const { pColumnConstraint } = require('../constraint_definition');
 const pExpression = require('../expression');
 const A = require('./actions');
 
-
 const Lang = P.createLanguage({
   ColumnsDefinition: (r) => P.alt(
     r.ComputedColumnDefinition.result(null),
@@ -57,7 +56,6 @@ const Lang = P.createLanguage({
   DataTypeXML: () => P.seq(P.alt(KP.KeywordDocument, KP.KeywordContent), pIdentifier)
     .tieWith(' '),
 
-
   NullOrNot: () => P.alt(KP.KeywordNull.result(false), KP.KeywordNotNull.result(true))
     .thru(streamline('not_null')),
 
@@ -77,7 +75,6 @@ const Lang = P.createLanguage({
     P.alt(KP.KeywordStart, KP.KeywordEnd),
     KP.KeywordHidden.fallback(null),
   ),
-
 
 });
 module.exports = {

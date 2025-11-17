@@ -1,5 +1,5 @@
-import { last } from 'lodash';
-import { None, Option, Some } from '../option';
+import { last } from 'lodash-es';
+import { None, Option, Some } from '@/lib/option';
 import {
   ElementDeclarationNode,
   FunctionExpressionNode,
@@ -10,17 +10,17 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-} from '../parser/nodes';
-import { isRelationshipOp, isTupleOfVariables } from './validator/utils';
-import { NodeSymbolIndex, isPublicSchemaIndex } from './symbol/symbolIndex';
-import { NodeSymbol } from './symbol/symbols';
+} from '@/lib/parser/nodes';
+import { isRelationshipOp, isTupleOfVariables } from '@/lib/analyzer/validator/utils';
+import { NodeSymbolIndex, isPublicSchemaIndex } from '@/lib/analyzer/symbol/symbolIndex';
+import { NodeSymbol } from '@/lib/analyzer/symbol/symbols';
 import {
   isAccessExpression,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
-} from '../parser/utils';
-import { SyntaxToken } from '../lexer/tokens';
-import { ElementKind } from './types';
+} from '@/lib/parser/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import { ElementKind } from '@/lib/analyzer/types';
 
 export function getElementKind (node?: ElementDeclarationNode): Option<ElementKind> {
   const kind = node?.type?.value.toLowerCase();
@@ -69,7 +69,6 @@ export function destructureComplexVariable (node?: SyntaxNode): Option<string[]>
 
   const variables: string[] = [];
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const fragment of fragments) {
     const variable = extractVariableFromExpression(fragment).unwrap_or(undefined);
     if (!variable) {
@@ -107,7 +106,6 @@ export function destructureComplexTuple (
     }
   }
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const fragment of fragments) {
     const variable = extractVariableFromExpression(fragment).unwrap_or(undefined);
     if (!variable) {

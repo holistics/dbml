@@ -1,21 +1,20 @@
-/* eslint-disable class-methods-use-this */
-import { partition } from 'lodash';
-import SymbolFactory from '../../symbol/factory';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { partition } from 'lodash-es';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '../../../parser/nodes';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementValidator } from '../types';
-import { isExpressionAQuotedString } from '../../../parser/utils';
-import { pickValidator } from '../utils';
-import SymbolTable from '../../symbol/symbolTable';
-import { ElementKind } from '../../types';
-import { destructureComplexVariable, getElementKind } from '../../utils';
-import { createStickyNoteSymbolIndex } from '../../symbol/symbolIndex';
+} from '@/lib/parser/nodes';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { isExpressionAQuotedString } from '@/lib/parser/utils';
+import { pickValidator } from '@/lib/analyzer/validator/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { ElementKind } from '@/lib/analyzer/types';
+import { destructureComplexVariable, getElementKind } from '@/lib/analyzer/utils';
+import { createStickyNoteSymbolIndex } from '@/lib/analyzer/symbol/symbolIndex';
 
 export default class NoteValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 

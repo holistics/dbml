@@ -1,22 +1,23 @@
-import { last, partition } from 'lodash';
-import SymbolFactory from '../../symbol/factory';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { last, partition } from 'lodash-es';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '../../../parser/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementValidator } from '../types';
+} from '@/lib/parser/nodes';
+import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/lib/parser/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
 import {
-  aggregateSettingList, isValidName, pickValidator, registerSchemaStack,
-} from '../utils';
-import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '../../symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
-import SymbolTable from '../../symbol/symbolTable';
-import { EnumFieldSymbol, EnumSymbol } from '../../symbol/symbols';
+  aggregateSettingList } from '@/lib/analyzer/validator/utils';
+import { isValidName, pickValidator } from '@/lib/analyzer/validator/utils';
+import { registerSchemaStack } from '@/lib/analyzer/validator/utils';
+import { createEnumFieldSymbolIndex, createEnumSymbolIndex } from '@/lib/analyzer/symbol/symbolIndex';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/lib/analyzer/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { EnumFieldSymbol, EnumSymbol } from '@/lib/analyzer/symbol/symbols';
 
 export default class EnumValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 
@@ -58,7 +59,7 @@ export default class EnumValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
+      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Enum shouldn\'t have an alias', aliasNode)];
     }
 
     return [];
@@ -154,7 +155,7 @@ export default class EnumValidator implements ElementValidator {
           });
           break;
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_ENUM_ELEMENT_SETTING, `Unknown enum field setting \'${name}\'`, attr)));
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_ENUM_ELEMENT_SETTING, `Unknown enum field setting '${name}'`, attr)));
       }
     }
     return errors;

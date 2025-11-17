@@ -7,5 +7,6 @@ export default class ProjectBinder extends ElementBinder {
     },
     settingList: {},
   };
+
   protected settingList = {};
 }

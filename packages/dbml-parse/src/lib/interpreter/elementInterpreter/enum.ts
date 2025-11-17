@@ -1,13 +1,13 @@
-import { extractQuotedStringToken, extractVariableFromExpression } from '../../analyzer/utils';
-import { aggregateSettingList } from '../../analyzer/validator/utils';
-import { CompileError, CompileErrorCode } from '../../errors';
+import { extractQuotedStringToken, extractVariableFromExpression } from '@/lib/analyzer/utils';
+import { aggregateSettingList } from '@/lib/analyzer/validator/utils';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '../../parser/nodes';
+} from '@/lib/parser/nodes';
 import {
   ElementInterpreter, Enum, EnumField, InterpreterDatabase,
-} from '../types';
-import { extractElementName, getTokenPosition, normalizeNoteContent } from '../utils';
+} from '@/lib/interpreter/types';
+import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/lib/interpreter/utils';
 
 export class EnumInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -63,4 +63,3 @@ export class EnumInterpreter implements ElementInterpreter {
     });
   }
 }
-

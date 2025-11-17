@@ -1,17 +1,17 @@
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '../../../parser/nodes';
-import SymbolFactory from '../../symbol/factory';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementValidator } from '../types';
-import { isExpressionAQuotedString } from '../../../parser/utils';
-import SymbolTable from '../../symbol/symbolTable';
-import { getElementKind } from '../../utils';
-import { ElementKind } from '../../types';
+} from '@/lib/parser/nodes';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { isExpressionAQuotedString } from '@/lib/parser/utils';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { getElementKind } from '@/lib/analyzer/utils';
+import { ElementKind } from '@/lib/analyzer/types';
 
 export default class CustomValidator implements ElementValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken; };
+  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;
 

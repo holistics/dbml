@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { Client } from 'pg';
 import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
 import {
@@ -97,13 +96,15 @@ const generateField = (row: Record<string, any>): Field => {
 
   const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(data_type, column_default, default_type) : null;
 
-  const fieldType = data_type === 'USER-DEFINED' ? {
-    type_name: udt_name,
-    schemaName: udt_schema,
-  } : {
-    type_name: getFieldType(data_type, udt_name, character_maximum_length, numeric_precision, numeric_scale),
-    schemaName: null,
-  };
+  const fieldType = data_type === 'USER-DEFINED'
+    ? {
+        type_name: udt_name,
+        schemaName: udt_schema,
+      }
+    : {
+        type_name: getFieldType(data_type, udt_name, character_maximum_length, numeric_precision, numeric_scale),
+        schemaName: null,
+      };
 
   return {
     name: column_name,
@@ -116,8 +117,8 @@ const generateField = (row: Record<string, any>): Field => {
 };
 
 const generateTablesAndFields = async (client: Client, schemas: string[]): Promise<{
-  tables: Table[],
-  fields: FieldsDictionary,
+  tables: Table[];
+  fields: FieldsDictionary;
 }> => {
   const fields: FieldsDictionary = {};
   const tablesAndFieldsSql = `
@@ -396,12 +397,14 @@ const generateIndexesAndConstraints = async (client: Client, schemas: string[]) 
       };
     });
 
-    const indexExpressions = index_expressions ? index_expressions.split(',').map((expression: string) => {
-      return {
-        type: 'expression',
-        value: expression,
-      };
-    }) : [];
+    const indexExpressions = index_expressions
+      ? index_expressions.split(',').map((expression: string) => {
+          return {
+            type: 'expression',
+            value: expression,
+          };
+        })
+      : [];
 
     const index = {
       name: index_name,

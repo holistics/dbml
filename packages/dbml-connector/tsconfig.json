@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true, // Generates .d.ts files
+    "declaration": true // Generates .d.ts files
   },
   "include": ["./src"],
   "exclude": ["node_modules", "**/*.test.ts"]

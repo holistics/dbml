@@ -1,5 +1,5 @@
-import { last } from 'lodash';
-import { isTupleOfVariables } from '../../validator/utils';
+import { last } from 'lodash-es';
+import { isTupleOfVariables } from '@/lib/analyzer/validator/utils';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -13,37 +13,38 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-} from '../../../parser/nodes';
+} from '@/lib/parser/nodes';
 import {
   extractStringFromIdentifierStream,
   isAccessExpression,
   isExpressionAVariableNode,
-} from '../../../parser/utils';
-import { ArgumentBinderRule, BinderRule, SettingListBinderRule } from '../types';
+} from '@/lib/parser/utils';
+import { ArgumentBinderRule, BinderRule, SettingListBinderRule } from '@/lib/analyzer/binder/types';
 import {
   destructureMemberAccessExpression,
   extractVarNameFromPartialInjection,
   extractVarNameFromPrimaryVariable,
   findSymbol,
   getElementKind,
-} from '../../utils';
-import { SyntaxToken } from '../../../lexer/tokens';
+} from '@/lib/analyzer/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
 import {
   NodeSymbolIndex, createNodeSymbolIndex, destructureIndex, getInjectorIndex,
   isInjectionIndex,
-} from '../../symbol/symbolIndex';
-import { CompileError, CompileErrorCode } from '../../../errors';
-import { pickBinder } from '../utils';
-import SymbolFactory from '../../symbol/factory';
-import { NodeSymbol } from '../../symbol/symbols';
-import { ElementKind } from '../../types';
-import { getInjectedFieldSymbolFromInjectorFieldSymbol } from '../../symbol/utils';
+} from '@/lib/analyzer/symbol/symbolIndex';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
+import { pickBinder } from '@/lib/analyzer/binder/utils';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { NodeSymbol } from '@/lib/analyzer/symbol/symbols';
+import { ElementKind } from '@/lib/analyzer/types';
+import { getInjectedFieldSymbolFromInjectorFieldSymbol } from '@/lib/analyzer/symbol/utils';
 
 export default abstract class ElementBinder {
   protected abstract subfield: {
     arg: ArgumentBinderRule;
     settingList: SettingListBinderRule;
   };
+
   protected abstract settingList: SettingListBinderRule;
   protected injectionBinderRule?: BinderRule;
 
@@ -215,21 +216,20 @@ export default abstract class ElementBinder {
       });
     }
 
-    // eslint-disable-next-line consistent-return
     return tuple
       ? tuple.elementList.forEach((e) => this.resolveIndexStack(
-        [
-          ...subnameStack,
-          {
-            index: createNodeSymbolIndex(
-              extractVarNameFromPrimaryVariable(e as any).unwrap(),
-              tupleVarSymbolKind!,
-            ),
-            referrer: e,
-          },
-        ],
-        rule.ignoreNameNotFound,
-      ))
+          [
+            ...subnameStack,
+            {
+              index: createNodeSymbolIndex(
+                extractVarNameFromPrimaryVariable(e as any).unwrap(),
+                tupleVarSymbolKind!,
+              ),
+              referrer: e,
+            },
+          ],
+          rule.ignoreNameNotFound,
+        ))
       : this.resolveIndexStack(subnameStack, rule.ignoreNameNotFound);
   }
 
@@ -256,7 +256,7 @@ export default abstract class ElementBinder {
 
     let prevScope = accessSymbol.symbolTable!;
     let { kind: prevKind, name: prevName } = destructureIndex(accessSubname.index).unwrap();
-    // eslint-disable-next-line no-restricted-syntax
+
     for (const subname of remainingSubnames) {
       const { kind: curKind, name: curName } = destructureIndex(subname.index).unwrap();
       const curSymbol = prevScope.get(subname.index);
@@ -293,7 +293,7 @@ export default abstract class ElementBinder {
     const symbolTable = this.declarationNode.symbol?.symbolTable;
     if (!symbolTable) return;
 
-    const injectorSymbols = new Map<NodeSymbolIndex, { injectorFieldSymbol: NodeSymbol, injectorDeclaration: SyntaxNode}>();
+    const injectorSymbols = new Map<NodeSymbolIndex, { injectorFieldSymbol: NodeSymbol; injectorDeclaration: SyntaxNode }>();
 
     symbolTable.forEach((nodeSymbol, nodeSymbolIndex) => {
       if (!isInjectionIndex(nodeSymbolIndex)) return;

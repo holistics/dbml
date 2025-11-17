@@ -7,5 +7,6 @@ export default class EnumBinder extends ElementBinder {
     },
     settingList: {},
   };
+
   protected settingList = {};
 }

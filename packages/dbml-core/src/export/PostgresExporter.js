@@ -209,7 +209,7 @@ class PostgresExporter {
           }
           line += ` CHECK (${check.expression})`;
         } else {
-          const checkExpressions = field.checkIds.map(checkId => {
+          const checkExpressions = field.checkIds.map((checkId) => {
             const check = model.checks[checkId];
             return `(${check.expression})`;
           });
@@ -235,7 +235,7 @@ class PostgresExporter {
   static getCompositePKs (tableId, model) {
     const table = model.tables[tableId];
 
-    const compositePkIds = table.indexIds ? table.indexIds.filter(indexId => model.indexes[indexId].pk) : [];
+    const compositePkIds = table.indexIds ? table.indexIds.filter((indexId) => model.indexes[indexId].pk) : [];
     const lines = compositePkIds.map((keyId) => {
       const key = model.indexes[keyId];
       let line = 'PRIMARY KEY';
@@ -308,7 +308,8 @@ class PostgresExporter {
       const table = model.tables[tableContent.tableId];
       const schema = model.schemas[table.schemaId];
       const tableStr = `CREATE TABLE ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".` : ''}"${table.name}" (\n${content.map(line => `  ${line}`).join(',\n')}\n);\n`;
+        ? `"${schema.name}".`
+        : ''}"${table.name}" (\n${content.map((line) => `  ${line}`).join(',\n')}\n);\n`;
       return tableStr;
     });
 
@@ -316,13 +317,14 @@ class PostgresExporter {
   }
 
   static buildFieldName (fieldIds, model) {
-    const fieldNames = fieldIds.map(fieldId => `"${model.fields[fieldId].name}"`).join(', ');
+    const fieldNames = fieldIds.map((fieldId) => `"${model.fields[fieldId].name}"`).join(', ');
     return `(${fieldNames})`;
   }
 
   static buildTableManyToMany (firstTableFieldsMap, secondTableFieldsMap, tableName, refEndpointSchema, model) {
     let line = `CREATE TABLE ${shouldPrintSchema(refEndpointSchema, model)
-      ? `"${refEndpointSchema.name}".` : ''}"${tableName}" (\n`;
+      ? `"${refEndpointSchema.name}".`
+      : ''}"${tableName}" (\n`;
     const key1s = [...firstTableFieldsMap.keys()].join('", "');
     const key2s = [...secondTableFieldsMap.keys()].join('", "');
     firstTableFieldsMap.forEach((fieldType, fieldName) => {
@@ -339,8 +341,10 @@ class PostgresExporter {
   static buildForeignKeyManyToMany (fieldsMap, foreignEndpointFields, refEndpointTableName, foreignEndpointTableName, refEndpointSchema, foreignEndpointSchema, model) {
     const refEndpointFields = [...fieldsMap.keys()].join('", "');
     const line = `ALTER TABLE ${shouldPrintSchema(refEndpointSchema, model)
-      ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTableName}" ADD FOREIGN KEY ("${refEndpointFields}") REFERENCES ${shouldPrintSchema(foreignEndpointSchema, model)
-      ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTableName}" ${foreignEndpointFields};\n\n`;
+      ? `"${refEndpointSchema.name}".`
+      : ''}"${refEndpointTableName}" ADD FOREIGN KEY ("${refEndpointFields}") REFERENCES ${shouldPrintSchema(foreignEndpointSchema, model)
+      ? `"${foreignEndpointSchema.name}".`
+      : ''}"${foreignEndpointTableName}" ${foreignEndpointFields};\n\n`;
     return line;
   }
 
@@ -348,7 +352,7 @@ class PostgresExporter {
     const strArr = refIds.map((refId) => {
       let line = '';
       const ref = model.refs[refId];
-      const refOneIndex = ref.endpointIds.findIndex(endpointId => model.endpoints[endpointId].relation === '1');
+      const refOneIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
       const refEndpointIndex = refOneIndex === -1 ? 0 : refOneIndex;
       const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
       const refEndpointId = ref.endpointIds[refEndpointIndex];
@@ -376,10 +380,14 @@ class PostgresExporter {
         line += this.buildForeignKeyManyToMany(secondTableFieldsMap, foreignEndpointFieldName, newTableName, foreignEndpointTable.name, refEndpointSchema, foreignEndpointSchema, model);
       } else {
         line = `ALTER TABLE ${shouldPrintSchema(foreignEndpointSchema, model)
-          ? `"${foreignEndpointSchema.name}".` : ''}"${foreignEndpointTable.name}" ADD `;
-        if (ref.name) { line += `CONSTRAINT "${ref.name}" `; }
+          ? `"${foreignEndpointSchema.name}".`
+          : ''}"${foreignEndpointTable.name}" ADD `;
+        if (ref.name) {
+          line += `CONSTRAINT "${ref.name}" `;
+        }
         line += `FOREIGN KEY ${foreignEndpointFieldName} REFERENCES ${shouldPrintSchema(refEndpointSchema, model)
-          ? `"${refEndpointSchema.name}".` : ''}"${refEndpointTable.name}" ${refEndpointFieldName}`;
+          ? `"${refEndpointSchema.name}".`
+          : ''}"${refEndpointTable.name}" ${refEndpointFieldName}`;
         if (ref.onDelete) {
           line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
         }
@@ -411,7 +419,8 @@ class PostgresExporter {
         line += ` ${indexName}`;
       }
       line += ` ON ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".` : ''}"${table.name}"`;
+        ? `"${schema.name}".`
+        : ''}"${table.name}"`;
       if (index.type) {
         line += ` USING ${index.type.toUpperCase()}`;
       }
@@ -445,13 +454,15 @@ class PostgresExporter {
       switch (comment.type) {
         case 'table': {
           line += ` TABLE ${shouldPrintSchema(schema, model)
-            ? `"${schema.name}".` : ''}"${table.name}" IS '${table.note.replace(/'/g, "''")}'`;
+            ? `"${schema.name}".`
+            : ''}"${table.name}" IS '${table.note.replace(/'/g, '\'\'')}'`;
           break;
         }
         case 'column': {
           const field = model.fields[comment.fieldId];
           line += ` COLUMN ${shouldPrintSchema(schema, model)
-            ? `"${schema.name}".` : ''}"${table.name}"."${field.name}" IS '${field.note.replace(/'/g, "''")}'`;
+            ? `"${schema.name}".`
+            : ''}"${table.name}"."${field.name}" IS '${field.note.replace(/'/g, '\'\'')}'`;
           break;
         }
         default:
@@ -469,7 +480,7 @@ class PostgresExporter {
   static export (model) {
     const database = model.database['1'];
 
-    const usedTableNames = new Set(Object.values(model.tables).map(table => table.name));
+    const usedTableNames = new Set(Object.values(model.tables).map((table) => table.name));
 
     // Pre-collect all user-defined enum names to distinguish them from built-in PostgreSQL types
     // This prevents built-in types like VARCHAR, INTEGER from being quoted unnecessarily

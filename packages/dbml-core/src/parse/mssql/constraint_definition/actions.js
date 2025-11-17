@@ -24,7 +24,7 @@ function makeDefaultConstraint (_keyword, constExpression) {
 
 function makeConstraintCheckEnum (fieldName, _ununsed, values) {
   const valuesProp = [];
-  values.forEach(value => {
+  values.forEach((value) => {
     valuesProp.push({
       name: value.value.value,
       token: value.value.token,

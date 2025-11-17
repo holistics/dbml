@@ -1,7 +1,6 @@
-/* eslint-disable */
 import pegjsRequire from 'pegjs-require-import';
 import Promise from 'bluebird';
-/* eslint-enable */
+
 import fs from 'fs';
 import path from 'path';
 

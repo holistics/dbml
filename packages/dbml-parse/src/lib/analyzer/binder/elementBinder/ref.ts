@@ -1,4 +1,4 @@
-import { SymbolKind } from '../../symbol/symbolIndex';
+import { SymbolKind } from '@/lib/analyzer/symbol/symbolIndex';
 import ElementBinder from './elementBinder';
 
 export default class RefBinder extends ElementBinder {
@@ -15,5 +15,6 @@ export default class RefBinder extends ElementBinder {
     },
     settingList: {},
   };
+
   protected settingList = {};
 }

@@ -17,7 +17,7 @@ const createRefs = (rawRefs) => {
     const {
       name, endpoints, onDelete, onUpdate,
     } = rawRef;
-    const eps = endpoints.map((ep) => { return new Endpoint(ep); });
+    const eps = endpoints.map((ep) => new Endpoint(ep));
     return new Ref({
       name,
       endpoints: eps,

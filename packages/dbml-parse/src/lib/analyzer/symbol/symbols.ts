@@ -1,6 +1,5 @@
-/* eslint-disable max-classes-per-file */
 import SymbolTable from './symbolTable';
-import { SyntaxNode } from '../../parser/nodes';
+import { SyntaxNode } from '@/lib/parser/nodes';
 
 export type NodeSymbolId = number;
 export class NodeSymbolIdGenerator {
@@ -11,7 +10,6 @@ export class NodeSymbolIdGenerator {
   }
 
   nextId (): NodeSymbolId {
-    // eslint-disable-next-line no-plusplus
     return this.id++;
   }
 }
@@ -190,7 +188,7 @@ export class TablePartialInjectedColumnSymbol implements NodeSymbol {
   injectorFieldSymbol: NodeSymbol;
   references: SyntaxNode[] = [];
 
-  constructor ({ injectorFieldSymbol, injectorDeclaration }: { injectorFieldSymbol: NodeSymbol, injectorDeclaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({ injectorFieldSymbol, injectorDeclaration }: { injectorFieldSymbol: NodeSymbol; injectorDeclaration: SyntaxNode }, id: NodeSymbolId) {
     this.id = id;
     this.injectorDeclaration = injectorDeclaration;
     this.injectorFieldSymbol = injectorFieldSymbol;

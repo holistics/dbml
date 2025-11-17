@@ -1,4 +1,4 @@
-import { SyntaxToken, SyntaxTokenKind } from '../../lexer/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/lib/lexer/tokens';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -13,9 +13,9 @@ import {
   VariableNode,
   CallExpressionNode,
   ArrayNode,
-} from '../../parser/nodes';
-import { isHexChar } from '../../utils';
-import { destructureComplexVariable } from '../utils';
+} from '@/lib/parser/nodes';
+import { isHexChar } from '@/lib/utils';
+import { destructureComplexVariable } from '@/lib/analyzer/utils';
 import CustomValidator from './elementValidators/custom';
 import EnumValidator from './elementValidators/enum';
 import IndexesValidator from './elementValidators/indexes';
@@ -24,17 +24,17 @@ import ProjectValidator from './elementValidators/project';
 import RefValidator from './elementValidators/ref';
 import TableValidator from './elementValidators/table';
 import TableGroupValidator from './elementValidators/tableGroup';
-import { createSchemaSymbolIndex } from '../symbol/symbolIndex';
-import { SchemaSymbol } from '../symbol/symbols';
-import SymbolTable from '../symbol/symbolTable';
-import SymbolFactory from '../symbol/factory';
+import { createSchemaSymbolIndex } from '@/lib/analyzer/symbol/symbolIndex';
+import { SchemaSymbol } from '@/lib/analyzer/symbol/symbols';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
 import {
   extractStringFromIdentifierStream, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
-} from '../../parser/utils';
-import { NUMERIC_LITERAL_PREFIX } from '../../../constants';
-import Report from '../../report';
-import { CompileError, CompileErrorCode } from '../../errors';
-import { ElementKind } from '../types';
+} from '@/lib/parser/utils';
+import { NUMERIC_LITERAL_PREFIX } from '@/constants';
+import Report from '@/lib/report';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
+import { ElementKind } from '@/lib/analyzer/types';
 import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';
 
@@ -115,7 +115,7 @@ export function registerSchemaStack (
   }
 
   let prevSchema = globalSchema;
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const curName of variables) {
     let curSchema: SymbolTable | undefined;
     const curId = createSchemaSymbolIndex(curName);
@@ -257,7 +257,6 @@ export function isValidColumnType (type: SyntaxNode): boolean {
       return false;
     }
 
-    // eslint-disable-next-line no-param-reassign
     type = type.callee;
   }
 
@@ -270,7 +269,6 @@ export function isValidColumnType (type: SyntaxNode): boolean {
       return false;
     }
 
-    // eslint-disable-next-line no-param-reassign
     type = type.array;
   }
 
@@ -280,7 +278,7 @@ export function isValidColumnType (type: SyntaxNode): boolean {
 }
 
 export function aggregateSettingList (settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }, CompileError> {
-  const map: { [index: string]: AttributeNode[]; } = {};
+  const map: { [index: string]: AttributeNode[] } = {};
   const errors: CompileError[] = [];
   if (!settingList) {
     return new Report({});

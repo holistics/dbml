@@ -1,7 +1,6 @@
-/* eslint-disable class-methods-use-this */
-import { last, forIn } from 'lodash';
-import SymbolFactory from '../../symbol/factory';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { last, forIn } from 'lodash-es';
+import SymbolFactory from '@/lib/analyzer/symbol/factory';
+import { CompileError, CompileErrorCode } from '@/lib/errors';
 import {
   ArrayNode,
   AttributeNode,
@@ -14,8 +13,8 @@ import {
   PartialInjectionNode,
   PrimaryExpressionNode,
   SyntaxNode,
-} from '../../../parser/nodes';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils';
+} from '@/lib/parser/nodes';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/lib/analyzer/utils';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -28,18 +27,18 @@ import {
   isVoid,
   pickValidator,
   registerSchemaStack,
-} from '../utils';
-import { ElementValidator } from '../types';
-import { ColumnSymbol, TablePartialInjectionSymbol, TableSymbol } from '../../symbol/symbols';
-import { createColumnSymbolIndex, createTablePartialInjectionSymbolIndex, createTableSymbolIndex } from '../../symbol/symbolIndex';
+} from '@/lib/analyzer/validator/utils';
+import { ElementValidator } from '@/lib/analyzer/validator/types';
+import { ColumnSymbol, TablePartialInjectionSymbol, TableSymbol } from '@/lib/analyzer/symbol/symbols';
+import { createColumnSymbolIndex, createTablePartialInjectionSymbolIndex, createTableSymbolIndex } from '@/lib/analyzer/symbol/symbolIndex';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
-} from '../../../parser/utils';
-import { SyntaxToken } from '../../../lexer/tokens';
-import SymbolTable from '../../symbol/symbolTable';
-import { SettingName } from '../../types';
+} from '@/lib/parser/utils';
+import { SyntaxToken } from '@/lib/lexer/tokens';
+import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
+import { SettingName } from '@/lib/analyzer/types';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -154,7 +153,7 @@ export default class TableValidator implements ElementValidator {
 
     if (
       alias && isSimpleName(alias)
-      // eslint-disable-next-line no-use-before-define
+
       && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
     ) {
       const aliasName = extractVarNameFromPrimaryVariable(alias as any).unwrap();
@@ -230,7 +229,6 @@ export default class TableValidator implements ElementValidator {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
       }
 
-      // eslint-disable-next-line no-use-before-define
       if (field.args[0] && !isValidColumnType(field.args[0])) {
         errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', field.args[0]));
       }
@@ -285,8 +283,8 @@ export default class TableValidator implements ElementValidator {
     const settingMap: {
       [index: string]: AttributeNode[];
     } & {
-      pk?: (AttributeNode | PrimaryExpressionNode)[],
-      unique?: (AttributeNode | PrimaryExpressionNode)[],
+      pk?: (AttributeNode | PrimaryExpressionNode)[];
+      unique?: (AttributeNode | PrimaryExpressionNode)[];
     } = aggReport.getValue();
 
     parts.forEach((part) => {
