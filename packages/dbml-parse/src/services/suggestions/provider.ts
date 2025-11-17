@@ -431,6 +431,11 @@ function suggestAttributeValue (
           range: undefined as any,
         })),
       };
+    case 'default':
+      return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+        SymbolKind.Schema,
+        SymbolKind.Enum,
+      ]);
     default:
       break;
   }

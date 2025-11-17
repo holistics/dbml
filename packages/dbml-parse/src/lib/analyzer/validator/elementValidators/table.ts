@@ -404,7 +404,7 @@ export default class TableValidator implements ElementValidator {
             if (!isValidDefaultValue(attr.value)) {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
-                '\'default\' must be a string literal, number literal, function expression, true, false or null',
+                '\'default\' must be an enum value, a string literal, number literal, function expression, true, false or null',
                 attr.value || attr.name!,
               ));
             }

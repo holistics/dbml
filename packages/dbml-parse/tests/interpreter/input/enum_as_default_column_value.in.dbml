@@ -1,0 +1,26 @@
+Enum status {
+  active
+  churned
+  inactive
+}
+
+Enum demographic.gender {
+  male
+  female
+}
+
+Enum demographic."age segment" {
+  toddler
+  children
+  teenager
+  young_adult
+  elder
+}
+
+Table user {
+  name text
+  id int
+  status status [default: status.active]
+  gender demographic.gender [default: demographic.gender.male]
+  age_type demographic."age segment" [default: demographic."age segment".young_adult]
+}
