@@ -1,7 +1,7 @@
 import { SymbolKind } from '@/lib/analyzer/symbol/symbolIndex';
 
-export type BinderRule
-  = | {
+export type BinderRule =
+  | {
     // Whether the binder should run
     shouldBind: true;
     // The kinds of the symbols the last subnames would be bound to

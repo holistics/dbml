@@ -67,6 +67,7 @@ export default defineConfig(
         'no-useless-escape': 'off',
         '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
         '@stylistic/max-statements-per-line': 'off',
+        '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
       },
     },
   ],

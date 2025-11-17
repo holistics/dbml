@@ -54,6 +54,7 @@ export default defineConfig(
         ],
         '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
         '@stylistic/max-statements-per-line': 'off',
+        '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
       },
       settings: {
         'import/resolver': {
