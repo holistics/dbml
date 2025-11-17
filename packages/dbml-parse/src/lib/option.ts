@@ -13,7 +13,6 @@ export class Some<T> {
     return this.value;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   unwrap_or<S>(orValue: S): S | T {
     return this.value;
   }
@@ -43,12 +42,10 @@ export class None<T> {
     return orValue;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   and_then<S>(callback: (_: T) => Option<S>): Option<S> {
     return new None();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   map<S>(callback: (_: T) => S): Option<S> {
     return new None();
   }
