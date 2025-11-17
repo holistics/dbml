@@ -26,6 +26,7 @@
   },
   "scripts": {
     "test": "jest",
+    "coverage": "jest --coverage",
     "benchmark": "jest --projects jest-bench.config.json",
     "build:lib": "babel src --out-dir lib --copy-files",
     "build:parser": "npx babel-node src/parse/buildParser.js",
@@ -60,18 +61,6 @@
     "pegjs-require-import": "0.0.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.3"
-  },
-  "jest": {
-    "setupFiles": [
-      "./jestHelpers.js"
-    ],
-    "transform": {
-      "^.+\\.js$": "babel-jest",
-      "\\.(?!json$)[^.]*$": "@glen/jest-raw-loader"
-    },
-    "moduleNameMapper": {
-      "^lodash-es$": "lodash"
-    }
   },
   "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556",
   "engines": {
