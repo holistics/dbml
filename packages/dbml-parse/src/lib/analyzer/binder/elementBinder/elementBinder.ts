@@ -257,7 +257,7 @@ export default abstract class ElementBinder {
       this.logError(
         accessSubname.referrer,
         `Can not find ${kind} '${name}'`,
-        rule.ignoreNameNotFound || (rule.ignoreNameNotFoundForQuotedVariable && isFirstFragmentQuotedVariable),
+        rule.ignoreNameNotFound || (!!rule.ignoreNameNotFoundForQuotedVariable && isFirstFragmentQuotedVariable),
       );
       return;
     }
