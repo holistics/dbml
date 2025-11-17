@@ -1,13 +1,12 @@
-import importer from '../../src/import';
+import importer from '../../../src/import';
+import { scanTestNames, getFileExtension } from '../testHelpers';
+import { ParseFormat } from '../../../types/parse/Parser';
 
 describe('@dbml/core - importer', () => {
-  /**
-   * @param {string} format = [json|mysql|postgres]
-   */
-  const runTest = (fileName, testDir, format) => {
+  const runTest = async (fileName: string, testDir: string, format: ParseFormat) => {
     const fileExtension = getFileExtension(format);
-    const input = require(`./${testDir}/input/${fileName}.in.${fileExtension}`);
-    const output = require(`./${testDir}/output/${fileName}.out.dbml`);
+    const input = await import(`./${testDir}/input/${fileName}.in.${fileExtension}`);
+    const output = await import(`./${testDir}/output/${fileName}.out.dbml`);
 
     const res = importer.import(input, format);
 

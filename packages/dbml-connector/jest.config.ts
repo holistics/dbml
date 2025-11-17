@@ -1,4 +1,7 @@
-module.exports = {
+import { type Config } from 'jest';
+
+const config: Config = {
+  testMatch: ["**/?(*.)+(spec|test).?([mc])[jt]s?(x)"],
   preset: 'ts-jest',
   testEnvironment: 'node',
   transform: {
@@ -11,3 +14,5 @@ module.exports = {
   coverageReporters: ['json', 'json-summary'],
   coverageDirectory: 'coverage',
 };
+
+export default config;

@@ -3,11 +3,12 @@ import fs from 'fs';
 import util from 'util';
 import childProcess from 'child_process';
 import stripAnsi from 'strip-ansi';
+import { scanDirNames } from './testHelpers';
 
 const exec = util.promisify(childProcess.exec);
 
 describe('@dbml/cli', () => {
-  const runTest = async (dirName, binFile) => {
+  const runTest = async (dirName: string, binFile: string) => {
     process.chdir(dirName);
     const args = [path.join(__dirname, binFile)];
     const optsRaw = fs.readFileSync(path.join(dirName, './options.json'), 'utf-8');

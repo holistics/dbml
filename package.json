@@ -36,10 +36,6 @@
     "url": "https://github.com/holistics/dbml"
   },
   "jest": {
-    "setupFiles": [
-      "./packages/dbml-cli/jestHelpers.js",
-      "./packages/dbml-core/jestHelpers.js"
-    ],
     "setupFilesAfterEnv": [
       "<rootDir>/test/testSetupFile.js"
     ],

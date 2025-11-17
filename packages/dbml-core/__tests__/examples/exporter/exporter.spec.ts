@@ -1,13 +1,12 @@
-import exporter from '../../src/export';
+import exporter from '../../../src/export';
+import { scanTestNames, getFileExtension } from '../testHelpers';
+import { ExportFormatOption } from '../../../types/export/ModelExporter';
 
 describe('@dbml/core - exporter', () => {
-  /**
-   * @param {string} format = [json|mysql|postgres]
-   */
-  const runTest = (fileName, testDir, format) => {
+  const runTest = async (fileName: string, testDir: string, format: ExportFormatOption) => {
     const fileExtension = getFileExtension(format);
-    const input = require(`./${testDir}/input/${fileName}.in.dbml`);
-    const output = require(`./${testDir}/output/${fileName}.out.${fileExtension}`);
+    const input = await import(`./${testDir}/input/${fileName}.in.dbml`);
+    const output = await import(`./${testDir}/output/${fileName}.out.${fileExtension}`);
     const res = exporter.export(input, format);
 
     expect(res).toBe(output);

@@ -1,16 +1,20 @@
-import Parser from '../../src/parse/Parser';
+import Parser from '../../../src/parse/Parser';
+import { scanTestNames, getFileExtension, isEqualExcludeTokenEmpty } from '../testHelpers';
+import { ParseFormat } from '../../../types/parse/Parser';
 
 describe('@dbml/core', () => {
   describe('parser', () => {
-    /**
-     * @param {string} format = [json|mysql|postgres|dbml|schemarb|mssql]
-     */
-    const runTest = (fileName, testDir, format, parseFuncName) => {
+    const runTest = async (
+      fileName: string,
+      testDir: string,
+      format: ParseFormat,
+      parseFuncName: string,
+    ) => {
       const fileExtension = getFileExtension(format);
 
-      const input = require(`./${testDir}/input/${fileName}.in.${fileExtension}`);
-      const output = require(`./${testDir}/output/${fileName}.out.json`);
-      const jsonSchema = Parser[parseFuncName](input);
+      const input = await import(`./${testDir}/input/${fileName}.in.${fileExtension}`);
+      const output = await import(`./${testDir}/output/${fileName}.out.json`);
+      const jsonSchema = (Parser as any)[parseFuncName](input);
       isEqualExcludeTokenEmpty(jsonSchema, output);
     };
 
