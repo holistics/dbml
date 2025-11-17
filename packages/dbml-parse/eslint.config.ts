@@ -10,7 +10,6 @@ export default defineConfig(
   stylistic.configs.customize({
     indent: 2,
     semi: true,
-    quotes: 'single',
     arrowParens: true,
     braceStyle: '1tbs',
   }),
@@ -53,6 +52,7 @@ export default defineConfig(
         '@typescript-eslint/consistent-return': [
           'error',
         ],
+        '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
       },
       settings: {
         'import/resolver': {

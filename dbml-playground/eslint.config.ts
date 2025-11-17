@@ -13,7 +13,6 @@ export default defineConfig(
   stylistic.configs.customize({
     indent: 2,
     semi: true,
-    quotes: 'single',
     arrowParens: true,
     braceStyle: '1tbs',
   }),
@@ -66,6 +65,7 @@ export default defineConfig(
           },
         ],
         'no-useless-escape': 'off',
+        '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
       },
     },
   ],

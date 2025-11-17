@@ -9,7 +9,6 @@ export default defineConfig(
   stylistic.configs.customize({
     indent: 2,
     semi: true,
-    quotes: 'single',
     arrowParens: true,
     braceStyle: '1tbs',
   }),
@@ -50,6 +49,7 @@ export default defineConfig(
           },
         ],
         '@stylistic/space-before-function-paren': ['error', 'always'],
+        '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
       }
     },
     {
