@@ -563,6 +563,8 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
     refsRes,
   ]);
 
+  await client.close();
+
   const { tables, fields } = res[0];
   const { indexes, tableConstraints, checks } = res[1];
   const refs = res[2];
