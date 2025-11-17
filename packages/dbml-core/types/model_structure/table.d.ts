@@ -22,36 +22,34 @@ interface RawTable {
 }
 
 declare class Table extends Element {
-  name: string;
-  alias: string;
-  note: string;
-  noteToken: Token;
-  fields: Field[];
-  indexes: Index[];
-  checks: Check[];
-  schema: Schema;
-  headerColor: string;
-  dbState: DbState;
-  id: number;
-  group: TableGroup;
-  partials: TablePartial[];
+    name: string;
+    alias: string;
+    note: string;
+    noteToken: Token;
+    fields: Field[];
+    indexes: Index[];
+    checks: Check[];
+    schema: Schema;
+    headerColor: string;
+    dbState: DbState;
+    id: number;
+    group: TableGroup;
+    partials: TablePartial[];
 
-  constructor({
-    name, alias, note, fields, indexes, checks, schema, token, headerColor,
-  }: RawTable);
-  generateId(): void;
-  processFields(rawFields: any): void;
-  pushField(field: any): void;
-  checkField(field: any): void;
-  processIndexes(rawIndexes: any): void;
-  pushIndex(index: any): void;
-  checkIndex(index: any): void;
-  processChecks(checks: any[]): void;
-  pushCheck(check: any): void;
-  findField(fieldName: any): Field;
-  checkSameId(table: any): boolean;
-  processPartials(): void;
-  export(): {
+    constructor({ name, alias, note, fields, indexes, checks, schema, token, headerColor }: RawTable);
+    generateId(): void;
+    processFields(rawFields: any): void;
+    pushField(field: any): void;
+    checkField(field: any): void;
+    processIndexes(rawIndexes: any): void;
+    pushIndex(index: any): void;
+    checkIndex(index: any): void;
+    processChecks(checks: any[]): void;
+    pushCheck(check: any): void;
+    findField(fieldName: any): Field;
+    checkSameId(table: any): boolean;
+    processPartials(): void;
+    export(): {
         fields: {
             name: string;
             type: any;
@@ -79,7 +77,7 @@ declare class Table extends Element {
         headerColor: string;
         partials: TablePartial[];
     };
-  exportChild(): {
+    exportChild(): {
         fields: {
             name: string;
             type: any;
@@ -102,23 +100,23 @@ declare class Table extends Element {
             note: string;
         }[];
     };
-  exportChildIds(): {
+    exportChildIds(): {
         fieldIds: number[];
         indexIds: number[];
         checkIds: number[];
     };
-  exportParentIds(): {
+    exportParentIds(): {
         schemaId: number;
         groupId: number;
     };
-  shallowExport(): {
+    shallowExport(): {
         name: string;
         alias: string;
         note: string;
         headerColor: string;
         partials: TablePartial[];
     };
-  normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedDatabase): void;
 }
 
 export interface NormalizedTable {

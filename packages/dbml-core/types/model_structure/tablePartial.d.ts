@@ -17,21 +17,19 @@ interface RawTablePartial {
 }
 
 declare class TablePartial extends Element {
-  name: string;
-  note: string;
-  noteToken: Token;
-  fields: Field[];
-  indexes: Index[];
-  checks: Check[];
-  headerColor: string;
-  dbState: DbState;
-  id: number;
+    name: string;
+    note: string;
+    noteToken: Token;
+    fields: Field[];
+    indexes: Index[];
+    checks: Check[];
+    headerColor: string;
+    dbState: DbState;
+    id: number;
 
-  constructor({
-    name, note, fields, indexes, checks, token, headerColor, dbState,
-  }: RawTablePartial);
-  generateId(): void;
-  export(): {
+    constructor({ name, note, fields, indexes, checks, token, headerColor, dbState }: RawTablePartial);
+    generateId(): void;
+    export(): {
         name: string;
         note: string;
         headerColor: string;
@@ -58,7 +56,7 @@ declare class TablePartial extends Element {
             note: string;
         }[];
     };
-  shallowExport(): {
+    shallowExport(): {
         name: string;
         note: string;
         headerColor: string;
@@ -85,7 +83,7 @@ declare class TablePartial extends Element {
             note: string;
         }[];
     };
-  normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedDatabase): void;
 }
 
 export interface NormalizedTablePartial {

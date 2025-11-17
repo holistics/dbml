@@ -14,30 +14,28 @@ interface RawCheck {
 }
 
 declare class Check extends Element {
-  name: string;
-  expression: string;
-  table: Table;
-  column: Field | null;
-  injectedPartial: TablePartial | null;
+    name: string;
+    expression: string;
+    table: Table;
+    column: Field | null;
+    injectedPartial: TablePartial | null;
 
-  constructor({
-    token, name, expression, table, column, injectedPartial,
-  }: RawCheck);
-  generateId(): void;
-  export(): {
+    constructor({ token, name, expression, table, column, injectedPartial }: RawCheck);
+    generateId(): void;
+    export(): {
         name: string;
         expression: string;
     };
-  exportParentIds(): {
+    exportParentIds(): {
         tableId: number;
         columnId: number | null;
         injectedPartialId: number | null;
     };
-  shallowExport(): {
+    shallowExport(): {
         name: string;
         expression: string;
     };
-  normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedDatabase): void;
 }
 
 export interface NormalizedCheck {
