@@ -1,0 +1,181 @@
+name: Coverage
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+    paths-ignore:
+      - 'dbml-homepage/**'
+jobs:
+  coverage:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [22.x]
+    services:
+      postgres:
+        image: postgres:15-bullseye
+        env:
+          POSTGRES_USER: dbml
+          POSTGRES_PASSWORD: testtest
+          POSTGRES_DB: dbml_test
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: dbml.123.123
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "exit 0"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      mysql-8.0:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: dbml_test
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Import DDL to Postgres
+      run: |
+        psql -h localhost -U dbml -d dbml_test -f packages/dbml-cli/__tests__/db2dbml/postgres/schema.sql
+      env:
+        PGPASSWORD: testtest
+
+    - name: Import DDL to MySQL
+      run: |
+        mysql -h 127.0.0.1 -u root -proot dbml_test < packages/dbml-cli/__tests__/db2dbml/mysql/schema.sql
+
+    - name: Import DDL to MSSQL
+      run: |
+        sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__tests__/db2dbml/mssql/schema.sql
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: Build packages
+      run: yarn build
+
+    - name: Run coverage
+      run: yarn coverage
+
+    - name: Generate coverage report
+      id: coverage
+      run: |
+        # Create a markdown report
+        cat > coverage-report.md << 'EOF'
+        ## Coverage Report
+
+        EOF
+
+        # Process each package
+        for package in dbml-cli dbml-connector dbml-core dbml-parse; do
+          coverage_file="packages/${package}/coverage/coverage-summary.json"
+
+          if [ -f "$coverage_file" ]; then
+            echo "### 📦 @dbml/${package}" >> coverage-report.md
+            echo "" >> coverage-report.md
+
+            # Extract coverage data using node
+            node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('${coverage_file}', 'utf8'));
+            const total = data.total;
+
+            // Create summary table
+            console.log('| Metric | Coverage | Files Covered |');
+            console.log('|--------|----------|---------------|');
+            console.log(\`| Lines | \${total.lines.pct}% (\${total.lines.covered}/\${total.lines.total}) | - |\`);
+            console.log(\`| Statements | \${total.statements.pct}% (\${total.statements.covered}/\${total.statements.total}) | - |\`);
+            console.log(\`| Functions | \${total.functions.pct}% (\${total.functions.covered}/\${total.functions.total}) | - |\`);
+            console.log(\`| Branches | \${total.branches.pct}% (\${total.branches.covered}/\${total.branches.total}) | - |\`);
+            console.log('');
+
+            // Find files below 80% coverage threshold
+            const lowCoverageFiles = [];
+            for (const [file, metrics] of Object.entries(data)) {
+              if (file === 'total') continue;
+              if (metrics.lines.pct < 80 || metrics.statements.pct < 80) {
+                lowCoverageFiles.push({ file, metrics });
+              }
+            }
+
+            if (lowCoverageFiles.length > 0) {
+              console.log('#### ⚠️ Files Below 80% Coverage');
+              console.log('');
+              console.log('| File | Lines | Statements | Functions | Branches |');
+              console.log('|------|-------|------------|-----------|----------|');
+
+              lowCoverageFiles.sort((a, b) => a.metrics.lines.pct - b.metrics.lines.pct).forEach(({ file, metrics }) => {
+                const shortFile = file.replace(process.cwd() + '/', '');
+                console.log(\`| \${shortFile} | \${metrics.lines.pct}% | \${metrics.statements.pct}% | \${metrics.functions.pct}% | \${metrics.branches.pct}% |\`);
+              });
+              console.log('');
+            }
+
+            // Show all files with detailed coverage
+            console.log('<details>');
+            console.log('<summary>📄 Detailed File Coverage</summary>');
+            console.log('');
+            console.log('| File | Lines | Statements | Functions | Branches |');
+            console.log('|------|-------|------------|-----------|----------|');
+
+            const files = Object.entries(data)
+              .filter(([file]) => file !== 'total')
+              .sort(([a], [b]) => a.localeCompare(b));
+
+            files.forEach(([file, metrics]) => {
+              const shortFile = file.replace(process.cwd() + '/', '');
+              console.log(\`| \${shortFile} | \${metrics.lines.pct}% | \${metrics.statements.pct}% | \${metrics.functions.pct}% | \${metrics.branches.pct}% |\`);
+            });
+
+            console.log('');
+            console.log('</details>');
+            console.log('');
+            " >> coverage-report.md
+          else
+            echo "⚠️ No coverage data found for @dbml/${package}" >> coverage-report.md
+            echo "" >> coverage-report.md
+          fi
+        done
+
+    - name: Comment PR with coverage report
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        path: coverage-report.md
+
+    - name: Upload coverage artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-reports
+        path: |
+          packages/dbml-cli/coverage/
+          packages/dbml-connector/coverage/
+          packages/dbml-core/coverage/
+          packages/dbml-parse/coverage/
