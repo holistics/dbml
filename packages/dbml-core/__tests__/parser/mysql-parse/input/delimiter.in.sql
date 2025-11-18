@@ -2,11 +2,23 @@ CREATE TABLE Table_0 (
   id INT DEFAULT 'default value with semicolon ;'
 );
 
+/* comment with delimiter ; */
+# comment with delimiter ;  
+# comment with delimiter ;
+-- comment with delimiter ;  
+-- comment with delimiter ;
+
 DELIMITER ;;
 
 CREATE TABLE Table_1 (
   id INT
 );;
+
+/* comment with delimiter ;; */
+# comment with delimiter ;;   
+# comment with delimiter ;;
+-- comment with delimiter ;;  
+-- comment with delimiter ;;
 
 DELIMITER @@
 
