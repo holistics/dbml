@@ -59,12 +59,12 @@ const createFields = (rawFields, fieldsConstraints) => {
 const createIndexes = (rawIndexes) => {
   return rawIndexes.map((rawIndex) => {
     const {
-      name, unique, primary, type, columns,
+      name, unique, pk, type, columns,
     } = rawIndex;
     const index = new Index({
       name,
       unique,
-      pk: primary,
+      pk,
       type,
       columns,
     });
