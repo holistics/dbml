@@ -680,7 +680,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
       res.forEach((r) => {
         const column = r.column !== null ? findColumn(table, r.column) : null;
         if (r.column !== null && !column) {
-          throw new CompilerError(ctx.tableview_name(), `Column ${r.column} not found on Table ${tableName}`);
+          throw createCompilerError(ctx.tableview_name(), `Column ${r.column} not found on Table ${tableName}`);
         }
         r.constraints.forEach((c) => handleConstraint.bind(this)(column, c));
       });
