@@ -1,0 +1,186 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "data_types",
+      "fields": [
+        {
+          "name": "c1_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "c2_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        },
+        {
+          "name": "c3_varchar",
+          "type": {
+            "type_name": "VARCHAR(50)"
+          },
+          "checks": []
+        },
+        {
+          "name": "c4_nchar",
+          "type": {
+            "type_name": "NCHAR(20)"
+          },
+          "checks": []
+        },
+        {
+          "name": "c5_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "c6_number",
+          "type": {
+            "type_name": "NUMBER(10, 2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "c7_long",
+          "type": {
+            "type_name": "LONG"
+          },
+          "checks": []
+        },
+        {
+          "name": "c8_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "c9_binary_float",
+          "type": {
+            "type_name": "BINARY_FLOAT"
+          },
+          "checks": []
+        },
+        {
+          "name": "c10_binary_double",
+          "type": {
+            "type_name": "BINARY_DOUBLE"
+          },
+          "checks": []
+        },
+        {
+          "name": "c11_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP(6)"
+          },
+          "checks": []
+        },
+        {
+          "name": "c12_timestamp_with_tz",
+          "type": {
+            "type_name": "TIMESTAMP(6) WITH TIME ZONE"
+          },
+          "checks": []
+        },
+        {
+          "name": "c13_timestamp_with_local_tz",
+          "type": {
+            "type_name": "TIMESTAMP(6) WITH LOCAL TIME ZONE"
+          },
+          "checks": []
+        },
+        {
+          "name": "c14_interval_ytm",
+          "type": {
+            "type_name": "INTERVAL YEAR(2) TO MONTH"
+          },
+          "checks": []
+        },
+        {
+          "name": "c15_interval_dts",
+          "type": {
+            "type_name": "INTERVAL DAY(2) TO SECOND(6)"
+          },
+          "checks": []
+        },
+        {
+          "name": "c16_raw",
+          "type": {
+            "type_name": "RAW(1000)"
+          },
+          "checks": []
+        },
+        {
+          "name": "c17_long_raw",
+          "type": {
+            "type_name": "LONG RAW"
+          },
+          "checks": []
+        },
+        {
+          "name": "c18_rowid",
+          "type": {
+            "type_name": "ROWID"
+          },
+          "checks": []
+        },
+        {
+          "name": "c19_urowid",
+          "type": {
+            "type_name": "UROWID(4000)"
+          },
+          "checks": []
+        },
+        {
+          "name": "c20_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "checks": []
+        },
+        {
+          "name": "c21_nclob",
+          "type": {
+            "type_name": "NCLOB"
+          },
+          "checks": []
+        },
+        {
+          "name": "c22_blob",
+          "type": {
+            "type_name": "BLOB"
+          },
+          "checks": []
+        },
+        {
+          "name": "c23_bfile",
+          "type": {
+            "type_name": "BFILE"
+          },
+          "checks": []
+        },
+        {
+          "name": "c24_xmltype",
+          "type": {
+            "type_name": "XMLTYPE"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

@@ -1,0 +1,16 @@
+Table "database_products" {
+  "product_id" NUMBER(10) [pk]
+  "product_name" VARCHAR2(100) [not null]
+  "vendor_name" VARCHAR2(100)
+  "release_year" NUMBER(4)
+  "is_open_source" NUMBER(1) [default: 0]
+  "license_cost" "NUMBER(10, 2)"
+  "market_share" "NUMBER(5, 2)"
+  "latest_version" VARCHAR2(20)
+  "description" CLOB
+  "created_at" TIMESTAMP [default: `SYSTIMESTAMP`]
+  "updated_at" TIMESTAMP [default: `SYSTIMESTAMP`]
+  "is_active" NUMBER(1) [default: 1]
+  "max_connections" NUMBER(10)
+  "status" CHAR(1) [default: 'A']
+}

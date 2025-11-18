@@ -17,6 +17,10 @@ import TSqlLexer from '../parsers/mssql/TSqlLexer';
 import TSqlParser from '../parsers/mssql/TSqlParser';
 import MssqlASTGen from './mssql/MssqlASTGen';
 
+import OracleSQLLexer from '../parsers/oraclesql/OracleSqlLexer';
+import OracleSQLParser from '../parsers/oraclesql/OracleSqlParser';
+import OracleSqlASTGen from './oraclesql/OracleSQLASTGen';
+
 function parse (input, format) {
   const chars = new antlr4.InputStream(input);
   let database = null;
@@ -80,6 +84,21 @@ function parse (input, format) {
       const parseTree = parser.snowflake_file();
 
       database = parseTree.accept(new SnowflakeASTGen());
+
+      if (errorListener.errors.length) throw errorListener.errors;
+      break;
+    }
+    case 'oracle': {
+      const lexer = new OracleSQLLexer(chars);
+      const tokens = new antlr4.CommonTokenStream(lexer);
+      const parser = new OracleSQLParser(tokens);
+      parser.buildParseTrees = true;
+      parser.removeErrorListeners();
+      parser.addErrorListener(errorListener);
+
+      const parseTree = parser.sql_script();
+
+      database = parseTree.accept(new OracleSqlASTGen());
 
       if (errorListener.errors.length) throw errorListener.errors;
       break;

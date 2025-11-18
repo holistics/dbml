@@ -1,0 +1,715 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "employees",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "orders",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "order_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "ship_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "ship_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "complex_parent",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "pk": true,
+          "columns": [
+            {
+              "value": "id",
+              "type": "column"
+            },
+            {
+              "value": "code",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "complex_child",
+      "fields": [
+        {
+          "name": "child_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "parent_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "parent_code",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "order_details",
+      "fields": [
+        {
+          "name": "detail_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "assignments",
+      "fields": [
+        {
+          "name": "assignment_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "project_members",
+      "fields": [
+        {
+          "name": "member_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "unique": true,
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "unique": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes_fk",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "employees_self",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "order_history",
+      "fields": [
+        {
+          "name": "history_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "history_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "shipment_details",
+      "fields": [
+        {
+          "name": "detail_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "ship_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "project_assignments",
+      "fields": [
+        {
+          "name": "assign_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "project_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [
+    {
+      "endpoints": [
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_order_cust",
+      "endpoints": [
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_ship_cust",
+      "endpoints": [
+        {
+          "tableName": "shipments",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_child_complex",
+      "endpoints": [
+        {
+          "tableName": "complex_child",
+          "fieldNames": [
+            "parent_id",
+            "parent_code"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "complex_parent",
+          "fieldNames": [
+            "id",
+            "code"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_detail_item",
+      "endpoints": [
+        {
+          "tableName": "order_details",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "inventory",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_assign_dept",
+      "endpoints": [
+        {
+          "tableName": "assignments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_member_dept",
+      "endpoints": [
+        {
+          "tableName": "project_members",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_dt_number",
+      "endpoints": [
+        {
+          "tableName": "test_datatypes_fk",
+          "fieldNames": [
+            "col_number"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "test_datatypes",
+          "fieldNames": [
+            "col_number"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_dt_varchar2",
+      "endpoints": [
+        {
+          "tableName": "test_datatypes_fk",
+          "fieldNames": [
+            "col_varchar2"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "test_datatypes",
+          "fieldNames": [
+            "col_varchar2"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_self_manager",
+      "endpoints": [
+        {
+          "tableName": "employees_self",
+          "fieldNames": [
+            "manager_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees_self",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_very_long_constraint_name_for_testing_parser_limits",
+      "endpoints": [
+        {
+          "tableName": "order_history",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "order_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_ship_detail",
+      "endpoints": [
+        {
+          "tableName": "shipment_details",
+          "fieldNames": [
+            "ship_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "shipments",
+          "fieldNames": [
+            "ship_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_assign_emp",
+      "endpoints": [
+        {
+          "tableName": "project_assignments",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

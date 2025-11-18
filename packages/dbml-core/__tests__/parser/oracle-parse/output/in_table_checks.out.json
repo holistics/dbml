@@ -1,0 +1,536 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "expression": "cust_id > 0"
+        }
+      ]
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_price_pos",
+          "expression": "price >= 0"
+        }
+      ]
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "ship_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "ship_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "total_amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_amount_date",
+          "expression": "total_amount >= 0 AND ship_date IS NOT NULL"
+        }
+      ]
+    },
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "budget",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "expression": "budget >= 0"
+        }
+      ]
+    },
+    {
+      "name": "suppliers",
+      "fields": [
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "contact",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "credit_limit",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_credit_limit",
+          "expression": "credit_limit >= 0"
+        }
+      ]
+    },
+    {
+      "name": "employees",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_status_values",
+          "expression": "status IN ('ACTIVE', 'INACTIVE', 'SUSPENDED')"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "order_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "total_amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "tax_amount",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_order_amounts",
+          "expression": "total_amount >= tax_amount AND tax_amount >= 0"
+        }
+      ]
+    },
+    {
+      "name": "contracts",
+      "fields": [
+        {
+          "name": "contract_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "start_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "end_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_date_range",
+          "expression": "end_date > start_date AND start_date >= SYSDATE"
+        }
+      ]
+    },
+    {
+      "name": "users",
+      "fields": [
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "ssn",
+          "type": {
+            "type_name": "VARCHAR2(11)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_ssn_format",
+          "expression": "ssn LIKE '[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]'"
+        }
+      ]
+    },
+    {
+      "name": "sales",
+      "fields": [
+        {
+          "name": "sale_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "sale_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "discount",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_sale_complex",
+          "expression": "amount >= discount AND discount >= 0 AND sale_date >= SYSDATE"
+        }
+      ]
+    },
+    {
+      "name": "accounts",
+      "fields": [
+        {
+          "name": "account_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "account_number",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        },
+        {
+          "name": "balance",
+          "type": {
+            "type_name": "NUMBER(12,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "account_type",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_acc_number",
+          "expression": "REGEXP_LIKE(account_number, '^[0-9]{10}$')"
+        }
+      ]
+    },
+    {
+      "name": "reports",
+      "fields": [
+        {
+          "name": "report_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "report_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "report_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_very_long_constraint_name_for_testing_parser_limits",
+          "expression": "status IN ('DRAFT', 'FINAL', 'ARCHIVED')"
+        }
+      ]
+    },
+    {
+      "name": "employees_sub",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "salary",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "name": "chk_dept_exists",
+          "expression": "dept_id IN (SELECT dept_id FROM departments)"
+        }
+      ]
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

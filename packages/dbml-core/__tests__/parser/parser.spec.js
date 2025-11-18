@@ -29,5 +29,9 @@ describe('@dbml/core', () => {
     test.each(scanTestNames(__dirname, 'mssql-parse/input'))('mssql-parse/%s', (name) => {
       runTest(name, 'mssql-parse', 'mssql', 'parseMSSQLToJSONv2');
     });
+
+    test.each(scanTestNames(__dirname, 'oracle-parse/input'))('oracle-parse/%s', (name) => {
+      runTest(name, 'oracle-parse', 'oracle', 'parseOracleToJSON');
+    });
   });
 });

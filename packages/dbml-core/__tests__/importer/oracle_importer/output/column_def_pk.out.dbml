@@ -1,0 +1,152 @@
+Table "customers" {
+  "cust_id" NUMBER(10) [pk]
+  "cust_name" VARCHAR2(100)
+  "email" VARCHAR2(100)
+  "phone" VARCHAR2(20)
+}
+
+Table "inventory" {
+  "item_id" NUMBER(10) [pk]
+  "item_name" VARCHAR2(200)
+  "price" NUMBER(10,2)
+  "category" VARCHAR2(50)
+}
+
+Table "shipments" {
+  "ship_id" NUMBER(10) [pk]
+  "customer_id" NUMBER(10)
+  "ship_date" DATE
+  "total_amount" NUMBER(12,2)
+}
+
+Table "departments" {
+  "dept_id" NUMBER(10) [pk]
+  "dept_name" VARCHAR2(100)
+  "manager_id" NUMBER(10)
+  "budget" NUMBER(12,2)
+}
+
+Table "suppliers" {
+  "supp_id" NUMBER(10) [pk]
+  "supp_name" VARCHAR2(100)
+  "contact" VARCHAR2(100)
+  "credit_limit" NUMBER(10,2)
+}
+
+Table "test_datatypes" {
+  "col_number" NUMBER(10,2) [pk]
+  "col_varchar2" VARCHAR2(100)
+  "col_char" CHAR(10)
+  "col_date" DATE
+  "col_timestamp" TIMESTAMP
+  "col_clob" CLOB
+  "col_raw" RAW(100)
+  "col_float" FLOAT
+  "col_integer" INTEGER
+  "col_nvarchar2" NVARCHAR2(100)
+  "col_nchar" NCHAR(10)
+}
+
+Table "test_basic" {
+  "id" NUMBER(10) [pk]
+  "value" NUMBER(10)
+}
+
+Table "test_named" {
+  "code" NUMBER(10) [pk]
+  "description" VARCHAR2(200)
+}
+
+Table "test_status" {
+  "status_code" VARCHAR2(20) [pk]
+  "status_desc" VARCHAR2(100)
+}
+
+Table "test_dates" {
+  "event_date" DATE [pk]
+  "event_desc" VARCHAR2(200)
+}
+
+Table "test_enable" {
+  "level" NUMBER(2) [pk]
+  "level_desc" VARCHAR2(50)
+}
+
+Table "test_disable" {
+  "priority" NUMBER(2) [pk]
+  "priority_desc" VARCHAR2(50)
+}
+
+Table "test_validate" {
+  "amount" NUMBER(10,2) [pk]
+  "amount_desc" VARCHAR2(100)
+}
+
+Table "test_novalidate" {
+  "discount" NUMBER(10,2) [pk]
+  "discount_desc" VARCHAR2(100)
+}
+
+Table "test_disable_novalidate" {
+  "weight" NUMBER(8,2) [pk]
+  "weight_desc" VARCHAR2(100)
+}
+
+Table "test_rely" {
+  "code" NUMBER(10) [pk]
+  "code_desc" VARCHAR2(50)
+}
+
+Table "test_norely" {
+  "sequence" NUMBER(10) [pk]
+  "sequence_desc" VARCHAR2(50)
+}
+
+Table "test_enable_rely" {
+  "batch_id" NUMBER(10) [pk]
+  "batch_desc" VARCHAR2(50)
+}
+
+Table "test_disable_norely" {
+  "zone_id" NUMBER(5) [pk]
+  "zone_desc" VARCHAR2(50)
+}
+
+Table "test_deferrable_deferred" {
+  "order_id" NUMBER(10) [pk]
+  "order_desc" VARCHAR2(100)
+}
+
+Table "test_deferrable_immediate" {
+  "invoice_id" NUMBER(10) [pk]
+  "invoice_desc" VARCHAR2(100)
+}
+
+Table "test_not_deferrable" {
+  "ticket_id" NUMBER(10) [pk]
+  "ticket_desc" VARCHAR2(100)
+}
+
+Table "test_datatypes_inline" {
+  "col_number" NUMBER(10,2) [pk]
+  "col_varchar2" VARCHAR2(100)
+  "col_char" CHAR(10) [pk]
+  "col_date" DATE [pk]
+  "col_timestamp" TIMESTAMP [pk]
+  "col_clob" CLOB [pk]
+  "col_raw" RAW(100) [pk]
+  "col_float" FLOAT [pk]
+  "col_integer" INTEGER [pk]
+  "col_nvarchar2" NVARCHAR2(100) [pk]
+  "col_nchar" NCHAR(10) [pk]
+}
+
+Table "test_long_name" {
+  "identifier" NUMBER(10) [pk]
+  "record_code" VARCHAR2(20)
+}
+
+Table "test_complex" {
+  "score" NUMBER(3) [pk]
+  "rating" VARCHAR2(20) [pk]
+}
