@@ -111,7 +111,6 @@ export function registerSchemaStack (
 ): SymbolTable {
   // public schema is already global schema
   if (variables[0] === 'public') {
-    // eslint-disable-next-line no-param-reassign
     variables = variables.slice(1);
   }
 
