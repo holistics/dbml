@@ -65,7 +65,7 @@ $ dbml2sql <path-to-dbml-file>
            [-o|--out-file <output-filepath>]
 ```
 
-## Convert  a SQL file to DBML
+## Convert a SQL file to DBML
 
 To convert SQL to DBML file:
 
@@ -92,7 +92,7 @@ $ sql2dbml --mysql dump.sql -o mydatabase.dbml
 
 ```bash
 $ sql2dbml <path-to-sql-file>
-           [--mysql|--postgres|--mssql|--postgres-legacy|--mysql-legacy|--mssql-legacy|--snowflake]
+           [--mysql|--postgres|--mssql|--postgres-legacy|--mysql-legacy|--mssql-legacy|--snowflake|--oracle]
            [-o|--out-file <output-filepath>]
 ```
 
