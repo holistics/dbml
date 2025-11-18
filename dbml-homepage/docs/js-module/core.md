@@ -29,7 +29,7 @@ const { importer } = require('@dbml/core');
 
 * **Arguments:**
   * ```{string} str```
-  * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'mssqlLegacy'|'snowflake'|'json'} format```
+  * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'mssqlLegacy'|'snowflake'|'json'|'oracle'} format```
 
 * **Returns:**
   * ```{string} DBML```
@@ -120,7 +120,7 @@ const parser = new Parser();
 
 * **Arguments:**
   * ```{string} str```
-  * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'mssqlLegacy'|'snowflake'|'json'|'dbmlv2'} format```
+  * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'mssqlLegacy'|'snowflake'|'json'|'dbmlv2'|'oracle'} format```
 
 * **Returns:** ```Database``` object
 
