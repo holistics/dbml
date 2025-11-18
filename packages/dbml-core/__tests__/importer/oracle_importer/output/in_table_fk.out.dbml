@@ -1,0 +1,125 @@
+Table "departments" {
+  "dept_id" NUMBER(10) [pk]
+}
+
+Table "customers" {
+  "cust_id" NUMBER(10) [pk]
+}
+
+Table "employees" {
+  "emp_id" NUMBER(10)
+  "emp_name" VARCHAR2(100)
+  "dept_id" NUMBER(10)
+}
+
+Table "orders" {
+  "order_id" NUMBER(10)
+  "customer_id" NUMBER(10)
+  "order_date" DATE
+}
+
+Table "shipments" {
+  "ship_id" NUMBER(10)
+  "customer_id" NUMBER(10) [not null]
+  "ship_date" DATE
+}
+
+Table "complex_parent" {
+  "id" NUMBER(10)
+  "code" VARCHAR2(20)
+
+  Indexes {
+    (id, code) [pk]
+  }
+}
+
+Table "inventory" {
+  "item_id" NUMBER(10) [pk]
+}
+
+Table "complex_child" {
+  "child_id" NUMBER(10)
+  "parent_id" NUMBER(10)
+  "parent_code" VARCHAR2(20)
+}
+
+Table "order_details" {
+  "detail_id" NUMBER(10)
+  "order_id" NUMBER(10)
+  "item_id" NUMBER(10)
+}
+
+Table "assignments" {
+  "assignment_id" NUMBER(10)
+  "emp_id" NUMBER(10)
+  "dept_id" NUMBER(10)
+}
+
+Table "project_members" {
+  "member_id" NUMBER(10)
+  "emp_id" NUMBER(10)
+  "dept_id" NUMBER(10)
+}
+
+Table "test_datatypes" {
+  "col_number" NUMBER(10,2) [unique]
+  "col_varchar2" VARCHAR2(100) [unique]
+}
+
+Table "test_datatypes_fk" {
+  "id" NUMBER(10)
+  "col_number" NUMBER(10,2)
+  "col_varchar2" VARCHAR2(100)
+  "col_char" CHAR(10)
+  "col_date" DATE
+}
+
+Table "employees_self" {
+  "emp_id" NUMBER(10) [pk]
+  "manager_id" NUMBER(10)
+  "emp_name" VARCHAR2(100)
+}
+
+Table "order_history" {
+  "history_id" NUMBER(10)
+  "order_id" NUMBER(10)
+  "history_date" DATE
+}
+
+Table "shipment_details" {
+  "detail_id" NUMBER(10)
+  "ship_id" NUMBER(10)
+  "item_id" NUMBER(10)
+}
+
+Table "project_assignments" {
+  "assign_id" NUMBER(10)
+  "emp_id" NUMBER(10)
+  "project_id" NUMBER(10)
+}
+
+Ref:"departments"."dept_id" < "employees"."dept_id"
+
+Ref "fk_order_cust":"customers"."cust_id" < "orders"."customer_id"
+
+Ref "fk_ship_cust":"customers"."cust_id" < "shipments"."customer_id"
+
+Ref "fk_child_complex":"complex_parent".("id", "code") < "complex_child".("parent_id", "parent_code")
+
+Ref "fk_detail_item":"inventory"."item_id" < "order_details"."item_id"
+
+Ref "fk_assign_dept":"departments"."dept_id" < "assignments"."dept_id"
+
+Ref "fk_member_dept":"departments"."dept_id" < "project_members"."dept_id"
+
+Ref "fk_dt_number":"test_datatypes"."col_number" < "test_datatypes_fk"."col_number"
+
+Ref "fk_dt_varchar2":"test_datatypes"."col_varchar2" < "test_datatypes_fk"."col_varchar2"
+
+Ref "fk_self_manager":"employees_self"."emp_id" < "employees_self"."manager_id"
+
+Ref "fk_very_long_constraint_name_for_testing_parser_limits":"orders"."order_id" < "order_history"."order_id"
+
+Ref "fk_ship_detail":"shipments"."ship_id" < "shipment_details"."ship_id"
+
+Ref "fk_assign_emp":"employees"."emp_id" < "project_assignments"."emp_id"

@@ -10,6 +10,7 @@ export const TABLE_CONSTRAINT_KIND = {
 
 export const COLUMN_CONSTRAINT_KIND = {
   NOT_NULL: 'not_null',
+  NULLABLE: 'nullable',
   UNIQUE: 'unique',
   PK: 'pk',
   DEFAULT: 'dbdefault',

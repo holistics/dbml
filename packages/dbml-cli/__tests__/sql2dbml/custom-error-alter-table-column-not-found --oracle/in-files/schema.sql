@@ -1,0 +1,6 @@
+CREATE TABLE Users (
+  id TEXT PRIMARY KEY
+);
+
+ALTER TABLE Users
+ADD CONSTRAINT unq UNIQUE (name);

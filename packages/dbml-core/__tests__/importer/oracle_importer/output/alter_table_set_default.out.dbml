@@ -1,0 +1,62 @@
+Table "customers" {
+  "cust_id" NUMBER(10) [default: 1]
+  "cust_name" VARCHAR2(100)
+  "email" VARCHAR2(100) [default: 'email@example.com']
+  "phone" VARCHAR2(20) [default: null]
+  "address" VARCHAR2(200)
+  "status" VARCHAR2(20) [default: 'churned']
+  "reg_date" DATE [default: `SYSDATE`]
+  "last_login" TIMESTAMP
+}
+
+Table "inventory" {
+  "item_id" NUMBER(10)
+  "item_name" VARCHAR2(200) [default: 'Unknown']
+  "price" NUMBER(10,2) [default: 0.99]
+  "category" VARCHAR2(50) [default: 'Misc']
+  "sku" VARCHAR2(50)
+  "weight" NUMBER(8,2)
+  "stock_level" NUMBER(10)
+  "reorder_level" NUMBER(10)
+}
+
+Table "shipments" {
+  "ship_id" NUMBER(10)
+  "customer_id" NUMBER(10) [default: 1]
+  "ship_date" DATE [default: `SYSDATE`]
+  "total_amount" NUMBER(12,2)
+  "tracking_number" VARCHAR2(50) [default: `SYS_GUID()`]
+  "carrier" VARCHAR2(100)
+  "priority" NUMBER(2)
+  "notes" VARCHAR2(4000) [default: 'This is a very long default value for testing purposes, exceeding typical lengths to check parser limits and storage implications in Oracle SQL']
+}
+
+Table "departments" {
+  "dept_id" NUMBER(10) [default: `test_seq.NEXTVAL`]
+  "dept_name" VARCHAR2(100)
+  "manager_id" NUMBER(10)
+  "budget" NUMBER(12,2) [default: 10000]
+  "location" VARCHAR2(50) [default: `UPPER(USER) || '_DEPT'`]
+  "established_date" DATE [default: `SYSDATE`]
+}
+
+Table "suppliers" {
+  "supp_id" NUMBER(10)
+  "supp_name" VARCHAR2(100) [default: 'Anonymous']
+  "contact" VARCHAR2(100) [default: 'N/A']
+  "ssn" VARCHAR2(11)
+  "badge_number" VARCHAR2(10)
+  "credit_limit" NUMBER(10,2) [default: `5000 + 1000`]
+}
+
+Table "test_defaults" {
+  "col1" NUMBER
+  "col2" VARCHAR2(50)
+  "col3" DATE
+  "col4" TIMESTAMP
+  "col5" CLOB
+  "col6" RAW(100)
+  "col7" FLOAT
+  "col8" INTEGER
+  "col9" NVARCHAR2(100)
+}

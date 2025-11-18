@@ -1,0 +1,1643 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_dept_id",
+          "pk": true,
+          "columns": [
+            {
+              "value": "dept_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "suppliers",
+      "fields": [
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_supp_id",
+          "pk": true,
+          "columns": [
+            {
+              "value": "supp_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "customers",
+      "fields": [
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_cust_id",
+          "pk": true,
+          "columns": [
+            {
+              "value": "cust_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "inventory",
+      "fields": [
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_name",
+          "type": {
+            "type_name": "VARCHAR2(200)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_item_id",
+          "pk": true,
+          "columns": [
+            {
+              "value": "item_id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "complex_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_complex_id",
+          "pk": true,
+          "columns": [
+            {
+              "value": "id",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes",
+      "fields": [
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "pk_datatype_number",
+          "pk": true,
+          "columns": [
+            {
+              "value": "col_number",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "employees",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "emp_name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "orders",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "tracking_number",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "shipments",
+      "fields": [
+        {
+          "name": "ship_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "customer_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "tracking_number",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "pk": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "complex_child",
+      "fields": [
+        {
+          "name": "child_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "parent_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "parent_code",
+          "type": {
+            "type_name": "VARCHAR2(20)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_enable",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_disable",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_validate",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_novalidate",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_disable_novalidate",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_rely",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_norely",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_enable_rely",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_disable_norely",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_deferrable_deferred",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_deferrable_immediate",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_not_deferrable",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_datatypes_fk",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_number",
+          "type": {
+            "type_name": "NUMBER(10,2)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_varchar2",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_char",
+          "type": {
+            "type_name": "CHAR(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_date",
+          "type": {
+            "type_name": "DATE"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_timestamp",
+          "type": {
+            "type_name": "TIMESTAMP"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_clob",
+          "type": {
+            "type_name": "CLOB"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_raw",
+          "type": {
+            "type_name": "RAW(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_float",
+          "type": {
+            "type_name": "FLOAT"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_integer",
+          "type": {
+            "type_name": "INTEGER"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nvarchar2",
+          "type": {
+            "type_name": "NVARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "col_nchar",
+          "type": {
+            "type_name": "NCHAR(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "employees_self",
+      "fields": [
+        {
+          "name": "emp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "order_details",
+      "fields": [
+        {
+          "name": "order_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "item_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_cascade",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "supp_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "test_set_null",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "dept_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        },
+        {
+          "name": "cust_id",
+          "type": {
+            "type_name": "NUMBER(10)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [
+    {
+      "name": "fk_emp_dept",
+      "endpoints": [
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_emp_manager",
+      "endpoints": [
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "manager_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_order_cust",
+      "endpoints": [
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_order_track",
+      "endpoints": [
+        {
+          "tableName": "orders",
+          "fieldNames": [
+            "tracking_number"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "shipments",
+          "fieldNames": [
+            "tracking_number"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_ship_cust",
+      "endpoints": [
+        {
+          "tableName": "shipments",
+          "fieldNames": [
+            "customer_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_child_complex",
+      "endpoints": [
+        {
+          "tableName": "complex_child",
+          "fieldNames": [
+            "parent_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "complex_test",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_child_code",
+      "endpoints": [
+        {
+          "tableName": "complex_child",
+          "fieldNames": [
+            "parent_code"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "complex_test",
+          "fieldNames": [
+            "code"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_enable_dept",
+      "endpoints": [
+        {
+          "tableName": "test_enable",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_enable_supp",
+      "endpoints": [
+        {
+          "tableName": "test_enable",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "suppliers",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_disable_dept",
+      "endpoints": [
+        {
+          "tableName": "test_disable",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_disable_cust",
+      "endpoints": [
+        {
+          "tableName": "test_disable",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_validate_item",
+      "endpoints": [
+        {
+          "tableName": "test_validate",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "inventory",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_validate_supp",
+      "endpoints": [
+        {
+          "tableName": "test_validate",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "suppliers",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_noval_dept",
+      "endpoints": [
+        {
+          "tableName": "test_novalidate",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_noval_cust",
+      "endpoints": [
+        {
+          "tableName": "test_novalidate",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_dis_noval_item",
+      "endpoints": [
+        {
+          "tableName": "test_disable_novalidate",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "inventory",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_dis_noval_supp",
+      "endpoints": [
+        {
+          "tableName": "test_disable_novalidate",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "suppliers",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_rely_dept",
+      "endpoints": [
+        {
+          "tableName": "test_rely",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_rely_cust",
+      "endpoints": [
+        {
+          "tableName": "test_rely",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_norely_item",
+      "endpoints": [
+        {
+          "tableName": "test_norely",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "inventory",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_norely_supp",
+      "endpoints": [
+        {
+          "tableName": "test_norely",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "suppliers",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_en_rely_dept",
+      "endpoints": [
+        {
+          "tableName": "test_enable_rely",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_en_rely_cust",
+      "endpoints": [
+        {
+          "tableName": "test_enable_rely",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_dis_norely_item",
+      "endpoints": [
+        {
+          "tableName": "test_disable_norely",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "inventory",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_dis_norely_supp",
+      "endpoints": [
+        {
+          "tableName": "test_disable_norely",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "suppliers",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_def_deferred_dept",
+      "endpoints": [
+        {
+          "tableName": "test_deferrable_deferred",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_def_deferred_cust",
+      "endpoints": [
+        {
+          "tableName": "test_deferrable_deferred",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_def_immed_item",
+      "endpoints": [
+        {
+          "tableName": "test_deferrable_immediate",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "inventory",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_def_immed_supp",
+      "endpoints": [
+        {
+          "tableName": "test_deferrable_immediate",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "suppliers",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_not_def_dept",
+      "endpoints": [
+        {
+          "tableName": "test_not_deferrable",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_not_def_cust",
+      "endpoints": [
+        {
+          "tableName": "test_not_deferrable",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_dt_number",
+      "endpoints": [
+        {
+          "tableName": "test_datatypes_fk",
+          "fieldNames": [
+            "col_number"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "test_datatypes",
+          "fieldNames": [
+            "col_number"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_dt_varchar2",
+      "endpoints": [
+        {
+          "tableName": "test_datatypes_fk",
+          "fieldNames": [
+            "col_varchar2"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "test_datatypes",
+          "fieldNames": [
+            "col_varchar2"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_self_emp",
+      "endpoints": [
+        {
+          "tableName": "employees_self",
+          "fieldNames": [
+            "manager_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "employees_self",
+          "fieldNames": [
+            "emp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_self_dept",
+      "endpoints": [
+        {
+          "tableName": "employees_self",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_detail_item",
+      "endpoints": [
+        {
+          "tableName": "order_details",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "inventory",
+          "fieldNames": [
+            "item_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_detail_cust",
+      "endpoints": [
+        {
+          "tableName": "order_details",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_cascade_dept",
+      "endpoints": [
+        {
+          "tableName": "test_cascade",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_cascade_supp",
+      "endpoints": [
+        {
+          "tableName": "test_cascade",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "suppliers",
+          "fieldNames": [
+            "supp_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_set_null_dept",
+      "endpoints": [
+        {
+          "tableName": "test_set_null",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "name": "fk_set_null_cust",
+      "endpoints": [
+        {
+          "tableName": "test_set_null",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "customers",
+          "fieldNames": [
+            "cust_id"
+          ],
+          "relation": "1"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}
