@@ -1,0 +1,5 @@
+  ERROR: 
+    You have a syntax error at "schema.sql" line 5 column 19. Table "Posts" not found
+
+  A complete log can be found in:
+     /home/huydna/projects/dbml-release/packages/dbml-cli/__tests__/sql2dbml/custom-error-column-comment-table-not-found --oracle/dbml-error.log

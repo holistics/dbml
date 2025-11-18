@@ -602,7 +602,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
 
     const table = findTable(this.data.tables, schemaName, tableName);
     if (!table) {
-      throw createCompilerError(ctx.tableview_name(), `Table "${tableName}" not found`);
+      throw createCompilerError(ctx.column_name(), `Table "${tableName}" not found`);
     }
     const field = findColumn(table, columnName);
     if (!field) {
