@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX idx ON Users(id);

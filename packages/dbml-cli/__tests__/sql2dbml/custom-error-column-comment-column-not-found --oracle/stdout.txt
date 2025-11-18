@@ -1,0 +1,5 @@
+  ERROR: 
+    You have a syntax error at "schema.sql" line 5 column 19. Column "name" not found in table "Users"
+
+  A complete log can be found in:
+     /home/huydna/projects/dbml-release/packages/dbml-cli/__tests__/sql2dbml/custom-error-column-comment-column-not-found --oracle/dbml-error.log

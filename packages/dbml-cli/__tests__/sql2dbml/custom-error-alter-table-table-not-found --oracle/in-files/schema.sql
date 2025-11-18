@@ -1,0 +1,2 @@
+ALTER TABLE Users
+ADD CONSTRAINT unq UNIQUE (id);
