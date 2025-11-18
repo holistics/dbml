@@ -1,3 +1,8 @@
+/*
+Original: https://github.com/antlr/grammars-v4/blob/master/sql/plsql/PlSqlLexer.g4
+Last updated: 2025-11-01
+*/
+
 /**
  * Oracle(c) PL/SQL 11g Parser
  *
