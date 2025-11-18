@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "jobs",
@@ -7,9 +8,10 @@
           "name": "id",
           "type": {
             "type_name": "integer",
-            "args": null
+            "schemaName": null
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "status",
@@ -22,10 +24,12 @@
               "'failed'",
               "'wait for validation'"
             ]
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     },
     {
       "name": "orders",
@@ -34,15 +38,18 @@
           "name": "id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)"
-          }
+            "type_name": "varchar(255)",
+            "schemaName": null
+          },
+          "checks": []
         },
         {
           "name": "priority",
@@ -53,7 +60,8 @@
               "'medium'",
               "'high'"
             ]
-          }
+          },
+          "checks": []
         },
         {
           "name": "status",
@@ -64,10 +72,12 @@
               "'processing'",
               "'done'"
             ]
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     }
   ],
   "refs": [],
@@ -120,5 +130,9 @@
         }
       ]
     }
-  ]
+  ],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
 }

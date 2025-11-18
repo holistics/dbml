@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "products",
@@ -7,89 +8,105 @@
           "name": "id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
-          "pk": true,
           "dbdefault": {
             "value": "123",
             "type": "number"
-          }
+          },
+          "pk": true,
+          "checks": []
         },
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "schemaName": null
           },
           "dbdefault": {
             "value": "Tea",
             "type": "string"
-          }
+          },
+          "checks": []
         },
         {
           "name": "merchant_id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         },
         {
           "name": "price",
           "type": {
             "type_name": "float",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
             "value": "123.12",
             "type": "number"
-          }
+          },
+          "checks": []
         },
         {
           "name": "status",
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "schemaName": null
           },
           "dbdefault": {
             "value": "NULL",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "schemaName": null
           },
           "dbdefault": {
             "value": "now()",
             "type": "expression"
-          }
+          },
+          "checks": []
         },
         {
           "name": "stock",
           "type": {
             "type_name": "boolean",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
             "value": "true",
             "type": "boolean"
-          }
+          },
+          "checks": []
         },
         {
           "name": "expiration",
           "type": {
             "type_name": "date",
-            "args": null
+            "schemaName": null
           },
           "dbdefault": {
             "value": "current_date+interval1year",
             "type": "expression"
-          }
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     }
   ],
   "refs": [],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
 }
