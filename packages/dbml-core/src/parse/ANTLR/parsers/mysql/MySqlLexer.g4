@@ -37,25 +37,14 @@ THE SOFTWARE.
 lexer grammar MySqlLexer;
 
 options {
+    // MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
+    superClass = MySqlLexerBase;
     caseInsensitive = true;
 }
 
 channels {
     MYSQLCOMMENT,
     ERRORCHANNEL
-}
-
-// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
-@members {
-  this.currentDelimiter = ";";
-
-  this.setDelimiter = function (delimiter) {
-    this.currentDelimiter = delimiter.trim();
-  };
-
-  this.isCurrentDelimiter = function (text) {
-    return text === this.currentDelimiter;
-  };
 }
 
 // SKIP
