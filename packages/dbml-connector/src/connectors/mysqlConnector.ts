@@ -342,7 +342,7 @@ async function generatePrimaryAndUniqueConstraint (client: Connection, schemaNam
     }
 
     if (constraintType === 'PRIMARY KEY') {
-      acc[key][constraintName].primary = true;
+      acc[key][constraintName].pk = true;
     }
 
     if (constraintType === 'UNIQUE') {
