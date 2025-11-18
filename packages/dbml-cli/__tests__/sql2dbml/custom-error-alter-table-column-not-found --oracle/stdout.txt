@@ -2,4 +2,3 @@
     You have a syntax error at "schema.sql" line 1 column 1. Column "name" do not exist in table "Users"
 
   A complete log can be found in:
-     /home/huydna/projects/dbml-release/packages/dbml-cli/__tests__/sql2dbml/custom-error-alter-table-column-not-found --oracle/dbml-error.log
