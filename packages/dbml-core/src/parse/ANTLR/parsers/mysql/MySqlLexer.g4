@@ -1,3 +1,5 @@
+/* WARNING - MUST READ: Before updating the grammar, check for all the MUST READ below*/
+
 /*
 Original: https://github.com/antlr/grammars-v4/blob/master/sql/mysql/Positive-Technologies/MySqlLexer.g4
 Last updated: 2023-12-05
@@ -35,6 +37,8 @@ THE SOFTWARE.
 lexer grammar MySqlLexer;
 
 options {
+    // MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
+    superClass = MySqlLexerBase;
     caseInsensitive = true;
 }
 
@@ -42,6 +46,45 @@ channels {
     MYSQLCOMMENT,
     ERRORCHANNEL
 }
+
+TRANSITION_TO_HIGH_PRIORITY: {true}? -> mode(HIGH_PRIORITY_MODE), skip;
+
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
+// Why do we need to do this
+// Consider:
+// ```
+// DELIMITER '
+// CREATE TABLE Users (
+//   id INT
+// )' -- first quote
+// CREATE TABLE Posts (
+//   id INT
+// )' -- second quote
+// ```
+// The Lexer grammar itself wouldn't work because
+// ANTLR prioritizes the longest match first, which would be a string literal.
+// So the first quote wouldn't be treated as a STATEMENT_TERMINATOR,
+// but rather the WHOLE string from the first quote to the second quote is treated as a STRING LITERAL
+// Therefore, we split into two modes: high-priority and low-priority
+mode HIGH_PRIORITY_MODE;
+// SEMI should be preferred over STATEMENT_TERMINATOR, as:
+// - Procedural SQL still uses SEMI regardless of the current STATEMENT_TERMINATOR
+// - If SEMI is below STATEMENT_TERMINATOR, then by default, ';' will never be lexed as a SEMI token
+// Note that this requires the parser to account for both STATEMENT_TERMINATOR
+SEMI               : ';';
+
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
+STATEMENT_TERMINATOR: ~[ \t\r\n]+ {this.isCurrentDelimiter(this.text)}?;
+
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
+TRANSITION_TO_LOW_PRIORITY: {true}? -> mode(LOW_PRIORITY_MODE), skip;
+
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
+mode LOW_PRIORITY_MODE;
+
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
+// DELIMITER - should override other symbols
+DELIMITER_KEYWORD : 'DELIMITER' [ \t\r\n]+ -> mode(DELIMITER_MODE), skip;
 
 // SKIP
 
@@ -1244,7 +1287,6 @@ DOT                : '.';
 LR_BRACKET         : '(';
 RR_BRACKET         : ')';
 COMMA              : ',';
-SEMI               : ';';
 AT_SIGN            : '@';
 ZERO_DECIMAL       : '0';
 ONE_DECIMAL        : '1';
@@ -1355,3 +1397,19 @@ fragment IP_ADDRESS        : [0-9]+ '.' [0-9.]+ | [0-9A-F]* ':' [0-9A-F]* ':' [0
 // Last tokens must generate Errors
 
 ERROR_RECONGNIGION: . -> channel(ERRORCHANNEL);
+
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
+// DELIMITER mode
+mode DELIMITER_MODE;
+
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
+NEW_DELIMITER
+    : ~[ \t\r\n]+ 
+    {
+        this.setDelimiter(this.text);
+    }
+    -> mode(HIGH_PRIORITY_MODE), skip
+    ;
+
+// MUST READ: This is used to detect dynamic DELIMITERs, the original grammar does not have this
+DELIMITER_WS: [ \t\r\n]+ -> skip;
