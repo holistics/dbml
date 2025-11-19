@@ -7,7 +7,7 @@ import {
   tableGroupArbitrary,
   projectArbitrary,
   standaloneNoteArbitrary,
-  smallSchemaArbitrary,
+  dbmlSchemaArbitrary,
 } from './arbitraries/grammars';
 import { parse } from './utils';
 
@@ -76,7 +76,7 @@ describe('[fuzzer] parsing', () => {
   it('should parse schemas without errors', () => {
     // Property: Valid schemas should parse without errors
     fc.assert(
-      fc.property(smallSchemaArbitrary, (source: string) => {
+      fc.property(dbmlSchemaArbitrary, (source: string) => {
         const parseResult = parse(source);
         expect(parseResult.getErrors()).toHaveLength(0);
       }),
