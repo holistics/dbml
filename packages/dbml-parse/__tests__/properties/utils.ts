@@ -35,12 +35,21 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
 }
 
 export function flattenTokens (token: SyntaxToken): SyntaxToken[] {
+  function flattenInvalidTokens (token: SyntaxToken): SyntaxToken[] {
+    return [
+      ...token.leadingInvalid.flatMap(flattenInvalidTokens),
+      ...token.leadingTrivia,
+      token,
+      ...token.trailingTrivia,
+      ...token.trailingInvalid.flatMap(flattenInvalidTokens),
+    ];
+  }
   return [
-    ...token.leadingInvalid.flatMap((t) => [...t.leadingInvalid, ...t.leadingTrivia, t, ...t.trailingTrivia, ...t.trailingInvalid]),
+    ...token.leadingInvalid.flatMap(flattenInvalidTokens),
     ...token.leadingTrivia,
     token,
     ...token.trailingTrivia,
-    ...token.trailingInvalid.flatMap((t) => [...t.leadingInvalid, ...t.leadingTrivia, t, ...t.trailingTrivia, ...t.trailingInvalid]),
+    ...token.trailingInvalid.flatMap(flattenInvalidTokens),
   ];
 }
 
