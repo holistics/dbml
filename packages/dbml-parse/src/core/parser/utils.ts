@@ -8,6 +8,7 @@ import {
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
+  DummyNode,
   ElementDeclarationNode,
   ExpressionNode,
   FunctionApplicationNode,
@@ -173,6 +174,16 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.literal);
   } else if (node instanceof GroupExpressionNode) {
     throw new Error('This case is handled by the TupleExpressionNode case');
+  } else if (node instanceof ArrayNode) {
+    markInvalid(node.array);
+    markInvalid(node.indexer);
+  } else if (node instanceof ProgramNode) {
+    node.body.forEach(markInvalid);
+    markInvalid(node.eof);
+  } else if (node instanceof PartialInjectionNode) {
+    markInvalid(node.partial);
+  } else if (node instanceof DummyNode) {
+    // DummyNode has no children to mark invalid
   } else {
     throw new Error('Unreachable case in markInvalidNode');
   }
