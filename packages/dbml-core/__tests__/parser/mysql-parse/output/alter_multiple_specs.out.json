@@ -1,0 +1,345 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "multi_alter_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [
+        {
+          "expression": "score >= 0",
+          "name": "chk_score"
+        },
+        {
+          "expression": "rating BETWEEN 0 AND 5",
+          "name": "chk_rating"
+        },
+        {
+          "expression": "min_val >= 0",
+          "name": "chk_min"
+        },
+        {
+          "expression": "max_val <= 100",
+          "name": "chk_max"
+        },
+        {
+          "expression": "min_val < max_val",
+          "name": "chk_range"
+        },
+        {
+          "expression": "col3 > 0",
+          "name": "chk_col3"
+        }
+      ]
+    },
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "cities",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "countries",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "pk_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "pk": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "id"
+            },
+            {
+              "type": "column",
+              "value": "code"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "auto_inc_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "partition_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "created_year",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "pk": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "id"
+            },
+            {
+              "type": "column",
+              "value": "created_year"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    }
+  ],
+  "refs": [
+    {
+      "endpoints": [
+        {
+          "tableName": "multi_alter_test",
+          "fieldNames": [
+            "dept_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "departments",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "multi_alter_test",
+          "fieldNames": [
+            "city_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "cities",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "multi_alter_test",
+          "fieldNames": [
+            "country_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "countries",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    },
+    {
+      "endpoints": [
+        {
+          "tableName": "multi_alter_test",
+          "fieldNames": [
+            "manager_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "multi_alter_test",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}
