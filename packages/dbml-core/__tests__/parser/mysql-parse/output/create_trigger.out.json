@@ -1,0 +1,170 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "audit_log",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "table_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "action",
+          "type": {
+            "type_name": "VARCHAR(10)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "changed_at",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_TIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "users",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "updated_at",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "products",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "stock",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "last_updated",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

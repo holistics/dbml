@@ -1,0 +1,1660 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "gen_simple",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "first_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "last_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "full_name",
+          "type": {
+            "type_name": "VARCHAR(101)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_virtual",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "total",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_stored",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "tax_rate",
+          "type": {
+            "type_name": "DECIMAL(5,2)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "0.10",
+            "type": "number"
+          },
+          "checks": []
+        },
+        {
+          "name": "tax_amount",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_always",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "radius",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "area",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_multiple",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "width",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "height",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "depth",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "area",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "volume",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "perimeter",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_strings",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "domain",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "username",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "email_upper",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_dates",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "birth_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "age",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "birth_year",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "birth_month",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_json",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "JSON",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "age",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "city",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_case",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "score",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "grade",
+          "type": {
+            "type_name": "CHAR(1)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_if",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "age",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "is_adult",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_null_safe",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "discount",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "final_price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_math",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "x",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "y",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "distance",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "abs_x",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "rounded",
+          "type": {
+            "type_name": "DECIMAL(10,0)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_concat_ws",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "first_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "middle_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "last_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "full_name",
+          "type": {
+            "type_name": "VARCHAR(152)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_indexed",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "total",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_total",
+          "columns": [
+            {
+              "type": "column",
+              "value": "total"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "gen_length",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "char_count",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "word_count",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_date_calc",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "start_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "duration_days",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "end_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "is_expired",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_timestamps",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "CURRENT_TIMESTAMP",
+            "type": "expression"
+          },
+          "checks": []
+        },
+        {
+          "name": "created_year",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "created_month",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "created_day",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_padding",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "padded_code",
+          "type": {
+            "type_name": "VARCHAR(10)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "formatted_code",
+          "type": {
+            "type_name": "VARCHAR(15)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_chained",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "base_price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "markup",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "final_price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_substring",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "full_code",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "prefix",
+          "type": {
+            "type_name": "VARCHAR(5)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "suffix",
+          "type": {
+            "type_name": "VARCHAR(5)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_replace",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "phone_clean",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_trim",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "raw_text",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "trimmed_text",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "trimmed_lower",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_mod",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "is_even",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "is_divisible_by_5",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_coalesce",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "primary_email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "secondary_email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "contact_email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_greatest_least",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "score1",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "score2",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "score3",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "best_score",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "worst_score",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_hex",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "hex_value",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_date_compare",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "expiry_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "days_until_expiry",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "is_expired",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "expires_soon",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_backticks",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "price-with-tax",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_floor_ceil",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "floored",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "ceiled",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_complex",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "a",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "b",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "c",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "result",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_in",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "is_active",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_between",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "age",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "is_adult",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "is_senior",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_like",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "is_gmail",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_regexp",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "is_valid_code",
+          "type": {
+            "type_name": "BOOLEAN",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_alter_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_not_null",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "first_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "last_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "full_name",
+          "type": {
+            "type_name": "VARCHAR(101)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_unique",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "normalized_email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "unique": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_comment",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "radius",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "area",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "note": {
+            "value": "Calculated circle area"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_utc",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "local_time",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "utc_time",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "gen_bin_oct",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "binary_repr",
+          "type": {
+            "type_name": "VARCHAR(64)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "octal_repr",
+          "type": {
+            "type_name": "VARCHAR(64)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

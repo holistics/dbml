@@ -1,5 +1,4 @@
 import antlr4 from 'antlr4';
-import MySqlLexer from './MySqlLexer';
 
 export default class MySqlLexerBase extends antlr4.Lexer {
   constructor (input) {
@@ -17,13 +16,7 @@ export default class MySqlLexerBase extends antlr4.Lexer {
 
   nextToken () {
     // See the comment above HIGH_PRIORITY_MODE in the Lexer grammar G4 file
-    const token = super.nextToken();
-    const newMode = this._mode;
-    if (newMode === MySqlLexer.LOW_PRIORITY_MODE) {
-      // If we're just extracting a low-priority token
-      // Then return back to high priority mode
-      this.mode(MySqlLexer.HIGH_PRIORITY_MODE);
-    }
-    return token;
+    this.mode(MySqlLexerBase.DEFAULT_MODE); // always start in DEFAULT_MODE, which will automatically switch to high priority mode
+    return super.nextToken();
   }
 }

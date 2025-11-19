@@ -1,0 +1,476 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "old_table",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "table1",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "table2",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "table3",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "table_a",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "table_b",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "temp_table",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "source_with_indexes",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_name",
+          "columns": [
+            {
+              "type": "column",
+              "value": "name"
+            }
+          ]
+        },
+        {
+          "name": "uk_email",
+          "unique": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "email"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "truncate_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "truncate_test2",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "truncate_vs_delete",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "parent_trunc",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "child_trunc",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "parent_id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "partitioned_truncate",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "created_year",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "pk": true,
+          "columns": [
+            {
+              "type": "column",
+              "value": "id"
+            },
+            {
+              "type": "column",
+              "value": "created_year"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "temp_truncate",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "table_with_trigger_trunc",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "t1",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "t2",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "t3",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [
+    {
+      "endpoints": [
+        {
+          "tableName": "child_trunc",
+          "fieldNames": [
+            "parent_id"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "parent_trunc",
+          "fieldNames": [
+            "id"
+          ],
+          "relation": "1"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": [
+    {
+      "tableName": "truncate_vs_delete",
+      "columns": [
+        "data"
+      ],
+      "values": [
+        [
+          {
+            "value": "test1",
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": "test2",
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": "test3",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "temp_truncate",
+      "columns": [],
+      "values": [
+        [
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "test",
+            "type": "string"
+          }
+        ]
+      ]
+    }
+  ]
+}

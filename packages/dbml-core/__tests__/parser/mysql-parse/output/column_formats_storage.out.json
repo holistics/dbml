@@ -1,0 +1,1416 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "col_format_fixed",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "fixed_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_format_dynamic",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "dynamic_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_format_default",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "default_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_format_mixed",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "fixed_col",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "dynamic_col",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "default_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_storage_disk",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "disk_col",
+          "type": {
+            "type_name": "BLOB",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_storage_memory",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "memory_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_storage_default",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "default_col",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_storage_mixed",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "disk_col",
+          "type": {
+            "type_name": "BLOB",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "memory_col",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "default_col",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_format_storage",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col3",
+          "type": {
+            "type_name": "BLOB",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_format_attrs",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "test",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "col3",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "note": {
+            "value": "Fixed column"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_storage_attrs",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "BLOB",
+            "schemaName": null
+          },
+          "not_null": true,
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "note": {
+            "value": "Memory storage"
+          },
+          "checks": []
+        },
+        {
+          "name": "col3",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "default",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_format_types",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "char_col",
+          "type": {
+            "type_name": "CHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "varchar_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "text_col",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "blob_col",
+          "type": {
+            "type_name": "BLOB",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "col_storage_types",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "int_col",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "varchar_col",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "text_col",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "blob_col",
+          "type": {
+            "type_name": "BLOB",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "json_col",
+          "type": {
+            "type_name": "JSON",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "alter_format_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "alter_storage_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "alter_both_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_backticks",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col-name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "storage_backticks",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "blob-col",
+          "type": {
+            "type_name": "BLOB",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_reserved",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "select",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "where",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "storage_reserved",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "table",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "index",
+          "type": {
+            "type_name": "BLOB",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_null",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "nullable_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "not_null_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "storage_null",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "nullable_col",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "not_null": false,
+          "checks": []
+        },
+        {
+          "name": "not_null_col",
+          "type": {
+            "type_name": "BLOB",
+            "schemaName": null
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_default_val",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "test",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "fixed",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "storage_default_val",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "test",
+            "type": "string"
+          },
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "memory",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_auto_inc",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_unique",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "unique_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "unique": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "storage_unique",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "unique_col",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "unique": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_pk",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_indexed",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "indexed_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_col",
+          "columns": [
+            {
+              "type": "column",
+              "value": "indexed_col"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "storage_indexed",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "indexed_col",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_col",
+          "columns": [
+            {
+              "type": "column",
+              "value": "indexed_col"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "format_comment",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "note": {
+            "value": "Dynamic format column"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "storage_comment",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "BLOB",
+            "schemaName": null
+          },
+          "note": {
+            "value": "Disk storage column"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "both_comment",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "note": {
+            "value": "Full options"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "all_attributes",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "increment": true,
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "full_col",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "test",
+            "type": "string"
+          },
+          "unique": true,
+          "note": {
+            "value": "Column with all attributes"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_generated",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "base_val",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "computed",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "storage_generated",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "tax",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_enum_set",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "format_enum_set_status_enum",
+            "args": [
+              "'a'",
+              "'b'",
+              "'c'"
+            ]
+          },
+          "checks": []
+        },
+        {
+          "name": "flags",
+          "type": {
+            "type_name": "SET('read','write')",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_charset",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "storage_charset",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "format_collate",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "storage_collate",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "attr_order_test1",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "test",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "attr_order_test2",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "test",
+            "type": "string"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "storage_order_test1",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "storage_order_test2",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "not_null": true,
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [
+    {
+      "name": "format_enum_set_status_enum",
+      "values": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        },
+        {
+          "name": "c"
+        }
+      ]
+    }
+  ],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}
