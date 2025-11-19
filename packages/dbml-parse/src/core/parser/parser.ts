@@ -203,7 +203,6 @@ export default class Parser {
     if (invalidToken.kind !== SyntaxTokenKind.EOF) {
       markInvalid(this.advance());
     } else {
-      markInvalid(this.peek());
       this.logError(invalidToken, CompileErrorCode.UNEXPECTED_EOF, 'Unexpected EOF');
     }
   };
