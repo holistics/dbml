@@ -36,11 +36,11 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
 
 export function flattenTokens (token: SyntaxToken): SyntaxToken[] {
   return [
-    ...token.leadingInvalid.flatMap((t) => t.leadingTrivia.concat(t.trailingTrivia)),
+    ...token.leadingInvalid.flatMap((t) => [...t.leadingInvalid, ...t.leadingTrivia, t, ...t.trailingTrivia, ...t.trailingInvalid]),
     ...token.leadingTrivia,
     token,
     ...token.trailingTrivia,
-    ...token.trailingInvalid.flatMap((t) => t.leadingTrivia.concat(t.trailingTrivia)),
+    ...token.trailingInvalid.flatMap((t) => [...t.leadingInvalid, ...t.leadingTrivia, t, ...t.trailingTrivia, ...t.trailingInvalid]),
   ];
 }
 
