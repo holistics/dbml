@@ -194,6 +194,7 @@ export function processDefaultValue (valueNode?: SyntaxNode):
 }
 
 export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, CompileError> {
+  let typeSuffix: string = '';
   let typeArgs: string | null = null;
   if (typeNode instanceof CallExpressionNode) {
     typeArgs = typeNode
@@ -208,16 +209,34 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
       return extractVariableFromExpression(e).unwrap();
     })
       .join(',');
+    typeSuffix = `(${typeArgs})`;
     typeNode = typeNode.callee!;
   }
-  let typeIndexer: string = '';
-  while (typeNode instanceof ArrayNode) {
-    typeIndexer = `[${
-      typeNode
-        .indexer!.elementList.map((e) => (e.name as any).expression.literal.value)
-        .join(',')
-    }]${typeIndexer}`;
-    typeNode = typeNode.array!;
+  while (typeNode instanceof CallExpressionNode || typeNode instanceof ArrayNode) {
+    if (typeNode instanceof CallExpressionNode) {
+      const args = typeNode
+        .argumentList!.elementList.map((e) => {
+        if (isExpressionANumber(e)) {
+          return getNumberTextFromExpression(e);
+        }
+        if (isExpressionAQuotedString(e)) {
+          return extractQuotedStringToken(e).unwrap();
+        }
+        // e can only be an identifier here
+        return extractVariableFromExpression(e).unwrap();
+      })
+        .join(',');
+      typeSuffix = `(${args})${typeSuffix}`;
+      typeNode = typeNode.callee!;
+    } else if (typeNode instanceof ArrayNode) {
+      const indexer = `[${
+        typeNode
+          .indexer!.elementList.map((e) => (e.name as any).expression.literal.value)
+          .join(',')
+      }]`;
+      typeSuffix = `${indexer}${typeSuffix}`;
+      typeNode = typeNode.array!;
+    }
   }
 
   const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
@@ -225,7 +244,7 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
     return new Report(
       {
         schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
-        type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
+        type_name: `${typeName}${typeSuffix}`,
         args: typeArgs,
       },
       [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)],
@@ -234,7 +253,7 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
 
   return new Report({
     schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
-    type_name: `${typeName}${typeIndexer}${typeArgs ? `(${typeArgs})` : ''}`,
+    type_name: `${typeName}${typeSuffix}`,
     args: typeArgs,
   });
 }
