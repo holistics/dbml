@@ -1,3 +1,28 @@
+## v5.2.0 (2025-11-19)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#774](https://github.com/holistics/dbml/pull/774) db2dbml not marking primary key composite indexes with pk ([@H-DNA](https://github.com/H-DNA))
+  * [#774](https://github.com/holistics/dbml/pull/774) @dbml/connector's fetchSchemaJson now respects the Field type definition defined in @dbml/connector and @dbml/core's generateDatabase now expects `pk` key instead of `primary` in Field object ([@H-DNA](https://github.com/H-DNA))
+* `dbml-core`
+  * [#654](https://github.com/holistics/dbml/pull/654) fix(dbml/core): avoid dangling 'default: ' in DbmlExporter when field.dbdefault.type is invalid ([@Mrxyy](https://github.com/Mrxyy))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#778](https://github.com/holistics/dbml/pull/778) Support dynamic delimiter in mysql parser ([@H-DNA](https://github.com/H-DNA))
+* `dbml-cli`, `dbml-core`
+  * [#775](https://github.com/holistics/dbml/pull/775) Support OracleSQL importer ([@H-DNA](https://github.com/H-DNA))
+* `dbml-parse`
+  * [#777](https://github.com/holistics/dbml/pull/777) Feat/support enum as default value ([@H-DNA](https://github.com/H-DNA))
+
+#### :house_with_garden: Internal
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#776](https://github.com/holistics/dbml/pull/776) Setup lint ([@H-DNA](https://github.com/H-DNA))
+
+#### Committers: 2
+- Huy DNA ([@H-DNA](https://github.com/H-DNA))
+- Mrxyy ([@Mrxyy](https://github.com/Mrxyy))
+
 ## v5.1.0 (2025-10-28)
 
 #### :rocket: New Feature
