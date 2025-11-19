@@ -34,7 +34,7 @@ const multiLineCommentRegex = /\/\*([^*]|\*[^/])*(\*)?\*\//;
 const colorRegex = /#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})/;
 const opRegex = /(!=|>=|<=|==|=|>|<|-|\+|\*|\/|%|~)/;
 
-export const tokenStreamArbitrary = fc.stringMatching(chainRegex(/[ ]/, orRegex(
+export const tokenStreamArbitrary = fc.stringMatching(matchFullRegex(zeroOrManyRegex(chainRegex(/[ ]/, orRegex(
   numberRegex,
   singleLineStringRegex,
   multiLineStringRegex,
@@ -47,4 +47,4 @@ export const tokenStreamArbitrary = fc.stringMatching(chainRegex(/[ ]/, orRegex(
   multiLineCommentRegex,
   colorRegex,
   opRegex,
-)));
+)))));
