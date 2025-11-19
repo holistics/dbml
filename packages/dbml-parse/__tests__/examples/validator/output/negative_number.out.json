@@ -6230,6 +6230,70 @@
               "fullEnd": 291,
               "start": 287,
               "end": 290,
+              "op": {
+                "kind": "<tilde>",
+                "startPos": {
+                  "offset": 287,
+                  "line": 14,
+                  "column": 2
+                },
+                "endPos": {
+                  "offset": 288,
+                  "line": 14,
+                  "column": 3
+                },
+                "value": "~",
+                "leadingTrivia": [
+                  {
+                    "kind": "<space>",
+                    "startPos": {
+                      "offset": 285,
+                      "line": 14,
+                      "column": 0
+                    },
+                    "endPos": {
+                      "offset": 286,
+                      "line": 14,
+                      "column": 1
+                    },
+                    "value": " ",
+                    "leadingTrivia": [],
+                    "trailingTrivia": [],
+                    "leadingInvalid": [],
+                    "trailingInvalid": [],
+                    "isInvalid": false,
+                    "start": 285,
+                    "end": 286
+                  },
+                  {
+                    "kind": "<space>",
+                    "startPos": {
+                      "offset": 286,
+                      "line": 14,
+                      "column": 1
+                    },
+                    "endPos": {
+                      "offset": 287,
+                      "line": 14,
+                      "column": 2
+                    },
+                    "value": " ",
+                    "leadingTrivia": [],
+                    "trailingTrivia": [],
+                    "leadingInvalid": [],
+                    "trailingInvalid": [],
+                    "isInvalid": false,
+                    "start": 286,
+                    "end": 287
+                  }
+                ],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 287,
+                "end": 288
+              },
               "partial": {
                 "id": 137,
                 "kind": "<variable>",

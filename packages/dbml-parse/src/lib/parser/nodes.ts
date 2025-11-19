@@ -345,10 +345,12 @@ export class BlockExpressionNode extends SyntaxNode {
 }
 
 export class PartialInjectionNode extends SyntaxNode {
+  op?: SyntaxToken;
   partial?: VariableNode;
 
   constructor ({ op, partial }: { op?: SyntaxToken; partial?: VariableNode }, id: SyntaxNodeId) {
     super(id, SyntaxNodeKind.PARTIAL_INJECTION, [op, partial]); // Need `op` for suggestion service
+    this.op = op;
     this.partial = partial;
   }
 }
