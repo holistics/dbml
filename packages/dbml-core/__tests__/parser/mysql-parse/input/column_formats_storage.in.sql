@@ -1,0 +1,332 @@
+-- Test COLUMN_FORMAT and STORAGE options
+
+-- COLUMN_FORMAT FIXED
+CREATE TABLE col_format_fixed (
+  id INT PRIMARY KEY,
+  fixed_col VARCHAR(100) COLUMN_FORMAT FIXED
+) ENGINE=MyISAM;
+
+-- COLUMN_FORMAT DYNAMIC
+CREATE TABLE col_format_dynamic (
+  id INT PRIMARY KEY,
+  dynamic_col VARCHAR(100) COLUMN_FORMAT DYNAMIC
+) ENGINE=MyISAM;
+
+-- COLUMN_FORMAT DEFAULT
+CREATE TABLE col_format_default (
+  id INT PRIMARY KEY,
+  default_col VARCHAR(100) COLUMN_FORMAT DEFAULT
+);
+
+-- Multiple columns with different formats
+CREATE TABLE col_format_mixed (
+  id INT PRIMARY KEY,
+  fixed_col VARCHAR(50) COLUMN_FORMAT FIXED,
+  dynamic_col TEXT COLUMN_FORMAT DYNAMIC,
+  default_col VARCHAR(100) COLUMN_FORMAT DEFAULT
+) ENGINE=MyISAM;
+
+-- STORAGE DISK
+CREATE TABLE col_storage_disk (
+  id INT PRIMARY KEY,
+  disk_col BLOB STORAGE DISK
+) ENGINE=InnoDB;
+
+-- STORAGE MEMORY
+CREATE TABLE col_storage_memory (
+  id INT PRIMARY KEY,
+  memory_col VARCHAR(100) STORAGE MEMORY
+) ENGINE=InnoDB;
+
+-- STORAGE DEFAULT
+CREATE TABLE col_storage_default (
+  id INT PRIMARY KEY,
+  default_col TEXT STORAGE DEFAULT
+);
+
+-- Multiple columns with different storage
+CREATE TABLE col_storage_mixed (
+  id INT PRIMARY KEY,
+  disk_col BLOB STORAGE DISK,
+  memory_col VARCHAR(200) STORAGE MEMORY,
+  default_col TEXT STORAGE DEFAULT
+) ENGINE=InnoDB;
+
+-- Combination of COLUMN_FORMAT and STORAGE
+CREATE TABLE col_format_storage (
+  id INT PRIMARY KEY,
+  col1 VARCHAR(100) COLUMN_FORMAT DYNAMIC STORAGE MEMORY,
+  col2 TEXT COLUMN_FORMAT DEFAULT STORAGE DISK,
+  col3 BLOB STORAGE DISK
+) ENGINE=InnoDB;
+
+-- COLUMN_FORMAT with other attributes
+CREATE TABLE col_format_attrs (
+  id INT PRIMARY KEY,
+  col1 VARCHAR(100) NOT NULL COLUMN_FORMAT DYNAMIC,
+  col2 TEXT DEFAULT 'test' COLUMN_FORMAT DEFAULT,
+  col3 VARCHAR(50) COLUMN_FORMAT FIXED COMMENT 'Fixed column'
+) ENGINE=MyISAM;
+
+-- STORAGE with other attributes
+CREATE TABLE col_storage_attrs (
+  id INT PRIMARY KEY,
+  col1 BLOB NOT NULL STORAGE DISK,
+  col2 TEXT STORAGE MEMORY COMMENT 'Memory storage',
+  col3 VARCHAR(200) DEFAULT 'default' STORAGE DEFAULT
+);
+
+-- Edge case: COLUMN_FORMAT on various data types
+CREATE TABLE col_format_types (
+  id INT PRIMARY KEY,
+  char_col CHAR(50) COLUMN_FORMAT FIXED,
+  varchar_col VARCHAR(100) COLUMN_FORMAT DYNAMIC,
+  text_col TEXT COLUMN_FORMAT DYNAMIC,
+  blob_col BLOB COLUMN_FORMAT DYNAMIC
+) ENGINE=MyISAM;
+
+-- Edge case: STORAGE on various data types
+CREATE TABLE col_storage_types (
+  id INT PRIMARY KEY,
+  int_col INT STORAGE DEFAULT,
+  varchar_col VARCHAR(200) STORAGE MEMORY,
+  text_col TEXT STORAGE DISK,
+  blob_col BLOB STORAGE DISK,
+  json_col JSON STORAGE DISK
+) ENGINE=InnoDB;
+
+-- ALTER TABLE to add COLUMN_FORMAT
+CREATE TABLE alter_format_test (
+  id INT PRIMARY KEY,
+  data VARCHAR(100)
+) ENGINE=MyISAM;
+
+ALTER TABLE alter_format_test
+  MODIFY COLUMN data VARCHAR(100) COLUMN_FORMAT DYNAMIC;
+
+-- ALTER TABLE to add STORAGE
+CREATE TABLE alter_storage_test (
+  id INT PRIMARY KEY,
+  data TEXT
+) ENGINE=InnoDB;
+
+ALTER TABLE alter_storage_test
+  MODIFY COLUMN data TEXT STORAGE DISK;
+
+-- ALTER TABLE to change COLUMN_FORMAT
+ALTER TABLE alter_format_test
+  MODIFY COLUMN data VARCHAR(100) COLUMN_FORMAT FIXED;
+
+-- ALTER TABLE to change STORAGE
+ALTER TABLE alter_storage_test
+  MODIFY COLUMN data TEXT STORAGE MEMORY;
+
+-- ALTER TABLE with both COLUMN_FORMAT and STORAGE
+CREATE TABLE alter_both_test (
+  id INT PRIMARY KEY,
+  col1 VARCHAR(100),
+  col2 TEXT
+);
+
+ALTER TABLE alter_both_test
+  MODIFY COLUMN col1 VARCHAR(100) COLUMN_FORMAT DYNAMIC STORAGE MEMORY,
+  MODIFY COLUMN col2 TEXT COLUMN_FORMAT DEFAULT STORAGE DISK;
+
+-- Edge case: COLUMN_FORMAT with backticked column names
+CREATE TABLE format_backticks (
+  id INT PRIMARY KEY,
+  `col-name` VARCHAR(100) COLUMN_FORMAT DYNAMIC
+) ENGINE=MyISAM;
+
+-- Edge case: STORAGE with backticked column names
+CREATE TABLE storage_backticks (
+  id INT PRIMARY KEY,
+  `blob-col` BLOB STORAGE DISK
+) ENGINE=InnoDB;
+
+-- Edge case: Reserved words with COLUMN_FORMAT
+CREATE TABLE format_reserved (
+  id INT PRIMARY KEY,
+  `select` VARCHAR(100) COLUMN_FORMAT DYNAMIC,
+  `where` TEXT COLUMN_FORMAT DEFAULT
+) ENGINE=MyISAM;
+
+-- Edge case: Reserved words with STORAGE
+CREATE TABLE storage_reserved (
+  id INT PRIMARY KEY,
+  `table` TEXT STORAGE DISK,
+  `index` BLOB STORAGE MEMORY
+) ENGINE=InnoDB;
+
+-- COLUMN_FORMAT with NULL/NOT NULL
+CREATE TABLE format_null (
+  id INT PRIMARY KEY,
+  nullable_col VARCHAR(100) NULL COLUMN_FORMAT DYNAMIC,
+  not_null_col VARCHAR(100) NOT NULL COLUMN_FORMAT FIXED
+) ENGINE=MyISAM;
+
+-- STORAGE with NULL/NOT NULL
+CREATE TABLE storage_null (
+  id INT PRIMARY KEY,
+  nullable_col TEXT NULL STORAGE DISK,
+  not_null_col BLOB NOT NULL STORAGE DISK
+) ENGINE=InnoDB;
+
+-- COLUMN_FORMAT with DEFAULT
+CREATE TABLE format_default_val (
+  id INT PRIMARY KEY,
+  col1 VARCHAR(100) DEFAULT 'test' COLUMN_FORMAT DYNAMIC,
+  col2 VARCHAR(50) COLUMN_FORMAT FIXED DEFAULT 'fixed'
+) ENGINE=MyISAM;
+
+-- STORAGE with DEFAULT
+CREATE TABLE storage_default_val (
+  id INT PRIMARY KEY,
+  col1 TEXT DEFAULT 'test' STORAGE DISK,
+  col2 VARCHAR(200) STORAGE MEMORY DEFAULT 'memory'
+);
+
+-- COLUMN_FORMAT with AUTO_INCREMENT (unusual but test parser)
+CREATE TABLE format_auto_inc (
+  id INT AUTO_INCREMENT PRIMARY KEY COLUMN_FORMAT DEFAULT,
+  data VARCHAR(100)
+) ENGINE=MyISAM;
+
+-- COLUMN_FORMAT with UNIQUE
+CREATE TABLE format_unique (
+  id INT PRIMARY KEY,
+  unique_col VARCHAR(100) UNIQUE COLUMN_FORMAT DYNAMIC
+) ENGINE=MyISAM;
+
+-- STORAGE with UNIQUE
+CREATE TABLE storage_unique (
+  id INT PRIMARY KEY,
+  unique_col VARCHAR(200) UNIQUE STORAGE MEMORY
+);
+
+-- COLUMN_FORMAT with PRIMARY KEY
+CREATE TABLE format_pk (
+  id VARCHAR(50) PRIMARY KEY COLUMN_FORMAT FIXED,
+  data VARCHAR(100)
+) ENGINE=MyISAM;
+
+-- COLUMN_FORMAT with indexes
+CREATE TABLE format_indexed (
+  id INT PRIMARY KEY,
+  indexed_col VARCHAR(100) COLUMN_FORMAT DYNAMIC,
+  INDEX idx_col (indexed_col)
+) ENGINE=MyISAM;
+
+-- STORAGE with indexes
+CREATE TABLE storage_indexed (
+  id INT PRIMARY KEY,
+  indexed_col TEXT STORAGE DISK,
+  INDEX idx_col (indexed_col(100))
+) ENGINE=InnoDB;
+
+-- COLUMN_FORMAT with COMMENT
+CREATE TABLE format_comment (
+  id INT PRIMARY KEY,
+  col1 VARCHAR(100) COLUMN_FORMAT DYNAMIC COMMENT 'Dynamic format column'
+) ENGINE=MyISAM;
+
+-- STORAGE with COMMENT
+CREATE TABLE storage_comment (
+  id INT PRIMARY KEY,
+  col1 BLOB STORAGE DISK COMMENT 'Disk storage column'
+) ENGINE=InnoDB;
+
+-- Both COLUMN_FORMAT and STORAGE with COMMENT
+CREATE TABLE both_comment (
+  id INT PRIMARY KEY,
+  col1 VARCHAR(100) COLUMN_FORMAT DYNAMIC STORAGE MEMORY COMMENT 'Full options'
+);
+
+-- Edge case: All column attributes together
+CREATE TABLE all_attributes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  full_col VARCHAR(100)
+    NOT NULL
+    DEFAULT 'test'
+    COLUMN_FORMAT DYNAMIC
+    STORAGE MEMORY
+    COMMENT 'Column with all attributes'
+    UNIQUE
+) ENGINE=MyISAM;
+
+-- COLUMN_FORMAT in generated column
+CREATE TABLE format_generated (
+  id INT PRIMARY KEY,
+  base_val INT,
+  computed VARCHAR(100) AS (CONCAT('val_', base_val)) STORED COLUMN_FORMAT DYNAMIC
+) ENGINE=MyISAM;
+
+-- STORAGE in generated column
+CREATE TABLE storage_generated (
+  id INT PRIMARY KEY,
+  price DECIMAL(10,2),
+  tax DECIMAL(10,2) AS (price * 0.1) STORED STORAGE DISK
+) ENGINE=InnoDB;
+
+-- Edge case: COLUMN_FORMAT on ENUM/SET
+CREATE TABLE format_enum_set (
+  id INT PRIMARY KEY,
+  status ENUM('a', 'b', 'c') COLUMN_FORMAT FIXED,
+  flags SET('read', 'write') COLUMN_FORMAT DYNAMIC
+) ENGINE=MyISAM;
+
+-- Edge case: Multiple ALTER operations with COLUMN_FORMAT
+ALTER TABLE alter_format_test
+  ADD COLUMN new_col VARCHAR(100) COLUMN_FORMAT DYNAMIC,
+  MODIFY COLUMN data VARCHAR(150) COLUMN_FORMAT FIXED;
+
+-- Edge case: Multiple ALTER operations with STORAGE
+ALTER TABLE alter_storage_test
+  ADD COLUMN new_col TEXT STORAGE DISK,
+  MODIFY COLUMN data TEXT STORAGE DEFAULT;
+
+-- COLUMN_FORMAT with CHARACTER SET
+CREATE TABLE format_charset (
+  id INT PRIMARY KEY,
+  col1 VARCHAR(100) CHARACTER SET utf8mb4 COLUMN_FORMAT DYNAMIC
+) ENGINE=MyISAM;
+
+-- STORAGE with CHARACTER SET
+CREATE TABLE storage_charset (
+  id INT PRIMARY KEY,
+  col1 TEXT CHARACTER SET utf8mb4 STORAGE DISK
+) ENGINE=InnoDB;
+
+-- COLUMN_FORMAT with COLLATE
+CREATE TABLE format_collate (
+  id INT PRIMARY KEY,
+  col1 VARCHAR(100) COLLATE utf8mb4_unicode_ci COLUMN_FORMAT DYNAMIC
+) ENGINE=MyISAM;
+
+-- STORAGE with COLLATE
+CREATE TABLE storage_collate (
+  id INT PRIMARY KEY,
+  col1 TEXT COLLATE utf8mb4_unicode_ci STORAGE DISK
+) ENGINE=InnoDB;
+
+-- Edge case: Order of attributes (COLUMN_FORMAT before vs after other attrs)
+CREATE TABLE attr_order_test1 (
+  id INT PRIMARY KEY,
+  col1 VARCHAR(100) COLUMN_FORMAT DYNAMIC NOT NULL DEFAULT 'test'
+) ENGINE=MyISAM;
+
+CREATE TABLE attr_order_test2 (
+  id INT PRIMARY KEY,
+  col1 VARCHAR(100) NOT NULL DEFAULT 'test' COLUMN_FORMAT DYNAMIC
+) ENGINE=MyISAM;
+
+-- Edge case: STORAGE attribute order
+CREATE TABLE storage_order_test1 (
+  id INT PRIMARY KEY,
+  col1 TEXT STORAGE DISK NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE storage_order_test2 (
+  id INT PRIMARY KEY,
+  col1 TEXT NOT NULL STORAGE DISK
+) ENGINE=InnoDB;

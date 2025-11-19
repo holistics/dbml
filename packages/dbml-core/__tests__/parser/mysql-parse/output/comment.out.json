@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "products",
@@ -7,21 +8,23 @@
           "name": "id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
-          "pk": true,
           "dbdefault": {
             "value": "123",
             "type": "number"
           },
+          "pk": true,
           "note": {
             "value": "just a comment"
-          }
+          },
+          "checks": []
         },
         {
           "name": "name",
           "type": {
-            "type_name": "varchar(255)"
+            "type_name": "varchar(255)",
+            "schemaName": null
           },
           "dbdefault": {
             "value": "Tea",
@@ -29,20 +32,27 @@
           },
           "note": {
             "value": "name length <= 255"
-          }
+          },
+          "checks": []
         },
         {
           "name": "merchant_id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
-          "not_null": true
+          "not_null": true,
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     }
   ],
   "refs": [],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
 }

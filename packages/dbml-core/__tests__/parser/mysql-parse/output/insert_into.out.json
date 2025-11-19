@@ -1,4 +1,11 @@
 {
+  "schemas": [],
+  "tables": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
   "records": [
     {
       "tableName": "users",
@@ -77,8 +84,8 @@
       ]
     },
     {
-      "schemaName": "blog",
       "tableName": "posts",
+      "schemaName": "blog",
       "columns": [
         "id",
         "title",
@@ -156,8 +163,8 @@
       ]
     },
     {
-      "schemaName": "store",
       "tableName": "products",
+      "schemaName": "store",
       "columns": [
         "id",
         "name",

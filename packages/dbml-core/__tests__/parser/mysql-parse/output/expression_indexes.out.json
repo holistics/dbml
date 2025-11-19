@@ -1,0 +1,1966 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "expr_lower",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_lower_email",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LOWER(email))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_upper",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_upper_name",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(UPPER(name))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_substring",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_prefix",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(SUBSTRING(code,1,5))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_concat",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "first_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "last_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_full_name",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(CONCAT(first_name,' ',last_name))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_arithmetic",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "tax_rate",
+          "type": {
+            "type_name": "DECIMAL(5,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_total",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(price*(1+tax_rate))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_round",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "DECIMAL(10,5)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_rounded",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(ROUND(value,2))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_floor",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "amount",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_floored",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(FLOOR(amount))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_ceil",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_ceiled",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(CEIL(price))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_abs",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "delta",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_absolute",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(ABS(delta))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_date",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_year",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(YEAR(created_at))"
+            }
+          ]
+        },
+        {
+          "name": "idx_month",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(MONTH(created_at))"
+            }
+          ]
+        },
+        {
+          "name": "idx_day",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(DAY(created_at))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_date_format",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "event_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_year_month",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(DATE_FORMAT(event_date,'%Y-%m'))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_json",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "JSON",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_json_name",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(CAST(data->>'$.name'ASCHAR(100)))"
+            }
+          ]
+        },
+        {
+          "name": "idx_json_age",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(CAST(data->>'$.age'ASUNSIGNED))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_json_extract",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "metadata",
+          "type": {
+            "type_name": "JSON",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_json_type",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(JSON_UNQUOTE(JSON_EXTRACT(metadata,'$.type')))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_cast",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_as_int",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(CAST(valueASSIGNED))"
+            }
+          ]
+        },
+        {
+          "name": "idx_as_decimal",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(CAST(valueASDECIMAL(10,2)))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_coalesce",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "primary_val",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "secondary_val",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_coalesce",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(COALESCE(primary_val,secondary_val,0))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_trim",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "text_data",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_trimmed",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(TRIM(text_data))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_ltrim_rtrim",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_ltrim",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LTRIM(data))"
+            }
+          ]
+        },
+        {
+          "name": "idx_rtrim",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(RTRIM(data))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_replace",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "phone",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_clean_phone",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(REPLACE(REPLACE(phone,'-',''),' ',''))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_if",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "age",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_is_adult",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(IF(age>=18,1,0))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_case",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "score",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_grade",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(CASEWHENscore>=90THEN'A'WHENscore>=80THEN'B'WHENscore>=70THEN'C'ELSE'F'END)"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_char_length",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_length",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(CHAR_LENGTH(description))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_left_right",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_left5",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LEFT(code,5))"
+            }
+          ]
+        },
+        {
+          "name": "idx_right5",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(RIGHT(code,5))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_mod",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_mod10",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(MOD(value,10))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_greatest_least",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "val1",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "val2",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "val3",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_max",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(GREATEST(val1,val2,val3))"
+            }
+          ]
+        },
+        {
+          "name": "idx_min",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LEAST(val1,val2,val3))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_nullif",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "numerator",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "denominator",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_safe_div",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(numerator/NULLIF(denominator,0))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_pad",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_padded",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LPAD(code,8,'0'))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_complex",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "a",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "b",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "c",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_formula",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(ROUND((a*b+c)/NULLIF(a+b,0),2))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_reverse",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_reversed",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(REVERSE(code))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_hex",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "value",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_hex",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(HEX(value))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_timestamp_diff",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "start_time",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "end_time",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_duration",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(TIMESTAMPDIFF(SECOND,start_time,end_time))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_datediff",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "start_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "end_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_days_diff",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(DATEDIFF(end_date,start_date))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_create_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_lower_email",
+          "unique": false,
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LOWER(email))"
+            }
+          ]
+        },
+        {
+          "name": "idx_upper_name",
+          "unique": false,
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(UPPER(name))"
+            }
+          ]
+        },
+        {
+          "name": "idx_rounded_price",
+          "unique": false,
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(ROUND(price))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_alter_test",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "expr_visible",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_lower_email",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LOWER(email))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_invisible",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_upper_name",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(UPPER(name))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_comment",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_lower",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LOWER(data))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_all_options",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "text_col",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_expr",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(TRIM(LOWER(text_col)))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_multiple",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "first_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "last_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "price",
+          "type": {
+            "type_name": "DECIMAL(10,2)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_lower_first",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LOWER(first_name))"
+            }
+          ]
+        },
+        {
+          "name": "idx_lower_last",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LOWER(last_name))"
+            }
+          ]
+        },
+        {
+          "name": "idx_lower_email",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LOWER(email))"
+            }
+          ]
+        },
+        {
+          "name": "idx_full_name",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(CONCAT(first_name,' ',last_name))"
+            }
+          ]
+        },
+        {
+          "name": "idx_rounded_price",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(ROUND(price,2))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_unique",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uk_lower_email",
+          "unique": true,
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LOWER(email))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_desc",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "TIMESTAMP",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_year_desc",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(YEAR(created_at))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_on_generated",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "base_val",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "computed_val",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_expr",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(computed_val+10)"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_nested",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "text_data",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_nested",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(UPPER(TRIM(SUBSTRING(text_data,1,50))))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_multi_col",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "first_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "last_name",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "checks": []
+        },
+        {
+          "name": "suffix",
+          "type": {
+            "type_name": "VARCHAR(10)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_complex",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(CONCAT(UPPER(first_name),' ',UPPER(last_name),' ',COALESCE(suffix,'')))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_soundex",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_soundex",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(SOUNDEX(name))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_md5",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_hash",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(MD5(data))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_sha",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "sensitive_data",
+          "type": {
+            "type_name": "VARCHAR(200)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_sha1",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(SHA1(sensitive_data))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_ip",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "ip_address",
+          "type": {
+            "type_name": "VARCHAR(15)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_ip_num",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(INET_ATON(ip_address))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr-backticks",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "col-name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx-expr",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LOWER(`col-name`))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_elt",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "status_code",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_status_text",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(ELT(status_code,'pending','active','inactive'))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    },
+    {
+      "name": "expr_field",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "VARCHAR(20)",
+            "schemaName": null
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_priority_order",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(FIELD(priority,'high','medium','low'))"
+            }
+          ]
+        }
+      ],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}
