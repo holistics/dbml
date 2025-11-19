@@ -252,28 +252,28 @@ export function isValidColumnType (type: SyntaxNode): boolean {
     return false;
   }
 
-  if (type instanceof CallExpressionNode) {
-    if (type.callee === undefined || type.argumentList === undefined) {
-      return false;
+  while (type instanceof CallExpressionNode || type instanceof ArrayNode) {
+    if (type instanceof CallExpressionNode) {
+      if (type.callee === undefined || type.argumentList === undefined) {
+        return false;
+      }
+
+      if (!type.argumentList.elementList.every((e) => isExpressionANumber(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
+        return false;
+      }
+
+      type = type.callee;
+    } else if (type instanceof ArrayNode) {
+      if (type.array === undefined || type.indexer === undefined) {
+        return false;
+      }
+
+      if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isExpressionANumber(attribute.name))) {
+        return false;
+      }
+
+      type = type.array;
     }
-
-    if (!type.argumentList.elementList.every((e) => isExpressionANumber(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
-      return false;
-    }
-
-    type = type.callee;
-  }
-
-  while (type instanceof ArrayNode) {
-    if (type.array === undefined || type.indexer === undefined) {
-      return false;
-    }
-
-    if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isExpressionANumber(attribute.name))) {
-      return false;
-    }
-
-    type = type.array;
   }
 
   const variables = destructureComplexVariable(type).unwrap_or(undefined);
