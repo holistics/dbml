@@ -292,8 +292,7 @@ export const namedRefArbitrary = fc.tuple(
   fc.option(refSettingsListArbitrary, { nil: undefined }),
 ).chain(([keyword, name, table1, col1, rel, table2, col2, settings]) => {
   const parts = [keyword, name, ':', `${table1}.${col1}`, rel, `${table2}.${col2}`];
-  if (settings) parts.push(settings);
-  return joinWithRandomSpaces(...parts);
+  return settings ? joinWithRandomInlineSpaces(joinWithRandomSpaces(...parts), ' ', settings) : joinWithRandomSpaces(...parts);
 });
 
 // Multi-column ref
@@ -307,8 +306,7 @@ export const multiColumnRefArbitrary = fc.nat({ max: 10 }).chain((nendpoints) =>
   fc.option(refSettingsListArbitrary, { nil: undefined }),
 ).chain(([keyword, table1, cols1, rel, table2, cols2, settings]) => {
   const parts = [keyword, ':', `${table1}.(${cols1.join(', ')})`, rel, `${table2}.(${cols2.join(', ')})`];
-  if (settings) parts.push(settings);
-  return joinWithRandomSpaces(...parts);
+  return settings ? joinWithRandomInlineSpaces(joinWithRandomSpaces(...parts), ' ', settings) : joinWithRandomSpaces(...parts);
 }));
 
 // Any standalone ref
