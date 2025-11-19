@@ -7,6 +7,7 @@ import {
   numberArbitrary,
   functionExpressionArbitrary,
   colorArbitrary,
+  identifierArbitrary,
 } from './tokens';
 import { caseVariant, settingKeyValue, joinWithRandomSpaces, joinWithRandomInlineSpaces, caseVariantOneOf } from './utils';
 
@@ -276,8 +277,7 @@ export const standaloneRefArbitrary = fc.tuple(
   fc.option(refSettingsListArbitrary, { nil: undefined }),
 ).chain(([keyword, table1, col1, rel, table2, col2, settings]) => {
   const parts = [keyword, ':', `${table1}.${col1}`, rel, `${table2}.${col2}`];
-  if (settings) parts.push(settings);
-  return joinWithRandomSpaces(...parts);
+  return settings ? joinWithRandomInlineSpaces(joinWithRandomSpaces(...parts), ' ', settings) : joinWithRandomSpaces(...parts);
 });
 
 // Named ref
@@ -297,19 +297,19 @@ export const namedRefArbitrary = fc.tuple(
 });
 
 // Multi-column ref
-export const multiColumnRefArbitrary = fc.tuple(
+export const multiColumnRefArbitrary = fc.nat({ max: 10 }).chain((nendpoints) => fc.tuple(
   caseVariant('Ref'),
   schemaQualifiedNameArbitrary,
-  fc.array(anyIdentifierArbitrary, { minLength: 2, maxLength: 3 }),
+  fc.array(anyIdentifierArbitrary, { minLength: nendpoints, maxLength: nendpoints }),
   relationshipTypeArbitrary,
   schemaQualifiedNameArbitrary,
-  fc.array(anyIdentifierArbitrary, { minLength: 2, maxLength: 3 }),
+  fc.array(anyIdentifierArbitrary, { minLength: nendpoints, maxLength: nendpoints }),
   fc.option(refSettingsListArbitrary, { nil: undefined }),
 ).chain(([keyword, table1, cols1, rel, table2, cols2, settings]) => {
   const parts = [keyword, ':', `${table1}.(${cols1.join(', ')})`, rel, `${table2}.(${cols2.join(', ')})`];
   if (settings) parts.push(settings);
   return joinWithRandomSpaces(...parts);
-});
+}));
 
 // Any standalone ref
 export const anyRefArbitrary = fc.oneof(
@@ -445,12 +445,12 @@ export const standaloneNoteArbitrary = fc.tuple(
 
 // Project setting
 export const projectSettingArbitrary = fc.tuple(
-  anyIdentifierArbitrary,
+  identifierArbitrary,
   fc.oneof(
     anyStringArbitrary,
     numberArbitrary,
-    fc.constant('true'),
-    fc.constant('false'),
+    caseVariant('true'),
+    caseVariant('false'),
   ),
 ).map(([key, value]) => `  ${key}: ${value}`);
 

@@ -3,12 +3,12 @@ import { orRegex, chainRegex, matchFullRegex, oneOrManyRegex, zeroOrManyRegex } 
 
 // Matches decimal numbers: integers (123), floats (1.23), or trailing dot decimals (5.)
 const numberRegex = /(\d+\.\d*|\d+)/;
-// Matches single-line strings with single quotes, allows escapes: 'hello' or 'can\'t'
-const singleLineStringRegex = /'(\\.|[^'\\\n\r])*'/;
+// Matches single-line strings with single quotes, allows escapes: 'hello' or 'can\'t', avoid unicode escape sequences for simplicity
+const singleLineStringRegex = /'(\\[a-tv-zA-TV-Z0-9]|[^'\\\n\r])*'/;
 // Matches multi-line strings with triple quotes: '''hello\nworld'''
-const multiLineStringRegex = /'''(\\.|[^'\\])*'''/;
+const multiLineStringRegex = /'''(\\[a-tv-zA-TV-Z0-9]|[^'\\])*'''/;
 // Matches quoted identifiers with double quotes for names with spaces: "table name"
-const quotedIdentifierRegex = /"(\\.|[^"\\\n\r])*"/;
+const quotedIdentifierRegex = /"(\\[a-tv-zA-TV-Z0-9]|[^"\\\n\r])*"/;
 // Matches function expressions wrapped in backticks: `now()` or `CURRENT_TIMESTAMP`
 const functionExpressionRegex = /`[^`]*`/;
 // Matches unquoted identifiers: must start with letter/underscore, then alphanumeric/underscore
@@ -31,31 +31,31 @@ const identifierStreamRegex = chainRegex(
   oneOrManyRegex(chainRegex(/[ ]/, identifierRegex)),
 );
 
-export const identifierArbitrary = fc.stringMatching(identifierRegex);
-export const quotedIdentifierArbitrary = fc.stringMatching(quotedIdentifierRegex);
+export const identifierArbitrary = fc.stringMatching(matchFullRegex(identifierRegex));
+export const quotedIdentifierArbitrary = fc.stringMatching(matchFullRegex(quotedIdentifierRegex));
 export const anyIdentifierArbitrary = fc.oneof(
   identifierArbitrary,
   quotedIdentifierArbitrary,
 );
-export const singleLineStringArbitrary = fc.stringMatching(singleLineStringRegex);
-export const multiLineStringArbitrary = fc.stringMatching(multiLineStringRegex);
+export const singleLineStringArbitrary = fc.stringMatching(matchFullRegex(singleLineStringRegex));
+export const multiLineStringArbitrary = fc.stringMatching(matchFullRegex(multiLineStringRegex));
 export const anyStringArbitrary = fc.oneof(
   singleLineStringArbitrary,
   multiLineStringArbitrary,
 );
-export const numberArbitrary = fc.stringMatching(numberRegex);
-export const functionExpressionArbitrary = fc.stringMatching(functionExpressionRegex);
-export const colorArbitrary = fc.stringMatching(colorRegex);
-export const opArbitrary = fc.stringMatching(opRegex);
-export const seppuncArbitrary = fc.stringMatching(seppuncRegex);
-export const wsArbitrary = fc.stringMatching(wsRegex);
-export const singleLineCommentArbitrary = fc.stringMatching(singleLineCommentRegex);
-export const multiLineCommentArbitrary = fc.stringMatching(multiLineCommentRegex);
+export const numberArbitrary = fc.stringMatching(matchFullRegex(numberRegex));
+export const functionExpressionArbitrary = fc.stringMatching(matchFullRegex(functionExpressionRegex));
+export const colorArbitrary = fc.stringMatching(matchFullRegex(colorRegex));
+export const opArbitrary = fc.stringMatching(matchFullRegex(opRegex));
+export const seppuncArbitrary = fc.stringMatching(matchFullRegex(seppuncRegex));
+export const wsArbitrary = fc.stringMatching(matchFullRegex(wsRegex));
+export const singleLineCommentArbitrary = fc.stringMatching(matchFullRegex(singleLineCommentRegex));
+export const multiLineCommentArbitrary = fc.stringMatching(matchFullRegex(multiLineCommentRegex));
 export const commentArbitrary = fc.oneof(
   singleLineCommentArbitrary,
   multiLineCommentArbitrary,
 );
-export const identifierStreamArbitrary = fc.stringMatching(identifierStreamRegex);
+export const identifierStreamArbitrary = fc.stringMatching(matchFullRegex(identifierStreamRegex));
 
 // Arbitrary token sequences
 export const tokenStreamArbitrary = fc.stringMatching(matchFullRegex(zeroOrManyRegex(chainRegex(/[ ]/, orRegex(
