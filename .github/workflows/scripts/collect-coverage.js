@@ -210,7 +210,6 @@ function main() {
   // Output to console
   console.log('\n' + markdown);
 
-  // Exit with error code if any package has critically low coverage (< 60%)
   const criticallyLowCoverage = coverageData.some(pkg =>
     pkg.coverageData && pkg.coverageData.total && pkg.coverageData.total.lines.pct < 60
   );
