@@ -41,10 +41,10 @@ export function flattenTokens (token: SyntaxToken): SyntaxToken[] {
     token,
     ...token.trailingTrivia,
     ...token.trailingInvalid.flatMap((t) => t.leadingTrivia.concat(t.trailingTrivia)),
-  ].sort((a, b) => a.start - b.start);
+  ];
 }
 
-export function print (ast: SyntaxNode): string {
+export function print (source: string, ast: SyntaxNode): string {
   const tokens: SyntaxToken[] = [];
 
   function collectTokens (node: SyntaxNode | SyntaxToken | undefined): void {
@@ -142,13 +142,8 @@ export function print (ast: SyntaxNode): string {
       case SyntaxNodeKind.LIST_EXPRESSION: {
         const list = node as ListExpressionNode;
         if (list.listOpenBracket) collectTokens(list.listOpenBracket);
-        // Interleave elements and commas
-        for (let i = 0; i < list.elementList.length; i++) {
-          collectTokens(list.elementList[i]);
-          if (i < list.commaList.length) {
-            collectTokens(list.commaList[i]);
-          }
-        }
+        list.elementList.forEach(collectTokens);
+        list.commaList.forEach(collectTokens);
         if (list.listCloseBracket) collectTokens(list.listCloseBracket);
         break;
       }
@@ -157,13 +152,8 @@ export function print (ast: SyntaxNode): string {
       case SyntaxNodeKind.GROUP_EXPRESSION: {
         const tuple = node as TupleExpressionNode;
         if (tuple.tupleOpenParen) collectTokens(tuple.tupleOpenParen);
-        // Interleave elements and commas
-        for (let i = 0; i < tuple.elementList.length; i++) {
-          collectTokens(tuple.elementList[i]);
-          if (i < tuple.commaList.length) {
-            collectTokens(tuple.commaList[i]);
-          }
-        }
+        tuple.elementList.forEach(collectTokens);
+        tuple.commaList.forEach(collectTokens);
         if (tuple.tupleCloseParen) collectTokens(tuple.tupleCloseParen);
         break;
       }
@@ -215,5 +205,5 @@ export function print (ast: SyntaxNode): string {
 
   collectTokens(ast);
 
-  return tokens.map((t) => t.value).join('');
+  return tokens.sort((a, b) => a.start - b.start).map((t) => source.slice(t.start, t.end)).join('');
 }
