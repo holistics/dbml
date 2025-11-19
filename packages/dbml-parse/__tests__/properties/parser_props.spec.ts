@@ -18,11 +18,23 @@ describe('parsing', () => {
     );
   });
 
-  it('should roundtrip', () => {
+  it('should roundtrip with valid DBML', () => {
     // Property: Source 1 -parse-> ast -print-> Source 2
     // Then: Source 1 === Source 2
     fc.assert(
       fc.property(smallSchemaArbitrary, (source: string) => {
+        const ast = parse(source).getValue().ast;
+        const newSource = print(source, ast);
+        expect(source).toEqual(newSource);
+      }),
+    );
+  });
+
+  it('should roundtrip with random strings', () => {
+    // Property: Source 1 -parse-> ast -print-> Source 2
+    // Then: Source 1 === Source 2
+    fc.assert(
+      fc.property(fc.string(), (source: string) => {
         const ast = parse(source).getValue().ast;
         const newSource = print(source, ast);
         expect(source).toEqual(newSource);

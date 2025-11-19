@@ -154,7 +154,7 @@ export default class Parser {
     }
 
     curValid = this.tokens[i];
-    curValid.leadingInvalid = firstInvalidList;
+    curValid.leadingInvalid = [...firstInvalidList, ...curValid.leadingInvalid];
     tokens.push(curValid);
     for (i += 1; i < this.tokens.length; i += 1) {
       const curToken = this.tokens[i];
