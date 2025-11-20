@@ -39,12 +39,12 @@ Ref: posts.user_id > users.id`;
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        // Verify it starts with the expected element type
-        expect(sourceText.trim().startsWith('Table')).toBe(true);
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot(`
+        "Table users {
+          id int pk
+        }"
+      `);
     });
 
     it('- should find table definition on left side of Ref', () => {
@@ -125,12 +125,12 @@ Ref: posts.user_id < users.id`;
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        // Verify it starts with the expected element type
-        expect(sourceText.trim().startsWith('Table')).toBe(true);
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot(`
+        "Table users {
+          id int pk
+        }"
+      `);
     });
 
     it('- should find self-referential table', () => {
@@ -189,11 +189,8 @@ Ref: posts.user_id > users.id`;
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        expect(sourceText.trim()).toContain('id');
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot('"id int pk"');
     });
 
     it('- should find column definition on left side of Ref', () => {
@@ -276,11 +273,8 @@ Ref: (orders.merchant_id, orders.country) > (merchants.id, merchants.country_cod
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        expect(sourceText.trim()).toContain('country_code');
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot('"country_code varchar"');
     });
   });
 
@@ -364,11 +358,8 @@ Table orders {
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        expect(sourceText.trim()).toBe('pending');
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot('"pending"');
     });
   });
 
@@ -452,12 +443,13 @@ Table users {
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        // Verify it starts with the expected element type
-        expect(sourceText.trim().startsWith('Enum')).toBe(true);
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot(`
+        "Enum myschema.status {
+          active
+          inactive
+        }"
+      `);
     });
   });
 
@@ -614,12 +606,13 @@ Table users {
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        // Verify it starts with the expected element type
-        expect(sourceText.trim().startsWith('TablePartial')).toBe(true);
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot(`
+        "TablePartial base_timestamps {
+          created_at timestamp
+          updated_at timestamp
+        }"
+      `);
     });
 
     it('- should find injected column definition from TablePartial', () => {
@@ -940,12 +933,12 @@ Ref: schema1.orders.id > schema2.orders.id`;
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        // Verify it starts with the expected element type
-        expect(sourceText.trim().startsWith('Table')).toBe(true);
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot(`
+        "Table schema1.orders {
+          id int pk
+        }"
+      `);
 
       // Position on schema2.orders
       const position2 = createPosition(9, 33);
@@ -1013,12 +1006,12 @@ Ref: orders.user_id > myproject.ecommerce.users.id`;
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        // Verify it starts with the expected element type
-        expect(sourceText.trim().startsWith('Table')).toBe(true);
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot(`
+        "Table myproject.ecommerce.users {
+          id int pk
+        }"
+      `);
     });
 
     it('- should handle column reference in check constraint', () => {
@@ -1169,11 +1162,8 @@ Ref: posts.user_id > users.id`;
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        expect(sourceText.trim()).toContain('id');
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot('"id int pk"');
     });
 
     it('- should find column definition on right side of inline ref', () => {
@@ -1208,11 +1198,8 @@ Table posts {
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        expect(sourceText.trim()).toContain('id');
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot('"id int pk"');
     });
 
     it('- should find table definition on right side of Ref with < operator', () => {
@@ -1249,12 +1236,12 @@ Ref: users.id < posts.user_id`;
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        // Verify it starts with the expected element type
-        expect(sourceText.trim().startsWith('Table')).toBe(true);
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot(`
+        "Table posts {
+          user_id int
+        }"
+      `);
     });
 
     it('- should find column in composite ref on right side', () => {
@@ -1293,11 +1280,8 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        expect(sourceText.trim()).toContain('first_name');
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot('"first_name varchar"');
     });
   });
 
@@ -1352,12 +1336,12 @@ Ref: posts.user_id >`;
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        // Verify it starts with the expected element type
-        expect(sourceText.trim().startsWith('Table')).toBe(true);
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot(`
+        "Table posts {
+          user_id int
+        }"
+      `);
     });
 
     it('- should handle incomplete inline ref', () => {
@@ -1463,12 +1447,8 @@ TableGroup my_group {
         ]
       `);
 
-      // Verify actual source text
-      definitions.forEach((def) => {
-        const sourceText = extractTextFromRange(program, def.range);
-        // Verify it starts with the expected element type
-        expect(sourceText.trim().startsWith('Table')).toBe(true);
-      });
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot('"Table users { id int }"');
     });
 
     it('- should handle broken composite ref', () => {
