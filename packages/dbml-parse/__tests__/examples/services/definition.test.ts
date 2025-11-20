@@ -3,34 +3,7 @@ import path from 'path';
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
-import type { TextModel, Position } from '@/services/types';
-
-// Mock TextModel for testing
-class MockTextModel implements Partial<TextModel> {
-  private content: string;
-  uri: string;
-
-  constructor(content: string, uri = 'file:///test.dbml') {
-    this.content = content;
-    this.uri = uri;
-  }
-
-  getOffsetAt(position: Position): number {
-    const lines = this.content.split('\n');
-    let offset = 0;
-
-    for (let i = 0; i < position.lineNumber - 1 && i < lines.length; i++) {
-      offset += lines[i].length + 1; // +1 for newline
-    }
-
-    offset += position.column - 1;
-    return offset;
-  }
-
-  getValue(): string {
-    return this.content;
-  }
-}
+import { MockTextModel, createPosition } from '../../mocks';
 
 describe('DefinitionProvider', () => {
   it('should provide definition for table reference', () => {
@@ -42,7 +15,7 @@ describe('DefinitionProvider', () => {
     const model = new MockTextModel(program) as any;
 
     // Position on "users" in "ref: > users.id"
-    const position: Position = { lineNumber: 10, column: 26 };
+    const position = createPosition(10, 26);
     const definitions = definitionProvider.provideDefinition(model, position);
 
     expect(definitions).toBeDefined();
@@ -58,7 +31,7 @@ describe('DefinitionProvider', () => {
     const model = new MockTextModel(program) as any;
 
     // Position on column reference
-    const position: Position = { lineNumber: 9, column: 28 };
+    const position = createPosition(9, 28);
     const definitions = definitionProvider.provideDefinition(model, position);
 
     expect(definitions).toBeDefined();
@@ -73,7 +46,7 @@ describe('DefinitionProvider', () => {
     const model = new MockTextModel(program) as any;
 
     // Position on keyword "Table"
-    const position: Position = { lineNumber: 1, column: 1 };
+    const position = createPosition(1, 1);
     const definitions = definitionProvider.provideDefinition(model, position);
 
     expect(definitions).toEqual([]);
@@ -87,7 +60,7 @@ describe('DefinitionProvider', () => {
     const definitionProvider = new DBMLDefinitionProvider(compiler);
     const model = new MockTextModel(program) as any;
 
-    const position: Position = { lineNumber: 1, column: 15 };
+    const position = createPosition(1, 15);
     const definitions = definitionProvider.provideDefinition(model, position);
 
     expect(Array.isArray(definitions)).toBe(true);
@@ -104,7 +77,7 @@ describe('DefinitionProvider', () => {
     const definitionProvider = new DBMLDefinitionProvider(compiler);
     const model = new MockTextModel(program) as any;
 
-    const position: Position = { lineNumber: 3, column: 45 };
+    const position = createPosition(3, 45);
     const definitions = definitionProvider.provideDefinition(model, position);
 
     expect(Array.isArray(definitions)).toBe(true);
@@ -121,7 +94,7 @@ describe('DefinitionProvider', () => {
     const definitionProvider = new DBMLDefinitionProvider(compiler);
     const model = new MockTextModel(program) as any;
 
-    const position: Position = { lineNumber: 3, column: 30 };
+    const position = createPosition(3, 30);
     const definitions = definitionProvider.provideDefinition(model, position);
 
     expect(Array.isArray(definitions)).toBe(true);

@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
-import { scanTestNames } from '../jestHelpers';
+import { scanTestNames } from '../testHelpers';
 import Lexer from '@/core/lexer/lexer';
 
 describe('#lexer', () => {
