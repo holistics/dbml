@@ -91,6 +91,8 @@ describe('DefinitionProvider', () => {
         const pos = createPosition(position.line, position.column);
 
         const firstDefinition = definitionProvider.provideDefinition(model, pos);
+        expect(Array.isArray(firstDefinition)).toBeTruthy();
+        if (!Array.isArray(firstDefinition)) return;
 
         // If we got a definition, go to it and try to get definition again
         if (firstDefinition && firstDefinition.length > 0) {
@@ -101,6 +103,8 @@ describe('DefinitionProvider', () => {
           );
 
           const secondDefinition = definitionProvider.provideDefinition(model, defPos);
+          expect(Array.isArray(secondDefinition)).toBeTruthy();
+          if (!Array.isArray(secondDefinition)) return;
 
           // Second definition should either be empty (we're at a declaration)
           // or should point to the same location
@@ -124,6 +128,8 @@ describe('DefinitionProvider', () => {
         const pos = createPosition(position.line, position.column);
 
         const definitions = definitionProvider.provideDefinition(model, pos);
+        expect(Array.isArray(definitions)).toBeTruthy();
+        if (!Array.isArray(definitions)) return;
 
         if (definitions && definitions.length > 0) {
           definitions.forEach((def) => {
@@ -147,6 +153,8 @@ describe('DefinitionProvider', () => {
         const pos = createPosition(position.line, position.column);
 
         const definitions = definitionProvider.provideDefinition(model, pos);
+        expect(Array.isArray(definitions)).toBeTruthy();
+        if (!Array.isArray(definitions)) return;
 
         if (definitions && definitions.length > 0) {
           // Check for duplicates by comparing ranges
@@ -199,6 +207,8 @@ describe('ReferencesProvider', () => {
 
         // First, go to definition
         const definitions = definitionProvider.provideDefinition(model, pos);
+        expect(Array.isArray(definitions)).toBeTruthy();
+        if (!Array.isArray(definitions)) return;
 
         if (definitions && definitions.length > 0) {
           const defLocation = definitions[0];
@@ -315,6 +325,8 @@ describe('Cross-Service', () => {
 
         // Go to definition from a reference
         const definitions = definitionProvider.provideDefinition(model, pos);
+        expect(Array.isArray(definitions)).toBeTruthy();
+        if (!Array.isArray(definitions)) return;
 
         if (definitions && definitions.length > 0) {
           const defLocation = definitions[0];
@@ -369,13 +381,13 @@ describe('Cross-Service', () => {
           const symbolCompletions = completions.suggestions.filter((s) => {
             // Filter out keywords and snippets
             const keywords = ['Table', 'Ref', 'Enum', 'Project', 'TableGroup', 'Indexes', 'Note'];
-            return !keywords.includes(s.label);
+            return !keywords.includes(s.label as string);
           });
 
           // For symbol completions, try to find their definitions
           symbolCompletions.forEach((completion) => {
             // Try to find where this symbol is in the source
-            const symbolPos = source.indexOf(completion.label);
+            const symbolPos = source.indexOf(completion.label as string);
             if (symbolPos !== -1) {
               // Calculate line and column
               const beforeSymbol = source.substring(0, symbolPos);
