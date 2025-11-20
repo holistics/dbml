@@ -69,7 +69,7 @@ export function addQuoteIfNeeded (completionList: CompletionList): CompletionLis
     ...completionList,
     suggestions: completionList.suggestions.map((s) => ({
       ...s,
-      insertText: (!s.insertText.split('').every(isAlphaOrUnderscore)) ? `"${s.insertText}"` : s.insertText,
+      insertText: (!s || !s.insertText.split('').every(isAlphaOrUnderscore)) ? `"${s.insertText}"` : s.insertText,
     })),
   };
 }
