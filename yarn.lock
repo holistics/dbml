@@ -7816,11 +7816,6 @@ external-editor@^3.0.3:
     iconv-lite "^0.4.24"
     tmp "^0.0.33"
 
-fast-check-io-ts@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/fast-check-io-ts/-/fast-check-io-ts-0.5.0.tgz#b584a2483c37a2f42ed33bdf9ac4e95a01eabe0f"
-  integrity sha512-z+jV8N2S+YY+2kvHLQmNBJGdjg+2W++F0jq4ga2kC2PI7jaX0MmpX77JNqNfSL0sOzzmTuR3eEB1BbXoH26wnw==
-
 fast-check@^4.3.0:
   version "4.3.0"
   resolved "https://registry.npmjs.org/fast-check/-/fast-check-4.3.0.tgz"
@@ -8900,11 +8895,6 @@ internal-slot@^1.0.5:
     get-intrinsic "^1.2.0"
     has "^1.0.3"
     side-channel "^1.0.4"
-
-io-ts@^2.2.22:
-  version "2.2.22"
-  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-2.2.22.tgz#5ab0d3636fe8494a275f0266461ab019da4b8d0b"
-  integrity sha512-FHCCztTkHoV9mdBsHpocLpdTAfh956ZQcIkWQxxS0U5HT53vtrcuYdQneEJKH6xILaLNzXVl2Cvwtoy8XNN0AA==
 
 ip@^2.0.0:
   version "2.0.1"
