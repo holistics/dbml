@@ -8,7 +8,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-22.04
-    timeout-minutes: 15
+    timeout-minutes: 10
     strategy:
       matrix:
         node-version: [22.x]
