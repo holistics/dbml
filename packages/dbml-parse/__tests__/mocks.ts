@@ -8,11 +8,13 @@ export function createPosition (lineNumber: number, column: number): Position {
 }
 
 // Mock TextModel for property testing
-export class MockTextModel implements Partial<TextModel> {
+export class MockTextModel {
   private content: string;
+  public uri: any;
 
-  constructor (content: string) {
+  constructor (content: string, uri: string = '') {
     this.content = content;
+    this.uri = uri;
   }
 
   getOffsetAt (position: Position): number {
@@ -30,4 +32,25 @@ export class MockTextModel implements Partial<TextModel> {
   getValue (): string {
     return this.content;
   }
+}
+
+export function createMockTextModel (content: string, uri: string = ''): TextModel {
+  return new MockTextModel(content, uri) as unknown as TextModel;
+}
+
+// Extract source text from a range in the program
+export function extractTextFromRange (program: string, range: { startLineNumber: number; startColumn: number; endLineNumber: number; endColumn: number }): string {
+  const mockModel = new MockTextModel(program);
+
+  const startOffset = mockModel.getOffsetAt({
+    lineNumber: range.startLineNumber,
+    column: range.startColumn,
+  } as Position);
+
+  const endOffset = mockModel.getOffsetAt({
+    lineNumber: range.endLineNumber,
+    column: range.endColumn,
+  } as Position);
+
+  return program.substring(startOffset, endOffset);
 }

@@ -7,7 +7,7 @@ import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { dbmlSchemaArbitrary } from './arbitraries/grammars';
 import { MockTextModel, createPosition } from '../mocks';
 
-describe('DefinitionProvider', () => {
+describe('[fuzzer] DefinitionProvider', () => {
   it('should handle any position without crashing in any source', () => {
     fc.assert(
       fc.property(fc.string(), fc.nat(), fc.nat(), (source: string, line: number, col: number) => {
@@ -47,7 +47,7 @@ describe('DefinitionProvider', () => {
   });
 });
 
-describe('ReferencesProvider', () => {
+describe('[fuzzer] ReferencesProvider', () => {
   it('should handle any position without crashing in any source', () => {
     fc.assert(
       fc.property(fc.string(), fc.nat(), fc.nat(), (source: string, line: number, col: number) => {
@@ -87,7 +87,7 @@ describe('ReferencesProvider', () => {
   });
 });
 
-describe('CompletionItemProvider', () => {
+describe('[fuzzer] CompletionItemProvider', () => {
   it('should handle any position without crashing in any source', () => {
     fc.assert(
       fc.property(fc.string(), fc.nat(), fc.nat(), (source: string, line: number, col: number) => {
