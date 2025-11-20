@@ -12,6 +12,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    timeout-minutes: 15
     strategy:
       matrix:
         node-version: [22.x]
