@@ -24,7 +24,8 @@ import {
   ArrayNode,
 } from '@/lib/parser/nodes';
 import Report from '@/lib/report';
-import { CompileError, SyntaxToken } from '@/index';
+import { CompileError, Compiler, SyntaxToken } from '@/index';
+import { Database } from '@/lib/interpreter/types';
 
 export function lex (source: string): Report<SyntaxToken[], CompileError> {
   return new Lexer(source).lex();
@@ -32,6 +33,12 @@ export function lex (source: string): Report<SyntaxToken[], CompileError> {
 
 export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }, CompileError> {
   return new Lexer(source).lex().chain((tokens) => new Parser(tokens, new SyntaxNodeIdGenerator()).parse());
+}
+
+export function interpret (source: string): Report<Database | undefined, CompileError> {
+  const compiler = new Compiler();
+  compiler.setSource(source);
+  return compiler.parse._().map(({ rawDb }) => rawDb);
 }
 
 export function flattenTokens (token: SyntaxToken): SyntaxToken[] {
