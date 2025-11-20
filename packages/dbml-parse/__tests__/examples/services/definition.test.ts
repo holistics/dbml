@@ -39,6 +39,8 @@ Ref: posts.user_id > users.id`;
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot(`
         "Table users {
@@ -125,6 +127,8 @@ Ref: posts.user_id < users.id`;
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot(`
         "Table users {
@@ -189,6 +193,8 @@ Ref: posts.user_id > users.id`;
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot('"id int pk"');
     });
@@ -273,6 +279,8 @@ Ref: (orders.merchant_id, orders.country) > (merchants.id, merchants.country_cod
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot('"country_code varchar"');
     });
@@ -358,6 +366,8 @@ Table orders {
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot('"pending"');
     });
@@ -443,6 +453,8 @@ Table users {
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot(`
         "Enum myschema.status {
@@ -606,6 +618,8 @@ Table users {
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot(`
         "TablePartial base_timestamps {
@@ -933,6 +947,8 @@ Ref: schema1.orders.id > schema2.orders.id`;
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot(`
         "Table schema1.orders {
@@ -1006,6 +1022,8 @@ Ref: orders.user_id > myproject.ecommerce.users.id`;
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot(`
         "Table myproject.ecommerce.users {
@@ -1162,6 +1180,8 @@ Ref: posts.user_id > users.id`;
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot('"id int pk"');
     });
@@ -1198,6 +1218,8 @@ Table posts {
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot('"id int pk"');
     });
@@ -1236,6 +1258,8 @@ Ref: users.id < posts.user_id`;
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot(`
         "Table posts {
@@ -1280,6 +1304,8 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot('"first_name varchar"');
     });
@@ -1336,6 +1362,8 @@ Ref: posts.user_id >`;
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot(`
         "Table posts {
@@ -1447,6 +1475,8 @@ TableGroup my_group {
         ]
       `);
 
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot('"Table users { id int }"');
     });
@@ -1492,6 +1522,8 @@ Ref: posts.user_id > users.id`;
       // Position on "users" in ref
       const position = createPosition(5, 23);
       const definitions = definitionProvider.provideDefinition(model, position);
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
 
       // Verify range points to table definition (entire table block from "Table users {" to "}")
       expect(definitions.length).toBe(1);
@@ -1519,6 +1551,8 @@ Ref: posts.user_id > users.id`;
       // Position on "id" in "users.id"
       const position = createPosition(5, 29);
       const definitions = definitionProvider.provideDefinition(model, position);
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
 
       // Verify range points to column definition line
       expect(definitions.length).toBe(1);
@@ -1547,6 +1581,8 @@ Table users {
       // Position on "status" type
       const position = createPosition(7, 16);
       const definitions = definitionProvider.provideDefinition(model, position);
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
 
       // Verify range points to enum definition (entire enum block)
       expect(definitions.length).toBe(1);
@@ -1577,6 +1613,8 @@ Table users {
       // Position on "mypartial" in injection
       const position = createPosition(7, 4);
       const definitions = definitionProvider.provideDefinition(model, position);
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
 
       // Verify range points to TablePartial definition
       expect(definitions.length).toBe(1);
@@ -1604,6 +1642,8 @@ Ref: posts.user_id > public.users.id`;
       // Position on "users" in "public.users"
       const position = createPosition(5, 30);
       const definitions = definitionProvider.provideDefinition(model, position);
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
 
       // Verify range points to table definition
       expect(definitions.length).toBe(1);
