@@ -154,7 +154,7 @@ export default class Parser {
     }
 
     curValid = this.tokens[i];
-    curValid.leadingInvalid = firstInvalidList;
+    curValid.leadingInvalid = [...firstInvalidList, ...curValid.leadingInvalid];
     tokens.push(curValid);
     for (i += 1; i < this.tokens.length; i += 1) {
       const curToken = this.tokens[i];
@@ -203,7 +203,6 @@ export default class Parser {
     if (invalidToken.kind !== SyntaxTokenKind.EOF) {
       markInvalid(this.advance());
     } else {
-      markInvalid(this.peek());
       this.logError(invalidToken, CompileErrorCode.UNEXPECTED_EOF, 'Unexpected EOF');
     }
   };
@@ -229,7 +228,6 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      args.type = e.partialNode;
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
     }
 
@@ -700,7 +698,6 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      args.value = e.partialNode;
       throw new PartialParsingError(
         e.token,
         this.nodeFactory.create(FunctionExpressionNode, args),
@@ -734,7 +731,6 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      args.blockOpenBrace = e.partialNode;
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildBlock(), e.handlerContext);
       }
@@ -770,7 +766,6 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      args.blockCloseBrace = e.partialNode;
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildBlock(), e.handlerContext);
       }
@@ -864,7 +859,6 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      args.tupleOpenParen = e.partialNode;
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildTuple(), e.handlerContext);
       }
@@ -912,7 +906,6 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      args.tupleCloseParen = e.partialNode;
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildTuple(), e.handlerContext);
       }
@@ -951,7 +944,6 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      args.listOpenBracket = e.partialNode;
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildList(), e.handlerContext);
       }
@@ -999,7 +991,6 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      args.listCloseBracket = e.partialNode;
       if (!this.canHandle(e)) {
         throw new PartialParsingError(e.token, buildList(), e.handlerContext);
       }

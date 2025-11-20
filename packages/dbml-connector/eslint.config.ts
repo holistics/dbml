@@ -19,9 +19,9 @@ export default defineConfig(
         'node_modules/*',
         'dist/*',
         'eslint.config.ts',
-        'jestHelpers.ts',
         'jest.config.ts',
         '**/*.test.ts',
+        '__tests__/**/*',
       ],
     },
     {

@@ -1,0 +1,29 @@
+TablePartial WithMoney {
+  balance int [check: `balance > 0`]
+
+  checks {
+    `balance < 10000000` [name: 'not_too_much_money']
+  }
+}
+
+Table User {
+  ~WithMoney
+
+  name TEXT [check: `LEN(name) > 0`]
+  email TEXT
+
+  checks {
+    `LEN(name) < 256` [name: 'name_not_too_long']
+    `REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')`
+  }
+}
+
+Table User2 {
+  ~WithMoney
+  
+  balance int
+}
+
+Table User3 {
+  balance int [check: `balance > 0`, check: `balance < 10000000`]
+}

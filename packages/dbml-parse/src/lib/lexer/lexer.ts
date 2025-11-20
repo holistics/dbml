@@ -249,7 +249,7 @@ export default class Lexer {
 
     for (; i < this.tokens.length; i += 1) {
       const token = this.tokens[i];
-      if (token.isInvalid) {
+      if (isInvalidToken(token)) {
         prevValidToken.trailingInvalid.push(token);
       } else {
         prevValidToken = token;

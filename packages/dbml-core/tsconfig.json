@@ -3,7 +3,9 @@
   "compilerOptions": {
     "rootDirs": ["./src", "./"],                          /* Allow multiple folders to be treated as one when resolving modules. */
     "baseUrl": "./src",                                   /* Specify the base directory to resolve non-relative module names. */
-    "outDir": "./lib"                                     /* Specify an output folder for all emitted files. */
+    "outDir": "./lib",                                    /* Specify an output folder for all emitted files. */
+    "esModuleInterop": true,                              /* Emit additional JavaScript to ease support for importing CommonJS modules. */
+    "resolveJsonModule": true                        /* Enable importing .json files. */
   },
   "files": ["package.json"],
   "include": ["src/**/*", "__tests__/**/*"]

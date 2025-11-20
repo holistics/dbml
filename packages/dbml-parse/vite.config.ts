@@ -21,12 +21,16 @@ export default defineConfig({
       formats: ['cjs', 'es'],
     },
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
+      // Browser-specific libraries that are only here for typings and testings
+      // should not be bundled
       external: ['monaco-editor-core'],
     },
   },
   test: {
     globals: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['json', 'json-summary', 'html', 'text'],
+    },
   },
 });
