@@ -1,5 +1,5 @@
-import Lexer from '../../src/lib/lexer/lexer';
-import Parser from '../../src/lib/parser/parser';
+import Lexer from '@/lib/lexer/lexer';
+import Parser from '@/lib/parser/parser';
 import {
   ProgramNode,
   SyntaxNode,
