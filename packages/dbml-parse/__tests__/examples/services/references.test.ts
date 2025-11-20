@@ -3,34 +3,7 @@ import path from 'path';
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLReferencesProvider from '@/services/references/provider';
-import type { TextModel, Position } from '@/services/types';
-
-// Mock TextModel for testing
-class MockTextModel implements Partial<TextModel> {
-  private content: string;
-  uri: string;
-
-  constructor(content: string, uri = 'file:///test.dbml') {
-    this.content = content;
-    this.uri = uri;
-  }
-
-  getOffsetAt(position: Position): number {
-    const lines = this.content.split('\n');
-    let offset = 0;
-
-    for (let i = 0; i < position.lineNumber - 1 && i < lines.length; i++) {
-      offset += lines[i].length + 1; // +1 for newline
-    }
-
-    offset += position.column - 1;
-    return offset;
-  }
-
-  getValue(): string {
-    return this.content;
-  }
-}
+import { MockTextModel, createPosition } from '../../mocks';
 
 describe('ReferencesProvider', () => {
   it('should provide references for table declaration', () => {
@@ -42,7 +15,7 @@ describe('ReferencesProvider', () => {
     const model = new MockTextModel(program) as any;
 
     // Position on "categories" table declaration
-    const position: Position = { lineNumber: 8, column: 10 };
+    const position = createPosition(8, 10);
     const references = referencesProvider.provideReferences(model, position);
 
     expect(references).toBeDefined();
@@ -58,7 +31,7 @@ describe('ReferencesProvider', () => {
     const model = new MockTextModel(program) as any;
 
     // Position on column
-    const position: Position = { lineNumber: 3, column: 8 };
+    const position = createPosition(3, 8);
     const references = referencesProvider.provideReferences(model, position);
 
     expect(Array.isArray(references)).toBe(true);
@@ -72,7 +45,7 @@ describe('ReferencesProvider', () => {
     const referencesProvider = new DBMLReferencesProvider(compiler);
     const model = new MockTextModel(program) as any;
 
-    const position: Position = { lineNumber: 1, column: 1 };
+    const position = createPosition(1, 1);
     const references = referencesProvider.provideReferences(model, position);
 
     expect(references).toEqual([]);
@@ -89,7 +62,7 @@ describe('ReferencesProvider', () => {
     const referencesProvider = new DBMLReferencesProvider(compiler);
     const model = new MockTextModel(program) as any;
 
-    const position: Position = { lineNumber: 2, column: 20 };
+    const position = createPosition(2, 20);
     const references = referencesProvider.provideReferences(model, position);
 
     expect(Array.isArray(references)).toBe(true);
@@ -109,7 +82,7 @@ describe('ReferencesProvider', () => {
     const referencesProvider = new DBMLReferencesProvider(compiler);
     const model = new MockTextModel(program) as any;
 
-    const position: Position = { lineNumber: 3, column: 5 };
+    const position = createPosition(3, 5);
     const references = referencesProvider.provideReferences(model, position);
 
     expect(Array.isArray(references)).toBe(true);
@@ -126,7 +99,7 @@ describe('ReferencesProvider', () => {
     const referencesProvider = new DBMLReferencesProvider(compiler);
     const model = new MockTextModel(program) as any;
 
-    const position: Position = { lineNumber: 2, column: 15 };
+    const position = createPosition(2, 15);
     const references = referencesProvider.provideReferences(model, position);
 
     expect(Array.isArray(references)).toBe(true);
