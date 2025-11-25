@@ -1,5 +1,5 @@
 import { BigQuery, BigQueryOptions } from '@google-cloud/bigquery';
-import { loadCredentialFromFile, parseBigQueryCredential } from '../utils/credential-loader';
+import { loadCredentialFromFile, parseBigQueryCredential } from '../../utils/credential-loader';
 import {
   getIntersection,
   getTableSchemaKey,
@@ -7,7 +7,7 @@ import {
   mergeIndexDictionary,
   mergeTableConstraintDictionary,
   mergeTables,
-} from '../utils/helpers';
+} from '../../utils/helpers';
 import {
   BigQueryCredentials,
   DatabaseSchema,
@@ -19,7 +19,7 @@ import {
   IndexesDictionary,
   Table,
   TableConstraintsDictionary,
-} from './types';
+} from '../types';
 
 // BigQuery client authentication strategy:
 // 1. Start with environment/default authentication:
