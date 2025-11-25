@@ -8,7 +8,7 @@
 
 import snowflake from 'snowflake-sdk';
 import type { Connection, LogLevel, ConnectionOptions } from 'snowflake-sdk';
-import { parseSchema } from '../utils/parseSchema';
+import { parseSchema } from '../../utils/parseSchema';
 import {
   DatabaseSchema,
   DefaultInfo,
@@ -19,7 +19,7 @@ import {
   IndexesDictionary,
   Table,
   TableConstraintsDictionary,
-} from './types';
+} from '../types';
 
 type ConstraintRow = {
   schemaName: string;

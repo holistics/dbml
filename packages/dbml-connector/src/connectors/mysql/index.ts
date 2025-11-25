@@ -2,7 +2,7 @@ import { createConnection, Connection } from 'mysql2/promise';
 import { flatten } from 'lodash';
 import {
   CheckConstraintDictionary, DefaultInfo, DatabaseSchema, DefaultType, Field, IndexColumn, FieldsDictionary, Table, Enum, IndexesDictionary, TableConstraintsDictionary, Index, Ref,
-} from './types';
+} from '../types';
 
 const NUMBER_REGEX = '^-?[0-9]+(.[0-9]+)?$';
 
