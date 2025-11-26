@@ -18,6 +18,8 @@ const fetchSchemaJson = async (connection: string, databaseType: string): Promis
       return fetchSnowflakeSchemaJson(connection);
     case 'bigquery':
       return fetchBigQuerySchemaJson(connection);
+    case 'oracle':
+      return fetchOracleSchemaJson(connection);
     default:
       throw new Error(`Unsupported database type: ${databaseType}`);
   }
