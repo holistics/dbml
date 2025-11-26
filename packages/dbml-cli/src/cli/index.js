@@ -83,6 +83,8 @@ function db2dbml (args) {
                            Note: Both client_email and private_key must be provided together.
 
                         If "datasets" is not specified or is empty, all accessible datasets will be fetched.
+
+                        - oracle: 'username/password@[//]host[:port][/service_name]'
   `;
   program
     .usage('<database-type> <connection-string> [options]')
