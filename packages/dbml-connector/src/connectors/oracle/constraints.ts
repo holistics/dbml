@@ -1,6 +1,6 @@
 import { Connection } from 'oracledb';
 import { CheckConstraint, CheckConstraintDictionary, Index, IndexesDictionary, TableConstraintsDictionary } from '../types';
-import { LIST_SEPARATOR } from './utils';
+import { EXECUTE_OPTIONS, LIST_SEPARATOR } from './utils';
 
 export async function generateConstraints (client: Connection): Promise<{
   indexes: IndexesDictionary;
@@ -9,68 +9,67 @@ export async function generateConstraints (client: Connection): Promise<{
 }> {
   const query = `
     WITH all_constraints AS (
-        SELECT 
-            c.CONSTRAINT_NAME AS constraint_name,
-            c.TABLE_NAME AS table_name,
-            c.CONSTRAINT_TYPE AS constraint_type,
-            c.SEARCH_CONDITION_VC AS constraint_check_expression
-        FROM USER_CONSTRAINTS c
-        WHERE
-          c.CONSTRAINT_TYPE IN ('P', 'U', 'C')
-          AND (c.CONSTRAINT_TYPE != 'C' OR UPPER(c.SEARCH_CONDITION_VC) NOT LIKE '%IS NOT NULL%')
+      SELECT
+        c.CONSTRAINT_NAME,
+        c.TABLE_NAME,
+        c.CONSTRAINT_TYPE,
+        c.SEARCH_CONDITION_VC AS CHECK_EXPRESSION
+      FROM USER_CONSTRAINTS c
+      WHERE c.CONSTRAINT_TYPE IN ('P', 'U', 'C')
+        AND (c.CONSTRAINT_TYPE != 'C' OR UPPER(c.SEARCH_CONDITION_VC) NOT LIKE '%IS NOT NULL%')
     ),
     constraint_columns AS (
-        SELECT 
-            cc.CONSTRAINT_NAME AS constraint_name,
-            LISTAGG(cc.COLUMN_NAME, '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY cc.POSITION) AS columns, -- a complex separator is used to avoid the column name containing the separator itself
-            COUNT(cc.COLUMN_NAME) AS column_count
-        FROM USER_CONS_COLUMNS cc
-        GROUP BY cc.CONSTRAINT_NAME
+      SELECT
+        cc.CONSTRAINT_NAME,
+        LISTAGG(cc.COLUMN_NAME, '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY cc.POSITION) AS COLUMNS,
+        COUNT(cc.COLUMN_NAME) AS COLUMN_COUNT
+      FROM USER_CONS_COLUMNS cc
+      GROUP BY cc.CONSTRAINT_NAME
     )
-    SELECT 
-        ac.constraint_name,
-        ac.table_name,
-        cc.columns,
-        cc.column_count,
-        ac.constraint_check_expression,
-        ac.constraint_type
+    SELECT
+      ac.CONSTRAINT_NAME,
+      ac.TABLE_NAME,
+      cc.COLUMNS,
+      cc.COLUMN_COUNT,
+      ac.CHECK_EXPRESSION,
+      ac.CONSTRAINT_TYPE
     FROM all_constraints ac
-    LEFT JOIN constraint_columns cc 
-        ON ac.constraint_name = cc.constraint_name
+    LEFT JOIN constraint_columns cc
+      ON ac.CONSTRAINT_NAME = cc.CONSTRAINT_NAME
   `;
 
   const indexes: IndexesDictionary = {};
   const tableConstraints: TableConstraintsDictionary = {};
   const checks: CheckConstraintDictionary = {};
 
-  const res = await client.execute(query);
+  const res = await client.execute(query, [], EXECUTE_OPTIONS);
   res.rows?.forEach((row) => {
-    const { constraint_name, table_name, columns: _columns, column_count, constraint_check_expression, constraint_type } = row as Record<string, unknown>;
-    const tableName = table_name as string;
-    const constraintName = constraint_name as string || '';
-    const columns = (_columns as string || '').split(LIST_SEPARATOR);
-    const columnCount = column_count as number || 1;
-    const constraintType = constraint_type as 'P' | 'U' | 'C';
-    const constraintCheckExpression = (constraint_check_expression || null) as string | null;
+    const { CONSTRAINT_NAME, TABLE_NAME, COLUMNS, COLUMN_COUNT, CHECK_EXPRESSION, CONSTRAINT_TYPE } = row as Record<string, unknown>;
+    const tableName = TABLE_NAME as string;
+    const constraintName = CONSTRAINT_NAME as string || '';
+    const columns = ((COLUMNS as string) || '').split(LIST_SEPARATOR);
+    const columnCount = (COLUMN_COUNT as number) || 1;
+    const constraintType = CONSTRAINT_TYPE as 'P' | 'U' | 'C';
+    const checkExpression = (CHECK_EXPRESSION || null) as string | null;
 
     // Table-level check constraints
-    if (constraintType === 'C' && constraintCheckExpression && columnCount > 1) {
+    if (constraintType === 'C' && checkExpression && columnCount > 1) {
       if (!checks[tableName]) checks[tableName] = [];
       const check: CheckConstraint = {
         name: constraintName,
-        expression: constraintCheckExpression,
+        expression: checkExpression,
       };
       checks[tableName].push(check);
       return;
     }
     // Column-level check constraints
-    if (constraintType === 'C' && constraintCheckExpression && columnCount === 1 && columns.length === 1) {
+    if (constraintType === 'C' && checkExpression && columnCount === 1 && columns.length === 1) {
       if (!tableConstraints[tableName]) tableConstraints[tableName] = {};
       const column = columns[0];
       if (!tableConstraints[tableName][column]) tableConstraints[tableName][column] = { checks: [] };
       tableConstraints[tableName][column].checks.push({
         name: constraintName,
-        expression: constraintCheckExpression,
+        expression: checkExpression,
       });
     }
     // Column-level unique or primary indexes
@@ -88,7 +87,7 @@ export async function generateConstraints (client: Connection): Promise<{
       const index: Index = {
         name: constraintName,
         type: '',
-        unique: true, // primary and unique indexes all imply uniqueness
+        unique: true,
         pk: constraintType === 'P',
         columns: columns.map((c) => ({
           type: 'column',
