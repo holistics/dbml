@@ -5,8 +5,12 @@ import { generateRawRefs } from './refs';
 import { generateConstraints } from './constraints';
 import { generateIndexes } from './indexes';
 
-const getValidatedClient = async (connection: string): Promise<Connection> => {
-  const client = await getConnection({ connectionString: connection });
+const getValidatedClient = async (username: string, password: string, dbidentifier: string): Promise<Connection> => {
+  const client = await getConnection({
+    username,
+    password,
+    connectionString: dbidentifier,
+  });
   try {
     await client.execute('SELECT 1');
 
@@ -21,9 +25,15 @@ const getValidatedClient = async (connection: string): Promise<Connection> => {
   }
 };
 
-// Expect an Easy Connect string format: username/password@[//]host[:port][/service_name]
+// Expect an Easy Connect string format: username/password@[//]host[:port][/database]
 async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
-  const client = await getValidatedClient(connection);
+  const matches = connection.match(/^(?<username>[^/@:]+)\/(?<password>[^/@:]+)@(\/\/)?(?<dbidentifier>.+)$/);
+  const { username, password, dbidentifier } = matches?.groups || {};
+  if (!username || !password || !dbidentifier) {
+    throw new Error('Invalid Easy Connect string. Expect a string of format \'username/password@[//]host[:port][/database]\'');
+  }
+
+  const client = await getValidatedClient(username, password, dbidentifier);
 
   const tablesAndFieldsRes = generateTablesAndFields(client);
   const constraintsRes = generateConstraints(client);
