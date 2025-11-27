@@ -54,8 +54,24 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
+      oracle:
+        image: gvenzl/oracle-xe:21-slim
+        env:
+          ORACLE_PASSWORD: root
+          ORACLE_DATABASE: dbml_test
+          APP_USER: dbml
+          APP_USER_PASSWORD: root
+        ports:
+          - 1521:1521
+        options: >-
+          --health-cmd healthcheck.sh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
+    - name: Setup Oracle Instant Client
+      uses: iamazeem/setup-oracle-instant-client-action@v2
     - uses: actions/checkout@v3
     - name: Import DDL to Postgres
       run: |
@@ -68,6 +84,9 @@ jobs:
     - name: Import DDL to MSSQL
       run: |
         sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__tests__/db2dbml/mssql/schema.sql
+    - name: Import DDL to Oracle
+      run: |
+        sqlplus -s dbml/root@localhost:1521/dbml_test packages/dbml-cli/__tests__/db2dbml/oracle/schema.sql
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
