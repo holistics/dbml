@@ -86,7 +86,7 @@ jobs:
         sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__tests__/db2dbml/mssql/schema.sql
     - name: Import DDL to Oracle
       run: |
-        sqlplus -s dbml/root@localhost:1521/dbml_test packages/dbml-cli/__tests__/db2dbml/oracle/schema.sql
+        sqlplus -s dbml/root@localhost:1521/dbml_test @packages/dbml-cli/__tests__/db2dbml/oracle/schema.sql
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
