@@ -13,7 +13,7 @@ export async function generateConstraints (client: Connection): Promise<{
             c.CONSTRAINT_NAME AS constraint_name,
             c.TABLE_NAME AS table_name,
             c.CONSTRAINT_TYPE AS constrain_type,
-            c.SEARCH_CONDITION_VC AS constraint_check_expression,
+            c.SEARCH_CONDITION_VC AS constraint_check_expression
         FROM USER_CONSTRAINTS c
         WHERE
           c.CONSTRAINT_TYPE IN ('P', 'U', 'C')
