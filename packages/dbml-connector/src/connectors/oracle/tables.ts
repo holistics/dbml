@@ -6,56 +6,36 @@ export async function generateTablesAndFields (client: Connection): Promise<{
   fields: FieldsDictionary;
 }> {
   const fields: FieldsDictionary = {};
+  // Note: DATA_DEFAULT is LONG type which doesn't support SQL string operations
+  // The oracledb driver fetches LONG as string, so we detect default type in JavaScript
   const tablesAndFieldsSql = `
-    WITH tables_and_fields AS (
-      SELECT
-        cols.TABLE_NAME AS table_name,
-        cols.COLUMN_ID AS column_id,
-        cols.COLUMN_NAME AS column_name,
-        cols.DATA_TYPE AS data_type,
-        cols.DATA_LENGTH AS character_maximum_length,
-        cols.DATA_PRECISION AS numeric_precision,
-        cols.SCALE AS numeric_scale,
-        CASE
-          WHEN cols.IDENTITY_COLUMN = 'YES' THEN 1
-          ELSE 0
-        END AS identity_increment,
-        CASE
-          WHEN cols.NULLABLE = 'Y' THEN 1
-          ELSE 0
-        END AS is_nullable,
-        cols.DATA_DEFAULT AS column_default,
-        tcoms.COMMENTS AS table_comment,
-        ccoms.COLUMN_COMMENT AS column_comment
-      FROM
-        USER_TAB_COLUMNS cols -- tables and columns owned by the current user
-      JOIN
-        USER_COL_COMMENTS ccoms -- column comments
-        ON ccoms.COLUMN_NAME = cols.COLUMN_NAME
-        AND ccoms.TABLE_NAME = cols.TABLE_NAME
-      JOIN
-        USER_TAB_COMMENTS tcoms -- table comments
-        ON tcoms.TABLE_NAME = cols.TABLE_NAME
-    )
     SELECT
-      table_name,
-      column_name,
-      data_type,
-      character_maximum_length,
-      numeric_precision,
-      numeric_scale,
-      identity_increment,
-      is_nullable,
-      column_default,
-      table_comment,
-      column_comment,
+      cols.TABLE_NAME AS table_name,
+      cols.COLUMN_NAME AS column_name,
+      cols.DATA_TYPE AS data_type,
+      cols.DATA_LENGTH AS character_maximum_length,
+      cols.DATA_PRECISION AS numeric_precision,
+      cols.DATA_SCALE AS numeric_scale,
       CASE
-        WHEN column_default = '\\'%\\'' THEN 'string'
-        WHEN REGEXP_LIKE(column_default, '^[0-9]+$') THEN 'number' -- only integer are supported as number defaults, otherwise, floats must be quoted like expressions
-        ELSE 'expression'
-      END AS default_type
+        WHEN cols.IDENTITY_COLUMN = 'YES' THEN 1
+        ELSE 0
+      END AS identity_increment,
+      CASE
+        WHEN cols.NULLABLE = 'Y' THEN 1
+        ELSE 0
+      END AS is_nullable,
+      cols.DATA_DEFAULT AS column_default,
+      tcoms.COMMENTS AS table_comment,
+      ccoms.COMMENTS AS column_comment
     FROM
-      tables_and_fields
+      USER_TAB_COLUMNS cols
+    JOIN
+      USER_COL_COMMENTS ccoms
+      ON ccoms.COLUMN_NAME = cols.COLUMN_NAME
+      AND ccoms.TABLE_NAME = cols.TABLE_NAME
+    JOIN
+      USER_TAB_COMMENTS tcoms
+      ON tcoms.TABLE_NAME = cols.TABLE_NAME
   `;
 
   const tablesAndFieldsResult = await client.execute(tablesAndFieldsSql);
@@ -87,6 +67,22 @@ export async function generateTablesAndFields (client: Connection): Promise<{
 
 // Field utils
 
+function getDefaultType (columnDefault: string | null): string {
+  if (columnDefault === null) {
+    return 'expression';
+  }
+  const trimmed = columnDefault.trim();
+  // String defaults are wrapped in single quotes: 'value'
+  if (/^'.*'$/.test(trimmed)) {
+    return 'string';
+  }
+  // Number defaults are integers only (floats would need quotes)
+  if (/^[0-9]+$/.test(trimmed)) {
+    return 'number';
+  }
+  return 'expression';
+}
+
 function generateField (row: Record<string, any>): Field {
   const {
     column_name,
@@ -97,11 +93,11 @@ function generateField (row: Record<string, any>): Field {
     identity_increment,
     is_nullable,
     column_default,
-    default_type,
     column_comment,
   } = row;
 
-  const dbdefault = column_default && default_type !== 'increment' ? getDbdefault(data_type, column_default, default_type) : null;
+  const defaultType = getDefaultType(column_default);
+  const dbdefault = column_default && defaultType !== 'increment' ? getDbdefault(data_type, column_default.trim(), defaultType) : null;
 
   const fieldType = {
     type_name: getFieldType(data_type, character_maximum_length, numeric_precision, numeric_scale),
@@ -197,7 +193,6 @@ const SIZED_DATA_TYPES = new Set([
   'national character',
   'national char varying',
   'national char',
-  'float',
 ]);
 
 // These datatypes can be and only be qualified with precision
@@ -258,15 +253,15 @@ function normalizeFieldType (dataType: string): string {
 export function getFieldType (dataType: string, characterMaximumLength: number, numericPrecision: number | null, numericScale: number | null): string {
   const normalizedDataType = normalizeFieldType(dataType);
   if (normalizedDataType === TIMESTAMP_WITH_LOCAL_TIME_ZONE_DATA_TYPE) {
-    if (numericPrecision !== null) return `timestamp (${numericPrecision}) with local time zone`;
+    if (numericScale !== null) return `timestamp (${numericScale}) with local time zone`;
     return normalizedDataType;
   }
   if (normalizedDataType === TIMESTAMP_WITH_TIME_ZONE_DATA_TYPE) {
-    if (numericPrecision !== null) return `timestamp (${numericPrecision}) with time zone`;
+    if (numericScale !== null) return `timestamp (${numericScale}) with time zone`;
     return normalizedDataType;
   }
   if (normalizedDataType === TIMESTAMP_DATA_TYPE) {
-    if (numericPrecision !== null) return `timestamp (${numericPrecision})`;
+    if (numericScale !== null) return `timestamp (${numericScale})`;
     return normalizedDataType;
   }
   if (normalizedDataType === INTERVAL_YEAR_DATA_TYPE) {

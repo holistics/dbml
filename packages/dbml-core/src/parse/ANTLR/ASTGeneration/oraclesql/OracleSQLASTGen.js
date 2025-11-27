@@ -919,7 +919,8 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   }
 
   visitId_expression (ctx) {
-    return getOriginalText(ctx);
+    const text = getOriginalText(ctx);
+    return text.startsWith('"') ? text.slice(1, -1) : text;
   }
 
   // expression
