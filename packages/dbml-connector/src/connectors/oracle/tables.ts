@@ -1,5 +1,6 @@
 import { Connection } from 'oracledb';
 import { DefaultInfo, DefaultType, Field, FieldsDictionary, Table } from '../types';
+import { EXECUTE_OPTIONS } from './utils';
 
 export async function generateTablesAndFields (client: Connection): Promise<{
   tables: Table[];
@@ -10,51 +11,39 @@ export async function generateTablesAndFields (client: Connection): Promise<{
   // The oracledb driver fetches LONG as string, so we detect default type in JavaScript
   const tablesAndFieldsSql = `
     SELECT
-      cols.TABLE_NAME AS table_name,
-      cols.COLUMN_NAME AS column_name,
-      cols.DATA_TYPE AS data_type,
-      cols.DATA_LENGTH AS character_maximum_length,
-      cols.DATA_PRECISION AS numeric_precision,
-      cols.DATA_SCALE AS numeric_scale,
-      CASE
-        WHEN cols.IDENTITY_COLUMN = 'YES' THEN 1
-        ELSE 0
-      END AS identity_increment,
-      CASE
-        WHEN cols.NULLABLE = 'Y' THEN 1
-        ELSE 0
-      END AS is_nullable,
-      cols.DATA_DEFAULT AS column_default,
-      tcoms.COMMENTS AS table_comment,
-      ccoms.COMMENTS AS column_comment
-    FROM
-      USER_TAB_COLUMNS cols
-    JOIN
-      USER_COL_COMMENTS ccoms
+      cols.TABLE_NAME,
+      cols.COLUMN_NAME,
+      cols.DATA_TYPE,
+      cols.DATA_LENGTH,
+      cols.DATA_PRECISION,
+      cols.DATA_SCALE,
+      CASE WHEN cols.IDENTITY_COLUMN = 'YES' THEN 1 ELSE 0 END AS IDENTITY_INCREMENT,
+      CASE WHEN cols.NULLABLE = 'Y' THEN 1 ELSE 0 END AS IS_NULLABLE,
+      cols.DATA_DEFAULT,
+      tcoms.COMMENTS AS TABLE_COMMENT,
+      ccoms.COMMENTS AS COLUMN_COMMENT
+    FROM USER_TAB_COLUMNS cols
+    JOIN USER_COL_COMMENTS ccoms
       ON ccoms.COLUMN_NAME = cols.COLUMN_NAME
       AND ccoms.TABLE_NAME = cols.TABLE_NAME
-    JOIN
-      USER_TAB_COMMENTS tcoms
+    JOIN USER_TAB_COMMENTS tcoms
       ON tcoms.TABLE_NAME = cols.TABLE_NAME
   `;
 
-  const tablesAndFieldsResult = await client.execute(tablesAndFieldsSql);
+  const tablesAndFieldsResult = await client.execute(tablesAndFieldsSql, [], EXECUTE_OPTIONS);
   const tableMap = tablesAndFieldsResult.rows?.reduce((acc: Record<string, Table>, row) => {
-    const {
-      table_name,
-      table_comment,
-    } = row as any;
-    if (!acc[table_name]) {
-      acc[table_name] = {
-        name: table_name,
+    const { TABLE_NAME, TABLE_COMMENT } = row as any;
+    if (!acc[TABLE_NAME]) {
+      acc[TABLE_NAME] = {
+        name: TABLE_NAME,
         schemaName: '',
-        note: table_comment ? { value: table_comment } : { value: '' },
+        note: TABLE_COMMENT ? { value: TABLE_COMMENT } : { value: '' },
       };
     }
 
-    if (!fields[table_name]) fields[table_name] = [];
+    if (!fields[TABLE_NAME]) fields[TABLE_NAME] = [];
     const field = generateField(row as any);
-    fields[table_name].push(field);
+    fields[TABLE_NAME].push(field);
 
     return acc;
   }, {} as Record<string, Table>) || {};
@@ -67,8 +56,8 @@ export async function generateTablesAndFields (client: Connection): Promise<{
 
 // Field utils
 
-function getDefaultType (columnDefault: string | null): string {
-  if (columnDefault === null) {
+function getDefaultType (columnDefault: string | null | undefined): string {
+  if (columnDefault === null || columnDefault === undefined) {
     return 'expression';
   }
   const trimmed = columnDefault.trim();
@@ -85,32 +74,32 @@ function getDefaultType (columnDefault: string | null): string {
 
 function generateField (row: Record<string, any>): Field {
   const {
-    column_name,
-    data_type,
-    character_maximum_length,
-    numeric_precision,
-    numeric_scale,
-    identity_increment,
-    is_nullable,
-    column_default,
-    column_comment,
+    COLUMN_NAME,
+    DATA_TYPE,
+    DATA_LENGTH,
+    DATA_PRECISION,
+    DATA_SCALE,
+    IDENTITY_INCREMENT,
+    IS_NULLABLE,
+    DATA_DEFAULT,
+    COLUMN_COMMENT,
   } = row;
 
-  const defaultType = getDefaultType(column_default);
-  const dbdefault = column_default && defaultType !== 'increment' ? getDbdefault(data_type, column_default.trim(), defaultType) : null;
+  const defaultType = getDefaultType(DATA_DEFAULT);
+  const dbdefault = DATA_DEFAULT && !IDENTITY_INCREMENT ? getDbdefault(DATA_TYPE, DATA_DEFAULT, defaultType) : null;
 
   const fieldType = {
-    type_name: getFieldType(data_type, character_maximum_length, numeric_precision, numeric_scale),
+    type_name: getFieldType(DATA_TYPE, DATA_LENGTH, DATA_PRECISION, DATA_SCALE),
     schemaName: null,
   };
 
   return {
-    name: column_name,
+    name: COLUMN_NAME,
     type: fieldType,
     dbdefault,
-    not_null: !is_nullable,
-    increment: !!identity_increment,
-    note: column_comment ? { value: column_comment } : { value: '' },
+    not_null: !IS_NULLABLE,
+    increment: !!IDENTITY_INCREMENT,
+    note: COLUMN_COMMENT ? { value: COLUMN_COMMENT } : { value: '' },
   };
 }
 
@@ -121,8 +110,9 @@ function getDbdefault (dataType: string, columnDefault: string | null, defaultTy
     return null;
   }
   if (defaultType === 'string') {
+    const trimmed = columnDefault.trim();
     return {
-      value: columnDefault.slice(1, -1) // slice off single quotes at the start and end of the value
+      value: trimmed.slice(1, -1) // slice off single quotes at the start and end of the value
         .replaceAll('\'\'', '\''), // escape sequences are preserved: in oracle, double single quotes = escape a single quote
       type: defaultType,
     };
