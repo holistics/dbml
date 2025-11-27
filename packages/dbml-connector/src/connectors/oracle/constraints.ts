@@ -12,7 +12,7 @@ export async function generateConstraints (client: Connection): Promise<{
         SELECT 
             c.CONSTRAINT_NAME AS constraint_name,
             c.TABLE_NAME AS table_name,
-            c.CONSTRAINT_TYPE AS constrain_type,
+            c.CONSTRAINT_TYPE AS constraint_type,
             c.SEARCH_CONDITION_VC AS constraint_check_expression
         FROM USER_CONSTRAINTS c
         WHERE

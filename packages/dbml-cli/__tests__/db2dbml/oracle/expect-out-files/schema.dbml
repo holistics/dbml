@@ -39,7 +39,7 @@ Table "DEFAULT_VALUES" {
   "NUM_DEFAULT" number [default: 42]
   "DECIMAL_DEFAULT" number(10, 2) [default: `99.99`]
   "DATE_DEFAULT" date [default: `SYSDATE`]
-  "TIMESTAMP_DEFAULT" timestamp [default: `SYSTIMESTAMP`]
+  "TIMESTAMP_DEFAULT" timestamp (6) [default: `SYSTIMESTAMP`]
   "CHAR_DEFAULT" char(10) [default: 'fixed']
 }
 
@@ -323,9 +323,9 @@ Table "ORACLE_DATA_TYPES" {
   "BINARY_FLOAT_COL" binary_float
   "BINARY_DOUBLE_COL" binary_double
   "DATE_COL" date
-  "TIMESTAMP_COL" timestamp
-  "TIMESTAMP_TZ" timestamp with time zone
-  "TIMESTAMP_LTZ" timestamp with local time zone
+  "TIMESTAMP_COL" timestamp (6)
+  "TIMESTAMP_TZ" timestamp (6) with time zone
+  "TIMESTAMP_LTZ" timestamp (6) with local time zone
   "INTERVAL_YM" interval year to month
   "INTERVAL_DS" interval day to second
   "CLOB_COL" clob
@@ -371,3 +371,47 @@ Ref "FK_REF_SIMPLE":"REF_SIMPLE_PARENT"."ID" < "REF_SIMPLE_CHILD"."PARENT_ID"
 Ref "FK_REF_COMPOSITE":"REF_COMPOSITE_PARENT".("KEY1", "KEY2") < "REF_COMPOSITE_CHILD".("FK1", "FK2")
 
 Ref "FK_ALTER_COMP_SELF":"ALTER_COMP_SELF_REF".("DEPT_ID", "EMP_ID") < "ALTER_COMP_SELF_REF".("PARENT_DEPT_ID", "PARENT_EMP_ID")
+
+Table "SPECIAL_DATA_TYPES" {
+  "ID" number [pk, not null, increment]
+  "TS_DEFAULT" timestamp (6)
+  "TS_0" timestamp (0)
+  "TS_3" timestamp (3)
+  "TS_6" timestamp (6)
+  "TS_9" timestamp (9)
+  "TS_TZ_DEFAULT" timestamp (6) with time zone
+  "TS_TZ_0" timestamp (0) with time zone
+  "TS_TZ_3" timestamp (3) with time zone
+  "TS_TZ_6" timestamp (6) with time zone
+  "TS_TZ_9" timestamp (9) with time zone
+  "TS_LTZ_DEFAULT" timestamp (6) with local time zone
+  "TS_LTZ_0" timestamp (0) with local time zone
+  "TS_LTZ_3" timestamp (3) with local time zone
+  "TS_LTZ_6" timestamp (6) with local time zone
+  "TS_LTZ_9" timestamp (9) with local time zone
+  "IYM_DEFAULT" interval year to month
+  "IYM_2" interval year (2) to month
+  "IYM_4" interval year (4) to month
+  "IYM_9" interval year (9) to month
+  "IDS_DEFAULT" interval day to second
+  "IDS_DAY_4" interval day (4) to second
+  "IDS_SEC_3" interval day to second (3)
+  "IDS_BOTH" interval day (5) to second (4)
+  "FLOAT_DEFAULT" float(126)
+  "FLOAT_1" float(1)
+  "FLOAT_63" float(63)
+  "FLOAT_126" float(126)
+  "NUM_DEFAULT" number
+  "NUM_P" number(5)
+  "NUM_PS" number(10, 2)
+  "NUM_P_NEG_S" number(10, -2)
+  "CHAR_DEFAULT" char(1)
+  "CHAR_SIZED" char(50)
+  "VARCHAR2_SIZED" varchar2(255)
+  "NCHAR_DEFAULT" nchar(1)
+  "NCHAR_SIZED" nchar(50)
+  "NVARCHAR2_SIZED" nvarchar2(255)
+  "RAW_SIZED" raw(200)
+  "UROWID_DEFAULT" urowid
+  "UROWID_SIZED" urowid(100)
+}
