@@ -17,7 +17,7 @@ export async function generateConstraints (client: Connection): Promise<{
         FROM USER_CONSTRAINTS c
         WHERE
           c.CONSTRAINT_TYPE IN ('P', 'U', 'C')
-          AND (c.CONSTRAINT_TYPE != 'C' OR c.SEARCH_CONDITION_VC NOT ILIKE '%IS NOT NULL%')
+          AND (c.CONSTRAINT_TYPE != 'C' OR UPPER(c.SEARCH_CONDITION_VC) NOT LIKE '%IS NOT NULL%')
     ),
     constraint_columns AS (
         SELECT 
@@ -67,7 +67,7 @@ export async function generateConstraints (client: Connection): Promise<{
     if (constraintType === 'C' && constraintCheckExpression && columnCount === 1 && columns.length === 1) {
       if (!tableConstraints[tableName]) tableConstraints[tableName] = {};
       const column = columns[0];
-      if (!tableConstraints[tableName][column].checks) tableConstraints[tableName][column].checks = [];
+      if (!tableConstraints[tableName][column]) tableConstraints[tableName][column] = { checks: [] };
       tableConstraints[tableName][column].checks.push({
         name: constraintName,
         expression: constraintCheckExpression,
@@ -77,7 +77,7 @@ export async function generateConstraints (client: Connection): Promise<{
     if (['P', 'U'].includes(constraintType) && columnCount === 1 && columns.length === 1) {
       if (!tableConstraints[tableName]) tableConstraints[tableName] = {};
       const column = columns[0];
-      if (!tableConstraints[tableName][column].checks) tableConstraints[tableName][column].checks = [];
+      if (!tableConstraints[tableName][column]) tableConstraints[tableName][column] = { checks: [] };
       tableConstraints[tableName][column].pk ||= constraintType === 'P';
       tableConstraints[tableName][column].unique ||= constraintType === 'U';
     }
