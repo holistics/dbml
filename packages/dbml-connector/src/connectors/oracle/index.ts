@@ -46,6 +46,8 @@ async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
     else indexes[key].push(...uniqueIndexes[key]);
   });
 
+  await client.close();
+
   return {
     tables,
     fields,
