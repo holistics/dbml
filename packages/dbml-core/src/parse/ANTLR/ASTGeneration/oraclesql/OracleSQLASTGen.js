@@ -570,7 +570,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   visitDatatype (ctx) {
     const typeName = getOriginalText(ctx);
     return {
-      type_name: typeName,
+      type_name: typeName.startsWith('"') ? typeName.slice(1, -1) : typeName,
     };
   }
 
