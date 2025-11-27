@@ -10,13 +10,13 @@ export async function generateIndexes (client: Connection): Promise<IndexesDicti
             i.INDEX_NAME AS index_name,
             i.TABLE_NAME AS table_name,
             CASE
-              WHEN i.INDEX_TYPE ILIKE '%NORMAL' THEN 'btree' -- btree index is stored as 'NORMAL' or 'FUNCTION-BASED NORMAL'
+              WHEN i.INDEX_TYPE LIKE '%NORMAL' THEN 'btree' -- btree index is stored as 'NORMAL' or 'FUNCTION-BASED NORMAL'
               ELSE LOWER(REGEXP_REPLACE(i.INDEX_TYPE, '^FUNCTION-BASED ', ''))
             END AS index_type,
             CASE
               WHEN i.UNIQUENESS = 'UNIQUE' THEN 1
               ELSE 0
-            END AS is_unique,
+            END AS is_unique
         FROM USER_INDEXES i
         WHERE NOT EXISTS (
             SELECT 1 

@@ -31,7 +31,7 @@ export async function generateTablesAndFields (client: Connection): Promise<{
         USER_TAB_COLUMNS cols -- tables and columns owned by the current user
       JOIN
         USER_COL_COMMENTS ccoms -- column comments
-        ON ccoms.COLUMN_ID = cols.COLUMN_ID
+        ON ccoms.COLUMN_NAME = cols.COLUMN_NAME
         AND ccoms.TABLE_NAME = cols.TABLE_NAME
       JOIN
         USER_TAB_COMMENTS tcoms -- table comments
