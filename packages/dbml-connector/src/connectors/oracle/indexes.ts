@@ -47,7 +47,7 @@ export async function generateIndexes (client: Connection): Promise<IndexesDicti
             LISTAGG(ice.column, '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY ice.column_position) AS columns,
             LISTAGG(ice.column_type, '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY ice.column_position) AS column_types
         FROM index_columns_and_expressions ice
-        GROUP BY ie.INDEX_NAME
+        GROUP BY ice.INDEX_NAME
     )
     SELECT 
         i.index_name,
