@@ -12,7 +12,7 @@ const getValidatedClient = async (username: string, password: string, dbidentifi
     connectionString: dbidentifier,
   });
   try {
-    await client.execute('SELECT 1');
+    await client.execute('SELECT 1 FROM DUAL');
 
     return client;
   } catch (error) {
