@@ -1,3 +1,13 @@
+Table "ALTER_COMPOSITE_UNIQUE" {
+  "ID" number [pk, not null, increment]
+  "FIRST_NAME" varchar2(50)
+  "LAST_NAME" varchar2(50)
+
+  Indexes {
+    (FIRST_NAME, LAST_NAME) [unique, name: "UQ_ALTER_FULLNAME"]
+  }
+}
+
 Table "ALTER_ADD_COLUMN" {
   "ID" number [pk, not null, increment]
   "NAME" varchar2(100)
@@ -112,16 +122,6 @@ Table "ORACLE_DATA_TYPES" {
   "INTERVAL_DS" "interval day(2) to second(6)"
 }
 
-Table "ALTER_COMPOSITE_UNIQUE" {
-  "ID" number [pk, not null, increment]
-  "FIRST_NAME" varchar2(50)
-  "LAST_NAME" varchar2(50)
-
-  Indexes {
-    (FIRST_NAME, LAST_NAME) [unique, name: "UQ_ALTER_FULLNAME"]
-  }
-}
-
 Table "TABLE_WITH_COMMENTS" {
   "ID" number [pk, not null, increment, note: 'Unique identifier']
   "NAME" varchar2(100) [not null, note: 'Item name - required field']
@@ -183,6 +183,16 @@ Table "SPECIAL_DATA_TYPES" {
   "RAW_SIZED" raw(200)
   "UROWID_DEFAULT" urowid(4000)
   "UROWID_SIZED" urowid(100)
+}
+
+Table "DEFAULT_VALUES" {
+  "ID" number [pk, not null, increment]
+  "STR_DEFAULT" varchar2(50) [default: 'default_string']
+  "NUM_DEFAULT" number [default: 42]
+  "DECIMAL_DEFAULT" "number(10, 2)" [default: 99.99]
+  "DATE_DEFAULT" date [default: `SYSDATE`]
+  "TIMESTAMP_DEFAULT" timestamp(6) [default: `SYSTIMESTAMP`]
+  "CHAR_DEFAULT" char(10) [default: 'fixed']
 }
 
 Table "NOT_NULL_COLS" {
@@ -301,16 +311,6 @@ Table "ALTER_ADD_PK" {
 Table "ALTER_FK_PARENT" {
   "ID" number [pk, not null, increment]
   "NAME" varchar2(100)
-}
-
-Table "DEFAULT_VALUES" {
-  "ID" number [pk, not null, increment]
-  "STR_DEFAULT" varchar2(50) [default: 'default_string']
-  "NUM_DEFAULT" number [default: 42]
-  "DECIMAL_DEFAULT" "number(10, 2)" [default: 99.99]
-  "DATE_DEFAULT" date [default: `SYSDATE`]
-  "TIMESTAMP_DEFAULT" timestamp(6) [default: `SYSTIMESTAMP`]
-  "CHAR_DEFAULT" char(10) [default: 'fixed']
 }
 
 Table "ALTER_FK_CHILD" {
