@@ -21,14 +21,14 @@ export async function generateConstraints (client: Connection): Promise<{
     constraint_columns AS (
       SELECT
         cc.CONSTRAINT_NAME,
-        LISTAGG(LOWER(cc.COLUMN_NAME), '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY cc.POSITION) AS COLUMNS,
+        LISTAGG(cc.COLUMN_NAME, '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY cc.POSITION) AS COLUMNS,
         COUNT(cc.COLUMN_NAME) AS COLUMN_COUNT
       FROM USER_CONS_COLUMNS cc
       GROUP BY cc.CONSTRAINT_NAME
     )
     SELECT
-      LOWER(ac.CONSTRAINT_NAME) AS "constraint_name",
-      LOWER(ac.TABLE_NAME) AS "table_name",
+      ac.CONSTRAINT_NAME AS "constraint_name",
+      ac.TABLE_NAME AS "table_name",
       cc.COLUMNS AS "columns",
       cc.COLUMN_COUNT AS "column_count",
       ac.CHECK_EXPRESSION AS "check_expression",

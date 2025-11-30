@@ -65,8 +65,8 @@ function getDefaultType (columnDefault: string | null | undefined): string {
   if (/^'.*'$/.test(trimmed)) {
     return 'string';
   }
-  // Number defaults are integers only (floats would need quotes)
-  if (/^[0-9]+$/.test(trimmed)) {
+  // Number defaults are integers or non-scientific floats
+  if (/^[0-9]+$/.test(trimmed) || /^[0-9]*\.[0-9]*$/.test(trimmed)) {
     return 'number';
   }
   return 'expression';

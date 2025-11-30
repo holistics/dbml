@@ -7,11 +7,11 @@ export async function generateRawRefs (client: Connection): Promise<Ref[]> {
 
   const refsListSql = `
     SELECT
-      LOWER(c.CONSTRAINT_NAME) AS "fk_name",
-      LOWER(c.TABLE_NAME) AS "child_table",
-      LISTAGG(LOWER(cc.COLUMN_NAME), '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY cc.POSITION) AS "child_columns",
-      LOWER(p.TABLE_NAME) AS "parent_table",
-      LISTAGG(LOWER(pc.COLUMN_NAME), '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY pc.POSITION) AS "parent_columns",
+      c.CONSTRAINT_NAME AS "fk_name",
+      c.TABLE_NAME AS "child_table",
+      LISTAGG(cc.COLUMN_NAME, '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY cc.POSITION) AS "child_columns",
+      p.TABLE_NAME AS "parent_table",
+      LISTAGG(pc.COLUMN_NAME, '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY pc.POSITION) AS "parent_columns",
       c.DELETE_RULE AS "delete_rule"
     FROM USER_CONSTRAINTS c
     JOIN USER_CONSTRAINTS p
