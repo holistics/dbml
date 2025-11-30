@@ -96,6 +96,14 @@ const createCompilerError = (ctx, message) => {
   }]);
 };
 
+const unquoteString = (str, quoteChar = '"') => {
+  return !str.startsWith(quoteChar)
+    ? str
+    : str
+        .slice(1, -1) // Strip off starting and ending quotes
+        .replaceAll(`${quoteChar}${quoteChar}`, quoteChar); // Unescape quotes, in Oracle, quotes are escaped by doubling it
+};
+
 // Only methods for rules representing whole statements can mutate `data`:
 //   * create_table
 //   * alter_table
@@ -570,7 +578,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   visitDatatype (ctx) {
     const typeName = getOriginalText(ctx);
     return {
-      type_name: typeName.startsWith('"') ? typeName.slice(1, -1) : typeName,
+      type_name: unquoteString(typeName),
     };
   }
 
@@ -920,7 +928,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
 
   visitId_expression (ctx) {
     const text = getOriginalText(ctx);
-    return text.startsWith('"') ? text.slice(1, -1) : text;
+    return unquoteString(text);
   }
 
   // expression
@@ -939,7 +947,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     if (ctx.CHAR_STRING()) {
       return {
         type: DATA_TYPE.STRING,
-        value: value.slice(1, -1),
+        value: unquoteString(value, "'"), // string literals use single quotes
       };
     }
     if (ctx.TRUE()) {
@@ -980,6 +988,6 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   }
 
   visitQuoted_string (ctx) {
-    return getOriginalText(ctx).slice(1, -1).replaceAll("''", "'");
+    return unquoteString(getOriginalText(ctx), "'"); // string literals use single quotes
   }
 }
