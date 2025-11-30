@@ -43,5 +43,5 @@ describe('@dbml/connector', () => {
 
   test.each(scanDirNames(__dirname, 'connectors'))('connectors/%s', async (dirName) => {
     await runTest(path.join(__dirname, 'connectors', dirName));
-  }, 15000);
+  });
 });
