@@ -23,10 +23,10 @@ export async function generateTablesAndFields (client: Connection): Promise<{
       tcoms.COMMENTS AS "table_comment",
       ccoms.COMMENTS AS "column_comment"
     FROM USER_TAB_COLUMNS cols
-    JOIN USER_COL_COMMENTS ccoms
+    LEFT JOIN USER_COL_COMMENTS ccoms
       ON ccoms.COLUMN_NAME = cols.COLUMN_NAME
       AND ccoms.TABLE_NAME = cols.TABLE_NAME
-    JOIN USER_TAB_COMMENTS tcoms
+    LEFT JOIN USER_TAB_COMMENTS tcoms
       ON tcoms.TABLE_NAME = cols.TABLE_NAME
   `;
 
