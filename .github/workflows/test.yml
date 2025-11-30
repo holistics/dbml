@@ -55,7 +55,7 @@ jobs:
           --health-timeout 5s
           --health-retries 10
       oracle:
-        image: gvenzl/oracle-xe:21-slim
+        image: gvenzl/oracle-xe:21-slim-faststart
         env:
           ORACLE_PASSWORD: root
           ORACLE_DATABASE: dbml_test
@@ -65,9 +65,9 @@ jobs:
           - 1521:1521
         options: >-
           --health-cmd healthcheck.sh
-          --health-interval 20s
-          --health-timeout 10s
-          --health-retries 20
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
     - name: Setup Oracle Instant Client
