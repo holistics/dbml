@@ -523,3 +523,5 @@ CREATE TABLE special_data_types (
   urowid_sized UROWID(100)
 );
 
+EXIT;
+
