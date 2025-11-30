@@ -1,412 +1,417 @@
-Table "alter_add_column" {
-  "name" varchar2(100)
-  "another_col" number [default: 0]
-  "id" number [pk, not null, increment]
-  "new_col" varchar2(50)
-  "date_col" date [default: `SYSDATE`]
+Table "ALTER_ADD_COLUMN" {
+  "DATE_COL" date [default: `SYSDATE`]
+  "NEW_COL" varchar2(50)
+  "NAME" varchar2(100)
+  "ID" number [pk, not null, increment]
+  "ANOTHER_COL" number [default: 0]
 }
 
-Table "idx_btree_table" {
-  "category" varchar2(50)
-  "code" varchar2(20)
-  "id" number [pk, not null, increment]
+Table "IDX_BTREE_TABLE" {
+  "CATEGORY" varchar2(50)
+  "ID" number [pk, not null, increment]
+  "CODE" varchar2(20)
 
   Indexes {
-    code [type: btree, name: "idx_btree_code"]
+    CODE [type: btree, name: "IDX_BTREE_CODE"]
   }
 }
 
-Table "idx_bitmap_table" {
-  "gender" varchar2(10)
-  "id" number [pk, not null, increment]
-  "status" varchar2(20)
+Table "IDX_BITMAP_TABLE" {
+  "ID" number [pk, not null, increment]
+  "GENDER" varchar2(10)
+  "STATUS" varchar2(20)
 
   Indexes {
-    gender [type: bitmap, name: "idx_bitmap_gender"]
-    status [type: bitmap, name: "idx_bitmap_status"]
+    GENDER [type: bitmap, name: "IDX_BITMAP_GENDER"]
+    STATUS [type: bitmap, name: "IDX_BITMAP_STATUS"]
   }
 }
 
-Table "idx_unique_table" {
-  "ssn" varchar2(20)
-  "id" number [pk, not null, increment]
-  "email" varchar2(100)
+Table "IDX_UNIQUE_TABLE" {
+  "ID" number [pk, not null, increment]
+  "EMAIL" varchar2(100)
+  "SSN" varchar2(20)
 
   Indexes {
-    email [type: btree, unique, name: "idx_unique_email"]
-    ssn [type: btree, unique, name: "idx_unique_ssn"]
+    EMAIL [type: btree, unique, name: "IDX_UNIQUE_EMAIL"]
+    SSN [type: btree, unique, name: "IDX_UNIQUE_SSN"]
   }
 }
 
-Table "idx_composite_only" {
-  "col1" varchar2(50)
-  "id" number [pk, not null, increment]
-  "col2" varchar2(50)
-  "col3" varchar2(50)
+Table "IDX_COMPOSITE_ONLY" {
+  "COL1" varchar2(50)
+  "COL2" varchar2(50)
+  "ID" number [pk, not null, increment]
+  "COL3" varchar2(50)
 
   Indexes {
-    (col1, col2) [type: btree, name: "idx_comp_12"]
-    (col1, col2, col3) [type: btree, name: "idx_comp_123"]
-    (col2, col3) [type: btree, name: "idx_comp_23"]
+    (COL1, COL2) [type: btree, name: "IDX_COMP_12"]
+    (COL1, COL2, COL3) [type: btree, name: "IDX_COMP_123"]
+    (COL2, COL3) [type: btree, name: "IDX_COMP_23"]
   }
 }
 
-Table "idx_functional_only" {
-  "id" number [pk, not null, increment]
-  "description" varchar2(500)
-  "full_name" varchar2(100)
+Table "IDX_FUNCTIONAL_ONLY" {
+  "DESCRIPTION" varchar2(500)
+  "FULL_NAME" varchar2(100)
+  "ID" number [pk, not null, increment]
 
   Indexes {
-    `LOWER("full_name")` [type: btree, name: "idx_func_lower_name"]
-    `SUBSTR("description",1,100)` [type: btree, name: "idx_func_substr"]
+    `LOWER("FULL_NAME")` [type: btree, name: "IDX_FUNC_LOWER_NAME"]
+    `SUBSTR("DESCRIPTION",1,100)` [type: btree, name: "IDX_FUNC_SUBSTR"]
   }
 }
 
-Table "ref_simple_parent" {
-  "name" varchar2(100)
-  "id" number [pk, not null, increment]
+Table "REF_SIMPLE_PARENT" {
+  "ID" number [pk, not null, increment]
+  "NAME" varchar2(100)
 }
 
-Table "ref_simple_child" {
-  "id" number [pk, not null, increment]
-  "parent_id" number
+Table "REF_SIMPLE_CHILD" {
+  "PARENT_ID" number
+  "ID" number [pk, not null, increment]
 }
 
-Table "ref_composite_parent" {
-  "data" varchar2(100)
-  "key2" number [not null]
-  "key1" number [not null]
+Table "REF_COMPOSITE_PARENT" {
+  "DATA" varchar2(100)
+  "KEY1" number [not null]
+  "KEY2" number [not null]
 
   Indexes {
-    (key1, key2) [pk, unique, name: "pk_ref_comp_parent"]
+    (KEY1, KEY2) [pk, unique, name: "PK_REF_COMP_PARENT"]
   }
 }
 
-Table "ref_composite_child" {
-  "fk1" number
-  "id" number [pk, not null, increment]
-  "fk2" number
+Table "REF_COMPOSITE_CHILD" {
+  "FK2" number
+  "ID" number [pk, not null, increment]
+  "FK1" number
 }
 
-Table "oracle_data_types" {
-  "nclob_col" nclob
-  "rowid_col" rowid
-  "varchar2_col" varchar2(100)
-  "blob_col" blob
-  "binary_float_col" binary_float
-  "timestamp_col" timestamp(6)
-  "timestamp_ltz" "timestamp(6) with local time zone"
-  "nchar_col" nchar(20)
-  "number_col" number
-  "clob_col" clob
-  "binary_double_col" binary_double
-  "id" number [pk, not null, increment]
-  "raw_col" raw(100)
-  "interval_ds" "interval day(2) to second(6)"
-  "timestamp_tz" "timestamp(6) with time zone"
-  "interval_ym" "interval year(2) to month"
-  "date_col" date
-  "number_precision" "number(10, 0)"
-  "number_scale" "number(10, 2)"
-  "char_col" char(10)
-  "nvarchar2_col" nvarchar2(200)
+Table "ORACLE_DATA_TYPES" {
+  "CLOB_COL" clob
+  "NCLOB_COL" nclob
+  "TIMESTAMP_TZ" "timestamp(6) with time zone"
+  "NVARCHAR2_COL" nvarchar2(200)
+  "DATE_COL" date
+  "ROWID_COL" rowid
+  "RAW_COL" raw(100)
+  "NUMBER_PRECISION" "number(10, 0)"
+  "TIMESTAMP_LTZ" "timestamp(6) with local time zone"
+  "INTERVAL_DS" "interval day(2) to second(6)"
+  "CHAR_COL" char(10)
+  "NUMBER_COL" number
+  "BINARY_DOUBLE_COL" binary_double
+  "NUMBER_SCALE" "number(10, 2)"
+  "BINARY_FLOAT_COL" binary_float
+  "INTERVAL_YM" "interval year(2) to month"
+  "NCHAR_COL" nchar(20)
+  "TIMESTAMP_COL" timestamp(6)
+  "BLOB_COL" blob
+  "ID" number [pk, not null, increment]
+  "VARCHAR2_COL" varchar2(100)
 }
 
-Table "table_with_comments" {
-  "id" number [pk, not null, increment, note: 'Unique identifier']
-  "description" varchar2(500) [note: 'Optional description of the item']
-  "name" varchar2(100) [not null, note: 'Item name - required field']
+Table "ALTER_COMPOSITE_UNIQUE" {
+  "LAST_NAME" varchar2(50)
+  "FIRST_NAME" varchar2(50)
+  "ID" number [pk, not null, increment]
+
+  Indexes {
+    (FIRST_NAME, LAST_NAME) [unique, name: "UQ_ALTER_FULLNAME"]
+  }
+}
+
+Table "TABLE_WITH_COMMENTS" {
+  "DESCRIPTION" varchar2(500) [note: 'Optional description of the item']
+  "NAME" varchar2(100) [not null, note: 'Item name - required field']
+  "ID" number [pk, not null, increment, note: 'Unique identifier']
   Note: 'This table stores items with descriptions'
 }
 
-Table "alter_comp_self_ref" {
-  "parent_dept_id" number
-  "emp_id" number [not null]
-  "parent_emp_id" number
-  "name" varchar2(100)
-  "dept_id" number [not null]
+Table "ALTER_COMP_SELF_REF" {
+  "PARENT_DEPT_ID" number
+  "DEPT_ID" number [not null]
+  "EMP_ID" number [not null]
+  "PARENT_EMP_ID" number
+  "NAME" varchar2(100)
 
   Indexes {
-    (dept_id, emp_id) [pk, unique, name: "pk_alter_comp_self"]
+    (DEPT_ID, EMP_ID) [pk, unique, name: "PK_ALTER_COMP_SELF"]
   }
 }
 
-Table "special_data_types" {
-  "raw_sized" raw(200)
-  "ts_tz_0" "timestamp(0) with time zone"
-  "urowid_default" urowid(4000)
-  "ts_9" timestamp(9)
-  "ts_tz_default" "timestamp(6) with time zone"
-  "ts_3" timestamp(3)
-  "ts_6" timestamp(6)
-  "float_1" float(1)
-  "num_ps" "number(10, 2)"
-  "char_sized" char(50)
-  "ids_default" "interval day(2) to second(6)"
-  "num_default" number
-  "nchar_default" nchar(2)
-  "ids_both" "interval day(5) to second(4)"
-  "float_63" float(63)
-  "varchar2_sized" varchar2(255)
-  "ids_day_4" "interval day(4) to second(6)"
-  "float_126" float(126)
-  "num_p" "number(5, 0)"
-  "nchar_sized" nchar(100)
-  "ts_tz_9" "timestamp(9) with time zone"
-  "iym_9" "interval year(9) to month"
-  "iym_default" "interval year(2) to month"
-  "num_p_neg_s" "number(10, -2)"
-  "ts_ltz_default" "timestamp(6) with local time zone"
-  "ts_0" timestamp(0)
-  "ts_default" timestamp(6)
-  "iym_2" "interval year(2) to month"
-  "ts_ltz_9" "timestamp(9) with local time zone"
-  "ts_tz_3" "timestamp(3) with time zone"
-  "ts_ltz_6" "timestamp(6) with local time zone"
-  "iym_4" "interval year(4) to month"
-  "float_default" float(126)
-  "urowid_sized" urowid(100)
-  "ts_tz_6" "timestamp(6) with time zone"
-  "nvarchar2_sized" nvarchar2(510)
-  "ts_ltz_3" "timestamp(3) with local time zone"
-  "char_default" char(1)
-  "id" number [pk, not null, increment]
-  "ts_ltz_0" "timestamp(0) with local time zone"
-  "ids_sec_3" "interval day(2) to second(3)"
+Table "SPECIAL_DATA_TYPES" {
+  "ID" number [pk, not null, increment]
+  "TS_LTZ_0" "timestamp(0) with local time zone"
+  "TS_LTZ_3" "timestamp(3) with local time zone"
+  "IYM_4" "interval year(4) to month"
+  "FLOAT_DEFAULT" float(126)
+  "TS_DEFAULT" timestamp(6)
+  "NVARCHAR2_SIZED" nvarchar2(510)
+  "UROWID_SIZED" urowid(100)
+  "TS_LTZ_DEFAULT" "timestamp(6) with local time zone"
+  "FLOAT_1" float(1)
+  "NUM_DEFAULT" number
+  "UROWID_DEFAULT" urowid(4000)
+  "IDS_DAY_4" "interval day(4) to second(6)"
+  "NUM_PS" "number(10, 2)"
+  "IDS_DEFAULT" "interval day(2) to second(6)"
+  "IDS_BOTH" "interval day(5) to second(4)"
+  "TS_TZ_9" "timestamp(9) with time zone"
+  "IYM_9" "interval year(9) to month"
+  "NCHAR_DEFAULT" nchar(2)
+  "IYM_DEFAULT" "interval year(2) to month"
+  "IDS_SEC_3" "interval day(2) to second(3)"
+  "CHAR_DEFAULT" char(1)
+  "TS_TZ_0" "timestamp(0) with time zone"
+  "NUM_P" "number(5, 0)"
+  "TS_LTZ_6" "timestamp(6) with local time zone"
+  "VARCHAR2_SIZED" varchar2(255)
+  "CHAR_SIZED" char(50)
+  "FLOAT_126" float(126)
+  "TS_TZ_DEFAULT" "timestamp(6) with time zone"
+  "NCHAR_SIZED" nchar(100)
+  "TS_9" timestamp(9)
+  "TS_TZ_3" "timestamp(3) with time zone"
+  "TS_LTZ_9" "timestamp(9) with local time zone"
+  "IYM_2" "interval year(2) to month"
+  "TS_6" timestamp(6)
+  "RAW_SIZED" raw(200)
+  "TS_0" timestamp(0)
+  "TS_3" timestamp(3)
+  "FLOAT_63" float(63)
+  "TS_TZ_6" "timestamp(6) with time zone"
+  "NUM_P_NEG_S" "number(10, -2)"
 }
 
-Table "default_values" {
-  "date_default" date [default: `SYSDATE`]
-  "timestamp_default" timestamp(6) [default: `SYSTIMESTAMP`]
-  "id" number [pk, not null, increment]
-  "str_default" varchar2(50) [default: 'default_string']
-  "char_default" char(10) [default: 'fixed']
-  "decimal_default" "number(10, 2)" [default: `99.99`]
-  "num_default" number [default: 42]
+Table "NOT_NULL_COLS" {
+  "REQUIRED_DATE" date [not null]
+  "REQUIRED_NUM" number [not null]
+  "REQUIRED_STR" varchar2(100) [not null]
+  "ID" number [pk, not null, increment]
 }
 
-Table "not_null_cols" {
-  "required_date" date [not null]
-  "required_num" number [not null]
-  "required_str" varchar2(100) [not null]
-  "id" number [pk, not null, increment]
+Table "NULLABLE_COLS" {
+  "ID" number [pk, not null, increment]
+  "OPTIONAL_STR" varchar2(100)
+  "OPTIONAL_DATE" date
+  "OPTIONAL_NUM" number
 }
 
-Table "nullable_cols" {
-  "id" number [pk, not null, increment]
-  "optional_str" varchar2(100)
-  "optional_date" date
-  "optional_num" number
+Table "AUTOINCREMENT_TABLE" {
+  "ID" number [pk, not null, increment]
+  "NAME" varchar2(100) [not null]
 }
 
-Table "unique_cols" {
-  "id" number [pk, not null, increment]
-  "email" varchar2(100) [unique, not null]
-  "username" varchar2(50) [unique, not null]
+Table "UNIQUE_COLS" {
+  "USERNAME" varchar2(50) [unique, not null]
+  "EMAIL" varchar2(100) [unique, not null]
+  "ID" number [pk, not null, increment]
 }
 
-Table "composite_pk" {
-  "quantity" number [default: 0]
-  "price" "number(10, 2)"
-  "product_id" number [not null]
-  "region_id" number [not null]
+Table "COMPOSITE_PK" {
+  "REGION_ID" number [not null]
+  "QUANTITY" number [default: 0]
+  "PRODUCT_ID" number [not null]
+  "PRICE" "number(10, 2)"
 
   Indexes {
-    (region_id, product_id) [pk, unique, name: "pk_composite"]
+    (REGION_ID, PRODUCT_ID) [pk, unique, name: "PK_COMPOSITE"]
   }
 }
 
-Table "composite_self_ref" {
-  "parent_dept_id" number
-  "name" varchar2(100) [not null]
-  "parent_emp_id" number
-  "emp_id" number [not null]
-  "dept_id" number [not null]
+Table "COMPOSITE_SELF_REF" {
+  "EMP_ID" number [not null]
+  "PARENT_DEPT_ID" number
+  "NAME" varchar2(100) [not null]
+  "DEPT_ID" number [not null]
+  "PARENT_EMP_ID" number
 
   Indexes {
-    (dept_id, emp_id) [pk, unique, name: "pk_composite_self_ref"]
+    (DEPT_ID, EMP_ID) [pk, unique, name: "PK_COMPOSITE_SELF_REF"]
   }
 }
 
-Table "composite_unique" {
-  "id" number [pk, not null, increment]
-  "first_name" varchar2(50) [not null]
-  "email" varchar2(100)
-  "last_name" varchar2(50) [not null]
+Table "COMPOSITE_UNIQUE" {
+  "ID" number [pk, not null, increment]
+  "EMAIL" varchar2(100)
+  "FIRST_NAME" varchar2(50) [not null]
+  "LAST_NAME" varchar2(50) [not null]
 
   Indexes {
-    (first_name, last_name) [unique, name: "uq_full_name"]
+    (FIRST_NAME, LAST_NAME) [unique, name: "UQ_FULL_NAME"]
   }
 }
 
-Table "functional_index_table" {
-  "full_name" varchar2(100) [not null]
-  "email" varchar2(100) [not null]
-  "id" number [pk, not null, increment]
+Table "FUNCTIONAL_INDEX_TABLE" {
+  "ID" number [pk, not null, increment]
+  "EMAIL" varchar2(100) [not null]
+  "FULL_NAME" varchar2(100) [not null]
 
   Indexes {
-    `LOWER("full_name")` [type: btree, name: "idx_lower_name"]
-    `UPPER("email")` [type: btree, name: "idx_upper_email"]
+    `LOWER("FULL_NAME")` [type: btree, name: "IDX_LOWER_NAME"]
+    `UPPER("EMAIL")` [type: btree, name: "IDX_UPPER_EMAIL"]
   }
 }
 
-Table "composite_index_table" {
-  "id" number [pk, not null, increment]
-  "last_name" varchar2(50) [not null]
-  "department" varchar2(50)
-  "first_name" varchar2(50) [not null]
+Table "COMPOSITE_INDEX_TABLE" {
+  "ID" number [pk, not null, increment]
+  "FIRST_NAME" varchar2(50) [not null]
+  "LAST_NAME" varchar2(50) [not null]
+  "DEPARTMENT" varchar2(50)
 
   Indexes {
-    (department, last_name) [type: btree, name: "idx_composite_dept"]
-    (first_name, last_name) [type: btree, name: "idx_composite_name"]
+    (DEPARTMENT, LAST_NAME) [type: btree, name: "IDX_COMPOSITE_DEPT"]
+    (FIRST_NAME, LAST_NAME) [type: btree, name: "IDX_COMPOSITE_NAME"]
   }
 }
 
-Table "mixed_index_table" {
-  "email" varchar2(100)
-  "last_name" varchar2(50) [not null]
-  "id" number [pk, not null, increment]
-  "first_name" varchar2(50) [not null]
+Table "MIXED_INDEX_TABLE" {
+  "LAST_NAME" varchar2(50) [not null]
+  "FIRST_NAME" varchar2(50) [not null]
+  "ID" number [pk, not null, increment]
+  "EMAIL" varchar2(100)
 
   Indexes {
-    (first_name, `UPPER("email")`) [type: btree, name: "idx_mixed_email"]
-    (`LOWER("first_name")`, last_name) [type: btree, name: "idx_mixed_name"]
+    (FIRST_NAME, `UPPER("EMAIL")`) [type: btree, name: "IDX_MIXED_EMAIL"]
+    (`LOWER("FIRST_NAME")`, LAST_NAME) [type: btree, name: "IDX_MIXED_NAME"]
   }
 }
 
-Table "column_index_table" {
-  "id" number [pk, not null, increment]
-  "status" varchar2(20)
-  "category" varchar2(50)
-  "created_at" date [default: `SYSDATE
+Table "COLUMN_INDEX_TABLE" {
+  "CATEGORY" varchar2(50)
+  "STATUS" varchar2(20)
+  "ID" number [pk, not null, increment]
+  "CREATED_AT" date [default: `SYSDATE
 `]
 
   Indexes {
-    category [type: btree, name: "idx_category"]
-    created_at [type: btree, name: "idx_created_at"]
-    status [type: btree, name: "idx_status"]
+    CATEGORY [type: btree, name: "IDX_CATEGORY"]
+    CREATED_AT [type: btree, name: "IDX_CREATED_AT"]
+    STATUS [type: btree, name: "IDX_STATUS"]
   }
 }
 
-Table "alter_add_pk" {
-  "id" number [pk, not null]
-  "name" varchar2(100)
+Table "ALTER_ADD_PK" {
+  "ID" number [pk, not null]
+  "NAME" varchar2(100)
 }
 
-Table "alter_fk_parent" {
-  "id" number [pk, not null, increment]
-  "name" varchar2(100)
+Table "ALTER_FK_PARENT" {
+  "ID" number [pk, not null, increment]
+  "NAME" varchar2(100)
 }
 
-Table "alter_fk_child" {
-  "id" number [pk, not null, increment]
-  "parent_id" number
+Table "DEFAULT_VALUES" {
+  "DATE_DEFAULT" date [default: `SYSDATE`]
+  "TIMESTAMP_DEFAULT" timestamp(6) [default: `SYSTIMESTAMP`]
+  "ID" number [pk, not null, increment]
+  "STR_DEFAULT" varchar2(50) [default: 'default_string']
+  "CHAR_DEFAULT" char(10) [default: 'fixed']
+  "DECIMAL_DEFAULT" "number(10, 2)" [default: 99.99]
+  "NUM_DEFAULT" number [default: 42]
 }
 
-Table "alter_self_ref" {
-  "parent_id" number
-  "id" number [pk, not null, increment]
-  "name" varchar2(100)
+Table "ALTER_FK_CHILD" {
+  "PARENT_ID" number
+  "ID" number [pk, not null, increment]
 }
 
-Table "alter_add_check" {
-  "id" number [pk, not null, increment]
-  "status" varchar2(20) [check: `status IN ('A', 'B', 'C')`]
-  "age" number [check: `age >= 18`]
-  "salary" "number(10, 2)" [check: `salary > 0`]
+Table "ALTER_SELF_REF" {
+  "ID" number [pk, not null, increment]
+  "PARENT_ID" number
+  "NAME" varchar2(100)
 }
 
-Table "alter_add_unique" {
-  "code" varchar2(20) [unique]
-  "email" varchar2(100) [unique]
-  "id" number [pk, not null, increment]
+Table "ALTER_ADD_CHECK" {
+  "SALARY" "number(10, 2)" [check: `salary > 0`]
+  "STATUS" varchar2(20) [check: `status IN ('A', 'B', 'C')`]
+  "AGE" number [check: `age >= 18`]
+  "ID" number [pk, not null, increment]
 }
 
-Table "alter_composite_pk" {
-  "region_id" number [not null]
-  "product_id" number [not null]
-  "quantity" number
+Table "ALTER_ADD_UNIQUE" {
+  "ID" number [pk, not null, increment]
+  "CODE" varchar2(20) [unique]
+  "EMAIL" varchar2(100) [unique]
+}
+
+Table "ALTER_COMPOSITE_PK" {
+  "PRODUCT_ID" number [not null]
+  "QUANTITY" number
+  "REGION_ID" number [not null]
 
   Indexes {
-    (region_id, product_id) [pk, unique, name: "pk_alter_composite"]
+    (REGION_ID, PRODUCT_ID) [pk, unique, name: "PK_ALTER_COMPOSITE"]
   }
 }
 
-Table "alter_composite_fk_parent" {
-  "name" varchar2(100)
-  "emp_id" number [not null]
-  "dept_id" number [not null]
+Table "ALTER_COMPOSITE_FK_PARENT" {
+  "EMP_ID" number [not null]
+  "DEPT_ID" number [not null]
+  "NAME" varchar2(100)
 
   Indexes {
-    (dept_id, emp_id) [pk, unique, name: "pk_alter_comp_parent"]
+    (DEPT_ID, EMP_ID) [pk, unique, name: "PK_ALTER_COMP_PARENT"]
   }
 }
 
-Table "alter_composite_fk_child" {
-  "id" number [pk, not null, increment]
-  "ref_emp_id" number
-  "ref_dept_id" number
+Table "ALTER_COMPOSITE_FK_CHILD" {
+  "REF_DEPT_ID" number
+  "ID" number [pk, not null, increment]
+  "REF_EMP_ID" number
 }
 
-Table "alter_composite_unique" {
-  "first_name" varchar2(50)
-  "id" number [pk, not null, increment]
-  "last_name" varchar2(50)
-
-  Indexes {
-    (first_name, last_name) [unique, name: "uq_alter_fullname"]
-  }
+Table "PK_SIMPLE" {
+  "ID" number [pk, not null, increment]
+  "NAME" varchar2(100) [not null]
 }
 
-Table "pk_simple" {
-  "id" number [pk, not null, increment]
-  "name" varchar2(100) [not null]
+Table "SELF_REF_FK" {
+  "PARENT_ID" number
+  "ID" number [pk, not null, increment]
+  "NAME" varchar2(100) [not null]
 }
 
-Table "self_ref_fk" {
-  "parent_id" number
-  "id" number [pk, not null, increment]
-  "name" varchar2(100) [not null]
+Table "FK_PARENT" {
+  "ID" number [pk, not null, increment]
+  "NAME" varchar2(100) [not null]
 }
 
-Table "fk_parent" {
-  "id" number [pk, not null, increment]
-  "name" varchar2(100) [not null]
+Table "FK_CHILD" {
+  "ID" number [pk, not null, increment]
+  "PARENT_ID" number [not null]
+  "DESCRIPTION" varchar2(200)
 }
 
-Table "fk_child" {
-  "id" number [pk, not null, increment]
-  "parent_id" number [not null]
-  "description" varchar2(200)
-}
-
-Table "check_constraints" {
-  "status" varchar2(20) [not null, check: `status IN ('active', 'inactive', 'pending')`]
-  "id" number [pk, not null, increment]
-  "start_date" date
-  "end_date" date
-  "age" number [not null, check: `age > 0`]
-  "salary" "number(10, 2)" [not null, check: `salary BETWEEN 0 AND 1000000`]
+Table "CHECK_CONSTRAINTS" {
+  "STATUS" varchar2(20) [not null, check: `status IN ('active', 'inactive', 'pending')`]
+  "ID" number [pk, not null, increment]
+  "START_DATE" date
+  "END_DATE" date
+  "AGE" number [not null, check: `age > 0`]
+  "SALARY" "number(10, 2)" [not null, check: `salary BETWEEN 0 AND 1000000`]
 
   Checks {
-    `start_date <= end_date` [name: 'chk_date_range']
+    `start_date <= end_date` [name: 'CHK_DATE_RANGE']
   }
 }
 
-Ref "fk_self_ref":"self_ref_fk"."id" < "self_ref_fk"."parent_id" [delete: set null]
+Ref "FK_SELF_REF":"SELF_REF_FK"."ID" < "SELF_REF_FK"."PARENT_ID" [delete: set null]
 
-Ref "fk_alter_self":"alter_self_ref"."id" < "alter_self_ref"."parent_id" [delete: set null]
+Ref "FK_ALTER_SELF":"ALTER_SELF_REF"."ID" < "ALTER_SELF_REF"."PARENT_ID" [delete: set null]
 
-Ref "fk_ref_simple":"ref_simple_parent"."id" < "ref_simple_child"."parent_id"
+Ref "FK_REF_SIMPLE":"REF_SIMPLE_PARENT"."ID" < "REF_SIMPLE_CHILD"."PARENT_ID"
 
-Ref "fk_alter_parent":"alter_fk_parent"."id" < "alter_fk_child"."parent_id" [delete: cascade]
+Ref "FK_ALTER_PARENT":"ALTER_FK_PARENT"."ID" < "ALTER_FK_CHILD"."PARENT_ID" [delete: cascade]
 
-Ref "fk_child_parent":"fk_parent"."id" < "fk_child"."parent_id" [delete: cascade]
+Ref "FK_CHILD_PARENT":"FK_PARENT"."ID" < "FK_CHILD"."PARENT_ID" [delete: cascade]
 
-Ref "fk_ref_composite":"ref_composite_parent".("key1", "key2") < "ref_composite_child".("fk1", "fk2")
+Ref "FK_REF_COMPOSITE":"REF_COMPOSITE_PARENT".("KEY1", "KEY2") < "REF_COMPOSITE_CHILD".("FK1", "FK2")
 
-Ref "fk_composite_self":"composite_self_ref".("dept_id", "emp_id") < "composite_self_ref".("parent_dept_id", "parent_emp_id") [delete: set null]
+Ref "FK_COMPOSITE_SELF":"COMPOSITE_SELF_REF".("DEPT_ID", "EMP_ID") < "COMPOSITE_SELF_REF".("PARENT_DEPT_ID", "PARENT_EMP_ID") [delete: set null]
 
-Ref "fk_alter_composite":"alter_composite_fk_parent".("dept_id", "emp_id") < "alter_composite_fk_child".("ref_dept_id", "ref_emp_id")
+Ref "FK_ALTER_COMPOSITE":"ALTER_COMPOSITE_FK_PARENT".("DEPT_ID", "EMP_ID") < "ALTER_COMPOSITE_FK_CHILD".("REF_DEPT_ID", "REF_EMP_ID")
 
-Ref "fk_alter_comp_self":"alter_comp_self_ref".("dept_id", "emp_id") < "alter_comp_self_ref".("parent_dept_id", "parent_emp_id")
+Ref "FK_ALTER_COMP_SELF":"ALTER_COMP_SELF_REF".("DEPT_ID", "EMP_ID") < "ALTER_COMP_SELF_REF".("PARENT_DEPT_ID", "PARENT_EMP_ID")

@@ -5,14 +5,14 @@ import { EXECUTE_OPTIONS } from './utils';
 export async function generateIndexes (client: Connection): Promise<IndexesDictionary> {
   const query = `
     SELECT
-      LOWER(i.INDEX_NAME) AS "index_name",
-      LOWER(i.TABLE_NAME) AS "table_name",
+      i.INDEX_NAME AS "index_name",
+      i.TABLE_NAME AS "table_name",
       CASE
         WHEN i.INDEX_TYPE LIKE '%NORMAL' THEN 'btree'
         ELSE LOWER(REGEXP_REPLACE(i.INDEX_TYPE, '^FUNCTION-BASED ', ''))
       END AS "index_type",
       CASE WHEN i.UNIQUENESS = 'UNIQUE' THEN 1 ELSE 0 END AS "is_unique",
-      LOWER(ic.COLUMN_NAME) AS "column_name",
+      ic.COLUMN_NAME AS "column_name",
       ic.COLUMN_POSITION AS "column_position",
       ie.COLUMN_EXPRESSION AS "column_expression"
     FROM USER_INDEXES i
