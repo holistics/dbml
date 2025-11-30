@@ -21,18 +21,18 @@ export async function generateConstraints (client: Connection): Promise<{
     constraint_columns AS (
       SELECT
         cc.CONSTRAINT_NAME,
-        LISTAGG(cc.COLUMN_NAME, '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY cc.POSITION) AS COLUMNS,
+        LISTAGG(LOWER(cc.COLUMN_NAME), '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY cc.POSITION) AS COLUMNS,
         COUNT(cc.COLUMN_NAME) AS COLUMN_COUNT
       FROM USER_CONS_COLUMNS cc
       GROUP BY cc.CONSTRAINT_NAME
     )
     SELECT
-      ac.CONSTRAINT_NAME,
-      ac.TABLE_NAME,
-      cc.COLUMNS,
-      cc.COLUMN_COUNT,
-      ac.CHECK_EXPRESSION,
-      ac.CONSTRAINT_TYPE
+      LOWER(ac.CONSTRAINT_NAME) AS "constraint_name",
+      LOWER(ac.TABLE_NAME) AS "table_name",
+      cc.COLUMNS AS "columns",
+      cc.COLUMN_COUNT AS "column_count",
+      ac.CHECK_EXPRESSION AS "check_expression",
+      ac.CONSTRAINT_TYPE AS "constraint_type"
     FROM all_constraints ac
     LEFT JOIN constraint_columns cc
       ON ac.CONSTRAINT_NAME = cc.CONSTRAINT_NAME
@@ -44,13 +44,13 @@ export async function generateConstraints (client: Connection): Promise<{
 
   const res = await client.execute(query, [], EXECUTE_OPTIONS);
   res.rows?.forEach((row) => {
-    const { CONSTRAINT_NAME, TABLE_NAME, COLUMNS, COLUMN_COUNT, CHECK_EXPRESSION, CONSTRAINT_TYPE } = row as Record<string, unknown>;
-    const tableName = TABLE_NAME as string;
-    const constraintName = CONSTRAINT_NAME as string || '';
-    const columns = ((COLUMNS as string) || '').split(LIST_SEPARATOR);
-    const columnCount = (COLUMN_COUNT as number) || 1;
-    const constraintType = CONSTRAINT_TYPE as 'P' | 'U' | 'C';
-    const checkExpression = (CHECK_EXPRESSION || null) as string | null;
+    const { constraint_name, table_name, columns: columnsStr, column_count, check_expression, constraint_type } = row as Record<string, unknown>;
+    const tableName = table_name as string;
+    const constraintName = (constraint_name as string) || '';
+    const columns = ((columnsStr as string) || '').split(LIST_SEPARATOR);
+    const columnCount = (column_count as number) || 1;
+    const constraintType = constraint_type as 'P' | 'U' | 'C';
+    const checkExpression = (check_expression || null) as string | null;
 
     // Table-level check constraints
     if (constraintType === 'C' && checkExpression && columnCount > 1) {

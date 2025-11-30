@@ -7,12 +7,12 @@ export async function generateRawRefs (client: Connection): Promise<Ref[]> {
 
   const refsListSql = `
     SELECT
-      c.CONSTRAINT_NAME AS FK_NAME,
-      c.TABLE_NAME AS CHILD_TABLE,
-      LISTAGG(cc.COLUMN_NAME, '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY cc.POSITION) AS CHILD_COLUMNS,
-      p.TABLE_NAME AS PARENT_TABLE,
-      LISTAGG(pc.COLUMN_NAME, '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY pc.POSITION) AS PARENT_COLUMNS,
-      c.DELETE_RULE
+      LOWER(c.CONSTRAINT_NAME) AS "fk_name",
+      LOWER(c.TABLE_NAME) AS "child_table",
+      LISTAGG(LOWER(cc.COLUMN_NAME), '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY cc.POSITION) AS "child_columns",
+      LOWER(p.TABLE_NAME) AS "parent_table",
+      LISTAGG(LOWER(pc.COLUMN_NAME), '${LIST_SEPARATOR}') WITHIN GROUP (ORDER BY pc.POSITION) AS "parent_columns",
+      c.DELETE_RULE AS "delete_rule"
     FROM USER_CONSTRAINTS c
     JOIN USER_CONSTRAINTS p
       ON c.R_CONSTRAINT_NAME = p.CONSTRAINT_NAME
@@ -31,26 +31,26 @@ export async function generateRawRefs (client: Connection): Promise<Ref[]> {
 
   const refsQueryResult = await client.execute(refsListSql, [], EXECUTE_OPTIONS);
   refsQueryResult.rows?.forEach((refRow) => {
-    const { FK_NAME, CHILD_TABLE, CHILD_COLUMNS, PARENT_TABLE, PARENT_COLUMNS, DELETE_RULE } = refRow as Record<string, string>;
+    const { fk_name, child_table, child_columns, parent_table, parent_columns, delete_rule } = refRow as Record<string, string>;
 
     const ep1: RefEndpoint = {
-      tableName: CHILD_TABLE,
+      tableName: child_table,
       schemaName: '',
-      fieldNames: CHILD_COLUMNS.split(LIST_SEPARATOR),
+      fieldNames: child_columns.split(LIST_SEPARATOR),
       relation: '*',
     };
 
     const ep2: RefEndpoint = {
-      tableName: PARENT_TABLE,
+      tableName: parent_table,
       schemaName: '',
-      fieldNames: PARENT_COLUMNS.split(LIST_SEPARATOR),
+      fieldNames: parent_columns.split(LIST_SEPARATOR),
       relation: '1',
     };
 
     refs.push({
-      name: FK_NAME,
+      name: fk_name,
       endpoints: [ep1, ep2],
-      onDelete: DELETE_RULE === 'NO ACTION' ? null : DELETE_RULE,
+      onDelete: delete_rule === 'NO ACTION' ? null : delete_rule,
       onUpdate: null,
     });
   });

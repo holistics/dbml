@@ -11,17 +11,17 @@ export async function generateTablesAndFields (client: Connection): Promise<{
   // The oracledb driver fetches LONG as string, so we detect default type in JavaScript
   const tablesAndFieldsSql = `
     SELECT
-      cols.TABLE_NAME,
-      cols.COLUMN_NAME,
-      cols.DATA_TYPE,
-      cols.DATA_LENGTH,
-      cols.DATA_PRECISION,
-      cols.DATA_SCALE,
-      CASE WHEN cols.IDENTITY_COLUMN = 'YES' THEN 1 ELSE 0 END AS IDENTITY_INCREMENT,
-      CASE WHEN cols.NULLABLE = 'Y' THEN 1 ELSE 0 END AS IS_NULLABLE,
-      cols.DATA_DEFAULT,
-      tcoms.COMMENTS AS TABLE_COMMENT,
-      ccoms.COMMENTS AS COLUMN_COMMENT
+      cols.TABLE_NAME AS "table_name",
+      cols.COLUMN_NAME AS "column_name",
+      cols.DATA_TYPE AS "data_type",
+      cols.DATA_LENGTH AS "data_length",
+      cols.DATA_PRECISION AS "data_precision",
+      cols.DATA_SCALE AS "data_scale",
+      CASE WHEN cols.IDENTITY_COLUMN = 'YES' THEN 1 ELSE 0 END AS "identity_increment",
+      CASE WHEN cols.NULLABLE = 'Y' THEN 1 ELSE 0 END AS "is_nullable",
+      cols.DATA_DEFAULT AS "data_default",
+      tcoms.COMMENTS AS "table_comment",
+      ccoms.COMMENTS AS "column_comment"
     FROM USER_TAB_COLUMNS cols
     JOIN USER_COL_COMMENTS ccoms
       ON ccoms.COLUMN_NAME = cols.COLUMN_NAME
@@ -32,18 +32,18 @@ export async function generateTablesAndFields (client: Connection): Promise<{
 
   const tablesAndFieldsResult = await client.execute(tablesAndFieldsSql, [], EXECUTE_OPTIONS);
   const tableMap = tablesAndFieldsResult.rows?.reduce((acc: Record<string, Table>, row) => {
-    const { TABLE_NAME, TABLE_COMMENT } = row as any;
-    if (!acc[TABLE_NAME]) {
-      acc[TABLE_NAME] = {
-        name: TABLE_NAME,
+    const { table_name, table_comment } = row as any;
+    if (!acc[table_name]) {
+      acc[table_name] = {
+        name: table_name,
         schemaName: '',
-        note: TABLE_COMMENT ? { value: TABLE_COMMENT } : { value: '' },
+        note: table_comment ? { value: table_comment } : { value: '' },
       };
     }
 
-    if (!fields[TABLE_NAME]) fields[TABLE_NAME] = [];
+    if (!fields[table_name]) fields[table_name] = [];
     const field = generateField(row as any);
-    fields[TABLE_NAME].push(field);
+    fields[table_name].push(field);
 
     return acc;
   }, {} as Record<string, Table>) || {};
@@ -74,32 +74,32 @@ function getDefaultType (columnDefault: string | null | undefined): string {
 
 function generateField (row: Record<string, any>): Field {
   const {
-    COLUMN_NAME,
-    DATA_TYPE,
-    DATA_LENGTH,
-    DATA_PRECISION,
-    DATA_SCALE,
-    IDENTITY_INCREMENT,
-    IS_NULLABLE,
-    DATA_DEFAULT,
-    COLUMN_COMMENT,
+    column_name,
+    data_type,
+    data_length,
+    data_precision,
+    data_scale,
+    identity_increment,
+    is_nullable,
+    data_default,
+    column_comment,
   } = row;
 
-  const defaultType = getDefaultType(DATA_DEFAULT);
-  const dbdefault = DATA_DEFAULT && !IDENTITY_INCREMENT ? getDbdefault(DATA_TYPE, DATA_DEFAULT, defaultType) : null;
+  const defaultType = getDefaultType(data_default);
+  const dbdefault = data_default && !identity_increment ? getDbdefault(data_type, data_default, defaultType) : null;
 
   const fieldType = {
-    type_name: getFieldType(DATA_TYPE, DATA_LENGTH, DATA_PRECISION, DATA_SCALE),
+    type_name: getFieldType(data_type, data_length, data_precision, data_scale),
     schemaName: null,
   };
 
   return {
-    name: COLUMN_NAME,
+    name: column_name,
     type: fieldType,
     dbdefault,
-    not_null: !IS_NULLABLE,
-    increment: !!IDENTITY_INCREMENT,
-    note: COLUMN_COMMENT ? { value: COLUMN_COMMENT } : { value: '' },
+    not_null: !is_nullable,
+    increment: !!identity_increment,
+    note: column_comment ? { value: column_comment } : { value: '' },
   };
 }
 

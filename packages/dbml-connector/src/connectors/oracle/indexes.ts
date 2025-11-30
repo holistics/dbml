@@ -5,16 +5,16 @@ import { EXECUTE_OPTIONS } from './utils';
 export async function generateIndexes (client: Connection): Promise<IndexesDictionary> {
   const query = `
     SELECT
-      i.INDEX_NAME,
-      i.TABLE_NAME,
+      LOWER(i.INDEX_NAME) AS "index_name",
+      LOWER(i.TABLE_NAME) AS "table_name",
       CASE
         WHEN i.INDEX_TYPE LIKE '%NORMAL' THEN 'btree'
         ELSE LOWER(REGEXP_REPLACE(i.INDEX_TYPE, '^FUNCTION-BASED ', ''))
-      END AS INDEX_TYPE,
-      CASE WHEN i.UNIQUENESS = 'UNIQUE' THEN 1 ELSE 0 END AS IS_UNIQUE,
-      ic.COLUMN_NAME,
-      ic.COLUMN_POSITION,
-      ie.COLUMN_EXPRESSION
+      END AS "index_type",
+      CASE WHEN i.UNIQUENESS = 'UNIQUE' THEN 1 ELSE 0 END AS "is_unique",
+      LOWER(ic.COLUMN_NAME) AS "column_name",
+      ic.COLUMN_POSITION AS "column_position",
+      ie.COLUMN_EXPRESSION AS "column_expression"
     FROM USER_INDEXES i
     LEFT JOIN USER_IND_COLUMNS ic
       ON i.INDEX_NAME = ic.INDEX_NAME
@@ -35,25 +35,25 @@ export async function generateIndexes (client: Connection): Promise<IndexesDicti
   const indexMap: Record<string, { table: string; type: string; unique: boolean; columns: Array<{ type: 'column' | 'expression'; value: string }> }> = {};
 
   res.rows?.forEach((row) => {
-    const { INDEX_NAME, TABLE_NAME, INDEX_TYPE, IS_UNIQUE, COLUMN_NAME, COLUMN_EXPRESSION } = row as Record<string, unknown>;
+    const { index_name, table_name, index_type, is_unique, column_name, column_expression } = row as Record<string, unknown>;
 
-    const name = INDEX_NAME as string;
-    const table = TABLE_NAME as string;
-    const type = INDEX_TYPE as string;
-    const unique = !!(IS_UNIQUE as number);
+    const name = index_name as string;
+    const table = table_name as string;
+    const type = index_type as string;
+    const unique = !!(is_unique as number);
 
-    if (COLUMN_EXPRESSION) {
+    if (column_expression) {
       if (!indexMap[name]) {
         indexMap[name] = { table, type, unique, columns: [] };
       }
-      indexMap[name].columns.push({ type: 'expression', value: COLUMN_EXPRESSION as string });
+      indexMap[name].columns.push({ type: 'expression', value: column_expression as string });
       return;
     }
-    if (COLUMN_NAME) {
+    if (column_name) {
       if (!indexMap[name]) {
         indexMap[name] = { table, type, unique, columns: [] };
       }
-      indexMap[name].columns.push({ type: 'column', value: COLUMN_NAME as string });
+      indexMap[name].columns.push({ type: 'column', value: column_name as string });
       return;
     }
   });
