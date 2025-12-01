@@ -16,7 +16,7 @@ export async function generateConstraints (client: Connection): Promise<{
         c.SEARCH_CONDITION_VC AS CHECK_EXPRESSION
       FROM USER_CONSTRAINTS c
       WHERE c.CONSTRAINT_TYPE IN ('P', 'U', 'C')
-        AND (c.CONSTRAINT_TYPE != 'C' OR UPPER(c.SEARCH_CONDITION_VC) NOT LIKE '%IS NOT NULL%')
+        AND (c.CONSTRAINT_TYPE != 'C' OR UPPER(c.SEARCH_CONDITION_VC) NOT LIKE '%IS NOT NULL')
     ),
     constraint_columns AS (
       SELECT
