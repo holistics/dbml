@@ -4,6 +4,7 @@ import { generateTablesAndFields } from './tables';
 import { generateRawRefs } from './refs';
 import { generateConstraints } from './constraints';
 import { generateIndexes } from './indexes';
+import { processEasyConnectString } from './utils';
 
 const getValidatedClient = async (username: string, password: string, dbidentifier: string): Promise<Connection> => {
   const client = await getConnection({
@@ -30,11 +31,7 @@ const getValidatedClient = async (username: string, password: string, dbidentifi
 // `port` and `database` (and the parts enclosed in `[]`) are optional
 // Explanation of the format: https://www.orafaq.com/wiki/EZCONNECT
 async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
-  const matches = connection.match(/^(?<username>[^/@:]+)\/(?<password>[^/@:]+)@(\/\/)?(?<dbidentifier>.+)$/);
-  const { username, password, dbidentifier } = matches?.groups || {};
-  if (!username || !password || !dbidentifier) {
-    throw new Error('Invalid Easy Connect string. Expect a string of format \'username/password@[//]host[:port][/database]\'');
-  }
+  const { username, password, dbidentifier } = processEasyConnectString(connection);
 
   const client = await getValidatedClient(username, password, dbidentifier);
 
