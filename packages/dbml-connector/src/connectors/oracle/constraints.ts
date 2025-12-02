@@ -41,6 +41,7 @@ export async function generateConstraints (client: Connection): Promise<{
       AND obj.OBJECT_TYPE = 'TABLE'
     ORDER BY
       obj.CREATED,
+      obj.OBJECT_ID,
       ac.CONSTRAINT_NAME
   `;
 

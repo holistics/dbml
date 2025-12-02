@@ -2269,16 +2269,16 @@
     ],
     "TABLE_WITH_COMMENTS": [
       {
-        "name": "ID",
+        "name": "DESCRIPTION",
         "type": {
-          "type_name": "number",
+          "type_name": "varchar2(500)",
           "schemaName": null
         },
         "dbdefault": null,
-        "not_null": true,
-        "increment": true,
+        "not_null": false,
+        "increment": false,
         "note": {
-          "value": "Unique\nidentifier"
+          "value": "Optional description of the item"
         }
       },
       {
@@ -2295,16 +2295,16 @@
         }
       },
       {
-        "name": "DESCRIPTION",
+        "name": "ID",
         "type": {
-          "type_name": "varchar2(500)",
+          "type_name": "number",
           "schemaName": null
         },
         "dbdefault": null,
-        "not_null": false,
-        "increment": false,
+        "not_null": true,
+        "increment": true,
         "note": {
-          "value": "Optional description of the item"
+          "value": "Unique\nidentifier"
         }
       }
     ],

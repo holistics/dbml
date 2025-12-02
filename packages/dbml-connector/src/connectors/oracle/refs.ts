@@ -34,9 +34,12 @@ export async function generateRawRefs (client: Connection): Promise<Ref[]> {
       p.TABLE_NAME,
       c.DELETE_RULE,
       obj_child.CREATED,
-      obj_parent.CREATED
+      obj_child.OBJECT_ID,
+      obj_parent.CREATED,
+      obj_parent.OBJECT_ID
     ORDER BY
       obj_child.CREATED,
+      obj_child.OBJECT_ID,
       c.CONSTRAINT_NAME
   `;
 
