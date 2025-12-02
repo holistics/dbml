@@ -558,11 +558,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
 
   visitIdentifier (ctx) {
     const text = getOriginalText(ctx);
-    if (text.startsWith('"')) {
-      return text.substring(1, text.length - 1);
-    }
-    text.replace('""', '"');
-    return text;
+    return unquoteString(text);
   }
 
   visitType_name (ctx) {
@@ -977,8 +973,8 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     if (ctx.column_name()) {
       return {
         type: CONSTRAINT_TYPE.COLUMN,
-        rawValue: value,
-        value: getOriginalText(ctx.column_name()),
+        rawValue: unquoteString(value),
+        value: unquoteString(getOriginalText(ctx.column_name())),
       };
     }
     return {
@@ -989,5 +985,9 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
 
   visitQuoted_string (ctx) {
     return unquoteString(getOriginalText(ctx), "'"); // string literals use single quotes
+  }
+
+  visitRegular_id (ctx) {
+    return unquoteString(getOriginalText(ctx), '"');
   }
 }

@@ -26,6 +26,8 @@ const getValidatedClient = async (username: string, password: string, dbidentifi
 };
 
 // Expect an Easy Connect string format: username/password@[//]host[:port][/database]
+// `username` and `password` are mandatory
+// `port` and `database` (and the parts enclosed in `[]`) are optional
 // Explanation of the format: https://www.orafaq.com/wiki/EZCONNECT
 async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
   const matches = connection.match(/^(?<username>[^/@:]+)\/(?<password>[^/@:]+)@(\/\/)?(?<dbidentifier>.+)$/);
