@@ -288,6 +288,7 @@ export function getFieldType (dataType: string, characterMaximumLength: number, 
     return normalizedDataType;
   }
 
+  // This is not needed since we return `normalizedDataType` either if the condition holds true or not
   // if (UNQUALIFIED_DATA_TYPES.has(normalizedDataType)) {
   //   return normalizedDataType;
   // }
