@@ -33,7 +33,7 @@ export async function generateTablesAndFields (client: Connection): Promise<{
     LEFT JOIN USER_OBJECTS obj
       ON obj.OBJECT_NAME = cols.TABLE_NAME
       AND obj.OBJECT_TYPE = 'TABLE'
-    ORDER BY obj.CREATED, cols.COLUMN_ID
+    ORDER BY obj.CREATED, obj.OBJECT_ID, cols.COLUMN_ID
   `;
 
   const tablesAndFieldsResult = await client.execute(tablesAndFieldsSql, [], EXECUTE_OPTIONS);

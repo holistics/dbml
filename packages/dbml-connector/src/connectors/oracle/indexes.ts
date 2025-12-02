@@ -29,7 +29,7 @@ export async function generateIndexes (client: Connection): Promise<IndexesDicti
       FROM USER_CONSTRAINTS c
       WHERE c.INDEX_NAME = i.INDEX_NAME
     )
-    ORDER BY obj.CREATED, i.INDEX_NAME, ic.COLUMN_POSITION
+    ORDER BY obj.CREATED, obj.OBJECT_ID, i.INDEX_NAME, ic.COLUMN_POSITION
   `;
 
   const res = await client.execute(query, [], EXECUTE_OPTIONS);

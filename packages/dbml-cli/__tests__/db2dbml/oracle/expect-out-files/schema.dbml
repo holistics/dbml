@@ -162,8 +162,8 @@ Table "ALTER_FK_PARENT" {
 }
 
 Table "ALTER_FK_CHILD" {
-  "PARENT_ID" number
   "ID" number [pk, not null, increment]
+  "PARENT_ID" number
 }
 
 Table "ALTER_SELF_REF" {
@@ -312,11 +312,6 @@ Table "REF_COMPOSITE_CHILD" {
 }
 
 Table "ORACLE_DATA_TYPES" {
-  "CLOB_COL" clob
-  "NCLOB_COL" nclob
-  "BLOB_COL" blob
-  "RAW_COL" raw(100)
-  "ROWID_COL" rowid
   "ID" number [pk, not null, increment]
   "CHAR_COL" char(10)
   "VARCHAR2_COL" varchar2(100)
@@ -333,14 +328,19 @@ Table "ORACLE_DATA_TYPES" {
   "TIMESTAMP_LTZ" "timestamp(6) with local time zone"
   "INTERVAL_YM" "interval year(2) to month"
   "INTERVAL_DS" "interval day(2) to second(6)"
+  "CLOB_COL" clob
+  "NCLOB_COL" nclob
+  "BLOB_COL" blob
+  "RAW_COL" raw(100)
+  "ROWID_COL" rowid
 }
 
 Table "TABLE_WITH_COMMENTS" {
-  "ID" number [pk, not null, increment, note: 'Unique
-identifier']
+  "ID" number [pk, not null, increment, note: '''Unique
+identifier''']
   "NAME" varchar2(100) [not null, note: '!@#$%^&*()[]"Item name - required field']
   "DESCRIPTION" varchar2(500) [note: 'Optional description of the item']
-  Note: '''This table\'\'
+  Note: '''This table\'
 stores items with descriptions'''
 }
 
