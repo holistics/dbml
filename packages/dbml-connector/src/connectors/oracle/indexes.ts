@@ -21,12 +21,15 @@ export async function generateIndexes (client: Connection): Promise<IndexesDicti
     LEFT JOIN USER_IND_EXPRESSIONS ie
       ON i.INDEX_NAME = ie.INDEX_NAME
       AND ic.COLUMN_POSITION = ie.COLUMN_POSITION
+    LEFT JOIN USER_OBJECTS obj
+      ON obj.OBJECT_NAME = i.TABLE_NAME
+      AND obj.OBJECT_TYPE = 'TABLE'
     WHERE NOT EXISTS (
       SELECT 1
       FROM USER_CONSTRAINTS c
       WHERE c.INDEX_NAME = i.INDEX_NAME
     )
-    ORDER BY i.INDEX_NAME, ic.COLUMN_POSITION
+    ORDER BY obj.CREATED, i.INDEX_NAME, ic.COLUMN_POSITION
   `;
 
   const res = await client.execute(query, [], EXECUTE_OPTIONS);

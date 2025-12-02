@@ -1,105 +1,42 @@
 {
   "tables": [
     {
-      "name": "ALTER_ADD_COLUMN",
+      "name": "PK_SIMPLE",
       "schemaName": "",
       "note": {
         "value": ""
       }
     },
     {
-      "name": "IDX_BTREE_TABLE",
+      "name": "SELF_REF_FK",
       "schemaName": "",
       "note": {
         "value": ""
       }
     },
     {
-      "name": "IDX_BITMAP_TABLE",
+      "name": "FK_PARENT",
       "schemaName": "",
       "note": {
         "value": ""
       }
     },
     {
-      "name": "IDX_UNIQUE_TABLE",
+      "name": "FK_CHILD",
       "schemaName": "",
       "note": {
         "value": ""
       }
     },
     {
-      "name": "IDX_COMPOSITE_ONLY",
+      "name": "CHECK_CONSTRAINTS",
       "schemaName": "",
       "note": {
         "value": ""
       }
     },
     {
-      "name": "IDX_FUNCTIONAL_ONLY",
-      "schemaName": "",
-      "note": {
-        "value": ""
-      }
-    },
-    {
-      "name": "REF_SIMPLE_PARENT",
-      "schemaName": "",
-      "note": {
-        "value": ""
-      }
-    },
-    {
-      "name": "REF_SIMPLE_CHILD",
-      "schemaName": "",
-      "note": {
-        "value": ""
-      }
-    },
-    {
-      "name": "REF_COMPOSITE_PARENT",
-      "schemaName": "",
-      "note": {
-        "value": ""
-      }
-    },
-    {
-      "name": "REF_COMPOSITE_CHILD",
-      "schemaName": "",
-      "note": {
-        "value": ""
-      }
-    },
-    {
-      "name": "ORACLE_DATA_TYPES",
-      "schemaName": "",
-      "note": {
-        "value": ""
-      }
-    },
-    {
-      "name": "ALTER_COMPOSITE_UNIQUE",
-      "schemaName": "",
-      "note": {
-        "value": ""
-      }
-    },
-    {
-      "name": "TABLE_WITH_COMMENTS",
-      "schemaName": "",
-      "note": {
-        "value": "This table stores items with descriptions"
-      }
-    },
-    {
-      "name": "ALTER_COMP_SELF_REF",
-      "schemaName": "",
-      "note": {
-        "value": ""
-      }
-    },
-    {
-      "name": "SPECIAL_DATA_TYPES",
+      "name": "DEFAULT_VALUES",
       "schemaName": "",
       "note": {
         "value": ""
@@ -197,13 +134,6 @@
       }
     },
     {
-      "name": "DEFAULT_VALUES",
-      "schemaName": "",
-      "note": {
-        "value": ""
-      }
-    },
-    {
       "name": "ALTER_FK_CHILD",
       "schemaName": "",
       "note": {
@@ -253,35 +183,105 @@
       }
     },
     {
-      "name": "PK_SIMPLE",
+      "name": "ALTER_COMPOSITE_UNIQUE",
       "schemaName": "",
       "note": {
         "value": ""
       }
     },
     {
-      "name": "SELF_REF_FK",
+      "name": "ALTER_ADD_COLUMN",
       "schemaName": "",
       "note": {
         "value": ""
       }
     },
     {
-      "name": "FK_PARENT",
+      "name": "IDX_BTREE_TABLE",
       "schemaName": "",
       "note": {
         "value": ""
       }
     },
     {
-      "name": "FK_CHILD",
+      "name": "IDX_BITMAP_TABLE",
       "schemaName": "",
       "note": {
         "value": ""
       }
     },
     {
-      "name": "CHECK_CONSTRAINTS",
+      "name": "IDX_UNIQUE_TABLE",
+      "schemaName": "",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "IDX_COMPOSITE_ONLY",
+      "schemaName": "",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "IDX_FUNCTIONAL_ONLY",
+      "schemaName": "",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "REF_SIMPLE_PARENT",
+      "schemaName": "",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "REF_SIMPLE_CHILD",
+      "schemaName": "",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "REF_COMPOSITE_PARENT",
+      "schemaName": "",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "REF_COMPOSITE_CHILD",
+      "schemaName": "",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "ORACLE_DATA_TYPES",
+      "schemaName": "",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "TABLE_WITH_COMMENTS",
+      "schemaName": "",
+      "note": {
+        "value": "This table'\nstores items with descriptions"
+      }
+    },
+    {
+      "name": "ALTER_COMP_SELF_REF",
+      "schemaName": "",
+      "note": {
+        "value": ""
+      }
+    },
+    {
+      "name": "SPECIAL_DATA_TYPES",
       "schemaName": "",
       "note": {
         "value": ""
@@ -289,6 +289,1280 @@
     }
   ],
   "fields": {
+    "PK_SIMPLE": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NAME",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "SELF_REF_FK": [
+      {
+        "name": "PARENT_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NAME",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "FK_PARENT": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NAME",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "FK_CHILD": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "PARENT_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "DESCRIPTION",
+        "type": {
+          "type_name": "varchar2(200)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "CHECK_CONSTRAINTS": [
+      {
+        "name": "STATUS",
+        "type": {
+          "type_name": "varchar2(20)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "START_DATE",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "END_DATE",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "AGE",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "SALARY",
+        "type": {
+          "type_name": "number(10, 2)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "DEFAULT_VALUES": [
+      {
+        "name": "DATE_DEFAULT",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "SYSDATE",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "TIMESTAMP_DEFAULT",
+        "type": {
+          "type_name": "timestamp(6)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "SYSTIMESTAMP",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "STR_DEFAULT",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "default_string",
+          "type": "string"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "CHAR_DEFAULT",
+        "type": {
+          "type_name": "char(10)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "fixed",
+          "type": "string"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "DECIMAL_DEFAULT",
+        "type": {
+          "type_name": "number(10, 2)",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "99.99",
+          "type": "number"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NUM_DEFAULT",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "42",
+          "type": "number"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "NOT_NULL_COLS": [
+      {
+        "name": "REQUIRED_DATE",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "REQUIRED_NUM",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "REQUIRED_STR",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "NULLABLE_COLS": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "OPTIONAL_STR",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "OPTIONAL_DATE",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "OPTIONAL_NUM",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "AUTOINCREMENT_TABLE": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NAME",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "UNIQUE_COLS": [
+      {
+        "name": "USERNAME",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "EMAIL",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "COMPOSITE_PK": [
+      {
+        "name": "REGION_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "QUANTITY",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "0",
+          "type": "number"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "PRODUCT_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "PRICE",
+        "type": {
+          "type_name": "number(10, 2)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "COMPOSITE_SELF_REF": [
+      {
+        "name": "EMP_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "PARENT_DEPT_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NAME",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "DEPT_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "PARENT_EMP_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "COMPOSITE_UNIQUE": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "EMAIL",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "FIRST_NAME",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "LAST_NAME",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "FUNCTIONAL_INDEX_TABLE": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "EMAIL",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "FULL_NAME",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "COMPOSITE_INDEX_TABLE": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "FIRST_NAME",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "LAST_NAME",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "DEPARTMENT",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "MIXED_INDEX_TABLE": [
+      {
+        "name": "LAST_NAME",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "FIRST_NAME",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "EMAIL",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "COLUMN_INDEX_TABLE": [
+      {
+        "name": "CATEGORY",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "STATUS",
+        "type": {
+          "type_name": "varchar2(20)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "CREATED_AT",
+        "type": {
+          "type_name": "date",
+          "schemaName": null
+        },
+        "dbdefault": {
+          "value": "SYSDATE\n",
+          "type": "expression"
+        },
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "ALTER_ADD_PK": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NAME",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "ALTER_FK_PARENT": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NAME",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "ALTER_FK_CHILD": [
+      {
+        "name": "PARENT_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "ALTER_SELF_REF": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "PARENT_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NAME",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "ALTER_ADD_CHECK": [
+      {
+        "name": "SALARY",
+        "type": {
+          "type_name": "number(10, 2)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "STATUS",
+        "type": {
+          "type_name": "varchar2(20)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "AGE",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "ALTER_ADD_UNIQUE": [
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "CODE",
+        "type": {
+          "type_name": "varchar2(20)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "EMAIL",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "ALTER_COMPOSITE_PK": [
+      {
+        "name": "PRODUCT_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "QUANTITY",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "REGION_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "ALTER_COMPOSITE_FK_PARENT": [
+      {
+        "name": "EMP_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "DEPT_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "NAME",
+        "type": {
+          "type_name": "varchar2(100)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "ALTER_COMPOSITE_FK_CHILD": [
+      {
+        "name": "REF_DEPT_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "REF_EMP_ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
+    "ALTER_COMPOSITE_UNIQUE": [
+      {
+        "name": "LAST_NAME",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "FIRST_NAME",
+        "type": {
+          "type_name": "varchar2(50)",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": false,
+        "increment": false,
+        "note": {
+          "value": ""
+        }
+      },
+      {
+        "name": "ID",
+        "type": {
+          "type_name": "number",
+          "schemaName": null
+        },
+        "dbdefault": null,
+        "not_null": true,
+        "increment": true,
+        "note": {
+          "value": ""
+        }
+      }
+    ],
     "ALTER_ADD_COLUMN": [
       {
         "name": "DATE_COL",
@@ -993,33 +2267,7 @@
         }
       }
     ],
-    "ALTER_COMPOSITE_UNIQUE": [
-      {
-        "name": "LAST_NAME",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "FIRST_NAME",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
+    "TABLE_WITH_COMMENTS": [
       {
         "name": "ID",
         "type": {
@@ -1030,22 +2278,7 @@
         "not_null": true,
         "increment": true,
         "note": {
-          "value": ""
-        }
-      }
-    ],
-    "TABLE_WITH_COMMENTS": [
-      {
-        "name": "DESCRIPTION",
-        "type": {
-          "type_name": "varchar2(500)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": "Optional description of the item"
+          "value": "Unique\nidentifier"
         }
       },
       {
@@ -1058,20 +2291,20 @@
         "not_null": true,
         "increment": false,
         "note": {
-          "value": "Item name - required field"
+          "value": "!@#$%^&*()[]\"Item name - required field"
         }
       },
       {
-        "name": "ID",
+        "name": "DESCRIPTION",
         "type": {
-          "type_name": "number",
+          "type_name": "varchar2(500)",
           "schemaName": null
         },
         "dbdefault": null,
-        "not_null": true,
-        "increment": true,
+        "not_null": false,
+        "increment": false,
         "note": {
-          "value": "Unique identifier"
+          "value": "Optional description of the item"
         }
       }
     ],
@@ -1676,1239 +2909,6 @@
           "value": ""
         }
       }
-    ],
-    "NOT_NULL_COLS": [
-      {
-        "name": "REQUIRED_DATE",
-        "type": {
-          "type_name": "date",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "REQUIRED_NUM",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "REQUIRED_STR",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "NULLABLE_COLS": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "OPTIONAL_STR",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "OPTIONAL_DATE",
-        "type": {
-          "type_name": "date",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "OPTIONAL_NUM",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "AUTOINCREMENT_TABLE": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "NAME",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "UNIQUE_COLS": [
-      {
-        "name": "USERNAME",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "EMAIL",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "COMPOSITE_PK": [
-      {
-        "name": "REGION_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "QUANTITY",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": {
-          "value": "0",
-          "type": "number"
-        },
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "PRODUCT_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "PRICE",
-        "type": {
-          "type_name": "number(10, 2)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "COMPOSITE_SELF_REF": [
-      {
-        "name": "EMP_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "PARENT_DEPT_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "NAME",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "DEPT_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "PARENT_EMP_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "COMPOSITE_UNIQUE": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "EMAIL",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "FIRST_NAME",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "LAST_NAME",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "FUNCTIONAL_INDEX_TABLE": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "EMAIL",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "FULL_NAME",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "COMPOSITE_INDEX_TABLE": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "FIRST_NAME",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "LAST_NAME",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "DEPARTMENT",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "MIXED_INDEX_TABLE": [
-      {
-        "name": "LAST_NAME",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "FIRST_NAME",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "EMAIL",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "COLUMN_INDEX_TABLE": [
-      {
-        "name": "CATEGORY",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "STATUS",
-        "type": {
-          "type_name": "varchar2(20)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "CREATED_AT",
-        "type": {
-          "type_name": "date",
-          "schemaName": null
-        },
-        "dbdefault": {
-          "value": "SYSDATE\n",
-          "type": "expression"
-        },
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "ALTER_ADD_PK": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "NAME",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "ALTER_FK_PARENT": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "NAME",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "DEFAULT_VALUES": [
-      {
-        "name": "DATE_DEFAULT",
-        "type": {
-          "type_name": "date",
-          "schemaName": null
-        },
-        "dbdefault": {
-          "value": "SYSDATE",
-          "type": "expression"
-        },
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "TIMESTAMP_DEFAULT",
-        "type": {
-          "type_name": "timestamp(6)",
-          "schemaName": null
-        },
-        "dbdefault": {
-          "value": "SYSTIMESTAMP",
-          "type": "expression"
-        },
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "STR_DEFAULT",
-        "type": {
-          "type_name": "varchar2(50)",
-          "schemaName": null
-        },
-        "dbdefault": {
-          "value": "default_string",
-          "type": "string"
-        },
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "CHAR_DEFAULT",
-        "type": {
-          "type_name": "char(10)",
-          "schemaName": null
-        },
-        "dbdefault": {
-          "value": "fixed",
-          "type": "string"
-        },
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "DECIMAL_DEFAULT",
-        "type": {
-          "type_name": "number(10, 2)",
-          "schemaName": null
-        },
-        "dbdefault": {
-          "value": "99.99",
-          "type": "number"
-        },
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "NUM_DEFAULT",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": {
-          "value": "42",
-          "type": "number"
-        },
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "ALTER_FK_CHILD": [
-      {
-        "name": "PARENT_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "ALTER_SELF_REF": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "PARENT_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "NAME",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "ALTER_ADD_CHECK": [
-      {
-        "name": "SALARY",
-        "type": {
-          "type_name": "number(10, 2)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "STATUS",
-        "type": {
-          "type_name": "varchar2(20)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "AGE",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "ALTER_ADD_UNIQUE": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "CODE",
-        "type": {
-          "type_name": "varchar2(20)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "EMAIL",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "ALTER_COMPOSITE_PK": [
-      {
-        "name": "PRODUCT_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "QUANTITY",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "REGION_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "ALTER_COMPOSITE_FK_PARENT": [
-      {
-        "name": "EMP_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "DEPT_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "NAME",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "ALTER_COMPOSITE_FK_CHILD": [
-      {
-        "name": "REF_DEPT_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "REF_EMP_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "PK_SIMPLE": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "NAME",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "SELF_REF_FK": [
-      {
-        "name": "PARENT_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "NAME",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "FK_PARENT": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "NAME",
-        "type": {
-          "type_name": "varchar2(100)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "FK_CHILD": [
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "PARENT_ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "DESCRIPTION",
-        "type": {
-          "type_name": "varchar2(200)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
-    ],
-    "CHECK_CONSTRAINTS": [
-      {
-        "name": "STATUS",
-        "type": {
-          "type_name": "varchar2(20)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "ID",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": true,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "START_DATE",
-        "type": {
-          "type_name": "date",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "END_DATE",
-        "type": {
-          "type_name": "date",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": false,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "AGE",
-        "type": {
-          "type_name": "number",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      },
-      {
-        "name": "SALARY",
-        "type": {
-          "type_name": "number(10, 2)",
-          "schemaName": null
-        },
-        "dbdefault": null,
-        "not_null": true,
-        "increment": false,
-        "note": {
-          "value": ""
-        }
-      }
     ]
   },
   "refs": [
@@ -2936,75 +2936,6 @@
       "onUpdate": null
     },
     {
-      "name": "FK_ALTER_SELF",
-      "endpoints": [
-        {
-          "tableName": "ALTER_SELF_REF",
-          "schemaName": "",
-          "fieldNames": [
-            "PARENT_ID"
-          ],
-          "relation": "*"
-        },
-        {
-          "tableName": "ALTER_SELF_REF",
-          "schemaName": "",
-          "fieldNames": [
-            "ID"
-          ],
-          "relation": "1"
-        }
-      ],
-      "onDelete": "SET NULL",
-      "onUpdate": null
-    },
-    {
-      "name": "FK_REF_SIMPLE",
-      "endpoints": [
-        {
-          "tableName": "REF_SIMPLE_CHILD",
-          "schemaName": "",
-          "fieldNames": [
-            "PARENT_ID"
-          ],
-          "relation": "*"
-        },
-        {
-          "tableName": "REF_SIMPLE_PARENT",
-          "schemaName": "",
-          "fieldNames": [
-            "ID"
-          ],
-          "relation": "1"
-        }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
-      "name": "FK_ALTER_PARENT",
-      "endpoints": [
-        {
-          "tableName": "ALTER_FK_CHILD",
-          "schemaName": "",
-          "fieldNames": [
-            "PARENT_ID"
-          ],
-          "relation": "*"
-        },
-        {
-          "tableName": "ALTER_FK_PARENT",
-          "schemaName": "",
-          "fieldNames": [
-            "ID"
-          ],
-          "relation": "1"
-        }
-      ],
-      "onDelete": "CASCADE",
-      "onUpdate": null
-    },
-    {
       "name": "FK_CHILD_PARENT",
       "endpoints": [
         {
@@ -3025,31 +2956,6 @@
         }
       ],
       "onDelete": "CASCADE",
-      "onUpdate": null
-    },
-    {
-      "name": "FK_REF_COMPOSITE",
-      "endpoints": [
-        {
-          "tableName": "REF_COMPOSITE_CHILD",
-          "schemaName": "",
-          "fieldNames": [
-            "FK1",
-            "FK2"
-          ],
-          "relation": "*"
-        },
-        {
-          "tableName": "REF_COMPOSITE_PARENT",
-          "schemaName": "",
-          "fieldNames": [
-            "KEY1",
-            "KEY2"
-          ],
-          "relation": "1"
-        }
-      ],
-      "onDelete": null,
       "onUpdate": null
     },
     {
@@ -3078,6 +2984,52 @@
       "onUpdate": null
     },
     {
+      "name": "FK_ALTER_PARENT",
+      "endpoints": [
+        {
+          "tableName": "ALTER_FK_CHILD",
+          "schemaName": "",
+          "fieldNames": [
+            "PARENT_ID"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "ALTER_FK_PARENT",
+          "schemaName": "",
+          "fieldNames": [
+            "ID"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": null
+    },
+    {
+      "name": "FK_ALTER_SELF",
+      "endpoints": [
+        {
+          "tableName": "ALTER_SELF_REF",
+          "schemaName": "",
+          "fieldNames": [
+            "PARENT_ID"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "ALTER_SELF_REF",
+          "schemaName": "",
+          "fieldNames": [
+            "ID"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": "SET NULL",
+      "onUpdate": null
+    },
+    {
       "name": "FK_ALTER_COMPOSITE",
       "endpoints": [
         {
@@ -3095,6 +3047,54 @@
           "fieldNames": [
             "DEPT_ID",
             "EMP_ID"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "name": "FK_REF_SIMPLE",
+      "endpoints": [
+        {
+          "tableName": "REF_SIMPLE_CHILD",
+          "schemaName": "",
+          "fieldNames": [
+            "PARENT_ID"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "REF_SIMPLE_PARENT",
+          "schemaName": "",
+          "fieldNames": [
+            "ID"
+          ],
+          "relation": "1"
+        }
+      ],
+      "onDelete": null,
+      "onUpdate": null
+    },
+    {
+      "name": "FK_REF_COMPOSITE",
+      "endpoints": [
+        {
+          "tableName": "REF_COMPOSITE_CHILD",
+          "schemaName": "",
+          "fieldNames": [
+            "FK1",
+            "FK2"
+          ],
+          "relation": "*"
+        },
+        {
+          "tableName": "REF_COMPOSITE_PARENT",
+          "schemaName": "",
+          "fieldNames": [
+            "KEY1",
+            "KEY2"
           ],
           "relation": "1"
         }
@@ -3130,39 +3130,144 @@
   ],
   "enums": [],
   "indexes": {
-    "IDX_BITMAP_TABLE": [
+    "COMPOSITE_PK": [
       {
-        "name": "IDX_BITMAP_GENDER",
-        "type": "bitmap",
-        "unique": false,
+        "name": "PK_COMPOSITE",
+        "type": "",
+        "unique": true,
+        "pk": true,
         "columns": [
           {
             "type": "column",
-            "value": "GENDER"
-          }
-        ]
-      },
-      {
-        "name": "IDX_BITMAP_STATUS",
-        "type": "bitmap",
-        "unique": false,
-        "columns": [
+            "value": "REGION_ID"
+          },
           {
             "type": "column",
-            "value": "STATUS"
+            "value": "PRODUCT_ID"
           }
         ]
       }
     ],
-    "IDX_BTREE_TABLE": [
+    "COMPOSITE_SELF_REF": [
       {
-        "name": "IDX_BTREE_CODE",
+        "name": "PK_COMPOSITE_SELF_REF",
+        "type": "",
+        "unique": true,
+        "pk": true,
+        "columns": [
+          {
+            "type": "column",
+            "value": "DEPT_ID"
+          },
+          {
+            "type": "column",
+            "value": "EMP_ID"
+          }
+        ]
+      }
+    ],
+    "COMPOSITE_UNIQUE": [
+      {
+        "name": "UQ_FULL_NAME",
+        "type": "",
+        "unique": true,
+        "pk": false,
+        "columns": [
+          {
+            "type": "column",
+            "value": "FIRST_NAME"
+          },
+          {
+            "type": "column",
+            "value": "LAST_NAME"
+          }
+        ]
+      }
+    ],
+    "FUNCTIONAL_INDEX_TABLE": [
+      {
+        "name": "IDX_LOWER_NAME",
+        "type": "btree",
+        "unique": false,
+        "columns": [
+          {
+            "type": "expression",
+            "value": "LOWER(\"FULL_NAME\")"
+          }
+        ]
+      },
+      {
+        "name": "IDX_UPPER_EMAIL",
+        "type": "btree",
+        "unique": false,
+        "columns": [
+          {
+            "type": "expression",
+            "value": "UPPER(\"EMAIL\")"
+          }
+        ]
+      }
+    ],
+    "COMPOSITE_INDEX_TABLE": [
+      {
+        "name": "IDX_COMPOSITE_DEPT",
         "type": "btree",
         "unique": false,
         "columns": [
           {
             "type": "column",
-            "value": "CODE"
+            "value": "DEPARTMENT"
+          },
+          {
+            "type": "column",
+            "value": "LAST_NAME"
+          }
+        ]
+      },
+      {
+        "name": "IDX_COMPOSITE_NAME",
+        "type": "btree",
+        "unique": false,
+        "columns": [
+          {
+            "type": "column",
+            "value": "FIRST_NAME"
+          },
+          {
+            "type": "column",
+            "value": "LAST_NAME"
+          }
+        ]
+      }
+    ],
+    "MIXED_INDEX_TABLE": [
+      {
+        "name": "IDX_MIXED_EMAIL",
+        "type": "btree",
+        "unique": false,
+        "columns": [
+          {
+            "type": "column",
+            "value": "FIRST_NAME"
+          },
+          {
+            "type": "expression",
+            "value": "UPPER(\"EMAIL\")"
+          }
+        ]
+      },
+      {
+        "name": "IDX_MIXED_NAME",
+        "type": "btree",
+        "unique": false,
+        "columns": [
+          {
+            "type": "expression",
+            "value": "LOWER(\"FIRST_NAME\")"
+          },
+          {
+            "type": "column",
+            "value": "LAST_NAME"
           }
         ]
       }
@@ -3202,26 +3307,48 @@
         ]
       }
     ],
-    "COMPOSITE_INDEX_TABLE": [
+    "ALTER_COMPOSITE_PK": [
       {
-        "name": "IDX_COMPOSITE_DEPT",
-        "type": "btree",
-        "unique": false,
+        "name": "PK_ALTER_COMPOSITE",
+        "type": "",
+        "unique": true,
+        "pk": true,
         "columns": [
           {
             "type": "column",
-            "value": "DEPARTMENT"
+            "value": "REGION_ID"
           },
           {
             "type": "column",
-            "value": "LAST_NAME"
+            "value": "PRODUCT_ID"
           }
         ]
-      },
+      }
+    ],
+    "ALTER_COMPOSITE_FK_PARENT": [
       {
-        "name": "IDX_COMPOSITE_NAME",
-        "type": "btree",
-        "unique": false,
+        "name": "PK_ALTER_COMP_PARENT",
+        "type": "",
+        "unique": true,
+        "pk": true,
+        "columns": [
+          {
+            "type": "column",
+            "value": "DEPT_ID"
+          },
+          {
+            "type": "column",
+            "value": "EMP_ID"
+          }
+        ]
+      }
+    ],
+    "ALTER_COMPOSITE_UNIQUE": [
+      {
+        "name": "UQ_ALTER_FULLNAME",
+        "type": "",
+        "unique": true,
+        "pk": false,
         "columns": [
           {
             "type": "column",
@@ -3230,6 +3357,67 @@
           {
             "type": "column",
             "value": "LAST_NAME"
+          }
+        ]
+      }
+    ],
+    "IDX_BTREE_TABLE": [
+      {
+        "name": "IDX_BTREE_CODE",
+        "type": "btree",
+        "unique": false,
+        "columns": [
+          {
+            "type": "column",
+            "value": "CODE"
+          }
+        ]
+      }
+    ],
+    "IDX_BITMAP_TABLE": [
+      {
+        "name": "IDX_BITMAP_GENDER",
+        "type": "bitmap",
+        "unique": false,
+        "columns": [
+          {
+            "type": "column",
+            "value": "GENDER"
+          }
+        ]
+      },
+      {
+        "name": "IDX_BITMAP_STATUS",
+        "type": "bitmap",
+        "unique": false,
+        "columns": [
+          {
+            "type": "column",
+            "value": "STATUS"
+          }
+        ]
+      }
+    ],
+    "IDX_UNIQUE_TABLE": [
+      {
+        "name": "IDX_UNIQUE_EMAIL",
+        "type": "btree",
+        "unique": true,
+        "columns": [
+          {
+            "type": "column",
+            "value": "EMAIL"
+          }
+        ]
+      },
+      {
+        "name": "IDX_UNIQUE_SSN",
+        "type": "btree",
+        "unique": true,
+        "columns": [
+          {
+            "type": "column",
+            "value": "SSN"
           }
         ]
       }
@@ -3309,194 +3497,6 @@
         ]
       }
     ],
-    "FUNCTIONAL_INDEX_TABLE": [
-      {
-        "name": "IDX_LOWER_NAME",
-        "type": "btree",
-        "unique": false,
-        "columns": [
-          {
-            "type": "expression",
-            "value": "LOWER(\"FULL_NAME\")"
-          }
-        ]
-      },
-      {
-        "name": "IDX_UPPER_EMAIL",
-        "type": "btree",
-        "unique": false,
-        "columns": [
-          {
-            "type": "expression",
-            "value": "UPPER(\"EMAIL\")"
-          }
-        ]
-      }
-    ],
-    "MIXED_INDEX_TABLE": [
-      {
-        "name": "IDX_MIXED_EMAIL",
-        "type": "btree",
-        "unique": false,
-        "columns": [
-          {
-            "type": "column",
-            "value": "FIRST_NAME"
-          },
-          {
-            "type": "expression",
-            "value": "UPPER(\"EMAIL\")"
-          }
-        ]
-      },
-      {
-        "name": "IDX_MIXED_NAME",
-        "type": "btree",
-        "unique": false,
-        "columns": [
-          {
-            "type": "expression",
-            "value": "LOWER(\"FIRST_NAME\")"
-          },
-          {
-            "type": "column",
-            "value": "LAST_NAME"
-          }
-        ]
-      }
-    ],
-    "IDX_UNIQUE_TABLE": [
-      {
-        "name": "IDX_UNIQUE_EMAIL",
-        "type": "btree",
-        "unique": true,
-        "columns": [
-          {
-            "type": "column",
-            "value": "EMAIL"
-          }
-        ]
-      },
-      {
-        "name": "IDX_UNIQUE_SSN",
-        "type": "btree",
-        "unique": true,
-        "columns": [
-          {
-            "type": "column",
-            "value": "SSN"
-          }
-        ]
-      }
-    ],
-    "COMPOSITE_PK": [
-      {
-        "name": "PK_COMPOSITE",
-        "type": "",
-        "unique": true,
-        "pk": true,
-        "columns": [
-          {
-            "type": "column",
-            "value": "REGION_ID"
-          },
-          {
-            "type": "column",
-            "value": "PRODUCT_ID"
-          }
-        ]
-      }
-    ],
-    "COMPOSITE_SELF_REF": [
-      {
-        "name": "PK_COMPOSITE_SELF_REF",
-        "type": "",
-        "unique": true,
-        "pk": true,
-        "columns": [
-          {
-            "type": "column",
-            "value": "DEPT_ID"
-          },
-          {
-            "type": "column",
-            "value": "EMP_ID"
-          }
-        ]
-      }
-    ],
-    "COMPOSITE_UNIQUE": [
-      {
-        "name": "UQ_FULL_NAME",
-        "type": "",
-        "unique": true,
-        "pk": false,
-        "columns": [
-          {
-            "type": "column",
-            "value": "FIRST_NAME"
-          },
-          {
-            "type": "column",
-            "value": "LAST_NAME"
-          }
-        ]
-      }
-    ],
-    "ALTER_COMPOSITE_PK": [
-      {
-        "name": "PK_ALTER_COMPOSITE",
-        "type": "",
-        "unique": true,
-        "pk": true,
-        "columns": [
-          {
-            "type": "column",
-            "value": "REGION_ID"
-          },
-          {
-            "type": "column",
-            "value": "PRODUCT_ID"
-          }
-        ]
-      }
-    ],
-    "ALTER_COMPOSITE_FK_PARENT": [
-      {
-        "name": "PK_ALTER_COMP_PARENT",
-        "type": "",
-        "unique": true,
-        "pk": true,
-        "columns": [
-          {
-            "type": "column",
-            "value": "DEPT_ID"
-          },
-          {
-            "type": "column",
-            "value": "EMP_ID"
-          }
-        ]
-      }
-    ],
-    "ALTER_COMPOSITE_UNIQUE": [
-      {
-        "name": "UQ_ALTER_FULLNAME",
-        "type": "",
-        "unique": true,
-        "pk": false,
-        "columns": [
-          {
-            "type": "column",
-            "value": "FIRST_NAME"
-          },
-          {
-            "type": "column",
-            "value": "LAST_NAME"
-          }
-        ]
-      }
-    ],
     "REF_COMPOSITE_PARENT": [
       {
         "name": "PK_REF_COMP_PARENT",
@@ -3535,31 +3535,28 @@
     ]
   },
   "tableConstraints": {
-    "ALTER_ADD_CHECK": {
-      "AGE": {
-        "checks": [
-          {
-            "name": "CHK_ALTER_AGE",
-            "expression": "age >= 18"
-          }
-        ]
-      },
-      "SALARY": {
-        "checks": [
-          {
-            "name": "CHK_ALTER_SALARY",
-            "expression": "salary > 0"
-          }
-        ]
-      },
-      "STATUS": {
-        "checks": [
-          {
-            "name": "CHK_ALTER_STATUS",
-            "expression": "status IN ('A', 'B', 'C')"
-          }
-        ]
-      },
+    "PK_SIMPLE": {
+      "ID": {
+        "checks": [],
+        "pk": true,
+        "unique": false
+      }
+    },
+    "SELF_REF_FK": {
+      "ID": {
+        "checks": [],
+        "pk": true,
+        "unique": false
+      }
+    },
+    "FK_PARENT": {
+      "ID": {
+        "checks": [],
+        "pk": true,
+        "unique": false
+      }
+    },
+    "FK_CHILD": {
       "ID": {
         "checks": [],
         "pk": true,
@@ -3591,34 +3588,6 @@
           }
         ]
       },
-      "ID": {
-        "checks": [],
-        "pk": true,
-        "unique": false
-      }
-    },
-    "PK_SIMPLE": {
-      "ID": {
-        "checks": [],
-        "pk": true,
-        "unique": false
-      }
-    },
-    "SELF_REF_FK": {
-      "ID": {
-        "checks": [],
-        "pk": true,
-        "unique": false
-      }
-    },
-    "FK_PARENT": {
-      "ID": {
-        "checks": [],
-        "pk": true,
-        "unique": false
-      }
-    },
-    "FK_CHILD": {
       "ID": {
         "checks": [],
         "pk": true,
@@ -3729,6 +3698,37 @@
       }
     },
     "ALTER_SELF_REF": {
+      "ID": {
+        "checks": [],
+        "pk": true,
+        "unique": false
+      }
+    },
+    "ALTER_ADD_CHECK": {
+      "AGE": {
+        "checks": [
+          {
+            "name": "CHK_ALTER_AGE",
+            "expression": "age >= 18"
+          }
+        ]
+      },
+      "SALARY": {
+        "checks": [
+          {
+            "name": "CHK_ALTER_SALARY",
+            "expression": "salary > 0"
+          }
+        ]
+      },
+      "STATUS": {
+        "checks": [
+          {
+            "name": "CHK_ALTER_STATUS",
+            "expression": "status IN ('A', 'B', 'C')"
+          }
+        ]
+      },
       "ID": {
         "checks": [],
         "pk": true,
