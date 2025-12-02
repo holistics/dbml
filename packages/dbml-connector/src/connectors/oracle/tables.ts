@@ -92,7 +92,7 @@ function generateField (row: Record<string, any>): Field {
   } = row;
 
   const defaultType = getDefaultType(data_default);
-  const dbdefault = data_default && !identity_increment ? getDbdefault(data_type, data_default, defaultType) : null;
+  const dbdefault = data_default && !identity_increment ? getDbdefault(data_default, defaultType) : null;
 
   const fieldType = {
     type_name: getFieldType(data_type, data_length, data_precision, data_scale),
