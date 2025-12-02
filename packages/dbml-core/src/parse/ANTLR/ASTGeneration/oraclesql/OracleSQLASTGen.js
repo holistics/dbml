@@ -818,7 +818,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   //   : id_expression
   //   ;
   visitConstraint_name (ctx) {
-    return getOriginalText(ctx);
+    return unquoteString(getOriginalText(ctx));
   }
 
   visitIndex_name (ctx) {

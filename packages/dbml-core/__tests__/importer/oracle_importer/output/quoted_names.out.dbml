@@ -3,7 +3,7 @@ Table " aba " {
   "date of birth" string
 
   Indexes {
-    date of birth [pk, name: "" primary key bd ""]
+    date of birth [pk, name: " primary key bd "]
   }
 }
 
@@ -12,7 +12,7 @@ Table "silver  users" {
   "date of birth" string
 
   Checks {
-    `"date of birth" IS NOT NULL` [name: '"silver dob"']
+    `"date of birth" IS NOT NULL` [name: 'silver dob']
   }
 
   Indexes {
@@ -20,4 +20,4 @@ Table "silver  users" {
   }
 }
 
-Ref "" foreign key bd "":"silver  users"."date of birth" < " aba "."date of birth"
+Ref " foreign key bd ":"silver  users"."date of birth" < " aba "."date of birth"
