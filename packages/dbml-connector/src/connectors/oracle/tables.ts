@@ -111,7 +111,7 @@ function generateField (row: Record<string, any>): Field {
 
 // Field default utils
 
-function getDbdefault (dataType: string, columnDefault: string | null, defaultType: string): DefaultInfo | null {
+function getDbdefault (columnDefault: string | null, defaultType: string): DefaultInfo | null {
   if (columnDefault === null) {
     return null;
   }
