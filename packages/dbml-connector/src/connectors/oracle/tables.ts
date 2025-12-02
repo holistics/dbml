@@ -62,13 +62,19 @@ function getDefaultType (columnDefault: string | null | undefined): string {
   }
   const trimmed = columnDefault.trim();
   // String defaults are wrapped in single quotes: 'value'
+  // Example: `'string'`, `'string with quotes'''`
   if (/^'.*'$/.test(trimmed)) {
     return 'string';
   }
   // Number defaults are integers or non-scientific floats
+  // Example: `123`, `0.12`, `.12`, `12.`
   if (/^[0-9]+$/.test(trimmed) || /^[0-9]*\.[0-9]*$/.test(trimmed)) {
     return 'number';
   }
+  // Example: Strings that are not enclosed in `'` or do not contain only numbers and `.`
+  //   * CURRENT_TIMESTAMP
+  //   * SYSDATE
+  //   * "number-column" + 2
   return 'expression';
 }
 
