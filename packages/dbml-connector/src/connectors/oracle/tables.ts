@@ -13,6 +13,7 @@ export async function generateTablesAndFields (client: Connection): Promise<{
     SELECT
       cols.TABLE_NAME AS "table_name",
       cols.COLUMN_NAME AS "column_name",
+      cols.COLUMN_ID AS "column_id",
       cols.DATA_TYPE AS "data_type",
       cols.DATA_LENGTH AS "data_length",
       cols.DATA_PRECISION AS "data_precision",
@@ -21,13 +22,18 @@ export async function generateTablesAndFields (client: Connection): Promise<{
       CASE WHEN cols.NULLABLE = 'Y' THEN 1 ELSE 0 END AS "is_nullable",
       cols.DATA_DEFAULT AS "data_default",
       tcoms.COMMENTS AS "table_comment",
-      ccoms.COMMENTS AS "column_comment"
+      ccoms.COMMENTS AS "column_comment",
+      obj.CREATED AS "table_created"
     FROM USER_TAB_COLUMNS cols
     LEFT JOIN USER_COL_COMMENTS ccoms
       ON ccoms.COLUMN_NAME = cols.COLUMN_NAME
       AND ccoms.TABLE_NAME = cols.TABLE_NAME
     LEFT JOIN USER_TAB_COMMENTS tcoms
       ON tcoms.TABLE_NAME = cols.TABLE_NAME
+    LEFT JOIN USER_OBJECTS obj
+      ON obj.OBJECT_NAME = cols.TABLE_NAME
+      AND obj.OBJECT_TYPE = 'TABLE'
+    ORDER BY obj.CREATED, cols.COLUMN_ID
   `;
 
   const tablesAndFieldsResult = await client.execute(tablesAndFieldsSql, [], EXECUTE_OPTIONS);

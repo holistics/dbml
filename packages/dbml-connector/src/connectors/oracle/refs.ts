@@ -21,12 +21,23 @@ export async function generateRawRefs (client: Connection): Promise<Ref[]> {
     JOIN USER_CONS_COLUMNS pc
       ON p.CONSTRAINT_NAME = pc.CONSTRAINT_NAME
       AND cc.POSITION = pc.POSITION
+    LEFT JOIN USER_OBJECTS obj_child
+      ON obj_child.OBJECT_NAME = c.TABLE_NAME
+      AND obj_child.OBJECT_TYPE = 'TABLE'
+    LEFT JOIN USER_OBJECTS obj_parent
+      ON obj_parent.OBJECT_NAME = p.TABLE_NAME
+      AND obj_parent.OBJECT_TYPE = 'TABLE'
     WHERE c.CONSTRAINT_TYPE = 'R'
     GROUP BY
       c.CONSTRAINT_NAME,
       c.TABLE_NAME,
       p.TABLE_NAME,
-      c.DELETE_RULE
+      c.DELETE_RULE,
+      obj_child.CREATED,
+      obj_parent.CREATED
+    ORDER BY
+      obj_child.CREATED,
+      c.CONSTRAINT_NAME
   `;
 
   const refsQueryResult = await client.execute(refsListSql, [], EXECUTE_OPTIONS);

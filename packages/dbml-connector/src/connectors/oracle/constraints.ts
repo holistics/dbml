@@ -36,6 +36,12 @@ export async function generateConstraints (client: Connection): Promise<{
     FROM all_constraints ac
     LEFT JOIN constraint_columns cc
       ON ac.CONSTRAINT_NAME = cc.CONSTRAINT_NAME
+    LEFT JOIN USER_OBJECTS obj
+      ON obj.OBJECT_NAME = ac.TABLE_NAME
+      AND obj.OBJECT_TYPE = 'TABLE'
+    ORDER BY
+      obj.CREATED,
+      ac.CONSTRAINT_NAME
   `;
 
   const indexes: IndexesDictionary = {};
