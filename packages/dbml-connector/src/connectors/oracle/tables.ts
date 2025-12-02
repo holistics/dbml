@@ -222,6 +222,8 @@ const PRECISION_SCALED_DATA_TYPES = new Set([
   'dec',
 ]);
 
+// Format the field type to a standard string for aesthetic when exporting to DBML (`ANYDATA`, `anydata` are all normalized to `AnyData`)
+// Some types contain multiple words with arbitrary spaces, for example, `TIMESTAMP (6)   WITH LOCAL TIME ZONE`, we should normalize this to allow processing to be uniform, for example when checking for equality
 function normalizeFieldType (dataType: string): string {
   const normalizedDataType = dataType.split(' ').filter(Boolean).join(' ').toLowerCase();
   switch (normalizedDataType) {
