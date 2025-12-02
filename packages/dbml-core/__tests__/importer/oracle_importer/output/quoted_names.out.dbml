@@ -1,0 +1,23 @@
+Table " aba " {
+  "birthday" "string COLLATE Latin1_General_CS_AS"
+  "date of birth" string
+
+  Indexes {
+    date of birth [pk, name: "" primary key bd ""]
+  }
+}
+
+Table "silver  users" {
+  "children  " integer [check: `"children  " > 0`]
+  "date of birth" string
+
+  Checks {
+    `"date of birth" IS NOT NULL` [name: '"silver dob"']
+  }
+
+  Indexes {
+    (date of birth,  a aaa ) [name: "index on silver"]
+  }
+}
+
+Ref "" foreign key bd "":"silver  users"."date of birth" < " aba "."date of birth"
