@@ -123,10 +123,12 @@ Table "ORACLE_DATA_TYPES" {
 }
 
 Table "TABLE_WITH_COMMENTS" {
-  "ID" number [pk, not null, increment, note: 'Unique identifier']
-  "NAME" varchar2(100) [not null, note: 'Item name - required field']
+  "ID" number [pk, not null, increment, note: 'Unique
+identifier']
+  "NAME" varchar2(100) [not null, note: '!@#$%^&*()[]"Item name - required field']
   "DESCRIPTION" varchar2(500) [note: 'Optional description of the item']
-  Note: 'This table stores items with descriptions'
+  Note: '''This table\'\'
+stores items with descriptions'''
 }
 
 Table "ALTER_COMP_SELF_REF" {
