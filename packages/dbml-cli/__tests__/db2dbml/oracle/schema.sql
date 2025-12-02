@@ -446,9 +446,11 @@ CREATE TABLE table_with_comments (
   description VARCHAR2(500)
 );
 
-COMMENT ON TABLE table_with_comments IS 'This table stores items with descriptions';
-COMMENT ON COLUMN table_with_comments.id IS 'Unique identifier';
-COMMENT ON COLUMN table_with_comments.name IS 'Item name - required field';
+COMMENT ON TABLE table_with_comments IS 'This table''
+stores items with descriptions';
+COMMENT ON COLUMN table_with_comments.id IS 'Unique
+identifier';
+COMMENT ON COLUMN table_with_comments.name IS '!@#$%^&*()[]"Item name - required field';
 COMMENT ON COLUMN table_with_comments.description IS 'Optional description of the item';
 
 -- ============================================================================
