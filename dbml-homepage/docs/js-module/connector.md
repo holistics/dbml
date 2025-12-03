@@ -36,7 +36,7 @@ const { connector } = require('@dbml/connector');
 
 - **Arguments:**
   - `{string} connection`
-  - `{'postgres'|'mssql'|'mysql'|'snowflake'|'bigquery'} databaseType`
+  - `{'postgres'|'mssql'|'mysql'|'snowflake'|'bigquery'|'oracle'} databaseType`
 
 - **Returns:**
   - `{DatabaseSchema} schemaJson`

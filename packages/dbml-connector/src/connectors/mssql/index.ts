@@ -4,7 +4,7 @@
  * - Since DBML 4.0.0, we have supported CHECK constraints, so we no longer extract ENUMS out from CHECK constraints but rather keep them as CHECK constraints.
  * */
 import sql from 'mssql';
-import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
+import { buildSchemaQuery, parseConnectionString } from '../../utils/parseSchema';
 import {
   CheckConstraintDictionary,
   DatabaseSchema,
@@ -17,7 +17,7 @@ import {
   RefEndpoint,
   Table,
   TableConstraintsDictionary,
-} from './types';
+} from '../types';
 
 // https://learn.microsoft.com/en-us/sql/t-sql/data-types/date-and-time-types?view=sql-server-ver15
 const MSSQL_DATE_TYPES = [
