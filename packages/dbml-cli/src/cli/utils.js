@@ -34,7 +34,7 @@ function getFormatOpt (opts) {
 }
 
 function getConnectionOpt (args) {
-  const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery'];
+  const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery', 'oracle'];
   const defaultConnectionOpt = {
     connection: args[0],
     databaseType: 'unknown',

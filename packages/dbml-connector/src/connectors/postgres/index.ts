@@ -1,5 +1,5 @@
 import { Client } from 'pg';
-import { buildSchemaQuery, parseConnectionString } from '../utils/parseSchema';
+import { buildSchemaQuery, parseConnectionString } from '../../utils/parseSchema';
 import {
   CheckConstraintDictionary,
   DatabaseSchema,
@@ -13,7 +13,7 @@ import {
   RefEndpoint,
   Table,
   TableConstraintsDictionary,
-} from './types';
+} from '../types';
 
 const getValidatedClient = async (connection: string): Promise<Client> => {
   const client = new Client(connection);
