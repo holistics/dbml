@@ -1,3 +1,12 @@
+## v5.3.0 (2025-12-04)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`
+  * [#785](https://github.com/holistics/dbml/pull/785) Oracle connector ([@H-DNA](https://github.com/H-DNA))
+
+#### Committers: 1
+- Huy DNA ([@H-DNA](https://github.com/H-DNA))
+
 ## v5.2.0 (2025-11-19)
 
 #### :bug: Bug Fix
