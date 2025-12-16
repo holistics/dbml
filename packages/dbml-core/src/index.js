@@ -4,6 +4,7 @@ import { CompilerError } from './parse/error';
 import importer from './import';
 import exporter from './export';
 import { VERSION } from './utils/version';
+import renameTable from './renameTable';
 
 export {
   importer,
@@ -12,4 +13,5 @@ export {
   CompilerError,
   Parser,
   VERSION,
+  renameTable,
 };

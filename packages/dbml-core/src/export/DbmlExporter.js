@@ -216,6 +216,9 @@ class DbmlExporter {
       let tableName = `"${table.name}"`;
       if (shouldPrintSchema(schema, model)) tableName = `"${schema.name}"."${table.name}"`;
 
+      // Include alias if present
+      const aliasStr = table.alias ? ` as ${table.alias}` : '';
+
       const fieldStr = tableContent.fieldContents.map((field) => `  ${field}\n`).join('');
 
       let checkStr = '';
@@ -232,7 +235,7 @@ class DbmlExporter {
 
       const noteStr = table.note ? `  Note: ${DbmlExporter.escapeNote(table.note)}\n` : '';
 
-      return `Table ${tableName}${tableSettingStr} {\n${fieldStr}${checkStr}${indexStr}${noteStr}}\n`;
+      return `Table ${tableName}${aliasStr}${tableSettingStr} {\n${fieldStr}${checkStr}${indexStr}${noteStr}}\n`;
     });
 
     return tableStrs.length ? tableStrs.join('\n') : '';
