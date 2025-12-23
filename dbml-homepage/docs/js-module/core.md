@@ -202,7 +202,7 @@ This section documents the SQL parsing capabilities for each supported database 
 | Basic syntax | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Parameterized types (e.g., `VARCHAR(255)`) | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Array types (e.g., `INTEGER[]`) | ✓ | — | — | — | — |
-| Enumerated types (`ENUM`) | ✓ | — | — | — | — |
+| Enumerated types (`ENUM`) | ✓ | ✓ | — | — | — |
 | Temporary tables | ◐ | ✗ | ✓ | ◐ | ◐ |
 | `CREATE TABLE` AS SELECT | ✗ | ✗ | ✗ | ✗ | ✗ |
 | Table options (`ENGINE`, `TABLESPACE`, etc.) | ◐ | ◐ | ◐ | ◐ | ◐ |
@@ -314,6 +314,9 @@ This section documents the SQL parsing capabilities for each supported database 
 | FULLTEXT | — | ◐ | ✗ | — | — |
 | SPATIAL | — | ◐ | ✗ | — | — |
 
+**Notes:**
+- **MSSQL**: Function-based indexes use computed columns instead
+
 ---
 
 ### `INSERT` Statements
@@ -323,7 +326,7 @@ This section documents the SQL parsing capabilities for each supported database 
 | Basic `INSERT` ... VALUES | ✓ | ✓ | ✓ | ✓ | ✗ |
 | Multi-row `INSERT` | ✓ | ✓ | ✓ | — | ✓ |
 | `INSERT` ... SELECT | ✗ | ✗ | ✗ | ✗ | ✗ |
-| `INSERT` ... RETURNING | ◐ | — | — | ◐ | — |
+| `INSERT` ... with returned rows (`RETURNING`, `OUTPUT`) | ◐ | — | ◐ | ◐ | — |
 | `INSERT` ... ON CONFLICT/DUPLICATE KEY | ◐ | ◐ | — | — | — |
 
 **Notes:**
