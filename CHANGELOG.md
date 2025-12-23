@@ -1,3 +1,15 @@
+## v5.3.1 (2025-12-23)
+
+#### :robot: Dependencies Update
+* `dbml-connector`
+  * [#792](https://github.com/holistics/dbml/pull/792) deps(connector): bump snowflake-sdk to 2.3.3 ([@nguyenalter](https://github.com/nguyenalter))
+* Other
+  * [#790](https://github.com/holistics/dbml/pull/790) chore(deps)/bump node-glob to v10.5.0 ([@H-DNA](https://github.com/H-DNA))
+
+#### Committers: 2
+- Huy DNA ([@H-DNA](https://github.com/H-DNA))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
 ## v5.3.0 (2025-12-04)
 
 #### :rocket: New Feature
