@@ -10,10 +10,10 @@ This module provides SQL parsing capabilities for MySQL databases, enabling conv
 
 | Symbol | Meaning |
 |--------|---------|
-| Supported | Feature is fully supported and correctly parsed |
-| Partial | Valid SQL that is parsed, but some options/clauses are ignored in the output |
-| Not Supported | Valid MySQL syntax, but the parser fails to generate output |
-| N/A | Syntax not valid in MySQL |
+| ✓ | Fully supported and correctly parsed |
+| ◐ | Valid SQL that is parsed, but some options/clauses are ignored |
+| ✗ | Valid MySQL syntax, but the parser fails to generate output |
+| — | Syntax not valid in MySQL |
 
 ## Key Capabilities
 
@@ -42,203 +42,203 @@ This module provides SQL parsing capabilities for MySQL databases, enabling conv
 
 ### `CREATE TABLE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `CREATE TABLE` syntax | Supported | |
-| Enumerated data types (ENUM) | Supported | MySQL uses inline ENUM type |
-| Parameterized types `name(...)` | Supported | e.g., `VARCHAR(255)`, `DECIMAL(10,2)` |
-| Array types `name[...]` | N/A | Not supported in MySQL |
-| TEMPORARY tables | Not Supported | Tables are completely ignored |
-| `CREATE TABLE` AS SELECT | Not Supported | |
-| Table options (ENGINE, CHARSET, etc.) | Partial | Options are ignored |
+| Basic `CREATE TABLE` syntax | ✓ | |
+| Enumerated data types (ENUM) | ✓ | MySQL uses inline ENUM type |
+| Parameterized types `name(...)` | ✓ | e.g., `VARCHAR(255)`, `DECIMAL(10,2)` |
+| Array types `name[...]` | — | Not supported in MySQL |
+| TEMPORARY tables | ✗ | Tables are completely ignored |
+| `CREATE TABLE` AS SELECT | ✗ | |
+| Table options (ENGINE, CHARSET, etc.) | ◐ | Options are ignored |
 
 ### Constraints
 
 #### `PRIMARY KEY`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `PRIMARY KEY` | Supported | `id INT PRIMARY KEY` |
-| Table-level `PRIMARY KEY` | Supported | `PRIMARY KEY (id)` |
-| Multi-column `PRIMARY KEY` | Supported | `PRIMARY KEY (a, b)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT pk_name PRIMARY KEY (id)` |
-| Index options (USING BTREE, etc.) | Partial | Options are ignored |
+| Column-level `PRIMARY KEY` | ✓ | `id INT PRIMARY KEY` |
+| Table-level `PRIMARY KEY` | ✓ | `PRIMARY KEY (id)` |
+| Multi-column `PRIMARY KEY` | ✓ | `PRIMARY KEY (a, b)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT pk_name PRIMARY KEY (id)` |
+| Index options (USING BTREE, etc.) | ◐ | Options are ignored |
 
 #### `FOREIGN KEY`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `FOREIGN KEY` | Supported | `col INT REFERENCES other(id)` |
-| Table-level `FOREIGN KEY` | Supported | `FOREIGN KEY (col) REFERENCES other(id)` |
-| Multi-column `FOREIGN KEY` | Supported | `FOREIGN KEY (a, b) REFERENCES other(x, y)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT fk_name FOREIGN KEY ...` |
-| `ON UPDATE` action | Supported | CASCADE, SET NULL, RESTRICT, NO ACTION |
-| `ON DELETE` action | Supported | CASCADE, SET NULL, RESTRICT, NO ACTION |
-| Index options | Partial | Options are ignored |
+| Column-level `FOREIGN KEY` | ✓ | `col INT REFERENCES other(id)` |
+| Table-level `FOREIGN KEY` | ✓ | `FOREIGN KEY (col) REFERENCES other(id)` |
+| Multi-column `FOREIGN KEY` | ✓ | `FOREIGN KEY (a, b) REFERENCES other(x, y)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT fk_name FOREIGN KEY ...` |
+| `ON UPDATE` action | ✓ | CASCADE, SET NULL, RESTRICT, NO ACTION |
+| `ON DELETE` action | ✓ | CASCADE, SET NULL, RESTRICT, NO ACTION |
+| Index options | ◐ | Options are ignored |
 
 #### `UNIQUE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `UNIQUE` | Supported | `col INT UNIQUE` |
-| Table-level `UNIQUE` | Supported | `UNIQUE (col)` |
-| Multi-column `UNIQUE` | Supported | `UNIQUE (a, b)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT uq_name UNIQUE (col)` |
-| Index options | Partial | Options are ignored |
-| NULLS NOT DISTINCT | Not Supported | Treats NULLs as equal - parse failure in MySQL |
-| `UNIQUE KEY` / `UNIQUE INDEX` | Supported | MySQL-specific alternative syntax |
+| Column-level `UNIQUE` | ✓ | `col INT UNIQUE` |
+| Table-level `UNIQUE` | ✓ | `UNIQUE (col)` |
+| Multi-column `UNIQUE` | ✓ | `UNIQUE (a, b)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT uq_name UNIQUE (col)` |
+| Index options | ◐ | Options are ignored |
+| NULLS NOT DISTINCT | ✗ | Treats NULLs as equal - parse failure in MySQL |
+| `UNIQUE KEY` / `UNIQUE INDEX` | ✓ | MySQL-specific alternative syntax |
 
 #### `CHECK`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `CHECK` | Supported | `col INT CHECK (col > 0)` |
-| Table-level `CHECK` | Supported | `CHECK (col > 0)` |
-| Explicitly named (CONSTRAINT name) | Supported | Name ignored for column-level checks |
-| NOT ENFORCED option | Partial | Enforcement control is ignored |
+| Column-level `CHECK` | ✓ | `col INT CHECK (col > 0)` |
+| Table-level `CHECK` | ✓ | `CHECK (col > 0)` |
+| Explicitly named (CONSTRAINT name) | ✓ | Name ignored for column-level checks |
+| NOT ENFORCED option | ◐ | Enforcement control is ignored |
 
 #### `DEFAULT`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `DEFAULT` | Supported | `col INT DEFAULT 0` |
-| Table-level `DEFAULT` | N/A | MySQL only supports column-level `DEFAULT` |
-| Function as `DEFAULT` | Supported | `DEFAULT CURRENT_TIMESTAMP`, `DEFAULT UUID()` |
-| Explicitly named `DEFAULT` | N/A | MySQL doesn't support named `DEFAULT` constraints |
+| Column-level `DEFAULT` | ✓ | `col INT DEFAULT 0` |
+| Table-level `DEFAULT` | — | MySQL only supports column-level `DEFAULT` |
+| Function as `DEFAULT` | ✓ | `DEFAULT CURRENT_TIMESTAMP`, `DEFAULT UUID()` |
+| Explicitly named `DEFAULT` | — | MySQL doesn't support named `DEFAULT` constraints |
 
 #### `NOT NULL` / NULL
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `NOT NULL` | Supported | `col INT NOT NULL` |
-| NULL (explicitly nullable) | Supported | `col INT NULL` |
-| Table-level `NOT NULL` | N/A | MySQL only supports column-level `NOT NULL` |
-| Constraint options | Partial | Options are ignored |
+| Column-level `NOT NULL` | ✓ | `col INT NOT NULL` |
+| NULL (explicitly nullable) | ✓ | `col INT NULL` |
+| Table-level `NOT NULL` | — | MySQL only supports column-level `NOT NULL` |
+| Constraint options | ◐ | Options are ignored |
 
 ### Auto-Increment Columns
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `AUTO_INCREMENT` (column attribute) | Supported | `id INT AUTO_INCREMENT PRIMARY KEY` |
-| `AUTO_INCREMENT` starting value | Partial | `AUTO_INCREMENT=1000` table option is ignored |
-| `SERIAL` (pseudo-type) | N/A | PostgreSQL syntax - not valid in MySQL |
-| `BIGSERIAL` (pseudo-type) | N/A | PostgreSQL syntax - not valid in MySQL |
-| `IDENTITY(seed, increment)` (column property) | N/A | SQL Server/Snowflake syntax - not valid in MySQL |
-| `GENERATED AS IDENTITY` (column property) | N/A | SQL standard syntax - not valid in MySQL |
+| `AUTO_INCREMENT` (column attribute) | ✓ | `id INT AUTO_INCREMENT PRIMARY KEY` |
+| `AUTO_INCREMENT` starting value | ◐ | `AUTO_INCREMENT=1000` table option is ignored |
+| `SERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in MySQL |
+| `BIGSERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in MySQL |
+| `IDENTITY(seed, increment)` (column property) | — | SQL Server/Snowflake syntax - not valid in MySQL |
+| `GENERATED AS IDENTITY` (column property) | — | SQL standard syntax - not valid in MySQL |
 
 ### Inline Indexes (in `CREATE TABLE`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level indexes | Not Supported | Parse failure |
-| Table-level indexes (INDEX/KEY) | Supported | |
-| Named indexes | Supported | |
-| Multi-column indexes | Supported | |
-| USING BTREE | Supported | |
-| USING HASH | Supported | |
-| CLUSTERED/NONCLUSTERED | N/A | SQL Server syntax |
-| FULLTEXT index | Partial | Ignored |
-| SPATIAL index | Partial | Ignored |
-| Other index options | Partial | Ignored |
+| Column-level indexes | ✗ | Parse failure |
+| Table-level indexes (INDEX/KEY) | ✓ | |
+| Named indexes | ✓ | |
+| Multi-column indexes | ✓ | |
+| USING BTREE | ✓ | |
+| USING HASH | ✓ | |
+| CLUSTERED/NONCLUSTERED | — | SQL Server syntax |
+| FULLTEXT index | ◐ | Ignored |
+| SPATIAL index | ◐ | Ignored |
+| Other index options | ◐ | Ignored |
 
 ### Table/Column Comments (in `CREATE TABLE`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Table `COMMENT` attribute | Supported | e.g., `CREATE TABLE t (...) COMMENT 'desc'` |
-| Column `COMMENT` attribute | Supported | e.g., `col INT COMMENT 'desc'` |
+| Table `COMMENT` attribute | ✓ | e.g., `CREATE TABLE t (...) COMMENT 'desc'` |
+| Column `COMMENT` attribute | ✓ | e.g., `col INT COMMENT 'desc'` |
 
 ---
 
 ### `CREATE INDEX`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `CREATE INDEX` | Supported | |
-| Multi-column index | Supported | |
-| Explicitly named index | Supported | |
-| `UNIQUE` index | Supported | |
-| BTREE index | Supported | |
-| HASH index | Supported | |
-| Function-based index | Supported | e.g., `CREATE INDEX ON t ((col + 1))` |
-| Partial/Filtered index | Not Supported | Parse failure |
-| INCLUDE columns | N/A | Not supported in MySQL |
-| CLUSTERED/NONCLUSTERED | Partial | Ignored |
-| FULLTEXT index | Partial | Ignored |
-| SPATIAL index | Partial | Ignored |
-| COLLATE | Not Supported | Parse failure |
-| Index `COMMENT` | Partial | Ignored |
-| NULLS FIRST/LAST | N/A | Not supported in MySQL |
-| ASC/DESC | Partial | Ignored |
+| Basic `CREATE INDEX` | ✓ | |
+| Multi-column index | ✓ | |
+| Explicitly named index | ✓ | |
+| `UNIQUE` index | ✓ | |
+| BTREE index | ✓ | |
+| HASH index | ✓ | |
+| Function-based index | ✓ | e.g., `CREATE INDEX ON t ((col + 1))` |
+| Partial/Filtered index | ✗ | Parse failure |
+| INCLUDE columns | — | Not supported in MySQL |
+| CLUSTERED/NONCLUSTERED | ◐ | Ignored |
+| FULLTEXT index | ◐ | Ignored |
+| SPATIAL index | ◐ | Ignored |
+| COLLATE | ✗ | Parse failure |
+| Index `COMMENT` | ◐ | Ignored |
+| NULLS FIRST/LAST | — | Not supported in MySQL |
+| ASC/DESC | ◐ | Ignored |
 
 ---
 
 ### `INSERT` Statements
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `INSERT` ... VALUES | Supported | |
-| Multi-row `INSERT` | Supported | |
-| `INSERT` ... SELECT | Not Supported | |
-| WITH clause (CTE) | Not Supported | |
-| Target table alias | N/A | Not supported in MySQL |
-| `INSERT` ... RETURNING | N/A | Not supported in MySQL |
-| `INSERT` ... ON DUPLICATE KEY UPDATE | Partial | Clause is ignored |
-| `INSERT` IGNORE | Partial | IGNORE is ignored |
-| `INSERT` OVERWRITE | N/A | Snowflake/Hive syntax |
-| Multi-table `INSERT` | Not Supported | |
-| Conditional `INSERT` (WHEN/FIRST/ALL) | Not Supported | |
+| Basic `INSERT` ... VALUES | ✓ | |
+| Multi-row `INSERT` | ✓ | |
+| `INSERT` ... SELECT | ✗ | |
+| WITH clause (CTE) | ✗ | |
+| Target table alias | — | Not supported in MySQL |
+| `INSERT` ... RETURNING | — | Not supported in MySQL |
+| `INSERT` ... ON DUPLICATE KEY UPDATE | ◐ | Clause is ignored |
+| `INSERT` IGNORE | ◐ | IGNORE is ignored |
+| `INSERT` OVERWRITE | — | Snowflake/Hive syntax |
+| Multi-table `INSERT` | ✗ | |
+| Conditional `INSERT` (WHEN/FIRST/ALL) | ✗ | |
 
 ---
 
 ### `ALTER TABLE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
 | **ADD COLUMN** | | |
-| - All column properties | Not Supported | |
-| **DROP COLUMN** | Not Supported | |
+| - All column properties | ✗ | |
+| **DROP COLUMN** | ✗ | |
 | **ALTER COLUMN / MODIFY COLUMN** | | |
-| - `COMMENT` | Not Supported | |
-| - Other modifications | Not Supported | |
-| **RENAME COLUMN** | Not Supported | |
+| - `COMMENT` | ✗ | |
+| - Other modifications | ✗ | |
+| **RENAME COLUMN** | ✗ | |
 | **ADD CONSTRAINT** | | |
-| - Named `CHECK` | Supported | |
-| - Unnamed `CHECK` | Supported | |
-| - Named `UNIQUE` | Not Supported | |
-| - Unnamed `UNIQUE` | Not Supported | |
-| - Named `PRIMARY KEY` | Partial | Name is ignored |
-| - Unnamed `PRIMARY KEY` | Supported | |
-| - Named `FOREIGN KEY` | Supported | |
-| - Unnamed `FOREIGN KEY` | Supported | |
-| - `DEFAULT` | Not Supported | Parse failure |
-| - `NOT NULL` / NULL | Not Supported | |
-| **DROP CONSTRAINT** | Not Supported | |
-| **ALTER CONSTRAINT** | Not Supported | |
-| **RENAME TABLE** | Not Supported | |
-| **SET SCHEMA** | Not Supported | |
-| **ADD INDEX** | Not Supported | |
+| - Named `CHECK` | ✓ | |
+| - Unnamed `CHECK` | ✓ | |
+| - Named `UNIQUE` | ✗ | |
+| - Unnamed `UNIQUE` | ✗ | |
+| - Named `PRIMARY KEY` | ◐ | Name is ignored |
+| - Unnamed `PRIMARY KEY` | ✓ | |
+| - Named `FOREIGN KEY` | ✓ | |
+| - Unnamed `FOREIGN KEY` | ✓ | |
+| - `DEFAULT` | ✗ | Parse failure |
+| - `NOT NULL` / NULL | ✗ | |
+| **DROP CONSTRAINT** | ✗ | |
+| **ALTER CONSTRAINT** | ✗ | |
+| **RENAME TABLE** | ✗ | |
+| **SET SCHEMA** | ✗ | |
+| **ADD INDEX** | ✗ | |
 
 ---
 
 ### Other DDL Statements
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `DROP TABLE` | Not Supported | |
-| `DROP INDEX` | Not Supported | |
-| `ALTER INDEX` | N/A | Not supported in MySQL |
-| `CREATE VIEW` | Not Supported | |
+| `DROP TABLE` | ✗ | |
+| `DROP INDEX` | ✗ | |
+| `ALTER INDEX` | — | Not supported in MySQL |
+| `CREATE VIEW` | ✗ | |
 
 ---
 
 ### Comments (Standalone Statements)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Standalone table comments | N/A | Use inline `COMMENT` in `CREATE TABLE` |
-| Standalone column comments | N/A | Use inline `COMMENT` |
-| Index comments | Not Supported | Parse failure |
+| Standalone table comments | — | Use inline `COMMENT` in `CREATE TABLE` |
+| Standalone column comments | — | Use inline `COMMENT` |
+| Index comments | ✗ | Parse failure |
 
 ---
 

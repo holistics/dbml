@@ -10,10 +10,10 @@ This module provides SQL parsing capabilities for Snowflake databases, enabling 
 
 | Symbol | Meaning |
 |--------|---------|
-| Supported | Feature is fully supported and correctly parsed |
-| Partial | Valid SQL that is parsed, but some options/clauses are ignored in the output |
-| Not Supported | Valid Snowflake syntax, but the parser fails to generate output |
-| N/A | Syntax not valid in Snowflake |
+| ✓ | Fully supported and correctly parsed |
+| ◐ | Valid SQL that is parsed, but some options/clauses are ignored |
+| ✗ | Valid Snowflake syntax, but the parser fails to generate output |
+| — | Syntax not valid in Snowflake |
 
 ## Key Capabilities
 
@@ -41,176 +41,176 @@ This module provides SQL parsing capabilities for Snowflake databases, enabling 
 
 ### `CREATE TABLE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `CREATE TABLE` syntax | Supported | |
-| Enumerated data types | N/A | Not supported in Snowflake |
-| Parameterized types `name(...)` | Supported | e.g., `VARCHAR(255)`, `NUMBER(10,2)` |
-| Array types `name[...]` | N/A | Snowflake uses ARRAY type differently |
-| TEMPORARY tables | Partial | Parsed but no indication of temporary status |
-| `CREATE TABLE` AS SELECT | Not Supported | |
-| Table options (CLUSTER BY, etc.) | Partial | Options are ignored |
+| Basic `CREATE TABLE` syntax | ✓ | |
+| Enumerated data types | — | Not supported in Snowflake |
+| Parameterized types `name(...)` | ✓ | e.g., `VARCHAR(255)`, `NUMBER(10,2)` |
+| Array types `name[...]` | — | Snowflake uses ARRAY type differently |
+| TEMPORARY tables | ◐ | Parsed but no indication of temporary status |
+| `CREATE TABLE` AS SELECT | ✗ | |
+| Table options (CLUSTER BY, etc.) | ◐ | Options are ignored |
 
 ### Constraints
 
 #### `PRIMARY KEY`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `PRIMARY KEY` | Supported | `id INT PRIMARY KEY` |
-| Table-level `PRIMARY KEY` | Supported | `PRIMARY KEY (id)` |
-| Multi-column `PRIMARY KEY` | Supported | `PRIMARY KEY (a, b)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT pk_name PRIMARY KEY (id)` |
-| RELY / NORELY options | Partial | Constraint enforcement hints are ignored |
+| Column-level `PRIMARY KEY` | ✓ | `id INT PRIMARY KEY` |
+| Table-level `PRIMARY KEY` | ✓ | `PRIMARY KEY (id)` |
+| Multi-column `PRIMARY KEY` | ✓ | `PRIMARY KEY (a, b)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT pk_name PRIMARY KEY (id)` |
+| RELY / NORELY options | ◐ | Constraint enforcement hints are ignored |
 
 #### `FOREIGN KEY`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `FOREIGN KEY` | Not Supported | Known bug - produces undefined error |
-| Table-level `FOREIGN KEY` | Not Supported | Known bug - produces undefined error |
-| Multi-column `FOREIGN KEY` | Not Supported | Known bug - produces undefined error |
-| Explicitly named (CONSTRAINT name) | Not Supported | Known bug - produces undefined error |
-| `ON UPDATE` action | Not Supported | Known bug - produces undefined error |
-| `ON DELETE` action | Not Supported | Known bug - produces undefined error |
-| Constraint options | Not Supported | Known bug - produces undefined error |
+| Column-level `FOREIGN KEY` | ✗ | Known bug - produces undefined error |
+| Table-level `FOREIGN KEY` | ✗ | Known bug - produces undefined error |
+| Multi-column `FOREIGN KEY` | ✗ | Known bug - produces undefined error |
+| Explicitly named (CONSTRAINT name) | ✗ | Known bug - produces undefined error |
+| `ON UPDATE` action | ✗ | Known bug - produces undefined error |
+| `ON DELETE` action | ✗ | Known bug - produces undefined error |
+| Constraint options | ✗ | Known bug - produces undefined error |
 
 #### `UNIQUE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `UNIQUE` | Supported | `col INT UNIQUE` |
-| Table-level `UNIQUE` | Supported | `UNIQUE (col)` |
-| Multi-column `UNIQUE` | Supported | `UNIQUE (a, b)` |
-| Explicitly named (CONSTRAINT name) | Partial | Name is ignored in output |
-| Constraint options | Partial | Options are ignored |
-| NULLS NOT DISTINCT | N/A | Not valid in Snowflake |
-| `UNIQUE KEY`/`UNIQUE INDEX` | N/A | MySQL syntax - not valid in Snowflake |
+| Column-level `UNIQUE` | ✓ | `col INT UNIQUE` |
+| Table-level `UNIQUE` | ✓ | `UNIQUE (col)` |
+| Multi-column `UNIQUE` | ✓ | `UNIQUE (a, b)` |
+| Explicitly named (CONSTRAINT name) | ◐ | Name is ignored in output |
+| Constraint options | ◐ | Options are ignored |
+| NULLS NOT DISTINCT | — | Not valid in Snowflake |
+| `UNIQUE KEY`/`UNIQUE INDEX` | — | MySQL syntax - not valid in Snowflake |
 
 #### `CHECK`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `CHECK` | Not Supported | `CHECK (col > 0)` - parse failure |
-| Table-level `CHECK` | Not Supported | Parse failure |
-| Explicitly named (CONSTRAINT name) | Not Supported | Parse failure |
-| Enforcement options | Not Supported | Parse failure |
+| Column-level `CHECK` | ✗ | `CHECK (col > 0)` - parse failure |
+| Table-level `CHECK` | ✗ | Parse failure |
+| Explicitly named (CONSTRAINT name) | ✗ | Parse failure |
+| Enforcement options | ✗ | Parse failure |
 
 #### `DEFAULT`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `DEFAULT` | Supported | `col INT DEFAULT 0` |
-| Table-level `DEFAULT` | Not Supported | Parse failure |
-| Function as `DEFAULT` | Supported | `DEFAULT CURRENT_TIMESTAMP()` |
-| Explicitly named `DEFAULT` | Partial | Name is ignored in output |
+| Column-level `DEFAULT` | ✓ | `col INT DEFAULT 0` |
+| Table-level `DEFAULT` | ✗ | Parse failure |
+| Function as `DEFAULT` | ✓ | `DEFAULT CURRENT_TIMESTAMP()` |
+| Explicitly named `DEFAULT` | ◐ | Name is ignored in output |
 
 #### `NOT NULL` / NULL
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `NOT NULL` | Supported | |
-| NULL attribute | Supported | |
-| Table-level `NOT NULL` | N/A | |
-| Constraint options | Partial | Options are ignored |
+| Column-level `NOT NULL` | ✓ | |
+| NULL attribute | ✓ | |
+| Table-level `NOT NULL` | — | |
+| Constraint options | ◐ | Options are ignored |
 
 ### Auto-Increment Columns
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `IDENTITY` (column property) | Supported | `id INT IDENTITY(1,1)` |
-| Increment range | Supported | `IDENTITY(start, increment)` syntax |
-| `AUTO_INCREMENT` (column attribute) | N/A | MySQL syntax - not valid in Snowflake |
-| `SERIAL` (pseudo-type) | N/A | PostgreSQL syntax - not valid in Snowflake |
-| `BIGSERIAL` (pseudo-type) | N/A | PostgreSQL syntax - not valid in Snowflake |
-| `GENERATED AS IDENTITY` (column property) | Not Supported | SQL standard syntax - parse failure |
+| `IDENTITY` (column property) | ✓ | `id INT IDENTITY(1,1)` |
+| Increment range | ✓ | `IDENTITY(start, increment)` syntax |
+| `AUTO_INCREMENT` (column attribute) | — | MySQL syntax - not valid in Snowflake |
+| `SERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in Snowflake |
+| `BIGSERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in Snowflake |
+| `GENERATED AS IDENTITY` (column property) | ✗ | SQL standard syntax - parse failure |
 
 ### Inline Indexes (in `CREATE TABLE`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| All index features | N/A | Snowflake does not support user-defined indexes |
+| All index features | — | Snowflake does not support user-defined indexes |
 
 ### Table/Column Comments (in `CREATE TABLE`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Table `COMMENT` attribute | Supported | |
-| Column `COMMENT` attribute | Not Supported | |
+| Table `COMMENT` attribute | ✓ | |
+| Column `COMMENT` attribute | ✗ | |
 
 ---
 
 ### `CREATE INDEX`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| All index features | N/A | Snowflake does not support `CREATE INDEX` |
+| All index features | — | Snowflake does not support `CREATE INDEX` |
 
 ---
 
 ### `INSERT` Statements
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `INSERT` ... VALUES | Not Supported | |
-| Multi-row `INSERT` | Supported | |
-| `INSERT` ... SELECT | Not Supported | |
-| WITH clause (CTE) | Not Supported | |
-| Target table alias | N/A | |
-| `INSERT` ... RETURNING | N/A | |
-| `INSERT` OVERWRITE | Not Supported | |
-| Multi-table `INSERT` | Not Supported | |
-| Conditional `INSERT` (WHEN/FIRST/ALL) | Not Supported | |
+| Basic `INSERT` ... VALUES | ✗ | |
+| Multi-row `INSERT` | ✓ | |
+| `INSERT` ... SELECT | ✗ | |
+| WITH clause (CTE) | ✗ | |
+| Target table alias | — | |
+| `INSERT` ... RETURNING | — | |
+| `INSERT` OVERWRITE | ✗ | |
+| Multi-table `INSERT` | ✗ | |
+| Conditional `INSERT` (WHEN/FIRST/ALL) | ✗ | |
 
 ---
 
 ### `ALTER TABLE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
 | **ADD COLUMN** | | |
-| - All column properties | Not Supported | |
-| **DROP COLUMN** | Not Supported | |
+| - All column properties | ✗ | |
+| **DROP COLUMN** | ✗ | |
 | **ALTER COLUMN / MODIFY** | | |
-| - `COMMENT` | Not Supported | |
-| - Other modifications | Not Supported | |
-| **RENAME COLUMN** | Not Supported | |
+| - `COMMENT` | ✗ | |
+| - Other modifications | ✗ | |
+| **RENAME COLUMN** | ✗ | |
 | **ADD CONSTRAINT** | | |
-| - Named `CHECK` | N/A | Snowflake uses SET/UNSET for constraints |
-| - Unnamed `CHECK` | N/A | |
-| - Named `UNIQUE` | Partial | Name is ignored |
-| - Unnamed `UNIQUE` | Supported | |
-| - Named `PRIMARY KEY` | Not Supported | |
-| - Unnamed `PRIMARY KEY` | Not Supported | |
-| - Named `FOREIGN KEY` | Partial | Name is ignored |
-| - Unnamed `FOREIGN KEY` | Supported | |
-| - `DEFAULT` | Not Supported | Parse failure |
-| - `NOT NULL` / NULL | Not Supported | |
-| **DROP CONSTRAINT** | Not Supported | |
-| **ALTER CONSTRAINT** | Not Supported | |
-| **RENAME TABLE** | Not Supported | |
-| **SET SCHEMA** | Not Supported | |
+| - Named `CHECK` | — | Snowflake uses SET/UNSET for constraints |
+| - Unnamed `CHECK` | — | |
+| - Named `UNIQUE` | ◐ | Name is ignored |
+| - Unnamed `UNIQUE` | ✓ | |
+| - Named `PRIMARY KEY` | ✗ | |
+| - Unnamed `PRIMARY KEY` | ✗ | |
+| - Named `FOREIGN KEY` | ◐ | Name is ignored |
+| - Unnamed `FOREIGN KEY` | ✓ | |
+| - `DEFAULT` | ✗ | Parse failure |
+| - `NOT NULL` / NULL | ✗ | |
+| **DROP CONSTRAINT** | ✗ | |
+| **ALTER CONSTRAINT** | ✗ | |
+| **RENAME TABLE** | ✗ | |
+| **SET SCHEMA** | ✗ | |
 
 ---
 
 ### Other DDL Statements
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `DROP TABLE` | Not Supported | |
-| `DROP INDEX` | N/A | No indexes in Snowflake |
-| `ALTER INDEX` | N/A | No indexes in Snowflake |
-| `CREATE VIEW` | Not Supported | |
+| `DROP TABLE` | ✗ | |
+| `DROP INDEX` | — | No indexes in Snowflake |
+| `ALTER INDEX` | — | No indexes in Snowflake |
+| `CREATE VIEW` | ✗ | |
 
 ---
 
 ### Comments (Standalone Statements)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `COMMENT ON TABLE` | Not Supported | |
-| `COMMENT ON COLUMN` | Not Supported | |
-| COMMENT ... IS NULL | N/A | Use `ALTER TABLE ... SET/UNSET COMMENT` |
+| `COMMENT ON TABLE` | ✗ | |
+| `COMMENT ON COLUMN` | ✗ | |
+| COMMENT ... IS NULL | — | Use `ALTER TABLE ... SET/UNSET COMMENT` |
 
 ---
 
