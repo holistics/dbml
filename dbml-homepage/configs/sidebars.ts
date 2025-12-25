@@ -15,6 +15,7 @@ const SidebarConfigs: SidebarsConfig = {
   docs: [
     'home',
     'docs',
+    'database-support',
     'cli',
     {
       type: 'category',
