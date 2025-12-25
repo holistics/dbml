@@ -10,10 +10,10 @@ This module provides SQL parsing capabilities for Oracle databases, enabling con
 
 | Symbol | Meaning |
 |--------|---------|
-| Supported | Feature is fully supported and correctly parsed |
-| Partial | Valid SQL that is parsed, but some options/clauses are ignored in the output |
-| Not Supported | Valid Oracle syntax, but the parser fails to generate output |
-| N/A | Syntax not valid in Oracle |
+| ✓ | Fully supported and correctly parsed |
+| ◐ | Valid SQL that is parsed, but some options/clauses are ignored |
+| ✗ | Valid Oracle syntax, but the parser fails to generate output |
+| — | Syntax not valid in Oracle |
 
 ## Key Capabilities
 
@@ -44,199 +44,199 @@ This module provides SQL parsing capabilities for Oracle databases, enabling con
 
 ### `CREATE TABLE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `CREATE TABLE` syntax | Supported | |
-| Enumerated data types | N/A | Not supported in Oracle (supported in Oracle 23ai) |
-| Parameterized types `name(...)` | Supported | e.g., `VARCHAR2(255)`, `NUMBER(10,2)` |
-| Array types `name[...]` | N/A | Oracle uses VARRAY differently |
-| TEMPORARY tables | Partial | Parsed but no indication of temporary status |
-| `CREATE TABLE` AS SELECT | Not Supported | |
-| Table options (TABLESPACE, etc.) | Partial | Options are ignored |
+| Basic `CREATE TABLE` syntax | ✓ | |
+| Enumerated data types | — | Not supported in Oracle (supported in Oracle 23ai) |
+| Parameterized types `name(...)` | ✓ | e.g., `VARCHAR2(255)`, `NUMBER(10,2)` |
+| Array types `name[...]` | — | Oracle uses VARRAY differently |
+| TEMPORARY tables | ◐ | Parsed but no indication of temporary status |
+| `CREATE TABLE` AS SELECT | ✗ | |
+| Table options (TABLESPACE, etc.) | ◐ | Options are ignored |
 
 ### Constraints
 
 #### `PRIMARY KEY`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `PRIMARY KEY` | Supported | Defined with column: `id NUMBER PRIMARY KEY` |
-| Table-level `PRIMARY KEY` | Supported | Defined separately: `PRIMARY KEY (id)` |
-| Multi-column `PRIMARY KEY` | Supported | Multiple columns: `PRIMARY KEY (a, b)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT pk_name PRIMARY KEY (id)` |
-| DEFERRABLE / NOT DEFERRABLE | Partial | Constraint timing options are ignored |
+| Column-level `PRIMARY KEY` | ✓ | Defined with column: `id NUMBER PRIMARY KEY` |
+| Table-level `PRIMARY KEY` | ✓ | Defined separately: `PRIMARY KEY (id)` |
+| Multi-column `PRIMARY KEY` | ✓ | Multiple columns: `PRIMARY KEY (a, b)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT pk_name PRIMARY KEY (id)` |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
 
 #### `FOREIGN KEY`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `FOREIGN KEY` | Supported | `col NUMBER REFERENCES other(id)` |
-| Table-level `FOREIGN KEY` | Supported | `FOREIGN KEY (col) REFERENCES other(id)` |
-| Multi-column `FOREIGN KEY` | Supported | `FOREIGN KEY (a, b) REFERENCES other(x, y)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT fk_name FOREIGN KEY ...` |
-| `ON UPDATE` action | N/A | Oracle does not support `ON UPDATE` |
-| `ON DELETE` action | Supported | CASCADE, SET NULL, NO ACTION |
-| DEFERRABLE / NOT DEFERRABLE | Partial | Constraint timing options are ignored |
+| Column-level `FOREIGN KEY` | ✓ | `col NUMBER REFERENCES other(id)` |
+| Table-level `FOREIGN KEY` | ✓ | `FOREIGN KEY (col) REFERENCES other(id)` |
+| Multi-column `FOREIGN KEY` | ✓ | `FOREIGN KEY (a, b) REFERENCES other(x, y)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT fk_name FOREIGN KEY ...` |
+| `ON UPDATE` action | — | Oracle does not support `ON UPDATE` |
+| `ON DELETE` action | ✓ | CASCADE, SET NULL, NO ACTION |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
 
 #### `UNIQUE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `UNIQUE` | Supported | `col NUMBER UNIQUE` |
-| Table-level `UNIQUE` | Supported | `UNIQUE (col)` |
-| Multi-column `UNIQUE` | Supported | `UNIQUE (a, b)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT uq_name UNIQUE (col)` |
-| DEFERRABLE / NOT DEFERRABLE | Partial | Constraint timing options are ignored |
-| NULLS NOT DISTINCT | Partial | Treats NULLs as equal - option is ignored |
-| `UNIQUE KEY`/`UNIQUE INDEX` | N/A | MySQL syntax; use `CREATE INDEX` |
+| Column-level `UNIQUE` | ✓ | `col NUMBER UNIQUE` |
+| Table-level `UNIQUE` | ✓ | `UNIQUE (col)` |
+| Multi-column `UNIQUE` | ✓ | `UNIQUE (a, b)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT uq_name UNIQUE (col)` |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
+| NULLS NOT DISTINCT | ◐ | Treats NULLs as equal - option is ignored |
+| `UNIQUE KEY`/`UNIQUE INDEX` | — | MySQL syntax; use `CREATE INDEX` |
 
 #### `CHECK`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `CHECK` | Supported | `col NUMBER CHECK (col > 0)` |
-| Table-level `CHECK` | Supported | `CHECK (col > 0)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT chk_name CHECK (col > 0)` |
-| ENABLE / DISABLE options | Partial | Enforcement options are ignored |
+| Column-level `CHECK` | ✓ | `col NUMBER CHECK (col > 0)` |
+| Table-level `CHECK` | ✓ | `CHECK (col > 0)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT chk_name CHECK (col > 0)` |
+| ENABLE / DISABLE options | ◐ | Enforcement options are ignored |
 
 #### `DEFAULT`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `DEFAULT` | Supported | `col NUMBER DEFAULT 0` |
-| Table-level `DEFAULT` | N/A | Oracle only supports column-level `DEFAULT` |
-| Function as `DEFAULT` | Supported | `DEFAULT SYSDATE`, `DEFAULT SYS_GUID()` |
-| Explicitly named `DEFAULT` | N/A | Oracle doesn't support named `DEFAULT` constraints |
+| Column-level `DEFAULT` | ✓ | `col NUMBER DEFAULT 0` |
+| Table-level `DEFAULT` | — | Oracle only supports column-level `DEFAULT` |
+| Function as `DEFAULT` | ✓ | `DEFAULT SYSDATE`, `DEFAULT SYS_GUID()` |
+| Explicitly named `DEFAULT` | — | Oracle doesn't support named `DEFAULT` constraints |
 
 #### `NOT NULL` / NULL
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `NOT NULL` | Supported | `col NUMBER NOT NULL` |
-| NULL (explicitly nullable) | Supported | `col NUMBER NULL` |
-| Table-level `NOT NULL` | N/A | Oracle only supports column-level `NOT NULL` |
-| DEFERRABLE / NOT DEFERRABLE | Partial | Constraint timing options are ignored |
+| Column-level `NOT NULL` | ✓ | `col NUMBER NOT NULL` |
+| NULL (explicitly nullable) | ✓ | `col NUMBER NULL` |
+| Table-level `NOT NULL` | — | Oracle only supports column-level `NOT NULL` |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
 
 ### Auto-Increment Columns
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `GENERATED AS IDENTITY` (column property) | Supported | `id NUMBER GENERATED AS IDENTITY` |
-| `GENERATED ALWAYS AS IDENTITY` (column property) | Supported | Database always generates value |
-| `GENERATED BY DEFAULT AS IDENTITY` (column property) | Supported | Database generates if no value provided |
-| START WITH / INCREMENT BY | Partial | Sequence options are ignored |
-| `AUTO_INCREMENT` (column attribute) | N/A | MySQL syntax - not valid in Oracle |
-| `SERIAL` (pseudo-type) | N/A | PostgreSQL syntax - not valid in Oracle |
-| `BIGSERIAL` (pseudo-type) | N/A | PostgreSQL syntax - not valid in Oracle |
-| `IDENTITY(seed, increment)` (column property) | N/A | SQL Server/Snowflake syntax - not valid in Oracle |
+| `GENERATED AS IDENTITY` (column property) | ✓ | `id NUMBER GENERATED AS IDENTITY` |
+| `GENERATED ALWAYS AS IDENTITY` (column property) | ✓ | Database always generates value |
+| `GENERATED BY DEFAULT AS IDENTITY` (column property) | ✓ | Database generates if no value provided |
+| START WITH / INCREMENT BY | ◐ | Sequence options are ignored |
+| `AUTO_INCREMENT` (column attribute) | — | MySQL syntax - not valid in Oracle |
+| `SERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in Oracle |
+| `BIGSERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in Oracle |
+| `IDENTITY(seed, increment)` (column property) | — | SQL Server/Snowflake syntax - not valid in Oracle |
 
 ### Inline Indexes (in `CREATE TABLE`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level indexes | N/A | Oracle uses separate `CREATE INDEX` statement |
-| Table-level indexes | Supported | Via constraint definitions |
-| Named indexes | Supported | Index name specified with constraint |
-| Multi-column indexes | Supported | Multiple columns in constraint |
-| CLUSTERED/NONCLUSTERED | N/A | SQL Server syntax - not valid in Oracle |
-| Index options | Partial | Options are ignored |
+| Column-level indexes | — | Oracle uses separate `CREATE INDEX` statement |
+| Table-level indexes | ✓ | Via constraint definitions |
+| Named indexes | ✓ | Index name specified with constraint |
+| Multi-column indexes | ✓ | Multiple columns in constraint |
+| CLUSTERED/NONCLUSTERED | — | SQL Server syntax - not valid in Oracle |
+| Index options | ◐ | Options are ignored |
 
 ### Table/Column Comments (in `CREATE TABLE`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Table comments | Supported | Via `COMMENT ON TABLE` statement |
-| Column comments | Supported | Via `COMMENT ON COLUMN` statement |
+| Table comments | ✓ | Via `COMMENT ON TABLE` statement |
+| Column comments | ✓ | Via `COMMENT ON COLUMN` statement |
 
 ---
 
 ### `CREATE INDEX`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `CREATE INDEX` | Supported | `CREATE INDEX idx ON table (col)` |
-| Multi-column index | Supported | `CREATE INDEX idx ON table (a, b)` |
-| Explicitly named index | Supported | Index name is required in Oracle |
-| `UNIQUE` index | Supported | `CREATE UNIQUE INDEX idx ON table (col)` |
-| Function-based index | Supported | `CREATE INDEX ON t (UPPER(col))` |
-| Partial/Filtered index (WHERE clause) | Partial | WHERE condition is ignored |
-| BITMAP index | N/A | Parsed but type not captured |
-| BTREE/HASH/GIST/BRIN/GIN | N/A | PostgreSQL syntax - not applicable to Oracle |
-| INCLUDE columns | N/A | Not supported in Oracle |
-| CLUSTERED/NONCLUSTERED | N/A | SQL Server syntax - not valid in Oracle |
-| COLLATE | Partial | Collation settings are ignored |
-| Index comments | Partial | Comments are ignored |
-| NULLS FIRST/LAST | N/A | Oracle uses different syntax |
-| ASC/DESC | Partial | Sort direction is ignored |
-| FULLTEXT/SPATIAL | N/A | Oracle uses different syntax (Oracle Text, Spatial) |
+| Basic `CREATE INDEX` | ✓ | `CREATE INDEX idx ON table (col)` |
+| Multi-column index | ✓ | `CREATE INDEX idx ON table (a, b)` |
+| Explicitly named index | ✓ | Index name is required in Oracle |
+| `UNIQUE` index | ✓ | `CREATE UNIQUE INDEX idx ON table (col)` |
+| Function-based index | ✓ | `CREATE INDEX ON t (UPPER(col))` |
+| Partial/Filtered index (WHERE clause) | ◐ | WHERE condition is ignored |
+| BITMAP index | — | Parsed but type not captured |
+| BTREE/HASH/GIST/BRIN/GIN | — | PostgreSQL syntax - not applicable to Oracle |
+| INCLUDE columns | — | Not supported in Oracle |
+| CLUSTERED/NONCLUSTERED | — | SQL Server syntax - not valid in Oracle |
+| COLLATE | ◐ | Collation settings are ignored |
+| Index comments | ◐ | Comments are ignored |
+| NULLS FIRST/LAST | — | Oracle uses different syntax |
+| ASC/DESC | ◐ | Sort direction is ignored |
+| FULLTEXT/SPATIAL | — | Oracle uses different syntax (Oracle Text, Spatial) |
 
 ---
 
 ### `INSERT` Statements
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `INSERT` ... VALUES | Supported | `INSERT INTO t (col) VALUES (1)` |
-| Multi-row `INSERT` | N/A | Oracle uses `INSERT ALL` syntax |
-| `INSERT` ... SELECT | Not Supported | Subquery as data source |
-| WITH clause (CTE) | Not Supported | CTE before `INSERT` |
-| Target table alias | Not Supported | `INSERT INTO t alias ...` |
-| `INSERT` ... RETURNING | Partial | Returns inserted rows - clause is ignored |
-| `INSERT ALL` (multi-table insert) | Not Supported | Oracle-specific multi-table insert |
-| Conditional `INSERT` (WHEN/FIRST/ALL) | Not Supported | Oracle syntax for conditional inserts |
-| `INSERT` OVERWRITE | N/A | Snowflake/Hive syntax - not valid in Oracle |
+| Basic `INSERT` ... VALUES | ✓ | `INSERT INTO t (col) VALUES (1)` |
+| Multi-row `INSERT` | — | Oracle uses `INSERT ALL` syntax |
+| `INSERT` ... SELECT | ✗ | Subquery as data source |
+| WITH clause (CTE) | ✗ | CTE before `INSERT` |
+| Target table alias | ✗ | `INSERT INTO t alias ...` |
+| `INSERT` ... RETURNING | ◐ | Returns inserted rows - clause is ignored |
+| `INSERT ALL` (multi-table insert) | ✗ | Oracle-specific multi-table insert |
+| Conditional `INSERT` (WHEN/FIRST/ALL) | ✗ | Oracle syntax for conditional inserts |
+| `INSERT` OVERWRITE | — | Snowflake/Hive syntax - not valid in Oracle |
 
 ---
 
 ### `ALTER TABLE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
 | **ADD COLUMN** | | |
-| - All column properties | Not Supported | |
-| **DROP COLUMN** | Not Supported | |
+| - All column properties | ✗ | |
+| **DROP COLUMN** | ✗ | |
 | **ALTER COLUMN / MODIFY** | | |
-| - `COMMENT` | N/A | Use `COMMENT ON` statement |
-| - Other modifications | Not Supported | |
-| **RENAME COLUMN** | Not Supported | |
+| - `COMMENT` | — | Use `COMMENT ON` statement |
+| - Other modifications | ✗ | |
+| **RENAME COLUMN** | ✗ | |
 | **ADD CONSTRAINT** | | |
-| - Named `DEFAULT` | Supported | Best among all DBMS |
-| - Named `NOT NULL` | Supported | Best among all DBMS |
-| - NULL | Supported | |
-| - Named `CHECK` | Supported | |
-| - Unnamed `CHECK` | Supported | |
-| - Named `UNIQUE` | Supported | |
-| - Unnamed `UNIQUE` | Supported | |
-| - Named `PRIMARY KEY` | Supported | |
-| - Unnamed `PRIMARY KEY` | Supported | |
-| - Named `FOREIGN KEY` | Supported | |
-| - Unnamed `FOREIGN KEY` | Supported | |
-| **DROP CONSTRAINT** | Not Supported | |
-| **ALTER CONSTRAINT** | Not Supported | |
-| **RENAME TABLE** | Not Supported | |
-| **SET SCHEMA** | Not Supported | |
+| - Named `DEFAULT` | ✓ | Best among all DBMS |
+| - Named `NOT NULL` | ✓ | Best among all DBMS |
+| - NULL | ✓ | |
+| - Named `CHECK` | ✓ | |
+| - Unnamed `CHECK` | ✓ | |
+| - Named `UNIQUE` | ✓ | |
+| - Unnamed `UNIQUE` | ✓ | |
+| - Named `PRIMARY KEY` | ✓ | |
+| - Unnamed `PRIMARY KEY` | ✓ | |
+| - Named `FOREIGN KEY` | ✓ | |
+| - Unnamed `FOREIGN KEY` | ✓ | |
+| **DROP CONSTRAINT** | ✗ | |
+| **ALTER CONSTRAINT** | ✗ | |
+| **RENAME TABLE** | ✗ | |
+| **SET SCHEMA** | ✗ | |
 
 ---
 
 ### Other DDL Statements
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `DROP TABLE` | Not Supported | |
-| `DROP INDEX` | Not Supported | |
-| `ALTER INDEX` | Not Supported | |
-| `CREATE VIEW` | Not Supported | |
+| `DROP TABLE` | ✗ | |
+| `DROP INDEX` | ✗ | |
+| `ALTER INDEX` | ✗ | |
+| `CREATE VIEW` | ✗ | |
 
 ---
 
 ### Comments (`COMMENT ON`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `COMMENT ON TABLE` | Supported | |
-| `COMMENT ON COLUMN` | Supported | |
-| COMMENT ... IS NULL | Supported | Removes comment |
-| `COMMENT ON INDEX` | Not Supported | |
+| `COMMENT ON TABLE` | ✓ | |
+| `COMMENT ON COLUMN` | ✓ | |
+| COMMENT ... IS NULL | ✓ | Removes comment |
+| `COMMENT ON INDEX` | ✗ | |
 
 ---
 

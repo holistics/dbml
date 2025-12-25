@@ -10,10 +10,10 @@ This module provides SQL parsing capabilities for Microsoft SQL Server databases
 
 | Symbol | Meaning |
 |--------|---------|
-| Supported | Feature is fully supported and correctly parsed |
-| Partial | Valid SQL that is parsed, but some options/clauses are ignored in the output |
-| Not Supported | Valid T-SQL syntax, but the parser fails to generate output |
-| N/A | Syntax not valid in SQL Server |
+| ✓ | Fully supported and correctly parsed |
+| ◐ | Valid SQL that is parsed, but some options/clauses are ignored |
+| ✗ | Valid T-SQL syntax, but the parser fails to generate output |
+| — | Syntax not valid in SQL Server |
 
 ## Key Capabilities
 
@@ -44,199 +44,199 @@ This module provides SQL parsing capabilities for Microsoft SQL Server databases
 
 ### `CREATE TABLE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `CREATE TABLE` syntax | Supported | |
-| Enumerated data types | N/A | SQL Server doesn't have ENUM type |
-| Parameterized types `name(...)` | Supported | e.g., `VARCHAR(255)`, `DECIMAL(10,2)` |
-| Array types `name[...]` | N/A | Not supported in SQL Server |
-| TEMPORARY tables (`#` prefix) | Supported | Tables with `#` prefix recognized as temporary |
-| `CREATE TABLE` AS SELECT (SELECT INTO) | Not Supported | |
-| Table options (FILEGROUP, etc.) | Partial | Options are ignored |
+| Basic `CREATE TABLE` syntax | ✓ | |
+| Enumerated data types | — | SQL Server doesn't have ENUM type |
+| Parameterized types `name(...)` | ✓ | e.g., `VARCHAR(255)`, `DECIMAL(10,2)` |
+| Array types `name[...]` | — | Not supported in SQL Server |
+| TEMPORARY tables (`#` prefix) | ✓ | Tables with `#` prefix recognized as temporary |
+| `CREATE TABLE` AS SELECT (SELECT INTO) | ✗ | |
+| Table options (FILEGROUP, etc.) | ◐ | Options are ignored |
 
 ### Constraints
 
 #### `PRIMARY KEY`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `PRIMARY KEY` | Supported | Defined with column: `id INT PRIMARY KEY` |
-| Table-level `PRIMARY KEY` | Supported | Defined separately: `PRIMARY KEY (id)` |
-| Multi-column `PRIMARY KEY` | Supported | Multiple columns: `PRIMARY KEY (a, b)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT pk_name PRIMARY KEY (id)` |
-| CLUSTERED/NONCLUSTERED | Partial | Index type options are ignored |
-| Constraint options | Partial | Other options are ignored |
+| Column-level `PRIMARY KEY` | ✓ | Defined with column: `id INT PRIMARY KEY` |
+| Table-level `PRIMARY KEY` | ✓ | Defined separately: `PRIMARY KEY (id)` |
+| Multi-column `PRIMARY KEY` | ✓ | Multiple columns: `PRIMARY KEY (a, b)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT pk_name PRIMARY KEY (id)` |
+| CLUSTERED/NONCLUSTERED | ◐ | Index type options are ignored |
+| Constraint options | ◐ | Other options are ignored |
 
 #### `FOREIGN KEY`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `FOREIGN KEY` | Not Supported | Known bug - use table-level syntax instead |
-| Table-level `FOREIGN KEY` | Supported | `FOREIGN KEY (col) REFERENCES other(id)` |
-| Multi-column `FOREIGN KEY` | Supported | `FOREIGN KEY (a, b) REFERENCES other(x, y)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT fk_name FOREIGN KEY ...` |
-| `ON UPDATE` action | Supported | CASCADE, SET NULL, SET DEFAULT, NO ACTION |
-| `ON DELETE` action | Supported | CASCADE, SET NULL, SET DEFAULT, NO ACTION |
-| Constraint options | Partial | Other options are ignored |
+| Column-level `FOREIGN KEY` | ✗ | Known bug - use table-level syntax instead |
+| Table-level `FOREIGN KEY` | ✓ | `FOREIGN KEY (col) REFERENCES other(id)` |
+| Multi-column `FOREIGN KEY` | ✓ | `FOREIGN KEY (a, b) REFERENCES other(x, y)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT fk_name FOREIGN KEY ...` |
+| `ON UPDATE` action | ✓ | CASCADE, SET NULL, SET DEFAULT, NO ACTION |
+| `ON DELETE` action | ✓ | CASCADE, SET NULL, SET DEFAULT, NO ACTION |
+| Constraint options | ◐ | Other options are ignored |
 
 #### `UNIQUE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `UNIQUE` | Supported | `col INT UNIQUE` |
-| Table-level `UNIQUE` | Supported | `UNIQUE (col)` |
-| Multi-column `UNIQUE` | Supported | `UNIQUE (a, b)` |
-| Explicitly named (CONSTRAINT name) | Partial | `CONSTRAINT uq_name UNIQUE (col)` - name is ignored |
-| CLUSTERED/NONCLUSTERED | Partial | Index type options are ignored |
-| Constraint options | Partial | Other options are ignored |
-| NULLS NOT DISTINCT | N/A | Not valid in SQL Server |
-| `UNIQUE KEY`/`UNIQUE INDEX` | N/A | MySQL syntax - not valid in SQL Server |
+| Column-level `UNIQUE` | ✓ | `col INT UNIQUE` |
+| Table-level `UNIQUE` | ✓ | `UNIQUE (col)` |
+| Multi-column `UNIQUE` | ✓ | `UNIQUE (a, b)` |
+| Explicitly named (CONSTRAINT name) | ◐ | `CONSTRAINT uq_name UNIQUE (col)` - name is ignored |
+| CLUSTERED/NONCLUSTERED | ◐ | Index type options are ignored |
+| Constraint options | ◐ | Other options are ignored |
+| NULLS NOT DISTINCT | — | Not valid in SQL Server |
+| `UNIQUE KEY`/`UNIQUE INDEX` | — | MySQL syntax - not valid in SQL Server |
 
 #### `CHECK`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `CHECK` | Supported | `col INT CHECK (col > 0)` |
-| Table-level `CHECK` | Supported | `CHECK (col > 0)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT chk_name CHECK (col > 0)` |
-| WITH CHECK / WITH NOCHECK | Partial | Enforcement options are ignored |
+| Column-level `CHECK` | ✓ | `col INT CHECK (col > 0)` |
+| Table-level `CHECK` | ✓ | `CHECK (col > 0)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT chk_name CHECK (col > 0)` |
+| WITH CHECK / WITH NOCHECK | ◐ | Enforcement options are ignored |
 
 #### `DEFAULT`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `DEFAULT` | Supported | `col INT DEFAULT 0` |
-| Table-level `DEFAULT` | Not Supported | Completely ignored |
-| Function as `DEFAULT` | Supported | `DEFAULT GETDATE()`, `DEFAULT NEWID()` |
-| Explicitly named `DEFAULT` | Partial | `CONSTRAINT df_name DEFAULT 0` - name is ignored |
+| Column-level `DEFAULT` | ✓ | `col INT DEFAULT 0` |
+| Table-level `DEFAULT` | ✗ | Completely ignored |
+| Function as `DEFAULT` | ✓ | `DEFAULT GETDATE()`, `DEFAULT NEWID()` |
+| Explicitly named `DEFAULT` | ◐ | `CONSTRAINT df_name DEFAULT 0` - name is ignored |
 
 #### `NOT NULL` / NULL
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `NOT NULL` | Supported | `col INT NOT NULL` |
-| NULL (explicitly nullable) | Supported | `col INT NULL` |
-| Table-level `NOT NULL` | N/A | SQL Server only supports column-level `NOT NULL` |
-| Constraint options | Partial | Other options are ignored |
+| Column-level `NOT NULL` | ✓ | `col INT NOT NULL` |
+| NULL (explicitly nullable) | ✓ | `col INT NULL` |
+| Table-level `NOT NULL` | — | SQL Server only supports column-level `NOT NULL` |
+| Constraint options | ◐ | Other options are ignored |
 
 ### Auto-Increment Columns
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `IDENTITY` (column property) | Supported | `id INT IDENTITY` |
-| `IDENTITY` with seed and increment | Supported | `id INT IDENTITY(1,1)` - starts at 1, increments by 1 |
-| `AUTO_INCREMENT` (column attribute) | N/A | MySQL syntax - not valid in SQL Server |
-| `SERIAL` (pseudo-type) | N/A | PostgreSQL syntax - not valid in SQL Server |
-| `BIGSERIAL` (pseudo-type) | N/A | PostgreSQL syntax - not valid in SQL Server |
-| `GENERATED AS IDENTITY` (column property) | Not Supported | SQL standard syntax - parse failure |
+| `IDENTITY` (column property) | ✓ | `id INT IDENTITY` |
+| `IDENTITY` with seed and increment | ✓ | `id INT IDENTITY(1,1)` - starts at 1, increments by 1 |
+| `AUTO_INCREMENT` (column attribute) | — | MySQL syntax - not valid in SQL Server |
+| `SERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in SQL Server |
+| `BIGSERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in SQL Server |
+| `GENERATED AS IDENTITY` (column property) | ✗ | SQL standard syntax - parse failure |
 
 ### Inline Indexes (in `CREATE TABLE`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level indexes | N/A | Except for `UNIQUE`/`PRIMARY KEY` constraints |
-| Table-level indexes | N/A | Except for `UNIQUE`/`PRIMARY KEY` constraints |
-| Named indexes | N/A | Use `CREATE INDEX` statement |
-| Multi-column indexes | N/A | Use `CREATE INDEX` statement |
-| CLUSTERED/NONCLUSTERED | Partial | Index type options are ignored |
-| Index options | N/A | Use `CREATE INDEX` statement |
+| Column-level indexes | — | Except for `UNIQUE`/`PRIMARY KEY` constraints |
+| Table-level indexes | — | Except for `UNIQUE`/`PRIMARY KEY` constraints |
+| Named indexes | — | Use `CREATE INDEX` statement |
+| Multi-column indexes | — | Use `CREATE INDEX` statement |
+| CLUSTERED/NONCLUSTERED | ◐ | Index type options are ignored |
+| Index options | — | Use `CREATE INDEX` statement |
 
 ### Table/Column Comments (in `CREATE TABLE`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Table comments | N/A | SQL Server uses `sp_addextendedproperty` |
-| Column comments | N/A | SQL Server uses `sp_addextendedproperty` |
+| Table comments | — | SQL Server uses `sp_addextendedproperty` |
+| Column comments | — | SQL Server uses `sp_addextendedproperty` |
 
 ---
 
 ### `CREATE INDEX`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `CREATE INDEX` | Supported | `CREATE INDEX idx ON table (col)` |
-| Multi-column index | Supported | `CREATE INDEX idx ON table (a, b)` |
-| Explicitly named index | Supported | Index name is required in SQL Server |
-| `UNIQUE` index | Supported | `CREATE UNIQUE INDEX idx ON table (col)` |
-| CLUSTERED index | Partial | Index type is ignored |
-| NONCLUSTERED index | Partial | Index type is ignored |
-| Function-based index | N/A | SQL Server uses computed columns instead |
-| Partial/Filtered index (WHERE clause) | Partial | WHERE condition is ignored |
-| INCLUDE columns | Partial | Covering index columns are ignored |
-| BTREE/HASH | Not Supported | PostgreSQL syntax - parse failure |
-| COLLATE | N/A | Not applicable to SQL Server indexes |
-| Index comments | N/A | Use `sp_addextendedproperty` |
-| NULLS FIRST/LAST | N/A | Not valid in SQL Server |
-| ASC/DESC | Partial | Sort direction is ignored |
-| FULLTEXT index | Not Supported | Parse failure |
-| SPATIAL index | Not Supported | Parse failure |
+| Basic `CREATE INDEX` | ✓ | `CREATE INDEX idx ON table (col)` |
+| Multi-column index | ✓ | `CREATE INDEX idx ON table (a, b)` |
+| Explicitly named index | ✓ | Index name is required in SQL Server |
+| `UNIQUE` index | ✓ | `CREATE UNIQUE INDEX idx ON table (col)` |
+| CLUSTERED index | ◐ | Index type is ignored |
+| NONCLUSTERED index | ◐ | Index type is ignored |
+| Function-based index | — | SQL Server uses computed columns instead |
+| Partial/Filtered index (WHERE clause) | ◐ | WHERE condition is ignored |
+| INCLUDE columns | ◐ | Covering index columns are ignored |
+| BTREE/HASH | ✗ | PostgreSQL syntax - parse failure |
+| COLLATE | — | Not applicable to SQL Server indexes |
+| Index comments | — | Use `sp_addextendedproperty` |
+| NULLS FIRST/LAST | — | Not valid in SQL Server |
+| ASC/DESC | ◐ | Sort direction is ignored |
+| FULLTEXT index | ✗ | Parse failure |
+| SPATIAL index | ✗ | Parse failure |
 
 ---
 
 ### `INSERT` Statements
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `INSERT` ... VALUES | Supported | `INSERT INTO t (col) VALUES (1)` |
-| Multi-row `INSERT` | Supported | `INSERT INTO t VALUES (1), (2), (3)` |
-| `INSERT` ... SELECT | Not Supported | Subquery as data source |
-| WITH clause (CTE) | Not Supported | CTE before `INSERT` |
-| Target table alias | N/A | Not valid in SQL Server |
-| `INSERT` ... OUTPUT | Partial | Returns inserted rows - clause is ignored |
-| `INSERT` OVERWRITE | N/A | Snowflake/Hive syntax - not valid in SQL Server |
-| Multi-table `INSERT` | Not Supported | Insert into multiple tables at once |
-| Conditional `INSERT` | Not Supported | |
+| Basic `INSERT` ... VALUES | ✓ | `INSERT INTO t (col) VALUES (1)` |
+| Multi-row `INSERT` | ✓ | `INSERT INTO t VALUES (1), (2), (3)` |
+| `INSERT` ... SELECT | ✗ | Subquery as data source |
+| WITH clause (CTE) | ✗ | CTE before `INSERT` |
+| Target table alias | — | Not valid in SQL Server |
+| `INSERT` ... OUTPUT | ◐ | Returns inserted rows - clause is ignored |
+| `INSERT` OVERWRITE | — | Snowflake/Hive syntax - not valid in SQL Server |
+| Multi-table `INSERT` | ✗ | Insert into multiple tables at once |
+| Conditional `INSERT` | ✗ | |
 
 ---
 
 ### `ALTER TABLE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
 | **ADD COLUMN** | | |
-| - All column properties | Not Supported | |
-| **DROP COLUMN** | Not Supported | |
+| - All column properties | ✗ | |
+| **DROP COLUMN** | ✗ | |
 | **ALTER COLUMN** | | |
-| - All modifications | Not Supported | |
-| **RENAME COLUMN** | Not Supported | |
+| - All modifications | ✗ | |
+| **RENAME COLUMN** | ✗ | |
 | **ADD CONSTRAINT** | | |
-| - Named `DEFAULT` | Supported | Name is ignored |
-| - `NOT NULL` | Not Supported | |
-| - NULL | Not Supported | |
-| - Named `CHECK` | Supported | |
-| - Unnamed `CHECK` | Supported | |
-| - Named `UNIQUE` | Supported | |
-| - Unnamed `UNIQUE` | Supported | |
-| - Named `PRIMARY KEY` | Supported | |
-| - Unnamed `PRIMARY KEY` | Supported | |
-| - Named `FOREIGN KEY` | Supported | |
-| - Unnamed `FOREIGN KEY` | Supported | |
-| **DROP CONSTRAINT** | Not Supported | |
-| **ALTER CONSTRAINT** | Not Supported | |
-| **RENAME TABLE (`sp_rename`)** | Not Supported | |
-| **TRANSFER (schema change)** | Not Supported | |
-| **ADD INDEX** | Not Supported | |
+| - Named `DEFAULT` | ✓ | Name is ignored |
+| - `NOT NULL` | ✗ | |
+| - NULL | ✗ | |
+| - Named `CHECK` | ✓ | |
+| - Unnamed `CHECK` | ✓ | |
+| - Named `UNIQUE` | ✓ | |
+| - Unnamed `UNIQUE` | ✓ | |
+| - Named `PRIMARY KEY` | ✓ | |
+| - Unnamed `PRIMARY KEY` | ✓ | |
+| - Named `FOREIGN KEY` | ✓ | |
+| - Unnamed `FOREIGN KEY` | ✓ | |
+| **DROP CONSTRAINT** | ✗ | |
+| **ALTER CONSTRAINT** | ✗ | |
+| **RENAME TABLE (`sp_rename`)** | ✗ | |
+| **TRANSFER (schema change)** | ✗ | |
+| **ADD INDEX** | ✗ | |
 
 ---
 
 ### Other DDL Statements
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `DROP TABLE` | Not Supported | |
-| `DROP INDEX` | Not Supported | |
-| `ALTER INDEX` | Not Supported | |
-| `CREATE VIEW` | Not Supported | |
+| `DROP TABLE` | ✗ | |
+| `DROP INDEX` | ✗ | |
+| `ALTER INDEX` | ✗ | |
+| `CREATE VIEW` | ✗ | |
 
 ---
 
 ### Comments (Extended Properties)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `sp_addextendedproperty` (table) | Supported | `MS_Description` for tables - parsing is unreliable |
-| `sp_addextendedproperty` (column) | Supported | `MS_Description` for columns - parsing is unreliable |
-| `sp_dropextendedproperty` | Supported | Remove extended property - parsing is unreliable |
+| `sp_addextendedproperty` (table) | ✓ | `MS_Description` for tables - parsing is unreliable |
+| `sp_addextendedproperty` (column) | ✓ | `MS_Description` for columns - parsing is unreliable |
+| `sp_dropextendedproperty` | ✓ | Remove extended property - parsing is unreliable |
 
 ---
 

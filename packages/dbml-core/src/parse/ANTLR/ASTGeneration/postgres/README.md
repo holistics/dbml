@@ -10,10 +10,10 @@ This module provides SQL parsing capabilities for PostgreSQL databases, enabling
 
 | Symbol | Meaning |
 |--------|---------|
-| Supported | Feature is fully supported and correctly parsed |
-| Partial | Valid SQL that is parsed, but some options/clauses are ignored in the output |
-| Not Supported | Valid PostgreSQL syntax, but the parser fails to generate output |
-| N/A | Syntax not valid in PostgreSQL |
+| ✓ | Fully supported and correctly parsed |
+| ◐ | Valid SQL that is parsed, but some options/clauses are ignored |
+| ✗ | Valid PostgreSQL syntax, but the parser fails to generate output |
+| — | Syntax not valid in PostgreSQL |
 
 ## Key Capabilities
 
@@ -41,196 +41,196 @@ This module provides SQL parsing capabilities for PostgreSQL databases, enabling
 
 ### `CREATE TABLE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `CREATE TABLE` syntax | Supported | |
-| Enumerated data types | Supported | |
-| Parameterized types `name(...)` | Supported | e.g., `VARCHAR(255)`, `NUMERIC(10,2)` |
-| Array types `name[...]` | Supported | e.g., `INTEGER[]`, `TEXT[][]` |
-| TEMPORARY tables | Partial | Parsed but no indication of temporary status in output |
-| `CREATE TABLE` AS SELECT | Not Supported | |
-| Table options (UNLOGGED, partition, etc.) | Partial | Options are ignored |
+| Basic `CREATE TABLE` syntax | ✓ | |
+| Enumerated data types | ✓ | |
+| Parameterized types `name(...)` | ✓ | e.g., `VARCHAR(255)`, `NUMERIC(10,2)` |
+| Array types `name[...]` | ✓ | e.g., `INTEGER[]`, `TEXT[][]` |
+| TEMPORARY tables | ◐ | Parsed but no indication of temporary status in output |
+| `CREATE TABLE` AS SELECT | ✗ | |
+| Table options (UNLOGGED, partition, etc.) | ◐ | Options are ignored |
 
 ### Constraints
 
 #### `PRIMARY KEY`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `PRIMARY KEY` | Supported | Defined with column: `id INT PRIMARY KEY` |
-| Table-level `PRIMARY KEY` | Supported | Defined separately: `PRIMARY KEY (id)` |
-| Multi-column `PRIMARY KEY` | Supported | Multiple columns: `PRIMARY KEY (a, b)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT pk_name PRIMARY KEY (id)` |
-| DEFERRABLE / NOT DEFERRABLE | Partial | Constraint timing options are ignored |
+| Column-level `PRIMARY KEY` | ✓ | Defined with column: `id INT PRIMARY KEY` |
+| Table-level `PRIMARY KEY` | ✓ | Defined separately: `PRIMARY KEY (id)` |
+| Multi-column `PRIMARY KEY` | ✓ | Multiple columns: `PRIMARY KEY (a, b)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT pk_name PRIMARY KEY (id)` |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
 
 #### `FOREIGN KEY`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `FOREIGN KEY` | Supported | `col INT REFERENCES other(id)` |
-| Table-level `FOREIGN KEY` | Supported | `FOREIGN KEY (col) REFERENCES other(id)` |
-| Multi-column `FOREIGN KEY` | Supported | `FOREIGN KEY (a, b) REFERENCES other(x, y)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT fk_name FOREIGN KEY ...` |
-| `ON UPDATE` action | Supported | CASCADE, SET NULL, SET DEFAULT, NO ACTION, RESTRICT |
-| `ON DELETE` action | Supported | CASCADE, SET NULL, SET DEFAULT, NO ACTION, RESTRICT |
-| DEFERRABLE / NOT DEFERRABLE | Partial | Constraint timing options are ignored |
+| Column-level `FOREIGN KEY` | ✓ | `col INT REFERENCES other(id)` |
+| Table-level `FOREIGN KEY` | ✓ | `FOREIGN KEY (col) REFERENCES other(id)` |
+| Multi-column `FOREIGN KEY` | ✓ | `FOREIGN KEY (a, b) REFERENCES other(x, y)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT fk_name FOREIGN KEY ...` |
+| `ON UPDATE` action | ✓ | CASCADE, SET NULL, SET DEFAULT, NO ACTION, RESTRICT |
+| `ON DELETE` action | ✓ | CASCADE, SET NULL, SET DEFAULT, NO ACTION, RESTRICT |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
 
 #### `UNIQUE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `UNIQUE` | Supported | `col INT UNIQUE` |
-| Table-level `UNIQUE` | Supported | `UNIQUE (col)` |
-| Multi-column `UNIQUE` | Supported | `UNIQUE (a, b)` |
-| Explicitly named (CONSTRAINT name) | Supported | `CONSTRAINT uq_name UNIQUE (col)` |
-| DEFERRABLE / NOT DEFERRABLE | Partial | Constraint timing options are ignored |
-| NULLS NOT DISTINCT | N/A | Treats NULLs as equal (PostgreSQL 15+) - not valid in older versions |
-| `UNIQUE` KEY/`UNIQUE` INDEX syntax | N/A | MySQL syntax; use `CREATE INDEX` for indexes |
+| Column-level `UNIQUE` | ✓ | `col INT UNIQUE` |
+| Table-level `UNIQUE` | ✓ | `UNIQUE (col)` |
+| Multi-column `UNIQUE` | ✓ | `UNIQUE (a, b)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT uq_name UNIQUE (col)` |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
+| NULLS NOT DISTINCT | — | Treats NULLs as equal (PostgreSQL 15+) - not valid in older versions |
+| `UNIQUE` KEY/`UNIQUE` INDEX syntax | — | MySQL syntax; use `CREATE INDEX` for indexes |
 
 #### `CHECK`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `CHECK` | Supported | `col INT CHECK (col > 0)` |
-| Table-level `CHECK` | Supported | `CHECK (col > 0)` |
-| Explicitly named (CONSTRAINT name) | Supported | Name ignored for column-level checks |
-| NOT VALID / NO INHERIT | Partial | Enforcement options are ignored |
+| Column-level `CHECK` | ✓ | `col INT CHECK (col > 0)` |
+| Table-level `CHECK` | ✓ | `CHECK (col > 0)` |
+| Explicitly named (CONSTRAINT name) | ✓ | Name ignored for column-level checks |
+| NOT VALID / NO INHERIT | ◐ | Enforcement options are ignored |
 
 #### `DEFAULT`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `DEFAULT` | Supported | `col INT DEFAULT 0` |
-| Table-level `DEFAULT` | N/A | PostgreSQL only supports column-level `DEFAULT` |
-| Function as `DEFAULT` | Supported | `DEFAULT NOW()`, `DEFAULT gen_random_uuid()` |
-| Explicitly named `DEFAULT` | N/A | PostgreSQL doesn't support named `DEFAULT` constraints |
+| Column-level `DEFAULT` | ✓ | `col INT DEFAULT 0` |
+| Table-level `DEFAULT` | — | PostgreSQL only supports column-level `DEFAULT` |
+| Function as `DEFAULT` | ✓ | `DEFAULT NOW()`, `DEFAULT gen_random_uuid()` |
+| Explicitly named `DEFAULT` | — | PostgreSQL doesn't support named `DEFAULT` constraints |
 
 #### `NOT NULL` / NULL
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level `NOT NULL` | Supported | `col INT NOT NULL` |
-| NULL (explicitly nullable) | Supported | `col INT NULL` |
-| Table-level `NOT NULL` | N/A | PostgreSQL only supports column-level `NOT NULL` |
-| DEFERRABLE / NOT DEFERRABLE | Partial | Constraint timing options are ignored |
+| Column-level `NOT NULL` | ✓ | `col INT NOT NULL` |
+| NULL (explicitly nullable) | ✓ | `col INT NULL` |
+| Table-level `NOT NULL` | — | PostgreSQL only supports column-level `NOT NULL` |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
 
 ### Auto-Increment Columns
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `SERIAL` (pseudo-type) | Supported | `id SERIAL` - auto-incrementing 4-byte integer |
-| `BIGSERIAL` (pseudo-type) | Supported | `id BIGSERIAL` - auto-incrementing 8-byte integer |
-| `GENERATED AS IDENTITY` (column property) | Supported | `id INT GENERATED ALWAYS AS IDENTITY` |
-| START WITH / INCREMENT BY | Partial | Sequence options are ignored |
-| `AUTO_INCREMENT` (column attribute) | N/A | MySQL syntax - not valid in PostgreSQL |
-| `IDENTITY(seed, increment)` (column property) | N/A | SQL Server/Snowflake syntax - not valid in PostgreSQL |
+| `SERIAL` (pseudo-type) | ✓ | `id SERIAL` - auto-incrementing 4-byte integer |
+| `BIGSERIAL` (pseudo-type) | ✓ | `id BIGSERIAL` - auto-incrementing 8-byte integer |
+| `GENERATED AS IDENTITY` (column property) | ✓ | `id INT GENERATED ALWAYS AS IDENTITY` |
+| START WITH / INCREMENT BY | ◐ | Sequence options are ignored |
+| `AUTO_INCREMENT` (column attribute) | — | MySQL syntax - not valid in PostgreSQL |
+| `IDENTITY(seed, increment)` (column property) | — | SQL Server/Snowflake syntax - not valid in PostgreSQL |
 
 ### Inline Indexes (in `CREATE TABLE`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Column-level indexes | N/A | Except for `UNIQUE`/`PRIMARY KEY` constraints |
-| Table-level indexes | N/A | Use `CREATE INDEX` statement |
+| Column-level indexes | — | Except for `UNIQUE`/`PRIMARY KEY` constraints |
+| Table-level indexes | — | Use `CREATE INDEX` statement |
 
 ### Table/Column Comments (in `CREATE TABLE`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Table comments in `CREATE TABLE` | N/A | Use `COMMENT ON` statement |
-| Column comments in `CREATE TABLE` | N/A | Use `COMMENT ON` statement |
+| Table comments in `CREATE TABLE` | — | Use `COMMENT ON` statement |
+| Column comments in `CREATE TABLE` | — | Use `COMMENT ON` statement |
 
 ---
 
 ### `CREATE INDEX`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `CREATE INDEX` | Supported | `CREATE INDEX idx ON table (col)` |
-| Multi-column index | Supported | `CREATE INDEX idx ON table (a, b)` |
-| Explicitly named index | Supported | Index name is required in PostgreSQL |
-| `UNIQUE` index | Supported | `CREATE UNIQUE INDEX idx ON table (col)` |
-| BTREE index | Supported | Default index type, B-tree structure |
-| HASH index | Supported | Hash-based index for equality comparisons |
-| GIST index | Supported | Generalized Search Tree for complex types |
-| BRIN index | Supported | Block Range Index for large sequential data |
-| GIN index | Supported | Generalized Inverted Index for arrays/JSON |
-| Function-based index | Supported | `CREATE INDEX ON t (LOWER(col))` |
-| Partial index (WHERE clause) | Partial | `WHERE condition` is ignored |
-| INCLUDE columns | Partial | Covering index columns are ignored |
-| NULLS FIRST/LAST | Partial | NULL ordering is ignored |
-| ASC/DESC | Partial | Sort direction is ignored |
-| COLLATE | Partial | Collation settings are ignored |
-| Index comments | Partial | Comments are ignored |
-| CLUSTERED/NONCLUSTERED | N/A | SQL Server syntax - not valid in PostgreSQL |
-| FULLTEXT index | N/A | MySQL syntax - use GIN with tsvector |
-| SPATIAL index | N/A | MySQL syntax - use GIST with geometry |
+| Basic `CREATE INDEX` | ✓ | `CREATE INDEX idx ON table (col)` |
+| Multi-column index | ✓ | `CREATE INDEX idx ON table (a, b)` |
+| Explicitly named index | ✓ | Index name is required in PostgreSQL |
+| `UNIQUE` index | ✓ | `CREATE UNIQUE INDEX idx ON table (col)` |
+| BTREE index | ✓ | Default index type, B-tree structure |
+| HASH index | ✓ | Hash-based index for equality comparisons |
+| GIST index | ✓ | Generalized Search Tree for complex types |
+| BRIN index | ✓ | Block Range Index for large sequential data |
+| GIN index | ✓ | Generalized Inverted Index for arrays/JSON |
+| Function-based index | ✓ | `CREATE INDEX ON t (LOWER(col))` |
+| Partial index (WHERE clause) | ◐ | `WHERE condition` is ignored |
+| INCLUDE columns | ◐ | Covering index columns are ignored |
+| NULLS FIRST/LAST | ◐ | NULL ordering is ignored |
+| ASC/DESC | ◐ | Sort direction is ignored |
+| COLLATE | ◐ | Collation settings are ignored |
+| Index comments | ◐ | Comments are ignored |
+| CLUSTERED/NONCLUSTERED | — | SQL Server syntax - not valid in PostgreSQL |
+| FULLTEXT index | — | MySQL syntax - use GIN with tsvector |
+| SPATIAL index | — | MySQL syntax - use GIST with geometry |
 
 ---
 
 ### `INSERT` Statements
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| Basic `INSERT` ... VALUES | Supported | `INSERT INTO t (col) VALUES (1)` |
-| Multi-row `INSERT` | Supported | `INSERT INTO t VALUES (1), (2), (3)` |
-| `INSERT` ... SELECT | Not Supported | Subquery as data source |
-| WITH clause (CTE) | Not Supported | Common Table Expression before `INSERT` |
-| Table alias in `INSERT` | Not Supported | `INSERT INTO t AS alias ...` |
-| `INSERT` ... RETURNING | Partial | Returns inserted rows - clause is ignored |
-| `INSERT` ... ON CONFLICT (UPSERT) | Partial | Upsert behavior - clause is ignored |
-| `INSERT` OVERWRITE | N/A | Snowflake/Hive syntax - not valid in PostgreSQL |
-| Multi-table `INSERT` | Not Supported | Insert into multiple tables at once |
-| Conditional `INSERT` (WHEN/ALL/FIRST) | Not Supported | Oracle syntax for conditional inserts |
+| Basic `INSERT` ... VALUES | ✓ | `INSERT INTO t (col) VALUES (1)` |
+| Multi-row `INSERT` | ✓ | `INSERT INTO t VALUES (1), (2), (3)` |
+| `INSERT` ... SELECT | ✗ | Subquery as data source |
+| WITH clause (CTE) | ✗ | Common Table Expression before `INSERT` |
+| Table alias in `INSERT` | ✗ | `INSERT INTO t AS alias ...` |
+| `INSERT` ... RETURNING | ◐ | Returns inserted rows - clause is ignored |
+| `INSERT` ... ON CONFLICT (UPSERT) | ◐ | Upsert behavior - clause is ignored |
+| `INSERT` OVERWRITE | — | Snowflake/Hive syntax - not valid in PostgreSQL |
+| Multi-table `INSERT` | ✗ | Insert into multiple tables at once |
+| Conditional `INSERT` (WHEN/ALL/FIRST) | ✗ | Oracle syntax for conditional inserts |
 
 ---
 
 ### `ALTER TABLE`
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
 | **ADD COLUMN** | | |
-| - All column properties | Not Supported | |
-| **DROP COLUMN** | Not Supported | |
+| - All column properties | ✗ | |
+| **DROP COLUMN** | ✗ | |
 | **ALTER COLUMN / MODIFY** | | |
-| - All modifications | Not Supported | |
-| **RENAME COLUMN** | Not Supported | |
+| - All modifications | ✗ | |
+| **RENAME COLUMN** | ✗ | |
 | **ADD CONSTRAINT** | | |
-| - Named `CHECK` | Supported | |
-| - Unnamed `CHECK` | Supported | |
-| - Named `UNIQUE` | Supported | Name is ignored |
-| - Unnamed `UNIQUE` | Supported | |
-| - Named `PRIMARY KEY` | Partial | Name is ignored |
-| - Unnamed `PRIMARY KEY` | Supported | |
-| - Named `FOREIGN KEY` | Supported | |
-| - Unnamed `FOREIGN KEY` | Supported | |
-| - `DEFAULT` | Not Supported | Parse failure |
-| - `NOT NULL` / NULL | Not Supported | |
-| **DROP CONSTRAINT** | Not Supported | |
-| **ALTER CONSTRAINT** | Not Supported | |
-| **RENAME TABLE** | Not Supported | |
-| **SET SCHEMA** | Not Supported | |
+| - Named `CHECK` | ✓ | |
+| - Unnamed `CHECK` | ✓ | |
+| - Named `UNIQUE` | ✓ | Name is ignored |
+| - Unnamed `UNIQUE` | ✓ | |
+| - Named `PRIMARY KEY` | ◐ | Name is ignored |
+| - Unnamed `PRIMARY KEY` | ✓ | |
+| - Named `FOREIGN KEY` | ✓ | |
+| - Unnamed `FOREIGN KEY` | ✓ | |
+| - `DEFAULT` | ✗ | Parse failure |
+| - `NOT NULL` / NULL | ✗ | |
+| **DROP CONSTRAINT** | ✗ | |
+| **ALTER CONSTRAINT** | ✗ | |
+| **RENAME TABLE** | ✗ | |
+| **SET SCHEMA** | ✗ | |
 
 ---
 
 ### Other DDL Statements
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `DROP TABLE` | Not Supported | |
-| `DROP INDEX` | Not Supported | |
-| `ALTER INDEX` | Not Supported | |
-| `CREATE VIEW` | Not Supported | |
+| `DROP TABLE` | ✗ | |
+| `DROP INDEX` | ✗ | |
+| `ALTER INDEX` | ✗ | |
+| `CREATE VIEW` | ✗ | |
 
 ---
 
 ### Comments (`COMMENT ON`)
 
-| Feature | Support | Notes |
+| Feature | Status | Notes |
 |---------|---------|-------|
-| `COMMENT ON TABLE` | Supported | |
-| `COMMENT ON COLUMN` | Supported | |
-| COMMENT ... IS NULL | Supported | Removes comment |
-| `COMMENT ON INDEX` | Partial | Ignored |
+| `COMMENT ON TABLE` | ✓ | |
+| `COMMENT ON COLUMN` | ✓ | |
+| COMMENT ... IS NULL | ✓ | Removes comment |
+| `COMMENT ON INDEX` | ◐ | Ignored |
 
 ---
 
