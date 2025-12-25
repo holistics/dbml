@@ -14,12 +14,12 @@ This page provides an overview of which databases are supported across DBML's di
 | MySQL | ✓ | ✓ | ✓ |
 | MSSQL (SQL Server) | ✓ | ✓ | ✓ |
 | Oracle | ✓ | ✓ | ✓ |
-| Snowflake | ✓ | - | ✓ |
-| BigQuery | - | - | ✓ |
+| Snowflake | ✓ | — | ✓ |
+| BigQuery | — | — | ✓ |
 
 **Legend:**
 - ✓ = Supported
-- \- = Not supported
+- — = Not supported
 
 ## Capabilities
 
