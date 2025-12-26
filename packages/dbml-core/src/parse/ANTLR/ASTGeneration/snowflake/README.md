@@ -1,157 +1,236 @@
-# Snowflake model structure generator
+# Snowflake SQL Parser Support
 
-This folder houses the implementation of the Snowflake model structure generator based on the ANTLR4 parser.
+> Comprehensive documentation for the Snowflake model structure generator based on the ANTLR4 parser.
 
-This file documents the current features and bugs of this model structure generator.
+## Overview
 
-In the below table, the following notation is used:
-  - ✅: Supported.
-  - 🤷🏼‍♂️: Invalid SQL in Snowflake.
-  - ❓: Valid SQL in Snowflake, the generator can still generate output but it ignores this syntax.
-  - ❌: Valid SQL in Snowflake, but the generator fails to generate any output.
+This module provides SQL parsing capabilities for Snowflake databases, enabling conversion of Snowflake DDL statements to DBML format. The parser supports Snowflake-specific syntax including `IDENTITY` columns with increment ranges. Note that Snowflake, as a cloud data warehouse, does not support traditional indexes, and the parser has known issues with `FOREIGN KEY` and `CHECK` constraints.
 
-| SQL syntax                    | Snowflake     |
-|-------------------------------|---------------|
-| 1. INSERT statement           |           |
-| 1.a. Basic INSERT ... VALUES  | ❌            |
-| 1.b. INSERT ... SELECT        | ❌            |
-| 1.c. Multi-row INSERT         | ✅            |
-| 1.d. Common table expression (WITH clause) | ❌            |
-| 1.e. Target table alias       | 🤷🏼‍♂️         |
-| 1.f. INSERT ... RETURNING/INSERT … OUTPUT | 🤷🏼‍♂️         |
-| 1.g. INSERT ... ON CONFLICT (UPSERT)/INSERT ... ON DUPLICATE KEY/INSERT … IGNORE | 🤷🏼‍♂️         |
-| 1.h. INSERT OVERWRITE         | ❌            |
-| 1.i. Multi-table INSERT       | ❌            |
-| 1.j. Conditional multi-table INSERT (WHEN/FIRST/ALL) | ❌            |
-| 6. CREATE TABLE               |           |
-| 6.a. Basic syntax             | ✅            |
-| 6.a.i. Enumerated data type   | 🤷🏼‍♂️         |
-| 6.a.ii. Data type of the form name(...) | ✅            |
-| 6.a.iii. Data type of the form name\[...\] | 🤷🏼‍♂️         |
-| 6.b. PRIMARY KEY              |               |
-| 6.b.i. Inline PRIMARY KEY     | ✅            |
-| 6.b.ii. Out-of-line PRIMARY KEY | ✅            |
-| 6.b.iii. Composite PRIMARY KEY | ✅            |
-| 6.b.iv. Named PRIMARY KEY     | ✅            |
-| 6.b.v. Other options (deferrable, etc.) | ❓ (ignore the options) |
-| 6.c. FOREIGN KEY              |               |
-| 6.c.i. Inline FOREIGN KEY     | ❌ (weird error: (undefined:undefined) undefined) |
-| 6.c.ii. Out-of-line FOREIGN KEY | ❌ (weird error: (undefined:undefined) undefined) |
-| 6.c.iii. Composite FOREIGN KEY | ❌ (weird error: (undefined:undefined) undefined) |
-| 6.c.iv. Named FOREIGN KEY     | ❌ (weird error: (undefined:undefined) undefined) |
-| 6.c.v. ON UPDATE              | ❌ (weird error: (undefined:undefined) undefined) |
-| 6.c.vi. ON DELETE             | ❌ (weird error: (undefined:undefined) undefined) |
-| 6.c.vii. Other options (deferrable, etc.) | ❌ (weird error: (undefined:undefined) undefined) |
-| 6.d. UNIQUE                   |               |
-| 6.d.i. Inline UNIQUE          | ✅            |
-| 6.d.ii. Out-of-line UNIQUE    | ✅            |
-| 6.d.iii. Composite UNIQUE     | ✅            |
-| 6.d.iv. Named UNIQUE          | ❓ (ignore the name) |
-| 6.d.v. Other options (deferrable, etc) | ❓ (ignore the option) |
-| 6.d.vi. NULLS NOT DISTINCT    | 🤷🏼‍♂️         |
-| 6.d.vii. UNIQUE KEY/UNIQUE INDEX | 🤷🏼‍♂️         |
-| 6.e. CHECK                    |               |
-| 6.e.i. Inline CHECK           | ❌ (parse fail) |
-| 6.e.ii. Out-of-line CHECK     | ❌ (parse fail) |
-| 6.e.iii. Named CHECK          | ❌ (parse fail) |
-| 6.e.iv. Other options (enforcement control, etc.) | ❌ (parse fail) |
-| 6.f. DEFAULT values           |               |
-| 6.f.i. Inline DEFAULT         | ✅            |
-| 6.f.ii. Out-of-line DEFAULT   | ❌ (parse fail) |
-| 6.f.iii. Functional DEFAULT   | ✅            |
-| 6.f.iv. Named DEFAULT         | ❓ (ignore the name) |
-| 6.g. NULL                     | ✅            |
-| 6.h. NOT NULL                 |               |
-| 6.h.i. Inline NOT NULL        | ✅            |
-| 6.h.ii. Out-of-line NOT NULL  | 🤷🏼‍♂️         |
-| 6.h.iii. Named NOT NULL       | 🤷🏼‍♂️         |
-| 6.h.iv. Other options (deferrable, etc.) | ❓ (ignore) |
-| 6.i. Indexes                  |               |
-| 6.i.i. Inline indexes         | 🤷🏼‍♂️         |
-| 6.i.ii. Out-of-line indexes   | 🤷🏼‍♂️         |
-| 6.i.iii. Named indexes        | 🤷🏼‍♂️         |
-| 6.i.iv. Multi-column indexes  | 🤷🏼‍♂️         |
-| 6.i.v. CLUSTERED/NONCLUSTERED | 🤷🏼‍♂️         |
-| 6.i.vi. FULLTEXT              | 🤷🏼‍♂️         |
-| 6.i.vii. SPATIAL              | 🤷🏼‍♂️         |
-| 6.i.viii. Other options       | 🤷🏼‍♂️         |
-| 6.i.ix. USING HASH/BTREE      | 🤷🏼‍♂️         |
-| 6.j. Auto-increment           |               |
-| 6.j.i. AUTO_INCREMENT         | 🤷🏼‍♂️         |
-| 6.j.ii. SERIAL/BIG SERIAL     | 🤷🏼‍♂️         |
-| 6.j.iii. IDENTITY             | ✅            |
-| 6.j.iv. Increment range       | ✅ (only for IDENTITY()) |
-| 6.j.v. GENERATED ... AS IDENTITY | ❌ (parse fail) |
-| 6.k. Computed column          | ❓            |
-| 6.l. TEMPORARY tables         | ❓ (No indication of temporary table) |
-| 6.m. CREATE TABLE AS SELECT (CTAS) | ❌            |
-| 6.n. Comments                 |               |
-| 6.n.i. Table comments         | ✅            |
-| 6.n.ii. Column comments       | ❌            |
-| 6.o. Other options (inheritance, UNLOGGED, partition, collate, etc.) | ❓            |
-| 7. ALTER TABLE                |           |
-| 7.a. ADD COLUMN               |               |
-| 7.a.i. Type                   | ❌            |
-| 7.a.ii. DEFAULT               | ❌            |
-| 7.a.iii. NOT NULL             | ❌            |
-| 7.a.iv. NULL                  | ❌            |
-| 7.a.v. CHECK                  | ❌            |
-| 7.a.vi. UNIQUE                | ❌            |
-| 7.a.vii. FOREIGN KEY          | ❌            |
-| 7.a.viii. PRIMARY KEY         | ❌            |
-| 7.a.ix. AUTOINCREMENT/SERIAL/BIGSERIAL/IDENTITY/GENERATED AS IDENTITY | ❌            |
-| 7.a.x. Computed column        | ❌            |
-| 7.b. DROP COLUMN              | ❌            |
-| 7.c. ALTER COLUMN / MODIFY COLUMN |               |
-| 7.c.i. COMMENT                | ❌            |
-| 7.c.ii. Others                | ❌            |
-| 7.d. RENAME COLUMN            | ❌            |
-| 7.e. ADD CONSTRAINT           |               |
-| 7.e.i. DEFAULT                | ❌ (parse fail) |
-| 7.e.ii. NOT NULL              | ❌            |
-| 7.e.iii. NULL                 | ❌            |
-| 7.e.iv. named CHECK           | 🤷🏼‍♂️         |
-| 7.e.v. unnamed CHECK          | 🤷🏼‍♂️         |
-| 7.e.vi. named UNIQUE          | ❓ (ignore name) |
-| 7.e.vii. unnamed UNIQUE       | ✅            |
-| 7.e.viii. named PRIMARY KEY   | ❌            |
-| 7.e.ix. unnamed PRIMARY KEY   | ❌            |
-| 7.e.x. named FOREIGN KEY      | ❓ (ignore name) |
-| 7.e.xi. unnamed FOREIGN KEY   | ✅            |
-| 7.g. DROP CONSTRAINT          | ❌            |
-| 7.h. ALTER CONSTRAINT         | ❌            |
-| 7.i. RENAME TABLE             | ❌            |
-| 7.j. SET SCHEMA               | ❌            |
-| 7.k. ALTER INDEX              | 🤷🏼‍♂️         |
-| 7.l. DROP INDEX               | 🤷🏼‍♂️         |
-| 7.m. SET COMMENT/COMMENT =    | 🤷🏼‍♂️         |
-| 7.n. ADD INDEX                | 🤷🏼‍♂️         |
-| 8. DROP TABLE                 |           |
-| 8.a. Basic syntax             | ❌            |
-| 9. CREATE INDEX               | 🤷🏼‍♂️         |
-| 9.a. Basic syntax             | ❌            |
-| 9.b. Composite index          | ❌            |
-| 9.c. Named index              | ❌            |
-| 9.d. UNIQUE index             | 🤷🏼‍♂️         |
-| 9.e. Partial/Filtered index   | 🤷🏼‍♂️         |
-| 9.f. BTREE/HASH/GIST/BRIN/… index | 🤷🏼‍♂️         |
-| 9.g. INCLUDE columns          | 🤷🏼‍♂️         |
-| 9.h. CLUSTERED/NONCLUSTERED   | 🤷🏼‍♂️         |
-| 9.i. Functional index         | 🤷🏼‍♂️         |
-| 9.j. FULLTEXT/SPATIAL index   | 🤷🏼‍♂️         |
-| 9.k. COLLATE                  | 🤷🏼‍♂️         |
-| 9.l. COMMENT                  | 🤷🏼‍♂️         |
-| 9.m. NULLS LAST/FIRST         | 🤷🏼‍♂️         |
-| 9.n. ASC/DESC                 | 🤷🏼‍♂️         |
-| 10. DROP INDEX                | 🤷🏼‍♂️         |
-| 10.a. Basic syntax            | 🤷🏼‍♂️         |
-| 11. ALTER INDEX               | 🤷🏼‍♂️         |
-| 11.a. RENAME                  | 🤷🏼‍♂️         |
-| 11.b. ALTER COLUMN            | 🤷🏼‍♂️         |
-| 12. CREATE VIEW               |           |
-| 12.a. Basic syntax            | ❌            |
-| 13. Comment                   |               |
-| 13.a. Table comments          | ❌            |
-| 13.b. Column comments         | ❌            |
-| 13.c. COMMENT … IS NULL       | 🤷🏼‍♂️         |
-| 13.d. Index comments          | 🤷🏼‍♂️         |
+## Support Legend
+
+| Symbol | Meaning |
+|--------|---------|
+| ✓ | Fully supported and correctly parsed |
+| ◐ | Valid SQL that is parsed, but some options/clauses are ignored |
+| ✗ | Valid Snowflake syntax, but the parser fails to generate output |
+| — | Syntax not valid in Snowflake |
+
+## Key Capabilities
+
+- **Data Definition**
+  - `CREATE TABLE` with basic syntax support
+  - Data types: parameterized types (e.g., `VARCHAR(255)`, `NUMBER(10,2)`)
+- **Constraints**
+  - `PRIMARY KEY` (column-level, table-level, multi-column, with explicit name)
+  - `UNIQUE` (column-level, table-level, multi-column)
+  - `DEFAULT`, `NOT NULL`
+  - `FOREIGN KEY`: **Not Supported** (known bug)
+  - `CHECK`: **Not Supported** (parse failure)
+- **Auto-increment**
+  - `IDENTITY` with increment range (e.g., `IDENTITY(1,1)`)
+- **Indexes**
+  - N/A (Snowflake does not support user-defined indexes)
+- **Comments**
+  - Table comments only (column comments not supported)
+- **Data Manipulation**
+  - Multi-row `INSERT` only
+
+---
+
+## Feature Support Matrix
+
+### `CREATE TABLE`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Basic `CREATE TABLE` syntax | ✓ | |
+| Enumerated data types | — | Not supported in Snowflake |
+| Parameterized types `name(...)` | ✓ | e.g., `VARCHAR(255)`, `NUMBER(10,2)` |
+| Array types `name[...]` | — | Snowflake uses ARRAY type differently |
+| TEMPORARY tables | ◐ | Parsed but no indication of temporary status |
+| `CREATE TABLE` AS SELECT | ✗ | |
+| Table options (CLUSTER BY, etc.) | ◐ | Options are ignored |
+
+### Constraints
+
+#### `PRIMARY KEY`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `PRIMARY KEY` | ✓ | `id INT PRIMARY KEY` |
+| Table-level `PRIMARY KEY` | ✓ | `PRIMARY KEY (id)` |
+| Multi-column `PRIMARY KEY` | ✓ | `PRIMARY KEY (a, b)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT pk_name PRIMARY KEY (id)` |
+| RELY / NORELY options | ◐ | Constraint enforcement hints are ignored |
+
+#### `FOREIGN KEY`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `FOREIGN KEY` | ✗ | Known bug - produces undefined error |
+| Table-level `FOREIGN KEY` | ✗ | Known bug - produces undefined error |
+| Multi-column `FOREIGN KEY` | ✗ | Known bug - produces undefined error |
+| Explicitly named (CONSTRAINT name) | ✗ | Known bug - produces undefined error |
+| `ON UPDATE` action | ✗ | Known bug - produces undefined error |
+| `ON DELETE` action | ✗ | Known bug - produces undefined error |
+| Constraint options | ✗ | Known bug - produces undefined error |
+
+#### `UNIQUE`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `UNIQUE` | ✓ | `col INT UNIQUE` |
+| Table-level `UNIQUE` | ✓ | `UNIQUE (col)` |
+| Multi-column `UNIQUE` | ✓ | `UNIQUE (a, b)` |
+| Explicitly named (CONSTRAINT name) | ◐ | Name is ignored in output |
+| Constraint options | ◐ | Options are ignored |
+| NULLS NOT DISTINCT | — | Not valid in Snowflake |
+| `UNIQUE KEY`/`UNIQUE INDEX` | — | MySQL syntax - not valid in Snowflake |
+
+#### `CHECK`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `CHECK` | ✗ | `CHECK (col > 0)` - parse failure |
+| Table-level `CHECK` | ✗ | Parse failure |
+| Explicitly named (CONSTRAINT name) | ✗ | Parse failure |
+| Enforcement options | ✗ | Parse failure |
+
+#### `DEFAULT`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `DEFAULT` | ✓ | `col INT DEFAULT 0` |
+| Table-level `DEFAULT` | ✗ | Parse failure |
+| Function as `DEFAULT` | ✓ | `DEFAULT CURRENT_TIMESTAMP()` |
+| Explicitly named `DEFAULT` | ◐ | Name is ignored in output |
+
+#### `NOT NULL` / NULL
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `NOT NULL` | ✓ | |
+| NULL attribute | ✓ | |
+| Table-level `NOT NULL` | — | |
+| Constraint options | ◐ | Options are ignored |
+
+### Auto-Increment Columns
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| `IDENTITY` (column property) | ✓ | `id INT IDENTITY(1,1)` |
+| Increment range | ✓ | `IDENTITY(start, increment)` syntax |
+| `AUTO_INCREMENT` (column attribute) | — | MySQL syntax - not valid in Snowflake |
+| `SERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in Snowflake |
+| `BIGSERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in Snowflake |
+| `GENERATED AS IDENTITY` (column property) | ✗ | SQL standard syntax - parse failure |
+
+### Inline Indexes (in `CREATE TABLE`)
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| All index features | — | Snowflake does not support user-defined indexes |
+
+### Table/Column Comments (in `CREATE TABLE`)
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Table `COMMENT` attribute | ✓ | |
+| Column `COMMENT` attribute | ✗ | |
+
+---
+
+### `CREATE INDEX`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| All index features | — | Snowflake does not support `CREATE INDEX` |
+
+---
+
+### `INSERT` Statements
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Basic `INSERT` ... VALUES | ✗ | |
+| Multi-row `INSERT` | ✓ | |
+| `INSERT` ... SELECT | ✗ | |
+| WITH clause (CTE) | ✗ | |
+| Target table alias | — | |
+| `INSERT` ... RETURNING | — | |
+| `INSERT` OVERWRITE | ✗ | |
+| Multi-table `INSERT` | ✗ | |
+| Conditional `INSERT` (WHEN/FIRST/ALL) | ✗ | |
+
+---
+
+### `ALTER TABLE`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| **ADD COLUMN** | | |
+| - All column properties | ✗ | |
+| **DROP COLUMN** | ✗ | |
+| **ALTER COLUMN / MODIFY** | | |
+| - `COMMENT` | ✗ | |
+| - Other modifications | ✗ | |
+| **RENAME COLUMN** | ✗ | |
+| **ADD CONSTRAINT** | | |
+| - Named `CHECK` | — | Snowflake uses SET/UNSET for constraints |
+| - Unnamed `CHECK` | — | |
+| - Named `UNIQUE` | ◐ | Name is ignored |
+| - Unnamed `UNIQUE` | ✓ | |
+| - Named `PRIMARY KEY` | ✗ | |
+| - Unnamed `PRIMARY KEY` | ✗ | |
+| - Named `FOREIGN KEY` | ◐ | Name is ignored |
+| - Unnamed `FOREIGN KEY` | ✓ | |
+| - `DEFAULT` | ✗ | Parse failure |
+| - `NOT NULL` / NULL | ✗ | |
+| **DROP CONSTRAINT** | ✗ | |
+| **ALTER CONSTRAINT** | ✗ | |
+| **RENAME TABLE** | ✗ | |
+| **SET SCHEMA** | ✗ | |
+
+---
+
+### Other DDL Statements
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| `DROP TABLE` | ✗ | |
+| `DROP INDEX` | — | No indexes in Snowflake |
+| `ALTER INDEX` | — | No indexes in Snowflake |
+| `CREATE VIEW` | ✗ | |
+
+---
+
+### Comments (Standalone Statements)
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| `COMMENT ON TABLE` | ✗ | |
+| `COMMENT ON COLUMN` | ✗ | |
+| COMMENT ... IS NULL | — | Use `ALTER TABLE ... SET/UNSET COMMENT` |
+
+---
+
+## Known Limitations
+
+- **`FOREIGN KEY` constraints**: All `FOREIGN KEY` definitions fail with undefined errors
+- **`CHECK` constraints**: All `CHECK` constraint definitions fail to parse
+- **Column comments**: Column-level comments are not supported
+- **Basic `INSERT`**: Single-row `INSERT` without parentheses may fail; use multi-row `INSERT` syntax
+- **`ALTER TABLE` operations**: Very limited support
+- **`CREATE VIEW`**: View definitions are not parsed
+- **Indexes**: Not applicable to Snowflake (cloud DW architecture)
+- **`GENERATED AS IDENTITY`**: SQL standard syntax not supported; use `IDENTITY(start, increment)` instead
+
+## Snowflake-Specific Notes
+
+1. **`IDENTITY` Columns**: Snowflake uses `IDENTITY(start, increment)` syntax for auto-increment, e.g., `IDENTITY(1,1)`. This is supported with increment range
+2. **No Indexes**: Snowflake is a cloud data warehouse that does not support traditional indexes. All index-related features are marked N/A
+3. **`FOREIGN KEY` Issues**: There is a known bug where all `FOREIGN KEY` constraint definitions produce `(undefined:undefined) undefined` errors
+4. **`CHECK` Constraints**: `CHECK` constraints are valid in Snowflake SQL but currently fail to parse
+5. **Comments**: Use inline `COMMENT` in `CREATE TABLE` for table comments. Column comments have parsing issues
+6. **Data Types**: Snowflake has its own type system; common types like `VARCHAR`, `NUMBER`, `TIMESTAMP` are fully supported
+7. **Constraint Enforcement**: Snowflake's constraint options like `RELY`/`NORELY`, `ENFORCED`/`NOT ENFORCED` are parsed but ignored

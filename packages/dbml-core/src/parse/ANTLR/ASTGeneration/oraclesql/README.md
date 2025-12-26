@@ -1,157 +1,261 @@
-# OracleSQL model structure generator
+# Oracle SQL Parser Support
 
-This folder houses the implementation of the OracleSQL model structure generator based on the ANTLR4 parser.
+> Comprehensive documentation for the Oracle SQL model structure generator based on the ANTLR4 parser.
 
-This file documents the current features and bugs of this model structure generator.
+## Overview
 
-In the below table, the following notation is used:
-  - ✅: Supported.
-  - 🤷🏼‍♂️: Invalid SQL in OracleSQL.
-  - ❓: Valid SQL in OracleSQL, the generator can still generate output but it ignores this syntax.
-  - ❌: Valid SQL in OracleSQL, but the generator fails to generate any output.
+This module provides SQL parsing capabilities for Oracle databases, enabling conversion of Oracle DDL statements to DBML format. The parser supports Oracle-specific syntax including `GENERATED AS IDENTITY` columns, function-based indexes, and comprehensive `ALTER TABLE ADD CONSTRAINT` operations. Oracle has the best `ALTER TABLE` support among all supported databases.
 
-| SQL syntax                    | OracleSQL     |
-|-------------------------------|---------------|
-| 1. INSERT statement           |           |
-| 1.a. Basic INSERT ... VALUES  | ✅            |
-| 1.b. INSERT ... SELECT        | ❌            |
-| 1.c. Multi-row INSERT         | 🤷🏼‍♂️         |
-| 1.d. Common table expression (WITH clause) | ❌            |
-| 1.e. Target table alias       | ❌            |
-| 1.f. INSERT ... RETURNING/INSERT … OUTPUT | ❓            |
-| 1.g. INSERT ... ON CONFLICT (UPSERT)/INSERT ... ON DUPLICATE KEY/INSERT … IGNORE | 🤷🏼‍♂️         |
-| 1.h. INSERT OVERWRITE         | 🤷🏼‍♂️         |
-| 1.i. Multi-table INSERT       | ❌            |
-| 1.j. Conditional multi-table INSERT (WHEN/FIRST/ALL) | ❌            |
-| 6. CREATE TABLE               |           |
-| 6.a. Basic syntax             | ✅            |
-| 6.a.i. Enumerated data type   | 🤷🏼‍♂️ (but supported in Oracle 23ai) |
-| 6.a.ii. Data type of the form name(...) | ✅            |
-| 6.a.iii. Data type of the form name\[...\] | 🤷🏼‍♂️         |
-| 6.b. PRIMARY KEY              |               |
-| 6.b.i. Inline PRIMARY KEY     | ✅            |
-| 6.b.ii. Out-of-line PRIMARY KEY | ✅            |
-| 6.b.iii. Composite PRIMARY KEY | ✅            |
-| 6.b.iv. Named PRIMARY KEY     | ✅            |
-| 6.b.v. Other options (deferrable, etc.) | ❓ (ignore the options) |
-| 6.c. FOREIGN KEY              |               |
-| 6.c.i. Inline FOREIGN KEY     | ✅            |
-| 6.c.ii. Out-of-line FOREIGN KEY | ✅            |
-| 6.c.iii. Composite FOREIGN KEY | ✅            |
-| 6.c.iv. Named FOREIGN KEY     | ✅            |
-| 6.c.v. ON UPDATE              | 🤷🏼‍♂️         |
-| 6.c.vi. ON DELETE             | ✅            |
-| 6.c.vii. Other options (deferrable, etc.) | ❓            |
-| 6.d. UNIQUE                   |               |
-| 6.d.i. Inline UNIQUE          | ✅            |
-| 6.d.ii. Out-of-line UNIQUE    | ✅            |
-| 6.d.iii. Composite UNIQUE     | ✅            |
-| 6.d.iv. Named UNIQUE          | ✅            |
-| 6.d.v. Other options (deferrable, etc) | ❓            |
-| 6.d.vi. NULLS NOT DISTINCT    | ❓            |
-| 6.d.vii. UNIQUE KEY/UNIQUE INDEX | 🤷🏼‍♂️         |
-| 6.e. CHECK                    |               |
-| 6.e.i. Inline CHECK           | ✅            |
-| 6.e.ii. Out-of-line CHECK     | ✅            |
-| 6.e.iii. Named CHECK          | ✅            |
-| 6.e.iv. Other options (enforcement control, etc.) | ❓            |
-| 6.f. DEFAULT values           |               |
-| 6.f.i. Inline DEFAULT         | ✅            |
-| 6.f.ii. Out-of-line DEFAULT   | 🤷🏼‍♂️         |
-| 6.f.iii. Functional DEFAULT   | ✅            |
-| 6.f.iv. Named DEFAULT         | 🤷🏼‍♂️         |
-| 6.g. NULL                     | ✅            |
-| 6.h. NOT NULL                 |               |
-| 6.h.i. Inline NOT NULL        | ✅            |
-| 6.h.ii. Out-of-line NOT NULL  | 🤷🏼‍♂️         |
-| 6.h.iii. Named NOT NULL       | 🤷🏼‍♂️         |
-| 6.h.iv. Other options (deferrable, etc.) | ❓            |
-| 6.i. Indexes                  |               |
-| 6.i.i. Inline indexes         | 🤷🏼‍♂️         |
-| 6.i.ii. Out-of-line indexes   | ✅            |
-| 6.i.iii. Named indexes        | ✅            |
-| 6.i.iv. Multi-column indexes  | ✅            |
-| 6.i.v. CLUSTERED/NONCLUSTERED | 🤷🏼‍♂️         |
-| 6.i.vi. FULLTEXT              | 🤷🏼‍♂️         |
-| 6.i.vii. SPATIAL              | 🤷🏼‍♂️         |
-| 6.i.viii. Other options       | ❓            |
-| 6.i.ix. USING HASH/BTREE      | 🤷🏼‍♂️         |
-| 6.j. Auto-increment           |               |
-| 6.j.i. AUTO_INCREMENT         | 🤷🏼‍♂️         |
-| 6.j.ii. SERIAL/BIG SERIAL     | 🤷🏼‍♂️         |
-| 6.j.iii. IDENTITY             | 🤷🏼‍♂️         |
-| 6.j.iv. Increment range       | ❓            |
-| 6.j.v. GENERATED ... AS IDENTITY | ✅            |
-| 6.k. Computed column          | ❓            |
-| 6.l. TEMPORARY tables         | ❓ (No indication of temporary table) |
-| 6.m. CREATE TABLE AS SELECT (CTAS) | ❌            |
-| 6.n. Comments                 |               |
-| 6.n.i. Table comments         | ✅            |
-| 6.n.ii. Column comments       | ✅            |
-| 6.o. Other options (inheritance, UNLOGGED, partition, collate, etc.) | ❓            |
-| 7. ALTER TABLE                |           |
-| 7.a. ADD COLUMN               |               |
-| 7.a.i. Type                   | ❌            |
-| 7.a.ii. DEFAULT               | ❌            |
-| 7.a.iii. NOT NULL             | ❌            |
-| 7.a.iv. NULL                  | ❌            |
-| 7.a.v. CHECK                  | ❌            |
-| 7.a.vi. UNIQUE                | ❌            |
-| 7.a.vii. FOREIGN KEY          | ❌            |
-| 7.a.viii. PRIMARY KEY         | ❌            |
-| 7.a.ix. AUTOINCREMENT/SERIAL/BIGSERIAL/IDENTITY/GENERATED AS IDENTITY | ❌            |
-| 7.a.x. Computed column        | ❌            |
-| 7.b. DROP COLUMN              | ❌            |
-| 7.c. ALTER COLUMN / MODIFY COLUMN |               |
-| 7.c.i. COMMENT                | 🤷🏼‍♂️         |
-| 7.c.ii. Others                | ❌            |
-| 7.d. RENAME COLUMN            | ❌            |
-| 7.e. ADD CONSTRAINT           |               |
-| 7.e.i. DEFAULT                | ✅            |
-| 7.e.ii. NOT NULL              | ✅            |
-| 7.e.iii. NULL                 | ✅            |
-| 7.e.iv. named CHECK           | ✅            |
-| 7.e.v. unnamed CHECK          | ✅            |
-| 7.e.vi. named UNIQUE          | ✅            |
-| 7.e.vii. unnamed UNIQUE       | ✅            |
-| 7.e.viii. named PRIMARY KEY   | ✅            |
-| 7.e.ix. unnamed PRIMARY KEY   | ✅            |
-| 7.e.x. named FOREIGN KEY      | ✅            |
-| 7.e.xi. unnamed FOREIGN KEY   | ✅            |
-| 7.g. DROP CONSTRAINT          | ❌            |
-| 7.h. ALTER CONSTRAINT         | ❌            |
-| 7.i. RENAME TABLE             | ❌            |
-| 7.j. SET SCHEMA               | ❌            |
-| 7.k. ALTER INDEX              | 🤷🏼‍♂️         |
-| 7.l. DROP INDEX               | 🤷🏼‍♂️         |
-| 7.m. SET COMMENT/COMMENT =    | 🤷🏼‍♂️         |
-| 7.n. ADD INDEX                | 🤷🏼‍♂️         |
-| 8. DROP TABLE                 |           |
-| 8.a. Basic syntax             | ❌            |
-| 9. CREATE INDEX               |           |
-| 9.a. Basic syntax             | ✅            |
-| 9.b. Composite index          | ✅            |
-| 9.c. Named index              | ✅            |
-| 9.d. UNIQUE index             | ✅            |
-| 9.e. Partial/Filtered index   | ❓ (ignore) |
-| 9.f. BTREE/HASH/GIST/BRIN/… index | 🤷🏼‍♂️         |
-| 9.g. INCLUDE columns          | 🤷🏼‍♂️         |
-| 9.h. CLUSTERED/NONCLUSTERED   | 🤷🏼‍♂️         |
-| 9.i. Functional index         | ✅            |
-| 9.j. FULLTEXT/SPATIAL index   | 🤷🏼‍♂️         |
-| 9.k. COLLATE                  | ❓            |
-| 9.l. COMMENT                  | ❓            |
-| 9.m. NULLS LAST/FIRST         | 🤷🏼‍♂️         |
-| 9.n. ASC/DESC                 | ❓            |
-| 10. DROP INDEX                |           |
-| 10.a. Basic syntax            | ❌            |
-| 11. ALTER INDEX               |           |
-| 11.a. RENAME                  | ❌            |
-| 11.b. ALTER COLUMN            | 🤷🏼‍♂️         |
-| 12. CREATE VIEW               |           |
-| 12.a. Basic syntax            | ❌            |
-| 13. Comment                   |               |
-| 13.a. Table comments          | ✅            |
-| 13.b. Column comments         | ✅            |
-| 13.c. COMMENT … IS NULL       | ✅            |
-| 13.d. Index comments          | ❌            |
+## Support Legend
+
+| Symbol | Meaning |
+|--------|---------|
+| ✓ | Fully supported and correctly parsed |
+| ◐ | Valid SQL that is parsed, but some options/clauses are ignored |
+| ✗ | Valid Oracle syntax, but the parser fails to generate output |
+| — | Syntax not valid in Oracle |
+
+## Key Capabilities
+
+- **Data Definition**
+  - `CREATE TABLE` with full syntax support
+  - Data types: parameterized types (e.g., `VARCHAR2(255)`, `NUMBER(10,2)`)
+- **Constraints**
+  - `PRIMARY KEY` (column-level, table-level, multi-column, with explicit name)
+  - `FOREIGN KEY` with `ON DELETE` actions (`ON UPDATE` not supported by Oracle)
+  - `UNIQUE`, `CHECK`, `DEFAULT`, `NOT NULL`
+- **Auto-increment**
+  - `GENERATED AS IDENTITY`
+  - `GENERATED ALWAYS` / `GENERATED BY DEFAULT` AS IDENTITY
+- **Indexes**
+  - `CREATE INDEX` (basic, multi-column, unique)
+  - Function-based indexes (e.g., `UPPER(column)`)
+- **Comments**
+  - `COMMENT ON TABLE` / `COMMENT ON COLUMN` statements
+- **Schema Modification**
+  - `ALTER TABLE ADD CONSTRAINT` (best support among all DBMS)
+    - Supports: `DEFAULT`, `NOT NULL`, `CHECK`, `UNIQUE`, `PRIMARY KEY`, `FOREIGN KEY`
+- **Data Manipulation**
+  - Basic `INSERT` only (Oracle uses `INSERT ALL` for multi-row)
+
+---
+
+## Feature Support Matrix
+
+### `CREATE TABLE`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Basic `CREATE TABLE` syntax | ✓ | |
+| Enumerated data types | — | Not supported in Oracle (supported in Oracle 23ai) |
+| Parameterized types `name(...)` | ✓ | e.g., `VARCHAR2(255)`, `NUMBER(10,2)` |
+| Array types `name[...]` | — | Oracle uses VARRAY differently |
+| TEMPORARY tables | ◐ | Parsed but no indication of temporary status |
+| `CREATE TABLE` AS SELECT | ✗ | |
+| Table options (TABLESPACE, etc.) | ◐ | Options are ignored |
+
+### Constraints
+
+#### `PRIMARY KEY`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `PRIMARY KEY` | ✓ | Defined with column: `id NUMBER PRIMARY KEY` |
+| Table-level `PRIMARY KEY` | ✓ | Defined separately: `PRIMARY KEY (id)` |
+| Multi-column `PRIMARY KEY` | ✓ | Multiple columns: `PRIMARY KEY (a, b)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT pk_name PRIMARY KEY (id)` |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
+
+#### `FOREIGN KEY`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `FOREIGN KEY` | ✓ | `col NUMBER REFERENCES other(id)` |
+| Table-level `FOREIGN KEY` | ✓ | `FOREIGN KEY (col) REFERENCES other(id)` |
+| Multi-column `FOREIGN KEY` | ✓ | `FOREIGN KEY (a, b) REFERENCES other(x, y)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT fk_name FOREIGN KEY ...` |
+| `ON UPDATE` action | — | Oracle does not support `ON UPDATE` |
+| `ON DELETE` action | ✓ | CASCADE, SET NULL, NO ACTION |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
+
+#### `UNIQUE`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `UNIQUE` | ✓ | `col NUMBER UNIQUE` |
+| Table-level `UNIQUE` | ✓ | `UNIQUE (col)` |
+| Multi-column `UNIQUE` | ✓ | `UNIQUE (a, b)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT uq_name UNIQUE (col)` |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
+| NULLS NOT DISTINCT | ◐ | Treats NULLs as equal - option is ignored |
+| `UNIQUE KEY`/`UNIQUE INDEX` | — | MySQL syntax; use `CREATE INDEX` |
+
+#### `CHECK`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `CHECK` | ✓ | `col NUMBER CHECK (col > 0)` |
+| Table-level `CHECK` | ✓ | `CHECK (col > 0)` |
+| Explicitly named (CONSTRAINT name) | ✓ | `CONSTRAINT chk_name CHECK (col > 0)` |
+| ENABLE / DISABLE options | ◐ | Enforcement options are ignored |
+
+#### `DEFAULT`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `DEFAULT` | ✓ | `col NUMBER DEFAULT 0` |
+| Table-level `DEFAULT` | — | Oracle only supports column-level `DEFAULT` |
+| Function as `DEFAULT` | ✓ | `DEFAULT SYSDATE`, `DEFAULT SYS_GUID()` |
+| Explicitly named `DEFAULT` | — | Oracle doesn't support named `DEFAULT` constraints |
+
+#### `NOT NULL` / NULL
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level `NOT NULL` | ✓ | `col NUMBER NOT NULL` |
+| NULL (explicitly nullable) | ✓ | `col NUMBER NULL` |
+| Table-level `NOT NULL` | — | Oracle only supports column-level `NOT NULL` |
+| DEFERRABLE / NOT DEFERRABLE | ◐ | Constraint timing options are ignored |
+
+### Auto-Increment Columns
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| `GENERATED AS IDENTITY` (column property) | ✓ | `id NUMBER GENERATED AS IDENTITY` |
+| `GENERATED ALWAYS AS IDENTITY` (column property) | ✓ | Database always generates value |
+| `GENERATED BY DEFAULT AS IDENTITY` (column property) | ✓ | Database generates if no value provided |
+| START WITH / INCREMENT BY | ◐ | Sequence options are ignored |
+| `AUTO_INCREMENT` (column attribute) | — | MySQL syntax - not valid in Oracle |
+| `SERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in Oracle |
+| `BIGSERIAL` (pseudo-type) | — | PostgreSQL syntax - not valid in Oracle |
+| `IDENTITY(seed, increment)` (column property) | — | SQL Server/Snowflake syntax - not valid in Oracle |
+
+### Inline Indexes (in `CREATE TABLE`)
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Column-level indexes | — | Oracle uses separate `CREATE INDEX` statement |
+| Table-level indexes | ✓ | Via constraint definitions |
+| Named indexes | ✓ | Index name specified with constraint |
+| Multi-column indexes | ✓ | Multiple columns in constraint |
+| CLUSTERED/NONCLUSTERED | — | SQL Server syntax - not valid in Oracle |
+| Index options | ◐ | Options are ignored |
+
+### Table/Column Comments (in `CREATE TABLE`)
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Table comments | ✓ | Via `COMMENT ON TABLE` statement |
+| Column comments | ✓ | Via `COMMENT ON COLUMN` statement |
+
+---
+
+### `CREATE INDEX`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Basic `CREATE INDEX` | ✓ | `CREATE INDEX idx ON table (col)` |
+| Multi-column index | ✓ | `CREATE INDEX idx ON table (a, b)` |
+| Explicitly named index | ✓ | Index name is required in Oracle |
+| `UNIQUE` index | ✓ | `CREATE UNIQUE INDEX idx ON table (col)` |
+| Function-based index | ✓ | `CREATE INDEX ON t (UPPER(col))` |
+| Partial/Filtered index (WHERE clause) | ◐ | WHERE condition is ignored |
+| BITMAP index | — | Parsed but type not captured |
+| BTREE/HASH/GIST/BRIN/GIN | — | PostgreSQL syntax - not applicable to Oracle |
+| INCLUDE columns | — | Not supported in Oracle |
+| CLUSTERED/NONCLUSTERED | — | SQL Server syntax - not valid in Oracle |
+| COLLATE | ◐ | Collation settings are ignored |
+| Index comments | ◐ | Comments are ignored |
+| NULLS FIRST/LAST | — | Oracle uses different syntax |
+| ASC/DESC | ◐ | Sort direction is ignored |
+| FULLTEXT/SPATIAL | — | Oracle uses different syntax (Oracle Text, Spatial) |
+
+---
+
+### `INSERT` Statements
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| Basic `INSERT` ... VALUES | ✓ | `INSERT INTO t (col) VALUES (1)` |
+| Multi-row `INSERT` | — | Oracle uses `INSERT ALL` syntax |
+| `INSERT` ... SELECT | ✗ | Subquery as data source |
+| WITH clause (CTE) | ✗ | CTE before `INSERT` |
+| Target table alias | ✗ | `INSERT INTO t alias ...` |
+| `INSERT` ... RETURNING | ◐ | Returns inserted rows - clause is ignored |
+| `INSERT ALL` (multi-table insert) | ✗ | Oracle-specific multi-table insert |
+| Conditional `INSERT` (WHEN/FIRST/ALL) | ✗ | Oracle syntax for conditional inserts |
+| `INSERT` OVERWRITE | — | Snowflake/Hive syntax - not valid in Oracle |
+
+---
+
+### `ALTER TABLE`
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| **ADD COLUMN** | | |
+| - All column properties | ✗ | |
+| **DROP COLUMN** | ✗ | |
+| **ALTER COLUMN / MODIFY** | | |
+| - `COMMENT` | — | Use `COMMENT ON` statement |
+| - Other modifications | ✗ | |
+| **RENAME COLUMN** | ✗ | |
+| **ADD CONSTRAINT** | | |
+| - Named `DEFAULT` | ✓ | Best among all DBMS |
+| - Named `NOT NULL` | ✓ | Best among all DBMS |
+| - NULL | ✓ | |
+| - Named `CHECK` | ✓ | |
+| - Unnamed `CHECK` | ✓ | |
+| - Named `UNIQUE` | ✓ | |
+| - Unnamed `UNIQUE` | ✓ | |
+| - Named `PRIMARY KEY` | ✓ | |
+| - Unnamed `PRIMARY KEY` | ✓ | |
+| - Named `FOREIGN KEY` | ✓ | |
+| - Unnamed `FOREIGN KEY` | ✓ | |
+| **DROP CONSTRAINT** | ✗ | |
+| **ALTER CONSTRAINT** | ✗ | |
+| **RENAME TABLE** | ✗ | |
+| **SET SCHEMA** | ✗ | |
+
+---
+
+### Other DDL Statements
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| `DROP TABLE` | ✗ | |
+| `DROP INDEX` | ✗ | |
+| `ALTER INDEX` | ✗ | |
+| `CREATE VIEW` | ✗ | |
+
+---
+
+### Comments (`COMMENT ON`)
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| `COMMENT ON TABLE` | ✓ | |
+| `COMMENT ON COLUMN` | ✓ | |
+| COMMENT ... IS NULL | ✓ | Removes comment |
+| `COMMENT ON INDEX` | ✗ | |
+
+---
+
+## Known Limitations
+
+- **`ON UPDATE` for `FOREIGN KEY`**: Oracle does not support `ON UPDATE` actions for foreign keys; only `ON DELETE` is available
+- **Multi-row `INSERT`**: Oracle uses `INSERT ALL` syntax which is not currently supported
+- **DDL modification statements**: `DROP TABLE`, `DROP INDEX`, `ALTER INDEX` not supported
+- **`INSERT` ... SELECT**: Subqueries in `INSERT` statements not supported
+- **`CREATE VIEW`**: View definitions are not parsed
+- **Enumerated Types**: Not supported in Oracle (introduced in Oracle 23ai)
+- **Increment options for `IDENTITY`**: START WITH, INCREMENT BY options are parsed but ignored
+
+## Oracle-Specific Notes
+
+1. **`GENERATED AS IDENTITY`**: Oracle fully supports the SQL standard `GENERATED AS IDENTITY` syntax. Both `GENERATED ALWAYS` and `GENERATED BY DEFAULT` variants are supported
+2. **`ALTER TABLE ADD CONSTRAINT`**: Oracle has the most comprehensive `ALTER TABLE ADD CONSTRAINT` support, including `DEFAULT`, `NOT NULL`, `CHECK`, `UNIQUE`, `PRIMARY KEY`, and `FOREIGN KEY` - all fully functional
+3. **Function-based Indexes**: Oracle's function-based indexes (e.g., `CREATE INDEX ON t (UPPER(col))`) are fully supported
+4. **`ON DELETE` Only**: Oracle foreign keys only support `ON DELETE` actions (`CASCADE`, `SET NULL`, `NO ACTION`). There is no `ON UPDATE` support
+5. **Comments**: Use `COMMENT ON TABLE/COLUMN` statements. These are separate DDL statements, not inline with `CREATE TABLE`
+6. **No Multi-row `INSERT`**: Oracle uses `INSERT ALL ... SELECT` syntax for multi-row inserts, which differs from other databases
+7. **`VARCHAR2`**: Oracle uses `VARCHAR2` (not `VARCHAR`) as the standard variable-length string type
