@@ -1,6 +1,6 @@
 # @dbml/core
 
-See our website [@dbml/core](https://dbml.dbdiagram.io/js-module/core) for more information
+Refer to [@dbml/core](https://dbml.dbdiagram.io/js-module/core) for the complete API reference.
 
 ## Installation
 
