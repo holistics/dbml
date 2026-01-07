@@ -3,11 +3,10 @@ import type Compiler from './index';
 export const CACHE_STORAGE = Symbol('compilerCache');
 export type CacheStorage = Map<string, Map<any, any> | any>;
 
-export interface QueryOptions<TArg = unknown, TKey = TArg> {
-  toKey?: (arg: TArg) => TKey;
+export interface QueryOptions {
+  toKey?: (...args: any[]) => unknown;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyMethod = (...args: any[]) => any;
 
 /**
@@ -19,7 +18,7 @@ type AnyMethod = (...args: any[]) => any;
  */
 export function query<This, Args extends unknown[], Return> (
   queryId: string,
-  options?: QueryOptions<Args[0], unknown>,
+  options?: QueryOptions,
 ): (
   target: (this: This, ...args: Args) => Return,
   context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>,
@@ -34,9 +33,8 @@ export function query<This, Args extends unknown[], Return> (
     const cachedMethod = function (this: This, ...args: Args): Return {
       const compiler = this as unknown as Compiler;
       const cache = compiler[CACHE_STORAGE] as CacheStorage;
-      const arg = args[0];
 
-      if (arg === undefined) {
+      if (args.length === 0) {
         if (cache.has(queryId) && !(cache.get(queryId) instanceof Map)) {
           return cache.get(queryId);
         }
@@ -45,7 +43,7 @@ export function query<This, Args extends unknown[], Return> (
         return result;
       }
 
-      const key = options?.toKey ? options.toKey(arg) : arg;
+      const key = options?.toKey ? options.toKey(...args) : args.length === 1 ? args[0] : args;
       let mapCache = cache.get(queryId);
 
       if (mapCache instanceof Map && mapCache.has(key)) {

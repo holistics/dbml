@@ -458,7 +458,7 @@ function suggestMembers (
 
   return addQuoteIfNeeded({
     suggestions: compiler.symbol
-      .ofName({ nameStack, owner: compiler.container.element(offset) })
+      .ofName(nameStack, compiler.container.element(offset))
       .flatMap(({ symbol }) => compiler.symbol.members(symbol))
       .map(({ kind, name }) => ({
         label: name,

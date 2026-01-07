@@ -1,7 +1,7 @@
 import type Compiler from '../../index';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 
-export function element (
+export function containerElement (
   this: Compiler,
   offset: number,
 ): Readonly<ElementDeclarationNode | ProgramNode> {
