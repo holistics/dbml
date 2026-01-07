@@ -15,7 +15,7 @@ import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isOffsetWithinSpan } from '@/core/utils';
 import { getMemberChain } from '@/core/parser/utils';
 
-export function stack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
+export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
   const tokens = this.token.flatStream();
   const { index: startIndex, token } = this.container.token(offset);
   const validIndex = startIndex === undefined

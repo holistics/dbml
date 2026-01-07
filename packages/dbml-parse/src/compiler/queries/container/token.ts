@@ -5,7 +5,7 @@ export type ContainerTokenResult =
   | { token: SyntaxToken; index: number }
   | { token: undefined; index: undefined };
 
-export function token (this: Compiler, offset: number): ContainerTokenResult {
+export function containerToken (this: Compiler, offset: number): ContainerTokenResult {
   const id = this.token.flatStream().findIndex((t) => t.start >= offset);
 
   if (id === undefined) {

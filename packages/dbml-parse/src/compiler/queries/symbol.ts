@@ -1,24 +1,22 @@
-import type Compiler from '../../index';
+import type Compiler from '../index';
 import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { generatePossibleIndexes } from '@/core/analyzer/symbol/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 
-export interface OfNameArg {
-  nameStack: string[];
-  owner: ElementDeclarationNode | ProgramNode;
+export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
+  if (!ownerSymbol.symbolTable) {
+    return [];
+  }
+
+  return [...ownerSymbol.symbolTable.entries()].map(([index, symbol]) => ({
+    ...destructureIndex(index).unwrap(),
+    symbol,
+  }));
 }
 
-export type OfNameResult = readonly Readonly<{
-  symbol: NodeSymbol;
-  kind: SymbolKind;
-  name: string;
-}>[];
-
-export function ofName (this: Compiler, arg: OfNameArg): OfNameResult {
-  const { nameStack, owner = this.parse.ast() } = arg;
-
+export function symbolOfName (this: Compiler, nameStack: string[], owner: ElementDeclarationNode | ProgramNode) {
   if (nameStack.length === 0) {
     return [];
   }
@@ -60,6 +58,6 @@ export function ofName (this: Compiler, arg: OfNameArg): OfNameResult {
   return res;
 }
 
-export function ofNameToKey (arg: OfNameArg): string {
-  return `${arg.nameStack.join('.')}@${arg.owner.id}`;
+export function symbolOfNameToKey (nameStack: string[], owner: { id: number }): string {
+  return `${nameStack.join('.')}@${owner.id}`;
 }
