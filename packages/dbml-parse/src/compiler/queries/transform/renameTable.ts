@@ -6,6 +6,7 @@ import {
   createSchemaSymbolIndex,
   createTableSymbolIndex,
 } from '@/core/analyzer/symbol/symbolIndex';
+import { applyTextEdits, TextEdit } from './applyTextEdits';
 
 const DEFAULT_SCHEMA_NAME = 'public';
 
@@ -19,12 +20,6 @@ interface FormattedTableNameParts extends TableNameParts {
   rawTableName: string;
   shouldQuoteTable: boolean;
   shouldQuoteSchema: boolean;
-}
-
-interface Replacement {
-  start: number;
-  end: number;
-  newText: string;
 }
 
 function parseTableName (tableName: string): TableNameParts {
@@ -184,8 +179,8 @@ function findReplacements (
   oldParts: TableNameParts,
   newParts: FormattedTableNameParts,
   source: string,
-): Replacement[] {
-  const replacements: Replacement[] = [];
+): TextEdit[] {
+  const replacements: TextEdit[] = [];
   const processedRanges = new Set<string>();
 
   for (const node of nodes) {
@@ -225,17 +220,6 @@ function findReplacements (
   }
 
   return replacements;
-}
-
-function applyReplacements (source: string, replacements: Replacement[]): string {
-  const sortedReplacements = [...replacements].sort((a, b) => b.start - a.start);
-
-  let result = source;
-  for (const { start, end, newText } of sortedReplacements) {
-    result = result.substring(0, start) + newText + result.substring(end);
-  }
-
-  return result;
 }
 
 export function renameTable (
@@ -308,5 +292,5 @@ export function renameTable (
     source,
   );
 
-  return applyReplacements(source, replacements);
+  return applyTextEdits(source, replacements);
 }
