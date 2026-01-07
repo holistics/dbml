@@ -35,6 +35,10 @@ export {
 } from '@/core/types';
 
 export {
+  addQuoteIfNeeded,
+} from '@/core/utils';
+
+export {
   // Scope kinds from compiler
   ScopeKind,
 } from '@/compiler/index';

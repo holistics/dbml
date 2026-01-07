@@ -33,6 +33,10 @@ export function isAlphaNumeric (char: string): boolean {
   return isAlphaOrUnderscore(char) || isDigit(char);
 }
 
+export function addQuoteIfNeeded (s: string): string {
+  return s.split('').every(isAlphaNumeric) ? s : `"${s}"`;
+}
+
 export function alternateLists<T, S> (firstList: T[], secondList: S[]): (T | S)[] {
   const res: (T | S)[] = [];
   const minLength = Math.min(firstList.length, secondList.length);
