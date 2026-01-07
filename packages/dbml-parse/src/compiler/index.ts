@@ -29,6 +29,7 @@ import { ofName, ofNameToKey, type OfNameArg, type OfNameResult } from './querie
 import { members, type MembersResult } from './queries/symbol/members';
 
 import { renameTable } from './queries/transform/renameTable';
+import { applyTextEdits, TextEdit } from './queries/transform/applyTextEdits';
 
 // Re-export types
 export { ScopeKind } from './types';
@@ -128,6 +129,10 @@ export default class Compiler {
 
   renameTable (oldName: string, newName: string): string {
     return renameTable.call(this, oldName, newName);
+  }
+
+  applyTextEdits (edits: TextEdit[]): string {
+    return applyTextEdits(this.parse.source(), edits);
   }
 
   // Namespace objects
