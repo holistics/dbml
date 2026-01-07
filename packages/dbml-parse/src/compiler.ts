@@ -1,9 +1,9 @@
 import { findLastIndex, last } from 'lodash-es';
-import { SymbolKind, destructureIndex } from '@/lib/analyzer/symbol/symbolIndex';
-import { generatePossibleIndexes } from '@/lib/analyzer/symbol/utils';
-import SymbolTable from '@/lib/analyzer/symbol/symbolTable';
-import { isOffsetWithinSpan } from '@/lib/utils';
-import { CompileError } from '@/lib/errors';
+import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { generatePossibleIndexes } from '@/core/analyzer/symbol/utils';
+import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { isOffsetWithinSpan } from '@/core/utils';
+import { CompileError } from '@/core/errors';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -16,16 +16,16 @@ import {
   SyntaxNode,
   SyntaxNodeIdGenerator,
   TupleExpressionNode,
-} from '@/lib/parser/nodes';
-import { NodeSymbol, NodeSymbolIdGenerator } from '@/lib/analyzer/symbol/symbols';
-import Report from '@/lib/report';
-import Lexer from '@/lib/lexer/lexer';
-import Parser from '@/lib/parser/parser';
-import Analyzer from '@/lib/analyzer/analyzer';
-import Interpreter from '@/lib/interpreter/interpreter';
-import { SyntaxToken, SyntaxTokenKind } from '@/lib/lexer/tokens';
-import { getMemberChain, isInvalidToken } from '@/lib/parser/utils';
-import { Database } from '@/lib/interpreter/types';
+} from '@/core/parser/nodes';
+import { NodeSymbol, NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
+import Report from '@/core/report';
+import Lexer from '@/core/lexer/lexer';
+import Parser from '@/core/parser/parser';
+import Analyzer from '@/core/analyzer/analyzer';
+import Interpreter from '@/core/interpreter/interpreter';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { getMemberChain, isInvalidToken } from '@/core/parser/utils';
+import { Database } from '@/core/interpreter/types';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from '@/services/index';
 
 const enum Query {
