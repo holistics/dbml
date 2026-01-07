@@ -1,3 +1,4 @@
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '../../index';
 import { SyntaxNode } from '@/core/parser/nodes';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
@@ -7,8 +8,6 @@ import {
   createTableSymbolIndex,
 } from '@/core/analyzer/symbol/symbolIndex';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
-
-const DEFAULT_SCHEMA_NAME = 'public';
 
 interface TableNameParts {
   schemaName: string;

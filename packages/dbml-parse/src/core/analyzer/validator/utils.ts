@@ -1,3 +1,4 @@
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import {
   AttributeNode,
@@ -110,7 +111,7 @@ export function registerSchemaStack (
   symbolFactory: SymbolFactory,
 ): SymbolTable {
   // public schema is already global schema
-  if (variables[0] === 'public') {
+  if (variables[0] === DEFAULT_SCHEMA_NAME) {
     variables = variables.slice(1);
   }
 
