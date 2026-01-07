@@ -51,4 +51,7 @@ export {
   type TablePartial,
 } from '@/lib/interpreter/types';
 
+// Export refactoring utilities
+export { renameTable } from '@/lib/renameTable';
+
 export { serialize, Compiler, services };
