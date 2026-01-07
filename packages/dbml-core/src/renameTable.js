@@ -1,4 +1,4 @@
-import { Compiler, renameTable as renameTableImpl } from '@dbml/parse';
+import { Compiler } from '@dbml/parse';
 
 /**
  * Renames a table in DBML code using symbol table and token-based replacement
@@ -18,14 +18,8 @@ function renameTable (oldTableName, newTableName, dbmlCode) {
   compiler.setSource(dbmlCode);
 
   try {
-    // Use the implementation from @dbml/parse
-    return renameTableImpl(
-      oldTableName,
-      newTableName,
-      dbmlCode,
-      compiler.parse.publicSymbolTable(),
-      compiler.parse.tokens(),
-    );
+    // Use the renameTable method from the Compiler instance
+    return compiler.renameTable(oldTableName, newTableName);
   } catch (error) {
     // If parsing fails or renaming fails, return unchanged code
     return dbmlCode;
