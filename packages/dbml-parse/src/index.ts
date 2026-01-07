@@ -1,5 +1,5 @@
 import { serialize } from '@/core/serialization/serialize';
-import Compiler from '@/compiler';
+import Compiler from '@/compiler/index';
 import * as services from '@/services/index';
 
 // Export the types that playground and other consumers need
@@ -37,7 +37,7 @@ export {
 export {
   // Scope kinds from compiler
   ScopeKind,
-} from '@/compiler';
+} from '@/compiler/index';
 
 // Export interpreted types for structured data
 export {
@@ -50,8 +50,5 @@ export {
   type TableGroup,
   type TablePartial,
 } from '@/core/interpreter/types';
-
-// Export refactoring utilities
-export { renameTable } from '@/core/renameTable';
 
 export { serialize, Compiler, services };
