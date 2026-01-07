@@ -1,14 +1,14 @@
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
-} from '@/lib/analyzer/utils';
+} from '@/core/analyzer/utils';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
-} from '@/lib/parser/utils';
+} from '@/core/parser/utils';
 import Compiler, { ScopeKind } from '@/compiler';
-import { SyntaxToken, SyntaxTokenKind } from '@/lib/lexer/tokens';
-import { isOffsetWithinSpan } from '@/lib/utils';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import { isOffsetWithinSpan } from '@/core/utils';
 import {
   type CompletionList,
   type TextModel,
@@ -17,8 +17,8 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { TableSymbol } from '@/lib/analyzer/symbol/symbols';
-import { SymbolKind, destructureIndex } from '@/lib/analyzer/symbol/symbolIndex';
+import { TableSymbol } from '@/core/analyzer/symbol/symbols';
+import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
@@ -38,10 +38,10 @@ import {
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
-} from '@/lib/parser/nodes';
+} from '@/core/parser/nodes';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
-import { isComment } from '@/lib/lexer/utils';
-import { SettingName } from '@/lib/analyzer/types';
+import { isComment } from '@/core/lexer/utils';
+import { SettingName } from '@/core/analyzer/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
