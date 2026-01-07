@@ -35,11 +35,11 @@ import { applyTextEdits, TextEdit } from './queries/transform/applyTextEdits';
 export { ScopeKind } from './types';
 
 export default class Compiler {
-  source = '';
-  [CACHE_STORAGE]: CacheStorage = createCacheStorage();
+  private source = '';
+  private [CACHE_STORAGE]: CacheStorage = createCacheStorage();
 
-  nodeIdGenerator = new SyntaxNodeIdGenerator();
-  symbolIdGenerator = new NodeSymbolIdGenerator();
+  private nodeIdGenerator = new SyntaxNodeIdGenerator();
+  private symbolIdGenerator = new NodeSymbolIdGenerator();
 
   setSource (source: string) {
     this.source = source;
