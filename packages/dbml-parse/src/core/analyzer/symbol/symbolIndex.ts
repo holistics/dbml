@@ -1,3 +1,4 @@
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { None, Option, Some } from '@/core/option';
 
 // Used to index a symbol table to obtain a symbol
@@ -96,7 +97,7 @@ export function isPublicSchemaIndex (id: NodeSymbolIndex): boolean {
   }
   const { kind, name } = res;
 
-  return kind === 'Schema' && name === 'public';
+  return kind === 'Schema' && name === DEFAULT_SCHEMA_NAME;
 }
 
 export function isInjectionIndex (id: NodeSymbolIndex): boolean {
