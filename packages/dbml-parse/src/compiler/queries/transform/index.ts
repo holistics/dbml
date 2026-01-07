@@ -1,0 +1,1 @@
+export { renameTable } from './renameTable';
