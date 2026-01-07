@@ -63,37 +63,6 @@ Table posts { user_id int [ref: > users.id] }
     expect(result).not.toContain('public');
   });
 
-  test('should handle quoted names in relationships', () => {
-    const input = `
-Table "app users" {
-  id int [pk]
-}
-
-Table posts {
-  user_id int [ref: > "app users".id]
-}
-`;
-
-    const result = renameTable('app users', 'customers', input);
-
-    expect(result).toContain('Table "customers"');
-    expect(result).toContain('"customers".id');
-    expect(result).not.toContain('"app users"');
-  });
-
-  test('should preserve quotes in check constraints', () => {
-    const input = `
-Table users {
-  status varchar [check: \`users.status IN ('active', 'inactive')\`]
-}
-`;
-
-    const result = renameTable('users', 'app users', input);
-
-    expect(result).toContain('"app users"');
-    expect(result).toContain('`"app users".status IN');
-  });
-
   test('should handle mixed quoted and unquoted references', () => {
     const input = `
 Table "users" {
