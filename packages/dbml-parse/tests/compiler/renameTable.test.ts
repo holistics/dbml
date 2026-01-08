@@ -784,4 +784,284 @@ TableGroup social {
       expect(customerMatches!.length).toBeGreaterThanOrEqual(2);
     });
   });
+
+  describe('malformed and edge cases', () => {
+    test('should handle empty input', () => {
+      const result = renameTable('users', 'customers', '');
+      expect(result).toBe('');
+    });
+
+    test('should handle whitespace-only input', () => {
+      const input = '   \n\t\n   ';
+      const result = renameTable('users', 'customers', input);
+      expect(result).toBe(input);
+    });
+
+    test('should handle DBML with only comments', () => {
+      const input = `
+// This is a comment
+// Another comment
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toBe(input);
+    });
+
+    test('should handle malformed DBML - unclosed brace', () => {
+      const input = `
+Table users {
+  id int [pk]
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('customers');
+    });
+
+    test('should handle malformed DBML - missing column type', () => {
+      const input = `
+Table users {
+  id
+  name varchar
+}
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('customers');
+    });
+
+    test('should handle malformed DBML - invalid ref syntax', () => {
+      const input = `
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  user_id int [ref: > ]
+}
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('customers');
+    });
+
+    test('should handle table with no columns', () => {
+      const input = `
+Table users {
+}
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('customers');
+    });
+
+    test('should handle unicode table names', () => {
+      const input = `
+Table "用户" {
+  id int [pk]
+}
+
+Table posts {
+  user_id int [ref: > "用户".id]
+}
+`;
+      const result = renameTable('用户', '客户', input);
+      expect(result).toContain('"客户"');
+      expect(result).not.toContain('"用户"');
+    });
+
+    test('should handle table name with numbers', () => {
+      const input = `
+Table users2024 {
+  id int [pk]
+}
+`;
+      const result = renameTable('users2024', 'customers2024', input);
+      expect(result).toContain('customers2024');
+      expect(result).not.toContain('users2024');
+    });
+
+    test('should handle self-referencing table', () => {
+      const input = `
+Table employees {
+  id int [pk]
+  manager_id int [ref: > employees.id]
+}
+`;
+      const result = renameTable('employees', 'staff', input);
+      expect(result).toContain('Table staff');
+      expect(result).toContain('staff.id');
+      expect(result).not.toContain('employees');
+    });
+
+    test('should handle table with multiple self-references', () => {
+      const input = `
+Table categories {
+  id int [pk]
+  parent_id int [ref: > categories.id]
+  root_id int [ref: > categories.id]
+}
+`;
+      const result = renameTable('categories', 'groups', input);
+      expect(result).toContain('Table groups');
+      const groupRefs = result.match(/groups\.id/g);
+      expect(groupRefs).toHaveLength(2);
+    });
+
+    test('should handle very long table name', () => {
+      const longName = 'a'.repeat(100);
+      const newLongName = 'b'.repeat(100);
+      const input = `Table ${longName} { id int [pk] }`;
+      const result = renameTable(longName, newLongName, input);
+      expect(result).toContain(newLongName);
+      expect(result).not.toContain(longName);
+    });
+
+    test('should handle table name that is substring of another', () => {
+      const input = `
+Table user {
+  id int [pk]
+}
+
+Table users {
+  id int [pk]
+  user_id int [ref: > user.id]
+}
+
+Table user_profiles {
+  id int [pk]
+  user_id int [ref: > user.id]
+}
+`;
+      const result = renameTable('user', 'account', input);
+      expect(result).toContain('Table account');
+      expect(result).toContain('Table users');
+      expect(result).toContain('Table user_profiles');
+      expect(result).toContain('account.id');
+    });
+
+    test('should handle empty table name in rename request', () => {
+      const input = `
+Table users {
+  id int [pk]
+}
+`;
+      const result = renameTable('', 'customers', input);
+      expect(result).toBe(input);
+    });
+
+    test('should handle empty new name in rename request', () => {
+      const input = `
+Table users {
+  id int [pk]
+}
+`;
+      const result = renameTable('users', '', input);
+      expect(result).toContain('Table ""');
+    });
+
+    test('should handle DBML with enum references', () => {
+      const input = `
+Enum status {
+  active
+  inactive
+}
+
+Table users {
+  id int [pk]
+  status status
+}
+
+Table posts {
+  id int [pk]
+  author_id int [ref: > users.id]
+  status status
+}
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('Table customers');
+      expect(result).toContain('customers.id');
+      expect(result).toContain('Enum status');
+    });
+
+    test('should handle multiple tables with similar prefixes', () => {
+      const input = `
+Table user {
+  id int [pk]
+}
+
+Table user_role {
+  id int [pk]
+  user_id int [ref: > user.id]
+}
+
+Table user_permission {
+  id int [pk]
+  user_id int [ref: > user.id]
+}
+`;
+      const result = renameTable('user', 'account', input);
+      expect(result).toContain('Table account {');
+      expect(result).toContain('Table user_role {');
+      expect(result).toContain('Table user_permission {');
+      expect(result).toContain('> account.id');
+    });
+
+    test('should handle DBML with project block', () => {
+      const input = `
+Project my_project {
+  database_type: 'PostgreSQL'
+  Note: 'My project'
+}
+
+Table users {
+  id int [pk]
+}
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('Project my_project');
+      expect(result).toContain('Table customers');
+    });
+
+    test('should handle inline ref with composite key', () => {
+      const input = `
+Table users {
+  id int [pk]
+  org_id int [pk]
+}
+
+Table posts {
+  id int [pk]
+  user_id int
+  org_id int
+
+  indexes {
+    (user_id, org_id) [ref: > users.(id, org_id)]
+  }
+}
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('Table customers');
+    });
+
+    test('should handle note blocks', () => {
+      const input = `
+Table users {
+  id int [pk]
+
+  Note: '''
+    This is a multi-line note
+    about the users table
+  '''
+}
+`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('Table customers');
+      expect(result).toContain('about the users table');
+    });
+
+    test('should preserve formatting and whitespace', () => {
+      const input = `Table users {
+  id    int    [pk]
+  name  varchar(255)
+}`;
+      const result = renameTable('users', 'customers', input);
+      expect(result).toContain('  id    int    [pk]');
+      expect(result).toContain('  name  varchar(255)');
+    });
+  });
 });
