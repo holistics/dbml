@@ -12,7 +12,7 @@ import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvi
 import { ast, errors, tokens, rawDb, publicSymbolTable } from './queries/parse';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
-import { containerStack, containerToken, containerElement, containerScope, containerScopeKind, type ContainerTokenResult } from './queries/container';
+import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
 import { renameTable, applyTextEdits, type TextEdit } from './queries/transform';
 
 import Report from '@/core/report';
@@ -98,7 +98,7 @@ export default class Compiler {
   }
 
   @query(QueryId.Container_Token)
-  private _containerToken (offset: number): ContainerTokenResult {
+  private _containerToken (offset: number): { token: SyntaxToken; index: number } | { token: undefined; index: undefined } {
     return containerToken.call(this, offset);
   }
 
