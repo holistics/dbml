@@ -1,5 +1,7 @@
+export type TableNameInput = string | { schema?: string; table: string };
+
 export function renameTable(
-  oldName: { schema?: string; table: string },
-  newName: { schema?: string; table: string },
+  oldName: TableNameInput,
+  newName: TableNameInput,
   dbmlCode: string
 ): string;

@@ -13,7 +13,7 @@ import { ast, errors, tokens, rawDb, publicSymbolTable } from './queries/parse';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
-import { renameTable, applyTextEdits, type TextEdit } from './queries/transform';
+import { renameTable, applyTextEdits, type TextEdit, type TableNameInput } from './queries/transform';
 
 // Re-export types
 export { ScopeKind } from './types';
@@ -74,8 +74,8 @@ export default class Compiler {
   }
 
   renameTable (
-    oldName: { schema?: string; table: string },
-    newName: { schema?: string; table: string },
+    oldName: TableNameInput,
+    newName: TableNameInput,
   ): string {
     return renameTable.call(this, oldName, newName);
   }

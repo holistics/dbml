@@ -1,15 +1,41 @@
 import { describe, expect, test } from 'vitest';
 import Compiler from '@/compiler/index';
+import { TableNameInput } from '@/compiler/queries/transform';
 
 function renameTable (
-  oldName: { schema?: string; table: string },
-  newName: { schema?: string; table: string },
+  oldName: TableNameInput,
+  newName: TableNameInput,
   input: string,
 ): string {
   const compiler = new Compiler();
   compiler.setSource(input);
   return compiler.renameTable(oldName, newName);
 }
+
+describe('@dbml/parse - renameTable (string format)', () => {
+  test('should accept string format for simple table names', () => {
+    const input = `
+Table users {
+  id int [pk]
+  name varchar
+}
+`;
+    const result = renameTable('users', 'customers', input);
+    expect(result).toContain('Table customers');
+    expect(result).not.toContain('Table users');
+  });
+
+  test('should accept string format with schema.table', () => {
+    const input = `
+Table auth.users {
+  id int [pk]
+}
+`;
+    const result = renameTable('auth.users', 'auth.customers', input);
+    expect(result).toContain('auth.customers');
+    expect(result).not.toContain('auth.users');
+  });
+});
 
 describe('@dbml/parse - renameTable', () => {
   describe('basic renaming', () => {
