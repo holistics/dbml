@@ -73,7 +73,10 @@ export default class Compiler {
     );
   }
 
-  renameTable (oldName: string, newName: string): string {
+  renameTable (
+    oldName: { schema?: string; table: string },
+    newName: { schema?: string; table: string },
+  ): string {
     return renameTable.call(this, oldName, newName);
   }
 
