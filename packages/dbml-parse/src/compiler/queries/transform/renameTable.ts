@@ -57,6 +57,7 @@ function checkIfTableDeclarationUsesQuotes (
   const nameNode = declarationNode.name;
   const nameText = source.substring(nameNode.start, nameNode.end);
 
+  // FIXME: This check is fragile
   return nameText.includes('"');
 }
 
