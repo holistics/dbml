@@ -35,6 +35,200 @@ Table auth.users {
     expect(result).toContain('auth.customers');
     expect(result).not.toContain('auth.users');
   });
+
+  test('should update references when using bare string format', () => {
+    const input = `
+Table users {
+  id int [pk]
+  name varchar
+}
+
+Table posts {
+  id int [pk]
+  user_id int [ref: > users.id]
+}
+
+Ref: posts.user_id > users.id
+`;
+    const result = renameTable('users', 'customers', input);
+    expect(result).toContain('Table customers');
+    expect(result).not.toContain('Table users');
+    expect(result).toContain('customers.id');
+    expect(result).not.toContain('users.id');
+  });
+
+  test('should handle moving table between schemas with bare string', () => {
+    const input = `
+Table public.users {
+  id int [pk]
+}
+
+Table posts {
+  user_id int [ref: > public.users.id]
+}
+`;
+    const result = renameTable('public.users', 'auth.customers', input);
+    expect(result).toContain('auth.customers');
+    expect(result).not.toContain('public.users');
+    expect(result).toContain('auth.customers.id');
+  });
+
+  test('should handle bare string with only new schema specified', () => {
+    const input = `
+Table users {
+  id int [pk]
+}
+`;
+    const result = renameTable('users', 'auth.users', input);
+    expect(result).toContain('auth.users');
+    expect(result).not.toContain('Table users {');
+  });
+
+  test('should handle removing schema qualification with bare string', () => {
+    const input = `
+Table auth.users {
+  id int [pk]
+}
+
+Table posts {
+  user_id int [ref: > auth.users.id]
+}
+`;
+    const result = renameTable('auth.users', 'users', input);
+    expect(result).toContain('Table users');
+    expect(result).not.toContain('auth.users');
+    expect(result).toContain('users.id');
+  });
+
+  test('should handle mixed bare string and object inputs - string old, object new', () => {
+    const input = `
+Table users {
+  id int [pk]
+}
+`;
+    const result = renameTable('users', { table: 'customers' }, input);
+    expect(result).toContain('Table customers');
+    expect(result).not.toContain('Table users');
+  });
+
+  test('should handle mixed bare string and object inputs - object old, string new', () => {
+    const input = `
+Table users {
+  id int [pk]
+}
+`;
+    const result = renameTable({ table: 'users' }, 'customers', input);
+    expect(result).toContain('Table customers');
+    expect(result).not.toContain('Table users');
+  });
+
+  test('should handle bare string for table not found', () => {
+    const input = `
+Table users {
+  id int [pk]
+}
+`;
+    const result = renameTable('nonexistent', 'customers', input);
+    expect(result).toBe(input);
+  });
+
+  test('should handle bare string collision detection', () => {
+    const input = `
+Table users {
+  id int [pk]
+}
+
+Table customers {
+  id int [pk]
+}
+`;
+    const result = renameTable('users', 'customers', input);
+    expect(result).toBe(input);
+  });
+
+  test('should handle bare string with table groups', () => {
+    const input = `
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  id int [pk]
+}
+
+TableGroup group1 {
+  users
+  posts
+}
+`;
+    const result = renameTable('users', 'customers', input);
+    expect(result).toContain('Table customers');
+    expect(result).not.toContain('Table users');
+    expect(result).toContain('customers');
+  });
+
+  test('should handle bare string with table alias', () => {
+    const input = `
+Table users as U {
+  id int [pk]
+}
+
+Table posts {
+  user_id int [ref: > U.id]
+}
+`;
+    const result = renameTable('users', 'customers', input);
+    expect(result).toContain('Table customers');
+    expect(result).not.toContain('Table users');
+    expect(result).toContain('as U');
+  });
+
+  test('should handle bare string renaming same name (no-op)', () => {
+    const input = `
+Table users {
+  id int [pk]
+}
+`;
+    const result = renameTable('users', 'users', input);
+    expect(result).toContain('Table users');
+  });
+
+  test('should handle bare string that needs quoting in new name', () => {
+    const input = `
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  user_id int [ref: > users.id]
+}
+`;
+    const result = renameTable('users', 'app users', input);
+    expect(result).toContain('"app users"');
+    expect(result).toContain('"app users".id');
+    expect(result).not.toContain('Table users');
+  });
+
+  test('should handle bare string with multiple schemas having same table name', () => {
+    const input = `
+Table auth.users {
+  id int [pk]
+}
+
+Table public.users {
+  id int [pk]
+}
+
+Table posts {
+  auth_user_id int [ref: > auth.users.id]
+  public_user_id int [ref: > public.users.id]
+}
+`;
+    const result = renameTable('auth.users', 'auth.customers', input);
+    expect(result).toContain('auth.customers');
+    expect(result).toContain('public.users'); // should remain unchanged
+    expect(result).not.toContain('auth.users');
+  });
 });
 
 describe('@dbml/parse - renameTable', () => {
