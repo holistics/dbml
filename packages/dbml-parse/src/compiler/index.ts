@@ -1,47 +1,65 @@
-import { CACHE_STORAGE, CacheStorage, createCacheStorage, clearCache, query } from './query';
-import { ScopeKind } from './types';
-import { SyntaxNodeIdGenerator, ProgramNode, ElementDeclarationNode, SyntaxNode } from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator, NodeSymbol } from '@/core/analyzer/symbol/symbols';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
+import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { SyntaxToken } from '@/core/lexer/tokens';
 import { CompileError } from '@/core/errors';
 import { Database } from '@/core/interpreter/types';
+import Report from '@/core/report';
+import Lexer from '@/core/lexer/lexer';
+import Parser from '@/core/parser/parser';
+import Analyzer from '@/core/analyzer/analyzer';
+import Interpreter from '@/core/interpreter/interpreter';
 import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from '@/services/index';
-
-// Import query implementations
 import { ast, errors, tokens, rawDb, publicSymbolTable } from './queries/parse';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
 import { renameTable, applyTextEdits, type TextEdit } from './queries/transform';
 
-import Report from '@/core/report';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
-import Interpreter from '@/core/interpreter/interpreter';
-
 // Re-export types
 export { ScopeKind } from './types';
 
 export default class Compiler {
   private source = '';
-  private [CACHE_STORAGE]: CacheStorage = createCacheStorage();
-
+  private cache = new Map<string, any>();
   private nodeIdGenerator = new SyntaxNodeIdGenerator();
   private symbolIdGenerator = new NodeSymbolIdGenerator();
 
   setSource (source: string) {
     this.source = source;
-    clearCache(this[CACHE_STORAGE]);
+    this.cache.clear();
     this.nodeIdGenerator.reset();
     this.symbolIdGenerator.reset();
   }
 
-  // Parse namespace queries
-  @query()
-  private _interpret () {
-    const parseRes = new Lexer(this.source)
+  private query<Args extends unknown[], Return> (
+    fn: (this: Compiler, ...args: Args) => Return,
+    toKey?: (...args: Args) => unknown,
+  ): (...args: Args) => Return {
+    const name = fn.name;
+    return ((...args: Args): Return => {
+      if (args.length === 0) {
+        if (this.cache.has(name)) return this.cache.get(name);
+        const result = fn.apply(this, args);
+        this.cache.set(name, result);
+        return result;
+      }
+
+      const key = toKey ? toKey(...args) : args[0];
+      let mapCache = this.cache.get(name);
+      if (mapCache instanceof Map && mapCache.has(key)) return mapCache.get(key);
+
+      const result = fn.apply(this, args);
+      if (!(mapCache instanceof Map)) {
+        mapCache = new Map();
+        this.cache.set(name, mapCache);
+      }
+      mapCache.set(key, result);
+      return result;
+    }) as (...args: Args) => Return;
+  }
+
+  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }, CompileError> {
+    const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }, CompileError> = new Lexer(this.source)
       .lex()
       .chain((lexedTokens) => new Parser(lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
       .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({ ast, tokens })));
@@ -55,79 +73,6 @@ export default class Compiler {
     );
   }
 
-  @query()
-  private _ast (): Readonly<ProgramNode> {
-    return ast.call(this);
-  }
-
-  @query()
-  private _errors (): readonly Readonly<CompileError>[] {
-    return errors.call(this);
-  }
-
-  @query()
-  private _tokens (): Readonly<SyntaxToken>[] {
-    return tokens.call(this);
-  }
-
-  @query()
-  private _rawDb (): Readonly<Database> | undefined {
-    return rawDb.call(this);
-  }
-
-  @query()
-  private _publicSymbolTable (): Readonly<SymbolTable> {
-    return publicSymbolTable.call(this);
-  }
-
-  // Token namespace queries
-  @query()
-  private _invalidStream (): readonly SyntaxToken[] {
-    return invalidStream.call(this);
-  }
-
-  @query()
-  private _flatStream (): readonly SyntaxToken[] {
-    return flatStream.call(this);
-  }
-
-  // Container namespace queries
-  @query()
-  private _containerStack (offset: number): readonly Readonly<SyntaxNode>[] {
-    return containerStack.call(this, offset);
-  }
-
-  @query()
-  private _containerToken (offset: number): { token: SyntaxToken; index: number } | { token: undefined; index: undefined } {
-    return containerToken.call(this, offset);
-  }
-
-  @query()
-  private _containerElement (offset: number): Readonly<ElementDeclarationNode | ProgramNode> {
-    return containerElement.call(this, offset);
-  }
-
-  @query()
-  private _containerScope (offset: number): Readonly<SymbolTable> | undefined {
-    return containerScope.call(this, offset);
-  }
-
-  @query()
-  private _containerScopeKind (offset: number): ScopeKind {
-    return containerScopeKind.call(this, offset);
-  }
-
-  // Symbol namespace queries
-  @query({ toKey: symbolOfNameToKey })
-  private _symbolOfName (nameStack: string[], owner: ElementDeclarationNode | ProgramNode) {
-    return symbolOfName.call(this, nameStack, owner);
-  }
-
-  @query()
-  private _symbolMembers (ownerSymbol: NodeSymbol) {
-    return symbolMembers.call(this, ownerSymbol);
-  }
-
   renameTable (oldName: string, newName: string): string {
     return renameTable.call(this, oldName, newName);
   }
@@ -136,33 +81,32 @@ export default class Compiler {
     return applyTextEdits(this.parse.source(), edits);
   }
 
-  // Namespace objects
   readonly token = {
-    invalidStream: this._invalidStream,
-    flatStream: this._flatStream,
+    invalidStream: this.query(invalidStream),
+    flatStream: this.query(flatStream),
   };
 
   readonly parse = {
     source: () => this.source as Readonly<string>,
-    _: this._interpret,
-    ast: this._ast,
-    errors: this._errors,
-    tokens: this._tokens,
-    rawDb: this._rawDb,
-    publicSymbolTable: this._publicSymbolTable,
+    _: this.query(this.interpret),
+    ast: this.query(ast),
+    errors: this.query(errors),
+    tokens: this.query(tokens),
+    rawDb: this.query(rawDb),
+    publicSymbolTable: this.query(publicSymbolTable),
   };
 
   readonly container = {
-    stack: this._containerStack,
-    token: this._containerToken,
-    element: this._containerElement,
-    scope: this._containerScope,
-    scopeKind: this._containerScopeKind,
+    stack: this.query(containerStack),
+    token: this.query(containerToken),
+    element: this.query(containerElement),
+    scope: this.query(containerScope),
+    scopeKind: this.query(containerScopeKind),
   };
 
   readonly symbol = {
-    ofName: this._symbolOfName,
-    members: this._symbolMembers,
+    ofName: this.query(symbolOfName, symbolOfNameToKey),
+    members: this.query(symbolMembers),
   };
 
   initMonacoServices () {
