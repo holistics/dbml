@@ -10,6 +10,8 @@ import {
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
 
+export type TableNameInput = string | { schema?: string; table: string };
+
 interface FormattedTableName {
   schema: string;
   table: string;
@@ -27,6 +29,43 @@ function stripQuotes (str: string): string {
     return str.slice(1, -1);
   }
   return str;
+}
+
+/**
+ * Normalizes a table name input to { schema, table } format.
+ * FIXME: String parsing uses simple split('.') which doesn't handle quoted identifiers with dots
+ */
+function normalizeTableName (input: TableNameInput): { schema: string; table: string } {
+  if (typeof input !== 'string') {
+    return {
+      schema: input.schema ?? DEFAULT_SCHEMA_NAME,
+      table: input.table,
+    };
+  }
+
+  // FIXME: This simple split doesn't handle quoted identifiers containing dots
+  const parts = input.split('.');
+
+  if (parts.length === 1) {
+    return {
+      schema: DEFAULT_SCHEMA_NAME,
+      table: stripQuotes(parts[0]),
+    };
+  }
+
+  if (parts.length === 2) {
+    return {
+      schema: stripQuotes(parts[0]),
+      table: stripQuotes(parts[1]),
+    };
+  }
+
+  // More than 2 parts - treat the last as table, rest as schema
+  const tablePart = parts.pop()!;
+  return {
+    schema: stripQuotes(parts.join('.')),
+    table: stripQuotes(tablePart),
+  };
 }
 
 /**
@@ -245,16 +284,18 @@ function findReplacements (
 /**
  * Renames a table in the DBML source code.
  *
- * @param oldName - The current table name (schema is optional, defaults to 'public')
- * @param newName - The new table name (schema is optional, defaults to 'public')
+ * @param oldName - The current table name as string or object (schema defaults to 'public')
+ * @param newName - The new table name as string or object (schema defaults to 'public')
  * @returns The updated DBML source code with the table renamed
  *
  * @example
- * // Rename a table in the default schema
- * compiler.renameTable({ table: 'users' }, { table: 'customers' });
+ * // String format
+ * compiler.renameTable('users', 'customers');
+ * compiler.renameTable('public.users', 'auth.customers');
  *
  * @example
- * // Rename a table with schema
+ * // Object format
+ * compiler.renameTable({ table: 'users' }, { table: 'customers' });
  * compiler.renameTable(
  *   { schema: 'auth', table: 'users' },
  *   { schema: 'auth', table: 'customers' }
@@ -262,16 +303,19 @@ function findReplacements (
  */
 export function renameTable (
   this: Compiler,
-  oldName: { schema?: string; table: string },
-  newName: { schema?: string; table: string },
+  oldName: TableNameInput,
+  newName: TableNameInput,
 ): string {
   const source = this.parse.source();
   const symbolTable = this.parse.publicSymbolTable();
 
-  const oldSchema = oldName.schema ?? DEFAULT_SCHEMA_NAME;
-  const oldTable = oldName.table;
-  const newSchema = newName.schema ?? DEFAULT_SCHEMA_NAME;
-  const newTable = newName.table;
+  const normalizedOld = normalizeTableName(oldName);
+  const normalizedNew = normalizeTableName(newName);
+
+  const oldSchema = normalizedOld.schema;
+  const oldTable = normalizedOld.table;
+  const newSchema = normalizedNew.schema;
+  const newTable = normalizedNew.table;
 
   // Look up the table symbol
   const tableSymbol = lookupTableSymbol(symbolTable, oldSchema, oldTable);
