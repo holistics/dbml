@@ -8,6 +8,7 @@ import {
   createTableSymbolIndex,
 } from '@/core/analyzer/symbol/symbolIndex';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
+import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
 
 interface TableNameParts {
   schemaName: string;
@@ -21,6 +22,7 @@ interface FormattedTableNameParts extends TableNameParts {
   shouldQuoteSchema: boolean;
 }
 
+// FIXME: This function would not work correctly if table or schema name contains '.'
 function parseTableName (tableName: string): TableNameParts {
   const parts = tableName.split('.');
   if (parts.length === 2 && parts[0] && parts[1]) {
@@ -39,6 +41,7 @@ function escapeRegex (str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+// FIXME: This function is too adhoc
 function checkIfTableUsesQuotes (source: string, tableParts: TableNameParts): boolean {
   const quotedPattern =
     tableParts.schemaName !== DEFAULT_SCHEMA_NAME
@@ -66,7 +69,7 @@ function validateAndQuoteTableName (
   const originalUsedQuotes = checkIfTableUsesQuotes(dbmlSource, oldParts);
 
   const isValidIdentifier = (name: string) => {
-    return /^[a-zA-Z0-9_]+$/.test(name);
+    return name.split('').every((char) => isAlphaOrUnderscore(char) || isDigit(char)) && !isDigit(name[0]);
   };
 
   const tableNeedsQuotes = !isValidIdentifier(tableName);
@@ -122,6 +125,7 @@ function checkForNameCollision (
   return true;
 }
 
+// FIXME: This is adhoc & fragile & very prone to errors
 function checkIfPartOfQualifiedReference (
   node: SyntaxNode,
   oldParts: TableNameParts,
