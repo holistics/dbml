@@ -40,7 +40,7 @@ export default class Compiler {
 
   // Parse namespace queries
   @query()
-  private _parseInterpret () {
+  private _interpret () {
     const parseRes = new Lexer(this.source)
       .lex()
       .chain((lexedTokens) => new Parser(lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
@@ -56,38 +56,38 @@ export default class Compiler {
   }
 
   @query()
-  private _parseAst (): Readonly<ProgramNode> {
+  private _ast (): Readonly<ProgramNode> {
     return ast.call(this);
   }
 
   @query()
-  private _parseErrors (): readonly Readonly<CompileError>[] {
+  private _errors (): readonly Readonly<CompileError>[] {
     return errors.call(this);
   }
 
   @query()
-  private _parseTokens (): Readonly<SyntaxToken>[] {
+  private _tokens (): Readonly<SyntaxToken>[] {
     return tokens.call(this);
   }
 
   @query()
-  private _parseRawDb (): Readonly<Database> | undefined {
+  private _rawDb (): Readonly<Database> | undefined {
     return rawDb.call(this);
   }
 
   @query()
-  private _parsePublicSymbolTable (): Readonly<SymbolTable> {
+  private _publicSymbolTable (): Readonly<SymbolTable> {
     return publicSymbolTable.call(this);
   }
 
   // Token namespace queries
   @query()
-  private _tokenInvalidStream (): readonly SyntaxToken[] {
+  private _invalidStream (): readonly SyntaxToken[] {
     return invalidStream.call(this);
   }
 
   @query()
-  private _tokenFlatStream (): readonly SyntaxToken[] {
+  private _flatStream (): readonly SyntaxToken[] {
     return flatStream.call(this);
   }
 
@@ -138,18 +138,18 @@ export default class Compiler {
 
   // Namespace objects
   readonly token = {
-    invalidStream: this._tokenInvalidStream,
-    flatStream: this._tokenFlatStream,
+    invalidStream: this._invalidStream,
+    flatStream: this._flatStream,
   };
 
   readonly parse = {
     source: () => this.source as Readonly<string>,
-    _: this._parseInterpret,
-    ast: this._parseAst,
-    errors: this._parseErrors,
-    tokens: this._parseTokens,
-    rawDb: this._parseRawDb,
-    publicSymbolTable: this._parsePublicSymbolTable,
+    _: this._interpret,
+    ast: this._ast,
+    errors: this._errors,
+    tokens: this._tokens,
+    rawDb: this._rawDb,
+    publicSymbolTable: this._publicSymbolTable,
   };
 
   readonly container = {
