@@ -1,5 +1,6 @@
-import Lexer from '@/lib/lexer/lexer';
-import Parser from '@/lib/parser/parser';
+import Lexer from '@/core/lexer/lexer';
+import Parser from '@/core/parser/parser';
+import Analyzer from '@/core/analyzer/analyzer';
 import {
   ProgramNode,
   SyntaxNode,
@@ -22,10 +23,11 @@ import {
   VariableNode,
   PrimaryExpressionNode,
   ArrayNode,
-} from '@/lib/parser/nodes';
-import Report from '@/lib/report';
+} from '@/core/parser/nodes';
+import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
+import Report from '@/core/report';
 import { CompileError, Compiler, SyntaxToken } from '@/index';
-import { Database } from '@/lib/interpreter/types';
+import { Database } from '@/core/interpreter/types';
 
 export function lex (source: string): Report<SyntaxToken[], CompileError> {
   return new Lexer(source).lex();
@@ -33,6 +35,10 @@ export function lex (source: string): Report<SyntaxToken[], CompileError> {
 
 export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }, CompileError> {
   return new Lexer(source).lex().chain((tokens) => new Parser(tokens, new SyntaxNodeIdGenerator()).parse());
+}
+
+export function analyze (source: string): Report<ProgramNode, CompileError> {
+  return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
 }
 
 export function interpret (source: string): Report<Database | undefined, CompileError> {

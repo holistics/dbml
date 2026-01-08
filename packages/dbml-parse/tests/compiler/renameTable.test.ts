@@ -12,7 +12,7 @@ function renameTable (
   return compiler.renameTable(oldName, newName);
 }
 
-describe('@dbml/parse - renameTable (string format)', () => {
+describe('[example] renameTable (string format)', () => {
   test('should accept string format for simple table names', () => {
     const input = `
 Table users {
@@ -231,7 +231,7 @@ Table posts {
   });
 });
 
-describe('@dbml/parse - renameTable', () => {
+describe('[example] renameTable', () => {
   describe('basic renaming', () => {
     test('should rename a simple table', () => {
       const input = `

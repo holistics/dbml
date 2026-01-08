@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
-import { createMockTextModel, createPosition } from '../../mocks';
-import { isEqual } from 'lodash-es';
+import { createMockTextModel, createPosition } from '../../utils';
 
-describe('CompletionItemProvider', () => {
+describe('[snapshot] CompletionItemProvider', () => {
   describe('should suggest element types when at top level', () => {
     it('- work if the source is empty', () => {
       const program = '';
