@@ -1,5 +1,5 @@
 import { CACHE_STORAGE, CacheStorage, createCacheStorage, clearCache, query } from './query';
-import { ScopeKind, QueryId } from './types';
+import { ScopeKind } from './types';
 import { SyntaxNodeIdGenerator, ProgramNode, ElementDeclarationNode, SyntaxNode } from '@/core/parser/nodes';
 import { NodeSymbolIdGenerator, NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
@@ -39,7 +39,7 @@ export default class Compiler {
   }
 
   // Parse namespace queries
-  @query(QueryId._Interpret)
+  @query()
   private _parseInterpret () {
     const parseRes = new Lexer(this.source)
       .lex()
@@ -55,75 +55,75 @@ export default class Compiler {
     );
   }
 
-  @query(QueryId.Parse_Ast)
+  @query()
   private _parseAst (): Readonly<ProgramNode> {
     return ast.call(this);
   }
 
-  @query(QueryId.Parse_Errors)
+  @query()
   private _parseErrors (): readonly Readonly<CompileError>[] {
     return errors.call(this);
   }
 
-  @query(QueryId.Parse_Tokens)
+  @query()
   private _parseTokens (): Readonly<SyntaxToken>[] {
     return tokens.call(this);
   }
 
-  @query(QueryId.Parse_RawDb)
+  @query()
   private _parseRawDb (): Readonly<Database> | undefined {
     return rawDb.call(this);
   }
 
-  @query(QueryId.Parse_PublicSymbolTable)
+  @query()
   private _parsePublicSymbolTable (): Readonly<SymbolTable> {
     return publicSymbolTable.call(this);
   }
 
   // Token namespace queries
-  @query(QueryId.Token_InvalidStream)
+  @query()
   private _tokenInvalidStream (): readonly SyntaxToken[] {
     return invalidStream.call(this);
   }
 
-  @query(QueryId.Token_FlatStream)
+  @query()
   private _tokenFlatStream (): readonly SyntaxToken[] {
     return flatStream.call(this);
   }
 
   // Container namespace queries
-  @query(QueryId.Container_Stack)
+  @query()
   private _containerStack (offset: number): readonly Readonly<SyntaxNode>[] {
     return containerStack.call(this, offset);
   }
 
-  @query(QueryId.Container_Token)
+  @query()
   private _containerToken (offset: number): { token: SyntaxToken; index: number } | { token: undefined; index: undefined } {
     return containerToken.call(this, offset);
   }
 
-  @query(QueryId.Container_Element)
+  @query()
   private _containerElement (offset: number): Readonly<ElementDeclarationNode | ProgramNode> {
     return containerElement.call(this, offset);
   }
 
-  @query(QueryId.Container_Scope)
+  @query()
   private _containerScope (offset: number): Readonly<SymbolTable> | undefined {
     return containerScope.call(this, offset);
   }
 
-  @query(QueryId.Container_Scope_Kind)
+  @query()
   private _containerScopeKind (offset: number): ScopeKind {
     return containerScopeKind.call(this, offset);
   }
 
   // Symbol namespace queries
-  @query(QueryId.Symbol_OfName, { toKey: symbolOfNameToKey })
+  @query({ toKey: symbolOfNameToKey })
   private _symbolOfName (nameStack: string[], owner: ElementDeclarationNode | ProgramNode) {
     return symbolOfName.call(this, nameStack, owner);
   }
 
-  @query(QueryId.Symbol_Members)
+  @query()
   private _symbolMembers (ownerSymbol: NodeSymbol) {
     return symbolMembers.call(this, ownerSymbol);
   }

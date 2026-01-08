@@ -12,12 +12,11 @@ type AnyMethod = (...args: any[]) => any;
 /**
  * Method decorator that adds caching and auto-binds to instance.
  * Uses TypeScript 5.0+ native decorators with context.addInitializer for auto-binding.
+ * The method name is used as the cache key.
  *
- * @param queryId - Unique identifier for this query (used as cache key)
  * @param options - Optional configuration for caching behavior
  */
 export function query<This, Args extends unknown[], Return> (
-  queryId: string,
   options?: QueryOptions,
 ): (
   target: (this: This, ...args: Args) => Return,
@@ -27,7 +26,7 @@ export function query<This, Args extends unknown[], Return> (
     target: (this: This, ...args: Args) => Return,
     context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>,
   ): (this: This, ...args: Args) => Return {
-    const methodName = context.name;
+    const methodName = String(context.name);
 
     // Wrapped method with caching
     const cachedMethod = function (this: This, ...args: Args): Return {
@@ -35,16 +34,16 @@ export function query<This, Args extends unknown[], Return> (
       const cache = compiler[CACHE_STORAGE] as CacheStorage;
 
       if (args.length === 0) {
-        if (cache.has(queryId) && !(cache.get(queryId) instanceof Map)) {
-          return cache.get(queryId);
+        if (cache.has(methodName) && !(cache.get(methodName) instanceof Map)) {
+          return cache.get(methodName);
         }
         const result = target.apply(this, args);
-        cache.set(queryId, result);
+        cache.set(methodName, result);
         return result;
       }
 
       const key = options?.toKey ? options.toKey(...args) : args.length === 1 ? args[0] : args;
-      let mapCache = cache.get(queryId);
+      let mapCache = cache.get(methodName);
 
       if (mapCache instanceof Map && mapCache.has(key)) {
         return mapCache.get(key);
@@ -54,7 +53,7 @@ export function query<This, Args extends unknown[], Return> (
 
       if (!(mapCache instanceof Map)) {
         mapCache = new Map();
-        cache.set(queryId, mapCache);
+        cache.set(methodName, mapCache);
       }
       mapCache.set(key, result);
 
