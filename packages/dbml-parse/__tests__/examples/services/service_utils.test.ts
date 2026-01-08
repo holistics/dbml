@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
-import { createPosition, MockTextModel } from '../../mocks';
+import { createPosition, MockTextModel } from '../../utils';
 
-describe('Services Utils', () => {
+describe('[snapshot] Services Utils', () => {
   // Useful for detecting breaking changes of monaco-editor-core
   describe('getOffsetFromMonacoPosition', () => {
     it('should calculate offset from position correctly', () => {

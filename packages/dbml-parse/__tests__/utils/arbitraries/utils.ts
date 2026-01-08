@@ -49,10 +49,8 @@ export const settingKeyValue = (key: string, valueArb: fc.Arbitrary<string>) =>
   fc.tuple(caseVariant(key), valueArb).map(([k, v]) => `${k}: ${v}`);
 
 /**
- * Helper to generate random whitespace (spaces, tabs, newlines, or combination)
- * Returns 1-3 whitespace characters
- * Newlines are less frequent to keep generated code more compact
- * Use this for top-level declarations (Table, Enum, etc.)
+ * Helper to generate random whitespace (spaces, tabs, newlines)
+ * CRLF tested separately via crlfSchemaArbitrary
  */
 export const randomSpaceArbitrary = fc.array(
   fc.oneof(

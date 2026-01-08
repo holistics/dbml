@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
-import { createMockTextModel, createPosition, extractTextFromRange } from '../../mocks';
+import { createMockTextModel, createPosition, extractTextFromRange } from '../../utils';
 
-describe('DefinitionProvider', () => {
+describe('[snapshot] DefinitionProvider', () => {
   describe('should find definition for tables', () => {
     it('- should find table definition in Ref block', () => {
       const program = `Table users {

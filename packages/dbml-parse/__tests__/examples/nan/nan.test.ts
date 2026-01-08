@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
-import { scanTestNames } from '../testHelpers';
+import { scanTestNames } from '../../utils';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import Lexer from '@/core/lexer/lexer';
@@ -9,7 +9,7 @@ import Parser from '@/core/parser/parser';
 import Analyzer from '@/core/analyzer/analyzer';
 import Interpreter from '@/core/interpreter/interpreter';
 
-describe('#interpreter - check for cases that previously cause NaN-positioned errors', () => {
+describe('[snapshot] interpreter (NaN cases)', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {

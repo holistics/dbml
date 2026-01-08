@@ -18,14 +18,31 @@ export class MockTextModel {
   }
 
   getOffsetAt (position: Position): number {
-    const lines = this.content.split('\n');
-    let offset = 0;
+    // Split on all line ending types while preserving them for accurate offset calculation
+    const lineEndingRegex = /\r\n|\r|\n/g;
+    let lastIndex = 0;
+    const lines: Array<{ text: string; ending: string }> = [];
 
+    let match;
+    while ((match = lineEndingRegex.exec(this.content)) !== null) {
+      lines.push({
+        text: this.content.slice(lastIndex, match.index),
+        ending: match[0],
+      });
+      lastIndex = match.index + match[0].length;
+    }
+    // Add remaining content after last line ending
+    lines.push({ text: this.content.slice(lastIndex), ending: '' });
+
+    let offset = 0;
     for (let i = 0; i < position.lineNumber - 1 && i < lines.length; i++) {
-      offset += lines[i].length + 1;
+      offset += lines[i].text.length + lines[i].ending.length;
     }
 
-    offset += Math.min(position.column - 1, lines[position.lineNumber - 1]?.length || 0);
+    const currentLine = lines[position.lineNumber - 1];
+    if (currentLine) {
+      offset += Math.min(position.column - 1, currentLine.text.length);
+    }
     return Math.max(0, offset);
   }
 

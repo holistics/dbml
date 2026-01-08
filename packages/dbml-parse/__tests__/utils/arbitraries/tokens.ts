@@ -15,7 +15,7 @@ const functionExpressionRegex = /`[^`]*`/;
 const identifierRegex = /[a-zA-Z_][a-zA-Z_0-9]*/;
 // Matches separator punctuation: colons, semicolons, dots, brackets, braces, parens, commas
 const seppuncRegex = /[:;.,[\]{}(),]/;
-// Matches whitespace: space, tab, or newline
+// Matches whitespace: space, tab, or newline (CRLF tested separately via crlfSchemaArbitrary)
 const wsRegex = /[ \t\n]/;
 // Matches single-line comments: // comment until end of line
 const singleLineCommentRegex = /\/\/[^\r\n]*\n/;
@@ -57,8 +57,8 @@ export const commentArbitrary = fc.oneof(
 );
 export const identifierStreamArbitrary = fc.stringMatching(matchFullRegex(identifierStreamRegex));
 
-// Arbitrary token sequences
-export const tokenStreamArbitrary = fc.stringMatching(matchFullRegex(zeroOrManyRegex(chainRegex(/[ ]/, orRegex(
+// Single token regex (any valid token)
+const singleTokenRegex = orRegex(
   numberRegex,
   singleLineStringRegex,
   multiLineStringRegex,
@@ -71,4 +71,10 @@ export const tokenStreamArbitrary = fc.stringMatching(matchFullRegex(zeroOrManyR
   multiLineCommentRegex,
   colorRegex,
   opRegex,
-)))));
+);
+
+// Arbitrary token sequences - allows adjacent tokens without mandatory whitespace
+export const tokenStreamArbitrary = fc.stringMatching(matchFullRegex(zeroOrManyRegex(singleTokenRegex)));
+
+// Token stream with guaranteed whitespace between tokens (for testing trivia attachment)
+export const spacedTokenStreamArbitrary = fc.stringMatching(matchFullRegex(zeroOrManyRegex(chainRegex(/[ ]/, singleTokenRegex))));
