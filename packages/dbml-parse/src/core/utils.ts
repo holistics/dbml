@@ -17,7 +17,8 @@ export function isAlphaOrUnderscore (char: string): boolean {
 }
 
 export function isDigit (char: string): boolean {
-  const [c] = char;
+  if (!char) return false;
+  const c = char[0];
 
   return c >= '0' && c <= '9';
 }
