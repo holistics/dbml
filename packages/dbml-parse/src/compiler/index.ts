@@ -20,7 +20,7 @@ export { ScopeKind } from './types';
 
 export default class Compiler {
   private source = '';
-  private cache = new Map<string, any>();
+  private cache = new Map<symbol, any>();
   private nodeIdGenerator = new SyntaxNodeIdGenerator();
   private symbolIdGenerator = new NodeSymbolIdGenerator();
 
@@ -35,23 +35,23 @@ export default class Compiler {
     fn: (this: Compiler, ...args: Args) => Return,
     toKey?: (...args: Args) => unknown,
   ): (...args: Args) => Return {
-    const name = fn.name;
+    const cacheKey = Symbol();
     return ((...args: Args): Return => {
       if (args.length === 0) {
-        if (this.cache.has(name)) return this.cache.get(name);
+        if (this.cache.has(cacheKey)) return this.cache.get(cacheKey);
         const result = fn.apply(this, args);
-        this.cache.set(name, result);
+        this.cache.set(cacheKey, result);
         return result;
       }
 
       const key = toKey ? toKey(...args) : args[0];
-      let mapCache = this.cache.get(name);
+      let mapCache = this.cache.get(cacheKey);
       if (mapCache instanceof Map && mapCache.has(key)) return mapCache.get(key);
 
       const result = fn.apply(this, args);
       if (!(mapCache instanceof Map)) {
         mapCache = new Map();
-        this.cache.set(name, mapCache);
+        this.cache.set(cacheKey, mapCache);
       }
       mapCache.set(key, result);
       return result;
