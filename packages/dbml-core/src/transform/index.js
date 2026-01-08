@@ -8,12 +8,8 @@ import { Compiler } from '@dbml/parse';
  * @param {string} dbmlCode - The DBML code containing the table
  * @returns {string} The updated DBML code with the renamed table
  */
-function renameTable (oldTableName, newTableName, dbmlCode) {
+export function renameTable (oldTableName, newTableName, dbmlCode) {
   const compiler = new Compiler();
   compiler.setSource(dbmlCode);
   return compiler.renameTable(oldTableName, newTableName);
 }
-
-export default {
-  renameTable,
-};
