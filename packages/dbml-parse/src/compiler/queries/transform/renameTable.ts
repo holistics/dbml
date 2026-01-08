@@ -69,6 +69,7 @@ function validateAndQuoteTableName (
   const originalUsedQuotes = checkIfTableUsesQuotes(dbmlSource, oldParts);
 
   const isValidIdentifier = (name: string) => {
+    if (!name) return false;
     return name.split('').every((char) => isAlphaOrUnderscore(char) || isDigit(char)) && !isDigit(name[0]);
   };
 

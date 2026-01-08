@@ -950,6 +950,7 @@ Table users {
   id int [pk]
 }
 `;
+      // Empty new name is not a valid identifier, so it gets quoted
       const result = renameTable('users', '', input);
       expect(result).toContain('Table ""');
     });
