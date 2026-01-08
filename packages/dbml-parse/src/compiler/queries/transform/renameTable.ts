@@ -10,99 +10,123 @@ import {
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
 
-interface TableNameParts {
-  schemaName: string;
-  tableName: string;
-}
-
-interface FormattedTableNameParts extends TableNameParts {
-  rawSchemaName: string;
-  rawTableName: string;
-  shouldQuoteTable: boolean;
+interface FormattedTableName {
+  schema: string;
+  table: string;
+  formattedSchema: string;
+  formattedTable: string;
   shouldQuoteSchema: boolean;
+  shouldQuoteTable: boolean;
 }
 
-// FIXME: This function would not work correctly if table or schema name contains '.'
-function parseTableName (tableName: string): TableNameParts {
-  const parts = tableName.split('.');
-  if (parts.length === 2 && parts[0] && parts[1]) {
-    return {
-      schemaName: parts[0],
-      tableName: parts[1],
-    };
+/**
+ * Removes surrounding double quotes from a string if present.
+ */
+function stripQuotes (str: string): string {
+  if (str.startsWith('"') && str.endsWith('"') && str.length >= 2) {
+    return str.slice(1, -1);
   }
-  return {
-    schemaName: DEFAULT_SCHEMA_NAME,
-    tableName: tableName,
-  };
+  return str;
 }
 
-function escapeRegex (str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/**
+ * Checks if an identifier is valid (can be used without quotes).
+ */
+function isValidIdentifier (name: string): boolean {
+  if (!name) return false;
+  return name.split('').every((char) => isAlphaOrUnderscore(char) || isDigit(char)) && !isDigit(name[0]);
 }
 
-// FIXME: This function is too adhoc
-function checkIfTableUsesQuotes (source: string, tableParts: TableNameParts): boolean {
-  const quotedPattern =
-    tableParts.schemaName !== DEFAULT_SCHEMA_NAME
-      ? new RegExp(
-          `Table\\s+"${escapeRegex(tableParts.schemaName)}"\\."${escapeRegex(tableParts.tableName)}"`,
-        )
-      : new RegExp(`Table\\s+"${escapeRegex(tableParts.tableName)}"`);
+/**
+ * Checks if the table declaration uses quoted identifiers by examining
+ * the source text at the declaration node position.
+ */
+function checkIfTableDeclarationUsesQuotes (
+  tableSymbol: TableSymbol,
+  source: string,
+): boolean {
+  if (!tableSymbol.declaration) {
+    return false;
+  }
 
-  return quotedPattern.test(source);
+  const declarationNode = tableSymbol.declaration as any;
+  if (!declarationNode.name) {
+    return false;
+  }
+
+  const nameNode = declarationNode.name;
+  const nameText = source.substring(nameNode.start, nameNode.end);
+
+  return nameText.includes('"');
 }
 
-function validateAndQuoteTableName (
-  nameParts: TableNameParts,
-  dbmlSource: string,
-  oldParts: TableNameParts,
-): {
-  isValid: boolean;
-  tableName: string;
-  schemaName: string;
-  shouldQuoteTable: boolean;
-  shouldQuoteSchema: boolean;
-} {
-  const { tableName, schemaName } = nameParts;
-
-  const originalUsedQuotes = checkIfTableUsesQuotes(dbmlSource, oldParts);
-
-  const isValidIdentifier = (name: string) => {
-    if (!name) return false;
-    return name.split('').every((char) => isAlphaOrUnderscore(char) || isDigit(char)) && !isDigit(name[0]);
-  };
-
-  const tableNeedsQuotes = !isValidIdentifier(tableName);
-  const schemaNeedsQuotes = !isValidIdentifier(schemaName);
+/**
+ * Formats the new table name with appropriate quoting.
+ */
+function formatTableName (
+  schema: string,
+  table: string,
+  originalUsedQuotes: boolean,
+): FormattedTableName {
+  const tableNeedsQuotes = !isValidIdentifier(table);
+  const schemaNeedsQuotes = !isValidIdentifier(schema);
 
   const shouldQuoteTable = originalUsedQuotes || tableNeedsQuotes;
   const shouldQuoteSchema = originalUsedQuotes || schemaNeedsQuotes;
 
-  const formattedTableName = shouldQuoteTable ? `"${tableName}"` : tableName;
-  const formattedSchemaName = shouldQuoteSchema ? `"${schemaName}"` : schemaName;
-
   return {
-    isValid: true,
-    tableName: formattedTableName,
-    schemaName: formattedSchemaName,
-    shouldQuoteTable,
+    schema,
+    table,
+    formattedSchema: shouldQuoteSchema ? `"${schema}"` : schema,
+    formattedTable: shouldQuoteTable ? `"${table}"` : table,
     shouldQuoteSchema,
+    shouldQuoteTable,
   };
 }
 
+/**
+ * Looks up a table symbol from the symbol table.
+ */
+function lookupTableSymbol (
+  symbolTable: Readonly<SymbolTable>,
+  schema: string,
+  table: string,
+): TableSymbol | null {
+  const tableSymbolIndex = createTableSymbolIndex(table);
+
+  if (schema === DEFAULT_SCHEMA_NAME) {
+    const symbol = symbolTable.get(tableSymbolIndex);
+    return symbol instanceof TableSymbol ? symbol : null;
+  }
+
+  const schemaSymbolIndex = createSchemaSymbolIndex(schema);
+  const schemaSymbol = symbolTable.get(schemaSymbolIndex);
+
+  if (!schemaSymbol || !schemaSymbol.symbolTable) {
+    return null;
+  }
+
+  const symbol = schemaSymbol.symbolTable.get(tableSymbolIndex);
+  return symbol instanceof TableSymbol ? symbol : null;
+}
+
+/**
+ * Checks if renaming would cause a name collision.
+ */
 function checkForNameCollision (
   symbolTable: Readonly<SymbolTable>,
-  oldParts: TableNameParts,
-  newParts: FormattedTableNameParts,
+  oldSchema: string,
+  oldTable: string,
+  newSchema: string,
+  newTable: string,
 ): boolean {
-  const tableSymbolIndex = createTableSymbolIndex(newParts.rawTableName);
+  const tableSymbolIndex = createTableSymbolIndex(newTable);
   let existingTableSymbol;
 
-  if (newParts.rawSchemaName === DEFAULT_SCHEMA_NAME) {
+  if (newSchema === DEFAULT_SCHEMA_NAME) {
     existingTableSymbol = symbolTable.get(tableSymbolIndex);
   } else {
-    const schemaSymbolIndex = createSchemaSymbolIndex(newParts.rawSchemaName);
+    const schemaSymbolIndex = createSchemaSymbolIndex(newSchema);
     const schemaSymbol = symbolTable.get(schemaSymbolIndex);
 
     if (!schemaSymbol || !schemaSymbol.symbolTable) {
@@ -116,41 +140,51 @@ function checkForNameCollision (
     return false;
   }
 
-  if (
-    oldParts.schemaName === newParts.rawSchemaName
-    && oldParts.tableName === newParts.rawTableName
-  ) {
+  // Not a collision if renaming to the same name
+  if (oldSchema === newSchema && oldTable === newTable) {
     return false;
   }
 
   return true;
 }
 
-// FIXME: This is adhoc & fragile & very prone to errors
+/**
+ * Checks if a node is part of a qualified reference like `schema.table`.
+ * Returns the full range including the schema prefix if so.
+ * FIXME: This approach is fragile, adhoc and does not scale when we support more elements
+ */
 function checkIfPartOfQualifiedReference (
   node: SyntaxNode,
-  oldParts: TableNameParts,
+  oldSchema: string,
   source: string,
 ): { start: number; end: number } | null {
   let i = node.start - 1;
 
+  // Skip whitespace
   while (i >= 0 && /\s/.test(source[i])) {
     i--;
   }
 
+  // Check for dot separator
   if (i < 0 || source[i] !== '.') {
     return null;
   }
   i--;
 
+  // Skip whitespace
   while (i >= 0 && /\s/.test(source[i])) {
     i--;
   }
 
-  let schemaEnd = i + 1;
-  let schemaStart = schemaEnd;
+  if (i < 0) {
+    return null;
+  }
 
-  if (i >= 0 && source[i] === '"') {
+  // Parse schema name backwards
+  let schemaStart: number;
+  let schemaEnd: number;
+
+  if (source[i] === '"') {
     schemaEnd = i + 1;
     i--;
     while (i >= 0 && source[i] !== '"') {
@@ -159,6 +193,7 @@ function checkIfPartOfQualifiedReference (
     if (i < 0) return null;
     schemaStart = i;
   } else {
+    schemaEnd = i + 1;
     while (i >= 0 && /[a-zA-Z0-9_]/.test(source[i])) {
       i--;
     }
@@ -166,114 +201,95 @@ function checkIfPartOfQualifiedReference (
   }
 
   const schemaText = source.substring(schemaStart, schemaEnd);
-  const cleanSchemaText = schemaText.replace(/"/g, '');
+  const cleanSchemaText = stripQuotes(schemaText);
 
-  if (cleanSchemaText === oldParts.schemaName) {
-    return {
-      start: schemaStart,
-      end: node.end,
-    };
+  if (cleanSchemaText === oldSchema) {
+    return { start: schemaStart, end: node.end };
   }
 
   return null;
 }
 
+/**
+ * Finds all text replacements needed for renaming.
+ */
 function findReplacements (
   nodes: SyntaxNode[],
-  oldParts: TableNameParts,
-  newParts: FormattedTableNameParts,
+  oldSchema: string,
+  newFormatted: FormattedTableName,
   source: string,
 ): TextEdit[] {
   const replacements: TextEdit[] = [];
   const processedRanges = new Set<string>();
 
   for (const node of nodes) {
-    const qualifiedRange = checkIfPartOfQualifiedReference(node, oldParts, source);
+    const qualifiedRange = checkIfPartOfQualifiedReference(node, oldSchema, source);
 
-    if (qualifiedRange) {
-      const rangeKey = `${qualifiedRange.start}-${qualifiedRange.end}`;
-      if (processedRanges.has(rangeKey)) continue;
-      processedRanges.add(rangeKey);
+    const range = qualifiedRange ?? { start: node.start, end: node.end };
+    const rangeKey = `${range.start}-${range.end}`;
 
-      const newText =
-        newParts.rawSchemaName !== DEFAULT_SCHEMA_NAME
-          ? `${newParts.schemaName}.${newParts.tableName}`
-          : newParts.tableName;
+    if (processedRanges.has(rangeKey)) continue;
+    processedRanges.add(rangeKey);
 
-      replacements.push({
-        start: qualifiedRange.start,
-        end: qualifiedRange.end,
-        newText,
-      });
-    } else {
-      const rangeKey = `${node.start}-${node.end}`;
-      if (processedRanges.has(rangeKey)) continue;
-      processedRanges.add(rangeKey);
+    const newText = newFormatted.schema !== DEFAULT_SCHEMA_NAME
+      ? `${newFormatted.formattedSchema}.${newFormatted.formattedTable}`
+      : newFormatted.formattedTable;
 
-      const newText =
-        newParts.rawSchemaName !== DEFAULT_SCHEMA_NAME
-          ? `${newParts.schemaName}.${newParts.tableName}`
-          : newParts.tableName;
-
-      replacements.push({
-        start: node.start,
-        end: node.end,
-        newText,
-      });
-    }
+    replacements.push({ start: range.start, end: range.end, newText });
   }
 
   return replacements;
 }
 
+/**
+ * Renames a table in the DBML source code.
+ *
+ * @param oldName - The current table name (schema is optional, defaults to 'public')
+ * @param newName - The new table name (schema is optional, defaults to 'public')
+ * @returns The updated DBML source code with the table renamed
+ *
+ * @example
+ * // Rename a table in the default schema
+ * compiler.renameTable({ table: 'users' }, { table: 'customers' });
+ *
+ * @example
+ * // Rename a table with schema
+ * compiler.renameTable(
+ *   { schema: 'auth', table: 'users' },
+ *   { schema: 'auth', table: 'customers' }
+ * );
+ */
 export function renameTable (
   this: Compiler,
-  oldTableName: string,
-  newTableName: string,
+  oldName: { schema?: string; table: string },
+  newName: { schema?: string; table: string },
 ): string {
   const source = this.parse.source();
   const symbolTable = this.parse.publicSymbolTable();
 
-  const oldParts = parseTableName(oldTableName);
-  const newPartsRaw = parseTableName(newTableName);
+  const oldSchema = oldName.schema ?? DEFAULT_SCHEMA_NAME;
+  const oldTable = oldName.table;
+  const newSchema = newName.schema ?? DEFAULT_SCHEMA_NAME;
+  const newTable = newName.table;
 
-  const validationResult = validateAndQuoteTableName(newPartsRaw, source, oldParts);
-  if (!validationResult.isValid) {
+  // Look up the table symbol
+  const tableSymbol = lookupTableSymbol(symbolTable, oldSchema, oldTable);
+  if (!tableSymbol) {
     return source;
   }
 
-  const newParts: FormattedTableNameParts = {
-    tableName: validationResult.tableName,
-    schemaName: validationResult.schemaName,
-    rawTableName: newPartsRaw.tableName,
-    rawSchemaName: newPartsRaw.schemaName,
-    shouldQuoteTable: validationResult.shouldQuoteTable,
-    shouldQuoteSchema: validationResult.shouldQuoteSchema,
-  };
-
-  if (checkForNameCollision(symbolTable, oldParts, newParts)) {
+  // Check for name collision
+  if (checkForNameCollision(symbolTable, oldSchema, oldTable, newSchema, newTable)) {
     return source;
   }
 
-  const tableSymbolIndex = createTableSymbolIndex(oldParts.tableName);
-  let tableSymbol;
+  // Determine quoting style
+  const originalUsedQuotes = checkIfTableDeclarationUsesQuotes(tableSymbol, source);
+  const newFormatted = formatTableName(newSchema, newTable, originalUsedQuotes);
 
-  if (oldParts.schemaName === DEFAULT_SCHEMA_NAME) {
-    tableSymbol = symbolTable.get(tableSymbolIndex);
-  } else {
-    const schemaSymbolIndex = createSchemaSymbolIndex(oldParts.schemaName);
-    const schemaSymbol = symbolTable.get(schemaSymbolIndex);
-    if (!schemaSymbol || !schemaSymbol.symbolTable) {
-      return source;
-    }
-    tableSymbol = schemaSymbol.symbolTable.get(tableSymbolIndex);
-  }
-
-  if (!tableSymbol || !(tableSymbol instanceof TableSymbol)) {
-    return source;
-  }
-
+  // Collect nodes to rename
   const nodesToRename: SyntaxNode[] = [];
+
   if (tableSymbol.declaration) {
     const declarationNode = tableSymbol.declaration as any;
     if (declarationNode.name) {
@@ -284,17 +300,13 @@ export function renameTable (
   for (const ref of tableSymbol.references) {
     const refText = source.substring(ref.start, ref.end);
     const cleanRefText = refText.replace(/"/g, '');
-    if (cleanRefText === oldParts.tableName) {
+    if (cleanRefText === oldTable) {
       nodesToRename.push(ref);
     }
   }
 
-  const replacements = findReplacements(
-    nodesToRename,
-    oldParts,
-    newParts,
-    source,
-  );
+  // Generate and apply replacements
+  const replacements = findReplacements(nodesToRename, oldSchema, newFormatted, source);
 
   return applyTextEdits(source, replacements);
 }
