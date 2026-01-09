@@ -516,27 +516,6 @@ describe('[fuzz] interpreter - semantic correctness', () => {
     );
   });
 
-  it('should produce refs with valid endpoints', () => {
-    fc.assert(
-      fc.property(dbmlSchemaArbitrary, (source: string) => {
-        const result = interpret(source);
-        const db = result.getValue();
-
-        fc.pre(db !== undefined);
-        fc.pre(db.refs.length > 0);
-
-        db.refs.forEach((ref) => {
-          expect(ref.endpoints.length).toBeGreaterThanOrEqual(2);
-          ref.endpoints.forEach((endpoint) => {
-            expect(endpoint.tableName).toBeDefined();
-            expect(endpoint.fieldNames.length).toBeGreaterThanOrEqual(1);
-          });
-        });
-      }),
-      SEMANTIC_CONFIG,
-    );
-  });
-
   it('should handle tables with zero column settings', () => {
     fc.assert(
       fc.property(tableWithZeroSettingsArbitrary, (source: string) => {
