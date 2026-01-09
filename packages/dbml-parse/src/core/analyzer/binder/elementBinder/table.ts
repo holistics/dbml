@@ -1,0 +1,49 @@
+import { SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
+import ElementBinder from './elementBinder';
+
+export default class TableBinder extends ElementBinder {
+  protected subfield = {
+    arg: {
+      argBinderRules: [
+        { shouldBind: false as const },
+        {
+          shouldBind: true as const,
+          topSubnamesSymbolKind: [SymbolKind.Enum],
+          remainingSubnamesSymbolKind: SymbolKind.Schema,
+          ignoreNameNotFound: true,
+          ignoreNameNotFoundForQuotedVariable: true,
+        },
+      ],
+    },
+    settingList: {
+      ref: {
+        shouldBind: true as const,
+        topSubnamesSymbolKind: [SymbolKind.Table, SymbolKind.Column],
+        remainingSubnamesSymbolKind: SymbolKind.Schema,
+        ignoreNameNotFound: false,
+        ignoreNameNotFoundForQuotedVariable: false,
+      },
+      default: {
+        shouldBind: true as const,
+        topSubnamesSymbolKind: [SymbolKind.Enum, SymbolKind.EnumField],
+        remainingSubnamesSymbolKind: SymbolKind.Schema,
+        ignoreNameNotFound: false,
+        keywords: ['false', 'true', 'null'],
+        ignoreNameNotFoundForQuotedVariable: true,
+      },
+      check: {
+        shouldBind: false as const,
+      },
+    },
+  };
+
+  protected settingList = {};
+
+  protected injectionBinderRule = {
+    shouldBind: true as const,
+    topSubnamesSymbolKind: [],
+    remainingSubnamesSymbolKind: SymbolKind.TablePartial,
+    ignoreNameNotFound: false,
+    ignoreNameNotFoundForQuotedVariable: false,
+  };
+}
