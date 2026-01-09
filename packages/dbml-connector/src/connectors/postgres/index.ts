@@ -576,33 +576,36 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   const { connectionString, schemas } = parseConnectionString(connection, 'jdbc');
   const client = await getValidatedClient(connectionString);
 
-  const tablesAndFieldsRes = generateTablesAndFields(client, schemas);
-  const indexesRes = generateIndexesAndConstraints(client, schemas);
-  const refsRes = generateRawRefs(client, schemas);
-  const enumsRes = generateRawEnums(client, schemas);
+  try {
+    const tablesAndFieldsRes = generateTablesAndFields(client, schemas);
+    const indexesRes = generateIndexesAndConstraints(client, schemas);
+    const refsRes = generateRawRefs(client, schemas);
+    const enumsRes = generateRawEnums(client, schemas);
 
-  const res = await Promise.all([
-    tablesAndFieldsRes,
-    indexesRes,
-    refsRes,
-    enumsRes,
-  ]);
-  client.end();
+    const res = await Promise.all([
+      tablesAndFieldsRes,
+      indexesRes,
+      refsRes,
+      enumsRes,
+    ]);
 
-  const { tables, fields } = res[0];
-  const { indexes, tableConstraints, checks } = res[1];
-  const refs = res[2];
-  const enums = res[3];
+    const { tables, fields } = res[0];
+    const { indexes, tableConstraints, checks } = res[1];
+    const refs = res[2];
+    const enums = res[3];
 
-  return {
-    tables,
-    fields,
-    refs,
-    enums,
-    indexes,
-    tableConstraints,
-    checks,
-  };
+    return {
+      tables,
+      fields,
+      refs,
+      enums,
+      indexes,
+      tableConstraints,
+      checks,
+    };
+  } finally {
+    await client.end();
+  }
 };
 
 export {

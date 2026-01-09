@@ -531,46 +531,49 @@ async function fetchSchemaJson (connection: string): Promise<DatabaseSchema> {
     throw new Error('Cannot get schema name from the connection');
   }
 
-  const result = await Promise.all([
-    generateTablesAndFields(client, schemaName),
-    generateEnums(client, schemaName),
-    generateIndexes(client, schemaName),
-    generatePrimaryAndUniqueConstraint(client, schemaName),
-    generateForeignKeys(client, schemaName),
-    generateCheckConstraints(client, schemaName),
-  ]);
-  client.end();
+  try {
+    const result = await Promise.all([
+      generateTablesAndFields(client, schemaName),
+      generateEnums(client, schemaName),
+      generateIndexes(client, schemaName),
+      generatePrimaryAndUniqueConstraint(client, schemaName),
+      generateForeignKeys(client, schemaName),
+      generateCheckConstraints(client, schemaName),
+    ]);
 
-  const [
-    { tableList, fieldMap },
-    enumList,
-    rawIndexMap,
-    { primaryAndUniqueConstraintMap, compositeConstraintMap },
-    foreignKeyList,
-    { checks: tableCheckConstraintMap, tableConstraints: columnCheckConstraintMap },
-  ] = result;
+    const [
+      { tableList, fieldMap },
+      enumList,
+      rawIndexMap,
+      { primaryAndUniqueConstraintMap, compositeConstraintMap },
+      foreignKeyList,
+      { checks: tableCheckConstraintMap, tableConstraints: columnCheckConstraintMap },
+    ] = result;
 
-  // combine normal index and composite key
-  const indexMap = combineIndexAndCompositeConstraint(rawIndexMap, compositeConstraintMap);
+    // combine normal index and composite key
+    const indexMap = combineIndexAndCompositeConstraint(rawIndexMap, compositeConstraintMap);
 
-  const tableConstraints: TableConstraintsDictionary = { ...primaryAndUniqueConstraintMap };
-  Object.keys(columnCheckConstraintMap).forEach((tableName) => {
-    if (!tableConstraints[tableName]) tableConstraints[tableName] = {};
-    Object.keys(columnCheckConstraintMap[tableName]).forEach((colName) => {
-      if (!tableConstraints[tableName][colName]) tableConstraints[tableName][colName] = { checks: [] };
-      tableConstraints[tableName][colName].checks.push(...columnCheckConstraintMap[tableName][colName].checks);
+    const tableConstraints: TableConstraintsDictionary = { ...primaryAndUniqueConstraintMap };
+    Object.keys(columnCheckConstraintMap).forEach((tableName) => {
+      if (!tableConstraints[tableName]) tableConstraints[tableName] = {};
+      Object.keys(columnCheckConstraintMap[tableName]).forEach((colName) => {
+        if (!tableConstraints[tableName][colName]) tableConstraints[tableName][colName] = { checks: [] };
+        tableConstraints[tableName][colName].checks.push(...columnCheckConstraintMap[tableName][colName].checks);
+      });
     });
-  });
 
-  return {
-    tables: tableList,
-    fields: fieldMap,
-    refs: foreignKeyList,
-    enums: enumList,
-    indexes: indexMap,
-    tableConstraints,
-    checks: tableCheckConstraintMap,
-  };
+    return {
+      tables: tableList,
+      fields: fieldMap,
+      refs: foreignKeyList,
+      enums: enumList,
+      indexes: indexMap,
+      tableConstraints,
+      checks: tableCheckConstraintMap,
+    };
+  } finally {
+    await client.end();
+  }
 }
 
 export {
