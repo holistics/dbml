@@ -22,6 +22,9 @@ class Parser {
     return parse(str, 'mysql');
   }
 
+  /**
+   * @deprecated Use the `parseMySQLToJSONv2` method instead
+   */
   static parseMySQLToJSON (str) {
     return mysqlParser.parse(str);
   }
@@ -30,6 +33,9 @@ class Parser {
     return parse(str, 'postgres');
   }
 
+  /**
+   * @deprecated Use the `parsePostgresToJSONv2` method instead
+   */
   static parsePostgresToJSON (str) {
     return postgresParser.parse(str);
   }
@@ -59,6 +65,9 @@ class Parser {
     return compiler.parse.rawDb();
   }
 
+  /**
+   * @deprecated Use the `parseDBMLToJSONv2` method instead
+   */
   static parseDBMLToJSON (str) {
     return dbmlParser.parse(str);
   }
@@ -67,6 +76,9 @@ class Parser {
     return schemarbParser.parse(str);
   }
 
+  /**
+   * @deprecated Use the `parseMSSQLToJSONv2` method instead
+   */
   static parseMSSQLToJSON (str) {
     return mssqlParser.parseWithPegError(str);
   }
