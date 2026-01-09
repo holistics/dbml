@@ -1,10 +1,10 @@
 import { Compiler } from '@dbml/parse';
 import Database from '../model_structure/database';
-import mysqlParser from './mysqlParser';
-import postgresParser from './postgresParser';
-import dbmlParser from './dbmlParser';
-import schemarbParser from './schemarbParser';
-import mssqlParser from './mssqlParser';
+import mysqlParser from './deprecated/mysqlParser';
+import postgresParser from './deprecated/postgresParser';
+import dbmlParser from './deprecated/dbmlParser';
+import schemarbParser from './deprecated/schemarbParser';
+import mssqlParser from './deprecated/mssqlParser';
 import { parse } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
 

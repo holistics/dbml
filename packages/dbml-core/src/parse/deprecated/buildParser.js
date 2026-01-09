@@ -1,3 +1,8 @@
+/**
+ * @deprecated This file is deprecated and should not be maintained.
+ * The PEG parsers are being replaced by ANTLR-based parsers.
+ * Use the v2 parser methods in Parser.js instead.
+ */
 import pegjsRequire from 'pegjs-require-import';
 import Promise from 'bluebird';
 

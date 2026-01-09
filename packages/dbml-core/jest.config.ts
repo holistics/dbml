@@ -24,17 +24,7 @@ const config: Config = {
   coverageDirectory: 'coverage',
   collectCoverageFrom: [
     'src/**/*.{js,ts}',
-    '!src/parse/buildParser.js',
-    '!src/parse/dbmlParser.js',
-    '!src/parse/mssqlParser.js',
-    '!src/parse/mysqlParser.js',
-    '!src/parse/postgresParser.js',
-    '!src/parse/schemarbParser.js',
-    '!src/parse/dbml/**/*.js',
-    '!src/parse/mssql/**/*.js',
-    '!src/parse/mysql/**/*.js',
-    '!src/parse/postgresql/**/*.js',
-    '!src/parse/schemarb/**/*.js',
+    '!src/parse/deprecated/**/*.js',
     '!src/parse/ANTLR/parsers/**/*.js',
   ],
 };

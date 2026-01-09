@@ -29,7 +29,7 @@
     "coverage": "jest --coverage",
     "benchmark": "jest --projects jest-bench.config.json",
     "build:lib": "babel src --out-dir lib --copy-files",
-    "build:parser": "npx babel-node src/parse/buildParser.js",
+    "build:parser": "npx babel-node src/parse/deprecated/buildParser.js",
     "build": "npm run build:lib",
     "prepublish": "npm run build",
     "lint": "eslint .",
