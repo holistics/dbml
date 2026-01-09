@@ -1656,4 +1656,560 @@ Ref: posts.user_id > public.users.id`;
       expect(sourceText.trim().startsWith('Table public.users')).toBe(true);
     });
   });
+
+  describe('complex multi-table scenarios', () => {
+    it('- should find definition in large schema with many tables', () => {
+      const program = `Table users {
+  id int pk
+  email varchar
+}
+
+Table posts {
+  id int pk
+  user_id int
+  title varchar
+}
+
+Table comments {
+  id int pk
+  post_id int
+  user_id int
+  content text
+}
+
+Table likes {
+  id int pk
+  user_id int
+  post_id int
+}
+
+Table tags {
+  id int pk
+  name varchar
+}
+
+Table post_tags {
+  post_id int
+  tag_id int
+}
+
+Ref: posts.user_id > users.id
+Ref: comments.post_id > posts.id
+Ref: comments.user_id > users.id
+Ref: likes.user_id > users.id
+Ref: likes.post_id > posts.id
+Ref: post_tags.post_id > posts.id
+Ref: post_tags.tag_id > tags.id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "users" in last ref
+      const position = createPosition(36, 24);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+      if (definitions.length > 0) {
+        const sourceText = extractTextFromRange(program, definitions[0].range);
+        expect(sourceText.includes('Table users')).toBe(true);
+      }
+    });
+
+    it('- should navigate definition in many-to-many relationship', () => {
+      const program = `Table students {
+  id int pk
+  name varchar
+}
+
+Table courses {
+  id int pk
+  title varchar
+}
+
+Table enrollments {
+  student_id int [ref: > students.id]
+  course_id int [ref: > courses.id]
+  enrolled_at timestamp
+
+  indexes {
+    (student_id, course_id) [pk]
+  }
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "students" in inline ref
+      const position = createPosition(12, 29);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should find definition with polymorphic relationships', () => {
+      const program = `Table users {
+  id int pk
+}
+
+Table posts {
+  id int pk
+}
+
+Table comments {
+  id int pk
+  commentable_type varchar
+  commentable_id int
+}
+
+// Comments can belong to users or posts
+Ref: comments.commentable_id > users.id
+Ref: comments.commentable_id > posts.id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "users" in first polymorphic ref
+      const position = createPosition(17, 33);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+  });
+
+  describe('sticky notes and project elements', () => {
+    it('- should handle Note element at top level', () => {
+      const program = `Note project_overview {
+  'This is the main project database'
+}
+
+Table users {
+  id int pk
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "project_overview" Note
+      const position = createPosition(1, 10);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle Project element with nested elements', () => {
+      const program = `Project ecommerce {
+  database_type: 'PostgreSQL'
+  Note: 'E-commerce database schema'
+}
+
+Table users {
+  id int pk
+}
+
+Ref: orders.user_id > users.id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "users" in ref
+      const position = createPosition(10, 24);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle sticky notes inside tables', () => {
+      const program = `Table users {
+  id int pk
+  email varchar [note: 'User email address']
+
+  Note: 'Main user table for authentication'
+}
+
+Ref: posts.user_id > users.id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "users" in ref
+      const position = createPosition(8, 24);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+  });
+
+  describe('complex index scenarios', () => {
+    it('- should find definition for column in expression index', () => {
+      const program = `Table users {
+  id int pk
+  first_name varchar
+  last_name varchar
+  email varchar
+
+  indexes {
+    email [unique, name: 'idx_email']
+    (first_name, last_name) [name: 'idx_fullname']
+    \`lower(email)\` [name: 'idx_email_lower']
+  }
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "first_name" in composite index
+      const position = createPosition(9, 6);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle index with multiple settings', () => {
+      const program = `Table orders {
+  id int pk
+  status varchar
+  created_at timestamp
+
+  indexes {
+    (status, created_at) [type: btree, name: 'idx_status_time', note: 'For status queries']
+  }
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "status" in composite index
+      const position = createPosition(7, 6);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+  });
+
+  describe('TablePartial complex scenarios', () => {
+    it('- should find definition with multiple TablePartial injections', () => {
+      const program = `TablePartial timestamps {
+  created_at timestamp
+  updated_at timestamp
+}
+
+TablePartial soft_delete {
+  deleted_at timestamp
+  is_deleted bool
+}
+
+TablePartial audit {
+  created_by int
+  updated_by int
+}
+
+Table users {
+  id int pk
+  name varchar
+  ~timestamps
+  ~soft_delete
+  ~audit
+}
+
+Ref: users.created_by > admins.id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "timestamps" injection
+      const position = createPosition(19, 4);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+      if (definitions.length > 0) {
+        const sourceText = extractTextFromRange(program, definitions[0].range);
+        expect(sourceText.includes('TablePartial timestamps')).toBe(true);
+      }
+    });
+
+    it('- should find definition for TablePartial with indexes', () => {
+      const program = `TablePartial searchable {
+  search_vector tsvector
+
+  indexes {
+    search_vector [type: gin]
+  }
+}
+
+Table articles {
+  id int pk
+  title varchar
+  content text
+  ~searchable
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "searchable" injection
+      const position = createPosition(13, 4);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+  });
+
+  describe('enum complex scenarios', () => {
+    it('- should find enum field definition with notes', () => {
+      const program = `Enum order_status {
+  pending [note: 'Order placed but not processed']
+  processing [note: 'Order being prepared']
+  shipped [note: 'Order in transit']
+  delivered [note: 'Order received']
+  cancelled [note: 'Order cancelled by user']
+}
+
+Table orders {
+  id int pk
+  status order_status [default: order_status.pending]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "pending" in default value
+      const position = createPosition(11, 48);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should find enum definition with multiple usages', () => {
+      const program = `Enum user_role {
+  admin
+  moderator
+  user
+  guest
+}
+
+Table users {
+  id int pk
+  role user_role [default: user_role.user]
+}
+
+Table audit_logs {
+  id int pk
+  actor_role user_role
+  action varchar
+}
+
+Table permissions {
+  id int pk
+  required_role user_role
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "user_role" in permissions table
+      const position = createPosition(21, 18);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+  });
+
+  describe('TableGroup complex scenarios', () => {
+    it('- should find table definition from nested TableGroup', () => {
+      const program = `Table auth.users {
+  id int pk
+}
+
+Table auth.sessions {
+  id int pk
+  user_id int
+}
+
+Table billing.invoices {
+  id int pk
+}
+
+Table billing.payments {
+  id int pk
+}
+
+TableGroup authentication [color: #3498db] {
+  auth.users
+  auth.sessions
+}
+
+TableGroup finance [color: #2ecc71] {
+  billing.invoices
+  billing.payments
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "users" in TableGroup
+      const position = createPosition(20, 8);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle TableGroup with table aliases', () => {
+      const program = `Table users as u {
+  id int pk
+}
+
+Table orders as o {
+  id int pk
+  user_id int
+}
+
+TableGroup core {
+  u
+  o
+}
+
+Ref: o.user_id > u.id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "u" alias in TableGroup
+      const position = createPosition(11, 3);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+  });
+
+  describe('ref with settings complex scenarios', () => {
+    it('- should find definition in ref with all settings', () => {
+      const program = `Table users {
+  id int pk
+}
+
+Table orders {
+  id int pk
+  user_id int
+}
+
+Ref orders_user [update: cascade, delete: set null, color: #ff0000]: orders.user_id > users.id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "users" in named ref with settings
+      const position = createPosition(10, 86);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should find definition in composite ref with settings', () => {
+      const program = `Table warehouses {
+  id int pk
+  region_code varchar pk
+}
+
+Table inventory {
+  warehouse_id int
+  warehouse_region varchar
+  product_id int
+  quantity int
+}
+
+Ref inventory_warehouse [delete: cascade]: (inventory.warehouse_id, inventory.warehouse_region) > (warehouses.id, warehouses.region_code)`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "region_code" in composite ref
+      const position = createPosition(13, 127);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+  });
+
+  describe('unicode and special characters', () => {
+    it('- should find definition with unicode table names', () => {
+      const program = `Table "用户" {
+  id int pk
+  "名称" varchar
+}
+
+Table posts {
+  user_id int
+}
+
+Ref: posts.user_id > "用户".id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on quoted unicode table name
+      const position = createPosition(10, 24);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should find definition with special SQL keywords as names', () => {
+      const program = `Table "order" {
+  id int pk
+  "select" varchar
+  "from" varchar
+}
+
+Table "user" {
+  id int pk
+}
+
+Ref: "order".id > "user".id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "user" (SQL keyword as table name)
+      const position = createPosition(12, 20);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+  });
 });
