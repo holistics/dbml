@@ -1,3 +1,18 @@
+## v5.4.0 (2026-01-09)
+
+#### :memo: Documentation
+* `dbml-core`
+  * [#791](https://github.com/holistics/dbml/pull/791) Doc/Document database features support ([@H-DNA](https://github.com/H-DNA))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#794](https://github.com/holistics/dbml/pull/794) [DBX-6497] Add rename table function ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 3
+- Huy DNA ([@H-DNA](https://github.com/H-DNA))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v5.3.1 (2025-12-23)
 
 #### :robot: Dependencies Update
