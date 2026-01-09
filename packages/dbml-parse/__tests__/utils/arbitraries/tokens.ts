@@ -3,12 +3,13 @@ import { orRegex, chainRegex, matchFullRegex, oneOrManyRegex, zeroOrManyRegex } 
 
 // Matches decimal numbers: integers (123), floats (1.23), or trailing dot decimals (5.)
 const numberRegex = /(\d+\.\d*|\d+)/;
-// Matches single-line strings with single quotes, allows escapes: 'hello' or 'can\'t', avoid unicode escape sequences for simplicity
-const singleLineStringRegex = /'(\\[a-tv-zA-TV-Z0-9]|[^'\\\n\r])*'/;
+// Matches single-line strings with single quotes, allows escapes including \uHHHH unicode
+const singleLineStringRegex = /'(\\u[0-9A-Fa-f]{4}|\\[a-tv-zA-TV-Z0-9 ]|[^'\\\n\r])*'/;
 // Matches multi-line strings with triple quotes: '''hello\nworld'''
-const multiLineStringRegex = /'''(\\[a-tv-zA-TV-Z0-9]|[^'\\])*'''/;
+const multiLineStringRegex = /'''(\\u[0-9A-Fa-f]{4}|\\[a-tv-zA-TV-Z0-9 ]|[^'\\])*'''/;
 // Matches quoted identifiers with double quotes for names with spaces: "table name"
-const quotedIdentifierRegex = /"(\\[a-tv-zA-TV-Z0-9]|[^"\\\n\r])*"/;
+// Requires at least one character inside quotes to prevent empty identifiers
+const quotedIdentifierRegex = /"(\\u[0-9A-Fa-f]{4}|\\[a-tv-zA-TV-Z0-9 ]|[^"\\\n\r])+"/;
 // Matches function expressions wrapped in backticks: `now()` or `CURRENT_TIMESTAMP`
 const functionExpressionRegex = /`[^`]*`/;
 // Matches unquoted identifiers: must start with letter/underscore, then alphanumeric/underscore
@@ -44,6 +45,11 @@ export const anyStringArbitrary = fc.oneof(
   multiLineStringArbitrary,
 );
 export const numberArbitrary = fc.stringMatching(matchFullRegex(numberRegex));
+// Prefixed numbers for default values: +10, -45, -3.14
+export const prefixedNumberArbitrary = fc.tuple(
+  fc.constantFrom('+', '-'),
+  fc.stringMatching(matchFullRegex(numberRegex)),
+).map(([prefix, num]) => `${prefix}${num}`);
 export const functionExpressionArbitrary = fc.stringMatching(matchFullRegex(functionExpressionRegex));
 export const colorArbitrary = fc.stringMatching(matchFullRegex(colorRegex));
 export const opArbitrary = fc.stringMatching(matchFullRegex(opRegex));
