@@ -30,7 +30,7 @@
     "benchmark": "jest --projects jest-bench.config.json",
     "build:lib": "babel src --out-dir lib --copy-files",
     "build:parser": "npx babel-node src/parse/buildParser.js",
-    "build": "npm run build:parser && npm run build:lib",
+    "build": "npm run build:lib",
     "prepublish": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
