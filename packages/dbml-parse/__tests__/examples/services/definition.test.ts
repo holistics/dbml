@@ -1711,7 +1711,7 @@ Ref: post_tags.tag_id > tags.id`;
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(Array.isArray(definitions)).toBe(true);
-      if (definitions.length > 0) {
+      if (Array.isArray(definitions) && definitions.length > 0) {
         const sourceText = extractTextFromRange(program, definitions[0].range);
         expect(sourceText.includes('Table users')).toBe(true);
       }
@@ -1939,7 +1939,7 @@ Ref: users.created_by > admins.id`;
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(Array.isArray(definitions)).toBe(true);
-      if (definitions.length > 0) {
+      if (Array.isArray(definitions) && definitions.length > 0) {
         const sourceText = extractTextFromRange(program, definitions[0].range);
         expect(sourceText.includes('TablePartial timestamps')).toBe(true);
       }
