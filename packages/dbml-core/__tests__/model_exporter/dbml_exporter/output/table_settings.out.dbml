@@ -1,4 +1,4 @@
-Table "user" [headerColor: #555] {
+Table "user" as U [headerColor: #555] {
   "id" int [pk]
   "name" string
 }

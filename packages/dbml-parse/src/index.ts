@@ -1,12 +1,12 @@
-import { serialize } from '@/lib/serialization/serialize';
-import Compiler from '@/compiler';
+import { serialize } from '@/core/serialization/serialize';
+import Compiler from '@/compiler/index';
 import * as services from '@/services/index';
 
 // Export the types that playground and other consumers need
 export {
   // Element types from analyzer
   ElementKind,
-} from '@/lib/analyzer/types';
+} from '@/core/analyzer/types';
 
 export {
   // Core AST node types
@@ -15,29 +15,33 @@ export {
   ProgramNode,
   SyntaxNodeKind,
   type SyntaxNodeId,
-} from '@/lib/parser/nodes';
+} from '@/core/parser/nodes';
 
 export {
   // Token types
   SyntaxToken,
   SyntaxTokenKind,
-} from '@/lib/lexer/tokens';
+} from '@/core/lexer/tokens';
 
 export {
   // Error types
   CompileError,
   CompileErrorCode,
-} from '@/lib/errors';
+} from '@/core/errors';
 
 export {
   // Position interface
   type Position,
-} from '@/lib/types';
+} from '@/core/types';
+
+export {
+  addQuoteIfNeeded,
+} from '@/core/utils';
 
 export {
   // Scope kinds from compiler
   ScopeKind,
-} from '@/compiler';
+} from '@/compiler/index';
 
 // Export interpreted types for structured data
 export {
@@ -49,6 +53,6 @@ export {
   type Project,
   type TableGroup,
   type TablePartial,
-} from '@/lib/interpreter/types';
+} from '@/core/interpreter/types';
 
 export { serialize, Compiler, services };

@@ -2,12 +2,12 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
 import { scanTestNames } from '../jestHelpers';
-import { NodeSymbolIdGenerator } from '@/lib/analyzer/symbol/symbols';
-import { SyntaxNodeIdGenerator } from '@/lib/parser/nodes';
-import Lexer from '@/lib/lexer/lexer';
-import Parser from '@/lib/parser/parser';
-import Analyzer from '@/lib/analyzer/analyzer';
-import Interpreter from '@/lib/interpreter/interpreter';
+import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
+import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import Lexer from '@/core/lexer/lexer';
+import Parser from '@/core/parser/parser';
+import Analyzer from '@/core/analyzer/analyzer';
+import Interpreter from '@/core/interpreter/interpreter';
 
 describe('#interpreter - check for cases that previously cause NaN-positioned errors', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
