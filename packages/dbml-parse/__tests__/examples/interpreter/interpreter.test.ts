@@ -449,6 +449,28 @@ describe('[example] interpreter', () => {
       expect(field.type.type_name).toContain('varchar');
     });
 
+    test('should interpret array type with arguments like varchar(255)[]', () => {
+      const db = interpret('Table t { name varchar(255)[] }').getValue()!;
+      const field = db.tables[0].fields[0];
+
+      expect(field.name).toBe('name');
+      // type_name captures the full type including args and array brackets
+      expect(field.type.type_name).toBe('varchar(255)[]');
+      // args is null because outermost type is array, not call expression
+      // args only captures outermost call expression arguments (e.g., varchar(255) -> '255')
+      expect(field.type.args).toBeNull();
+    });
+
+    test('should interpret nested array type with arguments like decimal(10,2)[][]', () => {
+      const db = interpret('Table t { prices decimal(10, 2)[][] }').getValue()!;
+      const field = db.tables[0].fields[0];
+
+      expect(field.name).toBe('prices');
+      expect(field.type.type_name).toBe('decimal(10,2)[][]');
+      // args is null because outermost type is array
+      expect(field.type.args).toBeNull();
+    });
+
     test('should interpret complex type with schema', () => {
       const db = interpret('Table t { col public.custom_type }').getValue()!;
       const field = db.tables[0].fields[0];
