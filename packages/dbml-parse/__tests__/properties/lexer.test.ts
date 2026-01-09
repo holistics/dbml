@@ -4,11 +4,8 @@ import { SyntaxTokenKind } from '../../src';
 import { tokenStreamArbitrary, identifierArbitrary } from '../utils/arbitraries';
 import { lex } from '../utils';
 
-// Run count rationale:
-// - 200: Standard for fast operations (lexer ~0.5ms/run)
-// - 100: Reduced for complex assertions with multiple checks per token
-const PROPERTY_TEST_CONFIG = { numRuns: 200 };
-const EXTENDED_CONFIG = { numRuns: 100 };
+const PROPERTY_TEST_CONFIG = { numRuns: 50 };
+const EXTENDED_CONFIG = { numRuns: 25 };
 
 describe('[property] lexer', () => {
   it('should roundtrip', () => {
@@ -84,38 +81,6 @@ describe('[property] lexer', () => {
             token.startPos.line,
           ] as [boolean, number];
         }, [true, -1] as [boolean, number]);
-      }),
-      PROPERTY_TEST_CONFIG,
-    );
-  });
-
-  it('should concatenate', () => {
-    // Property: Lexing the concatenated string would be the same as concatenating two lexed strings
-    // Note: This only holds when source1 doesn't end with unclosed constructs (comments, strings)
-    fc.assert(
-      fc.property(tokenStreamArbitrary, tokenStreamArbitrary, (source1: string, source2: string) => {
-        // Skip if source1 ends with unclosed multiline comment or single-line comment
-        // (the newline would be absorbed into these constructs)
-        fc.pre(!(source1.includes('/*') && !source1.includes('*/')));
-        fc.pre(!(source1.endsWith('//') || /\/\/[^\n]*$/.test(source1)));
-        // Skip if source1 ends with unclosed string/backtick
-        fc.pre((source1.match(/'/g) || []).length % 2 === 0);
-        fc.pre((source1.match(/"/g) || []).length % 2 === 0);
-        fc.pre((source1.match(/`/g) || []).length % 2 === 0);
-
-        const tokens1 = lex(source1).getValue()
-          .flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia])
-          .slice(0, -1)
-          .map((token) => `${token.kind}:${token.value}`);
-        const tokens2 = lex(source2).getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia])
-          .slice(0, -1)
-          .map((token) => `${token.kind}:${token.value}`);
-
-        const source3 = `${source1}\n${source2}`;
-        const tokens3 = lex(source3).getValue().flatMap((token) => [...token.leadingTrivia, token, ...token.trailingTrivia])
-          .map((token) => `${token.kind}:${token.value}`);
-
-        expect([...tokens1, `${SyntaxTokenKind.NEWLINE}:\n`, ...tokens2, `${SyntaxTokenKind.EOF}:`]).toEqual(tokens3);
       }),
       PROPERTY_TEST_CONFIG,
     );

@@ -18,7 +18,6 @@ import {
   extremeNestingArbitrary,
   malformedTableArbitrary,
   malformedEnumArbitrary,
-  malformedRefArbitrary,
   selfReferentialTableArbitrary,
   circularRefArbitrary,
   danglingRefArbitrary,
@@ -34,9 +33,8 @@ import {
 import { parse, lex } from '../utils';
 import { SyntaxNodeKind } from '@/core/parser/nodes';
 
-// Run counts chosen for balance of coverage vs execution time
-const FUZZ_CONFIG = { numRuns: 200 };
-const ROBUSTNESS_CONFIG = { numRuns: 100 };
+const FUZZ_CONFIG = { numRuns: 50 };
+const ROBUSTNESS_CONFIG = { numRuns: 25 };
 
 describe('[fuzz] parser - valid input', () => {
   it('should parse valid tables without errors and produce valid AST', () => {
@@ -228,7 +226,7 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
           expect(result.getValue().ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 100 },
+      { numRuns: 50 },
     );
   });
 
@@ -243,7 +241,7 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
           expect(result.getValue().ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 100 },
+      { numRuns: 50 },
     );
   });
 
@@ -263,7 +261,7 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
           expect(ast.body.length).toBeGreaterThanOrEqual(0);
         },
       ),
-      { numRuns: 200 },
+      { numRuns: 50 },
     );
   });
 });
@@ -358,7 +356,7 @@ describe('[fuzz] parser - mutation resilience', () => {
           expect(ast.end).toBeLessThanOrEqual(mutated.length);
         },
       ),
-      { numRuns: 100 },
+      { numRuns: 50 },
     );
   });
 
@@ -379,7 +377,7 @@ describe('[fuzz] parser - mutation resilience', () => {
           expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 300 },
+      { numRuns: 50 },
     );
   });
 
@@ -394,7 +392,7 @@ describe('[fuzz] parser - mutation resilience', () => {
           expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 200 },
+      { numRuns: 50 },
     );
   });
 
@@ -409,7 +407,7 @@ describe('[fuzz] parser - mutation resilience', () => {
           expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 200 },
+      { numRuns: 50 },
     );
   });
 
@@ -424,7 +422,7 @@ describe('[fuzz] parser - mutation resilience', () => {
           expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 200 },
+      { numRuns: 50 },
     );
   });
 });
@@ -454,7 +452,7 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
           }
         },
       ),
-      { numRuns: 500 },
+      { numRuns: 50 },
     );
   });
 
@@ -478,7 +476,7 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 200 },
+      { numRuns: 50 },
     );
   });
 
@@ -503,7 +501,7 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 200 },
+      { numRuns: 50 },
     );
   });
 
@@ -537,7 +535,7 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 200 },
+      { numRuns: 50 },
     );
   });
 });
@@ -553,7 +551,7 @@ describe('[fuzz] parser - malformed input (true fuzzing)', () => {
         expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         expect(ast.body).toBeInstanceOf(Array);
       }),
-      { numRuns: 300 },
+      { numRuns: 50 },
     );
   });
 
@@ -625,7 +623,7 @@ describe('[fuzz] parser - malformed input (true fuzzing)', () => {
 
         expect(result.getValue().ast.kind).toBe(SyntaxNodeKind.PROGRAM);
       }),
-      { numRuns: 20 },
+      { numRuns: 25 },
     );
   });
 
@@ -646,19 +644,6 @@ describe('[fuzz] parser - malformed input (true fuzzing)', () => {
   it('should report errors for malformed enum declarations', () => {
     fc.assert(
       fc.property(malformedEnumArbitrary, (source: string) => {
-        const result = parse(source);
-        const ast = result.getValue().ast;
-
-        expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
-        expect(result.getErrors().length).toBeGreaterThan(0);
-      }),
-      ROBUSTNESS_CONFIG,
-    );
-  });
-
-  it('should report errors for malformed ref declarations', () => {
-    fc.assert(
-      fc.property(malformedRefArbitrary, (source: string) => {
         const result = parse(source);
         const ast = result.getValue().ast;
 

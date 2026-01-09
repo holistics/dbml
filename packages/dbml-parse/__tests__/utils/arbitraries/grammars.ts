@@ -11,7 +11,6 @@ import {
   identifierArbitrary,
   commentArbitrary,
   singleLineCommentArbitrary,
-  multiLineCommentArbitrary,
 } from './tokens';
 import { caseVariant, settingKeyValue, joinWithRandomSpaces, joinWithRandomInlineSpaces, caseVariantOneOf } from './utils';
 
@@ -379,7 +378,9 @@ export const standaloneRefArbitrary = fc.tuple(
   fc.option(refSettingsListArbitrary, { nil: undefined }),
 ).chain(([keyword, endpoint1, rel, endpoint2, settings]) => {
   const parts = [keyword, ':', endpoint1, rel, endpoint2];
-  return settings ? joinWithRandomSpaces(...parts, settings) : joinWithRandomSpaces(...parts);
+  return settings
+    ? joinWithRandomSpaces(...parts).map((s) => s.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
+    : joinWithRandomSpaces(...parts);
 });
 
 // Named ref
@@ -392,7 +393,9 @@ export const namedRefArbitrary = fc.tuple(
   fc.option(refSettingsListArbitrary, { nil: undefined }),
 ).chain(([keyword, name, endpoint1, rel, endpoint2, settings]) => {
   const parts = [keyword, name, ':', endpoint1, rel, endpoint2];
-  return settings ? joinWithRandomSpaces(...parts, settings) : joinWithRandomSpaces(...parts);
+  return settings
+    ? joinWithRandomSpaces(...parts).map((s) => s.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
+    : joinWithRandomSpaces(...parts);
 });
 
 // Multi-column ref (composite keys) - increased column count bounds
@@ -406,7 +409,9 @@ export const multiColumnRefArbitrary = fc.integer({ min: 2, max: 10 }).chain((ne
   fc.option(refSettingsListArbitrary, { nil: undefined }),
 ).chain(([keyword, table1, cols1, rel, table2, cols2, settings]) => {
   const parts = [keyword, ':', `${table1}.(${cols1.join(', ')})`, rel, `${table2}.(${cols2.join(', ')})`];
-  return settings ? joinWithRandomSpaces(...parts, settings) : joinWithRandomSpaces(...parts);
+  return settings
+    ? joinWithRandomSpaces(...parts).map((s) => s.trimEnd()).chain((base) => joinWithRandomInlineSpaces(base, settings))
+    : joinWithRandomSpaces(...parts);
 }));
 
 // Any standalone ref
@@ -922,6 +927,8 @@ export const mismatchedCompositeRefArbitrary = fc.tuple(
 });
 
 // Combined malformed arbitrary (for comprehensive fuzzing)
+// Only includes syntactically invalid inputs - semantic issues (conflicting settings,
+// dangling refs, mismatched composite refs, empty tables) are tested separately
 export const malformedInputArbitrary = fc.oneof(
   { weight: 2, arbitrary: unclosedBracketArbitrary },
   { weight: 2, arbitrary: mismatchedBracketsArbitrary },
@@ -933,10 +940,6 @@ export const malformedInputArbitrary = fc.oneof(
   { weight: 2, arbitrary: malformedTableArbitrary },
   { weight: 2, arbitrary: malformedEnumArbitrary },
   { weight: 2, arbitrary: malformedRefArbitrary },
-  { weight: 1, arbitrary: conflictingSettingsArbitrary },
-  { weight: 1, arbitrary: emptyTableArbitrary },
-  { weight: 1, arbitrary: danglingRefArbitrary },
-  { weight: 1, arbitrary: mismatchedCompositeRefArbitrary },
 );
 
 // Mutation arbitraries
