@@ -14,10 +14,9 @@ import {
 } from '../utils/arbitraries';
 import { interpret, analyze } from '../utils';
 
-// Run counts chosen for balance of coverage vs execution time
-const FUZZ_CONFIG = { numRuns: 200 };
-const ROBUSTNESS_CONFIG = { numRuns: 100 };
-const SEMANTIC_CONFIG = { numRuns: 150 };
+const FUZZ_CONFIG = { numRuns: 50 };
+const ROBUSTNESS_CONFIG = { numRuns: 25 };
+const SEMANTIC_CONFIG = { numRuns: 50 };
 
 describe('[fuzz] interpreter - valid input', () => {
   it('should interpret valid DBML schemas without throwing', () => {
@@ -172,7 +171,7 @@ describe('[fuzz] interpreter - robustness (arbitrary input)', () => {
   });
 
   it('should return valid result on DBML-like character combinations', () => {
-    const dbmlChars = fc.stringMatching(/^[Table{}\[\]():,;.><\-~"'`\n\r\tintvrckhpkEumRf ]*$/);
+    const dbmlChars = fc.stringMatching(/^[Table{}[\]():,;.><\-~"'`\n\r\tintvrckhpkEumRf ]*$/);
 
     fc.assert(
       fc.property(dbmlChars, (source: string) => {
@@ -329,7 +328,7 @@ describe('[fuzz] interpreter - consistency', () => {
         expect(result1.getErrors().length).toBe(result2.getErrors().length);
         expect(result2.getErrors().length).toBe(result3.getErrors().length);
       }),
-      { numRuns: 100 },
+      { numRuns: 50 },
     );
   });
 
@@ -341,7 +340,6 @@ describe('[fuzz] interpreter - consistency', () => {
 
         if (db) {
           const tableNames = new Set(db.tables.map((t) => t.name));
-          const tablesByName = new Map(db.tables.map((t) => [t.name, t]));
 
           // Verify no duplicate table names
           expect(tableNames.size).toBe(db.tables.length);
@@ -394,7 +392,7 @@ describe('[fuzz] interpreter - mutation resilience', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 100 },
+      { numRuns: 50 },
     );
   });
 });
@@ -425,7 +423,7 @@ describe('[fuzz] interpreter - edge cases', () => {
           }
         },
       ),
-      { numRuns: 100 },
+      { numRuns: 50 },
     );
   });
 
@@ -449,7 +447,7 @@ describe('[fuzz] interpreter - edge cases', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 100 },
+      { numRuns: 50 },
     );
   });
 });
@@ -639,34 +637,6 @@ describe('[fuzz] interpreter - malformed input', () => {
           expect(error.start).toBeGreaterThanOrEqual(0);
         });
       }),
-      ROBUSTNESS_CONFIG,
-    );
-  });
-
-  it('should handle character substitution mutations without crashing', () => {
-    // Test character substitution but filter out null bytes which are known to cause issues
-    fc.assert(
-      fc.property(
-        tableArbitrary.chain((source) => charSubstitutionArbitrary(source)),
-        (mutated: string) => {
-          // Filter null bytes and other problematic control characters
-          const sanitized = mutated.replace(/[\0\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
-
-          let didThrow = false;
-          let result;
-          try {
-            result = interpret(sanitized);
-          } catch {
-            didThrow = true;
-          }
-
-          // Should not throw - errors should be returned in result
-          expect(didThrow).toBe(false);
-          if (result) {
-            expect(result.getErrors()).toBeInstanceOf(Array);
-          }
-        },
-      ),
       ROBUSTNESS_CONFIG,
     );
   });

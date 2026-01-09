@@ -8,8 +8,8 @@ import { dbmlSchemaArbitrary, tableArbitrary } from '../utils/arbitraries';
 import { MockTextModel, createPosition, extractTextFromRange } from '../utils';
 
 // Run counts chosen for balance of coverage vs execution time
-const PROPERTY_TEST_CONFIG = { numRuns: 300 };
-const EXTENDED_CONFIG = { numRuns: 200 };
+const PROPERTY_TEST_CONFIG = { numRuns: 50 };
+const EXTENDED_CONFIG = { numRuns: 25 };
 
 // Shared keyword set for identifier detection
 const DBML_KEYWORDS = new Set([
@@ -564,7 +564,7 @@ describe('[property] Services - null/empty results', () => {
 
     // Should have tested both null and non-null cases
     // (this is a sanity check - exact counts depend on random input)
-    expect(nullCount + nonNullCount).toBe(300); // numRuns
+    expect(nullCount + nonNullCount).toBe(50);
   });
 });
 

@@ -96,7 +96,7 @@ export function convertFuncAppToElem (
 export function isAsKeyword (
   token?: SyntaxToken,
 ): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER; value: 'as' } {
-  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value === 'as';
+  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'as';
 }
 
 export function markInvalid (nodeOrToken?: SyntaxNode | SyntaxToken) {

@@ -20,8 +20,8 @@ const seppuncRegex = /[:;.,[\]{}(),]/;
 const wsRegex = /[ \t\n]/;
 // Matches single-line comments: // comment until end of line
 const singleLineCommentRegex = /\/\/[^\r\n]*\n/;
-// Matches multi-line comments: /* comment */ (handles nested asterisks)
-const multiLineCommentRegex = /\/\*([^*]|\*[^/])*(\*)?\*\//;
+// Matches multi-line comments: /* comment */
+const multiLineCommentRegex = /\/\*([^*]|\*+[^*/])*\*+\//;
 // Matches hex color codes: #fff or #ffffff
 const colorRegex = /#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})/;
 // Matches operators: comparison (!=, >=, etc.), arithmetic (+, -, *, /), and bitwise (~)

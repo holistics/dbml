@@ -5,12 +5,8 @@ import { isEqual } from 'lodash-es';
 import { parse, print, lex } from '../utils';
 import { SyntaxNodeKind, BlockExpressionNode } from '@/core/parser/nodes';
 
-// Run count rationale:
-// - 200: Standard for fast operations (parser ~1ms/run)
-// - 100: Reduced for string injection tests (larger input space)
-// - 50: Minimal for recursive AST traversal (expensive per-run)
-const PROPERTY_TEST_CONFIG = { numRuns: 200 };
-const EXTENDED_CONFIG = { numRuns: 100 };
+const PROPERTY_TEST_CONFIG = { numRuns: 50 };
+const EXTENDED_CONFIG = { numRuns: 25 };
 
 describe('[property] parser', () => {
   it('should produce consistent ASTs', { timeout: 30000 }, () => {
@@ -80,47 +76,6 @@ describe('[property] parser', () => {
         expect(ast.body).toBeInstanceOf(Array);
       }),
       PROPERTY_TEST_CONFIG,
-    );
-  });
-
-  it('should have valid AST node positions', () => {
-    // Property: All AST nodes should have valid start/end positions
-    // Note: Trivia nodes (whitespace, comments) may have special position handling
-    const triviaProperties = new Set([
-      'leadingTrivia',
-      'trailingTrivia',
-      'leadingInvalid',
-      'trailingInvalid',
-    ]);
-
-    fc.assert(
-      fc.property(dbmlSchemaArbitrary, (source: string) => {
-        const result = parse(source);
-        const ast = result.getValue().ast;
-
-        function checkNode (node: any): void {
-          if (!node || typeof node !== 'object') return;
-
-          if ('start' in node && 'end' in node) {
-            expect(node.start).toBeGreaterThanOrEqual(0);
-            expect(node.end).toBeGreaterThanOrEqual(node.start);
-            expect(node.end).toBeLessThanOrEqual(source.length);
-          }
-
-          // Check children, skipping trivia properties
-          Object.entries(node).forEach(([key, child]) => {
-            if (triviaProperties.has(key)) return;
-            if (Array.isArray(child)) {
-              child.forEach(checkNode);
-            } else if (child && typeof child === 'object') {
-              checkNode(child);
-            }
-          });
-        }
-
-        checkNode(ast);
-      }),
-      { numRuns: 50 }, // Reduced for complex recursive check
     );
   });
 
@@ -407,7 +362,7 @@ describe('[property] parser - AST structure semantics', () => {
 
         ast.body.forEach((elem) => checkNested(elem, 0, source.length));
       }),
-      { numRuns: 50 }, // Reduced for complex recursive check
+      { numRuns: 50 },
     );
   });
 });

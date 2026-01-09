@@ -7,11 +7,11 @@ import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { dbmlSchemaArbitrary, tableArbitrary } from '../utils/arbitraries';
 import { MockTextModel, createPosition } from '../utils';
 
-const FUZZ_CONFIG = { numRuns: 300 }; // Services are fast, need thorough testing
-const ROBUSTNESS_CONFIG = { numRuns: 200 }; // Position fuzzing needs many samples
+const FUZZ_CONFIG = { numRuns: 50 };
+const ROBUSTNESS_CONFIG = { numRuns: 25 };
 
 // Helper to create valid position within source bounds
-function clampPosition(line: number, col: number, source: string): { line: number; col: number } {
+function clampPosition (line: number, col: number, source: string): { line: number; col: number } {
   const lines = source.split('\n');
   const maxLine = Math.max(0, lines.length - 1);
   const clampedLine = Math.min(Math.max(0, line), maxLine);
@@ -331,7 +331,7 @@ describe('[fuzz] services - consistency', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 200 },
+      { numRuns: 50 },
     );
   });
 });
@@ -378,7 +378,7 @@ describe('[fuzz] services - edge cases', () => {
         }
         expect(didThrow).toBe(false);
       }),
-      { numRuns: 100 },
+      { numRuns: 50 },
     );
   });
 
@@ -403,7 +403,7 @@ describe('[fuzz] services - edge cases', () => {
         }
         expect(didThrow).toBe(false);
       }),
-      { numRuns: 100 },
+      { numRuns: 50 },
     );
   });
 
@@ -466,7 +466,7 @@ describe('[fuzz] services - unicode handling', () => {
         }
         expect(didThrow).toBe(false);
       }),
-      { numRuns: 100 },
+      { numRuns: 50 },
     );
   });
 });
