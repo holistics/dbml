@@ -17,7 +17,8 @@
   "exports": {
     ".": {
       "import": "./dist/dbml-parse.mjs",
-      "require": "./dist/dbml-parse.js"
+      "require": "./dist/dbml-parse.js",
+      "types": "./dist/src/index.d.ts"
     }
   },
   "files": [
