@@ -181,6 +181,7 @@ function markInvalidNode (node: SyntaxNode) {
     node.body.forEach(markInvalid);
     markInvalid(node.eof);
   } else if (node instanceof PartialInjectionNode) {
+    markInvalid(node.op);
     markInvalid(node.partial);
   } else if (node instanceof DummyNode) {
     // DummyNode has no children to mark invalid
@@ -287,7 +288,7 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
     );
   }
 
-  if (node instanceof PartialInjectionNode) return filterUndefined(node.partial);
+  if (node instanceof PartialInjectionNode) return filterUndefined(node.op, node.partial);
 
   if (node instanceof GroupExpressionNode) {
     throw new Error('This case is already handled by TupleExpressionNode');

@@ -553,32 +553,34 @@ const fetchSchemaJson = async (connection: string): Promise<DatabaseSchema> => {
   const { connectionString, schemas } = parseConnectionString(connection, 'odbc');
   const client = await getValidatedClient(connectionString);
 
-  const tablesRes = generateTablesFields(client, schemas);
-  const indexesAndConstraintsRes = generateIndexesAndConstraints(client, schemas);
-  const refsRes = generateRefs(client, schemas);
+  try {
+    const tablesRes = generateTablesFields(client, schemas);
+    const indexesAndConstraintsRes = generateIndexesAndConstraints(client, schemas);
+    const refsRes = generateRefs(client, schemas);
 
-  const res = await Promise.all([
-    tablesRes,
-    indexesAndConstraintsRes,
-    refsRes,
-  ]);
+    const res = await Promise.all([
+      tablesRes,
+      indexesAndConstraintsRes,
+      refsRes,
+    ]);
 
-  await client.close();
+    const { tables, fields } = res[0];
+    const { indexes, tableConstraints, checks } = res[1];
+    const refs = res[2];
 
-  const { tables, fields } = res[0];
-  const { indexes, tableConstraints, checks } = res[1];
-  const refs = res[2];
-
-  return {
-    tables,
-    fields,
-    // MSSQL doesn't support the notion of enums
-    enums: [],
-    refs,
-    indexes,
-    tableConstraints,
-    checks,
-  };
+    return {
+      tables,
+      fields,
+      // MSSQL doesn't support the notion of enums
+      enums: [],
+      refs,
+      indexes,
+      tableConstraints,
+      checks,
+    };
+  } finally {
+    await client.close();
+  }
 };
 
 export {
