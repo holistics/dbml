@@ -5969,15 +5969,15 @@ acorn@^8.11.0, acorn@^8.4.1:
   resolved "https://registry.npmjs.org/acorn/-/acorn-8.12.1.tgz"
   integrity sha512-tcpGyI9zbizT9JbV6oYE477V6mTlXvvi0T0G3SNIYE2apm/G5huBa1+K89VGeovbg+jycCrfhl3ADxErOuO6Jg==
 
+acorn@^8.12.1, acorn@^8.15.0:
+  version "8.15.0"
+  resolved "https://registry.npmjs.org/acorn/-/acorn-8.15.0.tgz"
+  integrity sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==
+
 acorn@^8.14.0:
   version "8.14.1"
   resolved "https://registry.npmjs.org/acorn/-/acorn-8.14.1.tgz"
   integrity sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==
-
-acorn@^8.15.0:
-  version "8.15.0"
-  resolved "https://registry.npmjs.org/acorn/-/acorn-8.15.0.tgz"
-  integrity sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==
 
 add-stream@^1.0.0:
   version "1.0.0"
@@ -7604,7 +7604,7 @@ es-errors@^1.3.0:
   resolved "https://registry.npmjs.org/es-errors/-/es-errors-1.3.0.tgz"
   integrity sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==
 
-es-module-lexer@^1.7.0:
+es-module-lexer@^1.5.4, es-module-lexer@^1.7.0:
   version "1.7.0"
   resolved "https://registry.npmjs.org/es-module-lexer/-/es-module-lexer-1.7.0.tgz"
   integrity sha512-jEQoCwk8hyb2AZziIOLhDqpm5+2ww5uIE6lkO/6jcOCusfk6LhMHpXXfBLXTZ7Ydyt0j4VoUQv6uGNYbdW+kBA==
@@ -10928,19 +10928,19 @@ lru-cache@^8.0.0:
   resolved "https://registry.npmjs.org/lru-cache/-/lru-cache-8.0.5.tgz"
   integrity sha512-MhWWlVnuab1RG5/zMRRcVGXZLCXrZTgfwMikgzCegsPnG62yDQo5JnqKkrK4jO5iKqDAZGItAqN5CtKBCBWRUA==
 
+magic-string@^0.30.11, magic-string@^0.30.21:
+  version "0.30.21"
+  resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.30.21.tgz"
+  integrity sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==
+  dependencies:
+    "@jridgewell/sourcemap-codec" "^1.5.5"
+
 magic-string@^0.30.17:
   version "0.30.17"
   resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.30.17.tgz"
   integrity sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.5.0"
-
-magic-string@^0.30.21:
-  version "0.30.21"
-  resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.30.21.tgz"
-  integrity sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==
-  dependencies:
-    "@jridgewell/sourcemap-codec" "^1.5.5"
 
 magicast@^0.5.1:
   version "0.5.1"
@@ -11959,6 +11959,11 @@ oracledb@^6.10.0:
   version "6.10.0"
   resolved "https://registry.yarnpkg.com/oracledb/-/oracledb-6.10.0.tgz#a54f699547e7dfc1f2ecb8a72af0423b4e86e51d"
   integrity sha512-kGUumXmrEWbSpBuKJyb9Ip3rXcNgKK6grunI3/cLPzrRvboZ6ZoLi9JQ+z6M/RIG924tY8BLflihL4CKKQAYMA==
+
+os-tmpdir@~1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
+  integrity sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==
 
 p-finally@^1.0.0:
   version "1.0.0"
@@ -13759,7 +13764,14 @@ tinyrainbow@^3.0.3:
   resolved "https://registry.npmjs.org/tinyrainbow/-/tinyrainbow-3.0.3.tgz"
   integrity sha512-PSkbLUoxOFRzJYjjxHJt9xro7D+iilgMX/C9lawzVuYiIdcihh9DXmVibBe8lmcFrRi/VzlPjBxbN7rH24q8/Q==
 
-tmp@0.2.5, tmp@^0.0.33, tmp@~0.2.1:
+tmp@^0.0.33:
+  version "0.0.33"
+  resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.33.tgz#6d34335889768d21b2bcda0aa277ced3b1bfadf9"
+  integrity sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==
+  dependencies:
+    os-tmpdir "~1.0.2"
+
+tmp@~0.2.1:
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.2.5.tgz#b06bcd23f0f3c8357b426891726d16015abfd8f8"
   integrity sha512-voyz6MApa1rQGUxT3E+BK7/ROe8itEx7vD8/HEvt4xwXucvQ5G5oeEiHkmHZJuBO21RpOf+YYm9MOivj709jow==
@@ -14206,6 +14218,15 @@ validate-npm-package-name@^3.0.0:
   dependencies:
     builtins "^1.0.3"
 
+vite-plugin-commonjs@^0.10.4:
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/vite-plugin-commonjs/-/vite-plugin-commonjs-0.10.4.tgz#5bcf316a323e3b88e392ec2de8754ca5f249b74f"
+  integrity sha512-eWQuvQKCcx0QYB5e5xfxBNjQKyrjEWZIR9UOkOV6JAgxVhtbZvCOF+FNC2ZijBJ3U3Px04ZMMyyMyFBVWIJ5+g==
+  dependencies:
+    acorn "^8.12.1"
+    magic-string "^0.30.11"
+    vite-plugin-dynamic-import "^1.6.0"
+
 vite-plugin-dts@^4.5.4:
   version "4.5.4"
   resolved "https://registry.yarnpkg.com/vite-plugin-dts/-/vite-plugin-dts-4.5.4.tgz#51b60aaaa760d9cf5c2bb3676c69d81910d6b08c"
@@ -14220,6 +14241,16 @@ vite-plugin-dts@^4.5.4:
     kolorist "^1.8.0"
     local-pkg "^1.0.0"
     magic-string "^0.30.17"
+
+vite-plugin-dynamic-import@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-dynamic-import/-/vite-plugin-dynamic-import-1.6.0.tgz#c9680b2093fc897721fe535202acc8af77537ae4"
+  integrity sha512-TM0sz70wfzTIo9YCxVFwS8OA9lNREsh+0vMHGSkWDTZ7bgd1Yjs5RV8EgB634l/91IsXJReg0xtmuQqP0mf+rg==
+  dependencies:
+    acorn "^8.12.1"
+    es-module-lexer "^1.5.4"
+    fast-glob "^3.3.2"
+    magic-string "^0.30.11"
 
 "vite@^6.0.0 || ^7.0.0":
   version "7.2.2"
