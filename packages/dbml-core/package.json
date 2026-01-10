@@ -70,7 +70,8 @@
     "pegjs-require-import": "0.0.6",
     "ts-jest": "^29.4.5",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.3"
+    "typescript-eslint": "^8.46.3",
+    "vite-plugin-commonjs": "^0.10.4"
   },
   "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556",
   "engines": {
