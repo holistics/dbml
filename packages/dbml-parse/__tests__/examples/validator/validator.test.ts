@@ -70,7 +70,9 @@ describe('[example] validator', () => {
       // Two errors for two occurrences of duplicated setting
       expect(errors).toHaveLength(2);
       expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_TABLE_SETTING);
-      expect(errors[0].diagnostic).toContain('can only appear once');
+      expect(errors[0].diagnostic).toBe("'headercolor' can only appear once");
+      expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_TABLE_SETTING);
+      expect(errors[1].diagnostic).toBe("'headercolor' can only appear once");
 
       // Both errors should have distinct positions
       expect(errors[0].start).not.toBe(errors[1].start);
@@ -82,7 +84,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.UNKNOWN_TABLE_SETTING);
-      expect(errors[0].diagnostic).toContain('Unknown');
+      expect(errors[0].diagnostic).toBe("Unknown 'unknown_setting' setting");
     });
   });
 
@@ -179,10 +181,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.UNKNOWN_COLUMN_SETTING);
-      expect(errors[0].diagnostic).toContain("Unknown column setting 'unknown_setting'");
-
-      // Verify error location points to the setting
-      expect(errors[0].start).toBeGreaterThan(0);
+      expect(errors[0].diagnostic).toBe("Unknown column setting 'unknown_setting'");
     });
 
     test('should accept column with null setting', () => {
@@ -293,7 +292,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.UNEXPECTED_SETTINGS);
-      expect(errors[0].diagnostic).toContain("shouldn't have a setting list");
+      expect(errors[0].diagnostic).toBe("A Ref shouldn't have a setting list");
     });
 
     test('should accept all ref relationship types', () => {
@@ -317,8 +316,9 @@ describe('[example] validator', () => {
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.length).toBeGreaterThan(0);
+      expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.BINDING_ERROR);
+      expect(errors[0].diagnostic).toBe("Can not find Table 'nonexistent'");
     });
 
     test('should detect unknown column in ref with binding error', () => {
@@ -329,8 +329,9 @@ describe('[example] validator', () => {
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.length).toBeGreaterThan(0);
+      expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.BINDING_ERROR);
+      expect(errors[0].diagnostic).toBe("Table 'posts' does not have Column 'nonexistent'");
     });
 
     test('should accept ref with named ref and settings in block form', () => {
@@ -372,7 +373,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.INVALID_TABLEGROUP_FIELD);
-      expect(errors[0].diagnostic).toContain('single Table name');
+      expect(errors[0].diagnostic).toBe('A TableGroup field should only have a single Table name');
     });
 
     test('should detect unknown table in tablegroup', () => {
@@ -606,7 +607,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.UNKNOWN_INDEX_SETTING);
-      expect(errors[0].diagnostic).toContain('Unknown index setting');
+      expect(errors[0].diagnostic).toBe("Unknown index setting 'unknown_setting'");
     });
 
     test('should accept index with hash type', () => {
@@ -832,17 +833,26 @@ Table users { name varchar }`;
 
     test('should detect errors across different element types', () => {
       const source = `
-        Table users { id int id varchar }
-        Enum status { active active }
+        Table users {
+          id int
+          id varchar
+        }
+        Enum status {
+          active
+          active
+        }
         Ref: nonexistent.id > users.id
       `;
       const errors = analyze(source).getErrors();
 
       // Should have errors for:
-      // - Duplicate column (2)
-      // - Duplicate enum field (2)
+      // - Duplicate column (2 - one for each occurrence)
+      // - Duplicate enum field (2 - one for each occurrence, uses same code as duplicate column)
       // - Unknown table in ref (1)
-      expect(errors.length).toBeGreaterThanOrEqual(3);
+      expect(errors).toHaveLength(5);
+      expect(errors.filter((e) => e.diagnostic === 'Duplicate column id')).toHaveLength(2);
+      expect(errors.filter((e) => e.diagnostic === 'Duplicate enum field active')).toHaveLength(2);
+      expect(errors.filter((e) => e.code === CompileErrorCode.BINDING_ERROR)).toHaveLength(1);
     });
 
     test('should validate forward references correctly', () => {
@@ -859,14 +869,19 @@ Table users { name varchar }`;
 
     test('should detect circular references between tables as binding errors', () => {
       const source = `
-        Table a { id int b_id int [ref: > b.id] }
-        Table b { id int a_id int [ref: > a.id] }
+        Table a {
+          id int
+          b_id int [ref: > b.id]
+        }
+        Table b {
+          id int
+          a_id int [ref: > a.id]
+        }
       `;
       const errors = analyze(source).getErrors();
 
-      // Circular references may cause binding errors depending on resolution order
-      // The validator should at least not crash
-      expect(errors).toBeDefined();
+      // Circular references are valid and should not produce errors
+      expect(errors).toHaveLength(0);
     });
 
     test('should validate self-referencing table', () => {
@@ -945,19 +960,20 @@ Table users { name varchar }`;
   describe('error combinations', () => {
     test('should report both duplicate table AND duplicate column errors', () => {
       const source = `
-        Table users { id int id varchar }
+        Table users {
+          id int
+          id varchar
+        }
         Table users { email varchar }
       `;
       const errors = analyze(source).getErrors();
 
-      // Should have errors for both types
-      expect(errors.length).toBeGreaterThanOrEqual(2);
-
-      // Verify we get both types of errors
-      const hasDuplicateColumnError = errors.some((e) => e.code === CompileErrorCode.DUPLICATE_COLUMN_NAME);
-      const hasDuplicateTableError = errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME);
-
-      expect(hasDuplicateColumnError || hasDuplicateTableError).toBe(true);
+      // Should have 3 errors:
+      // - 2 for duplicate column (both occurrences)
+      // - 1 for duplicate table (second occurrence)
+      expect(errors).toHaveLength(3);
+      expect(errors.filter((e) => e.code === CompileErrorCode.DUPLICATE_COLUMN_NAME)).toHaveLength(2);
+      expect(errors.filter((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toHaveLength(1);
     });
 
     test('should report unknown setting AND binding error in same table', () => {
@@ -977,8 +993,13 @@ Table users { name varchar }`;
       `;
       const errors = analyze(source).getErrors();
 
-      const bindingErrors = errors.filter((e) => e.code === CompileErrorCode.BINDING_ERROR);
-      expect(bindingErrors.length).toBeGreaterThanOrEqual(2);
+      // 4 binding errors - one for each unknown table (a, b, c, d)
+      expect(errors).toHaveLength(4);
+      expect(errors.every((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+      expect(errors[0].diagnostic).toBe("Can not find Table 'a'");
+      expect(errors[1].diagnostic).toBe("Can not find Table 'b'");
+      expect(errors[2].diagnostic).toBe("Can not find Table 'c'");
+      expect(errors[3].diagnostic).toBe("Can not find Table 'd'");
     });
   });
 
@@ -991,8 +1012,7 @@ Table users { name varchar }`;
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      // Error message should include the duplicated name
-      expect(errors[0].diagnostic).toContain('users');
+      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'public'");
     });
 
     test('should include schema context in error messages when relevant', () => {
@@ -1003,46 +1023,60 @@ Table users { name varchar }`;
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      // Error message should include schema context
-      expect(errors[0].diagnostic).toContain('auth');
+      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'auth'");
     });
 
     test('should provide actionable error messages for unknown references', () => {
       const source = 'Ref: posts.user_id > nonexistent.id';
       const errors = analyze(source).getErrors();
 
-      expect(errors.length).toBeGreaterThan(0);
-      // Error message should mention what couldn't be found
-      expect(errors[0].diagnostic.length).toBeGreaterThan(10);
+      expect(errors).toHaveLength(2);
+      expect(errors[0].diagnostic).toBe("Can not find Table 'posts'");
+      expect(errors[1].diagnostic).toBe("Can not find Table 'nonexistent'");
     });
 
     test('should have non-empty diagnostic for all error types', () => {
-      const sources = [
-        'Table users { id int id varchar }', // duplicate column
-        'Table { id int }', // missing table name
-        'Enum status { active active }', // duplicate enum value
-        'Table users [unknown: value] { id int }', // unknown setting
-      ];
+      // Test duplicate column
+      const dupColSource = 'Table users { id int\nid varchar }';
+      const dupColErrors = analyze(dupColSource).getErrors();
+      expect(dupColErrors).toHaveLength(2);
+      expect(dupColErrors[0].diagnostic).toBe('Duplicate column id');
 
-      sources.forEach((source) => {
-        const errors = analyze(source).getErrors();
-        errors.forEach((error) => {
-          expect(error.diagnostic).toBeDefined();
-          expect(error.diagnostic.length).toBeGreaterThan(0);
-        });
-      });
+      // Test missing table name
+      const missingNameErrors = analyze('Table { id int }').getErrors();
+      expect(missingNameErrors).toHaveLength(1);
+      expect(missingNameErrors[0].diagnostic).toBe('A Table must have a name');
+
+      // Test duplicate enum value
+      const dupEnumSource = 'Enum status { active\nactive }';
+      const dupEnumErrors = analyze(dupEnumSource).getErrors();
+      expect(dupEnumErrors).toHaveLength(2);
+      expect(dupEnumErrors[0].diagnostic).toBe('Duplicate enum field active');
+
+      // Test unknown setting
+      const unknownErrors = analyze('Table users [unknown: value] { id int }').getErrors();
+      expect(unknownErrors).toHaveLength(1);
+      expect(unknownErrors[0].diagnostic).toBe("Unknown 'unknown' setting");
     });
 
     test('should have error ranges that are not excessively wide', () => {
-      const source = 'Table users { id int id varchar name text }';
+      const source = `Table users {
+        id int
+        id varchar
+        name text
+      }`;
       const errors = analyze(source).getErrors();
 
+      // Should have 2 duplicate column errors
+      expect(errors).toHaveLength(2);
       errors.forEach((error) => {
         const rangeSize = error.end - error.start;
         // Error range should not span the entire source
         expect(rangeSize).toBeLessThan(source.length);
         // Error range should be at least 1 character
         expect(rangeSize).toBeGreaterThanOrEqual(1);
+        // Error range should be less than 20 characters (reasonable for an identifier)
+        expect(rangeSize).toBeLessThan(20);
       });
     });
   });
