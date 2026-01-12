@@ -8,6 +8,7 @@ import {
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
+  DummyNode,
   ElementDeclarationNode,
   ExpressionNode,
   FunctionApplicationNode,
@@ -95,7 +96,7 @@ export function convertFuncAppToElem (
 export function isAsKeyword (
   token?: SyntaxToken,
 ): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER; value: 'as' } {
-  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value === 'as';
+  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'as';
 }
 
 export function markInvalid (nodeOrToken?: SyntaxNode | SyntaxToken) {
@@ -173,6 +174,17 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.literal);
   } else if (node instanceof GroupExpressionNode) {
     throw new Error('This case is handled by the TupleExpressionNode case');
+  } else if (node instanceof ArrayNode) {
+    markInvalid(node.array);
+    markInvalid(node.indexer);
+  } else if (node instanceof ProgramNode) {
+    node.body.forEach(markInvalid);
+    markInvalid(node.eof);
+  } else if (node instanceof PartialInjectionNode) {
+    markInvalid(node.op);
+    markInvalid(node.partial);
+  } else if (node instanceof DummyNode) {
+    // DummyNode has no children to mark invalid
   } else {
     throw new Error('Unreachable case in markInvalidNode');
   }
@@ -276,7 +288,7 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
     );
   }
 
-  if (node instanceof PartialInjectionNode) return filterUndefined(node.partial);
+  if (node instanceof PartialInjectionNode) return filterUndefined(node.op, node.partial);
 
   if (node instanceof GroupExpressionNode) {
     throw new Error('This case is already handled by TupleExpressionNode');

@@ -5,12 +5,15 @@
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "@tests/*": [
+        "__tests__/*"
       ]
     },
     "baseUrl": "."
   },
   "include": [
     "src",
-    "tests"
+    "__tests__"
   ]
 }

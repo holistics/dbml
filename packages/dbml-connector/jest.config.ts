@@ -1,4 +1,7 @@
-module.exports = {
+import { type Config } from 'jest';
+
+const config: Config = {
+  testMatch: ["**/?(*.)+(spec|test).?([mc])[jt]s?(x)"],
   preset: 'ts-jest',
   testEnvironment: 'node',
   transform: {
@@ -7,4 +10,9 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css|less|scss)$': 'identity-obj-proxy',
   },
+  collectCoverage: true,
+  coverageReporters: ['json', 'json-summary', 'html', 'text'],
+  coverageDirectory: 'coverage',
 };
+
+export default config;
