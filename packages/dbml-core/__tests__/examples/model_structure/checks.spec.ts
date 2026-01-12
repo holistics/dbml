@@ -2,7 +2,7 @@ import Database from '../../../src/model_structure/database';
 import jsonDb from './checks.json';
 
 describe('@dbml/core - model_structure', () => {
-  let database: Database | undefined;
+  let database: Database;
 
   beforeAll(() => {
     database = new Database(jsonDb as any);
@@ -11,7 +11,7 @@ describe('@dbml/core - model_structure', () => {
   describe('table_partial_and_table_with_checks_schema', () => {
     describe('nested_structure', () => {
       test('table partial WithMoney has correct checks', () => {
-        const tablePartial = database!.tablePartials[0];
+        const tablePartial = database.tablePartials[0];
 
         const tablePartialConstraint = tablePartial.checks[0];
         expect(tablePartial.checks.length).toEqual(1);
@@ -24,14 +24,14 @@ describe('@dbml/core - model_structure', () => {
         expect(tablePartialField.checks[0].expression).toEqual('balance > 0');
       });
       test('table User has correct checks', () => {
-        const table = database!.schemas[0].findTable('User');
+        const table = database.schemas[0].findTable('User');
 
         expect(table.checks.length).toEqual(3);
 
         expect(table.checks[0].name).toEqual('User.not_too_much_money');
         expect(table.checks[0].expression).toEqual('balance < 10000000');
         expect(table.checks[0].table).toEqual(table);
-        expect(table.checks[0].injectedPartial).toEqual(database!.tablePartials[0]);
+        expect(table.checks[0].injectedPartial).toEqual(database.tablePartials[0]);
 
         expect(table.checks[1].name).toEqual('name_not_too_long');
         expect(table.checks[1].expression).toEqual('LEN(name) < 256');
@@ -54,14 +54,14 @@ describe('@dbml/core - model_structure', () => {
         expect(column1.checks.length).toEqual(0);
       });
       test('table User2 has correct checks', () => {
-        const table = database!.schemas[0].findTable('User2');
+        const table = database.schemas[0].findTable('User2');
 
         expect(table.checks.length).toEqual(1);
 
         expect(table.checks[0].name).toEqual('User2.not_too_much_money');
         expect(table.checks[0].expression).toEqual('balance < 10000000');
         expect(table.checks[0].table).toEqual(table);
-        expect(table.checks[0].injectedPartial).toEqual(database!.tablePartials[0]);
+        expect(table.checks[0].injectedPartial).toEqual(database.tablePartials[0]);
 
         const column0 = table.findField('balance');
 

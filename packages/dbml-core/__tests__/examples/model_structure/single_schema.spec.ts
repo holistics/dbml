@@ -5,7 +5,7 @@ import { DEFAULT_SCHEMA_NAME } from '../../../src/model_structure/config';
 import { NormalizedDatabase } from '../../../types/model_structure/database';
 
 describe('@dbml/core - model_structure', () => {
-  let database: Database | undefined;
+  let database: Database;
 
   beforeAll(() => {
     database = new Database(jsonDb as any);
@@ -14,26 +14,26 @@ describe('@dbml/core - model_structure', () => {
   describe('general_schema', () => {
     describe('nested_structure', () => {
       test('database - contains all properties', () => {
-        expect(database!.id).toBeDefined();
-        expect(database!.schemas).toBeDefined();
-        expect(database!.note).toBeDefined();
-        expect(database!.databaseType).toBeDefined();
+        expect(database.id).toBeDefined();
+        expect(database.schemas).toBeDefined();
+        expect(database.note).toBeDefined();
+        expect(database.databaseType).toBeDefined();
       });
 
       test('database - check properties', () => {
-        expect(database!.note).toEqual('# Introduction\nThis is an ecommerce project\n\n# Description\n...');
-        expect(database!.databaseType).toEqual('PostgreSQL');
-        expect(database!.name).toEqual('ecommerce');
+        expect(database.note).toEqual('# Introduction\nThis is an ecommerce project\n\n# Description\n...');
+        expect(database.databaseType).toEqual('PostgreSQL');
+        expect(database.name).toEqual('ecommerce');
       });
 
       test('database - contains all schemas', () => {
-        expect(database!.schemas).toHaveLength(1);
+        expect(database.schemas).toHaveLength(1);
 
-        expect(database!.schemas.map((schema) => schema.name)).toEqual(expect.arrayContaining([DEFAULT_SCHEMA_NAME]));
+        expect(database.schemas.map((schema) => schema.name)).toEqual(expect.arrayContaining([DEFAULT_SCHEMA_NAME]));
       });
 
       test('all schemas - contains all properties', () => {
-        database!.schemas.forEach((schema) => {
+        database.schemas.forEach((schema) => {
           expect(schema.id).toBeDefined();
           expect(schema.name).toBeDefined();
           expect(schema.database).toBeDefined();
@@ -47,14 +47,14 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('schema "public" - check properties', () => {
-        const schema = database!.schemas[0];
+        const schema = database.schemas[0];
 
         expect(schema.name).toEqual(DEFAULT_SCHEMA_NAME);
         expect(schema.note).toEqual(`Default ${_.capitalize(DEFAULT_SCHEMA_NAME)} Schema`);
       });
 
       test('schema "public" - contains all tables', () => {
-        const schema = database!.schemas[0];
+        const schema = database.schemas[0];
 
         expect(schema.tables).toHaveLength(6);
 
@@ -63,7 +63,7 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('schema "public" - contains all enums', () => {
-        const schema = database!.schemas[0];
+        const schema = database.schemas[0];
 
         expect(schema.enums).toHaveLength(1);
 
@@ -72,7 +72,7 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('schema "public" - contains all tableGroups', () => {
-        const schema = database!.schemas[0];
+        const schema = database.schemas[0];
 
         expect(schema.tableGroups).toHaveLength(1);
 
@@ -81,7 +81,7 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('schema "public" - contains all refs', () => {
-        const schema = database!.schemas[0];
+        const schema = database.schemas[0];
         expect(schema.refs).toHaveLength(7);
 
         const refs = schema.refs.map((ref: any) => ({
@@ -141,13 +141,13 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('schema "public" - contains all parent references', () => {
-        const schema = database!.schemas[0];
+        const schema = database.schemas[0];
 
         expect(schema.database.id).toEqual(1);
       });
 
       test('all refs - contains all properties', () => {
-        const schema = database!.schemas[0];
+        const schema = database.schemas[0];
         schema.refs.forEach((ref: any) => {
           expect(ref.id).toBeDefined();
           expect(ref.schema).toBeDefined();
@@ -160,7 +160,7 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('all enums - contains all properties', () => {
-        const schema = database!.schemas[0];
+        const schema = database.schemas[0];
         schema.enums.forEach((_enum: any) => {
           expect(_enum.id).toBeDefined();
           expect(_enum.schema).toBeDefined();
@@ -173,13 +173,13 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('enum "products_status" - check properties', () => {
-        const _enum = database!.schemas[0].enums[0];
+        const _enum = database.schemas[0].enums[0];
 
         expect(_enum.name).toEqual('products_status');
       });
 
       test('enum "products_status" contains all values', () => {
-        const _enum = database!.schemas[0].enums[0];
+        const _enum = database.schemas[0].enums[0];
 
         expect(_enum.values).toHaveLength(3);
 
@@ -204,7 +204,7 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('enum "products_status" contains all fields', () => {
-        const _enum = database!.schemas[0].enums[0];
+        const _enum = database.schemas[0].enums[0];
 
         expect(_enum.fields).toHaveLength(1);
 
@@ -213,13 +213,13 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('enum "products_status" contains all parent references', () => {
-        const _enum = database!.schemas[0].enums[0];
+        const _enum = database.schemas[0].enums[0];
 
         expect(_enum.schema.name).toEqual(DEFAULT_SCHEMA_NAME);
       });
 
       test('all tableGroups - contains all properties', () => {
-        const schema = database!.schemas[0];
+        const schema = database.schemas[0];
         schema.tableGroups.forEach((group: any) => {
           expect(group.id).toBeDefined();
           expect(group.name).toBeDefined();
@@ -229,13 +229,13 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('tableGroup "g1" - check properties', () => {
-        const group = database!.schemas[0].tableGroups[0];
+        const group = database.schemas[0].tableGroups[0];
 
         expect(group.name).toEqual('g1');
       });
 
       test('tableGroup "g1" contains all tables', () => {
-        const group = database!.schemas[0].tableGroups[0];
+        const group = database.schemas[0].tableGroups[0];
 
         expect(group.tables).toHaveLength(2);
 
@@ -244,13 +244,13 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('tableGroup "g1" contains all parent references', () => {
-        const group = database!.schemas[0].tableGroups[0];
+        const group = database.schemas[0].tableGroups[0];
 
         expect(group.schema.name).toEqual(DEFAULT_SCHEMA_NAME);
       });
 
       test('all tables - contains all properties', () => {
-        const schema = database!.schemas[0];
+        const schema = database.schemas[0];
         schema.tables.forEach((table: any) => {
           expect(table.id).toBeDefined();
           expect(table.name).toBeDefined();
@@ -265,14 +265,14 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('table "users" - check properties', () => {
-        const table = database!.schemas[0].findTable('users');
+        const table = database.schemas[0].findTable('users');
 
         expect(table.name).toEqual('users');
         expect(table.alias).toEqual('U');
       });
 
       test('table "users - contains all fields', () => {
-        const table = database!.schemas[0].findTable('users');
+        const table = database.schemas[0].findTable('users');
 
         const fields = table.fields.map((field: any) => ({
           name: field.name,
@@ -323,7 +323,7 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('table "users - contains all indexes', () => {
-        const table = database!.schemas[0].findTable('users');
+        const table = database.schemas[0].findTable('users');
 
         const indexes = table.indexes.map((index: any) => ({
           name: index.name,
@@ -367,7 +367,7 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('table "users" - contains all parent references', () => {
-        const table = database!.schemas[0].findTable('users');
+        const table = database.schemas[0].findTable('users');
 
         expect(table.schema.name).toEqual(DEFAULT_SCHEMA_NAME);
         expect(table.group.name).toEqual('g1');
@@ -375,14 +375,14 @@ describe('@dbml/core - model_structure', () => {
     });
 
     describe('normalized_structure', () => {
-      let normalizedModel: NormalizedDatabase | undefined;
+      let normalizedModel: NormalizedDatabase;
 
       function getEle (ele: keyof NormalizedDatabase, id: string) {
-        return (normalizedModel![ele] as any)[id];
+        return (normalizedModel[ele] as any)[id];
       }
 
       beforeAll(() => {
-        normalizedModel = database!.normalize();
+        normalizedModel = database.normalize();
       });
 
       test('database - contains all properties', () => {
@@ -591,7 +591,7 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('table "users" - check properties', () => {
-        const tableId = Object.keys(normalizedModel!.tables).find((key) => getEle('tables', key).name === 'users');
+        const tableId = Object.keys(normalizedModel.tables).find((key) => getEle('tables', key).name === 'users');
         const table = getEle('tables', tableId!);
 
         expect(table.name).toEqual('users');
@@ -599,7 +599,7 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('table "users - contains all fields', () => {
-        const tableId = Object.keys(normalizedModel!.tables).find((key) => getEle('tables', key).name === 'users');
+        const tableId = Object.keys(normalizedModel.tables).find((key) => getEle('tables', key).name === 'users');
         const table = getEle('tables', tableId!);
 
         const fields = table.fieldIds.map((fieldId: any) => ({
@@ -651,7 +651,7 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('table "users - contains all indexes', () => {
-        const tableId = Object.keys(normalizedModel!.tables).find((key) => getEle('tables', key).name === 'users');
+        const tableId = Object.keys(normalizedModel.tables).find((key) => getEle('tables', key).name === 'users');
         const table = getEle('tables', tableId!);
 
         const indexes = table.indexIds.map((indexId: any) => ({
@@ -697,7 +697,7 @@ describe('@dbml/core - model_structure', () => {
       });
 
       test('table "users" - contains all parent references', () => {
-        const tableId = Object.keys(normalizedModel!.tables).find((key) => getEle('tables', key).name === 'users');
+        const tableId = Object.keys(normalizedModel.tables).find((key) => getEle('tables', key).name === 'users');
         const table = getEle('tables', tableId!);
 
         expect(getEle('schemas', table.schemaId).name).toEqual(DEFAULT_SCHEMA_NAME);
