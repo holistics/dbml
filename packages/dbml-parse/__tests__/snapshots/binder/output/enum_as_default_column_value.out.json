@@ -8416,71 +8416,7 @@
     },
     {
       "code": 4000,
-      "diagnostic": "Can not find Enum field 'invalid_value'",
-      "nodeOrToken": {
-        "id": 117,
-        "kind": "<primary-expression>",
-        "startPos": {
-          "offset": 453,
-          "line": 26,
-          "column": 46
-        },
-        "fullStart": 453,
-        "endPos": {
-          "offset": 466,
-          "line": 26,
-          "column": 59
-        },
-        "fullEnd": 466,
-        "start": 453,
-        "end": 466,
-        "expression": {
-          "id": 116,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 453,
-            "line": 26,
-            "column": 46
-          },
-          "fullStart": 453,
-          "endPos": {
-            "offset": 466,
-            "line": 26,
-            "column": 59
-          },
-          "fullEnd": 466,
-          "start": 453,
-          "end": 466,
-          "variable": {
-            "kind": "<identifier>",
-            "startPos": {
-              "offset": 453,
-              "line": 26,
-              "column": 46
-            },
-            "endPos": {
-              "offset": 466,
-              "line": 26,
-              "column": 59
-            },
-            "value": "invalid_value",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 453,
-            "end": 466
-          }
-        }
-      },
-      "start": 453,
-      "end": 466,
-      "name": "CompileError"
-    },
-    {
-      "code": 4000,
-      "diagnostic": "Can not find Schema 'field1'",
+      "diagnostic": "Schema 'field1' does not exist in Schema 'public'",
       "nodeOrToken": {
         "id": 127,
         "kind": "<primary-expression>",
@@ -8544,7 +8480,7 @@
     },
     {
       "code": 4000,
-      "diagnostic": "Can not find Enum 'invalid_enum'",
+      "diagnostic": "Enum 'invalid_enum' does not exist in Schema 'public'",
       "nodeOrToken": {
         "id": 146,
         "kind": "<primary-expression>",

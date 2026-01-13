@@ -8,16 +8,60 @@ describe('[example] binder', () => {
     test('should create TableSymbol with correct properties', () => {
       const ast = analyze('Table users { id int }').getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
-      const tableSymbol = elements[0].symbol as TableSymbol;
+      const tableNode = elements[0];
+      const tableSymbol = tableNode.symbol as TableSymbol;
 
+      // Verify symbol properties
       expect(tableSymbol).toBeInstanceOf(TableSymbol);
-      expect(tableSymbol.declaration).toBe(elements[0]);
-      expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.declaration).toBe(tableNode);
       expect(tableSymbol.references).toEqual([]);
 
-      // Verify public schema symbol table
+      // Verify symbolTable contains column
+      expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
+
+      // Verify column symbol properties
+      const columnSymbol = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
+      const tableBody = tableNode.body as BlockExpressionNode;
+      const columnNode = tableBody.body[0];
+      expect(columnSymbol.declaration).toBe(columnNode);
+      expect(columnSymbol.references).toEqual([]);
+
+      // Verify public schema symbol table (publicSymbolTable concept)
       const schemaSymbol = ast.symbol as SchemaSymbol;
+      expect(schemaSymbol).toBeInstanceOf(SchemaSymbol);
       expect(schemaSymbol.symbolTable.get('Table:users')).toBe(tableSymbol);
+    });
+
+    test('should verify nested children symbol properties', () => {
+      const source = `
+        Table users {
+          id int [pk]
+          name varchar
+          email varchar
+        }
+      `;
+      const ast = analyze(source).getValue();
+      const tableNode = ast.body[0] as ElementDeclarationNode;
+      const tableSymbol = tableNode.symbol as TableSymbol;
+      const tableBody = tableNode.body as BlockExpressionNode;
+
+      // Verify all columns are in symbolTable
+      expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get('Column:name')).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get('Column:email')).toBeInstanceOf(ColumnSymbol);
+
+      // Verify each column's symbol and declaration relationship
+      tableBody.body.forEach((field, index) => {
+        const columnNode = field as ElementDeclarationNode;
+        const columnSymbol = columnNode.symbol as ColumnSymbol;
+
+        expect(columnSymbol).toBeInstanceOf(ColumnSymbol);
+        expect(columnSymbol.declaration).toBe(columnNode);
+
+        // Verify column is accessible from table's symbolTable
+        const expectedNames = ['id', 'name', 'email'];
+        expect(tableSymbol.symbolTable.get(`Column:${expectedNames[index]}`)).toBe(columnSymbol);
+      });
     });
 
     test('should allow duplicate column names across tables', () => {

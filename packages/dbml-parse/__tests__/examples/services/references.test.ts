@@ -625,8 +625,12 @@ Ref: posts.author_id > u.id`;
       const position = createPosition(1, 7);
       const references = referencesProvider.provideReferences(model, position);
 
-      // Should find references using the alias
-      expect(Array.isArray(references)).toBe(true);
+      // Should find 2 references using the alias (TableGroup and Ref)
+      expect(references.length).toBe(2);
+      references.forEach((ref) => {
+        const sourceText = extractTextFromRange(program, ref.range);
+        expect(sourceText).toBe('u');
+      });
     });
 
     it('- should find enum references in default values', () => {
