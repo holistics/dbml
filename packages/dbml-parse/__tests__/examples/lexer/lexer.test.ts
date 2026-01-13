@@ -165,7 +165,7 @@ describe('[example] lexer', () => {
 
       expect(tokens).toHaveLength(2);
 
-      expect(tokens[0].kind).toBe(SyntaxTokenKind.TILDE);
+      expect(tokens[0].kind).toBe(SyntaxTokenKind.OP);
       expect(tokens[0].value).toBe('~');
       expect(tokens[0].start).toBe(0);
       expect(tokens[0].end).toBe(1);

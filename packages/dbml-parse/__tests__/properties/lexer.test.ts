@@ -219,7 +219,6 @@ describe('[property] lexer', () => {
             case SyntaxTokenKind.COLON:
             case SyntaxTokenKind.COMMA:
             case SyntaxTokenKind.SEMICOLON:
-            case SyntaxTokenKind.TILDE:
             case SyntaxTokenKind.NEWLINE:
             case SyntaxTokenKind.SPACE:
             case SyntaxTokenKind.TAB:

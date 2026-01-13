@@ -33,10 +33,16 @@ export default class TableBinder implements ElementBinder {
 
   // Must call this before any bind methods of any binder classes
   resolvePartialInjections (): CompileError[] {
+    const { body } = this.declarationNode;
+    const members = !body
+      ? []
+      : body instanceof BlockExpressionNode
+        ? body.body
+        : [body];
     // Prioritize the later injections
-    return (this.declarationNode.body as BlockExpressionNode).body
+    return members
       .filter((i) => i instanceof FunctionApplicationNode && isValidPartialInjection(i.callee))
-      .reverse()
+      .reverse() // Warning: `reverse` mutates, but it's safe because we're working on a filtered array
       .flatMap((i) => {
         const fragments = destructureComplexVariableTuple(((i as FunctionApplicationNode).callee as PrefixExpressionNode).expression).unwrap();
         const tablePartialBindee = fragments.variables.pop();
@@ -100,6 +106,7 @@ export default class TableBinder implements ElementBinder {
           const settingsMap = aggregateSettingList(listExpression).getValue();
 
           errors.push(...(settingsMap.ref?.flatMap((ref) => (ref.value ? this.bindInlineRef(ref.value) : [])) || []));
+          errors.push(...(settingsMap.default?.flatMap((def) => (def.value ? this.tryToBindEnumFieldRef(def.value) : [])) || []));
           args.pop();
         }
 
@@ -130,6 +137,29 @@ export default class TableBinder implements ElementBinder {
     lookupAndBindInScope(this.ast, [
       ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
       { node: enumBindee, kind: SymbolKind.Enum },
+    ]);
+  }
+
+  // Bind enum field references in default values (e.g., order_status.pending)
+  private tryToBindEnumFieldRef (defaultValue: SyntaxNode): CompileError[] {
+    const fragments = destructureComplexVariableTuple(defaultValue).unwrap_or(undefined);
+    if (!fragments) {
+      return [];
+    }
+
+    const enumFieldBindee = fragments.variables.pop();
+    const enumBindee = fragments.variables.pop();
+
+    if (!enumFieldBindee || !enumBindee) {
+      return [];
+    }
+
+    const schemaBindees = fragments.variables;
+
+    return lookupAndBindInScope(this.ast, [
+      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
+      { node: enumBindee, kind: SymbolKind.Enum },
+      { node: enumFieldBindee, kind: SymbolKind.EnumField },
     ]);
   }
 

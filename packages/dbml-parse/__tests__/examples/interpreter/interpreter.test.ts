@@ -411,8 +411,8 @@ describe('[example] interpreter', () => {
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(2);
-      expect(errors[0].diagnostic).toBe("Can not find Table 'nonexistent'");
-      expect(errors[1].diagnostic).toBe("Can not find Table 'also_nonexistent'");
+      expect(errors[0].diagnostic).toBe("Table 'nonexistent' does not exist in Schema 'public'");
+      expect(errors[1].diagnostic).toBe("Table 'also_nonexistent' does not exist in Schema 'public'");
     });
   });
 
