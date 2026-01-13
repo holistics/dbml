@@ -1,3 +1,16 @@
+## v5.4.1 (2026-01-13)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#782](https://github.com/holistics/dbml/pull/782) Add comprehensive parser tests & Avoid connection leak & Minor parser bugs ([@hdnax](https://github.com/hdnax))
+
+#### :house_with_garden: Internal
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#782](https://github.com/holistics/dbml/pull/782) Add comprehensive parser tests & Avoid connection leak & Minor parser bugs ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
 ## v5.4.0 (2026-01-09)
 
 #### :memo: Documentation
