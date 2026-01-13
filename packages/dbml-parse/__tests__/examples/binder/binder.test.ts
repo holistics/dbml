@@ -604,7 +604,7 @@ describe('[example] binder', () => {
       const partialSymbol = partial?.symbol as TablePartialSymbol;
 
       expect(partialSymbol.references.length).toBe(1);
-      expect(partialSymbol.references[0].kind).toBe(SyntaxNodeKind.PARTIAL_INJECTION);
+      expect(partialSymbol.references[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
       expect(partialSymbol.references[0].referee).toBe(partialSymbol);
     });
 
@@ -641,11 +641,11 @@ describe('[example] binder', () => {
       const auditSymbol = schemaSymbol.symbolTable.get('TablePartial:audit') as TablePartialSymbol;
 
       expect(timestampsSymbol.references.length).toBe(1);
-      expect(timestampsSymbol.references[0].kind).toBe(SyntaxNodeKind.PARTIAL_INJECTION);
+      expect(timestampsSymbol.references[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
       expect(timestampsSymbol.references[0].referee).toBe(timestampsSymbol);
 
       expect(auditSymbol.references.length).toBe(1);
-      expect(auditSymbol.references[0].kind).toBe(SyntaxNodeKind.PARTIAL_INJECTION);
+      expect(auditSymbol.references[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
       expect(auditSymbol.references[0].referee).toBe(auditSymbol);
     });
 
@@ -663,7 +663,7 @@ describe('[example] binder', () => {
       const derivedSymbol = schemaSymbol.symbolTable.get('Table:derived') as TableSymbol;
 
       expect(baseSymbol.references.length).toBe(1);
-      expect(baseSymbol.references[0].kind).toBe(SyntaxNodeKind.PARTIAL_INJECTION);
+      expect(baseSymbol.references[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
       expect(baseSymbol.references[0].referee).toBe(baseSymbol);
       expect(derivedSymbol).toBeInstanceOf(TableSymbol);
     });
