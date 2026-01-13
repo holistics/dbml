@@ -364,6 +364,90 @@ Table users {
         expect(sourceText).toEqual('status');
       });
     });
+
+    it('- should find references for enum named "true" in default values', () => {
+      const program = `Enum true {
+  value
+  other
+}
+
+Table users {
+  status true [default: true.value]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "true" enum declaration
+      const position = createPosition(1, 6);
+      const references = referencesProvider.provideReferences(model, position);
+
+      // Should find 2 references: column type and default value
+      expect(references.length).toBe(2);
+      references.forEach((ref) => {
+        const sourceText = extractTextFromRange(program, ref.range);
+        expect(sourceText).toBe('true');
+      });
+    });
+
+    it('- should find references for enum field in default values', () => {
+      const program = `Enum true {
+  value
+  other
+}
+
+Table users {
+  status true [default: true.value]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "value" enum field declaration
+      const position = createPosition(2, 3);
+      const references = referencesProvider.provideReferences(model, position);
+
+      // Should find reference to containing enum
+      expect(references.length).toBe(2);
+    });
+
+    it('- should not find references for quoted string defaults', () => {
+      const program = `Table users {
+  name varchar [default: "hello"]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "hello" in default value - should not be bound
+      const position = createPosition(2, 28);
+      const references = referencesProvider.provideReferences(model, position);
+
+      expect(references).toEqual([]);
+    });
+
+    it('- should not find references for keyword defaults', () => {
+      const program = `Table users {
+  active boolean [default: true]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "true" in default value - should not be bound (keyword)
+      const position = createPosition(2, 29);
+      const references = referencesProvider.provideReferences(model, position);
+
+      expect(references).toEqual([]);
+    });
   });
 
   describe('should find all references for TablePartials', () => {
