@@ -213,8 +213,8 @@ export function print (source: string, ast: SyntaxNode): string {
         break;
       }
 
-      case SyntaxNodeKind.DUMMY:
-        // Dummy nodes don't contribute to output
+      case SyntaxNodeKind.EMPTY:
+        // Empty nodes don't contribute to output
         break;
 
       default: {

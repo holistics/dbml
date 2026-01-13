@@ -9,7 +9,7 @@ import {
   BlockExpressionNode,
   CallExpressionNode,
   CommaExpressionNode,
-  DummyNode,
+  EmptyNode,
   ElementDeclarationNode,
   ExpressionNode,
   FunctionApplicationNode,
@@ -32,8 +32,8 @@ import { destructureComplexVariable } from '@/core/analyzer/utils';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
-  callee: ExpressionNode | undefined,
-  args: NormalExpressionNode[],
+  callee: ExpressionNode | CommaExpressionNode | undefined,
+  args: (NormalExpressionNode | CommaExpressionNode)[],
   factory: NodeFactory,
 ): Option<ElementDeclarationNode> {
   if (!callee || !isExpressionAnIdentifierNode(callee) || args.length === 0) {
@@ -184,7 +184,7 @@ function markInvalidNode (node: SyntaxNode) {
   } else if (node instanceof ProgramNode) {
     node.body.forEach(markInvalid);
     markInvalid(node.eof);
-  } else if (node instanceof DummyNode) {
+  } else if (node instanceof EmptyNode) {
     // DummyNode has no children to mark invalid
   } else {
     throw new Error('Unreachable case in markInvalidNode');

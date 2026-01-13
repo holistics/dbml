@@ -99,7 +99,7 @@ export enum SyntaxNodeKind {
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
   COMMA_EXPRESSION = '<comma-expression>',
-  DUMMY = '<dummy>',
+  EMPTY = '<dummy>',
   ARRAY = '<array>',
 }
 
@@ -246,7 +246,7 @@ export type NormalExpressionNode =
   | CallExpressionNode
   | PrimaryExpressionNode
   | FunctionExpressionNode
-  | DummyNode
+  | EmptyNode
   | ArrayNode;
 
 export type ExpressionNode =
@@ -466,8 +466,11 @@ export class TupleExpressionNode extends SyntaxNode {
 // Form: <normal-expr> , <normal-expr> [, <normal-expr>]*
 // A comma-separated list of expressions without delimiters (CSV-like)
 // Used inside function applications for multi-value arguments
+// Empty fields (consecutive commas) are represented by DummyNode
 // e.g. 1, 2, 3
 // e.g. 'a', 'b', 'c'
+// e.g. 1, , 3 (empty field in middle)
+// e.g. 1, 2, (trailing comma)
 export class CommaExpressionNode extends SyntaxNode {
   elementList: NormalExpressionNode[];
 
@@ -587,11 +590,14 @@ export class PrimaryExpressionNode extends SyntaxNode {
 }
 
 // Form: (empty)
-// A placeholder for missing operands during error recovery
-export class DummyNode extends SyntaxNode {
-  constructor ({ pre }: { pre: Readonly<SyntaxNode> | Readonly<SyntaxToken> }, id: SyntaxNodeId) {
-    const nextToken = SyntaxToken.create(SyntaxTokenKind.SPACE, pre.endPos, pre.endPos, ' ', false);
-    super(id, SyntaxNodeKind.DUMMY, [nextToken]);
+// A placeholder node used for:
+// - Missing operands during error recovery
+// - Empty fields in comma expressions (e.g. 1, , 3)
+// - Trailing commas in comma expressions (e.g. 1, 2,)
+export class EmptyNode extends SyntaxNode {
+  constructor ({ prevToken }: { prevToken: Readonly<SyntaxNode> | Readonly<SyntaxToken> }, id: SyntaxNodeId) {
+    const nextToken = SyntaxToken.create(SyntaxTokenKind.SPACE, prevToken.endPos, prevToken.endPos, ' ', false);
+    super(id, SyntaxNodeKind.EMPTY, [nextToken]);
   }
 }
 
