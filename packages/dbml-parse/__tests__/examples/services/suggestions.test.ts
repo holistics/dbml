@@ -1290,19 +1290,13 @@ describe('[snapshot] CompletionItemProvider', () => {
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toEqual([
-        'Note',
-        'indexes',
-        'checks',
-
+        'mypartial',
       ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
       expect(insertTexts).toEqual([
-        'Note',
-        'indexes',
-        'checks',
-
+        'mypartial',
       ]);
     });
   });

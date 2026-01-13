@@ -349,7 +349,7 @@ Table orders {
       const model = createMockTextModel(program);
 
       // Position on "pending" in default value
-      const position = createPosition(7, 47);
+      const position = createPosition(7, 48);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot(`
@@ -601,7 +601,7 @@ Table users {
       const model = createMockTextModel(program);
 
       // Position on "base_timestamps" in injection
-      const position = createPosition(8, 4);
+      const position = createPosition(8, 5);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot(`
@@ -1611,7 +1611,7 @@ Table users {
       const model = createMockTextModel(program);
 
       // Position on "mypartial" in injection
-      const position = createPosition(7, 4);
+      const position = createPosition(7, 5);
       const definitions = definitionProvider.provideDefinition(model, position);
       expect(Array.isArray(definitions)).toBeTruthy();
       if (!Array.isArray(definitions)) return;

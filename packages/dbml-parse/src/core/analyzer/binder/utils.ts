@@ -16,6 +16,7 @@ import { SymbolKind, createNodeSymbolIndex } from '@/core/analyzer/symbol/symbol
 import { getSymbolKind } from '@/core/analyzer/symbol/utils';
 import { getElementName, isExpressionAVariableNode } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode } from '@/core/errors';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -71,7 +72,13 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
   }
 
   if (node instanceof TupleExpressionNode) {
-    return destructureComplexVariableTuple(node).map((res) => [res]).unwrap_or([]);
+    const fragments = destructureComplexVariableTuple(node).unwrap_or(undefined);
+    if (!fragments) {
+      // Tuple elements are not simple variables (e.g., member access expressions like table.column)
+      // Recurse into each element
+      return node.elementList.flatMap(scanNonListNodeForBinding);
+    }
+    return [fragments];
   }
 
   // The other cases are not supported as practically they shouldn't arise
@@ -88,12 +95,12 @@ export function lookupAndBindInScope (
 
   let curSymbolTable = initialScope.symbol.symbolTable;
   let curKind = getSymbolKind(initialScope.symbol);
-  let curName = initialScope instanceof ElementDeclarationNode ? getElementName(initialScope).unwrap_or('<invalid name>') : 'public';
+  let curName = initialScope instanceof ElementDeclarationNode ? getElementName(initialScope).unwrap_or('<invalid name>') : DEFAULT_SCHEMA_NAME;
 
   if (initialScope instanceof ProgramNode && symbolInfos.length) {
     const { node, kind } = symbolInfos[0];
     const name = extractVarNameFromPrimaryVariable(node).unwrap_or('<unnamed>');
-    if (name === 'public' && kind === SymbolKind.Schema) {
+    if (name === DEFAULT_SCHEMA_NAME && kind === SymbolKind.Schema) {
       symbolInfos.shift();
     }
   }
@@ -105,7 +112,7 @@ export function lookupAndBindInScope (
     const symbol = curSymbolTable.get(index);
 
     if (!symbol) {
-      return [new CompileError(CompileErrorCode.BINDING_ERROR, `${kind} '${name}' does not exists in ${curName === undefined ? 'global scope' : `${curKind} '${curName}'`}`, node)];
+      return [new CompileError(CompileErrorCode.BINDING_ERROR, `${kind} '${name}' does not exist in ${curName === undefined ? 'global scope' : `${curKind} '${curName}'`}`, node)];
     }
     node.referee = symbol;
     symbol.references.push(node);
