@@ -11,6 +11,8 @@ import { SymbolKind, createColumnSymbolIndex } from '../../symbol/symbolIndex';
 import { destructureComplexVariableTuple, extractVariableFromExpression } from '../../utils';
 import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '../../symbol/symbols';
 import SymbolFactory from '../../symbol/factory';
+import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
+import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 
 export default class TableBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -142,6 +144,19 @@ export default class TableBinder implements ElementBinder {
 
   // Bind enum field references in default values (e.g., order_status.pending)
   private tryToBindEnumFieldRef (defaultValue: SyntaxNode): CompileError[] {
+    // Skip quoted strings (e.g., [default: "hello"] or [default: `hello`])
+    if (isExpressionAQuotedString(defaultValue)) {
+      return [];
+    }
+
+    // Skip keywords (null, true, false)
+    if (isExpressionAVariableNode(defaultValue)) {
+      const varName = defaultValue.expression.variable?.value?.toLowerCase();
+      if (varName && KEYWORDS_OF_DEFAULT_SETTING.includes(varName)) {
+        return [];
+      }
+    }
+
     const fragments = destructureComplexVariableTuple(defaultValue).unwrap_or(undefined);
     if (!fragments) {
       return [];
