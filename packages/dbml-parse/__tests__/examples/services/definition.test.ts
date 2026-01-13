@@ -66,10 +66,22 @@ Ref: posts.user_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position on "posts" in "Ref: posts.user_id"
-      const position = createPosition(9, 6);
+      const position = createPosition(9, 7);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 7,
+              "startColumn": 1,
+              "startLineNumber": 5,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should find table definition in inline ref', () => {
@@ -87,10 +99,22 @@ Table posts {
       const model = createMockTextModel(program);
 
       // Position on "users" in inline ref
-      const position = createPosition(6, 23);
+      const position = createPosition(6, 24);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 3,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should find table definition with different ref operators (<, -, <>)', () => {
@@ -151,10 +175,22 @@ Ref: users.referrer_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position on second "users" in self-reference
-      const position = createPosition(6, 26);
+      const position = createPosition(6, 27);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 4,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
   });
 
@@ -237,10 +273,22 @@ Table posts {
       const model = createMockTextModel(program);
 
       // Position on "id" in inline ref
-      const position = createPosition(6, 29);
+      const position = createPosition(6, 30);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 12,
+              "endLineNumber": 2,
+              "startColumn": 3,
+              "startLineNumber": 2,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should find column in composite foreign key', () => {
@@ -305,10 +353,22 @@ Table orders {
       const model = createMockTextModel(program);
 
       // Position on "order_status" column type
-      const position = createPosition(9, 10);
+      const position = createPosition(9, 11);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 5,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should find enum definition in default value context', () => {
@@ -327,10 +387,27 @@ Table orders {
       const model = createMockTextModel(program);
 
       // Position on "order_status" in default value
-      const position = createPosition(7, 33);
+      const position = createPosition(7, 34);
       const definitions = definitionProvider.provideDefinition(model, position);
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 4,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
+      expect(definitions.length).toBe(1);
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText.trim().startsWith('Enum order_status')).toBe(true);
     });
 
     it('- should find enum field definition', () => {
@@ -371,6 +448,118 @@ Table orders {
       const sourceText = extractTextFromRange(program, definitions[0].range);
       expect(sourceText).toMatchInlineSnapshot('"pending"');
     });
+
+    it('- should find definition for enum in default value', () => {
+      const program = `Enum true {
+  value
+  other
+}
+
+Table users {
+  status true [default: true.value]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "true" in default value
+      const position = createPosition(7, 26);
+      const definitions = definitionProvider.provideDefinition(model, position);
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 4,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
+
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
+      expect(definitions.length).toBe(1);
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText.trim().startsWith('Enum true')).toBe(true);
+    });
+
+    it('- should find definition for enum field "value" in default value', () => {
+      const program = `Enum true {
+  value
+  other
+}
+
+Table users {
+  status true [default: true.value]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "value" in default value
+      const position = createPosition(7, 31);
+      const definitions = definitionProvider.provideDefinition(model, position);
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 8,
+              "endLineNumber": 2,
+              "startColumn": 3,
+              "startLineNumber": 2,
+            },
+            "uri": "",
+          },
+        ]
+      `);
+
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
+      expect(definitions.length).toBe(1);
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toBe('value');
+    });
+
+    it('- should not find definition for quoted string default', () => {
+      const program = `Table users {
+  name varchar [default: "hello"]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "hello" in default value
+      const position = createPosition(2, 29);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(definitions).toEqual([]);
+    });
+
+    it('- should not find definition for keyword default', () => {
+      const program = `Table users {
+  active boolean [default: true]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "true" keyword in default value
+      const position = createPosition(2, 30);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(definitions).toEqual([]);
+    });
   });
 
   describe('should find definition for schema-qualified names', () => {
@@ -391,10 +580,22 @@ Ref: ecommerce.orders.user_id > ecommerce.users.id`;
       const model = createMockTextModel(program);
 
       // Position on "users" in qualified name
-      const position = createPosition(9, 43);
+      const position = createPosition(9, 44);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 3,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should find column in schema-qualified table', () => {
@@ -414,10 +615,22 @@ Ref: ecommerce.orders.user_id > ecommerce.users.id`;
       const model = createMockTextModel(program);
 
       // Position on "id" in qualified name
-      const position = createPosition(9, 49);
+      const position = createPosition(9, 50);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 12,
+              "endLineNumber": 2,
+              "startColumn": 3,
+              "startLineNumber": 2,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should find schema-qualified enum definition', () => {
@@ -486,10 +699,22 @@ TableGroup ecommerce {
       const model = createMockTextModel(program);
 
       // Position on "users" in TableGroup
-      const position = createPosition(10, 3);
+      const position = createPosition(10, 4);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 3,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should find schema-qualified table in TableGroup', () => {
@@ -507,10 +732,22 @@ TableGroup group1 {
       const model = createMockTextModel(program);
 
       // Position on "users" in qualified TableGroup reference
-      const position = createPosition(6, 12);
+      const position = createPosition(6, 13);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 3,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
   });
 
@@ -531,10 +768,22 @@ TableGroup group1 {
       const model = createMockTextModel(program);
 
       // Position on "email" in index
-      const position = createPosition(6, 5);
+      const position = createPosition(6, 6);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 16,
+              "endLineNumber": 3,
+              "startColumn": 3,
+              "startLineNumber": 3,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should find column definition in composite index', () => {
@@ -554,7 +803,7 @@ TableGroup group1 {
       const model = createMockTextModel(program);
 
       // Position on "status" in composite index
-      const position = createPosition(7, 19);
+      const position = createPosition(7, 20);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -576,10 +825,22 @@ TableGroup group1 {
       const model = createMockTextModel(program);
 
       // Position on "email" in named index
-      const position = createPosition(6, 5);
+      const position = createPosition(6, 6);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 16,
+              "endLineNumber": 3,
+              "startColumn": 3,
+              "startLineNumber": 3,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
   });
 
@@ -648,10 +909,22 @@ Ref: users.created_at > logs.timestamp`;
       const model = createMockTextModel(program);
 
       // Position on "created_at" which is injected from partial
-      const position = createPosition(11, 12);
+      const position = createPosition(11, 13);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 19,
+              "endLineNumber": 8,
+              "startColumn": 3,
+              "startLineNumber": 8,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should find schema-qualified TablePartial', () => {
@@ -670,7 +943,7 @@ Table users {
       const model = createMockTextModel(program);
 
       // Position on "timestamps" in qualified partial injection
-      const position = createPosition(7, 13);
+      const position = createPosition(7, 14);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -957,7 +1230,7 @@ Ref: schema1.orders.id > schema2.orders.id`;
       `);
 
       // Position on schema2.orders
-      const position2 = createPosition(9, 33);
+      const position2 = createPosition(9, 34);
       const definitions2 = definitionProvider.provideDefinition(model, position2);
 
       expect(definitions2).toMatchInlineSnapshot('[]');
@@ -982,10 +1255,22 @@ Ref: users.created_at > logs.timestamp`;
       const model = createMockTextModel(program);
 
       // Position on created_at in ref - should find direct definition, not injected
-      const position = createPosition(11, 12);
+      const position = createPosition(11, 13);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 42,
+              "endLineNumber": 7,
+              "startColumn": 3,
+              "startLineNumber": 7,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should handle long qualified names', () => {
@@ -1095,10 +1380,22 @@ Ref: users.id > posts.user_id`;
       const model = createMockTextModel(program);
 
       // Position on "users"
-      const position = createPosition(5, 6);
+      const position = createPosition(5, 7);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 3,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should return correct range for column definition', () => {
@@ -1115,10 +1412,22 @@ Ref: users.email > logs.email_col`;
       const model = createMockTextModel(program);
 
       // Position on "email" in ref
-      const position = createPosition(6, 12);
+      const position = createPosition(6, 13);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 16,
+              "endLineNumber": 3,
+              "startColumn": 3,
+              "startLineNumber": 3,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should return correct range for enum definition', () => {
@@ -1137,10 +1446,22 @@ Table users {
       const model = createMockTextModel(program);
 
       // Position on "status" type
-      const position = createPosition(7, 15);
+      const position = createPosition(7, 16);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 4,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
   });
 
@@ -1322,7 +1643,7 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
       const model = createMockTextModel(program);
 
       // Position on "users"
-      const position = createPosition(1, 8);
+      const position = createPosition(1, 9);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1387,7 +1708,7 @@ Table posts {
       const model = createMockTextModel(program);
 
       // Position on "user_id"
-      const position = createPosition(6, 4);
+      const position = createPosition(6, 5);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1406,7 +1727,7 @@ Ref: posts.user_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position on "posts" (non-existent table)
-      const position = createPosition(5, 7);
+      const position = createPosition(5, 8);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1422,7 +1743,7 @@ Ref: posts.user_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position on "status"
-      const position = createPosition(1, 7);
+      const position = createPosition(1, 8);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1439,7 +1760,7 @@ Ref: posts.user_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position on "users"
-      const position = createPosition(1, 8);
+      const position = createPosition(1, 9);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1499,7 +1820,7 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
       const model = createMockTextModel(program);
 
       // Position on "author_last" (doesn't exist in posts)
-      const position = createPosition(10, 28);
+      const position = createPosition(10, 29);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');

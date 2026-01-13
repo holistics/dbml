@@ -542,6 +542,119 @@ describe('[example] binder', () => {
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum 'nonexistent_enum' does not exist in Schema 'public'");
     });
+
+    test('should allow double-quoted string as default value', () => {
+      const source = `
+        Table users {
+          name varchar [default: "hello"]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should allow single-quoted string as default value', () => {
+      const source = `
+        Table users {
+          name varchar [default: \`hello\`]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should allow null keyword as default value', () => {
+      const source = `
+        Table users {
+          name varchar [default: null]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should allow true keyword as default value', () => {
+      const source = `
+        Table users {
+          active boolean [default: true]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should allow false keyword as default value', () => {
+      const source = `
+        Table users {
+          active boolean [default: false]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should bind true.value as enum access', () => {
+      // true.value is treated as enum "true" with field "value"
+      const source = `
+        Table users {
+          status varchar [default: true.value]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(1);
+      expect(errors[0].diagnostic).toBe("Enum 'true' does not exist in Schema 'public'");
+    });
+
+    test('should bind true.value when enum true exists but field does not', () => {
+      const source = `
+        Enum true {
+          other
+        }
+        Table users {
+          status true [default: true.value]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(1);
+      expect(errors[0].diagnostic).toBe("Enum field 'value' does not exist in Enum 'true'");
+    });
+
+    test('should bind true.value when enum true exists with field value', () => {
+      const source = `
+        Enum true {
+          value
+          other
+        }
+        Table users {
+          status true [default: true.value]
+        }
+      `;
+      const result = analyze(source);
+      expect(result.getErrors()).toHaveLength(0);
+
+      // Verify the binding
+      const ast = result.getValue();
+      const schemaSymbol = ast.symbol as SchemaSymbol;
+      const enumSymbol = schemaSymbol.symbolTable.get('Enum:true') as EnumSymbol;
+      const valueField = enumSymbol.symbolTable.get('Enum field:value') as EnumFieldSymbol;
+
+      // Enum should have 2 references: column type + default value
+      expect(enumSymbol.references.length).toBe(2);
+      // Enum field should have 1 reference from default value
+      expect(valueField.references.length).toBe(1);
+    });
+
+    test('should bind quoted string with field as enum access', () => {
+      // "hello".abc is treated as enum "hello" with field "abc"
+      const source = `
+        Table users {
+          status varchar [default: "hello".abc]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(1);
+      expect(errors[0].diagnostic).toBe("Enum 'hello' does not exist in Schema 'public'");
+    });
   });
 
   describe('Ref', () => {
