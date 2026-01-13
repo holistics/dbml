@@ -2212,4 +2212,202 @@ Ref: "order".id > "user".id`;
       expect(Array.isArray(definitions)).toBe(true);
     });
   });
+
+  describe('cursor position coverage', () => {
+    it('- should handle position after comma in settings', () => {
+      const program = `Table users {
+  id int [pk, unique]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position right after comma: [pk,| unique]
+      const position = createPosition(2, 14);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle position after colon in setting', () => {
+      const program = `Table users {
+  name varchar [default: 'test']
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position right after colon: [default:| 'test']
+      const position = createPosition(2, 25);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle position after opening bracket', () => {
+      const program = `Table users {
+  id int [pk]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position right after opening bracket: [|pk]
+      const position = createPosition(2, 11);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle position before closing bracket', () => {
+      const program = `Table users {
+  id int [pk]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position right before closing bracket: [pk|]
+      const position = createPosition(2, 13);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle position after opening brace', () => {
+      const program = `Table users {
+  id int
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position right after opening brace: users {|
+      const position = createPosition(1, 14);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle position before closing brace', () => {
+      const program = `Table users {
+  id int
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position right before closing brace
+      const position = createPosition(3, 1);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle position after dot in member access', () => {
+      const program = `Table users {
+  id int
+}
+Ref: users.id > posts.user_id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position right after dot: users.|id
+      const position = createPosition(4, 12);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle position inside tuple in composite ref', () => {
+      const program = `Table merchants {
+  id int pk
+  country_code varchar
+}
+Table orders {
+  merchant_id int
+  country varchar
+}
+Ref: orders.(merchant_id, country) > merchants.(id, country_code)`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on column inside tuple
+      const position = createPosition(9, 15);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle position in empty block body', () => {
+      const program = `Table users {
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position inside empty block
+      const position = createPosition(2, 1);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+      expect(definitions).toMatchInlineSnapshot('[]');
+    });
+
+    it('- should handle position at exact token start', () => {
+      const program = `Table users {
+  id int
+}
+Ref: users.id > posts.user_id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position at exact start of "users" token
+      const position = createPosition(4, 6);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+
+    it('- should handle position at exact token end', () => {
+      const program = `Table users {
+  id int
+}
+Ref: users.id > posts.user_id`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position at exact end of "users" token
+      const position = createPosition(4, 11);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBe(true);
+    });
+  });
 });
