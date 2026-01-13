@@ -13,8 +13,10 @@ import {
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
-  DummyNode,
+  CommaExpressionNode,
+  EmptyNode,
   ElementDeclarationNode,
+  ExpressionNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
   GroupExpressionNode,
@@ -396,8 +398,8 @@ export default class Parser {
     // Since function application expression is the most generic form
     // by default, we'll interpret any expression as a function application
     const args: {
-      callee?: NormalExpressionNode;
-      args: NormalExpressionNode[];
+      callee?: ExpressionNode;
+      args: ExpressionNode[];
     } = { args: [] };
 
     // Try interpreting the function application as an element declaration expression
@@ -407,7 +409,7 @@ export default class Parser {
     );
 
     try {
-      args.callee = this.normalExpression();
+      args.callee = this.commaExpression();
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
         throw e;
@@ -425,18 +427,18 @@ export default class Parser {
     // Note {
     //   'This is a note'
     // }
-    if (this.shouldStopExpression()) {
+    if (this.shouldStopFunctionApplication()) {
       return buildExpression();
     }
 
-    let prevNode = args.callee!;
-    while (!this.shouldStopExpression()) {
+    let prevNode: ExpressionNode = args.callee!;
+    while (!this.shouldStopFunctionApplication()) {
       if (!hasTrailingSpaces(this.previous())) {
         this.logError(prevNode, CompileErrorCode.MISSING_SPACES, 'Expect a following space');
       }
 
       try {
-        prevNode = this.normalExpression();
+        prevNode = this.commaExpression();
         args.args.push(prevNode);
       } catch (e) {
         if (!(e instanceof PartialParsingError)) {
@@ -451,20 +453,92 @@ export default class Parser {
     return buildExpression();
   }
 
-  private shouldStopExpression (): boolean {
+  private shouldStopFunctionApplication (): boolean {
     if (this.isAtEnd() || hasTrailingNewLines(this.previous())) {
       return true;
     }
 
     const nextTokenKind = this.peek().kind;
 
-    return (
-      nextTokenKind === SyntaxTokenKind.RBRACE
-      || nextTokenKind === SyntaxTokenKind.RBRACKET
-      || nextTokenKind === SyntaxTokenKind.RPAREN
-      || nextTokenKind === SyntaxTokenKind.COMMA
-      || nextTokenKind === SyntaxTokenKind.COLON
-    );
+    return [
+      SyntaxTokenKind.RBRACE,
+      SyntaxTokenKind.RBRACKET,
+      SyntaxTokenKind.RPAREN,
+      SyntaxTokenKind.COMMA,
+      SyntaxTokenKind.COLON,
+    ].includes(nextTokenKind);
+  }
+
+  private commaExpression (): NormalExpressionNode | CommaExpressionNode {
+    // If we start with a comma, treat the first field as an empty node
+    const firstExpr = this.check(SyntaxTokenKind.COMMA)
+      ? this.nodeFactory.create(EmptyNode, { prevToken: this.previous() })
+      : this.normalExpression();
+
+    // If there's no comma, just return the normal expression
+    if (!this.check(SyntaxTokenKind.COMMA)) {
+      return firstExpr;
+    }
+
+    const args: {
+      elementList: NormalExpressionNode[];
+      commaList: SyntaxToken[];
+    } = {
+      elementList: [firstExpr],
+      commaList: [],
+    };
+
+    while (this.check(SyntaxTokenKind.COMMA)) {
+      args.commaList.push(this.advance());
+
+      // Check for empty field (consecutive commas)
+      if (this.check(SyntaxTokenKind.COMMA)) {
+        args.elementList.push(this.nodeFactory.create(EmptyNode, { prevToken: this.previous() }));
+        continue;
+      }
+      // Check for empty field (trailing commas)
+      if (this.shouldStopCommaExpression()) {
+        args.elementList.push(this.nodeFactory.create(EmptyNode, { prevToken: this.previous() }));
+        break;
+      }
+
+      try {
+        const nextExpr = this.normalExpression();
+        args.elementList.push(nextExpr);
+      } catch (e) {
+        if (!(e instanceof PartialParsingError)) {
+          throw e;
+        }
+        if (e.partialNode) {
+          args.elementList.push(e.partialNode);
+        }
+        throw new PartialParsingError(
+          e.token,
+          this.nodeFactory.create(CommaExpressionNode, args),
+          e.handlerContext,
+        );
+      }
+    }
+
+    return this.nodeFactory.create(CommaExpressionNode, args);
+  }
+
+  private shouldStopCommaExpression (): boolean {
+    if (this.isAtEnd() || hasTrailingNewLines(this.previous())) {
+      return true;
+    }
+
+    const nextTokenKind = this.peek().kind;
+
+    return [
+      // We do not support {} in CSV line
+      SyntaxTokenKind.RBRACE, SyntaxTokenKind.LBRACE,
+      // We do not support [] in CSV line
+      SyntaxTokenKind.RBRACKET, SyntaxTokenKind.LBRACKET,
+      // We do not support () in CSV line
+      SyntaxTokenKind.RPAREN, SyntaxTokenKind.LPAREN,
+      SyntaxTokenKind.COLON,
+    ].includes(nextTokenKind);
   }
 
   private normalExpression (): NormalExpressionNode {
@@ -595,7 +669,7 @@ export default class Parser {
 
         throw new PartialParsingError(
           args.op,
-          this.nodeFactory.create(DummyNode, { pre: args.op }),
+          this.nodeFactory.create(EmptyNode, { prevToken: args.op }),
           this.contextStack.findHandlerContext(this.tokens, this.current),
         );
       }
@@ -618,10 +692,10 @@ export default class Parser {
       leftExpression = this.nodeFactory.create(PrefixExpressionNode, args);
     } else {
       leftExpression = this.extractOperand();
-      if (leftExpression instanceof DummyNode) {
+      if (leftExpression instanceof EmptyNode) {
         throw new PartialParsingError(
           this.peek(),
-          this.nodeFactory.create(DummyNode, { pre: this.peek() }),
+          this.nodeFactory.create(EmptyNode, { prevToken: this.peek() }),
           this.contextStack.findHandlerContext(this.tokens, this.current),
         );
       }
@@ -683,7 +757,7 @@ export default class Parser {
       );
     }
 
-    return this.nodeFactory.create(DummyNode, { pre: this.previous() });
+    return this.nodeFactory.create(EmptyNode, { prevToken: this.previous() });
   }
 
   /* Parsing FunctionExpression */
