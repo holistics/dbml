@@ -8,6 +8,7 @@ import {
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
+  CommaExpressionNode,
   DummyNode,
   ElementDeclarationNode,
   ExpressionNode,
@@ -158,6 +159,9 @@ function markInvalidNode (node: SyntaxNode) {
     node.commaList.forEach(markInvalid);
     node.elementList.forEach(markInvalid);
     markInvalid(node.tupleCloseParen);
+  } else if (node instanceof CommaExpressionNode) {
+    node.commaList.forEach(markInvalid);
+    node.elementList.forEach(markInvalid);
   } else if (node instanceof CallExpressionNode) {
     markInvalid(node.callee);
     markInvalid(node.argumentList);
@@ -267,6 +271,12 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
       node.tupleOpenParen,
       ...alternateLists(node.elementList, node.commaList),
       node.tupleCloseParen,
+    );
+  }
+
+  if (node instanceof CommaExpressionNode) {
+    return filterUndefined(
+      ...alternateLists(node.elementList, node.commaList),
     );
   }
 
