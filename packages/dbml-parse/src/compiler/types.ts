@@ -10,4 +10,5 @@ export const enum ScopeKind {
   TOPLEVEL,
   TABLEPARTIAL,
   CHECKS,
+  RECORDS,
 }
