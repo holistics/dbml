@@ -6,7 +6,12 @@ import {
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import SymbolFactory from '../../symbol/factory';
-import { destructureMemberAccessExpression, extractVarNameFromPrimaryVariable, getElementKind } from '../../utils';
+import {
+  destructureCallExpression,
+  destructureMemberAccessExpression,
+  extractVarNameFromPrimaryVariable,
+  getElementKind,
+} from '../../utils';
 import { createColumnSymbolIndex, SymbolKind } from '../../symbol/symbolIndex';
 import { ElementKind } from '../../types';
 import { isTupleOfVariables } from '../../validator/utils';
@@ -212,39 +217,4 @@ export default class RecordsBinder implements ElementBinder {
       return binder.bind();
     });
   }
-}
-
-// Destructure a call expression like `schema.table(col1, col2)` or `table(col1, col2)`.
-// Returns the callee variables (schema, table) and the args (col1, col2).
-//   schema.table(col1, col2) => { variables: [schema, table], args: [col1, col2] }
-//   table(col1, col2)        => { variables: [table], args: [col1, col2] }
-//   table()                  => { variables: [table], args: [] }
-function destructureCallExpression (
-  node?: SyntaxNode,
-): Option<{ variables: (PrimaryExpressionNode & { expression: VariableNode })[]; args: (PrimaryExpressionNode & { expression: VariableNode })[] }> {
-  if (!(node instanceof CallExpressionNode) || !node.callee) {
-    return new None();
-  }
-
-  // Destructure the callee (e.g., schema.table or just table)
-  const fragments = destructureMemberAccessExpression(node.callee).unwrap_or(undefined);
-  if (!fragments || fragments.length === 0) {
-    return new None();
-  }
-
-  // All callee fragments must be simple variables
-  if (!fragments.every(isExpressionAVariableNode)) {
-    return new None();
-  }
-
-  // Get args from argument list
-  let args: (PrimaryExpressionNode & { expression: VariableNode })[] = [];
-  if (isTupleOfVariables(node.argumentList)) {
-    args = [...node.argumentList.elementList];
-  }
-
-  return new Some({
-    variables: fragments as (PrimaryExpressionNode & { expression: VariableNode })[],
-    args,
-  });
 }

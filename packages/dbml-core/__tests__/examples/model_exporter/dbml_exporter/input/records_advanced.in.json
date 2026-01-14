@@ -1,0 +1,122 @@
+{
+  "schemas": [
+    {
+      "name": "myschema",
+      "token": {
+        "start": { "offset": 0, "line": 1, "column": 1 },
+        "end": { "offset": 10, "line": 1, "column": 11 }
+      },
+      "tables": [
+        {
+          "name": "products",
+          "schemaName": "myschema",
+          "alias": null,
+          "fields": [
+            {
+              "name": "id",
+              "type": {
+                "schemaName": null,
+                "type_name": "integer",
+                "args": null
+              },
+              "token": {
+                "start": { "offset": 0, "line": 1, "column": 1 },
+                "end": { "offset": 10, "line": 1, "column": 11 }
+              },
+              "inline_refs": [],
+              "pk": true,
+              "unique": false
+            },
+            {
+              "name": "name",
+              "type": {
+                "schemaName": null,
+                "type_name": "varchar",
+                "args": null
+              },
+              "token": {
+                "start": { "offset": 0, "line": 2, "column": 1 },
+                "end": { "offset": 10, "line": 2, "column": 11 }
+              },
+              "inline_refs": [],
+              "pk": false,
+              "unique": false
+            },
+            {
+              "name": "price",
+              "type": {
+                "schemaName": null,
+                "type_name": "decimal",
+                "args": null
+              },
+              "token": {
+                "start": { "offset": 0, "line": 3, "column": 1 },
+                "end": { "offset": 10, "line": 3, "column": 11 }
+              },
+              "inline_refs": [],
+              "pk": false,
+              "unique": false
+            },
+            {
+              "name": "created_at",
+              "type": {
+                "schemaName": null,
+                "type_name": "timestamp",
+                "args": null
+              },
+              "token": {
+                "start": { "offset": 0, "line": 4, "column": 1 },
+                "end": { "offset": 10, "line": 4, "column": 11 }
+              },
+              "inline_refs": [],
+              "pk": false,
+              "unique": false
+            }
+          ],
+          "token": {
+            "start": { "offset": 0, "line": 1, "column": 1 },
+            "end": { "offset": 100, "line": 5, "column": 2 }
+          },
+          "indexes": []
+        }
+      ],
+      "enums": [],
+      "tableGroups": [],
+      "refs": []
+    }
+  ],
+  "tables": [],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": [
+    {
+      "schemaName": "myschema",
+      "tableName": "products",
+      "columns": ["id", "name", "price", "created_at"],
+      "values": [
+        [
+          { "value": 1, "type": "integer" },
+          { "value": "Widget", "type": "string" },
+          { "value": 9.99, "type": "real" },
+          { "value": "2024-01-15T10:30:00Z", "type": "datetime" }
+        ],
+        [
+          { "value": 2, "type": "integer" },
+          { "value": "Gadget's \"Pro\"", "type": "string" },
+          { "value": 19.99, "type": "real" },
+          { "value": "now()", "type": "datetime", "is_expression": true }
+        ],
+        [
+          { "value": 3, "type": "integer" },
+          { "value": "Item", "type": "string" },
+          { "value": 0, "type": "real" },
+          { "value": null, "type": "datetime" }
+        ]
+      ]
+    }
+  ]
+}

@@ -24,6 +24,23 @@ export interface InterpreterDatabase {
   tablePartials: Map<ElementDeclarationNode, TablePartial>;
   aliases: Alias[];
   project: Map<ElementDeclarationNode, Project>;
+  records: TableRecord[];
+}
+
+// Record value type
+export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
+
+export interface RecordValue {
+  value: any;
+  type: RecordValueType;
+  is_expression?: boolean;
+}
+
+export interface TableRecord {
+  schemaName: string | undefined;
+  tableName: string;
+  columns: string[];
+  values: RecordValue[][];
 }
 
 export interface Database {
@@ -36,13 +53,14 @@ export interface Database {
   aliases: Alias[];
   project: Project;
   tablePartials: TablePartial[];
+  records: TableRecord[];
 }
 
 export interface Table {
   name: string;
   schemaName: null | string;
   alias: string | null;
-  fields: Column[];
+  fields: Column[]; // The order of fields must match the order of declaration
   checks: Check[];
   partials: TablePartialInjection[];
   token: TokenPosition;
@@ -216,6 +234,6 @@ export type Project =
     };
     token: TokenPosition;
     [
-    index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials'>
+    index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials' | 'records'>
     ]: string;
   };
