@@ -28,6 +28,8 @@ export function containerScopeKind (this: Compiler, offset: number): ScopeKind {
       return ScopeKind.TABLEPARTIAL;
     case 'checks':
       return ScopeKind.CHECKS;
+    case 'records':
+      return ScopeKind.RECORDS;
     default:
       return ScopeKind.CUSTOM;
   }

@@ -1061,4 +1061,336 @@ describe('[example] interpreter', () => {
       });
     });
   });
+
+  describe('records interpretation', () => {
+    test('should interpret basic records', () => {
+      const source = `
+        Table users {
+          id int [pk]
+          name varchar
+        }
+        records users(id, name) {
+          1, "Alice"
+          2, "Bob"
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.records).toHaveLength(1);
+      expect(db.records[0].tableName).toBe('users');
+      expect(db.records[0].columns).toEqual(['id', 'name']);
+      expect(db.records[0].values).toHaveLength(2);
+    });
+
+    test('should interpret integer values correctly', () => {
+      const source = `
+        Table data { id int }
+        records data(id) {
+          1
+          42
+        }
+      `;
+      const result = interpret(source);
+      const errors = result.getErrors();
+      expect(errors).toHaveLength(0);
+
+      const db = result.getValue()!;
+      expect(db.records[0].values[0][0].type).toBe('integer');
+      expect(db.records[0].values[0][0].value).toBe(1);
+      expect(db.records[0].values[1][0].value).toBe(42);
+    });
+
+    test('should interpret float values correctly', () => {
+      const source = `
+        Table data { value decimal(10,2) }
+        records data(value) {
+          3.14
+          0.01
+        }
+      `;
+      const result = interpret(source);
+      const errors = result.getErrors();
+      expect(errors).toHaveLength(0);
+
+      const db = result.getValue()!;
+      expect(db.records[0].values[0][0].type).toBe('real');
+      expect(db.records[0].values[0][0].value).toBe(3.14);
+      expect(db.records[0].values[1][0].value).toBe(0.01);
+    });
+
+    test('should interpret scientific notation correctly', () => {
+      const source = `
+        Table data { value decimal }
+        records data(value) {
+          1e10
+          3.14e-5
+          2E+8
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.records[0].values[0][0].type).toBe('real');
+      expect(db.records[0].values[0][0].value).toBe(1e10);
+      expect(db.records[0].values[1][0].value).toBe(3.14e-5);
+      expect(db.records[0].values[2][0].value).toBe(2e8);
+    });
+
+    test('should interpret boolean values correctly', () => {
+      const source = `
+        Table data { flag boolean }
+        records data(flag) {
+          true
+          false
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.records[0].values[0][0].type).toBe('bool');
+      expect(db.records[0].values[0][0].value).toBe(true);
+      expect(db.records[0].values[1][0].value).toBe(false);
+    });
+
+    test('should interpret string values correctly', () => {
+      const source = `
+        Table data { name varchar }
+        records data(name) {
+          "Alice"
+          'Bob'
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.records[0].values[0][0].type).toBe('string');
+      expect(db.records[0].values[0][0].value).toBe('Alice');
+      expect(db.records[0].values[1][0].value).toBe('Bob');
+    });
+
+    test('should interpret null values correctly', () => {
+      const source = `
+        Table data { name varchar }
+        records data(name) {
+          null
+          ""
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.records[0].values[0][0].type).toBe('string');
+      expect(db.records[0].values[0][0].value).toBe(null);
+      expect(db.records[0].values[1][0].type).toBe('string');
+    });
+
+    test('should interpret function expressions correctly', () => {
+      const source = `
+        Table data { created_at timestamp }
+        records data(created_at) {
+          \`now()\`
+          \`uuid_generate_v4()\`
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.records[0].values[0][0].type).toBe('datetime');
+      expect(db.records[0].values[0][0].value).toBe('now()');
+      expect(db.records[0].values[1][0].value).toBe('uuid_generate_v4()');
+    });
+
+    test('should interpret enum values correctly', () => {
+      const source = `
+        Enum status { active\n inactive }
+        Table users {
+          id int
+          status status
+        }
+        records users(id, status) {
+          1, status.active
+          2, status.inactive
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.records[0].values[0][1].type).toBe('string');
+      expect(db.records[0].values[0][1].value).toBe('active');
+      expect(db.records[0].values[1][1].value).toBe('inactive');
+    });
+
+    test('should group multiple records blocks for same table', () => {
+      const source = `
+        Table users {
+          id int [pk]
+          name varchar
+        }
+        records users(id, name) {
+          1, "Alice"
+        }
+        records users(id, name) {
+          2, "Bob"
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      // Should be grouped into one records entry
+      expect(db.records).toHaveLength(1);
+      expect(db.records[0].values).toHaveLength(2);
+      expect(db.records[0].values[0][0].value).toBe(1);
+      expect(db.records[0].values[1][0].value).toBe(2);
+    });
+
+    test('should interpret records with schema-qualified table', () => {
+      const source = `
+        Table auth.users {
+          id int
+          email varchar
+        }
+        records auth.users(id, email) {
+          1, "alice@example.com"
+        }
+      `;
+      const result = interpret(source);
+      const errors = result.getErrors();
+      expect(errors).toHaveLength(0);
+
+      const db = result.getValue()!;
+      expect(db.records).toHaveLength(1);
+      // tableName extracted from table declaration
+      expect(db.records[0].values).toHaveLength(1);
+    });
+
+    test('should interpret mixed data types in same row', () => {
+      const source = `
+        Table data {
+          id int
+          value decimal
+          active boolean
+          name varchar
+        }
+        records data(id, value, active, name) {
+          1, 3.14, true, "test"
+          2, -2.5, false, "hello"
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const row1 = db.records[0].values[0];
+      expect(row1[0]).toEqual({ type: 'integer', value: 1 });
+      expect(row1[1]).toEqual({ type: 'real', value: 3.14 });
+      expect(row1[2]).toEqual({ type: 'bool', value: true });
+      expect(row1[3]).toEqual({ type: 'string', value: 'test' });
+    });
+
+    test('should handle empty records block', () => {
+      const source = `
+        Table users { id int }
+        records users(id) {
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.records).toHaveLength(0);
+    });
+
+    test('should detect column count mismatch', () => {
+      const source = `
+        Table users {
+          id int
+          name varchar
+        }
+        records users(id, name) {
+          1
+        }
+      `;
+      const result = interpret(source);
+      expect(result.getErrors().length).toBeGreaterThan(0);
+    });
+
+    test('should validate type compatibility', () => {
+      const source = `
+        Table data {
+          value int
+        }
+        records data(value) {
+          "not a number"
+        }
+      `;
+      const result = interpret(source);
+      // Should have a type compatibility error
+      expect(result.getErrors().length).toBeGreaterThan(0);
+    });
+
+    test.skip('should validate precision and scale', () => {
+      const source = `
+        Table data {
+          value decimal(5, 2)
+        }
+        records data(value) {
+          12345.123
+        }
+      `;
+      const result = interpret(source);
+      // Should have precision/scale error
+      expect(result.getErrors().length).toBeGreaterThan(0);
+    });
+
+    test('should validate not null constraint', () => {
+      const source = `
+        Table users {
+          id int [pk]
+          name varchar [not null]
+        }
+        records users(id, name) {
+          1, null
+        }
+      `;
+      const result = interpret(source);
+      expect(result.getErrors().length).toBeGreaterThan(0);
+    });
+
+    test('should validate primary key uniqueness', () => {
+      const source = `
+        Table users {
+          id int [pk]
+          name varchar
+        }
+        records users(id, name) {
+          1, "Alice"
+          1, "Bob"
+        }
+      `;
+      const result = interpret(source);
+      expect(result.getErrors().length).toBeGreaterThan(0);
+    });
+
+    test('should validate unique constraint', () => {
+      const source = `
+        Table users {
+          id int [pk]
+          email varchar [unique]
+        }
+        records users(id, email) {
+          1, "test@example.com"
+          2, "test@example.com"
+        }
+      `;
+      const result = interpret(source);
+      expect(result.getErrors().length).toBeGreaterThan(0);
+    });
+
+    test('should validate constraints across multiple records blocks', () => {
+      const source = `
+        Table users {
+          id int [pk]
+          name varchar
+        }
+        records users(id, name) {
+          1, "Alice"
+        }
+        records users(id, name) {
+          1, "Bob"
+        }
+      `;
+      const result = interpret(source);
+      // Should detect duplicate PK across blocks
+      expect(result.getErrors().length).toBeGreaterThan(0);
+    });
+  });
 });
