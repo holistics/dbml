@@ -5,6 +5,7 @@ import Report from '@/core/report';
 import { CompileError } from '@/core/errors';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import SymbolFactory from '@/core/analyzer/symbol/factory';
+import { RecordsChecker } from '@/core/analyzer/records_checker';
 
 export default class Analyzer {
   private ast: ProgramNode;
@@ -15,7 +16,7 @@ export default class Analyzer {
     this.symbolFactory = new SymbolFactory(symbolIdGenerator);
   }
 
-  // Analyzing: Invoking both the validator and binder
+  // Analyzing: Invoking the validator, binder, and records checker
   analyze (): Report<ProgramNode, CompileError> {
     const validator = new Validator(this.ast, this.symbolFactory);
 
@@ -23,6 +24,10 @@ export default class Analyzer {
       const binder = new Binder(program, this.symbolFactory);
 
       return binder.resolve();
+    }).chain((program) => {
+      const recordsChecker = new RecordsChecker(program);
+
+      return recordsChecker.check();
     });
   }
 
