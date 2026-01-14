@@ -19,13 +19,16 @@ export interface Project {
     name: string;
 }
 
+type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
+
 interface RawTableRecord {
     schemaName: string | undefined;
     tableName: string;
     columns: string[];
     values: {
         value: any;
-        type: string;
+        type: RecordValueType;
+        is_expression?: boolean;
     }[][];
 }
 

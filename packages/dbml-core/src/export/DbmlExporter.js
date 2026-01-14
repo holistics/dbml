@@ -347,6 +347,89 @@ class DbmlExporter {
     }, '');
   }
 
+  static formatRecordValue (recordValue) {
+    const { value, type, is_expression } = recordValue;
+
+    // Handle null values
+    if (value === null) {
+      return 'null';
+    }
+
+    // Handle expressions (backtick strings)
+    if (is_expression) {
+      return `\`${value}\``;
+    }
+
+    // Handle by type
+    switch (type) {
+      case 'bool':
+        return value ? 'true' : 'false';
+
+      case 'integer':
+      case 'real':
+        return String(value);
+
+      case 'string':
+      case 'date':
+      case 'time':
+      case 'datetime': {
+        // Strings need to be quoted
+        const strValue = String(value);
+        // Use single quotes, escape any existing single quotes
+        if (strValue.includes('\'')) {
+          return `"${strValue.replace(/"/g, '\\"')}"`;
+        }
+        return `'${strValue}'`;
+      }
+
+      default:
+        // For enum types and other custom types, check if it's a string that needs quoting
+        if (typeof value === 'string') {
+          // Enum references like status.active should not be quoted
+          if (/^[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)+$/.test(value)) {
+            return value;
+          }
+          // Other strings need quoting
+          if (value.includes('\'')) {
+            return `"${value.replace(/"/g, '\\"')}"`;
+          }
+          return `'${value}'`;
+        }
+        return String(value);
+    }
+  }
+
+  static exportRecords (model) {
+    const records = model.records;
+    if (!records || isEmpty(records)) {
+      return '';
+    }
+
+    const recordStrs = Object.values(records).map((record) => {
+      const { schemaName, tableName, columns, values } = record;
+
+      // Build the table reference with schema if present
+      const tableRef = schemaName
+        ? `"${schemaName}"."${tableName}"`
+        : `"${tableName}"`;
+
+      // Build the column list
+      const columnList = columns.map((col) => `"${col}"`).join(', ');
+
+      // Build the data rows
+      const rowStrs = values.map((row) => {
+        const valueStrs = row.map((val) => DbmlExporter.formatRecordValue(val));
+        return `  ${valueStrs.join(', ')}`;
+      });
+
+      const body = rowStrs.join('\n');
+
+      return `records ${tableRef}(${columnList}) {\n${body}\n}\n`;
+    });
+
+    return recordStrs.length ? recordStrs.join('\n') : '';
+  }
+
   static export (model) {
     const elementStrs = [];
     const database = model.database['1'];
@@ -363,6 +446,7 @@ class DbmlExporter {
     });
 
     if (!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));
+    if (!isEmpty(model.records)) elementStrs.push(DbmlExporter.exportRecords(model));
 
     // all elements already end with 1 '\n', so join('\n') to separate them with 1 blank line
     return elementStrs.join('\n');

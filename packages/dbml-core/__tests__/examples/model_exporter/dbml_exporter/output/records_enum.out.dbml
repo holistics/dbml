@@ -1,0 +1,16 @@
+Enum "status_enum" {
+  "pending"
+  "active"
+  "completed"
+}
+
+Table "orders" {
+  "id" integer [pk]
+  "status" status_enum
+}
+
+records "orders"("id", "status") {
+  1, status_enum.pending
+  2, status_enum.active
+  3, status_enum.completed
+}

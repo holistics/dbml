@@ -1,4 +1,4 @@
-import { ProgramNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 import { CompileError } from '@/core/errors';
 import { Database, InterpreterDatabase } from '@/core/interpreter/types';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
@@ -8,6 +8,7 @@ import { TableGroupInterpreter } from '@/core/interpreter/elementInterpreter/tab
 import { EnumInterpreter } from '@/core/interpreter/elementInterpreter/enum';
 import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/project';
 import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
+import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
@@ -23,6 +24,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     aliases: env.aliases,
     project: Array.from(env.project.values())[0] || {},
     tablePartials: Array.from(env.tablePartials.values()),
+    records: env.records,
   };
 }
 
@@ -45,10 +47,15 @@ export default class Interpreter {
       aliases: [],
       project: new Map(),
       tablePartials: new Map(),
+      records: [],
     };
   }
 
   interpret (): Report<Database, CompileError> {
+    // Collect records elements to process later
+    const recordsElements: ElementDeclarationNode[] = [];
+
+    // First pass: interpret all non-records elements
     const errors = this.ast.body.flatMap((element) => {
       switch (getElementKind(element).unwrap_or(undefined)) {
         case ElementKind.Table:
@@ -65,10 +72,19 @@ export default class Interpreter {
           return (new EnumInterpreter(element, this.env)).interpret();
         case ElementKind.Project:
           return (new ProjectInterpreter(element, this.env)).interpret();
+        case ElementKind.Records:
+          // Defer records interpretation - collect for later
+          recordsElements.push(element);
+          return [];
         default:
           return [];
       }
     });
+
+    // Second pass: interpret all records elements grouped by table
+    // Now that all tables, enums, etc. are interpreted, we can validate records properly
+    const recordsErrors = new RecordsInterpreter(this.env).interpret(recordsElements);
+    errors.push(...recordsErrors);
 
     return new Report(convertEnvToDb(this.env), errors);
   }

@@ -1,0 +1,106 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "orders",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": { "offset": 0, "line": 1, "column": 1 },
+            "end": { "offset": 10, "line": 1, "column": 11 }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "unique": false
+        },
+        {
+          "name": "status",
+          "type": {
+            "schemaName": null,
+            "type_name": "status_enum",
+            "args": null
+          },
+          "token": {
+            "start": { "offset": 0, "line": 2, "column": 1 },
+            "end": { "offset": 10, "line": 2, "column": 11 }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": { "offset": 0, "line": 1, "column": 1 },
+        "end": { "offset": 100, "line": 5, "column": 2 }
+      },
+      "indexes": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [
+    {
+      "name": "status_enum",
+      "schemaName": null,
+      "token": {
+        "start": { "offset": 0, "line": 1, "column": 1 },
+        "end": { "offset": 50, "line": 5, "column": 2 }
+      },
+      "values": [
+        {
+          "name": "pending",
+          "token": {
+            "start": { "offset": 0, "line": 2, "column": 1 },
+            "end": { "offset": 10, "line": 2, "column": 11 }
+          }
+        },
+        {
+          "name": "active",
+          "token": {
+            "start": { "offset": 0, "line": 3, "column": 1 },
+            "end": { "offset": 10, "line": 3, "column": 11 }
+          }
+        },
+        {
+          "name": "completed",
+          "token": {
+            "start": { "offset": 0, "line": 4, "column": 1 },
+            "end": { "offset": 10, "line": 4, "column": 11 }
+          }
+        }
+      ]
+    }
+  ],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": [
+    {
+      "schemaName": null,
+      "tableName": "orders",
+      "columns": ["id", "status"],
+      "values": [
+        [
+          { "value": 1, "type": "integer" },
+          { "value": "status_enum.pending", "type": "status_enum" }
+        ],
+        [
+          { "value": 2, "type": "integer" },
+          { "value": "status_enum.active", "type": "status_enum" }
+        ],
+        [
+          { "value": 3, "type": "integer" },
+          { "value": "status_enum.completed", "type": "status_enum" }
+        ]
+      ]
+    }
+  ]
+}

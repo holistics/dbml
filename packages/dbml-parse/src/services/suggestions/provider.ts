@@ -28,6 +28,7 @@ import {
 } from '@/services/suggestions/utils';
 import {
   AttributeNode,
+  CommaExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   IdentiferStreamNode,
@@ -137,6 +138,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         return suggestInAttribute(this.compiler, offset, container);
       } else if (container instanceof TupleExpressionNode) {
         return suggestInTuple(this.compiler, offset);
+      } else if (container instanceof CommaExpressionNode) {
+        return suggestInCommaExpression(this.compiler, offset);
       } else if (container instanceof FunctionApplicationNode) {
         return suggestInSubField(this.compiler, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
@@ -242,6 +245,20 @@ function suggestInTuple (compiler: Compiler, offset: number): CompletionList {
       return suggestInRefField(compiler, offset);
     default:
       break;
+  }
+
+  return noSuggestions();
+}
+
+function suggestInCommaExpression (compiler: Compiler, offset: number): CompletionList {
+  const scopeKind = compiler.container.scopeKind(offset);
+
+  // CommaExpressionNode is used in records data rows
+  if (scopeKind === ScopeKind.RECORDS) {
+    // In records, suggest enum values if applicable
+    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+      SymbolKind.EnumField,
+    ]);
   }
 
   return noSuggestions();
