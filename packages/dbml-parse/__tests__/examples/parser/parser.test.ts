@@ -14,7 +14,6 @@ import {
   VariableNode,
   CommaExpressionNode,
   LiteralNode,
-  EmptyNode,
 } from '@/core/parser/nodes';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { parse } from '@tests/utils';
@@ -988,7 +987,7 @@ Table posts {
 
       // First element: 1
       expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      // Second element: empty (DummyNode)
+      // Second element: empty (EmptyNode)
       expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.EMPTY);
       // Third element: 3
       expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
@@ -1010,9 +1009,9 @@ Table posts {
 
       // First element: 1
       expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      // Second element: empty (DummyNode)
+      // Second element: empty (EmptyNode)
       expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.EMPTY);
-      // Third element: empty (DummyNode)
+      // Third element: empty (EmptyNode)
       expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.EMPTY);
       // Fourth element: 4
       expect(commaExpr.elementList[3].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
@@ -1036,7 +1035,7 @@ Table posts {
       expect(commaExpr.elementList[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
       // Second element: 2
       expect(commaExpr.elementList[1].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
-      // Third element: empty (DummyNode for trailing comma)
+      // Third element: empty (EmptyNode for trailing comma)
       expect(commaExpr.elementList[2].kind).toBe(SyntaxNodeKind.EMPTY);
     });
 
