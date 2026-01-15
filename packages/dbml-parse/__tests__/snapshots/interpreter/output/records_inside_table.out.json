@@ -1,0 +1,106 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "products",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 19,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 34,
+              "line": 2,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 37,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 49,
+              "line": 3,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "price",
+          "type": {
+            "schemaName": null,
+            "type_name": "decimal",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 52,
+              "line": 4,
+              "column": 3
+            },
+            "end": {
+              "offset": 65,
+              "line": 4,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 155,
+          "line": 11,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "tablePartials": [],
+  "records": []
+}
