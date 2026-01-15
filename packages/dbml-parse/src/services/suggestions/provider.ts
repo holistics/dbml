@@ -259,18 +259,19 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Syn
     }
   }
 
-  // Check if we're in a Records element header (top-level Records)
+  // Check if we're in a Records element header
   if (
     element instanceof ElementDeclarationNode
     && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    // Suggest column names from the table
-    // If Records is inside a table, use parent.symbol, otherwise use name?.referee
     const tableSymbol = element.parent?.symbol || element.name?.referee;
     if (tableSymbol) {
-      return suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+      let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+      suggestions = excludeSuggestions(suggestions, ['records']);
+      suggestions = addExpandAllColumnsSuggestion(suggestions);
+      return suggestions;
     }
   }
 
@@ -285,17 +286,11 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Syn
           && extractVariableFromExpression(c.callee).unwrap_or('').toLowerCase() === 'records'
           && !(c.args?.[0] instanceof CallExpressionNode)
         ) {
-        // Use the parent element's symbol (the table)
           const tableSymbol = element.symbol;
           if (tableSymbol) {
             let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-
-            // Exclude "records" from column suggestions
             suggestions = excludeSuggestions(suggestions, ['records']);
-
-            // Add special suggestion: expand * to all columns
             suggestions = addExpandAllColumnsSuggestion(suggestions);
-
             return suggestions;
           }
           break;
@@ -742,7 +737,6 @@ function suggestInCallExpression (
     && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    // If in callee, suggest schema and table names
     if (inCallee) {
       return suggestNamesInScope(compiler, offset, element.parent, [
         SymbolKind.Schema,
@@ -750,7 +744,6 @@ function suggestInCallExpression (
       ]);
     }
 
-    // If in args, suggest column names from the table referenced in the callee
     if (inArgs) {
       const callee = container.callee;
       if (callee) {
@@ -760,20 +753,15 @@ function suggestInCallExpression (
 
         if (tableSymbol) {
           let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-
-          // Exclude "records" from column suggestions
           suggestions = excludeSuggestions(suggestions, ['records']);
-
-          // Add special suggestion: expand * to all columns
           suggestions = addExpandAllColumnsSuggestion(suggestions);
-
           return suggestions;
         }
       }
     }
   }
 
-  // Check if we're inside a Records FunctionApplicationNode (e.g., typing "Records users()")
+  // Check if we're inside a Records FunctionApplicationNode (e.g., typing "Records ()")
   const containers = [...compiler.container.stack(offset)];
   for (const c of containers) {
     if (
@@ -799,13 +787,8 @@ function suggestInCallExpression (
 
           if (tableSymbol) {
             let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-
-            // Exclude "records" from column suggestions
             suggestions = excludeSuggestions(suggestions, ['records']);
-
-            // Add special suggestion: expand * to all columns
             suggestions = addExpandAllColumnsSuggestion(suggestions);
-
             return suggestions;
           }
         }
