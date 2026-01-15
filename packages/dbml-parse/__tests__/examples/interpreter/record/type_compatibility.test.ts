@@ -390,7 +390,7 @@ describe('[example - record] type compatibility validation', () => {
       expect(db.records[0].values[0][2]).toEqual({ type: 'string', value: null });
     });
 
-    test('- should reject NULL for NOT NULL column without default', () => {
+    test('- should reject NULL for NOT NULL column without default and increment', () => {
       const source = `
         Table users {
           id int [pk]
@@ -404,7 +404,7 @@ describe('[example - record] type compatibility validation', () => {
       const errors = result.getErrors();
 
       expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'name' without default");
+      expect(errors[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'name' without default and increment");
     });
 
     test('- should allow NULL for NOT NULL column with default', () => {
@@ -471,7 +471,7 @@ describe('[example - record] type compatibility validation', () => {
 
       // NULL should be valid syntax
       expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'name' without default");
+      expect(errors[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'name' without default and increment");
     });
   });
 

@@ -192,37 +192,14 @@ export class RecordsInterpreter {
     }
 
     // NULL literal
-    if (isNullish(node)) {
-      if (notNull && !dbdefault) {
+    if (isNullish(node) || (isEmptyStringLiteral(node) && !isStringType(type))) {
+      const defaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null' ? this.interpretDefaultValue(dbdefault.value, column, valueType, node) : null;
+      if (notNull && defaultValue === null && !increment) {
         return [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
-          `NULL not allowed for NOT NULL column '${column.name}' without default`,
+          `NULL not allowed for NOT NULL column '${column.name}' without default and increment`,
           node,
         )];
-      }
-      if (dbdefault && dbdefault.value.toString().toLowerCase() !== 'null') {
-        return this.interpretDefaultValue(dbdefault.value, column, valueType, node);
-      }
-      return { value: null, type: valueType };
-    }
-
-    // Empty string - treated as NULL for non-string types
-    if (isEmptyStringLiteral(node)) {
-      if (isStringType(type)) {
-        return { value: '', type: 'string' };
-      }
-      if (notNull && !dbdefault) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Empty value not allowed for NOT NULL column '${column.name}' without default`,
-          node,
-        )];
-      }
-      if (dbdefault && dbdefault.value.toString().toLowerCase() !== 'null') {
-        return this.interpretDefaultValue(dbdefault.value, column, valueType, node);
-      }
-      if (increment) {
-        return { value: null, type: valueType };
       }
       return { value: null, type: valueType };
     }
