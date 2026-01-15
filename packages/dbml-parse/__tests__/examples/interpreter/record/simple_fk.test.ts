@@ -74,7 +74,7 @@ describe('[example - record] simple foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'user_id' does not exist in referenced table 'users'");
+    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column 'user_id' does not exist in referenced table 'users'");
   });
 
   test('should allow NULL FK values (optional relationship)', () => {
@@ -146,8 +146,8 @@ describe('[example - record] simple foreign key constraints', () => {
     // 1. user_profiles.user_id=3 doesn't exist in users.id
     // 2. users.id=2 (Bob) doesn't have a matching user_profiles.user_id
     expect(errors.length).toBe(2);
-    expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'user_id' does not exist in referenced table 'users'");
-    expect(errors[1].diagnostic).toBe("Foreign key violation: value for column 'id' does not exist in referenced table 'user_profiles'");
+    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column 'user_id' does not exist in referenced table 'users'");
+    expect(errors[1].diagnostic).toBe("Foreign key not found: value for column 'id' does not exist in referenced table 'user_profiles'");
   });
 
   test('should validate one-to-many FK from parent side', () => {
@@ -175,7 +175,7 @@ describe('[example - record] simple foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'dept_id' does not exist in referenced table 'departments'");
+    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column 'dept_id' does not exist in referenced table 'departments'");
   });
 
   test('should accept valid string FK values', () => {
@@ -235,7 +235,7 @@ describe('[example - record] simple foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'country_code' does not exist in referenced table 'countries'");
+    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column 'country_code' does not exist in referenced table 'countries'");
   });
 
   test('should validate FK with zero values', () => {
@@ -324,7 +324,7 @@ describe('[example - record] simple foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'user_id' does not exist in referenced table 'users'");
+    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column 'user_id' does not exist in referenced table 'users'");
   });
 
   test('should accept inline ref syntax for FK', () => {
@@ -376,7 +376,7 @@ describe('[example - record] simple foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'user_id' does not exist in referenced table 'users'");
+    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column 'user_id' does not exist in referenced table 'users'");
   });
 
   test('should accept self-referencing FK', () => {
@@ -418,6 +418,6 @@ describe('[example - record] simple foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'manager_id' does not exist in referenced table 'employees'");
+    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column 'manager_id' does not exist in referenced table 'employees'");
   });
 });

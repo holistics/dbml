@@ -102,7 +102,7 @@ describe('[example - record] Unique validation across multiple records blocks', 
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('Duplicate composite unique');
+    expect(errors[0].diagnostic).toContain('Duplicate unique value');
   });
 
   test('should allow NULL for unique constraint across blocks', () => {
