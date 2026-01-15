@@ -257,6 +257,8 @@ function suggestInCommaExpression (compiler: Compiler, offset: number): Completi
   if (scopeKind === ScopeKind.RECORDS) {
     // In records, suggest enum values if applicable
     return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+      SymbolKind.Schema,
+      SymbolKind.Enum,
       SymbolKind.EnumField,
     ]);
   }
@@ -523,7 +525,7 @@ function suggestInSubField (
 
 function suggestTopLevelElementType (): CompletionList {
   return {
-    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial'].map((name) => ({
+    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records'].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -559,7 +561,7 @@ function suggestInColumn (
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const elements = ['Note', 'indexes', 'checks'];
+  const elements = ['Note', 'indexes', 'checks', 'Records'];
   if (!container?.callee) {
     return {
       suggestions: elements.map((name) => ({
