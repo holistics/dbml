@@ -1,0 +1,205 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 16,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 31,
+              "line": 2,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 34,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 46,
+              "line": 3,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 49,
+              "line": 4,
+              "column": 3
+            },
+            "end": {
+              "offset": 62,
+              "line": 4,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "age",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 65,
+              "line": 5,
+              "column": 3
+            },
+            "end": {
+              "offset": 76,
+              "line": 5,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 79,
+              "line": 6,
+              "column": 3
+            },
+            "end": {
+              "offset": 99,
+              "line": 6,
+              "column": 23
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 101,
+          "line": 7,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "tablePartials": [],
+  "records": [
+    {
+      "tableName": "users",
+      "columns": [
+        "id",
+        "name",
+        "email"
+      ],
+      "values": [
+        [
+          {
+            "value": 1,
+            "type": "integer"
+          },
+          {
+            "value": "Alice",
+            "type": "string"
+          },
+          {
+            "value": null,
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": 2,
+            "type": "integer"
+          },
+          {
+            "value": null,
+            "type": "string"
+          },
+          {
+            "value": null,
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": 3,
+            "type": "integer"
+          },
+          {
+            "value": "Charlie",
+            "type": "string"
+          },
+          {
+            "value": "charlie@example.com",
+            "type": "string"
+          }
+        ]
+      ]
+    }
+  ]
+}

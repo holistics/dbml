@@ -16,11 +16,11 @@ describe('[snapshot] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial']);
+      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial']);
+      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
     });
 
     it('- work even if some characters have been typed out', () => {
@@ -34,11 +34,11 @@ describe('[snapshot] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial']);
+      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial']);
+      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
     });
 
     it('- work even if there are some not directly following nonsensical characters', () => {
@@ -52,11 +52,11 @@ describe('[snapshot] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial']);
+      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial']);
+      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
     });
 
     it('- work even if there are some directly following nonsensical characters', () => {
@@ -70,11 +70,11 @@ describe('[snapshot] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial']);
+      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial']);
+      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
     });
   });
 
@@ -125,7 +125,7 @@ describe('[snapshot] CompletionItemProvider', () => {
         'Note',
         'indexes',
         'checks',
-
+        'Records',
       ]);
 
       // Test insertTexts
@@ -134,7 +134,7 @@ describe('[snapshot] CompletionItemProvider', () => {
         'Note',
         'indexes',
         'checks',
-
+        'Records',
       ]);
     });
 
@@ -207,7 +207,7 @@ describe('[snapshot] CompletionItemProvider', () => {
         'Note',
         'indexes',
         'checks',
-
+        'Records',
       ]);
 
       // Test insertTexts
@@ -216,7 +216,7 @@ describe('[snapshot] CompletionItemProvider', () => {
         'Note',
         'indexes',
         'checks',
-
+        'Records',
       ]);
     });
 
@@ -235,7 +235,7 @@ describe('[snapshot] CompletionItemProvider', () => {
         'Note',
         'indexes',
         'checks',
-
+        'Records',
       ]);
 
       // Test insertTexts
@@ -244,7 +244,7 @@ describe('[snapshot] CompletionItemProvider', () => {
         'Note',
         'indexes',
         'checks',
-
+        'Records',
       ]);
     });
   });
@@ -1265,7 +1265,7 @@ describe('[snapshot] CompletionItemProvider', () => {
         'Note',
         'indexes',
         'checks',
-
+        'Records',
       ]);
 
       // Test insertTexts
@@ -1274,7 +1274,7 @@ describe('[snapshot] CompletionItemProvider', () => {
         'Note',
         'indexes',
         'checks',
-
+        'Records',
       ]);
     });
 
@@ -1430,8 +1430,7 @@ describe('[snapshot] CompletionItemProvider', () => {
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
       expect(insertTexts).toEqual([
-        '"user-table"',
-
+        '""user-table""',
       ]);
     });
 
@@ -2135,6 +2134,156 @@ Table posts {
 
       // Should still provide some suggestions despite syntax error
       expect(Array.isArray(result.suggestions)).toBe(true);
+    });
+  });
+
+  describe('Records element suggestions', () => {
+    it('- should suggest table names for top-level Records', () => {
+      const program = `Table users {
+  id int pk
+  name varchar
+}
+
+Table orders {
+  id int pk
+}
+
+Records `;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+      const model = createMockTextModel(program);
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const position = createPosition(10, 9);
+      const result = provider.provideCompletionItems(model, position);
+
+      expect(result.suggestions.some((s) => s.label === 'users')).toBe(true);
+      expect(result.suggestions.some((s) => s.label === 'orders')).toBe(true);
+    });
+
+    it('- should suggest column names for Records column list', () => {
+      const program = `Table users {
+  id int pk
+  name varchar
+  email varchar
+  age int
+}
+
+Records users(id, )`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+      const model = createMockTextModel(program);
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const position = createPosition(8, 19);
+      const result = provider.provideCompletionItems(model, position);
+
+      expect(result.suggestions.some((s) => s.label === 'name')).toBe(true);
+      expect(result.suggestions.some((s) => s.label === 'email')).toBe(true);
+      expect(result.suggestions.some((s) => s.label === 'age')).toBe(true);
+    });
+
+    it('- should suggest schema-qualified table names', () => {
+      const program = `Table s.users {
+  id int pk
+}
+
+Table s.orders {
+  id int pk
+}
+
+Records s.`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+      const model = createMockTextModel(program);
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const position = createPosition(9, 11);
+      const result = provider.provideCompletionItems(model, position);
+
+      expect(result.suggestions.some((s) => s.label === 'users')).toBe(true);
+      expect(result.suggestions.some((s) => s.label === 'orders')).toBe(true);
+    });
+
+    it('- should suggest column names for Records inside table', () => {
+      const program = `Table products {
+  id integer [pk]
+  name varchar
+  price decimal
+
+  Records ()
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+      const model = createMockTextModel(program);
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const position = createPosition(6, 12);
+      const result = provider.provideCompletionItems(model, position);
+
+      expect(result.suggestions.some((s) => s.label === 'id')).toBe(true);
+      expect(result.suggestions.some((s) => s.label === 'name')).toBe(true);
+      expect(result.suggestions.some((s) => s.label === 'price')).toBe(true);
+    });
+
+    it('- should suggest enum values in Records data rows', () => {
+      const program = `Enum status {
+  active
+  inactive
+  pending
+}
+
+Table users {
+  id int pk
+  user_status status
+}
+
+Records users(id, user_status) {
+  1, status.
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+      const model = createMockTextModel(program);
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const position = createPosition(13, 14);
+      const result = provider.provideCompletionItems(model, position);
+
+      expect(result.suggestions.some((s) => s.label === 'active')).toBe(true);
+      expect(result.suggestions.some((s) => s.label === 'inactive')).toBe(true);
+      expect(result.suggestions.some((s) => s.label === 'pending')).toBe(true);
+    });
+
+    it('- should suggest Records keyword in table body', () => {
+      const program = `Table products {
+  id integer [pk]
+  name varchar
+
+
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+      const model = createMockTextModel(program);
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const position = createPosition(5, 3);
+      const result = provider.provideCompletionItems(model, position);
+
+      expect(result.suggestions.some((s) => s.label === 'Records')).toBe(true);
+    });
+
+    it('- should suggest column names in Records call expression', () => {
+      const program = `Table users {
+  id int pk
+  name varchar
+  email varchar
+}
+
+Records users()`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+      const model = createMockTextModel(program);
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const position = createPosition(7, 15);
+      const result = provider.provideCompletionItems(model, position);
+
+      expect(result.suggestions.some((s) => s.label === 'id')).toBe(true);
+      expect(result.suggestions.some((s) => s.label === 'name')).toBe(true);
+      expect(result.suggestions.some((s) => s.label === 'email')).toBe(true);
     });
   });
 });
