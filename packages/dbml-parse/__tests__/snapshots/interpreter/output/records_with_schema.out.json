@@ -1,0 +1,170 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "orders",
+      "schemaName": "public",
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 24,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 39,
+              "line": 2,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "pk": true,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "customer_name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 42,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 63,
+              "line": 3,
+              "column": 24
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "total",
+          "type": {
+            "schemaName": null,
+            "type_name": "decimal",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 66,
+              "line": 4,
+              "column": 3
+            },
+            "end": {
+              "offset": 79,
+              "line": 4,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "status",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 82,
+              "line": 5,
+              "column": 3
+            },
+            "end": {
+              "offset": 96,
+              "line": 5,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 98,
+          "line": 6,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [],
+      "checks": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "tablePartials": [],
+  "records": [
+    {
+      "schemaName": "public",
+      "tableName": "orders",
+      "columns": [
+        "id",
+        "customer_name"
+      ],
+      "values": [
+        [
+          {
+            "value": 1,
+            "type": "integer"
+          },
+          {
+            "value": "John Doe",
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": 2,
+            "type": "integer"
+          },
+          {
+            "value": "Jane Smith",
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": 3,
+            "type": "integer"
+          },
+          {
+            "value": "Bob Wilson",
+            "type": "string"
+          }
+        ]
+      ]
+    }
+  ]
+}
