@@ -10,7 +10,7 @@ import {
   PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/parser/nodes';
 import {
-  ColumnType, RelationCardinality, Table, TokenPosition,
+  ColumnType, RelationCardinality, Table, TokenPosition, InterpreterDatabase,
 } from '@/core/interpreter/types';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
@@ -199,12 +199,16 @@ export function processDefaultValue (valueNode?: SyntaxNode):
   throw new Error('Unreachable');
 }
 
-export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, CompileError> {
+export function processColumnType (typeNode: SyntaxNode, env?: InterpreterDatabase): Report<ColumnType, CompileError> {
   let typeSuffix: string = '';
   let typeArgs: string | null = null;
+  let numericParams: { precision: number; scale: number } | undefined;
+  let lengthParam: { length: number } | undefined;
+  let isEnum = false;
+
   if (typeNode instanceof CallExpressionNode) {
-    typeArgs = typeNode
-      .argumentList!.elementList.map((e) => {
+    const argElements = typeNode.argumentList!.elementList;
+    typeArgs = argElements.map((e) => {
       if (isExpressionASignedNumberExpression(e)) {
         return getNumberTextFromExpression(e);
       }
@@ -213,9 +217,35 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
       }
       // e can only be an identifier here
       return extractVariableFromExpression(e).unwrap();
-    })
-      .join(',');
+    }).join(',');
     typeSuffix = `(${typeArgs})`;
+
+    // Parse numeric type parameters (precision, scale)
+    if (argElements.length === 2 &&
+        isExpressionASignedNumberExpression(argElements[0]) &&
+        isExpressionASignedNumberExpression(argElements[1])) {
+      try {
+        const precision = parseNumber(argElements[0] as any);
+        const scale = parseNumber(argElements[1] as any);
+        if (!isNaN(precision) && !isNaN(scale)) {
+          numericParams = { precision: Math.trunc(precision), scale: Math.trunc(scale) };
+        }
+      } catch {
+        // If parsing fails, just skip setting numericParams
+      }
+    }
+    // Parse length parameter
+    else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
+      try {
+        const length = parseNumber(argElements[0] as any);
+        if (!isNaN(length)) {
+          lengthParam = { length: Math.trunc(length) };
+        }
+      } catch {
+        // If parsing fails, just skip setting lengthParam
+      }
+    }
+
     typeNode = typeNode.callee!;
   }
   while (typeNode instanceof CallExpressionNode || typeNode instanceof ArrayNode) {
@@ -246,12 +276,27 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
   }
 
   const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
+
+  // Check if this type references an enum
+  if (env) {
+    const schema = typeSchemaName.length === 0 ? null : typeSchemaName[0];
+    for (const enumObj of env.enums.values()) {
+      if (enumObj.name === typeName && enumObj.schemaName === schema) {
+        isEnum = true;
+        break;
+      }
+    }
+  }
+
   if (typeSchemaName.length > 1) {
     return new Report(
       {
         schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
         type_name: `${typeName}${typeSuffix}`,
         args: typeArgs,
+        numericParams,
+        lengthParam,
+        isEnum,
       },
       [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)],
     );
@@ -261,5 +306,8 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
     schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
     type_name: `${typeName}${typeSuffix}`,
     args: typeArgs,
+    numericParams,
+    lengthParam,
+    isEnum,
   });
 }
