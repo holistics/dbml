@@ -53,10 +53,13 @@ export function validatePrimaryKey (
         // Report error for missing columns without defaults/autoincrement
         if (missingColumnsWithoutDefaults.length > 0) {
           const missingStr = formatColumns(missingColumnsWithoutDefaults);
+          const msg = missingColumnsWithoutDefaults.length > 1
+            ? `Missing primary key columns ${missingStr}`
+            : `Missing primary key '${missingColumnsWithoutDefaults[0]}'`;
           for (const row of rows) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_RECORDS_FIELD,
-              `Missing primary key column ${missingStr} in record`,
+              msg,
               row.node,
             ));
           }
@@ -84,20 +87,30 @@ export function validatePrimaryKey (
             continue;
           }
           // Non-auto-increment PK columns cannot have NULL (even with defaults)
-          const msg = isComposite
-            ? `NULL value not allowed in composite primary key ${columnsStr}`
-            : `NULL value not allowed in primary key column ${columnsStr}`;
-          errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, row.node));
+          // Find the first NULL column to report error on
+          for (const col of pkColumns) {
+            const val = row.values[col];
+            if (!val || val.value === null) {
+              const errorNode = row.columnNodes[col] || row.node;
+              const msg = isComposite
+                ? `NULL not allowed in primary key '${col}'`
+                : `NULL not allowed in primary key`;
+              errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
+              break;
+            }
+          }
           continue;
         }
 
         // Check for duplicates (using defaults for missing values)
         const keyValue = extractKeyValue(row.values, pkColumns, pkColumnFields);
         if (seen.has(keyValue)) {
+          // Report error on the first column of the constraint
+          const errorNode = row.columnNodes[pkColumns[0]] || row.node;
           const msg = isComposite
-            ? `Duplicate composite primary key value for ${columnsStr}`
-            : `Duplicate primary key value for column ${columnsStr}`;
-          errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, row.node));
+            ? `Duplicate primary key ${columnsStr}`
+            : `Duplicate primary key`;
+          errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
         } else {
           seen.set(keyValue, rowIndex);
         }

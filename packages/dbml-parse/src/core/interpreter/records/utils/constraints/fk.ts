@@ -34,14 +34,20 @@ function makeTableKey (schema: string | null | undefined, table: string): string
 }
 
 // Build lookup map indexed by schema.table key
+// Includes all tables from database, even those without records
 function createRecordMapFromKey (
+  allTables: Map<any, Table>,
   records: Map<Table, TableRecordRow[]>,
 ): LookupMap {
   const lookup = new Map<string, TableLookup>();
-  for (const [table, rows] of records) {
+
+  // Add all tables with their records (or empty array if no records)
+  for (const table of allTables.values()) {
     const key = makeTableKey(table.schemaName, table.name);
+    const rows = records.get(table) || [];
     lookup.set(key, { table, rows });
   }
+
   return lookup;
 }
 
@@ -65,7 +71,12 @@ function validateDirection (
 ): CompileError[] {
   const errors: CompileError[] = [];
 
-  // Collect column names from source and target
+  // Skip if source table has no records (nothing to validate)
+  if (source.rows.length === 0) {
+    return errors;
+  }
+
+  // Collect column names from source records
   const sourceColumns = new Set<string>();
   for (const row of source.rows) {
     for (const colName of Object.keys(row.values)) {
@@ -73,20 +84,19 @@ function validateDirection (
     }
   }
 
-  const targetColumns = new Set<string>();
-  for (const row of target.rows) {
-    for (const colName of Object.keys(row.values)) {
-      targetColumns.add(colName);
-    }
+  // Skip if FK columns not found in source records
+  if (sourceEndpoint.fieldNames.some((col) => !sourceColumns.has(col))) {
+    return errors;
   }
 
-  // Skip if columns not found in source or target
-  if (sourceEndpoint.fieldNames.some((col) => !sourceColumns.has(col))
-    || targetEndpoint.fieldNames.some((col) => !targetColumns.has(col))) {
+  // Check if target columns exist in the target table schema (not just records)
+  const targetTableColumns = new Set(target.table.fields.map((f) => f.name));
+  if (targetEndpoint.fieldNames.some((col) => !targetTableColumns.has(col))) {
     return errors;
   }
 
   const validKeys = collectValidKeys(target.rows, targetEndpoint.fieldNames);
+  const isComposite = sourceEndpoint.fieldNames.length > 1;
   const columnsStr = formatColumns(sourceEndpoint.fieldNames);
 
   for (const row of source.rows) {
@@ -95,10 +105,16 @@ function validateDirection (
 
     const key = extractKeyValue(row.values, sourceEndpoint.fieldNames);
     if (!validKeys.has(key)) {
+      // Report error on the first column of the FK
+      const errorNode = row.columnNodes[sourceEndpoint.fieldNames[0]] || row.node;
+      const targetColStr = formatColumns(targetEndpoint.fieldNames);
+      const msg = isComposite
+        ? `Foreign key ${columnsStr} not found in '${targetEndpoint.tableName}${targetColStr}'`
+        : `Foreign key not found in '${targetEndpoint.tableName}.${targetEndpoint.fieldNames[0]}'`;
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Foreign key violation: value for column ${columnsStr} does not exist in referenced table '${targetEndpoint.tableName}'`,
-        row.node,
+        msg,
+        errorNode,
       ));
     }
   }
@@ -152,8 +168,11 @@ function validateRef (ref: Ref, lookup: LookupMap): CompileError[] {
   const table1 = lookup.get(makeTableKey(endpoint1.schemaName, endpoint1.tableName));
   const table2 = lookup.get(makeTableKey(endpoint2.schemaName, endpoint2.tableName));
 
-  // Skip if either table has no records
+  // Skip if tables don't exist in lookup (no table definition)
   if (!table1 || !table2) return [];
+
+  // Skip if source tables have no records (nothing to validate)
+  // But don't skip if only target table is empty - that's a violation!
 
   const rel1 = endpoint1.relation;
   const rel2 = endpoint2.relation;
@@ -185,7 +204,7 @@ function validateRef (ref: Ref, lookup: LookupMap): CompileError[] {
 export function validateForeignKeys (
   env: InterpreterDatabase,
 ): CompileError[] {
-  const lookup = createRecordMapFromKey(env.records);
+  const lookup = createRecordMapFromKey(env.tables, env.records);
   const refs = Array.from(env.ref.values());
   const errors: CompileError[] = [];
 
