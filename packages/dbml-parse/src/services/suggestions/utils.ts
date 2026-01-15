@@ -3,6 +3,8 @@ import { CompletionItemKind, type CompletionList } from '@/services/types';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
 import { isAlphaOrUnderscore } from '@/core/utils';
+import { SyntaxNode } from '@/core/parser/nodes';
+import Compiler from '@/compiler';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
@@ -72,4 +74,27 @@ export function addQuoteIfNeeded (completionList: CompletionList): CompletionLis
       insertText: (!s.insertText || !s.insertText.split('').every(isAlphaOrUnderscore)) ? `"${s.insertText ?? ''}"` : s.insertText,
     })),
   };
+}
+
+export function getSource (compiler: Compiler, tokenOrNode: SyntaxToken | SyntaxNode): string {
+  return compiler.parse.source().slice(tokenOrNode.start, tokenOrNode.end);
+}
+
+/**
+ * Checks if the offset is within the element's header
+ * (within the element, but outside the body)
+ */
+export function isOffsetWithinElementHeader (offset: number, element: SyntaxNode & { body?: SyntaxNode }): boolean {
+  // Check if offset is within the element at all
+  if (offset < element.start || offset > element.end) {
+    return false;
+  }
+
+  // If element has a body, check if offset is outside it
+  if (element.body) {
+    return offset < element.body.start || offset > element.body.end;
+  }
+
+  // Element has no body, so entire element is considered header
+  return true;
 }
