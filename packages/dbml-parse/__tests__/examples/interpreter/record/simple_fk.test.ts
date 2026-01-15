@@ -177,4 +177,247 @@ describe('[example - record] simple foreign key constraints', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'dept_id' does not exist in referenced table 'departments'");
   });
+
+  test('should accept valid string FK values', () => {
+    const source = `
+      Table countries {
+        code varchar(2) [pk]
+        name varchar
+      }
+      Table cities {
+        id int [pk]
+        country_code varchar(2)
+        name varchar
+      }
+      Ref: cities.country_code > countries.code
+
+      records countries(code, name) {
+        "US", "United States"
+        "UK", "United Kingdom"
+      }
+      records cities(id, country_code, name) {
+        1, "US", "New York"
+        2, "UK", "London"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+
+    const db = result.getValue()!;
+    expect(db.records[1].values[0][1]).toEqual({ type: 'string', value: 'US' });
+    expect(db.records[1].values[1][1]).toEqual({ type: 'string', value: 'UK' });
+  });
+
+  test('should reject invalid string FK values', () => {
+    const source = `
+      Table countries {
+        code varchar(2) [pk]
+        name varchar
+      }
+      Table cities {
+        id int [pk]
+        country_code varchar(2)
+        name varchar
+      }
+      Ref: cities.country_code > countries.code
+
+      records countries(code, name) {
+        "US", "United States"
+      }
+      records cities(id, country_code, name) {
+        1, "US", "New York"
+        2, "FR", "Paris"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'country_code' does not exist in referenced table 'countries'");
+  });
+
+  test('should validate FK with zero values', () => {
+    const source = `
+      Table items {
+        id int [pk]
+        name varchar
+      }
+      Table orders {
+        id int [pk]
+        item_id int
+      }
+      Ref: orders.item_id > items.id
+
+      records items(id, name) {
+        0, "Default Item"
+        1, "Item One"
+      }
+      records orders(id, item_id) {
+        1, 0
+        2, 1
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+  });
+
+  test('should validate FK with negative values', () => {
+    const source = `
+      Table accounts {
+        id int [pk]
+        name varchar
+      }
+      Table transactions {
+        id int [pk]
+        account_id int
+        amount decimal
+      }
+      Ref: transactions.account_id > accounts.id
+
+      records accounts(id, name) {
+        -1, "System Account"
+        1, "User Account"
+      }
+      records transactions(id, account_id, amount) {
+        1, -1, 100.00
+        2, 1, 50.00
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+  });
+
+  test('should validate FK across multiple records blocks', () => {
+    const source = `
+      Table users {
+        id int [pk]
+        name varchar
+      }
+      Table posts {
+        id int [pk]
+        user_id int
+        title varchar
+      }
+      Ref: posts.user_id > users.id
+
+      records users(id, name) {
+        1, "Alice"
+      }
+      records users(id, name) {
+        2, "Bob"
+      }
+      records posts(id, user_id, title) {
+        1, 1, "Alice's Post"
+      }
+      records posts(id, user_id, title) {
+        2, 2, "Bob's Post"
+        3, 3, "Invalid Post"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'user_id' does not exist in referenced table 'users'");
+  });
+
+  test('should accept inline ref syntax for FK', () => {
+    const source = `
+      Table users {
+        id int [pk]
+        name varchar
+      }
+      Table posts {
+        id int [pk]
+        user_id int [ref: > users.id]
+        title varchar
+      }
+
+      records users(id, name) {
+        1, "Alice"
+      }
+      records posts(id, user_id, title) {
+        1, 1, "Valid Post"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+  });
+
+  test('should reject invalid inline ref FK value', () => {
+    const source = `
+      Table users {
+        id int [pk]
+        name varchar
+      }
+      Table posts {
+        id int [pk]
+        user_id int [ref: > users.id]
+        title varchar
+      }
+
+      records users(id, name) {
+        1, "Alice"
+      }
+      records posts(id, user_id, title) {
+        1, 1, "Valid Post"
+        2, 999, "Invalid Post"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'user_id' does not exist in referenced table 'users'");
+  });
+
+  test('should accept self-referencing FK', () => {
+    const source = `
+      Table employees {
+        id int [pk]
+        manager_id int
+        name varchar
+      }
+      Ref: employees.manager_id > employees.id
+
+      records employees(id, manager_id, name) {
+        1, null, "CEO"
+        2, 1, "Manager"
+        3, 2, "Employee"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+  });
+
+  test('should reject invalid self-referencing FK', () => {
+    const source = `
+      Table employees {
+        id int [pk]
+        manager_id int
+        name varchar
+      }
+      Ref: employees.manager_id > employees.id
+
+      records employees(id, manager_id, name) {
+        1, null, "CEO"
+        2, 999, "Invalid Manager Reference"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toBe("Foreign key violation: value for column 'manager_id' does not exist in referenced table 'employees'");
+  });
 });
