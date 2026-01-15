@@ -232,7 +232,7 @@ function extractValue (
     if (dtValue === null) {
       return [new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid datetime value for column '${column.name}', expected ISO 8601 format`,
+        `Invalid datetime value for column '${column.name}', expected ISO 8601 format (e.g., YYYY-MM-DD, HH:MM:SS, or YYYY-MM-DDTHH:MM:SS)`,
         node,
       )];
     }
@@ -310,7 +310,7 @@ function extractDefaultValue (
     if (dtValue === null) {
       return [new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid datetime value for column '${column.name}', expected ISO 8601 format`,
+        `Invalid datetime value for column '${column.name}', expected ISO 8601 format (e.g., YYYY-MM-DD, HH:MM:SS, or YYYY-MM-DDTHH:MM:SS)`,
         node,
       )];
     }
