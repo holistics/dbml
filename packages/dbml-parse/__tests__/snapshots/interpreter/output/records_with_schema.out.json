@@ -11,7 +11,8 @@
           "type": {
             "schemaName": null,
             "type_name": "integer",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -36,7 +37,8 @@
           "type": {
             "schemaName": null,
             "type_name": "varchar",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -59,7 +61,8 @@
           "type": {
             "schemaName": null,
             "type_name": "decimal",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -82,7 +85,8 @@
           "type": {
             "schemaName": null,
             "type_name": "varchar",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -134,36 +138,36 @@
         "customer_name"
       ],
       "values": [
-        [
-          {
+        {
+          "id": {
             "value": 1,
             "type": "integer"
           },
-          {
+          "customer_name": {
             "value": "John Doe",
             "type": "string"
           }
-        ],
-        [
-          {
+        },
+        {
+          "id": {
             "value": 2,
             "type": "integer"
           },
-          {
+          "customer_name": {
             "value": "Jane Smith",
             "type": "string"
           }
-        ],
-        [
-          {
+        },
+        {
+          "id": {
             "value": 3,
             "type": "integer"
           },
-          {
+          "customer_name": {
             "value": "Bob Wilson",
             "type": "string"
           }
-        ]
+        }
       ]
     }
   ]

@@ -1,6 +1,6 @@
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import { ProgramNode } from '@/core/parser/nodes';
 import { CompileError } from '@/core/errors';
-import { Database, InterpreterDatabase } from '@/core/interpreter/types';
+import { Database, InterpreterDatabase, TableRecord } from '@/core/interpreter/types';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
 import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
@@ -14,6 +14,27 @@ import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 
 function convertEnvToDb (env: InterpreterDatabase): Database {
+  // Convert records Map to array of TableRecord
+  const records: TableRecord[] = [];
+  for (const [table, rows] of env.records) {
+    if (rows.length > 0) {
+      // Collect all unique column names from all rows
+      const columnsSet = new Set<string>();
+      for (const row of rows) {
+        for (const colName of Object.keys(row.values)) {
+          columnsSet.add(colName);
+        }
+      }
+
+      records.push({
+        schemaName: table.schemaName || undefined,
+        tableName: table.name,
+        columns: Array.from(columnsSet),
+        values: rows.map((r) => r.values),
+      });
+    }
+  }
+
   return {
     schemas: [],
     tables: Array.from(env.tables.values()),
@@ -24,7 +45,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     aliases: env.aliases,
     project: Array.from(env.project.values())[0] || {},
     tablePartials: Array.from(env.tablePartials.values()),
-    records: env.records,
+    records,
   };
 }
 
@@ -47,14 +68,12 @@ export default class Interpreter {
       aliases: [],
       project: new Map(),
       tablePartials: new Map(),
-      records: [],
+      records: new Map(),
+      recordsElements: [],
     };
   }
 
   interpret (): Report<Database, CompileError> {
-    // Collect records elements to process later
-    const recordsElements: ElementDeclarationNode[] = [];
-
     // First pass: interpret all non-records elements
     const errors = this.ast.body.flatMap((element) => {
       switch (getElementKind(element).unwrap_or(undefined)) {
@@ -74,7 +93,7 @@ export default class Interpreter {
           return (new ProjectInterpreter(element, this.env)).interpret();
         case ElementKind.Records:
           // Defer records interpretation - collect for later
-          recordsElements.push(element);
+          this.env.recordsElements.push(element);
           return [];
         default:
           return [];
@@ -83,7 +102,7 @@ export default class Interpreter {
 
     // Second pass: interpret all records elements grouped by table
     // Now that all tables, enums, etc. are interpreted, we can validate records properly
-    const recordsErrors = new RecordsInterpreter(this.env).interpret(recordsElements);
+    const recordsErrors = new RecordsInterpreter(this.env).interpret(this.env.recordsElements);
     errors.push(...recordsErrors);
 
     return new Report(convertEnvToDb(this.env), errors);

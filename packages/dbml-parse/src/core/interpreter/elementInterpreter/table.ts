@@ -157,6 +157,11 @@ export class TableInterpreter implements ElementInterpreter {
         case ElementKind.Check:
           return this.interpretChecks(sub);
 
+        case ElementKind.Records:
+          // Collect nested records for later interpretation
+          this.env.recordsElements.push(sub);
+          return [];
+
         default:
           return [];
       }
@@ -202,7 +207,7 @@ export class TableInterpreter implements ElementInterpreter {
 
     column.name = extractVarNameFromPrimaryVariable(field.callee as any).unwrap();
 
-    const typeReport = processColumnType(field.args[0]);
+    const typeReport = processColumnType(field.args[0], this.env);
     column.type = typeReport.getValue();
     errors.push(...typeReport.getErrors());
 
