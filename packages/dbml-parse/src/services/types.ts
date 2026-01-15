@@ -77,3 +77,9 @@ export type SignatureHelpResult = languages.SignatureHelpResult;
 
 // Show references
 export type ReferenceProvider = languages.ReferenceProvider;
+
+// Code actions
+export type CodeActionProvider = languages.CodeActionProvider;
+export type CodeAction = languages.CodeAction;
+export type CodeActionContext = languages.CodeActionContext;
+export type WorkspaceEdit = languages.WorkspaceEdit;
