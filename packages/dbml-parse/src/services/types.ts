@@ -83,3 +83,7 @@ export type CodeActionProvider = languages.CodeActionProvider;
 export type CodeAction = languages.CodeAction;
 export type CodeActionContext = languages.CodeActionContext;
 export type WorkspaceEdit = languages.WorkspaceEdit;
+
+// Hover provider
+export type HoverProvider = languages.HoverProvider;
+export type Hover = languages.Hover;
