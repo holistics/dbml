@@ -24,16 +24,16 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     expect(db.records[0].values.length).toBe(3);
 
     // Row 1: id=null (auto-generated), name="Alice"
-    expect(db.records[0].values[0][0].value).toBe(null);
-    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'Alice' });
+    expect(db.records[0].values[0].id.value).toBe(null);
+    expect(db.records[0].values[0].name).toEqual({ type: 'string', value: 'Alice' });
 
     // Row 2: id=null (auto-generated), name="Bob"
-    expect(db.records[0].values[1][0].value).toBe(null);
-    expect(db.records[0].values[1][1]).toEqual({ type: 'string', value: 'Bob' });
+    expect(db.records[0].values[1].id.value).toBe(null);
+    expect(db.records[0].values[1].name).toEqual({ type: 'string', value: 'Bob' });
 
     // Row 3: id=1, name="Charlie"
-    expect(db.records[0].values[2][0]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[2][1]).toEqual({ type: 'string', value: 'Charlie' });
+    expect(db.records[0].values[2].id).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[2].name).toEqual({ type: 'string', value: 'Charlie' });
   });
 
   test('should allow NULL in pk column with serial type', () => {

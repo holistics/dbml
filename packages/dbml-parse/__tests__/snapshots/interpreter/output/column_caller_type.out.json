@@ -11,7 +11,8 @@
           "type": {
             "schemaName": null,
             "type_name": "int",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -34,7 +35,8 @@
           "type": {
             "schemaName": null,
             "type_name": "nvarbinary(MAX)",
-            "args": "MAX"
+            "args": "MAX",
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -57,7 +59,8 @@
           "type": {
             "schemaName": null,
             "type_name": "varchar(MAX)",
-            "args": "MAX"
+            "args": "MAX",
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -80,7 +83,8 @@
           "type": {
             "schemaName": null,
             "type_name": "varbinary(MAX)",
-            "args": "MAX"
+            "args": "MAX",
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -103,7 +107,11 @@
           "type": {
             "schemaName": null,
             "type_name": "int(10)",
-            "args": "10"
+            "args": "10",
+            "lengthParam": {
+              "length": 10
+            },
+            "isEnum": false
           },
           "token": {
             "start": {

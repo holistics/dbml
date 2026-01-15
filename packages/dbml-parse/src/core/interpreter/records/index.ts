@@ -1,22 +1,21 @@
 import {
+  BlockExpressionNode,
   CommaExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
   SyntaxNode,
+  TupleExpressionNode,
 } from '@/core/parser/nodes';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
   RecordValue,
   InterpreterDatabase,
   Table,
-  TableRecord,
+  Column,
 } from '@/core/interpreter/types';
-import { ColumnSchema, RecordsBatch } from './types';
+import { RefRelation } from '@/constants';
 import {
-  collectRows,
-  processTableSchema,
-  resolveTableAndColumnsOfRecords,
   isNullish,
   isEmptyStringLiteral,
   tryExtractNumeric,
@@ -33,6 +32,8 @@ import {
   validateUnique,
   validateForeignKeys,
 } from './utils';
+import { destructureCallExpression, extractVariableFromExpression } from '@/core/analyzer/utils';
+import { last } from 'lodash-es';
 
 export class RecordsInterpreter {
   private env: InterpreterDatabase;
@@ -41,315 +42,298 @@ export class RecordsInterpreter {
     this.env = env;
   }
 
-  // Interpret all records elements, grouped by table
   interpret (elements: ElementDeclarationNode[]): CompileError[] {
     const errors: CompileError[] = [];
-    const batchByTable = new Map<Table, RecordsBatch>();
 
     for (const element of elements) {
-      const result = resolveTableAndColumnsOfRecords(element, this.env);
-      if (!result) continue;
-
-      const { table, tableSymbol, columnSymbols } = result;
-      if (!batchByTable.has(table)) {
-        batchByTable.set(table, processTableSchema(table, tableSymbol, columnSymbols, this.env));
-      }
-      const batch = batchByTable.get(table)!;
-      batch.rows.push(...collectRows(element));
-    }
-
-    // Interpret each batch and collect results for validation
-    const recordMap = new Map<Table, { batch: RecordsBatch; record: TableRecord }>();
-
-    for (const [table, batch] of batchByTable) {
-      const { errors: batchErrors, record } = this.interpretBatch(batch);
-      errors.push(...batchErrors);
-      if (record) {
-        recordMap.set(table, { batch, record });
+      const { table, columns } = getTableAndColumnsOfRecords(element, this.env);
+      for (const row of (element.body as BlockExpressionNode).body) {
+        const rowNode = row as FunctionApplicationNode;
+        const { errors: rowErrors, row: rowValue } = extractDataFromRow(rowNode, columns);
+        errors.push(...rowErrors);
+        if (!rowValue) continue;
+        if (!this.env.records.has(table)) {
+          this.env.records.set(table, []);
+        }
+        const tableRecords = this.env.records.get(table);
+        tableRecords!.push({
+          values: rowValue,
+          node: rowNode,
+        });
       }
     }
 
-    // Validate constraints after all records are interpreted
-    errors.push(...this.validateConstraints(recordMap));
+    errors.push(...this.validateConstraints());
 
     return errors;
   }
 
-  // Validate all constraints (pk, unique, fk)
-  private validateConstraints (
-    recordMap: Map<Table, { batch: RecordsBatch; record: TableRecord }>,
-  ): CompileError[] {
+  private validateConstraints (): CompileError[] {
     const errors: CompileError[] = [];
 
-    // Validate PK and Unique for each table
-    for (const { batch, record } of recordMap.values()) {
-      errors.push(...validatePrimaryKey(record, batch.constraints.pk, batch.rows, batch.columns));
-      errors.push(...validateUnique(record, batch.constraints.unique, batch.rows, batch.columns));
-    }
+    // Validate PK constraints
+    errors.push(...validatePrimaryKey(this.env));
+
+    // Validate unique constraints
+    errors.push(...validateUnique(this.env));
 
     // Validate FK constraints
-    errors.push(...validateForeignKeys(recordMap, this.env));
+    errors.push(...validateForeignKeys(this.env));
 
     return errors;
   }
+}
 
-  // Interpret a batch of records for a single table
-  private interpretBatch (batch: RecordsBatch): { errors: CompileError[]; record: TableRecord | null } {
-    const errors: CompileError[] = [];
-    const record: TableRecord = {
-      schemaName: batch.schema || undefined,
-      tableName: batch.table,
-      columns: batch.columns.map((c) => c.name),
-      values: [],
+function getTableAndColumnsOfRecords (records: ElementDeclarationNode, env: InterpreterDatabase): { table: Table; columns: Column[] } {
+  const nameNode = records.name;
+  const parent = records.parent;
+  if (parent instanceof ElementDeclarationNode) {
+    const table = env.tables.get(parent)!;
+    if (!nameNode) return {
+      table,
+      columns: table.fields,
     };
-
-    for (const row of batch.rows) {
-      const result = this.interpretRow(row, batch.columns);
-      errors.push(...result.errors);
-      if (result.values) {
-        record.values.push(result.values);
-      }
-    }
-
-    if (record.values.length > 0) {
-      this.env.records.push(record);
-      return { errors, record };
-    }
-
-    return { errors, record: null };
+    const columns = (nameNode as TupleExpressionNode).elementList.map((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e).unwrap())!);
+    return {
+      table,
+      columns,
+    };
   }
+  const fragments = destructureCallExpression(nameNode!).unwrap();
+  const table = env.tables.get(last(fragments.variables)!.referee!.declaration as ElementDeclarationNode)!;
+  const columns = fragments.args.map((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e).unwrap())!);
+  return {
+    table,
+    columns,
+  };
+}
 
-  // Extract row values from a FunctionApplicationNode
-  // Records rows can be parsed in two ways:
-  // 1. row.args contains values directly (e.g., from inline syntax)
-  // 2. row.callee is a CommaExpressionNode with values (e.g., `1, "Alice"` parsed as callee)
-  private extractRowValues (row: FunctionApplicationNode): SyntaxNode[] {
-    // If args has values, use them
-    if (row.args.length > 0) {
-      return row.args;
-    }
-
-    // If callee is a comma expression, extract values from it
-    if (row.callee instanceof CommaExpressionNode) {
-      return row.callee.elementList;
-    }
-
-    // If callee is a single value (no comma), return it as single-element array
-    if (row.callee) {
-      return [row.callee];
-    }
-
+function extractRowValues (row: FunctionApplicationNode): SyntaxNode[] {
+  if (row.args.length > 0) {
     return [];
   }
 
-  // Interpret a single data row
-  private interpretRow (
-    row: FunctionApplicationNode,
-    columns: ColumnSchema[],
-  ): { errors: CompileError[]; values: RecordValue[] | null } {
-    const errors: CompileError[] = [];
-    const values: RecordValue[] = [];
+  if (row.callee instanceof CommaExpressionNode) {
+    return row.callee.elementList;
+  }
 
-    const args = this.extractRowValues(row);
-    if (args.length !== columns.length) {
-      errors.push(new CompileError(
+  if (row.callee) {
+    return [row.callee];
+  }
+
+  return [];
+}
+
+function extractDataFromRow (
+  row: FunctionApplicationNode,
+  columns: Column[],
+): { errors: CompileError[]; row: Record<string, RecordValue> | null } {
+  const errors: CompileError[] = [];
+  const rowObj: Record<string, RecordValue> = {};
+
+  const args = extractRowValues(row);
+  if (args.length !== columns.length) {
+    errors.push(new CompileError(
+      CompileErrorCode.INVALID_RECORDS_FIELD,
+      `Expected ${columns.length} values but got ${args.length}`,
+      row,
+    ));
+    return { errors, row: null };
+  }
+
+  for (let i = 0; i < columns.length; i++) {
+    const arg = args[i];
+    const column = columns[i];
+    const result = extractValue(arg, column);
+    if (Array.isArray(result)) {
+      errors.push(...result);
+    } else {
+      rowObj[column.name] = result;
+    }
+  }
+
+  return { errors, row: rowObj };
+}
+
+function extractValue (
+  node: SyntaxNode,
+  column: Column,
+): RecordValue | CompileError[] {
+  // FIXME: Make this more precise
+  const type = column.type.type_name.split('(')[0];
+  const { increment, not_null: notNull, dbdefault } = column;
+  const isEnum = column.type.isEnum || false;
+  const valueType = getRecordValueType(type, isEnum);
+
+  // Function expression - keep original type, mark as expression
+  if (node instanceof FunctionExpressionNode) {
+    return {
+      value: node.value?.value || '',
+      type: valueType,
+      is_expression: true,
+    };
+  }
+
+  // NULL literal
+  if (isNullish(node) || (isEmptyStringLiteral(node) && !isStringType(type))) {
+    const defaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null' ? extractDefaultValue(dbdefault.value, column, valueType, node) : null;
+    if (notNull && defaultValue === null && !increment) {
+      return [new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Expected ${columns.length} values but got ${args.length}`,
-        row,
-      ));
-      return { errors, values: null };
+        `NULL not allowed for NOT NULL column '${column.name}' without default and increment`,
+        node,
+      )];
     }
-
-    for (let i = 0; i < columns.length; i++) {
-      const arg = args[i];
-      const column = columns[i];
-      const result = this.interpretValue(arg, column);
-      if (Array.isArray(result)) {
-        errors.push(...result);
-      } else {
-        values.push(result);
-      }
-    }
-
-    return { errors, values };
-  }
-
-  // Interpret a single value based on column type
-  private interpretValue (
-    node: SyntaxNode,
-    column: ColumnSchema,
-  ): RecordValue | CompileError[] {
-    const { type, increment, isEnum, notNull, dbdefault } = column;
-    const valueType = getRecordValueType(type, isEnum);
-
-    // Function expression - keep original type, mark as expression
-    if (node instanceof FunctionExpressionNode) {
-      return {
-        value: node.value?.value || '',
-        type: valueType,
-        is_expression: true,
-      };
-    }
-
-    // NULL literal
-    if (isNullish(node) || (isEmptyStringLiteral(node) && !isStringType(type))) {
-      const defaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null' ? this.interpretDefaultValue(dbdefault.value, column, valueType, node) : null;
-      if (notNull && defaultValue === null && !increment) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `NULL not allowed for NOT NULL column '${column.name}' without default and increment`,
-          node,
-        )];
-      }
-      return { value: null, type: valueType };
-    }
-
-    // Enum type
-    if (isEnum) {
-      const enumValue = tryExtractEnum(node);
-      if (enumValue === null) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid enum value for column '${column.name}'`,
-          node,
-        )];
-      }
-      return { value: enumValue, type: valueType };
-    }
-
-    // Numeric type
-    if (isNumericType(type)) {
-      const numValue = tryExtractNumeric(node);
-      if (numValue === null) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid numeric value for column '${column.name}'`,
-          node,
-        )];
-      }
-      return { value: numValue, type: valueType };
-    }
-
-    // Boolean type
-    if (isBooleanType(type)) {
-      const boolValue = tryExtractBoolean(node);
-      if (boolValue === null) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid boolean value for column '${column.name}'`,
-          node,
-        )];
-      }
-      return { value: boolValue, type: valueType };
-    }
-
-    // Datetime type
-    if (isDateTimeType(type)) {
-      const dtValue = tryExtractDateTime(node);
-      if (dtValue === null) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid datetime value for column '${column.name}', expected ISO 8601 format`,
-          node,
-        )];
-      }
-      return { value: dtValue, type: valueType };
-    }
-
-    // String type
-    if (isStringType(type)) {
-      const strValue = tryExtractString(node);
-      if (strValue === null) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid string value for column '${column.name}'`,
-          node,
-        )];
-      }
-      return { value: strValue, type: 'string' };
-    }
-
-    // Fallback - try to extract as string
-    const strValue = tryExtractString(node);
-    return { value: strValue, type: valueType };
-  }
-
-  // Interpret a primitive value (boolean, number, string) - used for dbdefault
-  // We left the value to be `null` to stay true to the original data sample & left it to DBMS
-  private interpretDefaultValue (
-    value: boolean | number | string,
-    column: ColumnSchema,
-    valueType: string,
-    node: SyntaxNode,
-  ): RecordValue | CompileError[] {
-    const { type, isEnum } = column;
-
-    // Enum type
-    if (isEnum) {
-      const enumValue = tryExtractEnum(value);
-      if (enumValue === null) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid enum value for column '${column.name}'`,
-          node,
-        )];
-      }
-      return { value: null, type: valueType };
-    }
-
-    // Numeric type
-    if (isNumericType(type)) {
-      const numValue = tryExtractNumeric(value);
-      if (numValue === null) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid numeric value for column '${column.name}'`,
-          node,
-        )];
-      }
-      return { value: null, type: valueType };
-    }
-
-    // Boolean type
-    if (isBooleanType(type)) {
-      const boolValue = tryExtractBoolean(value);
-      if (boolValue === null) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid boolean value for column '${column.name}'`,
-          node,
-        )];
-      }
-      return { value: null, type: valueType };
-    }
-
-    // Datetime type
-    if (isDateTimeType(type)) {
-      const dtValue = tryExtractDateTime(value);
-      if (dtValue === null) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid datetime value for column '${column.name}', expected ISO 8601 format`,
-          node,
-        )];
-      }
-      return { value: null, type: valueType };
-    }
-
-    // String type
-    if (isStringType(type)) {
-      const strValue = tryExtractString(value);
-      if (strValue === null) {
-        return [new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid string value for column '${column.name}'`,
-          node,
-        )];
-      }
-      return { value: null, type: 'string' };
-    }
-
-    // Fallback
     return { value: null, type: valueType };
   }
+
+  // Enum type
+  if (isEnum) {
+    const enumValue = tryExtractEnum(node);
+    if (enumValue === null) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_RECORDS_FIELD,
+        `Invalid enum value for column '${column.name}'`,
+        node,
+      )];
+    }
+    return { value: enumValue, type: valueType };
+  }
+
+  // Numeric type
+  if (isNumericType(type)) {
+    const numValue = tryExtractNumeric(node);
+    if (numValue === null) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_RECORDS_FIELD,
+        `Invalid numeric value for column '${column.name}'`,
+        node,
+      )];
+    }
+    return { value: numValue, type: valueType };
+  }
+
+  // Boolean type
+  if (isBooleanType(type)) {
+    const boolValue = tryExtractBoolean(node);
+    if (boolValue === null) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_RECORDS_FIELD,
+        `Invalid boolean value for column '${column.name}'`,
+        node,
+      )];
+    }
+    return { value: boolValue, type: valueType };
+  }
+
+  // Datetime type
+  if (isDateTimeType(type)) {
+    const dtValue = tryExtractDateTime(node);
+    if (dtValue === null) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_RECORDS_FIELD,
+        `Invalid datetime value for column '${column.name}', expected ISO 8601 format`,
+        node,
+      )];
+    }
+    return { value: dtValue, type: valueType };
+  }
+
+  // String type
+  if (isStringType(type)) {
+    const strValue = tryExtractString(node);
+    if (strValue === null) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_RECORDS_FIELD,
+        `Invalid string value for column '${column.name}'`,
+        node,
+      )];
+    }
+    return { value: strValue, type: 'string' };
+  }
+
+  // Fallback - try to extract as string
+  const strValue = tryExtractString(node);
+  return { value: strValue, type: valueType };
+}
+
+// Interpret a primitive value (boolean, number, string) - used for dbdefault
+// We left the value to be `null` to stay true to the original data sample & left it to DBMS
+function extractDefaultValue (
+  value: boolean | number | string,
+  column: Column,
+  valueType: string,
+  node: SyntaxNode,
+): RecordValue | CompileError[] {
+  // FIXME: Make this more precise
+  const type = column.type.type_name.split('(')[0];
+  const isEnum = column.type.isEnum;
+
+  if (isEnum) {
+    const enumValue = tryExtractEnum(value);
+    if (enumValue === null) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_RECORDS_FIELD,
+        `Invalid enum value for column '${column.name}'`,
+        node,
+      )];
+    }
+    return { value: null, type: valueType };
+  }
+
+  if (isNumericType(type)) {
+    const numValue = tryExtractNumeric(value);
+    if (numValue === null) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_RECORDS_FIELD,
+        `Invalid numeric value for column '${column.name}'`,
+        node,
+      )];
+    }
+    return { value: null, type: valueType };
+  }
+
+  if (isBooleanType(type)) {
+    const boolValue = tryExtractBoolean(value);
+    if (boolValue === null) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_RECORDS_FIELD,
+        `Invalid boolean value for column '${column.name}'`,
+        node,
+      )];
+    }
+    return { value: null, type: valueType };
+  }
+
+  if (isDateTimeType(type)) {
+    const dtValue = tryExtractDateTime(value);
+    if (dtValue === null) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_RECORDS_FIELD,
+        `Invalid datetime value for column '${column.name}', expected ISO 8601 format`,
+        node,
+      )];
+    }
+    return { value: null, type: valueType };
+  }
+
+  if (isStringType(type)) {
+    const strValue = tryExtractString(value);
+    if (strValue === null) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_RECORDS_FIELD,
+        `Invalid string value for column '${column.name}'`,
+        node,
+      )];
+    }
+    return { value: null, type: 'string' };
+  }
+  return { value: null, type: 'string' };
+}
+
+function getRefRelation (card1: string, card2: string): RefRelation {
+  if (card1 === '*' && card2 === '1') return RefRelation.ManyToOne;
+  if (card1 === '1' && card2 === '*') return RefRelation.OneToMany;
+  if (card1 === '1' && card2 === '1') return RefRelation.OneToOne;
+  return RefRelation.ManyToMany;
 }

@@ -11,7 +11,8 @@
           "type": {
             "schemaName": null,
             "type_name": "text",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -34,7 +35,8 @@
           "type": {
             "schemaName": null,
             "type_name": "int",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -57,7 +59,8 @@
           "type": {
             "schemaName": null,
             "type_name": "status",
-            "args": null
+            "args": null,
+            "isEnum": true
           },
           "token": {
             "start": {
@@ -86,7 +89,8 @@
           "type": {
             "schemaName": "demographic",
             "type_name": "gender",
-            "args": null
+            "args": null,
+            "isEnum": true
           },
           "token": {
             "start": {
@@ -115,7 +119,8 @@
           "type": {
             "schemaName": "demographic",
             "type_name": "age segment",
-            "args": null
+            "args": null,
+            "isEnum": true
           },
           "token": {
             "start": {

@@ -22,8 +22,8 @@ describe('[example - record] type compatibility validation', () => {
       const db = result.getValue()!;
       expect(db.records.length).toBe(1);
       expect(db.records[0].values.length).toBe(2);
-      expect(db.records[0].values[0][1]).toEqual({ type: 'bool', value: true });
-      expect(db.records[0].values[1][1]).toEqual({ type: 'bool', value: false });
+      expect(db.records[0].values[0].active).toEqual({ type: 'bool', value: true });
+      expect(db.records[0].values[1].active).toEqual({ type: 'bool', value: false });
     });
 
     test('- should accept string boolean values (true/false)', () => {
@@ -43,8 +43,8 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'bool', value: true });
-      expect(db.records[0].values[1][1]).toEqual({ type: 'bool', value: false });
+      expect(db.records[0].values[0].active).toEqual({ type: 'bool', value: true });
+      expect(db.records[0].values[1].active).toEqual({ type: 'bool', value: false });
     });
 
     test('- should accept string boolean values (t/f)', () => {
@@ -64,8 +64,8 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'bool', value: true });
-      expect(db.records[0].values[1][1]).toEqual({ type: 'bool', value: false });
+      expect(db.records[0].values[0].active).toEqual({ type: 'bool', value: true });
+      expect(db.records[0].values[1].active).toEqual({ type: 'bool', value: false });
     });
 
     test('- should accept string boolean values (y/n)', () => {
@@ -85,8 +85,8 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'bool', value: true });
-      expect(db.records[0].values[1][1]).toEqual({ type: 'bool', value: false });
+      expect(db.records[0].values[0].active).toEqual({ type: 'bool', value: true });
+      expect(db.records[0].values[1].active).toEqual({ type: 'bool', value: false });
     });
 
     test('- should accept string boolean values (yes/no)', () => {
@@ -106,8 +106,8 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'bool', value: true });
-      expect(db.records[0].values[1][1]).toEqual({ type: 'bool', value: false });
+      expect(db.records[0].values[0].active).toEqual({ type: 'bool', value: true });
+      expect(db.records[0].values[1].active).toEqual({ type: 'bool', value: false });
     });
 
     test('- should accept numeric boolean values (1/0)', () => {
@@ -129,10 +129,10 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'bool', value: true });
-      expect(db.records[0].values[1][1]).toEqual({ type: 'bool', value: false });
-      expect(db.records[0].values[2][1]).toEqual({ type: 'bool', value: true });
-      expect(db.records[0].values[3][1]).toEqual({ type: 'bool', value: false });
+      expect(db.records[0].values[0].active).toEqual({ type: 'bool', value: true });
+      expect(db.records[0].values[1].active).toEqual({ type: 'bool', value: false });
+      expect(db.records[0].values[2].active).toEqual({ type: 'bool', value: true });
+      expect(db.records[0].values[3].active).toEqual({ type: 'bool', value: false });
     });
 
     test('- should reject invalid string value for boolean column', () => {
@@ -206,8 +206,8 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'real', value: 99.99 });
-      expect(db.records[0].values[0][2]).toEqual({ type: 'real', value: 3.14159 });
+      expect(db.records[0].values[0].price).toEqual({ type: 'real', value: 99.99 });
+      expect(db.records[0].values[0].rate).toEqual({ type: 'real', value: 3.14159 });
     });
 
     test('- should accept scientific notation for numeric columns', () => {
@@ -228,9 +228,9 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'real', value: 1e10 });
-      expect(db.records[0].values[1][1]).toEqual({ type: 'real', value: 3.14e-5 });
-      expect(db.records[0].values[2][1]).toEqual({ type: 'real', value: 2e8 });
+      expect(db.records[0].values[0].value).toEqual({ type: 'real', value: 1e10 });
+      expect(db.records[0].values[1].value).toEqual({ type: 'real', value: 3.14e-5 });
+      expect(db.records[0].values[2].value).toEqual({ type: 'real', value: 2e8 });
     });
   });
 
@@ -251,7 +251,7 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'Alice' });
+      expect(db.records[0].values[0].name).toEqual({ type: 'string', value: 'Alice' });
     });
 
     test('- should accept double-quoted strings', () => {
@@ -270,7 +270,7 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'Bob' });
+      expect(db.records[0].values[0].name).toEqual({ type: 'string', value: 'Bob' });
     });
 
     test('- should accept empty strings for string columns', () => {
@@ -290,8 +290,8 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: '' });
-      expect(db.records[0].values[1][1]).toEqual({ type: 'string', value: '' });
+      expect(db.records[0].values[0].name).toEqual({ type: 'string', value: '' });
+      expect(db.records[0].values[1].name).toEqual({ type: 'string', value: '' });
     });
 
     test('- should treat empty field as null for non-string columns', () => {
@@ -311,9 +311,9 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
-      expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: null });
-      expect(db.records[0].values[0][2]).toEqual({ type: 'string', value: 'test' });
+      expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 1 });
+      expect(db.records[0].values[0].count).toEqual({ type: 'integer', value: null });
+      expect(db.records[0].values[0].name).toEqual({ type: 'string', value: 'test' });
     });
 
     test('- should handle various null forms correctly', () => {
@@ -337,16 +337,16 @@ describe('[example - record] type compatibility validation', () => {
 
       const db = result.getValue()!;
       // Row 1: explicit null keyword
-      expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: null });
-      expect(db.records[0].values[0][2]).toEqual({ type: 'real', value: null });
-      expect(db.records[0].values[0][3]).toEqual({ type: 'string', value: null });
-      expect(db.records[0].values[0][4]).toEqual({ type: 'string', value: null });
+      expect(db.records[0].values[0].count).toEqual({ type: 'integer', value: null });
+      expect(db.records[0].values[0].amount).toEqual({ type: 'real', value: null });
+      expect(db.records[0].values[0].name).toEqual({ type: 'string', value: null });
+      expect(db.records[0].values[0].description).toEqual({ type: 'string', value: null });
 
       // Row 2: empty field (treated as null for non-string, null for string)
-      expect(db.records[0].values[1][1]).toEqual({ type: 'integer', value: null });
-      expect(db.records[0].values[1][2]).toEqual({ type: 'real', value: null });
-      expect(db.records[0].values[1][3]).toEqual({ type: 'string', value: null });
-      expect(db.records[0].values[1][4]).toEqual({ type: 'string', value: null });
+      expect(db.records[0].values[1].count).toEqual({ type: 'integer', value: null });
+      expect(db.records[0].values[1].amount).toEqual({ type: 'real', value: null });
+      expect(db.records[0].values[1].name).toEqual({ type: 'string', value: null });
+      expect(db.records[0].values[1].description).toEqual({ type: 'string', value: null });
     });
 
     test('- should accept strings with special characters', () => {
@@ -386,8 +386,8 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: null });
-      expect(db.records[0].values[0][2]).toEqual({ type: 'string', value: null });
+      expect(db.records[0].values[0].name).toEqual({ type: 'string', value: null });
+      expect(db.records[0].values[0].email).toEqual({ type: 'string', value: null });
     });
 
     test('- should reject NULL for NOT NULL column without default and increment', () => {
@@ -427,12 +427,12 @@ describe('[example - record] type compatibility validation', () => {
       expect(db.records[0].values.length).toBe(2);
 
       // Row 1: id=1, status=null (null stored, default applied at DB level)
-      expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
-      expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: null });
+      expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 1 });
+      expect(db.records[0].values[0].status).toEqual({ type: 'string', value: null });
 
       // Row 2: id=2, status="inactive"
-      expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 2 });
-      expect(db.records[0].values[1][1]).toEqual({ type: 'string', value: 'inactive' });
+      expect(db.records[0].values[1].id).toEqual({ type: 'integer', value: 2 });
+      expect(db.records[0].values[1].status).toEqual({ type: 'string', value: 'inactive' });
     });
 
     test('- should allow NULL for auto-increment column', () => {
@@ -452,8 +452,8 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: null });
-      expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: null });
+      expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: null });
+      expect(db.records[0].values[1].id).toEqual({ type: 'integer', value: null });
     });
 
     test('- should reject explicit null keyword in various casings (if invalid)', () => {
@@ -493,10 +493,10 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1].type).toBe('datetime');
-      expect(db.records[0].values[0][1].value).toBe('2024-01-15 10:30:00');
-      expect(db.records[0].values[0][2].type).toBe('date');
-      expect(db.records[0].values[0][2].value).toBe('2024-01-15');
+      expect(db.records[0].values[0].created_at.type).toBe('datetime');
+      expect(db.records[0].values[0].created_at.value).toBe('2024-01-15 10:30:00');
+      expect(db.records[0].values[0].event_date.type).toBe('date');
+      expect(db.records[0].values[0].event_date.value).toBe('2024-01-15');
     });
   });
 
@@ -666,9 +666,9 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
-      expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: null });
-      expect(db.records[0].values[0][2]).toEqual({ type: 'real', value: null });
+      expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 1 });
+      expect(db.records[0].values[0].count).toEqual({ type: 'integer', value: null });
+      expect(db.records[0].values[0].price).toEqual({ type: 'real', value: null });
     });
 
     test('- should treat empty field as null for boolean type', () => {
@@ -687,7 +687,7 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'bool', value: null });
+      expect(db.records[0].values[0].active).toEqual({ type: 'bool', value: null });
     });
 
     test('- should treat empty field as null for datetime type', () => {
@@ -706,7 +706,7 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'datetime', value: null });
+      expect(db.records[0].values[0].created_at).toEqual({ type: 'datetime', value: null });
     });
 
     test('- should treat empty field as null for enum type', () => {
@@ -730,8 +730,8 @@ describe('[example - record] type compatibility validation', () => {
 
       const db = result.getValue()!;
       // Empty field for enum is treated as string null
-      expect(db.records[0].values[0][1].type).toBe('string');
-      expect(db.records[0].values[0][1].value).toBe(null);
+      expect(db.records[0].values[0].status.type).toBe('string');
+      expect(db.records[0].values[0].status.value).toBe(null);
     });
 
     test('- should treat empty string as null for non-string types', () => {
@@ -753,10 +753,10 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: null });
-      expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: null });
-      expect(db.records[0].values[0][2]).toEqual({ type: 'bool', value: null });
-      expect(db.records[0].values[0][3]).toEqual({ type: 'string', value: '' });
+      expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: null });
+      expect(db.records[0].values[0].count).toEqual({ type: 'integer', value: null });
+      expect(db.records[0].values[0].active).toEqual({ type: 'bool', value: null });
+      expect(db.records[0].values[0].name).toEqual({ type: 'string', value: '' });
     });
 
     test('- should accept empty string for string types', () => {
@@ -776,8 +776,8 @@ describe('[example - record] type compatibility validation', () => {
       expect(errors.length).toBe(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: '' });
-      expect(db.records[0].values[0][2]).toEqual({ type: 'string', value: '' });
+      expect(db.records[0].values[0].name).toEqual({ type: 'string', value: '' });
+      expect(db.records[0].values[0].description).toEqual({ type: 'string', value: '' });
     });
   });
 });
