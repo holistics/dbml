@@ -561,8 +561,9 @@ export default class Parser {
           // When '(' is encountered,
           // consider it part of another expression if
           // it's at the start of a new line
+          // or if there are spaces before '(' (disallow call expressions with spaces)
           // and we're currently not having unmatched '(' or '['
-          isAtStartOfLine(this.previous(), token)
+          (isAtStartOfLine(this.previous(), token) || hasTrailingSpaces(this.previous()))
           && !this.contextStack.isWithinGroupExpressionContext()
           && !this.contextStack.isWithinListExpressionContext()
         ) {
