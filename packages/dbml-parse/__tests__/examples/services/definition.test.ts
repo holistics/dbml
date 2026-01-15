@@ -2731,4 +2731,225 @@ Ref: users.id > posts.user_id`;
       expect(Array.isArray(definitions)).toBe(true);
     });
   });
+
+  describe('should find definition for Records elements', () => {
+    it('- should find table definition from top-level Records', () => {
+      const program = `Table users {
+  id int pk
+  name varchar
+  email varchar
+}
+
+Records users(id, name, email) {
+  1, "John", "john@example.com"
+  2, "Jane", "jane@example.com"
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "users" in Records declaration
+      const position = createPosition(7, 10);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 5,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
+
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot(`
+        "Table users {
+          id int pk
+          name varchar
+          email varchar
+        }"
+      `);
+    });
+
+    it('- should find column definition from Records column list', () => {
+      const program = `Table users {
+  id int pk
+  name varchar
+  email varchar
+}
+
+Records users(id, name, email) {
+  1, "John", "john@example.com"
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "name" in Records column list
+      const position = createPosition(7, 18);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBeTruthy();
+      expect(definitions).toMatchInlineSnapshot('[]');
+    });
+
+    it('- should find schema-qualified table from Records', () => {
+      const program = `Table public.orders {
+  id int pk
+  customer_name varchar
+  total decimal
+}
+
+Records public.orders(id, customer_name) {
+  1, "John Doe"
+  2, "Jane Smith"
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "orders" in schema-qualified Records
+      const position = createPosition(7, 17);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 5,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
+    });
+
+    it('- should find enum definition from Records data', () => {
+      const program = `Enum order_status {
+  pending
+  processing
+  completed
+}
+
+Table orders {
+  id int pk
+  status order_status
+}
+
+Records orders(id, status) {
+  1, order_status.pending
+  2, order_status.completed
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "order_status" enum in Records data
+      const position = createPosition(13, 9);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 5,
+              "startColumn": 1,
+              "startLineNumber": 1,
+            },
+            "uri": "",
+          },
+        ]
+      `);
+    });
+
+    it('- should find enum field definition from Records data', () => {
+      const program = `Enum order_status {
+  pending
+  processing
+  completed
+}
+
+Table orders {
+  id int pk
+  status order_status
+}
+
+Records orders(id, status) {
+  1, order_status.pending
+  2, order_status.completed
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "pending" enum field in Records data
+      const position = createPosition(13, 20);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 10,
+              "endLineNumber": 2,
+              "startColumn": 3,
+              "startLineNumber": 2,
+            },
+            "uri": "",
+          },
+        ]
+      `);
+
+      expect(Array.isArray(definitions)).toBeTruthy();
+      if (!Array.isArray(definitions)) return;
+      const sourceText = extractTextFromRange(program, definitions[0].range);
+      expect(sourceText).toMatchInlineSnapshot('"pending"');
+    });
+
+    it('- should find column definition from Records inside table', () => {
+      const program = `Table products {
+  id integer [pk]
+  name varchar
+  price decimal
+
+  Records (id, name, price) {
+    1, "Laptop", 999.99
+    2, "Mouse", 29.99
+  }
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "name" in Records column list inside table
+      const position = createPosition(6, 16);
+      const definitions = definitionProvider.provideDefinition(model, position);
+
+      expect(Array.isArray(definitions)).toBeTruthy();
+      expect(definitions).toMatchInlineSnapshot('[]');
+    });
+  });
 });
