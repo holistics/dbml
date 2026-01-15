@@ -97,7 +97,6 @@ describe('[example - record] data type interpretation', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    // Note: varchar/char keep their full type, text becomes 'string'
     expect(db.records[0].values[0][0]).toEqual({ type: 'string', value: 'Alice' });
     expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'A short description' });
     expect(db.records[0].values[0][2]).toEqual({ type: 'string', value: 'ABC123' });

@@ -14,7 +14,7 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 
   test('should accept records with various data types', () => {
@@ -31,7 +31,7 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 
   test('should accept records with null values', () => {
@@ -46,7 +46,7 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 
   test('should accept records with function expressions', () => {
@@ -61,7 +61,7 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 
   test('should accept records with scientific notation', () => {
@@ -77,7 +77,7 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 
   test('should accept records with negative numbers', () => {
@@ -92,7 +92,7 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 
   test('should accept records with enum values', () => {
@@ -108,7 +108,7 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 
   test('should detect unknown table in records', () => {
@@ -118,7 +118,8 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toBe("Table 'nonexistent' does not exist in Schema 'public'");
   });
 
   test('should detect unknown column in records', () => {
@@ -131,7 +132,8 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toBe("Column 'unknown_column' does not exist in table");
   });
 
   test('should accept multiple records blocks for same table', () => {
@@ -151,7 +153,7 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 
   test('should accept records with schema-qualified table name', () => {
@@ -165,7 +167,7 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 
   test('should accept records with quoted column names', () => {
@@ -179,7 +181,7 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 
   test('should accept empty records block', () => {
@@ -192,7 +194,7 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 
   test('should accept records with only one column', () => {
@@ -207,6 +209,6 @@ describe('[example] records validator', () => {
       }
     `;
     const errors = analyze(source).getErrors();
-    expect(errors).toHaveLength(0);
+    expect(errors.length).toBe(0);
   });
 });
