@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
-import { createMockTextModel, createPosition, extractTextFromRange } from '../../utils';
+import { createMockTextModel, createPosition, extractTextFromRange } from '../../../utils';
 
-describe('[snapshot] DefinitionProvider', () => {
+describe('[example] DefinitionProvider', () => {
   describe('should find definition for tables', () => {
     it('- should find table definition in Ref block', () => {
       const program = `Table users {
@@ -252,10 +252,22 @@ Ref: posts.user_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position on "user_id" in "posts.user_id"
-      const position = createPosition(9, 12);
+      const position = createPosition(9, 13);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 14,
+              "endLineNumber": 6,
+              "startColumn": 3,
+              "startLineNumber": 6,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should find column definition in inline ref', () => {
@@ -803,7 +815,7 @@ TableGroup group1 {
       const model = createMockTextModel(program);
 
       // Position on "status" in composite index
-      const position = createPosition(7, 20);
+      const position = createPosition(7, 21);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -943,7 +955,7 @@ Table users {
       const model = createMockTextModel(program);
 
       // Position on "timestamps" in qualified partial injection
-      const position = createPosition(7, 14);
+      const position = createPosition(7, 15);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -962,7 +974,7 @@ Table users {
       const model = createMockTextModel(program);
 
       // Position on keyword "Table"
-      const position = createPosition(1, 1);
+      const position = createPosition(1, 2);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -996,7 +1008,7 @@ Ref: posts.user_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position on number literal
-      const position = createPosition(2, 20);
+      const position = createPosition(2, 21);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1013,7 +1025,7 @@ Ref: posts.user_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position inside string literal
-      const position = createPosition(2, 27);
+      const position = createPosition(2, 28);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1030,7 +1042,7 @@ Ref: posts.user_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position on "pk" attribute
-      const position = createPosition(2, 11);
+      const position = createPosition(2, 12);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1048,7 +1060,7 @@ Table posts {
       const model = createMockTextModel(program);
 
       // Position inside comment
-      const position = createPosition(1, 10);
+      const position = createPosition(1, 11);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1230,10 +1242,22 @@ Ref: schema1.orders.id > schema2.orders.id`;
       `);
 
       // Position on schema2.orders
-      const position2 = createPosition(9, 34);
+      const position2 = createPosition(9, 35);
       const definitions2 = definitionProvider.provideDefinition(model, position2);
 
-      expect(definitions2).toMatchInlineSnapshot('[]');
+      expect(definitions2).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 2,
+              "endLineNumber": 7,
+              "startColumn": 1,
+              "startLineNumber": 5,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
 
     it('- should handle mixed direct and injected columns', () => {
@@ -1643,7 +1667,7 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
       const model = createMockTextModel(program);
 
       // Position on "users"
-      const position = createPosition(1, 9);
+      const position = createPosition(1, 10);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1708,7 +1732,7 @@ Table posts {
       const model = createMockTextModel(program);
 
       // Position on "user_id"
-      const position = createPosition(6, 5);
+      const position = createPosition(6, 6);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1727,7 +1751,7 @@ Ref: posts.user_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position on "posts" (non-existent table)
-      const position = createPosition(5, 8);
+      const position = createPosition(5, 9);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1743,7 +1767,7 @@ Ref: posts.user_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position on "status"
-      const position = createPosition(1, 8);
+      const position = createPosition(1, 9);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1760,7 +1784,7 @@ Ref: posts.user_id > users.id`;
       const model = createMockTextModel(program);
 
       // Position on "users"
-      const position = createPosition(1, 9);
+      const position = createPosition(1, 10);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -1820,7 +1844,7 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
       const model = createMockTextModel(program);
 
       // Position on "author_last" (doesn't exist in posts)
-      const position = createPosition(10, 29);
+      const position = createPosition(10, 30);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(definitions).toMatchInlineSnapshot('[]');
@@ -2688,7 +2712,7 @@ Ref: orders.(merchant_id, country) > merchants.(id, country_code)`;
       const model = createMockTextModel(program);
 
       // Position inside empty block
-      const position = createPosition(2, 1);
+      const position = createPosition(2, 2);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(Array.isArray(definitions)).toBe(true);
@@ -2797,7 +2821,7 @@ Records users(id, name, email) {
       const model = createMockTextModel(program);
 
       // Position on "name" in Records column list
-      const position = createPosition(7, 18);
+      const position = createPosition(7, 19);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(Array.isArray(definitions)).toBeTruthy();
@@ -2945,11 +2969,23 @@ Records orders(id, status) {
       const model = createMockTextModel(program);
 
       // Position on "name" in Records column list inside table
-      const position = createPosition(6, 16);
+      const position = createPosition(6, 17);
       const definitions = definitionProvider.provideDefinition(model, position);
 
       expect(Array.isArray(definitions)).toBeTruthy();
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 15,
+              "endLineNumber": 3,
+              "startColumn": 3,
+              "startLineNumber": 3,
+            },
+            "uri": "",
+          },
+        ]
+      `);
     });
   });
 });
