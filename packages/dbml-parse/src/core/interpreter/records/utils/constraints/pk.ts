@@ -1,105 +1,106 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { TableRecord } from '@/core/interpreter/types';
-import { FunctionApplicationNode } from '@/core/parser/nodes';
-import { ColumnSchema } from '../../../records/types';
+import { InterpreterDatabase } from '@/core/interpreter/types';
 import {
   extractKeyValue,
-  extractKeyValueWithDefaults,
-  getColumnIndices,
   hasNullInKey,
   formatColumns,
   isAutoIncrementColumn,
-  hasNotNullWithDefault,
 } from './helper';
 
-// Validate primary key constraints for a table
 export function validatePrimaryKey (
-  tableRecord: TableRecord,
-  pkConstraints: string[][],
-  rowNodes: FunctionApplicationNode[],
-  columnSchemas: ColumnSchema[],
+  env: InterpreterDatabase,
 ): CompileError[] {
   const errors: CompileError[] = [];
-  const { columns, values } = tableRecord;
-  const schemaMap = new Map(columnSchemas.map((c) => [c.name, c]));
 
-  for (const pkColumns of pkConstraints) {
-    const indices = getColumnIndices(columns, pkColumns);
-    const missingColumns = pkColumns.filter((_, i) => indices[i] === -1);
+  for (const [table, rows] of env.records) {
+    if (rows.length === 0) continue;
 
-    // If PK column is missing from record, every row violates the constraint
-    if (missingColumns.length > 0) {
-      const missingStr = formatColumns(missingColumns);
-      for (const rowNode of rowNodes) {
-        errors.push(new CompileError(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Missing primary key column ${missingStr} in record`,
-          rowNode,
-        ));
+    // Extract PK constraints
+    const pkConstraints: string[][] = [];
+    for (const field of table.fields) {
+      if (field.pk) {
+        pkConstraints.push([field.name]);
       }
-      continue;
+    }
+    for (const index of table.indexes) {
+      if (index.pk) {
+        pkConstraints.push(index.columns.map((c) => c.value));
+      }
     }
 
-    const pkColumnSchemas = pkColumns.map((col) => schemaMap.get(col));
+    // Collect all unique column names from all rows
+    const columnsSet = new Set<string>();
+    for (const row of rows) {
+      for (const colName of Object.keys(row.values)) {
+        columnsSet.add(colName);
+      }
+    }
+    const columns = Array.from(columnsSet);
+    const columnMap = new Map(table.fields.map((c) => [c.name, c]));
 
-    // Check if ALL pk columns are auto-increment (serial/increment)
-    // Only then can we skip NULL checks and treat nulls as unique
-    const allAutoIncrement = pkColumnSchemas.every((schema) => schema && isAutoIncrementColumn(schema));
+    for (const pkColumns of pkConstraints) {
+      const missingColumns = pkColumns.filter((col) => !columns.includes(col));
+      const pkColumnFields = pkColumns.map((col) => columnMap.get(col)).filter(Boolean);
 
-    // Check if ANY pk column has not null + dbdefault
-    // In this case, NULL values will resolve to the default, so check for duplicates
-    const hasDefaultConstraint = pkColumnSchemas.some((schema) => schema && hasNotNullWithDefault(schema));
+      // If PK column is completely missing from records, check if it has default/autoincrement
+      if (missingColumns.length > 0) {
+        const missingColumnsWithoutDefaults = missingColumns.filter((colName) => {
+          const col = columnMap.get(colName);
+          // Allow missing only if column has autoincrement or has a default value
+          return col && !col.increment && !col.dbdefault;
+        });
 
-    const isComposite = pkColumns.length > 1;
-    const columnsStr = formatColumns(pkColumns);
-    const seen = new Map<string, number>(); // key -> first row index
-
-    for (let rowIndex = 0; rowIndex < values.length; rowIndex++) {
-      const row = values[rowIndex];
-      const rowNode = rowNodes[rowIndex];
-
-      // Check for NULL in PK
-      const hasNull = hasNullInKey(row, indices);
-      if (hasNull) {
-        // Auto-increment columns can have NULL - each gets a unique value from DB
-        // Skip duplicate checking for this row (will be unique)
-        if (allAutoIncrement) {
-          continue;
-        }
-        if (hasDefaultConstraint) {
-          // Has not null + dbdefault: NULL resolves to default value
-          // Check for duplicates using resolved default values
-          const keyValue = extractKeyValueWithDefaults(row, indices, pkColumnSchemas);
-          if (seen.has(keyValue)) {
-            const msg = isComposite
-              ? `Duplicate composite primary key value for ${columnsStr}`
-              : `Duplicate primary key value for column ${columnsStr}`;
-            errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, rowNode));
-          } else {
-            seen.set(keyValue, rowIndex);
+        // Report error for missing columns without defaults/autoincrement
+        if (missingColumnsWithoutDefaults.length > 0) {
+          const missingStr = formatColumns(missingColumnsWithoutDefaults);
+          for (const row of rows) {
+            errors.push(new CompileError(
+              CompileErrorCode.INVALID_RECORDS_FIELD,
+              `Missing primary key column ${missingStr} in record`,
+              row.node,
+            ));
           }
-          continue;
-        } else {
-          // Non-auto-increment PK columns without default cannot have NULL
+        }
+        continue;
+      }
+
+      // Check if ALL pk columns are auto-increment (serial/increment)
+      // Only then can we skip NULL checks and treat nulls as unique
+      const allAutoIncrement = pkColumnFields.every((col) => col && isAutoIncrementColumn(col));
+
+      const isComposite = pkColumns.length > 1;
+      const columnsStr = formatColumns(pkColumns);
+      const seen = new Map<string, number>(); // key -> first row index
+
+      for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+        const row = rows[rowIndex];
+
+        // Check for NULL in PK (considering defaults)
+        const hasNull = hasNullInKey(row.values, pkColumns, pkColumnFields);
+        if (hasNull) {
+          // Auto-increment columns can have NULL - each gets a unique value from DB
+          // Skip duplicate checking for this row (will be unique)
+          if (allAutoIncrement) {
+            continue;
+          }
+          // Non-auto-increment PK columns cannot have NULL (even with defaults)
           const msg = isComposite
             ? `NULL value not allowed in composite primary key ${columnsStr}`
             : `NULL value not allowed in primary key column ${columnsStr}`;
-          errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, rowNode));
+          errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, row.node));
           continue;
         }
-      }
 
-      // Check for duplicates
-      const keyValue = hasDefaultConstraint
-        ? extractKeyValueWithDefaults(row, indices, pkColumnSchemas)
-        : extractKeyValue(row, indices);
-      if (seen.has(keyValue)) {
-        const msg = isComposite
-          ? `Duplicate composite primary key value for ${columnsStr}`
-          : `Duplicate primary key value for column ${columnsStr}`;
-        errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, rowNode));
-      } else {
-        seen.set(keyValue, rowIndex);
+        // Check for duplicates (using defaults for missing values)
+        const keyValue = extractKeyValue(row.values, pkColumns, pkColumnFields);
+        if (seen.has(keyValue)) {
+          const msg = isComposite
+            ? `Duplicate composite primary key value for ${columnsStr}`
+            : `Duplicate primary key value for column ${columnsStr}`;
+          errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, row.node));
+        } else {
+          seen.set(keyValue, rowIndex);
+        }
       }
     }
   }

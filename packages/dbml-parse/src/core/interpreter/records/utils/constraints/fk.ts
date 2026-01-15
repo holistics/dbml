@@ -1,7 +1,6 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
-import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecord } from '@/core/interpreter/types';
-import { RecordsBatch } from '../../types';
-import { extractKeyValue, formatColumns, getColumnIndices, hasNullInKey } from './helper';
+import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/core/interpreter/types';
+import { extractKeyValue, formatColumns, hasNullInKey } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 /**
@@ -23,8 +22,8 @@ import { DEFAULT_SCHEMA_NAME } from '@/constants';
  */
 
 interface TableLookup {
-  record: TableRecord;
-  batch: RecordsBatch;
+  table: Table;
+  rows: TableRecordRow[];
 }
 
 type LookupMap = Map<string, TableLookup>;
@@ -36,22 +35,22 @@ function makeTableKey (schema: string | null | undefined, table: string): string
 
 // Build lookup map indexed by schema.table key
 function createRecordMapFromKey (
-  recordMap: Map<Table, { batch: RecordsBatch; record: TableRecord }>,
+  records: Map<Table, TableRecordRow[]>,
 ): LookupMap {
   const lookup = new Map<string, TableLookup>();
-  for (const { batch, record } of recordMap.values()) {
-    const key = makeTableKey(batch.schema, batch.table);
-    lookup.set(key, { record, batch });
+  for (const [table, rows] of records) {
+    const key = makeTableKey(table.schemaName, table.name);
+    lookup.set(key, { table, rows });
   }
   return lookup;
 }
 
 // Build set of valid keys from a table's records
-function collectValidKeys (record: TableRecord, columnIndices: number[]): Set<string> {
+function collectValidKeys (rows: TableRecordRow[], columnNames: string[]): Set<string> {
   const keys = new Set<string>();
-  for (const row of record.values) {
-    if (!hasNullInKey(row, columnIndices)) {
-      keys.add(extractKeyValue(row, columnIndices));
+  for (const row of rows) {
+    if (!hasNullInKey(row.values, columnNames)) {
+      keys.add(extractKeyValue(row.values, columnNames));
     }
   }
   return keys;
@@ -66,30 +65,40 @@ function validateDirection (
 ): CompileError[] {
   const errors: CompileError[] = [];
 
-  const sourceIndices = getColumnIndices(source.record.columns, sourceEndpoint.fieldNames);
-  const targetIndices = getColumnIndices(target.record.columns, targetEndpoint.fieldNames);
+  // Collect column names from source and target
+  const sourceColumns = new Set<string>();
+  for (const row of source.rows) {
+    for (const colName of Object.keys(row.values)) {
+      sourceColumns.add(colName);
+    }
+  }
 
-  // Skip if columns not found
-  if (sourceIndices.some((i) => i === -1) || targetIndices.some((i) => i === -1)) {
+  const targetColumns = new Set<string>();
+  for (const row of target.rows) {
+    for (const colName of Object.keys(row.values)) {
+      targetColumns.add(colName);
+    }
+  }
+
+  // Skip if columns not found in source or target
+  if (sourceEndpoint.fieldNames.some((col) => !sourceColumns.has(col))
+    || targetEndpoint.fieldNames.some((col) => !targetColumns.has(col))) {
     return errors;
   }
 
-  const validKeys = collectValidKeys(target.record, targetIndices);
+  const validKeys = collectValidKeys(target.rows, targetEndpoint.fieldNames);
   const columnsStr = formatColumns(sourceEndpoint.fieldNames);
 
-  for (let i = 0; i < source.record.values.length; i++) {
-    const row = source.record.values[i];
-    const rowNode = source.batch.rows[i];
-
+  for (const row of source.rows) {
     // NULL FK values are allowed (0..1 / 0..* optionality)
-    if (hasNullInKey(row, sourceIndices)) continue;
+    if (hasNullInKey(row.values, sourceEndpoint.fieldNames)) continue;
 
-    const key = extractKeyValue(row, sourceIndices);
+    const key = extractKeyValue(row.values, sourceEndpoint.fieldNames);
     if (!validKeys.has(key)) {
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `Foreign key violation: value for column ${columnsStr} does not exist in referenced table '${targetEndpoint.tableName}'`,
-        rowNode,
+        row.node,
       ));
     }
   }
@@ -174,10 +183,9 @@ function validateRef (ref: Ref, lookup: LookupMap): CompileError[] {
 
 // Main entry point: validate all foreign key constraints
 export function validateForeignKeys (
-  recordMap: Map<Table, { batch: RecordsBatch; record: TableRecord }>,
   env: InterpreterDatabase,
 ): CompileError[] {
-  const lookup = createRecordMapFromKey(recordMap);
+  const lookup = createRecordMapFromKey(env.records);
   const refs = Array.from(env.ref.values());
   const errors: CompileError[] = [];
 
