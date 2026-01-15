@@ -11,7 +11,8 @@
           "type": {
             "schemaName": null,
             "type_name": "int",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -36,7 +37,8 @@
           "type": {
             "schemaName": null,
             "type_name": "int",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -62,7 +64,8 @@
           "type": {
             "schemaName": null,
             "type_name": "varchar",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -102,7 +105,8 @@
           "type": {
             "schemaName": null,
             "type_name": "varchar",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {

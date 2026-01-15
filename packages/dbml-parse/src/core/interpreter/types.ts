@@ -1,4 +1,4 @@
-import { ElementDeclarationNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import { Position } from '@/core/types';
 import { CompileError } from '@/core/errors';
 
@@ -24,7 +24,8 @@ export interface InterpreterDatabase {
   tablePartials: Map<ElementDeclarationNode, TablePartial>;
   aliases: Alias[];
   project: Map<ElementDeclarationNode, Project>;
-  records: TableRecord[];
+  records: Map<Table, TableRecordRow[]>;
+  recordsElements: ElementDeclarationNode[];
 }
 
 // Record value type
@@ -36,11 +37,21 @@ export interface RecordValue {
   is_expression?: boolean;
 }
 
+export interface TableRecordRow {
+  values: Record<string, RecordValue>;
+  node: FunctionApplicationNode;
+}
+
+export interface TableRecordsData {
+  table: Table;
+  rows: TableRecordRow[];
+}
+
 export interface TableRecord {
   schemaName: string | undefined;
   tableName: string;
   columns: string[];
-  values: RecordValue[][];
+  values: Record<string, RecordValue>[];
 }
 
 export interface Database {
@@ -83,6 +94,11 @@ export interface ColumnType {
   schemaName: string | null;
   type_name: string;
   args: string | null;
+  // Parsed type parameters
+  numericParams?: { precision: number; scale: number };
+  lengthParam?: { length: number };
+  // Whether this type references an enum
+  isEnum?: boolean;
 }
 
 export interface Column {
