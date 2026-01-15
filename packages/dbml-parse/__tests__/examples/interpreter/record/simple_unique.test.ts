@@ -132,4 +132,140 @@ describe('[example - record] simple unique constraints', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].diagnostic).toBe("Duplicate unique value for column 'username'");
   });
+
+  test('should accept unique constraint with numeric values', () => {
+    const source = `
+      Table products {
+        id int [pk]
+        sku int [unique]
+        name varchar
+      }
+      records products(id, sku, name) {
+        1, 1001, "Product A"
+        2, 1002, "Product B"
+        3, 1003, "Product C"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+
+    const db = result.getValue()!;
+    expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: 1001 });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'integer', value: 1002 });
+    expect(db.records[0].values[2][1]).toEqual({ type: 'integer', value: 1003 });
+  });
+
+  test('should reject duplicate numeric unique values', () => {
+    const source = `
+      Table products {
+        id int [pk]
+        sku int [unique]
+        name varchar
+      }
+      records products(id, sku, name) {
+        1, 1001, "Product A"
+        2, 1001, "Product B"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toBe("Duplicate unique value for column 'sku'");
+  });
+
+  test('should accept zero as unique value', () => {
+    const source = `
+      Table items {
+        id int [pk]
+        code int [unique]
+      }
+      records items(id, code) {
+        1, 0
+        2, 1
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+  });
+
+  test('should handle negative numbers in unique constraint', () => {
+    const source = `
+      Table balances {
+        id int [pk]
+        account_num int [unique]
+      }
+      records balances(id, account_num) {
+        1, -100
+        2, 100
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+
+    const db = result.getValue()!;
+    expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: -100 });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'integer', value: 100 });
+  });
+
+  test('should accept both pk and unique on same column', () => {
+    const source = `
+      Table items {
+        id int [pk, unique]
+        name varchar
+      }
+      records items(id, name) {
+        1, "Item 1"
+        2, "Item 2"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+  });
+
+  test('should reject duplicate when column has both pk and unique', () => {
+    const source = `
+      Table items {
+        id int [pk, unique]
+        name varchar
+      }
+      records items(id, name) {
+        1, "Item 1"
+        1, "Item 2"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    // Both pk and unique violations are reported
+    expect(errors.length).toBe(2);
+    expect(errors[0].diagnostic).toBe("Duplicate primary key value for column 'id'");
+    expect(errors[1].diagnostic).toBe("Duplicate unique value for column 'id'");
+  });
+
+  test('should allow all null values in unique column', () => {
+    const source = `
+      Table data {
+        id int [pk]
+        optional_code varchar [unique]
+      }
+      records data(id, optional_code) {
+        1, null
+        2, null
+        3, null
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+  });
 });

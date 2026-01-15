@@ -110,4 +110,122 @@ describe('[example - record] simple primary key constraints', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].diagnostic).toBe("Missing primary key column 'id' in record");
   });
+
+  test('should accept string primary keys', () => {
+    const source = `
+      Table countries {
+        code varchar(2) [pk]
+        name varchar
+      }
+      records countries(code, name) {
+        "US", "United States"
+        "UK", "United Kingdom"
+        "CA", "Canada"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+
+    const db = result.getValue()!;
+    expect(db.records[0].values[0][0]).toEqual({ type: 'string', value: 'US' });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'string', value: 'UK' });
+    expect(db.records[0].values[2][0]).toEqual({ type: 'string', value: 'CA' });
+  });
+
+  test('should reject duplicate string primary keys', () => {
+    const source = `
+      Table countries {
+        code varchar(2) [pk]
+        name varchar
+      }
+      records countries(code, name) {
+        "US", "United States"
+        "US", "USA"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toBe("Duplicate primary key value for column 'code'");
+  });
+
+  test('should accept primary key alias syntax', () => {
+    const source = `
+      Table users {
+        id int [primary key]
+        name varchar
+      }
+      records users(id, name) {
+        1, "Alice"
+        2, "Bob"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+  });
+
+  test('should handle zero as valid pk value', () => {
+    const source = `
+      Table items {
+        id int [pk]
+        name varchar
+      }
+      records items(id, name) {
+        0, "Zero Item"
+        1, "One Item"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+
+    const db = result.getValue()!;
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 0 });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 1 });
+  });
+
+  test('should handle negative numbers as pk values', () => {
+    const source = `
+      Table transactions {
+        id int [pk]
+        amount decimal
+      }
+      records transactions(id, amount) {
+        -1, 100.00
+        1, 50.00
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+
+    const db = result.getValue()!;
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: -1 });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 1 });
+  });
+
+  test('should accept valid pk with auto-increment', () => {
+    const source = `
+      Table users {
+        id int [pk, increment]
+        name varchar
+      }
+      records users(id, name) {
+        null, "Alice"
+        null, "Bob"
+        3, "Charlie"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+  });
 });

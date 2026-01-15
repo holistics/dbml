@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLReferencesProvider from '@/services/references/provider';
-import { createPosition, createMockTextModel, extractTextFromRange } from '../../utils';
+import { createPosition, createMockTextModel, extractTextFromRange } from '../../../utils';
 
-describe('[snapshot] ReferencesProvider', () => {
+describe('[example] ReferencesProvider', () => {
   it('should return empty array when no references found', () => {
     const program = 'Table test { id int }';
     const compiler = new Compiler();
