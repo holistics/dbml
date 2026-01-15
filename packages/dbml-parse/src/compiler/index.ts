@@ -8,7 +8,7 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import Analyzer from '@/core/analyzer/analyzer';
 import Interpreter from '@/core/interpreter/interpreter';
-import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLHoverProvider } from '@/services/index';
+import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from '@/services/index';
 import { ast, errors, tokens, rawDb, publicSymbolTable } from './queries/parse';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
@@ -117,7 +117,6 @@ export default class Compiler {
       definitionProvider: new DBMLDefinitionProvider(this),
       referenceProvider: new DBMLReferencesProvider(this),
       autocompletionProvider: new DBMLCompletionItemProvider(this),
-      hoverProvider: new DBMLHoverProvider(this),
     };
   }
 }
