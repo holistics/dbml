@@ -1,6 +1,7 @@
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
+  getElementKind,
 } from '@/core/analyzer/utils';
 import {
   extractStringFromIdentifierStream,
@@ -43,7 +44,7 @@ import {
 } from '@/core/parser/nodes';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
-import { SettingName } from '@/core/analyzer/types';
+import { ElementKind, SettingName } from '@/core/analyzer/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -149,7 +150,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       } else if (container instanceof ElementDeclarationNode) {
         // Check if we're in a Records element header - suggest schema.table names
         if (
-          container.type?.value.toLowerCase() === 'records'
+          getElementKind(container).unwrap_or(undefined) === ElementKind.Records
           && isOffsetWithinElementHeader(offset, container)
         ) {
           return suggestInRecordsHeader(this.compiler, offset, container);
@@ -259,7 +260,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Syn
   // Check if we're in a Records element header (top-level Records)
   if (
     element instanceof ElementDeclarationNode
-    && element.type?.value.toLowerCase() === 'records'
+    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
     && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
@@ -728,7 +729,7 @@ function suggestInCallExpression (
   // Check if we're in a Records element header (top-level Records)
   if (
     element instanceof ElementDeclarationNode
-    && element.type?.value.toLowerCase() === 'records'
+    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
     && isOffsetWithinElementHeader(offset, element)
   ) {
     // If in callee, suggest schema and table names
