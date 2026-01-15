@@ -33,15 +33,12 @@ function makeTableKey (schema: string | null | undefined, table: string): string
   return schema ? `${schema}.${table}` : `${DEFAULT_SCHEMA_NAME}.${table}`;
 }
 
-// Build lookup map indexed by schema.table key
-// Includes all tables from database, even those without records
 function createRecordMapFromKey (
   allTables: Map<any, Table>,
   records: Map<Table, TableRecordRow[]>,
 ): LookupMap {
   const lookup = new Map<string, TableLookup>();
 
-  // Add all tables with their records (or empty array if no records)
   for (const table of allTables.values()) {
     const key = makeTableKey(table.schemaName, table.name);
     const rows = records.get(table) || [];
@@ -51,7 +48,6 @@ function createRecordMapFromKey (
   return lookup;
 }
 
-// Build set of valid keys from a table's records
 function collectValidKeys (rows: TableRecordRow[], columnNames: string[]): Set<string> {
   const keys = new Set<string>();
   for (const row of rows) {
@@ -200,7 +196,6 @@ function validateRef (ref: Ref, lookup: LookupMap): CompileError[] {
   return [];
 }
 
-// Main entry point: validate all foreign key constraints
 export function validateForeignKeys (
   env: InterpreterDatabase,
 ): CompileError[] {
