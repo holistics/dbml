@@ -27,6 +27,8 @@ import {
   noSuggestions,
   prependSpace,
   isOffsetWithinElementHeader,
+  excludeSuggestions,
+  addExpandAllColumnsSuggestion,
 } from '@/services/suggestions/utils';
 import {
   AttributeNode,
@@ -286,7 +288,15 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Syn
         // Use the parent element's symbol (the table)
           const tableSymbol = element.symbol;
           if (tableSymbol) {
-            return suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+            let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+
+            // Exclude "records" from column suggestions
+            suggestions = excludeSuggestions(suggestions, ['records']);
+
+            // Add special suggestion: expand * to all columns
+            suggestions = addExpandAllColumnsSuggestion(suggestions);
+
+            return suggestions;
           }
           break;
         }
@@ -749,7 +759,15 @@ function suggestInCallExpression (
         const tableSymbol = rightmostExpr?.referee;
 
         if (tableSymbol) {
-          return suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+          let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+
+          // Exclude "records" from column suggestions
+          suggestions = excludeSuggestions(suggestions, ['records']);
+
+          // Add special suggestion: expand * to all columns
+          suggestions = addExpandAllColumnsSuggestion(suggestions);
+
+          return suggestions;
         }
       }
     }
@@ -780,7 +798,15 @@ function suggestInCallExpression (
           const tableSymbol = rightmostExpr?.referee;
 
           if (tableSymbol) {
-            return suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+            let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+
+            // Exclude "records" from column suggestions
+            suggestions = excludeSuggestions(suggestions, ['records']);
+
+            // Add special suggestion: expand * to all columns
+            suggestions = addExpandAllColumnsSuggestion(suggestions);
+
+            return suggestions;
           }
         }
       }
