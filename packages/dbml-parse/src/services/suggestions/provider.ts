@@ -139,7 +139,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       } else if (container instanceof ListExpressionNode) {
         return suggestInAttribute(this.compiler, offset, container);
       } else if (container instanceof TupleExpressionNode) {
-        return suggestInTuple(this.compiler, offset);
+        return suggestInTuple(this.compiler, offset, container);
       } else if (container instanceof CommaExpressionNode) {
         return suggestInCommaExpression(this.compiler, offset);
       } else if (container instanceof CallExpressionNode) {
@@ -244,14 +244,23 @@ function suggestNamesInScope (
   return addQuoteIfNeeded(res);
 }
 
-function suggestInTuple (compiler: Compiler, offset: number): CompletionList {
+function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: SyntaxNode): CompletionList {
   const scopeKind = compiler.container.scopeKind(offset);
   const element = compiler.container.element(offset);
+
+  // Check if we're inside a CallExpression - delegate to suggestInCallExpression
+  const containers = [...compiler.container.stack(offset)];
+  for (const c of containers) {
+    if (c instanceof CallExpressionNode && c.argumentList === tupleContainer) {
+      return suggestInCallExpression(compiler, offset, c);
+    }
+  }
 
   // Check if we're in a Records element header (top-level Records)
   if (
     element instanceof ElementDeclarationNode
     && element.type?.value.toLowerCase() === 'records'
+    && !(element.name instanceof CallExpressionNode)
     && isOffsetWithinElementHeader(offset, element)
   ) {
     // Suggest column names from the table
@@ -262,34 +271,31 @@ function suggestInTuple (compiler: Compiler, offset: number): CompletionList {
     }
   }
 
-  // Check if we're inside a table typing "Records (...)"
-  // In this case, Records is a FunctionApplicationNode
-  if (
-    [ScopeKind.TABLE].includes(scopeKind)
-  ) {
-    const containers = [...compiler.container.stack(offset)];
-    for (const c of containers) {
-      if (
-        c instanceof FunctionApplicationNode
-        && isExpressionAVariableNode(c.callee)
-        && extractVariableFromExpression(c.callee).unwrap_or('').toLowerCase() === 'records'
-      ) {
-        // Use the parent element's symbol (the table)
-        const tableSymbol = element.symbol;
-        if (tableSymbol) {
-          return suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-        }
-        break;
-      }
-    }
-  }
-
   switch (scopeKind) {
+    case ScopeKind.TABLE: {
+      // Check if we're inside a table typing "Records (...)"
+      // In this case, Records is a FunctionApplicationNode
+      for (const c of containers) {
+        if (
+          c instanceof FunctionApplicationNode
+          && isExpressionAVariableNode(c.callee)
+          && extractVariableFromExpression(c.callee).unwrap_or('').toLowerCase() === 'records'
+          && !(c.args?.[0] instanceof CallExpressionNode)
+        ) {
+        // Use the parent element's symbol (the table)
+          const tableSymbol = element.symbol;
+          if (tableSymbol) {
+            return suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+          }
+          break;
+        }
+      }
+      break;
+    }
     case ScopeKind.INDEXES:
       return suggestColumnNameInIndexes(compiler, offset);
     case ScopeKind.REF:
       {
-        const containers = [...compiler.container.stack(offset)];
         while (containers.length > 0) {
           const container = containers.pop()!;
           if (container instanceof InfixExpressionNode && container.op?.value === '.') {
@@ -745,6 +751,39 @@ function suggestInCallExpression (
           return suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
         }
       }
+    }
+  }
+
+  // Check if we're inside a Records FunctionApplicationNode (e.g., typing "Records users()")
+  const containers = [...compiler.container.stack(offset)];
+  for (const c of containers) {
+    if (
+      c instanceof FunctionApplicationNode
+      && isExpressionAVariableNode(c.callee)
+      && extractVariableFromExpression(c.callee).unwrap_or('').toLowerCase() === 'records'
+    ) {
+      // If in callee, suggest schema and table names
+      if (inCallee) {
+        return suggestNamesInScope(compiler, offset, element, [
+          SymbolKind.Schema,
+          SymbolKind.Table,
+        ]);
+      }
+
+      // If in args, suggest column names from the table referenced in the callee
+      if (inArgs) {
+        const callee = container.callee;
+        if (callee) {
+          const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
+          const rightmostExpr = fragments[fragments.length - 1];
+          const tableSymbol = rightmostExpr?.referee;
+
+          if (tableSymbol) {
+            return suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+          }
+        }
+      }
+      break;
     }
   }
 
