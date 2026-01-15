@@ -1,22 +1,19 @@
 import { SyntaxToken } from '../../../lexer/tokens';
 import { ElementBinder } from '../types';
 import {
-  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, VariableNode,
+  BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '../../../parser/nodes';
 import { CompileError, CompileErrorCode } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import SymbolFactory from '../../symbol/factory';
 import {
   destructureCallExpression,
-  destructureMemberAccessExpression,
   extractVarNameFromPrimaryVariable,
   getElementKind,
 } from '../../utils';
 import { createColumnSymbolIndex, SymbolKind } from '../../symbol/symbolIndex';
 import { ElementKind } from '../../types';
 import { isTupleOfVariables } from '../../validator/utils';
-import { isExpressionAVariableNode } from '../../../parser/utils';
-import { None, Option, Some } from '../../../option';
 
 export default class RecordsBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
