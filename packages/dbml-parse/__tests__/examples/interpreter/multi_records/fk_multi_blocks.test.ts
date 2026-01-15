@@ -68,7 +68,7 @@ describe('[example - record] FK validation across multiple records blocks', () =
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
     expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Foreign key violation');
+    expect(errors[0].diagnostic).toContain('Foreign key not found');
   });
 
   test('should validate composite FK across multiple records blocks', () => {
@@ -147,7 +147,7 @@ describe('[example - record] FK validation across multiple records blocks', () =
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
     expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Foreign key violation');
+    expect(errors[0].diagnostic).toContain('not found in');
   });
 
   test('should handle FK when referenced column appears in some but not all blocks', () => {
@@ -282,7 +282,7 @@ describe('[example - record] FK validation across multiple records blocks', () =
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBeGreaterThan(0);
-    expect(errors.some(e => e.diagnostic.includes('Foreign key violation'))).toBe(true);
+    expect(errors.some(e => e.diagnostic.includes('Foreign key not found'))).toBe(true);
   });
 
   test('should validate FK across nested and top-level records', () => {

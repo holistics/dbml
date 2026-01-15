@@ -1,4 +1,4 @@
-import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
 import { Position } from '@/core/types';
 import { CompileError } from '@/core/errors';
 
@@ -35,11 +35,13 @@ export interface RecordValue {
   value: any;
   type: RecordValueType;
   is_expression?: boolean;
+  node?: SyntaxNode; // The specific node for this column value
 }
 
 export interface TableRecordRow {
   values: Record<string, RecordValue>;
   node: FunctionApplicationNode;
+  columnNodes: Record<string, SyntaxNode>; // Map of column name to its value node
 }
 
 export interface TableRecordsData {
