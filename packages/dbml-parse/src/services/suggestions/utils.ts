@@ -81,7 +81,7 @@ export function excludeSuggestions (completionList: CompletionList, excludeLabel
     ...completionList,
     suggestions: completionList.suggestions.filter((s) => {
       const label = typeof s.label === 'string' ? s.label : s.label.label;
-      return !excludeLabels.includes(label);
+      return !excludeLabels.includes(label.toLowerCase());
     }),
   };
 }
