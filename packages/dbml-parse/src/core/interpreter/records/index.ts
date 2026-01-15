@@ -49,7 +49,7 @@ export class RecordsInterpreter {
       const { table, columns } = getTableAndColumnsOfRecords(element, this.env);
       for (const row of (element.body as BlockExpressionNode).body) {
         const rowNode = row as FunctionApplicationNode;
-        const { errors: rowErrors, row: rowValue } = extractDataFromRow(rowNode, columns);
+        const { errors: rowErrors, row: rowValue, columnNodes } = extractDataFromRow(rowNode, columns);
         errors.push(...rowErrors);
         if (!rowValue) continue;
         if (!this.env.records.has(table)) {
@@ -59,6 +59,7 @@ export class RecordsInterpreter {
         tableRecords!.push({
           values: rowValue,
           node: rowNode,
+          columnNodes,
         });
       }
     }
@@ -127,9 +128,10 @@ function extractRowValues (row: FunctionApplicationNode): SyntaxNode[] {
 function extractDataFromRow (
   row: FunctionApplicationNode,
   columns: Column[],
-): { errors: CompileError[]; row: Record<string, RecordValue> | null } {
+): { errors: CompileError[]; row: Record<string, RecordValue> | null; columnNodes: Record<string, SyntaxNode> } {
   const errors: CompileError[] = [];
   const rowObj: Record<string, RecordValue> = {};
+  const columnNodes: Record<string, SyntaxNode> = {};
 
   const args = extractRowValues(row);
   if (args.length !== columns.length) {
@@ -138,21 +140,22 @@ function extractDataFromRow (
       `Expected ${columns.length} values but got ${args.length}`,
       row,
     ));
-    return { errors, row: null };
+    return { errors, row: null, columnNodes: {} };
   }
 
   for (let i = 0; i < columns.length; i++) {
     const arg = args[i];
     const column = columns[i];
+    columnNodes[column.name] = arg;
     const result = extractValue(arg, column);
     if (Array.isArray(result)) {
       errors.push(...result);
     } else {
-      rowObj[column.name] = result;
+      rowObj[column.name] = { ...result, node: arg };
     }
   }
 
-  return { errors, row: rowObj };
+  return { errors, row: rowObj, columnNodes };
 }
 
 function extractValue (

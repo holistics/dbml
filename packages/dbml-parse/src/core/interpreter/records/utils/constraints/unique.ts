@@ -58,10 +58,12 @@ export function validateUnique (
         // Check for duplicates (using defaults for missing values)
         const keyValue = extractKeyValue(row.values, uniqueColumns, uniqueColumnFields);
         if (seen.has(keyValue)) {
+          // Report error on the first column of the constraint
+          const errorNode = row.columnNodes[uniqueColumns[0]] || row.node;
           const msg = isComposite
-            ? `Duplicate composite unique constraint value for ${columnsStr}`
-            : `Duplicate unique value for column ${columnsStr}`;
-          errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, row.node));
+            ? `Duplicate unique value ${columnsStr}`
+            : `Duplicate unique value for '${uniqueColumns[0]}'`;
+          errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
         } else {
           seen.set(keyValue, rowIndex);
         }
