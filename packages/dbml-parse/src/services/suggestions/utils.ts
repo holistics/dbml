@@ -1,5 +1,5 @@
 import { SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
-import { CompletionItemKind, type CompletionList } from '@/services/types';
+import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
 import { isAlphaOrUnderscore } from '@/core/utils';
@@ -73,6 +73,41 @@ export function addQuoteIfNeeded (completionList: CompletionList): CompletionLis
       ...s,
       insertText: (!s.insertText || !s.insertText.split('').every(isAlphaOrUnderscore)) ? `"${s.insertText ?? ''}"` : s.insertText,
     })),
+  };
+}
+
+export function excludeSuggestions (completionList: CompletionList, excludeLabels: string[]): CompletionList {
+  return {
+    ...completionList,
+    suggestions: completionList.suggestions.filter((s) => {
+      const label = typeof s.label === 'string' ? s.label : s.label.label;
+      return !excludeLabels.includes(label);
+    }),
+  };
+}
+
+export function addExpandAllColumnsSuggestion (completionList: CompletionList): CompletionList {
+  const allColumns = completionList.suggestions
+    .map((s) => typeof s.label === 'string' ? s.label : s.label.label)
+    .join(', ');
+
+  if (!allColumns) {
+    return completionList;
+  }
+
+  return {
+    ...completionList,
+    suggestions: [
+      {
+        label: '* (all columns)',
+        insertText: allColumns,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Snippet,
+        sortText: '00',
+        range: undefined as any,
+      },
+      ...completionList.suggestions,
+    ],
   };
 }
 
