@@ -1,5 +1,5 @@
 import { isEmpty, reduce } from 'lodash-es';
-import { addQuoteIfNeeded } from '@dbml/parse';
+import { addQuoteIfNeeded, isNumericType, isBooleanType, isStringType, isDateTimeType } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
@@ -360,24 +360,17 @@ class DbmlExporter {
       return `\`${value}\``;
     }
 
-    // Handle by type
-    switch (type) {
-      case 'bool':
-        return value ? 'true' : 'false';
-
-      case 'integer':
-      case 'real':
-        return String(value);
-
-      case 'string':
-      case 'date':
-      case 'time':
-      case 'datetime':
-      default: {
-        const strValue = String(value);
-        return `'${strValue.replaceAll("'", "\\'")}'`;
-      }
+    if (isBooleanType(type)) {
+      return value ? 'true' : 'false';
     }
+
+    if (isNumericType(type)) {
+      return String(value);
+    }
+
+    // Default: string types, date/time types, and others
+    const strValue = String(value);
+    return `'${strValue.replaceAll("'", "\\'")}'`;
   }
 
   static exportRecords (model) {
