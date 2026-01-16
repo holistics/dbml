@@ -26,16 +26,16 @@ describe('[example - record] simple primary key constraints', () => {
     expect(db.records[0].values.length).toBe(3);
 
     // Row 1: id=1, name="Alice"
-    expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].name).toEqual({ type: 'string', value: 'Alice' });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'Alice' });
 
     // Row 2: id=2, name="Bob"
-    expect(db.records[0].values[1].id).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1].name).toEqual({ type: 'string', value: 'Bob' });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'string', value: 'Bob' });
 
     // Row 3: id=3, name="Charlie"
-    expect(db.records[0].values[2].id).toEqual({ type: 'integer', value: 3 });
-    expect(db.records[0].values[2].name).toEqual({ type: 'string', value: 'Charlie' });
+    expect(db.records[0].values[2][0]).toEqual({ type: 'integer', value: 3 });
+    expect(db.records[0].values[2][1]).toEqual({ type: 'string', value: 'Charlie' });
   });
 
   test('should reject duplicate primary key values', () => {
@@ -129,9 +129,9 @@ describe('[example - record] simple primary key constraints', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values[0].code).toEqual({ type: 'string', value: 'US' });
-    expect(db.records[0].values[1].code).toEqual({ type: 'string', value: 'UK' });
-    expect(db.records[0].values[2].code).toEqual({ type: 'string', value: 'CA' });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'string', value: 'US' });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'string', value: 'UK' });
+    expect(db.records[0].values[2][0]).toEqual({ type: 'string', value: 'CA' });
   });
 
   test('should reject duplicate string primary keys', () => {
@@ -186,8 +186,8 @@ describe('[example - record] simple primary key constraints', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 0 });
-    expect(db.records[0].values[1].id).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 0 });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 1 });
   });
 
   test('should handle negative numbers as pk values', () => {
@@ -207,8 +207,8 @@ describe('[example - record] simple primary key constraints', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: -1 });
-    expect(db.records[0].values[1].id).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: -1 });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 1 });
   });
 
   test('should accept valid pk with auto-increment', () => {

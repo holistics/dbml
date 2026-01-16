@@ -36,17 +36,17 @@ describe('[example - record] simple foreign key constraints', () => {
     // Users table
     expect(db.records[0].tableName).toBe('users');
     expect(db.records[0].values.length).toBe(2);
-    expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].name).toEqual({ type: 'string', value: 'Alice' });
-    expect(db.records[0].values[1].id).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1].name).toEqual({ type: 'string', value: 'Bob' });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'Alice' });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'string', value: 'Bob' });
 
     // Posts table
     expect(db.records[1].tableName).toBe('posts');
     expect(db.records[1].values.length).toBe(3);
-    expect(db.records[1].values[0].id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[1].values[0].user_id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[1].values[0].title).toEqual({ type: 'string', value: "Alice's Post" });
+    expect(db.records[1].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[1].values[0][1]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[1].values[0][2]).toEqual({ type: 'string', value: "Alice's Post" });
   });
 
   test('should reject FK values that dont exist in referenced table', () => {
@@ -107,14 +107,14 @@ describe('[example - record] simple foreign key constraints', () => {
     expect(db.records[1].values.length).toBe(2);
 
     // Row 1: id=1, category_id=1, name="Laptop"
-    expect(db.records[1].values[0].id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[1].values[0].category_id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[1].values[0].name).toEqual({ type: 'string', value: 'Laptop' });
+    expect(db.records[1].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[1].values[0][1]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[1].values[0][2]).toEqual({ type: 'string', value: 'Laptop' });
 
     // Row 2: id=2, category_id=null, name="Uncategorized Item"
-    expect(db.records[1].values[1].id).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[1].values[1].category_id.value).toBe(null);
-    expect(db.records[1].values[1].name).toEqual({ type: 'string', value: 'Uncategorized Item' });
+    expect(db.records[1].values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[1].values[1][1].value).toBe(null);
+    expect(db.records[1].values[1][2]).toEqual({ type: 'string', value: 'Uncategorized Item' });
   });
 
   test('should validate one-to-one FK both directions', () => {
@@ -206,8 +206,8 @@ describe('[example - record] simple foreign key constraints', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[1].values[0].country_code).toEqual({ type: 'string', value: 'US' });
-    expect(db.records[1].values[1].country_code).toEqual({ type: 'string', value: 'UK' });
+    expect(db.records[1].values[0][1]).toEqual({ type: 'string', value: 'US' });
+    expect(db.records[1].values[1][1]).toEqual({ type: 'string', value: 'UK' });
   });
 
   test('should reject invalid string FK values', () => {

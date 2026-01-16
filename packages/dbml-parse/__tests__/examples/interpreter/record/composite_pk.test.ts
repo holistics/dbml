@@ -31,19 +31,19 @@ describe('[example - record] composite primary key constraints', () => {
     expect(db.records[0].values.length).toBe(3);
 
     // Row 1: order_id=1, product_id=100, quantity=2
-    expect(db.records[0].values[0].order_id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].product_id).toEqual({ type: 'integer', value: 100 });
-    expect(db.records[0].values[0].quantity).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: 100 });
+    expect(db.records[0].values[0][2]).toEqual({ type: 'integer', value: 2 });
 
     // Row 2: order_id=1, product_id=101, quantity=1
-    expect(db.records[0].values[1].order_id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[1].product_id).toEqual({ type: 'integer', value: 101 });
-    expect(db.records[0].values[1].quantity).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'integer', value: 101 });
+    expect(db.records[0].values[1][2]).toEqual({ type: 'integer', value: 1 });
 
     // Row 3: order_id=2, product_id=100, quantity=3
-    expect(db.records[0].values[2].order_id).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[2].product_id).toEqual({ type: 'integer', value: 100 });
-    expect(db.records[0].values[2].quantity).toEqual({ type: 'integer', value: 3 });
+    expect(db.records[0].values[2][0]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[2][1]).toEqual({ type: 'integer', value: 100 });
+    expect(db.records[0].values[2][2]).toEqual({ type: 'integer', value: 3 });
   });
 
   test('should reject duplicate composite primary key values', () => {
@@ -143,21 +143,21 @@ describe('[example - record] composite primary key constraints', () => {
     expect(db.records[0].values.length).toBe(3);
 
     // Row 1: user_id=1, role_id=1, assigned_at="2024-01-01"
-    expect(db.records[0].values[0].user_id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].role_id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].assigned_at.type).toBe('datetime');
-    expect(db.records[0].values[0].assigned_at.value).toBe('2024-01-01');
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][2].type).toBe('datetime');
+    expect(db.records[0].values[0][2].value).toBe('2024-01-01');
 
     // Row 2: user_id=1, role_id=2, assigned_at="2024-01-02"
-    expect(db.records[0].values[1].user_id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[1].role_id).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1].assigned_at.type).toBe('datetime');
-    expect(db.records[0].values[1].assigned_at.value).toBe('2024-01-02');
+    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[1][2].type).toBe('datetime');
+    expect(db.records[0].values[1][2].value).toBe('2024-01-02');
 
     // Row 3: user_id=2, role_id=1, assigned_at="2024-01-03"
-    expect(db.records[0].values[2].user_id).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[2].role_id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[2].assigned_at.type).toBe('datetime');
-    expect(db.records[0].values[2].assigned_at.value).toBe('2024-01-03');
+    expect(db.records[0].values[2][0]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[2][1]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[2][2].type).toBe('datetime');
+    expect(db.records[0].values[2][2].value).toBe('2024-01-03');
   });
 });

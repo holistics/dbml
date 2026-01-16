@@ -1095,9 +1095,9 @@ describe('[example] interpreter', () => {
       expect(errors).toHaveLength(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0].id.type).toBe('integer');
-      expect(db.records[0].values[0].id.value).toBe(1);
-      expect(db.records[0].values[1].id.value).toBe(42);
+      expect(db.records[0].values[0][0].type).toBe('integer');
+      expect(db.records[0].values[0][0].value).toBe(1);
+      expect(db.records[0].values[1][0].value).toBe(42);
     });
 
     test('should interpret float values correctly', () => {
@@ -1113,9 +1113,9 @@ describe('[example] interpreter', () => {
       expect(errors).toHaveLength(0);
 
       const db = result.getValue()!;
-      expect(db.records[0].values[0].value.type).toBe('real');
-      expect(db.records[0].values[0].value.value).toBe(3.14);
-      expect(db.records[0].values[1].value.value).toBe(0.01);
+      expect(db.records[0].values[0][0].type).toBe('real');
+      expect(db.records[0].values[0][0].value).toBe(3.14);
+      expect(db.records[0].values[1][0].value).toBe(0.01);
     });
 
     test('should interpret scientific notation correctly', () => {
@@ -1129,10 +1129,10 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
 
-      expect(db.records[0].values[0].value.type).toBe('real');
-      expect(db.records[0].values[0].value.value).toBe(1e10);
-      expect(db.records[0].values[1].value.value).toBe(3.14e-5);
-      expect(db.records[0].values[2].value.value).toBe(2e8);
+      expect(db.records[0].values[0][0].type).toBe('real');
+      expect(db.records[0].values[0][0].value).toBe(1e10);
+      expect(db.records[0].values[1][0].value).toBe(3.14e-5);
+      expect(db.records[0].values[2][0].value).toBe(2e8);
     });
 
     test('should interpret boolean values correctly', () => {
@@ -1145,9 +1145,9 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
 
-      expect(db.records[0].values[0].flag.type).toBe('bool');
-      expect(db.records[0].values[0].flag.value).toBe(true);
-      expect(db.records[0].values[1].flag.value).toBe(false);
+      expect(db.records[0].values[0][0].type).toBe('bool');
+      expect(db.records[0].values[0][0].value).toBe(true);
+      expect(db.records[0].values[1][0].value).toBe(false);
     });
 
     test('should interpret string values correctly', () => {
@@ -1160,9 +1160,9 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
 
-      expect(db.records[0].values[0].name.type).toBe('string');
-      expect(db.records[0].values[0].name.value).toBe('Alice');
-      expect(db.records[0].values[1].name.value).toBe('Bob');
+      expect(db.records[0].values[0][0].type).toBe('string');
+      expect(db.records[0].values[0][0].value).toBe('Alice');
+      expect(db.records[0].values[1][0].value).toBe('Bob');
     });
 
     test('should interpret null values correctly', () => {
@@ -1175,9 +1175,9 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
 
-      expect(db.records[0].values[0].name.type).toBe('string');
-      expect(db.records[0].values[0].name.value).toBe(null);
-      expect(db.records[0].values[1].name.type).toBe('string');
+      expect(db.records[0].values[0][0].type).toBe('string');
+      expect(db.records[0].values[0][0].value).toBe(null);
+      expect(db.records[0].values[1][0].type).toBe('string');
     });
 
     test('should interpret function expressions correctly', () => {
@@ -1190,9 +1190,9 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
 
-      expect(db.records[0].values[0].created_at.type).toBe('expression');
-      expect(db.records[0].values[0].created_at.value).toBe('now()');
-      expect(db.records[0].values[1].created_at.value).toBe('uuid_generate_v4()');
+      expect(db.records[0].values[0][0].type).toBe('expression');
+      expect(db.records[0].values[0][0].value).toBe('now()');
+      expect(db.records[0].values[1][0].value).toBe('uuid_generate_v4()');
     });
 
     test('should interpret enum values correctly', () => {
@@ -1209,9 +1209,9 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
 
-      expect(db.records[0].values[0].status.type).toBe('string');
-      expect(db.records[0].values[0].status.value).toBe('active');
-      expect(db.records[0].values[1].status.value).toBe('inactive');
+      expect(db.records[0].values[0][1].type).toBe('string');
+      expect(db.records[0].values[0][1].value).toBe('active');
+      expect(db.records[0].values[1][1].value).toBe('inactive');
     });
 
     test('should group multiple records blocks for same table', () => {
@@ -1232,8 +1232,8 @@ describe('[example] interpreter', () => {
       // Should be grouped into one records entry
       expect(db.records).toHaveLength(1);
       expect(db.records[0].values).toHaveLength(2);
-      expect(db.records[0].values[0].id.value).toBe(1);
-      expect(db.records[0].values[1].id.value).toBe(2);
+      expect(db.records[0].values[0][0].value).toBe(1);
+      expect(db.records[0].values[1][0].value).toBe(2);
     });
 
     test('should interpret records with schema-qualified table', () => {
@@ -1272,10 +1272,10 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
 
       const row1 = db.records[0].values[0];
-      expect(row1.id).toEqual({ type: 'integer', value: 1 });
-      expect(row1.value).toEqual({ type: 'real', value: 3.14 });
-      expect(row1.active).toEqual({ type: 'bool', value: true });
-      expect(row1.name).toEqual({ type: 'string', value: 'test' });
+      expect(row1[0]).toEqual({ type: 'integer', value: 1 });
+      expect(row1[1]).toEqual({ type: 'real', value: 3.14 });
+      expect(row1[2]).toEqual({ type: 'bool', value: true });
+      expect(row1[3]).toEqual({ type: 'string', value: 'test' });
     });
 
     test('should handle empty records block', () => {

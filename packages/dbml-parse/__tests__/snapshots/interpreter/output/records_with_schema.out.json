@@ -138,36 +138,36 @@
         "customer_name"
       ],
       "values": [
-        {
-          "id": {
+        [
+          {
             "value": 1,
             "type": "integer"
           },
-          "customer_name": {
+          {
             "value": "John Doe",
             "type": "string"
           }
-        },
-        {
-          "id": {
+        ],
+        [
+          {
             "value": 2,
             "type": "integer"
           },
-          "customer_name": {
+          {
             "value": "Jane Smith",
             "type": "string"
           }
-        },
-        {
-          "id": {
+        ],
+        [
+          {
             "value": 3,
             "type": "integer"
           },
-          "customer_name": {
+          {
             "value": "Bob Wilson",
             "type": "string"
           }
-        }
+        ]
       ]
     }
   ]
