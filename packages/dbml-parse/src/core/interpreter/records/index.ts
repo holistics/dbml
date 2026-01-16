@@ -179,7 +179,7 @@ function extractValue (
   // NULL literal
   if (isNullish(node) || (isEmptyStringLiteral(node) && !isStringType(type))) {
     const hasDefaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null';
-    if (notNull && hasDefaultValue && !increment) {
+    if (notNull && !hasDefaultValue && !increment) {
       return [new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `NULL not allowed for NOT NULL column '${column.name}' without default and increment`,

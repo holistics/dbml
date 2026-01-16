@@ -116,7 +116,9 @@ export function tryExtractString (value: SyntaxNode): string | null {
   return extractQuotedStringToken(value).unwrap_or(null);
 }
 
-// ISO 8601 datetime format: YYYY-MM-DDTHH:MM:SS with optional fractional seconds and timezone
+// ISO 8601 datetime/date/time formats
+const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+const ISO_TIME_REGEX = /^\d{2}:\d{2}:\d{2}(?:\.\d+)?$/;
 const ISO_DATETIME_REGEX = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/;
 
 // Try to extract a datetime value from a syntax node or primitive in ISO format
@@ -127,7 +129,7 @@ export function tryExtractDateTime (value: SyntaxNode): string | null {
 
   if (strValue === null) return null;
 
-  if (ISO_DATETIME_REGEX.test(strValue)) {
+  if (ISO_DATETIME_REGEX.test(strValue) || ISO_DATE_REGEX.test(strValue) || ISO_TIME_REGEX.test(strValue)) {
     return strValue;
   }
 

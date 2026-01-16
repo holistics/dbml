@@ -52,8 +52,8 @@ export function validatePrimaryKey (
         if (missingColumnsWithoutDefaults.length > 0) {
           const missingStr = formatColumns(missingColumnsWithoutDefaults);
           const msg = missingColumnsWithoutDefaults.length > 1
-            ? `Missing primary key columns ${missingStr}`
-            : `Missing primary key '${missingColumnsWithoutDefaults[0]}'`;
+            ? `Missing primary key columns ${missingStr} in record`
+            : `Missing primary key column '${missingColumnsWithoutDefaults[0]}' in record`;
           for (const row of rows) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -91,8 +91,8 @@ export function validatePrimaryKey (
             if (!val || val.value === null) {
               const errorNode = row.columnNodes[col] || row.node;
               const msg = isComposite
-                ? `NULL not allowed in primary key '${col}'`
-                : 'NULL not allowed in primary key';
+                ? `NULL value not allowed in composite primary key ${columnsStr}`
+                : `NULL value not allowed in primary key column '${col}'`;
               errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
               break;
             }
@@ -107,7 +107,7 @@ export function validatePrimaryKey (
           const errorNode = row.columnNodes[pkColumns[0]] || row.node;
           const msg = isComposite
             ? `Duplicate primary key ${columnsStr}`
-            : 'Duplicate primary key';
+            : `Duplicate primary key value for column '${pkColumns[0]}'`;
           errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
         } else {
           seen.set(keyValue, rowIndex);
