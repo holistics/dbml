@@ -6,8 +6,61 @@ import {
   escapeObjectName,
   shouldPrintSchema,
 } from './utils';
+import {
+  isNumericType,
+  isStringType,
+  isBooleanType,
+  isDatetimeType,
+  isBinaryType,
+} from '@dbml/parse';
 
 class OracleExporter {
+  static exportRecords (model) {
+    const records = Object.values(model.records || {});
+    if (_.isEmpty(records)) {
+      return [];
+    }
+
+    const insertStatements = records.map((record) => {
+      const { schemaName, tableName, columns, values } = record;
+
+      // Build the table reference with schema if present
+      const tableRef = schemaName ? `"${schemaName}"."${tableName}"` : `"${tableName}"`;
+
+      // Build the column list
+      const columnList = columns.length > 0
+        ? `("${columns.join('", "')}")`
+        : '';
+
+      const valueExporter = (val) => {
+        if (val.value === null) return 'NULL';
+        if (val.type === 'expression') return val.value;
+        if (isNumericType(val.type)) return val.value;
+        if (isBooleanType(val.type)) return val.value.toString().toUpperCase() === 'TRUE' ? '1' : '0';
+        if (isStringType(val.type) || isDatetimeType(val.type)) return `'${val.value.replace(/'/g, "''")}'`;
+        if (isBinaryType(val.type)) return `HEXTORAW('${val.value}')`;
+        // Unknown type - use CAST
+        return `CAST('${val.value.replace(/'/g, "''")}' AS ${val.type})`;
+      };
+
+      // Build the INSERT ALL statement for multiple rows
+      if (values.length > 1) {
+        const intoStatements = values.map((row) => {
+          const valueStrs = row.map(valueExporter);
+          return `  INTO ${tableRef} ${columnList} VALUES (${valueStrs.join(', ')})`;
+        });
+        return `INSERT ALL\n${intoStatements.join('\n')}\nSELECT * FROM dual;`;
+      }
+
+      // Single row INSERT
+      const valueStrs = values[0].map(valueExporter);
+
+      return `INSERT INTO ${tableRef} ${columnList}\nVALUES (${valueStrs.join(', ')});`;
+    });
+
+    return insertStatements;
+  }
+
   static buildSchemaToTableNameSetMap (model) {
     const schemaToTableNameSetMap = new Map();
 
@@ -500,6 +553,20 @@ class OracleExporter {
       refs: [],
     });
 
+    // Export INSERT statements with constraint checking disabled
+    const insertStatements = this.exportRecords(model);
+    const recordsSection = !isEmpty(insertStatements)
+      ? [
+          '-- Disable constraint checks for INSERT',
+          'ALTER SESSION SET CONSTRAINTS = DEFERRED;',
+          '',
+          ...insertStatements,
+          '',
+          '-- Re-enable constraint checks',
+          'ALTER SESSION SET CONSTRAINTS = IMMEDIATE;',
+        ]
+      : [];
+
     const res = concat(
       statements.schemas,
       statements.tables,
@@ -507,6 +574,7 @@ class OracleExporter {
       statements.comments,
       statements.referenceGrants,
       statements.refs,
+      recordsSection,
     ).join('\n');
     return res;
   }
