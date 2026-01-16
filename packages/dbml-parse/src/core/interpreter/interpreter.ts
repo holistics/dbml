@@ -31,10 +31,10 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
         tableName: table.name,
         columns: Array.from(columnsSet),
         values: rows.map((r) => {
-          const cleanValues: Record<string, { value: any; type: string; is_expression?: boolean }> = {};
+          const cleanValues: Record<string, { value: any; type: string }> = {};
           for (const [key, val] of Object.entries(r.values)) {
-            const { value, type, is_expression } = val;
-            cleanValues[key] = is_expression ? { value, type, is_expression } : { value, type };
+            const { value, type } = val;
+            cleanValues[key] = { value, type };
           }
           return cleanValues;
         }),
