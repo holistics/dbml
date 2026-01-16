@@ -39,5 +39,9 @@ describe('@dbml/core', () => {
     test.each(scanTestNames(__dirname, 'oracle-parse/input'))('oracle-parse/%s', (name) => {
       runTest(name, 'oracle-parse', 'oracle', 'parseOracleToJSON');
     });
+
+    test.each(scanTestNames(__dirname, 'snowflake-parse/input'))('snowflake-parse/%s', (name) => {
+      runTest(name, 'snowflake-parse', 'snowflake', 'parseSnowflakeToJSON');
+    });
   });
 });
