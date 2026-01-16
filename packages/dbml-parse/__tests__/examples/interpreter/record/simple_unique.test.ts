@@ -26,16 +26,16 @@ describe('[example - record] simple unique constraints', () => {
     expect(db.records[0].values.length).toBe(3);
 
     // Row 1: id=1, email="alice@example.com"
-    expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].email).toEqual({ type: 'string', value: 'alice@example.com' });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'alice@example.com' });
 
     // Row 2: id=2, email="bob@example.com"
-    expect(db.records[0].values[1].id).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1].email).toEqual({ type: 'string', value: 'bob@example.com' });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'string', value: 'bob@example.com' });
 
     // Row 3: id=3, email="charlie@example.com"
-    expect(db.records[0].values[2].id).toEqual({ type: 'integer', value: 3 });
-    expect(db.records[0].values[2].email).toEqual({ type: 'string', value: 'charlie@example.com' });
+    expect(db.records[0].values[2][0]).toEqual({ type: 'integer', value: 3 });
+    expect(db.records[0].values[2][1]).toEqual({ type: 'string', value: 'charlie@example.com' });
   });
 
   test('should reject duplicate unique values', () => {
@@ -78,20 +78,20 @@ describe('[example - record] simple unique constraints', () => {
     expect(db.records[0].values.length).toBe(4);
 
     // Row 1: id=1, phone=null
-    expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].phone).toEqual({ type: 'string', value: null });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: null });
 
     // Row 2: id=2, phone=null
-    expect(db.records[0].values[1].id).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1].phone).toEqual({ type: 'string', value: '' });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'string', value: '' });
 
     // Row 3: id=3, phone="555-1234"
-    expect(db.records[0].values[2].id).toEqual({ type: 'integer', value: 3 });
-    expect(db.records[0].values[2].phone).toEqual({ type: 'string', value: '555-1234' });
+    expect(db.records[0].values[2][0]).toEqual({ type: 'integer', value: 3 });
+    expect(db.records[0].values[2][1]).toEqual({ type: 'string', value: '555-1234' });
 
     // Row 4: id=4, phone=null
-    expect(db.records[0].values[3].id).toEqual({ type: 'integer', value: 4 });
-    expect(db.records[0].values[3].phone).toEqual({ type: 'string', value: null });
+    expect(db.records[0].values[3][0]).toEqual({ type: 'integer', value: 4 });
+    expect(db.records[0].values[3][1]).toEqual({ type: 'string', value: null });
   });
 
   test('should detect duplicate unique across multiple records blocks', () => {
@@ -152,9 +152,9 @@ describe('[example - record] simple unique constraints', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values[0].sku).toEqual({ type: 'integer', value: 1001 });
-    expect(db.records[0].values[1].sku).toEqual({ type: 'integer', value: 1002 });
-    expect(db.records[0].values[2].sku).toEqual({ type: 'integer', value: 1003 });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: 1001 });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'integer', value: 1002 });
+    expect(db.records[0].values[2][1]).toEqual({ type: 'integer', value: 1003 });
   });
 
   test('should reject duplicate numeric unique values', () => {
@@ -210,8 +210,8 @@ describe('[example - record] simple unique constraints', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values[0].account_num).toEqual({ type: 'integer', value: -100 });
-    expect(db.records[0].values[1].account_num).toEqual({ type: 'integer', value: 100 });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: -100 });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'integer', value: 100 });
   });
 
   test('should accept both pk and unique on same column', () => {
