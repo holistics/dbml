@@ -28,7 +28,6 @@ interface RawTableRecord {
     values: {
         value: any;
         type: RecordValueType;
-        is_expression?: boolean;
     }[][];
 }
 

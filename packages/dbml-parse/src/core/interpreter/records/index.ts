@@ -171,8 +171,7 @@ function extractValue (
   if (node instanceof FunctionExpressionNode) {
     return {
       value: node.value?.value || '',
-      type: valueType,
-      is_expression: true,
+      type: 'expression',
     };
   }
 
