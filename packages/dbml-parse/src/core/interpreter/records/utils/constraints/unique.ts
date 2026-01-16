@@ -56,8 +56,8 @@ export function validateUnique (
         if (seen.has(keyValue)) {
           const errorNode = row.columnNodes[uniqueColumns[0]] || row.node;
           const msg = isComposite
-            ? `Duplicate unique value ${columnsStr}`
-            : `Duplicate unique value for '${uniqueColumns[0]}'`;
+            ? `Duplicate composite unique constraint value for ${columnsStr}`
+            : `Duplicate unique value for column '${uniqueColumns[0]}'`;
           errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
         } else {
           seen.set(keyValue, rowIndex);

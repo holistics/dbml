@@ -129,7 +129,7 @@ describe('[example - record] PK validation across multiple records blocks', () =
     expect(errors.length).toBe(1);
     expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
     // With merged records, missing PK column results in undefined/NULL value
-    expect(errors[0].diagnostic).toContain('NULL not allowed in primary key');
+    expect(errors[0].diagnostic).toContain('NULL value not allowed in primary key');
   });
 
   test('should validate PK with NULL across blocks', () => {
@@ -152,7 +152,7 @@ describe('[example - record] PK validation across multiple records blocks', () =
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('NULL not allowed in primary key');
+    expect(errors[0].diagnostic).toContain('NULL value not allowed in primary key');
   });
 
   test('should allow NULL for auto-increment PK across blocks', () => {

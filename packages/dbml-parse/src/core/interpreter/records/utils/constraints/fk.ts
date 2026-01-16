@@ -81,8 +81,8 @@ function validateDirection (
       const errorNode = row.columnNodes[sourceEndpoint.fieldNames[0]] || row.node;
       const targetColStr = formatColumns(targetEndpoint.fieldNames);
       const msg = isComposite
-        ? `Foreign key ${columnsStr} not found in '${targetEndpoint.tableName}${targetColStr}'`
-        : `Foreign key not found in '${targetEndpoint.tableName}.${targetEndpoint.fieldNames[0]}'`;
+        ? `Foreign key not found: value for column ${columnsStr} does not exist in referenced table '${targetEndpoint.tableName}'`
+        : `Foreign key not found: value for column '${sourceEndpoint.fieldNames[0]}' does not exist in referenced table '${targetEndpoint.tableName}'`;
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         msg,
