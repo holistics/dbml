@@ -1190,7 +1190,7 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
 
-      expect(db.records[0].values[0].created_at.type).toBe('datetime');
+      expect(db.records[0].values[0].created_at.type).toBe('expression');
       expect(db.records[0].values[0].created_at.value).toBe('now()');
       expect(db.records[0].values[1].created_at.value).toBe('uuid_generate_v4()');
     });
