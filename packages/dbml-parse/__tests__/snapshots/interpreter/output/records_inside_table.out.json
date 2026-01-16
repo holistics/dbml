@@ -114,48 +114,48 @@
         "price"
       ],
       "values": [
-        {
-          "id": {
+        [
+          {
             "value": 1,
             "type": "integer"
           },
-          "name": {
+          {
             "value": "Laptop",
             "type": "string"
           },
-          "price": {
+          {
             "value": 999.99,
             "type": "real"
           }
-        },
-        {
-          "id": {
+        ],
+        [
+          {
             "value": 2,
             "type": "integer"
           },
-          "name": {
+          {
             "value": "Mouse",
             "type": "string"
           },
-          "price": {
+          {
             "value": 29.99,
             "type": "real"
           }
-        },
-        {
-          "id": {
+        ],
+        [
+          {
             "value": 3,
             "type": "integer"
           },
-          "name": {
+          {
             "value": "Keyboard",
             "type": "string"
           },
-          "price": {
+          {
             "value": 79.99,
             "type": "real"
           }
-        }
+        ]
       ]
     }
   ]

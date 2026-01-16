@@ -415,11 +415,12 @@ class SqlServerExporter {
       refs: [],
     });
 
-    // Export INSERT statements with constraint checking disabled
+    // Export INSERT statements
+    // Note: SQL Server does not support DEFERRED constraints, so constraint checks are disabled
     const insertStatements = SqlServerExporter.exportRecords(model);
     const recordsSection = !isEmpty(insertStatements)
       ? [
-          '-- Disable constraint checks for INSERT',
+          '-- Disable constraint checks for INSERT (SQL Server does not support DEFERRED)',
           'EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all";',
           'GO',
           '',

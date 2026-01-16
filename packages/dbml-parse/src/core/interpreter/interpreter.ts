@@ -26,17 +26,21 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
         }
       }
 
+      const columns = Array.from(columnsSet);
       records.push({
         schemaName: table.schemaName || undefined,
         tableName: table.name,
-        columns: Array.from(columnsSet),
+        columns,
         values: rows.map((r) => {
-          const cleanValues: Record<string, { value: any; type: string }> = {};
-          for (const [key, val] of Object.entries(r.values)) {
-            const { value, type } = val;
-            cleanValues[key] = { value, type };
-          }
-          return cleanValues;
+          // Convert object-based values to array-based values ordered by columns
+          return columns.map((col) => {
+            const val = r.values[col];
+            if (val) {
+              return { value: val.value, type: val.type };
+            }
+            // Column not present in this row (shouldn't happen with validation)
+            return { value: null, type: 'unknown' };
+          });
         }),
       });
     }

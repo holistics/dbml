@@ -554,17 +554,16 @@ class OracleExporter {
       refs: [],
     });
 
-    // Export INSERT statements with constraint checking disabled
+    // Export INSERT statements with deferred constraint checking
     const insertStatements = this.exportRecords(model);
     const recordsSection = !isEmpty(insertStatements)
       ? [
-          '-- Disable constraint checks for INSERT',
-          'ALTER SESSION SET CONSTRAINTS = DEFERRED;',
+          '-- Use deferred constraints for INSERT',
+          'SET CONSTRAINTS ALL DEFERRED;',
           '',
           ...insertStatements,
           '',
-          '-- Re-enable constraint checks',
-          'ALTER SESSION SET CONSTRAINTS = IMMEDIATE;',
+          'COMMIT;',
         ]
       : [];
 
