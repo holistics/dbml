@@ -11,7 +11,7 @@ describe('[example - suggestions] Expand * to all columns in Records', () => {
   name varchar
   email varchar
 
-  records (
+  records ()
 }`;
       const compiler = new Compiler();
       compiler.setSource(program);
