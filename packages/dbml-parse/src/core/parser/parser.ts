@@ -488,18 +488,19 @@ export default class Parser {
       commaList: [],
     };
 
-    while (this.check(SyntaxTokenKind.COMMA)) {
+    while (!this.shouldStopCommaExpression() && this.check(SyntaxTokenKind.COMMA)) {
       args.commaList.push(this.advance());
+
+      // Check for empty field (trailing commas)
+      if (this.shouldStopCommaExpression()) {
+        args.elementList.push(this.nodeFactory.create(EmptyNode, { prevToken: this.previous() }));
+        break;
+      }
 
       // Check for empty field (consecutive commas)
       if (this.check(SyntaxTokenKind.COMMA)) {
         args.elementList.push(this.nodeFactory.create(EmptyNode, { prevToken: this.previous() }));
         continue;
-      }
-      // Check for empty field (trailing commas)
-      if (this.shouldStopCommaExpression()) {
-        args.elementList.push(this.nodeFactory.create(EmptyNode, { prevToken: this.previous() }));
-        break;
       }
 
       try {
