@@ -9,7 +9,7 @@ import {
   isNumericType,
   isStringType,
   isBooleanType,
-  isDatetimeType,
+  isDateTimeType,
   isBinaryType,
 } from '@dbml/parse';
 
@@ -35,9 +35,10 @@ class SqlServerExporter {
       const formatValue = (val) => {
         if (val.value === null) return 'NULL';
         if (val.type === 'expression') return val.value;
+
         if (isNumericType(val.type)) return val.value;
         if (isBooleanType(val.type)) return val.value.toString().toUpperCase() === 'TRUE' ? '1' : '0';
-        if (isStringType(val.type) || isDatetimeType(val.type)) return `'${val.value.replace(/'/g, "''")}'`;
+        if (isStringType(val.type) || isDateTimeType(val.type)) return `'${val.value.replace(/'/g, "''")}'`;
         if (isBinaryType(val.type)) return `0x${val.value}`; // SQL Server binary as hex
         // Unknown type - use CAST
         return `CAST('${val.value.replace(/'/g, "''")}' AS ${val.type})`;
