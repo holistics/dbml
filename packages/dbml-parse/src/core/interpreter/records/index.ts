@@ -14,7 +14,6 @@ import {
   Table,
   Column,
 } from '@/core/interpreter/types';
-import { RefRelation } from '@/constants';
 import {
   isNullish,
   isEmptyStringLiteral,
@@ -332,11 +331,4 @@ function extractDefaultValue (
     return { value: null, type: 'string' };
   }
   return { value: null, type: 'string' };
-}
-
-function getRefRelation (card1: string, card2: string): RefRelation {
-  if (card1 === '*' && card2 === '1') return RefRelation.ManyToOne;
-  if (card1 === '1' && card2 === '*') return RefRelation.OneToMany;
-  if (card1 === '1' && card2 === '1') return RefRelation.OneToOne;
-  return RefRelation.ManyToMany;
 }
