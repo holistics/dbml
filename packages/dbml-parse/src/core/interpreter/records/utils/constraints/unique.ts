@@ -1,12 +1,11 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { InterpreterDatabase } from '@/core/interpreter/types';
 import {
-  extractKeyValue,
+  extractKeyValueWithDefault,
   hasNullInKey,
   formatColumns,
 } from './helper';
 
-// Validate unique constraints for all tables
 export function validateUnique (
   env: InterpreterDatabase,
 ): CompileError[] {
@@ -15,7 +14,6 @@ export function validateUnique (
   for (const [table, rows] of env.records) {
     if (rows.length === 0) continue;
 
-    // Extract unique constraints
     const uniqueConstraints: string[][] = [];
     for (const field of table.fields) {
       if (field.unique) {
@@ -47,7 +45,6 @@ export function validateUnique (
       for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
         const row = rows[rowIndex];
 
-        // Check for NULL in unique constraint (considering defaults)
         const hasNull = hasNullInKey(row.values, uniqueColumns, uniqueColumnFields);
 
         // NULL values are allowed in unique constraints and don't conflict
@@ -55,10 +52,8 @@ export function validateUnique (
           continue;
         }
 
-        // Check for duplicates (using defaults for missing values)
-        const keyValue = extractKeyValue(row.values, uniqueColumns, uniqueColumnFields);
+        const keyValue = extractKeyValueWithDefault(row.values, uniqueColumns, uniqueColumnFields);
         if (seen.has(keyValue)) {
-          // Report error on the first column of the constraint
           const errorNode = row.columnNodes[uniqueColumns[0]] || row.node;
           const msg = isComposite
             ? `Duplicate unique value ${columnsStr}`
