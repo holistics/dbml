@@ -1,11 +1,10 @@
 import { RecordValue, Column } from '@/core/interpreter/types';
+import { normalizeTypeName, SERIAL_TYPES } from '../data';
 
-// Serial types that auto-generate values
-const SERIAL_TYPES = new Set(['serial', 'smallserial', 'bigserial']);
-
-// Extract composite key value from an object-based row
-// For missing columns, use their default value if available
-export function extractKeyValue (
+// Given a set of columns and a row
+// Return a string contain the values of the columns joined together with `|` -> This string is used for deduplication
+// Note that we do not take autoincrement into account, as we cannot know its value
+export function extractKeyValueWithDefault (
   row: Record<string, RecordValue>,
   columnNames: string[],
   columns?: (Column | undefined)[],
@@ -13,7 +12,6 @@ export function extractKeyValue (
   return columnNames.map((name, idx) => {
     const value = row[name]?.value;
 
-    // If value is missing and we have column info with default, use the default
     if ((value === null || value === undefined) && columns && columns[idx]) {
       const column = columns[idx];
       if (column?.dbdefault) {
@@ -25,8 +23,6 @@ export function extractKeyValue (
   }).join('|');
 }
 
-// Check if any value in the key is null (considering defaults)
-// If a column is missing/null but has a default, it's not considered null
 export function hasNullInKey (
   row: Record<string, RecordValue>,
   columnNames: string[],
@@ -59,8 +55,8 @@ export function formatColumns (columnNames: string[]): string {
 
 // Check if column is an auto-increment column (serial types or increment flag)
 export function isAutoIncrementColumn (column: Column): boolean {
-  const typeLower = column.type.type_name.toLowerCase();
-  return column.increment || SERIAL_TYPES.has(typeLower);
+  const normalizedType = normalizeTypeName(column.type.type_name);
+  return column.increment || SERIAL_TYPES.has(normalizedType);
 }
 
 // Check if column has NOT NULL constraint with a default value
