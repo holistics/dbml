@@ -118,6 +118,12 @@ export function getRecordValueType (sqlType: string, isEnum: boolean): string {
   if (isFloatType(sqlType)) return 'real';
   if (isBooleanType(sqlType)) return 'bool';
   if (isStringType(sqlType)) return 'string';
+
+  // Specific datetime type mapping
+  const normalized = normalizeTypeName(sqlType);
+  if (normalized === 'date') return 'date';
+  if (normalized === 'time' || normalized === 'timetz' || normalized === 'time with time zone' || normalized === 'time without time zone') return 'time';
   if (isDateTimeType(sqlType)) return 'datetime';
+
   return sqlType; // Keep original type if not recognized
 }
