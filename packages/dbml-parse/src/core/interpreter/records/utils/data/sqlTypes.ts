@@ -16,6 +16,7 @@ export const FLOAT_TYPES = new Set([
 ]);
 
 export const STRING_TYPES = new Set([
+  'string', // Generic string type for records
   'varchar', 'char', 'character', 'character varying', 'nvarchar', 'nchar',
   'text', 'ntext', 'tinytext', 'mediumtext', 'longtext',
 ]);
