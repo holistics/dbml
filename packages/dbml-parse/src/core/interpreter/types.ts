@@ -34,7 +34,6 @@ export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 
 export interface RecordValue {
   value: any;
   type: RecordValueType;
-  is_expression?: boolean;
   node?: SyntaxNode; // The specific node for this column value
 }
 
