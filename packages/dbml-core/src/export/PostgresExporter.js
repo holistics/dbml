@@ -12,7 +12,7 @@ import {
   isNumericType,
   isStringType,
   isBooleanType,
-  isDatetimeType,
+  isDateTimeType,
   isBinaryType,
 } from '@dbml/parse';
 
@@ -172,9 +172,10 @@ class PostgresExporter {
         if (!val || typeof val !== 'object') return String(val);
         if (val.value === null) return 'NULL';
         if (val.type === 'expression') return val.value;
+
         if (isNumericType(val.type)) return val.value;
         if (isBooleanType(val.type)) return val.value ? 'TRUE' : 'FALSE';
-        if (isStringType(val.type) || isDatetimeType(val.type) || isBinaryType(val.type)) return `'${String(val.value).replace(/'/g, "''")}'`;
+        if (isStringType(val.type) || isDateTimeType(val.type) || isBinaryType(val.type)) return `'${String(val.value).replace(/'/g, "''")}'`;
         // Unknown type - use CAST
         return `CAST('${String(val.value).replace(/'/g, "''")}' AS ${val.type})`;
       };
