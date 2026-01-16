@@ -5,8 +5,58 @@ import {
   buildJunctionFields2,
   buildNewTableName,
 } from './utils';
+import {
+  isNumericType,
+  isStringType,
+  isBooleanType,
+  isDatetimeType,
+  isBinaryType,
+} from '@dbml/parse';
 
 class SqlServerExporter {
+  static exportRecords (model) {
+    const records = Object.values(model.records || {});
+    if (_.isEmpty(records)) {
+      return [];
+    }
+
+    const insertStatements = records.map((record) => {
+      const { schemaName, tableName, columns, values } = record;
+
+      // Build the table reference with schema if present
+      const tableRef = schemaName ? `[${schemaName}].[${tableName}]` : `[${tableName}]`;
+
+      // Build the column list
+      const columnList = columns.length > 0
+        ? `([${columns.join('], [')}])`
+        : '';
+
+      // Value formatter for SQL Server
+      const formatValue = (val) => {
+        if (val.value === null) return 'NULL';
+        if (val.type === 'expression') return val.value;
+        if (isNumericType(val.type)) return val.value;
+        if (isBooleanType(val.type)) return val.value.toString().toUpperCase() === 'TRUE' ? '1' : '0';
+        if (isStringType(val.type) || isDatetimeType(val.type)) return `'${val.value.replace(/'/g, "''")}'`;
+        if (isBinaryType(val.type)) return `0x${val.value}`; // SQL Server binary as hex
+        // Unknown type - use CAST
+        return `CAST('${val.value.replace(/'/g, "''")}' AS ${val.type})`;
+      };
+
+      // Build the VALUES clause
+      const valueRows = values.map((row) => {
+        const valueStrs = row.map(formatValue);
+        return `(${valueStrs.join(', ')})`;
+      });
+
+      const valuesClause = valueRows.join(',\n  ');
+
+      return `INSERT INTO ${tableRef} ${columnList}\nVALUES\n  ${valuesClause};\nGO`;
+    });
+
+    return insertStatements;
+  }
+
   static getFieldLines (tableId, model) {
     const table = model.tables[tableId];
 
@@ -364,6 +414,22 @@ class SqlServerExporter {
       refs: [],
     });
 
+    // Export INSERT statements with constraint checking disabled
+    const insertStatements = SqlServerExporter.exportRecords(model);
+    const recordsSection = !_.isEmpty(insertStatements)
+      ? [
+          '-- Disable constraint checks for INSERT',
+          'EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all";',
+          'GO',
+          '',
+          ...insertStatements,
+          '',
+          '-- Re-enable constraint checks',
+          'EXEC sp_MSforeachtable "ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all";',
+          'GO',
+        ]
+      : [];
+
     const res = _.concat(
       statements.schemas,
       statements.enums,
@@ -371,6 +437,7 @@ class SqlServerExporter {
       statements.indexes,
       statements.comments,
       statements.refs,
+      recordsSection,
     ).join('\n');
     return res;
   }
