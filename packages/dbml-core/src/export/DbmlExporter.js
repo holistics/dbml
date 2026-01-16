@@ -372,30 +372,11 @@ class DbmlExporter {
       case 'string':
       case 'date':
       case 'time':
-      case 'datetime': {
-        // Strings need to be quoted
+      case 'datetime':
+      default: {
         const strValue = String(value);
-        // Use single quotes, escape any existing single quotes
-        if (strValue.includes('\'')) {
-          return `"${strValue.replace(/"/g, '\\"')}"`;
-        }
-        return `'${strValue}'`;
+        return `'${strValue.replaceAll("'", "\\'")}'`;
       }
-
-      default:
-        // For enum types and other custom types, check if it's a string that needs quoting
-        if (typeof value === 'string') {
-          // Enum references like status.active should not be quoted
-          if (/^[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)+$/.test(value)) {
-            return value;
-          }
-          // Other strings need quoting
-          if (value.includes('\'')) {
-            return `"${value.replace(/"/g, '\\"')}"`;
-          }
-          return `'${value}'`;
-        }
-        return String(value);
     }
   }
 
