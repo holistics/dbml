@@ -27,6 +27,7 @@ describe('@dbml/core', () => {
       'schemarb-parse': { format: 'schemarb' as ParseFormat, parseFunc: 'parseSchemaRbToJSON' },
       'mssql-parse': { format: 'mssql' as ParseFormat, parseFunc: 'parseMSSQLToJSONv2' },
       'oracle-parse': { format: 'oracle' as ParseFormat, parseFunc: 'parseOracleToJSON' },
+      'snowflake-parse': { format: 'snowflake' as ParseFormat, parseFunc: 'parseSnowflakeToJSON' },
     } as const;
 
     for (const [parser, { format, parseFunc }] of Object.entries(spec)) {
