@@ -104,6 +104,11 @@ export function hasSimpleBody (
   return !!node.bodyColon;
 }
 
+export function isValidPartialInjection (
+  node?: SyntaxNode,
+): node is PrefixExpressionNode & { op: { value: '~' } } {
+  return node instanceof PrefixExpressionNode && node.op?.value === '~' && isExpressionAVariableNode(node.expression);
+}
 // Register the `variables` array as a stack of schema, the following nested within the former
 export function registerSchemaStack (
   variables: string[],
@@ -182,7 +187,7 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
     return true;
   }
 
-  if (isExpressionANumber(value)) {
+  if (isExpressionASignedNumberExpression(value)) {
     return true;
   }
 
@@ -193,7 +198,7 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
   if (
     value instanceof PrefixExpressionNode
     && NUMERIC_LITERAL_PREFIX.includes(value.op?.value as any)
-    && isExpressionANumber(value.expression)
+    && isExpressionASignedNumberExpression(value.expression)
   ) {
     return true;
   }
@@ -208,10 +213,13 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
   return fragments.length === 2 || fragments.length === 3;
 }
 
-export function isExpressionANumber (value?: SyntaxNode): boolean {
+export type SignedNumberExpression =
+  (PrimaryExpressionNode & { expression: LiteralNode & { literal: { kind: SyntaxTokenKind.NUMERIC_LITERAL } } })
+  | (PrefixExpressionNode & { op: '-' | '+'; expression: SignedNumberExpression });
+export function isExpressionASignedNumberExpression (value?: SyntaxNode): value is SignedNumberExpression {
   if (value instanceof PrefixExpressionNode) {
-    if (value.op?.value !== '-' && value.op?.value !== '+') return false;
-    return isExpressionANumber(value.expression);
+    if (!NUMERIC_LITERAL_PREFIX.includes(value.op!.value)) return false;
+    return isExpressionASignedNumberExpression(value.expression);
   }
   return (
     value instanceof PrimaryExpressionNode
@@ -258,7 +266,7 @@ export function isValidColumnType (type: SyntaxNode): boolean {
         return false;
       }
 
-      if (!type.argumentList.elementList.every((e) => isExpressionANumber(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
+      if (!type.argumentList.elementList.every((e) => isExpressionASignedNumberExpression(e) || isExpressionAQuotedString(e) || isExpressionAnIdentifierNode(e))) {
         return false;
       }
 
@@ -268,7 +276,7 @@ export function isValidColumnType (type: SyntaxNode): boolean {
         return false;
       }
 
-      if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isExpressionANumber(attribute.name))) {
+      if (!type.indexer.elementList.every((attribute) => !attribute.colon && !attribute.value && isExpressionASignedNumberExpression(attribute.name))) {
         return false;
       }
 

@@ -411,8 +411,8 @@ describe('[example] interpreter', () => {
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(2);
-      expect(errors[0].diagnostic).toBe("Can not find Table 'nonexistent'");
-      expect(errors[1].diagnostic).toBe("Can not find Table 'also_nonexistent'");
+      expect(errors[0].diagnostic).toBe("Table 'nonexistent' does not exist in Schema 'public'");
+      expect(errors[1].diagnostic).toBe("Table 'also_nonexistent' does not exist in Schema 'public'");
     });
   });
 
@@ -441,12 +441,53 @@ describe('[example] interpreter', () => {
   });
 
   describe('detailed field type verification', () => {
+    test('should interpret simple types with exact matching', () => {
+      const testCases = [
+        { type: 'int', expected: { type_name: 'int', args: null, schemaName: null } },
+        { type: 'integer', expected: { type_name: 'integer', args: null, schemaName: null } },
+        { type: 'bigint', expected: { type_name: 'bigint', args: null, schemaName: null } },
+        { type: 'varchar', expected: { type_name: 'varchar', args: null, schemaName: null } },
+        { type: 'text', expected: { type_name: 'text', args: null, schemaName: null } },
+        { type: 'boolean', expected: { type_name: 'boolean', args: null, schemaName: null } },
+        { type: 'timestamp', expected: { type_name: 'timestamp', args: null, schemaName: null } },
+        { type: 'uuid', expected: { type_name: 'uuid', args: null, schemaName: null } },
+      ];
+
+      testCases.forEach(({ type, expected }) => {
+        const db = interpret(`Table t { col ${type} }`).getValue()!;
+        const field = db.tables[0].fields[0];
+        expect(field.type.type_name).toBe(expected.type_name);
+        expect(field.type.args).toBe(expected.args);
+        expect(field.type.schemaName).toBe(expected.schemaName);
+      });
+    });
+
+    test('should interpret parameterized types with exact matching', () => {
+      // For parameterized types, type_name includes the full type string with args
+      const testCases = [
+        { type: 'varchar(255)', expected: { type_name: 'varchar(255)', args: '255', schemaName: null } },
+        { type: 'char(10)', expected: { type_name: 'char(10)', args: '10', schemaName: null } },
+        { type: 'decimal(10,2)', expected: { type_name: 'decimal(10,2)', args: '10,2', schemaName: null } },
+        { type: 'numeric(5)', expected: { type_name: 'numeric(5)', args: '5', schemaName: null } },
+      ];
+
+      testCases.forEach(({ type, expected }) => {
+        const db = interpret(`Table t { col ${type} }`).getValue()!;
+        const field = db.tables[0].fields[0];
+        expect(field.type.type_name).toBe(expected.type_name);
+        expect(field.type.args).toBe(expected.args);
+        expect(field.type.schemaName).toBe(expected.schemaName);
+      });
+    });
+
     test('should interpret array types', () => {
       const db = interpret('Table t { tags varchar[] }').getValue()!;
       const field = db.tables[0].fields[0];
 
       expect(field.name).toBe('tags');
-      expect(field.type.type_name).toContain('varchar');
+      expect(field.type.type_name).toBe('varchar[]');
+      expect(field.type.args).toBeNull();
+      expect(field.type.schemaName).toBeNull();
     });
 
     test('should interpret array type with arguments like varchar(255)[]', () => {
@@ -457,8 +498,8 @@ describe('[example] interpreter', () => {
       // type_name captures the full type including args and array brackets
       expect(field.type.type_name).toBe('varchar(255)[]');
       // args is null because outermost type is array, not call expression
-      // args only captures outermost call expression arguments (e.g., varchar(255) -> '255')
       expect(field.type.args).toBeNull();
+      expect(field.type.schemaName).toBeNull();
     });
 
     test('should interpret nested array type with arguments like decimal(10,2)[][]', () => {
@@ -467,16 +508,18 @@ describe('[example] interpreter', () => {
 
       expect(field.name).toBe('prices');
       expect(field.type.type_name).toBe('decimal(10,2)[][]');
-      // args is null because outermost type is array
       expect(field.type.args).toBeNull();
+      expect(field.type.schemaName).toBeNull();
     });
 
-    test('should interpret complex type with schema', () => {
+    test('should interpret schema-qualified type', () => {
       const db = interpret('Table t { col public.custom_type }').getValue()!;
       const field = db.tables[0].fields[0];
 
       expect(field.name).toBe('col');
-      expect(field.type.type_name).toContain('custom_type');
+      expect(field.type.type_name).toBe('custom_type');
+      expect(field.type.schemaName).toBe('public');
+      expect(field.type.args).toBeNull();
     });
 
     test('should interpret type with multiple arguments', () => {
@@ -484,9 +527,37 @@ describe('[example] interpreter', () => {
       const field = db.tables[0].fields[0];
 
       expect(field.name).toBe('price');
-      expect(field.type.type_name).toContain('decimal');
+      // type_name includes full type with args
+      expect(field.type.type_name).toBe('decimal(10,2)');
       // Args are stored without spaces
       expect(field.type.args).toBe('10,2');
+      expect(field.type.schemaName).toBeNull();
+    });
+
+    test('should interpret enum as column type', () => {
+      const source = `
+        Enum order_status { pending\n completed }
+        Table orders { status order_status }
+      `;
+      const db = interpret(source).getValue()!;
+      const field = db.tables[0].fields[0];
+
+      expect(field.type.type_name).toBe('order_status');
+      expect(field.type.args).toBeNull();
+      expect(field.type.schemaName).toBeNull();
+    });
+
+    test('should interpret schema-qualified enum as column type', () => {
+      const source = `
+        Enum types.status { active\n inactive }
+        Table users { status types.status }
+      `;
+      const db = interpret(source).getValue()!;
+      const field = db.tables[0].fields[0];
+
+      expect(field.type.type_name).toBe('status');
+      expect(field.type.schemaName).toBe('types');
+      expect(field.type.args).toBeNull();
     });
   });
 
@@ -540,6 +611,81 @@ describe('[example] interpreter', () => {
   });
 
   describe('detailed ref verification', () => {
+    test('should interpret ref with all settings (name, delete, update, color)', () => {
+      const source = `
+        Table users { id int }
+        Table posts { user_id int }
+        Ref post_author: posts.user_id > users.id [delete: cascade, update: no action, color: #abc]
+      `;
+      const db = interpret(source).getValue()!;
+      const ref = db.refs[0];
+
+      expect(ref.name).toBe('post_author');
+      expect(ref.onDelete).toBe('cascade');
+      expect(ref.onUpdate).toBe('no action');
+      expect(ref.color).toBe('#abc');
+    });
+
+    test('should interpret ref delete actions', () => {
+      const testCases = [
+        { action: 'cascade', expected: 'cascade' },
+        { action: 'no action', expected: 'no action' },
+        { action: 'set null', expected: 'set null' },
+        { action: 'set default', expected: 'set default' },
+        { action: 'restrict', expected: 'restrict' },
+      ];
+
+      testCases.forEach(({ action, expected }) => {
+        const source = `
+          Table a { id int }
+          Table b { a_id int }
+          Ref: b.a_id > a.id [delete: ${action}]
+        `;
+        const db = interpret(source).getValue()!;
+        expect(db.refs[0].onDelete).toBe(expected);
+      });
+    });
+
+    test('should interpret ref update actions', () => {
+      const testCases = [
+        { action: 'cascade', expected: 'cascade' },
+        { action: 'no action', expected: 'no action' },
+        { action: 'set null', expected: 'set null' },
+        { action: 'set default', expected: 'set default' },
+        { action: 'restrict', expected: 'restrict' },
+      ];
+
+      testCases.forEach(({ action, expected }) => {
+        const source = `
+          Table a { id int }
+          Table b { a_id int }
+          Ref: b.a_id > a.id [update: ${action}]
+        `;
+        const db = interpret(source).getValue()!;
+        expect(db.refs[0].onUpdate).toBe(expected);
+      });
+    });
+
+    test('should interpret named ref', () => {
+      const source = `
+        Table users { id int }
+        Table posts { user_id int }
+        Ref fk_user: posts.user_id > users.id
+      `;
+      const db = interpret(source).getValue()!;
+      expect(db.refs[0].name).toBe('fk_user');
+    });
+
+    test('should interpret ref color', () => {
+      const source = `
+        Table a { id int }
+        Table b { a_id int }
+        Ref: b.a_id > a.id [color: #ff0000]
+      `;
+      const db = interpret(source).getValue()!;
+      expect(db.refs[0].color).toBe('#ff0000');
+    });
+
     test('should interpret many-to-one ref correctly', () => {
       const source = `
         Table parent { id int }
@@ -642,6 +788,21 @@ describe('[example] interpreter', () => {
       expect(index.type).toBe('btree');
     });
 
+    test('should interpret index type hash', () => {
+      const source = `
+        Table t {
+          col varchar
+          indexes {
+            col [type: hash]
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const index = db.tables[0].indexes[0];
+
+      expect(index.type).toBe('hash');
+    });
+
     test('should interpret pk index', () => {
       const source = `
         Table t {
@@ -673,7 +834,7 @@ describe('[example] interpreter', () => {
       expect(index.note?.value).toBe('Email index');
     });
 
-    test('should interpret index column values', () => {
+    test('should interpret index column values and types', () => {
       const source = `
         Table t {
           first_name varchar
@@ -688,7 +849,68 @@ describe('[example] interpreter', () => {
 
       expect(index.columns).toHaveLength(2);
       expect(index.columns[0].value).toBe('first_name');
+      expect(index.columns[0].type).toBe('column');
       expect(index.columns[1].value).toBe('last_name');
+      expect(index.columns[1].type).toBe('column');
+      expect(index.name).toBe('idx_fullname');
+    });
+
+    test('should interpret expression index', () => {
+      const source = `
+        Table t {
+          email varchar
+          indexes {
+            \`lower(email)\` [name: 'idx_email_lower']
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const index = db.tables[0].indexes[0];
+
+      expect(index.columns).toHaveLength(1);
+      expect(index.columns[0].value).toBe('lower(email)');
+      expect(index.columns[0].type).toBe('expression');
+      expect(index.name).toBe('idx_email_lower');
+    });
+
+    test('should interpret mixed column and expression index', () => {
+      const source = `
+        Table t {
+          first_name varchar
+          last_name varchar
+          indexes {
+            (\`lower(first_name)\`, last_name)
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const index = db.tables[0].indexes[0];
+
+      expect(index.columns).toHaveLength(2);
+      expect(index.columns[0].value).toBe('lower(first_name)');
+      expect(index.columns[0].type).toBe('expression');
+      expect(index.columns[1].value).toBe('last_name');
+      expect(index.columns[1].type).toBe('column');
+    });
+
+    test('should interpret index with all settings', () => {
+      const source = `
+        Table t {
+          email varchar
+          indexes {
+            email [unique, name: 'idx_email', type: btree, note: 'Unique email']
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const index = db.tables[0].indexes[0];
+
+      expect(index.unique).toBe(true);
+      expect(index.name).toBe('idx_email');
+      expect(index.type).toBe('btree');
+      expect(index.note?.value).toBe('Unique email');
+      expect(index.columns[0].value).toBe('email');
+      expect(index.columns[0].type).toBe('column');
     });
   });
 

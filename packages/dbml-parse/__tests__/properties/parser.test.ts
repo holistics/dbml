@@ -37,10 +37,8 @@ describe('[property] parser', () => {
   it('should roundtrip with ASCII strings', () => {
     // Property: Source 1 -parse-> ast -print-> Source 2
     // Then: Source 1 === Source 2
-    // Note: ~ has special meaning in DBML (TablePartial injection)
     fc.assert(
       fc.property(fc.string(), (source: string) => {
-        fc.pre(!source.includes('~')); // Tilde tested separately via tablePartialArbitrary
         const ast = parse(source).getValue().ast;
         const newSource = print(source, ast);
         expect(source).toEqual(newSource);
@@ -54,7 +52,6 @@ describe('[property] parser', () => {
     // Then: Source 1 === Source 2
     fc.assert(
       fc.property(dbmlSchemaArbitrary, fc.nat({ max: 10 }), fc.string(), (source: string, injectedPos: number, injectSource: string) => {
-        fc.pre(!injectSource.includes('~')); // Tilde tested separately via tablePartialArbitrary
         const injectedSource = `${source.slice(0, injectedPos)}${injectSource}${source.slice(injectedPos)}`;
         const ast = parse(injectedSource).getValue().ast;
         const newSource = print(injectedSource, ast);
@@ -240,7 +237,6 @@ describe('[property] parser - AST structure semantics', () => {
     fc.assert(
       fc.property(tableArbitrary, (source: string) => {
         const result = parse(source);
-        fc.pre(result.getErrors().length === 0);
 
         const ast = result.getValue().ast;
         const table = ast.body[0];
@@ -259,7 +255,6 @@ describe('[property] parser - AST structure semantics', () => {
     fc.assert(
       fc.property(enumArbitrary, (source: string) => {
         const result = parse(source);
-        fc.pre(result.getErrors().length === 0);
 
         const ast = result.getValue().ast;
         const enumDecl = ast.body[0];
@@ -279,7 +274,6 @@ describe('[property] parser - AST structure semantics', () => {
     fc.assert(
       fc.property(tableArbitrary, (source: string) => {
         const result = parse(source);
-        fc.pre(result.getErrors().length === 0);
 
         const ast = result.getValue().ast;
         const table = ast.body[0];
@@ -309,9 +303,6 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
         const ast = result.getValue().ast;
 
-        fc.pre(result.getErrors().length === 0);
-        fc.pre(ast.body.length > 0);
-
         const ref = ast.body[0];
         expect(ref.type?.value?.toLowerCase()).toBe('ref');
         expect(ref.bodyColon).toBeDefined();
@@ -334,8 +325,6 @@ describe('[property] parser - AST structure semantics', () => {
     fc.assert(
       fc.property(dbmlSchemaArbitrary, (source: string) => {
         const result = parse(source);
-        // Only check error-free parses to avoid error recovery artifacts
-        fc.pre(result.getErrors().length === 0);
 
         const ast = result.getValue().ast;
 
@@ -409,8 +398,6 @@ describe('[property] parser - negative tests', () => {
 
     fc.assert(
       fc.property(garbage, (source: string) => {
-        fc.pre(source.length > 0);
-
         const result = parse(source);
 
         // Garbage input should not produce valid elements

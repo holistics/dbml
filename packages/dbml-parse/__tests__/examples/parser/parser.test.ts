@@ -12,10 +12,9 @@ import {
   AttributeNode,
   PrimaryExpressionNode,
   VariableNode,
-  PartialInjectionNode,
 } from '@/core/parser/nodes';
-import { SyntaxTokenKind, SyntaxToken } from '@/core/lexer/tokens';
-import { parse, print } from '@tests/utils';
+import { SyntaxTokenKind } from '@/core/lexer/tokens';
+import { parse } from '@tests/utils';
 
 // Helper to extract a value from a PrimaryExpressionNode
 function getPrimaryValue (node: PrimaryExpressionNode | undefined): string | undefined {
@@ -290,13 +289,16 @@ describe('[example] parser', () => {
       expect(body.body).toHaveLength(2);
 
       // Find the partial injection
-      const partial = body.body.find(
-        (node) => node.kind === SyntaxNodeKind.PARTIAL_INJECTION,
-      ) as PartialInjectionNode;
+      const partialFunctionAppNode = body.body[1];
 
-      expect(partial).toBeDefined();
-      expect(partial.op?.value).toBe('~');
-      expect(partial.partial?.variable?.value).toBe('timestamps');
+      expect(partialFunctionAppNode).toBeInstanceOf(FunctionApplicationNode);
+      const partialInjectionNode = (partialFunctionAppNode as FunctionApplicationNode).callee as PrefixExpressionNode;
+      expect(partialInjectionNode).toBeInstanceOf(PrefixExpressionNode);
+
+      expect(partialInjectionNode.op?.value).toBe('~');
+      const partialNode = partialInjectionNode.expression as PrimaryExpressionNode;
+      expect(partialNode).toBeInstanceOf(PrimaryExpressionNode);
+      expect((partialNode.expression as VariableNode).variable?.value).toBe('timestamps');
     });
   });
 
@@ -928,118 +930,6 @@ Table posts {
       // Table name should be 'table' (keyword used as identifier)
       const tableName = elements[0].name as PrimaryExpressionNode;
       expect(getPrimaryValue(tableName)).toBe('table');
-    });
-  });
-
-  describe('error types', () => {
-    test('should report error for unclosed bracket with location', () => {
-      const source = 'Table users { id [pk }';
-      const errors = parse(source).getErrors();
-
-      expect(errors.length).toBeGreaterThanOrEqual(1);
-      // Verify error has location info
-      expect(errors[0].nodeOrToken).toBeDefined();
-      expect(errors[0].start).toBeDefined();
-      expect(errors[0].end).toBeDefined();
-    });
-
-    test('should parse with missing spaces where syntax allows', () => {
-      const source = 'Table users{id int}';
-      const result = parse(source);
-
-      expect(result.getValue().ast).toBeDefined();
-
-      // Verify structure is still parsed
-      const elements = getElements(source);
-      expect(elements).toHaveLength(1);
-    });
-
-    test('should include precise error location information', () => {
-      const source = 'Table users { id [pk }';
-      const errors = parse(source).getErrors();
-
-      expect(errors.length).toBeGreaterThanOrEqual(1);
-
-      const error = errors[0];
-      expect(error.nodeOrToken).toBeDefined();
-      expect((error.nodeOrToken as SyntaxToken).startPos).toBeDefined();
-      expect((error.nodeOrToken as SyntaxToken).startPos.line).toBeGreaterThanOrEqual(0);
-      expect((error.nodeOrToken as SyntaxToken).startPos.column).toBeGreaterThanOrEqual(0);
-      expect(error.start).toBeGreaterThanOrEqual(0);
-      expect(error.end).toBeGreaterThan(error.start);
-    });
-  });
-
-  describe('round-trip verification', () => {
-    test('should preserve source through parse-print cycle for simple table', () => {
-      const source = 'Table users { id int }';
-      const result = parse(source);
-      const printed = print(source, result.getValue().ast);
-
-      // Remove any whitespace differences for comparison
-      expect(printed.replace(/\s+/g, ' ').trim()).toBe(source.replace(/\s+/g, ' ').trim());
-    });
-
-    test('should preserve source through parse-print cycle for table with settings', () => {
-      const source = 'Table users [headercolor: #fff] { id int [pk] }';
-      const result = parse(source);
-      const printed = print(source, result.getValue().ast);
-
-      expect(printed.replace(/\s+/g, ' ').trim()).toBe(source.replace(/\s+/g, ' ').trim());
-    });
-
-    test('should preserve source through parse-print cycle for ref', () => {
-      const source = 'Ref: users.id > posts.user_id';
-      const result = parse(source);
-      const printed = print(source, result.getValue().ast);
-
-      expect(printed.replace(/\s+/g, ' ').trim()).toBe(source.replace(/\s+/g, ' ').trim());
-    });
-
-    test('should preserve source through parse-print cycle for enum', () => {
-      const source = 'Enum status { active inactive pending }';
-      const result = parse(source);
-      const printed = print(source, result.getValue().ast);
-
-      expect(printed.replace(/\s+/g, ' ').trim()).toBe(source.replace(/\s+/g, ' ').trim());
-    });
-  });
-
-  describe('AST node relationships', () => {
-    test('should have consistent start/end positions between parent and children', () => {
-      const source = 'Table users { id int }';
-      const elements = getElements(source);
-      const table = elements[0];
-      const body = table.body as BlockExpressionNode;
-
-      // Body should be within table bounds
-      expect(body.start).toBeGreaterThanOrEqual(table.start);
-      expect(body.end).toBeLessThanOrEqual(table.end);
-
-      // Verify braces are at expected positions
-      expect(body.blockOpenBrace?.start).toBeGreaterThan(table.start);
-      expect(body.blockCloseBrace?.end).toBeLessThanOrEqual(table.end);
-    });
-
-    test('should have non-overlapping sibling positions', () => {
-      const source = 'Table a { id int } Table b { id int }';
-      const elements = getElements(source);
-
-      expect(elements).toHaveLength(2);
-
-      // Second element should start after first ends
-      expect(elements[1].start).toBeGreaterThanOrEqual(elements[0].end);
-    });
-
-    test('should have children ordered by position', () => {
-      const source = 'Table users { a int b varchar c text }';
-      const elements = getElements(source);
-      const body = elements[0].body as BlockExpressionNode;
-
-      // Verify children are in order
-      for (let i = 1; i < body.body.length; i++) {
-        expect(body.body[i].start).toBeGreaterThan(body.body[i - 1].start);
-      }
     });
   });
 });
