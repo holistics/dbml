@@ -150,7 +150,7 @@ function extractDataFromRow (
     if (Array.isArray(result)) {
       errors.push(...result);
     } else {
-      rowObj[column.name] = { ...result, node: arg };
+      rowObj[column.name] = result;
     }
   }
 

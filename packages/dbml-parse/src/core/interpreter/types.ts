@@ -34,11 +34,14 @@ export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 
 export interface RecordValue {
   value: any;
   type: RecordValueType;
-  node?: SyntaxNode; // The specific node for this column value
 }
 
 export interface TableRecordRow {
-  values: Record<string, RecordValue>;
+  values: Record<string, {
+    value: any;
+    type: RecordValueType;
+    node?: SyntaxNode; // The specific node for this column value
+  }>;
   node: FunctionApplicationNode;
   columnNodes: Record<string, SyntaxNode>; // Map of column name to its value node
 }
@@ -52,7 +55,7 @@ export interface TableRecord {
   schemaName: string | undefined;
   tableName: string;
   columns: string[];
-  values: Record<string, RecordValue>[];
+  values: RecordValue[][];
 }
 
 export interface Database {

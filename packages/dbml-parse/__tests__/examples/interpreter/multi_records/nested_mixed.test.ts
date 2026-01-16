@@ -82,16 +82,21 @@ describe('[example - record] nested and top-level records mixed', () => {
     expect(record.columns).toContain('name');
     expect(record.columns).toContain('email');
 
-    // Should have 2 data rows (object-based)
+    // Should have 2 data rows (array-based)
     expect(record.values).toHaveLength(2);
 
     // First row has id and name
-    expect(record.values[0].id).toBeDefined();
-    expect(record.values[0].name).toBeDefined();
+    // columns order varies, but should contain id, name, email
+    const idIndex = record.columns.indexOf('id');
+    const nameIndex = record.columns.indexOf('name');
+    const emailIndex = record.columns.indexOf('email');
+
+    expect(record.values[0][idIndex]).toBeDefined();
+    expect(record.values[0][nameIndex]).toBeDefined();
 
     // Second row has id and email
-    expect(record.values[1].id).toBeDefined();
-    expect(record.values[1].email).toBeDefined();
+    expect(record.values[1][idIndex]).toBeDefined();
+    expect(record.values[1][emailIndex]).toBeDefined();
   });
 
   test('should merge multiple nested records blocks with same columns', () => {

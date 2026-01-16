@@ -21,11 +21,11 @@ describe('[example - record] data type interpretation', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].count).toEqual({ type: 'integer', value: 42 });
-    expect(db.records[0].values[0].small).toEqual({ type: 'integer', value: -100 });
-    expect(db.records[0].values[0].big).toEqual({ type: 'integer', value: 9999999999 });
-    expect(db.records[0].values[1].id).toEqual({ type: 'integer', value: 0 });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: 42 });
+    expect(db.records[0].values[0][2]).toEqual({ type: 'integer', value: -100 });
+    expect(db.records[0].values[0][3]).toEqual({ type: 'integer', value: 9999999999 });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 0 });
   });
 
   test('should interpret float and decimal values correctly', () => {
@@ -47,12 +47,12 @@ describe('[example - record] data type interpretation', () => {
 
     const db = result.getValue()!;
     // Note: float/numeric/decimal types are normalized to 'real'
-    expect(db.records[0].values[0].price).toEqual({ type: 'real', value: 99.99 });
-    expect(db.records[0].values[0].rate).toEqual({ type: 'real', value: 3.14159 });
-    expect(db.records[0].values[0].amount).toEqual({ type: 'real', value: 0.001 });
-    expect(db.records[0].values[1].price).toEqual({ type: 'real', value: 50.5 });
-    expect(db.records[0].values[1].rate).toEqual({ type: 'real', value: 0.5 });
-    expect(db.records[0].values[1].amount).toEqual({ type: 'real', value: 100 });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'real', value: 99.99 });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'real', value: 3.14159 });
+    expect(db.records[0].values[0][2]).toEqual({ type: 'real', value: 0.001 });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'real', value: 50.5 });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'real', value: 0.5 });
+    expect(db.records[0].values[1][2]).toEqual({ type: 'real', value: 100 });
   });
 
   test('should interpret boolean values correctly', () => {
@@ -73,10 +73,10 @@ describe('[example - record] data type interpretation', () => {
 
     const db = result.getValue()!;
     // Note: boolean types are normalized to 'bool'
-    expect(db.records[0].values[0].active).toEqual({ type: 'bool', value: true });
-    expect(db.records[0].values[0].verified).toEqual({ type: 'bool', value: false });
-    expect(db.records[0].values[1].active).toEqual({ type: 'bool', value: false });
-    expect(db.records[0].values[1].verified).toEqual({ type: 'bool', value: true });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'bool', value: true });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'bool', value: false });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'bool', value: false });
+    expect(db.records[0].values[1][1]).toEqual({ type: 'bool', value: true });
   });
 
   test('should interpret string values correctly', () => {
@@ -97,10 +97,10 @@ describe('[example - record] data type interpretation', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values[0].name).toEqual({ type: 'string', value: 'Alice' });
-    expect(db.records[0].values[0].description).toEqual({ type: 'string', value: 'A short description' });
-    expect(db.records[0].values[0].code).toEqual({ type: 'string', value: 'ABC123' });
-    expect(db.records[0].values[1].name).toEqual({ type: 'string', value: 'Bob' });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'string', value: 'Alice' });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'A short description' });
+    expect(db.records[0].values[0][2]).toEqual({ type: 'string', value: 'ABC123' });
+    expect(db.records[0].values[1][0]).toEqual({ type: 'string', value: 'Bob' });
   });
 
   test('should interpret datetime values correctly', () => {
@@ -122,12 +122,12 @@ describe('[example - record] data type interpretation', () => {
 
     const db = result.getValue()!;
     // Note: timestamp->datetime, date->date, time->time
-    expect(db.records[0].values[0].created_at.type).toBe('datetime');
-    expect(db.records[0].values[0].created_at.value).toBe('2024-01-15T10:30:00Z');
-    expect(db.records[0].values[0].event_date.type).toBe('date');
-    expect(db.records[0].values[0].event_date.value).toBe('2024-01-15');
-    expect(db.records[0].values[0].event_time.type).toBe('time');
-    expect(db.records[0].values[0].event_time.value).toBe('10:30:00');
+    expect(db.records[0].values[0][0].type).toBe('datetime');
+    expect(db.records[0].values[0][0].value).toBe('2024-01-15T10:30:00Z');
+    expect(db.records[0].values[0][1].type).toBe('date');
+    expect(db.records[0].values[0][1].value).toBe('2024-01-15');
+    expect(db.records[0].values[0][2].type).toBe('time');
+    expect(db.records[0].values[0][2].value).toBe('10:30:00');
   });
 
   test('should handle nested records with partial columns', () => {
@@ -156,17 +156,27 @@ describe('[example - record] data type interpretation', () => {
     expect(db.records[0].tableName).toBe('products');
     expect(db.records[0].values).toHaveLength(2);
 
+    // Columns should be merged from both records blocks
+    // First block: (id, name), Second block: (id, price, description)
+    // Merged columns: ['id', 'name', 'price', 'description']
+    expect(db.records[0].columns).toEqual(['id', 'name', 'price', 'description']);
+
     // First row has id and name, but no price or description
-    expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].name).toEqual({ type: 'string', value: 'Laptop' });
-    expect(db.records[0].values[0].price).toBeUndefined();
-    expect(db.records[0].values[0].description).toBeUndefined();
+    const idIdx = db.records[0].columns.indexOf('id');
+    const nameIdx = db.records[0].columns.indexOf('name');
+    const priceIdx = db.records[0].columns.indexOf('price');
+    const descIdx = db.records[0].columns.indexOf('description');
+
+    expect(db.records[0].values[0][idIdx]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][nameIdx]).toEqual({ type: 'string', value: 'Laptop' });
+    expect(db.records[0].values[0][priceIdx]).toEqual({ type: 'unknown', value: null });
+    expect(db.records[0].values[0][descIdx]).toEqual({ type: 'unknown', value: null });
 
     // Second row has id, price, and description, but no name
-    expect(db.records[0].values[1].id).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1].name).toBeUndefined();
-    expect(db.records[0].values[1].price).toEqual({ type: 'real', value: 999.99 });
-    expect(db.records[0].values[1].description).toEqual({ type: 'string', value: 'High-end gaming laptop' });
+    expect(db.records[0].values[1][idIdx]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[1][nameIdx]).toEqual({ type: 'unknown', value: null });
+    expect(db.records[0].values[1][priceIdx]).toEqual({ type: 'real', value: 999.99 });
+    expect(db.records[0].values[1][descIdx]).toEqual({ type: 'string', value: 'High-end gaming laptop' });
   });
 
   test('should handle nested and top-level records with different data types', () => {
@@ -208,25 +218,31 @@ describe('[example - record] data type interpretation', () => {
     expect(db.records[0].columns).toContain('active');
 
     // First row: id, name, metric_value (nested)
-    expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].name).toEqual({ type: 'string', value: 'CPU Usage' });
-    expect(db.records[0].values[0].metric_value).toEqual({ type: 'real', value: 85.5 });
-    expect(db.records[0].values[0].timestamp).toBeUndefined();
-    expect(db.records[0].values[0].active).toBeUndefined();
+    const idIdx = db.records[0].columns.indexOf('id');
+    const nameIdx = db.records[0].columns.indexOf('name');
+    const metricValueIdx = db.records[0].columns.indexOf('metric_value');
+    const timestampIdx = db.records[0].columns.indexOf('timestamp');
+    const activeIdx = db.records[0].columns.indexOf('active');
+
+    expect(db.records[0].values[0][idIdx]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][nameIdx]).toEqual({ type: 'string', value: 'CPU Usage' });
+    expect(db.records[0].values[0][metricValueIdx]).toEqual({ type: 'real', value: 85.5 });
+    expect(db.records[0].values[0][timestampIdx]).toEqual({ type: 'unknown', value: null });
+    expect(db.records[0].values[0][activeIdx]).toEqual({ type: 'unknown', value: null });
 
     // Second row: id, timestamp, active (top-level)
-    expect(db.records[0].values[1].id).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1].name).toBeUndefined();
-    expect(db.records[0].values[1].metric_value).toBeUndefined();
-    expect(db.records[0].values[1].timestamp.type).toBe('datetime');
-    expect(db.records[0].values[1].active).toEqual({ type: 'bool', value: true });
+    expect(db.records[0].values[1][idIdx]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[1][nameIdx]).toEqual({ type: 'unknown', value: null });
+    expect(db.records[0].values[1][metricValueIdx]).toEqual({ type: 'unknown', value: null });
+    expect(db.records[0].values[1][timestampIdx].type).toBe('datetime');
+    expect(db.records[0].values[1][activeIdx]).toEqual({ type: 'bool', value: true });
 
     // Third row: all columns (top-level with explicit columns)
-    expect(db.records[0].values[2].id).toEqual({ type: 'integer', value: 3 });
-    expect(db.records[0].values[2].name).toEqual({ type: 'string', value: 'Memory Usage' });
-    expect(db.records[0].values[2].metric_value).toEqual({ type: 'real', value: 60.2 });
-    expect(db.records[0].values[2].timestamp.type).toBe('datetime');
-    expect(db.records[0].values[2].active).toEqual({ type: 'bool', value: false });
+    expect(db.records[0].values[2][idIdx]).toEqual({ type: 'integer', value: 3 });
+    expect(db.records[0].values[2][nameIdx]).toEqual({ type: 'string', value: 'Memory Usage' });
+    expect(db.records[0].values[2][metricValueIdx]).toEqual({ type: 'real', value: 60.2 });
+    expect(db.records[0].values[2][timestampIdx].type).toBe('datetime');
+    expect(db.records[0].values[2][activeIdx]).toEqual({ type: 'bool', value: false });
   });
 
   test('should handle multiple nested records blocks for same table', () => {
@@ -261,15 +277,21 @@ describe('[example - record] data type interpretation', () => {
     expect(db.records[0].values).toHaveLength(4);
 
     // Verify different column combinations are merged correctly
-    expect(db.records[0].values[0].id).toBeDefined();
-    expect(db.records[0].values[0].type).toBeDefined();
-    expect(db.records[0].values[0].user_id).toBeDefined();
-    expect(db.records[0].values[0].data).toBeUndefined();
+    const idIdx2 = db.records[0].columns.indexOf('id');
+    const typeIdx = db.records[0].columns.indexOf('type');
+    const userIdIdx = db.records[0].columns.indexOf('user_id');
+    const dataIdx = db.records[0].columns.indexOf('data');
+    const createdAtIdx = db.records[0].columns.indexOf('created_at');
 
-    expect(db.records[0].values[2].data).toBeDefined();
-    expect(db.records[0].values[2].user_id).toBeUndefined();
+    expect(db.records[0].values[0][idIdx2]).toBeDefined();
+    expect(db.records[0].values[0][typeIdx]).toBeDefined();
+    expect(db.records[0].values[0][userIdIdx]).toBeDefined();
+    expect(db.records[0].values[0][dataIdx]).toEqual({ type: 'unknown', value: null });
 
-    expect(db.records[0].values[3].created_at).toBeDefined();
-    expect(db.records[0].values[3].type).toBeUndefined();
+    expect(db.records[0].values[2][idIdx2]).toBeDefined();
+    expect(db.records[0].values[2][userIdIdx]).toEqual({ type: 'unknown', value: null });
+
+    expect(db.records[0].values[3][idIdx2]).toBeDefined();
+    expect(db.records[0].values[3][typeIdx]).toEqual({ type: 'unknown', value: null });
   });
 });

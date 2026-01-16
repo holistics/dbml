@@ -40,18 +40,20 @@ describe('[example - record] composite foreign key constraints', () => {
     expect(db.records.length).toBe(2);
 
     // Merchants table
+    // columns = ['id', 'country_code']
     expect(db.records[0].tableName).toBe('merchants');
     expect(db.records[0].values.length).toBe(3);
-    expect(db.records[0].values[0].id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].country_code).toEqual({ type: 'string', value: 'US' });
+    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'US' });
 
     // Orders table
+    // columns = ['id', 'merchant_id', 'country', 'amount']
     expect(db.records[1].tableName).toBe('orders');
     expect(db.records[1].values.length).toBe(3);
-    expect(db.records[1].values[0].id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[1].values[0].merchant_id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[1].values[0].country).toEqual({ type: 'string', value: 'US' });
-    expect(db.records[1].values[0].amount).toEqual({ type: 'real', value: 100.00 });
+    expect(db.records[1].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[1].values[0][1]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[1].values[0][2]).toEqual({ type: 'string', value: 'US' });
+    expect(db.records[1].values[0][3]).toEqual({ type: 'real', value: 100.00 });
   });
 
   test('should reject composite FK when partial key match fails', () => {
@@ -123,14 +125,15 @@ describe('[example - record] composite foreign key constraints', () => {
     expect(db.records[1].values.length).toBe(3);
 
     // Row 2: null FK column
-    expect(db.records[1].values[1].merchant_id.value).toBe(null);
-    expect(db.records[1].values[1].country).toEqual({ type: 'string', value: 'UK' });
-    expect(db.records[1].values[1].status).toEqual({ type: 'string', value: 'pending' });
+    // columns = ['id', 'merchant_id', 'country', 'status']
+    expect(db.records[1].values[1][1].value).toBe(null); // merchant_id
+    expect(db.records[1].values[1][2]).toEqual({ type: 'string', value: 'UK' }); // country
+    expect(db.records[1].values[1][3]).toEqual({ type: 'string', value: 'pending' }); // status
 
     // Row 3: null FK column
-    expect(db.records[1].values[2].merchant_id).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[1].values[2].country.value).toBe(null);
-    expect(db.records[1].values[2].status).toEqual({ type: 'string', value: 'processing' });
+    expect(db.records[1].values[2][0]).toEqual({ type: 'integer', value: 3 }); // id
+    expect(db.records[1].values[2][2].value).toBe(null); // country
+    expect(db.records[1].values[2][3]).toEqual({ type: 'string', value: 'processing' }); // status
   });
 
   test('should validate many-to-many composite FK both directions', () => {
