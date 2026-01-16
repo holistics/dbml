@@ -1,7 +1,7 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { InterpreterDatabase } from '@/core/interpreter/types';
 import {
-  extractKeyValue,
+  extractKeyValueWithDefault,
   hasNullInKey,
   formatColumns,
   isAutoIncrementColumn,
@@ -15,7 +15,6 @@ export function validatePrimaryKey (
   for (const [table, rows] of env.records) {
     if (rows.length === 0) continue;
 
-    // Extract PK constraints
     const pkConstraints: string[][] = [];
     for (const field of table.fields) {
       if (field.pk) {
@@ -28,7 +27,6 @@ export function validatePrimaryKey (
       }
     }
 
-    // Collect all unique column names from all rows
     const columnsSet = new Set<string>();
     for (const row of rows) {
       for (const colName of Object.keys(row.values)) {
@@ -94,7 +92,7 @@ export function validatePrimaryKey (
               const errorNode = row.columnNodes[col] || row.node;
               const msg = isComposite
                 ? `NULL not allowed in primary key '${col}'`
-                : `NULL not allowed in primary key`;
+                : 'NULL not allowed in primary key';
               errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
               break;
             }
@@ -103,13 +101,13 @@ export function validatePrimaryKey (
         }
 
         // Check for duplicates (using defaults for missing values)
-        const keyValue = extractKeyValue(row.values, pkColumns, pkColumnFields);
+        const keyValue = extractKeyValueWithDefault(row.values, pkColumns, pkColumnFields);
         if (seen.has(keyValue)) {
           // Report error on the first column of the constraint
           const errorNode = row.columnNodes[pkColumns[0]] || row.node;
           const msg = isComposite
             ? `Duplicate primary key ${columnsStr}`
-            : `Duplicate primary key`;
+            : 'Duplicate primary key';
           errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
         } else {
           seen.set(keyValue, rowIndex);
