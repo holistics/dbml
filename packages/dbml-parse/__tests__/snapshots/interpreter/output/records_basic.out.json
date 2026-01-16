@@ -139,60 +139,60 @@
         "age"
       ],
       "values": [
-        {
-          "id": {
+        [
+          {
             "value": 1,
             "type": "integer"
           },
-          "name": {
+          {
             "value": "John Doe",
             "type": "string"
           },
-          "email": {
+          {
             "value": "john@example.com",
             "type": "string"
           },
-          "age": {
+          {
             "value": 30,
             "type": "integer"
           }
-        },
-        {
-          "id": {
+        ],
+        [
+          {
             "value": 2,
             "type": "integer"
           },
-          "name": {
+          {
             "value": "Jane Smith",
             "type": "string"
           },
-          "email": {
+          {
             "value": "jane@example.com",
             "type": "string"
           },
-          "age": {
+          {
             "value": 25,
             "type": "integer"
           }
-        },
-        {
-          "id": {
+        ],
+        [
+          {
             "value": 3,
             "type": "integer"
           },
-          "name": {
+          {
             "value": "Bob Johnson",
             "type": "string"
           },
-          "email": {
+          {
             "value": "bob@example.com",
             "type": "string"
           },
-          "age": {
+          {
             "value": 35,
             "type": "integer"
           }
-        }
+        ]
       ]
     }
   ]

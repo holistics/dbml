@@ -39,31 +39,32 @@ describe('[example - record] multiple records blocks', () => {
     expect(db.records[0].values.length).toBe(4);
 
     // First two rows from records users(id, name)
-    expect(db.records[0].values[0].id).toMatchObject({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].name).toMatchObject({ type: 'string', value: 'Alice' });
+    // columns = ['id', 'name', 'age']
+    expect(db.records[0].values[0][0]).toMatchObject({ type: 'integer', value: 1 }); // id
+    expect(db.records[0].values[0][1]).toMatchObject({ type: 'string', value: 'Alice' }); // name
     // age column may not exist on rows that only specified (id, name)
-    if ('age' in db.records[0].values[0]) {
-      expect(db.records[0].values[0].age).toMatchObject({ type: 'integer', value: null });
+    if (db.records[0].values[0].length > 2) {
+      expect(db.records[0].values[0][2]).toMatchObject({ type: 'unknown', value: null }); // age
     }
 
-    expect(db.records[0].values[1].id).toMatchObject({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1].name).toMatchObject({ type: 'string', value: 'Bob' });
-    if ('age' in db.records[0].values[1]) {
-      expect(db.records[0].values[1].age).toMatchObject({ type: 'integer', value: null });
+    expect(db.records[0].values[1][0]).toMatchObject({ type: 'integer', value: 2 }); // id
+    expect(db.records[0].values[1][1]).toMatchObject({ type: 'string', value: 'Bob' }); // name
+    if (db.records[0].values[1].length > 2) {
+      expect(db.records[0].values[1][2]).toMatchObject({ type: 'unknown', value: null }); // age
     }
 
     // Next two rows from records users(id, age)
-    expect(db.records[0].values[2].id).toMatchObject({ type: 'integer', value: 3 });
-    if ('name' in db.records[0].values[2]) {
-      expect(db.records[0].values[2].name).toMatchObject({ type: 'string', value: null });
+    expect(db.records[0].values[2][0]).toMatchObject({ type: 'integer', value: 3 }); // id
+    if (db.records[0].values[2].length > 1) {
+      expect(db.records[0].values[2][1]).toMatchObject({ type: 'unknown', value: null }); // name
     }
-    expect(db.records[0].values[2].age).toMatchObject({ type: 'integer', value: 25 });
+    expect(db.records[0].values[2][2]).toMatchObject({ type: 'integer', value: 25 }); // age
 
-    expect(db.records[0].values[3].id).toMatchObject({ type: 'integer', value: 4 });
-    if ('name' in db.records[0].values[3]) {
-      expect(db.records[0].values[3].name).toMatchObject({ type: 'string', value: null });
+    expect(db.records[0].values[3][0]).toMatchObject({ type: 'integer', value: 4 }); // id
+    if (db.records[0].values[3].length > 1) {
+      expect(db.records[0].values[3][1]).toMatchObject({ type: 'unknown', value: null }); // name
     }
-    expect(db.records[0].values[3].age).toMatchObject({ type: 'integer', value: 30 });
+    expect(db.records[0].values[3][2]).toMatchObject({ type: 'integer', value: 30 }); // age
   });
 
   test('should handle multiple records blocks, one with explicit columns and one without', () => {
@@ -99,17 +100,18 @@ describe('[example - record] multiple records blocks', () => {
     expect(db.records[0].values.length).toBe(2);
 
     // First row from records posts(id, title)
-    expect(db.records[0].values[0].id).toMatchObject({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0].title).toMatchObject({ type: 'string', value: 'First post' });
+    // columns = ['id', 'title', 'content']
+    expect(db.records[0].values[0][0]).toMatchObject({ type: 'integer', value: 1 }); // id
+    expect(db.records[0].values[0][1]).toMatchObject({ type: 'string', value: 'First post' }); // title
     // content column may not exist on this row, or may be null
-    if ('content' in db.records[0].values[0]) {
-      expect(db.records[0].values[0].content).toMatchObject({ type: 'string', value: null });
+    if (db.records[0].values[0].length > 2) {
+      expect(db.records[0].values[0][2]).toMatchObject({ type: 'unknown', value: null }); // content
     }
 
     // Second row from records posts(id, title, content)
-    expect(db.records[0].values[1].id).toMatchObject({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1].title).toMatchObject({ type: 'string', value: 'Second post' });
-    expect(db.records[0].values[1].content).toMatchObject({ type: 'string', value: 'Content of second post' });
+    expect(db.records[0].values[1][0]).toMatchObject({ type: 'integer', value: 2 }); // id
+    expect(db.records[0].values[1][1]).toMatchObject({ type: 'string', value: 'Second post' }); // title
+    expect(db.records[0].values[1][2]).toMatchObject({ type: 'string', value: 'Content of second post' }); // content
   });
 
   test('should report error for inconsistent column count in implicit records', () => {
