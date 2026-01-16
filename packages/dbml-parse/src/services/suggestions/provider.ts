@@ -157,8 +157,7 @@ function suggestOnPartialInjectionOp (
   compiler: Compiler,
   offset: number,
 ) {
-  const parent = compiler.container.element(offset);
-  return suggestNamesInScope(compiler, offset, parent, [SymbolKind.TablePartial]);
+  return suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.TablePartial]);
 }
 
 function suggestOnRelOp (
