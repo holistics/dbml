@@ -1,5 +1,5 @@
 import { isEmpty, reduce } from 'lodash';
-import { addQuoteIfNeeded } from '@dbml/parse';
+import { addQuoteIfNeeded, isNumericType, isBooleanType, isStringType, isDateTimeType } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
@@ -347,6 +347,63 @@ class DbmlExporter {
     }, '');
   }
 
+  static formatRecordValue (recordValue) {
+    const { value, type } = recordValue;
+
+    // Handle null values
+    if (value === null) {
+      return 'null';
+    }
+
+    // Handle expressions (backtick strings)
+    if (type === 'expression') {
+      return `\`${value}\``;
+    }
+
+    if (isBooleanType(type)) {
+      return value ? 'true' : 'false';
+    }
+
+    if (isNumericType(type)) {
+      return String(value);
+    }
+
+    // Default: string types, date/time types, and others
+    const strValue = String(value);
+    return `'${strValue.replaceAll("'", "\\'")}'`;
+  }
+
+  static exportRecords (model) {
+    const records = model.records;
+    if (!records || isEmpty(records)) {
+      return '';
+    }
+
+    const recordStrs = Object.values(records).map((record) => {
+      const { schemaName, tableName, columns, values } = record;
+
+      // Build the table reference with schema if present
+      const tableRef = schemaName
+        ? `"${schemaName}"."${tableName}"`
+        : `"${tableName}"`;
+
+      // Build the column list
+      const columnList = columns.map((col) => `"${col}"`).join(', ');
+
+      // Build the data rows
+      const rowStrs = values.map((row) => {
+        const valueStrs = row.map((val) => DbmlExporter.formatRecordValue(val));
+        return `  ${valueStrs.join(', ')}`;
+      });
+
+      const body = rowStrs.join('\n');
+
+      return `records ${tableRef}(${columnList}) {\n${body}\n}\n`;
+    });
+
+    return recordStrs.length ? recordStrs.join('\n') : '';
+  }
+
   static export (model) {
     const elementStrs = [];
     const database = model.database['1'];
@@ -363,6 +420,7 @@ class DbmlExporter {
     });
 
     if (!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));
+    if (!isEmpty(model.records)) elementStrs.push(DbmlExporter.exportRecords(model));
 
     // all elements already end with 1 '\n', so join('\n') to separate them with 1 blank line
     return elementStrs.join('\n');

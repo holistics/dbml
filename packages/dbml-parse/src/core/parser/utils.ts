@@ -8,7 +8,8 @@ import {
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
-  DummyNode,
+  CommaExpressionNode,
+  EmptyNode,
   ElementDeclarationNode,
   ExpressionNode,
   FunctionApplicationNode,
@@ -31,8 +32,8 @@ import { destructureComplexVariable } from '@/core/analyzer/utils';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
-  callee: ExpressionNode | undefined,
-  args: NormalExpressionNode[],
+  callee: ExpressionNode | CommaExpressionNode | undefined,
+  args: (NormalExpressionNode | CommaExpressionNode)[],
   factory: NodeFactory,
 ): Option<ElementDeclarationNode> {
   if (!callee || !isExpressionAnIdentifierNode(callee) || args.length === 0) {
@@ -158,6 +159,9 @@ function markInvalidNode (node: SyntaxNode) {
     node.commaList.forEach(markInvalid);
     node.elementList.forEach(markInvalid);
     markInvalid(node.tupleCloseParen);
+  } else if (node instanceof CommaExpressionNode) {
+    node.commaList.forEach(markInvalid);
+    node.elementList.forEach(markInvalid);
   } else if (node instanceof CallExpressionNode) {
     markInvalid(node.callee);
     markInvalid(node.argumentList);
@@ -180,7 +184,7 @@ function markInvalidNode (node: SyntaxNode) {
   } else if (node instanceof ProgramNode) {
     node.body.forEach(markInvalid);
     markInvalid(node.eof);
-  } else if (node instanceof DummyNode) {
+  } else if (node instanceof EmptyNode) {
     // DummyNode has no children to mark invalid
   } else {
     throw new Error('Unreachable case in markInvalidNode');
@@ -267,6 +271,12 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
       node.tupleOpenParen,
       ...alternateLists(node.elementList, node.commaList),
       node.tupleCloseParen,
+    );
+  }
+
+  if (node instanceof CommaExpressionNode) {
+    return filterUndefined(
+      ...alternateLists(node.elementList, node.commaList),
     );
   }
 

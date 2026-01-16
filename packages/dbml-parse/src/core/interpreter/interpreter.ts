@@ -1,6 +1,6 @@
 import { ProgramNode } from '@/core/parser/nodes';
 import { CompileError } from '@/core/errors';
-import { Database, InterpreterDatabase } from '@/core/interpreter/types';
+import { Database, InterpreterDatabase, TableRecord } from '@/core/interpreter/types';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
 import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
@@ -8,11 +8,44 @@ import { TableGroupInterpreter } from '@/core/interpreter/elementInterpreter/tab
 import { EnumInterpreter } from '@/core/interpreter/elementInterpreter/enum';
 import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/project';
 import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
+import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 
 function convertEnvToDb (env: InterpreterDatabase): Database {
+  // Convert records Map to array of TableRecord
+  const records: TableRecord[] = [];
+  for (const [table, rows] of env.records) {
+    if (rows.length > 0) {
+      // Collect all unique column names from all rows
+      const columnsSet = new Set<string>();
+      for (const row of rows) {
+        for (const colName of Object.keys(row.values)) {
+          columnsSet.add(colName);
+        }
+      }
+
+      const columns = Array.from(columnsSet);
+      records.push({
+        schemaName: table.schemaName || undefined,
+        tableName: table.name,
+        columns,
+        values: rows.map((r) => {
+          // Convert object-based values to array-based values ordered by columns
+          return columns.map((col) => {
+            const val = r.values[col];
+            if (val) {
+              return { value: val.value, type: val.type };
+            }
+            // Column not present in this row (shouldn't happen with validation)
+            return { value: null, type: 'unknown' };
+          });
+        }),
+      });
+    }
+  }
+
   return {
     schemas: [],
     tables: Array.from(env.tables.values()),
@@ -23,6 +56,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     aliases: env.aliases,
     project: Array.from(env.project.values())[0] || {},
     tablePartials: Array.from(env.tablePartials.values()),
+    records,
   };
 }
 
@@ -45,10 +79,13 @@ export default class Interpreter {
       aliases: [],
       project: new Map(),
       tablePartials: new Map(),
+      records: new Map(),
+      recordsElements: [],
     };
   }
 
   interpret (): Report<Database, CompileError> {
+    // First pass: interpret all non-records elements
     const errors = this.ast.body.flatMap((element) => {
       switch (getElementKind(element).unwrap_or(undefined)) {
         case ElementKind.Table:
@@ -65,10 +102,19 @@ export default class Interpreter {
           return (new EnumInterpreter(element, this.env)).interpret();
         case ElementKind.Project:
           return (new ProjectInterpreter(element, this.env)).interpret();
+        case ElementKind.Records:
+          // Defer records interpretation - collect for later
+          this.env.recordsElements.push(element);
+          return [];
         default:
           return [];
       }
     });
+
+    // Second pass: interpret all records elements grouped by table
+    // Now that all tables, enums, etc. are interpreted, we can validate records properly
+    const recordsErrors = new RecordsInterpreter(this.env).interpret(this.env.recordsElements);
+    errors.push(...recordsErrors);
 
     return new Report(convertEnvToDb(this.env), errors);
   }

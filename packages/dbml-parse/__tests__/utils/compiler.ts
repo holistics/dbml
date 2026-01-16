@@ -17,6 +17,7 @@ import {
   BlockExpressionNode,
   ListExpressionNode,
   TupleExpressionNode,
+  CommaExpressionNode,
   CallExpressionNode,
   LiteralNode,
   VariableNode,
@@ -173,6 +174,13 @@ export function print (source: string, ast: SyntaxNode): string {
         break;
       }
 
+      case SyntaxNodeKind.COMMA_EXPRESSION: {
+        const comma = node as CommaExpressionNode;
+        comma.elementList.forEach(collectTokens);
+        comma.commaList.forEach(collectTokens);
+        break;
+      }
+
       case SyntaxNodeKind.CALL_EXPRESSION: {
         const call = node as CallExpressionNode;
         if (call.callee) collectTokens(call.callee);
@@ -205,8 +213,8 @@ export function print (source: string, ast: SyntaxNode): string {
         break;
       }
 
-      case SyntaxNodeKind.DUMMY:
-        // Dummy nodes don't contribute to output
+      case SyntaxNodeKind.EMPTY:
+        // Empty nodes don't contribute to output
         break;
 
       default: {

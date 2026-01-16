@@ -1,8 +1,10 @@
 import { SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
-import { CompletionItemKind, type CompletionList } from '@/services/types';
+import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
 import { isAlphaOrUnderscore } from '@/core/utils';
+import { SyntaxNode, TupleExpressionNode } from '@/core/parser/nodes';
+import Compiler from '@/compiler';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
@@ -72,4 +74,66 @@ export function addQuoteIfNeeded (completionList: CompletionList): CompletionLis
       insertText: (!s.insertText || !s.insertText.split('').every(isAlphaOrUnderscore)) ? `"${s.insertText ?? ''}"` : s.insertText,
     })),
   };
+}
+
+export function excludeSuggestions (completionList: CompletionList, excludeLabels: string[]): CompletionList {
+  return {
+    ...completionList,
+    suggestions: completionList.suggestions.filter((s) => {
+      const label = typeof s.label === 'string' ? s.label : s.label.label;
+      return !excludeLabels.includes(label.toLowerCase());
+    }),
+  };
+}
+
+export function addExpandAllColumnsSuggestion (completionList: CompletionList): CompletionList {
+  const allColumns = completionList.suggestions
+    .map((s) => typeof s.label === 'string' ? s.label : s.label.label)
+    .join(', ');
+
+  if (!allColumns) {
+    return completionList;
+  }
+
+  return {
+    ...completionList,
+    suggestions: [
+      {
+        label: '* (all columns)',
+        insertText: allColumns,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Snippet,
+        sortText: '00',
+        range: undefined as any,
+      },
+      ...completionList.suggestions,
+    ],
+  };
+}
+
+export function getSource (compiler: Compiler, tokenOrNode: SyntaxToken | SyntaxNode): string {
+  return compiler.parse.source().slice(tokenOrNode.start, tokenOrNode.end);
+}
+
+/**
+ * Checks if the offset is within the element's header
+ * (within the element, but outside the body)
+ */
+export function isOffsetWithinElementHeader (offset: number, element: SyntaxNode & { body?: SyntaxNode }): boolean {
+  // Check if offset is within the element at all
+  if (offset < element.start || offset > element.end) {
+    return false;
+  }
+
+  // If element has a body, check if offset is outside it
+  if (element.body) {
+    return offset < element.body.start || offset > element.body.end;
+  }
+
+  // Element has no body, so entire element is considered header
+  return true;
+}
+
+export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
+  return tuple.commaList.length + tuple.elementList.length === 0;
 }

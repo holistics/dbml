@@ -15,7 +15,7 @@ export default class Analyzer {
     this.symbolFactory = new SymbolFactory(symbolIdGenerator);
   }
 
-  // Analyzing: Invoking both the validator and binder
+  // Analyzing: Invoking the validator and binder
   analyze (): Report<ProgramNode, CompileError> {
     const validator = new Validator(this.ast, this.symbolFactory);
 

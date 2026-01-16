@@ -1,0 +1,11 @@
+Table products {
+  id integer [pk]
+  name varchar
+  price decimal
+
+  Records {
+    1, "Laptop", 999.99
+    2, "Mouse", 29.99
+    3, "Keyboard", 79.99
+  }
+}
