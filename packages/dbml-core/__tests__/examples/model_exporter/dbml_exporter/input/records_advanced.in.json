@@ -108,7 +108,7 @@
           { "value": 2, "type": "integer" },
           { "value": "Gadget's \"Pro\"", "type": "string" },
           { "value": 19.99, "type": "real" },
-          { "value": "now()", "type": "datetime", "is_expression": true }
+          { "value": "now()", "type": "expression" }
         ],
         [
           { "value": 3, "type": "integer" },

@@ -348,7 +348,7 @@ class DbmlExporter {
   }
 
   static formatRecordValue (recordValue) {
-    const { value, type, is_expression } = recordValue;
+    const { value, type } = recordValue;
 
     // Handle null values
     if (value === null) {
@@ -356,7 +356,7 @@ class DbmlExporter {
     }
 
     // Handle expressions (backtick strings)
-    if (is_expression) {
+    if (type === 'expression') {
       return `\`${value}\``;
     }
 
