@@ -1,6 +1,6 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/core/interpreter/types';
-import { extractKeyValue, formatColumns, hasNullInKey } from './helper';
+import { extractKeyValueWithDefault, formatColumns, hasNullInKey } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 interface TableLookup {
@@ -34,7 +34,7 @@ function collectValidKeys (rows: TableRecordRow[], columnNames: string[]): Set<s
   const keys = new Set<string>();
   for (const row of rows) {
     if (!hasNullInKey(row.values, columnNames)) {
-      keys.add(extractKeyValue(row.values, columnNames));
+      keys.add(extractKeyValueWithDefault(row.values, columnNames));
     }
   }
   return keys;
@@ -76,7 +76,7 @@ function validateDirection (
   for (const row of source.rows) {
     if (hasNullInKey(row.values, sourceEndpoint.fieldNames)) continue;
 
-    const key = extractKeyValue(row.values, sourceEndpoint.fieldNames);
+    const key = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
     if (!validKeys.has(key)) {
       const errorNode = row.columnNodes[sourceEndpoint.fieldNames[0]] || row.node;
       const targetColStr = formatColumns(targetEndpoint.fieldNames);
