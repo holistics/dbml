@@ -395,11 +395,12 @@ class MySQLExporter {
       refs: [],
     });
 
-    // Export INSERT statements with constraint checking disabled
+    // Export INSERT statements
+    // Note: MySQL does not support DEFERRED constraints, so foreign key checks are disabled
     const insertStatements = MySQLExporter.exportRecords(model);
     const recordsSection = !_.isEmpty(insertStatements)
       ? [
-          '-- Disable foreign key checks for INSERT',
+          '-- Disable foreign key checks for INSERT (MySQL does not support DEFERRED)',
           'SET FOREIGN_KEY_CHECKS = 0;',
           '',
           ...insertStatements,

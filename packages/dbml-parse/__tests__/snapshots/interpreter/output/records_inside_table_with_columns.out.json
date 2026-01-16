@@ -187,60 +187,60 @@
         "department"
       ],
       "values": [
-        {
-          "id": {
+        [
+          {
             "value": 1,
             "type": "integer"
           },
-          "first_name": {
+          {
             "value": "Alice",
             "type": "string"
           },
-          "last_name": {
+          {
             "value": "Anderson",
             "type": "string"
           },
-          "department": {
+          {
             "value": "Engineering",
             "type": "string"
           }
-        },
-        {
-          "id": {
+        ],
+        [
+          {
             "value": 2,
             "type": "integer"
           },
-          "first_name": {
+          {
             "value": "Bob",
             "type": "string"
           },
-          "last_name": {
+          {
             "value": "Brown",
             "type": "string"
           },
-          "department": {
+          {
             "value": "Marketing",
             "type": "string"
           }
-        },
-        {
-          "id": {
+        ],
+        [
+          {
             "value": 3,
             "type": "integer"
           },
-          "first_name": {
+          {
             "value": "Carol",
             "type": "string"
           },
-          "last_name": {
+          {
             "value": "Chen",
             "type": "string"
           },
-          "department": {
+          {
             "value": "Engineering",
             "type": "string"
           }
-        }
+        ]
       ]
     }
   ]

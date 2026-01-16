@@ -162,48 +162,48 @@
         "email"
       ],
       "values": [
-        {
-          "id": {
+        [
+          {
             "value": 1,
             "type": "integer"
           },
-          "name": {
+          {
             "value": "Alice",
             "type": "string"
           },
-          "email": {
+          {
             "value": null,
             "type": "string"
           }
-        },
-        {
-          "id": {
+        ],
+        [
+          {
             "value": 2,
             "type": "integer"
           },
-          "name": {
+          {
             "value": null,
             "type": "string"
           },
-          "email": {
+          {
             "value": null,
             "type": "string"
           }
-        },
-        {
-          "id": {
+        ],
+        [
+          {
             "value": 3,
             "type": "integer"
           },
-          "name": {
+          {
             "value": "Charlie",
             "type": "string"
           },
-          "email": {
+          {
             "value": "charlie@example.com",
             "type": "string"
           }
-        }
+        ]
       ]
     }
   ]
