@@ -142,55 +142,934 @@
         {
           "id": {
             "value": 1,
-            "type": "integer"
+            "type": "integer",
+            "node": {
+              "id": 40,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 120,
+                "line": 8,
+                "column": 2
+              },
+              "fullStart": 118,
+              "endPos": {
+                "offset": 121,
+                "line": 8,
+                "column": 3
+              },
+              "fullEnd": 121,
+              "start": 120,
+              "end": 121,
+              "expression": {
+                "id": 39,
+                "kind": "<literal>",
+                "startPos": {
+                  "offset": 120,
+                  "line": 8,
+                  "column": 2
+                },
+                "fullStart": 118,
+                "endPos": {
+                  "offset": 121,
+                  "line": 8,
+                  "column": 3
+                },
+                "fullEnd": 121,
+                "start": 120,
+                "end": 121,
+                "literal": {
+                  "kind": "<number>",
+                  "startPos": {
+                    "offset": 120,
+                    "line": 8,
+                    "column": 2
+                  },
+                  "endPos": {
+                    "offset": 121,
+                    "line": 8,
+                    "column": 3
+                  },
+                  "value": "1",
+                  "leadingTrivia": [
+                    {
+                      "kind": "<space>",
+                      "startPos": {
+                        "offset": 118,
+                        "line": 8,
+                        "column": 0
+                      },
+                      "endPos": {
+                        "offset": 119,
+                        "line": 8,
+                        "column": 1
+                      },
+                      "value": " ",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 118,
+                      "end": 119
+                    },
+                    {
+                      "kind": "<space>",
+                      "startPos": {
+                        "offset": 119,
+                        "line": 8,
+                        "column": 1
+                      },
+                      "endPos": {
+                        "offset": 120,
+                        "line": 8,
+                        "column": 2
+                      },
+                      "value": " ",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 119,
+                      "end": 120
+                    }
+                  ],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 120,
+                  "end": 121
+                }
+              }
+            }
           },
           "name": {
             "value": "John Doe",
-            "type": "string"
+            "type": "string",
+            "node": {
+              "id": 42,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 123,
+                "line": 8,
+                "column": 5
+              },
+              "fullStart": 123,
+              "endPos": {
+                "offset": 133,
+                "line": 8,
+                "column": 15
+              },
+              "fullEnd": 133,
+              "start": 123,
+              "end": 133,
+              "expression": {
+                "id": 41,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 123,
+                  "line": 8,
+                  "column": 5
+                },
+                "fullStart": 123,
+                "endPos": {
+                  "offset": 133,
+                  "line": 8,
+                  "column": 15
+                },
+                "fullEnd": 133,
+                "start": 123,
+                "end": 133,
+                "variable": {
+                  "kind": "<variable>",
+                  "startPos": {
+                    "offset": 123,
+                    "line": 8,
+                    "column": 5
+                  },
+                  "endPos": {
+                    "offset": 133,
+                    "line": 8,
+                    "column": 15
+                  },
+                  "value": "John Doe",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 123,
+                  "end": 133
+                }
+              }
+            }
           },
           "email": {
             "value": "john@example.com",
-            "type": "string"
+            "type": "string",
+            "node": {
+              "id": 44,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 135,
+                "line": 8,
+                "column": 17
+              },
+              "fullStart": 135,
+              "endPos": {
+                "offset": 153,
+                "line": 8,
+                "column": 35
+              },
+              "fullEnd": 153,
+              "start": 135,
+              "end": 153,
+              "expression": {
+                "id": 43,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 135,
+                  "line": 8,
+                  "column": 17
+                },
+                "fullStart": 135,
+                "endPos": {
+                  "offset": 153,
+                  "line": 8,
+                  "column": 35
+                },
+                "fullEnd": 153,
+                "start": 135,
+                "end": 153,
+                "variable": {
+                  "kind": "<variable>",
+                  "startPos": {
+                    "offset": 135,
+                    "line": 8,
+                    "column": 17
+                  },
+                  "endPos": {
+                    "offset": 153,
+                    "line": 8,
+                    "column": 35
+                  },
+                  "value": "john@example.com",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 135,
+                  "end": 153
+                }
+              }
+            }
           },
           "age": {
             "value": 30,
-            "type": "integer"
+            "type": "integer",
+            "node": {
+              "id": 46,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 155,
+                "line": 8,
+                "column": 37
+              },
+              "fullStart": 155,
+              "endPos": {
+                "offset": 157,
+                "line": 8,
+                "column": 39
+              },
+              "fullEnd": 158,
+              "start": 155,
+              "end": 157,
+              "expression": {
+                "id": 45,
+                "kind": "<literal>",
+                "startPos": {
+                  "offset": 155,
+                  "line": 8,
+                  "column": 37
+                },
+                "fullStart": 155,
+                "endPos": {
+                  "offset": 157,
+                  "line": 8,
+                  "column": 39
+                },
+                "fullEnd": 158,
+                "start": 155,
+                "end": 157,
+                "literal": {
+                  "kind": "<number>",
+                  "startPos": {
+                    "offset": 155,
+                    "line": 8,
+                    "column": 37
+                  },
+                  "endPos": {
+                    "offset": 157,
+                    "line": 8,
+                    "column": 39
+                  },
+                  "value": "30",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [
+                    {
+                      "kind": "<newline>",
+                      "startPos": {
+                        "offset": 157,
+                        "line": 8,
+                        "column": 39
+                      },
+                      "endPos": {
+                        "offset": 158,
+                        "line": 9,
+                        "column": 0
+                      },
+                      "value": "\n",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 157,
+                      "end": 158
+                    }
+                  ],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 155,
+                  "end": 157
+                }
+              }
+            }
           }
         },
         {
           "id": {
             "value": 2,
-            "type": "integer"
+            "type": "integer",
+            "node": {
+              "id": 50,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 160,
+                "line": 9,
+                "column": 2
+              },
+              "fullStart": 158,
+              "endPos": {
+                "offset": 161,
+                "line": 9,
+                "column": 3
+              },
+              "fullEnd": 161,
+              "start": 160,
+              "end": 161,
+              "expression": {
+                "id": 49,
+                "kind": "<literal>",
+                "startPos": {
+                  "offset": 160,
+                  "line": 9,
+                  "column": 2
+                },
+                "fullStart": 158,
+                "endPos": {
+                  "offset": 161,
+                  "line": 9,
+                  "column": 3
+                },
+                "fullEnd": 161,
+                "start": 160,
+                "end": 161,
+                "literal": {
+                  "kind": "<number>",
+                  "startPos": {
+                    "offset": 160,
+                    "line": 9,
+                    "column": 2
+                  },
+                  "endPos": {
+                    "offset": 161,
+                    "line": 9,
+                    "column": 3
+                  },
+                  "value": "2",
+                  "leadingTrivia": [
+                    {
+                      "kind": "<space>",
+                      "startPos": {
+                        "offset": 158,
+                        "line": 9,
+                        "column": 0
+                      },
+                      "endPos": {
+                        "offset": 159,
+                        "line": 9,
+                        "column": 1
+                      },
+                      "value": " ",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 158,
+                      "end": 159
+                    },
+                    {
+                      "kind": "<space>",
+                      "startPos": {
+                        "offset": 159,
+                        "line": 9,
+                        "column": 1
+                      },
+                      "endPos": {
+                        "offset": 160,
+                        "line": 9,
+                        "column": 2
+                      },
+                      "value": " ",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 159,
+                      "end": 160
+                    }
+                  ],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 160,
+                  "end": 161
+                }
+              }
+            }
           },
           "name": {
             "value": "Jane Smith",
-            "type": "string"
+            "type": "string",
+            "node": {
+              "id": 52,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 163,
+                "line": 9,
+                "column": 5
+              },
+              "fullStart": 163,
+              "endPos": {
+                "offset": 175,
+                "line": 9,
+                "column": 17
+              },
+              "fullEnd": 175,
+              "start": 163,
+              "end": 175,
+              "expression": {
+                "id": 51,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 163,
+                  "line": 9,
+                  "column": 5
+                },
+                "fullStart": 163,
+                "endPos": {
+                  "offset": 175,
+                  "line": 9,
+                  "column": 17
+                },
+                "fullEnd": 175,
+                "start": 163,
+                "end": 175,
+                "variable": {
+                  "kind": "<variable>",
+                  "startPos": {
+                    "offset": 163,
+                    "line": 9,
+                    "column": 5
+                  },
+                  "endPos": {
+                    "offset": 175,
+                    "line": 9,
+                    "column": 17
+                  },
+                  "value": "Jane Smith",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 163,
+                  "end": 175
+                }
+              }
+            }
           },
           "email": {
             "value": "jane@example.com",
-            "type": "string"
+            "type": "string",
+            "node": {
+              "id": 54,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 177,
+                "line": 9,
+                "column": 19
+              },
+              "fullStart": 177,
+              "endPos": {
+                "offset": 195,
+                "line": 9,
+                "column": 37
+              },
+              "fullEnd": 195,
+              "start": 177,
+              "end": 195,
+              "expression": {
+                "id": 53,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 177,
+                  "line": 9,
+                  "column": 19
+                },
+                "fullStart": 177,
+                "endPos": {
+                  "offset": 195,
+                  "line": 9,
+                  "column": 37
+                },
+                "fullEnd": 195,
+                "start": 177,
+                "end": 195,
+                "variable": {
+                  "kind": "<variable>",
+                  "startPos": {
+                    "offset": 177,
+                    "line": 9,
+                    "column": 19
+                  },
+                  "endPos": {
+                    "offset": 195,
+                    "line": 9,
+                    "column": 37
+                  },
+                  "value": "jane@example.com",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 177,
+                  "end": 195
+                }
+              }
+            }
           },
           "age": {
             "value": 25,
-            "type": "integer"
+            "type": "integer",
+            "node": {
+              "id": 56,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 197,
+                "line": 9,
+                "column": 39
+              },
+              "fullStart": 197,
+              "endPos": {
+                "offset": 199,
+                "line": 9,
+                "column": 41
+              },
+              "fullEnd": 200,
+              "start": 197,
+              "end": 199,
+              "expression": {
+                "id": 55,
+                "kind": "<literal>",
+                "startPos": {
+                  "offset": 197,
+                  "line": 9,
+                  "column": 39
+                },
+                "fullStart": 197,
+                "endPos": {
+                  "offset": 199,
+                  "line": 9,
+                  "column": 41
+                },
+                "fullEnd": 200,
+                "start": 197,
+                "end": 199,
+                "literal": {
+                  "kind": "<number>",
+                  "startPos": {
+                    "offset": 197,
+                    "line": 9,
+                    "column": 39
+                  },
+                  "endPos": {
+                    "offset": 199,
+                    "line": 9,
+                    "column": 41
+                  },
+                  "value": "25",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [
+                    {
+                      "kind": "<newline>",
+                      "startPos": {
+                        "offset": 199,
+                        "line": 9,
+                        "column": 41
+                      },
+                      "endPos": {
+                        "offset": 200,
+                        "line": 10,
+                        "column": 0
+                      },
+                      "value": "\n",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 199,
+                      "end": 200
+                    }
+                  ],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 197,
+                  "end": 199
+                }
+              }
+            }
           }
         },
         {
           "id": {
             "value": 3,
-            "type": "integer"
+            "type": "integer",
+            "node": {
+              "id": 60,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 202,
+                "line": 10,
+                "column": 2
+              },
+              "fullStart": 200,
+              "endPos": {
+                "offset": 203,
+                "line": 10,
+                "column": 3
+              },
+              "fullEnd": 203,
+              "start": 202,
+              "end": 203,
+              "expression": {
+                "id": 59,
+                "kind": "<literal>",
+                "startPos": {
+                  "offset": 202,
+                  "line": 10,
+                  "column": 2
+                },
+                "fullStart": 200,
+                "endPos": {
+                  "offset": 203,
+                  "line": 10,
+                  "column": 3
+                },
+                "fullEnd": 203,
+                "start": 202,
+                "end": 203,
+                "literal": {
+                  "kind": "<number>",
+                  "startPos": {
+                    "offset": 202,
+                    "line": 10,
+                    "column": 2
+                  },
+                  "endPos": {
+                    "offset": 203,
+                    "line": 10,
+                    "column": 3
+                  },
+                  "value": "3",
+                  "leadingTrivia": [
+                    {
+                      "kind": "<space>",
+                      "startPos": {
+                        "offset": 200,
+                        "line": 10,
+                        "column": 0
+                      },
+                      "endPos": {
+                        "offset": 201,
+                        "line": 10,
+                        "column": 1
+                      },
+                      "value": " ",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 200,
+                      "end": 201
+                    },
+                    {
+                      "kind": "<space>",
+                      "startPos": {
+                        "offset": 201,
+                        "line": 10,
+                        "column": 1
+                      },
+                      "endPos": {
+                        "offset": 202,
+                        "line": 10,
+                        "column": 2
+                      },
+                      "value": " ",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 201,
+                      "end": 202
+                    }
+                  ],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 202,
+                  "end": 203
+                }
+              }
+            }
           },
           "name": {
             "value": "Bob Johnson",
-            "type": "string"
+            "type": "string",
+            "node": {
+              "id": 62,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 205,
+                "line": 10,
+                "column": 5
+              },
+              "fullStart": 205,
+              "endPos": {
+                "offset": 218,
+                "line": 10,
+                "column": 18
+              },
+              "fullEnd": 218,
+              "start": 205,
+              "end": 218,
+              "expression": {
+                "id": 61,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 205,
+                  "line": 10,
+                  "column": 5
+                },
+                "fullStart": 205,
+                "endPos": {
+                  "offset": 218,
+                  "line": 10,
+                  "column": 18
+                },
+                "fullEnd": 218,
+                "start": 205,
+                "end": 218,
+                "variable": {
+                  "kind": "<variable>",
+                  "startPos": {
+                    "offset": 205,
+                    "line": 10,
+                    "column": 5
+                  },
+                  "endPos": {
+                    "offset": 218,
+                    "line": 10,
+                    "column": 18
+                  },
+                  "value": "Bob Johnson",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 205,
+                  "end": 218
+                }
+              }
+            }
           },
           "email": {
             "value": "bob@example.com",
-            "type": "string"
+            "type": "string",
+            "node": {
+              "id": 64,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 220,
+                "line": 10,
+                "column": 20
+              },
+              "fullStart": 220,
+              "endPos": {
+                "offset": 237,
+                "line": 10,
+                "column": 37
+              },
+              "fullEnd": 237,
+              "start": 220,
+              "end": 237,
+              "expression": {
+                "id": 63,
+                "kind": "<variable>",
+                "startPos": {
+                  "offset": 220,
+                  "line": 10,
+                  "column": 20
+                },
+                "fullStart": 220,
+                "endPos": {
+                  "offset": 237,
+                  "line": 10,
+                  "column": 37
+                },
+                "fullEnd": 237,
+                "start": 220,
+                "end": 237,
+                "variable": {
+                  "kind": "<variable>",
+                  "startPos": {
+                    "offset": 220,
+                    "line": 10,
+                    "column": 20
+                  },
+                  "endPos": {
+                    "offset": 237,
+                    "line": 10,
+                    "column": 37
+                  },
+                  "value": "bob@example.com",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 220,
+                  "end": 237
+                }
+              }
+            }
           },
           "age": {
             "value": 35,
-            "type": "integer"
+            "type": "integer",
+            "node": {
+              "id": 66,
+              "kind": "<primary-expression>",
+              "startPos": {
+                "offset": 239,
+                "line": 10,
+                "column": 39
+              },
+              "fullStart": 239,
+              "endPos": {
+                "offset": 241,
+                "line": 10,
+                "column": 41
+              },
+              "fullEnd": 242,
+              "start": 239,
+              "end": 241,
+              "expression": {
+                "id": 65,
+                "kind": "<literal>",
+                "startPos": {
+                  "offset": 239,
+                  "line": 10,
+                  "column": 39
+                },
+                "fullStart": 239,
+                "endPos": {
+                  "offset": 241,
+                  "line": 10,
+                  "column": 41
+                },
+                "fullEnd": 242,
+                "start": 239,
+                "end": 241,
+                "literal": {
+                  "kind": "<number>",
+                  "startPos": {
+                    "offset": 239,
+                    "line": 10,
+                    "column": 39
+                  },
+                  "endPos": {
+                    "offset": 241,
+                    "line": 10,
+                    "column": 41
+                  },
+                  "value": "35",
+                  "leadingTrivia": [],
+                  "trailingTrivia": [
+                    {
+                      "kind": "<newline>",
+                      "startPos": {
+                        "offset": 241,
+                        "line": 10,
+                        "column": 41
+                      },
+                      "endPos": {
+                        "offset": 242,
+                        "line": 11,
+                        "column": 0
+                      },
+                      "value": "\n",
+                      "leadingTrivia": [],
+                      "trailingTrivia": [],
+                      "leadingInvalid": [],
+                      "trailingInvalid": [],
+                      "isInvalid": false,
+                      "start": 241,
+                      "end": 242
+                    }
+                  ],
+                  "leadingInvalid": [],
+                  "trailingInvalid": [],
+                  "isInvalid": false,
+                  "start": 239,
+                  "end": 241
+                }
+              }
+            }
           }
         }
       ]
