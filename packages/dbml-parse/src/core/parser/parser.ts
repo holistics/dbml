@@ -488,7 +488,7 @@ export default class Parser {
       commaList: [],
     };
 
-    while (!this.shouldStopCommaExpression() && this.check(SyntaxTokenKind.COMMA)) {
+    do {
       args.commaList.push(this.advance());
 
       // Check for empty field (trailing commas)
@@ -519,7 +519,7 @@ export default class Parser {
           e.handlerContext,
         );
       }
-    }
+    } while (!this.shouldStopCommaExpression() && this.check(SyntaxTokenKind.COMMA));
 
     return this.nodeFactory.create(CommaExpressionNode, args);
   }
