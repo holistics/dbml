@@ -178,8 +178,8 @@ function extractValue (
 
   // NULL literal
   if (isNullish(node) || (isEmptyStringLiteral(node) && !isStringType(type))) {
-    const defaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null' ? extractDefaultValue(dbdefault.value, column, valueType, node) : null;
-    if (notNull && defaultValue === null && !increment) {
+    const hasDefaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null';
+    if (notNull && hasDefaultValue && !increment) {
       return [new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `NULL not allowed for NOT NULL column '${column.name}' without default and increment`,
@@ -257,78 +257,4 @@ function extractValue (
   // Fallback - try to extract as string
   const strValue = tryExtractString(node);
   return { value: strValue, type: valueType };
-}
-
-// Interpret a primitive value (boolean, number, string) - used for dbdefault
-// We left the value to be `null` to stay true to the original data sample & left it to DBMS
-function extractDefaultValue (
-  value: boolean | number | string,
-  column: Column,
-  valueType: string,
-  node: SyntaxNode,
-): RecordValue | CompileError[] {
-  // FIXME: Make this more precise
-  const type = column.type.type_name.split('(')[0];
-  const isEnum = column.type.isEnum;
-
-  if (isEnum) {
-    const enumValue = tryExtractEnum(value);
-    if (enumValue === null) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid enum value for column '${column.name}'`,
-        node,
-      )];
-    }
-    return { value: null, type: valueType };
-  }
-
-  if (isNumericType(type)) {
-    const numValue = tryExtractNumeric(value);
-    if (numValue === null) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid numeric value for column '${column.name}'`,
-        node,
-      )];
-    }
-    return { value: null, type: valueType };
-  }
-
-  if (isBooleanType(type)) {
-    const boolValue = tryExtractBoolean(value);
-    if (boolValue === null) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid boolean value for column '${column.name}'`,
-        node,
-      )];
-    }
-    return { value: null, type: valueType };
-  }
-
-  if (isDateTimeType(type)) {
-    const dtValue = tryExtractDateTime(value);
-    if (dtValue === null) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid datetime value for column '${column.name}', expected ISO 8601 format (e.g., YYYY-MM-DD, HH:MM:SS, or YYYY-MM-DDTHH:MM:SS)`,
-        node,
-      )];
-    }
-    return { value: null, type: valueType };
-  }
-
-  if (isStringType(type)) {
-    const strValue = tryExtractString(value);
-    if (strValue === null) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid string value for column '${column.name}'`,
-        node,
-      )];
-    }
-    return { value: null, type: 'string' };
-  }
-  return { value: null, type: 'string' };
 }
