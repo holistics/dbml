@@ -3,7 +3,7 @@ import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList }
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
 import { isAlphaOrUnderscore } from '@/core/utils';
-import { SyntaxNode } from '@/core/parser/nodes';
+import { SyntaxNode, TupleExpressionNode } from '@/core/parser/nodes';
 import Compiler from '@/compiler';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
@@ -132,4 +132,8 @@ export function isOffsetWithinElementHeader (offset: number, element: SyntaxNode
 
   // Element has no body, so entire element is considered header
   return true;
+}
+
+export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
+  return tuple.commaList.length + tuple.elementList.length === 0;
 }
