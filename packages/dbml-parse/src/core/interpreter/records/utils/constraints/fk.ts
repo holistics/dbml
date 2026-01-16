@@ -3,24 +3,6 @@ import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/
 import { extractKeyValue, formatColumns, hasNullInKey } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
-/**
- * FK Relationship Types (endpoint1.relation - endpoint2.relation):
- *
- * 1-1:     Both sides reference each other. Every non-null value in table1
- *          must exist in table2, and vice versa.
- *
- * *-1:     Many-to-one. The "*" side (endpoint1) has FK referencing the "1" side.
- *          Values in endpoint1 must exist in endpoint2.
- *
- * 1-*:     One-to-many. The "*" side (endpoint2) has FK referencing the "1" side.
- *          Values in endpoint2 must exist in endpoint1.
- *
- * *-*:     Many-to-many. Both sides reference each other.
- *          Values in each table must exist in the other.
- *
- * Note: "0" optionality (nullable FK) is handled by skipping NULL values during validation.
- */
-
 interface TableLookup {
   table: Table;
   rows: TableRecordRow[];
@@ -67,12 +49,10 @@ function validateDirection (
 ): CompileError[] {
   const errors: CompileError[] = [];
 
-  // Skip if source table has no records (nothing to validate)
   if (source.rows.length === 0) {
     return errors;
   }
 
-  // Collect column names from source records
   const sourceColumns = new Set<string>();
   for (const row of source.rows) {
     for (const colName of Object.keys(row.values)) {
@@ -80,12 +60,10 @@ function validateDirection (
     }
   }
 
-  // Skip if FK columns not found in source records
   if (sourceEndpoint.fieldNames.some((col) => !sourceColumns.has(col))) {
     return errors;
   }
 
-  // Check if target columns exist in the target table schema (not just records)
   const targetTableColumns = new Set(target.table.fields.map((f) => f.name));
   if (targetEndpoint.fieldNames.some((col) => !targetTableColumns.has(col))) {
     return errors;
@@ -96,12 +74,10 @@ function validateDirection (
   const columnsStr = formatColumns(sourceEndpoint.fieldNames);
 
   for (const row of source.rows) {
-    // NULL FK values are allowed (0..1 / 0..* optionality)
     if (hasNullInKey(row.values, sourceEndpoint.fieldNames)) continue;
 
     const key = extractKeyValue(row.values, sourceEndpoint.fieldNames);
     if (!validKeys.has(key)) {
-      // Report error on the first column of the FK
       const errorNode = row.columnNodes[sourceEndpoint.fieldNames[0]] || row.node;
       const targetColStr = formatColumns(targetEndpoint.fieldNames);
       const msg = isComposite
@@ -119,6 +95,8 @@ function validateDirection (
 }
 
 // Validate 1-1 relationship (both directions)
+// * 1-1:     Both sides reference each other. Every non-null value in table1
+// *          must exist in table2, and vice versa.
 function validateOneToOne (
   table1: TableLookup,
   table2: TableLookup,
@@ -132,6 +110,10 @@ function validateOneToOne (
 }
 
 // Validate many-to-one relationship (FK on many side)
+// * *-1:     Many-to-one. The "*" side (endpoint1) has FK referencing the "1" side.
+// *          Values in endpoint1 must exist in endpoint2.
+// * 1-*:     One-to-many. The "*" side (endpoint2) has FK referencing the "1" side.
+// *          Values in endpoint2 must exist in endpoint1.
 function validateManyToOne (
   manyTable: TableLookup,
   oneTable: TableLookup,
@@ -142,6 +124,8 @@ function validateManyToOne (
 }
 
 // Validate many-to-many relationship (both directions)
+// * *-*:     Many-to-many. Both sides reference each other.
+// *          Values in each table must exist in the other.
 function validateManyToMany (
   table1: TableLookup,
   table2: TableLookup,
@@ -154,7 +138,6 @@ function validateManyToMany (
   ];
 }
 
-// Validate a single ref constraint
 function validateRef (ref: Ref, lookup: LookupMap): CompileError[] {
   if (!ref.endpoints) {
     return [];
@@ -164,31 +147,23 @@ function validateRef (ref: Ref, lookup: LookupMap): CompileError[] {
   const table1 = lookup.get(makeTableKey(endpoint1.schemaName, endpoint1.tableName));
   const table2 = lookup.get(makeTableKey(endpoint2.schemaName, endpoint2.tableName));
 
-  // Skip if tables don't exist in lookup (no table definition)
   if (!table1 || !table2) return [];
-
-  // Skip if source tables have no records (nothing to validate)
-  // But don't skip if only target table is empty - that's a violation!
 
   const rel1 = endpoint1.relation;
   const rel2 = endpoint2.relation;
 
-  // 1-1: Validate both directions
   if (rel1 === '1' && rel2 === '1') {
     return validateOneToOne(table1, table2, endpoint1, endpoint2);
   }
 
-  // *-1: Many-to-one (endpoint1 is FK source)
   if (rel1 === '*' && rel2 === '1') {
     return validateManyToOne(table1, table2, endpoint1, endpoint2);
   }
 
-  // 1-*: One-to-many (endpoint2 is FK source)
   if (rel1 === '1' && rel2 === '*') {
     return validateManyToOne(table2, table1, endpoint2, endpoint1);
   }
 
-  // *-*: Many-to-many - validate both directions
   if (rel1 === '*' && rel2 === '*') {
     return validateManyToMany(table1, table2, endpoint1, endpoint2);
   }
