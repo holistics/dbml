@@ -5,8 +5,57 @@ import {
   buildJunctionFields2,
   buildNewTableName,
 } from './utils';
+import {
+  isNumericType,
+  isStringType,
+  isBooleanType,
+  isDatetimeType,
+  isBinaryType,
+} from '@dbml/parse';
 
 class MySQLExporter {
+  static exportRecords (model) {
+    const records = Object.values(model.records || {});
+    if (_.isEmpty(records)) {
+      return [];
+    }
+
+    const insertStatements = records.map((record) => {
+      const { schemaName, tableName, columns, values } = record;
+
+      // Build the table reference with schema if present
+      const tableRef = schemaName ? `\`${schemaName}\`.\`${tableName}\`` : `\`${tableName}\``;
+
+      // Build the column list
+      const columnList = columns.length > 0
+        ? `(\`${columns.join('`, `')}\`)`
+        : '';
+
+      // Value formatter for MySQL
+      const formatValue = (val) => {
+        if (val.value === null) return 'NULL';
+        if (val.type === 'expression') return val.value;
+        if (isNumericType(val.type)) return val.value;
+        if (isBooleanType(val.type)) return val.value.toString().toUpperCase() === 'TRUE' ? '1' : '0';
+        if (isStringType(val.type) || isBinaryType(val.type) || isDatetimeType(val.type)) return `'${val.value.replace(/'/g, "''").replace(/\\/g, '\\\\')}'`;
+        // Unknown type - use CAST
+        return `CAST('${val.value.replace(/'/g, "''").replace(/\\/g, '\\\\')}' AS ${val.type})`;
+      };
+
+      // Build the VALUES clause
+      const valueRows = values.map((row) => {
+        const valueStrs = row.map(formatValue);
+        return `(${valueStrs.join(', ')})`;
+      });
+
+      const valuesClause = valueRows.join(',\n  ');
+
+      return `INSERT INTO ${tableRef} ${columnList}\nVALUES\n  ${valuesClause};`;
+    });
+
+    return insertStatements;
+  }
+
   static getFieldLines (tableId, model) {
     const table = model.tables[tableId];
 
@@ -345,6 +394,20 @@ class MySQLExporter {
       refs: [],
     });
 
+    // Export INSERT statements with constraint checking disabled
+    const insertStatements = MySQLExporter.exportRecords(model);
+    const recordsSection = !isEmpty(insertStatements)
+      ? [
+          '-- Disable foreign key checks for INSERT',
+          'SET FOREIGN_KEY_CHECKS = 0;',
+          '',
+          ...insertStatements,
+          '',
+          '-- Re-enable foreign key checks',
+          'SET FOREIGN_KEY_CHECKS = 1;',
+        ]
+      : [];
+
     const res = concat(
       statements.schemas,
       statements.enums,
@@ -352,6 +415,7 @@ class MySQLExporter {
       statements.indexes,
       statements.comments,
       statements.refs,
+      recordsSection,
     ).join('\n');
     return res;
   }

@@ -14,16 +14,21 @@ import {
 import { createColumnSymbolIndex, SymbolKind } from '../../symbol/symbolIndex';
 import { ElementKind } from '../../types';
 import { isTupleOfVariables } from '../../validator/utils';
+import { NodeSymbol } from '../../symbol/symbols';
 
 export default class RecordsBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private ast: ProgramNode;
+  // A mapping from bound column symbols to the referencing primary expressions nodes of column
+  // Example: Records (col1, col2) -> Map symbol of `col1` to the `col1` in `Records (col1, col2)``
+  private boundColumns: Map<NodeSymbol, SyntaxNode>;
 
   constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.ast = ast;
     this.symbolFactory = symbolFactory;
+    this.boundColumns = new Map();
   }
 
   bind (): CompileError[] {
@@ -93,9 +98,23 @@ export default class RecordsBinder implements ElementBinder {
         ));
         continue;
       }
-
       columnBindee.referee = columnSymbol;
       columnSymbol.references.push(columnBindee);
+
+      const originalBindee = this.boundColumns.get(columnSymbol);
+      if (originalBindee) {
+        errors.push(new CompileError(
+          CompileErrorCode.DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
+          `Column '${columnName}' is referenced more than once in a Records`,
+          originalBindee,
+        ));
+        errors.push(new CompileError(
+          CompileErrorCode.DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
+          `Column '${columnName}' is referenced more than once in a Records`,
+          columnBindee,
+        ));
+      }
+      this.boundColumns.set(columnSymbol, columnBindee);
     }
 
     return errors;

@@ -280,4 +280,26 @@ describe('[example] records binder', () => {
     // completed is referenced once
     expect(completedField.references.length).toBe(1);
   });
+
+  test('should error when there are duplicate columns in top-level records', () => {
+    const source = `
+      Table tasks {
+        id int
+        status status
+      }
+      records tasks(id, id, "id") {
+        1, 10
+        2, 20
+        3, 30
+        4, 40
+      }
+    `;
+    const result = analyze(source);
+    const errors = result.getErrors();
+    expect(errors.length).toBe(4);
+    expect(errors[0].message).toBe('Column \'id\' is referenced more than once in a Records');
+    expect(errors[1].message).toBe('Column \'id\' is referenced more than once in a Records');
+    expect(errors[2].message).toBe('Column \'id\' is referenced more than once in a Records');
+    expect(errors[3].message).toBe('Column \'id\' is referenced more than once in a Records');
+  });
 });
