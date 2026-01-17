@@ -2,28 +2,20 @@
 
 import path from 'path';
 import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
+import commonjs from 'vite-plugin-commonjs';
 
 export default defineConfig({
-  plugins: [
-    dts(),
-  ],
+  plugins: [commonjs()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src/"),
-      "@tests": path.resolve(__dirname, "__tests__/"),
     },
   },
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      fileName: 'dbml-parse',
+      fileName: 'dbml-core',
       formats: ['cjs', 'es'],
-    },
-    rollupOptions: {
-      // Browser-specific libraries that are only here for typings and testings
-      // should not be bundled
-      external: ['monaco-editor-core'],
     },
   },
   test: {
