@@ -306,6 +306,6 @@ describe('[example - record] PK validation across multiple records blocks', () =
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(2);
-    expect(errors.every(e => e.diagnostic.includes('Duplicate primary key'))).toBe(true);
+    expect(errors.every((e) => e.diagnostic.includes('Duplicate primary key'))).toBe(true);
   });
 });

@@ -29,7 +29,7 @@ describe('FK with empty target table', () => {
 
     // Should have FK violations since users table is empty but follows references it
     expect(errors.length).toBe(2); // Two FK violations: following_user_id and followed_user_id
-    expect(errors.every(e => e.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
-    expect(errors.every(e => e.diagnostic.includes('does not exist in'))).toBe(true);
+    expect(errors.every((e) => e.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
+    expect(errors.every((e) => e.diagnostic.includes('does not exist in'))).toBe(true);
   });
 });
