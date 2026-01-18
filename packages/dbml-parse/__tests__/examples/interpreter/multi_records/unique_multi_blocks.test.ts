@@ -213,8 +213,8 @@ describe('[example - record] Unique validation across multiple records blocks', 
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(2);
-    expect(errors.some(e => e.diagnostic.includes('email'))).toBe(true);
-    expect(errors.some(e => e.diagnostic.includes('username'))).toBe(true);
+    expect(errors.some((e) => e.diagnostic.includes('email'))).toBe(true);
+    expect(errors.some((e) => e.diagnostic.includes('username'))).toBe(true);
   });
 
   test('should validate unique across nested and top-level records', () => {
