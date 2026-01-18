@@ -1,0 +1,3 @@
+TablePartial T {
+  col type [ref: > col]
+}
