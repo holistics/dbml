@@ -993,6 +993,113 @@ describe('[example] binder', () => {
       expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
       expect(schemaSymbol.symbolTable.get('TablePartial:timestamps')).toBeInstanceOf(TablePartialSymbol);
     });
+
+    test('should detect duplicate TablePartial injection', () => {
+      const source = `
+        TablePartial p1 {}
+        Table t1 {
+          id int
+          ~p1
+          ~p2
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBeGreaterThanOrEqual(1);
+      expect(errors[0].diagnostic).toBe("TablePartial 'p2' does not exist in Schema 'public'");
+    });
+
+    test('should detect duplicate TablePartial injection same partial', () => {
+      const source = `
+        TablePartial p1 {}
+        Table t1 {
+          id int
+          ~p1
+          ~p1
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(2);
+      expect(errors[0].diagnostic).toBe("Duplicate TablePartial injection 'p1'");
+      expect(errors[1].diagnostic).toBe("Duplicate TablePartial injection 'p1'");
+    });
+
+    test('should detect nonexisting inline ref column in table partial', () => {
+      const source = `
+        TablePartial T1 {
+          col1 type [ref: > un_col1]
+          col2 type [ref: > T1.un_col2]
+          col3 type [ref: > un_T.un_col3]
+        }
+
+        Table T1 {
+          col type [ref: > un_col]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(4);
+
+      const errorDiagnostics = errors.map(e => e.diagnostic);
+      expect(errorDiagnostics).toContain("Column 'un_col1' does not exist in TablePartial 'T1'");
+      expect(errorDiagnostics).toContain("Column 'un_col2' does not exist in Table 'T1'");
+      expect(errorDiagnostics).toContain("Table 'un_T' does not exist in Schema 'public'");
+      expect(errorDiagnostics).toContain("Column 'un_col' does not exist in Table 'T1'");
+    });
+
+    test('should allow self-referential ref in table partial', () => {
+      const source = `
+        TablePartial T {
+          col type [ref: > col]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      // Self-referential refs in table partials are allowed
+      expect(errors.length).toBe(0);
+    });
+
+    test('should allow circular ref caused by table partial injection', () => {
+      const source = `
+        TablePartial T {
+          col1 type [ref: > T.col1]
+          col3 type [ref: > T.col2]
+        }
+
+        Table T {
+          ~T
+          col2 type [ref: > col3]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      // Circular refs via table partials are allowed
+      expect(errors.length).toBe(0);
+    });
+
+    test('should bind refs in table partial columns when injected', () => {
+      const source = `
+        TablePartial common {
+          user_id int [ref: > users.id]
+        }
+
+        Table users {
+          id int [pk]
+        }
+
+        Table posts {
+          id int [pk]
+          ~common
+        }
+      `;
+      const result = analyze(source);
+      expect(result.getErrors()).toHaveLength(0);
+
+      const ast = result.getValue();
+      const schemaSymbol = ast.symbol as SchemaSymbol;
+      const usersSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
+      const idColumn = usersSymbol.symbolTable.get('Column:id') as ColumnSymbol;
+
+      // users.id should be referenced from the partial's inline ref
+      expect(idColumn.references.length).toBe(1);
+      expect(idColumn.references[0].referee).toBe(idColumn);
+    });
   });
 
   describe('TableGroup', () => {
