@@ -228,7 +228,7 @@ export default class TableValidator implements ElementValidator {
             new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection ${injectedTablePartialName}`, symbol!.declaration!),
           ];
         }
-        symbolTable.set(injectedTablePartialName, partialInjectionSymbol);
+        symbolTable.set(partialInjectionSymbolId, partialInjectionSymbol);
       }
       if (field.args.length) {
         errors.push(
