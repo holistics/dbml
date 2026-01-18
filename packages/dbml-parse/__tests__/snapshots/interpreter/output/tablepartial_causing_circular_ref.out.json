@@ -11,7 +11,8 @@
           "type": {
             "schemaName": null,
             "type_name": "type",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -161,7 +162,8 @@
           "type": {
             "schemaName": null,
             "type_name": "type",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -207,7 +209,8 @@
           "type": {
             "schemaName": null,
             "type_name": "type",
-            "args": null
+            "args": null,
+            "isEnum": false
           },
           "token": {
             "start": {
@@ -264,5 +267,6 @@
       "indexes": [],
       "checks": []
     }
-  ]
+  ],
+  "records": []
 }
