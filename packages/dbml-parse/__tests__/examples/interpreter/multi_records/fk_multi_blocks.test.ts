@@ -282,7 +282,7 @@ describe('[example - record] FK validation across multiple records blocks', () =
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBeGreaterThan(0);
-    expect(errors.some(e => e.diagnostic.includes('Foreign key not found'))).toBe(true);
+    expect(errors.some((e) => e.diagnostic.includes('Foreign key not found'))).toBe(true);
   });
 
   test('should validate FK across nested and top-level records', () => {

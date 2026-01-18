@@ -66,7 +66,7 @@ describe('[example - record] composite unique constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Duplicate composite unique constraint value for (user_id, profile_type)");
+    expect(errors[0].diagnostic).toBe('Duplicate composite unique constraint value for (user_id, profile_type)');
   });
 
   test('should allow NULL values in composite unique (NULLs dont conflict)', () => {
@@ -132,7 +132,7 @@ describe('[example - record] composite unique constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Duplicate composite unique constraint value for (user_id, profile_type)");
+    expect(errors[0].diagnostic).toBe('Duplicate composite unique constraint value for (user_id, profile_type)');
   });
 
   test('should allow same value in one unique column when other differs', () => {
