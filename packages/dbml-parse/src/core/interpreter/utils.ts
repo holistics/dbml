@@ -221,9 +221,9 @@ export function processColumnType (typeNode: SyntaxNode, env?: InterpreterDataba
     typeSuffix = `(${typeArgs})`;
 
     // Parse numeric type parameters (precision, scale)
-    if (argElements.length === 2 &&
-        isExpressionASignedNumberExpression(argElements[0]) &&
-        isExpressionASignedNumberExpression(argElements[1])) {
+    if (argElements.length === 2
+      && isExpressionASignedNumberExpression(argElements[0])
+      && isExpressionASignedNumberExpression(argElements[1])) {
       try {
         const precision = parseNumber(argElements[0] as any);
         const scale = parseNumber(argElements[1] as any);
@@ -233,9 +233,7 @@ export function processColumnType (typeNode: SyntaxNode, env?: InterpreterDataba
       } catch {
         // If parsing fails, just skip setting numericParams
       }
-    }
-    // Parse length parameter
-    else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
+    } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
       try {
         const length = parseNumber(argElements[0] as any);
         if (!isNaN(length)) {
