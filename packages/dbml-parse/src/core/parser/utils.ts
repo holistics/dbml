@@ -398,6 +398,6 @@ export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode)
   return new Some(name);
 }
 
-export function getElementName (element: ElementDeclarationNode): Option<string> {
+export function getElementNameString (element: ElementDeclarationNode): Option<string> {
   return destructureComplexVariable(element.name).map((ss) => ss.join('.'));
 }
