@@ -9,7 +9,7 @@ import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../
 import { aggregateSettingList, isValidPartialInjection } from '../../validator/utils';
 import { SymbolKind, createColumnSymbolIndex } from '../../symbol/symbolIndex';
 import { destructureComplexVariableTuple, extractVariableFromExpression } from '../../utils';
-import { NodeSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol } from '../../symbol/symbols';
+import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '../../symbol/symbols';
 import SymbolFactory from '../../symbol/factory';
 import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
@@ -18,14 +18,11 @@ export default class TableBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private ast: ProgramNode;
-  // For keeping track of duplicate partial injection
-  private injectedTablePartials: Map<NodeSymbol, SyntaxNode>;
 
   constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
     this.declarationNode = declarationNode;
     this.ast = ast;
     this.symbolFactory = symbolFactory;
-    this.injectedTablePartials = new Map();
   }
 
   bind (): CompileError[] {
@@ -61,23 +58,7 @@ export default class TableBinder implements ElementBinder {
           ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
           { node: tablePartialBindee, kind: SymbolKind.TablePartial },
         ]);
-        const tablePartialSymbol = tablePartialBindee.referee;
-        if (errors.length || !tablePartialSymbol) return errors;
-        if (this.injectedTablePartials.has(tablePartialSymbol)) {
-          const name = extractVariableFromExpression(tablePartialBindee).unwrap_or('');
-          errors.push(new CompileError(
-            CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME,
-            `Duplicate TablePartial injection '${name}'`,
-            tablePartialBindee,
-          ));
-          errors.push(new CompileError(
-            CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME,
-            `Duplicate TablePartial injection '${name}'`,
-            this.injectedTablePartials.get(tablePartialSymbol)!,
-          ));
-          return errors;
-        }
-        this.injectedTablePartials.set(tablePartialSymbol, tablePartialBindee);
+        if (errors.length) return errors;
         tablePartialBindee.referee?.symbolTable?.forEach((value) => {
           const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee).unwrap_or(undefined);
           if (columnName === undefined) return;

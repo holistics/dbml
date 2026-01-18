@@ -1019,8 +1019,8 @@ describe('[example] binder', () => {
       `;
       const errors = analyze(source).getErrors();
       expect(errors.length).toBe(2);
-      expect(errors[0].diagnostic).toBe("Duplicate TablePartial injection 'p1'");
-      expect(errors[1].diagnostic).toBe("Duplicate TablePartial injection 'p1'");
+      expect(errors[0].diagnostic).toBe('Duplicate table partial injection p1');
+      expect(errors[1].diagnostic).toBe('Duplicate table partial injection p1');
     });
 
     test('should detect nonexisting inline ref column in table partial', () => {
@@ -1038,7 +1038,7 @@ describe('[example] binder', () => {
       const errors = analyze(source).getErrors();
       expect(errors.length).toBe(4);
 
-      const errorDiagnostics = errors.map(e => e.diagnostic);
+      const errorDiagnostics = errors.map((e) => e.diagnostic);
       expect(errorDiagnostics).toContain("Column 'un_col1' does not exist in TablePartial 'T1'");
       expect(errorDiagnostics).toContain("Column 'un_col2' does not exist in Table 'T1'");
       expect(errorDiagnostics).toContain("Table 'un_T' does not exist in Schema 'public'");
