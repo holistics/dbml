@@ -24,6 +24,8 @@ import {
   tryExtractEnum,
   extractEnumAccess,
   isNumericType,
+  isIntegerType,
+  isFloatType,
   isBooleanType,
   isStringType,
   isDateTimeType,
@@ -287,6 +289,44 @@ function extractValue (
         node,
       )];
     }
+
+    // Integer type: validate no decimal point
+    if (isIntegerType(type) && !Number.isInteger(numValue)) {
+      return [new CompileError(
+        CompileErrorCode.INVALID_RECORDS_FIELD,
+        `Invalid integer value ${numValue} for column '${column.name}': expected integer, got decimal`,
+        node,
+      )];
+    }
+
+    // Decimal/numeric type: validate precision and scale
+    if (isFloatType(type) && column.type.numericParams) {
+      const { precision, scale } = column.type.numericParams;
+      const numStr = numValue.toString();
+      const parts = numStr.split('.');
+      const integerPart = parts[0].replace(/^-/, ''); // Remove sign
+      const decimalPart = parts[1] || '';
+
+      const totalDigits = integerPart.length + decimalPart.length;
+      const decimalDigits = decimalPart.length;
+
+      if (totalDigits > precision) {
+        return [new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Numeric value ${numValue} for column '${column.name}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
+          node,
+        )];
+      }
+
+      if (decimalDigits > scale) {
+        return [new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Numeric value ${numValue} for column '${column.name}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
+          node,
+        )];
+      }
+    }
+
     return { value: numValue, type: valueType };
   }
 
@@ -326,6 +366,21 @@ function extractValue (
         node,
       )];
     }
+
+    // Validate string length
+    if (column.type.lengthParam) {
+      const { length } = column.type.lengthParam;
+      const actualLength = strValue.length;
+
+      if (actualLength > length) {
+        return [new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `String value for column '${column.name}' exceeds maximum length: expected at most ${length} characters, got ${actualLength}`,
+          node,
+        )];
+      }
+    }
+
     return { value: strValue, type: 'string' };
   }
 
