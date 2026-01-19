@@ -1,9 +1,8 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/core/interpreter/types';
-import { extractKeyValueWithDefault, formatColumns, hasNullInKey } from './helper';
+import { extractKeyValueWithDefault, formatColumns, hasNullInKey, formatFullColumnNames } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/core/interpreter/utils';
-import { fkViolationMessage } from './messages';
 
 interface TableLookup {
   table: Table;
@@ -78,19 +77,18 @@ function validateDirection (
     const key = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
     if (!validKeys.has(key)) {
       const errorNode = row.columnNodes[sourceEndpoint.fieldNames[0]] || row.node;
-      const valueMap = new Map<string, unknown>();
-      for (const col of sourceEndpoint.fieldNames) {
-        valueMap.set(col, row.values[col]?.value);
+      const isComposite = sourceEndpoint.fieldNames.length > 1;
+      const sourceColumnRef = formatFullColumnNames(source.mergedTable.schemaName, source.mergedTable.name, sourceEndpoint.fieldNames);
+      const targetColumnRef = formatFullColumnNames(target.mergedTable.schemaName, target.mergedTable.name, targetEndpoint.fieldNames);
+
+      let msg: string;
+      if (isComposite) {
+        const valueStr = sourceEndpoint.fieldNames.map((col) => JSON.stringify(row.values[col]?.value)).join(', ');
+        msg = `FK violation: ${sourceColumnRef} = (${valueStr}) does not exist in ${targetColumnRef}`;
+      } else {
+        const value = JSON.stringify(row.values[sourceEndpoint.fieldNames[0]]?.value);
+        msg = `FK violation: ${sourceColumnRef} = ${value} does not exist in ${targetColumnRef}`;
       }
-      const msg = fkViolationMessage(
-        source.mergedTable.schemaName,
-        source.mergedTable.name,
-        sourceEndpoint.fieldNames,
-        valueMap,
-        target.mergedTable.schemaName,
-        target.mergedTable.name,
-        targetEndpoint.fieldNames,
-      );
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         msg,
