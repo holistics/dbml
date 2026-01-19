@@ -7,8 +7,8 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import Analyzer from '@/core/analyzer/analyzer';
 import Interpreter from '@/core/interpreter/interpreter';
-import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider } from '@/services/index';
-import { ast, errors, tokens, rawDb, publicSymbolTable } from './queries/parse';
+import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
+import { ast, errors, warnings, tokens, rawDb, publicSymbolTable } from './queries/parse';
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
@@ -93,6 +93,7 @@ export default class Compiler {
     _: this.query(this.interpret),
     ast: this.query(ast),
     errors: this.query(errors),
+    warnings: this.query(warnings),
     tokens: this.query(tokens),
     rawDb: this.query(rawDb),
     publicSymbolTable: this.query(publicSymbolTable),
@@ -116,6 +117,7 @@ export default class Compiler {
       definitionProvider: new DBMLDefinitionProvider(this),
       referenceProvider: new DBMLReferencesProvider(this),
       autocompletionProvider: new DBMLCompletionItemProvider(this),
+      diagnosticsProvider: new DBMLDiagnosticsProvider(this),
     };
   }
 }
