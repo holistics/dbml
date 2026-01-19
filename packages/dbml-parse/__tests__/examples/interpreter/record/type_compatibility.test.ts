@@ -147,9 +147,11 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toBe("Invalid boolean value for column 'active'");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].diagnostic).toBe("Invalid boolean value for column 'active'");
     });
 
     test('- should reject numeric values other than 0/1 for boolean column', () => {
@@ -164,9 +166,11 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toBe("Invalid boolean value for column 'active'");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].diagnostic).toBe("Invalid boolean value for column 'active'");
     });
   });
 
@@ -183,9 +187,11 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toBe("Invalid numeric value for column 'id'");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].diagnostic).toBe("Invalid numeric value for column 'id'");
     });
 
     test('- should accept valid decimal values', () => {
@@ -402,9 +408,11 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'name' without default and increment");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'name' without default and increment");
     });
 
     test('- should allow NULL for NOT NULL column with default', () => {
@@ -468,10 +476,12 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
       // NULL should be valid syntax
-      expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'name' without default and increment");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'name' without default and increment");
     });
   });
 
@@ -540,6 +550,7 @@ describe('[example - record] type compatibility validation', () => {
       const result = interpret(source);
       const errors = result.getErrors();
 
+      // This is a BINDING_ERROR, not a validation error, so it stays as an error
       expect(errors.length).toBe(1);
       expect(errors[0].diagnostic).toBe("Enum field 'invalid' does not exist in Enum 'status'");
     });
@@ -560,9 +571,11 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toBe("Invalid enum value for column 'status'");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].diagnostic).toBe("Invalid enum value for column 'status'");
     });
   });
 
@@ -581,11 +594,13 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(3);
-      expect(errors[0].diagnostic).toBe("Invalid boolean value for column 'active'");
-      expect(errors[1].diagnostic).toBe("Invalid boolean value for column 'active'");
-      expect(errors[2].diagnostic).toBe("Invalid boolean value for column 'active'");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(3);
+      expect(warnings[0].diagnostic).toBe("Invalid boolean value for column 'active'");
+      expect(warnings[1].diagnostic).toBe("Invalid boolean value for column 'active'");
+      expect(warnings[2].diagnostic).toBe("Invalid boolean value for column 'active'");
     });
 
     test('- should reject invalid numeric values', () => {
@@ -602,11 +617,13 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(3);
-      expect(errors[0].diagnostic).toBe("Invalid numeric value for column 'id'");
-      expect(errors[1].diagnostic).toBe("Invalid numeric value for column 'price'");
-      expect(errors[2].diagnostic).toBe("Invalid numeric value for column 'price'");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(3);
+      expect(warnings[0].diagnostic).toBe("Invalid numeric value for column 'id'");
+      expect(warnings[1].diagnostic).toBe("Invalid numeric value for column 'price'");
+      expect(warnings[2].diagnostic).toBe("Invalid numeric value for column 'price'");
     });
 
     test('- should reject invalid string values', () => {
@@ -622,10 +639,12 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(2);
-      expect(errors[0].diagnostic).toBe("Invalid string value for column 'name'");
-      expect(errors[1].diagnostic).toBe("Invalid string value for column 'name'");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(2);
+      expect(warnings[0].diagnostic).toBe("Invalid string value for column 'name'");
+      expect(warnings[1].diagnostic).toBe("Invalid string value for column 'name'");
     });
 
     test('- should reject invalid datetime values', () => {
@@ -641,10 +660,12 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(2);
-      expect(errors[0].diagnostic).toContain("Invalid datetime value for column 'created_at'");
-      expect(errors[1].diagnostic).toContain("Invalid datetime value for column 'created_at'");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(2);
+      expect(warnings[0].diagnostic).toContain("Invalid datetime value for column 'created_at'");
+      expect(warnings[1].diagnostic).toContain("Invalid datetime value for column 'created_at'");
     });
   });
 

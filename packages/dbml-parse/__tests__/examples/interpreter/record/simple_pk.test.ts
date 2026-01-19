@@ -15,9 +15,9 @@ describe('[example - record] simple primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);
@@ -50,10 +50,10 @@ describe('[example - record] simple primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate PK: users.id = 1');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate PK: users.id = 1');
   });
 
   test('should reject NULL values in primary key column', () => {
@@ -67,10 +67,10 @@ describe('[example - record] simple primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('NULL in PK: users.id cannot be NULL');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('NULL in PK: users.id cannot be NULL');
   });
 
   test('should detect duplicate pk across multiple records blocks', () => {
@@ -87,10 +87,10 @@ describe('[example - record] simple primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate PK: users.id = 1');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate PK: users.id = 1');
   });
 
   test('should report error when pk column is missing from record', () => {
@@ -105,10 +105,10 @@ describe('[example - record] simple primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('PK: Column users.id is missing from record and has no default value');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('PK: Column users.id is missing from record and has no default value');
   });
 
   test('should accept string primary keys', () => {
@@ -124,9 +124,9 @@ describe('[example - record] simple primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values[0][0]).toEqual({ type: 'string', value: 'US' });
@@ -146,10 +146,10 @@ describe('[example - record] simple primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate PK: countries.code = "US"');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate PK: countries.code = "US"');
   });
 
   test('should accept primary key alias syntax', () => {
@@ -164,9 +164,9 @@ describe('[example - record] simple primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should handle zero as valid pk value', () => {
@@ -181,9 +181,9 @@ describe('[example - record] simple primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 0 });
@@ -202,9 +202,9 @@ describe('[example - record] simple primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: -1 });
@@ -224,8 +224,8 @@ describe('[example - record] simple primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 });

@@ -43,16 +43,6 @@ export function hasNullInKey (
   });
 }
 
-// Format column names for error messages
-// Single column: 'id'
-// Composite: (id, name)
-export function formatColumns (columnNames: string[]): string {
-  if (columnNames.length === 1) {
-    return `'${columnNames[0]}'`;
-  }
-  return `(${columnNames.join(', ')})`;
-}
-
 // Check if column is an auto-increment column (serial types or increment flag)
 export function isAutoIncrementColumn (column: Column): boolean {
   const normalizedType = normalizeTypeName(column.type.type_name);

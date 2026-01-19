@@ -32,9 +32,9 @@ describe('[example - record] composite foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(2);
@@ -83,10 +83,10 @@ describe('[example - record] composite foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('FK violation: (orders.merchant_id, orders.country) = (1, "UK") does not exist in (merchants.id, merchants.country_code)');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('FK violation: (orders.merchant_id, orders.country) = (1, "UK") does not exist in (merchants.id, merchants.country_code)');
   });
 
   test('should allow NULL in composite FK columns', () => {
@@ -117,9 +117,9 @@ describe('[example - record] composite foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[1].values.length).toBe(3);
@@ -166,11 +166,11 @@ describe('[example - record] composite foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(2);
-    expect(errors[0].diagnostic).toBe('FK violation: (products.id, products.region) = (2, "US") does not exist in (categories.id, categories.region)');
-    expect(errors[1].diagnostic).toBe('FK violation: (categories.id, categories.region) = (3, "EU") does not exist in (products.id, products.region)');
+    expect(warnings.length).toBe(2);
+    expect(warnings[0].diagnostic).toBe('FK violation: (products.id, products.region) = (2, "US") does not exist in (categories.id, categories.region)');
+    expect(warnings[1].diagnostic).toBe('FK violation: (categories.id, categories.region) = (3, "EU") does not exist in (products.id, products.region)');
   });
 
   test('should validate composite FK with schema-qualified tables', () => {
@@ -201,9 +201,9 @@ describe('[example - record] composite foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('FK violation: (public.posts.user_id, public.posts.tenant_id) = (999, 100) does not exist in (auth.users.id, auth.users.tenant_id)');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('FK violation: (public.posts.user_id, public.posts.tenant_id) = (999, 100) does not exist in (auth.users.id, auth.users.tenant_id)');
   });
 });

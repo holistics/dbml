@@ -146,3 +146,8 @@ export class CompileError extends Error {
     Object.setPrototypeOf(this, CompileError.prototype);
   }
 }
+
+// CompileWarning is just an alias for CompileError
+// Data type and constraint validation "errors" are returned as warnings
+// but use the same class structure
+export type CompileWarning = CompileError;

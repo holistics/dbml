@@ -20,9 +20,9 @@ describe('[example - record] composite primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);
@@ -63,10 +63,10 @@ describe('[example - record] composite primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
   });
 
   test('should reject NULL in any column of composite primary key', () => {
@@ -85,10 +85,10 @@ describe('[example - record] composite primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('NULL in Composite PK: (order_items.order_id, order_items.product_id) cannot be NULL');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('NULL in Composite PK: (order_items.order_id, order_items.product_id) cannot be NULL');
   });
 
   test('should detect duplicate composite pk across multiple records blocks', () => {
@@ -110,10 +110,10 @@ describe('[example - record] composite primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
   });
 
   test('should allow same value in one pk column when other differs', () => {
@@ -134,9 +134,9 @@ describe('[example - record] composite primary key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);

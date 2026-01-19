@@ -292,7 +292,7 @@ export function isValidColumnType (type: SyntaxNode): boolean {
   return variables !== undefined && variables.length > 0;
 }
 
-export function aggregateSettingList (settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }, CompileError> {
+export function aggregateSettingList (settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }> {
   const map: { [index: string]: AttributeNode[] } = {};
   const errors: CompileError[] = [];
   if (!settingList) {

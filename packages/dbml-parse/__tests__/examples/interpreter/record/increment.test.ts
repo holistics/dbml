@@ -15,9 +15,9 @@ describe('[example - record] auto-increment and serial type constraints', () => 
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);
@@ -48,9 +48,9 @@ describe('[example - record] auto-increment and serial type constraints', () => 
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(2);
@@ -68,9 +68,9 @@ describe('[example - record] auto-increment and serial type constraints', () => 
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect duplicate pk for non-null values with increment', () => {
@@ -86,10 +86,10 @@ describe('[example - record] auto-increment and serial type constraints', () => 
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate PK: users.id = 1');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate PK: users.id = 1');
   });
 
   test('should detect duplicate pk with not null + dbdefault', () => {
@@ -104,10 +104,10 @@ describe('[example - record] auto-increment and serial type constraints', () => 
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
     // Both NULLs resolve to default value 1, which is a duplicate
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate PK: users.id = null');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate PK: users.id = null');
   });
 });

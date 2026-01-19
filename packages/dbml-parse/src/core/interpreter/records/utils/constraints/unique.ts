@@ -3,7 +3,6 @@ import { InterpreterDatabase } from '@/core/interpreter/types';
 import {
   extractKeyValueWithDefault,
   hasNullInKey,
-  formatColumns,
   formatFullColumnNames,
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
@@ -41,8 +40,6 @@ export function validateUnique (
     for (const uniqueColumns of uniqueConstraints) {
       const uniqueColumnFields = uniqueColumns.map((col) => columnMap.get(col)).filter(Boolean);
 
-      const isComposite = uniqueColumns.length > 1;
-      const columnsStr = formatColumns(uniqueColumns);
       const seen = new Map<string, number>(); // key -> first row index
 
       for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {

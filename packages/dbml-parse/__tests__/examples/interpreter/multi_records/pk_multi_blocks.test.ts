@@ -23,8 +23,8 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect PK duplicate across blocks with different columns', () => {
@@ -46,10 +46,10 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Duplicate PK');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toContain('Duplicate PK');
   });
 
   test('should validate composite PK across multiple blocks', () => {
@@ -76,8 +76,8 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect composite PK duplicate across blocks', () => {
@@ -101,10 +101,10 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Duplicate Composite PK');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toContain('Duplicate Composite PK');
   });
 
   test('should handle PK validation when PK column missing from some blocks', () => {
@@ -125,11 +125,11 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
     // With merged records, missing PK column results in undefined/NULL value
-    expect(errors[0].diagnostic).toContain('NULL in PK');
+    expect(warnings[0].diagnostic).toContain('NULL in PK');
   });
 
   test('should validate PK with NULL across blocks', () => {
@@ -150,9 +150,9 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('NULL in PK');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toContain('NULL in PK');
   });
 
   test('should allow NULL for auto-increment PK across blocks', () => {
@@ -174,8 +174,8 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect duplicate non-NULL PK with increment', () => {
@@ -196,9 +196,9 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('Duplicate PK');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toContain('Duplicate PK');
   });
 
   test('should validate PK across nested and top-level records', () => {
@@ -219,8 +219,8 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect PK duplicate between nested and top-level', () => {
@@ -240,9 +240,9 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('Duplicate PK');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toContain('Duplicate PK');
   });
 
   test('should validate complex scenario with multiple blocks and mixed columns', () => {
@@ -274,8 +274,8 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect multiple PK violations across many blocks', () => {
@@ -304,8 +304,8 @@ describe('[example - record] PK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(2);
-    expect(errors.every((e) => e.diagnostic.includes('Duplicate PK'))).toBe(true);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(2);
+    expect(warnings.every((e) => e.diagnostic.includes('Duplicate PK'))).toBe(true);
   });
 });

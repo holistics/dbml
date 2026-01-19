@@ -26,9 +26,9 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(2);
@@ -71,10 +71,10 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
   });
 
   test('should allow NULL FK values (optional relationship)', () => {
@@ -99,9 +99,9 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[1].values.length).toBe(2);
@@ -140,14 +140,14 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
     // One-to-one validates both directions:
     // 1. user_profiles.user_id=3 doesn't exist in users.id
     // 2. users.id=2 (Bob) doesn't have a matching user_profiles.user_id
-    expect(errors.length).toBe(2);
-    expect(errors[0].diagnostic).toBe('FK violation: user_profiles.user_id = 3 does not exist in users.id');
-    expect(errors[1].diagnostic).toBe('FK violation: users.id = 2 does not exist in user_profiles.user_id');
+    expect(warnings.length).toBe(2);
+    expect(warnings[0].diagnostic).toBe('FK violation: user_profiles.user_id = 3 does not exist in users.id');
+    expect(warnings[1].diagnostic).toBe('FK violation: users.id = 2 does not exist in user_profiles.user_id');
   });
 
   test('should validate one-to-many FK from parent side', () => {
@@ -172,10 +172,10 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('FK violation: employees.dept_id = 999 does not exist in departments.id');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('FK violation: employees.dept_id = 999 does not exist in departments.id');
   });
 
   test('should accept valid string FK values', () => {
@@ -201,9 +201,9 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[1].values[0][1]).toEqual({ type: 'string', value: 'US' });
@@ -232,10 +232,10 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('FK violation: cities.country_code = "FR" does not exist in countries.code');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('FK violation: cities.country_code = "FR" does not exist in countries.code');
   });
 
   test('should validate FK with zero values', () => {
@@ -260,9 +260,9 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should validate FK with negative values', () => {
@@ -288,9 +288,9 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should validate FK across multiple records blocks', () => {
@@ -321,10 +321,10 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('FK violation: posts.user_id = 3 does not exist in users.id');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 3 does not exist in users.id');
   });
 
   test('should accept inline ref syntax for FK', () => {
@@ -347,9 +347,9 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should reject invalid inline ref FK value', () => {
@@ -373,10 +373,10 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
   });
 
   test('should accept self-referencing FK', () => {
@@ -395,9 +395,9 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should reject invalid self-referencing FK', () => {
@@ -415,9 +415,9 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('FK violation: employees.manager_id = 999 does not exist in employees.id');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('FK violation: employees.manager_id = 999 does not exist in employees.id');
   });
 });

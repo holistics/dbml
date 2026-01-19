@@ -1,10 +1,9 @@
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { ProgramNode, SyntaxNode } from '@/core/parser/nodes';
 import Report from '@/core/report';
-import { CompileError } from '@/core/errors';
 
 export function serialize (
-  report: Readonly<Report<ProgramNode, CompileError>>,
+  report: Readonly<Report<ProgramNode>>,
   pretty: boolean = false,
 ): string {
   return JSON.stringify(

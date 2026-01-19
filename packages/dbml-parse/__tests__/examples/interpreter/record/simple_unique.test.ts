@@ -15,9 +15,9 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);
@@ -50,10 +50,10 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate UNIQUE: users.email = "alice@example.com"');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate UNIQUE: users.email = "alice@example.com"');
   });
 
   test('should allow NULL values in unique column (NULLs dont conflict)', () => {
@@ -70,9 +70,9 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(4);
@@ -108,10 +108,10 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate UNIQUE: users.email = "alice@example.com"');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate UNIQUE: users.email = "alice@example.com"');
   });
 
   test('should validate multiple unique columns independently', () => {
@@ -127,10 +127,10 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate UNIQUE: users.username = "alice"');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate UNIQUE: users.username = "alice"');
   });
 
   test('should accept unique constraint with numeric values', () => {
@@ -147,9 +147,9 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: 1001 });
@@ -170,10 +170,10 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate UNIQUE: products.sku = 1001');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate UNIQUE: products.sku = 1001');
   });
 
   test('should accept zero as unique value', () => {
@@ -188,9 +188,9 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should handle negative numbers in unique constraint', () => {
@@ -205,9 +205,9 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: -100 });
@@ -226,9 +226,9 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should reject duplicate when column has both pk and unique', () => {
@@ -243,12 +243,12 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
     // Both pk and unique violations are reported
-    expect(errors.length).toBe(2);
-    expect(errors[0].diagnostic).toBe('Duplicate PK: items.id = 1');
-    expect(errors[1].diagnostic).toBe('Duplicate UNIQUE: items.id = 1');
+    expect(warnings.length).toBe(2);
+    expect(warnings[0].diagnostic).toBe('Duplicate PK: items.id = 1');
+    expect(warnings[1].diagnostic).toBe('Duplicate UNIQUE: items.id = 1');
   });
 
   test('should allow all null values in unique column', () => {
@@ -264,8 +264,8 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 });
