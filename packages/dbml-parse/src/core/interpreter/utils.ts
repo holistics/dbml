@@ -11,6 +11,7 @@ import {
 } from '@/core/parser/nodes';
 import {
   ColumnType, RelationCardinality, Table, TokenPosition, InterpreterDatabase,
+  Column, Ref,
 } from '@/core/interpreter/types';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
@@ -308,4 +309,95 @@ export function processColumnType (typeNode: SyntaxNode, env?: InterpreterDataba
     lengthParam,
     isEnum,
   });
+}
+
+export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): Table {
+  const fields = [...table.fields];
+  const indexes = [...table.indexes];
+  const checks = [...table.checks];
+  let headerColor = table.headerColor;
+  let note = table.note;
+
+  const tablePartials = [...env.tablePartials.values()];
+  // Prioritize later table partials
+  for (const tablePartial of [...table.partials].reverse()) {
+    const { name } = tablePartial;
+    const partial = tablePartials.find((p) => p.name === name);
+    if (!partial) continue;
+
+    // Merge fields (columns)
+    for (const c of partial.fields) {
+      if (fields.find((r) => r.name === c.name)) continue;
+      fields.push(c);
+    }
+
+    // Merge indexes
+    indexes.push(...partial.indexes);
+
+    // Merge checks
+    checks.push(...partial.checks);
+
+    // Merge settings (later partials override)
+    if (partial.headerColor !== undefined) {
+      headerColor = partial.headerColor;
+    }
+    if (partial.note !== undefined) {
+      note = partial.note;
+    }
+  }
+
+  return {
+    ...table,
+    fields,
+    indexes,
+    checks,
+    headerColor,
+    note,
+  };
+}
+
+export function extractInlineRefsFromTablePartials (table: Table, env: InterpreterDatabase): Ref[] {
+  const refs: Ref[] = [];
+  const tablePartials = [...env.tablePartials.values()];
+  const originalFieldNames = new Set(table.fields.map((f) => f.name));
+
+  // Process partials in the same order as mergeTableAndPartials
+  for (const tablePartial of [...table.partials].reverse()) {
+    const { name } = tablePartial;
+    const partial = tablePartials.find((p) => p.name === name);
+    if (!partial) continue;
+
+    // Extract inline refs from partial fields
+    for (const field of partial.fields) {
+      // Skip if this field is overridden by the original table
+      if (originalFieldNames.has(field.name)) continue;
+
+      for (const inlineRef of field.inline_refs) {
+        const multiplicities = getMultiplicities(inlineRef.relation);
+        refs.push({
+          name: null,
+          schemaName: null,
+          token: inlineRef.token,
+          endpoints: [
+            {
+              schemaName: inlineRef.schemaName,
+              tableName: inlineRef.tableName,
+              fieldNames: inlineRef.fieldNames,
+              token: inlineRef.token,
+              relation: multiplicities[1],
+            },
+            {
+              schemaName: table.schemaName,
+              tableName: table.name,
+              fieldNames: [field.name],
+              token: field.token,
+              relation: multiplicities[0],
+            },
+          ],
+        });
+      }
+    }
+  }
+
+  return refs;
 }

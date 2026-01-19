@@ -33,6 +33,7 @@ import {
 } from './utils';
 import { destructureCallExpression, extractVariableFromExpression } from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
+import { mergeTableAndPartials } from '../utils';
 
 export class RecordsInterpreter {
   private env: InterpreterDatabase;
@@ -45,10 +46,10 @@ export class RecordsInterpreter {
     const errors: CompileError[] = [];
 
     for (const element of elements) {
-      const { table, columns } = getTableAndColumnsOfRecords(element, this.env);
+      const { table, mergedColumns } = getTableAndColumnsOfRecords(element, this.env);
       for (const row of (element.body as BlockExpressionNode).body) {
         const rowNode = row as FunctionApplicationNode;
-        const { errors: rowErrors, row: rowValue, columnNodes } = extractDataFromRow(rowNode, columns);
+        const { errors: rowErrors, row: rowValue, columnNodes } = extractDataFromRow(rowNode, mergedColumns);
         errors.push(...rowErrors);
         if (!rowValue) continue;
         if (!this.env.records.has(table)) {
@@ -84,27 +85,33 @@ export class RecordsInterpreter {
   }
 }
 
-function getTableAndColumnsOfRecords (records: ElementDeclarationNode, env: InterpreterDatabase): { table: Table; columns: Column[] } {
+function getTableAndColumnsOfRecords (records: ElementDeclarationNode, env: InterpreterDatabase): { table: Table; mergedTable: Table; mergedColumns: Column[] } {
   const nameNode = records.name;
   const parent = records.parent;
   if (parent instanceof ElementDeclarationNode) {
     const table = env.tables.get(parent)!;
+    const mergedTable = mergeTableAndPartials(table, env);
     if (!nameNode) return {
       table,
-      columns: table.fields,
+      mergedTable,
+      mergedColumns: mergedTable.fields,
     };
-    const columns = (nameNode as TupleExpressionNode).elementList.map((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e).unwrap())!);
+    const mergedColumns = (nameNode as TupleExpressionNode).elementList.map((e) => mergedTable.fields.find((f) => f.name === extractVariableFromExpression(e).unwrap())!);
     return {
       table,
-      columns,
+      mergedTable,
+      mergedColumns,
     };
   }
   const fragments = destructureCallExpression(nameNode!).unwrap();
-  const table = env.tables.get(last(fragments.variables)!.referee!.declaration as ElementDeclarationNode)!;
-  const columns = fragments.args.map((e) => table.fields.find((f) => f.name === extractVariableFromExpression(e).unwrap())!);
+  const tableNode = last(fragments.variables)!.referee!.declaration as ElementDeclarationNode;
+  const table = env.tables.get(tableNode)!;
+  const mergedTable = mergeTableAndPartials(table, env);
+  const mergedColumns = fragments.args.map((e) => mergedTable.fields.find((f) => f.name === extractVariableFromExpression(e).unwrap())!);
   return {
     table,
-    columns,
+    mergedTable,
+    mergedColumns,
   };
 }
 
@@ -126,25 +133,25 @@ function extractRowValues (row: FunctionApplicationNode): SyntaxNode[] {
 
 function extractDataFromRow (
   row: FunctionApplicationNode,
-  columns: Column[],
+  mergedColumns: Column[],
 ): { errors: CompileError[]; row: Record<string, RecordValue> | null; columnNodes: Record<string, SyntaxNode> } {
   const errors: CompileError[] = [];
   const rowObj: Record<string, RecordValue> = {};
   const columnNodes: Record<string, SyntaxNode> = {};
 
   const args = extractRowValues(row);
-  if (args.length !== columns.length) {
+  if (args.length !== mergedColumns.length) {
     errors.push(new CompileError(
       CompileErrorCode.INVALID_RECORDS_FIELD,
-      `Expected ${columns.length} values but got ${args.length}`,
+      `Expected ${mergedColumns.length} values but got ${args.length}`,
       row,
     ));
     return { errors, row: null, columnNodes: {} };
   }
 
-  for (let i = 0; i < columns.length; i++) {
+  for (let i = 0; i < mergedColumns.length; i++) {
     const arg = args[i];
-    const column = columns[i];
+    const column = mergedColumns[i];
     columnNodes[column.name] = arg;
     const result = extractValue(arg, column);
     if (Array.isArray(result)) {
