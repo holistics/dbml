@@ -2,6 +2,7 @@ import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
   getElementKind,
+  destructureCallExpression,
 } from '@/core/analyzer/utils';
 import {
   extractStringFromIdentifierStream,
@@ -48,6 +49,7 @@ import {
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
+import { last } from 'lodash-es';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -157,6 +159,15 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           && isOffsetWithinElementHeader(offset, container)
         ) {
           return suggestInRecordsHeader(this.compiler, offset, container);
+        }
+
+        // Check if we're in a Records element body - suggest row snippet
+        if (
+          getElementKind(container).unwrap_or(undefined) === ElementKind.Records
+          && container.body
+          && isOffsetWithinSpan(offset, container.body)
+        ) {
+          return suggestInRecordsBody(this.compiler, offset, container);
         }
 
         if (
@@ -602,13 +613,25 @@ function suggestInSubField (
 
 function suggestTopLevelElementType (): CompletionList {
   return {
-    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records'].map((name) => ({
-      label: name,
-      insertText: name,
-      insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-      kind: CompletionItemKind.Keyword,
-      range: undefined as any,
-    })),
+    suggestions: [
+      ...['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records'].map((name) => ({
+        label: name,
+        insertText: name,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Keyword,
+        range: undefined as any,
+      })),
+      {
+        label: 'Records (snippet)',
+        insertText: 'Records ${1:table_name}($2) {\n\t$0\n}',
+        insertTextRules: CompletionItemInsertTextRule.InsertAsSnippet,
+        kind: CompletionItemKind.Snippet,
+        range: undefined as any,
+        detail: 'Insert Records with template',
+        documentation: 'Create a Records block with table name and column list placeholders',
+        sortText: '~Records', // Sort after the keyword version
+      },
+    ],
   };
 }
 
@@ -638,16 +661,52 @@ function suggestInColumn (
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const elements = ['Note', 'indexes', 'checks', 'Records'];
+  const elements = ['Note', 'indexes', 'checks'];
+  const element = compiler.container.element(offset);
+
+  // Get table columns for schema-aware Records snippet
+  let recordsSnippet = 'Records ($1) {\n\t$0\n}';
+  if (element?.symbol instanceof TableSymbol) {
+    const columns = [...element.symbol.symbolTable.entries()]
+      .map(([index]) => destructureIndex(index).unwrap_or(undefined))
+      .filter((res) => res?.kind === SymbolKind.Column)
+      .map((res) => res!.name);
+
+    if (columns.length > 0) {
+      const columnList = columns.map((col, i) => `\${${i + 1}:${col}}`).join(', ');
+      const valuePlaceholders = columns.map((_, i) => `\${${i + columns.length + 1}}`).join(', ');
+      recordsSnippet = `Records (${columnList}) {\n\t${valuePlaceholders}\n\t$0\n}`;
+    }
+  }
+
   if (!container?.callee) {
     return {
-      suggestions: elements.map((name) => ({
-        label: name,
-        insertText: name,
-        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: CompletionItemKind.Keyword,
-        range: undefined as any,
-      })),
+      suggestions: [
+        ...elements.map((name) => ({
+          label: name,
+          insertText: name,
+          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+          kind: CompletionItemKind.Keyword,
+          range: undefined as any,
+        })),
+        {
+          label: 'Records',
+          insertText: 'Records',
+          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+          kind: CompletionItemKind.Keyword,
+          range: undefined as any,
+        },
+        {
+          label: 'Records (snippet)',
+          insertText: recordsSnippet,
+          insertTextRules: CompletionItemInsertTextRule.InsertAsSnippet,
+          kind: CompletionItemKind.Snippet,
+          range: undefined as any,
+          detail: 'Insert Records with schema-aware template',
+          documentation: 'Create a Records block with column list and sample row based on table schema',
+          sortText: '~Records', // Sort after the keyword version
+        },
+      ],
     };
   }
 
@@ -655,13 +714,32 @@ function suggestInColumn (
 
   if (containerArgId === 0) {
     return {
-      suggestions: elements.map((name) => ({
-        label: name,
-        insertText: name,
-        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: CompletionItemKind.Keyword,
-        range: undefined as any,
-      })),
+      suggestions: [
+        ...elements.map((name) => ({
+          label: name,
+          insertText: name,
+          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+          kind: CompletionItemKind.Keyword,
+          range: undefined as any,
+        })),
+        {
+          label: 'Records',
+          insertText: 'Records',
+          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+          kind: CompletionItemKind.Keyword,
+          range: undefined as any,
+        },
+        {
+          label: 'Records (snippet)',
+          insertText: recordsSnippet,
+          insertTextRules: CompletionItemInsertTextRule.InsertAsSnippet,
+          kind: CompletionItemKind.Snippet,
+          range: undefined as any,
+          detail: 'Insert Records with schema-aware template',
+          documentation: 'Create a Records block with column list and sample row based on table schema',
+          sortText: '~Records', // Sort after the keyword version
+        },
+      ],
     };
   }
   if (containerArgId === 1) {
@@ -723,6 +801,78 @@ function suggestInRecordsHeader (
     SymbolKind.Schema,
     SymbolKind.Table,
   ]);
+}
+
+function suggestInRecordsBody (
+  compiler: Compiler,
+  offset: number,
+  recordsElement: ElementDeclarationNode,
+): CompletionList {
+  // Get the table reference from the Records element
+  const nameNode = recordsElement.name;
+  if (!nameNode) {
+    return noSuggestions();
+  }
+
+  // Determine columns based on Records declaration
+  let columns: string[] = [];
+  const parent = recordsElement.parent;
+
+  // For nested Records inside a table
+  if (parent instanceof ElementDeclarationNode && parent.symbol instanceof TableSymbol) {
+    if (nameNode instanceof TupleExpressionNode) {
+      // Records (col1, col2, ...)
+      columns = nameNode.elementList
+        .map((e) => extractVariableFromExpression(e).unwrap_or(''))
+        .filter((name) => name !== '');
+    } else {
+      // Records without column list - use all columns
+      columns = [...parent.symbol.symbolTable.entries()]
+        .map(([index]) => destructureIndex(index).unwrap_or(undefined))
+        .filter((res) => res?.kind === SymbolKind.Column)
+        .map((res) => res!.name);
+    }
+  } else {
+    // Top-level Records
+    if (nameNode instanceof CallExpressionNode) {
+      const fragments = destructureCallExpression(nameNode).unwrap_or({ variables: [], args: [] });
+      const tableNode = last(fragments.variables)?.referee?.declaration;
+      if (tableNode instanceof ElementDeclarationNode && tableNode.symbol instanceof TableSymbol) {
+        if (fragments.args.length > 0) {
+          // Records table(col1, col2, ...)
+          columns = fragments.args
+            .map((e) => extractVariableFromExpression(e).unwrap_or(''))
+            .filter((name) => name !== '');
+        } else {
+          // Records table() - use all columns
+          columns = [...tableNode.symbol.symbolTable.entries()]
+            .map(([index]) => destructureIndex(index).unwrap_or(undefined))
+            .filter((res) => res?.kind === SymbolKind.Column)
+            .map((res) => res!.name);
+        }
+      }
+    }
+  }
+
+  // Generate row snippet with placeholders for each column
+  if (columns.length > 0) {
+    const valuePlaceholders = columns.map((col, i) => `\${${i + 1}:${col}_value}`).join(', ');
+    return {
+      suggestions: [
+        {
+          label: 'New row',
+          insertText: `${valuePlaceholders}`,
+          insertTextRules: CompletionItemInsertTextRule.InsertAsSnippet,
+          kind: CompletionItemKind.Snippet,
+          range: undefined as any,
+          detail: 'Insert new data row',
+          documentation: `Insert a new row with ${columns.length} column${columns.length > 1 ? 's' : ''}: ${columns.join(', ')}`,
+        },
+      ],
+    };
+  }
+
+  return noSuggestions();
 }
 
 function suggestInCallExpression (
