@@ -122,20 +122,6 @@ describe('[example] records validator', () => {
     expect(errors[0].diagnostic).toBe("Table 'nonexistent' does not exist in Schema 'public'");
   });
 
-  test('should detect unknown column in records', () => {
-    const source = `
-      Table users {
-        id int
-      }
-      records users(id, unknown_column) {
-        1, "value"
-      }
-    `;
-    const errors = analyze(source).getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Column 'unknown_column' does not exist in table");
-  });
-
   test('should accept multiple records blocks for same table', () => {
     const source = `
       Table users {

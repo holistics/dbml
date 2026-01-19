@@ -93,7 +93,7 @@ describe('[example] records binder', () => {
     `;
     const errors = analyze(source).getErrors();
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in table");
+    expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'users'");
   });
 
   test('should bind multiple records for same table', () => {
@@ -297,9 +297,9 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(4);
-    expect(errors[0].message).toBe('Column \'id\' is referenced more than once in a Records');
-    expect(errors[1].message).toBe('Column \'id\' is referenced more than once in a Records');
-    expect(errors[2].message).toBe('Column \'id\' is referenced more than once in a Records');
-    expect(errors[3].message).toBe('Column \'id\' is referenced more than once in a Records');
+    expect(errors[0].message).toBe('Column \'id\' is referenced more than once in a Records for Table \'tasks\'');
+    expect(errors[1].message).toBe('Column \'id\' is referenced more than once in a Records for Table \'tasks\'');
+    expect(errors[2].message).toBe('Column \'id\' is referenced more than once in a Records for Table \'tasks\'');
+    expect(errors[3].message).toBe('Column \'id\' is referenced more than once in a Records for Table \'tasks\'');
   });
 });
