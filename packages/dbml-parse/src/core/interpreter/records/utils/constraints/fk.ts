@@ -3,6 +3,7 @@ import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/
 import { extractKeyValueWithDefault, formatColumns, hasNullInKey } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/core/interpreter/utils';
+import { fkViolationMessage } from './messages';
 
 interface TableLookup {
   table: Table;
@@ -77,9 +78,19 @@ function validateDirection (
     const key = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
     if (!validKeys.has(key)) {
       const errorNode = row.columnNodes[sourceEndpoint.fieldNames[0]] || row.node;
-      const msg = isComposite
-        ? `Foreign key not found: value for column ${columnsStr} does not exist in referenced table '${targetEndpoint.tableName}'`
-        : `Foreign key not found: value for column '${sourceEndpoint.fieldNames[0]}' does not exist in referenced table '${targetEndpoint.tableName}'`;
+      const valueMap = new Map<string, unknown>();
+      for (const col of sourceEndpoint.fieldNames) {
+        valueMap.set(col, row.values[col]?.value);
+      }
+      const msg = fkViolationMessage(
+        source.mergedTable.schemaName,
+        source.mergedTable.name,
+        sourceEndpoint.fieldNames,
+        valueMap,
+        target.mergedTable.schemaName,
+        target.mergedTable.name,
+        targetEndpoint.fieldNames,
+      );
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         msg,

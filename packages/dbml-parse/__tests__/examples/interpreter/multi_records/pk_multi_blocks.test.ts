@@ -49,7 +49,7 @@ describe('[example - record] PK validation across multiple records blocks', () =
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
     expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Duplicate primary key');
+    expect(errors[0].diagnostic).toContain('Duplicate PK');
   });
 
   test('should validate composite PK across multiple blocks', () => {
@@ -104,7 +104,7 @@ describe('[example - record] PK validation across multiple records blocks', () =
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
     expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Duplicate primary key');
+    expect(errors[0].diagnostic).toContain('Duplicate Composite PK');
   });
 
   test('should handle PK validation when PK column missing from some blocks', () => {
@@ -129,7 +129,7 @@ describe('[example - record] PK validation across multiple records blocks', () =
     expect(errors.length).toBe(1);
     expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
     // With merged records, missing PK column results in undefined/NULL value
-    expect(errors[0].diagnostic).toContain('NULL value not allowed in primary key');
+    expect(errors[0].diagnostic).toContain('NULL in PK');
   });
 
   test('should validate PK with NULL across blocks', () => {
@@ -152,7 +152,7 @@ describe('[example - record] PK validation across multiple records blocks', () =
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('NULL value not allowed in primary key');
+    expect(errors[0].diagnostic).toContain('NULL in PK');
   });
 
   test('should allow NULL for auto-increment PK across blocks', () => {
@@ -198,7 +198,7 @@ describe('[example - record] PK validation across multiple records blocks', () =
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('Duplicate primary key');
+    expect(errors[0].diagnostic).toContain('Duplicate PK');
   });
 
   test('should validate PK across nested and top-level records', () => {
@@ -242,7 +242,7 @@ describe('[example - record] PK validation across multiple records blocks', () =
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('Duplicate primary key');
+    expect(errors[0].diagnostic).toContain('Duplicate PK');
   });
 
   test('should validate complex scenario with multiple blocks and mixed columns', () => {
@@ -306,6 +306,6 @@ describe('[example - record] PK validation across multiple records blocks', () =
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(2);
-    expect(errors.every((e) => e.diagnostic.includes('Duplicate primary key'))).toBe(true);
+    expect(errors.every((e) => e.diagnostic.includes('Duplicate PK'))).toBe(true);
   });
 });
