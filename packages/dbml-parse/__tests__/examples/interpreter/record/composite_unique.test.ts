@@ -20,9 +20,9 @@ describe('[example - record] composite unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);
@@ -63,10 +63,10 @@ describe('[example - record] composite unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
   });
 
   test('should allow NULL values in composite unique (NULLs dont conflict)', () => {
@@ -87,9 +87,9 @@ describe('[example - record] composite unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(3);
@@ -129,10 +129,10 @@ describe('[example - record] composite unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
   });
 
   test('should allow same value in one unique column when other differs', () => {
@@ -153,9 +153,9 @@ describe('[example - record] composite unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(3);

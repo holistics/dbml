@@ -3,7 +3,6 @@ import { InterpreterDatabase } from '@/core/interpreter/types';
 import {
   extractKeyValueWithDefault,
   hasNullInKey,
-  formatColumns,
   isAutoIncrementColumn,
   formatFullColumnNames,
 } from './helper';
@@ -72,8 +71,6 @@ export function validatePrimaryKey (
       // Only then can we skip NULL checks and treat nulls as unique
       const allAutoIncrement = pkColumnFields.every((col) => col && isAutoIncrementColumn(col));
 
-      const isComposite = pkColumns.length > 1;
-      const columnsStr = formatColumns(pkColumns);
       const seen = new Map<string, number>(); // key -> first row index
 
       for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {

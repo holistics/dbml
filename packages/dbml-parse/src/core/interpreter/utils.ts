@@ -10,8 +10,7 @@ import {
   PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/parser/nodes';
 import {
-  ColumnType, RelationCardinality, Table, TokenPosition, InterpreterDatabase,
-  Column, Ref,
+  ColumnType, RelationCardinality, Table, TokenPosition, InterpreterDatabase, Ref,
 } from '@/core/interpreter/types';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
@@ -200,7 +199,7 @@ export function processDefaultValue (valueNode?: SyntaxNode):
   throw new Error('Unreachable');
 }
 
-export function processColumnType (typeNode: SyntaxNode, env?: InterpreterDatabase): Report<ColumnType, CompileError> {
+export function processColumnType (typeNode: SyntaxNode, env?: InterpreterDatabase): Report<ColumnType> {
   let typeSuffix: string = '';
   let typeArgs: string | null = null;
   let numericParams: { precision: number; scale: number } | undefined;
