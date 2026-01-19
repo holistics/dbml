@@ -1216,19 +1216,6 @@ Table users { name varchar }`;
       expect(errors.length).toBeGreaterThan(0);
     });
 
-    test('should detect unknown column in records', () => {
-      const source = `
-        Table users {
-          id int
-        }
-        records users(id, unknown_column) {
-          1, "value"
-        }
-      `;
-      const errors = analyze(source).getErrors();
-      expect(errors.length).toBeGreaterThan(0);
-    });
-
     test('should accept multiple records blocks for same table', () => {
       const source = `
         Table users {

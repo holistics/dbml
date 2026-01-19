@@ -15,6 +15,7 @@ import { createColumnSymbolIndex, SymbolKind } from '../../symbol/symbolIndex';
 import { ElementKind } from '../../types';
 import { isTupleOfVariables } from '../../validator/utils';
 import { NodeSymbol } from '../../symbol/symbols';
+import { getElementNameString } from '@/core/parser/utils';
 
 export default class RecordsBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -84,6 +85,8 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
+    const tableName = getElementNameString(tableBindee.referee?.declaration).unwrap_or('<invalid name>');
+
     const errors: CompileError[] = [];
     for (const columnBindee of fragments.args) {
       const columnName = extractVarNameFromPrimaryVariable(columnBindee).unwrap_or('<unnamed>');
@@ -93,7 +96,7 @@ export default class RecordsBinder implements ElementBinder {
       if (!columnSymbol) {
         errors.push(new CompileError(
           CompileErrorCode.BINDING_ERROR,
-          `Column '${columnName}' does not exist in table`,
+          `Column '${columnName}' does not exist in Table '${tableName}'`,
           columnBindee,
         ));
         continue;
@@ -105,12 +108,12 @@ export default class RecordsBinder implements ElementBinder {
       if (originalBindee) {
         errors.push(new CompileError(
           CompileErrorCode.DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
-          `Column '${columnName}' is referenced more than once in a Records`,
+          `Column '${columnName}' is referenced more than once in a Records for Table '${tableName}'`,
           originalBindee,
         ));
         errors.push(new CompileError(
           CompileErrorCode.DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
-          `Column '${columnName}' is referenced more than once in a Records`,
+          `Column '${columnName}' is referenced more than once in a Records for Table '${tableName}'`,
           columnBindee,
         ));
       }
@@ -143,6 +146,8 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
+    const tableName = getElementNameString(parent).unwrap_or('<invalid name>');
+
     const errors: CompileError[] = [];
     for (const columnBindee of nameNode.elementList) {
       const columnName = extractVarNameFromPrimaryVariable(columnBindee).unwrap_or('<unnamed>');
@@ -152,7 +157,7 @@ export default class RecordsBinder implements ElementBinder {
       if (!columnSymbol) {
         errors.push(new CompileError(
           CompileErrorCode.BINDING_ERROR,
-          `Column '${columnName}' does not exist in table`,
+          `Column '${columnName}' does not exist in Table '${tableName}'`,
           columnBindee,
         ));
         continue;
