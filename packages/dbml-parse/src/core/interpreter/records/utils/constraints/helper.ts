@@ -63,3 +63,28 @@ export function isAutoIncrementColumn (column: Column): boolean {
 export function hasNotNullWithDefault (column: Column): boolean {
   return (column.not_null || false) && !!column.dbdefault;
 }
+
+// Format full column name with schema and table
+export function formatFullColumnName (
+  schemaName: string | null,
+  tableName: string,
+  columnName: string,
+): string {
+  if (schemaName) {
+    return `${schemaName}.${tableName}.${columnName}`;
+  }
+  return `${tableName}.${columnName}`;
+}
+
+// Format full column names for single or composite constraints
+export function formatFullColumnNames (
+  schemaName: string | null,
+  tableName: string,
+  columnNames: string[],
+): string {
+  if (columnNames.length === 1) {
+    return formatFullColumnName(schemaName, tableName, columnNames[0]);
+  }
+  const formatted = columnNames.map((col) => formatFullColumnName(schemaName, tableName, col));
+  return `(${formatted.join(', ')})`;
+}
