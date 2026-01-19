@@ -109,6 +109,28 @@ export function tryExtractEnum (value: SyntaxNode): string | null {
   return extractQuotedStringToken(value).unwrap_or(null);
 }
 
+// Extract enum access with full path
+// Returns { path: ['schema', 'enum'], value: 'field' } for schema.enum.field
+// Returns { path: ['enum'], value: 'field' } for enum.field
+// Returns { path: [], value: 'field' } for "field" (string literal)
+export function extractEnumAccess (value: SyntaxNode): { path: string[]; value: string } | null {
+  // Enum field reference: schema.gender.male or gender.male
+  const fragments = destructureComplexVariable(value).unwrap_or(undefined);
+  if (fragments && fragments.length >= 2) {
+    const enumValue = last(fragments)!;
+    const enumPath = fragments.slice(0, -1);
+    return { path: enumPath, value: enumValue };
+  }
+
+  // Quoted string: 'male'
+  const stringValue = extractQuotedStringToken(value).unwrap_or(null);
+  if (stringValue !== null) {
+    return { path: [], value: stringValue };
+  }
+
+  return null;
+}
+
 // Try to extract a string value from a syntax node or primitive
 // Example: "abc", 'abc'
 export function tryExtractString (value: SyntaxNode): string | null {
