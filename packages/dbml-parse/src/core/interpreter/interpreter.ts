@@ -12,6 +12,7 @@ import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
+import { mergeTableAndPartials } from '@/core/interpreter/utils';
 
 function convertEnvToDb (env: InterpreterDatabase): Database {
   // Convert records Map to array of TableRecord

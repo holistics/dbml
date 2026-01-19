@@ -2,9 +2,11 @@ import { CompileError, CompileErrorCode } from '@/core/errors';
 import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/core/interpreter/types';
 import { extractKeyValueWithDefault, formatColumns, hasNullInKey } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/core/interpreter/utils';
 
 interface TableLookup {
   table: Table;
+  mergedTable: Table;
   rows: TableRecordRow[];
 }
 
@@ -16,15 +18,17 @@ function makeTableKey (schema: string | null | undefined, table: string): string
 }
 
 function createRecordMapFromKey (
-  allTables: Map<any, Table>,
+  tables: Map<unknown, Table>,
   records: Map<Table, TableRecordRow[]>,
+  env: InterpreterDatabase,
 ): LookupMap {
   const lookup = new Map<string, TableLookup>();
 
-  for (const table of allTables.values()) {
+  for (const table of tables.values()) {
     const key = makeTableKey(table.schemaName, table.name);
     const rows = records.get(table) || [];
-    lookup.set(key, { table, rows });
+    const mergedTable = mergeTableAndPartials(table, env);
+    lookup.set(key, { table, mergedTable, rows });
   }
 
   return lookup;
@@ -53,18 +57,12 @@ function validateDirection (
     return errors;
   }
 
-  const sourceColumns = new Set<string>();
-  for (const row of source.rows) {
-    for (const colName of Object.keys(row.values)) {
-      sourceColumns.add(colName);
-    }
-  }
-
-  if (sourceEndpoint.fieldNames.some((col) => !sourceColumns.has(col))) {
+  const sourceTableColumns = new Set(source.mergedTable.fields.map((f) => f.name));
+  if (sourceEndpoint.fieldNames.some((col) => !sourceTableColumns.has(col))) {
     return errors;
   }
 
-  const targetTableColumns = new Set(target.table.fields.map((f) => f.name));
+  const targetTableColumns = new Set(target.mergedTable.fields.map((f) => f.name));
   if (targetEndpoint.fieldNames.some((col) => !targetTableColumns.has(col))) {
     return errors;
   }
@@ -79,7 +77,6 @@ function validateDirection (
     const key = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
     if (!validKeys.has(key)) {
       const errorNode = row.columnNodes[sourceEndpoint.fieldNames[0]] || row.node;
-      const targetColStr = formatColumns(targetEndpoint.fieldNames);
       const msg = isComposite
         ? `Foreign key not found: value for column ${columnsStr} does not exist in referenced table '${targetEndpoint.tableName}'`
         : `Foreign key not found: value for column '${sourceEndpoint.fieldNames[0]}' does not exist in referenced table '${targetEndpoint.tableName}'`;
@@ -174,12 +171,22 @@ function validateRef (ref: Ref, lookup: LookupMap): CompileError[] {
 export function validateForeignKeys (
   env: InterpreterDatabase,
 ): CompileError[] {
-  const lookup = createRecordMapFromKey(env.tables, env.records);
+  const lookup = createRecordMapFromKey(env.tables, env.records, env);
   const refs = Array.from(env.ref.values());
   const errors: CompileError[] = [];
 
   for (const ref of refs) {
     errors.push(...validateRef(ref, lookup));
+  }
+
+  // Also validate inline refs from table partials
+  for (const mergedTableData of lookup.values()) {
+    const { table } = mergedTableData;
+    const partialRefs = extractInlineRefsFromTablePartials(table, env);
+
+    for (const ref of partialRefs) {
+      errors.push(...validateRef(ref, lookup));
+    }
   }
 
   return errors;

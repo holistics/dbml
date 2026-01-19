@@ -5,6 +5,7 @@ import {
   hasNullInKey,
   formatColumns,
 } from './helper';
+import { mergeTableAndPartials } from '@/core/interpreter/utils';
 
 export function validateUnique (
   env: InterpreterDatabase,
@@ -12,15 +13,16 @@ export function validateUnique (
   const errors: CompileError[] = [];
 
   for (const [table, rows] of env.records) {
+    const mergedTable = mergeTableAndPartials(table, env);
     if (rows.length === 0) continue;
 
     const uniqueConstraints: string[][] = [];
-    for (const field of table.fields) {
+    for (const field of mergedTable.fields) {
       if (field.unique) {
         uniqueConstraints.push([field.name]);
       }
     }
-    for (const index of table.indexes) {
+    for (const index of mergedTable.indexes) {
       if (index.unique) {
         uniqueConstraints.push(index.columns.map((c) => c.value));
       }
@@ -33,7 +35,7 @@ export function validateUnique (
         columnsSet.add(colName);
       }
     }
-    const columnMap = new Map(table.fields.map((c) => [c.name, c]));
+    const columnMap = new Map(mergedTable.fields.map((c) => [c.name, c]));
 
     for (const uniqueColumns of uniqueConstraints) {
       const uniqueColumnFields = uniqueColumns.map((col) => columnMap.get(col)).filter(Boolean);
