@@ -367,15 +367,16 @@ function extractValue (
       )];
     }
 
-    // Validate string length
+    // Validate string length (using UTF-8 byte length like SQL engines)
     if (column.type.lengthParam) {
       const { length } = column.type.lengthParam;
-      const actualLength = strValue.length;
+      // Calculate byte length in UTF-8 encoding (matching SQL behavior)
+      const actualByteLength = new TextEncoder().encode(strValue).length;
 
-      if (actualLength > length) {
+      if (actualByteLength > length) {
         return [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
-          `String value for column '${column.name}' exceeds maximum length: expected at most ${length} characters, got ${actualLength}`,
+          `String value for column '${column.name}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
           node,
         )];
       }
