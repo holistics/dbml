@@ -74,7 +74,7 @@ describe('[example - record] simple foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("FK violation: posts.user_id = 999 does not exist in users.id");
+    expect(errors[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
   });
 
   test('should allow NULL FK values (optional relationship)', () => {
@@ -146,8 +146,8 @@ describe('[example - record] simple foreign key constraints', () => {
     // 1. user_profiles.user_id=3 doesn't exist in users.id
     // 2. users.id=2 (Bob) doesn't have a matching user_profiles.user_id
     expect(errors.length).toBe(2);
-    expect(errors[0].diagnostic).toBe("FK violation: user_profiles.user_id = 3 does not exist in users.id");
-    expect(errors[1].diagnostic).toBe("FK violation: users.id = 2 does not exist in user_profiles.user_id");
+    expect(errors[0].diagnostic).toBe('FK violation: user_profiles.user_id = 3 does not exist in users.id');
+    expect(errors[1].diagnostic).toBe('FK violation: users.id = 2 does not exist in user_profiles.user_id');
   });
 
   test('should validate one-to-many FK from parent side', () => {
@@ -175,7 +175,7 @@ describe('[example - record] simple foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("FK violation: employees.dept_id = 999 does not exist in departments.id");
+    expect(errors[0].diagnostic).toBe('FK violation: employees.dept_id = 999 does not exist in departments.id');
   });
 
   test('should accept valid string FK values', () => {
@@ -324,7 +324,7 @@ describe('[example - record] simple foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("FK violation: posts.user_id = 3 does not exist in users.id");
+    expect(errors[0].diagnostic).toBe('FK violation: posts.user_id = 3 does not exist in users.id');
   });
 
   test('should accept inline ref syntax for FK', () => {
@@ -376,7 +376,7 @@ describe('[example - record] simple foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("FK violation: posts.user_id = 999 does not exist in users.id");
+    expect(errors[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
   });
 
   test('should accept self-referencing FK', () => {
@@ -418,6 +418,6 @@ describe('[example - record] simple foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("FK violation: employees.manager_id = 999 does not exist in employees.id");
+    expect(errors[0].diagnostic).toBe('FK violation: employees.manager_id = 999 does not exist in employees.id');
   });
 });
