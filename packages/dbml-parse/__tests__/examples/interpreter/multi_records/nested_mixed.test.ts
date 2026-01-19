@@ -18,8 +18,8 @@ describe('[example - record] nested and top-level records mixed', () => {
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);
@@ -42,8 +42,8 @@ describe('[example - record] nested and top-level records mixed', () => {
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);
@@ -69,8 +69,8 @@ describe('[example - record] nested and top-level records mixed', () => {
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     // All records for the same table should be merged into one TableRecord
@@ -117,8 +117,8 @@ describe('[example - record] nested and top-level records mixed', () => {
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);
@@ -143,8 +143,8 @@ describe('[example - record] nested and top-level records mixed', () => {
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     // All records for the same table are merged into one
@@ -187,8 +187,8 @@ describe('[example - record] nested and top-level records mixed', () => {
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
     // All records for orders table merged into one
@@ -222,10 +222,10 @@ describe('[example - record] nested and top-level records mixed', () => {
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Duplicate PK');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toContain('Duplicate PK');
   });
 
   test('should validate unique across nested and top-level records', () => {
@@ -246,9 +246,9 @@ describe('[example - record] nested and top-level records mixed', () => {
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Duplicate UNIQUE');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toContain('Duplicate UNIQUE');
   });
 });

@@ -31,9 +31,9 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect FK violation from injected table partial', () => {
@@ -63,11 +63,11 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
   });
 
   test('should validate FK when partial injected into multiple tables', () => {
@@ -109,9 +109,9 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect FK violation in one table when partial injected into multiple tables', () => {
@@ -151,11 +151,11 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toBe('FK violation: comments.created_by = 999 does not exist in users.id');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toBe('FK violation: comments.created_by = 999 does not exist in users.id');
   });
 
   test('should allow NULL FK values from injected table partial', () => {
@@ -185,9 +185,9 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should validate FK with multiple partials injected', () => {
@@ -230,9 +230,9 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect FK violation with multiple partials injected', () => {
@@ -277,13 +277,13 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings.length).toBe(2);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
     // Verify both errors are FK violations
-    const errorMessages = errors.map((e) => e.diagnostic);
+    const errorMessages = warnings.map((e) => e.diagnostic);
     expect(errorMessages.every((msg) => msg.startsWith('FK violation'))).toBe(true);
   });
 
@@ -307,9 +307,9 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect self-referencing FK violation from injected table partial', () => {
@@ -330,10 +330,10 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toBe('FK violation: nodes.parent_id = 999 does not exist in nodes.id');
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toBe('FK violation: nodes.parent_id = 999 does not exist in nodes.id');
   });
 });

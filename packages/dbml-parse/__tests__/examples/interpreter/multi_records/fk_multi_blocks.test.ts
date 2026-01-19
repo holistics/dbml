@@ -34,8 +34,8 @@ describe('[example - record] FK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect FK violation when referenced value not in any records block', () => {
@@ -65,10 +65,10 @@ describe('[example - record] FK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('FK violation');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toContain('FK violation');
   });
 
   test('should validate composite FK across multiple records blocks', () => {
@@ -107,8 +107,8 @@ describe('[example - record] FK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect composite FK violation across blocks', () => {
@@ -144,10 +144,10 @@ describe('[example - record] FK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('FK violation');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toContain('FK violation');
   });
 
   test('should handle FK when referenced column appears in some but not all blocks', () => {
@@ -187,8 +187,8 @@ describe('[example - record] FK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should validate FK with NULL values across blocks', () => {
@@ -219,8 +219,8 @@ describe('[example - record] FK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should validate bidirectional FK (1-1) across multiple blocks', () => {
@@ -252,8 +252,8 @@ describe('[example - record] FK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect bidirectional FK violation', () => {
@@ -280,9 +280,9 @@ describe('[example - record] FK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors.some((e) => e.diagnostic.includes('FK violation'))).toBe(true);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBeGreaterThan(0);
+    expect(warnings.some((e) => e.diagnostic.includes('FK violation'))).toBe(true);
   });
 
   test('should validate FK across nested and top-level records', () => {
@@ -315,7 +315,7 @@ describe('[example - record] FK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 });

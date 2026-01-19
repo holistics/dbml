@@ -37,10 +37,12 @@ describe('[example - record] Numeric type validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("Invalid integer value 10.5 for column 'quantity': expected integer, got decimal");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("Invalid integer value 10.5 for column 'quantity': expected integer, got decimal");
     });
 
     test('should reject multiple decimal values for integer columns', () => {
@@ -58,12 +60,14 @@ describe('[example - record] Numeric type validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(2);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("Invalid integer value 10.5 for column 'quantity': expected integer, got decimal");
-      expect(errors[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[1].diagnostic).toBe("Invalid integer value 30.7 for column 'stock': expected integer, got decimal");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(2);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("Invalid integer value 10.5 for column 'quantity': expected integer, got decimal");
+      expect(warnings[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[1].diagnostic).toBe("Invalid integer value 30.7 for column 'stock': expected integer, got decimal");
     });
 
     test('should accept negative integers', () => {
@@ -119,10 +123,12 @@ describe('[example - record] Numeric type validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("Numeric value 12345.67 for column 'price' exceeds precision: expected at most 5 total digits, got 7");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("Numeric value 12345.67 for column 'price' exceeds precision: expected at most 5 total digits, got 7");
     });
 
     test('should reject decimal value exceeding scale', () => {
@@ -138,10 +144,12 @@ describe('[example - record] Numeric type validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("Numeric value 99.999 for column 'price' exceeds scale: expected at most 2 decimal digits, got 3");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("Numeric value 99.999 for column 'price' exceeds scale: expected at most 2 decimal digits, got 3");
     });
 
     test('should accept decimal value with fewer decimal places than scale', () => {
@@ -192,10 +200,12 @@ describe('[example - record] Numeric type validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("Numeric value -12345.67 for column 'amount' exceeds precision: expected at most 5 total digits, got 7");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("Numeric value -12345.67 for column 'amount' exceeds precision: expected at most 5 total digits, got 7");
     });
 
     test('should validate multiple decimal columns', () => {
@@ -213,12 +223,14 @@ describe('[example - record] Numeric type validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(2);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("Numeric value 12345.67 for column 'price' exceeds precision: expected at most 5 total digits, got 7");
-      expect(errors[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[1].diagnostic).toBe("Numeric value 10.123 for column 'tax_rate' exceeds scale: expected at most 2 decimal digits, got 3");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(2);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("Numeric value 12345.67 for column 'price' exceeds precision: expected at most 5 total digits, got 7");
+      expect(warnings[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[1].diagnostic).toBe("Numeric value 10.123 for column 'tax_rate' exceeds scale: expected at most 2 decimal digits, got 3");
     });
 
     test('should allow decimal/numeric types without precision parameters', () => {
@@ -312,12 +324,14 @@ describe('[example - record] Numeric type validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(2);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("Invalid integer value 0.2 for column 'count': expected integer, got decimal");
-      expect(errors[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[1].diagnostic).toBe("Invalid integer value 0.35 for column 'count': expected integer, got decimal");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(2);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("Invalid integer value 0.2 for column 'count': expected integer, got decimal");
+      expect(warnings[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[1].diagnostic).toBe("Invalid integer value 0.35 for column 'count': expected integer, got decimal");
     });
 
     test('should accept scientific notation for decimal/numeric types', () => {
@@ -351,10 +365,12 @@ describe('[example - record] Numeric type validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("Numeric value 1000000 for column 'value' exceeds precision: expected at most 5 total digits, got 7");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("Numeric value 1000000 for column 'value' exceeds precision: expected at most 5 total digits, got 7");
     });
 
     test('should accept scientific notation for float types', () => {
@@ -394,10 +410,12 @@ describe('[example - record] Numeric type validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("Invalid integer value 20.5 for column 'quantity': expected integer, got decimal");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("Invalid integer value 20.5 for column 'quantity': expected integer, got decimal");
     });
   });
 });

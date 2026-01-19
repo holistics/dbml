@@ -26,22 +26,22 @@ import {
 } from '@/core/parser/nodes';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import Report from '@/core/report';
-import { CompileError, Compiler, SyntaxToken } from '@/index';
+import { Compiler, SyntaxToken } from '@/index';
 import { Database } from '@/core/interpreter/types';
 
-export function lex (source: string): Report<SyntaxToken[], CompileError> {
+export function lex (source: string): Report<SyntaxToken[]> {
   return new Lexer(source).lex();
 }
 
-export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }, CompileError> {
+export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
   return new Lexer(source).lex().chain((tokens) => new Parser(tokens, new SyntaxNodeIdGenerator()).parse());
 }
 
-export function analyze (source: string): Report<ProgramNode, CompileError> {
+export function analyze (source: string): Report<ProgramNode> {
   return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
 }
 
-export function interpret (source: string): Report<Database | undefined, CompileError> {
+export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(source);
   return compiler.parse._().map(({ rawDb }) => rawDb);

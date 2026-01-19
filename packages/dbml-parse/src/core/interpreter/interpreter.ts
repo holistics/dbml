@@ -1,5 +1,4 @@
 import { ProgramNode } from '@/core/parser/nodes';
-import { CompileError } from '@/core/errors';
 import { Database, InterpreterDatabase, TableRecord } from '@/core/interpreter/types';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
@@ -12,7 +11,6 @@ import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
-import { mergeTableAndPartials } from '@/core/interpreter/utils';
 
 function convertEnvToDb (env: InterpreterDatabase): Database {
   // Convert records Map to array of TableRecord
@@ -85,7 +83,7 @@ export default class Interpreter {
     };
   }
 
-  interpret (): Report<Database, CompileError> {
+  interpret (): Report<Database> {
     // First pass: interpret all non-records elements
     const errors = this.ast.body.flatMap((element) => {
       switch (getElementKind(element).unwrap_or(undefined)) {
@@ -114,9 +112,9 @@ export default class Interpreter {
 
     // Second pass: interpret all records elements grouped by table
     // Now that all tables, enums, etc. are interpreted, we can validate records properly
-    const recordsErrors = new RecordsInterpreter(this.env).interpret(this.env.recordsElements);
-    errors.push(...recordsErrors);
+    const recordsResult = new RecordsInterpreter(this.env).interpret(this.env.recordsElements);
+    errors.push(...recordsResult.getErrors());
 
-    return new Report(convertEnvToDb(this.env), errors);
+    return new Report(convertEnvToDb(this.env), errors, recordsResult.getWarnings());
   }
 }

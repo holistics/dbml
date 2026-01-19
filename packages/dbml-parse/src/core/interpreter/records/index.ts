@@ -7,7 +7,8 @@ import {
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/parser/nodes';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
+import Report from '@/core/report';
 import {
   RecordValue,
   InterpreterDatabase,
@@ -21,7 +22,6 @@ import {
   tryExtractBoolean,
   tryExtractString,
   tryExtractDateTime,
-  tryExtractEnum,
   extractEnumAccess,
   isNumericType,
   isIntegerType,
@@ -45,46 +45,50 @@ export class RecordsInterpreter {
     this.env = env;
   }
 
-  interpret (elements: ElementDeclarationNode[]): CompileError[] {
+  interpret (elements: ElementDeclarationNode[]): Report<void> {
     const errors: CompileError[] = [];
+    const warnings: CompileWarning[] = [];
 
     for (const element of elements) {
       const { table, mergedColumns } = getTableAndColumnsOfRecords(element, this.env);
       for (const row of (element.body as BlockExpressionNode).body) {
         const rowNode = row as FunctionApplicationNode;
-        const { errors: rowErrors, row: rowValue, columnNodes } = extractDataFromRow(rowNode, mergedColumns, table.schemaName, this.env);
-        errors.push(...rowErrors);
-        if (!rowValue) continue;
+        const result = extractDataFromRow(rowNode, mergedColumns, table.schemaName, this.env);
+        errors.push(...result.getErrors());
+        warnings.push(...result.getWarnings());
+        const rowData = result.getValue();
+        if (!rowData.row) continue;
         if (!this.env.records.has(table)) {
           this.env.records.set(table, []);
         }
         const tableRecords = this.env.records.get(table);
         tableRecords!.push({
-          values: rowValue,
+          values: rowData.row,
           node: rowNode,
-          columnNodes,
+          columnNodes: rowData.columnNodes,
         });
       }
     }
 
-    errors.push(...this.validateConstraints());
+    const constraintResult = this.validateConstraints();
+    warnings.push(...constraintResult);
 
-    return errors;
+    return new Report(undefined, errors, warnings);
   }
 
-  private validateConstraints (): CompileError[] {
-    const errors: CompileError[] = [];
+  private validateConstraints (): CompileWarning[] {
+    const warnings: CompileWarning[] = [];
 
     // Validate PK constraints
-    errors.push(...validatePrimaryKey(this.env));
+    warnings.push(...validatePrimaryKey(this.env));
 
     // Validate unique constraints
-    errors.push(...validateUnique(this.env));
+    warnings.push(...validateUnique(this.env));
 
     // Validate FK constraints
-    errors.push(...validateForeignKeys(this.env));
+    warnings.push(...validateForeignKeys(this.env));
 
-    return errors;
+    return warnings;
   }
 }
 
@@ -134,13 +138,16 @@ function extractRowValues (row: FunctionApplicationNode): SyntaxNode[] {
   return [];
 }
 
+type RowData = { row: Record<string, RecordValue> | null; columnNodes: Record<string, SyntaxNode> };
+
 function extractDataFromRow (
   row: FunctionApplicationNode,
   mergedColumns: Column[],
   tableSchemaName: string | null,
   env: InterpreterDatabase,
-): { errors: CompileError[]; row: Record<string, RecordValue> | null; columnNodes: Record<string, SyntaxNode> } {
+): Report<RowData> {
   const errors: CompileError[] = [];
+  const warnings: CompileWarning[] = [];
   const rowObj: Record<string, RecordValue> = {};
   const columnNodes: Record<string, SyntaxNode> = {};
 
@@ -151,7 +158,7 @@ function extractDataFromRow (
       `Expected ${mergedColumns.length} values but got ${args.length}`,
       row,
     ));
-    return { errors, row: null, columnNodes: {} };
+    return new Report({ row: null, columnNodes: {} }, errors, warnings);
   }
 
   for (let i = 0; i < mergedColumns.length; i++) {
@@ -160,13 +167,14 @@ function extractDataFromRow (
     columnNodes[column.name] = arg;
     const result = extractValue(arg, column, tableSchemaName, env);
     if (Array.isArray(result)) {
-      errors.push(...result);
+      // Data type validation errors become warnings
+      warnings.push(...result);
     } else {
       rowObj[column.name] = result;
     }
   }
 
-  return { errors, row: rowObj, columnNodes };
+  return new Report({ row: rowObj, columnNodes }, errors, warnings);
 }
 
 function extractValue (
@@ -238,9 +246,6 @@ function extractValue (
     } else {
       // Enum access syntax - validate path
       const actualPath = path.join('.');
-      const actualEnumName = path[path.length - 1];
-      const actualSchemaName = path.length > 1 ? path.slice(0, -1).join('.') : null;
-
       const expectedPath = expectedSchemaName ? `${expectedSchemaName}.${expectedEnumName}` : expectedEnumName;
 
       if (actualPath !== expectedPath) {

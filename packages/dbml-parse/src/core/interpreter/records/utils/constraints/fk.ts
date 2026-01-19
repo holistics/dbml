@@ -1,6 +1,6 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/core/interpreter/types';
-import { extractKeyValueWithDefault, formatColumns, hasNullInKey, formatFullColumnNames } from './helper';
+import { extractKeyValueWithDefault, hasNullInKey, formatFullColumnNames } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/core/interpreter/utils';
 
@@ -68,8 +68,6 @@ function validateDirection (
   }
 
   const validKeys = collectValidKeys(target.rows, targetEndpoint.fieldNames);
-  const isComposite = sourceEndpoint.fieldNames.length > 1;
-  const columnsStr = formatColumns(sourceEndpoint.fieldNames);
 
   for (const row of source.rows) {
     if (hasNullInKey(row.values, sourceEndpoint.fieldNames)) continue;

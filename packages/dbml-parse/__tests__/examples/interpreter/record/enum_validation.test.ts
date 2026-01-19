@@ -100,10 +100,12 @@ describe('[example - record] Enum validation', () => {
     `;
     const result = interpret(source);
     const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toBe("Invalid enum value \"invalid_value\" for column 'status' of type 'status' (valid values: active, inactive)");
+    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toBe("Invalid enum value \"invalid_value\" for column 'status' of type 'status' (valid values: active, inactive)");
   });
 
   test('should validate multiple enum columns', () => {
@@ -133,12 +135,14 @@ describe('[example - record] Enum validation', () => {
     `;
     const result = interpret(source);
     const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(2);
-    expect(errors.every((e) => e.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
-    const errorMessages = errors.map((e) => e.diagnostic);
-    expect(errorMessages.some((msg) => msg.includes('invalid_status'))).toBe(true);
-    expect(errorMessages.some((msg) => msg.includes('invalid_role'))).toBe(true);
+    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(2);
+    expect(warnings.every((e) => e.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
+    const warningMessages = warnings.map((e) => e.diagnostic);
+    expect(warningMessages.some((msg) => msg.includes('invalid_status'))).toBe(true);
+    expect(warningMessages.some((msg) => msg.includes('invalid_role'))).toBe(true);
   });
 
   test('should allow NULL for enum columns', () => {
@@ -209,11 +213,13 @@ describe('[example - record] Enum validation', () => {
     `;
     const result = interpret(source);
     const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('fully qualified');
-    expect(errors[0].diagnostic).toContain('app.status.active');
+    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toContain('fully qualified');
+    expect(warnings[0].diagnostic).toContain('app.status.active');
   });
 
   test('should reject unqualified enum access for schema-qualified enum', () => {
