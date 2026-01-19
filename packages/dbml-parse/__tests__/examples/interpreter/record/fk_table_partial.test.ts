@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { interpret } from '@tests/utils';
+import { CompileErrorCode } from '@/core/errors';
 
 describe('[example - record] FK in table partials', () => {
   test('should validate FK from injected table partial', () => {
@@ -65,7 +66,8 @@ describe('[example - record] FK in table partials', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column 'user_id' does not exist in referenced table 'users'");
+    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(errors[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
   });
 
   test('should validate FK when partial injected into multiple tables', () => {
@@ -152,7 +154,8 @@ describe('[example - record] FK in table partials', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column 'created_by' does not exist in referenced table 'users'");
+    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(errors[0].diagnostic).toBe('FK violation: comments.created_by = 999 does not exist in users.id');
   });
 
   test('should allow NULL FK values from injected table partial', () => {
@@ -277,8 +280,11 @@ describe('[example - record] FK in table partials', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(2);
-    expect(errors[0].diagnostic).toContain('Foreign key not found');
-    expect(errors[1].diagnostic).toContain('Foreign key not found');
+    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(errors[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    // Verify both errors are FK violations
+    const errorMessages = errors.map((e) => e.diagnostic);
+    expect(errorMessages.every((msg) => msg.startsWith('FK violation'))).toBe(true);
   });
 
   test('should validate self-referencing FK from injected table partial', () => {
@@ -327,6 +333,7 @@ describe('[example - record] FK in table partials', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column 'parent_id' does not exist in referenced table 'nodes'");
+    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(errors[0].diagnostic).toBe('FK violation: nodes.parent_id = 999 does not exist in nodes.id');
   });
 });

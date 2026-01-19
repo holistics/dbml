@@ -7,6 +7,7 @@ import {
   isAutoIncrementColumn,
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
+import { pkDuplicateMessage, pkNullMessage, pkMissingMessage } from './messages';
 
 export function validatePrimaryKey (
   env: InterpreterDatabase,
@@ -52,10 +53,7 @@ export function validatePrimaryKey (
 
         // Report error for missing columns without defaults/autoincrement
         if (missingColumnsWithoutDefaults.length > 0) {
-          const missingStr = formatColumns(missingColumnsWithoutDefaults);
-          const msg = missingColumnsWithoutDefaults.length > 1
-            ? `Missing primary key columns ${missingStr} in record`
-            : `Missing primary key column '${missingColumnsWithoutDefaults[0]}' in record`;
+          const msg = pkMissingMessage(mergedTable.schemaName, mergedTable.name, missingColumnsWithoutDefaults);
           for (const row of rows) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -92,9 +90,7 @@ export function validatePrimaryKey (
             const val = row.values[col];
             if (!val || val.value === null) {
               const errorNode = row.columnNodes[col] || row.node;
-              const msg = isComposite
-                ? `NULL value not allowed in composite primary key ${columnsStr}`
-                : `NULL value not allowed in primary key column '${col}'`;
+              const msg = pkNullMessage(mergedTable.schemaName, mergedTable.name, pkColumns);
               errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
               break;
             }
@@ -107,9 +103,11 @@ export function validatePrimaryKey (
         if (seen.has(keyValue)) {
           // Report error on the first column of the constraint
           const errorNode = row.columnNodes[pkColumns[0]] || row.node;
-          const msg = isComposite
-            ? `Duplicate primary key ${columnsStr}`
-            : `Duplicate primary key value for column '${pkColumns[0]}'`;
+          const valueMap = new Map<string, unknown>();
+          for (const col of pkColumns) {
+            valueMap.set(col, row.values[col]?.value);
+          }
+          const msg = pkDuplicateMessage(mergedTable.schemaName, mergedTable.name, pkColumns, valueMap);
           errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
         } else {
           seen.set(keyValue, rowIndex);

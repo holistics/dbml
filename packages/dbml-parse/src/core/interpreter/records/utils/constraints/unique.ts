@@ -6,6 +6,7 @@ import {
   formatColumns,
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
+import { uniqueDuplicateMessage } from './messages';
 
 export function validateUnique (
   env: InterpreterDatabase,
@@ -57,9 +58,11 @@ export function validateUnique (
         const keyValue = extractKeyValueWithDefault(row.values, uniqueColumns, uniqueColumnFields);
         if (seen.has(keyValue)) {
           const errorNode = row.columnNodes[uniqueColumns[0]] || row.node;
-          const msg = isComposite
-            ? `Duplicate composite unique constraint value for ${columnsStr}`
-            : `Duplicate unique value for column '${uniqueColumns[0]}'`;
+          const valueMap = new Map<string, unknown>();
+          for (const col of uniqueColumns) {
+            valueMap.set(col, row.values[col]?.value);
+          }
+          const msg = uniqueDuplicateMessage(mergedTable.schemaName, mergedTable.name, uniqueColumns, valueMap);
           errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
         } else {
           seen.set(keyValue, rowIndex);

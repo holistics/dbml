@@ -225,7 +225,7 @@ describe('[example - record] nested and top-level records mixed', () => {
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
     expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Duplicate primary key');
+    expect(errors[0].diagnostic).toContain('Duplicate PK');
   });
 
   test('should validate unique across nested and top-level records', () => {
@@ -249,6 +249,6 @@ describe('[example - record] nested and top-level records mixed', () => {
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
     expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Duplicate unique value');
+    expect(errors[0].diagnostic).toContain('Duplicate UNIQUE');
   });
 });

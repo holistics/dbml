@@ -53,7 +53,7 @@ describe('[example - record] simple unique constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Duplicate unique value for column 'email'");
+    expect(errors[0].diagnostic).toBe('Duplicate UNIQUE: users.email = "alice@example.com"');
   });
 
   test('should allow NULL values in unique column (NULLs dont conflict)', () => {
@@ -111,7 +111,7 @@ describe('[example - record] simple unique constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Duplicate unique value for column 'email'");
+    expect(errors[0].diagnostic).toBe('Duplicate UNIQUE: users.email = "alice@example.com"');
   });
 
   test('should validate multiple unique columns independently', () => {
@@ -130,7 +130,7 @@ describe('[example - record] simple unique constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Duplicate unique value for column 'username'");
+    expect(errors[0].diagnostic).toBe('Duplicate UNIQUE: users.username = "alice"');
   });
 
   test('should accept unique constraint with numeric values', () => {
@@ -173,7 +173,7 @@ describe('[example - record] simple unique constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Duplicate unique value for column 'sku'");
+    expect(errors[0].diagnostic).toBe('Duplicate UNIQUE: products.sku = 1001');
   });
 
   test('should accept zero as unique value', () => {
@@ -247,8 +247,8 @@ describe('[example - record] simple unique constraints', () => {
 
     // Both pk and unique violations are reported
     expect(errors.length).toBe(2);
-    expect(errors[0].diagnostic).toBe("Duplicate primary key value for column 'id'");
-    expect(errors[1].diagnostic).toBe("Duplicate unique value for column 'id'");
+    expect(errors[0].diagnostic).toBe('Duplicate PK: items.id = 1');
+    expect(errors[1].diagnostic).toBe('Duplicate UNIQUE: items.id = 1');
   });
 
   test('should allow all null values in unique column', () => {
