@@ -22,6 +22,7 @@ import {
   tryExtractString,
   tryExtractDateTime,
   tryExtractEnum,
+  extractEnumAccess,
   isNumericType,
   isBooleanType,
   isStringType,
@@ -49,7 +50,7 @@ export class RecordsInterpreter {
       const { table, mergedColumns } = getTableAndColumnsOfRecords(element, this.env);
       for (const row of (element.body as BlockExpressionNode).body) {
         const rowNode = row as FunctionApplicationNode;
-        const { errors: rowErrors, row: rowValue, columnNodes } = extractDataFromRow(rowNode, mergedColumns);
+        const { errors: rowErrors, row: rowValue, columnNodes } = extractDataFromRow(rowNode, mergedColumns, table.schemaName, this.env);
         errors.push(...rowErrors);
         if (!rowValue) continue;
         if (!this.env.records.has(table)) {
@@ -134,6 +135,8 @@ function extractRowValues (row: FunctionApplicationNode): SyntaxNode[] {
 function extractDataFromRow (
   row: FunctionApplicationNode,
   mergedColumns: Column[],
+  tableSchemaName: string | null,
+  env: InterpreterDatabase,
 ): { errors: CompileError[]; row: Record<string, RecordValue> | null; columnNodes: Record<string, SyntaxNode> } {
   const errors: CompileError[] = [];
   const rowObj: Record<string, RecordValue> = {};
@@ -153,7 +156,7 @@ function extractDataFromRow (
     const arg = args[i];
     const column = mergedColumns[i];
     columnNodes[column.name] = arg;
-    const result = extractValue(arg, column);
+    const result = extractValue(arg, column, tableSchemaName, env);
     if (Array.isArray(result)) {
       errors.push(...result);
     } else {
@@ -167,6 +170,8 @@ function extractDataFromRow (
 function extractValue (
   node: SyntaxNode,
   column: Column,
+  tableSchemaName: string | null,
+  env: InterpreterDatabase,
 ): RecordValue | CompileError[] {
   // FIXME: Make this more precise
   const type = column.type.type_name.split('(')[0];
@@ -199,14 +204,76 @@ function extractValue (
 
   // Enum type
   if (isEnum) {
-    const enumValue = tryExtractEnum(node);
-    if (enumValue === null) {
+    const enumAccess = extractEnumAccess(node);
+    if (enumAccess === null) {
       return [new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `Invalid enum value for column '${column.name}'`,
         node,
       )];
     }
+
+    const { path, value: enumValue } = enumAccess;
+
+    // Validate enum value against enum definition
+    const enumTypeName = type;
+    // Parse column type to get schema and enum name
+    // Type can be 'status' or 'app.status'
+    const typeParts = enumTypeName.split('.');
+    const expectedEnumName = typeParts[typeParts.length - 1];
+    const expectedSchemaName = typeParts.length > 1 ? typeParts.slice(0, -1).join('.') : tableSchemaName;
+
+    // Validate enum access path matches the enum type
+    if (path.length === 0) {
+      // String literal - only allowed for enums without schema qualification
+      if (expectedSchemaName !== null) {
+        return [new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Enum value must be fully qualified: expected ${expectedSchemaName}.${expectedEnumName}.${enumValue}, got string literal ${JSON.stringify(enumValue)}`,
+          node,
+        )];
+      }
+    } else {
+      // Enum access syntax - validate path
+      const actualPath = path.join('.');
+      const actualEnumName = path[path.length - 1];
+      const actualSchemaName = path.length > 1 ? path.slice(0, -1).join('.') : null;
+
+      const expectedPath = expectedSchemaName ? `${expectedSchemaName}.${expectedEnumName}` : expectedEnumName;
+
+      if (actualPath !== expectedPath) {
+        return [new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Enum path mismatch: expected ${expectedPath}.${enumValue}, got ${actualPath}.${enumValue}`,
+          node,
+        )];
+      }
+    }
+
+    // Find the enum definition
+    let enumDef = Array.from(env.enums.values()).find(
+      (e) => e.name === expectedEnumName && e.schemaName === expectedSchemaName,
+    );
+    // Fallback to null schema if not found
+    if (!enumDef && expectedSchemaName === tableSchemaName) {
+      enumDef = Array.from(env.enums.values()).find(
+        (e) => e.name === expectedEnumName && e.schemaName === null,
+      );
+    }
+
+    if (enumDef) {
+      const validValues = new Set(enumDef.values.map((v) => v.name));
+      if (!validValues.has(enumValue)) {
+        const validValuesList = Array.from(validValues).join(', ');
+        const fullEnumPath = expectedSchemaName ? `${expectedSchemaName}.${expectedEnumName}` : expectedEnumName;
+        return [new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Invalid enum value ${JSON.stringify(enumValue)} for column '${column.name}' of type '${fullEnumPath}' (valid values: ${validValuesList})`,
+          node,
+        )];
+      }
+    }
+
     return { value: enumValue, type: valueType };
   }
 
