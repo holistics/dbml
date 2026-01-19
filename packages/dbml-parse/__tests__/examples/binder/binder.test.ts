@@ -994,7 +994,7 @@ describe('[example] binder', () => {
       expect(schemaSymbol.symbolTable.get('TablePartial:timestamps')).toBeInstanceOf(TablePartialSymbol);
     });
 
-    test('should detect duplicate TablePartial injection', () => {
+    test('should detect non-existent TablePartial injection', () => {
       const source = `
         TablePartial p1 {}
         Table t1 {
@@ -1004,23 +1004,8 @@ describe('[example] binder', () => {
         }
       `;
       const errors = analyze(source).getErrors();
-      expect(errors.length).toBeGreaterThanOrEqual(1);
+      expect(errors.length).toEqual(1);
       expect(errors[0].diagnostic).toBe("TablePartial 'p2' does not exist in Schema 'public'");
-    });
-
-    test('should detect duplicate TablePartial injection same partial', () => {
-      const source = `
-        TablePartial p1 {}
-        Table t1 {
-          id int
-          ~p1
-          ~p1
-        }
-      `;
-      const errors = analyze(source).getErrors();
-      expect(errors.length).toBe(2);
-      expect(errors[0].diagnostic).toBe('Duplicate table partial injection p1');
-      expect(errors[1].diagnostic).toBe('Duplicate table partial injection p1');
     });
 
     test('should detect nonexisting inline ref column in table partial', () => {

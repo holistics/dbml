@@ -224,8 +224,8 @@ export default class TableValidator implements ElementValidator {
         if (symbolTable.has(partialInjectionSymbolId)) {
           const symbol = symbolTable.get(partialInjectionSymbolId);
           return [
-            new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection ${injectedTablePartialName}`, field),
-            new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection ${injectedTablePartialName}`, symbol!.declaration!),
+            new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, field),
+            new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, symbol!.declaration!),
           ];
         }
         symbolTable.set(partialInjectionSymbolId, partialInjectionSymbol);
