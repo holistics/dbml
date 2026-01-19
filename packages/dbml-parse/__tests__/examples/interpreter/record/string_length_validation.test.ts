@@ -269,7 +269,7 @@ describe('[example - record] String length validation', () => {
       // "😀😁😂" is 3 emojis × 4 bytes each = 12 bytes, exceeds varchar(10)
       expect(errors.length).toBe(1);
       expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toContain("exceeds maximum length: expected at most 10 bytes");
+      expect(errors[0].diagnostic).toContain('exceeds maximum length: expected at most 10 bytes');
     });
 
     test('should validate multiple errors in one record', () => {
