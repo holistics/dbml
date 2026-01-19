@@ -6,6 +6,7 @@ import {
   formatColumns,
   isAutoIncrementColumn,
 } from './helper';
+import { mergeTableAndPartials } from '@/core/interpreter/utils';
 
 export function validatePrimaryKey (
   env: InterpreterDatabase,
@@ -13,15 +14,16 @@ export function validatePrimaryKey (
   const errors: CompileError[] = [];
 
   for (const [table, rows] of env.records) {
+    const mergedTable = mergeTableAndPartials(table, env);
     if (rows.length === 0) continue;
 
     const pkConstraints: string[][] = [];
-    for (const field of table.fields) {
+    for (const field of mergedTable.fields) {
       if (field.pk) {
         pkConstraints.push([field.name]);
       }
     }
-    for (const index of table.indexes) {
+    for (const index of mergedTable.indexes) {
       if (index.pk) {
         pkConstraints.push(index.columns.map((c) => c.value));
       }
@@ -34,7 +36,7 @@ export function validatePrimaryKey (
       }
     }
     const columns = Array.from(columnsSet);
-    const columnMap = new Map(table.fields.map((c) => [c.name, c]));
+    const columnMap = new Map(mergedTable.fields.map((c) => [c.name, c]));
 
     for (const pkColumns of pkConstraints) {
       const missingColumns = pkColumns.filter((col) => !columns.includes(col));
