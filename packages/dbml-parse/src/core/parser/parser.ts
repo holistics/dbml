@@ -170,7 +170,7 @@ export default class Parser {
     this.tokens = tokens;
   }
 
-  parse (): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }, CompileError> {
+  parse (): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
     const body = this.program();
     const eof = this.advance();
     const program = this.nodeFactory.create(ProgramNode, { body, eof });

@@ -23,8 +23,8 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect unique violation across blocks', () => {
@@ -45,10 +45,10 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Duplicate UNIQUE');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toContain('Duplicate UNIQUE');
   });
 
   test('should validate composite unique across multiple blocks', () => {
@@ -75,8 +75,8 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect composite unique violation across blocks', () => {
@@ -100,9 +100,9 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('Duplicate Composite UNIQUE');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toContain('Duplicate Composite UNIQUE');
   });
 
   test('should allow NULL for unique constraint across blocks', () => {
@@ -125,8 +125,8 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should handle unique when column missing from some blocks', () => {
@@ -153,8 +153,8 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should validate multiple unique constraints on same table across blocks', () => {
@@ -184,8 +184,8 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect violations of different unique constraints', () => {
@@ -211,10 +211,10 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(2);
-    expect(errors.some((e) => e.diagnostic.includes('email'))).toBe(true);
-    expect(errors.some((e) => e.diagnostic.includes('username'))).toBe(true);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(2);
+    expect(warnings.some((e) => e.diagnostic.includes('email'))).toBe(true);
+    expect(warnings.some((e) => e.diagnostic.includes('username'))).toBe(true);
   });
 
   test('should validate unique across nested and top-level records', () => {
@@ -235,8 +235,8 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect unique violation between nested and top-level', () => {
@@ -256,9 +256,9 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('Duplicate UNIQUE');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].diagnostic).toContain('Duplicate UNIQUE');
   });
 
   test('should handle complex scenario with multiple unique constraints', () => {
@@ -289,8 +289,8 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect multiple unique violations in complex scenario', () => {
@@ -320,10 +320,10 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(2);
-    expect(errors[0].diagnostic).toContain('Duplicate UNIQUE');
-    expect(errors[1].diagnostic).toContain('Duplicate UNIQUE');
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(2);
+    expect(warnings[0].diagnostic).toContain('Duplicate UNIQUE');
+    expect(warnings[1].diagnostic).toContain('Duplicate UNIQUE');
   });
 
   test('should validate unique with both PK and unique constraints', () => {
@@ -343,7 +343,7 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const errors = result.getErrors();
-    expect(errors.length).toBe(0);
+    const warnings = result.getWarnings();
+    expect(warnings.length).toBe(0);
   });
 });

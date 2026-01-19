@@ -19,8 +19,10 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
       expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(0);
     });
 
     test('should reject string value exceeding length limit', () => {
@@ -36,10 +38,12 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 13 bytes");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 13 bytes");
     });
 
     test('should accept empty string for varchar', () => {
@@ -55,8 +59,10 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
       expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(0);
     });
 
     test('should accept string at exact length limit', () => {
@@ -72,8 +78,10 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
       expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(0);
     });
 
     test('should validate multiple varchar columns', () => {
@@ -91,10 +99,12 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("String value for column 'first_name' exceeds maximum length: expected at most 10 bytes (UTF-8), got 11 bytes");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("String value for column 'first_name' exceeds maximum length: expected at most 10 bytes (UTF-8), got 11 bytes");
     });
   });
 
@@ -113,8 +123,10 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
       expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(0);
     });
 
     test('should reject string value exceeding char limit', () => {
@@ -130,10 +142,12 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("String value for column 'code' exceeds maximum length: expected at most 3 bytes (UTF-8), got 4 bytes");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("String value for column 'code' exceeds maximum length: expected at most 3 bytes (UTF-8), got 4 bytes");
     });
   });
 
@@ -151,10 +165,12 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 13 bytes");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 13 bytes");
     });
 
     test('should validate nchar length', () => {
@@ -170,10 +186,12 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("String value for column 'code' exceeds maximum length: expected at most 3 bytes (UTF-8), got 4 bytes");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("String value for column 'code' exceeds maximum length: expected at most 3 bytes (UTF-8), got 4 bytes");
     });
 
     test('should validate character varying length', () => {
@@ -189,10 +207,12 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 10 bytes (UTF-8), got 11 bytes");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 10 bytes (UTF-8), got 11 bytes");
     });
   });
 
@@ -210,8 +230,10 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
       expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(0);
     });
 
     test('should allow any length for varchar without parameter', () => {
@@ -227,8 +249,10 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
       expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(0);
     });
   });
 
@@ -265,11 +289,13 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
       // "😀😁😂" is 3 emojis × 4 bytes each = 12 bytes, exceeds varchar(10)
-      expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toContain('exceeds maximum length: expected at most 10 bytes');
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(1);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toContain('exceeds maximum length: expected at most 10 bytes');
     });
 
     test('should validate multiple errors in one record', () => {
@@ -287,14 +313,16 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(3);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[0].diagnostic).toBe("String value for column 'first_name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 11 bytes");
-      expect(errors[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[1].diagnostic).toBe("String value for column 'last_name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 7 bytes");
-      expect(errors[2].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(errors[2].diagnostic).toBe("String value for column 'email' exceeds maximum length: expected at most 10 bytes (UTF-8), got 25 bytes");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(3);
+      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[0].diagnostic).toBe("String value for column 'first_name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 11 bytes");
+      expect(warnings[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[1].diagnostic).toBe("String value for column 'last_name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 7 bytes");
+      expect(warnings[2].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[2].diagnostic).toBe("String value for column 'email' exceeds maximum length: expected at most 10 bytes (UTF-8), got 25 bytes");
     });
 
     test('should validate across multiple records', () => {
@@ -314,10 +342,12 @@ describe('[example - record] String length validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
+      const warnings = result.getWarnings();
 
-      expect(errors.length).toBe(2);
-      expect(errors[0].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 11 bytes");
-      expect(errors[1].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 9 bytes");
+      expect(errors.length).toBe(0);
+      expect(warnings.length).toBe(2);
+      expect(warnings[0].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 11 bytes");
+      expect(warnings[1].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 9 bytes");
     });
   });
 });
