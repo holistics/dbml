@@ -442,6 +442,21 @@ describe('[example] validator', () => {
       expect(errors).toHaveLength(0);
     });
 
+    test('should detect duplicate TablePartial injection same partial', () => {
+      const source = `
+        TablePartial p1 {}
+        Table t1 {
+          id int
+          ~p1
+          ~p1
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(2);
+      expect(errors[0].diagnostic).toBe('Duplicate table partial injection \'p1\'');
+      expect(errors[1].diagnostic).toBe('Duplicate table partial injection \'p1\'');
+    });
+
     test('should detect unknown tablepartial reference with precise error', () => {
       const source = `
         Table users {

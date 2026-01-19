@@ -1581,7 +1581,7 @@
   "errors": [
     {
       "code": 3068,
-      "diagnostic": "Duplicate table partial injection common",
+      "diagnostic": "Duplicate table partial injection 'common'",
       "nodeOrToken": {
         "id": 23,
         "kind": "<function-application>",
@@ -1768,7 +1768,7 @@
     },
     {
       "code": 3068,
-      "diagnostic": "Duplicate table partial injection common",
+      "diagnostic": "Duplicate table partial injection 'common'",
       "nodeOrToken": {
         "id": 19,
         "kind": "<function-application>",
@@ -1955,7 +1955,7 @@
     },
     {
       "code": 3068,
-      "diagnostic": "Duplicate table partial injection common",
+      "diagnostic": "Duplicate table partial injection 'common'",
       "nodeOrToken": {
         "id": 27,
         "kind": "<function-application>",
@@ -2142,7 +2142,7 @@
     },
     {
       "code": 3068,
-      "diagnostic": "Duplicate table partial injection common",
+      "diagnostic": "Duplicate table partial injection 'common'",
       "nodeOrToken": {
         "id": 19,
         "kind": "<function-application>",
