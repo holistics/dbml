@@ -66,7 +66,7 @@ describe('[example - record] composite primary key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate primary key (order_id, product_id)');
+    expect(errors[0].diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
   });
 
   test('should reject NULL in any column of composite primary key', () => {
@@ -88,7 +88,7 @@ describe('[example - record] composite primary key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('NULL value not allowed in composite primary key (order_id, product_id)');
+    expect(errors[0].diagnostic).toBe('NULL in Composite PK: (order_items.order_id, order_items.product_id) cannot be NULL');
   });
 
   test('should detect duplicate composite pk across multiple records blocks', () => {
@@ -113,7 +113,7 @@ describe('[example - record] composite primary key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe('Duplicate primary key (order_id, product_id)');
+    expect(errors[0].diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
   });
 
   test('should allow same value in one pk column when other differs', () => {

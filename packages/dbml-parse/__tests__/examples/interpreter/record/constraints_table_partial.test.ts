@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { interpret } from '@tests/utils';
+import { CompileErrorCode } from '@/core/errors';
 
 describe('[example - record] Constraints in table partials', () => {
   describe('Primary Key', () => {
@@ -45,7 +46,8 @@ describe('[example - record] Constraints in table partials', () => {
       const errors = result.getErrors();
 
       expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toContain('Duplicate primary key');
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(errors[0].diagnostic).toBe('Duplicate PK: users.id = 1');
     });
 
     test('should validate composite PK from injected table partial', () => {
@@ -93,7 +95,8 @@ describe('[example - record] Constraints in table partials', () => {
       const errors = result.getErrors();
 
       expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toContain('Duplicate primary key');
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(errors[0].diagnostic).toBe('Duplicate Composite PK: (regions.country_code, regions.region_code) = ("US", "CA")');
     });
 
     test('should detect NULL in PK from injected table partial', () => {
@@ -116,7 +119,8 @@ describe('[example - record] Constraints in table partials', () => {
       const errors = result.getErrors();
 
       expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toContain('NULL value not allowed in primary key');
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(errors[0].diagnostic).toBe('NULL in PK: users.id cannot be NULL');
     });
   });
 
@@ -165,7 +169,7 @@ describe('[example - record] Constraints in table partials', () => {
       const errors = result.getErrors();
 
       expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toContain('Duplicate unique');
+      expect(errors[0].diagnostic).toBe('Duplicate UNIQUE: users.email = "alice@example.com"');
     });
 
     test('should allow NULL in UNIQUE columns from partial', () => {
@@ -247,8 +251,12 @@ describe('[example - record] Constraints in table partials', () => {
       const errors = result.getErrors();
 
       expect(errors.length).toBe(2);
-      expect(errors.some((e) => e.diagnostic.includes('email'))).toBe(true);
-      expect(errors.some((e) => e.diagnostic.includes('username'))).toBe(true);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(errors[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      // One error for email, one for username
+      const errorMessages = errors.map((e) => e.diagnostic);
+      expect(errorMessages.some((msg) => msg.includes('email'))).toBe(true);
+      expect(errorMessages.some((msg) => msg.includes('username'))).toBe(true);
     });
 
     test('should validate UNIQUE with table indexes from partial', () => {
@@ -302,7 +310,8 @@ describe('[example - record] Constraints in table partials', () => {
       const errors = result.getErrors();
 
       expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toContain('Duplicate');
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(errors[0].diagnostic).toBe('Duplicate Composite UNIQUE: (data.field1, data.field2) = ("a", "x")');
     });
   });
 
@@ -351,7 +360,8 @@ describe('[example - record] Constraints in table partials', () => {
       const errors = result.getErrors();
 
       expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toContain('NULL not allowed');
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(errors[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'email' without default and increment");
     });
 
     test('should validate multiple NOT NULL constraints from partial', () => {
@@ -401,7 +411,11 @@ describe('[example - record] Constraints in table partials', () => {
       const errors = result.getErrors();
 
       expect(errors.length).toBe(2);
-      expect(errors.every((e) => e.diagnostic.includes('NULL not allowed'))).toBe(true);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(errors[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      // Both errors should be about NULL not allowed
+      const errorMessages = errors.map((e) => e.diagnostic);
+      expect(errorMessages.every((msg) => msg.includes('NULL not allowed'))).toBe(true);
     });
 
     test('should allow nullable columns from partial when not marked as NOT NULL', () => {
@@ -495,9 +509,11 @@ describe('[example - record] Constraints in table partials', () => {
 
       // Should detect: duplicate PK (id), duplicate UNIQUE (email), NOT NULL (phone)
       expect(errors.length).toBe(3);
-      expect(errors.some((e) => e.diagnostic.includes('Duplicate primary key'))).toBe(true);
-      expect(errors.some((e) => e.diagnostic.includes('Duplicate unique'))).toBe(true);
-      expect(errors.some((e) => e.diagnostic.includes('NULL not allowed'))).toBe(true);
+      expect(errors.every((e) => e.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
+      const errorMessages = errors.map((e) => e.diagnostic);
+      expect(errorMessages.some((msg) => msg.includes('Duplicate PK'))).toBe(true);
+      expect(errorMessages.some((msg) => msg.includes('Duplicate UNIQUE'))).toBe(true);
+      expect(errorMessages.some((msg) => msg.includes('NULL not allowed'))).toBe(true);
     });
   });
 
@@ -569,9 +585,11 @@ describe('[example - record] Constraints in table partials', () => {
 
       // Should have errors only in admins table
       expect(errors.length).toBe(3);
-      expect(errors.some((e) => e.diagnostic.includes('Duplicate primary key'))).toBe(true);
-      expect(errors.some((e) => e.diagnostic.includes('Duplicate unique'))).toBe(true);
-      expect(errors.some((e) => e.diagnostic.includes('NULL not allowed'))).toBe(true);
+      expect(errors.every((e) => e.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
+      const errorMessages = errors.map((e) => e.diagnostic);
+      expect(errorMessages.some((msg) => msg.includes('Duplicate PK'))).toBe(true);
+      expect(errorMessages.some((msg) => msg.includes('Duplicate UNIQUE'))).toBe(true);
+      expect(errorMessages.some((msg) => msg.includes('NULL not allowed'))).toBe(true);
     });
   });
 });

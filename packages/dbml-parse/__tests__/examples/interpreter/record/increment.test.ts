@@ -89,7 +89,7 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Duplicate primary key value for column 'id'");
+    expect(errors[0].diagnostic).toBe("Duplicate PK: users.id = 1");
   });
 
   test('should detect duplicate pk with not null + dbdefault', () => {
@@ -108,6 +108,6 @@ describe('[example - record] auto-increment and serial type constraints', () => 
 
     // Both NULLs resolve to default value 1, which is a duplicate
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Duplicate primary key value for column 'id'");
+    expect(errors[0].diagnostic).toBe("Duplicate PK: users.id = null");
   });
 });

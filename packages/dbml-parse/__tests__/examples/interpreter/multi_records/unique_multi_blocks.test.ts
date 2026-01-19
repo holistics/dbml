@@ -48,7 +48,7 @@ describe('[example - record] Unique validation across multiple records blocks', 
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
     expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('Duplicate unique value');
+    expect(errors[0].diagnostic).toContain('Duplicate UNIQUE');
   });
 
   test('should validate composite unique across multiple blocks', () => {
@@ -102,7 +102,7 @@ describe('[example - record] Unique validation across multiple records blocks', 
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('Duplicate composite unique');
+    expect(errors[0].diagnostic).toContain('Duplicate Composite UNIQUE');
   });
 
   test('should allow NULL for unique constraint across blocks', () => {
@@ -258,7 +258,7 @@ describe('[example - record] Unique validation across multiple records blocks', 
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toContain('Duplicate unique value');
+    expect(errors[0].diagnostic).toContain('Duplicate UNIQUE');
   });
 
   test('should handle complex scenario with multiple unique constraints', () => {
@@ -322,8 +322,8 @@ describe('[example - record] Unique validation across multiple records blocks', 
     const result = interpret(source);
     const errors = result.getErrors();
     expect(errors.length).toBe(2);
-    expect(errors[0].diagnostic).toContain('Duplicate unique value');
-    expect(errors[1].diagnostic).toContain('Duplicate unique value');
+    expect(errors[0].diagnostic).toContain('Duplicate UNIQUE');
+    expect(errors[1].diagnostic).toContain('Duplicate UNIQUE');
   });
 
   test('should validate unique with both PK and unique constraints', () => {

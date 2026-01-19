@@ -86,7 +86,7 @@ describe('[example - record] composite foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column (merchant_id, country) does not exist in referenced table 'merchants'");
+    expect(errors[0].diagnostic).toBe('FK violation: (orders.merchant_id, orders.country) = (1, "UK") does not exist in (merchants.id, merchants.country_code)');
   });
 
   test('should allow NULL in composite FK columns', () => {
@@ -169,8 +169,8 @@ describe('[example - record] composite foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(2);
-    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column (id, region) does not exist in referenced table 'categories'");
-    expect(errors[1].diagnostic).toBe("Foreign key not found: value for column (id, region) does not exist in referenced table 'products'");
+    expect(errors[0].diagnostic).toBe('FK violation: (products.id, products.region) = (2, "US") does not exist in (categories.id, categories.region)');
+    expect(errors[1].diagnostic).toBe('FK violation: (categories.id, categories.region) = (3, "EU") does not exist in (products.id, products.region)');
   });
 
   test('should validate composite FK with schema-qualified tables', () => {
@@ -204,6 +204,6 @@ describe('[example - record] composite foreign key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Foreign key not found: value for column (user_id, tenant_id) does not exist in referenced table 'users'");
+    expect(errors[0].diagnostic).toBe("FK violation: (public.posts.user_id, public.posts.tenant_id) = (999, 100) does not exist in (auth.users.id, auth.users.tenant_id)");
   });
 });

@@ -53,7 +53,7 @@ describe('[example - record] simple primary key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Duplicate primary key value for column 'id'");
+    expect(errors[0].diagnostic).toBe("Duplicate PK: users.id = 1");
   });
 
   test('should reject NULL values in primary key column', () => {
@@ -70,7 +70,7 @@ describe('[example - record] simple primary key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("NULL value not allowed in primary key column 'id'");
+    expect(errors[0].diagnostic).toBe("NULL in PK: users.id cannot be NULL");
   });
 
   test('should detect duplicate pk across multiple records blocks', () => {
@@ -90,7 +90,7 @@ describe('[example - record] simple primary key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Duplicate primary key value for column 'id'");
+    expect(errors[0].diagnostic).toBe("Duplicate PK: users.id = 1");
   });
 
   test('should report error when pk column is missing from record', () => {
@@ -108,7 +108,7 @@ describe('[example - record] simple primary key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Missing primary key column 'id' in record");
+    expect(errors[0].diagnostic).toBe("PK: Column users.id is missing from record and has no default value");
   });
 
   test('should accept string primary keys', () => {
@@ -149,7 +149,7 @@ describe('[example - record] simple primary key constraints', () => {
     const errors = result.getErrors();
 
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Duplicate primary key value for column 'code'");
+    expect(errors[0].diagnostic).toBe('Duplicate PK: countries.code = "US"');
   });
 
   test('should accept primary key alias syntax', () => {
