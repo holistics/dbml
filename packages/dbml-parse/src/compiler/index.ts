@@ -1,7 +1,6 @@
 import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import { CompileError } from '@/core/errors';
 import { Database } from '@/core/interpreter/types';
 import Report from '@/core/report';
 import Lexer from '@/core/lexer/lexer';
@@ -58,14 +57,14 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }, CompileError> {
-    const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }, CompileError> = new Lexer(this.source)
+  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }> {
+    const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> = new Lexer(this.source)
       .lex()
       .chain((lexedTokens) => new Parser(lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
       .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({ ast, tokens })));
 
     if (parseRes.getErrors().length > 0) {
-      return parseRes as Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }, CompileError>;
+      return parseRes as Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }>;
     }
 
     return parseRes.chain(({ ast, tokens }) =>

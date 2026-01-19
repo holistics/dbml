@@ -27,7 +27,7 @@ export default class Validator {
     this.ast.symbol.declaration = this.ast;
   }
 
-  validate (): Report<ProgramNode, CompileError> {
+  validate (): Report<ProgramNode> {
     const errors: CompileError[] = [];
 
     this.ast.body.forEach((element) => {

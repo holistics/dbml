@@ -92,7 +92,7 @@ export default class Lexer {
     );
   }
 
-  lex (): Report<SyntaxToken[], CompileError> {
+  lex (): Report<SyntaxToken[]> {
     this.scanTokens();
     this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, this.current, '', false));
     this.gatherTrivia();

@@ -1313,8 +1313,8 @@ describe('[example] interpreter', () => {
         }
       `;
       const result = interpret(source);
-      // Should have a type compatibility error
-      expect(result.getErrors().length).toBeGreaterThan(0);
+      // Should have a type compatibility warning
+      expect(result.getWarnings().length).toBeGreaterThan(0);
     });
 
     test.skip('should validate precision and scale', () => {
@@ -1327,8 +1327,8 @@ describe('[example] interpreter', () => {
         }
       `;
       const result = interpret(source);
-      // Should have precision/scale error
-      expect(result.getErrors().length).toBeGreaterThan(0);
+      // Should have precision/scale warning
+      expect(result.getWarnings().length).toBeGreaterThan(0);
     });
 
     test('should validate not null constraint', () => {
@@ -1342,7 +1342,7 @@ describe('[example] interpreter', () => {
         }
       `;
       const result = interpret(source);
-      expect(result.getErrors().length).toBeGreaterThan(0);
+      expect(result.getWarnings().length).toBeGreaterThan(0);
     });
 
     test('should validate primary key uniqueness', () => {
@@ -1357,7 +1357,7 @@ describe('[example] interpreter', () => {
         }
       `;
       const result = interpret(source);
-      expect(result.getErrors().length).toBeGreaterThan(0);
+      expect(result.getWarnings().length).toBeGreaterThan(0);
     });
 
     test('should validate unique constraint', () => {
@@ -1372,7 +1372,7 @@ describe('[example] interpreter', () => {
         }
       `;
       const result = interpret(source);
-      expect(result.getErrors().length).toBeGreaterThan(0);
+      expect(result.getWarnings().length).toBeGreaterThan(0);
     });
 
     test('should validate constraints across multiple records blocks', () => {
@@ -1390,7 +1390,7 @@ describe('[example] interpreter', () => {
       `;
       const result = interpret(source);
       // Should detect duplicate PK across blocks
-      expect(result.getErrors().length).toBeGreaterThan(0);
+      expect(result.getWarnings().length).toBeGreaterThan(0);
     });
   });
 });
