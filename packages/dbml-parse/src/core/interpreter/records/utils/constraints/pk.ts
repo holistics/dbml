@@ -5,9 +5,9 @@ import {
   hasNullInKey,
   formatColumns,
   isAutoIncrementColumn,
+  formatFullColumnNames,
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
-import { pkDuplicateMessage, pkNullMessage, pkMissingMessage } from './messages';
 
 export function validatePrimaryKey (
   env: InterpreterDatabase,
@@ -53,7 +53,10 @@ export function validatePrimaryKey (
 
         // Report error for missing columns without defaults/autoincrement
         if (missingColumnsWithoutDefaults.length > 0) {
-          const msg = pkMissingMessage(mergedTable.schemaName, mergedTable.name, missingColumnsWithoutDefaults);
+          const isComposite = missingColumnsWithoutDefaults.length > 1;
+          const constraintType = isComposite ? 'Composite PK' : 'PK';
+          const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, missingColumnsWithoutDefaults);
+          const msg = `${constraintType}: Column ${columnRef} is missing from record and has no default value`;
           for (const row of rows) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -90,7 +93,10 @@ export function validatePrimaryKey (
             const val = row.values[col];
             if (!val || val.value === null) {
               const errorNode = row.columnNodes[col] || row.node;
-              const msg = pkNullMessage(mergedTable.schemaName, mergedTable.name, pkColumns);
+              const isComposite = pkColumns.length > 1;
+              const constraintType = isComposite ? 'Composite PK' : 'PK';
+              const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, pkColumns);
+              const msg = `NULL in ${constraintType}: ${columnRef} cannot be NULL`;
               errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
               break;
             }
@@ -103,11 +109,18 @@ export function validatePrimaryKey (
         if (seen.has(keyValue)) {
           // Report error on the first column of the constraint
           const errorNode = row.columnNodes[pkColumns[0]] || row.node;
-          const valueMap = new Map<string, unknown>();
-          for (const col of pkColumns) {
-            valueMap.set(col, row.values[col]?.value);
+          const isComposite = pkColumns.length > 1;
+          const constraintType = isComposite ? 'Composite PK' : 'PK';
+          const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, pkColumns);
+
+          let msg: string;
+          if (isComposite) {
+            const valueStr = pkColumns.map((col) => JSON.stringify(row.values[col]?.value)).join(', ');
+            msg = `Duplicate ${constraintType}: ${columnRef} = (${valueStr})`;
+          } else {
+            const value = JSON.stringify(row.values[pkColumns[0]]?.value);
+            msg = `Duplicate ${constraintType}: ${columnRef} = ${value}`;
           }
-          const msg = pkDuplicateMessage(mergedTable.schemaName, mergedTable.name, pkColumns, valueMap);
           errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
         } else {
           seen.set(keyValue, rowIndex);
