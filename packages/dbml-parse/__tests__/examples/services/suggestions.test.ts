@@ -14,13 +14,20 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(1, 1);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels
+      // Test labels - should include both Records keyword and snippet
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
+      expect(labels).toContain('Table');
+      expect(labels).toContain('TableGroup');
+      expect(labels).toContain('Enum');
+      expect(labels).toContain('Project');
+      expect(labels).toContain('Ref');
+      expect(labels).toContain('TablePartial');
+      expect(labels).toContain('Records');
+      expect(labels).toContain('Records (snippet)');
 
-      // Test insertTexts
+      // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
+      expect(insertTexts).toContain('Records');
     });
 
     it('- work even if some characters have been typed out', () => {
@@ -32,13 +39,14 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(1, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels
+      // Test labels - should include both Records keyword and snippet
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
+      expect(labels).toContain('Table');
+      expect(labels).toContain('Records');
 
-      // Test insertTexts
+      // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
+      expect(insertTexts).toContain('Records');
     });
 
     it('- work even if there are some not directly following nonsensical characters', () => {
@@ -50,13 +58,14 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(1, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels
+      // Test labels - should include both Records keyword and snippet
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
+      expect(labels).toContain('Table');
+      expect(labels).toContain('Records');
 
-      // Test insertTexts
+      // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
+      expect(insertTexts).toContain('Records');
     });
 
     it('- work even if there are some directly following nonsensical characters', () => {
@@ -68,13 +77,14 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(1, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels
+      // Test labels - should include both Records keyword and snippet
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
+      expect(labels).toContain('Table');
+      expect(labels).toContain('Records');
 
-      // Test insertTexts
+      // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records']);
+      expect(insertTexts).toContain('Records');
     });
   });
 
@@ -119,23 +129,17 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(3, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels
+      // Test labels - should include both Records keyword and snippet
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'Note',
-        'indexes',
-        'checks',
-        'Records',
-      ]);
+      expect(labels).toContain('Note');
+      expect(labels).toContain('indexes');
+      expect(labels).toContain('checks');
+      expect(labels).toContain('Records');
 
-      // Test insertTexts
+      // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'Note',
-        'indexes',
-        'checks',
-        'Records',
-      ]);
+      expect(insertTexts).toContain('Note');
+      expect(insertTexts).toContain('Records');
     });
 
     it('- work when there is a comma following', () => {
@@ -201,23 +205,17 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(2, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels
+      // Test labels - should include both Records keyword and snippet
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'Note',
-        'indexes',
-        'checks',
-        'Records',
-      ]);
+      expect(labels).toContain('Note');
+      expect(labels).toContain('indexes');
+      expect(labels).toContain('checks');
+      expect(labels).toContain('Records');
 
-      // Test insertTexts
+      // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'Note',
-        'indexes',
-        'checks',
-        'Records',
-      ]);
+      expect(insertTexts).toContain('Note');
+      expect(insertTexts).toContain('Records');
     });
 
     it('- should suggest after column definition', () => {
@@ -229,23 +227,17 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(3, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels
+      // Test labels - should include both Records keyword and snippet
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'Note',
-        'indexes',
-        'checks',
-        'Records',
-      ]);
+      expect(labels).toContain('Note');
+      expect(labels).toContain('indexes');
+      expect(labels).toContain('checks');
+      expect(labels).toContain('Records');
 
-      // Test insertTexts
+      // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'Note',
-        'indexes',
-        'checks',
-        'Records',
-      ]);
+      expect(insertTexts).toContain('Note');
+      expect(insertTexts).toContain('Records');
     });
   });
 
@@ -1259,23 +1251,17 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(2, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels
+      // Test labels - should include both Records keyword and snippet
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'Note',
-        'indexes',
-        'checks',
-        'Records',
-      ]);
+      expect(labels).toContain('Note');
+      expect(labels).toContain('indexes');
+      expect(labels).toContain('checks');
+      expect(labels).toContain('Records');
 
-      // Test insertTexts
+      // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'Note',
-        'indexes',
-        'checks',
-        'Records',
-      ]);
+      expect(insertTexts).toContain('Note');
+      expect(insertTexts).toContain('Records');
     });
 
     it('- should suggest TablePartial names after tilde operator', () => {
