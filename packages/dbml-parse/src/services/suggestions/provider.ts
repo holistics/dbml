@@ -2,7 +2,6 @@ import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
   getElementKind,
-  destructureCallExpression,
 } from '@/core/analyzer/utils';
 import {
   extractStringFromIdentifierStream,
@@ -49,7 +48,6 @@ import {
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
 import { ElementKind, SettingName } from '@/core/analyzer/types';
-import { last } from 'lodash-es';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -161,6 +159,14 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           return suggestInRecordsHeader(this.compiler, offset, container);
         }
 
+        // Check if we're in a Records element body - suggest record entry snippet
+        if (
+          getElementKind(container).unwrap_or(undefined) === ElementKind.Records
+          && container.body && isOffsetWithinSpan(offset, container.body)
+        ) {
+          // Don't provide suggestions in Records body - use inline completions instead
+          return noSuggestions();
+        }
 
         if (
           (container.bodyColon && offset >= container.bodyColon.end)

@@ -1,4 +1,4 @@
-import { SymbolKind } from '@/core/analyzer/symbol/symbolIndex';
+import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
@@ -136,4 +136,56 @@ export function isOffsetWithinElementHeader (offset: number, element: SyntaxNode
 
 export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
   return tuple.commaList.length + tuple.elementList.length === 0;
+}
+
+/**
+ * Get columns from a table symbol
+ * @param tableSymbol The table symbol to extract columns from
+ * @param compiler Optional compiler instance to extract type names from source
+ * @returns Array of column objects with name and type information
+ */
+export function getColumnsFromTableSymbol (
+  tableSymbol: any,
+  compiler?: Compiler,
+): Array<{ name: string; type: string }> {
+  const columns: Array<{ name: string; type: string }> = [];
+
+  for (const [index] of tableSymbol.symbolTable.entries()) {
+    const res = destructureIndex(index).unwrap_or(undefined);
+    if (res === undefined || res.kind !== SymbolKind.Column) continue;
+
+    const columnSymbol = tableSymbol.symbolTable.get(index);
+    if (columnSymbol) {
+      let type = 'value';
+
+      // Try to extract type from column declaration
+      if (compiler && columnSymbol.declaration) {
+        const declaration = columnSymbol.declaration;
+        // Column declaration is a FunctionApplicationNode like: id int [pk]
+        // The args[0] is the type
+        if (declaration.args && declaration.args[0]) {
+          type = getSource(compiler, declaration.args[0]);
+        }
+      }
+
+      columns.push({ name: res.name, type });
+    }
+  }
+
+  return columns;
+}
+
+/**
+ * Generate a snippet for entering a record entry with placeholders for each column
+ * @param columns Array of column objects with name and type information
+ * @returns A snippet string with placeholders like: ${1:id (int)}, ${2:name (varchar)}, ${3:email (varchar)}
+ */
+export function generateRecordEntrySnippet (columns: Array<{ name: string; type: string }>): string {
+  if (columns.length === 0) {
+    return '';
+  }
+
+  return columns
+    .map((col, index) => `\${${index + 1}:${col.name} (${col.type})}`)
+    .join(', ');
 }
