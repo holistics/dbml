@@ -1,5 +1,17 @@
 import { isEmpty, reduce } from 'lodash-es';
-import { addQuoteIfNeeded, isNumericType, isBooleanType, isStringType, isDateTimeType } from '@dbml/parse';
+import {
+  addQuoteIfNeeded,
+  isNumericType,
+  isBooleanType,
+  isStringType,
+  isDateTimeType,
+  tryExtractBoolean,
+  tryExtractNumeric,
+  tryExtractString,
+  tryExtractDateTime,
+  isNullish,
+  isFunctionExpression,
+} from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
@@ -350,8 +362,8 @@ class DbmlExporter {
   static formatRecordValue (recordValue) {
     const { value, type } = recordValue;
 
-    // Handle null values
-    if (value === null) {
+    // Handle null/undefined values
+    if (value === null || value === undefined) {
       return 'null';
     }
 
@@ -360,18 +372,46 @@ class DbmlExporter {
       return `\`${value}\``;
     }
 
+    // Try to extract typed values using tryExtract functions
+    // If extraction fails, fall back to function expression
+
     if (isBooleanType(type)) {
-      return value ? 'true' : 'false';
+      const extracted = tryExtractBoolean(value);
+      if (extracted !== null) {
+        return extracted ? 'true' : 'false';
+      }
+      // If extraction failed, wrap in function expression
+      return `\`${value}\``;
     }
 
     if (isNumericType(type)) {
-      return String(value);
+      const extracted = tryExtractNumeric(value);
+      if (extracted !== null) {
+        return String(extracted);
+      }
+      // If extraction failed, wrap in function expression
+      return `\`${value}\``;
     }
 
-    // Default: string types, date/time types, and others
-    const strValue = String(value);
-    const quote = strValue.includes('\n') ? '\'\'\'' : '\'';
-    return `${quote}${strValue.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}${quote}`;
+    if (isDateTimeType(type)) {
+      const extracted = tryExtractDateTime(value);
+      if (extracted !== null) {
+        const quote = extracted.includes('\n') ? '\'\'\'' : '\'';
+        return `${quote}${extracted.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}${quote}`;
+      }
+      // If extraction failed, wrap in function expression
+      return `\`${value}\``;
+    }
+
+    // Default: string types and others
+    const extracted = tryExtractString(value);
+    if (extracted !== null) {
+      const quote = extracted.includes('\n') ? '\'\'\'' : '\'';
+      return `${quote}${extracted.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}${quote}`;
+    }
+
+    // If all extractions failed, wrap in function expression
+    return `\`${value}\``;
   }
 
   static exportRecords (model) {
