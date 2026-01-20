@@ -1,0 +1,10 @@
+Table "sample_data_test" {
+  "id" int
+  "scientific_num" decimal(20,10) [default: 1.23e-5]
+  "signed_positive" int [default: `+42`]
+  "signed_negative" int [default: `-99`]
+  "sql_func_default" datetime [default: `NOW()`]
+  "datetime_val" datetime [default: '2024-01-15 10:30:00']
+  "string_simple" varchar(200) [default: 'test value']
+  "computed_expr" int
+}
