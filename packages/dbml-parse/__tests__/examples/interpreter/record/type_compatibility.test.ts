@@ -412,7 +412,7 @@ describe('[example - record] type compatibility validation', () => {
 
       expect(errors.length).toBe(0);
       expect(warnings.length).toBe(1);
-      expect(warnings[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'name' without default and increment");
+      expect(warnings[0].diagnostic).toBe("NULL not allowed for non-nullable column 'name' without default and increment");
     });
 
     test('- should allow NULL for NOT NULL column with default', () => {
@@ -481,7 +481,7 @@ describe('[example - record] type compatibility validation', () => {
       // NULL should be valid syntax
       expect(errors.length).toBe(0);
       expect(warnings.length).toBe(1);
-      expect(warnings[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'name' without default and increment");
+      expect(warnings[0].diagnostic).toBe("NULL not allowed for non-nullable column 'name' without default and increment");
     });
   });
 
