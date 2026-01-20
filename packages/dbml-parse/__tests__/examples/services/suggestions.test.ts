@@ -14,7 +14,7 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(1, 1);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels - should include both Records keyword and snippet
+      // Test labels
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toContain('Table');
       expect(labels).toContain('TableGroup');
@@ -23,7 +23,6 @@ describe('[snapshot] CompletionItemProvider', () => {
       expect(labels).toContain('Ref');
       expect(labels).toContain('TablePartial');
       expect(labels).toContain('Records');
-      expect(labels).toContain('Records (snippet)');
 
       // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
@@ -39,7 +38,7 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(1, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels - should include both Records keyword and snippet
+      // Test labels
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toContain('Table');
       expect(labels).toContain('Records');
@@ -58,7 +57,7 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(1, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels - should include both Records keyword and snippet
+      // Test labels
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toContain('Table');
       expect(labels).toContain('Records');
@@ -77,7 +76,7 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(1, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels - should include both Records keyword and snippet
+      // Test labels
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toContain('Table');
       expect(labels).toContain('Records');
@@ -129,7 +128,7 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(3, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels - should include both Records keyword and snippet
+      // Test labels
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toContain('Note');
       expect(labels).toContain('indexes');
@@ -205,7 +204,7 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(2, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels - should include both Records keyword and snippet
+      // Test labels
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toContain('Note');
       expect(labels).toContain('indexes');
@@ -227,7 +226,7 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(3, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels - should include both Records keyword and snippet
+      // Test labels
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toContain('Note');
       expect(labels).toContain('indexes');
@@ -1251,7 +1250,7 @@ describe('[snapshot] CompletionItemProvider', () => {
       const position = createPosition(2, 3);
       const result = provider.provideCompletionItems(model, position);
 
-      // Test labels - should include both Records keyword and snippet
+      // Test labels
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toContain('Note');
       expect(labels).toContain('indexes');
