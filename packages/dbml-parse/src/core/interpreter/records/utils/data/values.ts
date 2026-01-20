@@ -51,7 +51,18 @@ export function extractSignedNumber (node: SyntaxNode): number | null {
 
 // Try to extract a numeric value from a syntax node or primitive
 // Example: 0, 1, '0', '1', "2", -2, "-2"
-export function tryExtractNumeric (value: SyntaxNode): number | null {
+export function tryExtractNumeric (value: SyntaxNode | number | string | boolean | undefined | null): number | null {
+  // Handle null/undefined
+  if (value === null || value === undefined) return null;
+
+  // Handle primitive types
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') {
+    const parsed = Number(value);
+    return !isNaN(parsed) ? parsed : null;
+  }
+  if (typeof value === 'boolean') return value ? 1 : 0;
+
   // Numeric literal or signed number
   const num = extractSignedNumber(value);
   if (num !== null) return num;
@@ -73,7 +84,24 @@ export const FALSY_VALUES = ['false', 'no', 'n', 'f', '0'];
 
 // Try to extract a boolean value from a syntax node or primitive
 // Example: 't', 'f', 'y', 'n', 'true', 'false', true, false, 'yes', 'no', 1, 0, '1', '0'
-export function tryExtractBoolean (value: SyntaxNode): boolean | null {
+export function tryExtractBoolean (value: SyntaxNode | number | string | boolean | undefined | null): boolean | null {
+  // Handle null/undefined
+  if (value === null || value === undefined) return null;
+
+  // Handle primitive types
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') {
+    if (value === 0) return false;
+    if (value === 1) return true;
+    return null;
+  }
+  if (typeof value === 'string') {
+    const lower = value.toLowerCase();
+    if (TRUTHY_VALUES.includes(lower)) return true;
+    if (FALSY_VALUES.includes(lower)) return false;
+    return null;
+  }
+
   // Identifier: true, false
   if (isExpressionAnIdentifierNode(value)) {
     const varName = value.expression.variable?.value?.toLowerCase();
@@ -98,7 +126,13 @@ export function tryExtractBoolean (value: SyntaxNode): boolean | null {
 
 // Try to extract an enum value from a syntax node or primitive
 // Either enum references or string are ok
-export function tryExtractEnum (value: SyntaxNode): string | null {
+export function tryExtractEnum (value: SyntaxNode | string | undefined | null): string | null {
+  // Handle null/undefined
+  if (value === null || value === undefined) return null;
+
+  // Handle primitive string
+  if (typeof value === 'string') return value;
+
   // Enum field reference: gender.male
   const fragments = destructureComplexVariable(value).unwrap_or(undefined);
   if (fragments) {
@@ -133,7 +167,13 @@ export function extractEnumAccess (value: SyntaxNode): { path: string[]; value: 
 
 // Try to extract a string value from a syntax node or primitive
 // Example: "abc", 'abc'
-export function tryExtractString (value: SyntaxNode): string | null {
+export function tryExtractString (value: SyntaxNode | string | undefined | null): string | null {
+  // Handle null/undefined
+  if (value === null || value === undefined) return null;
+
+  // Handle primitive string
+  if (typeof value === 'string') return value;
+
   // Quoted string: 'hello', "world"
   return extractQuotedStringToken(value).unwrap_or(null);
 }
@@ -146,7 +186,18 @@ const ISO_DATETIME_REGEX = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:
 // Try to extract a datetime value from a syntax node or primitive in ISO format
 // Supports: date (YYYY-MM-DD), time (HH:MM:SS), datetime (YYYY-MM-DDTHH:MM:SS)
 // Example: '2024-01-15', '10:30:00', '2024-01-15T10:30:00Z'
-export function tryExtractDateTime (value: SyntaxNode): string | null {
+export function tryExtractDateTime (value: SyntaxNode | string | undefined | null): string | null {
+  // Handle null/undefined
+  if (value === null || value === undefined) return null;
+
+  // Handle primitive string
+  if (typeof value === 'string') {
+    if (ISO_DATETIME_REGEX.test(value) || ISO_DATE_REGEX.test(value) || ISO_TIME_REGEX.test(value)) {
+      return value;
+    }
+    return null;
+  }
+
   const strValue = extractQuotedStringToken(value).unwrap_or(null);
 
   if (strValue === null) return null;
