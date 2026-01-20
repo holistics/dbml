@@ -370,7 +370,8 @@ class DbmlExporter {
 
     // Default: string types, date/time types, and others
     const strValue = String(value);
-    return `'${strValue.replaceAll("'", "\\'")}'`;
+    const quote = strValue.includes('\n') ? '\'\'\'' : '\'';
+    return `${quote}${strValue.replaceAll("'", "\\'")}${quote}`;
   }
 
   static exportRecords (model) {
