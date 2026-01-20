@@ -1,0 +1,20 @@
+Table edge_cases {
+  id integer [pk]
+  scientific_notation_pos float
+  scientific_notation_neg float
+  signed_positive integer
+  signed_negative integer
+  sql_function_default varchar
+  dbml_expr_default integer
+  datetime_value timestamp
+  string_with_newline text
+  string_with_backslash varchar
+  string_with_escape_seq varchar
+  string_with_quotes varchar
+  null_value varchar
+}
+
+Records edge_cases(id, scientific_notation_pos, scientific_notation_neg, signed_positive, signed_negative, sql_function_default, dbml_expr_default, datetime_value, string_with_newline, string_with_backslash, string_with_escape_seq, string_with_quotes, null_value) {
+  1, 1.23e5, -4.56e-3, +42, -100, `NOW()`, `1 + 2 * 3`, "2024-01-15 10:30:00.123456", "Line 1\nLine 2\nLine 3", "C:\\Users\\path\\file.txt", "Tab:\tNewline:\nCarriage return:\r", "She said \"Hello\" and 'Hi'", null
+  2, 9.99e10, -1.11e-10, +0, -0, `CURRENT_TIMESTAMP`, `LENGTH('test')`, "2023-12-31 23:59:59", "First line\n\nThird line", "Escaped backslash: \\\\", "Quote: \" Apostrophe: ' Backslash: \\", "O'Reilly's \"book\"", null
+}
