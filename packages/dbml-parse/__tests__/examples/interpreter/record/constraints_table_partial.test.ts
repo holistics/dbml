@@ -361,7 +361,7 @@ describe('[example - record] Constraints in table partials', () => {
 
       expect(warnings.length).toBe(1);
       expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(warnings[0].diagnostic).toBe("NULL not allowed for NOT NULL column 'email' without default and increment");
+      expect(warnings[0].diagnostic).toBe("NULL not allowed for non-nullable column 'email' without default and increment");
     });
 
     test('should validate multiple NOT NULL constraints from partial', () => {
