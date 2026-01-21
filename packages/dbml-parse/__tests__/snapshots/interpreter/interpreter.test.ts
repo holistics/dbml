@@ -33,7 +33,7 @@ describe('[snapshot] interpreter', () => {
         2,
       );
     } else {
-      const res = new Interpreter(report.getValue()).interpret();
+      const res = new Interpreter(report.getValue(), program).interpret();
       if (res.getErrors().length > 0) {
         output = JSON.stringify(
           res.getErrors(),
