@@ -6,7 +6,7 @@ import {
   type InlineCompletions,
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
-import { ElementDeclarationNode, FunctionApplicationNode, BlockExpressionNode, ProgramNode, CallExpressionNode, TupleExpressionNode } from '@/core/parser/nodes';
+import { ElementDeclarationNode, BlockExpressionNode, ProgramNode, CallExpressionNode, TupleExpressionNode } from '@/core/parser/nodes';
 import { extractReferee, extractVariableFromExpression, getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { extractColumnNameAndType } from './utils';
@@ -45,10 +45,7 @@ export default class DBMLInlineCompletionItemProvider implements InlineCompletio
 
     // Check if cursor is at the start of a line (only whitespace before it)
     const lineContent = model.getLineContent(position.lineNumber);
-    const textBeforeCursor = lineContent.substring(0, position.column - 1);
-    if (textBeforeCursor.trim() !== '') {
-      return null;
-    }
+    if (lineContent.trim() !== '') return null;
 
     if (element.parent instanceof ProgramNode) {
       return suggestInTopLevelRecords(this.compiler, element, position);
