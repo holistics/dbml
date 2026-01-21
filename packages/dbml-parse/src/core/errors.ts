@@ -129,7 +129,7 @@ export class CompileError extends Error {
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: Readonly<SyntaxNode | SyntaxToken | readonly (SyntaxNode | SyntaxToken)[]>; // The nodes or tokens that cause the error
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
 
   start: Readonly<number>;
 

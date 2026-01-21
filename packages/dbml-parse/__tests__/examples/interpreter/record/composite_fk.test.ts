@@ -85,8 +85,9 @@ describe('[example - record] composite foreign key constraints', () => {
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(1);
+    expect(warnings.length).toBe(2);
     expect(warnings[0].diagnostic).toBe('FK violation: (orders.merchant_id, orders.country) = (1, "UK") does not exist in (merchants.id, merchants.country_code)');
+    expect(warnings[1].diagnostic).toBe('FK violation: (orders.merchant_id, orders.country) = (1, "UK") does not exist in (merchants.id, merchants.country_code)');
   });
 
   test('should allow NULL in composite FK columns', () => {
@@ -168,9 +169,11 @@ describe('[example - record] composite foreign key constraints', () => {
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(2);
+    expect(warnings.length).toBe(4);
     expect(warnings[0].diagnostic).toBe('FK violation: (products.id, products.region) = (2, "US") does not exist in (categories.id, categories.region)');
-    expect(warnings[1].diagnostic).toBe('FK violation: (categories.id, categories.region) = (3, "EU") does not exist in (products.id, products.region)');
+    expect(warnings[1].diagnostic).toBe('FK violation: (products.id, products.region) = (2, "US") does not exist in (categories.id, categories.region)');
+    expect(warnings[2].diagnostic).toBe('FK violation: (categories.id, categories.region) = (3, "EU") does not exist in (products.id, products.region)');
+    expect(warnings[3].diagnostic).toBe('FK violation: (categories.id, categories.region) = (3, "EU") does not exist in (products.id, products.region)');
   });
 
   test('should validate composite FK with schema-qualified tables', () => {
@@ -203,7 +206,8 @@ describe('[example - record] composite foreign key constraints', () => {
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(1);
+    expect(warnings.length).toBe(2);
     expect(warnings[0].diagnostic).toBe('FK violation: (public.posts.user_id, public.posts.tenant_id) = (999, 100) does not exist in (auth.users.id, auth.users.tenant_id)');
+    expect(warnings[1].diagnostic).toBe('FK violation: (public.posts.user_id, public.posts.tenant_id) = (999, 100) does not exist in (auth.users.id, auth.users.tenant_id)');
   });
 });
