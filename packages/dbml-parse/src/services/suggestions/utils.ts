@@ -5,6 +5,7 @@ import { hasTrailingSpaces } from '@/core/lexer/utils';
 import { isAlphaOrUnderscore } from '@/core/utils';
 import { SyntaxNode, TupleExpressionNode } from '@/core/parser/nodes';
 import Compiler from '@/compiler';
+import { extractColumnNameAndType } from '@/services/inlineCompletions/utils';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
@@ -147,7 +148,7 @@ export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
 export function getColumnsFromTableSymbol (
   tableSymbol: any,
   compiler?: Compiler,
-): Array<{ name: string; type: string }> {
+): Array<{ name: string; type: string }> | null {
   const columns: Array<{ name: string; type: string }> = [];
 
   for (const [index] of tableSymbol.symbolTable.entries()) {
@@ -155,21 +156,20 @@ export function getColumnsFromTableSymbol (
     if (res === undefined || res.kind !== SymbolKind.Column) continue;
 
     const columnSymbol = tableSymbol.symbolTable.get(index);
-    if (columnSymbol) {
-      let type = 'value';
-
-      // Try to extract type from column declaration
-      if (compiler && columnSymbol.declaration) {
-        const declaration = columnSymbol.declaration;
-        // Column declaration is a FunctionApplicationNode like: id int [pk]
-        // The args[0] is the type
-        if (declaration.args && declaration.args[0]) {
-          type = getSource(compiler, declaration.args[0]);
-        }
-      }
-
-      columns.push({ name: res.name, type });
+    if (!columnSymbol) {
+      // If any column symbol is missing, return null
+      return null;
     }
+
+    // Use extractColumnNameAndType for proper handling of injected columns
+    const columnInfo = extractColumnNameAndType(columnSymbol, res.name);
+
+    if (!columnInfo) {
+      // If we can't extract column info, return null
+      return null;
+    }
+
+    columns.push(columnInfo);
   }
 
   return columns;

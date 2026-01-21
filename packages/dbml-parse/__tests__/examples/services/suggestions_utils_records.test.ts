@@ -101,13 +101,16 @@ describe('[unit] Suggestions Utils - Records', () => {
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
 
-        expect(columns.length).toBe(3);
-        expect(columns[0].name).toBe('id');
-        expect(columns[0].type).toBe('int');
-        expect(columns[1].name).toBe('name');
-        expect(columns[1].type).toBe('varchar');
-        expect(columns[2].name).toBe('email');
-        expect(columns[2].type).toBe('varchar');
+        expect(columns).not.toBeNull();
+
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(3);
+        expect(columns![0].name).toBe('id');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('name');
+        expect(columns![1].type).toBe('varchar');
+        expect(columns![2].name).toBe('email');
+        expect(columns![2].type).toBe('varchar');
       }
     });
 
@@ -132,17 +135,19 @@ describe('[unit] Suggestions Utils - Records', () => {
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
 
-        expect(columns.length).toBe(5);
-        expect(columns[0].name).toBe('product_id');
-        expect(columns[0].type).toBe('int');
-        expect(columns[1].name).toBe('product_name');
-        expect(columns[1].type).toBe('varchar');
-        expect(columns[2].name).toBe('price');
-        expect(columns[2].type).toBe('decimal');
-        expect(columns[3].name).toBe('in_stock');
-        expect(columns[3].type).toBe('boolean');
-        expect(columns[4].name).toBe('created_at');
-        expect(columns[4].type).toBe('timestamp');
+        expect(columns).not.toBeNull();
+
+        expect(columns!.length).toBe(5);
+        expect(columns![0].name).toBe('product_id');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('product_name');
+        expect(columns![1].type).toBe('varchar');
+        expect(columns![2].name).toBe('price');
+        expect(columns![2].type).toBe('decimal');
+        expect(columns![3].name).toBe('in_stock');
+        expect(columns![3].type).toBe('boolean');
+        expect(columns![4].name).toBe('created_at');
+        expect(columns![4].type).toBe('timestamp');
       }
     });
 
@@ -163,9 +168,11 @@ describe('[unit] Suggestions Utils - Records', () => {
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
 
-        expect(columns.length).toBe(1);
-        expect(columns[0].name).toBe('count');
-        expect(columns[0].type).toBe('int');
+        expect(columns).not.toBeNull();
+
+        expect(columns!.length).toBe(1);
+        expect(columns![0].name).toBe('count');
+        expect(columns![0].type).toBe('int');
       }
     });
 
@@ -188,13 +195,15 @@ describe('[unit] Suggestions Utils - Records', () => {
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
 
-        expect(columns.length).toBe(3);
-        expect(columns[0].name).toBe('column-1');
-        expect(columns[0].type).toBe('int');
-        expect(columns[1].name).toBe('column 2');
-        expect(columns[1].type).toBe('varchar');
-        expect(columns[2].name).toBe('column.3');
-        expect(columns[2].type).toBe('boolean');
+        expect(columns).not.toBeNull();
+
+        expect(columns!.length).toBe(3);
+        expect(columns![0].name).toBe('column-1');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('column 2');
+        expect(columns![1].type).toBe('varchar');
+        expect(columns![2].name).toBe('column.3');
+        expect(columns![2].type).toBe('boolean');
       }
     });
 
@@ -213,7 +222,9 @@ describe('[unit] Suggestions Utils - Records', () => {
 
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
-        expect(columns.length).toBe(0);
+
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(0);
       }
     });
 
@@ -239,12 +250,14 @@ describe('[unit] Suggestions Utils - Records', () => {
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
 
+        expect(columns).not.toBeNull();
+
         // Should only get columns, not indexes
-        expect(columns.length).toBe(2);
-        expect(columns[0].name).toBe('id');
-        expect(columns[0].type).toBe('int');
-        expect(columns[1].name).toBe('name');
-        expect(columns[1].type).toBe('varchar');
+        expect(columns!.length).toBe(2);
+        expect(columns![0].name).toBe('id');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('name');
+        expect(columns![1].type).toBe('varchar');
       }
     });
 
@@ -267,13 +280,15 @@ describe('[unit] Suggestions Utils - Records', () => {
       if (tableSymbol instanceof TableSymbol) {
         const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
 
-        expect(columns.length).toBe(3);
-        expect(columns[0].name).toBe('id');
-        expect(columns[0].type).toBe('int');
-        expect(columns[1].name).toBe('username');
-        expect(columns[1].type).toBe('varchar');
-        expect(columns[2].name).toBe('password_hash');
-        expect(columns[2].type).toBe('varchar');
+        expect(columns).not.toBeNull();
+
+        expect(columns!.length).toBe(3);
+        expect(columns![0].name).toBe('id');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('username');
+        expect(columns![1].type).toBe('varchar');
+        expect(columns![2].name).toBe('password_hash');
+        expect(columns![2].type).toBe('varchar');
       }
     });
   });

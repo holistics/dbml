@@ -755,7 +755,6 @@ function suggestInRecordsHeader (
   ]);
 }
 
-
 function suggestInCallExpression (
   compiler: Compiler,
   offset: number,
