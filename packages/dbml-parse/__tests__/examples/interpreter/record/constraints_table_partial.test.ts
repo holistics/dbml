@@ -94,9 +94,11 @@ describe('[example - record] Constraints in table partials', () => {
       const result = interpret(source);
       const warnings = result.getWarnings();
 
-      expect(warnings.length).toBe(1);
+      expect(warnings.length).toBe(2);
       expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
       expect(warnings[0].diagnostic).toBe('Duplicate Composite PK: (regions.country_code, regions.region_code) = ("US", "CA")');
+      expect(warnings[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[1].diagnostic).toBe('Duplicate Composite PK: (regions.country_code, regions.region_code) = ("US", "CA")');
     });
 
     test('should detect NULL in PK from injected table partial', () => {
@@ -309,9 +311,11 @@ describe('[example - record] Constraints in table partials', () => {
       const result = interpret(source);
       const warnings = result.getWarnings();
 
-      expect(warnings.length).toBe(1);
+      expect(warnings.length).toBe(2);
       expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
       expect(warnings[0].diagnostic).toBe('Duplicate Composite UNIQUE: (data.field1, data.field2) = ("a", "x")');
+      expect(warnings[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(warnings[1].diagnostic).toBe('Duplicate Composite UNIQUE: (data.field1, data.field2) = ("a", "x")');
     });
   });
 

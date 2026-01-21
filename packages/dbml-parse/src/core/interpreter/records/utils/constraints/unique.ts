@@ -54,7 +54,10 @@ export function validateUnique (
 
         const keyValue = extractKeyValueWithDefault(row.values, uniqueColumns, uniqueColumnFields);
         if (seen.has(keyValue)) {
-          const errorNode = row.columnNodes[uniqueColumns[0]] || row.node;
+          // Create separate error for each column in the constraint
+          const errorNodes = uniqueColumns
+            .map((col) => row.columnNodes[col])
+            .filter(Boolean);
           const isComposite = uniqueColumns.length > 1;
           const constraintType = isComposite ? 'Composite UNIQUE' : 'UNIQUE';
           const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, uniqueColumns);
@@ -67,7 +70,24 @@ export function validateUnique (
             const value = JSON.stringify(row.values[uniqueColumns[0]]?.value);
             msg = `Duplicate ${constraintType}: ${columnRef} = ${value}`;
           }
-          errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
+
+          if (errorNodes.length > 0) {
+            // Create one error per column node
+            for (const node of errorNodes) {
+              errors.push(new CompileError(
+                CompileErrorCode.INVALID_RECORDS_FIELD,
+                msg,
+                node,
+              ));
+            }
+          } else {
+            // Fallback to row node if no column nodes available
+            errors.push(new CompileError(
+              CompileErrorCode.INVALID_RECORDS_FIELD,
+              msg,
+              row.node,
+            ));
+          }
         } else {
           seen.set(keyValue, rowIndex);
         }

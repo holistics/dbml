@@ -145,9 +145,11 @@ describe('[example - record] FK validation across multiple records blocks', () =
 
     const result = interpret(source);
     const warnings = result.getWarnings();
-    expect(warnings.length).toBe(1);
+    expect(warnings.length).toBe(2);
     expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
     expect(warnings[0].diagnostic).toContain('FK violation');
+    expect(warnings[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[1].diagnostic).toContain('FK violation');
   });
 
   test('should handle FK when referenced column appears in some but not all blocks', () => {
