@@ -74,7 +74,10 @@ function validateDirection (
 
     const key = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
     if (!validKeys.has(key)) {
-      const errorNode = row.columnNodes[sourceEndpoint.fieldNames[0]] || row.node;
+      // Create separate error for each column in the constraint
+      const errorNodes = sourceEndpoint.fieldNames
+        .map((col) => row.columnNodes[col])
+        .filter(Boolean);
       const isComposite = sourceEndpoint.fieldNames.length > 1;
       const sourceColumnRef = formatFullColumnNames(source.mergedTable.schemaName, source.mergedTable.name, sourceEndpoint.fieldNames);
       const targetColumnRef = formatFullColumnNames(target.mergedTable.schemaName, target.mergedTable.name, targetEndpoint.fieldNames);
@@ -87,11 +90,24 @@ function validateDirection (
         const value = JSON.stringify(row.values[sourceEndpoint.fieldNames[0]]?.value);
         msg = `FK violation: ${sourceColumnRef} = ${value} does not exist in ${targetColumnRef}`;
       }
-      errors.push(new CompileError(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        msg,
-        errorNode,
-      ));
+
+      if (errorNodes.length > 0) {
+        // Create one error per column node
+        for (const node of errorNodes) {
+          errors.push(new CompileError(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            msg,
+            node,
+          ));
+        }
+      } else {
+        // Fallback to row node if no column nodes available
+        errors.push(new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          msg,
+          row.node,
+        ));
+      }
     }
   }
 

@@ -57,11 +57,28 @@ export function validatePrimaryKey (
           const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, missingColumnsWithoutDefaults);
           const msg = `${constraintType}: Column ${columnRef} is missing from record and has no default value`;
           for (const row of rows) {
-            errors.push(new CompileError(
-              CompileErrorCode.INVALID_RECORDS_FIELD,
-              msg,
-              row.node,
-            ));
+            // Create separate error for each column in the constraint
+            const errorNodes = pkColumns
+              .map((col) => row.columnNodes[col])
+              .filter(Boolean);
+
+            if (errorNodes.length > 0) {
+              // Create one error per column node
+              for (const node of errorNodes) {
+                errors.push(new CompileError(
+                  CompileErrorCode.INVALID_RECORDS_FIELD,
+                  msg,
+                  node,
+                ));
+              }
+            } else {
+              // Fallback to row node if no column nodes available
+              errors.push(new CompileError(
+                CompileErrorCode.INVALID_RECORDS_FIELD,
+                msg,
+                row.node,
+              ));
+            }
           }
         }
         continue;
@@ -85,18 +102,31 @@ export function validatePrimaryKey (
             continue;
           }
           // Non-auto-increment PK columns cannot have NULL (even with defaults)
-          // Find the first NULL column to report error on
-          for (const col of pkColumns) {
-            const val = row.values[col];
-            if (!val || val.value === null) {
-              const errorNode = row.columnNodes[col] || row.node;
-              const isComposite = pkColumns.length > 1;
-              const constraintType = isComposite ? 'Composite PK' : 'PK';
-              const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, pkColumns);
-              const msg = `NULL in ${constraintType}: ${columnRef} cannot be NULL`;
-              errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
-              break;
+          // Create separate error for each column in the constraint
+          const errorNodes = pkColumns
+            .map((col) => row.columnNodes[col])
+            .filter(Boolean);
+          const isComposite = pkColumns.length > 1;
+          const constraintType = isComposite ? 'Composite PK' : 'PK';
+          const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, pkColumns);
+          const msg = `NULL in ${constraintType}: ${columnRef} cannot be NULL`;
+
+          if (errorNodes.length > 0) {
+            // Create one error per column node
+            for (const node of errorNodes) {
+              errors.push(new CompileError(
+                CompileErrorCode.INVALID_RECORDS_FIELD,
+                msg,
+                node,
+              ));
             }
+          } else {
+            // Fallback to row node if no column nodes available
+            errors.push(new CompileError(
+              CompileErrorCode.INVALID_RECORDS_FIELD,
+              msg,
+              row.node,
+            ));
           }
           continue;
         }
@@ -104,8 +134,10 @@ export function validatePrimaryKey (
         // Check for duplicates (using defaults for missing values)
         const keyValue = extractKeyValueWithDefault(row.values, pkColumns, pkColumnFields);
         if (seen.has(keyValue)) {
-          // Report error on the first column of the constraint
-          const errorNode = row.columnNodes[pkColumns[0]] || row.node;
+          // Create separate error for each column in the constraint
+          const errorNodes = pkColumns
+            .map((col) => row.columnNodes[col])
+            .filter(Boolean);
           const isComposite = pkColumns.length > 1;
           const constraintType = isComposite ? 'Composite PK' : 'PK';
           const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, pkColumns);
@@ -118,7 +150,24 @@ export function validatePrimaryKey (
             const value = JSON.stringify(row.values[pkColumns[0]]?.value);
             msg = `Duplicate ${constraintType}: ${columnRef} = ${value}`;
           }
-          errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_FIELD, msg, errorNode));
+
+          if (errorNodes.length > 0) {
+            // Create one error per column node
+            for (const node of errorNodes) {
+              errors.push(new CompileError(
+                CompileErrorCode.INVALID_RECORDS_FIELD,
+                msg,
+                node,
+              ));
+            }
+          } else {
+            // Fallback to row node if no column nodes available
+            errors.push(new CompileError(
+              CompileErrorCode.INVALID_RECORDS_FIELD,
+              msg,
+              row.node,
+            ));
+          }
         } else {
           seen.set(keyValue, rowIndex);
         }

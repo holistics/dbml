@@ -102,9 +102,11 @@ describe('[example - record] PK validation across multiple records blocks', () =
 
     const result = interpret(source);
     const warnings = result.getWarnings();
-    expect(warnings.length).toBe(1);
+    expect(warnings.length).toBe(2);
     expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
     expect(warnings[0].diagnostic).toContain('Duplicate Composite PK');
+    expect(warnings[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[1].diagnostic).toContain('Duplicate Composite PK');
   });
 
   test('should handle PK validation when PK column missing from some blocks', () => {
