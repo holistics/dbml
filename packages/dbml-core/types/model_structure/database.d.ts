@@ -19,7 +19,7 @@ export interface Project {
     name: string;
 }
 
-type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
+export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
 
 interface RawTableRecord {
     schemaName: string | undefined;
