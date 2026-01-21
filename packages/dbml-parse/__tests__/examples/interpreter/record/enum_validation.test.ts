@@ -247,9 +247,7 @@ describe('[example - record] Enum validation', () => {
     expect(errors[0].diagnostic).toContain('status');
   });
 
-  test.skip('should validate enum from table partial', () => {
-    // TODO: This test reveals that isEnum flag is not set correctly for columns from table partials
-    // This is a separate bug in the type resolution system that needs to be fixed
+  test('should validate enum from table partial', () => {
     const source = `
       Enum priority {
         low
@@ -274,10 +272,12 @@ describe('[example - record] Enum validation', () => {
     `;
     const result = interpret(source);
     const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    expect(errors.length).toBe(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(errors[0].diagnostic).toContain('invalid_priority');
-    expect(errors[0].diagnostic).toContain('priority');
+    expect(errors.length).toBe(0);
+    expect(warnings.length).toBe(1);
+    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(warnings[0].diagnostic).toContain('invalid_priority');
+    expect(warnings[0].diagnostic).toContain('priority');
   });
 });

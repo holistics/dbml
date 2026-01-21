@@ -177,13 +177,14 @@ function extractDataFromRow (
   return new Report({ row: rowObj, columnNodes }, errors, warnings);
 }
 
-function getNodeSourceText (node: SyntaxNode): string {
+function getNodeSourceText (node: SyntaxNode, source: string): string {
   if (node instanceof FunctionExpressionNode) {
     return node.value?.value || '';
   }
-  // For other nodes, try to extract a meaningful string representation
-  // This is a fallback that returns empty string for now
-  // TODO: implement full source text extraction if needed
+  // Extract the source text using node start and end positions
+  if (!isNaN(node.start) && !isNaN(node.end)) {
+    return source.slice(node.start, node.end);
+  }
   return '';
 }
 
@@ -297,7 +298,7 @@ function extractValue (
     const numValue = tryExtractNumeric(node);
     if (numValue === null) {
       return new Report(
-        { value: getNodeSourceText(node), type: 'expression' },
+        { value: getNodeSourceText(node, env.source), type: 'expression' },
         [],
         [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -352,7 +353,7 @@ function extractValue (
     const boolValue = tryExtractBoolean(node);
     if (boolValue === null) {
       return new Report(
-        { value: getNodeSourceText(node), type: 'expression' },
+        { value: getNodeSourceText(node, env.source), type: 'expression' },
         [],
         [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -369,7 +370,7 @@ function extractValue (
     const dtValue = tryExtractDateTime(node);
     if (dtValue === null) {
       return new Report(
-        { value: getNodeSourceText(node), type: 'expression' },
+        { value: getNodeSourceText(node, env.source), type: 'expression' },
         [],
         [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -386,7 +387,7 @@ function extractValue (
     const strValue = tryExtractString(node);
     if (strValue === null) {
       return new Report(
-        { value: getNodeSourceText(node), type: 'expression' },
+        { value: getNodeSourceText(node, env.source), type: 'expression' },
         [],
         [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,

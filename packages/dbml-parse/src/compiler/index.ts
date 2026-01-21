@@ -68,7 +68,7 @@ export default class Compiler {
     }
 
     return parseRes.chain(({ ast, tokens }) =>
-      new Interpreter(ast).interpret().map((rawDb) => ({ ast, tokens, rawDb })),
+      new Interpreter(ast, this.source).interpret().map((rawDb) => ({ ast, tokens, rawDb })),
     );
   }
 

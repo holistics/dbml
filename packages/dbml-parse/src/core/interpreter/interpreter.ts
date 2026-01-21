@@ -64,7 +64,7 @@ export default class Interpreter {
   ast: ProgramNode;
   env: InterpreterDatabase;
 
-  constructor (ast: ProgramNode) {
+  constructor (ast: ProgramNode, source: string) {
     this.ast = ast;
     this.env = {
       schema: [],
@@ -80,6 +80,7 @@ export default class Interpreter {
       tablePartials: new Map(),
       records: new Map(),
       recordsElements: [],
+      source,
     };
   }
 

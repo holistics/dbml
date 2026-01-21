@@ -26,6 +26,7 @@ export interface InterpreterDatabase {
   project: Map<ElementDeclarationNode, Project>;
   records: Map<Table, TableRecordRow[]>;
   recordsElements: ElementDeclarationNode[];
+  source: string;
 }
 
 // Record value type
