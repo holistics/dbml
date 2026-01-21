@@ -166,15 +166,25 @@ function extractDataFromRow (
     const column = mergedColumns[i];
     columnNodes[column.name] = arg;
     const result = extractValue(arg, column, tableSchemaName, env);
-    if (Array.isArray(result)) {
-      // Data type validation errors become warnings
-      warnings.push(...result);
-    } else {
-      rowObj[column.name] = result;
+    errors.push(...result.getErrors());
+    warnings.push(...result.getWarnings());
+    const value = result.getValue();
+    if (value !== null) {
+      rowObj[column.name] = value;
     }
   }
 
   return new Report({ row: rowObj, columnNodes }, errors, warnings);
+}
+
+function getNodeSourceText (node: SyntaxNode): string {
+  if (node instanceof FunctionExpressionNode) {
+    return node.value?.value || '';
+  }
+  // For other nodes, try to extract a meaningful string representation
+  // This is a fallback that returns empty string for now
+  // TODO: implement full source text extraction if needed
+  return '';
 }
 
 function extractValue (
@@ -182,7 +192,7 @@ function extractValue (
   column: Column,
   tableSchemaName: string | null,
   env: InterpreterDatabase,
-): RecordValue | CompileError[] {
+): Report<RecordValue | null> {
   // FIXME: Make this more precise
   const type = column.type.type_name.split('(')[0];
   const { increment, not_null: notNull, dbdefault } = column;
@@ -191,34 +201,34 @@ function extractValue (
 
   // Function expression - keep original type, mark as expression
   if (node instanceof FunctionExpressionNode) {
-    return {
+    return new Report({
       value: node.value?.value || '',
       type: 'expression',
-    };
+    }, [], []);
   }
 
   // NULL literal
   if (isNullish(node) || (isEmptyStringLiteral(node) && !isStringType(type))) {
     const hasDefaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null';
     if (notNull && !hasDefaultValue && !increment) {
-      return [new CompileError(
+      return new Report(null, [], [new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `NULL not allowed for non-nullable column '${column.name}' without default and increment`,
         node,
-      )];
+      )]);
     }
-    return { value: null, type: valueType };
+    return new Report({ value: null, type: valueType }, [], []);
   }
 
   // Enum type
   if (isEnum) {
     const enumAccess = extractEnumAccess(node);
     if (enumAccess === null) {
-      return [new CompileError(
+      return new Report(null, [], [new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `Invalid enum value for column '${column.name}'`,
         node,
-      )];
+      )]);
     }
 
     const { path, value: enumValue } = enumAccess;
@@ -235,11 +245,11 @@ function extractValue (
     if (path.length === 0) {
       // String literal - only allowed for enums without schema qualification
       if (expectedSchemaName !== null) {
-        return [new CompileError(
+        return new Report(null, [], [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Enum value must be fully qualified: expected ${expectedSchemaName}.${expectedEnumName}.${enumValue}, got string literal ${JSON.stringify(enumValue)}`,
           node,
-        )];
+        )]);
       }
     } else {
       // Enum access syntax - validate path
@@ -247,11 +257,11 @@ function extractValue (
       const expectedPath = expectedSchemaName ? `${expectedSchemaName}.${expectedEnumName}` : expectedEnumName;
 
       if (actualPath !== expectedPath) {
-        return [new CompileError(
+        return new Report(null, [], [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Enum path mismatch: expected ${expectedPath}.${enumValue}, got ${actualPath}.${enumValue}`,
           node,
-        )];
+        )]);
       }
     }
 
@@ -271,35 +281,39 @@ function extractValue (
       if (!validValues.has(enumValue)) {
         const validValuesList = Array.from(validValues).join(', ');
         const fullEnumPath = expectedSchemaName ? `${expectedSchemaName}.${expectedEnumName}` : expectedEnumName;
-        return [new CompileError(
+        return new Report(null, [], [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid enum value ${JSON.stringify(enumValue)} for column '${column.name}' of type '${fullEnumPath}' (valid values: ${validValuesList})`,
           node,
-        )];
+        )]);
       }
     }
 
-    return { value: enumValue, type: valueType };
+    return new Report({ value: enumValue, type: valueType }, [], []);
   }
 
   // Numeric type
   if (isNumericType(type)) {
     const numValue = tryExtractNumeric(node);
     if (numValue === null) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid numeric value for column '${column.name}'`,
-        node,
-      )];
+      return new Report(
+        { value: getNodeSourceText(node), type: 'expression' },
+        [],
+        [new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Invalid numeric value for column '${column.name}'`,
+          node,
+        )],
+      );
     }
 
     // Integer type: validate no decimal point
     if (isIntegerType(type) && !Number.isInteger(numValue)) {
-      return [new CompileError(
+      return new Report(null, [], [new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `Invalid integer value ${numValue} for column '${column.name}': expected integer, got decimal`,
         node,
-      )];
+      )]);
     }
 
     // Decimal/numeric type: validate precision and scale
@@ -314,60 +328,72 @@ function extractValue (
       const decimalDigits = decimalPart.length;
 
       if (totalDigits > precision) {
-        return [new CompileError(
+        return new Report(null, [], [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Numeric value ${numValue} for column '${column.name}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
           node,
-        )];
+        )]);
       }
 
       if (decimalDigits > scale) {
-        return [new CompileError(
+        return new Report(null, [], [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Numeric value ${numValue} for column '${column.name}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
           node,
-        )];
+        )]);
       }
     }
 
-    return { value: numValue, type: valueType };
+    return new Report({ value: numValue, type: valueType }, [], []);
   }
 
   // Boolean type
   if (isBooleanType(type)) {
     const boolValue = tryExtractBoolean(node);
     if (boolValue === null) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid boolean value for column '${column.name}'`,
-        node,
-      )];
+      return new Report(
+        { value: getNodeSourceText(node), type: 'expression' },
+        [],
+        [new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Invalid boolean value for column '${column.name}'`,
+          node,
+        )],
+      );
     }
-    return { value: boolValue, type: valueType };
+    return new Report({ value: boolValue, type: valueType }, [], []);
   }
 
   // Datetime type
   if (isDateTimeType(type)) {
     const dtValue = tryExtractDateTime(node);
     if (dtValue === null) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid datetime value for column '${column.name}', expected ISO 8601 format (e.g., YYYY-MM-DD, HH:MM:SS, or YYYY-MM-DDTHH:MM:SS)`,
-        node,
-      )];
+      return new Report(
+        { value: getNodeSourceText(node), type: 'expression' },
+        [],
+        [new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Invalid datetime value for column '${column.name}', expected ISO 8601 format (e.g., YYYY-MM-DD, HH:MM:SS, or YYYY-MM-DDTHH:MM:SS)`,
+          node,
+        )],
+      );
     }
-    return { value: dtValue, type: valueType };
+    return new Report({ value: dtValue, type: valueType }, [], []);
   }
 
   // String type
   if (isStringType(type)) {
     const strValue = tryExtractString(node);
     if (strValue === null) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_FIELD,
-        `Invalid string value for column '${column.name}'`,
-        node,
-      )];
+      return new Report(
+        { value: getNodeSourceText(node), type: 'expression' },
+        [],
+        [new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          `Invalid string value for column '${column.name}'`,
+          node,
+        )],
+      );
     }
 
     // Validate string length (using UTF-8 byte length like SQL engines)
@@ -377,18 +403,18 @@ function extractValue (
       const actualByteLength = new TextEncoder().encode(strValue).length;
 
       if (actualByteLength > length) {
-        return [new CompileError(
+        return new Report(null, [], [new CompileError(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `String value for column '${column.name}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
           node,
-        )];
+        )]);
       }
     }
 
-    return { value: strValue, type: 'string' };
+    return new Report({ value: strValue, type: 'string' }, [], []);
   }
 
   // Fallback - try to extract as string
   const strValue = tryExtractString(node);
-  return { value: strValue, type: valueType };
+  return new Report({ value: strValue, type: valueType }, [], []);
 }
