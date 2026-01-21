@@ -3,9 +3,10 @@ import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList }
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
 import { isAlphaOrUnderscore } from '@/core/utils';
-import { SyntaxNode, TupleExpressionNode } from '@/core/parser/nodes';
+import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import Compiler from '@/compiler';
-import { extractColumnNameAndType } from '@/services/inlineCompletions/utils';
+import { ColumnSymbol, TablePartialInjectedColumnSymbol } from '@/core/analyzer/symbol/symbols';
+import { extractVariableFromExpression } from '@/core/analyzer/utils';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
@@ -173,6 +174,48 @@ export function getColumnsFromTableSymbol (
   }
 
   return columns;
+}
+
+export function extractColumnNameAndType (
+  columnSymbol: ColumnSymbol | TablePartialInjectedColumnSymbol,
+  columnName?: string,
+): { name: string; type: string } | null {
+  // Handle table partial injected columns
+  if (columnSymbol instanceof TablePartialInjectedColumnSymbol) {
+    const tablePartialSymbol = columnSymbol.tablePartialSymbol;
+    if (!tablePartialSymbol?.symbolTable || !columnName) {
+      return null;
+    }
+
+    // Look up the column in the table partial's symbol table
+    const columnIndex = `column:${columnName}`;
+    const actualColumnSymbol = tablePartialSymbol.symbolTable.get(columnIndex);
+    if (!actualColumnSymbol?.declaration || !(actualColumnSymbol.declaration instanceof FunctionApplicationNode)) {
+      return null;
+    }
+
+    // Extract type from the actual column declaration
+    const type = extractVariableFromExpression(actualColumnSymbol.declaration.args[0]).unwrap_or(null);
+    if (!type) {
+      return null;
+    }
+
+    return { name: columnName, type };
+  }
+
+  // Handle regular column symbols
+  if (!(columnSymbol?.declaration instanceof FunctionApplicationNode)) {
+    return null;
+  }
+  const declaration = columnSymbol.declaration as FunctionApplicationNode;
+  const name = extractVariableFromExpression(declaration.callee).unwrap_or(null);
+  const type = extractVariableFromExpression(declaration.args[0]).unwrap_or(null);
+
+  if (!name || !type) {
+    return null;
+  }
+
+  return { name, type };
 }
 
 /**
