@@ -14,6 +14,9 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
         }
 
         Records users(id, name, email) {
+
+        
+
         }
       `;
       const compiler = new Compiler();
@@ -40,6 +43,9 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
         }
 
         Records products(product_id, product_name, price, in_stock) {
+
+        
+
         }
       `;
       const compiler = new Compiler();
@@ -62,6 +68,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
         }
 
         Records auth.users(id, username, password_hash) {
+        
         }
       `;
       const compiler = new Compiler();
@@ -83,6 +90,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
           total decimal
 
           Records {
+          
           }
         }
       `;
@@ -132,6 +140,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
         }
 
         Records counter(count) {
+        
         }
       `;
       const compiler = new Compiler();
@@ -154,6 +163,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
         }
 
         Records "special-table"("column-1", "column 2", "column.3") {
+        
         }
       `;
       const compiler = new Compiler();
@@ -251,6 +261,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
         }
 
         Records employee(emp_id, first_name, last_name, email, phone, hire_date, salary, department, manager_id, is_active) {
+        
         }
       `;
       const compiler = new Compiler();
@@ -279,6 +290,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
         }
 
         Records empty_table {
+        
         }
       `;
       const compiler = new Compiler();
@@ -301,6 +313,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
         }
 
         Records products(id, name, price) {
+        
         }
       `;
       const compiler = new Compiler();
@@ -324,6 +337,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
         }
 
         Records users(id, name) {
+        
         }
       `;
       const compiler = new Compiler();
@@ -350,6 +364,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
         }
 
         Records users(id, name) {
+        
         }
       `;
       const compiler = new Compiler();
