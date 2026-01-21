@@ -13,7 +13,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
           email varchar
         }
 
-        Records users {
+        Records users(id, name, email) {
         }
       `;
       const compiler = new Compiler();
@@ -39,7 +39,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
           in_stock boolean
         }
 
-        Records products {
+        Records products(product_id, product_name, price, in_stock) {
         }
       `;
       const compiler = new Compiler();
@@ -61,7 +61,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
           password_hash varchar
         }
 
-        Records auth.users {
+        Records auth.users(id, username, password_hash) {
         }
       `;
       const compiler = new Compiler();
@@ -131,7 +131,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
           count int
         }
 
-        Records counter {
+        Records counter(count) {
         }
       `;
       const compiler = new Compiler();
@@ -153,7 +153,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
           "column.3" boolean
         }
 
-        Records "special-table" {
+        Records "special-table"("column-1", "column 2", "column.3") {
         }
       `;
       const compiler = new Compiler();
@@ -250,7 +250,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
           is_active boolean
         }
 
-        Records employee {
+        Records employee(emp_id, first_name, last_name, email, phone, hire_date, salary, department, manager_id, is_active) {
         }
       `;
       const compiler = new Compiler();
@@ -334,12 +334,12 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
       const result = provider.provideInlineCompletions(model, position);
 
       expect(result).toBeDefined();
-      // Should suggest all table columns, not just the ones specified in Records header
+      // Should suggest only the columns specified in Records header
       const insertText = result?.items[0].insertText as { snippet: string };
       expect(insertText.snippet).toContain('id (int)');
       expect(insertText.snippet).toContain('name (varchar)');
-      expect(insertText.snippet).toContain('email (varchar)');
-      expect(insertText.snippet).toContain('created_at (timestamp)');
+      expect(insertText.snippet).not.toContain('email (varchar)');
+      expect(insertText.snippet).not.toContain('created_at (timestamp)');
     });
 
     it('- should provide correct range in completion item', () => {
@@ -349,7 +349,7 @@ describe('[snapshot] InlineCompletionItemProvider - Records', () => {
           name varchar
         }
 
-        Records users {
+        Records users(id, name) {
         }
       `;
       const compiler = new Compiler();
