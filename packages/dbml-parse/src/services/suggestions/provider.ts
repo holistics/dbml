@@ -31,6 +31,7 @@ import {
   addExpandAllColumnsSuggestion,
   isTupleEmpty,
 } from '@/services/suggestions/utils';
+import { suggestRecordRowSnippet, FALLTHROUGH } from '@/services/suggestions/recordRowSnippet';
 import {
   AttributeNode,
   CallExpressionNode,
@@ -61,6 +62,13 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {
     const offset = getOffsetFromMonacoPosition(model, position);
+
+    // Try to suggest record row snippet first
+    const recordRowSnippet = suggestRecordRowSnippet(this.compiler, model, position, offset);
+    if (recordRowSnippet !== FALLTHROUGH) {
+      return recordRowSnippet || noSuggestions();
+    }
+
     const flatStream = this.compiler.token.flatStream();
     // bOc: before-or-contain
     const { token: bOcToken, index: bOcTokenId } = this.compiler.container.token(offset);
@@ -157,15 +165,6 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           && isOffsetWithinElementHeader(offset, container)
         ) {
           return suggestInRecordsHeader(this.compiler, offset, container);
-        }
-
-        // Check if we're in a Records element body - suggest record entry snippet
-        if (
-          getElementKind(container).unwrap_or(undefined) === ElementKind.Records
-          && container.body && isOffsetWithinSpan(offset, container.body)
-        ) {
-          // Don't provide suggestions in Records body - use inline completions instead
-          return noSuggestions();
         }
 
         if (

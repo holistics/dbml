@@ -2,7 +2,6 @@ import DBMLCompletionItemProvider from './suggestions/provider';
 import DBMLDefinitionProvider from './definition/provider';
 import DBMLReferencesProvider from './references/provider';
 import DBMLDiagnosticsProvider from './diagnostics/provider';
-import DBMLInlineCompletionItemProvider from './inlineCompletions/provider';
 
 export * from '@/services/types';
 
@@ -11,5 +10,4 @@ export {
   DBMLDefinitionProvider,
   DBMLReferencesProvider,
   DBMLDiagnosticsProvider,
-  DBMLInlineCompletionItemProvider,
 };
