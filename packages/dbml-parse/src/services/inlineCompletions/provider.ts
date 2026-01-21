@@ -1,5 +1,4 @@
 import Compiler, { ScopeKind } from '@/compiler';
-import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import {
   type InlineCompletionItemProvider,
   type TextModel,
@@ -7,11 +6,12 @@ import {
   type InlineCompletions,
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
-import { ElementDeclarationNode, FunctionApplicationNode, CallExpressionNode } from '@/core/parser/nodes';
-import { getElementKind } from '@/core/analyzer/utils';
+import { ElementDeclarationNode, FunctionApplicationNode, BlockExpressionNode, ProgramNode, CallExpressionNode, TupleExpressionNode } from '@/core/parser/nodes';
+import { extractReferee, extractVariableFromExpression, getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
-import { TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
+import { extractColumnNameAndType } from './utils';
+import { getColumnsFromTableSymbol, isOffsetWithinElementHeader } from '@/services/suggestions/utils';
+import { ColumnSymbol, TablePartialInjectedColumnSymbol } from '@/core/analyzer/symbol/symbols';
 
 export default class DBMLInlineCompletionItemProvider implements InlineCompletionItemProvider {
   private compiler: Compiler;
@@ -36,23 +36,12 @@ export default class DBMLInlineCompletionItemProvider implements InlineCompletio
     }
 
     const elementKind = getElementKind(element).unwrap_or(undefined);
-    if (elementKind !== ElementKind.Records) {
+    if (elementKind !== ElementKind.Records || !(element.body instanceof BlockExpressionNode)) {
       return null;
     }
-
-    if (!element.body) {
-      return null;
-    }
-
-    // Check if we're outside any function application
+    // Check if we're outside any function application but inside the body
     // This means we're ready to type a new record entry
-    const containers = [...this.compiler.container.stack(offset)];
-    const isInFunctionApplication = containers.some(
-      (container) => container instanceof FunctionApplicationNode,
-    );
-    if (isInFunctionApplication) {
-      return null;
-    }
+    if (isOffsetWithinElementHeader(offset, element)) return null;
 
     // Check if cursor is at the start of a line (only whitespace before it)
     const lineContent = model.getLineContent(position.lineNumber);
@@ -61,72 +50,121 @@ export default class DBMLInlineCompletionItemProvider implements InlineCompletio
       return null;
     }
 
-    // Check if the previous character is a newline or we're at the start of a line
-    const { token } = this.compiler.container.token(offset);
-    if (!token) {
-      return null;
+    if (element.parent instanceof ProgramNode) {
+      return suggestInTopLevelRecords(this.compiler, element, position);
+    } else {
+      return suggestInNestedRecords(this.compiler, element, position);
     }
-
-    // Check if we should trigger: after newline in the body
-    const shouldTrigger = token.kind === SyntaxTokenKind.NEWLINE
-      || token.kind === SyntaxTokenKind.LBRACE
-      || (token.trailingTrivia && token.trailingTrivia.some(
-        (t) => t.kind === SyntaxTokenKind.NEWLINE && t.end <= offset,
-      ));
-
-    if (!shouldTrigger) {
-      return null;
-    }
-
-    // Get the table symbol
-    let tableSymbol;
-
-    // For nested Records (inside Table), parent.symbol is the TableSymbol
-    if (element.parent?.symbol instanceof TableSymbol) {
-      tableSymbol = element.parent.symbol;
-    }
-    // For top-level Records like: Records Users(id, b) { }
-    // element.name is a CallExpressionNode, and callee.referee is the table
-    else if (element.name instanceof CallExpressionNode) {
-      tableSymbol = element.name.callee?.referee;
-    }
-    // For simple top-level Records (though syntax doesn't allow this without columns)
-    else if (element.name) {
-      tableSymbol = element.name.referee;
-    }
-
-    if (!tableSymbol || !(tableSymbol instanceof TableSymbol)) {
-      return null;
-    }
-
-    // Get all columns from the table
-    const columns = getColumnsFromTableSymbol(tableSymbol, this.compiler);
-
-    if (columns.length === 0) {
-      return null;
-    }
-
-    // Generate the snippet with tab stops for inline completion
-    const snippet = columns.map((col, index) => `\${${index + 1}:${col.name} (${col.type})}`).join(', ');
-
-    return {
-      items: [
-        {
-          insertText: { snippet },
-          range: {
-            startLineNumber: position.lineNumber,
-            startColumn: position.column,
-            endLineNumber: position.lineNumber,
-            endColumn: position.column,
-          },
-        },
-      ],
-    };
   }
 
   // Required by Monaco's InlineCompletionsProvider interface
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  freeInlineCompletions (completions: InlineCompletions): void {
+  freeInlineCompletions (_completions: InlineCompletions): void {
     // No cleanup needed for our simple implementation
   }
+}
+function suggestInTopLevelRecords (compiler: Compiler, recordsElement: ElementDeclarationNode, position: Position): InlineCompletions | null {
+  // Top-level Records only work with explicit column list: Records users(id, name) { }
+  if (!(recordsElement.name instanceof CallExpressionNode)) return null;
+
+  const columnElements = recordsElement.name.argumentList?.elementList || [];
+  const columnSymbols = columnElements.map((e) => extractReferee(e));
+  if (!columnSymbols || columnSymbols.length === 0) return null;
+
+  const columns = columnElements
+    .map((element, index) => {
+      const symbol = columnSymbols[index];
+      if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
+        return null;
+      }
+      const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+      const result = extractColumnNameAndType(symbol, columnName);
+      return result;
+    })
+    .filter((col) => col !== null) as Array<{ name: string; type: string }>;
+
+  if (columns.length === 0) return null;
+
+  // Generate the snippet with tab stops for inline completion
+  const snippet = columns.map((col, index) => `\${${index + 1}:${col.name} (${col.type})}`).join(', ');
+
+  return {
+    items: [
+      {
+        insertText: { snippet },
+        range: {
+          startLineNumber: position.lineNumber,
+          startColumn: position.column,
+          endLineNumber: position.lineNumber,
+          endColumn: position.column,
+        },
+      },
+    ],
+  };
+}
+
+function suggestInNestedRecords (compiler: Compiler, recordsElement: ElementDeclarationNode, position: Position): InlineCompletions | null {
+  // Get parent table element
+  const parent = recordsElement.parent;
+  if (!(parent instanceof ElementDeclarationNode)) {
+    return null;
+  }
+
+  const parentKind = getElementKind(parent).unwrap_or(undefined);
+  if (parentKind !== ElementKind.Table) {
+    return null;
+  }
+
+  const tableSymbol = parent.symbol;
+  if (!tableSymbol?.symbolTable) {
+    return null;
+  }
+
+  let columns: Array<{ name: string; type: string }>;
+
+  if (recordsElement.name instanceof TupleExpressionNode) {
+    // Explicit columns from tuple: records (col1, col2)
+    const columnElements = recordsElement.name.elementList;
+    const columnSymbols = columnElements
+      .map((e) => extractReferee(e))
+      .filter((s) => s !== undefined);
+
+    columns = columnElements
+      .map((element, index) => {
+        const symbol = columnSymbols[index];
+        if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
+          return null;
+        }
+        const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+        return extractColumnNameAndType(symbol, columnName);
+      })
+      .filter((col) => col !== null) as Array<{ name: string; type: string }>;
+  } else {
+    // Implicit columns - use all columns from parent table
+    const result = getColumnsFromTableSymbol(tableSymbol, compiler);
+    if (!result) {
+      return null;
+    }
+    columns = result;
+  }
+
+  if (columns.length === 0) {
+    return null;
+  }
+
+  // Generate the snippet with tab stops for inline completion
+  const snippet = columns.map((col, index) => `\${${index + 1}:${col.name} (${col.type})}`).join(', ');
+
+  return {
+    items: [
+      {
+        insertText: { snippet },
+        range: {
+          startLineNumber: position.lineNumber,
+          startColumn: position.column,
+          endLineNumber: position.lineNumber,
+          endColumn: position.column,
+        },
+      },
+    ],
+  };
 }
