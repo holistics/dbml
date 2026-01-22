@@ -80,6 +80,48 @@ export function tryExtractNumeric (value: SyntaxNode | number | string | boolean
   return null;
 }
 
+// Try to extract an integer value from a syntax node or primitive
+// Rejects decimal values
+// Example: 0, 1, '0', '1', "2", -2, "-2"
+export function tryExtractInteger (value: SyntaxNode | number | string | boolean | undefined | null): number | null {
+  // Handle null/undefined
+  if (value === null || value === undefined) return null;
+
+  // Handle primitive types
+  if (typeof value === 'number') {
+    // Reject if it has a decimal part
+    if (!Number.isInteger(value)) return null;
+    return value;
+  }
+  if (typeof value === 'string') {
+    const parsed = Number(value);
+    if (isNaN(parsed)) return null;
+    // Reject if it has a decimal part
+    if (!Number.isInteger(parsed)) return null;
+    return parsed;
+  }
+  if (typeof value === 'boolean') return value ? 1 : 0;
+
+  // Numeric literal or signed number
+  const num = extractSignedNumber(value);
+  if (num !== null) {
+    // Reject if it has a decimal part
+    if (!Number.isInteger(num)) return null;
+    return num;
+  }
+
+  // Quoted string containing number: "42", '3.14'
+  const strValue = extractQuotedStringToken(value).unwrap_or(undefined);
+  if (strValue !== undefined) {
+    const parsed = Number(strValue);
+    if (!isNaN(parsed) && Number.isInteger(parsed)) {
+      return parsed;
+    }
+  }
+
+  return null;
+}
+
 export const TRUTHY_VALUES = ['true', 'yes', 'y', 't', '1'];
 export const FALSY_VALUES = ['false', 'no', 'n', 'f', '0'];
 
