@@ -36,16 +36,15 @@ export {
 } from '@/core/types';
 
 export {
-  addQuoteIfNeeded,
-} from '@/core/utils';
-
-export {
   // Scope kinds from compiler
   ScopeKind,
   // Utilities
   splitQualifiedIdentifier,
   unescapeString,
   escapeString,
+  formatRecordValue,
+  isValidIdentifier,
+  addDoubleQuoteIfNeeded,
 } from '@/compiler/index';
 
 // Export interpreted types for structured data
