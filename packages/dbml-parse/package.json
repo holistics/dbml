@@ -36,10 +36,12 @@
     "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
-    "monaco-editor-core": "^0.44.0"
+    "monaco-editor-core": "^0.44.0",
+    "@types/luxon": "^3.7.1"
   },
   "dependencies": {
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "luxon": "^3.7.2"
   },
   "engines": {
     "node": ">=18"
