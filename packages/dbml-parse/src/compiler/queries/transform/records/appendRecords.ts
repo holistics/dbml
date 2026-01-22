@@ -7,6 +7,16 @@ import { findRecordsForTable } from './utils';
 import { ElementDeclarationNode } from '@/core/parser/nodes';
 
 /**
+ * Normalizes a RecordValue or string to RecordValue.
+ */
+function normalizeRecordValue (value: RecordValue | string): RecordValue {
+  if (typeof value === 'string') {
+    return { value, type: 'string' };
+  }
+  return value;
+}
+
+/**
  * Checks if a Records block's columns are a superset of the target columns.
  */
 function doesRecordMatchColumns (recordsColumns: string[], targetColumns: string[]): boolean {
@@ -22,7 +32,7 @@ function insertIntoExistingRecords (
   element: ElementDeclarationNode,
   recordsColumns: string[],
   targetColumns: string[],
-  values: RecordValue[][],
+  values: (RecordValue | string)[][],
 ): string {
   const body = element.body;
   if (!body) {
@@ -36,7 +46,7 @@ function insertIntoExistingRecords (
     for (const col of recordsColumns) {
       const targetIndex = targetColumns.indexOf(col);
       if (targetIndex >= 0 && targetIndex < row.length) {
-        reorderedValues.push(formatRecordValue(row[targetIndex]));
+        reorderedValues.push(formatRecordValue(normalizeRecordValue(row[targetIndex])));
       } else {
         reorderedValues.push('null');
       }
@@ -64,7 +74,7 @@ function appendNewRecordsBlock (
   schemaName: string,
   tableName: string,
   columns: string[],
-  values: RecordValue[][],
+  values: (RecordValue | string)[][],
 ): string {
   const tableQualifier = schemaName === DEFAULT_SCHEMA_NAME
     ? addDoubleQuoteIfNeeded(tableName)
@@ -74,7 +84,7 @@ function appendNewRecordsBlock (
 
   const rows: string[] = [];
   for (const row of values) {
-    const formattedValues = row.map(formatRecordValue);
+    const formattedValues = row.map(v => formatRecordValue(normalizeRecordValue(v)));
     rows.push('  ' + formattedValues.join(', '));
   }
 
@@ -90,7 +100,7 @@ export function appendRecords (
   this: Compiler,
   tableName: TableNameInput,
   columns: string[],
-  values: RecordValue[][],
+  values: (RecordValue | string)[][],
 ): string {
   // Validation
   if (columns.length === 0) {
