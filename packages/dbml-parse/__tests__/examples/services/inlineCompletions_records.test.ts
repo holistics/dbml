@@ -130,7 +130,7 @@ describe('[snapshot] CompletionItemProvider - Records Row Snippets', () => {
       // Should suggest record row snippet if positioned on a new empty line
       // This test position is at the end of the line, not on an empty line
       // So it should not suggest the record row snippet
-      const recordSnippet = result?.suggestions?.find(s => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
       // Note: This may not trigger since position is at end of line, not on empty line
       if (recordSnippet) {
         expect(recordSnippet.insertText).toEqual('${1:id (int)}, ${2:name (varchar)}, ${3:email (varchar)}');
@@ -205,7 +205,7 @@ describe('[snapshot] CompletionItemProvider - Records Row Snippets', () => {
 
       // Should not suggest record row snippet when inside a function application
       // (may return other suggestions or empty array)
-      const recordSnippet = result?.suggestions?.find(s => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
       expect(recordSnippet).toBeUndefined();
     });
 
@@ -230,7 +230,7 @@ describe('[snapshot] CompletionItemProvider - Records Row Snippets', () => {
 
       // Should not suggest record row snippet in header
       // (may return other suggestions like schema.table names)
-      const recordSnippet = result?.suggestions?.find(s => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
       expect(recordSnippet).toBeUndefined();
     });
 
@@ -250,7 +250,7 @@ describe('[snapshot] CompletionItemProvider - Records Row Snippets', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Should not suggest record row snippet when not in RECORDS scope
-      const recordSnippet = result?.suggestions?.find(s => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
       expect(recordSnippet).toBeUndefined();
     });
 
@@ -310,7 +310,7 @@ describe('[snapshot] CompletionItemProvider - Records Row Snippets', () => {
       const result = provider.provideCompletionItems(model, position);
 
       // Should not return record row snippet when no columns
-      const recordSnippet = result?.suggestions?.find(s => s.label === 'Record row snippet');
+      const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
       expect(recordSnippet).toBeUndefined();
     });
 
@@ -365,6 +365,5 @@ describe('[snapshot] CompletionItemProvider - Records Row Snippets', () => {
       expect(insertText).not.toContain('email (varchar)');
       expect(insertText).not.toContain('created_at (timestamp)');
     });
-
   });
 });
