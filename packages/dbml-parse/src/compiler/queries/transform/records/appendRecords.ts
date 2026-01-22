@@ -10,7 +10,7 @@ import { ElementDeclarationNode } from '@/core/parser/nodes';
  * Normalizes a RecordValue or string to RecordValue.
  */
 function normalizeRecordValue (value: RecordValue | string): RecordValue {
-  if (typeof value === 'string') {
+  if (typeof value === 'string' || value === null) {
     return { value, type: 'string' };
   }
   return value;
@@ -84,7 +84,7 @@ function appendNewRecordsBlock (
 
   const rows: string[] = [];
   for (const row of values) {
-    const formattedValues = row.map(v => formatRecordValue(normalizeRecordValue(v)));
+    const formattedValues = row.map((v) => formatRecordValue(normalizeRecordValue(v)));
     rows.push('  ' + formattedValues.join(', '));
   }
 
