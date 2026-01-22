@@ -105,11 +105,29 @@ export function findRecordsForTable (
 }
 
 /**
- * Normalizes a RecordValue or string to RecordValue.
+ * Normalizes a RecordValue or string/number/boolean/null to RecordValue.
  */
-export function normalizeRecordValue (value: RecordValue | string | null): RecordValue {
-  if (typeof value === 'string' || value === null) {
-    return { value, type: 'string' };
+export function normalizeRecordValue (value: RecordValue | string | number | boolean | null): RecordValue {
+  // If already a RecordValue object with value and type, return as-is
+  if (value !== null && typeof value === 'object' && 'value' in value && 'type' in value) {
+    return value;
   }
-  return value;
+
+  // Handle null
+  if (value === null) {
+    return { value: null, type: 'string' };
+  }
+
+  // Handle numbers
+  if (typeof value === 'number') {
+    return { value, type: 'integer' };
+  }
+
+  // Handle booleans
+  if (typeof value === 'boolean') {
+    return { value, type: 'bool' };
+  }
+
+  // Handle strings and everything else
+  return { value: String(value), type: 'string' };
 }
