@@ -2,11 +2,11 @@ import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex
 import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
-import { isAlphaOrUnderscore } from '@/core/utils';
 import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import Compiler from '@/compiler';
 import { ColumnSymbol, TablePartialInjectedColumnSymbol } from '@/core/analyzer/symbol/symbols';
 import { extractVariableFromExpression } from '@/core/analyzer/utils';
+import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
@@ -73,7 +73,7 @@ export function addQuoteIfNeeded (completionList: CompletionList): CompletionLis
     ...completionList,
     suggestions: completionList.suggestions.map((s) => ({
       ...s,
-      insertText: (!s.insertText || !s.insertText.split('').every(isAlphaOrUnderscore)) ? `"${s.insertText ?? ''}"` : s.insertText,
+      insertText: addDoubleQuoteIfNeeded(s.insertText ?? ''),
     })),
   };
 }

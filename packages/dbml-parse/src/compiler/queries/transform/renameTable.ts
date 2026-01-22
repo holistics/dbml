@@ -3,15 +3,10 @@ import type Compiler from '../../index';
 import { SyntaxNode } from '@/core/parser/nodes';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { TableSymbol } from '@/core/analyzer/symbol/symbols';
-import {
-  createSchemaSymbolIndex,
-  createTableSymbolIndex,
-} from '@/core/analyzer/symbol/symbolIndex';
+import { createSchemaSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
-import { splitQualifiedIdentifier } from '../utils';
-
-export type TableNameInput = string | { schema?: string; table: string };
+import { normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput } from './utils';
 
 interface FormattedTableName {
   schema: string;
@@ -20,60 +15,6 @@ interface FormattedTableName {
   formattedTable: string;
   shouldQuoteSchema: boolean;
   shouldQuoteTable: boolean;
-}
-
-/**
- * Removes surrounding double quotes from a string if present.
- */
-function stripQuotes (str: string): string {
-  if (str.startsWith('"') && str.endsWith('"') && str.length >= 2) {
-    return str.slice(1, -1);
-  }
-  return str;
-}
-
-/**
- * Normalizes a table name input to { schema, table } format.
- * Properly handles quoted identifiers with dots inside.
- */
-function normalizeTableName (input: TableNameInput): { schema: string; table: string } {
-  if (typeof input !== 'string') {
-    return {
-      schema: input.schema ?? DEFAULT_SCHEMA_NAME,
-      table: input.table,
-    };
-  }
-
-  const parts = splitQualifiedIdentifier(input);
-
-  if (parts.length === 0) {
-    return {
-      schema: DEFAULT_SCHEMA_NAME,
-      table: '',
-    };
-  }
-
-  if (parts.length === 1) {
-    return {
-      schema: DEFAULT_SCHEMA_NAME,
-      table: parts[0],
-    };
-  }
-
-  if (parts.length === 2) {
-    return {
-      schema: parts[0],
-      table: parts[1],
-    };
-  }
-
-  // More than 2 parts - treat the last as table, rest as schema
-  const tablePart = parts[parts.length - 1];
-  const schemaPart = parts.slice(0, -1).join('.');
-  return {
-    schema: schemaPart,
-    table: tablePart,
-  };
 }
 
 /**
@@ -130,32 +71,6 @@ function formatTableName (
     shouldQuoteSchema,
     shouldQuoteTable,
   };
-}
-
-/**
- * Looks up a table symbol from the symbol table.
- */
-function lookupTableSymbol (
-  symbolTable: Readonly<SymbolTable>,
-  schema: string,
-  table: string,
-): TableSymbol | null {
-  const tableSymbolIndex = createTableSymbolIndex(table);
-
-  if (schema === DEFAULT_SCHEMA_NAME) {
-    const symbol = symbolTable.get(tableSymbolIndex);
-    return symbol instanceof TableSymbol ? symbol : null;
-  }
-
-  const schemaSymbolIndex = createSchemaSymbolIndex(schema);
-  const schemaSymbol = symbolTable.get(schemaSymbolIndex);
-
-  if (!schemaSymbol || !schemaSymbol.symbolTable) {
-    return null;
-  }
-
-  const symbol = schemaSymbol.symbolTable.get(tableSymbolIndex);
-  return symbol instanceof TableSymbol ? symbol : null;
 }
 
 /**
