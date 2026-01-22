@@ -2,8 +2,26 @@ import ModelExporter from './export/ModelExporter';
 import Parser from './parse/Parser';
 import importer from './import';
 import exporter from './export';
-import { renameTable } from './transform';
-export { renameTable, importer, exporter, ModelExporter, Parser };
+import {
+  renameTable,
+  appendRecords,
+  updateRecordField,
+  deleteRecordRow,
+  deleteRecordValue,
+  removeAllRecords,
+} from './transform';
+export {
+  renameTable,
+  appendRecords,
+  updateRecordField,
+  deleteRecordRow,
+  deleteRecordValue,
+  removeAllRecords,
+  importer,
+  exporter,
+  ModelExporter,
+  Parser,
+};
 export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel, } from './parse/error';
 
 // Export normalized types
