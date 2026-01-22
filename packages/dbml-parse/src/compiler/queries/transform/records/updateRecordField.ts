@@ -7,6 +7,16 @@ import type { RecordValue } from './types';
 import { findRecordsForTable, extractRowValues } from './utils';
 
 /**
+ * Normalizes a RecordValue or string to RecordValue.
+ */
+function normalizeRecordValue (value: RecordValue | string): RecordValue {
+  if (typeof value === 'string') {
+    return { value, type: 'string' };
+  }
+  return value;
+}
+
+/**
  * Updates a specific field value in one row for a table.
  */
 export function updateRecordField (
@@ -14,7 +24,7 @@ export function updateRecordField (
   targetName: TableNameInput,
   rowIndex: number,
   fieldName: string,
-  newValue: RecordValue,
+  newValue: RecordValue | string,
 ): string {
   const source = this.parse.source();
 
@@ -83,7 +93,7 @@ export function updateRecordField (
   const edits: TextEdit[] = [{
     start: targetValue.start,
     end: targetValue.end,
-    newText: formatRecordValue(newValue),
+    newText: formatRecordValue(normalizeRecordValue(newValue)),
   }];
 
   return applyTextEdits(source, edits);
