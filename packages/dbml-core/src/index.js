@@ -2,7 +2,7 @@ import ModelExporter from './export/ModelExporter';
 import Parser from './parse/Parser';
 import { CompilerError } from './parse/error';
 import importer from './import';
-import exporter, { formatRecordValue } from './export';
+import exporter, { formatDbmlRecordValue } from './export';
 import { renameTable } from './transform';
 import { VERSION } from './utils/version';
 
@@ -14,5 +14,8 @@ export {
   CompilerError,
   Parser,
   VERSION,
-  formatRecordValue,
+  formatDbmlRecordValue,
 };
+
+// Re-export types from @dbml/parse
+export { SqlDialect } from '@dbml/parse';

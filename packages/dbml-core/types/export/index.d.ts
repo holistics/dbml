@@ -6,7 +6,7 @@ export interface RecordValue {
     type: RecordValueType;
 }
 
-export declare function formatRecordValue(recordValue: RecordValue): string;
+export declare function formatDbmlRecordValue(recordValue: RecordValue): string;
 
 declare function _export(str: string, format: ExportFormatOption): string;
 declare const _default: {

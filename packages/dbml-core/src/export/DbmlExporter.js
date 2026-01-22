@@ -1,18 +1,6 @@
 import { isEmpty, reduce } from 'lodash';
-import {
-  addQuoteIfNeeded,
-  isNumericType,
-  isBooleanType,
-  isStringType,
-  isDateTimeType,
-  tryExtractBoolean,
-  tryExtractNumeric,
-  tryExtractString,
-  tryExtractDateTime,
-  isNullish,
-  isFunctionExpression,
-} from '@dbml/parse';
-import { shouldPrintSchema, formatRecordValue } from './utils';
+import { addQuoteIfNeeded } from '@dbml/parse';
+import { shouldPrintSchema, formatDbmlRecordValue } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
 class DbmlExporter {
@@ -378,7 +366,7 @@ class DbmlExporter {
 
       // Build the data rows
       const rowStrs = values.map((row) => {
-        const valueStrs = row.map((val) => formatRecordValue(val));
+        const valueStrs = row.map((val) => formatDbmlRecordValue(val));
         return `  ${valueStrs.join(', ')}`;
       });
 
