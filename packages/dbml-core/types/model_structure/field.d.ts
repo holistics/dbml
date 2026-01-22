@@ -5,19 +5,36 @@ import Endpoint from './endpoint';
 import Enum from './enum';
 import Table from './table';
 import TablePartial from './tablePartial';
-import Check from './check';
-interface RawField {
-    name: string;
-    type: any;
-    unique: boolean;
-    pk: boolean;
+import Check, { RawCheck } from './check';
+export interface InlineRef {
+    schemaName: string | null;
+    tableName: string;
+    fieldNames: string[];
+    relation: '>' | '<' | '-' | '<>';
     token: Token;
-    not_null: boolean;
-    note: RawNote;
-    dbdefault: any;
-    increment: boolean;
-    checks?: any[];
-    table: Table;
+}
+
+export interface ColumnType {
+    schemaName: string | null;
+    type_name: string;
+    args: string | null;
+}
+
+export interface RawField {
+    name: string;
+    type: ColumnType;
+    token: Token;
+    inline_refs: InlineRef[];
+    checks: RawCheck[];
+    pk?: boolean;
+    dbdefault?: {
+        type: 'number' | 'string' | 'boolean' | 'expression';
+        value: number | string;
+    };
+    increment?: boolean;
+    unique?: boolean;
+    not_null?: boolean;
+    note?: RawNote;
 }
 declare class Field extends Element {
     name: string;
@@ -36,7 +53,9 @@ declare class Field extends Element {
     _enum: Enum;
     injectedPartial?: TablePartial;
     injectedToken: Token;
-    constructor({ name, type, unique, pk, token, not_null, note, dbdefault, increment, checks, table }: RawField);
+    constructor({ name, type, unique, pk, token, not_null, note, dbdefault, increment, checks, inline_refs, table }: RawField & {
+        table: Table;
+    });
     generateId(): void;
     pushEndpoint(endpoint: any): void;
     processChecks(checks: any[]): void;
