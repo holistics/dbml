@@ -4,6 +4,7 @@ import { ElementDeclarationNode, FunctionApplicationNode, CommaExpressionNode, S
 import { getElementKind, extractVarNameFromPrimaryVariable, destructureCallExpression } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { createTableSymbolIndex, createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { RecordValue } from '@/core/interpreter/types';
 
 /**
  * Extracts value nodes from a row (FunctionApplicationNode).
@@ -101,4 +102,14 @@ export function findRecordsForTable (
   }
 
   return recordsElements;
+}
+
+/**
+ * Normalizes a RecordValue or string to RecordValue.
+ */
+export function normalizeRecordValue (value: RecordValue | string | null): RecordValue {
+  if (typeof value === 'string' || value === null) {
+    return { value, type: 'string' };
+  }
+  return value;
 }

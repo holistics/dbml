@@ -1,7 +1,7 @@
 import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import { Database } from '@/core/interpreter/types';
+import { Database, RecordValue } from '@/core/interpreter/types';
 import Report from '@/core/report';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
@@ -22,13 +22,12 @@ import {
   removeAllRecords,
   type TextEdit,
   type TableNameInput,
-  type RecordValue,
 } from './queries/transform';
 import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
 
 // Re-export types
 export { ScopeKind } from './types';
-export type { TextEdit, TableNameInput, RecordValue };
+export type { TextEdit, TableNameInput };
 
 // Re-export utilities
 export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
@@ -102,7 +101,7 @@ export default class Compiler {
   appendRecords (
     tableName: TableNameInput,
     columns: string[],
-    values: RecordValue[][] | string[][],
+    values: (RecordValue | string | null)[][],
   ): string {
     return appendRecords.call(this, tableName, columns, values);
   }
@@ -111,7 +110,7 @@ export default class Compiler {
     tableName: TableNameInput,
     rowIndex: number,
     fieldName: string,
-    newValue: RecordValue | string,
+    newValue: RecordValue | string | null,
   ): string {
     return updateRecordField.call(this, tableName, rowIndex, fieldName, newValue);
   }
