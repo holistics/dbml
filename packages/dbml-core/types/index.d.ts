@@ -5,5 +5,6 @@ import exporter from './export';
 import { renameTable } from './transform';
 export { renameTable, importer, exporter, ModelExporter, Parser };
 export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel, } from './parse/error';
-export { formatRecordValue, RecordValue } from './export';
+export { formatDbmlRecordValue, RecordValue } from './export';
 export { RecordValueType } from './model_structure/database';
+export { SqlDialect } from '@dbml/parse';
