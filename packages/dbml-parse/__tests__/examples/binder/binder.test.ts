@@ -1,6 +1,15 @@
 import { describe, expect } from 'vitest';
 import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode } from '@/core/parser/nodes';
 import { TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/analyzer/symbol/symbols';
+import {
+  createColumnSymbolIndex,
+  createTableSymbolIndex,
+  createSchemaSymbolIndex,
+  createEnumSymbolIndex,
+  createEnumFieldSymbolIndex,
+  createTableGroupSymbolIndex,
+  createTablePartialSymbolIndex
+} from '@/core/analyzer/symbol/symbolIndex';
 import { analyze } from '@tests/utils';
 
 describe('[example] binder', () => {
@@ -17,10 +26,10 @@ describe('[example] binder', () => {
       expect(tableSymbol.references).toEqual([]);
 
       // Verify symbolTable contains column
-      expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('id'))).toBeInstanceOf(ColumnSymbol);
 
       // Verify column symbol properties
-      const columnSymbol = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
+      const columnSymbol = tableSymbol.symbolTable.get(createColumnSymbolIndex('id')) as ColumnSymbol;
       const tableBody = tableNode.body as BlockExpressionNode;
       const columnNode = tableBody.body[0];
       expect(columnSymbol.declaration).toBe(columnNode);
@@ -29,7 +38,7 @@ describe('[example] binder', () => {
       // Verify public schema symbol table (publicSymbolTable concept)
       const schemaSymbol = ast.symbol as SchemaSymbol;
       expect(schemaSymbol).toBeInstanceOf(SchemaSymbol);
-      expect(schemaSymbol.symbolTable.get('Table:users')).toBe(tableSymbol);
+      expect(schemaSymbol.symbolTable.get(createTableSymbolIndex('users'))).toBe(tableSymbol);
     });
 
     test('should verify nested children symbol properties', () => {
@@ -46,9 +55,9 @@ describe('[example] binder', () => {
       const tableBody = tableNode.body as BlockExpressionNode;
 
       // Verify all columns are in symbolTable
-      expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
-      expect(tableSymbol.symbolTable.get('Column:name')).toBeInstanceOf(ColumnSymbol);
-      expect(tableSymbol.symbolTable.get('Column:email')).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('id'))).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('name'))).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('email'))).toBeInstanceOf(ColumnSymbol);
 
       // Verify each column's symbol and declaration relationship
       tableBody.body.forEach((field, index) => {
@@ -60,7 +69,7 @@ describe('[example] binder', () => {
 
         // Verify column is accessible from table's symbolTable
         const expectedNames = ['id', 'name', 'email'];
-        expect(tableSymbol.symbolTable.get(`Column:${expectedNames[index]}`)).toBe(columnSymbol);
+        expect(tableSymbol.symbolTable.get(createColumnSymbolIndex(expectedNames[index]))).toBe(columnSymbol);
       });
     });
 
@@ -74,15 +83,15 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
-      expect(schemaSymbol.symbolTable.get('Table:posts')).toBeInstanceOf(TableSymbol);
+      expect(schemaSymbol.symbolTable.get(createTableSymbolIndex('users'))).toBeInstanceOf(TableSymbol);
+      expect(schemaSymbol.symbolTable.get(createTableSymbolIndex('posts'))).toBeInstanceOf(TableSymbol);
 
-      const usersSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
-      const postsSymbol = schemaSymbol.symbolTable.get('Table:posts') as TableSymbol;
-      expect(usersSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
-      expect(usersSymbol.symbolTable.get('Column:name')).toBeInstanceOf(ColumnSymbol);
-      expect(postsSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
-      expect(postsSymbol.symbolTable.get('Column:name')).toBeInstanceOf(ColumnSymbol);
+      const usersSymbol = schemaSymbol.symbolTable.get(createTableSymbolIndex('users')) as TableSymbol;
+      const postsSymbol = schemaSymbol.symbolTable.get(createTableSymbolIndex('posts')) as TableSymbol;
+      expect(usersSymbol.symbolTable.get(createColumnSymbolIndex('id'))).toBeInstanceOf(ColumnSymbol);
+      expect(usersSymbol.symbolTable.get(createColumnSymbolIndex('name'))).toBeInstanceOf(ColumnSymbol);
+      expect(postsSymbol.symbolTable.get(createColumnSymbolIndex('id'))).toBeInstanceOf(ColumnSymbol);
+      expect(postsSymbol.symbolTable.get(createColumnSymbolIndex('name'))).toBeInstanceOf(ColumnSymbol);
     });
 
     test('should detect duplicate table names within same schema', () => {
@@ -108,12 +117,12 @@ describe('[example] binder', () => {
       const schemaSymbol = ast.symbol as SchemaSymbol;
 
       // Root has auth schema and public.users table
-      expect(schemaSymbol.symbolTable.get('Schema:auth')).toBeInstanceOf(SchemaSymbol);
-      expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
+      expect(schemaSymbol.symbolTable.get(createSchemaSymbolIndex('auth'))).toBeInstanceOf(SchemaSymbol);
+      expect(schemaSymbol.symbolTable.get(createTableSymbolIndex('users'))).toBeInstanceOf(TableSymbol);
 
       // auth schema has users table
-      const authSchema = schemaSymbol.symbolTable.get('Schema:auth') as SchemaSymbol;
-      expect(authSchema.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
+      const authSchema = schemaSymbol.symbolTable.get(createSchemaSymbolIndex('auth')) as SchemaSymbol;
+      expect(authSchema.symbolTable.get(createTableSymbolIndex('users'))).toBeInstanceOf(TableSymbol);
     });
 
     test('should handle table aliases', () => {
@@ -160,12 +169,12 @@ describe('[example] binder', () => {
       const result1 = analyze('Table a.b.c { id int }');
       expect(result1.getErrors()).toHaveLength(0);
       const schemaSymbol1 = result1.getValue().symbol as SchemaSymbol;
-      expect(schemaSymbol1.symbolTable.get('Schema:a')).toBeInstanceOf(SchemaSymbol);
+      expect(schemaSymbol1.symbolTable.get(createSchemaSymbolIndex('a'))).toBeInstanceOf(SchemaSymbol);
 
       const result2 = analyze('Table "user-table" { "user-id" int }');
       expect(result2.getErrors()).toHaveLength(0);
       const schemaSymbol2 = result2.getValue().symbol as SchemaSymbol;
-      expect(schemaSymbol2.symbolTable.get('Table:user-table')).toBeInstanceOf(TableSymbol);
+      expect(schemaSymbol2.symbolTable.get(createTableSymbolIndex('user-table'))).toBeInstanceOf(TableSymbol);
     });
   });
 
@@ -184,7 +193,7 @@ describe('[example] binder', () => {
 
       // Verify column is in table's symbol table
       const tableSymbol = tableElement.symbol as TableSymbol;
-      expect(tableSymbol.symbolTable.get('Column:id')).toBe(columnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('id'))).toBe(columnSymbol);
     });
 
     test('should detect duplicate column names in same table', () => {
@@ -218,10 +227,10 @@ describe('[example] binder', () => {
       const tableElement = ast.body[0] as ElementDeclarationNode;
       const tableSymbol = tableElement.symbol as TableSymbol;
 
-      expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
-      expect(tableSymbol.symbolTable.get('Column:name')).toBeInstanceOf(ColumnSymbol);
-      expect(tableSymbol.symbolTable.get('Column:email')).toBeInstanceOf(ColumnSymbol);
-      expect(tableSymbol.symbolTable.get('Column:status')).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('id'))).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('name'))).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('email'))).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('status'))).toBeInstanceOf(ColumnSymbol);
     });
 
     test('should track column references from inline refs', () => {
@@ -286,8 +295,8 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const tableSymbol = (ast.body[0] as ElementDeclarationNode).symbol as TableSymbol;
-      expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
-      expect(tableSymbol.symbolTable.get('Column:email')).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('id'))).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('email'))).toBeInstanceOf(ColumnSymbol);
     });
 
     test('should detect unknown columns in indexes', () => {
@@ -322,9 +331,9 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const tableSymbol = (ast.body[0] as ElementDeclarationNode).symbol as TableSymbol;
-      expect(tableSymbol.symbolTable.get('Column:first_name')).toBeInstanceOf(ColumnSymbol);
-      expect(tableSymbol.symbolTable.get('Column:last_name')).toBeInstanceOf(ColumnSymbol);
-      expect(tableSymbol.symbolTable.get('Column:email')).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('first_name'))).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('last_name'))).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get(createColumnSymbolIndex('email'))).toBeInstanceOf(ColumnSymbol);
     });
   });
 
@@ -343,13 +352,13 @@ describe('[example] binder', () => {
 
       expect(enumSymbol).toBeInstanceOf(EnumSymbol);
       expect(enumSymbol.declaration).toBe(enumNode);
-      expect(enumSymbol.symbolTable.get('Enum field:active')).toBeInstanceOf(EnumFieldSymbol);
-      expect(enumSymbol.symbolTable.get('Enum field:inactive')).toBeInstanceOf(EnumFieldSymbol);
+      expect(enumSymbol.symbolTable.get(createEnumFieldSymbolIndex('active'))).toBeInstanceOf(EnumFieldSymbol);
+      expect(enumSymbol.symbolTable.get(createEnumFieldSymbolIndex('inactive'))).toBeInstanceOf(EnumFieldSymbol);
       expect(enumSymbol.references).toEqual([]);
 
       // Verify enum is in public schema symbol table
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      expect(schemaSymbol.symbolTable.get('Enum:status')).toBe(enumSymbol);
+      expect(schemaSymbol.symbolTable.get(createEnumSymbolIndex('status'))).toBe(enumSymbol);
     });
 
     test('should create EnumFieldSymbol with correct properties', () => {
@@ -367,9 +376,9 @@ describe('[example] binder', () => {
       const enumElement = ast.body[0] as ElementDeclarationNode;
       const enumSymbol = enumElement.symbol as EnumSymbol;
 
-      expect(enumSymbol.symbolTable.get('Enum field:pending')).toBeInstanceOf(EnumFieldSymbol);
-      expect(enumSymbol.symbolTable.get('Enum field:approved')).toBeInstanceOf(EnumFieldSymbol);
-      expect(enumSymbol.symbolTable.get('Enum field:rejected')).toBeInstanceOf(EnumFieldSymbol);
+      expect(enumSymbol.symbolTable.get(createEnumFieldSymbolIndex('pending'))).toBeInstanceOf(EnumFieldSymbol);
+      expect(enumSymbol.symbolTable.get(createEnumFieldSymbolIndex('approved'))).toBeInstanceOf(EnumFieldSymbol);
+      expect(enumSymbol.symbolTable.get(createEnumFieldSymbolIndex('rejected'))).toBeInstanceOf(EnumFieldSymbol);
 
       const enumBody = enumElement.body as BlockExpressionNode;
       enumBody.body.forEach((field) => {
@@ -405,12 +414,12 @@ describe('[example] binder', () => {
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
 
-      const enumA = schemaSymbol.symbolTable.get('Enum:a') as EnumSymbol;
-      const enumB = schemaSymbol.symbolTable.get('Enum:b') as EnumSymbol;
-      expect(enumA.symbolTable.get('Enum field:val1')).toBeInstanceOf(EnumFieldSymbol);
-      expect(enumA.symbolTable.get('Enum field:val2')).toBeInstanceOf(EnumFieldSymbol);
-      expect(enumB.symbolTable.get('Enum field:val1')).toBeInstanceOf(EnumFieldSymbol);
-      expect(enumB.symbolTable.get('Enum field:val2')).toBeInstanceOf(EnumFieldSymbol);
+      const enumA = schemaSymbol.symbolTable.get(createEnumSymbolIndex('a')) as EnumSymbol;
+      const enumB = schemaSymbol.symbolTable.get(createEnumSymbolIndex('b')) as EnumSymbol;
+      expect(enumA.symbolTable.get(createEnumFieldSymbolIndex('val1'))).toBeInstanceOf(EnumFieldSymbol);
+      expect(enumA.symbolTable.get(createEnumFieldSymbolIndex('val2'))).toBeInstanceOf(EnumFieldSymbol);
+      expect(enumB.symbolTable.get(createEnumFieldSymbolIndex('val1'))).toBeInstanceOf(EnumFieldSymbol);
+      expect(enumB.symbolTable.get(createEnumFieldSymbolIndex('val2'))).toBeInstanceOf(EnumFieldSymbol);
     });
 
     test('should allow enum type reference in column', () => {
@@ -429,8 +438,8 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      expect(schemaSymbol.symbolTable.get('Enum:status')).toBeInstanceOf(EnumSymbol);
-      expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
+      expect(schemaSymbol.symbolTable.get(createEnumSymbolIndex('status'))).toBeInstanceOf(EnumSymbol);
+      expect(schemaSymbol.symbolTable.get(createTableSymbolIndex('users'))).toBeInstanceOf(TableSymbol);
     });
 
     test('should allow enum from different schema', () => {
@@ -449,8 +458,8 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      const typesSchema = schemaSymbol.symbolTable.get('Schema:types') as SchemaSymbol;
-      expect(typesSchema.symbolTable.get('Enum:status')).toBeInstanceOf(EnumSymbol);
+      const typesSchema = schemaSymbol.symbolTable.get(createSchemaSymbolIndex('types')) as SchemaSymbol;
+      expect(typesSchema.symbolTable.get(createEnumSymbolIndex('status'))).toBeInstanceOf(EnumSymbol);
     });
 
     test('should allow forward reference to enum', () => {
@@ -465,8 +474,8 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
-      expect(schemaSymbol.symbolTable.get('Enum:status_enum')).toBeInstanceOf(EnumSymbol);
+      expect(schemaSymbol.symbolTable.get(createTableSymbolIndex('users'))).toBeInstanceOf(TableSymbol);
+      expect(schemaSymbol.symbolTable.get(createEnumSymbolIndex('status_enum'))).toBeInstanceOf(EnumSymbol);
     });
 
     test('should bind enum field references in default values', () => {
@@ -486,8 +495,8 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      const enumSymbol = schemaSymbol.symbolTable.get('Enum:order_status') as EnumSymbol;
-      const pendingField = enumSymbol.symbolTable.get('Enum field:pending') as EnumFieldSymbol;
+      const enumSymbol = schemaSymbol.symbolTable.get(createEnumSymbolIndex('order_status')) as EnumSymbol;
+      const pendingField = enumSymbol.symbolTable.get(createEnumFieldSymbolIndex('pending')) as EnumFieldSymbol;
 
       // Enum should have 2 references: column type + default value
       expect(enumSymbol.references.length).toBe(2);
@@ -511,9 +520,9 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const publicSchema = ast.symbol as SchemaSymbol;
-      const typesSchema = publicSchema.symbolTable.get('Schema:types') as SchemaSymbol;
-      const enumSymbol = typesSchema.symbolTable.get('Enum:status') as EnumSymbol;
-      const activeField = enumSymbol.symbolTable.get('Enum field:active') as EnumFieldSymbol;
+      const typesSchema = publicSchema.symbolTable.get(createSchemaSymbolIndex('types')) as SchemaSymbol;
+      const enumSymbol = typesSchema.symbolTable.get(createEnumSymbolIndex('status')) as EnumSymbol;
+      const activeField = enumSymbol.symbolTable.get(createEnumFieldSymbolIndex('active')) as EnumFieldSymbol;
 
       expect(enumSymbol.references.length).toBe(2);
       expect(activeField.references.length).toBe(1);
@@ -635,8 +644,8 @@ describe('[example] binder', () => {
       // Verify the binding
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      const enumSymbol = schemaSymbol.symbolTable.get('Enum:true') as EnumSymbol;
-      const valueField = enumSymbol.symbolTable.get('Enum field:value') as EnumFieldSymbol;
+      const enumSymbol = schemaSymbol.symbolTable.get(createEnumSymbolIndex('true')) as EnumSymbol;
+      const valueField = enumSymbol.symbolTable.get(createEnumFieldSymbolIndex('value')) as EnumFieldSymbol;
 
       // Enum should have 2 references: column type + default value
       expect(enumSymbol.references.length).toBe(2);
@@ -756,8 +765,8 @@ describe('[example] binder', () => {
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
 
-      const usersSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
-      const postsSymbol = schemaSymbol.symbolTable.get('Table:posts') as TableSymbol;
+      const usersSymbol = schemaSymbol.symbolTable.get(createTableSymbolIndex('users')) as TableSymbol;
+      const postsSymbol = schemaSymbol.symbolTable.get(createTableSymbolIndex('posts')) as TableSymbol;
 
       expect(usersSymbol.references.length).toBe(1);
       expect(usersSymbol.references[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
@@ -779,8 +788,8 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
-      expect(schemaSymbol.symbolTable.get('Table:posts')).toBeInstanceOf(TableSymbol);
+      expect(schemaSymbol.symbolTable.get(createTableSymbolIndex('users'))).toBeInstanceOf(TableSymbol);
+      expect(schemaSymbol.symbolTable.get(createTableSymbolIndex('posts'))).toBeInstanceOf(TableSymbol);
     });
 
     test('should track multiple references to the same symbol', () => {
@@ -817,18 +826,18 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      const merchantsSymbol = schemaSymbol.symbolTable.get('Table:merchants') as TableSymbol;
-      const ordersSymbol = schemaSymbol.symbolTable.get('Table:orders') as TableSymbol;
+      const merchantsSymbol = schemaSymbol.symbolTable.get(createTableSymbolIndex('merchants')) as TableSymbol;
+      const ordersSymbol = schemaSymbol.symbolTable.get(createTableSymbolIndex('orders')) as TableSymbol;
 
       // Both tables should have 2 references (table name + tuple access)
       expect(merchantsSymbol.references.length).toBe(2);
       expect(ordersSymbol.references.length).toBe(2);
 
       // Check column references
-      const idColumn = merchantsSymbol.symbolTable.get('Column:id') as ColumnSymbol;
-      const countryCodeColumn = merchantsSymbol.symbolTable.get('Column:country_code') as ColumnSymbol;
-      const merchantIdColumn = ordersSymbol.symbolTable.get('Column:merchant_id') as ColumnSymbol;
-      const countryColumn = ordersSymbol.symbolTable.get('Column:country') as ColumnSymbol;
+      const idColumn = merchantsSymbol.symbolTable.get(createColumnSymbolIndex('id')) as ColumnSymbol;
+      const countryCodeColumn = merchantsSymbol.symbolTable.get(createColumnSymbolIndex('country_code')) as ColumnSymbol;
+      const merchantIdColumn = ordersSymbol.symbolTable.get(createColumnSymbolIndex('merchant_id')) as ColumnSymbol;
+      const countryColumn = ordersSymbol.symbolTable.get(createColumnSymbolIndex('country')) as ColumnSymbol;
 
       expect(idColumn.references.length).toBe(1);
       expect(countryCodeColumn.references.length).toBe(1);
@@ -858,9 +867,9 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const publicSchema = ast.symbol as SchemaSymbol;
-      const shopSchema = publicSchema.symbolTable.get('Schema:shop') as SchemaSymbol;
-      const productsSymbol = shopSchema.symbolTable.get('Table:products') as TableSymbol;
-      const ordersSymbol = shopSchema.symbolTable.get('Table:orders') as TableSymbol;
+      const shopSchema = publicSchema.symbolTable.get(createSchemaSymbolIndex('shop')) as SchemaSymbol;
+      const productsSymbol = shopSchema.symbolTable.get(createTableSymbolIndex('products')) as TableSymbol;
+      const ordersSymbol = shopSchema.symbolTable.get(createTableSymbolIndex('orders')) as TableSymbol;
 
       expect(productsSymbol.references.length).toBe(2);
       expect(ordersSymbol.references.length).toBe(2);
@@ -888,12 +897,12 @@ describe('[example] binder', () => {
 
       expect(partialSymbol).toBeInstanceOf(TablePartialSymbol);
       expect(partialSymbol.declaration).toBe(partialNode);
-      expect(partialSymbol.symbolTable.get('Column:created_at')).toBeInstanceOf(ColumnSymbol);
+      expect(partialSymbol.symbolTable.get(createColumnSymbolIndex('created_at'))).toBeInstanceOf(ColumnSymbol);
       expect(partialSymbol.references).toEqual([]);
 
       // Verify TablePartial is in public schema symbol table
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      expect(schemaSymbol.symbolTable.get('TablePartial:timestamps')).toBe(partialSymbol);
+      expect(schemaSymbol.symbolTable.get(createTablePartialSymbolIndex('timestamps'))).toBe(partialSymbol);
     });
 
     test('should bind TablePartial references and track injections', () => {
@@ -946,8 +955,8 @@ describe('[example] binder', () => {
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
 
-      const timestampsSymbol = schemaSymbol.symbolTable.get('TablePartial:timestamps') as TablePartialSymbol;
-      const auditSymbol = schemaSymbol.symbolTable.get('TablePartial:audit') as TablePartialSymbol;
+      const timestampsSymbol = schemaSymbol.symbolTable.get(createTablePartialSymbolIndex('timestamps')) as TablePartialSymbol;
+      const auditSymbol = schemaSymbol.symbolTable.get(createTablePartialSymbolIndex('audit')) as TablePartialSymbol;
 
       expect(timestampsSymbol.references.length).toBe(1);
       expect(timestampsSymbol.references[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
@@ -968,8 +977,8 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      const baseSymbol = schemaSymbol.symbolTable.get('TablePartial:base') as TablePartialSymbol;
-      const derivedSymbol = schemaSymbol.symbolTable.get('Table:derived') as TableSymbol;
+      const baseSymbol = schemaSymbol.symbolTable.get(createTablePartialSymbolIndex('base')) as TablePartialSymbol;
+      const derivedSymbol = schemaSymbol.symbolTable.get(createTableSymbolIndex('derived')) as TableSymbol;
 
       expect(baseSymbol.references.length).toBe(1);
       expect(baseSymbol.references[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
@@ -990,8 +999,8 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
-      expect(schemaSymbol.symbolTable.get('TablePartial:timestamps')).toBeInstanceOf(TablePartialSymbol);
+      expect(schemaSymbol.symbolTable.get(createTableSymbolIndex('users'))).toBeInstanceOf(TableSymbol);
+      expect(schemaSymbol.symbolTable.get(createTablePartialSymbolIndex('timestamps'))).toBeInstanceOf(TablePartialSymbol);
     });
 
     test('should detect non-existent TablePartial injection', () => {
@@ -1078,8 +1087,8 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      const usersSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
-      const idColumn = usersSymbol.symbolTable.get('Column:id') as ColumnSymbol;
+      const usersSymbol = schemaSymbol.symbolTable.get(createTableSymbolIndex('users')) as TableSymbol;
+      const idColumn = usersSymbol.symbolTable.get(createColumnSymbolIndex('id')) as ColumnSymbol;
 
       // users.id should be referenced from the partial's inline ref
       expect(idColumn.references.length).toBe(1);
@@ -1107,7 +1116,7 @@ describe('[example] binder', () => {
 
       // Verify TableGroup is in public schema symbol table
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      expect(schemaSymbol.symbolTable.get('TableGroup:group1')).toBe(groupSymbol);
+      expect(schemaSymbol.symbolTable.get(createTableGroupSymbolIndex('group1'))).toBe(groupSymbol);
     });
 
     test('should bind table references and track them', () => {
@@ -1150,7 +1159,7 @@ describe('[example] binder', () => {
 
       const ast = result.getValue();
       const schemaSymbol = ast.symbol as SchemaSymbol;
-      expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
+      expect(schemaSymbol.symbolTable.get(createTableSymbolIndex('users'))).toBeInstanceOf(TableSymbol);
     });
   });
 });
