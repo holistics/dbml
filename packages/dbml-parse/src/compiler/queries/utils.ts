@@ -1,3 +1,57 @@
+import {
+  isBooleanType,
+  isNumericType,
+  isDateTimeType,
+  tryExtractBoolean,
+  tryExtractNumeric,
+  tryExtractString,
+  tryExtractDateTime,
+} from '@/core/interpreter/records/utils';
+import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
+
+/**
+ * Checks if an identifier is valid (can be used without quotes in DBML).
+ * Valid identifiers must:
+ * - Contain only alphanumeric characters and underscores
+ * - Not start with a digit
+ *
+ * @param name - The identifier to check
+ * @returns True if the identifier is valid and doesn't need quotes
+ *
+ * @example
+ * isValidIdentifier('users') => true
+ * isValidIdentifier('user_name') => true
+ * isValidIdentifier('user name') => false (contains space)
+ * isValidIdentifier('123users') => false (starts with digit)
+ */
+export function isValidIdentifier (name: string): boolean {
+  if (!name) return false;
+  return name.split('').every((char) => isAlphaOrUnderscore(char) || isDigit(char)) && !isDigit(name[0]);
+}
+
+/**
+ * Adds double quotes around an identifier if needed.
+ * Identifiers need quotes if they:
+ * - Contain non-alphanumeric characters (except underscore)
+ * - Start with a digit
+ * - Are empty strings
+ *
+ * @param identifier - The identifier to potentially quote
+ * @returns The identifier with double quotes if needed, otherwise unchanged
+ *
+ * @example
+ * addDoubleQuoteIfNeeded('users') => 'users'
+ * addDoubleQuoteIfNeeded('user name') => '"user name"'
+ * addDoubleQuoteIfNeeded('123users') => '"123users"'
+ * addDoubleQuoteIfNeeded('user-name') => '"user-name"'
+ */
+export function addDoubleQuoteIfNeeded (identifier: string): string {
+  if (isValidIdentifier(identifier)) {
+    return identifier;
+  }
+  return `"${identifier}"`;
+}
+
 /**
  * Unescapes a string by processing escape sequences.
  * Handles escaped quotes (\"), common escape sequences, unicode (\uHHHH), and arbitrary escapes.
@@ -115,6 +169,74 @@ export function escapeString (str: string): string {
   }
 
   return result;
+}
+
+/**
+ * Formats a record value for DBML output.
+ * Handles different data types and converts them to appropriate DBML syntax.
+ *
+ * @param recordValue - The record value with type information
+ * @returns The formatted string representation for DBML
+ *
+ * @example
+ * formatRecordValue({ value: 1, type: 'integer' }) => '1'
+ * formatRecordValue({ value: 'Alice', type: 'string' }) => "'Alice'"
+ * formatRecordValue({ value: true, type: 'bool' }) => 'true'
+ * formatRecordValue({ value: null, type: 'string' }) => 'null'
+ */
+export function formatRecordValue (recordValue: { value: any; type: string }): string {
+  const { value, type } = recordValue;
+
+  // Handle null/undefined values
+  if (value === null || value === undefined) {
+    return 'null';
+  }
+
+  // Handle expressions (backtick strings)
+  if (type === 'expression') {
+    return `\`${value}\``;
+  }
+
+  // Try to extract typed values using tryExtract functions
+  // If extraction fails, fall back to function expression
+
+  if (isBooleanType(type)) {
+    const extracted = tryExtractBoolean(value);
+    if (extracted !== null) {
+      return extracted ? 'true' : 'false';
+    }
+    // If extraction failed, wrap in function expression
+    return `\`${value}\``;
+  }
+
+  if (isNumericType(type)) {
+    const extracted = tryExtractNumeric(value);
+    if (extracted !== null) {
+      return String(extracted);
+    }
+    // If extraction failed, wrap in function expression
+    return `\`${value}\``;
+  }
+
+  if (isDateTimeType(type)) {
+    const extracted = tryExtractDateTime(value);
+    if (extracted !== null) {
+      const quote = extracted.includes('\n') ? '\'\'\'' : '\'';
+      return `${quote}${extracted.replaceAll('\\', '\\\\').replaceAll("'", "\\'")}${quote}`;
+    }
+    // If extraction failed, wrap in function expression
+    return `\`${value}\``;
+  }
+
+  // Default: string types and others
+  const extracted = tryExtractString(value);
+  if (extracted !== null) {
+    const quote = extracted.includes('\n') ? '\'\'\'' : '\'';
+    return `${quote}${extracted.replaceAll('\\', '\\\\').replaceAll("'", "\\'")}${quote}`;
+  }
+
+  // If all extractions failed, wrap in function expression
+  return `\`${value}\``;
 }
 
 /**
