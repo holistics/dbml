@@ -20,13 +20,8 @@ declare class Endpoint extends Element {
     fields: Field[];
     ref: Ref;
     dbState: DbState;
-    constructor({ tableName, schemaName, fieldNames, relation, token, ref }: {
-        tableName: any;
-        schemaName: any;
-        fieldNames: any;
-        relation: any;
-        token: any;
-        ref: any;
+    constructor({ tableName, schemaName, fieldNames, relation, token, ref }: RawEndpoint & {
+        ref: Ref;
     });
     generateId(): void;
     equals(endpoint: any): boolean;

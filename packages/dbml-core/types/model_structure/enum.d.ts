@@ -1,15 +1,16 @@
 import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element, { Token, RawNote } from './element';
-import EnumValue from './enumValue';
+import EnumValue, { RawEnumValue } from './enumValue';
 import Field from './field';
 import Schema from './schema';
-interface RawEnum {
+export interface RawEnum {
     name: string;
+    schemaName: string | null;
     token: Token;
-    values: EnumValue[];
-    note: RawNote;
-    schema: Schema;
+    values: RawEnumValue[];
+    note?: RawNote;
+    noteToken?: Token;
 }
 declare class Enum extends Element {
     name: string;
@@ -21,7 +22,9 @@ declare class Enum extends Element {
     fields: Field[];
     dbState: DbState;
     id: number;
-    constructor({ name, token, values, note, schema }: RawEnum);
+    constructor({ name, token, values, note, schema, noteToken }: RawEnum & {
+        schema: Schema;
+    });
     generateId(): void;
     processValues(rawValues: any): void;
     pushValue(value: any): void;

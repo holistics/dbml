@@ -1,19 +1,18 @@
 import Element, { RawNote, Token } from './element';
-import Field from './field';
-import Index from './indexes';
-import Check from './check';
+import Field, { RawField } from './field';
+import Index, { RawIndex } from './indexes';
+import Check, { RawCheck } from './check';
 import DbState from './dbState';
 import { NormalizedModel } from './database';
 
-interface RawTablePartial {
+export interface RawTablePartial {
     name: string;
-    note: RawNote;
-    fields: Field[];
-    indexes: Index[];
-    checks?: any[];
+    fields: RawField[];
     token: Token;
-    headerColor: string;
-    dbState: DbState;
+    indexes: RawIndex[];
+    headerColor?: string;
+    checks: RawCheck[];
+    note?: RawNote;
 }
 
 declare class TablePartial extends Element {
@@ -27,7 +26,7 @@ declare class TablePartial extends Element {
     dbState: DbState;
     id: number;
 
-    constructor({ name, note, fields, indexes, checks, token, headerColor, dbState }: RawTablePartial);
+    constructor({ name, note, fields, indexes, checks, token, headerColor, dbState }: RawTablePartial & { dbState: DbState });
     generateId(): void;
     export(): {
         name: string;
