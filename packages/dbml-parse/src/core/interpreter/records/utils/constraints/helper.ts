@@ -1,5 +1,5 @@
 import { RecordValue, Column } from '@/core/interpreter/types';
-import { normalizeTypeName, SERIAL_TYPES } from '../data';
+import { isSerialType } from '../data';
 
 // Given a set of columns and a row
 // Return a string contain the values of the columns joined together with `|` -> This string is used for deduplication
@@ -45,8 +45,7 @@ export function hasNullInKey (
 
 // Check if column is an auto-increment column (serial types or increment flag)
 export function isAutoIncrementColumn (column: Column): boolean {
-  const normalizedType = normalizeTypeName(column.type.type_name);
-  return column.increment || SERIAL_TYPES.has(normalizedType);
+  return column.increment || isSerialType(column.type.type_name);
 }
 
 // Check if column has NOT NULL constraint with a default value

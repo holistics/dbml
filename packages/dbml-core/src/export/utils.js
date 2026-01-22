@@ -99,7 +99,7 @@ export function escapeObjectName (name, database) {
   return `${escapeSignature}${name}${escapeSignature}`;
 }
 
-export function formatRecordValue (recordValue) {
+export function formatDbmlRecordValue (recordValue) {
   const { value, type } = recordValue;
 
   // Handle null/undefined values

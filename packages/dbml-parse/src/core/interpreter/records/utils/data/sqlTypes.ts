@@ -5,76 +5,135 @@ import {
 import { extractNumericLiteral } from '@/core/analyzer/utils';
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 
-export const INTEGER_TYPES = new Set([
-  'int', 'integer', 'smallint', 'bigint', 'tinyint', 'mediumint',
-  'serial', 'bigserial', 'smallserial',
-]);
+export type SqlDialect = 'mysql' | 'postgres' | 'mssql' | 'oracle' | 'snowflake';
 
-export const FLOAT_TYPES = new Set([
-  'decimal', 'numeric', 'real', 'float', 'double', 'double precision',
-  'number',
-]);
+// Dialect-specific type mappings
+const DIALECT_INTEGER_TYPES: Record<SqlDialect, Set<string>> = {
+  mysql: new Set(['int', 'integer', 'smallint', 'bigint', 'tinyint', 'mediumint']),
+  postgres: new Set(['int', 'integer', 'smallint', 'bigint', 'serial', 'bigserial', 'smallserial']),
+  mssql: new Set(['int', 'integer', 'smallint', 'bigint', 'tinyint']),
+  oracle: new Set(['int', 'integer', 'smallint']),
+  snowflake: new Set(['int', 'integer', 'smallint', 'bigint', 'tinyint']),
+};
 
-export const STRING_TYPES = new Set([
-  'string', // Generic string type for records
-  'varchar', 'char', 'character', 'character varying', 'nvarchar', 'nchar',
-  'text', 'ntext', 'tinytext', 'mediumtext', 'longtext',
-]);
+const DIALECT_FLOAT_TYPES: Record<SqlDialect, Set<string>> = {
+  mysql: new Set(['decimal', 'numeric', 'float', 'double', 'real']),
+  postgres: new Set(['decimal', 'numeric', 'real', 'float', 'double precision']),
+  mssql: new Set(['decimal', 'numeric', 'real', 'float']),
+  oracle: new Set(['number', 'decimal', 'numeric', 'float', 'real']),
+  snowflake: new Set(['number', 'decimal', 'numeric', 'float', 'double', 'real']),
+};
 
-export const BINARY_TYPES = new Set([
-  'binary', 'varbinary', 'blob', 'tinyblob', 'mediumblob', 'longblob',
-  'bytea',
-]);
+const DIALECT_BOOL_TYPES: Record<SqlDialect, Set<string>> = {
+  mysql: new Set(['bool', 'boolean', 'bit']),
+  postgres: new Set(['bool', 'boolean']),
+  mssql: new Set(['bit']),
+  oracle: new Set([]), // Oracle typically uses number(1)
+  snowflake: new Set(['boolean']),
+};
 
-export const BOOL_TYPES = new Set([
-  'bool', 'boolean', 'bit',
-]);
+const DIALECT_STRING_TYPES: Record<SqlDialect, Set<string>> = {
+  mysql: new Set(['varchar', 'char', 'text', 'tinytext', 'mediumtext', 'longtext', 'string']),
+  postgres: new Set(['varchar', 'char', 'character', 'character varying', 'text', 'string']),
+  mssql: new Set(['varchar', 'char', 'nvarchar', 'nchar', 'text', 'ntext', 'string']),
+  oracle: new Set(['varchar', 'varchar2', 'char', 'nvarchar2', 'nchar', 'string']),
+  snowflake: new Set(['varchar', 'char', 'text', 'string']),
+};
 
-export const DATETIME_TYPES = new Set([
-  'date', 'datetime', 'datetime2', 'smalldatetime',
-  'timestamp', 'timestamptz', 'timestamp with time zone', 'timestamp without time zone',
-  'time', 'timetz', 'time with time zone', 'time without time zone',
-]);
+const DIALECT_BINARY_TYPES: Record<SqlDialect, Set<string>> = {
+  mysql: new Set(['binary', 'varbinary', 'blob', 'tinyblob', 'mediumblob', 'longblob']),
+  postgres: new Set(['bytea']),
+  mssql: new Set(['binary', 'varbinary']),
+  oracle: new Set(['blob', 'raw']),
+  snowflake: new Set(['binary', 'varbinary']),
+};
 
-export const SERIAL_TYPES = new Set(['serial', 'smallserial', 'bigserial']);
+const DIALECT_DATETIME_TYPES: Record<SqlDialect, Set<string>> = {
+  mysql: new Set(['date', 'datetime', 'timestamp', 'time']),
+  postgres: new Set(['date', 'timestamp', 'timestamptz', 'timestamp with time zone', 'timestamp without time zone', 'time', 'timetz', 'time with time zone', 'time without time zone']),
+  mssql: new Set(['date', 'datetime', 'datetime2', 'smalldatetime', 'time']),
+  oracle: new Set(['date', 'timestamp', 'timestamp with time zone', 'timestamp with local time zone']),
+  snowflake: new Set(['date', 'datetime', 'timestamp', 'time']),
+};
+
+const DIALECT_SERIAL_TYPES: Record<SqlDialect, Set<string>> = {
+  mysql: new Set([]),
+  postgres: new Set(['serial', 'smallserial', 'bigserial']),
+  mssql: new Set([]),
+  oracle: new Set([]),
+  snowflake: new Set([]),
+};
 
 // Normalize a type name (lowercase, trim, collapse spaces)
 export function normalizeTypeName (type: string): string {
   return type.toLowerCase().trim().replace(/\s+/g, ' ');
 }
 
-export function isIntegerType (type: string): boolean {
+export function isIntegerType (type: string, dialect?: SqlDialect): boolean {
   const normalized = normalizeTypeName(type);
-  return INTEGER_TYPES.has(normalized);
+  if (dialect) {
+    return DIALECT_INTEGER_TYPES[dialect].has(normalized);
+  }
+  // Check if any dialect has this type
+  return Object.values(DIALECT_INTEGER_TYPES).some((set) => set.has(normalized));
 }
 
-export function isFloatType (type: string): boolean {
+export function isFloatType (type: string, dialect?: SqlDialect): boolean {
   const normalized = normalizeTypeName(type);
-  return FLOAT_TYPES.has(normalized);
+  if (dialect) {
+    return DIALECT_FLOAT_TYPES[dialect].has(normalized);
+  }
+  // Check if any dialect has this type
+  return Object.values(DIALECT_FLOAT_TYPES).some((set) => set.has(normalized));
 }
 
-export function isNumericType (type: string): boolean {
-  return isIntegerType(type) || isFloatType(type);
+export function isNumericType (type: string, dialect?: SqlDialect): boolean {
+  return isIntegerType(type, dialect) || isFloatType(type, dialect);
 }
 
-export function isBooleanType (type: string): boolean {
+export function isBooleanType (type: string, dialect?: SqlDialect): boolean {
   const normalized = normalizeTypeName(type);
-  return BOOL_TYPES.has(normalized);
+  if (dialect) {
+    return DIALECT_BOOL_TYPES[dialect].has(normalized);
+  }
+  // Check if any dialect has this type
+  return Object.values(DIALECT_BOOL_TYPES).some((set) => set.has(normalized));
 }
 
-export function isStringType (type: string): boolean {
+export function isStringType (type: string, dialect?: SqlDialect): boolean {
   const normalized = normalizeTypeName(type);
-  return STRING_TYPES.has(normalized);
+  if (dialect) {
+    return DIALECT_STRING_TYPES[dialect].has(normalized);
+  }
+  // Check if any dialect has this type
+  return Object.values(DIALECT_STRING_TYPES).some((set) => set.has(normalized));
 }
 
-export function isBinaryType (type: string): boolean {
+export function isBinaryType (type: string, dialect?: SqlDialect): boolean {
   const normalized = normalizeTypeName(type);
-  return BINARY_TYPES.has(normalized);
+  if (dialect) {
+    return DIALECT_BINARY_TYPES[dialect].has(normalized);
+  }
+  // Check if any dialect has this type
+  return Object.values(DIALECT_BINARY_TYPES).some((set) => set.has(normalized));
 }
 
-export function isDateTimeType (type: string): boolean {
+export function isDateTimeType (type: string, dialect?: SqlDialect): boolean {
   const normalized = normalizeTypeName(type);
-  return DATETIME_TYPES.has(normalized);
+  if (dialect) {
+    return DIALECT_DATETIME_TYPES[dialect].has(normalized);
+  }
+  // Check if any dialect has this type
+  return Object.values(DIALECT_DATETIME_TYPES).some((set) => set.has(normalized));
+}
+
+export function isSerialType (type: string, dialect?: SqlDialect): boolean {
+  const normalized = normalizeTypeName(type);
+  if (dialect) {
+    return DIALECT_SERIAL_TYPES[dialect].has(normalized);
+  }
+  // Check if any dialect has this type
+  return Object.values(DIALECT_SERIAL_TYPES).some((set) => set.has(normalized));
 }
 
 // Get type node from a column symbol's declaration

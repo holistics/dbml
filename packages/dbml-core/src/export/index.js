@@ -1,6 +1,6 @@
 import ModelExporter from './ModelExporter';
 import Parser from '../parse/Parser';
-import { formatRecordValue } from './utils';
+import { formatDbmlRecordValue } from './utils';
 
 function _export (str, format) {
   const database = (new Parser()).parse(str, 'dbmlv2');
@@ -11,4 +11,4 @@ export default {
   export: _export,
 };
 
-export { formatRecordValue };
+export { formatDbmlRecordValue };
