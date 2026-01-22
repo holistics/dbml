@@ -9,6 +9,7 @@ import {
 } from '@/core/analyzer/symbol/symbolIndex';
 import { applyTextEdits, TextEdit } from './applyTextEdits';
 import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
+import { splitQualifiedIdentifier } from '../utils';
 
 export type TableNameInput = string | { schema?: string; table: string };
 
@@ -33,7 +34,7 @@ function stripQuotes (str: string): string {
 
 /**
  * Normalizes a table name input to { schema, table } format.
- * FIXME: String parsing uses simple split('.') which doesn't handle quoted identifiers with dots
+ * Properly handles quoted identifiers with dots inside.
  */
 function normalizeTableName (input: TableNameInput): { schema: string; table: string } {
   if (typeof input !== 'string') {
@@ -43,28 +44,35 @@ function normalizeTableName (input: TableNameInput): { schema: string; table: st
     };
   }
 
-  // FIXME: This simple split doesn't handle quoted identifiers containing dots
-  const parts = input.split('.');
+  const parts = splitQualifiedIdentifier(input);
+
+  if (parts.length === 0) {
+    return {
+      schema: DEFAULT_SCHEMA_NAME,
+      table: '',
+    };
+  }
 
   if (parts.length === 1) {
     return {
       schema: DEFAULT_SCHEMA_NAME,
-      table: stripQuotes(parts[0]),
+      table: parts[0],
     };
   }
 
   if (parts.length === 2) {
     return {
-      schema: stripQuotes(parts[0]),
-      table: stripQuotes(parts[1]),
+      schema: parts[0],
+      table: parts[1],
     };
   }
 
   // More than 2 parts - treat the last as table, rest as schema
-  const tablePart = parts.pop()!;
+  const tablePart = parts[parts.length - 1];
+  const schemaPart = parts.slice(0, -1).join('.');
   return {
-    schema: stripQuotes(parts.join('.')),
-    table: stripQuotes(tablePart),
+    schema: schemaPart,
+    table: tablePart,
   };
 }
 

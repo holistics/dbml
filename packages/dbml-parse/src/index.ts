@@ -42,6 +42,10 @@ export {
 export {
   // Scope kinds from compiler
   ScopeKind,
+  // Utilities
+  splitQualifiedIdentifier,
+  unescapeString,
+  escapeString,
 } from '@/compiler/index';
 
 // Export interpreted types for structured data
