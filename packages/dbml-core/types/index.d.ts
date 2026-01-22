@@ -57,6 +57,7 @@ export {
   isSerialType,
   tryExtractBoolean,
   tryExtractNumeric,
+  tryExtractInteger,
   tryExtractString,
   tryExtractDateTime,
   tryExtractEnum,
