@@ -102,7 +102,7 @@ export default class Compiler {
   appendRecords (
     tableName: TableNameInput,
     columns: string[],
-    values: RecordValue[][],
+    values: RecordValue[][] | string[][],
   ): string {
     return appendRecords.call(this, tableName, columns, values);
   }
@@ -111,7 +111,7 @@ export default class Compiler {
     tableName: TableNameInput,
     rowIndex: number,
     fieldName: string,
-    newValue: RecordValue,
+    newValue: RecordValue | string,
   ): string {
     return updateRecordField.call(this, tableName, rowIndex, fieldName, newValue);
   }
