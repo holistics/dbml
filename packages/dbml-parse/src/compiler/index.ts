@@ -13,9 +13,13 @@ import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
 import { renameTable, applyTextEdits, type TextEdit, type TableNameInput } from './queries/transform';
+import { splitQualifiedIdentifier, unescapeString, escapeString } from './queries/utils';
 
 // Re-export types
 export { ScopeKind } from './types';
+
+// Re-export utilities
+export { splitQualifiedIdentifier, unescapeString, escapeString };
 
 export default class Compiler {
   private source = '';
