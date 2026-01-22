@@ -4,15 +4,18 @@ import Element, { RawNote, Token } from './element';
 import IndexColumn from './indexColumn';
 import Table from './table';
 import TablePartial from './tablePartial';
-interface RawIndex {
-    columns: IndexColumn;
-    type: any;
-    unique: boolean;
-    pk: string;
-    name: string;
-    note: RawNote;
-    table: Table;
+export interface RawIndex {
+    columns: Array<{
+        value: string;
+        type: string;
+        token: Token;
+    }>;
     token: Token;
+    unique?: boolean;
+    pk?: boolean;
+    name?: string;
+    type?: string;
+    note?: RawNote;
 }
 declare class Index extends Element {
     columns: IndexColumn[];
@@ -25,7 +28,10 @@ declare class Index extends Element {
     table: Table;
     dbState: DbState;
     injectedPartial: TablePartial;
-    constructor({ columns, type, unique, pk, token, name, note, table }: RawIndex);
+    constructor({ columns, type, unique, pk, token, name, note, table }: RawIndex & {
+        table: Table;
+        injectedPartial: TablePartial;
+    });
     generateId(): void;
     processIndexColumns(rawColumns: any): void;
     pushIndexColumn(column: any): void;

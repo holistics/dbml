@@ -1,9 +1,9 @@
 import Schema, { NormalizedSchema, RawSchema } from './schema';
-import Ref, { NormalizedRef } from './ref';
-import Enum, { NormalizedEnum } from './enum';
-import TableGroup, { NormalizedTableGroup } from './tableGroup';
-import Table, { NormalizedTable } from './table';
-import StickyNote, { NormalizedStickyNote } from './stickyNote';
+import Ref, { NormalizedRef, RawRef } from './ref';
+import Enum, { NormalizedEnum, RawEnum } from './enum';
+import TableGroup, { NormalizedTableGroup, RawTableGroup } from './tableGroup';
+import Table, { NormalizedTable, RawTable } from './table';
+import StickyNote, { NormalizedStickyNote, RawStickyNote } from './stickyNote';
 import Element, { RawNote, Token } from './element';
 import DbState from './dbState';
 import { NormalizedEndpoint } from './endpoint';
@@ -12,14 +12,16 @@ import { NormalizedField } from './field';
 import { NormalizedIndexColumn } from './indexColumn';
 import { NormalizedIndex } from './indexes';
 import { NormalizedCheck } from './check';
-import TablePartial, { NormalizedTablePartial } from './tablePartial';
+import TablePartial, { NormalizedTablePartial, RawTablePartial } from './tablePartial';
 export interface Project {
-    note: RawNote;
-    database_type: string;
-    name: string;
+    note?: RawNote;
+    database_type?: string | null;
+    name?: string | null;
 }
 
-interface RawTableRecord {
+export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
+
+export interface RawTableRecord {
     schemaName: string | undefined;
     tableName: string;
     columns: string[];
@@ -37,16 +39,26 @@ export interface NormalizedRecords {
     [_id: number]: TableRecord;
 }
 
+export interface Alias {
+    name: string;
+    kind: 'table';
+    value: {
+        tableName: string;
+        schemaName: string | null;
+    };
+}
+
 export interface RawDatabase {
-    schemas: Schema[];
-    tables: Table[];
-    notes: StickyNote[];
-    enums: Enum[];
-    refs: Ref[];
-    tableGroups: TableGroup[];
+    schemas: [];
+    tables: RawTable[];
+    notes: RawStickyNote[];
+    refs: RawRef[];
+    enums: RawEnum[];
+    tableGroups: RawTableGroup[];
+    aliases: Alias[];
     project: Project;
+    tablePartials: RawTablePartial[];
     records: RawTableRecord[];
-    tablePartials: TablePartial[];
 }
 declare class Database extends Element {
     dbState: DbState;
@@ -57,9 +69,11 @@ declare class Database extends Element {
     noteToken: Token;
     databaseType: string;
     name: string;
+    aliases: any[];
     records: TableRecord[];
+    tablePartials: TablePartial[];
     id: number;
-    constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
+    constructor({ schemas, tables, notes, enums, refs, tableGroups, project, aliases, records, tablePartials }: RawDatabase);
     generateId(): void;
     processRecords(rawRecords: RawTableRecord[]): void;
     processSchemas(rawSchemas: RawSchema[]): void;
