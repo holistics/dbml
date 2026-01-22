@@ -28,7 +28,6 @@ export default defineConfig(
       files: ['**/*.js'],
       languageOptions: {
         globals: {
-          ...globals.browser,
           ...globals.node,
           ...globals.es2022,
         },
@@ -58,7 +57,6 @@ export default defineConfig(
       },
       languageOptions: {
         globals: {
-          ...globals.browser,
           ...globals.node,
           ...globals.es2022,
           // Vitest globals
