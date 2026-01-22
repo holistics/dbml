@@ -14,7 +14,7 @@ export function updateRecordField (
   targetName: TableNameInput,
   rowIndex: number,
   fieldName: string,
-  newValue: RecordValue | string | null,
+  newValue: RecordValue | string | number | boolean | null,
 ): string {
   const source = this.parse.source();
 

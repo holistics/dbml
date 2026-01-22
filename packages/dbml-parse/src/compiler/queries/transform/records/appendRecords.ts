@@ -22,7 +22,7 @@ function insertIntoExistingRecords (
   element: ElementDeclarationNode,
   recordsColumns: string[],
   targetColumns: string[],
-  values: (RecordValue | string | null)[][],
+  values: (RecordValue | string | number | boolean | null)[][],
 ): string {
   const body = element.body;
   if (!body) {
@@ -64,7 +64,7 @@ function appendNewRecordsBlock (
   schemaName: string,
   tableName: string,
   columns: string[],
-  values: (RecordValue | string | null)[][],
+  values: (RecordValue | string | number | boolean | null)[][],
 ): string {
   const tableQualifier = schemaName === DEFAULT_SCHEMA_NAME
     ? addDoubleQuoteIfNeeded(tableName)
@@ -90,7 +90,7 @@ export function appendRecords (
   this: Compiler,
   tableName: TableNameInput,
   columns: string[],
-  values: (RecordValue | string | null)[][],
+  values: (RecordValue | string | number | boolean | null)[][],
 ): string {
   // Validation
   if (columns.length === 0) {
