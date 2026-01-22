@@ -45,4 +45,19 @@ export type {
 } from './model_structure';
 export { formatDbmlRecordValue, RecordValue } from './export';
 export { RecordValueType } from './model_structure/database';
-export { SqlDialect } from '@dbml/parse';
+export {
+  SqlDialect,
+  isIntegerType,
+  isFloatType,
+  isNumericType,
+  isBooleanType,
+  isStringType,
+  isBinaryType,
+  isDateTimeType,
+  isSerialType,
+  tryExtractBoolean,
+  tryExtractNumeric,
+  tryExtractString,
+  tryExtractDateTime,
+  tryExtractEnum,
+} from '@dbml/parse';
