@@ -7,5 +7,4 @@ export {
   deleteRecordRow,
   deleteRecordValue,
   removeAllRecords,
-  type RecordValue,
 } from './records';

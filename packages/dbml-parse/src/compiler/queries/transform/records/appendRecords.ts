@@ -2,19 +2,9 @@ import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '../../../index';
 import { formatRecordValue, addDoubleQuoteIfNeeded } from '../../utils';
 import { normalizeTableName, type TableNameInput } from '../utils';
-import type { RecordValue } from './types';
-import { findRecordsForTable } from './utils';
+import { findRecordsForTable, normalizeRecordValue } from './utils';
 import { ElementDeclarationNode } from '@/core/parser/nodes';
-
-/**
- * Normalizes a RecordValue or string to RecordValue.
- */
-function normalizeRecordValue (value: RecordValue | string): RecordValue {
-  if (typeof value === 'string' || value === null) {
-    return { value, type: 'string' };
-  }
-  return value;
-}
+import { RecordValue } from '@/core/interpreter/types';
 
 /**
  * Checks if a Records block's columns are a superset of the target columns.
@@ -32,7 +22,7 @@ function insertIntoExistingRecords (
   element: ElementDeclarationNode,
   recordsColumns: string[],
   targetColumns: string[],
-  values: (RecordValue | string)[][],
+  values: (RecordValue | string | null)[][],
 ): string {
   const body = element.body;
   if (!body) {
@@ -74,7 +64,7 @@ function appendNewRecordsBlock (
   schemaName: string,
   tableName: string,
   columns: string[],
-  values: (RecordValue | string)[][],
+  values: (RecordValue | string | null)[][],
 ): string {
   const tableQualifier = schemaName === DEFAULT_SCHEMA_NAME
     ? addDoubleQuoteIfNeeded(tableName)
@@ -100,7 +90,7 @@ export function appendRecords (
   this: Compiler,
   tableName: TableNameInput,
   columns: string[],
-  values: (RecordValue | string)[][],
+  values: (RecordValue | string | null)[][],
 ): string {
   // Validation
   if (columns.length === 0) {

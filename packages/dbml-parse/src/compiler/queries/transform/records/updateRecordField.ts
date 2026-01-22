@@ -3,18 +3,8 @@ import { formatRecordValue } from '../../utils';
 import { ElementDeclarationNode, BlockExpressionNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import { normalizeTableName, type TableNameInput } from '../utils';
 import { applyTextEdits, type TextEdit } from '../applyTextEdits';
-import type { RecordValue } from './types';
-import { findRecordsForTable, extractRowValues } from './utils';
-
-/**
- * Normalizes a RecordValue or string to RecordValue.
- */
-function normalizeRecordValue (value: RecordValue | string): RecordValue {
-  if (typeof value === 'string') {
-    return { value, type: 'string' };
-  }
-  return value;
-}
+import { findRecordsForTable, extractRowValues, normalizeRecordValue } from './utils';
+import { RecordValue } from '@/core/interpreter/types';
 
 /**
  * Updates a specific field value in one row for a table.
@@ -24,7 +14,7 @@ export function updateRecordField (
   targetName: TableNameInput,
   rowIndex: number,
   fieldName: string,
-  newValue: RecordValue | string,
+  newValue: RecordValue | string | null,
 ): string {
   const source = this.parse.source();
 
