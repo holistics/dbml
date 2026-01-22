@@ -12,14 +12,26 @@ import { ast, errors, warnings, tokens, rawDb, publicSymbolTable } from './queri
 import { invalidStream, flatStream } from './queries/token';
 import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
 import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
-import { renameTable, applyTextEdits, type TextEdit, type TableNameInput } from './queries/transform';
-import { splitQualifiedIdentifier, unescapeString, escapeString } from './queries/utils';
+import {
+  renameTable,
+  applyTextEdits,
+  appendRecords,
+  updateRecordField,
+  deleteRecordRow,
+  deleteRecordValue,
+  removeAllRecords,
+  type TextEdit,
+  type TableNameInput,
+  type RecordValue,
+} from './queries/transform';
+import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
 
 // Re-export types
 export { ScopeKind } from './types';
+export type { TextEdit, TableNameInput, RecordValue };
 
 // Re-export utilities
-export { splitQualifiedIdentifier, unescapeString, escapeString };
+export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
 
 export default class Compiler {
   private source = '';
@@ -85,6 +97,44 @@ export default class Compiler {
 
   applyTextEdits (edits: TextEdit[]): string {
     return applyTextEdits(this.parse.source(), edits);
+  }
+
+  appendRecords (
+    tableName: TableNameInput,
+    columns: string[],
+    values: RecordValue[][],
+  ): string {
+    return appendRecords.call(this, tableName, columns, values);
+  }
+
+  updateRecordField (
+    tableName: TableNameInput,
+    rowIndex: number,
+    fieldName: string,
+    newValue: RecordValue,
+  ): string {
+    return updateRecordField.call(this, tableName, rowIndex, fieldName, newValue);
+  }
+
+  deleteRecordRow (
+    tableName: TableNameInput,
+    rowIndex: number,
+  ): string {
+    return deleteRecordRow.call(this, tableName, rowIndex);
+  }
+
+  deleteRecordValue (
+    tableName: TableNameInput,
+    rowIndex: number,
+    columnName: string,
+  ): string {
+    return deleteRecordValue.call(this, tableName, rowIndex, columnName);
+  }
+
+  removeAllRecords (
+    tableName: TableNameInput,
+  ): string {
+    return removeAllRecords.call(this, tableName);
   }
 
   readonly token = {
