@@ -17,5 +17,20 @@ export {
   formatDbmlRecordValue,
 };
 
-// Re-export types from @dbml/parse
-export { SqlDialect } from '@dbml/parse';
+// Re-export types and utilities from @dbml/parse
+export {
+  SqlDialect,
+  isIntegerType,
+  isFloatType,
+  isNumericType,
+  isBooleanType,
+  isStringType,
+  isBinaryType,
+  isDateTimeType,
+  isSerialType,
+  tryExtractBoolean,
+  tryExtractNumeric,
+  tryExtractString,
+  tryExtractDateTime,
+  tryExtractEnum,
+} from '@dbml/parse';
