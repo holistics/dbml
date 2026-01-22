@@ -43,3 +43,5 @@ export type {
     NormalizedRecords,
     RawSchema,
 } from './model_structure';
+export { formatRecordValue, RecordValue } from './export';
+export { RecordValueType } from './model_structure/database';
