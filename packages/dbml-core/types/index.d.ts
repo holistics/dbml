@@ -8,3 +8,18 @@ export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPositio
 
 export * from './model_structure';
 export { formatRecordValue, RecordValue } from './export';
+export {
+  isIntegerType,
+  isFloatType,
+  isNumericType,
+  isBooleanType,
+  isStringType,
+  isBinaryType,
+  isDateTimeType,
+  isSerialType,
+  tryExtractBoolean,
+  tryExtractNumeric,
+  tryExtractString,
+  tryExtractDateTime,
+  tryExtractEnum,
+} from '@dbml/parse';
