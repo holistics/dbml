@@ -12,7 +12,7 @@ import {
   isNullish,
   isFunctionExpression,
 } from '@dbml/parse';
-import { shouldPrintSchema } from './utils';
+import { shouldPrintSchema, formatRecordValue } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
 class DbmlExporter {
@@ -359,61 +359,6 @@ class DbmlExporter {
     }, '');
   }
 
-  static formatRecordValue (recordValue) {
-    const { value, type } = recordValue;
-
-    // Handle null/undefined values
-    if (value === null || value === undefined) {
-      return 'null';
-    }
-
-    // Handle expressions (backtick strings)
-    if (type === 'expression') {
-      return `\`${value}\``;
-    }
-
-    // Try to extract typed values using tryExtract functions
-    // If extraction fails, fall back to function expression
-
-    if (isBooleanType(type)) {
-      const extracted = tryExtractBoolean(value);
-      if (extracted !== null) {
-        return extracted ? 'true' : 'false';
-      }
-      // If extraction failed, wrap in function expression
-      return `\`${value}\``;
-    }
-
-    if (isNumericType(type)) {
-      const extracted = tryExtractNumeric(value);
-      if (extracted !== null) {
-        return String(extracted);
-      }
-      // If extraction failed, wrap in function expression
-      return `\`${value}\``;
-    }
-
-    if (isDateTimeType(type)) {
-      const extracted = tryExtractDateTime(value);
-      if (extracted !== null) {
-        const quote = extracted.includes('\n') ? '\'\'\'' : '\'';
-        return `${quote}${extracted.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}${quote}`;
-      }
-      // If extraction failed, wrap in function expression
-      return `\`${value}\``;
-    }
-
-    // Default: string types and others
-    const extracted = tryExtractString(value);
-    if (extracted !== null) {
-      const quote = extracted.includes('\n') ? '\'\'\'' : '\'';
-      return `${quote}${extracted.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}${quote}`;
-    }
-
-    // If all extractions failed, wrap in function expression
-    return `\`${value}\``;
-  }
-
   static exportRecords (model) {
     const records = model.records;
     if (!records || isEmpty(records)) {
@@ -433,7 +378,7 @@ class DbmlExporter {
 
       // Build the data rows
       const rowStrs = values.map((row) => {
-        const valueStrs = row.map((val) => DbmlExporter.formatRecordValue(val));
+        const valueStrs = row.map((val) => formatRecordValue(val));
         return `  ${valueStrs.join(', ')}`;
       });
 

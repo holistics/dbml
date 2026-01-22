@@ -1,4 +1,12 @@
 import { ExportFormatOption } from './ModelExporter';
+import { RecordValueType } from '../model_structure/database';
+
+export interface RecordValue {
+    value: any;
+    type: RecordValueType;
+}
+
+export declare function formatRecordValue(recordValue: RecordValue): string;
 
 declare function _export(str: string, format: ExportFormatOption): string;
 declare const _default: {
