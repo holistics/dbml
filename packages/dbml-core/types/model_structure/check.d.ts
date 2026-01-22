@@ -4,13 +4,10 @@ import Field from './field';
 import Table from './table';
 import TablePartial from './tablePartial';
 
-interface RawCheck {
+export interface RawCheck {
     token: Token;
-    name: string;
     expression: string;
-    table: Table;
-    column?: Field | null;
-    injectedPartial?: TablePartial | null;
+    name?: string;
 }
 
 declare class Check extends Element {
@@ -20,7 +17,11 @@ declare class Check extends Element {
     column: Field | null;
     injectedPartial: TablePartial | null;
 
-    constructor({ token, name, expression, table, column, injectedPartial }: RawCheck);
+    constructor({ token, name, expression, table, column, injectedPartial }: RawCheck & {
+        table: Table;
+        column?: Field | null;
+        injectedPartial?: TablePartial | null;
+    });
     generateId(): void;
     export(): {
         name: string;

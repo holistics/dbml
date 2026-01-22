@@ -1,8 +1,17 @@
-import Element from './element';
+import Element, { Token } from './element';
 import Field from './field';
 import Ref from './ref';
 import DbState from './dbState';
 import { NormalizedDatabase } from './database';
+
+export interface RawEndpoint {
+    schemaName: string | null;
+    tableName: string;
+    fieldNames: string[];
+    relation: '1' | '*';
+    token: Token;
+}
+
 declare class Endpoint extends Element {
     relation: any;
     schemaName: string;
@@ -11,13 +20,8 @@ declare class Endpoint extends Element {
     fields: Field[];
     ref: Ref;
     dbState: DbState;
-    constructor({ tableName, schemaName, fieldNames, relation, token, ref }: {
-        tableName: any;
-        schemaName: any;
-        fieldNames: any;
-        relation: any;
-        token: any;
-        ref: any;
+    constructor({ tableName, schemaName, fieldNames, relation, token, ref }: RawEndpoint & {
+        ref: Ref;
     });
     generateId(): void;
     equals(endpoint: any): boolean;
