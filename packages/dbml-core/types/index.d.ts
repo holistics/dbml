@@ -7,4 +7,19 @@ export { renameTable, importer, exporter, ModelExporter, Parser };
 export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel, } from './parse/error';
 export { formatDbmlRecordValue, RecordValue } from './export';
 export { RecordValueType } from './model_structure/database';
-export { SqlDialect } from '@dbml/parse';
+export {
+  SqlDialect,
+  isIntegerType,
+  isFloatType,
+  isNumericType,
+  isBooleanType,
+  isStringType,
+  isBinaryType,
+  isDateTimeType,
+  isSerialType,
+  tryExtractBoolean,
+  tryExtractNumeric,
+  tryExtractString,
+  tryExtractDateTime,
+  tryExtractEnum,
+} from '@dbml/parse';
