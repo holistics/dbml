@@ -32,7 +32,8 @@ export default defineConfig(
       files: ['**/*.js'],
       languageOptions: {
         globals: {
-          ...globals.browser,
+          // This globals has a key "AudioWorkletGlobalScope " with a trailing space, causing eslint to crash
+          // ...globals.browser,
           ...globals.jest,
           ...globals.node,
           ...globals.es2022,
@@ -64,7 +65,8 @@ export default defineConfig(
       },
       languageOptions: {
         globals: {
-          ...globals.browser,
+          // This globals has a key "AudioWorkletGlobalScope " with a trailing space, causing eslint to crash
+          // ...globals.browser,
           ...globals.jest,
           ...globals.node,
           ...globals.es2022,
