@@ -8,6 +8,7 @@ import { isExpressionAnIdentifierNode } from '@/core/parser/utils';
 import { isExpressionASignedNumberExpression } from '@/core/analyzer/validator/utils';
 import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
+import { DateTime } from 'luxon';
 
 export { extractNumericLiteral } from '@/core/analyzer/utils';
 
@@ -178,21 +179,50 @@ export function tryExtractString (value: SyntaxNode | string | undefined | null)
   return extractQuotedStringToken(value).unwrap_or(null);
 }
 
-// ISO 8601 datetime/date/time formats
-const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-const ISO_TIME_REGEX = /^\d{2}:\d{2}:\d{2}(?:\.\d+)?$/;
-const ISO_DATETIME_REGEX = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/;
+// Supported datetime formats using luxon format tokens (excluding ISO 8601 which is handled separately)
+const SUPPORTED_DATETIME_FORMATS = [
+  'yyyy-MM-dd', // ISO date: 2023-12-31
+  'HH:mm:ss', // Time: 23:59:59
+  'HH:mm:ss.SSS', // Time with milliseconds: 23:59:59.999
+  'yyyy-MM-dd HH:mm:ss', // ISO datetime with space: 2023-12-31 23:59:59
+  'M/d/yyyy', // MM/dd/yyyy: 12/31/2023 or 1/5/2023
+  'd MMM yyyy', // d MMM yyyy: 31 Dec 2023 or 1 Jan 2023
+  'MMM d, yyyy', // MMM d, yyyy: Dec 31, 2023
+];
 
-// Try to extract a datetime value from a syntax node or primitive in ISO format
-// Supports: date (YYYY-MM-DD), time (HH:MM:SS), datetime (YYYY-MM-DDTHH:MM:SS)
-// Example: '2024-01-15', '10:30:00', '2024-01-15T10:30:00Z'
+function isDateTimeFormat (str: string): boolean {
+  // Try ISO 8601 format first (handles dates, times, datetimes with/without timezones)
+  const isoDate = DateTime.fromISO(str);
+  if (isoDate.isValid) {
+    return true;
+  }
+
+  // Try other formats
+  for (const format of SUPPORTED_DATETIME_FORMATS) {
+    const dt = DateTime.fromFormat(str, format);
+    if (dt.isValid) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// Try to extract a datetime value from a syntax node or primitive
+// Supports:
+//   - ISO 8601: date (YYYY-MM-DD), time (HH:MM:SS), datetime (YYYY-MM-DDTHH:MM:SS)
+//   - MM/dd/yyyy: 12/31/2023
+//   - d MMM yyyy: 31 Dec 2023
+//   - MMM d, yyyy: Dec 31, 2023
+//   - yyyy-MM-dd HH:mm:ss: 2023-12-31 23:59:59
+// Example: '2024-01-15', '10:30:00', '2024-01-15T10:30:00Z', '12/31/2023', '31 Dec 2023'
 export function tryExtractDateTime (value: SyntaxNode | string | undefined | null): string | null {
   // Handle null/undefined
   if (value === null || value === undefined) return null;
 
   // Handle primitive string
   if (typeof value === 'string') {
-    if (ISO_DATETIME_REGEX.test(value) || ISO_DATE_REGEX.test(value) || ISO_TIME_REGEX.test(value)) {
+    if (isDateTimeFormat(value)) {
       return value;
     }
     return null;
@@ -202,13 +232,9 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
 
   if (strValue === null) return null;
 
-  if (ISO_DATETIME_REGEX.test(strValue) || ISO_DATE_REGEX.test(strValue) || ISO_TIME_REGEX.test(strValue)) {
+  if (isDateTimeFormat(strValue)) {
     return strValue;
   }
 
   return null;
-}
-
-export function isIsoDateTime (value: string): boolean {
-  return ISO_DATETIME_REGEX.test(value);
 }
