@@ -34,4 +34,5 @@ export {
   tryExtractString,
   tryExtractDateTime,
   tryExtractEnum,
+  addDoubleQuoteIfNeeded,
 } from '@dbml/parse';
