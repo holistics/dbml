@@ -1,4 +1,4 @@
-import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
+import { SymbolKind, destructureIndex, createColumnSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
@@ -188,7 +188,7 @@ export function extractColumnNameAndType (
     }
 
     // Look up the column in the table partial's symbol table
-    const columnIndex = `column:${columnName}`;
+    const columnIndex = createColumnSymbolIndex(columnName);
     const actualColumnSymbol = tablePartialSymbol.symbolTable.get(columnIndex);
     if (!actualColumnSymbol?.declaration || !(actualColumnSymbol.declaration instanceof FunctionApplicationNode)) {
       return null;

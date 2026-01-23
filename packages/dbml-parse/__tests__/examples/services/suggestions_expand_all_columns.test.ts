@@ -3,7 +3,7 @@ import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '../../utils';
 
-describe('[example - suggestions] Expand * to all columns in Records', () => {
+describe('[example] Expand * to all columns in Records', () => {
   describe('nested records', () => {
     it('- should suggest "* (all columns)" in nested records column list', () => {
       const program = `Table users {
