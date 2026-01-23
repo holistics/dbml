@@ -3,7 +3,7 @@ import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '../../utils';
 
-describe('[snapshot] CompletionItemProvider - Records', () => {
+describe('[example] CompletionItemProvider - Records', () => {
   describe('should NOT suggest record entry snippets in Records body (handled by inline completions)', () => {
     it('- should not suggest snippet in Records body', () => {
       const program = `
