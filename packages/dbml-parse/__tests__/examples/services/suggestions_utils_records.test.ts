@@ -79,6 +79,120 @@ describe('[unit] Suggestions Utils - Records', () => {
   });
 
   describe('getColumnsFromTableSymbol', () => {
+    it('- should extract columns from table with partial table injection', () => {
+      const program = `
+        TablePartial id {
+          id int [pk]
+        }
+
+        TablePartial timestamps {
+          created_at timestamp
+          updated_at timestamp
+        }
+
+        Table users {
+          ~id
+          name varchar
+          ~timestamps
+        }
+      `;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+      compiler.parse._();
+
+      const ast = compiler.parse.ast();
+      const tableElement = ast.body[2]; // users table is the third element
+      const tableSymbol = tableElement.symbol;
+
+      if (tableSymbol instanceof TableSymbol) {
+        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(4);
+
+        // Check that injected columns are correctly extracted
+        expect(columns!.some((col) => col.name === 'id' && col.type === 'int')).toBe(true);
+        expect(columns!.some((col) => col.name === 'name' && col.type === 'varchar')).toBe(true);
+        expect(columns!.some((col) => col.name === 'created_at' && col.type === 'timestamp')).toBe(true);
+        expect(columns!.some((col) => col.name === 'updated_at' && col.type === 'timestamp')).toBe(true);
+      }
+    });
+
+    it('- should handle table with only injected columns', () => {
+      const program = `
+        TablePartial base {
+          id int
+          created_at timestamp
+        }
+
+        Table entities {
+          ~base
+        }
+      `;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+      compiler.parse._();
+
+      const ast = compiler.parse.ast();
+      const tableElement = ast.body[1];
+      const tableSymbol = tableElement.symbol;
+
+      if (tableSymbol instanceof TableSymbol) {
+        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(2);
+        expect(columns![0].name).toBe('id');
+        expect(columns![0].type).toBe('int');
+        expect(columns![1].name).toBe('created_at');
+        expect(columns![1].type).toBe('timestamp');
+      }
+    });
+
+    it('- should handle mixed regular and injected columns', () => {
+      const program = `
+        TablePartial metadata {
+          version int
+        }
+
+        Table products {
+          product_id int [pk]
+          ~metadata
+          name varchar
+        }
+      `;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+      compiler.parse._();
+
+      const ast = compiler.parse.ast();
+      const tableElement = ast.body[1];
+      const tableSymbol = tableElement.symbol;
+
+      if (tableSymbol instanceof TableSymbol) {
+        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+
+        expect(columns).not.toBeNull();
+        expect(columns!.length).toBe(3);
+
+        // Verify all columns are present
+        const columnNames = columns!.map((col) => col.name);
+        expect(columnNames).toContain('product_id');
+        expect(columnNames).toContain('version');
+        expect(columnNames).toContain('name');
+
+        // Verify types
+        const productIdCol = columns!.find((col) => col.name === 'product_id');
+        expect(productIdCol?.type).toBe('int');
+
+        const versionCol = columns!.find((col) => col.name === 'version');
+        expect(versionCol?.type).toBe('int');
+
+        const nameCol = columns!.find((col) => col.name === 'name');
+        expect(nameCol?.type).toBe('varchar');
+      }
+    });
+
     it('- should extract columns with types from table symbol', () => {
       const program = `
         Table users {
