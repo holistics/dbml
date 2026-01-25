@@ -25,7 +25,6 @@ export {
 export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel, } from './parse/error';
 
 export * from './model_structure';
-export { formatRecordValue, RecordValue } from './export';
 export {
   isIntegerType,
   isFloatType,
@@ -42,4 +41,5 @@ export {
   tryExtractDateTime,
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
+  formatRecordValue,
 } from '@dbml/parse';
