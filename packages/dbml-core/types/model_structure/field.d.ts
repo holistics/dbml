@@ -23,19 +23,16 @@ export interface ColumnType {
 
 export interface RawField {
     name: string;
-    type: ColumnType;
+    type: any;
+    unique: boolean;
+    pk: boolean;
     token: Token;
-    inline_refs: InlineRef[];
-    checks: RawCheck[];
-    pk?: boolean;
-    dbdefault?: {
-        type: 'number' | 'string' | 'boolean' | 'expression';
-        value: number | string;
-    };
-    increment?: boolean;
-    unique?: boolean;
-    not_null?: boolean;
-    note?: RawNote;
+    not_null: boolean;
+    note: RawNote;
+    dbdefault: any;
+    increment: boolean;
+    checks?: any[];
+    table: Table;
 }
 
 declare class Field extends Element {
@@ -55,9 +52,7 @@ declare class Field extends Element {
     _enum: Enum;
     injectedPartial?: TablePartial;
     injectedToken: Token;
-    constructor({ name, type, unique, pk, token, not_null, note, dbdefault, increment, checks, inline_refs, table }: RawField & {
-        table: Table;
-    });
+    constructor({ name, type, unique, pk, token, not_null, note, dbdefault, increment, checks, table }: RawField);
     generateId(): void;
     pushEndpoint(endpoint: any): void;
     processChecks(checks: any[]): void;

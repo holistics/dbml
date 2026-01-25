@@ -1,20 +1,20 @@
-import Table, { RawTable } from './table';
+import Table from './table';
 import Element, { RawNote, Token } from './element';
-import Enum, { RawEnum } from './enum';
-import TableGroup, { RawTableGroup } from './tableGroup';
-import Ref, { RawRef } from './ref';
+import Enum from './enum';
+import TableGroup from './tableGroup';
+import Ref from './ref';
 import Database, { NormalizedModel } from './database';
 import DbState from './dbState';
 export interface RawSchema {
     name: string;
     alias?: string;
     note?: RawNote;
+    tables?: Table[];
+    refs?: Ref[];
+    enums?: Enum[];
+    tableGroups?: TableGroup[];
     token?: Token;
-    tables?: RawTable[];
-    refs?: RawRef[];
-    enums?: RawEnum[];
-    tableGroups?: RawTableGroup[];
-    noteToken?: Token;
+    database: Database;
 }
 declare class Schema extends Element {
     name: string;
@@ -27,9 +27,7 @@ declare class Schema extends Element {
     tableGroups: TableGroup[];
     database: Database;
     dbState: DbState;
-    constructor({ name, alias, note, tables, refs, enums, tableGroups, token, database, noteToken }: RawSchema & {
-        database: Database;
-    });
+    constructor({ name, alias, note, tables, refs, enums, tableGroups, token, database }: RawSchema);
     generateId(): void;
     processTables(rawTables: any): void;
     pushTable(table: any): void;
