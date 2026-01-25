@@ -78,17 +78,6 @@ export type SignatureHelpResult = languages.SignatureHelpResult;
 // Show references
 export type ReferenceProvider = languages.ReferenceProvider;
 
-// Code actions
-export type CodeActionProvider = languages.CodeActionProvider;
-export type CodeAction = languages.CodeAction;
-export type CodeActionContext = languages.CodeActionContext;
-export type WorkspaceEdit = languages.WorkspaceEdit;
-
 // Diagnostics/Markers
 export type MarkerSeverity = 1 | 2 | 4 | 8; // Hint = 1, Info = 2, Warning = 4, Error = 8
 export type MarkerData = editor.IMarkerData;
-
-// Inline completion types
-export type InlineCompletionItemProvider = languages.InlineCompletionsProvider;
-export type InlineCompletionItem = languages.InlineCompletion;
-export type InlineCompletions = languages.InlineCompletions;
