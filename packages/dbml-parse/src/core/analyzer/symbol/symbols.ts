@@ -21,7 +21,6 @@ export interface NodeSymbol {
   symbolTable?: SymbolTable;
   declaration?: SyntaxNode;
   references: SyntaxNode[];
-  injectorDeclaration?: SyntaxNode;
 }
 
 // A symbol for a schema, contains the schema's symbol table
@@ -164,19 +163,22 @@ export class TablePartialSymbol implements NodeSymbol {
   }
 }
 
-// A symbol for a table partial injection inside tables
-export class TablePartialInjectionSymbol implements NodeSymbol {
+// A member symbol for a Table injecting a TablePartial
+export class PartialInjectionSymbol implements NodeSymbol {
   id: NodeSymbolId;
+
+  symbolTable: SymbolTable;
 
   declaration: SyntaxNode;
 
   references: SyntaxNode[] = [];
 
   constructor (
-    { declaration }: { declaration: SyntaxNode },
+    { symbolTable, declaration }: { symbolTable: SymbolTable; declaration: SyntaxNode },
     id: NodeSymbolId,
   ) {
     this.id = id;
+    this.symbolTable = symbolTable;
     this.declaration = declaration;
   }
 }
@@ -184,13 +186,16 @@ export class TablePartialInjectionSymbol implements NodeSymbol {
 // A symbol for a column field
 export class TablePartialInjectedColumnSymbol implements NodeSymbol {
   id: NodeSymbolId;
-  injectorDeclaration: SyntaxNode;
-  injectorFieldSymbol: NodeSymbol;
+
+  declaration: SyntaxNode;
+
+  tablePartialSymbol: TablePartialSymbol;
+
   references: SyntaxNode[] = [];
 
-  constructor ({ injectorFieldSymbol, injectorDeclaration }: { injectorFieldSymbol: NodeSymbol; injectorDeclaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({ declaration, tablePartialSymbol }: { declaration: SyntaxNode; tablePartialSymbol: TablePartialSymbol }, id: NodeSymbolId) {
     this.id = id;
-    this.injectorDeclaration = injectorDeclaration;
-    this.injectorFieldSymbol = injectorFieldSymbol;
+    this.declaration = declaration;
+    this.tablePartialSymbol = tablePartialSymbol;
   }
 }

@@ -364,6 +364,90 @@ Table users {
         expect(sourceText).toEqual('status');
       });
     });
+
+    it('- should find references for enum named "true" in default values', () => {
+      const program = `Enum true {
+  value
+  other
+}
+
+Table users {
+  status true [default: true.value]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "true" enum declaration
+      const position = createPosition(1, 6);
+      const references = referencesProvider.provideReferences(model, position);
+
+      // Should find 2 references: column type and default value
+      expect(references.length).toBe(2);
+      references.forEach((ref) => {
+        const sourceText = extractTextFromRange(program, ref.range);
+        expect(sourceText).toBe('true');
+      });
+    });
+
+    it('- should find references for enum field in default values', () => {
+      const program = `Enum true {
+  value
+  other
+}
+
+Table users {
+  status true [default: true.value]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "value" enum field declaration
+      const position = createPosition(2, 3);
+      const references = referencesProvider.provideReferences(model, position);
+
+      // Should find reference to containing enum
+      expect(references.length).toBe(2);
+    });
+
+    it('- should not find references for quoted string defaults', () => {
+      const program = `Table users {
+  name varchar [default: "hello"]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "hello" in default value - should not be bound
+      const position = createPosition(2, 28);
+      const references = referencesProvider.provideReferences(model, position);
+
+      expect(references).toEqual([]);
+    });
+
+    it('- should not find references for keyword defaults', () => {
+      const program = `Table users {
+  active boolean [default: true]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "true" in default value - should not be bound (keyword)
+      const position = createPosition(2, 29);
+      const references = referencesProvider.provideReferences(model, position);
+
+      expect(references).toEqual([]);
+    });
   });
 
   describe('should find all references for TablePartials', () => {
@@ -487,7 +571,7 @@ Table orders {
   merchant_country varchar
 }
 
-Ref: (orders.merchant_id, orders.merchant_country) > (merchants.id, merchants.country_code)`;
+Ref: orders.(merchant_id, merchant_country) > merchants.(id, country_code)`;
       const compiler = new Compiler();
       compiler.setSource(program);
 
@@ -499,6 +583,43 @@ Ref: (orders.merchant_id, orders.merchant_country) > (merchants.id, merchants.co
       const references = referencesProvider.provideReferences(model, position);
 
       expect(Array.isArray(references)).toBe(true);
+      // Returns 2 references to the table (merchants) from the composite ref
+      expect(references.length).toBe(2);
+      references.forEach((ref) => {
+        const sourceText = extractTextFromRange(program, ref.range);
+        expect(sourceText).toBe('merchants');
+      });
+    });
+
+    it('- should find all column references in composite foreign keys', () => {
+      const program = `Table merchants {
+  id int pk
+  country_code varchar pk
+}
+
+Table orders {
+  id int pk
+  merchant_id int
+  merchant_country varchar
+}
+
+Ref: orders.(merchant_id, merchant_country) > merchants.(id, country_code)`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "country_code" column in merchants table
+      const position = createPosition(3, 3);
+      const references = referencesProvider.provideReferences(model, position);
+
+      // Returns 2 references to the table (merchants) from the composite ref
+      expect(references.length).toBe(2);
+      references.forEach((ref) => {
+        const sourceText = extractTextFromRange(program, ref.range);
+        expect(sourceText).toBe('merchants');
+      });
     });
 
     it('- should find references in many-to-many relationships', () => {
@@ -588,8 +709,12 @@ Ref: posts.author_id > u.id`;
       const position = createPosition(1, 7);
       const references = referencesProvider.provideReferences(model, position);
 
-      // Should find references using the alias
-      expect(Array.isArray(references)).toBe(true);
+      // Should find 2 references using the alias (TableGroup and Ref)
+      expect(references.length).toBe(2);
+      references.forEach((ref) => {
+        const sourceText = extractTextFromRange(program, ref.range);
+        expect(sourceText).toBe('u');
+      });
     });
 
     it('- should find enum references in default values', () => {
@@ -620,8 +745,42 @@ Table order_history {
       const position = createPosition(1, 7);
       const references = referencesProvider.provideReferences(model, position);
 
-      // Should find references in column types and default values
-      expect(references.length).toBeGreaterThanOrEqual(0);
+      // Should find 3 references: orders.status type, default value, order_history.status type
+      expect(references.length).toBe(3);
+      references.forEach((ref) => {
+        const sourceText = extractTextFromRange(program, ref.range);
+        expect(sourceText).toBe('order_status');
+      });
+    });
+
+    it('- should find enum field references in default values', () => {
+      const program = `Enum order_status {
+  pending
+  processing
+  shipped
+}
+
+Table orders {
+  id int pk
+  status order_status [default: order_status.pending]
+}`;
+      const compiler = new Compiler();
+      compiler.setSource(program);
+
+      const referencesProvider = new DBMLReferencesProvider(compiler);
+      const model = createMockTextModel(program);
+
+      // Position on "pending" enum field declaration
+      const position = createPosition(2, 3);
+      const references = referencesProvider.provideReferences(model, position);
+
+      // Returns 2 references to the enum (order_status) containing the field
+      // This is because references provider follows the enum symbol, not the field itself
+      expect(references.length).toBe(2);
+      references.forEach((ref) => {
+        const sourceText = extractTextFromRange(program, ref.range);
+        expect(sourceText).toBe('order_status');
+      });
     });
 
     it('- should find references in deeply nested schemas', () => {

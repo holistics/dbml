@@ -8,16 +8,60 @@ describe('[example] binder', () => {
     test('should create TableSymbol with correct properties', () => {
       const ast = analyze('Table users { id int }').getValue();
       const elements = ast.body.filter((n): n is ElementDeclarationNode => n.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
-      const tableSymbol = elements[0].symbol as TableSymbol;
+      const tableNode = elements[0];
+      const tableSymbol = tableNode.symbol as TableSymbol;
 
+      // Verify symbol properties
       expect(tableSymbol).toBeInstanceOf(TableSymbol);
-      expect(tableSymbol.declaration).toBe(elements[0]);
-      expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.declaration).toBe(tableNode);
       expect(tableSymbol.references).toEqual([]);
 
-      // Verify public schema symbol table
+      // Verify symbolTable contains column
+      expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
+
+      // Verify column symbol properties
+      const columnSymbol = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
+      const tableBody = tableNode.body as BlockExpressionNode;
+      const columnNode = tableBody.body[0];
+      expect(columnSymbol.declaration).toBe(columnNode);
+      expect(columnSymbol.references).toEqual([]);
+
+      // Verify public schema symbol table (publicSymbolTable concept)
       const schemaSymbol = ast.symbol as SchemaSymbol;
+      expect(schemaSymbol).toBeInstanceOf(SchemaSymbol);
       expect(schemaSymbol.symbolTable.get('Table:users')).toBe(tableSymbol);
+    });
+
+    test('should verify nested children symbol properties', () => {
+      const source = `
+        Table users {
+          id int [pk]
+          name varchar
+          email varchar
+        }
+      `;
+      const ast = analyze(source).getValue();
+      const tableNode = ast.body[0] as ElementDeclarationNode;
+      const tableSymbol = tableNode.symbol as TableSymbol;
+      const tableBody = tableNode.body as BlockExpressionNode;
+
+      // Verify all columns are in symbolTable
+      expect(tableSymbol.symbolTable.get('Column:id')).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get('Column:name')).toBeInstanceOf(ColumnSymbol);
+      expect(tableSymbol.symbolTable.get('Column:email')).toBeInstanceOf(ColumnSymbol);
+
+      // Verify each column's symbol and declaration relationship
+      tableBody.body.forEach((field, index) => {
+        const columnNode = field as ElementDeclarationNode;
+        const columnSymbol = columnNode.symbol as ColumnSymbol;
+
+        expect(columnSymbol).toBeInstanceOf(ColumnSymbol);
+        expect(columnSymbol.declaration).toBe(columnNode);
+
+        // Verify column is accessible from table's symbolTable
+        const expectedNames = ['id', 'name', 'email'];
+        expect(tableSymbol.symbolTable.get(`Column:${expectedNames[index]}`)).toBe(columnSymbol);
+      });
     });
 
     test('should allow duplicate column names across tables', () => {
@@ -258,7 +302,7 @@ describe('[example] binder', () => {
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].diagnostic).toBe("Can not find Column 'nonexistent_column'");
+      expect(errors[0].diagnostic).toBe("No column named 'nonexistent_column' inside Table 'users'");
     });
 
     test('should bind composite indexes with settings', () => {
@@ -424,6 +468,193 @@ describe('[example] binder', () => {
       expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
       expect(schemaSymbol.symbolTable.get('Enum:status_enum')).toBeInstanceOf(EnumSymbol);
     });
+
+    test('should bind enum field references in default values', () => {
+      const source = `
+        Enum order_status {
+          pending
+          processing
+          completed
+        }
+        Table orders {
+          id int pk
+          status order_status [default: order_status.pending]
+        }
+      `;
+      const result = analyze(source);
+      expect(result.getErrors()).toHaveLength(0);
+
+      const ast = result.getValue();
+      const schemaSymbol = ast.symbol as SchemaSymbol;
+      const enumSymbol = schemaSymbol.symbolTable.get('Enum:order_status') as EnumSymbol;
+      const pendingField = enumSymbol.symbolTable.get('Enum field:pending') as EnumFieldSymbol;
+
+      // Enum should have 2 references: column type + default value
+      expect(enumSymbol.references.length).toBe(2);
+      // Enum field should have 1 reference from default value
+      expect(pendingField.references.length).toBe(1);
+      expect(pendingField.references[0].referee).toBe(pendingField);
+    });
+
+    test('should bind schema-qualified enum field references in default values', () => {
+      const source = `
+        Enum types.status {
+          active
+          inactive
+        }
+        Table users {
+          status types.status [default: types.status.active]
+        }
+      `;
+      const result = analyze(source);
+      expect(result.getErrors()).toHaveLength(0);
+
+      const ast = result.getValue();
+      const publicSchema = ast.symbol as SchemaSymbol;
+      const typesSchema = publicSchema.symbolTable.get('Schema:types') as SchemaSymbol;
+      const enumSymbol = typesSchema.symbolTable.get('Enum:status') as EnumSymbol;
+      const activeField = enumSymbol.symbolTable.get('Enum field:active') as EnumFieldSymbol;
+
+      expect(enumSymbol.references.length).toBe(2);
+      expect(activeField.references.length).toBe(1);
+      expect(activeField.references[0].referee).toBe(activeField);
+    });
+
+    test('should detect invalid enum field in default value', () => {
+      const source = `
+        Enum status { active\n inactive }
+        Table users {
+          status status [default: status.nonexistent]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(1);
+      expect(errors[0].diagnostic).toBe("Enum field 'nonexistent' does not exist in Enum 'status'");
+    });
+
+    test('should detect invalid enum in default value', () => {
+      const source = `
+        Table users {
+          status varchar [default: nonexistent_enum.value]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(1);
+      expect(errors[0].diagnostic).toBe("Enum 'nonexistent_enum' does not exist in Schema 'public'");
+    });
+
+    test('should allow double-quoted string as default value', () => {
+      const source = `
+        Table users {
+          name varchar [default: "hello"]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should allow single-quoted string as default value', () => {
+      const source = `
+        Table users {
+          name varchar [default: \`hello\`]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should allow null keyword as default value', () => {
+      const source = `
+        Table users {
+          name varchar [default: null]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should allow true keyword as default value', () => {
+      const source = `
+        Table users {
+          active boolean [default: true]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should allow false keyword as default value', () => {
+      const source = `
+        Table users {
+          active boolean [default: false]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should bind true.value as enum access', () => {
+      // true.value is treated as enum "true" with field "value"
+      const source = `
+        Table users {
+          status varchar [default: true.value]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(1);
+      expect(errors[0].diagnostic).toBe("Enum 'true' does not exist in Schema 'public'");
+    });
+
+    test('should bind true.value when enum true exists but field does not', () => {
+      const source = `
+        Enum true {
+          other
+        }
+        Table users {
+          status true [default: true.value]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(1);
+      expect(errors[0].diagnostic).toBe("Enum field 'value' does not exist in Enum 'true'");
+    });
+
+    test('should bind true.value when enum true exists with field value', () => {
+      const source = `
+        Enum true {
+          value
+          other
+        }
+        Table users {
+          status true [default: true.value]
+        }
+      `;
+      const result = analyze(source);
+      expect(result.getErrors()).toHaveLength(0);
+
+      // Verify the binding
+      const ast = result.getValue();
+      const schemaSymbol = ast.symbol as SchemaSymbol;
+      const enumSymbol = schemaSymbol.symbolTable.get('Enum:true') as EnumSymbol;
+      const valueField = enumSymbol.symbolTable.get('Enum field:value') as EnumFieldSymbol;
+
+      // Enum should have 2 references: column type + default value
+      expect(enumSymbol.references.length).toBe(2);
+      // Enum field should have 1 reference from default value
+      expect(valueField.references.length).toBe(1);
+    });
+
+    test('should bind quoted string with field as enum access', () => {
+      // "hello".abc is treated as enum "hello" with field "abc"
+      const source = `
+        Table users {
+          status varchar [default: "hello".abc]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(1);
+      expect(errors[0].diagnostic).toBe("Enum 'hello' does not exist in Schema 'public'");
+    });
   });
 
   describe('Ref', () => {
@@ -478,8 +709,8 @@ describe('[example] binder', () => {
     test('should detect unknown table and column references', () => {
       const errors1 = analyze('Ref: nonexistent.id > also_nonexistent.id').getErrors();
       expect(errors1).toHaveLength(2);
-      expect(errors1[0].diagnostic).toBe("Can not find Table 'nonexistent'");
-      expect(errors1[1].diagnostic).toBe("Can not find Table 'also_nonexistent'");
+      expect(errors1[0].diagnostic).toBe("Table 'nonexistent' does not exist in Schema 'public'");
+      expect(errors1[1].diagnostic).toBe("Table 'also_nonexistent' does not exist in Schema 'public'");
 
       const source2 = `
         Table users { id int }
@@ -487,7 +718,7 @@ describe('[example] binder', () => {
       `;
       const errors2 = analyze(source2).getErrors();
       expect(errors2).toHaveLength(1);
-      expect(errors2[0].diagnostic).toBe("Table 'users' does not have Column 'nonexistent'");
+      expect(errors2[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'users'");
     });
 
     test('should resolve cross-schema references', () => {
@@ -568,6 +799,84 @@ describe('[example] binder', () => {
         expect(refNode.referee).toBe(usersSymbol);
       });
     });
+
+    test('should bind composite foreign key references', () => {
+      const source = `
+        Table merchants {
+          id int pk
+          country_code varchar
+        }
+        Table orders {
+          merchant_id int
+          country varchar
+        }
+        Ref: orders.(merchant_id, country) > merchants.(id, country_code)
+      `;
+      const result = analyze(source);
+      expect(result.getErrors()).toHaveLength(0);
+
+      const ast = result.getValue();
+      const schemaSymbol = ast.symbol as SchemaSymbol;
+      const merchantsSymbol = schemaSymbol.symbolTable.get('Table:merchants') as TableSymbol;
+      const ordersSymbol = schemaSymbol.symbolTable.get('Table:orders') as TableSymbol;
+
+      // Both tables should have 2 references (table name + tuple access)
+      expect(merchantsSymbol.references.length).toBe(2);
+      expect(ordersSymbol.references.length).toBe(2);
+
+      // Check column references
+      const idColumn = merchantsSymbol.symbolTable.get('Column:id') as ColumnSymbol;
+      const countryCodeColumn = merchantsSymbol.symbolTable.get('Column:country_code') as ColumnSymbol;
+      const merchantIdColumn = ordersSymbol.symbolTable.get('Column:merchant_id') as ColumnSymbol;
+      const countryColumn = ordersSymbol.symbolTable.get('Column:country') as ColumnSymbol;
+
+      expect(idColumn.references.length).toBe(1);
+      expect(countryCodeColumn.references.length).toBe(1);
+      expect(merchantIdColumn.references.length).toBe(1);
+      expect(countryColumn.references.length).toBe(1);
+
+      // Verify all references have correct referee
+      [idColumn, countryCodeColumn, merchantIdColumn, countryColumn].forEach((col) => {
+        expect(col.references[0].referee).toBe(col);
+      });
+    });
+
+    test('should bind composite foreign key with schema-qualified names', () => {
+      const source = `
+        Table shop.products {
+          id int pk
+          category_id int
+        }
+        Table shop.orders {
+          product_id int
+          category int
+        }
+        Ref: shop.orders.(product_id, category) > shop.products.(id, category_id)
+      `;
+      const result = analyze(source);
+      expect(result.getErrors()).toHaveLength(0);
+
+      const ast = result.getValue();
+      const publicSchema = ast.symbol as SchemaSymbol;
+      const shopSchema = publicSchema.symbolTable.get('Schema:shop') as SchemaSymbol;
+      const productsSymbol = shopSchema.symbolTable.get('Table:products') as TableSymbol;
+      const ordersSymbol = shopSchema.symbolTable.get('Table:orders') as TableSymbol;
+
+      expect(productsSymbol.references.length).toBe(2);
+      expect(ordersSymbol.references.length).toBe(2);
+    });
+
+    test('should detect errors in composite foreign key references', () => {
+      const source = `
+        Table users { id int }
+        Table posts { user_id int }
+        Ref: posts.(user_id, nonexistent) > users.(id, also_nonexistent)
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(2);
+      expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'posts'");
+      expect(errors[1].diagnostic).toBe("Column 'also_nonexistent' does not exist in Table 'users'");
+    });
   });
 
   describe('TablePartial', () => {
@@ -604,7 +913,7 @@ describe('[example] binder', () => {
       const partialSymbol = partial?.symbol as TablePartialSymbol;
 
       expect(partialSymbol.references.length).toBe(1);
-      expect(partialSymbol.references[0].kind).toBe(SyntaxNodeKind.PARTIAL_INJECTION);
+      expect(partialSymbol.references[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
       expect(partialSymbol.references[0].referee).toBe(partialSymbol);
     });
 
@@ -618,7 +927,7 @@ describe('[example] binder', () => {
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].diagnostic).toBe("Can not find TablePartial 'nonexistent_partial'");
+      expect(errors[0].diagnostic).toBe("TablePartial 'nonexistent_partial' does not exist in Schema 'public'");
     });
 
     test('should handle multiple TablePartial injections', () => {
@@ -641,11 +950,11 @@ describe('[example] binder', () => {
       const auditSymbol = schemaSymbol.symbolTable.get('TablePartial:audit') as TablePartialSymbol;
 
       expect(timestampsSymbol.references.length).toBe(1);
-      expect(timestampsSymbol.references[0].kind).toBe(SyntaxNodeKind.PARTIAL_INJECTION);
+      expect(timestampsSymbol.references[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
       expect(timestampsSymbol.references[0].referee).toBe(timestampsSymbol);
 
       expect(auditSymbol.references.length).toBe(1);
-      expect(auditSymbol.references[0].kind).toBe(SyntaxNodeKind.PARTIAL_INJECTION);
+      expect(auditSymbol.references[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
       expect(auditSymbol.references[0].referee).toBe(auditSymbol);
     });
 
@@ -663,7 +972,7 @@ describe('[example] binder', () => {
       const derivedSymbol = schemaSymbol.symbolTable.get('Table:derived') as TableSymbol;
 
       expect(baseSymbol.references.length).toBe(1);
-      expect(baseSymbol.references[0].kind).toBe(SyntaxNodeKind.PARTIAL_INJECTION);
+      expect(baseSymbol.references[0].kind).toBe(SyntaxNodeKind.PRIMARY_EXPRESSION);
       expect(baseSymbol.references[0].referee).toBe(baseSymbol);
       expect(derivedSymbol).toBeInstanceOf(TableSymbol);
     });
@@ -683,6 +992,98 @@ describe('[example] binder', () => {
       const schemaSymbol = ast.symbol as SchemaSymbol;
       expect(schemaSymbol.symbolTable.get('Table:users')).toBeInstanceOf(TableSymbol);
       expect(schemaSymbol.symbolTable.get('TablePartial:timestamps')).toBeInstanceOf(TablePartialSymbol);
+    });
+
+    test('should detect non-existent TablePartial injection', () => {
+      const source = `
+        TablePartial p1 {}
+        Table t1 {
+          id int
+          ~p1
+          ~p2
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toEqual(1);
+      expect(errors[0].diagnostic).toBe("TablePartial 'p2' does not exist in Schema 'public'");
+    });
+
+    test('should detect nonexisting inline ref column in table partial', () => {
+      const source = `
+        TablePartial T1 {
+          col1 type [ref: > un_col1]
+          col2 type [ref: > T1.un_col2]
+          col3 type [ref: > un_T.un_col3]
+        }
+
+        Table T1 {
+          col type [ref: > un_col]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(4);
+
+      const errorDiagnostics = errors.map((e) => e.diagnostic);
+      expect(errorDiagnostics).toContain("Column 'un_col1' does not exist in TablePartial 'T1'");
+      expect(errorDiagnostics).toContain("Column 'un_col2' does not exist in Table 'T1'");
+      expect(errorDiagnostics).toContain("Table 'un_T' does not exist in Schema 'public'");
+      expect(errorDiagnostics).toContain("Column 'un_col' does not exist in Table 'T1'");
+    });
+
+    test('should allow self-referential ref in table partial', () => {
+      const source = `
+        TablePartial T {
+          col type [ref: > col]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      // Self-referential refs in table partials are allowed
+      expect(errors.length).toBe(0);
+    });
+
+    test('should allow circular ref caused by table partial injection', () => {
+      const source = `
+        TablePartial T {
+          col1 type [ref: > T.col1]
+          col3 type [ref: > T.col2]
+        }
+
+        Table T {
+          ~T
+          col2 type [ref: > col3]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      // Circular refs via table partials are allowed
+      expect(errors.length).toBe(0);
+    });
+
+    test('should bind refs in table partial columns when injected', () => {
+      const source = `
+        TablePartial common {
+          user_id int [ref: > users.id]
+        }
+
+        Table users {
+          id int [pk]
+        }
+
+        Table posts {
+          id int [pk]
+          ~common
+        }
+      `;
+      const result = analyze(source);
+      expect(result.getErrors()).toHaveLength(0);
+
+      const ast = result.getValue();
+      const schemaSymbol = ast.symbol as SchemaSymbol;
+      const usersSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
+      const idColumn = usersSymbol.symbolTable.get('Column:id') as ColumnSymbol;
+
+      // users.id should be referenced from the partial's inline ref
+      expect(idColumn.references.length).toBe(1);
+      expect(idColumn.references[0].referee).toBe(idColumn);
     });
   });
 

@@ -1118,8 +1118,7 @@
                         "start": 66,
                         "end": 72
                       }
-                    },
-                    "referee": 0
+                    }
                   },
                   "rightExpression": {
                     "id": 20,
@@ -1480,8 +1479,7 @@
                         "start": 93,
                         "end": 99
                       }
-                    },
-                    "referee": 0
+                    }
                   },
                   "rightExpression": {
                     "id": 28,
@@ -2224,8 +2222,7 @@
                         "start": 145,
                         "end": 147
                       }
-                    },
-                    "referee": 10
+                    }
                   },
                   "rightExpression": {
                     "id": 43,
@@ -2612,8 +2609,7 @@
                         "start": 165,
                         "end": 167
                       }
-                    },
-                    "referee": 10
+                    }
                   },
                   "rightExpression": {
                     "id": 50,
@@ -4954,122 +4950,6 @@
                 }
               },
               "referee": 10
-            },
-            {
-              "id": 42,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 145,
-                "line": 6,
-                "column": 12
-              },
-              "fullStart": 145,
-              "endPos": {
-                "offset": 147,
-                "line": 6,
-                "column": 14
-              },
-              "fullEnd": 147,
-              "start": 145,
-              "end": 147,
-              "expression": {
-                "id": 41,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 145,
-                  "line": 6,
-                  "column": 12
-                },
-                "fullStart": 145,
-                "endPos": {
-                  "offset": 147,
-                  "line": 6,
-                  "column": 14
-                },
-                "fullEnd": 147,
-                "start": 145,
-                "end": 147,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 145,
-                    "line": 6,
-                    "column": 12
-                  },
-                  "endPos": {
-                    "offset": 147,
-                    "line": 6,
-                    "column": 14
-                  },
-                  "value": "v2",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 145,
-                  "end": 147
-                }
-              },
-              "referee": 10
-            },
-            {
-              "id": 49,
-              "kind": "<primary-expression>",
-              "startPos": {
-                "offset": 165,
-                "line": 7,
-                "column": 12
-              },
-              "fullStart": 165,
-              "endPos": {
-                "offset": 167,
-                "line": 7,
-                "column": 14
-              },
-              "fullEnd": 167,
-              "start": 165,
-              "end": 167,
-              "expression": {
-                "id": 48,
-                "kind": "<variable>",
-                "startPos": {
-                  "offset": 165,
-                  "line": 7,
-                  "column": 12
-                },
-                "fullStart": 165,
-                "endPos": {
-                  "offset": 167,
-                  "line": 7,
-                  "column": 14
-                },
-                "fullEnd": 167,
-                "start": 165,
-                "end": 167,
-                "variable": {
-                  "kind": "<identifier>",
-                  "startPos": {
-                    "offset": 165,
-                    "line": 7,
-                    "column": 12
-                  },
-                  "endPos": {
-                    "offset": 167,
-                    "line": 7,
-                    "column": 14
-                  },
-                  "value": "v2",
-                  "leadingTrivia": [],
-                  "trailingTrivia": [],
-                  "leadingInvalid": [],
-                  "trailingInvalid": [],
-                  "isInvalid": false,
-                  "start": 165,
-                  "end": 167
-                }
-              },
-              "referee": 10
             }
           ],
           "id": 10,
@@ -5294,10 +5174,7 @@
         }
       },
       "id": 0,
-      "references": [
-        18,
-        26
-      ]
+      "references": []
     }
   },
   "errors": [
@@ -5469,8 +5346,7 @@
               "start": 145,
               "end": 147
             }
-          },
-          "referee": 10
+          }
         },
         "rightExpression": {
           "id": 43,
@@ -5679,8 +5555,7 @@
               "start": 165,
               "end": 167
             }
-          },
-          "referee": 10
+          }
         },
         "rightExpression": {
           "id": 50,

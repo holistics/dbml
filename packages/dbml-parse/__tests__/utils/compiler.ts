@@ -15,7 +15,6 @@ import {
   FunctionExpressionNode,
   FunctionApplicationNode,
   BlockExpressionNode,
-  PartialInjectionNode,
   ListExpressionNode,
   TupleExpressionNode,
   CallExpressionNode,
@@ -152,12 +151,6 @@ export function print (source: string, ast: SyntaxNode): string {
         if (block.blockOpenBrace) collectTokens(block.blockOpenBrace);
         block.body.forEach(collectTokens);
         if (block.blockCloseBrace) collectTokens(block.blockCloseBrace);
-        break;
-      }
-
-      case SyntaxNodeKind.PARTIAL_INJECTION: {
-        const partial = node as PartialInjectionNode;
-        if (partial.partial) collectTokens(partial.partial);
         break;
       }
 
