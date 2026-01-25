@@ -99,10 +99,10 @@ export interface ColumnType {
   schemaName: string | null;
   type_name: string;
   args: string | null;
-  // Parsed type parameters
+  // Parsed type parameters - stripped when passed to @dbml/core
   numericParams?: { precision: number; scale: number };
   lengthParam?: { length: number };
-  // Whether this type references an enum
+  // Whether this type references an enum - stripped when passed to @dbml/core
   isEnum?: boolean;
 }
 
