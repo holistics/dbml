@@ -11,8 +11,7 @@
           "type": {
             "schemaName": null,
             "type_name": "integer",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -37,11 +36,7 @@
           "type": {
             "schemaName": null,
             "type_name": "varchar(255)",
-            "args": "255",
-            "lengthParam": {
-              "length": 255
-            },
-            "isEnum": false
+            "args": "255"
           },
           "token": {
             "start": {

@@ -11,8 +11,7 @@
           "type": {
             "schemaName": null,
             "type_name": "text",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -35,8 +34,7 @@
           "type": {
             "schemaName": null,
             "type_name": "int[]",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -62,8 +60,7 @@
           "type": {
             "schemaName": null,
             "type_name": "text[][]",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -111,8 +108,7 @@
           "type": {
             "schemaName": null,
             "type_name": "integer[3][3]",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {

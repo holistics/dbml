@@ -1,5 +1,5 @@
 import { ProgramNode } from '@/core/parser/nodes';
-import { Database, InterpreterDatabase, TableRecord } from '@/core/interpreter/types';
+import { Database, InterpreterDatabase, Table, TableRecord } from '@/core/interpreter/types';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
 import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
@@ -11,6 +11,21 @@ import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
+
+function processColumnInDb (table: Table): Table {
+  return {
+    ...table,
+    fields: table.fields.map((c) => ({
+      ...c,
+      type: {
+        ...c.type,
+        isEnum: undefined,
+        lengthParam: undefined,
+        numericParams: undefined,
+      },
+    })),
+  };
+}
 
 function convertEnvToDb (env: InterpreterDatabase): Database {
   // Convert records Map to array of TableRecord
@@ -47,7 +62,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
 
   return {
     schemas: [],
-    tables: Array.from(env.tables.values()),
+    tables: Array.from(env.tables.values()).map(processColumnInDb),
     notes: Array.from(env.notes.values()),
     refs: Array.from(env.ref.values()),
     enums: Array.from(env.enums.values()),
