@@ -1,6 +1,6 @@
-export type TableNameInput = string | { schema?: string; table: string };
+import { RecordValue } from '../model_structure/database';
 
-export type RecordValue = string | number | boolean | null | object;
+export type TableNameInput = string | { schema?: string; table: string };
 
 export function renameTable(
   oldName: TableNameInput,
