@@ -22,7 +22,7 @@ export {
   ModelExporter,
   Parser,
 };
-export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel, } from './parse/error';
+export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel } from './parse/error';
 
 export * from './model_structure';
 export {
