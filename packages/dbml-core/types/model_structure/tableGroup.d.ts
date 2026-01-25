@@ -1,16 +1,16 @@
 import { NormalizedModel } from './database';
 import DbState from './dbState';
-import Element, { RawNote, Token } from './element';
-import Schema, { RawSchema } from './schema';
-import Table, { RawTable } from './table';
+import Element, { RawNote, Token} from './element';
+import Schema from './schema';
+import Table from './table';
 
-export interface RawTableGroup {
-    name: string | null;
-    schemaName: string | null;
-    tables: Array<{ name: string; schemaName: string | null }>;
+interface RawTableGroup {
+    name: string;
+    tables: Table[];
+    schema: Schema;
     token: Token;
-    color?: string;
-    note?: RawNote;
+    note: RawNote;
+    color: string;
 }
 
 declare class TableGroup extends Element {
@@ -22,9 +22,7 @@ declare class TableGroup extends Element {
     note: string;
     noteToken: Token;
     color: string;
-    constructor({ name, token, tables, schema, note, color, noteToken }: RawTableGroup & {
-        schema: Schema;
-    });
+    constructor({ name, token, tables, schema, note, color }: RawTableGroup);
     generateId(): void;
     processTables(rawTables: any): void;
     pushTable(table: any): void;
