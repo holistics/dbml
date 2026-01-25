@@ -418,6 +418,15 @@ export default class Parser {
       throw new PartialParsingError(e.token, buildExpression(), e.handlerContext);
     }
 
+    // Handle the case:
+    // Table T {
+    //   records () // --> call expression here
+    // }
+    if (args.callee instanceof CallExpressionNode && args.callee.argumentList) {
+      args.args.push(args.callee.argumentList);
+      args.callee = args.callee.callee;
+    }
+
     // If there are newlines after the callee, then it's a simple expression
     // such as a PrefixExpression, InfixExpression, ...
     // e.g
@@ -564,7 +573,7 @@ export default class Parser {
           // it's at the start of a new line
           // or if there are spaces before '(' (disallow call expressions with spaces)
           // and we're currently not having unmatched '(' or '['
-          (isAtStartOfLine(this.previous(), token) || hasTrailingSpaces(this.previous()))
+          isAtStartOfLine(this.previous(), token)
           && !this.contextStack.isWithinGroupExpressionContext()
           && !this.contextStack.isWithinListExpressionContext()
         ) {
