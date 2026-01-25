@@ -2,7 +2,7 @@ import ModelExporter from './export/ModelExporter';
 import Parser from './parse/Parser';
 import { CompilerError } from './parse/error';
 import importer from './import';
-import exporter, { formatDbmlRecordValue } from './export';
+import exporter from './export';
 import {
   renameTable,
   appendRecords,
@@ -26,7 +26,6 @@ export {
   CompilerError,
   Parser,
   VERSION,
-  formatDbmlRecordValue,
 };
 
 // Re-export types and utilities from @dbml/parse
@@ -47,4 +46,5 @@ export {
   tryExtractDateTime,
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
+  formatRecordValue,
 } from '@dbml/parse';
