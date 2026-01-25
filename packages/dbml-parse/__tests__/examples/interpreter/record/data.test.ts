@@ -281,7 +281,6 @@ describe('[example - record] data type interpretation', () => {
     const typeIdx = db.records[0].columns.indexOf('type');
     const userIdIdx = db.records[0].columns.indexOf('user_id');
     const dataIdx = db.records[0].columns.indexOf('data');
-    const createdAtIdx = db.records[0].columns.indexOf('created_at');
 
     expect(db.records[0].values[0][idIdx2]).toBeDefined();
     expect(db.records[0].values[0][typeIdx]).toBeDefined();
