@@ -6,12 +6,12 @@ export default class Report<T> {
 
   private errors: CompileError[];
 
-  private warnings: CompileWarning[];
+  private warnings?: CompileWarning[];
 
   constructor (value: T, errors?: CompileError[], warnings?: CompileWarning[]) {
     this.value = value;
     this.errors = errors === undefined ? [] : errors;
-    this.warnings = warnings === undefined ? [] : warnings;
+    this.warnings = warnings;
   }
 
   getValue (): T {
@@ -23,13 +23,13 @@ export default class Report<T> {
   }
 
   getWarnings (): CompileWarning[] {
-    return this.warnings;
+    return this.warnings || [];
   }
 
   chain<U>(fn: (_: T) => Report<U>): Report<U> {
     const res = fn(this.value);
     const errors = [...this.errors, ...res.errors];
-    const warnings = [...this.warnings, ...res.warnings];
+    const warnings = [...this.getWarnings(), ...res.getWarnings()];
 
     return new Report<U>(res.value, errors, warnings);
   }
