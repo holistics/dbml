@@ -61,7 +61,7 @@ export type {
     NormalizedRecords,
     RawSchema,
 } from './model_structure';
-export { formatDbmlRecordValue, RecordValue } from './export';
+export { RecordValue } from './export';
 export { RecordValueType } from './model_structure/database';
 export {
   SqlDialect,
@@ -80,4 +80,5 @@ export {
   tryExtractDateTime,
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
+  formatRecordValue,
 } from '@dbml/parse';
