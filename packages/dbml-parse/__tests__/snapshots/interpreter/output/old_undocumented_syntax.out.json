@@ -11,8 +11,7 @@
           "type": {
             "schemaName": null,
             "type_name": "SMALLINT",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -38,8 +37,7 @@
           "type": {
             "schemaName": null,
             "type_name": "TINYINT",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -65,11 +63,7 @@
           "type": {
             "schemaName": null,
             "type_name": "VARCHAR(45)",
-            "args": "45",
-            "lengthParam": {
-              "length": 45
-            },
-            "isEnum": false
+            "args": "45"
           },
           "token": {
             "start": {
@@ -95,11 +89,7 @@
           "type": {
             "schemaName": null,
             "type_name": "VARCHAR(45)",
-            "args": "45",
-            "lengthParam": {
-              "length": 45
-            },
-            "isEnum": false
+            "args": "45"
           },
           "token": {
             "start": {
@@ -129,11 +119,7 @@
           "type": {
             "schemaName": null,
             "type_name": "VARCHAR(50)",
-            "args": "50",
-            "lengthParam": {
-              "length": 50
-            },
-            "isEnum": false
+            "args": "50"
           },
           "token": {
             "start": {
@@ -162,8 +148,7 @@
           "type": {
             "schemaName": null,
             "type_name": "SMALLINT",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -189,8 +174,7 @@
           "type": {
             "schemaName": null,
             "type_name": "BOOLEAN",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -220,8 +204,7 @@
           "type": {
             "schemaName": null,
             "type_name": "DATETIME",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -247,8 +230,7 @@
           "type": {
             "schemaName": null,
             "type_name": "TIMESTAMP",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -299,8 +281,7 @@
           "type": {
             "schemaName": null,
             "type_name": "integer",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -325,8 +306,7 @@
           "type": {
             "schemaName": null,
             "type_name": "e",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -355,8 +335,7 @@
           "type": {
             "schemaName": null,
             "type_name": "integer",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -416,8 +395,7 @@
           "type": {
             "schemaName": null,
             "type_name": "integer",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -440,8 +418,7 @@
           "type": {
             "schemaName": null,
             "type_name": "string[]",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -486,8 +463,7 @@
           "type": {
             "schemaName": null,
             "type_name": "integer",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -510,8 +486,7 @@
           "type": {
             "schemaName": null,
             "type_name": "string",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
