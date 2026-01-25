@@ -61,8 +61,7 @@ export type {
     NormalizedRecords,
     RawSchema,
 } from './model_structure';
-export { RecordValue } from './export';
-export { RecordValueType } from './model_structure/database';
+export { RecordValueType, RecordValue } from './model_structure/database';
 export {
   SqlDialect,
   isIntegerType,
