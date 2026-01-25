@@ -2,7 +2,7 @@ import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element, { Token, RawNote } from './element';
 import Enum from './enum';
-export interface RawEnumValue {
+interface RawEnumValue {
     name: string;
     token: Token;
     note: RawNote;
@@ -14,7 +14,7 @@ declare class EnumValue extends Element {
     noteToken: Token;
     _enum: Enum;
     dbState: DbState;
-    constructor({ name, token, note, _enum }: RawEnumValue & { _enum: Enum });
+    constructor({ name, token, note, _enum }: RawEnumValue);
     generateId(): void;
     export(): {
         name: string;
