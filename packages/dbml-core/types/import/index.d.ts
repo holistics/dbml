@@ -1,6 +1,4 @@
-import { SqlDialect } from '@dbml/parse';
-
-declare function _import(str: string, format: SqlDialect | 'dbml' | 'json' | 'postgresLegacy' | 'mssqlLegacy'): string;
+declare function _import(str: string, format: 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'postgresLegacy' | 'mssqlLegacy' | 'oracle'): string;
 
 /**
  * @param {any} schemaJson

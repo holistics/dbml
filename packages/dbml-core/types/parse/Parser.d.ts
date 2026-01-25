@@ -1,13 +1,14 @@
-import { Compiler, SqlDialect } from '@dbml/parse';
+import { Compiler } from '@dbml/parse';
 import Database, { RawDatabase } from '../model_structure/database';
 
-export declare type ParseFormat = SqlDialect
-    | 'json'
-    | 'mysqlLegacy'
-    | 'postgresLegacy'
+export declare type ParseFormat = 'json'
+    | 'mysql' | 'mysqlLegacy'
+    | 'postgres' | 'postgresLegacy'
     | 'dbml' | 'dbmlv2'
-    | 'mssqlLegacy'
-    | 'schemarb';
+    | 'mssql' | 'mssqlLegacy'
+    | 'schemarb'
+    | 'snowflake'
+    | 'oracle';
 
 declare class Parser {
     public DBMLCompiler: Compiler;
