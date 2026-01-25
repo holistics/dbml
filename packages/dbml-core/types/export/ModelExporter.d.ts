@@ -1,7 +1,6 @@
 import Database, { NormalizedDatabase } from '../model_structure/database';
-import { SqlDialect } from '@dbml/parse';
 
-export declare type ExportFormatOption = SqlDialect | 'dbml' | 'json';
+export declare type ExportFormatOption = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'oracle';
 declare class ModelExporter {
     static export(model: Database | NormalizedDatabase, format: ExportFormatOption, isNormalized?: boolean): string;
 }
