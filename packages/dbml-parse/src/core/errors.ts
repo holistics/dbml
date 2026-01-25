@@ -145,9 +145,35 @@ export class CompileError extends Error {
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileError.prototype);
   }
+
+  toWarning (): CompileWarning {
+    return new CompileWarning(
+      this.code,
+      this.message,
+      this.nodeOrToken,
+    );
+  }
 }
 
-// CompileWarning is just an alias for CompileError
-// Data type and constraint validation "errors" are returned as warnings
-// but use the same class structure
-export type CompileWarning = CompileError;
+export class CompileWarning extends Error {
+  code: Readonly<CompileErrorCode>;
+
+  diagnostic: Readonly<string>;
+
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
+
+  start: Readonly<number>;
+
+  end: Readonly<number>;
+
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+    super(message);
+    this.code = code;
+    this.diagnostic = message;
+    this.nodeOrToken = nodeOrToken;
+    this.start = nodeOrToken.start;
+    this.end = nodeOrToken.end;
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, CompileError.prototype);
+  }
+}

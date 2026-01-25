@@ -80,13 +80,13 @@ export class RecordsInterpreter {
     const warnings: CompileWarning[] = [];
 
     // Validate PK constraints
-    warnings.push(...validatePrimaryKey(this.env));
+    warnings.push(...validatePrimaryKey(this.env).map((e) => e.toWarning()));
 
     // Validate unique constraints
-    warnings.push(...validateUnique(this.env));
+    warnings.push(...validateUnique(this.env).map((e) => e.toWarning()));
 
     // Validate FK constraints
-    warnings.push(...validateForeignKeys(this.env));
+    warnings.push(...validateForeignKeys(this.env).map((e) => e.toWarning()));
 
     return warnings;
   }
@@ -212,7 +212,7 @@ function extractValue (
   if (isNullish(node) || (isEmptyStringLiteral(node) && !isStringType(type))) {
     const hasDefaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null';
     if (notNull && !hasDefaultValue && !increment) {
-      return new Report(null, [], [new CompileError(
+      return new Report(null, [], [new CompileWarning(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `NULL not allowed for non-nullable column '${column.name}' without default and increment`,
         node,
@@ -225,7 +225,7 @@ function extractValue (
   if (isEnum) {
     const enumAccess = extractEnumAccess(node);
     if (enumAccess === null) {
-      return new Report(null, [], [new CompileError(
+      return new Report(null, [], [new CompileWarning(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `Invalid enum value for column '${column.name}'`,
         node,
@@ -246,7 +246,7 @@ function extractValue (
     if (path.length === 0) {
       // String literal - only allowed for enums without schema qualification
       if (expectedSchemaName !== null) {
-        return new Report(null, [], [new CompileError(
+        return new Report(null, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Enum value must be fully qualified: expected ${expectedSchemaName}.${expectedEnumName}.${enumValue}, got string literal ${JSON.stringify(enumValue)}`,
           node,
@@ -258,7 +258,7 @@ function extractValue (
       const expectedPath = expectedSchemaName ? `${expectedSchemaName}.${expectedEnumName}` : expectedEnumName;
 
       if (actualPath !== expectedPath) {
-        return new Report(null, [], [new CompileError(
+        return new Report(null, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Enum path mismatch: expected ${expectedPath}.${enumValue}, got ${actualPath}.${enumValue}`,
           node,
@@ -282,7 +282,7 @@ function extractValue (
       if (!validValues.has(enumValue)) {
         const validValuesList = Array.from(validValues).join(', ');
         const fullEnumPath = expectedSchemaName ? `${expectedSchemaName}.${expectedEnumName}` : expectedEnumName;
-        return new Report(null, [], [new CompileError(
+        return new Report(null, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid enum value ${JSON.stringify(enumValue)} for column '${column.name}' of type '${fullEnumPath}' (valid values: ${validValuesList})`,
           node,
@@ -300,7 +300,7 @@ function extractValue (
       return new Report(
         { value: getNodeSourceText(node, env.source), type: 'expression' },
         [],
-        [new CompileError(
+        [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid numeric value for column '${column.name}'`,
           node,
@@ -310,7 +310,7 @@ function extractValue (
 
     // Integer type: validate no decimal point
     if (isIntegerType(type) && !Number.isInteger(numValue)) {
-      return new Report(null, [], [new CompileError(
+      return new Report(null, [], [new CompileWarning(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `Invalid integer value ${numValue} for column '${column.name}': expected integer, got decimal`,
         node,
@@ -329,7 +329,7 @@ function extractValue (
       const decimalDigits = decimalPart.length;
 
       if (totalDigits > precision) {
-        return new Report(null, [], [new CompileError(
+        return new Report(null, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Numeric value ${numValue} for column '${column.name}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
           node,
@@ -337,7 +337,7 @@ function extractValue (
       }
 
       if (decimalDigits > scale) {
-        return new Report(null, [], [new CompileError(
+        return new Report(null, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Numeric value ${numValue} for column '${column.name}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
           node,
@@ -355,7 +355,7 @@ function extractValue (
       return new Report(
         { value: getNodeSourceText(node, env.source), type: 'expression' },
         [],
-        [new CompileError(
+        [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid boolean value for column '${column.name}'`,
           node,
@@ -372,7 +372,7 @@ function extractValue (
       return new Report(
         { value: getNodeSourceText(node, env.source), type: 'expression' },
         [],
-        [new CompileError(
+        [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid datetime value for column '${column.name}', expected valid datetime format (e.g., 'YYYY-MM-DD', 'HH:MM:SS', 'YYYY-MM-DD HH:MM:SS', 'MM/DD/YYYY', 'D MMM YYYY', or 'MMM D, YYYY')`,
           node,
@@ -389,7 +389,7 @@ function extractValue (
       return new Report(
         { value: getNodeSourceText(node, env.source), type: 'expression' },
         [],
-        [new CompileError(
+        [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Invalid string value for column '${column.name}'`,
           node,
@@ -404,7 +404,7 @@ function extractValue (
       const actualByteLength = new TextEncoder().encode(strValue).length;
 
       if (actualByteLength > length) {
-        return new Report(null, [], [new CompileError(
+        return new Report(null, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `String value for column '${column.name}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
           node,
