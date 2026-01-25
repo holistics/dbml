@@ -1,4 +1,4 @@
 Test FunctionApplication {
     id	integer [primary key]
-    name char(255) [unique]
+    name char (255) [unique]
 }
