@@ -1,30 +1,34 @@
 import Element, { RawNote, Token } from './element';
+<<<<<<< HEAD
 import Field, { RawField } from './field';
 import Index, { RawIndex } from './indexes';
 import Check, { RawCheck } from './check';
+=======
+import Field from './field';
+import Index from './indexes';
+import Check from './check';
+>>>>>>> 7f379ede (Revert "fix: type definitions")
 import Schema from './schema';
 import DbState from './dbState';
 import TableGroup from './tableGroup';
 import TablePartial from './tablePartial';
+<<<<<<< HEAD
 import { NormalizedModel } from './database';
+=======
+import { NormalizedDatabase } from './database';
+>>>>>>> 7f379ede (Revert "fix: type definitions")
 
-export interface TablePartialInjection {
+interface RawTable {
     name: string;
-    order: number;
+    alias: string;
+    note: RawNote;
+    fields: Field[];
+    indexes: Index[];
+    checks?: any[];
+    schema: Schema;
     token: Token;
-}
-
-export interface RawTable {
-    name: string;
-    schemaName: null | string;
-    alias: string | null;
-    fields: RawField[];
-    checks: RawCheck[];
-    partials: TablePartialInjection[];
-    token: Token;
-    indexes: RawIndex[];
-    headerColor?: string;
-    note?: RawNote;
+    headerColor: string;
+    partials: TablePartial[];
 }
 
 declare class Table extends Element {
@@ -42,10 +46,7 @@ declare class Table extends Element {
     group: TableGroup;
     partials: TablePartial[];
 
-    constructor({ name, alias, note, fields, indexes, checks, schema, token, headerColor, noteToken, partials }: RawTable & {
-        schema: Schema;
-        noteToken?: Token;
-    });
+    constructor({ name, alias, note, fields, indexes, checks, schema, token, headerColor }: RawTable);
     generateId(): void;
     processFields(rawFields: any): void;
     pushField(field: any): void;

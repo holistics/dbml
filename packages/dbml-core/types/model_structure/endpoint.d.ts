@@ -1,8 +1,9 @@
-import Element, { Token } from './element';
+import Element from './element';
 import Field from './field';
 import Ref from './ref';
 import DbState from './dbState';
 import { NormalizedModel } from './database';
+import { Token } from 'antlr4';
 
 export interface RawEndpoint {
     schemaName: string | null;
@@ -20,8 +21,13 @@ declare class Endpoint extends Element {
     fields: Field[];
     ref: Ref;
     dbState: DbState;
-    constructor({ tableName, schemaName, fieldNames, relation, token, ref }: RawEndpoint & {
-        ref: Ref;
+    constructor({ tableName, schemaName, fieldNames, relation, token, ref }: {
+        tableName: any;
+        schemaName: any;
+        fieldNames: any;
+        relation: any;
+        token: any;
+        ref: any;
     });
     generateId(): void;
     equals(endpoint: any): boolean;

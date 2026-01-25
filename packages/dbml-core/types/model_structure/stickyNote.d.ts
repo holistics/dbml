@@ -1,13 +1,19 @@
 import Element, { Token } from './element';
 import Database from './database';
 import DbState from './dbState';
+<<<<<<< HEAD
 import { NormalizedModel } from './database';
 
 export interface RawStickyNote {
+=======
+import { NormalizedDatabase } from './database';
+interface RawStickyNote {
+>>>>>>> 7f379ede (Revert "fix: type definitions")
     name: string;
     content: string;
+    database: Database;
     token: Token;
-    headerColor?: string;
+    headerColor: string;
 }
 
 declare class StickyNote extends Element {
@@ -18,9 +24,7 @@ declare class StickyNote extends Element {
     database: Database;
     dbState: DbState;
     id: number;
-    constructor({ name, content, token, headerColor, database }: RawStickyNote & {
-        database: Database;
-    });
+    constructor({ name, content, token, headerColor, database }: RawStickyNote);
     generateId(): void;
     export(): {
         name: string;

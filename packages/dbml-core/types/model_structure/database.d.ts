@@ -14,9 +14,9 @@ import { NormalizedIndexIdMap } from './indexes';
 import { NormalizedCheckIdMap } from './check';
 import TablePartial, { NormalizedTablePartialIdMap } from './tablePartial';
 export interface Project {
-    note?: RawNote;
-    database_type?: string | null;
-    name?: string | null;
+    note: RawNote;
+    database_type: string;
+    name: string;
 }
 
 export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
@@ -46,26 +46,16 @@ export interface NormalizedRecordIdMap {
     [_id: number]: NormalizedRecord;
 }
 
-export interface Alias {
-    name: string;
-    kind: 'table';
-    value: {
-        tableName: string;
-        schemaName: string | null;
-    };
-}
-
 export interface RawDatabase {
-    schemas: [];
-    tables: RawTable[];
-    notes: RawStickyNote[];
-    refs: RawRef[];
-    enums: RawEnum[];
-    tableGroups: RawTableGroup[];
-    aliases: Alias[];
+    schemas: Schema[];
+    tables: Table[];
+    notes: StickyNote[];
+    enums: Enum[];
+    refs: Ref[];
+    tableGroups: TableGroup[];
     project: Project;
-    tablePartials: RawTablePartial[];
     records: RawTableRecord[];
+    tablePartials: TablePartial[];
 }
 declare class Database extends Element {
     dbState: DbState;
@@ -76,11 +66,9 @@ declare class Database extends Element {
     noteToken: Token;
     databaseType: string;
     name: string;
-    aliases: any[];
     records: TableRecord[];
-    tablePartials: TablePartial[];
     id: number;
-    constructor({ schemas, tables, notes, enums, refs, tableGroups, project, aliases, records, tablePartials }: RawDatabase);
+    constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
     generateId(): void;
     processRecords(rawRecords: RawTableRecord[]): void;
     processSchemas(rawSchemas: RawSchema[]): void;

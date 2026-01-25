@@ -1,17 +1,17 @@
 import Element, { Token } from './element';
-import Endpoint, { RawEndpoint } from './endpoint';
+import Endpoint from './endpoint';
 import Schema from './schema';
 import DbState from './dbState';
 import Database, { NormalizedModel } from './database';
 import TablePartial from './tablePartial';
-export interface RawRef {
-    schemaName: string | null;
-    name: string | null;
-    endpoints: [RawEndpoint, RawEndpoint];
+interface RawRef {
+    name: string;
     color?: string;
-    onDelete?: string;
-    onUpdate?: string;
+    endpoints: Endpoint[];
+    onDelete: any;
+    onUpdate: any;
     token: Token;
+    schema: Schema;
 }
 declare class Ref extends Element {
     name: string;
@@ -24,9 +24,7 @@ declare class Ref extends Element {
     id: number;
     database: Database;
     injectedPartial?: TablePartial;
-    constructor({ name, color, endpoints, onDelete, onUpdate, token, schema }: RawRef & {
-        schema: Schema;
-    });
+    constructor({ name, endpoints, onDelete, onUpdate, token, schema }: RawRef);
     generateId(): void;
     processEndpoints(rawEndpoints: any): void;
     equals(ref: any): any;
