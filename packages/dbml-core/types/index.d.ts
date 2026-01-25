@@ -23,7 +23,7 @@ export {
   Parser,
 };
 export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel, } from './parse/error';
-export { formatDbmlRecordValue, RecordValue } from './export';
+export { RecordValue } from './export';
 export { RecordValueType } from './model_structure/database';
 export {
   SqlDialect,
@@ -42,4 +42,5 @@ export {
   tryExtractDateTime,
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
+  formatRecordValue,
 } from '@dbml/parse';
