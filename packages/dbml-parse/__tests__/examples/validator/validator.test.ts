@@ -318,7 +318,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.BINDING_ERROR);
-      expect(errors[0].diagnostic).toBe("Can not find Table 'nonexistent'");
+      expect(errors[0].diagnostic).toBe("Table 'nonexistent' does not exist in Schema 'public'");
     });
 
     test('should detect unknown column in ref with binding error', () => {
@@ -331,7 +331,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.BINDING_ERROR);
-      expect(errors[0].diagnostic).toBe("Table 'posts' does not have Column 'nonexistent'");
+      expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'posts'");
     });
 
     test('should accept ref with named ref and settings in block form', () => {
@@ -442,6 +442,21 @@ describe('[example] validator', () => {
       expect(errors).toHaveLength(0);
     });
 
+    test('should detect duplicate TablePartial injection same partial', () => {
+      const source = `
+        TablePartial p1 {}
+        Table t1 {
+          id int
+          ~p1
+          ~p1
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBe(2);
+      expect(errors[0].diagnostic).toBe('Duplicate table partial injection \'p1\'');
+      expect(errors[1].diagnostic).toBe('Duplicate table partial injection \'p1\'');
+    });
+
     test('should detect unknown tablepartial reference with precise error', () => {
       const source = `
         Table users {
@@ -453,7 +468,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.BINDING_ERROR);
-      expect(errors[0].diagnostic).toContain("Can not find TablePartial 'nonexistent'");
+      expect(errors[0].diagnostic).toContain("TablePartial 'nonexistent' does not exist in Schema 'public'");
 
       // Error should point to the injection line
       expect((errors[0].nodeOrToken as SyntaxToken).startPos.line).toBe(3);
@@ -996,10 +1011,10 @@ Table users { name varchar }`;
       // 4 binding errors - one for each unknown table (a, b, c, d)
       expect(errors).toHaveLength(4);
       expect(errors.every((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
-      expect(errors[0].diagnostic).toBe("Can not find Table 'a'");
-      expect(errors[1].diagnostic).toBe("Can not find Table 'b'");
-      expect(errors[2].diagnostic).toBe("Can not find Table 'c'");
-      expect(errors[3].diagnostic).toBe("Can not find Table 'd'");
+      expect(errors[0].diagnostic).toBe("Table 'a' does not exist in Schema 'public'");
+      expect(errors[1].diagnostic).toBe("Table 'b' does not exist in Schema 'public'");
+      expect(errors[2].diagnostic).toBe("Table 'c' does not exist in Schema 'public'");
+      expect(errors[3].diagnostic).toBe("Table 'd' does not exist in Schema 'public'");
     });
   });
 
@@ -1031,8 +1046,8 @@ Table users { name varchar }`;
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(2);
-      expect(errors[0].diagnostic).toBe("Can not find Table 'posts'");
-      expect(errors[1].diagnostic).toBe("Can not find Table 'nonexistent'");
+      expect(errors[0].diagnostic).toBe("Table 'posts' does not exist in Schema 'public'");
+      expect(errors[1].diagnostic).toBe("Table 'nonexistent' does not exist in Schema 'public'");
     });
 
     test('should have non-empty diagnostic for all error types', () => {

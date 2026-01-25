@@ -19,7 +19,6 @@ import {
   ListExpressionNode,
   LiteralNode,
   NormalExpressionNode,
-  PartialInjectionNode,
   PostfixExpressionNode,
   PrefixExpressionNode,
   PrimaryExpressionNode,
@@ -28,6 +27,7 @@ import {
   TupleExpressionNode,
   VariableNode,
 } from '@/core/parser/nodes';
+import { destructureComplexVariable } from '@/core/analyzer/utils';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
@@ -180,9 +180,6 @@ function markInvalidNode (node: SyntaxNode) {
   } else if (node instanceof ProgramNode) {
     node.body.forEach(markInvalid);
     markInvalid(node.eof);
-  } else if (node instanceof PartialInjectionNode) {
-    markInvalid(node.op);
-    markInvalid(node.partial);
   } else if (node instanceof DummyNode) {
     // DummyNode has no children to mark invalid
   } else {
@@ -288,8 +285,6 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
     );
   }
 
-  if (node instanceof PartialInjectionNode) return filterUndefined(node.op, node.partial);
-
   if (node instanceof GroupExpressionNode) {
     throw new Error('This case is already handled by TupleExpressionNode');
   }
@@ -391,4 +386,8 @@ export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode)
   }
 
   return new Some(name);
+}
+
+export function getElementName (element: ElementDeclarationNode): Option<string> {
+  return destructureComplexVariable(element.name).map((ss) => ss.join('.'));
 }

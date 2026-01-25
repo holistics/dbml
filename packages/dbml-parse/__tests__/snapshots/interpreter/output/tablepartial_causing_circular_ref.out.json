@@ -1,0 +1,268 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "T",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "col2",
+          "type": {
+            "schemaName": null,
+            "type_name": "type",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 93,
+              "line": 8,
+              "column": 3
+            },
+            "end": {
+              "offset": 116,
+              "line": 8,
+              "column": 26
+            }
+          },
+          "inline_refs": [
+            {
+              "schemaName": null,
+              "tableName": "T",
+              "fieldNames": [
+                "col3"
+              ],
+              "relation": ">",
+              "token": {
+                "start": {
+                  "offset": 104,
+                  "line": 8,
+                  "column": 14
+                },
+                "end": {
+                  "offset": 115,
+                  "line": 8,
+                  "column": 25
+                }
+              }
+            }
+          ],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 76,
+          "line": 6,
+          "column": 1
+        },
+        "end": {
+          "offset": 118,
+          "line": 9,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "partials": [
+        {
+          "order": 0,
+          "token": {
+            "start": {
+              "offset": 88,
+              "line": 7,
+              "column": 3
+            },
+            "end": {
+              "offset": 90,
+              "line": 7,
+              "column": 5
+            }
+          },
+          "name": "T"
+        }
+      ],
+      "checks": []
+    }
+  ],
+  "notes": [],
+  "refs": [
+    {
+      "name": null,
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 104,
+          "line": 8,
+          "column": 14
+        },
+        "end": {
+          "offset": 115,
+          "line": 8,
+          "column": 25
+        }
+      },
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "T",
+          "fieldNames": [
+            "col3"
+          ],
+          "relation": "1",
+          "token": {
+            "start": {
+              "offset": 104,
+              "line": 8,
+              "column": 14
+            },
+            "end": {
+              "offset": 115,
+              "line": 8,
+              "column": 25
+            }
+          }
+        },
+        {
+          "schemaName": null,
+          "tableName": "T",
+          "fieldNames": [
+            "col2"
+          ],
+          "token": {
+            "start": {
+              "offset": 93,
+              "line": 8,
+              "column": 3
+            },
+            "end": {
+              "offset": 116,
+              "line": 8,
+              "column": 26
+            }
+          },
+          "relation": "*"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "tablePartials": [
+    {
+      "name": "T",
+      "fields": [
+        {
+          "name": "col1",
+          "type": {
+            "schemaName": null,
+            "type_name": "type",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 19,
+              "line": 2,
+              "column": 3
+            },
+            "end": {
+              "offset": 44,
+              "line": 2,
+              "column": 28
+            }
+          },
+          "inline_refs": [
+            {
+              "schemaName": null,
+              "tableName": "T",
+              "fieldNames": [
+                "col1"
+              ],
+              "relation": ">",
+              "token": {
+                "start": {
+                  "offset": 30,
+                  "line": 2,
+                  "column": 14
+                },
+                "end": {
+                  "offset": 43,
+                  "line": 2,
+                  "column": 27
+                }
+              }
+            }
+          ],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        },
+        {
+          "name": "col3",
+          "type": {
+            "schemaName": null,
+            "type_name": "type",
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 47,
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "offset": 72,
+              "line": 3,
+              "column": 28
+            }
+          },
+          "inline_refs": [
+            {
+              "schemaName": null,
+              "tableName": "T",
+              "fieldNames": [
+                "col2"
+              ],
+              "relation": ">",
+              "token": {
+                "start": {
+                  "offset": 58,
+                  "line": 3,
+                  "column": 14
+                },
+                "end": {
+                  "offset": 71,
+                  "line": 3,
+                  "column": 27
+                }
+              }
+            }
+          ],
+          "pk": false,
+          "increment": false,
+          "unique": false,
+          "checks": []
+        }
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 74,
+          "line": 4,
+          "column": 2
+        }
+      },
+      "indexes": [],
+      "checks": []
+    }
+  ]
+}
