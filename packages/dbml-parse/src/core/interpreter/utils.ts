@@ -204,7 +204,7 @@ export function processColumnType (typeNode: SyntaxNode, env?: InterpreterDataba
   let typeArgs: string | null = null;
   let numericParams: { precision: number; scale: number } | undefined;
   let lengthParam: { length: number } | undefined;
-  let isEnum = false;
+  let isEnum = undefined;
 
   if (typeNode instanceof CallExpressionNode) {
     const argElements = typeNode.argumentList!.elementList;

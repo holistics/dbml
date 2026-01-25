@@ -11,8 +11,7 @@
           "type": {
             "schemaName": null,
             "type_name": "string",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -156,11 +155,7 @@
           "type": {
             "schemaName": null,
             "type_name": "char(255)",
-            "args": "255",
-            "lengthParam": {
-              "length": 255
-            },
-            "isEnum": false
+            "args": "255"
           },
           "token": {
             "start": {
@@ -256,8 +251,7 @@
           "type": {
             "schemaName": null,
             "type_name": "string",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -280,8 +274,7 @@
           "type": {
             "schemaName": null,
             "type_name": "decimal",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -378,8 +371,7 @@
           "type": {
             "schemaName": null,
             "type_name": "int",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -402,8 +394,7 @@
           "type": {
             "schemaName": null,
             "type_name": "int",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -426,8 +417,7 @@
           "type": {
             "schemaName": null,
             "type_name": "string",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -521,8 +511,7 @@
           "type": {
             "schemaName": null,
             "type_name": "string",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -801,8 +790,7 @@
           "type": {
             "schemaName": null,
             "type_name": "int",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -827,8 +815,7 @@
           "type": {
             "schemaName": null,
             "type_name": "int",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
@@ -992,8 +979,7 @@
           "type": {
             "schemaName": null,
             "type_name": "string",
-            "args": null,
-            "isEnum": false
+            "args": null
           },
           "token": {
             "start": {
