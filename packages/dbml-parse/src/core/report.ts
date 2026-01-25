@@ -11,7 +11,9 @@ export default class Report<T> {
   constructor (value: T, errors?: CompileError[], warnings?: CompileWarning[]) {
     this.value = value;
     this.errors = errors === undefined ? [] : errors;
-    this.warnings = warnings;
+    if (warnings?.length) {
+      this.warnings = warnings;
+    }
   }
 
   getValue (): T {
