@@ -70,6 +70,7 @@ function validateDirection (
   const validKeys = collectValidKeys(target.rows, targetEndpoint.fieldNames);
 
   for (const row of source.rows) {
+    // TODO: implement FK for autoincrement fields
     if (hasNullWithoutDefaultInKey(row.values, sourceEndpoint.fieldNames)) continue;
 
     const key = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
