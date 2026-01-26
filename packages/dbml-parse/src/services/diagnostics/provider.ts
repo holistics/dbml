@@ -5,14 +5,13 @@ import type { SyntaxNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';
 
 export interface Diagnostic {
-  severity: 'error' | 'warning';
-  message: string;
-  startLineNumber: number;
+  type: 'error' | 'warning';
+  text: string;
+  startRow: number;
   startColumn: number;
-  endLineNumber: number;
+  endRow: number;
   endColumn: number;
   code?: string | number;
-  source?: string;
 }
 
 export default class DBMLDiagnosticsProvider {
@@ -66,16 +65,15 @@ export default class DBMLDiagnosticsProvider {
   provideMarkers (): MarkerData[] {
     const diagnostics = this.provideDiagnostics();
     return diagnostics.map((diag) => {
-      const severity = this.getSeverityValue(diag.severity);
+      const severity = this.getSeverityValue(diag.type);
       return {
         severity,
-        message: diag.message,
-        startLineNumber: diag.startLineNumber,
+        message: diag.text,
+        startLineNumber: diag.startRow,
         startColumn: diag.startColumn,
-        endLineNumber: diag.endLineNumber,
+        endLineNumber: diag.endRow,
         endColumn: diag.endColumn,
         code: diag.code ? String(diag.code) : undefined,
-        source: diag.source || 'dbml',
       };
     });
   }
@@ -103,14 +101,13 @@ export default class DBMLDiagnosticsProvider {
     }
 
     return {
-      severity,
-      message: errorOrWarning.diagnostic,
-      startLineNumber: startPos.line + 1,
+      type: severity,
+      text: errorOrWarning.diagnostic,
+      startRow: startPos.line + 1,
       startColumn: startPos.column + 1,
-      endLineNumber: endPos.line + 1,
+      endRow: endPos.line + 1,
       endColumn: endPos.column + 1,
       code: errorOrWarning.code,
-      source: 'dbml',
     };
   }
 
