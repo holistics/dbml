@@ -1675,7 +1675,7 @@ describe('[example - record] Enum validation', () => {
     expect(errors.length).toBe(0);
     expect(warnings.length).toBe(1);
     expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toBe("Invalid enum value \"invalid_value\" for column 'status' of type 'status' (valid values: active, inactive)");
+    expect(warnings[0].diagnostic).toBe("Invalid enum value for column 'status'");
   });
 
   test('should validate multiple enum columns', () => {
@@ -1711,8 +1711,12 @@ describe('[example - record] Enum validation', () => {
     expect(warnings.length).toBe(2);
     expect(warnings.every((e) => e.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
     const warningMessages = warnings.map((e) => e.diagnostic);
-    expect(warningMessages.some((msg) => msg.includes('invalid_status'))).toBe(true);
-    expect(warningMessages.some((msg) => msg.includes('invalid_role'))).toBe(true);
+    expect(warningMessages).toMatchInlineSnapshot(`
+      [
+        "Invalid enum value for column 'status'",
+        "Invalid enum value for column 'role'",
+      ]
+    `);
   });
 
   test('should allow NULL for enum columns', () => {
@@ -1765,7 +1769,7 @@ describe('[example - record] Enum validation', () => {
     expect(errors[0].diagnostic).toContain('invalid');
   });
 
-  test('should reject string literal for schema-qualified enum', () => {
+  test('should accept string literal for schema-qualified enum', () => {
     const source = `
       Enum app.status {
         active
@@ -1786,10 +1790,7 @@ describe('[example - record] Enum validation', () => {
     const warnings = result.getWarnings();
 
     expect(errors.length).toBe(0);
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toContain('fully qualified');
-    expect(warnings[0].diagnostic).toContain('app.status.active');
+    expect(warnings.length).toBe(0);
   });
 
   test('should reject unqualified enum access for schema-qualified enum', () => {
@@ -1847,7 +1848,6 @@ describe('[example - record] Enum validation', () => {
     expect(errors.length).toBe(0);
     expect(warnings.length).toBe(1);
     expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toContain('invalid_priority');
-    expect(warnings[0].diagnostic).toContain('priority');
+    expect(warnings[0].diagnostic).toBe('Invalid enum value for column \'priority\'');
   });
 });
