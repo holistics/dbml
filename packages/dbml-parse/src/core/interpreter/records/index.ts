@@ -32,6 +32,7 @@ import {
   validatePrimaryKey,
   validateUnique,
   validateForeignKeys,
+  isSerialType,
 } from './utils';
 import { destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
@@ -207,7 +208,8 @@ function extractValue (
   // NULL literal
   if (isNullish(node) || (isEmptyStringLiteral(node) && !isStringType(type))) {
     const hasDefaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null';
-    if (notNull && !hasDefaultValue && !increment) {
+    const isSerial = isSerialType(type);
+    if (notNull && !hasDefaultValue && !increment && !isSerial) {
       return new Report({ value: null, type: valueType }, [], [new CompileWarning(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `NULL not allowed for non-nullable column '${column.name}' without default and increment`,

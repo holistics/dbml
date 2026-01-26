@@ -1,6 +1,6 @@
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/core/interpreter/types';
-import { extractKeyValueWithDefault, hasNullInKey, formatFullColumnNames } from './helper';
+import { extractKeyValueWithDefault, hasNullWithoutDefaultInKey, formatFullColumnNames } from './helper';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/core/interpreter/utils';
 
@@ -37,7 +37,7 @@ function createRecordMapFromKey (
 function collectValidKeys (rows: TableRecordRow[], columnNames: string[]): Set<string> {
   const keys = new Set<string>();
   for (const row of rows) {
-    if (!hasNullInKey(row.values, columnNames)) {
+    if (!hasNullWithoutDefaultInKey(row.values, columnNames)) {
       keys.add(extractKeyValueWithDefault(row.values, columnNames));
     }
   }
@@ -70,7 +70,7 @@ function validateDirection (
   const validKeys = collectValidKeys(target.rows, targetEndpoint.fieldNames);
 
   for (const row of source.rows) {
-    if (hasNullInKey(row.values, sourceEndpoint.fieldNames)) continue;
+    if (hasNullWithoutDefaultInKey(row.values, sourceEndpoint.fieldNames)) continue;
 
     const key = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
     if (!validKeys.has(key)) {
