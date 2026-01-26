@@ -23,7 +23,7 @@ export function extractKeyValueWithDefault (
   }).join('|');
 }
 
-export function hasNullInKey (
+export function hasNullWithoutDefaultInKey (
   row: Record<string, RecordValue>,
   columnNames: string[],
   columns?: (Column | undefined)[],

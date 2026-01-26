@@ -2,7 +2,7 @@ import { CompileError, CompileErrorCode } from '@/core/errors';
 import { InterpreterDatabase } from '@/core/interpreter/types';
 import {
   extractKeyValueWithDefault,
-  hasNullInKey,
+  hasNullWithoutDefaultInKey,
   formatFullColumnNames,
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
@@ -45,7 +45,7 @@ export function validateUnique (
       for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
         const row = rows[rowIndex];
 
-        const hasNull = hasNullInKey(row.values, uniqueColumns, uniqueColumnFields);
+        const hasNull = hasNullWithoutDefaultInKey(row.values, uniqueColumns, uniqueColumnFields);
 
         // NULL values are allowed in unique constraints and don't conflict
         if (hasNull) {
