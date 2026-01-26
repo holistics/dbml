@@ -400,7 +400,7 @@ class MySQLExporter {
     const insertStatements = MySQLExporter.exportRecords(model);
     const recordsSection = !isEmpty(insertStatements)
       ? [
-          '-- Disable foreign key checks for INSERT (MySQL does not support DEFERRED)',
+          '-- Disable foreign key checks for INSERT',
           'SET FOREIGN_KEY_CHECKS = 0;',
           '',
           ...insertStatements,
