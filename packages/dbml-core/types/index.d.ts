@@ -4,19 +4,9 @@ import importer from './import';
 import exporter from './export';
 import {
   renameTable,
-  appendRecords,
-  updateRecordField,
-  deleteRecordRow,
-  deleteRecordValue,
-  removeAllRecords,
 } from './transform';
 export {
   renameTable,
-  appendRecords,
-  updateRecordField,
-  deleteRecordRow,
-  deleteRecordValue,
-  removeAllRecords,
   importer,
   exporter,
   ModelExporter,
