@@ -15,11 +15,6 @@ import { containerStack, containerToken, containerElement, containerScope, conta
 import {
   renameTable,
   applyTextEdits,
-  appendRecords,
-  updateRecordField,
-  deleteRecordRow,
-  deleteRecordValue,
-  removeAllRecords,
   type TextEdit,
   type TableNameInput,
 } from './queries/transform';
@@ -96,44 +91,6 @@ export default class Compiler {
 
   applyTextEdits (edits: TextEdit[]): string {
     return applyTextEdits(this.parse.source(), edits);
-  }
-
-  appendRecords (
-    tableName: TableNameInput,
-    columns: string[],
-    values: (RecordValue | string | number | boolean | null)[][],
-  ): string {
-    return appendRecords.call(this, tableName, columns, values);
-  }
-
-  updateRecordField (
-    tableName: TableNameInput,
-    rowIndex: number,
-    fieldName: string,
-    newValue: RecordValue | string | number | boolean | null,
-  ): string {
-    return updateRecordField.call(this, tableName, rowIndex, fieldName, newValue);
-  }
-
-  deleteRecordRow (
-    tableName: TableNameInput,
-    rowIndex: number,
-  ): string {
-    return deleteRecordRow.call(this, tableName, rowIndex);
-  }
-
-  deleteRecordValue (
-    tableName: TableNameInput,
-    rowIndex: number,
-    columnName: string,
-  ): string {
-    return deleteRecordValue.call(this, tableName, rowIndex, columnName);
-  }
-
-  removeAllRecords (
-    tableName: TableNameInput,
-  ): string {
-    return removeAllRecords.call(this, tableName);
   }
 
   readonly token = {
