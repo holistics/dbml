@@ -442,7 +442,7 @@ records users(id, name) {
       expect(result).toMatchInlineSnapshot(`
         "Table events { created_at timestamp }
         records events(created_at) {
-          '2024-01-15 10:30:00'
+          '2024-01-15T10:30:00.000+07:00'
         }
         "
       `);
