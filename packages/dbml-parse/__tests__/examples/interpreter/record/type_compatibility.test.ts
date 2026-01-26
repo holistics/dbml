@@ -505,7 +505,7 @@ describe('[example - record] type compatibility validation', () => {
 
       const db = result.getValue()!;
       expect(db.records[0].values[0][1].type).toBe('datetime');
-      expect(db.records[0].values[0][1].value).toBe('2024-01-15 10:30:00');
+      expect(db.records[0].values[0][1].value).toBe('2024-01-15T10:30:00.000+07:00');
       expect(db.records[0].values[0][2].type).toBe('date');
       expect(db.records[0].values[0][2].value).toBe('2024-01-15');
     });

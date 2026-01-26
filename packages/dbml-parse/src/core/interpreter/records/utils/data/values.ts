@@ -222,35 +222,23 @@ export function tryExtractString (value: SyntaxNode | string | undefined | null)
 }
 
 // Supported datetime formats using luxon format tokens (excluding ISO 8601 which is handled separately)
-const SUPPORTED_DATETIME_FORMATS = [
+const SUPPORTED_DATE_FORMATS = [
   'yyyy-MM-dd', // ISO date: 2023-12-31
-  'HH:mm:ss', // Time: 23:59:59
-  'HH:mm:ss.SSS', // Time with milliseconds: 23:59:59.999
-  'yyyy-MM-dd HH:mm:ss', // ISO datetime with space: 2023-12-31 23:59:59
   'M/d/yyyy', // MM/dd/yyyy: 12/31/2023 or 1/5/2023
   'd MMM yyyy', // d MMM yyyy: 31 Dec 2023 or 1 Jan 2023
   'MMM d, yyyy', // MMM d, yyyy: Dec 31, 2023
 ];
 
-function isDateTimeFormat (str: string): boolean {
-  // Try ISO 8601 format first (handles dates, times, datetimes with/without timezones)
-  const isoDate = DateTime.fromISO(str);
-  if (isoDate.isValid) {
-    return true;
-  }
+const SUPPORTED_DATETIME_FORMATS = [
+  'yyyy-MM-dd HH:mm:ss', // ISO datetime with space: 2023-12-31 23:59:59
+];
 
-  // Try other formats
-  for (const format of SUPPORTED_DATETIME_FORMATS) {
-    const dt = DateTime.fromFormat(str, format);
-    if (dt.isValid) {
-      return true;
-    }
-  }
+const SUPPORTED_TIME_FORMATS = [
+  'HH:mm:ss', // Time: 23:59:59
+  'HH:mm:ss.SSS', // Time with milliseconds: 23:59:59.999
+];
 
-  return false;
-}
-
-// Try to extract a datetime value from a syntax node or primitive
+// Try to extract a datetime value from a syntax node or primitive & normalized to ISO 8601
 // Supports:
 //   - ISO 8601: date (YYYY-MM-DD), time (HH:MM:SS), datetime (YYYY-MM-DDTHH:MM:SS)
 //   - MM/dd/yyyy: 12/31/2023
@@ -262,20 +250,35 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
   // Handle null/undefined
   if (value === null || value === undefined) return null;
 
-  // Handle primitive string
-  if (typeof value === 'string') {
-    if (isDateTimeFormat(value)) {
-      return value;
+  const extractedValue = typeof value === 'string' ? value : extractQuotedStringToken(value).unwrap_or(null);
+
+  if (extractedValue === null) return null;
+
+  // We prioritize more specific formats, like time-only & date-only before ISO-8601, which includes both date and time
+  for (const format of SUPPORTED_TIME_FORMATS) {
+    const dt = DateTime.fromFormat(extractedValue, format);
+    if (dt.isValid) {
+      return dt.toISOTime();
     }
-    return null;
   }
 
-  const strValue = extractQuotedStringToken(value).unwrap_or(null);
+  for (const format of SUPPORTED_DATE_FORMATS) {
+    const dt = DateTime.fromFormat(extractedValue, format);
+    if (dt.isValid) {
+      return dt.toISODate();
+    }
+  }
 
-  if (strValue === null) return null;
+  for (const format of SUPPORTED_DATETIME_FORMATS) {
+    const dt = DateTime.fromFormat(extractedValue, format);
+    if (dt.isValid) {
+      return dt.toISO();
+    }
+  }
 
-  if (isDateTimeFormat(strValue)) {
-    return strValue;
+  const isoDate = DateTime.fromISO(extractedValue);
+  if (isoDate.isValid) {
+    return isoDate.toISO();
   }
 
   return null;
