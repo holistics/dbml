@@ -420,7 +420,7 @@ class SqlServerExporter {
     const insertStatements = SqlServerExporter.exportRecords(model);
     const recordsSection = !_.isEmpty(insertStatements)
       ? [
-          '-- Disable constraint checks for INSERT (SQL Server does not support DEFERRED)',
+          '-- Disable constraint checks for INSERT',
           'EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all";',
           'GO',
           '',
