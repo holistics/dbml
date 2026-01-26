@@ -200,7 +200,6 @@ function extractValue (
   const isEnum = column.type.isEnum || false;
   const valueType = getRecordValueType(type, isEnum);
 
-  // Function expression - keep original type, mark as expression
   if (node instanceof FunctionExpressionNode) {
     return new Report({
       value: node.value?.value || '',
