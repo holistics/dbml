@@ -1,5 +1,5 @@
 import { ProgramNode } from '@/core/parser/nodes';
-import { Database, InterpreterDatabase, Table, TableRecord } from '@/core/interpreter/types';
+import { Database, InterpreterDatabase, Table, TablePartial, TableRecord } from '@/core/interpreter/types';
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
 import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
@@ -12,7 +12,7 @@ import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 
-function processColumnInDb (table: Table): Table {
+function processColumnInDb<T extends Table | TablePartial> (table: T): T {
   return {
     ...table,
     fields: table.fields.map((c) => ({
@@ -69,7 +69,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     tableGroups: Array.from(env.tableGroups.values()),
     aliases: env.aliases,
     project: Array.from(env.project.values())[0] || {},
-    tablePartials: Array.from(env.tablePartials.values()),
+    tablePartials: Array.from(env.tablePartials.values()).map(processColumnInDb),
     records,
   };
 }
