@@ -5,11 +5,6 @@ import importer from './import';
 import exporter from './export';
 import {
   renameTable,
-  appendRecords,
-  updateRecordField,
-  deleteRecordRow,
-  deleteRecordValue,
-  removeAllRecords,
 } from './transform';
 import { VERSION } from './utils/version';
 
@@ -17,11 +12,6 @@ export {
   importer,
   exporter,
   renameTable,
-  appendRecords,
-  updateRecordField,
-  deleteRecordRow,
-  deleteRecordValue,
-  removeAllRecords,
   ModelExporter,
   CompilerError,
   Parser,
