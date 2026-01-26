@@ -188,10 +188,7 @@
           "type": {
             "schemaName": null,
             "type_name": "int(-1)",
-            "args": "-1",
-            "lengthParam": {
-              "length": -1
-            }
+            "args": "-1"
           },
           "token": {
             "start": {
@@ -220,10 +217,7 @@
           "type": {
             "schemaName": null,
             "type_name": "int(--1)",
-            "args": "--1",
-            "lengthParam": {
-              "length": 1
-            }
+            "args": "--1"
           },
           "token": {
             "start": {
@@ -252,10 +246,7 @@
           "type": {
             "schemaName": null,
             "type_name": "int(+-+---+0.1)",
-            "args": "+-+---+0.1",
-            "lengthParam": {
-              "length": 0
-            }
+            "args": "+-+---+0.1"
           },
           "token": {
             "start": {
