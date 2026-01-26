@@ -123,11 +123,11 @@ describe('[example - record] data type interpretation', () => {
     const db = result.getValue()!;
     // Note: timestamp->datetime, date->date, time->time
     expect(db.records[0].values[0][0].type).toBe('datetime');
-    expect(db.records[0].values[0][0].value).toBe('2024-01-15T10:30:00Z');
+    expect(db.records[0].values[0][0].value).toBe('2024-01-15T17:30:00.000+07:00');
     expect(db.records[0].values[0][1].type).toBe('date');
     expect(db.records[0].values[0][1].value).toBe('2024-01-15');
     expect(db.records[0].values[0][2].type).toBe('time');
-    expect(db.records[0].values[0][2].value).toBe('10:30:00');
+    expect(db.records[0].values[0][2].value).toBe('10:30:00.000+07:00');
   });
 
   test('should handle nested records with partial columns', () => {
