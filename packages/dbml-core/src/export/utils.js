@@ -1,13 +1,4 @@
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
-import {
-  isNumericType,
-  isBooleanType,
-  isDateTimeType,
-  tryExtractBoolean,
-  tryExtractNumeric,
-  tryExtractString,
-  tryExtractDateTime,
-} from '@dbml/parse';
 
 export function hasWhiteSpace (s) {
   return /\s/g.test(s);

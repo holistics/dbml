@@ -1,14 +1,9 @@
 import Element, { Token } from './element';
 import Database from './database';
 import DbState from './dbState';
-<<<<<<< HEAD
 import { NormalizedModel } from './database';
 
 export interface RawStickyNote {
-=======
-import { NormalizedDatabase } from './database';
-interface RawStickyNote {
->>>>>>> 7f379ede (Revert "fix: type definitions")
     name: string;
     content: string;
     database: Database;
