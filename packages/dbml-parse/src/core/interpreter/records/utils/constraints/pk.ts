@@ -2,11 +2,12 @@ import { CompileError, CompileErrorCode } from '@/core/errors';
 import { InterpreterDatabase } from '@/core/interpreter/types';
 import {
   extractKeyValueWithDefault,
-  hasNullInKey,
+  hasNullWithoutDefaultInKey,
   isAutoIncrementColumn,
   formatFullColumnNames,
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
+import { isSerialType } from '../data';
 
 export function validatePrimaryKey (
   env: InterpreterDatabase,
@@ -42,15 +43,15 @@ export function validatePrimaryKey (
       const missingColumns = pkColumns.filter((col) => !columns.includes(col));
       const pkColumnFields = pkColumns.map((col) => columnMap.get(col)).filter(Boolean);
 
-      // If PK column is completely missing from records, check if it has default/autoincrement
+      // If PK column is completely missing from records, check if it has default/autoincrement/serial-type
       if (missingColumns.length > 0) {
         const missingColumnsWithoutDefaults = missingColumns.filter((colName) => {
           const col = columnMap.get(colName);
           // Allow missing only if column has autoincrement or has a default value
-          return col && !col.increment && !col.dbdefault;
+          return col && !col.increment && !isSerialType(col.type.type_name) && !col.dbdefault;
         });
 
-        // Report error for missing columns without defaults/autoincrement
+        // Report error for missing columns without defaults/autoincrement/serial-type
         if (missingColumnsWithoutDefaults.length > 0) {
           const isComposite = missingColumnsWithoutDefaults.length > 1;
           const constraintType = isComposite ? 'Composite PK' : 'PK';
@@ -94,7 +95,7 @@ export function validatePrimaryKey (
         const row = rows[rowIndex];
 
         // Check for NULL in PK (considering defaults)
-        const hasNull = hasNullInKey(row.values, pkColumns, pkColumnFields);
+        const hasNull = hasNullWithoutDefaultInKey(row.values, pkColumns, pkColumnFields);
         if (hasNull) {
           // Auto-increment columns can have NULL - each gets a unique value from DB
           // Skip duplicate checking for this row (will be unique)
