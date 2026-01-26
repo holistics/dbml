@@ -22,7 +22,6 @@ import {
   tryExtractBoolean,
   tryExtractString,
   tryExtractDateTime,
-  extractEnumAccess,
   isNumericType,
   isIntegerType,
   isFloatType,
@@ -34,7 +33,7 @@ import {
   validateUnique,
   validateForeignKeys,
 } from './utils';
-import { destructureCallExpression, extractVariableFromExpression } from '@/core/analyzer/utils';
+import { destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression } from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
 import { mergeTableAndPartials } from '../utils';
 
@@ -53,7 +52,7 @@ export class RecordsInterpreter {
       const { table, mergedColumns } = getTableAndColumnsOfRecords(element, this.env);
       for (const row of (element.body as BlockExpressionNode).body) {
         const rowNode = row as FunctionApplicationNode;
-        const result = extractDataFromRow(rowNode, mergedColumns, table.schemaName, this.env);
+        const result = extractDataFromRow(rowNode, mergedColumns, this.env);
         errors.push(...result.getErrors());
         warnings.push(...result.getWarnings());
         const rowData = result.getValue();
@@ -143,7 +142,6 @@ type RowData = { row: Record<string, RecordValue> | null; columnNodes: Record<st
 function extractDataFromRow (
   row: FunctionApplicationNode,
   mergedColumns: Column[],
-  tableSchemaName: string | null,
   env: InterpreterDatabase,
 ): Report<RowData> {
   const errors: CompileError[] = [];
@@ -165,7 +163,7 @@ function extractDataFromRow (
     const arg = args[i];
     const column = mergedColumns[i];
     columnNodes[column.name] = arg;
-    const result = extractValue(arg, column, tableSchemaName, env);
+    const result = extractValue(arg, column, env);
     errors.push(...result.getErrors());
     warnings.push(...result.getWarnings());
     const value = result.getValue();
@@ -191,7 +189,6 @@ function getNodeSourceText (node: SyntaxNode, source: string): string {
 function extractValue (
   node: SyntaxNode,
   column: Column,
-  tableSchemaName: string | null,
   env: InterpreterDatabase,
 ): Report<RecordValue | null> {
   // FIXME: Make this more precise
@@ -211,7 +208,7 @@ function extractValue (
   if (isNullish(node) || (isEmptyStringLiteral(node) && !isStringType(type))) {
     const hasDefaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null';
     if (notNull && !hasDefaultValue && !increment) {
-      return new Report(null, [], [new CompileWarning(
+      return new Report({ value: null, type: valueType }, [], [new CompileWarning(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `NULL not allowed for non-nullable column '${column.name}' without default and increment`,
         node,
@@ -222,71 +219,17 @@ function extractValue (
 
   // Enum type
   if (isEnum) {
-    const enumAccess = extractEnumAccess(node);
-    if (enumAccess === null) {
-      return new Report(null, [], [new CompileWarning(
+    const enumMembers = ([...env.enums.values()].find((e) => e.schemaName === column.type.schemaName && e.name === column.type.type_name)?.values || []).map((field) => field.name);
+    let enumValue = extractQuotedStringToken(node).unwrap_or(undefined);
+    if (enumValue === undefined) {
+      enumValue = destructureComplexVariable(node).unwrap_or([]).pop();
+    }
+    if (!(enumMembers as (string | undefined)[]).includes(enumValue)) {
+      return new Report({ value: enumValue, type: valueType }, [], [new CompileWarning(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `Invalid enum value for column '${column.name}'`,
         node,
       )]);
-    }
-
-    const { path, value: enumValue } = enumAccess;
-
-    // Validate enum value against enum definition
-    const enumTypeName = type;
-    // Parse column type to get schema and enum name
-    // Type can be 'status' or 'app.status'
-    const typeParts = enumTypeName.split('.');
-    const expectedEnumName = typeParts[typeParts.length - 1];
-    const expectedSchemaName = typeParts.length > 1 ? typeParts.slice(0, -1).join('.') : tableSchemaName;
-
-    // Validate enum access path matches the enum type
-    if (path.length === 0) {
-      // String literal - only allowed for enums without schema qualification
-      if (expectedSchemaName !== null) {
-        return new Report(null, [], [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Enum value must be fully qualified: expected ${expectedSchemaName}.${expectedEnumName}.${enumValue}, got string literal ${JSON.stringify(enumValue)}`,
-          node,
-        )]);
-      }
-    } else {
-      // Enum access syntax - validate path
-      const actualPath = path.join('.');
-      const expectedPath = expectedSchemaName ? `${expectedSchemaName}.${expectedEnumName}` : expectedEnumName;
-
-      if (actualPath !== expectedPath) {
-        return new Report(null, [], [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Enum path mismatch: expected ${expectedPath}.${enumValue}, got ${actualPath}.${enumValue}`,
-          node,
-        )]);
-      }
-    }
-
-    // Find the enum definition
-    let enumDef = Array.from(env.enums.values()).find(
-      (e) => e.name === expectedEnumName && e.schemaName === expectedSchemaName,
-    );
-    // Fallback to null schema if not found
-    if (!enumDef && expectedSchemaName === tableSchemaName) {
-      enumDef = Array.from(env.enums.values()).find(
-        (e) => e.name === expectedEnumName && e.schemaName === null,
-      );
-    }
-
-    if (enumDef) {
-      const validValues = new Set(enumDef.values.map((v) => v.name));
-      if (!validValues.has(enumValue)) {
-        const validValuesList = Array.from(validValues).join(', ');
-        const fullEnumPath = expectedSchemaName ? `${expectedSchemaName}.${expectedEnumName}` : expectedEnumName;
-        return new Report(null, [], [new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid enum value ${JSON.stringify(enumValue)} for column '${column.name}' of type '${fullEnumPath}' (valid values: ${validValuesList})`,
-          node,
-        )]);
-      }
     }
 
     return new Report({ value: enumValue, type: valueType }, [], []);
@@ -309,7 +252,7 @@ function extractValue (
 
     // Integer type: validate no decimal point
     if (isIntegerType(type) && !Number.isInteger(numValue)) {
-      return new Report(null, [], [new CompileWarning(
+      return new Report({ value: Math.floor(numValue), type: valueType }, [], [new CompileWarning(
         CompileErrorCode.INVALID_RECORDS_FIELD,
         `Invalid integer value ${numValue} for column '${column.name}': expected integer, got decimal`,
         node,
@@ -328,7 +271,7 @@ function extractValue (
       const decimalDigits = decimalPart.length;
 
       if (totalDigits > precision) {
-        return new Report(null, [], [new CompileWarning(
+        return new Report({ value: numValue, type: valueType }, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Numeric value ${numValue} for column '${column.name}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
           node,
@@ -336,7 +279,7 @@ function extractValue (
       }
 
       if (decimalDigits > scale) {
-        return new Report(null, [], [new CompileWarning(
+        return new Report({ value: numValue, type: valueType }, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `Numeric value ${numValue} for column '${column.name}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
           node,
@@ -403,7 +346,7 @@ function extractValue (
       const actualByteLength = new TextEncoder().encode(strValue).length;
 
       if (actualByteLength > length) {
-        return new Report(null, [], [new CompileWarning(
+        return new Report({ value: strValue, type: valueType }, [], [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
           `String value for column '${column.name}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
           node,
