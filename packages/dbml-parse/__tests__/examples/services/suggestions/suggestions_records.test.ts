@@ -59,7 +59,7 @@ describe('[example] CompletionItemProvider - Records', () => {
 
 describe('[example] Expand * to all columns in Records', () => {
   describe('nested records', () => {
-    it('- should suggest "* (all columns)" in nested records column list', () => {
+    it('- should suggest "* (all)" in nested records column list', () => {
       const program = `Table users {
   id int
   name varchar
@@ -77,18 +77,25 @@ describe('[example] Expand * to all columns in Records', () => {
       const position = createPosition(6, 12);
       const suggestions = suggestionProvider.provideCompletionItems(model, position);
 
-      expect(suggestions).toBeDefined();
-      expect(suggestions.suggestions.length).toBeGreaterThan(0);
+      // Verify suggestions exist with exact count
+      expect(suggestions.suggestions.length).toBe(4); // 3 columns + 1 "* (all)"
 
-      // Find the "* (all columns)" suggestion
-      const expandAllSuggestion = suggestions.suggestions.find((s) => s.label === '* (all columns)');
-      expect(expandAllSuggestion).toBeDefined();
+      // Verify "* (all)" suggestion is present
+      const expandAllSuggestion = suggestions.suggestions.find((s) => s.label === '* (all)');
+      expect(expandAllSuggestion).not.toBeUndefined();
       expect(expandAllSuggestion!.insertText).toBe('id, name, email');
+
+      // Verify individual column suggestions
+      const columnSuggestions = suggestions.suggestions.filter((s) => s.label !== '* (all)');
+      expect(columnSuggestions.length).toBe(3);
+      expect(columnSuggestions[0].label).toBe('id');
+      expect(columnSuggestions[1].label).toBe('name');
+      expect(columnSuggestions[2].label).toBe('email');
     });
   });
 
   describe('top-level records', () => {
-    it('- should suggest "* (all columns)" in top-level Records column list', () => {
+    it('- should suggest "* (all)" in top-level Records column list', () => {
       const program = `Table users {
   id int
   name varchar
@@ -108,13 +115,18 @@ Records users() {
       const position = createPosition(7, 15);
       const suggestions = suggestionProvider.provideCompletionItems(model, position);
 
-      expect(suggestions).toBeDefined();
-      expect(suggestions.suggestions.length).toBeGreaterThan(0);
+      // Verify exact suggestion count
+      expect(suggestions.suggestions.length).toBe(4); // 3 columns + 1 "* (all)"
 
-      // Find the "* (all columns)" suggestion
-      const expandAllSuggestion = suggestions.suggestions.find((s) => s.label === '* (all columns)');
-      expect(expandAllSuggestion).toBeDefined();
+      // Verify "* (all)" suggestion exists
+      const expandAllSuggestion = suggestions.suggestions.find((s) => s.label === '* (all)');
+      expect(expandAllSuggestion).not.toBeUndefined();
       expect(expandAllSuggestion!.insertText).toBe('id, name, email');
+
+      // Verify all column suggestions
+      expect(suggestions.suggestions[1].label).toBe('id');
+      expect(suggestions.suggestions[2].label).toBe('name');
+      expect(suggestions.suggestions[3].label).toBe('email');
     });
 
     it('- should be the first suggestion', () => {
@@ -136,12 +148,17 @@ Records products(
       const position = createPosition(7, 17);
       const suggestions = suggestionProvider.provideCompletionItems(model, position);
 
-      expect(suggestions).toBeDefined();
-      expect(suggestions.suggestions.length).toBeGreaterThan(0);
+      // Verify exact suggestion count
+      expect(suggestions.suggestions.length).toBe(4); // 3 columns + 1 "* (all)"
 
-      // The "* (all columns)" suggestion should be first
-      expect(suggestions.suggestions[0].label).toBe('* (all columns)');
+      // The "* (all)" suggestion should be first
+      expect(suggestions.suggestions[0].label).toBe('* (all)');
       expect(suggestions.suggestions[0].insertText).toBe('product_id, product_name, price');
+
+      // Verify column suggestions follow
+      expect(suggestions.suggestions[1].label).toBe('product_id');
+      expect(suggestions.suggestions[2].label).toBe('product_name');
+      expect(suggestions.suggestions[3].label).toBe('price');
     });
   });
 });
@@ -248,16 +265,19 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = tableElement.symbol;
 
       if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+        const columns = getColumnsFromTableSymbol(tableSymbol);
 
+        // Verify exact column count
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(4);
 
-        // Check that injected columns are correctly extracted
-        expect(columns!.some((col) => col.name === 'id' && col.type === 'int')).toBe(true);
-        expect(columns!.some((col) => col.name === 'name' && col.type === 'varchar')).toBe(true);
-        expect(columns!.some((col) => col.name === 'created_at' && col.type === 'timestamp')).toBe(true);
-        expect(columns!.some((col) => col.name === 'updated_at' && col.type === 'timestamp')).toBe(true);
+        // Verify all expected columns are present with correct types
+        // Note: Column order follows declaration order in table, not injection order
+        const columnMap = new Map(columns!.map((col) => [col.name, col.type]));
+        expect(columnMap.get('id')).toBe('int');
+        expect(columnMap.get('name')).toBe('varchar');
+        expect(columnMap.get('created_at')).toBe('timestamp');
+        expect(columnMap.get('updated_at')).toBe('timestamp');
       }
     });
 
@@ -281,7 +301,7 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = tableElement.symbol;
 
       if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+        const columns = getColumnsFromTableSymbol(tableSymbol);
 
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(2);
@@ -313,26 +333,17 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = tableElement.symbol;
 
       if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+        const columns = getColumnsFromTableSymbol(tableSymbol);
 
+        // Verify exact column count
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(3);
 
-        // Verify all columns are present
-        const columnNames = columns!.map((col) => col.name);
-        expect(columnNames).toContain('product_id');
-        expect(columnNames).toContain('version');
-        expect(columnNames).toContain('name');
-
-        // Verify types
-        const productIdCol = columns!.find((col) => col.name === 'product_id');
-        expect(productIdCol?.type).toBe('int');
-
-        const versionCol = columns!.find((col) => col.name === 'version');
-        expect(versionCol?.type).toBe('int');
-
-        const nameCol = columns!.find((col) => col.name === 'name');
-        expect(nameCol?.type).toBe('varchar');
+        // Verify all expected columns are present with correct types
+        const columnMap = new Map(columns!.map((col) => [col.name, col.type]));
+        expect(columnMap.get('product_id')).toBe('int');
+        expect(columnMap.get('version')).toBe('int');
+        expect(columnMap.get('name')).toBe('varchar');
       }
     });
 
@@ -356,10 +367,9 @@ describe('[example] Suggestions Utils - Records', () => {
       expect(tableSymbol).toBeInstanceOf(TableSymbol);
 
       if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+        const columns = getColumnsFromTableSymbol(tableSymbol);
 
-        expect(columns).not.toBeNull();
-
+        // Verify exact column count and properties
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(3);
         expect(columns![0].name).toBe('id');
@@ -390,11 +400,13 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = tableElement.symbol;
 
       if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+        const columns = getColumnsFromTableSymbol(tableSymbol);
 
+        // Verify exact column count
         expect(columns).not.toBeNull();
-
         expect(columns!.length).toBe(5);
+
+        // Verify all columns in exact order with exact types
         expect(columns![0].name).toBe('product_id');
         expect(columns![0].type).toBe('int');
         expect(columns![1].name).toBe('product_name');
@@ -423,10 +435,10 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = tableElement.symbol;
 
       if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+        const columns = getColumnsFromTableSymbol(tableSymbol);
 
+        // Verify exact single column
         expect(columns).not.toBeNull();
-
         expect(columns!.length).toBe(1);
         expect(columns![0].name).toBe('count');
         expect(columns![0].type).toBe('int');
@@ -450,10 +462,10 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = tableElement.symbol;
 
       if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+        const columns = getColumnsFromTableSymbol(tableSymbol);
 
+        // Verify exact columns with special characters
         expect(columns).not.toBeNull();
-
         expect(columns!.length).toBe(3);
         expect(columns![0].name).toBe('column-1');
         expect(columns![0].type).toBe('int');
@@ -478,7 +490,7 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = tableElement.symbol;
 
       if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+        const columns = getColumnsFromTableSymbol(tableSymbol);
 
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(0);
@@ -505,11 +517,10 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = tableElement.symbol;
 
       if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+        const columns = getColumnsFromTableSymbol(tableSymbol);
 
+        // Verify only columns are extracted, not indexes
         expect(columns).not.toBeNull();
-
-        // Should only get columns, not indexes
         expect(columns!.length).toBe(2);
         expect(columns![0].name).toBe('id');
         expect(columns![0].type).toBe('int');
@@ -535,10 +546,10 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = tableElement.symbol;
 
       if (tableSymbol instanceof TableSymbol) {
-        const columns = getColumnsFromTableSymbol(tableSymbol, compiler);
+        const columns = getColumnsFromTableSymbol(tableSymbol);
 
+        // Verify schema-qualified table columns
         expect(columns).not.toBeNull();
-
         expect(columns!.length).toBe(3);
         expect(columns![0].name).toBe('id');
         expect(columns![0].type).toBe('int');
