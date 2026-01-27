@@ -1,7 +1,7 @@
 import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { SyntaxToken } from '@/core/lexer/tokens';
-import { Database, RecordValue } from '@/core/interpreter/types';
+import { Database } from '@/core/interpreter/types';
 import Report from '@/core/report';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
