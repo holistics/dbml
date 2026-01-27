@@ -105,7 +105,8 @@ export function addSuggestAllSuggestion (completionList: CompletionList, separat
   };
 }
 
-export function getSource (compiler: Compiler, tokenOrNode: SyntaxToken | SyntaxNode): string {
+// Get the source text of a node or a token
+export function getNodeOrTokenSource (compiler: Compiler, tokenOrNode: SyntaxToken | SyntaxNode): string {
   return compiler.parse.source().slice(tokenOrNode.start, tokenOrNode.end);
 }
 
