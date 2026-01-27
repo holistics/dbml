@@ -213,7 +213,9 @@ const SUPPORTED_DATETIME_FORMATS = [
 
 const SUPPORTED_TIME_FORMATS = [
   'HH:mm:ss', // Time: 23:59:59
+  'HH:mm:ssZZ', // Time with timezone
   'HH:mm:ss.SSS', // Time with milliseconds: 23:59:59.999
+  'HH:mm:ss.SSSZZ', // Time with milliseconds & timezone
 ];
 
 // Try to extract a datetime value from a syntax node or primitive & normalized to ISO 8601
