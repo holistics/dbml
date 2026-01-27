@@ -86,19 +86,9 @@ export default class DBMLDiagnosticsProvider {
 
     // Get position from the node or token
     // Both SyntaxNode and SyntaxToken always have startPos and endPos
-    let startPos, endPos;
-    if (Array.isArray(nodeOrToken)) {
-      // Handle array of nodes/tokens - use first and last
-      const firstItem = nodeOrToken[0] as SyntaxNode | SyntaxToken;
-      const lastItem = nodeOrToken[nodeOrToken.length - 1] as SyntaxNode | SyntaxToken;
-      startPos = firstItem.startPos;
-      endPos = lastItem.endPos;
-    } else {
-      // Single node or token
-      const item = nodeOrToken as SyntaxNode | SyntaxToken;
-      startPos = item.startPos;
-      endPos = item.endPos;
-    }
+    const item = nodeOrToken as SyntaxNode | SyntaxToken;
+    const startPos = item.startPos;
+    const endPos = item.endPos;
 
     return {
       type: severity,

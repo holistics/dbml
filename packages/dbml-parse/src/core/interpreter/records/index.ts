@@ -126,22 +126,6 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, env: Inte
   };
 }
 
-function extractRowValues (row: FunctionApplicationNode): SyntaxNode[] {
-  if (row.args.length > 0) {
-    return [];
-  }
-
-  if (row.callee instanceof CommaExpressionNode) {
-    return row.callee.elementList;
-  }
-
-  if (row.callee) {
-    return [row.callee];
-  }
-
-  return [];
-}
-
 type RowData = { row: Record<string, RecordValue> | null; columnNodes: Record<string, SyntaxNode> };
 
 function extractDataFromRow (
@@ -154,7 +138,7 @@ function extractDataFromRow (
   const rowObj: Record<string, RecordValue> = {};
   const columnNodes: Record<string, SyntaxNode> = {};
 
-  const args = extractRowValues(row);
+  const args = row.callee instanceof CommaExpressionNode ? row.callee.elementList : [row.callee!];
   if (args.length !== mergedColumns.length) {
     errors.push(new CompileError(
       CompileErrorCode.INVALID_RECORDS_FIELD,
