@@ -92,6 +92,10 @@ export class RecordsInterpreter {
   }
 }
 
+// Returns:
+//   - `table`: The original interpreted table object that `records` refer to
+//   - `mergedTable`: The interpreted table object merged with its table partials
+//   - `mergedColumns`: The columns of the `mergedTable``
 function getTableAndColumnsOfRecords (records: ElementDeclarationNode, env: InterpreterDatabase): { table: Table; mergedTable: Table; mergedColumns: Column[] } {
   const nameNode = records.name;
   const parent = records.parent;
