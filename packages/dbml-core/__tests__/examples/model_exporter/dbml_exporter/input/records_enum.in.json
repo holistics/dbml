@@ -90,15 +90,15 @@
       "values": [
         [
           { "value": 1, "type": "integer" },
-          { "value": "status_enum.pending", "type": "status_enum" }
+          { "value": "pending", "type": "status_enum" }
         ],
         [
           { "value": 2, "type": "integer" },
-          { "value": "status_enum.active", "type": "status_enum" }
+          { "value": "active", "type": "status_enum" }
         ],
         [
           { "value": 3, "type": "integer" },
-          { "value": "status_enum.completed", "type": "status_enum" }
+          { "value": "completed", "type": "status_enum" }
         ]
       ]
     }

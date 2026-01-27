@@ -12,7 +12,7 @@ CREATE TABLE [sample_data_test] (
 )
 GO
 
--- Disable constraint checks for INSERT (SQL Server does not support DEFERRED)
+-- Disable constraint checks for INSERT
 EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all";
 GO
 
