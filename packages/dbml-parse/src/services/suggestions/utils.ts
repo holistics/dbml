@@ -4,7 +4,7 @@ import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
 import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import Compiler from '@/compiler';
-import { ColumnSymbol, TablePartialInjectedColumnSymbol } from '@/core/analyzer/symbol/symbols';
+import { ColumnSymbol, NodeSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
 import { extractVariableFromExpression } from '@/core/analyzer/utils';
 import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
 
@@ -136,33 +136,19 @@ export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
 /**
  * Get columns from a table symbol
  * @param tableSymbol The table symbol to extract columns from
- * @param compiler Optional compiler instance to extract type names from source
  * @returns Array of column objects with name and type information
  */
 export function getColumnsFromTableSymbol (
-  tableSymbol: any,
-  compiler?: Compiler,
+  tableSymbol: TableSymbol | TablePartialSymbol,
 ): Array<{ name: string; type: string }> | null {
   const columns: Array<{ name: string; type: string }> = [];
 
-  for (const [index] of tableSymbol.symbolTable.entries()) {
+  for (const [index, columnSymbol] of tableSymbol.symbolTable.entries()) {
     const res = destructureIndex(index).unwrap_or(undefined);
     if (res === undefined || res.kind !== SymbolKind.Column) continue;
-
-    const columnSymbol = tableSymbol.symbolTable.get(index);
-    if (!columnSymbol) {
-      // If any column symbol is missing, return null
-      return null;
-    }
-
-    // Use extractColumnNameAndType for proper handling of injected columns
+    if (!(columnSymbol instanceof ColumnSymbol || columnSymbol instanceof TablePartialInjectedColumnSymbol)) continue;
     const columnInfo = extractColumnNameAndType(columnSymbol, res.name);
-
-    if (!columnInfo) {
-      // If we can't extract column info, return null
-      return null;
-    }
-
+    if (!columnInfo) continue;
     columns.push(columnInfo);
   }
 
@@ -171,40 +157,19 @@ export function getColumnsFromTableSymbol (
 
 export function extractColumnNameAndType (
   columnSymbol: ColumnSymbol | TablePartialInjectedColumnSymbol,
-  columnName?: string,
+  columnName: string,
 ): { name: string; type: string } | null {
-  // Handle table partial injected columns
-  if (columnSymbol instanceof TablePartialInjectedColumnSymbol) {
-    const tablePartialSymbol = columnSymbol.tablePartialSymbol;
-    if (!tablePartialSymbol?.symbolTable || !columnName) {
-      return null;
-    }
-
-    // Look up the column in the table partial's symbol table
-    const columnIndex = createColumnSymbolIndex(columnName);
-    const actualColumnSymbol = tablePartialSymbol.symbolTable.get(columnIndex);
-    if (!actualColumnSymbol?.declaration || !(actualColumnSymbol.declaration instanceof FunctionApplicationNode)) {
-      return null;
-    }
-
-    // Extract type from the actual column declaration
-    const type = extractVariableFromExpression(actualColumnSymbol.declaration.args[0]).unwrap_or(null);
-    if (!type) {
-      return null;
-    }
-
-    return { name: columnName, type };
-  }
-
-  // Handle regular column symbols
-  if (!(columnSymbol?.declaration instanceof FunctionApplicationNode)) {
+  const columnIndex = createColumnSymbolIndex(columnName);
+  const columnDeclaration = columnSymbol instanceof TablePartialInjectedColumnSymbol
+    ? columnSymbol.tablePartialSymbol.symbolTable.get(columnIndex)?.declaration
+    : columnSymbol.declaration;
+  if (!(columnDeclaration instanceof FunctionApplicationNode)) {
     return null;
   }
-  const declaration = columnSymbol.declaration as FunctionApplicationNode;
-  const name = extractVariableFromExpression(declaration.callee).unwrap_or(null);
-  const type = extractVariableFromExpression(declaration.args[0]).unwrap_or(null);
+  const name = extractVariableFromExpression(columnDeclaration.callee).unwrap_or(null);
+  const type = extractVariableFromExpression(columnDeclaration.args[0]).unwrap_or(null);
 
-  if (!name || !type) {
+  if (name === null || type === null) {
     return null;
   }
 
