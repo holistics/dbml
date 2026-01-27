@@ -197,6 +197,9 @@ function extractValue (
   const { increment, not_null: notNull, dbdefault } = column;
   const isEnum = column.type.isEnum || false;
   const valueType = getRecordValueType(type, isEnum);
+  const rawString = tryExtractString(node);
+  const fallbackValue = rawString !== null ? rawString : getNodeSourceText(node, env.source);
+  const fallbackType = rawString !== null ? valueType : 'expression';
 
   if (node instanceof FunctionExpressionNode) {
     return new Report({
@@ -242,7 +245,7 @@ function extractValue (
     const numValue = tryExtractNumeric(node);
     if (numValue === null) {
       return new Report(
-        { value: getNodeSourceText(node, env.source), type: 'expression' },
+        { value: fallbackValue, type: fallbackType },
         [],
         [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -297,7 +300,7 @@ function extractValue (
     const boolValue = tryExtractBoolean(node);
     if (boolValue === null) {
       return new Report(
-        { value: getNodeSourceText(node, env.source), type: 'expression' },
+        { value: fallbackValue, type: fallbackType },
         [],
         [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -314,7 +317,7 @@ function extractValue (
     const dtValue = tryExtractDateTime(node);
     if (dtValue === null) {
       return new Report(
-        { value: getNodeSourceText(node, env.source), type: 'expression' },
+        { value: fallbackValue, type: fallbackType },
         [],
         [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -331,7 +334,7 @@ function extractValue (
     const strValue = tryExtractString(node);
     if (strValue === null) {
       return new Report(
-        { value: getNodeSourceText(node, env.source), type: 'expression' },
+        { value: fallbackValue, type: fallbackType },
         [],
         [new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -360,6 +363,5 @@ function extractValue (
   }
 
   // Fallback - try to extract as string
-  const strValue = tryExtractString(node);
-  return new Report({ value: strValue, type: valueType }, [], []);
+  return new Report({ value: fallbackValue, type: fallbackType }, [], []);
 }
