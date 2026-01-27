@@ -17,7 +17,7 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { ColumnSymbol, TablePartialInjectedColumnSymbol } from '@/core/analyzer/symbol/symbols';
+import { ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
 import { ElementKind } from '@/core/analyzer/types';
 import Compiler from '@/compiler';
 import {
@@ -129,13 +129,8 @@ function suggestRecordRowInNestedRecords (
     return noSuggestions();
   }
 
-  const parentKind = getElementKind(parent).unwrap_or(undefined);
-  if (parentKind !== ElementKind.Table) {
-    return noSuggestions();
-  }
-
   const tableSymbol = parent.symbol;
-  if (!tableSymbol?.symbolTable) {
+  if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();
   }
 
@@ -155,12 +150,13 @@ function suggestRecordRowInNestedRecords (
           return null;
         }
         const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+        if (columnName === undefined) return null;
         return extractColumnNameAndType(symbol, columnName);
       })
       .filter((col) => col !== null) as Array<{ name: string; type: string }>;
   } else {
     // Implicit columns - use all columns from parent table
-    const result = getColumnsFromTableSymbol(tableSymbol, compiler);
+    const result = getColumnsFromTableSymbol(tableSymbol);
     if (!result) {
       return noSuggestions();
     }
