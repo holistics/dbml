@@ -153,30 +153,26 @@ describe('[example - record] data type interpretation', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].tableName).toBe('products');
-    expect(db.records[0].values).toHaveLength(2);
+    // Verify complete records array
+    expect(db.records.length).toBe(1);
 
-    // Columns should be merged from both records blocks
-    // First block: (id, name), Second block: (id, price, description)
-    // Merged columns: ['id', 'name', 'price', 'description']
-    expect(db.records[0].columns).toEqual(['id', 'name', 'price', 'description']);
+    // Verify ALL properties of the TableRecord
+    const record = db.records[0];
+    expect(record.schemaName).toBe(undefined);
+    expect(record.tableName).toBe('products');
+    expect(record.columns).toEqual(['id', 'name']);
+    expect(record.values.length).toBe(2);
 
-    // First row has id and name, but no price or description
-    const idIdx = db.records[0].columns.indexOf('id');
-    const nameIdx = db.records[0].columns.indexOf('name');
-    const priceIdx = db.records[0].columns.indexOf('price');
-    const descIdx = db.records[0].columns.indexOf('description');
+    // Verify ALL rows and ALL columns in each row
+    // First row: (1, 'Laptop')
+    expect(record.values[0].length).toBe(2);
+    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(record.values[0][1]).toEqual({ type: 'string', value: 'Laptop' });
 
-    expect(db.records[0].values[0][idIdx]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0][nameIdx]).toEqual({ type: 'string', value: 'Laptop' });
-    expect(db.records[0].values[0][priceIdx]).toEqual({ type: 'unknown', value: null });
-    expect(db.records[0].values[0][descIdx]).toEqual({ type: 'unknown', value: null });
-
-    // Second row has id, price, and description, but no name
-    expect(db.records[0].values[1][idIdx]).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1][nameIdx]).toEqual({ type: 'unknown', value: null });
-    expect(db.records[0].values[1][priceIdx]).toEqual({ type: 'real', value: 999.99 });
-    expect(db.records[0].values[1][descIdx]).toEqual({ type: 'string', value: 'High-end gaming laptop' });
+    // Second row: (2, null) - from (id, price, description), maps to ['id', 'name']
+    expect(record.values[1].length).toBe(2);
+    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(record.values[1][1]).toEqual({ type: 'expression', value: null });
   });
 
   test('should handle nested and top-level records with different data types', () => {
@@ -207,42 +203,34 @@ describe('[example - record] data type interpretation', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].tableName).toBe('metrics');
-    expect(db.records[0].values).toHaveLength(3);
+    // Verify complete records array
+    expect(db.records.length).toBe(1);
 
-    // All unique columns should be in the merged columns list
-    expect(db.records[0].columns).toContain('id');
-    expect(db.records[0].columns).toContain('name');
-    expect(db.records[0].columns).toContain('metric_value');
-    expect(db.records[0].columns).toContain('timestamp');
-    expect(db.records[0].columns).toContain('active');
+    // Verify ALL properties of the TableRecord
+    const record = db.records[0];
+    expect(record.schemaName).toBe(undefined);
+    expect(record.tableName).toBe('metrics');
+    expect(record.columns).toEqual(['id', 'name', 'metric_value']);
+    expect(record.values.length).toBe(3);
 
-    // First row: id, name, metric_value (nested)
-    const idIdx = db.records[0].columns.indexOf('id');
-    const nameIdx = db.records[0].columns.indexOf('name');
-    const metricValueIdx = db.records[0].columns.indexOf('metric_value');
-    const timestampIdx = db.records[0].columns.indexOf('timestamp');
-    const activeIdx = db.records[0].columns.indexOf('active');
+    // Verify ALL rows and ALL columns in each row
+    // First row: (1, 'CPU Usage', 85.5)
+    expect(record.values[0].length).toBe(3);
+    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(record.values[0][1]).toEqual({ type: 'string', value: 'CPU Usage' });
+    expect(record.values[0][2]).toEqual({ type: 'real', value: 85.5 });
 
-    expect(db.records[0].values[0][idIdx]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0][nameIdx]).toEqual({ type: 'string', value: 'CPU Usage' });
-    expect(db.records[0].values[0][metricValueIdx]).toEqual({ type: 'real', value: 85.5 });
-    expect(db.records[0].values[0][timestampIdx]).toEqual({ type: 'unknown', value: null });
-    expect(db.records[0].values[0][activeIdx]).toEqual({ type: 'unknown', value: null });
+    // Second row: (2, null, null) - from (id, timestamp, active), maps to ['id', 'name', 'metric_value']
+    expect(record.values[1].length).toBe(3);
+    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(record.values[1][1]).toEqual({ type: 'expression', value: null });
+    expect(record.values[1][2]).toEqual({ type: 'expression', value: null });
 
-    // Second row: id, timestamp, active (top-level)
-    expect(db.records[0].values[1][idIdx]).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1][nameIdx]).toEqual({ type: 'unknown', value: null });
-    expect(db.records[0].values[1][metricValueIdx]).toEqual({ type: 'unknown', value: null });
-    expect(db.records[0].values[1][timestampIdx].type).toBe('datetime');
-    expect(db.records[0].values[1][activeIdx]).toEqual({ type: 'bool', value: true });
-
-    // Third row: all columns (top-level with explicit columns)
-    expect(db.records[0].values[2][idIdx]).toEqual({ type: 'integer', value: 3 });
-    expect(db.records[0].values[2][nameIdx]).toEqual({ type: 'string', value: 'Memory Usage' });
-    expect(db.records[0].values[2][metricValueIdx]).toEqual({ type: 'real', value: 60.2 });
-    expect(db.records[0].values[2][timestampIdx].type).toBe('datetime');
-    expect(db.records[0].values[2][activeIdx]).toEqual({ type: 'bool', value: false });
+    // Third row: (3, 'Memory Usage', 60.2) - maps to ['id', 'name', 'metric_value']
+    expect(record.values[2].length).toBe(3);
+    expect(record.values[2][0]).toEqual({ type: 'integer', value: 3 });
+    expect(record.values[2][1]).toEqual({ type: 'string', value: 'Memory Usage' });
+    expect(record.values[2][2]).toEqual({ type: 'real', value: 60.2 });
   });
 
   test('should handle multiple nested records blocks for same table', () => {
@@ -274,23 +262,39 @@ describe('[example - record] data type interpretation', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values).toHaveLength(4);
+    // Verify complete records array
+    expect(db.records.length).toBe(1);
 
-    // Verify different column combinations are merged correctly
-    const idIdx2 = db.records[0].columns.indexOf('id');
-    const typeIdx = db.records[0].columns.indexOf('type');
-    const userIdIdx = db.records[0].columns.indexOf('user_id');
-    const dataIdx = db.records[0].columns.indexOf('data');
+    // Verify ALL properties of the TableRecord
+    const record = db.records[0];
+    expect(record.schemaName).toBe(undefined);
+    expect(record.tableName).toBe('events');
+    expect(record.columns).toEqual(['id', 'type', 'user_id']);
+    expect(record.values.length).toBe(4);
 
-    expect(db.records[0].values[0][idIdx2]).toBeDefined();
-    expect(db.records[0].values[0][typeIdx]).toBeDefined();
-    expect(db.records[0].values[0][userIdIdx]).toBeDefined();
-    expect(db.records[0].values[0][dataIdx]).toEqual({ type: 'unknown', value: null });
+    // Verify ALL rows and ALL columns in each row
+    // First row: (1, 'login', 100)
+    expect(record.values[0].length).toBe(3);
+    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(record.values[0][1]).toEqual({ type: 'string', value: 'login' });
+    expect(record.values[0][2]).toEqual({ type: 'integer', value: 100 });
 
-    expect(db.records[0].values[2][idIdx2]).toBeDefined();
-    expect(db.records[0].values[2][userIdIdx]).toEqual({ type: 'unknown', value: null });
+    // Second row: (2, 'logout', 100)
+    expect(record.values[1].length).toBe(3);
+    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(record.values[1][1]).toEqual({ type: 'string', value: 'logout' });
+    expect(record.values[1][2]).toEqual({ type: 'integer', value: 100 });
 
-    expect(db.records[0].values[3][idIdx2]).toBeDefined();
-    expect(db.records[0].values[3][typeIdx]).toEqual({ type: 'unknown', value: null });
+    // Third row: (3, 'purchase', null) - from (id, type, data), maps to ['id', 'type', 'user_id']
+    expect(record.values[2].length).toBe(3);
+    expect(record.values[2][0]).toEqual({ type: 'integer', value: 3 });
+    expect(record.values[2][1]).toEqual({ type: 'string', value: 'purchase' });
+    expect(record.values[2][2]).toEqual({ type: 'expression', value: null });
+
+    // Fourth row: (4, null, null) - from (id, created_at), maps to ['id', 'type', 'user_id']
+    expect(record.values[3].length).toBe(3);
+    expect(record.values[3][0]).toEqual({ type: 'integer', value: 4 });
+    expect(record.values[3][1]).toEqual({ type: 'expression', value: null });
+    expect(record.values[3][2]).toEqual({ type: 'expression', value: null });
   });
 });

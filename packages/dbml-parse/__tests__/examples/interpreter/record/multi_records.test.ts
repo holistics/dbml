@@ -27,43 +27,36 @@ describe('[example - record] multiple records blocks', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    // Multiple records blocks for the same table are merged into one
+    // Verify complete records array
     expect(db.records.length).toBe(1);
-    expect(db.records[0].tableName).toBe('users');
 
-    // The merged records contain all unique columns that were actually used
-    expect(db.records[0].columns).toEqual(['id', 'name', 'age']);
+    // Verify ALL properties of the TableRecord
+    const record = db.records[0];
+    expect(record.schemaName).toBe(undefined);
+    expect(record.tableName).toBe('users');
+    expect(record.columns).toEqual(['id', 'name']);
+    expect(record.values.length).toBe(4);
 
-    // Check the data rows (columns not included in a specific records block may be undefined or null)
-    expect(db.records[0].values.length).toBe(4);
+    // Verify ALL rows and ALL columns in each row
+    // First row: (1, 'Alice')
+    expect(record.values[0].length).toBe(2);
+    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(record.values[0][1]).toEqual({ type: 'string', value: 'Alice' });
 
-    // First two rows from records users(id, name)
-    // columns = ['id', 'name', 'age']
-    expect(db.records[0].values[0][0]).toMatchObject({ type: 'integer', value: 1 }); // id
-    expect(db.records[0].values[0][1]).toMatchObject({ type: 'string', value: 'Alice' }); // name
-    // age column may not exist on rows that only specified (id, name)
-    if (db.records[0].values[0].length > 2) {
-      expect(db.records[0].values[0][2]).toMatchObject({ type: 'unknown', value: null }); // age
-    }
+    // Second row: (2, 'Bob')
+    expect(record.values[1].length).toBe(2);
+    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(record.values[1][1]).toEqual({ type: 'string', value: 'Bob' });
 
-    expect(db.records[0].values[1][0]).toMatchObject({ type: 'integer', value: 2 }); // id
-    expect(db.records[0].values[1][1]).toMatchObject({ type: 'string', value: 'Bob' }); // name
-    if (db.records[0].values[1].length > 2) {
-      expect(db.records[0].values[1][2]).toMatchObject({ type: 'unknown', value: null }); // age
-    }
+    // Third row: (3, null) - from records users(id, age), maps to ['id', 'name']
+    expect(record.values[2].length).toBe(2);
+    expect(record.values[2][0]).toEqual({ type: 'integer', value: 3 });
+    expect(record.values[2][1]).toEqual({ type: 'expression', value: null });
 
-    // Next two rows from records users(id, age)
-    expect(db.records[0].values[2][0]).toMatchObject({ type: 'integer', value: 3 }); // id
-    if (db.records[0].values[2].length > 1) {
-      expect(db.records[0].values[2][1]).toMatchObject({ type: 'unknown', value: null }); // name
-    }
-    expect(db.records[0].values[2][2]).toMatchObject({ type: 'integer', value: 25 }); // age
-
-    expect(db.records[0].values[3][0]).toMatchObject({ type: 'integer', value: 4 }); // id
-    if (db.records[0].values[3].length > 1) {
-      expect(db.records[0].values[3][1]).toMatchObject({ type: 'unknown', value: null }); // name
-    }
-    expect(db.records[0].values[3][2]).toMatchObject({ type: 'integer', value: 30 }); // age
+    // Fourth row: (4, null)
+    expect(record.values[3].length).toBe(2);
+    expect(record.values[3][0]).toEqual({ type: 'integer', value: 4 });
+    expect(record.values[3][1]).toEqual({ type: 'expression', value: null });
   });
 
   test('should handle multiple records blocks, one with explicit columns and one without', () => {
@@ -88,29 +81,26 @@ describe('[example - record] multiple records blocks', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    // Multiple records blocks for the same table are merged into one
+    // Verify complete records array
     expect(db.records.length).toBe(1);
-    expect(db.records[0].tableName).toBe('posts');
 
-    // The merged records contain all unique columns
-    expect(db.records[0].columns).toEqual(['id', 'title', 'content']);
+    // Verify ALL properties of the TableRecord
+    const record = db.records[0];
+    expect(record.schemaName).toBe(undefined);
+    expect(record.tableName).toBe('posts');
+    expect(record.columns).toEqual(['id', 'title']);
+    expect(record.values.length).toBe(2);
 
-    // Check the data rows
-    expect(db.records[0].values.length).toBe(2);
+    // Verify ALL rows and ALL columns in each row
+    // First row: (1, 'First post')
+    expect(record.values[0].length).toBe(2);
+    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(record.values[0][1]).toEqual({ type: 'string', value: 'First post' });
 
-    // First row from records posts(id, title)
-    // columns = ['id', 'title', 'content']
-    expect(db.records[0].values[0][0]).toMatchObject({ type: 'integer', value: 1 }); // id
-    expect(db.records[0].values[0][1]).toMatchObject({ type: 'string', value: 'First post' }); // title
-    // content column may not exist on this row, or may be null
-    if (db.records[0].values[0].length > 2) {
-      expect(db.records[0].values[0][2]).toMatchObject({ type: 'unknown', value: null }); // content
-    }
-
-    // Second row from records posts(id, title, content)
-    expect(db.records[0].values[1][0]).toMatchObject({ type: 'integer', value: 2 }); // id
-    expect(db.records[0].values[1][1]).toMatchObject({ type: 'string', value: 'Second post' }); // title
-    expect(db.records[0].values[1][2]).toMatchObject({ type: 'string', value: 'Content of second post' }); // content
+    // Second row: (2, 'Second post') - from records(id, title, content), maps to ['id', 'title']
+    expect(record.values[1].length).toBe(2);
+    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(record.values[1][1]).toEqual({ type: 'string', value: 'Second post' });
   });
 
   test('should report error for inconsistent column count in implicit records', () => {
@@ -213,30 +203,26 @@ describe('[example - record] nested and top-level records mixed', () => {
     expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
-    // All records for the same table should be merged into one TableRecord
+    // Verify complete records array
     expect(db.records.length).toBe(1);
 
+    // Verify ALL properties of the TableRecord
     const record = db.records[0];
-    // Columns should include all unique columns from all record blocks
-    expect(record.columns).toContain('id');
-    expect(record.columns).toContain('name');
-    expect(record.columns).toContain('email');
+    expect(record.schemaName).toBe(undefined);
+    expect(record.tableName).toBe('users');
+    expect(record.columns).toEqual(['id', 'name']);
+    expect(record.values.length).toBe(2);
 
-    // Should have 2 data rows (array-based)
-    expect(record.values).toHaveLength(2);
+    // Verify ALL rows and ALL columns in each row
+    // First row: (1, 'Alice')
+    expect(record.values[0].length).toBe(2);
+    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(record.values[0][1]).toEqual({ type: 'string', value: 'Alice' });
 
-    // First row has id and name
-    // columns order varies, but should contain id, name, email
-    const idIndex = record.columns.indexOf('id');
-    const nameIndex = record.columns.indexOf('name');
-    const emailIndex = record.columns.indexOf('email');
-
-    expect(record.values[0][idIndex]).toBeDefined();
-    expect(record.values[0][nameIndex]).toBeDefined();
-
-    // Second row has id and email
-    expect(record.values[1][idIndex]).toBeDefined();
-    expect(record.values[1][emailIndex]).toBeDefined();
+    // Second row: (2, null) - from records(id, email), maps to ['id', 'name']
+    expect(record.values[1].length).toBe(2);
+    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(record.values[1][1]).toEqual({ type: 'expression', value: null });
   });
 
   test('should merge multiple nested records blocks with same columns', () => {
@@ -261,8 +247,26 @@ describe('[example - record] nested and top-level records mixed', () => {
     expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
+    // Verify complete records array
     expect(db.records.length).toBe(1);
-    expect(db.records[0].values).toHaveLength(2);
+
+    // Verify ALL properties of the TableRecord
+    const record = db.records[0];
+    expect(record.schemaName).toBe(undefined);
+    expect(record.tableName).toBe('products');
+    expect(record.columns).toEqual(['id', 'name']);
+    expect(record.values.length).toBe(2);
+
+    // Verify ALL rows and ALL columns in each row
+    // First row: (1, 'Laptop')
+    expect(record.values[0].length).toBe(2);
+    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(record.values[0][1]).toEqual({ type: 'string', value: 'Laptop' });
+
+    // Second row: (2, 'Mouse')
+    expect(record.values[1].length).toBe(2);
+    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(record.values[1][1]).toEqual({ type: 'string', value: 'Mouse' });
   });
 
   test('should merge nested records blocks with different columns', () => {
@@ -287,17 +291,26 @@ describe('[example - record] nested and top-level records mixed', () => {
     expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
-    // All records for the same table are merged into one
+    // Verify complete records array
     expect(db.records.length).toBe(1);
 
+    // Verify ALL properties of the TableRecord
     const record = db.records[0];
-    // All unique columns should be present
-    expect(record.columns).toContain('id');
-    expect(record.columns).toContain('name');
-    expect(record.columns).toContain('price');
+    expect(record.schemaName).toBe(undefined);
+    expect(record.tableName).toBe('products');
+    expect(record.columns).toEqual(['id', 'name']);
+    expect(record.values.length).toBe(2);
 
-    // 2 rows, each with different columns populated
-    expect(record.values).toHaveLength(2);
+    // Verify ALL rows and ALL columns in each row
+    // First row: (1, 'Laptop')
+    expect(record.values[0].length).toBe(2);
+    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(record.values[0][1]).toEqual({ type: 'string', value: 'Laptop' });
+
+    // Second row: (2, null) - from (id, price), maps to ['id', 'name']
+    expect(record.values[1].length).toBe(2);
+    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(record.values[1][1]).toEqual({ type: 'expression', value: null });
   });
 
   test('should handle complex mix of nested, top-level, with and without columns', () => {
@@ -331,18 +344,36 @@ describe('[example - record] nested and top-level records mixed', () => {
     expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
-    // All records for orders table merged into one
+    // Verify complete records array
     expect(db.records.length).toBe(1);
 
+    // Verify ALL properties of the TableRecord
     const record = db.records[0];
-    // All columns should be present
-    expect(record.columns).toContain('id');
-    expect(record.columns).toContain('user_id');
-    expect(record.columns).toContain('total');
-    expect(record.columns).toContain('status');
+    expect(record.schemaName).toBe(undefined);
+    expect(record.tableName).toBe('orders');
+    expect(record.columns).toEqual(['id', 'user_id']);
+    expect(record.values.length).toBe(4);
 
-    // 4 data rows total
-    expect(record.values).toHaveLength(4);
+    // Verify ALL rows and ALL columns in each row
+    // First row: (1, 100)
+    expect(record.values[0].length).toBe(2);
+    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(record.values[0][1]).toEqual({ type: 'integer', value: 100 });
+
+    // Second row: (2, 101) - from implicit columns, maps to ['id', 'user_id']
+    expect(record.values[1].length).toBe(2);
+    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(record.values[1][1]).toEqual({ type: 'integer', value: 101 });
+
+    // Third row: (3, null) - from records(id, total), maps to ['id', 'user_id']
+    expect(record.values[2].length).toBe(2);
+    expect(record.values[2][0]).toEqual({ type: 'integer', value: 3 });
+    expect(record.values[2][1]).toEqual({ type: 'expression', value: null });
+
+    // Fourth row: (4, null) - from records(id, status), maps to ['id', 'user_id']
+    expect(record.values[3].length).toBe(2);
+    expect(record.values[3][0]).toEqual({ type: 'integer', value: 4 });
+    expect(record.values[3][1]).toEqual({ type: 'expression', value: null });
   });
 
   test('should validate PK across nested and top-level records', () => {
