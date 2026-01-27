@@ -10,7 +10,7 @@ Table "orders" {
 }
 
 records "orders"("id", "status") {
-  1, status_enum.pending
-  2, status_enum.active
-  3, status_enum.completed
+  1, 'pending'
+  2, 'active'
+  3, 'completed'
 }

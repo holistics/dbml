@@ -11,7 +11,7 @@ CREATE TABLE `sample_data_test` (
   `dbml_expr` int
 );
 
--- Disable foreign key checks for INSERT (MySQL does not support DEFERRED)
+-- Disable foreign key checks for INSERT
 SET FOREIGN_KEY_CHECKS = 0;
 
 INSERT INTO `sample_data_test` (`id`, `scientific_num`, `signed_positive`, `signed_negative`, `sql_func`, `datetime_val`, `string_newline`, `string_backslash`, `string_escape`, `dbml_expr`)
