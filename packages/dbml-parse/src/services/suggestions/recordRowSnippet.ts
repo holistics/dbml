@@ -95,6 +95,7 @@ function suggestRecordRowInTopLevelRecords (
         return null;
       }
       const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+      if (!columnName) return null;
       const result = extractColumnNameAndType(symbol, columnName);
       return result;
     })
