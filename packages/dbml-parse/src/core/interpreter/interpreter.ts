@@ -30,34 +30,24 @@ function processColumnInDb<T extends Table | TablePartial> (table: T): T {
 function convertEnvToDb (env: InterpreterDatabase): Database {
   // Convert records Map to array of TableRecord
   const records: TableRecord[] = [];
-  for (const [table, rows] of env.records) {
-    if (rows.length > 0) {
-      // Collect all unique column names from all rows
-      const columnsSet = new Set<string>();
-      for (const row of rows) {
-        for (const colName of Object.keys(row.values)) {
-          columnsSet.add(colName);
-        }
-      }
-
-      const columns = Array.from(columnsSet);
-      records.push({
-        schemaName: table.schemaName || undefined,
-        tableName: table.name,
-        columns,
-        values: rows.map((r) => {
-          // Convert object-based values to array-based values ordered by columns
-          return columns.map((col) => {
-            const val = r.values[col];
-            if (val) {
-              return { value: val.value, type: val.type };
-            }
-            // Column not present in this row (shouldn't happen with validation)
-            return { value: null, type: 'unknown' };
-          });
-        }),
-      });
-    }
+  for (const [table, block] of env.records) {
+    if (!block.length) continue;
+    const columns = Object.keys(block[0].columnNodes);
+    records.push({
+      schemaName: table.schemaName || undefined,
+      tableName: table.name,
+      columns,
+      values: block.map((r) => {
+        // Convert object-based values to array-based values ordered by columns
+        return columns.map((col) => {
+          const val = r.values[col];
+          if (val) {
+            return { value: val.value, type: val.type };
+          }
+          return { value: null, type: 'expression' };
+        });
+      }),
+    });
   }
 
   return {
