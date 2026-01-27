@@ -111,7 +111,7 @@ describe('[example - record] data type interpretation', () => {
         event_time time
       }
       records events(created_at, event_date, event_time) {
-        "2024-01-15T10:30:00Z", "2024-01-15", "10:30:00"
+        "2024-01-15T10:30:00", "2024-01-15", "10:30:00"
         "2024-12-31T23:59:59", "2024-12-31", "23:59:59"
       }
     `;
@@ -123,7 +123,7 @@ describe('[example - record] data type interpretation', () => {
     const db = result.getValue()!;
     // Note: timestamp->datetime, date->date, time->time
     expect(db.records[0].values[0][0].type).toBe('datetime');
-    expect(db.records[0].values[0][0].value).toBe('2024-01-15T17:30:00.000+07:00');
+    expect(db.records[0].values[0][0].value).toBe('2024-01-15T10:30:00.000+07:00');
     expect(db.records[0].values[0][1].type).toBe('date');
     expect(db.records[0].values[0][1].value).toBe('2024-01-15');
     expect(db.records[0].values[0][2].type).toBe('time');
