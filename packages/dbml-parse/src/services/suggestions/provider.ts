@@ -27,7 +27,7 @@ import {
   noSuggestions,
   prependSpace,
   isOffsetWithinElementHeader,
-  addExpandAllColumnsSuggestion,
+  addSuggestAllSuggestion,
   isTupleEmpty,
 } from '@/services/suggestions/utils';
 import { suggestRecordRowSnippet, FALLTHROUGH } from '@/services/suggestions/recordRowSnippet';
@@ -279,7 +279,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
       const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
       if (!isTupleEmpty(tupleContainer)) return suggestions;
-      return addExpandAllColumnsSuggestion(suggestions);
+      return addSuggestAllSuggestion(suggestions);
     }
   }
 
@@ -299,7 +299,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
             const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
             // If the user already typed some columns, we do not suggest "all columns" anymore
             if (!isTupleEmpty(tupleContainer)) return suggestions;
-            return addExpandAllColumnsSuggestion(suggestions);
+            return addSuggestAllSuggestion(suggestions);
           }
           break;
         }
@@ -784,7 +784,7 @@ function suggestInCallExpression (
     const { argumentList } = container;
     // If the user already typed some columns, we do not suggest "all columns" anymore
     if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
-    return addExpandAllColumnsSuggestion(suggestions);
+    return addSuggestAllSuggestion(suggestions);
   }
 
   // Check if we're inside a Records FunctionApplicationNode (e.g., typing "Records ()")
@@ -806,7 +806,7 @@ function suggestInCallExpression (
       const { argumentList } = container;
       // If the user already typed some columns, we do not suggest "all columns" anymore
       if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
-      return addExpandAllColumnsSuggestion(suggestions);
+      return addSuggestAllSuggestion(suggestions);
     }
   }
 

@@ -78,10 +78,12 @@ export function addQuoteIfNeeded (completionList: CompletionList): CompletionLis
   };
 }
 
-export function addExpandAllColumnsSuggestion (completionList: CompletionList): CompletionList {
+// Given a completion list with multiple suggestions: `a`, `b`, `c`
+// This function returns a new completion list augmented with `a, b, c`
+export function addSuggestAllSuggestion (completionList: CompletionList, separator = ', '): CompletionList {
   const allColumns = completionList.suggestions
     .map((s) => typeof s.label === 'string' ? s.label : s.label.label)
-    .join(', ');
+    .join(separator);
 
   if (!allColumns) {
     return completionList;
@@ -91,7 +93,7 @@ export function addExpandAllColumnsSuggestion (completionList: CompletionList): 
     ...completionList,
     suggestions: [
       {
-        label: '* (all columns)',
+        label: '* (all)',
         insertText: allColumns,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
         kind: CompletionItemKind.Snippet,
