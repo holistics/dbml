@@ -418,15 +418,6 @@ export default class Parser {
       throw new PartialParsingError(e.token, buildExpression(), e.handlerContext);
     }
 
-    // Handle the case:
-    // Table T {
-    //   records () // --> call expression here
-    // }
-    if (args.callee instanceof CallExpressionNode && args.callee.argumentList) {
-      args.args.push(args.callee.argumentList);
-      args.callee = args.callee.callee;
-    }
-
     // If there are newlines after the callee, then it's a simple expression
     // such as a PrefixExpression, InfixExpression, ...
     // e.g
