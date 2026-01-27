@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { interpret } from '@tests/utils';
 import { CompileErrorCode } from '@/index';
+import { DateTime } from 'luxon';
 
 describe('[example - record] type compatibility validation', () => {
   describe('boolean type validation', () => {
@@ -495,7 +496,7 @@ describe('[example - record] type compatibility validation', () => {
           event_date date
         }
         records events(id, created_at, event_date) {
-          1, "2024-01-15 10:30:00", "2024-01-15"
+          1, "2024-01-15T10:30:00+07:00", "2024-01-15"
         }
       `;
       const result = interpret(source);
@@ -505,7 +506,7 @@ describe('[example - record] type compatibility validation', () => {
 
       const db = result.getValue()!;
       expect(db.records[0].values[0][1].type).toBe('datetime');
-      expect(db.records[0].values[0][1].value).toBe('2024-01-15T10:30:00.000+07:00');
+      expect(db.records[0].values[0][1].value).toBe(DateTime.fromISO('2024-01-15T10:30:00.000+07:00').toISO());
       expect(db.records[0].values[0][2].type).toBe('date');
       expect(db.records[0].values[0][2].value).toBe('2024-01-15');
     });
