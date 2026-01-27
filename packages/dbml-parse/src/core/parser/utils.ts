@@ -32,10 +32,20 @@ import { destructureComplexVariable } from '@/core/analyzer/utils';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
-  callee: ExpressionNode | CommaExpressionNode | undefined,
-  args: (NormalExpressionNode | CommaExpressionNode)[],
+  _callee: ExpressionNode | CommaExpressionNode | undefined,
+  _args: (NormalExpressionNode | CommaExpressionNode)[],
   factory: NodeFactory,
 ): Option<ElementDeclarationNode> {
+  let args = _args;
+  let callee = _callee;
+  // Handle the case:
+  // Table T {
+  //   records () // --> call expression here
+  // }
+  if (callee instanceof CallExpressionNode && callee.argumentList) {
+    args = [callee.argumentList, ...args];
+    callee = callee.callee;
+  }
   if (!callee || !isExpressionAnIdentifierNode(callee) || args.length === 0) {
     return new None();
   }

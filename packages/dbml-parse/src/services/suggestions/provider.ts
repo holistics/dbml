@@ -771,69 +771,49 @@ function suggestInCallExpression (
     && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    if (inCallee) {
-      return suggestNamesInScope(compiler, offset, element.parent, [
-        SymbolKind.Schema,
-        SymbolKind.Table,
-      ]);
-    }
+    if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [
+      SymbolKind.Schema,
+      SymbolKind.Table,
+    ]);
+    if (!inArgs) return noSuggestions();
 
-    if (inArgs) {
-      const callee = container.callee;
-      if (callee) {
-        const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
-        const rightmostExpr = fragments[fragments.length - 1];
-        const tableSymbol = rightmostExpr?.referee;
+    const callee = container.callee;
+    if (!callee) return noSuggestions();
 
-        if (tableSymbol) {
-          let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-          const { argumentList } = container;
-          // If the user already typed some columns, we do not suggest "all columns" anymore
-          if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
-          suggestions = excludeSuggestions(suggestions, ['records']);
-          suggestions = addExpandAllColumnsSuggestion(suggestions);
-          return suggestions;
-        }
-      }
-    }
+    const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
+    const rightmostExpr = fragments[fragments.length - 1];
+    const tableSymbol = rightmostExpr?.referee;
+
+    if (!tableSymbol) return noSuggestions();
+    let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+    const { argumentList } = container;
+    // If the user already typed some columns, we do not suggest "all columns" anymore
+    if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
+    suggestions = addExpandAllColumnsSuggestion(suggestions);
+    return suggestions;
   }
 
   // Check if we're inside a Records FunctionApplicationNode (e.g., typing "Records ()")
+  // Example:
+  // Table T {
+  //   Records () // This is currently treated as a CallExpressionNode
+  // }
   const containers = [...compiler.container.stack(offset)];
   for (const c of containers) {
     if (
       c instanceof FunctionApplicationNode
-      && isExpressionAVariableNode(c.callee)
-      && extractVariableFromExpression(c.callee).unwrap_or('').toLowerCase() === 'records'
+      && c.callee === container
+      && extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() === 'records'
+      && inArgs
     ) {
-      // If in callee, suggest schema and table names
-      if (inCallee) {
-        return suggestNamesInScope(compiler, offset, element, [
-          SymbolKind.Schema,
-          SymbolKind.Table,
-        ]);
-      }
-
-      // If in args, suggest column names from the table referenced in the callee
-      if (inArgs) {
-        const callee = container.callee;
-        if (callee) {
-          const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
-          const rightmostExpr = fragments[fragments.length - 1];
-          const tableSymbol = rightmostExpr?.referee;
-
-          if (tableSymbol) {
-            let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-            const { argumentList } = container;
-            // If the user already typed some columns, we do not suggest "all columns" anymore
-            if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
-            suggestions = excludeSuggestions(suggestions, ['records']);
-            suggestions = addExpandAllColumnsSuggestion(suggestions);
-            return suggestions;
-          }
-        }
-      }
-      break;
+      const tableSymbol = compiler.container.element(offset).symbol;
+      if (!tableSymbol) return noSuggestions();
+      let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+      const { argumentList } = container;
+      // If the user already typed some columns, we do not suggest "all columns" anymore
+      if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
+      suggestions = addExpandAllColumnsSuggestion(suggestions);
+      return suggestions;
     }
   }
 
