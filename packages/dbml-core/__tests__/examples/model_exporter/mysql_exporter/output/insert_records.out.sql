@@ -15,7 +15,7 @@ CREATE TABLE `posts` (
 
 ALTER TABLE `users` ADD FOREIGN KEY (`id`) REFERENCES `posts` (`user_id`);
 
--- Disable foreign key checks for INSERT (MySQL does not support DEFERRED)
+-- Disable foreign key checks for INSERT
 SET FOREIGN_KEY_CHECKS = 0;
 
 INSERT INTO `users` (`id`, `name`, `email`, `active`, `created_at`)

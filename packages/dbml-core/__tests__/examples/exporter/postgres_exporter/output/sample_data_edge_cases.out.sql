@@ -24,7 +24,7 @@ VALUES
 Line 2
 Line 3', 'C:\Users\path\file.txt', 'Tab:	Newline:
 Carriage return:', 'She said "Hello" and ''Hi''', NULL),
-  (2, 99900000000, -1.11e-10, 0, 0, CURRENT_TIMESTAMP, LENGTH('test'), '2023-12-31 23:59:59', 'First line
+  (2, 99900000000, -1.11e-10, 0, 0, CURRENT_TIMESTAMP, LENGTH('test'), '2023-12-31T23:59:59.000+07:00', 'First line
 
 Third line', 'Escaped backslash: \\', 'Quote: " Apostrophe: '' Backslash: \', 'O''Reilly''s "book"', NULL);
 
