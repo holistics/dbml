@@ -1045,38 +1045,6 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const table = this.data.tables.find((t) => t.name === tableName && t.schemaName === schemaName);
     if (!table) return; // ALTER TABLE should appear after CREATE TABLE, so skip if table is not created yet
 
-    const columnDefTableConstraints = ctx.column_def_table_constraints() ? ctx.column_def_table_constraints().accept(this) : [];
-    const {
-      fieldsData, indexes, tableRefs, columnDefaults, checkConstraints,
-    } = splitColumnDefTableConstraints(columnDefTableConstraints);
-
-    const { inlineRefs, fields } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
-    this.data.refs.push(...flatten(inlineRefs));
-
-    this.data.refs.push(...tableRefs.map((tableRef) => {
-      tableRef.endpoints[0].tableName = tableName;
-      tableRef.endpoints[0].schemaName = schemaName;
-      return tableRef;
-    }));
-
-    table.fields.push(...fields);
-    table.indexes.push(...indexes);
-
-    columnDefaults.forEach((columnDefault) => {
-      const field = table.fields.find((f) => f.name === columnDefault.column);
-
-      if (!field) return;
-      field.dbdefault = columnDefault.defaultValue;
-    });
-
-    checkConstraints.forEach((checkConstraint) => {
-      const checkObj = { expression: checkConstraint.expression };
-      if (checkConstraint.name) {
-        checkObj.name = checkConstraint.name;
-      }
-      table.checks.push(checkObj);
-    });
-
     // Handle WITH CHECK/NOCHECK ADD CONSTRAINT FK
     if (ctx.WITH() && (ctx.CHECK() || ctx.NOCHECK()) && ctx.FOREIGN()) {
       const constraintName = ctx.constraint ? ctx.constraint.accept(this) : undefined;
@@ -1113,7 +1081,40 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       };
 
       this.data.refs.push(ref);
+      return;
     }
+
+    const columnDefTableConstraints = ctx.column_def_table_constraints() ? ctx.column_def_table_constraints().accept(this) : [];
+    const {
+      fieldsData, indexes, tableRefs, columnDefaults, checkConstraints,
+    } = splitColumnDefTableConstraints(columnDefTableConstraints);
+
+    const { inlineRefs, fields } = parseFieldsAndInlineRefsFromFieldsData(fieldsData, tableName, schemaName);
+    this.data.refs.push(...flatten(inlineRefs));
+
+    this.data.refs.push(...tableRefs.map((tableRef) => {
+      tableRef.endpoints[0].tableName = tableName;
+      tableRef.endpoints[0].schemaName = schemaName;
+      return tableRef;
+    }));
+
+    table.fields.push(...fields);
+    table.indexes.push(...indexes);
+
+    columnDefaults.forEach((columnDefault) => {
+      const field = table.fields.find((f) => f.name === columnDefault.column);
+
+      if (!field) return;
+      field.dbdefault = columnDefault.defaultValue;
+    });
+
+    checkConstraints.forEach((checkConstraint) => {
+      const checkObj = { expression: checkConstraint.expression };
+      if (checkConstraint.name) {
+        checkObj.name = checkConstraint.name;
+      }
+      table.checks.push(checkObj);
+    });
   }
 
   // create_index
