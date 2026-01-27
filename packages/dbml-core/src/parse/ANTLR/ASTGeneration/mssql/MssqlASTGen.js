@@ -1079,7 +1079,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
     // Handle WITH CHECK/NOCHECK ADD CONSTRAINT FK
     if (ctx.WITH() && (ctx.CHECK() || ctx.NOCHECK()) && ctx.FOREIGN()) {
-      const constraintName = ctx.constraint ? ctx.constraint.accept(this) : '';
+      const constraintName = ctx.constraint ? ctx.constraint.accept(this) : undefined;
       const localColumns = ctx.fk.accept(this);
 
       // table_name()[1] is the referenced table (table_name()[0] is the table being altered)
