@@ -18,7 +18,7 @@ GO
 ALTER TABLE [users] ADD FOREIGN KEY ([id]) REFERENCES [posts] ([user_id])
 GO
 
--- Disable constraint checks for INSERT (SQL Server does not support DEFERRED)
+-- Disable constraint checks for INSERT
 EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all";
 GO
 

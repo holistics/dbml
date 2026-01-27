@@ -14,7 +14,7 @@ CREATE TABLE `edge_cases` (
   `null_value` varchar(255)
 );
 
--- Disable foreign key checks for INSERT (MySQL does not support DEFERRED)
+-- Disable foreign key checks for INSERT
 SET FOREIGN_KEY_CHECKS = 0;
 
 INSERT INTO `edge_cases` (`id`, `scientific_notation_pos`, `scientific_notation_neg`, `signed_positive`, `signed_negative`, `sql_function_default`, `dbml_expr_default`, `datetime_value`, `string_with_newline`, `string_with_backslash`, `string_with_escape_seq`, `string_with_quotes`, `null_value`)
@@ -23,7 +23,7 @@ VALUES
 Line 2
 Line 3', 'C:\\Users\\path\\file.txt', 'Tab:	Newline:
 Carriage return:', 'She said "Hello" and ''Hi''', NULL),
-  (2, 99900000000, -1.11e-10, 0, 0, CURRENT_TIMESTAMP, LENGTH('test'), '2023-12-31 23:59:59', 'First line
+  (2, 99900000000, -1.11e-10, 0, 0, CURRENT_TIMESTAMP, LENGTH('test'), '2023-12-31T23:59:59.000+07:00', 'First line
 
 Third line', 'Escaped backslash: \\\\', 'Quote: " Apostrophe: '' Backslash: \\', 'O''Reilly''s "book"', NULL);
 

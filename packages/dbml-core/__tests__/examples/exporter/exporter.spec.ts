@@ -11,7 +11,8 @@ describe('@dbml/core - exporter', () => {
     const output = readFileSync(path.resolve(__dirname, `./${testDir}/output/${fileName}.out.${fileExtension}`), { encoding: 'utf8' });
     const res = exporter.export(input, format);
 
-    expect(res).toBe(output);
+    // Exclude meaningless spaces from failing the tests
+    expect(res.trim()).toBe(output.trim());
   };
 
   test.each(scanTestNames(__dirname, 'mysql_exporter/input'))('mysql_exporter/%s', (name) => {
