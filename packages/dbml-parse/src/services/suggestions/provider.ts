@@ -27,7 +27,6 @@ import {
   noSuggestions,
   prependSpace,
   isOffsetWithinElementHeader,
-  excludeSuggestions,
   addExpandAllColumnsSuggestion,
   isTupleEmpty,
 } from '@/services/suggestions/utils';
@@ -277,12 +276,10 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
   ) {
     const tableSymbol = element.parent?.symbol || element.name?.referee;
     if (tableSymbol) {
-      let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+      const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
       if (!isTupleEmpty(tupleContainer)) return suggestions;
-      suggestions = excludeSuggestions(suggestions, ['records']);
-      suggestions = addExpandAllColumnsSuggestion(suggestions);
-      return suggestions;
+      return addExpandAllColumnsSuggestion(suggestions);
     }
   }
 
@@ -299,12 +296,10 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
         ) {
           const tableSymbol = element.symbol;
           if (tableSymbol) {
-            let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+            const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
             // If the user already typed some columns, we do not suggest "all columns" anymore
             if (!isTupleEmpty(tupleContainer)) return suggestions;
-            suggestions = excludeSuggestions(suggestions, ['records']);
-            suggestions = addExpandAllColumnsSuggestion(suggestions);
-            return suggestions;
+            return addExpandAllColumnsSuggestion(suggestions);
           }
           break;
         }
@@ -785,12 +780,11 @@ function suggestInCallExpression (
     const tableSymbol = rightmostExpr?.referee;
 
     if (!tableSymbol) return noSuggestions();
-    let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+    const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
     const { argumentList } = container;
     // If the user already typed some columns, we do not suggest "all columns" anymore
     if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
-    suggestions = addExpandAllColumnsSuggestion(suggestions);
-    return suggestions;
+    return addExpandAllColumnsSuggestion(suggestions);
   }
 
   // Check if we're inside a Records FunctionApplicationNode (e.g., typing "Records ()")
@@ -808,12 +802,11 @@ function suggestInCallExpression (
     ) {
       const tableSymbol = compiler.container.element(offset).symbol;
       if (!tableSymbol) return noSuggestions();
-      let suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+      const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
       const { argumentList } = container;
       // If the user already typed some columns, we do not suggest "all columns" anymore
       if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
-      suggestions = addExpandAllColumnsSuggestion(suggestions);
-      return suggestions;
+      return addExpandAllColumnsSuggestion(suggestions);
     }
   }
 

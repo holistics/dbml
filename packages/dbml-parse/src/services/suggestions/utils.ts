@@ -78,16 +78,6 @@ export function addQuoteIfNeeded (completionList: CompletionList): CompletionLis
   };
 }
 
-export function excludeSuggestions (completionList: CompletionList, excludeLabels: string[]): CompletionList {
-  return {
-    ...completionList,
-    suggestions: completionList.suggestions.filter((s) => {
-      const label = typeof s.label === 'string' ? s.label : s.label.label;
-      return !excludeLabels.includes(label.toLowerCase());
-    }),
-  };
-}
-
 export function addExpandAllColumnsSuggestion (completionList: CompletionList): CompletionList {
   const allColumns = completionList.suggestions
     .map((s) => typeof s.label === 'string' ? s.label : s.label.label)
