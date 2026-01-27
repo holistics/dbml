@@ -175,7 +175,7 @@ export function escapeString (str: string): string {
  * Formats a record value for DBML output.
  * Handles different data types and converts them to appropriate DBML syntax.
  *
- * @param recordValue - The record value with type information
+ * @param recordValue - The record value with type information, or a primitive value
  * @returns The formatted string representation for DBML
  *
  * @example
@@ -183,8 +183,32 @@ export function escapeString (str: string): string {
  * formatRecordValue({ value: 'Alice', type: 'string' }) => "'Alice'"
  * formatRecordValue({ value: true, type: 'bool' }) => 'true'
  * formatRecordValue({ value: null, type: 'string' }) => 'null'
+ * formatRecordValue(undefined) => 'null'
+ * formatRecordValue(null) => 'null'
+ * formatRecordValue('Alice') => "'Alice'"
+ * formatRecordValue(42) => '42'
+ * formatRecordValue(true) => 'true'
  */
-export function formatRecordValue (recordValue: { value: any; type: string }): string {
+export function formatRecordValue (recordValue: { value: any; type: string } | string | number | boolean | null | undefined): string {
+  // Handle undefined and null primitives
+  if (recordValue === undefined || recordValue === null) {
+    return 'null';
+  }
+
+  // Handle primitive types directly
+  if (typeof recordValue === 'boolean') {
+    return recordValue ? 'true' : 'false';
+  }
+
+  if (typeof recordValue === 'number') {
+    return String(recordValue);
+  }
+
+  if (typeof recordValue === 'string') {
+    return `'${escapeString(recordValue)}'`;
+  }
+
+  // Handle object format { value, type }
   const { value, type } = recordValue;
 
   // Handle null/undefined values
@@ -221,8 +245,7 @@ export function formatRecordValue (recordValue: { value: any; type: string }): s
   if (isDateTimeType(type)) {
     const extracted = tryExtractDateTime(value);
     if (extracted !== null) {
-      const quote = extracted.includes('\n') ? '\'\'\'' : '\'';
-      return `${quote}${extracted.replaceAll('\\', '\\\\').replaceAll("'", "\\'")}${quote}`;
+      return `'${escapeString(extracted)}'`;
     }
     // If extraction failed, wrap in function expression
     return `\`${value}\``;
@@ -231,8 +254,7 @@ export function formatRecordValue (recordValue: { value: any; type: string }): s
   // Default: string types and others
   const extracted = tryExtractString(value);
   if (extracted !== null) {
-    const quote = extracted.includes('\n') ? '\'\'\'' : '\'';
-    return `${quote}${extracted.replaceAll('\\', '\\\\').replaceAll("'", "\\'")}${quote}`;
+    return `'${escapeString(extracted)}'`;
   }
 
   // If all extractions failed, wrap in function expression
