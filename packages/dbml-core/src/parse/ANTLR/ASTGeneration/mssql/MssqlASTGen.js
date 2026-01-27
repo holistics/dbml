@@ -1076,6 +1076,44 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       }
       table.checks.push(checkObj);
     });
+
+    // Handle WITH CHECK/NOCHECK ADD CONSTRAINT FK
+    if (ctx.WITH() && ctx.FOREIGN()) {
+      const constraintName = ctx.constraint ? ctx.constraint.accept(this) : '';
+      const localColumns = ctx.fk.accept(this);
+
+      // table_name()[1] is the referenced table (table_name()[0] is the table being altered)
+      const refTableNames = ctx.table_name()[1].accept(this);
+      const { schemaName: refSchemaName, tableName: refTableName } = getSchemaAndTableName(refTableNames);
+
+      // pk is optional - if not specified, assume same column names as fk
+      const refColumns = ctx.pk ? ctx.pk.accept(this) : localColumns;
+
+      const onDelete = ctx.on_delete().length > 0 ? ctx.on_delete()[0].accept(this) : null;
+      const onUpdate = ctx.on_update().length > 0 ? ctx.on_update()[0].accept(this) : null;
+
+      const ref = {
+        name: constraintName,
+        endpoints: [
+          {
+            tableName,
+            schemaName,
+            fieldNames: localColumns,
+            relation: '*',
+          },
+          {
+            tableName: refTableName,
+            schemaName: refSchemaName,
+            fieldNames: refColumns,
+            relation: '1',
+          },
+        ],
+        onDelete,
+        onUpdate,
+      };
+
+      this.data.refs.push(ref);
+    }
   }
 
   // create_index
