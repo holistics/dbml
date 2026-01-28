@@ -1,4 +1,4 @@
-import { last, zip } from 'lodash-es';
+import { last, zip, uniqBy } from 'lodash-es';
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 import {
   destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
@@ -6,18 +6,19 @@ import {
   extractVarNameFromPrimaryVariable,
 } from '@/core/analyzer/utils';
 import {
-  ArrayNode, CallExpressionNode, FunctionExpressionNode, LiteralNode,
+  ArrayNode, BlockExpressionNode, CallExpressionNode, FunctionExpressionNode, FunctionApplicationNode, LiteralNode,
   PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/parser/nodes';
 import {
   ColumnType, RelationCardinality, Table, TokenPosition, InterpreterDatabase, Ref,
+  Column,
 } from '@/core/interpreter/types';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { getNumberTextFromExpression, parseNumber } from '@/core/utils';
-import { isExpressionASignedNumberExpression } from '../analyzer/validator/utils';
+import { isExpressionASignedNumberExpression, isValidPartialInjection } from '../analyzer/validator/utils';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
   const { variables, tupleElements } = destructureComplexVariableTuple(operand).unwrap();
@@ -308,8 +309,16 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
   });
 }
 
+// The returned table respects (injected) column definition order
 export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): Table {
-  const fields = [...table.fields];
+  const tableElement = [...env.tables.entries()].find(([, t]) => t === table)?.[0];
+  if (!tableElement) {
+    throw new Error('mergeTableAndPartials should be called after all tables are interpreted');
+  }
+  if (!(tableElement.body instanceof BlockExpressionNode)) {
+    throw new Error('Table element should have a block body');
+  }
+
   const indexes = [...table.indexes];
   const checks = [...table.checks];
   let headerColor = table.headerColor;
@@ -321,12 +330,6 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
     const { name } = tablePartial;
     const partial = tablePartials.find((p) => p.name === name);
     if (!partial) continue;
-
-    // Merge fields (columns)
-    for (const c of partial.fields) {
-      if (fields.find((r) => r.name === c.name)) continue;
-      fields.push(c);
-    }
 
     // Merge indexes
     indexes.push(...partial.indexes);
@@ -342,6 +345,40 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
       note = partial.note;
     }
   }
+
+  const directFieldMap = new Map(table.fields.map((f) => [f.name, f]));
+  const directFieldNames = new Set(directFieldMap.keys());
+  const partialMap = new Map(tablePartials.map((p) => [p.name, p]));
+
+  // Collect all fields in declaration order
+  const allFields: Column[] = [];
+
+  for (const subfield of tableElement.body.body) {
+    if (!(subfield instanceof FunctionApplicationNode)) continue;
+
+    if (isValidPartialInjection(subfield.callee)) {
+      // Inject partial fields
+      const partialName = extractVariableFromExpression(subfield.callee.expression).unwrap_or(undefined);
+      const partial = partialMap.get(partialName!);
+      if (!partial) continue;
+
+      for (const field of partial.fields) {
+        // Skip if overridden by direct definition
+        if (directFieldNames.has(field.name)) continue;
+        allFields.push(field);
+      }
+    } else {
+      // Add direct field definition
+      const columnName = extractVariableFromExpression(subfield.callee).unwrap();
+      const column = directFieldMap.get(columnName);
+      if (!column) continue;
+      allFields.push(column);
+    }
+  }
+
+  // Use uniqBy to keep last occurrence of each field (later partials win)
+  // Process from end to start, then reverse to maintain declaration order
+  const fields = uniqBy([...allFields].reverse(), 'name').reverse();
 
   return {
     ...table,
