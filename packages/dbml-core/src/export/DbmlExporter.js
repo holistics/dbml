@@ -358,11 +358,11 @@ class DbmlExporter {
 
       // Build the table reference with schema if present
       const tableRef = schemaName
-        ? `"${schemaName}"."${tableName}"`
-        : `"${tableName}"`;
+        ? `${addDoubleQuoteIfNeeded(schemaName)}.${addDoubleQuoteIfNeeded(tableName)}`
+        : `${addDoubleQuoteIfNeeded(tableName)}`;
 
       // Build the column list
-      const columnList = columns.map((col) => `"${col}"`).join(', ');
+      const columnList = columns.map((col) => `${addDoubleQuoteIfNeeded(col)}`).join(', ');
 
       // Build the data rows
       const rowStrs = values.map((row) => {
