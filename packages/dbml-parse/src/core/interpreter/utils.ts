@@ -205,7 +205,6 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
   let typeArgs: string | null = null;
   let numericParams: { precision: number; scale: number } | undefined;
   let lengthParam: { length: number } | undefined;
-  let isEnum = undefined;
 
   if (typeNode instanceof CallExpressionNode) {
     const argElements = typeNode.argumentList!.elementList;
@@ -225,23 +224,15 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
     if (argElements.length === 2
       && isExpressionASignedNumberExpression(argElements[0])
       && isExpressionASignedNumberExpression(argElements[1])) {
-      try {
-        const precision = parseNumber(argElements[0] as any);
-        const scale = parseNumber(argElements[1] as any);
-        if (!isNaN(precision) && !isNaN(scale)) {
-          numericParams = { precision: Math.trunc(precision), scale: Math.trunc(scale) };
-        }
-      } catch {
-        // If parsing fails, just skip setting numericParams
+      const precision = parseNumber(argElements[0]);
+      const scale = parseNumber(argElements[1]);
+      if (!isNaN(precision) && !isNaN(scale)) {
+        numericParams = { precision: Math.trunc(precision), scale: Math.trunc(scale) };
       }
     } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
-      try {
-        const length = parseNumber(argElements[0] as any);
-        if (!isNaN(length)) {
-          lengthParam = { length: Math.trunc(length) };
-        }
-      } catch {
-        // If parsing fails, just skip setting lengthParam
+      const length = parseNumber(argElements[0]);
+      if (!isNaN(length)) {
+        lengthParam = { length: Math.trunc(length) };
       }
     }
 
@@ -278,12 +269,8 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
 
   // Check if this type references an enum
   const schema = typeSchemaName.length === 0 ? null : typeSchemaName[0];
-  for (const enumObj of env.enums.values()) {
-    if (enumObj.name === typeName && enumObj.schemaName === schema) {
-      isEnum = true;
-      break;
-    }
-  }
+
+  const isEnum = !![...env.enums.values()].find((e) => e.name === typeName && e.schemaName === schema);
 
   if (typeSchemaName.length > 1) {
     return new Report(
