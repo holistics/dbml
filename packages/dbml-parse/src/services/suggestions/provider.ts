@@ -579,15 +579,13 @@ function suggestInSubField (
 
 function suggestTopLevelElementType (): CompletionList {
   return {
-    suggestions: [
-      ...['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records'].map((name) => ({
-        label: name,
-        insertText: name,
-        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: CompletionItemKind.Keyword,
-        range: undefined as any,
-      })),
-    ],
+    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records'].map((name) => ({
+      label: name,
+      insertText: name,
+      insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+      kind: CompletionItemKind.Keyword,
+      range: undefined as any,
+    })),
   };
 }
 
