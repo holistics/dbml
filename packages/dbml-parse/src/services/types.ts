@@ -79,5 +79,11 @@ export type SignatureHelpResult = languages.SignatureHelpResult;
 export type ReferenceProvider = languages.ReferenceProvider;
 
 // Diagnostics/Markers
-export type MarkerSeverity = 1 | 2 | 4 | 8; // Hint = 1, Info = 2, Warning = 4, Error = 8
+export enum MarkerSeverity {
+  Hint = 1,
+  Info = 2,
+  Warning = 4,
+  Error = 8,
+}
+
 export type MarkerData = editor.IMarkerData;
