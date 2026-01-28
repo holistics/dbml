@@ -58,28 +58,11 @@ export function validatePrimaryKey (
           const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, missingColumnsWithoutDefaults);
           const msg = `${constraintType}: Column ${columnRef} is missing from record and has no default value`;
           for (const row of rows) {
-            // Create separate error for each column in the constraint
-            const errorNodes = pkColumns
-              .map((col) => row.columnNodes[col])
-              .filter(Boolean);
-
-            if (errorNodes.length > 0) {
-              // Create one error per column node
-              for (const node of errorNodes) {
-                errors.push(new CompileError(
-                  CompileErrorCode.INVALID_RECORDS_FIELD,
-                  msg,
-                  node,
-                ));
-              }
-            } else {
-              // Fallback to row node if no column nodes available
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_RECORDS_FIELD,
-                msg,
-                row.node,
-              ));
-            }
+            errors.push(new CompileError(
+              CompileErrorCode.INVALID_RECORDS_FIELD,
+              msg,
+              row.node,
+            ));
           }
         }
         continue;
