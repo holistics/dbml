@@ -112,7 +112,9 @@ describe('[example - record] composite unique constraints', () => {
     expect(db.records[0].values[2][2]).toEqual({ type: 'string', value: 'dark' });
   });
 
-  test('should detect duplicate composite unique across multiple records blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for multiple records blocks for same table', () => {
     const source = `
       Table user_profiles {
         user_id int
@@ -131,11 +133,14 @@ describe('[example - record] composite unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const errors = result.getErrors();
 
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
-    expect(warnings[1].diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
+    // Verify exact error count and ALL error properties
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'user_profiles'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'user_profiles'");
   });
 
   test('should allow same value in one unique column when other differs', () => {
@@ -276,7 +281,9 @@ describe('[example - record] simple unique constraints', () => {
     expect(db.records[0].values[3][1]).toEqual({ type: 'string', value: null });
   });
 
-  test('should detect duplicate unique across multiple records blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for multiple records blocks for same table', () => {
     const source = `
       Table users {
         id int [pk]
@@ -290,10 +297,14 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const errors = result.getErrors();
 
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('Duplicate UNIQUE: users.email = "alice@example.com"');
+    // Verify exact error count and ALL error properties
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
   test('should validate multiple unique columns independently', () => {
@@ -453,7 +464,9 @@ describe('[example - record] simple unique constraints', () => {
 });
 
 describe('[example - record] Unique validation across multiple records blocks', () => {
-  test('should validate unique constraint across blocks with different columns', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for unique constraint across blocks with different columns', () => {
     const source = `
       Table users {
         id int [pk]
@@ -473,11 +486,19 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
-  test('should detect unique violation across blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for unique violation across blocks', () => {
     const source = `
       Table users {
         id int [pk]
@@ -490,18 +511,24 @@ describe('[example - record] Unique validation across multiple records blocks', 
       }
 
       records users(id, email, name) {
-        2, 'alice@example.com', 'Alice2'  // Duplicate email
+        2, 'alice@example.com', 'Alice2'
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toContain('Duplicate UNIQUE');
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
-  test('should validate composite unique across multiple blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for composite unique across multiple blocks', () => {
     const source = `
       Table user_roles {
         id int [pk]
@@ -525,11 +552,19 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'user_roles'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'user_roles'");
   });
 
-  test('should detect composite unique violation across blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for composite unique violation across blocks', () => {
     const source = `
       Table user_roles {
         id int [pk]
@@ -545,18 +580,24 @@ describe('[example - record] Unique validation across multiple records blocks', 
       }
 
       records user_roles(id, user_id, role_id) {
-        2, 100, 1  // Duplicate (100, 1)
+        2, 100, 1
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toContain('Duplicate Composite UNIQUE');
-    expect(warnings[1].diagnostic).toContain('Duplicate Composite UNIQUE');
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'user_roles'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'user_roles'");
   });
 
-  test('should allow NULL for unique constraint across blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for NULL unique constraint across blocks', () => {
     const source = `
       Table users {
         id int [pk]
@@ -566,21 +607,29 @@ describe('[example - record] Unique validation across multiple records blocks', 
 
       records users(id, email) {
         1, null
-        2, null  // Multiple NULLs allowed
+        2, null
       }
 
       records users(id, phone) {
         3, null
-        4, null  // Multiple NULLs allowed
+        4, null
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
-  test('should handle unique when column missing from some blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for unique when column missing from some blocks', () => {
     const source = `
       Table products {
         id int [pk]
@@ -590,7 +639,7 @@ describe('[example - record] Unique validation across multiple records blocks', 
       }
 
       records products(id, name) {
-        1, 'Product A'  // sku missing, implicitly NULL
+        1, 'Product A'
       }
 
       records products(id, sku) {
@@ -599,16 +648,28 @@ describe('[example - record] Unique validation across multiple records blocks', 
       }
 
       records products(id, description) {
-        4, 'Description text'  // sku missing, implicitly NULL
+        4, 'Description text'
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (3 blocks = 4 errors)
+    expect(errors.length).toBe(4);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'products'");
   });
 
-  test('should validate multiple unique constraints on same table across blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for multiple unique constraints on same table across blocks', () => {
     const source = `
       Table users {
         id int [pk]
@@ -635,11 +696,27 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (4 blocks = 6 errors)
+    expect(errors.length).toBe(6);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[4].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[4].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[5].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[5].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
-  test('should detect violations of different unique constraints', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for violations of different unique constraints', () => {
     const source = `
       Table users {
         id int [pk]
@@ -656,19 +733,29 @@ describe('[example - record] Unique validation across multiple records blocks', 
       }
 
       records users(id, email, username) {
-        3, 'alice@example.com', 'charlie'  // Duplicate email
-        4, 'david@example.com', 'bob'       // Duplicate username
+        3, 'alice@example.com', 'charlie'
+        4, 'david@example.com', 'bob'
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(2);
-    expect(warnings.some((e) => e.diagnostic.includes('email'))).toBe(true);
-    expect(warnings.some((e) => e.diagnostic.includes('username'))).toBe(true);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (3 blocks = 4 errors)
+    expect(errors.length).toBe(4);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
-  test('should validate unique across nested and top-level records', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for unique across nested and top-level records', () => {
     const source = `
       Table users {
         id int [pk]
@@ -686,11 +773,19 @@ describe('[example - record] Unique validation across multiple records blocks', 
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
-  test('should detect unique violation between nested and top-level', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for unique violation between nested and top-level', () => {
     const source = `
       Table users {
         id int [pk]
@@ -702,14 +797,19 @@ describe('[example - record] Unique validation across multiple records blocks', 
       }
 
       records users(id, email) {
-        2, 'alice@example.com'  // Duplicate
+        2, 'alice@example.com'
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toContain('Duplicate UNIQUE');
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
   test('should handle complex scenario with multiple unique constraints', () => {
@@ -744,7 +844,9 @@ describe('[example - record] Unique validation across multiple records blocks', 
     expect(warnings.length).toBe(0);
   });
 
-  test('should detect multiple unique violations in complex scenario', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for multiple unique violations in complex scenario', () => {
     const source = `
       Table products {
         id int [pk]
@@ -762,19 +864,31 @@ describe('[example - record] Unique validation across multiple records blocks', 
       }
 
       records products(id, sku, name) {
-        3, 'SKU-001', 'Product 3'  // Duplicate SKU
+        3, 'SKU-001', 'Product 3'
       }
 
       records products(id, barcode) {
-        4, 'BAR-001'  // Duplicate barcode
+        4, 'BAR-001'
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toContain('Duplicate UNIQUE');
-    expect(warnings[1].diagnostic).toContain('Duplicate UNIQUE');
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (4 blocks = 6 errors)
+    expect(errors.length).toBe(6);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[4].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[4].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[5].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[5].diagnostic).toBe("Duplicate Records for the same Table 'products'");
   });
 
   test('should validate unique with both PK and unique constraints', () => {
