@@ -30,7 +30,7 @@ import {
   addSuggestAllSuggestion,
   isTupleEmpty,
 } from '@/services/suggestions/utils';
-import { suggestRecordRowSnippet, FALLTHROUGH } from '@/services/suggestions/recordRowSnippet';
+import { suggestRecordRowSnippet } from '@/services/suggestions/recordRowSnippet';
 import {
   AttributeNode,
   CallExpressionNode,
@@ -64,8 +64,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     // Try to suggest record row snippet first
     const recordRowSnippet = suggestRecordRowSnippet(this.compiler, model, position, offset);
-    if (recordRowSnippet !== FALLTHROUGH) {
-      return recordRowSnippet || noSuggestions();
+    if (recordRowSnippet !== null) {
+      return recordRowSnippet;
     }
 
     const flatStream = this.compiler.token.flatStream();
