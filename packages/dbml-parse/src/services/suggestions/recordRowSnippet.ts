@@ -22,50 +22,32 @@ import { ElementKind } from '@/core/analyzer/types';
 import Compiler from '@/compiler';
 import {
   noSuggestions,
-  isOffsetWithinElementHeader,
   getColumnsFromTableSymbol,
   extractColumnNameAndType,
 } from '@/services/suggestions/utils';
 import { isOffsetWithinSpan } from '@/core/utils';
-
-const FALLTHROUGH = Symbol('fallthrough');
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,
   model: TextModel,
   position: Position,
   offset: number,
-): CompletionList | null | typeof FALLTHROUGH {
+): CompletionList | null {
   const element = compiler.container.element(offset);
 
   // If not in an ElementDeclarationNode, fallthrough
-  if (!(element instanceof ElementDeclarationNode)) {
-    return FALLTHROUGH;
-  }
+  if (!(element instanceof ElementDeclarationNode)) return null;
 
   const elementKind = getElementKind(element).unwrap_or(undefined);
-
   // If not in a Records element, fallthrough
-  if (elementKind !== ElementKind.Records || !(element.body instanceof BlockExpressionNode)) {
-    return FALLTHROUGH;
-  }
-
-  // If we're in the header (not the body), fallthrough
-  if (isOffsetWithinElementHeader(offset, element)) {
-    return FALLTHROUGH;
-  }
+  if (elementKind !== ElementKind.Records || !(element.body instanceof BlockExpressionNode)) return null;
 
   // If we're not within the body, fallthrough
-  if (!element.body || !isOffsetWithinSpan(offset, element.body)) {
-    return FALLTHROUGH;
-  }
+  if (!element.body || !isOffsetWithinSpan(offset, element.body)) return null;
 
-  // Check if cursor is at the start of a line (only whitespace before it)
   const lineContent = model.getLineContent(position.lineNumber);
-  if (lineContent.trim() !== '') {
-    // Not on an empty line - fallthrough to allow other completions in Records body
-    return FALLTHROUGH;
-  }
+  // Not on an empty line - fallthrough to allow other completions in Records body
+  if (lineContent.trim() !== '') return null;
 
   // On an empty line in Records body - provide record row snippet
   if (element.parent instanceof ProgramNode) {
@@ -74,8 +56,6 @@ export function suggestRecordRowSnippet (
     return suggestRecordRowInNestedRecords(compiler, element);
   }
 }
-
-export { FALLTHROUGH };
 
 function suggestRecordRowInTopLevelRecords (
   compiler: Compiler,
