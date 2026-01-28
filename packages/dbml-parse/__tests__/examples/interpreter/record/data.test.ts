@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import { CompileErrorCode } from '@/index';
 import { interpret } from '@tests/utils';
 import { DateTime } from 'luxon';
 
@@ -131,7 +132,9 @@ describe('[example - record] data type interpretation', () => {
     expect(db.records[0].values[0][2].value).toBe(DateTime.fromISO('10:30:00.000+07:00').toISOTime());
   });
 
-  test('should handle nested records with partial columns', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for nested records with partial columns', () => {
     const source = `
       Table products {
         id int [pk]
@@ -151,32 +154,17 @@ describe('[example - record] data type interpretation', () => {
     const result = interpret(source);
     const errors = result.getErrors();
 
-    expect(errors.length).toBe(0);
-
-    const db = result.getValue()!;
-    // Verify complete records array
-    expect(db.records.length).toBe(1);
-
-    // Verify ALL properties of the TableRecord
-    const record = db.records[0];
-    expect(record.schemaName).toBe(undefined);
-    expect(record.tableName).toBe('products');
-    expect(record.columns).toEqual(['id', 'name']);
-    expect(record.values.length).toBe(2);
-
-    // Verify ALL rows and ALL columns in each row
-    // First row: (1, 'Laptop')
-    expect(record.values[0].length).toBe(2);
-    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
-    expect(record.values[0][1]).toEqual({ type: 'string', value: 'Laptop' });
-
-    // Second row: (2, null) - from (id, price, description), maps to ['id', 'name']
-    expect(record.values[1].length).toBe(2);
-    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
-    expect(record.values[1][1]).toEqual({ type: 'expression', value: null });
+    // Verify exact error count and ALL error properties
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'products'");
   });
 
-  test('should handle nested and top-level records with different data types', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for nested and top-level records with different data types', () => {
     const source = `
       Table metrics {
         id int [pk]
@@ -201,40 +189,21 @@ describe('[example - record] data type interpretation', () => {
     const result = interpret(source);
     const errors = result.getErrors();
 
-    expect(errors.length).toBe(0);
-
-    const db = result.getValue()!;
-    // Verify complete records array
-    expect(db.records.length).toBe(1);
-
-    // Verify ALL properties of the TableRecord
-    const record = db.records[0];
-    expect(record.schemaName).toBe(undefined);
-    expect(record.tableName).toBe('metrics');
-    expect(record.columns).toEqual(['id', 'name', 'metric_value']);
-    expect(record.values.length).toBe(3);
-
-    // Verify ALL rows and ALL columns in each row
-    // First row: (1, 'CPU Usage', 85.5)
-    expect(record.values[0].length).toBe(3);
-    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
-    expect(record.values[0][1]).toEqual({ type: 'string', value: 'CPU Usage' });
-    expect(record.values[0][2]).toEqual({ type: 'real', value: 85.5 });
-
-    // Second row: (2, null, null) - from (id, timestamp, active), maps to ['id', 'name', 'metric_value']
-    expect(record.values[1].length).toBe(3);
-    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
-    expect(record.values[1][1]).toEqual({ type: 'expression', value: null });
-    expect(record.values[1][2]).toEqual({ type: 'expression', value: null });
-
-    // Third row: (3, 'Memory Usage', 60.2) - maps to ['id', 'name', 'metric_value']
-    expect(record.values[2].length).toBe(3);
-    expect(record.values[2][0]).toEqual({ type: 'integer', value: 3 });
-    expect(record.values[2][1]).toEqual({ type: 'string', value: 'Memory Usage' });
-    expect(record.values[2][2]).toEqual({ type: 'real', value: 60.2 });
+    // Verify exact error count and ALL error properties (3 blocks = 4 errors)
+    expect(errors.length).toBe(4);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'metrics'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'metrics'");
+    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'metrics'");
+    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'metrics'");
   });
 
-  test('should handle multiple nested records blocks for same table', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for multiple nested records blocks for same table', () => {
     const source = `
       Table events {
         id int [pk]
@@ -260,42 +229,15 @@ describe('[example - record] data type interpretation', () => {
     const result = interpret(source);
     const errors = result.getErrors();
 
-    expect(errors.length).toBe(0);
-
-    const db = result.getValue()!;
-    // Verify complete records array
-    expect(db.records.length).toBe(1);
-
-    // Verify ALL properties of the TableRecord
-    const record = db.records[0];
-    expect(record.schemaName).toBe(undefined);
-    expect(record.tableName).toBe('events');
-    expect(record.columns).toEqual(['id', 'type', 'user_id']);
-    expect(record.values.length).toBe(4);
-
-    // Verify ALL rows and ALL columns in each row
-    // First row: (1, 'login', 100)
-    expect(record.values[0].length).toBe(3);
-    expect(record.values[0][0]).toEqual({ type: 'integer', value: 1 });
-    expect(record.values[0][1]).toEqual({ type: 'string', value: 'login' });
-    expect(record.values[0][2]).toEqual({ type: 'integer', value: 100 });
-
-    // Second row: (2, 'logout', 100)
-    expect(record.values[1].length).toBe(3);
-    expect(record.values[1][0]).toEqual({ type: 'integer', value: 2 });
-    expect(record.values[1][1]).toEqual({ type: 'string', value: 'logout' });
-    expect(record.values[1][2]).toEqual({ type: 'integer', value: 100 });
-
-    // Third row: (3, 'purchase', null) - from (id, type, data), maps to ['id', 'type', 'user_id']
-    expect(record.values[2].length).toBe(3);
-    expect(record.values[2][0]).toEqual({ type: 'integer', value: 3 });
-    expect(record.values[2][1]).toEqual({ type: 'string', value: 'purchase' });
-    expect(record.values[2][2]).toEqual({ type: 'expression', value: null });
-
-    // Fourth row: (4, null, null) - from (id, created_at), maps to ['id', 'type', 'user_id']
-    expect(record.values[3].length).toBe(3);
-    expect(record.values[3][0]).toEqual({ type: 'integer', value: 4 });
-    expect(record.values[3][1]).toEqual({ type: 'expression', value: null });
-    expect(record.values[3][2]).toEqual({ type: 'expression', value: null });
+    // Verify exact error count and ALL error properties (3 blocks = 4 errors)
+    expect(errors.length).toBe(4);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'events'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'events'");
+    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'events'");
+    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'events'");
   });
 });

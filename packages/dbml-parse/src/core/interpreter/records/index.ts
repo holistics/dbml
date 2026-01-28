@@ -40,9 +40,11 @@ import { mergeTableAndPartials } from '../utils';
 
 export class RecordsInterpreter {
   private env: InterpreterDatabase;
+  private tableToRecordMap: Map<Table, ElementDeclarationNode>;
 
   constructor (env: InterpreterDatabase) {
     this.env = env;
+    this.tableToRecordMap = new Map();
   }
 
   interpret (elements: ElementDeclarationNode[]): Report<void> {
@@ -51,6 +53,21 @@ export class RecordsInterpreter {
 
     for (const element of elements) {
       const { table, mergedColumns } = getTableAndColumnsOfRecords(element, this.env);
+      const prevRecord = this.tableToRecordMap.get(table);
+      if (prevRecord) {
+        errors.push(new CompileError(
+          CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
+          `Duplicate Records for the same Table '${table.name}'`,
+          prevRecord,
+        ));
+        errors.push(new CompileError(
+          CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
+          `Duplicate Records for the same Table '${table.name}'`,
+          element,
+        ));
+        continue;
+      }
+      this.tableToRecordMap.set(table, element);
       for (const row of (element.body as BlockExpressionNode).body) {
         const rowNode = row as FunctionApplicationNode;
         const result = extractDataFromRow(rowNode, mergedColumns, this.env);
