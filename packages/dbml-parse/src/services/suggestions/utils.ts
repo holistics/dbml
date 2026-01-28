@@ -147,7 +147,7 @@ export function getColumnsFromTableSymbol (
     const res = destructureIndex(index).unwrap_or(undefined);
     if (res === undefined || res.kind !== SymbolKind.Column) continue;
     if (!(columnSymbol instanceof ColumnSymbol || columnSymbol instanceof TablePartialInjectedColumnSymbol)) continue;
-    const columnInfo = extractColumnNameAndType(columnSymbol, res.name);
+    const columnInfo = extractNameAndTypeOfColumnSymbol(columnSymbol, res.name);
     if (!columnInfo) continue;
     columns.push(columnInfo);
   }
@@ -155,7 +155,8 @@ export function getColumnsFromTableSymbol (
   return columns;
 }
 
-export function extractColumnNameAndType (
+// This function also works with injected columns
+export function extractNameAndTypeOfColumnSymbol (
   columnSymbol: ColumnSymbol | TablePartialInjectedColumnSymbol,
   columnName: string,
 ): { name: string; type: string } | null {
