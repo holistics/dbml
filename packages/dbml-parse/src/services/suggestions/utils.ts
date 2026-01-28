@@ -164,15 +164,12 @@ export function extractNameAndTypeOfColumnSymbol (
   const columnDeclaration = columnSymbol instanceof TablePartialInjectedColumnSymbol
     ? columnSymbol.tablePartialSymbol.symbolTable.get(columnIndex)?.declaration
     : columnSymbol.declaration;
-  if (!(columnDeclaration instanceof FunctionApplicationNode)) {
-    return null;
-  }
+  if (!(columnDeclaration instanceof FunctionApplicationNode)) return null;
+
   const name = extractVariableFromExpression(columnDeclaration.callee).unwrap_or(null);
   const type = extractVariableFromExpression(columnDeclaration.args[0]).unwrap_or(null);
 
-  if (name === null || type === null) {
-    return null;
-  }
+  if (name === null || type === null) return null;
 
   return { name, type };
 }
