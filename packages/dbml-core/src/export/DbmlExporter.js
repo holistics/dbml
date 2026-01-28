@@ -353,29 +353,48 @@ class DbmlExporter {
       return '';
     }
 
-    const recordStrs = Object.values(records).map((record) => {
-      const { schemaName, tableName, columns, values } = record;
+    // Group records by schemaName and tableName
+    const recordGroups = Object.values(
+      Object.values(records).reduce((acc, record) => {
+        const key = `${record.schemaName || ''}||${record.tableName}`;
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(record);
+        return acc;
+      }, {}),
+    );
 
-      // Build the table reference with schema if present
+    // Process each group
+    const recordStrs = recordGroups.map((groupRecords) => {
+      const { schemaName, tableName } = groupRecords[0];
+
+      // Build table reference
       const tableRef = schemaName
         ? `${addDoubleQuoteIfNeeded(schemaName)}.${addDoubleQuoteIfNeeded(tableName)}`
-        : `${addDoubleQuoteIfNeeded(tableName)}`;
+        : addDoubleQuoteIfNeeded(tableName);
 
-      // Build the column list
-      const columnList = columns.map((col) => `${addDoubleQuoteIfNeeded(col)}`).join(', ');
+      // Collect all unique columns in order
+      const allColumns = [...new Set(groupRecords.flatMap((r) => r.columns))];
+      const columnList = allColumns.map(addDoubleQuoteIfNeeded).join(', ');
 
-      // Build the data rows
-      const rowStrs = values.map((row) => {
-        const valueStrs = row.map((val) => formatRecordValue(val));
-        return `  ${valueStrs.join(', ')}`;
-      });
+      // Merge all rows
+      const allRows = groupRecords.flatMap((record) =>
+        record.values.map((row) =>
+          allColumns.map((col) => {
+            const idx = record.columns.indexOf(col);
+            return idx !== -1 ? row[idx] : { value: null, type: 'expression' };
+          }),
+        ),
+      );
 
-      const body = rowStrs.join('\n');
+      // Build data rows
+      const rowStrs = allRows.map((row) =>
+        `  ${row.map(formatRecordValue).join(', ')}`,
+      );
 
-      return `records ${tableRef}(${columnList}) {\n${body}\n}\n`;
+      return `records ${tableRef}(${columnList}) {\n${rowStrs.join('\n')}\n}\n`;
     });
 
-    return recordStrs.length ? recordStrs.join('\n') : '';
+    return recordStrs.join('\n');
   }
 
   static export (model) {
