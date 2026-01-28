@@ -619,15 +619,13 @@ function suggestInColumn (
 
   if (!container?.callee) {
     return {
-      suggestions: [
-        ...elements.map((name) => ({
-          label: name,
-          insertText: name,
-          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-          kind: CompletionItemKind.Keyword,
-          range: undefined as any,
-        })),
-      ],
+      suggestions: elements.map((name) => ({
+        label: name,
+        insertText: name,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Keyword,
+        range: undefined as any,
+      })),
     };
   }
 
@@ -635,15 +633,13 @@ function suggestInColumn (
 
   if (containerArgId === 0) {
     return {
-      suggestions: [
-        ...elements.map((name) => ({
-          label: name,
-          insertText: name,
-          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-          kind: CompletionItemKind.Keyword,
-          range: undefined as any,
-        })),
-      ],
+      suggestions: elements.map((name) => ({
+        label: name,
+        insertText: name,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Keyword,
+        range: undefined as any,
+      })),
     };
   }
   if (containerArgId === 1) {
