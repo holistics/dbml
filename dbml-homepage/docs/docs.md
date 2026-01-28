@@ -39,7 +39,6 @@ outlines the full syntax documentations of DBML.
   - [Explicit Column List](#explicit-column-list)
   - [Implicit Column List](#implicit-column-list)
   - [Data Types](#data-types)
-  - [Type Conversion Rules](#type-conversion-rules)
 - [Multi-line String](#multi-line-string)
 - [Comments](#comments)
 - [Syntax Consistency](#syntax-consistency)
