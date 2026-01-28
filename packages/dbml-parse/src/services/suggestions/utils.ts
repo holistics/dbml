@@ -4,7 +4,7 @@ import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import { hasTrailingSpaces } from '@/core/lexer/utils';
 import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/parser/nodes';
 import Compiler from '@/compiler';
-import { ColumnSymbol, NodeSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
+import { ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
 import { extractVariableFromExpression } from '@/core/analyzer/utils';
 import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
 
@@ -174,19 +174,4 @@ export function extractColumnNameAndType (
   }
 
   return { name, type };
-}
-
-/**
- * Generate a snippet for entering a record entry with placeholders for each column
- * @param columns Array of column objects with name and type information
- * @returns A snippet string with placeholders like: ${1:id (int)}, ${2:name (varchar)}, ${3:email (varchar)}
- */
-export function generateRecordEntrySnippet (columns: Array<{ name: string; type: string }>): string {
-  if (columns.length === 0) {
-    return '';
-  }
-
-  return columns
-    .map((col, index) => `\${${index + 1}:${col.name} (${col.type})}`)
-    .join(', ');
 }
