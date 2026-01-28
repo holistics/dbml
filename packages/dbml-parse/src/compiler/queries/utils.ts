@@ -49,7 +49,7 @@ export function addDoubleQuoteIfNeeded (identifier: string): string {
   if (isValidIdentifier(identifier)) {
     return identifier;
   }
-  return `"${identifier}"`;
+  return `"${escapeString(identifier)}"`;
 }
 
 /**
