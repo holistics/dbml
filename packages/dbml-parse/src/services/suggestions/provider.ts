@@ -783,7 +783,7 @@ function suggestInCallExpression (
     if (
       c instanceof FunctionApplicationNode
       && c.callee === container
-      && extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() === 'records'
+      && extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() === ElementKind.Records
       && inArgs
     ) {
       const tableSymbol = compiler.container.element(offset).symbol;
