@@ -628,7 +628,7 @@ describe('[example - record] type compatibility validation', () => {
       expect(warnings[2].diagnostic).toBe("Invalid numeric value for column 'price'");
     });
 
-    test('- should reject invalid string values', () => {
+    test('- should allow non-string values for string types', () => {
       const source = `
         Table data {
           id int
@@ -644,9 +644,7 @@ describe('[example - record] type compatibility validation', () => {
       const warnings = result.getWarnings();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(2);
-      expect(warnings[0].diagnostic).toBe("Invalid string value for column 'name'");
-      expect(warnings[1].diagnostic).toBe("Invalid string value for column 'name'");
+      expect(warnings.length).toBe(0);
     });
 
     test('- should reject invalid datetime values', () => {
