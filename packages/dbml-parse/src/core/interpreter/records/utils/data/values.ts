@@ -189,15 +189,17 @@ export function tryExtractEnum (value: SyntaxNode | string | undefined | null): 
 
 // Try to extract a string value from a syntax node or primitive
 // Example: "abc", 'abc'
-export function tryExtractString (value: SyntaxNode | string | undefined | null): string | null {
+export function tryExtractString (value: SyntaxNode | string | boolean | number | undefined | null): string | null {
   // Handle null/undefined
   if (value === null || value === undefined) return null;
 
   // Handle primitive string
   if (typeof value === 'string') return value;
+  if (typeof value === 'number') return value.toString();
+  if (typeof value === 'boolean') return value.toString();
 
   // Quoted string: 'hello', "world"
-  const res = extractQuotedStringToken(value).unwrap_or(null) ?? tryExtractBoolean(value) ?? getNumberTextFromExpression(value);
+  const res = extractQuotedStringToken(value).unwrap_or(null) ?? tryExtractBoolean(value) ?? tryExtractNumeric(value);
   return res === null ? null : res.toString();
 }
 
