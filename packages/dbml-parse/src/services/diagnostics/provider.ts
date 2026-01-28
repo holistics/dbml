@@ -1,10 +1,11 @@
 import type Compiler from '@/compiler';
 import type { CompileError, CompileWarning } from '@/core/errors';
-import type { MarkerSeverity, MarkerData } from '@/services/types';
+import { MarkerSeverity, MarkerData } from '@/services/types';
 import type { SyntaxNode } from '@/core/parser/nodes';
 import type { SyntaxToken } from '@/core/lexer/tokens';
 
-export interface Diagnostic {
+// This is the same format that dbdiagram-frontend uses
+interface Diagnostic {
   type: 'error' | 'warning';
   text: string;
   startRow: number;
@@ -103,7 +104,6 @@ export default class DBMLDiagnosticsProvider {
 
   private getSeverityValue (severity: 'error' | 'warning'): MarkerSeverity {
     // Monaco marker severity values
-    // Error = 8, Warning = 4, Info = 2, Hint = 1
-    return severity === 'error' ? 8 : 4;
+    return severity === 'error' ? MarkerSeverity.Error : MarkerSeverity.Warning;
   }
 }
