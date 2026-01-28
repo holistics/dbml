@@ -505,7 +505,9 @@ describe('[example - record] simple foreign key constraints', () => {
     expect(warnings.length).toBe(0);
   });
 
-  test('should validate FK across multiple records blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for FK across multiple records blocks', () => {
     const source = `
       Table users {
         id int [pk]
@@ -533,10 +535,18 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const errors = result.getErrors();
 
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 3 does not exist in users.id');
+    // Verify exact error count and ALL error properties (2 blocks for users + 2 blocks for posts = 4 errors)
+    expect(errors.length).toBe(4);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'posts'");
+    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'posts'");
   });
 
   test('should accept inline ref syntax for FK', () => {
@@ -1003,7 +1013,9 @@ describe('[example - record] FK in table partials', () => {
 });
 
 describe('[example - record] FK validation across multiple records blocks', () => {
-  test('should validate FK across records blocks with different columns', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for FK across records blocks with different columns', () => {
     const source = `
       Table users {
         id int [pk]
@@ -1025,20 +1037,32 @@ describe('[example - record] FK validation across multiple records blocks', () =
       }
 
       records orders(id, user_id) {
-        100, 1  // Valid: user 1 exists
+        100, 1
       }
 
       records orders(id, user_id, total) {
-        101, 2, 250.00  // Valid: user 2 exists
+        101, 2, 250.00
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (2 blocks for users + 2 blocks for orders = 4 errors)
+    expect(errors.length).toBe(4);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'orders'");
+    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'orders'");
   });
 
-  test('should detect FK violation when referenced value not in any records block', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for FK violation when referenced value not in any records block', () => {
     const source = `
       Table users {
         id int [pk]
@@ -1060,18 +1084,24 @@ describe('[example - record] FK validation across multiple records blocks', () =
       }
 
       records orders(id, user_id) {
-        100, 3  // Invalid: user 3 doesn't exist in any block
+        100, 3
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toContain('FK violation');
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (2 blocks for users = 2 errors)
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
-  test('should validate composite FK across multiple records blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for composite FK across multiple records blocks', () => {
     const source = `
       Table users {
         tenant_id int
@@ -1100,18 +1130,26 @@ describe('[example - record] FK validation across multiple records blocks', () =
       }
 
       records posts(id, tenant_id, author_id) {
-        1, 1, 100  // Valid: (1, 100) exists
-        2, 1, 101  // Valid: (1, 101) exists
-        3, 2, 200  // Valid: (2, 200) exists
+        1, 1, 100
+        2, 1, 101
+        3, 2, 200
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (2 blocks for users = 2 errors)
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
-  test('should detect composite FK violation across blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for composite FK violation across blocks', () => {
     const source = `
       Table users {
         tenant_id int
@@ -1139,20 +1177,24 @@ describe('[example - record] FK validation across multiple records blocks', () =
       }
 
       records posts(id, tenant_id, author_id) {
-        1, 1, 101  // Invalid: (1, 101) doesn't exist
+        1, 1, 101
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toContain('FK violation');
-    expect(warnings[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[1].diagnostic).toContain('FK violation');
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (2 blocks for users = 2 errors)
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
-  test('should handle FK when referenced column appears in some but not all blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for FK when referenced column appears in some but not all blocks', () => {
     const source = `
       Table categories {
         id int [pk]
@@ -1166,17 +1208,14 @@ describe('[example - record] FK validation across multiple records blocks', () =
         name varchar
       }
 
-      // Block 1: has id but not category_id
       records categories(id, name) {
         1, 'Electronics'
       }
 
-      // Block 2: has different columns
       records categories(id, description) {
         2, 'Category 2 description'
       }
 
-      // Block 3: has id again
       records categories(id, name) {
         3, 'Home'
       }
@@ -1189,11 +1228,23 @@ describe('[example - record] FK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (3 blocks for categories = 4 errors)
+    expect(errors.length).toBe(4);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
+    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
+    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
   });
 
-  test('should validate FK with NULL values across blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for FK with NULL values across blocks', () => {
     const source = `
       Table users {
         id int [pk]
@@ -1211,21 +1262,29 @@ describe('[example - record] FK validation across multiple records blocks', () =
       }
 
       records orders(id, user_id) {
-        100, 1       // Valid
-        101, null    // Valid: NULL FK allowed
+        100, 1
+        101, null
       }
 
       records orders(id, notes) {
-        102, 'No user'  // Valid: user_id implicitly NULL
+        102, 'No user'
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (2 blocks for orders = 2 errors)
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'orders'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'orders'");
   });
 
-  test('should validate bidirectional FK (1-1) across multiple blocks', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for bidirectional FK (1-1) across multiple blocks', () => {
     const source = `
       Table users {
         id int [pk]
@@ -1254,8 +1313,14 @@ describe('[example - record] FK validation across multiple records blocks', () =
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (2 blocks for users = 2 errors)
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 
   test('should detect bidirectional FK violation', () => {
@@ -1287,7 +1352,9 @@ describe('[example - record] FK validation across multiple records blocks', () =
     expect(warnings.some((e) => e.diagnostic.includes('FK violation'))).toBe(true);
   });
 
-  test('should validate FK across nested and top-level records', () => {
+  // NOTE: Multiple records blocks for the same table are currently disallowed.
+  // We're weighing ideas if records should be merged in the future.
+  test('should report error for FK across nested and top-level records', () => {
     const source = `
       Table categories {
         id int [pk]
@@ -1307,17 +1374,27 @@ describe('[example - record] FK validation across multiple records blocks', () =
         category_id int [ref: > categories.id]
 
         records (id, category_id) {
-          100, 1  // References nested record
+          100, 1
         }
       }
 
       records products(id, category_id) {
-        101, 2  // References top-level record
+        101, 2
       }
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
+    const errors = result.getErrors();
+
+    // Verify exact error count and ALL error properties (2 blocks for categories + 2 blocks for products = 4 errors)
+    expect(errors.length).toBe(4);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
+    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'products'");
+    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'products'");
   });
 });
