@@ -68,7 +68,7 @@ export function prependSpace (completionList: CompletionList): CompletionList {
   };
 }
 
-export function addQuoteIfNeeded (completionList: CompletionList): CompletionList {
+export function addQuoteToSuggestionIfNeeded (completionList: CompletionList): CompletionList {
   return {
     ...completionList,
     suggestions: completionList.suggestions.map((s) => ({

@@ -34,12 +34,6 @@ export function isAlphaNumeric (char: string): boolean {
   return isAlphaOrUnderscore(char) || isDigit(char);
 }
 
-export function addQuoteToSuggestionIfNeeded (s: string): string {
-  if (!s) return `"${s}"`;
-  const isValid = s.split('').every((char) => isAlphaOrUnderscore(char) || isDigit(char)) && !isDigit(s[0]);
-  return isValid ? s : `"${s}"`;
-}
-
 export function alternateLists<T, S> (firstList: T[], secondList: S[]): (T | S)[] {
   const res: (T | S)[] = [];
   const minLength = Math.min(firstList.length, secondList.length);
