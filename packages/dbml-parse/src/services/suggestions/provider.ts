@@ -280,22 +280,6 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
   }
 
   switch (scopeKind) {
-    case ScopeKind.TABLE: {
-      // Check if we're inside a table typing "Records (...)"
-      // In this case, Records is a FunctionApplicationNode
-      for (const c of containers) {
-        if (!(c instanceof FunctionApplicationNode)) continue;
-        if (extractVariableFromExpression(c.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
-        if (!(c.args?.[0] instanceof CallExpressionNode)) continue;
-        const tableSymbol = element.symbol;
-        if (!tableSymbol) break;
-        const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-        // If the user already typed some columns, we do not suggest "all columns" anymore
-        if (!isTupleEmpty(tupleContainer)) return suggestions;
-        return addSuggestAllSuggestion(suggestions);
-      }
-      return noSuggestions();
-    }
     case ScopeKind.INDEXES:
       return suggestColumnNameInIndexes(compiler, offset);
     case ScopeKind.REF:

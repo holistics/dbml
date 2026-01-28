@@ -69,6 +69,21 @@ export function unescapeString (str: string): string {
   let result = '';
   let i = 0;
 
+  // Handle common escape sequences
+  const escapeMap: Record<string, string> = {
+    'n': '\n',
+    't': '\t',
+    'r': '\r',
+    'b': '\b',
+    'f': '\f',
+    'v': '\v',
+    '0': '\0',
+    '\\': '\\',
+    '"': '"',
+    '\'': '\'',
+    '`': '`',
+  };
+
   while (i < str.length) {
     if (str[i] === '\\' && i + 1 < str.length) {
       const nextChar = str[i + 1];
@@ -82,21 +97,6 @@ export function unescapeString (str: string): string {
           continue;
         }
       }
-
-      // Handle common escape sequences
-      const escapeMap: Record<string, string> = {
-        'n': '\n',
-        't': '\t',
-        'r': '\r',
-        'b': '\b',
-        'f': '\f',
-        'v': '\v',
-        '0': '\0',
-        '\\': '\\',
-        '"': '"',
-        '\'': '\'',
-        '`': '`',
-      };
 
       if (nextChar in escapeMap) {
         result += escapeMap[nextChar];
