@@ -639,7 +639,7 @@ function suggestInColumn (
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const elements = ['Note', 'indexes', 'checks'];
+  const elements = ['Note', 'indexes', 'checks', 'Records'];
 
   if (!container?.callee) {
     return {
@@ -651,13 +651,6 @@ function suggestInColumn (
           kind: CompletionItemKind.Keyword,
           range: undefined as any,
         })),
-        {
-          label: 'Records',
-          insertText: 'Records',
-          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-          kind: CompletionItemKind.Keyword,
-          range: undefined as any,
-        },
       ],
     };
   }
@@ -674,13 +667,6 @@ function suggestInColumn (
           kind: CompletionItemKind.Keyword,
           range: undefined as any,
         })),
-        {
-          label: 'Records',
-          insertText: 'Records',
-          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-          kind: CompletionItemKind.Keyword,
-          range: undefined as any,
-        },
       ],
     };
   }
