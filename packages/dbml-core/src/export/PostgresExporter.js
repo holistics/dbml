@@ -169,7 +169,6 @@ class PostgresExporter {
 
       // Value formatter for PostgreSQL
       const formatValue = (val) => {
-        if (!val || typeof val !== 'object') return String(val);
         if (val.value === null) return 'NULL';
         if (val.type === 'expression') return val.value;
 
@@ -182,9 +181,7 @@ class PostgresExporter {
 
       // Build the VALUES clause
       const valueRows = values.map((row) => {
-        // Check if row is actually an object (single value) or an array
-        const rowValues = Array.isArray(row) ? row : [row];
-        const valueStrs = rowValues.map(formatValue);
+        const valueStrs = row.map(formatValue);
         return `(${valueStrs.join(', ')})`;
       });
 
