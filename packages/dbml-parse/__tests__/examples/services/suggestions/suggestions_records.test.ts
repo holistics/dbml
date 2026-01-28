@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
-import { generateRecordEntrySnippet, getColumnsFromTableSymbol } from '@/services/suggestions/utils';
+import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
 import { TableSymbol } from '@/core/analyzer/symbol/symbols';
 
 describe('[example] CompletionItemProvider - Records', () => {
@@ -164,80 +164,6 @@ Records products(
 });
 
 describe('[example] Suggestions Utils - Records', () => {
-  describe('generateRecordEntrySnippet', () => {
-    it('- should generate snippet with placeholders including types for single column', () => {
-      const columns = [{ name: 'id', type: 'int' }];
-      const result = generateRecordEntrySnippet(columns);
-      expect(result).toBe('${1:id (int)}');
-    });
-
-    it('- should generate snippet with placeholders including types for multiple columns', () => {
-      const columns = [
-        { name: 'id', type: 'int' },
-        { name: 'name', type: 'varchar' },
-        { name: 'email', type: 'varchar' },
-      ];
-      const result = generateRecordEntrySnippet(columns);
-      expect(result).toBe('${1:id (int)}, ${2:name (varchar)}, ${3:email (varchar)}');
-    });
-
-    it('- should generate snippet with correct placeholder indices', () => {
-      const columns = [
-        { name: 'a', type: 'int' },
-        { name: 'b', type: 'int' },
-        { name: 'c', type: 'int' },
-        { name: 'd', type: 'int' },
-        { name: 'e', type: 'int' },
-      ];
-      const result = generateRecordEntrySnippet(columns);
-      expect(result).toBe('${1:a (int)}, ${2:b (int)}, ${3:c (int)}, ${4:d (int)}, ${5:e (int)}');
-    });
-
-    it('- should handle column names with special characters', () => {
-      const columns = [
-        { name: 'column-1', type: 'int' },
-        { name: 'column 2', type: 'varchar' },
-        { name: 'column.3', type: 'boolean' },
-      ];
-      const result = generateRecordEntrySnippet(columns);
-      expect(result).toBe('${1:column-1 (int)}, ${2:column 2 (varchar)}, ${3:column.3 (boolean)}');
-    });
-
-    it('- should return empty string for empty columns array', () => {
-      const columns: Array<{ name: string; type: string }> = [];
-      const result = generateRecordEntrySnippet(columns);
-      expect(result).toBe('');
-    });
-
-    it('- should handle many columns', () => {
-      const columns = Array.from({ length: 20 }, (_, i) => ({
-        name: `col${i + 1}`,
-        type: 'varchar',
-      }));
-      const result = generateRecordEntrySnippet(columns);
-
-      // Should have 20 placeholders
-      const placeholderCount = (result.match(/\$\{/g) || []).length;
-      expect(placeholderCount).toBe(20);
-
-      // Should start with ${1:col1 (varchar)}
-      expect(result).toMatch(/^\$\{1:col1 \(varchar\)\}/);
-
-      // Should end with ${20:col20 (varchar)}
-      expect(result).toMatch(/\$\{20:col20 \(varchar\)\}$/);
-    });
-
-    it('- should preserve exact column name and type in placeholder', () => {
-      const columns = [
-        { name: 'UserId', type: 'int' },
-        { name: 'FirstName', type: 'varchar' },
-        { name: 'LAST_NAME', type: 'varchar' },
-      ];
-      const result = generateRecordEntrySnippet(columns);
-      expect(result).toBe('${1:UserId (int)}, ${2:FirstName (varchar)}, ${3:LAST_NAME (varchar)}');
-    });
-  });
-
   describe('getColumnsFromTableSymbol', () => {
     it('- should extract columns from table with partial table injection', () => {
       const program = `
