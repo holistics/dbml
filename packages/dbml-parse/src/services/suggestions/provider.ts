@@ -284,23 +284,17 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
       // Check if we're inside a table typing "Records (...)"
       // In this case, Records is a FunctionApplicationNode
       for (const c of containers) {
-        if (
-          c instanceof FunctionApplicationNode
-          && isExpressionAVariableNode(c.callee)
-          && extractVariableFromExpression(c.callee).unwrap_or('').toLowerCase() === 'records'
-          && !(c.args?.[0] instanceof CallExpressionNode)
-        ) {
-          const tableSymbol = element.symbol;
-          if (tableSymbol) {
-            const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-            // If the user already typed some columns, we do not suggest "all columns" anymore
-            if (!isTupleEmpty(tupleContainer)) return suggestions;
-            return addSuggestAllSuggestion(suggestions);
-          }
-          break;
-        }
+        if (!(c instanceof FunctionApplicationNode)) continue;
+        if (extractVariableFromExpression(c.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
+        if (!(c.args?.[0] instanceof CallExpressionNode)) continue;
+        const tableSymbol = element.symbol;
+        if (!tableSymbol) break;
+        const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+        // If the user already typed some columns, we do not suggest "all columns" anymore
+        if (!isTupleEmpty(tupleContainer)) return suggestions;
+        return addSuggestAllSuggestion(suggestions);
       }
-      break;
+      return noSuggestions();
     }
     case ScopeKind.INDEXES:
       return suggestColumnNameInIndexes(compiler, offset);
@@ -780,20 +774,17 @@ function suggestInCallExpression (
   // }
   const containers = [...compiler.container.stack(offset)];
   for (const c of containers) {
-    if (
-      c instanceof FunctionApplicationNode
-      && c.callee === container
-      && extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() === ElementKind.Records
-      && inArgs
-    ) {
-      const tableSymbol = compiler.container.element(offset).symbol;
-      if (!tableSymbol) return noSuggestions();
-      const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-      const { argumentList } = container;
-      // If the user already typed some columns, we do not suggest "all columns" anymore
-      if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
-      return addSuggestAllSuggestion(suggestions);
-    }
+    if (!inArgs) continue;
+    if (!(c instanceof FunctionApplicationNode)) continue;
+    if (c.callee !== container) continue;
+    if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
+    const tableSymbol = compiler.container.element(offset).symbol;
+    if (!tableSymbol) return noSuggestions();
+    const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+    const { argumentList } = container;
+    // If the user already typed some columns, we do not suggest "all columns" anymore
+    if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
+    return addSuggestAllSuggestion(suggestions);
   }
 
   return noSuggestions();
