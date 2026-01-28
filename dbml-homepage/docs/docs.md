@@ -35,6 +35,11 @@ outlines the full syntax documentations of DBML.
     - [TableGroup Notes](#tablegroup-notes-1)
     - [TableGroup Settings](#tablegroup-settings)
 - [TablePartial](#tablepartial)
+- [Data Sample](#data-sample)
+  - [Explicit Column List](#explicit-column-list)
+  - [Implicit Column List](#implicit-column-list)
+  - [Data Types](#data-types)
+  - [Type Conversion Rules](#type-conversion-rules)
 - [Multi-line String](#multi-line-string)
 - [Comments](#comments)
 - [Syntax Consistency](#syntax-consistency)
@@ -657,6 +662,224 @@ When multiple partials define the same field, setting or index, DBML resolves co
 
 1. Local Table Definition: Fields, settings and indexes defined directly in the table override those from partials.
 2. Last Injected Partial: If a conflict exists between partials, the definition from the last-injected partial (in source order) takes precedence.
+
+## Data Sample
+
+`Records` allow you to define sample data for your tables directly in DBML. This is useful for documentation, testing, and providing example data for your database schema.
+
+Records can be defined either outside or inside a table definition.
+
+```text
+// Outside table definition
+Table users {
+  id int [pk]
+  name varchar
+  email varchar
+}
+
+records users(id, name, email) {
+  1, 'Alice', 'alice@example.com'
+  2, 'Bob', 'bob@example.com'
+}
+
+// Inside table definition
+Table posts {
+  id int [pk]
+  title varchar
+  published boolean
+
+  records (id, title, published) {
+    1, 'First Post', true
+    2, 'Second Post', false
+  }
+}
+```
+
+:::note
+Each table can have only one records block. You cannot define duplicate records block for the same table.
+:::
+
+### Explicit Column List
+
+You can specify which columns to populate by listing them in parentheses. This works for both inside and outside table records.
+
+```text
+Table users {
+  id int [pk]
+  name varchar
+  email varchar
+  created_at timestamp
+}
+
+// Only populate id and name, other columns will use default values or NULL
+records users(id, name) {
+  1, 'Alice'
+  2, 'Bob'
+  3, 'Charlie'
+}
+```
+
+### Implicit Column List
+
+When the column list is omitted, records will automatically use all table columns in their definition order. **Implicit column lists are only supported for records defined inside a table.**
+
+```text
+Table users {
+  id int [pk]
+  name varchar
+  active boolean
+
+  // Implicitly uses all columns in order: id, name, active
+  records {
+    1, 'Alice', true
+    2, 'Bob', false
+  }
+}
+```
+
+:::tip
+When using implicit columns with tables that inject partials using `~partial_name`, the column order follows the same precedence rules as [TablePartial](#tablepartial) injection.
+:::
+
+**Column Order with Table Partials**
+
+When a table injects partials, the final column order for implicit records is determined by:
+
+1. Fields from injected partials appear in their injection order
+2. Local table fields appear in their definition order
+3. Later partial injections override earlier ones for duplicate fields
+
+Example,
+
+```text
+TablePartial base_template {
+  id int [pk]
+  created_at timestamp
+}
+
+TablePartial metadata {
+  updated_at timestamp
+}
+
+Table users {
+  ~base_template  // id, created_at injected first
+  name varchar    // local field
+  email varchar   // local field
+  ~metadata       // updated_at injected last
+
+  // Implicit column order: id, created_at, name, email, updated_at
+  records {
+    1, '2024-01-15 10:00:00', 'Alice', 'alice@example.com', '2024-01-15 10:00:00'
+    2, '2024-01-16 11:00:00', 'Bob', 'bob@example.com', '2024-01-16 11:00:00'
+  }
+}
+```
+
+### Data Types
+
+Records use CSV-style syntax. Each value is interpreted and type-checked according to the target column's SQL type.
+
+**Strings**
+
+Wrapped in single quotes. Escape single quotes using `\'`.
+
+```text
+'Hello World'
+'Escape\'s sequence'
+```
+
+**Numbers**
+
+Integer or decimal values with or without quotes.
+
+```text
+42
+3.14
+-100
+1.5e10
+```
+
+**Booleans**
+
+Use `true` or `false` literals, or various boolean-like representations:
+
+```text
+true, false           // Boolean literals (case-insensitive)
+'Y', 'N'             // Yes/No (case-insensitive)
+'T', 'F'             // True/False (case-insensitive)
+'TRUE', 'FALSE'      // String forms (case-insensitive)
+1, 0                 // Numeric forms
+'1', '0'
+```
+
+**Null Values**
+
+Multiple ways to represent NULL:
+
+```text
+null                 // Explicit NULL literal
+''                   // Empty string (for non-string types)
+                     // Empty field between commas
+```
+
+Example,
+
+```text
+Table users {
+  id int
+  name varchar
+  age int
+}
+
+records users(id, name, age) {
+  1, 'Alice', null    // explicit NULL
+  2, 'Bob', ''        // empty string treated as NULL
+  3, , 25             // empty field treated as NULL
+}
+```
+
+**Timestamps/Dates**
+
+Wrapped in single quotes. Supports ISO 8601 and other sensible formats.
+
+```text
+'2024-01-15 10:30:00'
+'2024-01-15T10:30:00.000+07:00'
+'2024-01-15'
+'10:30:00'
+```
+
+**Enum Values**
+
+Reference enum members using the enum constant or string literal:
+
+```text
+enum Status {
+  active
+  inactive
+  pending
+}
+
+Table orders {
+  id int
+  status Status
+}
+
+records orders(id, status) {
+  1, Status.active    // Using enum constant
+  2, 'inactive'       // Using string literal
+}
+```
+
+**Expressions**
+
+Wrapped in backticks for database functions and expressions. When using expressions, static type checking is disabled for that value.
+
+```text
+`now()`
+`uuid_generate_v4()`
+`1 + 2 * 3`
+```
 
 ## Multi-line String
 
