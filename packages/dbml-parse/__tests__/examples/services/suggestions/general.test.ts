@@ -1409,13 +1409,12 @@ describe('[example] CompletionItemProvider', () => {
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toEqual([
         'user-table',
-
       ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
       expect(insertTexts).toEqual([
-        '""user-table""',
+        '"user-table"',
       ]);
     });
 
