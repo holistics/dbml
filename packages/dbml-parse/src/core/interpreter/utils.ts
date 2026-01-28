@@ -199,7 +199,7 @@ export function processDefaultValue (valueNode?: SyntaxNode):
   throw new Error('Unreachable');
 }
 
-export function processColumnType (typeNode: SyntaxNode, env?: InterpreterDatabase): Report<ColumnType> {
+export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabase): Report<ColumnType> {
   let typeSuffix: string = '';
   let typeArgs: string | null = null;
   let numericParams: { precision: number; scale: number } | undefined;
@@ -276,13 +276,11 @@ export function processColumnType (typeNode: SyntaxNode, env?: InterpreterDataba
   const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
 
   // Check if this type references an enum
-  if (env) {
-    const schema = typeSchemaName.length === 0 ? null : typeSchemaName[0];
-    for (const enumObj of env.enums.values()) {
-      if (enumObj.name === typeName && enumObj.schemaName === schema) {
-        isEnum = true;
-        break;
-      }
+  const schema = typeSchemaName.length === 0 ? null : typeSchemaName[0];
+  for (const enumObj of env.enums.values()) {
+    if (enumObj.name === typeName && enumObj.schemaName === schema) {
+      isEnum = true;
+      break;
     }
   }
 
