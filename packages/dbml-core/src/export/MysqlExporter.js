@@ -37,7 +37,7 @@ class MySQLExporter {
         if (val.type === 'expression') return val.value;
 
         if (isNumericType(val.type)) return val.value;
-        if (isBooleanType(val.type)) return val.value.toString().toUpperCase() === 'TRUE' ? '1' : '0';
+        if (isBooleanType(val.type)) return val.value ? 'TRUE' : 'FALSE';
         if (isStringType(val.type) || isBinaryType(val.type) || isDateTimeType(val.type)) return `'${val.value.replace(/'/g, "''").replace(/\\/g, '\\\\')}'`;
         // Unknown type - use CAST
         return `CAST('${val.value.replace(/'/g, "''").replace(/\\/g, '\\\\')}' AS ${val.type})`;

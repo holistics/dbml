@@ -37,7 +37,7 @@ class SqlServerExporter {
         if (val.type === 'expression') return val.value;
 
         if (isNumericType(val.type)) return val.value;
-        if (isBooleanType(val.type)) return val.value.toString().toUpperCase() === 'TRUE' ? '1' : '0';
+        if (isBooleanType(val.type)) return val.value.toString() ? '1' : '0';
         if (isStringType(val.type) || isDateTimeType(val.type)) return `'${val.value.replace(/'/g, "''")}'`;
         if (isBinaryType(val.type)) return `0x${val.value}`; // SQL Server binary as hex
         // Unknown type - use CAST

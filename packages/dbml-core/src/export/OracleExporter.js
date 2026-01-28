@@ -32,12 +32,12 @@ class OracleExporter {
         ? `("${columns.join('", "')}")`
         : '';
 
-      const valueExporter = (val) => {
+      const formatValue = (val) => {
         if (val.value === null) return 'NULL';
         if (val.type === 'expression') return val.value;
 
         if (isNumericType(val.type)) return val.value;
-        if (isBooleanType(val.type)) return val.value.toString().toUpperCase() === 'TRUE' ? '1' : '0';
+        if (isBooleanType(val.type)) return val.value ? '1' : '0';
         if (isStringType(val.type) || isDateTimeType(val.type)) return `'${val.value.replace(/'/g, "''")}'`;
         if (isBinaryType(val.type)) return `HEXTORAW('${val.value}')`;
         // Unknown type - use CAST
@@ -47,14 +47,14 @@ class OracleExporter {
       // Build the INSERT ALL statement for multiple rows
       if (values.length > 1) {
         const intoStatements = values.map((row) => {
-          const valueStrs = row.map(valueExporter);
+          const valueStrs = row.map(formatValue);
           return `  INTO ${tableRef} ${columnList} VALUES (${valueStrs.join(', ')})`;
         });
         return `INSERT ALL\n${intoStatements.join('\n')}\nSELECT * FROM dual;`;
       }
 
       // Single row INSERT
-      const valueStrs = values[0].map(valueExporter);
+      const valueStrs = values[0].map(formatValue);
 
       return `INSERT INTO ${tableRef} ${columnList}\nVALUES (${valueStrs.join(', ')});`;
     });
