@@ -4,237 +4,214 @@ import { extractKeyValueWithDefault, hasNullWithoutDefaultInKey, formatFullColum
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/core/interpreter/utils';
 
-export function validateForeignKeys (
-  env: InterpreterDatabase,
-): CompileError[] {
-  const refs = Array.from(env.ref.values());
-  const errors: CompileError[] = [];
+interface TableLookup {
+  table: Table;
+  mergedTable: Table;
+  rows: TableRecordRow[];
+}
 
-  // Validate explicit relationship definitions
-  for (const ref of refs) {
-    errors.push(...validateReference(ref, env));
+type LookupMap = Map<string, TableLookup>;
+
+// Create a table key from schema and table name
+function makeTableKey (schema: string | null | undefined, table: string): string {
+  return schema ? `${schema}.${table}` : `${DEFAULT_SCHEMA_NAME}.${table}`;
+}
+
+function createRecordMapFromKey (
+  tables: Map<unknown, Table>,
+  records: Map<Table, TableRecordRow[]>,
+  env: InterpreterDatabase,
+): LookupMap {
+  const lookup = new Map<string, TableLookup>();
+
+  for (const table of tables.values()) {
+    const key = makeTableKey(table.schemaName, table.name);
+    const rows = records.get(table) || [];
+    const mergedTable = mergeTableAndPartials(table, env);
+    lookup.set(key, { table, mergedTable, rows });
   }
 
-  // Validate inline refs from table partials
-  for (const table of env.tables.values()) {
-    const partialRefs = extractInlineRefsFromTablePartials(table, env);
-    for (const ref of partialRefs) {
-      errors.push(...validateReference(ref, env));
+  return lookup;
+}
+
+function collectValidKeys (rows: TableRecordRow[], columnNames: string[]): Set<string> {
+  const keys = new Set<string>();
+  for (const row of rows) {
+    if (!hasNullWithoutDefaultInKey(row.values, columnNames)) {
+      keys.add(extractKeyValueWithDefault(row.values, columnNames));
+    }
+  }
+  return keys;
+}
+
+// Validate FK direction: source table values must exist in target table
+function validateDirection (
+  source: TableLookup,
+  target: TableLookup,
+  sourceEndpoint: RefEndpoint,
+  targetEndpoint: RefEndpoint,
+): CompileError[] {
+  const errors: CompileError[] = [];
+
+  if (source.rows.length === 0) {
+    return errors;
+  }
+
+  const sourceTableColumns = new Set(source.mergedTable.fields.map((f) => f.name));
+  if (sourceEndpoint.fieldNames.some((col) => !sourceTableColumns.has(col))) {
+    return errors;
+  }
+
+  const targetTableColumns = new Set(target.mergedTable.fields.map((f) => f.name));
+  if (targetEndpoint.fieldNames.some((col) => !targetTableColumns.has(col))) {
+    return errors;
+  }
+
+  const validKeys = collectValidKeys(target.rows, targetEndpoint.fieldNames);
+
+  for (const row of source.rows) {
+    // TODO: implement FK for autoincrement fields
+    if (hasNullWithoutDefaultInKey(row.values, sourceEndpoint.fieldNames)) continue;
+
+    const key = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
+    if (!validKeys.has(key)) {
+      // Create separate error for each column in the constraint
+      const errorNodes = sourceEndpoint.fieldNames
+        .map((col) => row.columnNodes[col])
+        .filter(Boolean);
+      const isComposite = sourceEndpoint.fieldNames.length > 1;
+      const sourceColumnRef = formatFullColumnNames(source.mergedTable.schemaName, source.mergedTable.name, sourceEndpoint.fieldNames);
+      const targetColumnRef = formatFullColumnNames(target.mergedTable.schemaName, target.mergedTable.name, targetEndpoint.fieldNames);
+
+      let msg: string;
+      if (isComposite) {
+        const valueStr = sourceEndpoint.fieldNames.map((col) => JSON.stringify(row.values[col]?.value)).join(', ');
+        msg = `FK violation: ${sourceColumnRef} = (${valueStr}) does not exist in ${targetColumnRef}`;
+      } else {
+        const value = JSON.stringify(row.values[sourceEndpoint.fieldNames[0]]?.value);
+        msg = `FK violation: ${sourceColumnRef} = ${value} does not exist in ${targetColumnRef}`;
+      }
+
+      if (errorNodes.length > 0) {
+        // Create one error per column node
+        for (const node of errorNodes) {
+          errors.push(new CompileError(
+            CompileErrorCode.INVALID_RECORDS_FIELD,
+            msg,
+            node,
+          ));
+        }
+      } else {
+        // Fallback to row node if no column nodes available
+        errors.push(new CompileError(
+          CompileErrorCode.INVALID_RECORDS_FIELD,
+          msg,
+          row.node,
+        ));
+      }
     }
   }
 
   return errors;
 }
 
-function findTable (
-  schemaName: string | null | undefined,
-  tableName: string,
-  env: InterpreterDatabase,
-): Table | undefined {
-  for (const table of env.tables.values()) {
-    if (table.name === tableName && table.schemaName === (schemaName || DEFAULT_SCHEMA_NAME)) {
-      return table;
-    }
-  }
-  return undefined;
+// Validate 1-1 relationship (both directions)
+// * 1-1:     Both sides reference each other. Every non-null value in table1
+// *          must exist in table2, and vice versa.
+function validateOneToOne (
+  table1: TableLookup,
+  table2: TableLookup,
+  endpoint1: RefEndpoint,
+  endpoint2: RefEndpoint,
+): CompileError[] {
+  return [
+    ...validateDirection(table1, table2, endpoint1, endpoint2),
+    ...validateDirection(table2, table1, endpoint2, endpoint1),
+  ];
 }
 
-/**
- * Get set of valid keys for given columns in a table.
- * Returns all non-NULL key combinations.
- */
-function collectValidKeys (
-  table: Table,
-  columnNames: string[],
-  env: InterpreterDatabase,
-): Set<string> {
-  const rows = env.records.get(table) || [];
-  const keys = new Set<string>();
-
-  for (const row of rows) {
-    if (!hasNullWithoutDefaultInKey(row.values, columnNames)) {
-      keys.add(extractKeyValueWithDefault(row.values, columnNames));
-    }
-  }
-
-  return keys;
+// Validate many-to-one relationship (FK on many side)
+// * *-1:     Many-to-one. The "*" side (endpoint1) has FK referencing the "1" side.
+// *          Values in endpoint1 must exist in endpoint2.
+// * 1-*:     One-to-many. The "*" side (endpoint2) has FK referencing the "1" side.
+// *          Values in endpoint2 must exist in endpoint1.
+function validateManyToOne (
+  manyTable: TableLookup,
+  oneTable: TableLookup,
+  manyEndpoint: RefEndpoint,
+  oneEndpoint: RefEndpoint,
+): CompileError[] {
+  return validateDirection(manyTable, oneTable, manyEndpoint, oneEndpoint);
 }
 
-/**
- * Validate a single relationship definition.
- * Routes to appropriate validator based on cardinality.
- */
-function validateReference (ref: Ref, env: InterpreterDatabase): CompileError[] {
-  if (!ref.endpoints) return [];
+// Validate many-to-many relationship (both directions)
+// * *-*:     Many-to-many. Both sides reference each other.
+// *          Values in each table must exist in the other.
+function validateManyToMany (
+  table1: TableLookup,
+  table2: TableLookup,
+  endpoint1: RefEndpoint,
+  endpoint2: RefEndpoint,
+): CompileError[] {
+  return [
+    ...validateDirection(table1, table2, endpoint1, endpoint2),
+    ...validateDirection(table2, table1, endpoint2, endpoint1),
+  ];
+}
 
+function validateRef (ref: Ref, lookup: LookupMap): CompileError[] {
+  if (!ref.endpoints) {
+    return [];
+  }
   const [endpoint1, endpoint2] = ref.endpoints;
-  const table1 = findTable(endpoint1.schemaName, endpoint1.tableName, env);
-  const table2 = findTable(endpoint2.schemaName, endpoint2.tableName, env);
+
+  const table1 = lookup.get(makeTableKey(endpoint1.schemaName, endpoint1.tableName));
+  const table2 = lookup.get(makeTableKey(endpoint2.schemaName, endpoint2.tableName));
 
   if (!table1 || !table2) return [];
 
   const rel1 = endpoint1.relation;
   const rel2 = endpoint2.relation;
 
-  // Route to appropriate validator based on relationship type
   if (rel1 === '1' && rel2 === '1') {
-    return validateOneToOne(table1, table2, endpoint1, endpoint2, env);
+    return validateOneToOne(table1, table2, endpoint1, endpoint2);
   }
+
   if (rel1 === '*' && rel2 === '1') {
-    return validateManyToOne(table1, table2, endpoint1, endpoint2, env);
+    return validateManyToOne(table1, table2, endpoint1, endpoint2);
   }
+
   if (rel1 === '1' && rel2 === '*') {
-    return validateManyToOne(table2, table1, endpoint2, endpoint1, env);
+    return validateManyToOne(table2, table1, endpoint2, endpoint1);
   }
+
   if (rel1 === '*' && rel2 === '*') {
-    return validateManyToMany(table1, table2, endpoint1, endpoint2, env);
+    return validateManyToMany(table1, table2, endpoint1, endpoint2);
   }
 
   return [];
 }
 
-/**
- * Validate 1-1 relationship: both directions must be valid.
- */
-function validateOneToOne (
-  table1: Table,
-  table2: Table,
-  endpoint1: RefEndpoint,
-  endpoint2: RefEndpoint,
+export function validateForeignKeys (
   env: InterpreterDatabase,
 ): CompileError[] {
-  return [
-    ...validateForeignKeyDirection(table1, table2, endpoint1, endpoint2, env),
-    ...validateForeignKeyDirection(table2, table1, endpoint2, endpoint1, env),
-  ];
-}
-
-/**
- * Validate *-1 relationship: many side must reference valid keys on one side.
- */
-function validateManyToOne (
-  manyTable: Table,
-  oneTable: Table,
-  manyEndpoint: RefEndpoint,
-  oneEndpoint: RefEndpoint,
-  env: InterpreterDatabase,
-): CompileError[] {
-  return validateForeignKeyDirection(manyTable, oneTable, manyEndpoint, oneEndpoint, env);
-}
-
-/**
- * Validate *-* relationship: both directions must be valid.
- */
-function validateManyToMany (
-  table1: Table,
-  table2: Table,
-  endpoint1: RefEndpoint,
-  endpoint2: RefEndpoint,
-  env: InterpreterDatabase,
-): CompileError[] {
-  return [
-    ...validateForeignKeyDirection(table1, table2, endpoint1, endpoint2, env),
-    ...validateForeignKeyDirection(table2, table1, endpoint2, endpoint1, env),
-  ];
-}
-
-/**
- * Validate FK in one direction: source table values must exist in target table.
- */
-function validateForeignKeyDirection (
-  sourceTable: Table,
-  targetTable: Table,
-  sourceEndpoint: RefEndpoint,
-  targetEndpoint: RefEndpoint,
-  env: InterpreterDatabase,
-): CompileError[] {
+  const lookup = createRecordMapFromKey(env.tables, env.records, env);
+  const refs = Array.from(env.ref.values());
   const errors: CompileError[] = [];
-  const sourceRows = env.records.get(sourceTable) || [];
 
-  // Early exit if source has no rows
-  if (sourceRows.length === 0) return errors;
+  for (const ref of refs) {
+    errors.push(...validateRef(ref, lookup));
+  }
 
-  // Get merged tables and check columns exist
-  const sourceMerged = mergeTableAndPartials(sourceTable, env);
-  const targetMerged = mergeTableAndPartials(targetTable, env);
+  // Also validate inline refs from table partials
+  for (const mergedTableData of lookup.values()) {
+    const { table } = mergedTableData;
+    const partialRefs = extractInlineRefsFromTablePartials(table, env);
 
-  const sourceColumns = new Set(sourceMerged.fields.map((f) => f.name));
-  const targetColumns = new Set(targetMerged.fields.map((f) => f.name));
-
-  if (sourceEndpoint.fieldNames.some((col) => !sourceColumns.has(col))) return errors;
-  if (targetEndpoint.fieldNames.some((col) => !targetColumns.has(col))) return errors;
-
-  // Collect valid keys from target table
-  const validKeys = collectValidKeys(targetTable, targetEndpoint.fieldNames, env);
-
-  // Check each source row
-  for (const row of sourceRows) {
-    // Skip rows with NULL in FK columns (NULLs don't participate in FK checks)
-    if (hasNullWithoutDefaultInKey(row.values, sourceEndpoint.fieldNames)) continue;
-
-    const key = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
-    if (!validKeys.has(key)) {
-      errors.push(...createForeignKeyViolationErrors(
-        row,
-        sourceEndpoint,
-        targetEndpoint,
-        sourceMerged,
-        targetMerged,
-      ));
+    for (const ref of partialRefs) {
+      errors.push(...validateRef(ref, lookup));
     }
   }
 
   return errors;
-}
-
-/**
- * Create error for FK violation.
- */
-function createForeignKeyViolationErrors (
-  row: TableRecordRow,
-  sourceEndpoint: RefEndpoint,
-  targetEndpoint: RefEndpoint,
-  sourceTable: { schemaName: string | null; name: string },
-  targetTable: { schemaName: string | null; name: string },
-): CompileError[] {
-  const errorNodes = sourceEndpoint.fieldNames
-    .map((col) => row.columnNodes[col])
-    .filter(Boolean);
-
-  const isComposite = sourceEndpoint.fieldNames.length > 1;
-  const sourceColumnRef = formatFullColumnNames(
-    sourceTable.schemaName,
-    sourceTable.name,
-    sourceEndpoint.fieldNames,
-  );
-  const targetColumnRef = formatFullColumnNames(
-    targetTable.schemaName,
-    targetTable.name,
-    targetEndpoint.fieldNames,
-  );
-
-  let msg: string;
-  if (isComposite) {
-    const valueStr = sourceEndpoint.fieldNames
-      .map((col) => JSON.stringify(row.values[col]?.value))
-      .join(', ');
-    msg = `FK violation: ${sourceColumnRef} = (${valueStr}) does not exist in ${targetColumnRef}`;
-  } else {
-    const value = JSON.stringify(row.values[sourceEndpoint.fieldNames[0]]?.value);
-    msg = `FK violation: ${sourceColumnRef} = ${value} does not exist in ${targetColumnRef}`;
-  }
-
-  if (errorNodes.length > 0) {
-    return errorNodes.map((node) => new CompileError(
-      CompileErrorCode.INVALID_RECORDS_FIELD,
-      msg,
-      node,
-    ));
-  }
-
-  return [new CompileError(
-    CompileErrorCode.INVALID_RECORDS_FIELD,
-    msg,
-    row.node,
-  )];
 }
