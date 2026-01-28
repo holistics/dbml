@@ -26,8 +26,10 @@ export interface CompletionItemProvider {
     token: CancellationToken,
   ): ProviderResult<CompletionItem>;
 }
-export type CompletionItem = languages.CompletionItem;
-export type CompletionList = languages.CompletionList;
+export type CompletionItem = languages.CompletionItem & { quoted?: boolean };
+export interface CompletionList extends languages.CompletionList {
+  suggestions: CompletionItem[];
+};
 export enum CompletionItemKind {
   Function = 1,
   Constructor = 2,

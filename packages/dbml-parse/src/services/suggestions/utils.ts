@@ -73,7 +73,8 @@ export function addQuoteToSuggestionIfNeeded (completionList: CompletionList): C
     ...completionList,
     suggestions: completionList.suggestions.map((s) => ({
       ...s,
-      insertText: addDoubleQuoteIfNeeded(s.insertText ?? ''),
+      insertText: s.quoted ? s.insertText : addDoubleQuoteIfNeeded(s.insertText ?? ''),
+      quoted: true,
     })),
   };
 }
