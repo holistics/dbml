@@ -23,7 +23,7 @@ import Compiler from '@/compiler';
 import {
   noSuggestions,
   getColumnsFromTableSymbol,
-  extractColumnNameAndType,
+  extractNameAndTypeOfColumnSymbol,
 } from '@/services/suggestions/utils';
 import { isOffsetWithinSpan } from '@/core/utils';
 
@@ -76,7 +76,7 @@ function suggestRecordRowInTopLevelRecords (
       }
       const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
       if (!columnName) return null;
-      const result = extractColumnNameAndType(symbol, columnName);
+      const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
       return result;
     })
     .filter((col) => col !== null) as Array<{ name: string; type: string }>;
@@ -131,7 +131,7 @@ function suggestRecordRowInNestedRecords (
         }
         const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
         if (columnName === undefined) return null;
-        return extractColumnNameAndType(symbol, columnName);
+        return extractNameAndTypeOfColumnSymbol(symbol, columnName);
       })
       .filter((col) => col !== null) as Array<{ name: string; type: string }>;
   } else {
