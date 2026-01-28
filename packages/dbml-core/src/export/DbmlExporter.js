@@ -1,5 +1,5 @@
 import { isEmpty, reduce } from 'lodash-es';
-import { addDoubleQuoteIfNeeded, escapeString, formatRecordValue } from '@dbml/parse';
+import { addDoubleQuoteIfNeeded, formatRecordValue } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
@@ -218,7 +218,7 @@ class DbmlExporter {
       if (shouldPrintSchema(schema, model)) tableName = `"${schema.name}"."${table.name}"`;
 
       // Include alias if present
-      const aliasStr = table.alias ? ` as ${addDoubleQuoteIfNeeded(escapeString(table.alias))}` : '';
+      const aliasStr = table.alias ? ` as ${addDoubleQuoteIfNeeded(table.alias)}` : '';
 
       const fieldStr = tableContent.fieldContents.map((field) => `  ${field}\n`).join('');
 
