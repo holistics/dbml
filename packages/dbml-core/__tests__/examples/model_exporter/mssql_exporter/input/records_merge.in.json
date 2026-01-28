@@ -1,0 +1,189 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "products",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 10, "line": 1, "column": 11 } },
+          "inline_refs": [],
+          "pk": true,
+          "unique": false
+        },
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "nvarchar",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 2, "column": 1 }, "end": { "offset": 10, "line": 2, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "price",
+          "type": {
+            "schemaName": null,
+            "type_name": "decimal",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 3, "column": 1 }, "end": { "offset": 10, "line": 3, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "in_stock",
+          "type": {
+            "schemaName": null,
+            "type_name": "bit",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 4, "column": 1 }, "end": { "offset": 10, "line": 4, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 100, "line": 5, "column": 2 } },
+      "indexes": []
+    },
+    {
+      "name": "orders",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 10, "line": 1, "column": 11 } },
+          "inline_refs": [],
+          "pk": true,
+          "unique": false
+        },
+        {
+          "name": "product_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 2, "column": 1 }, "end": { "offset": 10, "line": 2, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 3, "column": 1 }, "end": { "offset": 10, "line": 3, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 100, "line": 4, "column": 2 } },
+      "indexes": []
+    }
+  ],
+  "notes": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": [
+    {
+      "schemaName": null,
+      "tableName": "products",
+      "columns": ["id", "name", "price", "in_stock"],
+      "values": [
+        [
+          { "value": 1, "type": "integer" },
+          { "value": "Laptop", "type": "string" },
+          { "value": 999.99, "type": "decimal" },
+          { "value": true, "type": "bool" }
+        ],
+        [
+          { "value": 2, "type": "integer" },
+          { "value": "Mouse", "type": "string" },
+          { "value": 29.99, "type": "decimal" },
+          { "value": true, "type": "bool" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "products",
+      "columns": ["id", "name", "price", "in_stock"],
+      "values": [
+        [
+          { "value": 3, "type": "integer" },
+          { "value": "Keyboard", "type": "string" },
+          { "value": 79.99, "type": "decimal" },
+          { "value": false, "type": "bool" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "products",
+      "columns": ["price", "in_stock", "id", "name"],
+      "values": [
+        [
+          { "value": 149.99, "type": "decimal" },
+          { "value": true, "type": "bool" },
+          { "value": 4, "type": "integer" },
+          { "value": "Monitor", "type": "string" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "orders",
+      "columns": ["id", "product_id", "quantity"],
+      "values": [
+        [
+          { "value": 1, "type": "integer" },
+          { "value": 1, "type": "integer" },
+          { "value": 2, "type": "integer" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "orders",
+      "columns": ["id", "product_id", "quantity"],
+      "values": [
+        [
+          { "value": 2, "type": "integer" },
+          { "value": 2, "type": "integer" },
+          { "value": 5, "type": "integer" }
+        ],
+        [
+          { "value": 3, "type": "integer" },
+          { "value": 1, "type": "integer" },
+          { "value": 1, "type": "integer" }
+        ]
+      ]
+    }
+  ]
+}
