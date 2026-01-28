@@ -158,12 +158,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       } else if (container instanceof FunctionApplicationNode) {
         return suggestInSubField(this.compiler, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
-        // Check if we're in a Records element header - suggest schema.table names
-        if (
-          getElementKind(container).unwrap_or(undefined) === ElementKind.Records
-          && isOffsetWithinElementHeader(offset, container)
-        ) {
-          return suggestInRecordsHeader(this.compiler, offset, container);
+        if (isOffsetWithinElementHeader(offset, container)) {
+          return suggestInElementHeader(this.compiler, offset, container);
         }
 
         if (
@@ -738,15 +734,19 @@ function suggestInRefField (compiler: Compiler, offset: number): CompletionList 
   ]);
 }
 
-function suggestInRecordsHeader (
+function suggestInElementHeader (
   compiler: Compiler,
   offset: number,
   container: ElementDeclarationNode,
 ): CompletionList {
-  return suggestNamesInScope(compiler, offset, container.parent, [
-    SymbolKind.Schema,
-    SymbolKind.Table,
-  ]);
+  const elementKind = getElementKind(container).unwrap_or(undefined);
+  if (elementKind === ElementKind.Records) {
+    return suggestNamesInScope(compiler, offset, container.parent, [
+      SymbolKind.Schema,
+      SymbolKind.Table,
+    ]);
+  }
+  return noSuggestions();
 }
 
 function suggestInCallExpression (
