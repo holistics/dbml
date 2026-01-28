@@ -1,97 +1,74 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import { InterpreterDatabase } from '@/core/interpreter/types';
+import { CompileError } from '@/core/errors';
+import { InterpreterDatabase, Table, Column, TableRecordRow } from '@/core/interpreter/types';
 import {
   extractKeyValueWithDefault,
   hasNullWithoutDefaultInKey,
   formatFullColumnNames,
+  formatValues,
+  createConstraintErrors,
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
 
-export function validateUnique (
-  env: InterpreterDatabase,
+function collectUniqueConstraints (mergedTable: Table): string[][] {
+  const uniqueConstraints: string[][] = [];
+
+  for (const field of mergedTable.fields) {
+    if (field.unique) uniqueConstraints.push([field.name]);
+  }
+
+  for (const index of mergedTable.indexes) {
+    if (index.unique) uniqueConstraints.push(index.columns.map((c) => c.value));
+  }
+
+  return uniqueConstraints;
+}
+
+function checkUniqueDuplicates (
+  rows: TableRecordRow[],
+  uniqueColumns: string[],
+  uniqueColumnFields: (Column | undefined)[],
+  mergedTable: Table,
 ): CompileError[] {
+  const errors: CompileError[] = [];
+  const seen = new Map<string, number>();
+
+  for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+    const row = rows[rowIndex];
+
+    // NULL values don't conflict in UNIQUE constraints (SQL standard behavior)
+    if (hasNullWithoutDefaultInKey(row.values, uniqueColumns, uniqueColumnFields)) {
+      continue;
+    }
+
+    const keyValue = extractKeyValueWithDefault(row.values, uniqueColumns, uniqueColumnFields);
+    if (seen.has(keyValue)) {
+      const constraintType = uniqueColumns.length > 1 ? 'Composite UNIQUE' : 'UNIQUE';
+      const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, uniqueColumns);
+      const valueStr = formatValues(row.values, uniqueColumns);
+      const message = `Duplicate ${constraintType}: ${columnRef} = ${valueStr}`;
+
+      errors.push(...createConstraintErrors(row, uniqueColumns, message));
+    } else {
+      seen.set(keyValue, rowIndex);
+    }
+  }
+
+  return errors;
+}
+
+export function validateUnique (env: InterpreterDatabase): CompileError[] {
   const errors: CompileError[] = [];
 
   for (const [table, rows] of env.records) {
     const mergedTable = mergeTableAndPartials(table, env);
     if (rows.length === 0) continue;
 
-    const uniqueConstraints: string[][] = [];
-    for (const field of mergedTable.fields) {
-      if (field.unique) {
-        uniqueConstraints.push([field.name]);
-      }
-    }
-    for (const index of mergedTable.indexes) {
-      if (index.unique) {
-        uniqueConstraints.push(index.columns.map((c) => c.value));
-      }
-    }
-
-    // Collect all unique column names from all rows
-    const columnsSet = new Set<string>();
-    for (const row of rows) {
-      for (const colName of Object.keys(row.values)) {
-        columnsSet.add(colName);
-      }
-    }
+    const uniqueConstraints = collectUniqueConstraints(mergedTable);
     const columnMap = new Map(mergedTable.fields.map((c) => [c.name, c]));
 
     for (const uniqueColumns of uniqueConstraints) {
       const uniqueColumnFields = uniqueColumns.map((col) => columnMap.get(col)).filter(Boolean);
-
-      const seen = new Map<string, number>(); // key -> first row index
-
-      for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-        const row = rows[rowIndex];
-
-        const hasNull = hasNullWithoutDefaultInKey(row.values, uniqueColumns, uniqueColumnFields);
-
-        // NULL values are allowed in unique constraints and don't conflict
-        if (hasNull) {
-          continue;
-        }
-
-        const keyValue = extractKeyValueWithDefault(row.values, uniqueColumns, uniqueColumnFields);
-        if (seen.has(keyValue)) {
-          // Create separate error for each column in the constraint
-          const errorNodes = uniqueColumns
-            .map((col) => row.columnNodes[col])
-            .filter(Boolean);
-          const isComposite = uniqueColumns.length > 1;
-          const constraintType = isComposite ? 'Composite UNIQUE' : 'UNIQUE';
-          const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, uniqueColumns);
-
-          let msg: string;
-          if (isComposite) {
-            const valueStr = uniqueColumns.map((col) => JSON.stringify(row.values[col]?.value)).join(', ');
-            msg = `Duplicate ${constraintType}: ${columnRef} = (${valueStr})`;
-          } else {
-            const value = JSON.stringify(row.values[uniqueColumns[0]]?.value);
-            msg = `Duplicate ${constraintType}: ${columnRef} = ${value}`;
-          }
-
-          if (errorNodes.length > 0) {
-            // Create one error per column node
-            for (const node of errorNodes) {
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_RECORDS_FIELD,
-                msg,
-                node,
-              ));
-            }
-          } else {
-            // Fallback to row node if no column nodes available
-            errors.push(new CompileError(
-              CompileErrorCode.INVALID_RECORDS_FIELD,
-              msg,
-              row.node,
-            ));
-          }
-        } else {
-          seen.set(keyValue, rowIndex);
-        }
-      }
+      errors.push(...checkUniqueDuplicates(rows, uniqueColumns, uniqueColumnFields, mergedTable));
     }
   }
 
