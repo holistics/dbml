@@ -1,4 +1,4 @@
-import { isEmpty, reduce } from 'lodash';
+import { groupBy, isEmpty, reduce } from 'lodash';
 import { addDoubleQuoteIfNeeded, formatRecordValue } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
@@ -354,17 +354,10 @@ class DbmlExporter {
     }
 
     // Group records by schemaName and tableName
-    const recordGroups = Object.values(
-      Object.values(records).reduce((acc, record) => {
-        const key = `${record.schemaName || ''}||${record.tableName}`;
-        if (!acc[key]) acc[key] = [];
-        acc[key].push(record);
-        return acc;
-      }, {}),
-    );
+    const recordGroups = groupBy(Object.values(records), (record) => `${record.schemaName || ''}.${record.tableName}`);
 
     // Process each group
-    const recordStrs = recordGroups.map((groupRecords) => {
+    const recordStrs = Object.values(recordGroups).map((groupRecords) => {
       const { schemaName, tableName } = groupRecords[0];
 
       // Build table reference
@@ -377,14 +370,10 @@ class DbmlExporter {
       const columnList = allColumns.map(addDoubleQuoteIfNeeded).join(', ');
 
       // Merge all rows
-      const allRows = groupRecords.flatMap((record) =>
-        record.values.map((row) =>
-          allColumns.map((col) => {
-            const idx = record.columns.indexOf(col);
-            return idx !== -1 ? row[idx] : { value: null, type: 'expression' };
-          }),
-        ),
-      );
+      const allRows = groupRecords.flatMap((record) => {
+        const allColumnIndexes = allColumns.map((col) => record.columns.indexOf(col));
+        return record.values.map((row) => allColumnIndexes.map((colIdx) => colIdx === -1 ? { value: null, type: 'expression' } : row[colIdx]));
+      });
 
       // Build data rows
       const rowStrs = allRows.map((row) =>
