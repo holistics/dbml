@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import { CompileErrorCode } from '@/index';
 import { interpret, analyze } from '@tests/utils';
 
 describe('[example] interpreter', () => {
@@ -1214,7 +1215,9 @@ describe('[example] interpreter', () => {
       expect(db.records[0].values[1][1].value).toBe('inactive');
     });
 
-    test('should group multiple records blocks for same table', () => {
+    // NOTE: Multiple records blocks for the same table are currently disallowed.
+    // We're weighing ideas if records should be merged in the future.
+    test('should report error for multiple records blocks for same table', () => {
       const source = `
         Table users {
           id int [pk]
@@ -1227,13 +1230,15 @@ describe('[example] interpreter', () => {
           2, "Bob"
         }
       `;
-      const db = interpret(source).getValue()!;
+      const result = interpret(source);
+      const errors = result.getErrors();
 
-      // Should be grouped into one records entry
-      expect(db.records).toHaveLength(1);
-      expect(db.records[0].values).toHaveLength(2);
-      expect(db.records[0].values[0][0].value).toBe(1);
-      expect(db.records[0].values[1][0].value).toBe(2);
+      // Verify exact error count and ALL error properties
+      expect(errors.length).toBe(2);
+      expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+      expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+      expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+      expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
     });
 
     test('should interpret records with schema-qualified table', () => {
@@ -1375,7 +1380,9 @@ describe('[example] interpreter', () => {
       expect(result.getWarnings().length).toBeGreaterThan(0);
     });
 
-    test('should validate constraints across multiple records blocks', () => {
+    // NOTE: Multiple records blocks for the same table are currently disallowed.
+    // We're weighing ideas if records should be merged in the future.
+    test('should report error for constraints across multiple records blocks', () => {
       const source = `
         Table users {
           id int [pk]
@@ -1389,8 +1396,14 @@ describe('[example] interpreter', () => {
         }
       `;
       const result = interpret(source);
-      // Should detect duplicate PK across blocks
-      expect(result.getWarnings().length).toBeGreaterThan(0);
+      const errors = result.getErrors();
+
+      // Verify exact error count and ALL error properties
+      expect(errors.length).toBe(2);
+      expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+      expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+      expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+      expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
     });
   });
 });
