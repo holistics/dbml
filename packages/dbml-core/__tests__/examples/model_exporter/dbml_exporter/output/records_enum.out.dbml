@@ -9,7 +9,7 @@ Table "orders" {
   "status" status_enum
 }
 
-records "orders"("id", "status") {
+records orders(id, status) {
   1, 'pending'
   2, 'active'
   3, 'completed'
