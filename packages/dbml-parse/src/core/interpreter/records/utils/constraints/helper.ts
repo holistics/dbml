@@ -1,10 +1,8 @@
-import { RecordValue, Column } from '@/core/interpreter/types';
+import { RecordValue, Column, TableRecordRow } from '@/core/interpreter/types';
 import { isSerialType } from '../data';
+import { CompileError, CompileErrorCode } from '@/core/errors';
 
-// Given a set of columns and a row
-// Return a string contain the values of the columns joined together with `|` -> This string is used for deduplication
-// Note that we do not take autoincrement into account, as we cannot know its value
-export function extractKeyValueWithDefault (
+export function extractKeyValueWithDefault(
   row: Record<string, RecordValue>,
   columnNames: string[],
   columns?: (Column | undefined)[],
@@ -23,7 +21,7 @@ export function extractKeyValueWithDefault (
   }).join('|');
 }
 
-export function hasNullWithoutDefaultInKey (
+export function hasNullWithoutDefaultInKey(
   row: Record<string, RecordValue>,
   columnNames: string[],
   columns?: (Column | undefined)[],
@@ -31,11 +29,10 @@ export function hasNullWithoutDefaultInKey (
   return columnNames.some((name, idx) => {
     const value = row[name]?.value;
 
-    // If value is null/undefined but column has default, it's not null
     if ((value === null || value === undefined) && columns && columns[idx]) {
       const column = columns[idx];
       if (column?.dbdefault) {
-        return false; // Has default, so not null
+        return false;
       }
     }
 
@@ -43,18 +40,15 @@ export function hasNullWithoutDefaultInKey (
   });
 }
 
-// Check if column is an auto-increment column (serial types or increment flag)
-export function isAutoIncrementColumn (column: Column): boolean {
+export function isAutoIncrementColumn(column: Column): boolean {
   return column.increment || isSerialType(column.type.type_name);
 }
 
-// Check if column has NOT NULL constraint with a default value
-export function hasNotNullWithDefault (column: Column): boolean {
+export function hasNotNullWithDefault(column: Column): boolean {
   return (column.not_null || false) && !!column.dbdefault;
 }
 
-// Format full column name with schema and table
-export function formatFullColumnName (
+export function formatFullColumnName(
   schemaName: string | null,
   tableName: string,
   columnName: string,
@@ -65,8 +59,7 @@ export function formatFullColumnName (
   return `${tableName}.${columnName}`;
 }
 
-// Format full column names for single or composite constraints
-export function formatFullColumnNames (
+export function formatFullColumnNames(
   schemaName: string | null,
   tableName: string,
   columnNames: string[],
@@ -76,4 +69,39 @@ export function formatFullColumnNames (
   }
   const formatted = columnNames.map((col) => formatFullColumnName(schemaName, tableName, col));
   return `(${formatted.join(', ')})`;
+}
+
+export function formatValues(
+  row: Record<string, RecordValue>,
+  columnNames: string[],
+): string {
+  if (columnNames.length === 1) {
+    return JSON.stringify(row[columnNames[0]]?.value);
+  }
+  const values = columnNames.map((col) => JSON.stringify(row[col]?.value)).join(', ');
+  return `(${values})`;
+}
+
+export function createConstraintErrors(
+  row: TableRecordRow,
+  columnNames: string[],
+  message: string,
+): CompileError[] {
+  const errorNodes = columnNames
+    .map((col) => row.columnNodes[col])
+    .filter(Boolean);
+
+  if (errorNodes.length > 0) {
+    return errorNodes.map((node) => new CompileError(
+      CompileErrorCode.INVALID_RECORDS_FIELD,
+      message,
+      node,
+    ));
+  }
+
+  return [new CompileError(
+    CompileErrorCode.INVALID_RECORDS_FIELD,
+    message,
+    row.node,
+  )];
 }
