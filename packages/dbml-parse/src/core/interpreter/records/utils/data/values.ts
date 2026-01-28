@@ -9,6 +9,7 @@ import { isExpressionASignedNumberExpression } from '@/core/analyzer/validator/u
 import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
 import { DateTime } from 'luxon';
+import { getNumberTextFromExpression } from '@/core/utils';
 
 export { extractNumericLiteral } from '@/core/analyzer/utils';
 
@@ -196,7 +197,8 @@ export function tryExtractString (value: SyntaxNode | string | undefined | null)
   if (typeof value === 'string') return value;
 
   // Quoted string: 'hello', "world"
-  return extractQuotedStringToken(value).unwrap_or(null);
+  const res = extractQuotedStringToken(value).unwrap_or(null) ?? tryExtractBoolean(value) ?? getNumberTextFromExpression(value);
+  return res === null ? null : res.toString();
 }
 
 // Supported datetime formats using luxon format tokens (excluding ISO 8601 which is handled separately)
