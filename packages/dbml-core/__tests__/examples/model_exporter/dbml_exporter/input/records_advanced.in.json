@@ -102,7 +102,7 @@
           { "value": 1, "type": "integer" },
           { "value": "Widget", "type": "string" },
           { "value": 9.99, "type": "real" },
-          { "value": "2024-01-15T10:30:00Z", "type": "datetime" }
+          { "value": "2024-01-15T10:30:00+07:00", "type": "datetime" }
         ],
         [
           { "value": 2, "type": "integer" },
