@@ -283,7 +283,7 @@ class OracleExporter {
 
   static buildForeignKeyManyToMany (foreignEndpointTableName, foreignEndpointFields, refEndpointTableName, refEndpointFieldsString) {
     const foreignEndpointFieldsString = [...foreignEndpointFields.keys()].join('`, `');
-    const line = `ALTER TABLE ${foreignEndpointTableName} ADD FOREIGN KEY ("${foreignEndpointFieldsString}") REFERENCES ${refEndpointTableName} ${refEndpointFieldsString};\n`;
+    const line = `ALTER TABLE ${foreignEndpointTableName} ADD FOREIGN KEY ("${foreignEndpointFieldsString}") REFERENCES ${refEndpointTableName} ${refEndpointFieldsString} DEFERRABLE INITIALLY IMMEDIATE;\n`;
     return line;
   }
 
@@ -328,7 +328,7 @@ class OracleExporter {
           line += ` ON DELETE ${ref.onDelete.toUpperCase()}`;
         }
 
-        line += ';\n';
+        line += ' DEFERRABLE INITIALLY IMMEDIATE;\n';
         result.refs.push(line);
         return;
       }
@@ -554,11 +554,11 @@ class OracleExporter {
       refs: [],
     });
 
-    // Export INSERT statements with deferred constraint checking
+    // Export INSERT statements with constraint checking disabled
     const insertStatements = this.exportRecords(model);
     const recordsSection = !isEmpty(insertStatements)
       ? [
-          '-- Use deferred constraints for INSERT',
+          '-- Disable constraint checking for INSERT',
           'SET CONSTRAINTS ALL DEFERRED;',
           '',
           ...insertStatements,
