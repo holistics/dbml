@@ -2,6 +2,7 @@
   "records": [
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -31,6 +32,7 @@
     },
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
