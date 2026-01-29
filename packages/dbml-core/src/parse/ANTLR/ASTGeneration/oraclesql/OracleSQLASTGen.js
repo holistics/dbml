@@ -862,8 +862,16 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     const valuesClause = ctx.values_clause().accept(this);
 
     if (intoClause && valuesClause) {
-      const { tableName, schemaName, columns } = intoClause;
+      let { tableName, schemaName, columns } = intoClause;
       const { values } = valuesClause;
+
+      // When no columns are specified, lookup table and use all its columns
+      if (columns.length === 0) {
+        const table = findTable(this.data.tables, schemaName, tableName);
+        if (table && table.fields) {
+          columns = table.fields.map((field) => field.name);
+        }
+      }
 
       const record = new TableRecord({
         schemaName,
