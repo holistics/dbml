@@ -24,7 +24,12 @@ export function validateForeignKeys (env: InterpreterDatabase): CompileError[] {
   for (const table of env.tables.values()) {
     const key = makeTableKey(table.schemaName, table.name);
     const rows = env.records.get(table) || [];
-    const mergedTable = mergeTableAndPartials(table, env);
+
+    if (!env.cachedMergedTables.has(table)) {
+      env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
+    }
+    const mergedTable = env.cachedMergedTables.get(table)!;
+
     tableInfoMap.set(key, { mergedTable, rows });
   }
 
