@@ -213,6 +213,9 @@ const SUPPORTED_DATE_FORMATS = [
 
 const SUPPORTED_DATETIME_FORMATS = [
   'yyyy-MM-dd HH:mm:ss', // ISO datetime with space: 2023-12-31 23:59:59
+  'yyyy-MM-dd HH:mm:ss.SSS', // 2023-12-31 23:59:59.000
+  'yyyy-MM-dd HH:mm:ss.SSSZZ', // 2023-12-31 23:59:59.000+07:00
+  'yyyy-MM-dd HH:mm:ssZZ', // 2023-12-31 23:59:59+07:00
 ];
 
 const SUPPORTED_TIME_FORMATS = [
