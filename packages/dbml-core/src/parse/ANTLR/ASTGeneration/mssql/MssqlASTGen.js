@@ -110,6 +110,15 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     };
   }
 
+  findTable (schemaName, tableName) {
+    const realSchemaName = schemaName || 'dbo';
+    const table = this.data.tables.find((t) => {
+      const targetSchemaName = t.schemaName || 'dbo';
+      return targetSchemaName === realSchemaName && t.name === tableName;
+    });
+    return table;
+  }
+
   // tsql_file
   //   : batch* EOF
   //   | execute_body_batch go_statement* EOF
@@ -185,7 +194,16 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const tableName = last(names);
     const schemaName = names.length > 1 ? nth(names, -2) : undefined;
 
-    const columns = ctx.insert_column_name_list() ? ctx.insert_column_name_list().accept(this) : [];
+    let columns = ctx.insert_column_name_list() ? ctx.insert_column_name_list().accept(this) : [];
+
+    // When no columns are specified, lookup table and use all its columns
+    if (columns.length === 0) {
+      const table = this.findTable(schemaName, tableName);
+      if (table && table.fields) {
+        columns = table.fields.map((field) => field.name);
+      }
+    }
+
     const values = ctx.insert_statement_value().accept(this);
 
     const record = new TableRecord({
