@@ -1061,8 +1061,17 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
-    // insert without specified columns
-    const columns = ctx.fullColumnNameList() ? ctx.fullColumnNameList().accept(this) : [];
+    // Get explicit columns if specified, otherwise lookup table definition
+    let columns = ctx.fullColumnNameList() ? ctx.fullColumnNameList().accept(this) : [];
+
+    // When no columns are specified, lookup table and use all its columns
+    if (columns.length === 0) {
+      const table = this.findTable(schemaName, tableName);
+      if (table && table.fields) {
+        columns = table.fields.map((field) => field.name);
+      }
+    }
+
     const values = ctx.insertStatementValue().accept(this);
 
     const record = new TableRecord({
