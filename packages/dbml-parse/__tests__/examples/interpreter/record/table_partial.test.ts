@@ -17,8 +17,8 @@ describe('[example - record] table partial with records', () => {
       }
 
       records users(created_at, updated_at, id, name, email) {
-        '2024-01-01 00:00:00', '2024-01-01 00:00:00', 1, 'Alice', 'alice@example.com'
-        '2024-01-02 00:00:00', '2024-01-02 00:00:00', 2, 'Bob', 'bob@example.com'
+        '2024-01-01 00:00:00+07:00', '2024-01-01 00:00:00+07:00', 1, 'Alice', 'alice@example.com'
+        '2024-01-02 00:00:00+07:00', '2024-01-02 00:00:00+07:00', 2, 'Bob', 'bob@example.com'
       }
     `;
 
@@ -195,8 +195,8 @@ describe('[example - record] table partial with records', () => {
         name varchar
 
         records (created_at, updated_at, id, name) {
-          '2024-01-01 00:00:00', '2024-01-01 00:00:00', 1, 'Alice'
-          '2024-01-02 00:00:00', '2024-01-02 00:00:00', 2, 'Bob'
+          '2024-01-01 00:00:00+07:00', '2024-01-01 00:00:00+07:00', 1, 'Alice'
+          '2024-01-02 00:00:00+07:00', '2024-01-02 00:00:00+07:00', 2, 'Bob'
         }
       }
     `;
