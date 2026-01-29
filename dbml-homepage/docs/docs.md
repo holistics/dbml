@@ -664,7 +664,7 @@ When multiple partials define the same field, setting or index, DBML resolves co
 
 ## Data Sample
 
-`Records` allow you to define sample data for your tables directly in DBML. This is useful for documentation, testing, and providing example data for your database schema.
+`Records` allows you to define sample data for your tables directly in DBML. This is useful for documentation, testing, and providing example data for your database schema.
 
 Records can be defined either outside or inside a table definition.
 
