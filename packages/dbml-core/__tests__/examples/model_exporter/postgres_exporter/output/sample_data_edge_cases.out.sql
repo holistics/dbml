@@ -11,9 +11,9 @@ CREATE TABLE "sample_data_test" (
   "dbml_expr" int
 );
 
--- Use deferred constraints for INSERT
+-- Disable constraint checking for INSERT
 BEGIN;
-SET CONSTRAINTS ALL DEFERRED;
+SET session_replication_role = replica;
 
 INSERT INTO "sample_data_test" ("id", "scientific_num", "signed_positive", "signed_negative", "sql_func", "datetime_val", "string_newline", "string_backslash", "string_escape", "dbml_expr")
 VALUES
@@ -21,4 +21,5 @@ VALUES
   (2, -3.14E+2, +0, -0, CURRENT_TIMESTAMP(), '2024-12-31 23:59:59', 'multi\nline\ntext\nhere', 'C:\\Users\\test', 'quote\"double', "id" * 2),
   (3, 6.022e23, +123, -456, UTC_TIMESTAMP(), '2024-06-15 12:00:00', 'simple text', 'double\\\\backslash', 'mixed\ttab\nand\rnewline', "scientific_num" / 100);
 
+SET session_replication_role = DEFAULT;
 COMMIT;
