@@ -39,15 +39,15 @@ CREATE TABLE "rental" (
   "last_update" timestamp
 );
 
-ALTER TABLE "staff" ADD FOREIGN KEY ("store_id") REFERENCES "store" ("id");
+ALTER TABLE "staff" ADD FOREIGN KEY ("store_id") REFERENCES "store" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "store" ADD FOREIGN KEY ("manager_staff_id") REFERENCES "staff" ("id");
+ALTER TABLE "store" ADD FOREIGN KEY ("manager_staff_id") REFERENCES "staff" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "payment" ADD FOREIGN KEY ("staff_id") REFERENCES "staff" ("id");
+ALTER TABLE "payment" ADD FOREIGN KEY ("staff_id") REFERENCES "staff" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "payment" ADD FOREIGN KEY ("rental_id") REFERENCES "rental" ("id");
+ALTER TABLE "payment" ADD FOREIGN KEY ("rental_id") REFERENCES "rental" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "rental" ADD FOREIGN KEY ("staff_id") REFERENCES "staff" ("id");
+ALTER TABLE "rental" ADD FOREIGN KEY ("staff_id") REFERENCES "staff" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 CREATE TABLE "country" (
   "id" int PRIMARY KEY,
   "country" nvarchar2(255),
@@ -86,11 +86,11 @@ CREATE TABLE "customer" (
 
 CREATE INDEX "IDX_CUSTOMER" ON "customer" ("id", "first_name");
 
-ALTER TABLE "city" ADD FOREIGN KEY ("country_id") REFERENCES "country" ("id");
+ALTER TABLE "city" ADD FOREIGN KEY ("country_id") REFERENCES "country" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "address" ADD FOREIGN KEY ("city_id") REFERENCES "city" ("id");
+ALTER TABLE "address" ADD FOREIGN KEY ("city_id") REFERENCES "city" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "customer" ADD FOREIGN KEY ("address_id") REFERENCES "address" ("id");
+ALTER TABLE "customer" ADD FOREIGN KEY ("address_id") REFERENCES "address" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 CREATE TABLE "category" (
   "id" int PRIMARY KEY,
   "name" nvarchar2(255),
@@ -153,16 +153,16 @@ CREATE TABLE "inventory" (
   "last_update" timestamp
 );
 
-ALTER TABLE "film_category" ADD FOREIGN KEY ("category_id") REFERENCES "category" ("id");
+ALTER TABLE "film_category" ADD FOREIGN KEY ("category_id") REFERENCES "category" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "film_text" ADD FOREIGN KEY ("film_id") REFERENCES "film" ("id");
+ALTER TABLE "film_text" ADD FOREIGN KEY ("film_id") REFERENCES "film" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "film" ADD FOREIGN KEY ("language_id") REFERENCES "language" ("id");
+ALTER TABLE "film" ADD FOREIGN KEY ("language_id") REFERENCES "language" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "film" ADD FOREIGN KEY ("original_language_id") REFERENCES "language" ("id");
+ALTER TABLE "film" ADD FOREIGN KEY ("original_language_id") REFERENCES "language" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "film_actor" ADD FOREIGN KEY ("film_id") REFERENCES "film" ("id");
+ALTER TABLE "film_actor" ADD FOREIGN KEY ("film_id") REFERENCES "film" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "film_actor" ADD FOREIGN KEY ("actor_id") REFERENCES "actor" ("id");
+ALTER TABLE "film_actor" ADD FOREIGN KEY ("actor_id") REFERENCES "actor" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "inventory" ADD FOREIGN KEY ("film_id") REFERENCES "film" ("id");
+ALTER TABLE "inventory" ADD FOREIGN KEY ("film_id") REFERENCES "film" ("id") DEFERRABLE INITIALLY IMMEDIATE;
