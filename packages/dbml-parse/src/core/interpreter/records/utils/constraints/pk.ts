@@ -11,6 +11,70 @@ import {
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
 import { isSerialType } from '../data';
 
+export function validatePrimaryKey (env: InterpreterDatabase): CompileError[] {
+  const errors: CompileError[] = [];
+
+  for (const [table, rows] of env.records) {
+    if (rows.length === 0) continue;
+
+    if (!env.cachedMergedTables.has(table)) {
+      env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
+    }
+    const mergedTable = env.cachedMergedTables.get(table)!;
+
+    const pkConstraints = collectPkConstraints(mergedTable);
+    const availableColumns = collectAvailableColumns(rows);
+    const columnMap = new Map(mergedTable.fields.map((c) => [c.name, c]));
+
+    for (const pkColumns of pkConstraints) {
+      const missingErrors = checkMissingPkColumns(pkColumns, availableColumns, columnMap, mergedTable, rows);
+      if (missingErrors.length > 0) {
+        errors.push(...missingErrors);
+        continue;
+      }
+
+      const pkColumnFields = pkColumns.map((col) => columnMap.get(col)).filter(Boolean);
+
+      const areAllColumnsAutoIncrement = pkColumnFields.every((col) => col && isAutoIncrementColumn(col));
+
+      const seenValueIndexes = new Map<string, number>();
+
+      for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+        const row = rows[rowIndex];
+
+        // NULL in PK is allowed only when all PK columns auto-generate unique values
+        const hasNull = hasNullWithoutDefaultInKey(row.values, pkColumns, pkColumnFields);
+        if (hasNull) {
+          if (areAllColumnsAutoIncrement) continue;
+
+          // Prepare error message
+          const constraintType = pkColumns.length > 1 ? 'Composite PK' : 'PK';
+          const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, pkColumns);
+          const message = `NULL in ${constraintType}: ${columnRef} cannot be NULL`;
+          errors.push(...createConstraintErrors(row, pkColumns, message));
+          continue;
+        }
+
+        // Check uniqueness by comparing serialized key values
+        const keyValue = extractKeyValueWithDefault(row.values, pkColumns, pkColumnFields);
+        if (seenValueIndexes.has(keyValue)) {
+          // Prepare error message
+          const constraintType = pkColumns.length > 1 ? 'Composite PK' : 'PK';
+          const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, pkColumns);
+          const valueStr = formatValues(row.values, pkColumns);
+          const message = `Duplicate ${constraintType}: ${columnRef} = ${valueStr}`;
+
+          errors.push(...createConstraintErrors(row, pkColumns, message));
+          continue;
+        }
+        seenValueIndexes.set(keyValue, rowIndex);
+      }
+    }
+  }
+
+  return errors;
+}
+
 function collectPkConstraints (mergedTable: Table): string[][] {
   const pkConstraints: string[][] = [];
 
@@ -62,75 +126,4 @@ function checkMissingPkColumns (
     message,
     row.node,
   ));
-}
-
-function checkPkDuplicates (
-  rows: TableRecordRow[],
-  pkColumns: string[],
-  pkColumnFields: (Column | undefined)[],
-  allAutoIncrement: boolean,
-  mergedTable: Table,
-): CompileError[] {
-  const errors: CompileError[] = [];
-  const seen = new Map<string, number>();
-
-  for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-    const row = rows[rowIndex];
-
-    // NULL in PK is allowed only when all PK columns auto-generate unique values
-    const hasNull = hasNullWithoutDefaultInKey(row.values, pkColumns, pkColumnFields);
-    if (hasNull) {
-      if (allAutoIncrement) {
-        continue;
-      }
-      const constraintType = pkColumns.length > 1 ? 'Composite PK' : 'PK';
-      const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, pkColumns);
-      const message = `NULL in ${constraintType}: ${columnRef} cannot be NULL`;
-      errors.push(...createConstraintErrors(row, pkColumns, message));
-      continue;
-    }
-
-    // Check uniqueness by comparing serialized key values
-    const keyValue = extractKeyValueWithDefault(row.values, pkColumns, pkColumnFields);
-    if (seen.has(keyValue)) {
-      const constraintType = pkColumns.length > 1 ? 'Composite PK' : 'PK';
-      const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, pkColumns);
-      const valueStr = formatValues(row.values, pkColumns);
-      const message = `Duplicate ${constraintType}: ${columnRef} = ${valueStr}`;
-
-      errors.push(...createConstraintErrors(row, pkColumns, message));
-    } else {
-      seen.set(keyValue, rowIndex);
-    }
-  }
-
-  return errors;
-}
-
-export function validatePrimaryKey (env: InterpreterDatabase): CompileError[] {
-  const errors: CompileError[] = [];
-
-  for (const [table, rows] of env.records) {
-    const mergedTable = mergeTableAndPartials(table, env);
-    if (rows.length === 0) continue;
-
-    const pkConstraints = collectPkConstraints(mergedTable);
-    const availableColumns = collectAvailableColumns(rows);
-    const columnMap = new Map(mergedTable.fields.map((c) => [c.name, c]));
-
-    for (const pkColumns of pkConstraints) {
-      const missingErrors = checkMissingPkColumns(pkColumns, availableColumns, columnMap, mergedTable, rows);
-      if (missingErrors.length > 0) {
-        errors.push(...missingErrors);
-        continue;
-      }
-
-      const pkColumnFields = pkColumns.map((col) => columnMap.get(col)).filter(Boolean);
-      const allAutoIncrement = pkColumnFields.every((col) => col && isAutoIncrementColumn(col));
-
-      errors.push(...checkPkDuplicates(rows, pkColumns, pkColumnFields, allAutoIncrement, mergedTable));
-    }
-  }
-
-  return errors;
 }

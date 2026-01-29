@@ -11,6 +11,7 @@ import { RecordsInterpreter } from '@/core/interpreter/records';
 import Report from '@/core/report';
 import { getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
+import { CompileWarning } from '../errors';
 
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {
   return {
@@ -85,6 +86,7 @@ export default class Interpreter {
       tablePartials: new Map(),
       records: new Map(),
       recordsElements: [],
+      cachedMergedTables: new Map(),
       source,
     };
   }
@@ -116,11 +118,15 @@ export default class Interpreter {
       }
     });
 
+    const warnings: CompileWarning[] = [];
+    if (this.env.recordsElements.length) {
     // Second pass: interpret all records elements grouped by table
     // Now that all tables, enums, etc. are interpreted, we can validate records properly
-    const recordsResult = new RecordsInterpreter(this.env).interpret(this.env.recordsElements);
-    errors.push(...recordsResult.getErrors());
+      const recordsResult = new RecordsInterpreter(this.env).interpret(this.env.recordsElements);
+      errors.push(...recordsResult.getErrors());
+      warnings.push(...recordsResult.getWarnings());
+    }
 
-    return new Report(convertEnvToDb(this.env), errors, recordsResult.getWarnings());
+    return new Report(convertEnvToDb(this.env), errors, warnings);
   }
 }
