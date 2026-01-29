@@ -9,7 +9,6 @@ import { isExpressionASignedNumberExpression } from '@/core/analyzer/validator/u
 import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/analyzer/utils';
 import { last } from 'lodash-es';
 import { DateTime } from 'luxon';
-import { getNumberTextFromExpression } from '@/core/utils';
 
 export { extractNumericLiteral } from '@/core/analyzer/utils';
 
@@ -243,30 +242,39 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
 
   // We prioritize more specific formats, like time-only & date-only before ISO-8601, which includes both date and time
   for (const format of SUPPORTED_TIME_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format);
+    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
     if (dt.isValid) {
-      return dt.toISOTime();
+      // https://moment.github.io/luxon/api-docs/index.html#datetimetoisotime
+      return dt.toISOTime({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(dt) });
     }
   }
 
   for (const format of SUPPORTED_DATE_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format);
+    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
     if (dt.isValid) {
+      // https://moment.github.io/luxon/api-docs/index.html#datetimetoisodate
       return dt.toISODate();
     }
   }
 
   for (const format of SUPPORTED_DATETIME_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format);
+    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
     if (dt.isValid) {
-      return dt.toISO();
+      // https://moment.github.io/luxon/api-docs/index.html#datetimetoiso
+      return dt.toISO({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(dt) });
     }
   }
 
-  const isoDate = DateTime.fromISO(extractedValue);
+  const isoDate = DateTime.fromISO(extractedValue, { setZone: true });
   if (isoDate.isValid) {
-    return isoDate.toISO();
+    // https://moment.github.io/luxon/api-docs/index.html#datetimetoiso
+    return isoDate.toISO({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(isoDate) });
   }
 
   return null;
+
+  function hasExplicitTimeZone (dt: DateTime): boolean {
+    // https://github.com/moment/luxon/blob/master/docs/zones.md#specifying-a-zone
+    return dt.zone.type !== 'system';
+  }
 }
