@@ -10,6 +10,8 @@ import {
 
 const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
 
+const DEFAULT_SCHEMA = 'dbo';
+
 const getSchemaAndTableName = (names) => {
   const tableName = last(names);
   const schemaName = names.length > 1 ? nth(names, -2) : undefined;
@@ -111,9 +113,9 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   }
 
   findTable (schemaName, tableName) {
-    const realSchemaName = schemaName || 'dbo';
+    const realSchemaName = schemaName || DEFAULT_SCHEMA;
     const table = this.data.tables.find((t) => {
-      const targetSchemaName = t.schemaName || 'dbo';
+      const targetSchemaName = t.schemaName || DEFAULT_SCHEMA;
       return targetSchemaName === realSchemaName && t.name === tableName;
     });
     return table;
@@ -1237,7 +1239,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
       if (!level0Type.includes('schema')) return;
 
-      const schemaName = argsObj.level0name !== 'dbo' ? argsObj.level0name : undefined;
+      const schemaName = argsObj.level0name !== DEFAULT_SCHEMA ? argsObj.level0name : undefined;
 
       const level1Type = argsObj.level1type.toLowerCase();
       const tableName = level1Type.includes('table') ? argsObj.level1name : null;
