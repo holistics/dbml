@@ -5,7 +5,8 @@ Table "users" {
 }
 
 records users(id, name, active) {
-  1, 'Alice', true
-  2, 'Bob', false
-  3, null, true
+  1, 'Alice', null
+  2, 'Bob', null
+  null, 'Charlie', true
+  3, null, false
 }

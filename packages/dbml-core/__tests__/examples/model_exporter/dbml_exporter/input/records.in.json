@@ -69,22 +69,37 @@
     {
       "schemaName": null,
       "tableName": "users",
-      "columns": ["id", "name", "active"],
+      "columns": ["id", "name"],
       "values": [
         [
           { "value": 1, "type": "integer" },
-          { "value": "Alice", "type": "string" },
-          { "value": true, "type": "bool" }
+          { "value": "Alice", "type": "string" }
         ],
         [
           { "value": 2, "type": "integer" },
-          { "value": "Bob", "type": "string" },
-          { "value": false, "type": "bool" }
-        ],
+          { "value": "Bob", "type": "string" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "users",
+      "columns": ["name", "active"],
+      "values": [
+        [
+          { "value": "Charlie", "type": "string" },
+          { "value": true, "type": "bool" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "users",
+      "columns": ["id", "active"],
+      "values": [
         [
           { "value": 3, "type": "integer" },
-          { "value": null, "type": "string" },
-          { "value": true, "type": "bool" }
+          { "value": false, "type": "bool" }
         ]
       ]
     }
