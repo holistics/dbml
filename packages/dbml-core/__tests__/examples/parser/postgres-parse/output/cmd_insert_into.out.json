@@ -342,7 +342,12 @@
     {
       "tableName": "users",
       "schemaName": "ignore_1",
-      "columns": [],
+      "columns": [
+        "id",
+        "name",
+        "email",
+        "created_at"
+      ],
       "values": [
         [
           {
