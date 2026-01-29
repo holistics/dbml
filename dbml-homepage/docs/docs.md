@@ -36,8 +36,6 @@ outlines the full syntax documentations of DBML.
     - [TableGroup Settings](#tablegroup-settings)
 - [TablePartial](#tablepartial)
 - [Data Sample](#data-sample)
-  - [Explicit Column List](#explicit-column-list)
-  - [Implicit Column List](#implicit-column-list)
   - [Data Types](#data-types)
 - [Multi-line String](#multi-line-string)
 - [Comments](#comments)
