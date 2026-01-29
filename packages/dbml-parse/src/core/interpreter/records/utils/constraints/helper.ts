@@ -2,7 +2,7 @@ import { RecordValue, Column, TableRecordRow } from '@/core/interpreter/types';
 import { isSerialType } from '../data';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 
-export function extractKeyValueWithDefault(
+export function extractKeyValueWithDefault (
   row: Record<string, RecordValue>,
   columnNames: string[],
   columns?: (Column | undefined)[],
@@ -21,7 +21,7 @@ export function extractKeyValueWithDefault(
   }).join('|');
 }
 
-export function hasNullWithoutDefaultInKey(
+export function hasNullWithoutDefaultInKey (
   row: Record<string, RecordValue>,
   columnNames: string[],
   columns?: (Column | undefined)[],
@@ -40,15 +40,15 @@ export function hasNullWithoutDefaultInKey(
   });
 }
 
-export function isAutoIncrementColumn(column: Column): boolean {
+export function isAutoIncrementColumn (column: Column): boolean {
   return column.increment || isSerialType(column.type.type_name);
 }
 
-export function hasNotNullWithDefault(column: Column): boolean {
+export function hasNotNullWithDefault (column: Column): boolean {
   return (column.not_null || false) && !!column.dbdefault;
 }
 
-export function formatFullColumnName(
+export function formatFullColumnName (
   schemaName: string | null,
   tableName: string,
   columnName: string,
@@ -59,7 +59,7 @@ export function formatFullColumnName(
   return `${tableName}.${columnName}`;
 }
 
-export function formatFullColumnNames(
+export function formatFullColumnNames (
   schemaName: string | null,
   tableName: string,
   columnNames: string[],
@@ -71,7 +71,7 @@ export function formatFullColumnNames(
   return `(${formatted.join(', ')})`;
 }
 
-export function formatValues(
+export function formatValues (
   row: Record<string, RecordValue>,
   columnNames: string[],
 ): string {
@@ -82,7 +82,7 @@ export function formatValues(
   return `(${values})`;
 }
 
-export function createConstraintErrors(
+export function createConstraintErrors (
   row: TableRecordRow,
   columnNames: string[],
   message: string,
