@@ -17,8 +17,8 @@ describe('[example - record] table partial with records', () => {
       }
 
       records users(created_at, updated_at, id, name, email) {
-        '2024-01-01 00:00:00+07:00', '2024-01-01 00:00:00+07:00', 1, 'Alice', 'alice@example.com'
-        '2024-01-02 00:00:00+07:00', '2024-01-02 00:00:00+07:00', 2, 'Bob', 'bob@example.com'
+        '2024-01-01 00:00:00', '2024-01-01 00:00:00', 1, 'Alice', 'alice@example.com'
+        '2024-01-02 00:00:00+08:00', '2024-01-02 00:00:00.100+07:00', 2, 'Bob', 'bob@example.com'
       }
     `;
 
@@ -34,11 +34,13 @@ describe('[example - record] table partial with records', () => {
     expect(db.records[0].values).toHaveLength(2);
 
     // Check first row values
-    expect(db.records[0].values[0][0].value).toBe('2024-01-01T00:00:00.000+07:00');
-    expect(db.records[0].values[0][1].value).toBe('2024-01-01T00:00:00.000+07:00');
+    expect(db.records[0].values[0][0].value).toBe('2024-01-01T00:00:00');
+    expect(db.records[0].values[0][1].value).toBe('2024-01-01T00:00:00');
     expect(db.records[0].values[0][2]).toEqual({ type: 'integer', value: 1 });
     expect(db.records[0].values[0][3]).toEqual({ type: 'string', value: 'Alice' });
     expect(db.records[0].values[0][4]).toEqual({ type: 'string', value: 'alice@example.com' });
+    expect(db.records[0].values[1][0].value).toBe('2024-01-02T00:00:00+08:00');
+    expect(db.records[0].values[1][1].value).toBe('2024-01-02T00:00:00.100+07:00');
   });
 
   test('should handle records with explicit columns that include partial fields', () => {
