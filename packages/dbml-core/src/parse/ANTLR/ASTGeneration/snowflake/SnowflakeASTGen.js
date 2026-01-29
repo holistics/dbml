@@ -1,8 +1,10 @@
-import { isEmpty, flatten, get, values, add, last, flattenDepth } from 'lodash';
+import { isEmpty, flatten, flattenDepth } from 'lodash';
 import SnowflakeParserVisitor from '../../parsers/snowflake/SnowflakeParserVisitor';
-import { Endpoint, Enum, Field, Index, Table, Ref, TableRecord } from '../AST';
+import { Enum, Field, Index, Table, TableRecord } from '../AST';
 import { TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE } from '../constants';
 import { getOriginalText } from '../helpers';
+
+const DEFAULT_SCHEMA = 'public';
 
 const sanitizeComment = (stringContext) => {
   return getOriginalText(stringContext).replace(/''/g, "'").slice(1, -1);
@@ -24,9 +26,9 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   }
 
   findTable (schemaName, tableName) {
-    const realSchemaName = schemaName || 'public';
+    const realSchemaName = schemaName || DEFAULT_SCHEMA;
     const table = this.data.tables.find((t) => {
-      const targetSchemaName = t.schemaName || 'public';
+      const targetSchemaName = t.schemaName || DEFAULT_SCHEMA;
       return targetSchemaName === realSchemaName && t.name === tableName;
     });
     return table;
@@ -624,15 +626,9 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   //   ;
   visitInsert_statement (ctx) {
     const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
-    let columns = ctx.column_list_in_parentheses() ? ctx.column_list_in_parentheses().accept(this) : [];
-
-    // When no columns are specified, lookup table and use all its columns
-    if (columns.length === 0) {
-      const table = this.findTable(schemaName, tableName);
-      if (table && table.fields) {
-        columns = table.fields.map((field) => field.name);
-      }
-    }
+    let columns = ctx.column_list_in_parentheses()
+      ? ctx.column_list_in_parentheses().accept(this)
+      : this.findTable(schemaName, tableName)?.fields.map((field) => field.name) || [];
 
     // Only handle values_builder, not query_statement
     const values = ctx.values_builder() ? ctx.values_builder().accept(this) : [];
