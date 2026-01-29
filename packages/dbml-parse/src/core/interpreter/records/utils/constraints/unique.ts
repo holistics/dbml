@@ -9,6 +9,29 @@ import {
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
 
+export function validateUnique (env: InterpreterDatabase): CompileError[] {
+  const errors: CompileError[] = [];
+
+  for (const [table, rows] of env.records) {
+    if (!env.cachedMergedTables.has(table)) {
+      env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
+    }
+    const mergedTable = env.cachedMergedTables.get(table)!;
+
+    if (rows.length === 0) continue;
+
+    const uniqueConstraints = collectUniqueConstraints(mergedTable);
+    const columnMap = new Map(mergedTable.fields.map((c) => [c.name, c]));
+
+    for (const uniqueColumns of uniqueConstraints) {
+      const uniqueColumnFields = uniqueColumns.map((col) => columnMap.get(col)).filter(Boolean);
+      errors.push(...checkUniqueDuplicates(rows, uniqueColumns, uniqueColumnFields, mergedTable));
+    }
+  }
+
+  return errors;
+}
+
 function collectUniqueConstraints (mergedTable: Table): string[][] {
   const uniqueConstraints: string[][] = [];
 
@@ -50,25 +73,6 @@ function checkUniqueDuplicates (
       errors.push(...createConstraintErrors(row, uniqueColumns, message));
     } else {
       seen.set(keyValue, rowIndex);
-    }
-  }
-
-  return errors;
-}
-
-export function validateUnique (env: InterpreterDatabase): CompileError[] {
-  const errors: CompileError[] = [];
-
-  for (const [table, rows] of env.records) {
-    const mergedTable = mergeTableAndPartials(table, env);
-    if (rows.length === 0) continue;
-
-    const uniqueConstraints = collectUniqueConstraints(mergedTable);
-    const columnMap = new Map(mergedTable.fields.map((c) => [c.name, c]));
-
-    for (const uniqueColumns of uniqueConstraints) {
-      const uniqueColumnFields = uniqueColumns.map((col) => columnMap.get(col)).filter(Boolean);
-      errors.push(...checkUniqueDuplicates(rows, uniqueColumns, uniqueColumnFields, mergedTable));
     }
   }
 
