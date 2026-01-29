@@ -37,7 +37,7 @@ class OracleExporter {
         if (val.type === 'expression') return val.value;
 
         if (isNumericType(val.type)) return val.value;
-        if (isBooleanType(val.type)) return val.value ? '1' : '0';
+        if (isBooleanType(val.type)) return String(val.value).toUpperCase() === 'TRUE' ? '1' : '0';
         if (isStringType(val.type) || isDateTimeType(val.type)) return `'${val.value.replace(/'/g, "''")}'`;
         if (isBinaryType(val.type)) return `HEXTORAW('${val.value}')`;
         // Unknown type - use CAST
