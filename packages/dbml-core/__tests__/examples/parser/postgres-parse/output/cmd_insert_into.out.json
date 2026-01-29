@@ -1,8 +1,14 @@
 {
+  "schemas": [],
+  "tables": [],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
   "records": [
     {
       "tableName": "users",
-      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -32,7 +38,6 @@
     },
     {
       "tableName": "users",
-      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -79,8 +84,8 @@
       ]
     },
     {
+      "tableName": "posts",
       "schemaName": "public",
-      "tableName": "posts",
       "columns": [
         "id",
         "title",
@@ -158,8 +163,8 @@
       ]
     },
     {
+      "tableName": "posts",
       "schemaName": "blog",
-      "tableName": "posts",
       "columns": [
         "id",
         "title",
@@ -237,8 +242,8 @@
       ]
     },
     {
-      "schemaName": "store",
       "tableName": "products",
+      "schemaName": "store",
       "columns": [
         "id",
         "name",
@@ -344,12 +349,7 @@
     {
       "tableName": "users",
       "schemaName": "ignore_1",
-      "columns": [
-        "id",
-        "name",
-        "email",
-        "created_at"
-      ],
+      "columns": [],
       "values": [
         [
           {
