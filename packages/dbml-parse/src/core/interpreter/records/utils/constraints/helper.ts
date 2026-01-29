@@ -71,6 +71,10 @@ export function formatFullColumnNames (
   return `(${formatted.join(', ')})`;
 }
 
+// Format values to put in error messages
+// e.g. 1 -> '1'
+// e.g. 'a' -> '"a"'
+// e.g. 1, 'a' -> '(1, "a")'
 export function formatValues (
   row: Record<string, RecordValue>,
   columnNames: string[],
@@ -82,6 +86,8 @@ export function formatValues (
   return `(${values})`;
 }
 
+// For a row and a set of columns
+// Add one compile error for each cell in the row corresponding to each column in the set
 export function createConstraintErrors (
   row: TableRecordRow,
   columnNames: string[],
