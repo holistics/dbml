@@ -407,9 +407,13 @@
   ],
   "refs": [
     {
+      "name": null,
+      "onDelete": null,
+      "onUpdate": null,
       "endpoints": [
         {
           "tableName": "child_trunc",
+          "schemaName": null,
           "fieldNames": [
             "parent_id"
           ],
@@ -417,6 +421,7 @@
         },
         {
           "tableName": "parent_trunc",
+          "schemaName": null,
           "fieldNames": [
             "id"
           ],
@@ -432,6 +437,7 @@
   "records": [
     {
       "tableName": "truncate_vs_delete",
+      "schemaName": null,
       "columns": [
         "data"
       ],
@@ -458,7 +464,11 @@
     },
     {
       "tableName": "temp_truncate",
-      "columns": [],
+      "schemaName": null,
+      "columns": [
+        "id",
+        "data"
+      ],
       "values": [
         [
           {
