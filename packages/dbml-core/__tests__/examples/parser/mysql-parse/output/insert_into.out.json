@@ -9,12 +9,7 @@
   "records": [
     {
       "tableName": "users",
-      "columns": [
-        "id",
-        "name",
-        "email",
-        "created_at"
-      ],
+      "columns": ["id", "name", "email", "created_at"],
       "values": [
         [
           {
@@ -38,12 +33,7 @@
     },
     {
       "tableName": "users",
-      "columns": [
-        "id",
-        "name",
-        "email",
-        "created_at"
-      ],
+      "columns": ["id", "name", "email", "created_at"],
       "values": [
         [
           {
@@ -86,13 +76,7 @@
     {
       "tableName": "posts",
       "schemaName": "blog",
-      "columns": [
-        "id",
-        "title",
-        "content",
-        "author_id",
-        "published_at"
-      ],
+      "columns": ["id", "title", "content", "author_id", "published_at"],
       "values": [
         [
           {
@@ -269,7 +253,7 @@
     },
     {
       "tableName": "users",
-      "columns": [],
+      "columns": ["id", "name", "email", "created_at"],
       "values": [
         [
           {
@@ -294,13 +278,7 @@
     {
       "tableName": "users",
       "schemaName": "app",
-      "columns": [
-        "id",
-        "name",
-        "email",
-        "preferences",
-        "created_at"
-      ],
+      "columns": ["id", "name", "email", "preferences", "created_at"],
       "values": []
     }
   ]

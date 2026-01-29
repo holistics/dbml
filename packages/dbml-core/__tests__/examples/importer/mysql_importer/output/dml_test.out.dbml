@@ -10,92 +10,73 @@ Table "t3" {
   "col" varchar(10)
 }
 
-records "geom"() {
-  `GeomFromWKB(0x0101000000000000000000F03F000000000000F03F)`
+records geom() {
+  
 }
 
-records "mytable"() {
-  `load_file('sompath')`, 'str1', 2
+records mytable() {
+  
+  
 }
 
-records "tbl"() {
-  'a', 1, 'b'
-  'c', 2, 'd'
-  'e', 3, 'f'
+records tbl() {
+  
+  
+  
+  
+  
+  
 }
 
-records "mytable"() {
-  `load_file('sompath')`, 'str1', 2
+records t1(col1, col2, col3, a, b, c) {
+  'abc', 0, 0.12, null, null, null
+  'adfasdf', 23432, `-.12`, null, null, null
+  null, null, null, 1, 2, 3
+  null, null, null, 4, 5, 6
 }
 
-records "tbl"() {
-  'a', 1, 'b'
-  'c', 2, 'd'
-  'e', 3, 'f'
-}
-
-records "t1"() {
-
-}
-
-records "some_ship_info"() {
+records some_ship_info() {
 
 }
 
-records "l4stal13prema00"."fusion"("partition en", "classe", "segment", "F tot", "F loc", "indice specif") {
+records l4stal13prema00.fusion("partition en", classe, segment, "F tot", "F loc", "indice specif") {
 
 }
 
-records "t1"("col1", "col2", "col3") {
-  'abc', 0, 0.12
-  'adfasdf', 23432, `-.12`
-}
-
-records "test_auto_inc"() {
+records test_auto_inc() {
 
 }
 
-records "tbl_name"("col1", "col2") {
-  null, null, null, 15
+records tbl_name(col1, col2) {
+  null, null
+  15, null
 }
 
-records "tbl_name"("col1", "col2") {
-  15, null, null, null
-}
-
-records "logs"("site_id", "time", "hits") {
+records logs(site_id, time, hits) {
   1, '2004-08-09', 15
 }
 
-records "t2"("b", "c") {
-  null, null, null, 'shoulder'
-  null, null, null, 'old block'
-  null, null, null, 'toilet'
-  null, null, null, 'long,silver'
-  null, null, null, 'li\'\'l'
+records t2(b, c) {
+  null, null
+  null, null
+  null, null
+  null, null
+  null, null
 }
 
-records "tbl_test"("FirstName") {
+records tbl_test(FirstName) {
 
 }
 
-records "t"() {
-  'кириллица', 2, 3
+records t() {
+  
 }
 
-records "wptests_posts"("post_author", "post_date", "post_date_gmt", "post_content", "post_content_filtered", "post_title", "post_excerpt", "post_status", "post_type", "comment_status", "ping_status", "post_password", "post_name", "to_ping", "pinged", "post_modified", "post_modified_gmt", "post_parent", "menu_order", "post_mime_type", "guid") {
+records wptests_posts(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt, post_status, post_type, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type, guid) {
   7, '2016-09-06 16:49:51', '2016-09-06 16:49:51', '', '', 'صورة', '', 'inherit', 'attachment', 'open', 'closed', '', '%d8%b5%d9%88%d8%b1%d8%a9', '', '', '2016-09-06 16:49:51', '2016-09-06 16:49:51', 0, 0, 'image/jpeg', ''
 }
 
-records "sql_log"() {
-  null, null, null, 0, 0, null, `now()`
-}
-
-records "sql_log"() {
-  null, null, null, 0, 0, `current_user()`, `now()`
-}
-
-records "t1"("a", "b", "c") {
-  1, 2, 3
-  4, 5, 6
+records sql_log() {
+  
+  
 }

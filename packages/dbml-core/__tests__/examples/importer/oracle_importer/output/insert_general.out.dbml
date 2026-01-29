@@ -15,118 +15,34 @@ Table "database_products" {
   "status" CHAR(1) [default: 'A']
 }
 
-records "database_products"("product_id", "product_name", "vendor_name", "release_year", "is_open_source", "license_cost", "market_share", "latest_version", "description", "is_active", "max_connections", "status") {
-  `db_products_seq.NEXTVAL`, 'Oracle Database', 'Oracle Corporation', 1979, 0, 47500, 28.5, '21c', 'Enterprise relational database management system', 1, 10000, 'A'
-}
-
-records "database_products"("product_name", "vendor_name", "is_open_source", "is_active") {
-  'MySQL', 'Oracle Corporation', 1, 1
-}
-
-records "database_products"("product_name", "vendor_name", "license_cost", "description") {
-  'PostgreSQL', 'PostgreSQL Global Development Group', null, null
-}
-
-records "database_products"("product_name", "release_year", "market_share", "max_connections") {
-  'SQLite', 2000, `15.5 + 2.3`, `1000 * 10`
-}
-
-records "database_products"("product_name", "vendor_name", "description", "latest_version") {
-  `UPPER('microsoft sql server')`, `'Microsoft' || ' Corporation'`, `TRIM('  Relational database management system  ')`, `SUBSTR('2022-CU10', 1, 4)`
-}
-
-records "database_products"("product_name", "vendor_name", "release_year", "created_at") {
-  'MariaDB', 'MariaDB Foundation', `EXTRACT(YEAR FROM SYSDATE)`, `SYSTIMESTAMP`
-}
-
-records "database_products"("product_name", "license_cost", "market_share", "max_connections") {
-  'IBM Db2', `1500.00 * 12`, `ROUND(5.678, 1)`, `POWER(2, 14)`
-}
-
-records "database_products"("product_name", "vendor_name", "license_cost", "is_open_source") {
-  'Amazon Aurora', 'Amazon Web Services', `CASE WHEN 1=1 THEN 0.00 ELSE 1000.00 END`, 0
-}
-
-records "database_products"("product_name") {
-  'CockroachDB'
-}
-
-records "database_products"("product_name", "license_cost", "release_year") {
-  'Test Database', `-100.00`, 2020
-}
-
-records "database_products"("product_name", "max_connections", "license_cost") {
-  'Enterprise DB', 999999, 99999.99
-}
-
-records "database_products"("product_name", "description") {
-  'Neo4j', `'Graph database for connected data' || CHR(10) || 'Supports Cypher query language'`
-}
-
-records "database_products"("product_name", "release_year", "created_at") {
-  'Firebird', 2000, `TO_TIMESTAMP('2000-07-25 10:30:00', 'YYYY-MM-DD HH24:MI:SS')`
-}
-
-records "database_products"("is_active", "product_name", "is_open_source", "vendor_name") {
-  1, 'TimescaleDB', 1, 'Timescale Inc.'
-}
-
-records "database_products"("product_name", "license_cost", "market_share", "max_connections") {
-  'MemSQL', 0, 0, 0
-}
-
-records "database_products"("product_name", "release_year", "latest_version", "created_at") {
-  'InfluxDB', `EXTRACT(YEAR FROM SYSDATE)`, `'v' || '2.7'`, `SYSDATE`
-}
-
-records "database_products"("product_name", "vendor_name", "license_cost") {
-  'Vertica', 'Micro Focus', `NVL(NULL, 5000.00)`
-}
-
-records "database_products"("product_name", "is_open_source", "status") {
-  'Greenplum', `DECODE('yes', 'yes', 1, 'no', 0, 0)`, 'A'
-}
-
-records "database_products"("product_name", "max_connections", "vendor_name") {
-  'SAP HANA', `LENGTH('Maximum')`, 'SAP SE'
-}
-
-records "database_products"("product_name", "vendor_name") {
-  `INITCAP('clickhouse')`, `INITCAP('clickhouse inc')`
-}
-
-records "database_products"("product_name", "license_cost", "market_share") {
-  'Snowflake', `COALESCE(NULL, NULL, 2500.00)`, 3.5
-}
-
-records "database_products"("product_name", "max_connections", "market_share") {
-  'Teradata', `GREATEST(1000, 5000, 3000)`, `LEAST(10.5, 8.2, 15.7)`
-}
-
-records "database_products"("product_name", "max_connections", "release_year") {
-  'Informix', `MOD(10050, 1000)`, `1980 + MOD(45, 20)`
-}
-
-records "database_products"("product_id", "product_name", "vendor_name") {
-  `db_products_seq.NEXTVAL`, 'DynamoDB', 'Amazon Web Services'
-}
-
-records "database_products"("product_name", "latest_version") {
-  'SingleStore', `LPAD('8', 3, '0') || '.' || RPAD('5', 2, '0')`
-}
-
-records "database_products"("product_name", "description") {
-  'Azure SQL', `REPLACE('Microsoft cloud database service', 'cloud', 'managed cloud')`
-}
-
-records "database_products"("product_name", "license_cost", "market_share") {
-  'Db2 Warehouse', `ABS(-15000)`, `ABS(-4.5)`
-}
-
-records "database_products"("product_name", "market_share", "license_cost") {
-  'Actian Ingres', `TRUNC(7.89456, 2)`, `TRUNC(12345.6789, 2)`
-}
-
-records "database_products"("product_name", "vendor_name", "latest_version", "release_year") {
-  `UPPER(SUBSTR('rockset database', 1, 7))`, `INITCAP(TRIM('  rockset inc  '))`, `'v' || TO_CHAR(ROUND(2.75, 1))`, `TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - 5`
+records database_products(product_id, product_name, vendor_name, release_year, is_open_source, license_cost, market_share, latest_version, description, is_active, max_connections, status, created_at) {
+  `db_products_seq.NEXTVAL`, 'Oracle Database', 'Oracle Corporation', 1979, 0, 47500, 28.5, '21c', 'Enterprise relational database management system', 1, 10000, 'A', null
+  null, 'MySQL', 'Oracle Corporation', null, 1, null, null, null, null, 1, null, null, null
+  null, 'PostgreSQL', 'PostgreSQL Global Development Group', null, null, null, null, null, null, null, null, null, null
+  null, 'SQLite', null, 2000, null, null, `15.5 + 2.3`, null, null, null, `1000 * 10`, null, null
+  null, `UPPER('microsoft sql server')`, `'Microsoft' || ' Corporation'`, null, null, null, null, `SUBSTR('2022-CU10', 1, 4)`, `TRIM('  Relational database management system  ')`, null, null, null, null
+  null, 'MariaDB', 'MariaDB Foundation', `EXTRACT(YEAR FROM SYSDATE)`, null, null, null, null, null, null, null, null, `SYSTIMESTAMP`
+  null, 'IBM Db2', null, null, null, `1500.00 * 12`, `ROUND(5.678, 1)`, null, null, null, `POWER(2, 14)`, null, null
+  null, 'Amazon Aurora', 'Amazon Web Services', null, 0, `CASE WHEN 1=1 THEN 0.00 ELSE 1000.00 END`, null, null, null, null, null, null, null
+  null, 'CockroachDB', null, null, null, null, null, null, null, null, null, null, null
+  null, 'Test Database', null, 2020, null, `-100.00`, null, null, null, null, null, null, null
+  null, 'Enterprise DB', null, null, null, 99999.99, null, null, null, null, 999999, null, null
+  null, 'Neo4j', null, null, null, null, null, null, `'Graph database for connected data' || CHR(10) || 'Supports Cypher query language'`, null, null, null, null
+  null, 'Firebird', null, 2000, null, null, null, null, null, null, null, null, `TO_TIMESTAMP('2000-07-25 10:30:00', 'YYYY-MM-DD HH24:MI:SS')`
+  null, 'TimescaleDB', 'Timescale Inc.', null, 1, null, null, null, null, 1, null, null, null
+  null, 'MemSQL', null, null, null, 0, 0, null, null, null, 0, null, null
+  null, 'InfluxDB', null, `EXTRACT(YEAR FROM SYSDATE)`, null, null, null, `'v' || '2.7'`, null, null, null, null, `SYSDATE`
+  null, 'Vertica', 'Micro Focus', null, null, `NVL(NULL, 5000.00)`, null, null, null, null, null, null, null
+  null, 'Greenplum', null, null, `DECODE('yes', 'yes', 1, 'no', 0, 0)`, null, null, null, null, null, null, 'A', null
+  null, 'SAP HANA', 'SAP SE', null, null, null, null, null, null, null, `LENGTH('Maximum')`, null, null
+  null, `INITCAP('clickhouse')`, `INITCAP('clickhouse inc')`, null, null, null, null, null, null, null, null, null, null
+  null, 'Snowflake', null, null, null, `COALESCE(NULL, NULL, 2500.00)`, 3.5, null, null, null, null, null, null
+  null, 'Teradata', null, null, null, null, `LEAST(10.5, 8.2, 15.7)`, null, null, null, `GREATEST(1000, 5000, 3000)`, null, null
+  null, 'Informix', null, `1980 + MOD(45, 20)`, null, null, null, null, null, null, `MOD(10050, 1000)`, null, null
+  `db_products_seq.NEXTVAL`, 'DynamoDB', 'Amazon Web Services', null, null, null, null, null, null, null, null, null, null
+  null, 'SingleStore', null, null, null, null, null, `LPAD('8', 3, '0') || '.' || RPAD('5', 2, '0')`, null, null, null, null, null
+  null, 'Azure SQL', null, null, null, null, null, null, `REPLACE('Microsoft cloud database service', 'cloud', 'managed cloud')`, null, null, null, null
+  null, 'Db2 Warehouse', null, null, null, `ABS(-15000)`, `ABS(-4.5)`, null, null, null, null, null, null
+  null, 'Actian Ingres', null, null, null, `TRUNC(12345.6789, 2)`, `TRUNC(7.89456, 2)`, null, null, null, null, null, null
+  null, `UPPER(SUBSTR('rockset database', 1, 7))`, `INITCAP(TRIM('  rockset inc  '))`, `TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - 5`, null, null, null, `'v' || TO_CHAR(ROUND(2.75, 1))`, null, null, null, null, null
 }
