@@ -10,7 +10,7 @@ CREATE TABLE "employees" (
   "name" nvarchar2
 );
 
--- Use deferred constraints for INSERT
+-- Disable constraint checking for INSERT
 SET CONSTRAINTS ALL DEFERRED;
 
 INSERT INTO "departments" ("id", "name", "budget")

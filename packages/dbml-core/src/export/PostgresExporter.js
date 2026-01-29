@@ -600,16 +600,17 @@ class PostgresExporter {
       return prevStatements;
     }, schemaEnumStatements);
 
-    // Export INSERT statements with deferred constraint checking
+    // Export INSERT statements with constraint checking disabled
     const insertStatements = PostgresExporter.exportRecords(model);
     const recordsSection = !_.isEmpty(insertStatements)
       ? [
-          '-- Use deferred constraints for INSERT',
+          '-- Disable constraint checking for INSERT',
           'BEGIN;',
-          'SET CONSTRAINTS ALL DEFERRED;',
+          'SET session_replication_role = replica;',
           '',
           ...insertStatements,
           '',
+          'SET session_replication_role = DEFAULT;',
           'COMMIT;',
         ]
       : [];
