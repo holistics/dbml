@@ -26,6 +26,7 @@ export interface InterpreterDatabase {
   project: Map<ElementDeclarationNode, Project>;
   records: Map<Table, TableRecordRow[]>;
   recordsElements: ElementDeclarationNode[];
+  cachedMergedTables: Map<Table, Table>; // map Table to Table that has been merged with table partials
   source: string;
 }
 
