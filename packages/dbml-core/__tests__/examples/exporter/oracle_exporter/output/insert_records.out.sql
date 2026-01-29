@@ -13,9 +13,9 @@ CREATE TABLE "posts" (
   "content" text
 );
 
-ALTER TABLE "posts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "posts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
--- Use deferred constraints for INSERT
+-- Disable constraint checking for INSERT
 SET CONSTRAINTS ALL DEFERRED;
 
 INSERT ALL

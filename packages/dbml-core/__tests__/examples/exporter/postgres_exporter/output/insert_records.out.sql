@@ -15,9 +15,9 @@ CREATE TABLE "posts" (
 
 ALTER TABLE "posts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
--- Use deferred constraints for INSERT
+-- Disable constraint checking for INSERT
 BEGIN;
-SET CONSTRAINTS ALL DEFERRED;
+SET session_replication_role = replica;
 
 INSERT INTO "users" ("id", "name", "email", "active", "created_at")
 VALUES
@@ -29,4 +29,5 @@ VALUES
   (1, 1, 'First Post', 'Hello World'),
   (2, 1, 'Second Post', 'It''s a beautiful day');
 
+SET session_replication_role = DEFAULT;
 COMMIT;
