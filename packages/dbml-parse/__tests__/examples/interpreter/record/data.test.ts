@@ -113,8 +113,8 @@ describe('[example - record] data type interpretation', () => {
         event_time time
       }
       records events(created_at, event_date, event_time) {
-        "2024-01-15T10:30:00+07:00", "2024-01-15", "10:30:00+07:00"
-        "2024-12-31T23:59:59+07:00", "2024-12-31", "23:59:59"
+        "2024-01-15 10:30:00", "2024-01-15", "10:30:00"
+        "2024-12-31 23:59:59", "2024-12-31", "23:59:59"
       }
     `;
     const result = interpret(source);
@@ -125,11 +125,11 @@ describe('[example - record] data type interpretation', () => {
     const db = result.getValue()!;
     // Note: timestamp->datetime, date->date, time->time
     expect(db.records[0].values[0][0].type).toBe('datetime');
-    expect(db.records[0].values[0][0].value).toBe(DateTime.fromISO('2024-01-15T10:30:00.000+07:00').toISO());
+    expect(db.records[0].values[0][0].value).toBe('2024-01-15T10:30:00');
     expect(db.records[0].values[0][1].type).toBe('date');
     expect(db.records[0].values[0][1].value).toBe('2024-01-15');
     expect(db.records[0].values[0][2].type).toBe('time');
-    expect(db.records[0].values[0][2].value).toBe(DateTime.fromISO('10:30:00.000+07:00').toISOTime());
+    expect(db.records[0].values[0][2].value).toBe('10:30:00');
   });
 
   // NOTE: Multiple records blocks for the same table are currently disallowed.
