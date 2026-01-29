@@ -24,7 +24,7 @@ VALUES
 GO
 INSERT INTO [products] ([id], [name], [price], [in_stock])
 VALUES
-  (3, 'Keyboard', 79.99, 1);
+  (3, 'Keyboard', 79.99, 0);
 GO
 INSERT INTO [products] ([price], [in_stock], [id], [name])
 VALUES

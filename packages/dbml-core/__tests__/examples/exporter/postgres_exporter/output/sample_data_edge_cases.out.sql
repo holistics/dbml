@@ -23,7 +23,7 @@ VALUES
   (1, 123000, -0.00456, 42, -100, NOW(), 1 + 2 * 3, '2024-01-15T10:30:00.123+07:00', 'Line 1
 Line 2
 Line 3', 'C:\Users\path\file.txt', 'Tab:	Newline:
-Carriage return:', 'She said "Hello" and ''Hi''', NULL),
+Carriage return:', 'She said "Hello" and ''Hi''', NULL),
   (2, 99900000000, -1.11e-10, 0, 0, CURRENT_TIMESTAMP, LENGTH('test'), '2023-12-31T23:59:59+07:00', 'First line
 
 Third line', 'Escaped backslash: \\', 'Quote: " Apostrophe: '' Backslash: \', 'O''Reilly''s "book"', NULL);
