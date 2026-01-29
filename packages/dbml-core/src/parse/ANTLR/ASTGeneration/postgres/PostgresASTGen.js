@@ -1057,7 +1057,15 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
-    const { columns, values } = ctx.insert_rest().accept(this);
+    let { columns, values } = ctx.insert_rest().accept(this);
+
+    // When no columns are specified, lookup table and use all its columns
+    if (columns.length === 0) {
+      const table = findTable(this.data.tables, schemaName, tableName);
+      if (table && table.fields) {
+        columns = table.fields.map((field) => field.name);
+      }
+    }
 
     const record = new TableRecord({
       schemaName,

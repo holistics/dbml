@@ -23,6 +23,15 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
     };
   }
 
+  findTable (schemaName, tableName) {
+    const realSchemaName = schemaName || 'public';
+    const table = this.data.tables.find((t) => {
+      const targetSchemaName = t.schemaName || 'public';
+      return targetSchemaName === realSchemaName && t.name === tableName;
+    });
+    return table;
+  }
+
   // batch? EOF
   visitSnowflake_file (ctx) {
     ctx.batch()?.accept(this);
@@ -615,7 +624,15 @@ export default class SnowflakeASTGen extends SnowflakeParserVisitor {
   //   ;
   visitInsert_statement (ctx) {
     const [databaseName, schemaName, tableName] = ctx.object_name().accept(this);
-    const columns = ctx.column_list_in_parentheses() ? ctx.column_list_in_parentheses().accept(this) : [];
+    let columns = ctx.column_list_in_parentheses() ? ctx.column_list_in_parentheses().accept(this) : [];
+
+    // When no columns are specified, lookup table and use all its columns
+    if (columns.length === 0) {
+      const table = this.findTable(schemaName, tableName);
+      if (table && table.fields) {
+        columns = table.fields.map((field) => field.name);
+      }
+    }
 
     // Only handle values_builder, not query_statement
     const values = ctx.values_builder() ? ctx.values_builder().accept(this) : [];
