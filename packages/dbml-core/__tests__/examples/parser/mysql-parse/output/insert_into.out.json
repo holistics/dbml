@@ -9,6 +9,7 @@
   "records": [
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": ["id", "name", "email", "created_at"],
       "values": [
         [
@@ -33,6 +34,7 @@
     },
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": ["id", "name", "email", "created_at"],
       "values": [
         [
@@ -253,6 +255,7 @@
     },
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": ["id", "name", "email", "created_at"],
       "values": [
         [
