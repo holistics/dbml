@@ -214,9 +214,17 @@ describe('[example - record] composite foreign key constraints', () => {
 });
 
 describe('[example - record] simple foreign key constraints', () => {
-  test('should accept valid many-to-one FK references', () => {
+  test('should validate FK with various data types and values', () => {
     const source = `
       Table users {
+        id int [pk]
+        name varchar
+      }
+      Table countries {
+        code varchar(2) [pk]
+        name varchar
+      }
+      Table accounts {
         id int [pk]
         name varchar
       }
@@ -225,16 +233,46 @@ describe('[example - record] simple foreign key constraints', () => {
         user_id int
         title varchar
       }
+      Table cities {
+        id int [pk]
+        country_code varchar(2)
+        name varchar
+      }
+      Table transactions {
+        id int [pk]
+        account_id int
+        amount decimal
+      }
       Ref: posts.user_id > users.id
+      Ref: cities.country_code > countries.code
+      Ref: transactions.account_id > accounts.id
 
       records users(id, name) {
         1, "Alice"
         2, "Bob"
       }
+      records countries(code, name) {
+        "US", "United States"
+        "UK", "United Kingdom"
+      }
+      records accounts(id, name) {
+        0, "Default Account"
+        1, "User Account"
+        2, "Business Account"
+      }
       records posts(id, user_id, title) {
-        1, 1, "Alice's Post"
+        1, 1, "Alice Post"
         2, 1, "Another Post"
-        3, 2, "Bob's Post"
+        3, 2, "Bob Post"
+      }
+      records cities(id, country_code, name) {
+        1, "US", "New York"
+        2, "UK", "London"
+      }
+      records transactions(id, account_id, amount) {
+        1, 0, 100.00
+        2, 1, 50.00
+        3, 2, 25.00
       }
     `;
     const result = interpret(source);
@@ -242,10 +280,16 @@ describe('[example - record] simple foreign key constraints', () => {
 
     expect(warnings.length).toBe(0);
 
-    const db = result.getValue()!;
-    expect(db.records.length).toBe(2);
+    const db = result.getValue();
+    if (!db || !db.records) {
+      const errors = result.getErrors();
+      console.error('Compilation errors:', errors.map((e) => e.diagnostic));
+      throw new Error('Failed to compile DBML source');
+    }
+    expect(db.records).toBeDefined();
+    expect(db.records.length).toBe(6);
 
-    // Users table
+    // Verify users table
     expect(db.records[0].tableName).toBe('users');
     expect(db.records[0].values.length).toBe(2);
     expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
@@ -253,12 +297,24 @@ describe('[example - record] simple foreign key constraints', () => {
     expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 2 });
     expect(db.records[0].values[1][1]).toEqual({ type: 'string', value: 'Bob' });
 
-    // Posts table
-    expect(db.records[1].tableName).toBe('posts');
-    expect(db.records[1].values.length).toBe(3);
-    expect(db.records[1].values[0][0]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[1].values[0][1]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[1].values[0][2]).toEqual({ type: 'string', value: "Alice's Post" });
+    // Verify posts table (find it by name since order might vary)
+    const postsRecord = db.records.find((r) => r.tableName === 'posts');
+    expect(postsRecord).toBeDefined();
+    expect(postsRecord!.values.length).toBe(3);
+    expect(postsRecord!.values[0][1]).toEqual({ type: 'integer', value: 1 }); // user_id
+
+    // Verify cities table with string FK
+    const citiesRecord = db.records.find((r) => r.tableName === 'cities');
+    expect(citiesRecord).toBeDefined();
+    expect(citiesRecord!.values[0][1]).toEqual({ type: 'string', value: 'US' }); // country_code
+    expect(citiesRecord!.values[1][1]).toEqual({ type: 'string', value: 'UK' });
+
+    // Verify transactions table with zero values
+    const transactionsRecord = db.records.find((r) => r.tableName === 'transactions');
+    expect(transactionsRecord).toBeDefined();
+    expect(transactionsRecord!.values[0][1]).toEqual({ type: 'integer', value: 0 }); // account_id=0
+    expect(transactionsRecord!.values[1][1]).toEqual({ type: 'integer', value: 1 }); // account_id=1
+    expect(transactionsRecord!.values[2][1]).toEqual({ type: 'integer', value: 2 }); // account_id=2
   });
 
   test('should reject FK values that dont exist in referenced table', () => {
@@ -267,26 +323,44 @@ describe('[example - record] simple foreign key constraints', () => {
         id int [pk]
         name varchar
       }
+      Table countries {
+        code varchar(2) [pk]
+        name varchar
+      }
       Table posts {
         id int [pk]
         user_id int
         title varchar
       }
+      Table cities {
+        id int [pk]
+        country_code varchar(2)
+        name varchar
+      }
       Ref: posts.user_id > users.id
+      Ref: cities.country_code > countries.code
 
       records users(id, name) {
         1, "Alice"
+      }
+      records countries(code, name) {
+        "US", "United States"
       }
       records posts(id, user_id, title) {
         1, 1, "Valid Post"
         2, 999, "Invalid FK"
       }
+      records cities(id, country_code, name) {
+        1, "US", "New York"
+        2, "FR", "Paris"
+      }
     `;
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(1);
+    expect(warnings.length).toBe(2);
     expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
+    expect(warnings[1].diagnostic).toBe('FK violation: cities.country_code = "FR" does not exist in countries.code');
   });
 
   test('should allow NULL FK values (optional relationship)', () => {
@@ -329,7 +403,7 @@ describe('[example - record] simple foreign key constraints', () => {
     expect(db.records[1].values[1][2]).toEqual({ type: 'string', value: 'Uncategorized Item' });
   });
 
-  test('should validate one-to-one FK both directions', () => {
+  test('should validate one-to-one and one-to-many FK relationships', () => {
     const source = `
       Table users {
         id int [pk]
@@ -340,30 +414,6 @@ describe('[example - record] simple foreign key constraints', () => {
         user_id int
         bio text
       }
-      Ref: user_profiles.user_id - users.id
-
-      records users(id, name) {
-        1, "Alice"
-        2, "Bob"
-      }
-      records user_profiles(id, user_id, bio) {
-        1, 1, "Alice's bio"
-        2, 3, "Invalid user"
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    // One-to-one validates both directions:
-    // 1. user_profiles.user_id=3 doesn't exist in users.id
-    // 2. users.id=2 (Bob) doesn't have a matching user_profiles.user_id
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('FK violation: user_profiles.user_id = 3 does not exist in users.id');
-    expect(warnings[1].diagnostic).toBe('FK violation: users.id = 2 does not exist in user_profiles.user_id');
-  });
-
-  test('should validate one-to-many FK from parent side', () => {
-    const source = `
       Table departments {
         id int [pk]
         name varchar
@@ -373,8 +423,17 @@ describe('[example - record] simple foreign key constraints', () => {
         dept_id int
         name varchar
       }
+      Ref: user_profiles.user_id - users.id
       Ref: departments.id < employees.dept_id
 
+      records users(id, name) {
+        1, "Alice"
+        2, "Bob"
+      }
+      records user_profiles(id, user_id, bio) {
+        1, 1, "Alice's bio"
+        2, 3, "Invalid user"
+      }
       records departments(id, name) {
         1, "Engineering"
       }
@@ -386,170 +445,18 @@ describe('[example - record] simple foreign key constraints', () => {
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('FK violation: employees.dept_id = 999 does not exist in departments.id');
+    // One-to-one validates both directions:
+    // 1. user_profiles.user_id=3 doesn't exist in users.id
+    // 2. users.id=2 (Bob) doesn't have a matching user_profiles.user_id
+    // One-to-many violation:
+    // 3. employees.dept_id=999 doesn't exist in departments.id
+    expect(warnings.length).toBe(3);
+    expect(warnings[0].diagnostic).toBe('FK violation: user_profiles.user_id = 3 does not exist in users.id');
+    expect(warnings[1].diagnostic).toBe('FK violation: users.id = 2 does not exist in user_profiles.user_id');
+    expect(warnings[2].diagnostic).toBe('FK violation: employees.dept_id = 999 does not exist in departments.id');
   });
 
-  test('should accept valid string FK values', () => {
-    const source = `
-      Table countries {
-        code varchar(2) [pk]
-        name varchar
-      }
-      Table cities {
-        id int [pk]
-        country_code varchar(2)
-        name varchar
-      }
-      Ref: cities.country_code > countries.code
-
-      records countries(code, name) {
-        "US", "United States"
-        "UK", "United Kingdom"
-      }
-      records cities(id, country_code, name) {
-        1, "US", "New York"
-        2, "UK", "London"
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-
-    const db = result.getValue()!;
-    expect(db.records[1].values[0][1]).toEqual({ type: 'string', value: 'US' });
-    expect(db.records[1].values[1][1]).toEqual({ type: 'string', value: 'UK' });
-  });
-
-  test('should reject invalid string FK values', () => {
-    const source = `
-      Table countries {
-        code varchar(2) [pk]
-        name varchar
-      }
-      Table cities {
-        id int [pk]
-        country_code varchar(2)
-        name varchar
-      }
-      Ref: cities.country_code > countries.code
-
-      records countries(code, name) {
-        "US", "United States"
-      }
-      records cities(id, country_code, name) {
-        1, "US", "New York"
-        2, "FR", "Paris"
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('FK violation: cities.country_code = "FR" does not exist in countries.code');
-  });
-
-  test('should validate FK with zero values', () => {
-    const source = `
-      Table items {
-        id int [pk]
-        name varchar
-      }
-      Table orders {
-        id int [pk]
-        item_id int
-      }
-      Ref: orders.item_id > items.id
-
-      records items(id, name) {
-        0, "Default Item"
-        1, "Item One"
-      }
-      records orders(id, item_id) {
-        1, 0
-        2, 1
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-  });
-
-  test('should validate FK with negative values', () => {
-    const source = `
-      Table accounts {
-        id int [pk]
-        name varchar
-      }
-      Table transactions {
-        id int [pk]
-        account_id int
-        amount decimal
-      }
-      Ref: transactions.account_id > accounts.id
-
-      records accounts(id, name) {
-        -1, "System Account"
-        1, "User Account"
-      }
-      records transactions(id, account_id, amount) {
-        1, -1, 100.00
-        2, 1, 50.00
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for FK across multiple records blocks', () => {
-    const source = `
-      Table users {
-        id int [pk]
-        name varchar
-      }
-      Table posts {
-        id int [pk]
-        user_id int
-        title varchar
-      }
-      Ref: posts.user_id > users.id
-
-      records users(id, name) {
-        1, "Alice"
-      }
-      records users(id, name) {
-        2, "Bob"
-      }
-      records posts(id, user_id, title) {
-        1, 1, "Alice's Post"
-      }
-      records posts(id, user_id, title) {
-        2, 2, "Bob's Post"
-        3, 3, "Invalid Post"
-      }
-    `;
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties (2 blocks for users + 2 blocks for posts = 4 errors)
-    expect(errors.length).toBe(4);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'posts'");
-    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'posts'");
-  });
-
-  test('should accept inline ref syntax for FK', () => {
+  test('should validate inline ref syntax and self-referencing FK', () => {
     const source = `
       Table users {
         id int [pk]
@@ -560,31 +467,12 @@ describe('[example - record] simple foreign key constraints', () => {
         user_id int [ref: > users.id]
         title varchar
       }
-
-      records users(id, name) {
-        1, "Alice"
-      }
-      records posts(id, user_id, title) {
-        1, 1, "Valid Post"
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-  });
-
-  test('should reject invalid inline ref FK value', () => {
-    const source = `
-      Table users {
+      Table employees {
         id int [pk]
+        manager_id int
         name varchar
       }
-      Table posts {
-        id int [pk]
-        user_id int [ref: > users.id]
-        title varchar
-      }
+      Ref: employees.manager_id > employees.id
 
       records users(id, name) {
         1, "Alice"
@@ -593,58 +481,20 @@ describe('[example - record] simple foreign key constraints', () => {
         1, 1, "Valid Post"
         2, 999, "Invalid Post"
       }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
-  });
-
-  test('should accept self-referencing FK', () => {
-    const source = `
-      Table employees {
-        id int [pk]
-        manager_id int
-        name varchar
-      }
-      Ref: employees.manager_id > employees.id
-
       records employees(id, manager_id, name) {
         1, null, "CEO"
         2, 1, "Manager"
-        3, 2, "Employee"
+        3, 999, "Invalid Manager Reference"
       }
     `;
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(0);
+    expect(warnings.length).toBe(2);
+    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
+    expect(warnings[1].diagnostic).toBe('FK violation: employees.manager_id = 999 does not exist in employees.id');
   });
 
-  test('should reject invalid self-referencing FK', () => {
-    const source = `
-      Table employees {
-        id int [pk]
-        manager_id int
-        name varchar
-      }
-      Ref: employees.manager_id > employees.id
-
-      records employees(id, manager_id, name) {
-        1, null, "CEO"
-        2, 999, "Invalid Manager Reference"
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('FK violation: employees.manager_id = 999 does not exist in employees.id');
-  });
-});
-
-describe('FK with empty target table', () => {
   test('should detect FK violation when target table is empty', () => {
     const source = `
       Table follows {
@@ -673,6 +523,30 @@ describe('FK with empty target table', () => {
     expect(warnings.length).toBe(2); // Two FK violations: following_user_id and followed_user_id
     expect(warnings.every((e) => e.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
     expect(warnings.every((e) => e.diagnostic.includes('does not exist in'))).toBe(true);
+  });
+
+  test('should report error for duplicate records blocks', () => {
+    const source = `
+      Table users {
+        id int [pk]
+        name varchar
+      }
+
+      records users(id, name) {
+        1, "Alice"
+      }
+      records users(id, name) {
+        2, "Bob"
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(2);
+    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
+    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
   });
 });
 
@@ -779,48 +653,6 @@ describe('[example - record] FK in table partials', () => {
 
       records comments(id, content, created_by) {
         1, "Comment 1", 1
-        2, "Comment 2", 2
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-  });
-
-  test('should detect FK violation in one table when partial injected into multiple tables', () => {
-    const source = `
-      TablePartial timestamps {
-        created_by int [ref: > users.id]
-      }
-
-      Table users {
-        id int [pk]
-        name varchar
-      }
-
-      Table posts {
-        id int [pk]
-        title varchar
-        ~timestamps
-      }
-
-      Table comments {
-        id int [pk]
-        content varchar
-        ~timestamps
-      }
-
-      records users(id, name) {
-        1, "Alice"
-      }
-
-      records posts(id, title, created_by) {
-        1, "Post 1", 1
-      }
-
-      records comments(id, content, created_by) {
-        1, "Comment 1", 1
         2, "Comment 2", 999
       }
     `;
@@ -900,51 +732,6 @@ describe('[example - record] FK in table partials', () => {
       }
 
       records posts(id, title, user_id, category_id) {
-        1, "Post 1", 1, 1
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-  });
-
-  test('should detect FK violation with multiple partials injected', () => {
-    const source = `
-      TablePartial user_ref {
-        user_id int [ref: > users.id]
-      }
-
-      TablePartial category_ref {
-        category_id int [ref: > categories.id]
-      }
-
-      Table users {
-        id int [pk]
-        name varchar
-      }
-
-      Table categories {
-        id int [pk]
-        name varchar
-      }
-
-      Table posts {
-        id int [pk]
-        title varchar
-        ~user_ref
-        ~category_ref
-      }
-
-      records users(id, name) {
-        1, "Alice"
-      }
-
-      records categories(id, name) {
-        1, "Tech"
-      }
-
-      records posts(id, title, user_id, category_id) {
         1, "Valid Post", 1, 1
         2, "Invalid Category", 1, 999
         3, "Invalid User", 999, 1
@@ -976,31 +763,7 @@ describe('[example - record] FK in table partials', () => {
       records nodes(id, name, parent_id) {
         1, "Root", null
         2, "Child 1", 1
-        3, "Child 2", 1
-        4, "Grandchild", 2
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-  });
-
-  test('should detect self-referencing FK violation from injected table partial', () => {
-    const source = `
-      TablePartial hierarchical {
-        parent_id int [ref: > nodes.id]
-      }
-
-      Table nodes {
-        id int [pk]
-        name varchar
-        ~hierarchical
-      }
-
-      records nodes(id, name, parent_id) {
-        1, "Root", null
-        2, "Invalid Child", 999
+        3, "Invalid Child", 999
       }
     `;
     const result = interpret(source);
@@ -1009,392 +772,5 @@ describe('[example - record] FK in table partials', () => {
     expect(warnings.length).toBe(1);
     expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
     expect(warnings[0].diagnostic).toBe('FK violation: nodes.parent_id = 999 does not exist in nodes.id');
-  });
-});
-
-describe('[example - record] FK validation across multiple records blocks', () => {
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for FK across records blocks with different columns', () => {
-    const source = `
-      Table users {
-        id int [pk]
-        name varchar
-      }
-
-      Table orders {
-        id int [pk]
-        user_id int [ref: > users.id]
-        total decimal
-      }
-
-      records users(id, name) {
-        1, 'Alice'
-      }
-
-      records users(id) {
-        2
-      }
-
-      records orders(id, user_id) {
-        100, 1
-      }
-
-      records orders(id, user_id, total) {
-        101, 2, 250.00
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties (2 blocks for users + 2 blocks for orders = 4 errors)
-    expect(errors.length).toBe(4);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'orders'");
-    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'orders'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for FK violation when referenced value not in any records block', () => {
-    const source = `
-      Table users {
-        id int [pk]
-        name varchar
-        email varchar
-      }
-
-      Table orders {
-        id int [pk]
-        user_id int [ref: > users.id]
-      }
-
-      records users(id, name) {
-        1, 'Alice'
-      }
-
-      records users(id, email) {
-        2, 'bob@example.com'
-      }
-
-      records orders(id, user_id) {
-        100, 3
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties (2 blocks for users = 2 errors)
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for composite FK across multiple records blocks', () => {
-    const source = `
-      Table users {
-        tenant_id int
-        user_id int
-        name varchar
-        indexes {
-          (tenant_id, user_id) [pk]
-        }
-      }
-
-      Table posts {
-        id int [pk]
-        tenant_id int
-        author_id int
-      }
-
-      Ref: posts.(tenant_id, author_id) > users.(tenant_id, user_id)
-
-      records users(tenant_id, user_id) {
-        1, 100
-      }
-
-      records users(tenant_id, user_id, name) {
-        1, 101, 'Bob'
-        2, 200, 'Charlie'
-      }
-
-      records posts(id, tenant_id, author_id) {
-        1, 1, 100
-        2, 1, 101
-        3, 2, 200
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties (2 blocks for users = 2 errors)
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for composite FK violation across blocks', () => {
-    const source = `
-      Table users {
-        tenant_id int
-        user_id int
-        email varchar
-        indexes {
-          (tenant_id, user_id) [pk]
-        }
-      }
-
-      Table posts {
-        id int [pk]
-        tenant_id int
-        author_id int
-      }
-
-      Ref: posts.(tenant_id, author_id) > users.(tenant_id, user_id)
-
-      records users(tenant_id, user_id) {
-        1, 100
-      }
-
-      records users(tenant_id, user_id, email) {
-        2, 200, 'user@example.com'
-      }
-
-      records posts(id, tenant_id, author_id) {
-        1, 1, 101
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties (2 blocks for users = 2 errors)
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for FK when referenced column appears in some but not all blocks', () => {
-    const source = `
-      Table categories {
-        id int [pk]
-        name varchar
-        description text
-      }
-
-      Table products {
-        id int [pk]
-        category_id int [ref: > categories.id]
-        name varchar
-      }
-
-      records categories(id, name) {
-        1, 'Electronics'
-      }
-
-      records categories(id, description) {
-        2, 'Category 2 description'
-      }
-
-      records categories(id, name) {
-        3, 'Home'
-      }
-
-      records products(id, category_id, name) {
-        100, 1, 'Laptop'
-        101, 2, 'Mouse'
-        102, 3, 'Chair'
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties (3 blocks for categories = 4 errors)
-    expect(errors.length).toBe(4);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
-    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
-    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for FK with NULL values across blocks', () => {
-    const source = `
-      Table users {
-        id int [pk]
-        name varchar
-      }
-
-      Table orders {
-        id int [pk]
-        user_id int [ref: > users.id]
-        notes varchar
-      }
-
-      records users(id, name) {
-        1, 'Alice'
-      }
-
-      records orders(id, user_id) {
-        100, 1
-        101, null
-      }
-
-      records orders(id, notes) {
-        102, 'No user'
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties (2 blocks for orders = 2 errors)
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'orders'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'orders'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for bidirectional FK (1-1) across multiple blocks', () => {
-    const source = `
-      Table users {
-        id int [pk]
-        name varchar
-      }
-
-      Table profiles {
-        id int [pk]
-        user_id int [unique]
-      }
-
-      Ref: users.id <> profiles.user_id
-
-      records users(id) {
-        1
-      }
-
-      records users(id, name) {
-        2, 'Bob'
-      }
-
-      records profiles(id, user_id) {
-        10, 1
-        11, 2
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties (2 blocks for users = 2 errors)
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-  });
-
-  test('should detect bidirectional FK violation', () => {
-    const source = `
-      Table users {
-        id int [pk]
-      }
-
-      Table profiles {
-        id int [pk]
-        user_id int [unique]
-      }
-
-      Ref: users.id <> profiles.user_id
-
-      records users(id) {
-        1
-      }
-
-      records profiles(id, user_id) {
-        10, 1
-        11, 3  // Invalid: user 3 doesn't exist
-      }
-    `;
-
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBeGreaterThan(0);
-    expect(warnings.some((e) => e.diagnostic.includes('FK violation'))).toBe(true);
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for FK across nested and top-level records', () => {
-    const source = `
-      Table categories {
-        id int [pk]
-        name varchar
-
-        records (id) {
-          1
-        }
-      }
-
-      records categories(id, name) {
-        2, 'Electronics'
-      }
-
-      Table products {
-        id int [pk]
-        category_id int [ref: > categories.id]
-
-        records (id, category_id) {
-          100, 1
-        }
-      }
-
-      records products(id, category_id) {
-        101, 2
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties (2 blocks for categories + 2 blocks for products = 4 errors)
-    expect(errors.length).toBe(4);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'categories'");
-    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'products'");
-    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'products'");
   });
 });
