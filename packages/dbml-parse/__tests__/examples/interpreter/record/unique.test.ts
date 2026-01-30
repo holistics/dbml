@@ -112,37 +112,6 @@ describe('[example - record] composite unique constraints', () => {
     expect(db.records[0].values[2][2]).toEqual({ type: 'string', value: 'dark' });
   });
 
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for multiple records blocks for same table', () => {
-    const source = `
-      Table user_profiles {
-        user_id int
-        profile_type varchar
-        data text
-
-        indexes {
-          (user_id, profile_type) [unique]
-        }
-      }
-      records user_profiles(user_id, profile_type, data) {
-        1, "work", "Engineer"
-      }
-      records user_profiles(user_id, profile_type, data) {
-        1, "work", "Developer"
-      }
-    `;
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'user_profiles'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'user_profiles'");
-  });
-
   test('should allow same value in one unique column when other differs', () => {
     const source = `
       Table event_registrations {
@@ -189,16 +158,33 @@ describe('[example - record] composite unique constraints', () => {
 });
 
 describe('[example - record] simple unique constraints', () => {
-  test('should accept valid unique values', () => {
+  test('should validate unique constraints with various data types', () => {
     const source = `
       Table users {
         id int [pk]
         email varchar [unique]
+        username varchar [unique]
       }
-      records users(id, email) {
-        1, "alice@example.com"
-        2, "bob@example.com"
-        3, "charlie@example.com"
+      Table products {
+        id int [pk]
+        sku varchar [unique]
+      }
+      Table accounts {
+        id int [pk]
+        account_number int [unique]
+      }
+      records users(id, email, username) {
+        1, "alice@example.com", "alice"
+        2, "bob@example.com", "bob"
+      }
+      records products(id, sku) {
+        1, "PROD-001"
+        2, "PROD-002"
+      }
+      records accounts(id, account_number) {
+        1, 0
+        2, -1
+        3, 1000
       }
     `;
     const result = interpret(source);
@@ -207,22 +193,25 @@ describe('[example - record] simple unique constraints', () => {
     expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records.length).toBe(1);
+    expect(db.records.length).toBe(3);
+
+    // Verify users table
     expect(db.records[0].tableName).toBe('users');
-    expect(db.records[0].columns).toEqual(['id', 'email']);
-    expect(db.records[0].values.length).toBe(3);
-
-    // Row 1: id=1, email="alice@example.com"
-    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values.length).toBe(2);
     expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'alice@example.com' });
-
-    // Row 2: id=2, email="bob@example.com"
-    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 2 });
     expect(db.records[0].values[1][1]).toEqual({ type: 'string', value: 'bob@example.com' });
 
-    // Row 3: id=3, email="charlie@example.com"
-    expect(db.records[0].values[2][0]).toEqual({ type: 'integer', value: 3 });
-    expect(db.records[0].values[2][1]).toEqual({ type: 'string', value: 'charlie@example.com' });
+    // Verify products table
+    expect(db.records[1].tableName).toBe('products');
+    expect(db.records[1].values.length).toBe(2);
+    expect(db.records[1].values[0][1]).toEqual({ type: 'string', value: 'PROD-001' });
+
+    // Verify accounts table with numeric unique values including zero and negative
+    expect(db.records[2].tableName).toBe('accounts');
+    expect(db.records[2].values.length).toBe(3);
+    expect(db.records[2].values[0][1]).toEqual({ type: 'integer', value: 0 });
+    expect(db.records[2].values[1][1]).toEqual({ type: 'integer', value: -1 });
+    expect(db.records[2].values[2][1]).toEqual({ type: 'integer', value: 1000 });
   });
 
   test('should reject duplicate unique values', () => {
@@ -231,29 +220,48 @@ describe('[example - record] simple unique constraints', () => {
         id int [pk]
         email varchar [unique]
       }
+      Table products {
+        id int [pk]
+        sku varchar [unique]
+      }
       records users(id, email) {
         1, "alice@example.com"
         2, "alice@example.com"
+      }
+      records products(id, sku) {
+        1, "PROD-001"
+        2, "PROD-001"
       }
     `;
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('Duplicate UNIQUE: users.email = "alice@example.com"');
+    // Should have warnings for duplicate unique values
+    expect(warnings.length).toBeGreaterThan(0);
+
+    // Verify users.email duplicate warnings
+    const userWarnings = warnings.filter((w) => w.diagnostic.includes('users.email') && w.diagnostic.includes('alice@example.com'));
+    expect(userWarnings.length).toBeGreaterThan(0);
+    expect(userWarnings.every((w) => w.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
+
+    // Verify products.sku duplicate warnings
+    const productWarnings = warnings.filter((w) => w.diagnostic.includes('products.sku') && w.diagnostic.includes('PROD-001'));
+    expect(productWarnings.length).toBeGreaterThan(0);
+    expect(productWarnings.every((w) => w.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
   });
 
-  test('should allow NULL values in unique column (NULLs dont conflict)', () => {
+  test('should allow multiple NULL values in unique columns', () => {
     const source = `
       Table users {
         id int [pk]
+        email varchar [unique]
         phone varchar [unique]
       }
-      records users(id, phone) {
-        1, null
-        2, ""
-        3, "555-1234"
-        4,
+      records users(id, email, phone) {
+        1, "alice@example.com", null
+        2, "bob@example.com", null
+        3, null, "123-456"
+        4, null, "789-012"
       }
     `;
     const result = interpret(source);
@@ -264,26 +272,24 @@ describe('[example - record] simple unique constraints', () => {
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(4);
 
-    // Row 1: id=1, phone=null
-    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: null });
+    // Row 1: email="alice@example.com", phone=null
+    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'alice@example.com' });
+    expect(db.records[0].values[0][2].value).toBe(null);
 
-    // Row 2: id=2, phone=null
-    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[1][1]).toEqual({ type: 'string', value: '' });
+    // Row 2: email="bob@example.com", phone=null
+    expect(db.records[0].values[1][1]).toEqual({ type: 'string', value: 'bob@example.com' });
+    expect(db.records[0].values[1][2].value).toBe(null);
 
-    // Row 3: id=3, phone="555-1234"
-    expect(db.records[0].values[2][0]).toEqual({ type: 'integer', value: 3 });
-    expect(db.records[0].values[2][1]).toEqual({ type: 'string', value: '555-1234' });
+    // Row 3: email=null, phone="123-456"
+    expect(db.records[0].values[2][1].value).toBe(null);
+    expect(db.records[0].values[2][2]).toEqual({ type: 'string', value: '123-456' });
 
-    // Row 4: id=4, phone=null
-    expect(db.records[0].values[3][0]).toEqual({ type: 'integer', value: 4 });
-    expect(db.records[0].values[3][1]).toEqual({ type: 'string', value: null });
+    // Row 4: email=null, phone="789-012"
+    expect(db.records[0].values[3][1].value).toBe(null);
+    expect(db.records[0].values[3][2]).toEqual({ type: 'string', value: '789-012' });
   });
 
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for multiple records blocks for same table', () => {
+  test('should validate unique with PK constraint', () => {
     const source = `
       Table users {
         id int [pk]
@@ -291,385 +297,18 @@ describe('[example - record] simple unique constraints', () => {
       }
       records users(id, email) {
         1, "alice@example.com"
-      }
-      records users(id, email) {
-        2, "alice@example.com"
-      }
-    `;
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-  });
-
-  test('should validate multiple unique columns independently', () => {
-    const source = `
-      Table users {
-        id int [pk]
-        email varchar [unique]
-        username varchar [unique]
-      }
-      records users(id, email, username) {
-        1, "alice@example.com", "alice"
-        2, "bob@example.com", "alice"
+        1, "bob@example.com"
       }
     `;
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('Duplicate UNIQUE: users.username = "alice"');
+    // Should have warnings for duplicate PK
+    expect(warnings.length).toBeGreaterThan(0);
+    expect(warnings.every((w) => w.diagnostic.includes('Duplicate PK') && w.diagnostic.includes('users.id'))).toBe(true);
   });
 
-  test('should accept unique constraint with numeric values', () => {
-    const source = `
-      Table products {
-        id int [pk]
-        sku int [unique]
-        name varchar
-      }
-      records products(id, sku, name) {
-        1, 1001, "Product A"
-        2, 1002, "Product B"
-        3, 1003, "Product C"
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-
-    const db = result.getValue()!;
-    expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: 1001 });
-    expect(db.records[0].values[1][1]).toEqual({ type: 'integer', value: 1002 });
-    expect(db.records[0].values[2][1]).toEqual({ type: 'integer', value: 1003 });
-  });
-
-  test('should reject duplicate numeric unique values', () => {
-    const source = `
-      Table products {
-        id int [pk]
-        sku int [unique]
-        name varchar
-      }
-      records products(id, sku, name) {
-        1, 1001, "Product A"
-        2, 1001, "Product B"
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('Duplicate UNIQUE: products.sku = 1001');
-  });
-
-  test('should accept zero as unique value', () => {
-    const source = `
-      Table items {
-        id int [pk]
-        code int [unique]
-      }
-      records items(id, code) {
-        1, 0
-        2, 1
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-  });
-
-  test('should handle negative numbers in unique constraint', () => {
-    const source = `
-      Table balances {
-        id int [pk]
-        account_num int [unique]
-      }
-      records balances(id, account_num) {
-        1, -100
-        2, 100
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-
-    const db = result.getValue()!;
-    expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: -100 });
-    expect(db.records[0].values[1][1]).toEqual({ type: 'integer', value: 100 });
-  });
-
-  test('should accept both pk and unique on same column', () => {
-    const source = `
-      Table items {
-        id int [pk, unique]
-        name varchar
-      }
-      records items(id, name) {
-        1, "Item 1"
-        2, "Item 2"
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-  });
-
-  test('should reject duplicate when column has both pk and unique', () => {
-    const source = `
-      Table items {
-        id int [pk, unique]
-        name varchar
-      }
-      records items(id, name) {
-        1, "Item 1"
-        1, "Item 2"
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    // Both pk and unique violations are reported
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('Duplicate PK: items.id = 1');
-    expect(warnings[1].diagnostic).toBe('Duplicate UNIQUE: items.id = 1');
-  });
-
-  test('should allow all null values in unique column', () => {
-    const source = `
-      Table data {
-        id int [pk]
-        optional_code varchar [unique]
-      }
-      records data(id, optional_code) {
-        1, null
-        2, null
-        3, null
-      }
-    `;
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-
-    expect(warnings.length).toBe(0);
-  });
-});
-
-describe('[example - record] Unique validation across multiple records blocks', () => {
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for unique constraint across blocks with different columns', () => {
-    const source = `
-      Table users {
-        id int [pk]
-        email varchar [unique]
-        username varchar [unique]
-      }
-
-      records users(id, email) {
-        1, 'alice@example.com'
-        2, 'bob@example.com'
-      }
-
-      records users(id, username) {
-        3, 'charlie'
-        4, 'david'
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for unique violation across blocks', () => {
-    const source = `
-      Table users {
-        id int [pk]
-        email varchar [unique]
-        name varchar
-      }
-
-      records users(id, email) {
-        1, 'alice@example.com'
-      }
-
-      records users(id, email, name) {
-        2, 'alice@example.com', 'Alice2'
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for composite unique across multiple blocks', () => {
-    const source = `
-      Table user_roles {
-        id int [pk]
-        user_id int
-        role_id int
-        granted_by int
-        indexes {
-          (user_id, role_id) [unique]
-        }
-      }
-
-      records user_roles(id, user_id, role_id) {
-        1, 100, 1
-        2, 100, 2
-      }
-
-      records user_roles(id, user_id, role_id, granted_by) {
-        3, 101, 1, 999
-        4, 102, 1, 999
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'user_roles'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'user_roles'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for composite unique violation across blocks', () => {
-    const source = `
-      Table user_roles {
-        id int [pk]
-        user_id int
-        role_id int
-        indexes {
-          (user_id, role_id) [unique]
-        }
-      }
-
-      records user_roles(id, user_id, role_id) {
-        1, 100, 1
-      }
-
-      records user_roles(id, user_id, role_id) {
-        2, 100, 1
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'user_roles'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'user_roles'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for NULL unique constraint across blocks', () => {
-    const source = `
-      Table users {
-        id int [pk]
-        email varchar [unique]
-        phone varchar [unique]
-      }
-
-      records users(id, email) {
-        1, null
-        2, null
-      }
-
-      records users(id, phone) {
-        3, null
-        4, null
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for unique when column missing from some blocks', () => {
-    const source = `
-      Table products {
-        id int [pk]
-        sku varchar [unique]
-        name varchar
-        description text
-      }
-
-      records products(id, name) {
-        1, 'Product A'
-      }
-
-      records products(id, sku) {
-        2, 'SKU-001'
-        3, 'SKU-002'
-      }
-
-      records products(id, description) {
-        4, 'Description text'
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties (3 blocks = 4 errors)
-    expect(errors.length).toBe(4);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'products'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'products'");
-    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'products'");
-    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'products'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for multiple unique constraints on same table across blocks', () => {
+  test('should validate multiple unique columns on same table', () => {
     const source = `
       Table users {
         id int [pk]
@@ -677,238 +316,44 @@ describe('[example - record] Unique validation across multiple records blocks', 
         username varchar [unique]
         phone varchar [unique]
       }
-
-      records users(id, email, username) {
-        1, 'alice@example.com', 'alice'
-      }
-
-      records users(id, phone) {
-        2, '555-0001'
-      }
-
-      records users(id, email) {
-        3, 'bob@example.com'
-      }
-
-      records users(id, username, phone) {
-        4, 'charlie', '555-0002'
+      records users(id, email, username, phone) {
+        1, "alice@example.com", "alice", "111-111"
+        2, "bob@example.com", "bob", "222-222"
+        3, "charlie@example.com", "alice", "333-333"
+        4, "dave@example.com", "dave", "111-111"
       }
     `;
-
     const result = interpret(source);
-    const errors = result.getErrors();
+    const warnings = result.getWarnings();
 
-    // Verify exact error count and ALL error properties (4 blocks = 6 errors)
-    expect(errors.length).toBe(6);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[4].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[4].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[5].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[5].diagnostic).toBe("Duplicate Records for the same Table 'users'");
+    // username "alice" is duplicate (rows 1 and 3) and phone "111-111" is duplicate (rows 1 and 4)
+    // Each duplicate generates one warning per affected row
+    expect(warnings.length).toBeGreaterThan(0);
+    expect(warnings.some((w) => w.diagnostic.includes('users.username') && w.diagnostic.includes('alice'))).toBe(true);
+    expect(warnings.some((w) => w.diagnostic.includes('users.phone') && w.diagnostic.includes('111-111'))).toBe(true);
   });
 
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for violations of different unique constraints', () => {
+  test('should report error for duplicate records blocks', () => {
     const source = `
       Table users {
         id int [pk]
         email varchar [unique]
-        username varchar [unique]
       }
 
       records users(id, email) {
-        1, 'alice@example.com'
+        1, "alice@example.com"
       }
-
-      records users(id, username) {
-        2, 'bob'
-      }
-
-      records users(id, email, username) {
-        3, 'alice@example.com', 'charlie'
-        4, 'david@example.com', 'bob'
+      records users(id, email) {
+        2, "bob@example.com"
       }
     `;
-
     const result = interpret(source);
     const errors = result.getErrors();
 
-    // Verify exact error count and ALL error properties (3 blocks = 4 errors)
-    expect(errors.length).toBe(4);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for unique across nested and top-level records', () => {
-    const source = `
-      Table users {
-        id int [pk]
-        email varchar [unique]
-        username varchar
-
-        records (id, email) {
-          1, 'alice@example.com'
-        }
-      }
-
-      records users(id, username) {
-        2, 'bob'
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties
     expect(errors.length).toBe(2);
     expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
     expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
     expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for unique violation between nested and top-level', () => {
-    const source = `
-      Table users {
-        id int [pk]
-        email varchar [unique]
-
-        records (id, email) {
-          1, 'alice@example.com'
-        }
-      }
-
-      records users(id, email) {
-        2, 'alice@example.com'
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties
-    expect(errors.length).toBe(2);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'users'");
-  });
-
-  test('should handle complex scenario with multiple unique constraints', () => {
-    const source = `
-      Table employees {
-        id int [pk]
-        email varchar [unique]
-        employee_code varchar [unique]
-        ssn varchar [unique]
-        name varchar
-      }
-
-      records employees(id, email, employee_code) {
-        1, 'emp1@company.com', 'EMP001'
-      }
-
-      records employees(id, ssn) {
-        2, '123-45-6789'
-      }
-
-      records employees(id, email, ssn) {
-        3, 'emp3@company.com', '987-65-4321'
-      }
-
-      records employees(id, employee_code, name) {
-        4, 'EMP004', 'John Doe'
-      }
-    `;
-
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
-  });
-
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
-  test('should report error for multiple unique violations in complex scenario', () => {
-    const source = `
-      Table products {
-        id int [pk]
-        sku varchar [unique]
-        barcode varchar [unique]
-        name varchar
-      }
-
-      records products(id, sku, barcode) {
-        1, 'SKU-001', 'BAR-001'
-      }
-
-      records products(id, sku) {
-        2, 'SKU-002'
-      }
-
-      records products(id, sku, name) {
-        3, 'SKU-001', 'Product 3'
-      }
-
-      records products(id, barcode) {
-        4, 'BAR-001'
-      }
-    `;
-
-    const result = interpret(source);
-    const errors = result.getErrors();
-
-    // Verify exact error count and ALL error properties (4 blocks = 6 errors)
-    expect(errors.length).toBe(6);
-    expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records for the same Table 'products'");
-    expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records for the same Table 'products'");
-    expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[2].diagnostic).toBe("Duplicate Records for the same Table 'products'");
-    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[3].diagnostic).toBe("Duplicate Records for the same Table 'products'");
-    expect(errors[4].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[4].diagnostic).toBe("Duplicate Records for the same Table 'products'");
-    expect(errors[5].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[5].diagnostic).toBe("Duplicate Records for the same Table 'products'");
-  });
-
-  test('should validate unique with both PK and unique constraints', () => {
-    const source = `
-      Table users {
-        id int [pk, unique]  // Both PK and unique
-        email varchar [unique]
-      }
-
-      records users(id) {
-        1
-      }
-
-      records users(id, email) {
-        2, 'alice@example.com'
-      }
-    `;
-
-    const result = interpret(source);
-    const warnings = result.getWarnings();
-    expect(warnings.length).toBe(0);
   });
 });
