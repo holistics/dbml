@@ -2,7 +2,7 @@
 
 #### :bug: Bug Fix
 * `dbml-core`
-  * [#806](https://github.com/holistics/dbml/pull/806) feat: add support for alter table with check in mssql ast generator ([@hdnax](https://github.com/hdnax))
+  * [#806](https://github.com/holistics/dbml/pull/806) Add support for `ALTER TABLE WITH CHECK/NOCHECK` in MSSQL parser/AST generator ([@hdnax](https://github.com/hdnax))
 
 #### :boom: Breaking Change
 * `dbml-parse`
@@ -20,7 +20,9 @@
 
 #### :house_with_garden: Internal
 * `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
-  * [#782](https://github.com/holistics/dbml/pull/782) Setup coverage tests & setup property-based, example-based & fuzz testing for @dbml/parse ([@hdnax](https://github.com/hdnax))
+  * [#782](https://github.com/holistics/dbml/pull/782) Setup coverage tests ([@hdnax](https://github.com/hdnax))
+* `dbml-parse`
+  * [#782](https://github.com/holistics/dbml/pull/782) Setup property-based, example-based & fuzz testing ([@hdnax](https://github.com/hdnax))
 
 #### Committers: 1
 - Huy DNA ([@hdnax](https://github.com/hdnax))
