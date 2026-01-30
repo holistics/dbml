@@ -1,6 +1,7 @@
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
+  getElementKind,
 } from '@/core/analyzer/utils';
 import {
   extractStringFromIdentifierStream,
@@ -17,17 +18,23 @@ import {
   CompletionItemKind,
   CompletionItemInsertTextRule,
 } from '@/services/types';
-import { TableSymbol } from '@/core/analyzer/symbol/symbols';
+import { TableSymbol, type NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import { SymbolKind, destructureIndex } from '@/core/analyzer/symbol/symbolIndex';
 import {
   pickCompletionItemKind,
   shouldPrependSpace,
-  addQuoteIfNeeded,
+  addQuoteToSuggestionIfNeeded,
   noSuggestions,
   prependSpace,
+  isOffsetWithinElementHeader,
+  addSuggestAllSuggestion,
+  isTupleEmpty,
 } from '@/services/suggestions/utils';
+import { suggestRecordRowSnippet } from '@/services/suggestions/recordRowSnippet';
 import {
   AttributeNode,
+  CallExpressionNode,
+  CommaExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   IdentiferStreamNode,
@@ -40,7 +47,7 @@ import {
 } from '@/core/parser/nodes';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { isComment } from '@/core/lexer/utils';
-import { SettingName } from '@/core/analyzer/types';
+import { ElementKind, SettingName } from '@/core/analyzer/types';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -54,6 +61,13 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {
     const offset = getOffsetFromMonacoPosition(model, position);
+
+    // Try to suggest record row snippet first
+    const recordRowSnippet = suggestRecordRowSnippet(this.compiler, model, position, offset);
+    if (recordRowSnippet !== null) {
+      return recordRowSnippet;
+    }
+
     const flatStream = this.compiler.token.flatStream();
     // bOc: before-or-contain
     const { token: bOcToken, index: bOcTokenId } = this.compiler.container.token(offset);
@@ -136,10 +150,18 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       } else if (container instanceof ListExpressionNode) {
         return suggestInAttribute(this.compiler, offset, container);
       } else if (container instanceof TupleExpressionNode) {
-        return suggestInTuple(this.compiler, offset);
+        return suggestInTuple(this.compiler, offset, container);
+      } else if (container instanceof CommaExpressionNode) {
+        return suggestInCommaExpression(this.compiler, offset);
+      } else if (container instanceof CallExpressionNode) {
+        return suggestInCallExpression(this.compiler, offset, container);
       } else if (container instanceof FunctionApplicationNode) {
         return suggestInSubField(this.compiler, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
+        if (isOffsetWithinElementHeader(offset, container)) {
+          return suggestInElementHeader(this.compiler, offset, container);
+        }
+
         if (
           (container.bodyColon && offset >= container.bodyColon.end)
           || (container.body && isOffsetWithinSpan(offset, container.body))
@@ -184,6 +206,26 @@ function suggestOnRelOp (
   return noSuggestions();
 }
 
+function suggestMembersOfSymbol (
+  compiler: Compiler,
+  symbol: NodeSymbol,
+  acceptedKinds: SymbolKind[],
+): CompletionList {
+  return addQuoteToSuggestionIfNeeded({
+    suggestions: compiler.symbol
+      .members(symbol)
+      .filter(({ kind }) => acceptedKinds.includes(kind))
+      .map(({ name, kind }) => ({
+        label: name,
+        insertText: name,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: pickCompletionItemKind(kind),
+        sortText: pickCompletionItemKind(kind).toString().padStart(2, '0'),
+        range: undefined as any,
+      })),
+  });
+}
+
 function suggestNamesInScope (
   compiler: Compiler,
   offset: number,
@@ -200,33 +242,48 @@ function suggestNamesInScope (
     if (curElement?.symbol?.symbolTable) {
       const { symbol } = curElement;
       res.suggestions.push(
-        ...compiler.symbol
-          .members(symbol)
-          .filter(({ kind }) => acceptedKinds.includes(kind))
-          .map(({ name, kind }) => ({
-            label: name,
-            insertText: name,
-            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            kind: pickCompletionItemKind(kind),
-            sortText: pickCompletionItemKind(kind).toString().padStart(2, '0'),
-            range: undefined as any,
-          })),
+        ...suggestMembersOfSymbol(compiler, symbol, acceptedKinds).suggestions,
       );
     }
     curElement = curElement instanceof ElementDeclarationNode ? curElement.parent : undefined;
   }
 
-  return addQuoteIfNeeded(res);
+  return addQuoteToSuggestionIfNeeded(res);
 }
 
-function suggestInTuple (compiler: Compiler, offset: number): CompletionList {
+function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: TupleExpressionNode): CompletionList {
   const scopeKind = compiler.container.scopeKind(offset);
+  const element = compiler.container.element(offset);
+
+  // Check if we're inside a CallExpression - delegate to suggestInCallExpression
+  const containers = [...compiler.container.stack(offset)];
+  for (const c of containers) {
+    if (c instanceof CallExpressionNode && c.argumentList === tupleContainer) {
+      return suggestInCallExpression(compiler, offset, c);
+    }
+  }
+
+  // Check if we're in a Records element header
+  if (
+    element instanceof ElementDeclarationNode
+    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
+    && !(element.name instanceof CallExpressionNode)
+    && isOffsetWithinElementHeader(offset, element)
+  ) {
+    const tableSymbol = element.parent?.symbol || element.name?.referee;
+    if (tableSymbol) {
+      const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+      // If the user already typed some columns, we do not suggest "all columns" anymore
+      if (!isTupleEmpty(tupleContainer)) return suggestions;
+      return addSuggestAllSuggestion(suggestions);
+    }
+  }
+
   switch (scopeKind) {
     case ScopeKind.INDEXES:
       return suggestColumnNameInIndexes(compiler, offset);
     case ScopeKind.REF:
       {
-        const containers = [...compiler.container.stack(offset)];
         while (containers.length > 0) {
           const container = containers.pop()!;
           if (container instanceof InfixExpressionNode && container.op?.value === '.') {
@@ -242,6 +299,22 @@ function suggestInTuple (compiler: Compiler, offset: number): CompletionList {
       return suggestInRefField(compiler, offset);
     default:
       break;
+  }
+
+  return noSuggestions();
+}
+
+function suggestInCommaExpression (compiler: Compiler, offset: number): CompletionList {
+  const scopeKind = compiler.container.scopeKind(offset);
+
+  // CommaExpressionNode is used in records data rows
+  if (scopeKind === ScopeKind.RECORDS) {
+    // In records, suggest enum values if applicable
+    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+      SymbolKind.Schema,
+      SymbolKind.Enum,
+      SymbolKind.EnumField,
+    ]);
   }
 
   return noSuggestions();
@@ -457,7 +530,7 @@ function suggestMembers (
 
   const nameStack = fragments.map((f) => extractVariableFromExpression(f).unwrap());
 
-  return addQuoteIfNeeded({
+  return addQuoteToSuggestionIfNeeded({
     suggestions: compiler.symbol
       .ofName(nameStack, compiler.container.element(offset))
       .flatMap(({ symbol }) => compiler.symbol.members(symbol))
@@ -506,7 +579,7 @@ function suggestInSubField (
 
 function suggestTopLevelElementType (): CompletionList {
   return {
-    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial'].map((name) => ({
+    suggestions: ['Table', 'TableGroup', 'Enum', 'Project', 'Ref', 'TablePartial', 'Records'].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -542,7 +615,8 @@ function suggestInColumn (
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const elements = ['Note', 'indexes', 'checks'];
+  const elements = ['Note', 'indexes', 'checks', 'Records'];
+
   if (!container?.callee) {
     return {
       suggestions: elements.map((name) => ({
@@ -618,10 +692,86 @@ function suggestInRefField (compiler: Compiler, offset: number): CompletionList 
   ]);
 }
 
+function suggestInElementHeader (
+  compiler: Compiler,
+  offset: number,
+  container: ElementDeclarationNode,
+): CompletionList {
+  const elementKind = getElementKind(container).unwrap_or(undefined);
+  if (elementKind === ElementKind.Records) {
+    return suggestNamesInScope(compiler, offset, container.parent, [
+      SymbolKind.Schema,
+      SymbolKind.Table,
+    ]);
+  }
+  return noSuggestions();
+}
+
+function suggestInCallExpression (
+  compiler: Compiler,
+  offset: number,
+  container: CallExpressionNode,
+): CompletionList {
+  const element = compiler.container.element(offset);
+
+  // Determine if we're in the callee or in the arguments
+  const inCallee = container.callee && isOffsetWithinSpan(offset, container.callee);
+  const inArgs = container.argumentList && isOffsetWithinSpan(offset, container.argumentList);
+
+  // Check if we're in a Records element header (top-level Records)
+  if (
+    element instanceof ElementDeclarationNode
+    && getElementKind(element).unwrap_or(undefined) === ElementKind.Records
+    && isOffsetWithinElementHeader(offset, element)
+  ) {
+    if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [
+      SymbolKind.Schema,
+      SymbolKind.Table,
+    ]);
+    if (!inArgs) return noSuggestions();
+
+    const callee = container.callee;
+    if (!callee) return noSuggestions();
+
+    const fragments = destructureMemberAccessExpression(callee).unwrap_or([callee]);
+    const rightmostExpr = fragments[fragments.length - 1];
+    const tableSymbol = rightmostExpr?.referee;
+
+    if (!tableSymbol) return noSuggestions();
+    const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+    const { argumentList } = container;
+    // If the user already typed some columns, we do not suggest "all columns" anymore
+    if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
+    return addSuggestAllSuggestion(suggestions);
+  }
+
+  // Check if we're inside a Records FunctionApplicationNode (e.g., typing "Records ()")
+  // Example:
+  // Table T {
+  //   Records () // This is currently treated as a CallExpressionNode
+  // }
+  const containers = [...compiler.container.stack(offset)];
+  for (const c of containers) {
+    if (!inArgs) continue;
+    if (!(c instanceof FunctionApplicationNode)) continue;
+    if (c.callee !== container) continue;
+    if (extractVariableFromExpression(container.callee).unwrap_or('').toLowerCase() !== ElementKind.Records) continue;
+    const tableSymbol = compiler.container.element(offset).symbol;
+    if (!tableSymbol) return noSuggestions();
+    const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+    const { argumentList } = container;
+    // If the user already typed some columns, we do not suggest "all columns" anymore
+    if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
+    return addSuggestAllSuggestion(suggestions);
+  }
+
+  return noSuggestions();
+}
+
 function suggestInTableGroupField (compiler: Compiler): CompletionList {
   return {
     suggestions: [
-      ...addQuoteIfNeeded({
+      ...addQuoteToSuggestionIfNeeded({
         suggestions: [...compiler.parse.publicSymbolTable().entries()].flatMap(([index]) => {
           const res = destructureIndex(index).unwrap_or(undefined);
           if (res === undefined) return [];
@@ -737,7 +887,7 @@ function suggestColumnNameInIndexes (compiler: Compiler, offset: number): Comple
 
   const { symbolTable } = tableNode.symbol;
 
-  return addQuoteIfNeeded({
+  return addQuoteToSuggestionIfNeeded({
     suggestions: [...symbolTable.entries()].flatMap(([index]) => {
       const res = destructureIndex(index).unwrap_or(undefined);
       if (res === undefined) {

@@ -1,6 +1,6 @@
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import Report from '@/core/report';
-import { CompileError, ProgramNode, SyntaxNode } from '@/index';
+import { ProgramNode, SyntaxNode } from '@/index';
 import fs from 'fs';
 
 export function scanTestNames (_path: any) {
@@ -22,7 +22,7 @@ export function scanTestNames (_path: any) {
  * - 'symbolTable': Converts Map to Object for JSON compatibility
  */
 export function serialize (
-  report: Readonly<Report<ProgramNode, CompileError>>,
+  report: Readonly<Report<ProgramNode>>,
   pretty: boolean = false,
 ): string {
   return JSON.stringify(

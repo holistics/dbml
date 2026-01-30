@@ -8,6 +8,13 @@ import {
   hasWhiteSpace,
 } from './utils';
 import { shouldPrintSchemaName } from '../model_structure/utils';
+import {
+  isNumericType,
+  isStringType,
+  isBooleanType,
+  isDateTimeType,
+  isBinaryType,
+} from '@dbml/parse';
 
 // PostgreSQL built-in data types
 // Generated from PostgreSQLParser.g4 and PostgreSQLLexer.g4
@@ -138,6 +145,54 @@ const POSTGRES_RESERVED_KEYWORDS = [
 ];
 
 class PostgresExporter {
+  static exportRecords (model) {
+    const records = Object.values(model.records || {});
+    if (_.isEmpty(records)) {
+      return [];
+    }
+
+    const insertStatements = records.map((record) => {
+      const { schemaName, tableName, columns, values } = record;
+
+      // Skip if no values
+      if (!values || values.length === 0) {
+        return null;
+      }
+
+      // Build the table reference with schema if present
+      const tableRef = schemaName ? `"${schemaName}"."${tableName}"` : `"${tableName}"`;
+
+      // Build the column list
+      const columnList = columns.length > 0
+        ? `(${columns.map((col) => `"${col}"`).join(', ')})`
+        : '';
+
+      // Value formatter for PostgreSQL
+      const formatValue = (val) => {
+        if (val.value === null) return 'NULL';
+        if (val.type === 'expression') return val.value;
+
+        if (isNumericType(val.type)) return val.value;
+        if (isBooleanType(val.type)) return String(val.value).toUpperCase() === 'TRUE' ? 'TRUE' : 'FALSE';
+        if (isStringType(val.type) || isDateTimeType(val.type) || isBinaryType(val.type)) return `'${String(val.value).replace(/'/g, "''")}'`;
+        // Unknown type - use CAST
+        return `CAST('${String(val.value).replace(/'/g, "''")}' AS ${val.type})`;
+      };
+
+      // Build the VALUES clause
+      const valueRows = values.map((row) => {
+        const valueStrs = row.map(formatValue);
+        return `(${valueStrs.join(', ')})`;
+      });
+
+      const valuesClause = valueRows.join(',\n  ');
+
+      return `INSERT INTO ${tableRef} ${columnList}\nVALUES\n  ${valuesClause};`;
+    }).filter(Boolean);
+
+    return insertStatements;
+  }
+
   static exportEnums (enumIds, model) {
     return enumIds.map((enumId) => {
       const _enum = model.enums[enumId];
@@ -545,6 +600,21 @@ class PostgresExporter {
       return prevStatements;
     }, schemaEnumStatements);
 
+    // Export INSERT statements with constraint checking disabled
+    const insertStatements = PostgresExporter.exportRecords(model);
+    const recordsSection = !_.isEmpty(insertStatements)
+      ? [
+          '-- Disable constraint checking for INSERT',
+          'BEGIN;',
+          'SET session_replication_role = replica;',
+          '',
+          ...insertStatements,
+          '',
+          'SET session_replication_role = DEFAULT;',
+          'COMMIT;',
+        ]
+      : [];
+
     const res = _.concat(
       statements.schemas,
       statements.enums,
@@ -552,6 +622,7 @@ class PostgresExporter {
       statements.indexes,
       statements.comments,
       statements.refs,
+      recordsSection,
     ).join('\n');
     return res;
   }

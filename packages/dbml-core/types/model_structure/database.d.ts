@@ -19,13 +19,20 @@ export interface Project {
     name: string;
 }
 
-interface RawTableRecord {
+export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
+
+export interface RecordValue {
+    value: any;
+    type: RecordValueType;
+}
+
+export interface RawTableRecord {
     schemaName: string | undefined;
     tableName: string;
     columns: string[];
     values: {
         value: any;
-        type: string;
+        type: RecordValueType;
     }[][];
 }
 

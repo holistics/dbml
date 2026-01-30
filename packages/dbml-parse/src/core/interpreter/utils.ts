@@ -1,4 +1,4 @@
-import { last, zip } from 'lodash-es';
+import { last, zip, uniqBy } from 'lodash-es';
 import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 import {
   destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
@@ -6,18 +6,19 @@ import {
   extractVarNameFromPrimaryVariable,
 } from '@/core/analyzer/utils';
 import {
-  ArrayNode, CallExpressionNode, FunctionExpressionNode, LiteralNode,
+  ArrayNode, BlockExpressionNode, CallExpressionNode, FunctionExpressionNode, FunctionApplicationNode, LiteralNode,
   PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/parser/nodes';
 import {
-  ColumnType, RelationCardinality, Table, TokenPosition,
+  ColumnType, RelationCardinality, Table, TokenPosition, InterpreterDatabase, Ref,
+  Column,
 } from '@/core/interpreter/types';
 import { SyntaxTokenKind } from '@/core/lexer/tokens';
 import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
 import Report from '@/core/report';
 import { CompileError, CompileErrorCode } from '@/core/errors';
 import { getNumberTextFromExpression, parseNumber } from '@/core/utils';
-import { isExpressionASignedNumberExpression } from '../analyzer/validator/utils';
+import { isExpressionASignedNumberExpression, isValidPartialInjection } from '../analyzer/validator/utils';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
   const { variables, tupleElements } = destructureComplexVariableTuple(operand).unwrap();
@@ -199,12 +200,15 @@ export function processDefaultValue (valueNode?: SyntaxNode):
   throw new Error('Unreachable');
 }
 
-export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, CompileError> {
+export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabase): Report<ColumnType> {
   let typeSuffix: string = '';
   let typeArgs: string | null = null;
+  let numericParams: { precision: number; scale: number } | undefined;
+  let lengthParam: { length: number } | undefined;
+
   if (typeNode instanceof CallExpressionNode) {
-    typeArgs = typeNode
-      .argumentList!.elementList.map((e) => {
+    const argElements = typeNode.argumentList!.elementList;
+    typeArgs = argElements.map((e) => {
       if (isExpressionASignedNumberExpression(e)) {
         return getNumberTextFromExpression(e);
       }
@@ -213,9 +217,25 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
       }
       // e can only be an identifier here
       return extractVariableFromExpression(e).unwrap();
-    })
-      .join(',');
+    }).join(',');
     typeSuffix = `(${typeArgs})`;
+
+    // Parse numeric type parameters (precision, scale)
+    if (argElements.length === 2
+      && isExpressionASignedNumberExpression(argElements[0])
+      && isExpressionASignedNumberExpression(argElements[1])) {
+      const precision = parseNumber(argElements[0]);
+      const scale = parseNumber(argElements[1]);
+      if (!isNaN(precision) && !isNaN(scale)) {
+        numericParams = { precision: Math.trunc(precision), scale: Math.trunc(scale) };
+      }
+    } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
+      const length = parseNumber(argElements[0]);
+      if (!isNaN(length)) {
+        lengthParam = { length: Math.trunc(length) };
+      }
+    }
+
     typeNode = typeNode.callee!;
   }
   while (typeNode instanceof CallExpressionNode || typeNode instanceof ArrayNode) {
@@ -246,12 +266,21 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
   }
 
   const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
+
+  // Check if this type references an enum
+  const schema = typeSchemaName.length === 0 ? null : typeSchemaName[0];
+
+  const isEnum = !![...env.enums.values()].find((e) => e.name === typeName && e.schemaName === schema);
+
   if (typeSchemaName.length > 1) {
     return new Report(
       {
         schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
         type_name: `${typeName}${typeSuffix}`,
         args: typeArgs,
+        numericParams,
+        lengthParam,
+        isEnum,
       },
       [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)],
     );
@@ -261,5 +290,135 @@ export function processColumnType (typeNode: SyntaxNode): Report<ColumnType, Com
     schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
     type_name: `${typeName}${typeSuffix}`,
     args: typeArgs,
+    numericParams,
+    lengthParam,
+    isEnum,
   });
+}
+
+// The returned table respects (injected) column definition order
+export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): Table {
+  const tableElement = [...env.tables.entries()].find(([, t]) => t === table)?.[0];
+  if (!tableElement) {
+    throw new Error('mergeTableAndPartials should be called after all tables are interpreted');
+  }
+  if (!(tableElement.body instanceof BlockExpressionNode)) {
+    throw new Error('Table element should have a block body');
+  }
+
+  const indexes = [...table.indexes];
+  const checks = [...table.checks];
+  let headerColor = table.headerColor;
+  let note = table.note;
+
+  const tablePartials = [...env.tablePartials.values()];
+  // Prioritize later table partials
+  for (const tablePartial of [...table.partials].reverse()) {
+    const { name } = tablePartial;
+    const partial = tablePartials.find((p) => p.name === name);
+    if (!partial) continue;
+
+    // Merge indexes
+    indexes.push(...partial.indexes);
+
+    // Merge checks
+    checks.push(...partial.checks);
+
+    // Merge settings (later partials override)
+    if (partial.headerColor !== undefined) {
+      headerColor = partial.headerColor;
+    }
+    if (partial.note !== undefined) {
+      note = partial.note;
+    }
+  }
+
+  const directFieldMap = new Map(table.fields.map((f) => [f.name, f]));
+  const directFieldNames = new Set(directFieldMap.keys());
+  const partialMap = new Map(tablePartials.map((p) => [p.name, p]));
+
+  // Collect all fields in declaration order
+  const allFields: Column[] = [];
+
+  for (const subfield of tableElement.body.body) {
+    if (!(subfield instanceof FunctionApplicationNode)) continue;
+
+    if (isValidPartialInjection(subfield.callee)) {
+      // Inject partial fields
+      const partialName = extractVariableFromExpression(subfield.callee.expression).unwrap_or(undefined);
+      const partial = partialMap.get(partialName!);
+      if (!partial) continue;
+
+      for (const field of partial.fields) {
+        // Skip if overridden by direct definition
+        if (directFieldNames.has(field.name)) continue;
+        allFields.push(field);
+      }
+    } else {
+      // Add direct field definition
+      const columnName = extractVariableFromExpression(subfield.callee).unwrap();
+      const column = directFieldMap.get(columnName);
+      if (!column) continue;
+      allFields.push(column);
+    }
+  }
+
+  // Use uniqBy to keep last occurrence of each field (later partials win)
+  // Process from end to start, then reverse to maintain declaration order
+  const fields = uniqBy([...allFields].reverse(), 'name').reverse();
+
+  return {
+    ...table,
+    fields,
+    indexes,
+    checks,
+    headerColor,
+    note,
+  };
+}
+
+export function extractInlineRefsFromTablePartials (table: Table, env: InterpreterDatabase): Ref[] {
+  const refs: Ref[] = [];
+  const tablePartials = [...env.tablePartials.values()];
+  const originalFieldNames = new Set(table.fields.map((f) => f.name));
+
+  // Process partials in the same order as mergeTableAndPartials
+  for (const tablePartial of [...table.partials].reverse()) {
+    const { name } = tablePartial;
+    const partial = tablePartials.find((p) => p.name === name);
+    if (!partial) continue;
+
+    // Extract inline refs from partial fields
+    for (const field of partial.fields) {
+      // Skip if this field is overridden by the original table
+      if (originalFieldNames.has(field.name)) continue;
+
+      for (const inlineRef of field.inline_refs) {
+        const multiplicities = getMultiplicities(inlineRef.relation);
+        refs.push({
+          name: null,
+          schemaName: null,
+          token: inlineRef.token,
+          endpoints: [
+            {
+              schemaName: inlineRef.schemaName,
+              tableName: inlineRef.tableName,
+              fieldNames: inlineRef.fieldNames,
+              token: inlineRef.token,
+              relation: multiplicities[1],
+            },
+            {
+              schemaName: table.schemaName,
+              tableName: table.name,
+              fieldNames: [field.name],
+              token: field.token,
+              relation: multiplicities[0],
+            },
+          ],
+        });
+      }
+    }
+  }
+
+  return refs;
 }
