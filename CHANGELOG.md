@@ -1,12 +1,28 @@
+## v5.5.0 (2026-01-30)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#806](https://github.com/holistics/dbml/pull/806) Add support for `ALTER TABLE WITH CHECK/NOCHECK` in MSSQL parser/AST generator ([@hdnax](https://github.com/hdnax))
+
+#### :boom: Breaking Change
+* `dbml-parse`
+  * [#530](https://github.com/holistics/dbml/pull/530) Refactor binder and partial injection handling ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
 ## v5.4.1 (2026-01-13)
 
 #### :bug: Bug Fix
-* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
-  * [#782](https://github.com/holistics/dbml/pull/782) Add comprehensive parser tests & Avoid connection leak & Minor parser bugs ([@hdnax](https://github.com/hdnax))
+* `dbml-connector`
+  * [#782](https://github.com/holistics/dbml/pull/782) Avoid connection leak in @dbml/connector
+  * [#782](https://github.com/holistics/dbml/pull/782) Minor parser bugs related to token's offset and handlings of empty element names ([@hdnax](https://github.com/hdnax))
 
 #### :house_with_garden: Internal
 * `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
-  * [#782](https://github.com/holistics/dbml/pull/782) Add comprehensive parser tests & Avoid connection leak & Minor parser bugs ([@hdnax](https://github.com/hdnax))
+  * [#782](https://github.com/holistics/dbml/pull/782) Setup coverage tests ([@hdnax](https://github.com/hdnax))
+* `dbml-parse`
+  * [#782](https://github.com/holistics/dbml/pull/782) Setup property-based, example-based & fuzz testing ([@hdnax](https://github.com/hdnax))
 
 #### Committers: 1
 - Huy DNA ([@hdnax](https://github.com/hdnax))
