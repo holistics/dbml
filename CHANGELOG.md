@@ -1,3 +1,12 @@
+## v5.5.1 (2026-01-30)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#808](https://github.com/holistics/dbml/pull/808) Properly validate column reference in incomplete ref elements ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
 ## v5.5.0 (2026-01-30)
 
 #### :bug: Bug Fix
