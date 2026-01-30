@@ -197,4 +197,52 @@ describe('[example] records validator', () => {
     const errors = analyze(source).getErrors();
     expect(errors.length).toBe(0);
   });
+
+  test('should accept case-insensitive null, true, false', () => {
+    const source = `
+      Table data {
+        col1 varchar
+        col2 boolean
+        col3 varchar
+      }
+      records data(col1, col2, col3) {
+        NULL, TRUE, FALSE
+        null, true, false
+        Null, True, False
+        nUlL, tRuE, fAlSe
+      }
+    `;
+    const errors = analyze(source).getErrors();
+    expect(errors.length).toBe(0);
+  });
+
+  test('should reject invalid identifier values', () => {
+    const source = `
+      Table users {
+        id int [pk]
+        name varchar
+      }
+      records users(id, name) {
+        1, someInvalidIdentifier
+      }
+    `;
+    const errors = analyze(source).getErrors();
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toContain('Records can only contain simple values');
+  });
+
+  test('should reject standalone unqualified identifiers other than null/true/false', () => {
+    const source = `
+      Table config {
+        key varchar
+        value varchar
+      }
+      records config(key, value) {
+        "db_host", localhost
+      }
+    `;
+    const errors = analyze(source).getErrors();
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toContain('Records can only contain simple values');
+  });
 });

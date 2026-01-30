@@ -11,6 +11,7 @@ import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
 import { ElementKind } from '@/core/analyzer/types';
 import { isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
+import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 
 export default class RecordsValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -231,9 +232,10 @@ export default class RecordsValidator implements ElementValidator {
       return true;
     }
 
-    // Simple identifiers: true, false, null, NULL, TRUE, FALSE
+    // Simple identifiers: only null, true, false (case-insensitive)
     if (isExpressionAVariableNode(value)) {
-      return true;
+      const identifierValue = value.expression.variable.value.toLowerCase();
+      return KEYWORDS_OF_DEFAULT_SETTING.includes(identifierValue);
     }
 
     // Member access for enum field references: status.active, myschema.status.pending
