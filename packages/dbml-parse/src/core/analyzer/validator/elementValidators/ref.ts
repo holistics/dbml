@@ -11,7 +11,7 @@ import {
 } from '@/core/parser/utils';
 import { ElementValidator } from '@/core/analyzer/validator/types';
 import { isSimpleName, isValidColor, pickValidator, aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { isBinaryRelationship, isEqualTupleOperands } from '@/core/analyzer/utils';
+import { destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands } from '@/core/analyzer/utils';
 import SymbolTable from '@/core/analyzer/symbol/symbolTable';
 
 export default class RefValidator implements ElementValidator {
@@ -95,6 +95,19 @@ export default class RefValidator implements ElementValidator {
     fields.forEach((field) => {
       if (field.callee && !isBinaryRelationship(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field must be a binary relationship', field.callee));
+      }
+
+      if (field.callee && isBinaryRelationship(field.callee)) {
+        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression).unwrap_or({ variables: [], tupleElements: [] });
+        const leftFragmentCount = leftFragment.variables.length + Math.min(leftFragment.tupleElements.length, 1);
+        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression).unwrap_or({ variables: [], tupleElements: [] });
+        const rightFragmentCount = rightFragment.variables.length + Math.min(rightFragment.tupleElements.length, 1);
+        if (leftFragmentCount < 2) {
+          errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.leftExpression || field.callee));
+        }
+        if (rightFragmentCount < 2) {
+          errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.rightExpression || field.callee));
+        }
       }
 
       if (field.callee && !isEqualTupleOperands(field.callee)) {

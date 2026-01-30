@@ -3962,6 +3962,92 @@
       "name": "CompileError"
     },
     {
+      "code": 3039,
+      "diagnostic": "Invalid column reference",
+      "nodeOrToken": {
+        "id": 41,
+        "kind": "<primary-expression>",
+        "startPos": {
+          "offset": 138,
+          "line": 13,
+          "column": 9
+        },
+        "fullStart": 138,
+        "endPos": {
+          "offset": 140,
+          "line": 13,
+          "column": 11
+        },
+        "fullEnd": 141,
+        "start": 138,
+        "end": 140,
+        "expression": {
+          "id": 40,
+          "kind": "<variable>",
+          "startPos": {
+            "offset": 138,
+            "line": 13,
+            "column": 9
+          },
+          "fullStart": 138,
+          "endPos": {
+            "offset": 140,
+            "line": 13,
+            "column": 11
+          },
+          "fullEnd": 141,
+          "start": 138,
+          "end": 140,
+          "variable": {
+            "kind": "<identifier>",
+            "startPos": {
+              "offset": 138,
+              "line": 13,
+              "column": 9
+            },
+            "endPos": {
+              "offset": 140,
+              "line": 13,
+              "column": 11
+            },
+            "value": "id",
+            "leadingTrivia": [],
+            "trailingTrivia": [
+              {
+                "kind": "<space>",
+                "startPos": {
+                  "offset": 140,
+                  "line": 13,
+                  "column": 11
+                },
+                "endPos": {
+                  "offset": 141,
+                  "line": 13,
+                  "column": 12
+                },
+                "value": " ",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 140,
+                "end": 141
+              }
+            ],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 138,
+            "end": 140
+          }
+        }
+      },
+      "start": 138,
+      "end": 140,
+      "name": "CompileError"
+    },
+    {
       "code": 3034,
       "diagnostic": "A Ref must appear top-level",
       "nodeOrToken": {
@@ -4468,6 +4554,92 @@
       },
       "start": 152,
       "end": 170,
+      "name": "CompileError"
+    },
+    {
+      "code": 3039,
+      "diagnostic": "Invalid column reference",
+      "nodeOrToken": {
+        "id": 51,
+        "kind": "<primary-expression>",
+        "startPos": {
+          "offset": 157,
+          "line": 14,
+          "column": 9
+        },
+        "fullStart": 157,
+        "endPos": {
+          "offset": 161,
+          "line": 14,
+          "column": 13
+        },
+        "fullEnd": 162,
+        "start": 157,
+        "end": 161,
+        "expression": {
+          "id": 50,
+          "kind": "<variable>",
+          "startPos": {
+            "offset": 157,
+            "line": 14,
+            "column": 9
+          },
+          "fullStart": 157,
+          "endPos": {
+            "offset": 161,
+            "line": 14,
+            "column": 13
+          },
+          "fullEnd": 162,
+          "start": 157,
+          "end": 161,
+          "variable": {
+            "kind": "<identifier>",
+            "startPos": {
+              "offset": 157,
+              "line": 14,
+              "column": 9
+            },
+            "endPos": {
+              "offset": 161,
+              "line": 14,
+              "column": 13
+            },
+            "value": "code",
+            "leadingTrivia": [],
+            "trailingTrivia": [
+              {
+                "kind": "<space>",
+                "startPos": {
+                  "offset": 161,
+                  "line": 14,
+                  "column": 13
+                },
+                "endPos": {
+                  "offset": 162,
+                  "line": 14,
+                  "column": 14
+                },
+                "value": " ",
+                "leadingTrivia": [],
+                "trailingTrivia": [],
+                "leadingInvalid": [],
+                "trailingInvalid": [],
+                "isInvalid": false,
+                "start": 161,
+                "end": 162
+              }
+            ],
+            "leadingInvalid": [],
+            "trailingInvalid": [],
+            "isInvalid": false,
+            "start": 157,
+            "end": 161
+          }
+        }
+      },
+      "start": 157,
+      "end": 161,
       "name": "CompileError"
     }
   ]
