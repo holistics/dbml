@@ -46,7 +46,8 @@ export default class TableBinder implements ElementBinder {
       .filter((i) => i instanceof FunctionApplicationNode && isValidPartialInjection(i.callee))
       .reverse() // Warning: `reverse` mutates, but it's safe because we're working on a filtered array
       .flatMap((i) => {
-        const fragments = destructureComplexVariableTuple(((i as FunctionApplicationNode).callee as PrefixExpressionNode).expression).unwrap();
+        const fragments = destructureComplexVariableTuple(((i as FunctionApplicationNode).callee as PrefixExpressionNode).expression).unwrap_or(undefined);
+        if (!fragments) return [];
         const tablePartialBindee = fragments.variables.pop();
         const schemaBindees = fragments.variables;
 
