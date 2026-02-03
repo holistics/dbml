@@ -61,7 +61,7 @@ export default class TableBinder implements ElementBinder {
         ]);
         if (errors.length) return errors;
         tablePartialBindee.referee?.symbolTable?.forEach((value) => {
-          const columnName = extractVariableFromExpression((value.injectionDeclaration as FunctionApplicationNode).callee).unwrap_or(undefined);
+          const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee).unwrap_or(undefined);
           if (columnName === undefined) return;
           const injectedColumnSymbol = this.symbolFactory.create(
             TablePartialInjectedColumnSymbol,
