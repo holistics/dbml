@@ -1,0 +1,4 @@
+Table "users" {
+  "identity_data" jsonb
+  "email" text
+}
