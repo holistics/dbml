@@ -5,8 +5,10 @@
     "baseUrl": "./src",                                   /* Specify the base directory to resolve non-relative module names. */
     "outDir": "./lib",                                    /* Specify an output folder for all emitted files. */
     "esModuleInterop": true,                              /* Emit additional JavaScript to ease support for importing CommonJS modules. */
-    "resolveJsonModule": true                        /* Enable importing .json files. */
+    "resolveJsonModule": true,                            /* Enable importing .json files. */
+    "types": ["vitest/globals", "node"]
   },
   "files": ["package.json"],
-  "include": ["src/**/*", "__tests__/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["__tests__/**/*", "**/*.spec.ts", "**/*.test.ts"]
 }

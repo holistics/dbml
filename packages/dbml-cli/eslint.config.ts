@@ -21,6 +21,7 @@ export default defineConfig(
         'lib/*',
         'bin/*',
         'eslint.config.ts',
+        'vite.config.ts',
       ],
     },
     {

@@ -13,7 +13,7 @@
   ],
   "main": "./dist/dbml-parse.js",
   "module": "./dist/dbml-parse.mjs",
-  "types": "./dist/src/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
