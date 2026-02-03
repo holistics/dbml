@@ -20,16 +20,16 @@ export function validateForeignKeys (env: InterpreterDatabase): CompileError[] {
   // Collect all refs: explicit refs + inline refs from table partials
   const refs = [
     ...env.ref.values(),
-    ...flatMap(Array.from(env.tables.values()), t => extractInlineRefsFromTablePartials(t, env))
+    ...flatMap(Array.from(env.tables.values()), (t) => extractInlineRefsFromTablePartials(t, env)),
   ];
 
   // Build table info map
   const tableInfoMap = buildTableInfoMap(env);
 
-  return flatMap(refs, ref => validateRef(ref, tableInfoMap));
+  return flatMap(refs, (ref) => validateRef(ref, tableInfoMap));
 }
 
-function buildTableInfoMap(env: InterpreterDatabase): Map<string, TableInfo> {
+function buildTableInfoMap (env: InterpreterDatabase): Map<string, TableInfo> {
   const tableInfoMap = new Map<string, TableInfo>();
 
   for (const table of env.tables.values()) {
@@ -47,12 +47,12 @@ function buildTableInfoMap(env: InterpreterDatabase): Map<string, TableInfo> {
   return tableInfoMap;
 }
 
-function makeTableKey(schema: string | null | undefined, table: string): string {
+function makeTableKey (schema: string | null | undefined, table: string): string {
   return schema ? `${schema}.${table}` : `${DEFAULT_SCHEMA_NAME}.${table}`;
 }
 
 // Validate that source's values exist in target's values
-function validateFkSourceToTarget(
+function validateFkSourceToTarget (
   sourceTable: TableInfo,
   targetTable: TableInfo,
   sourceEndpoint: RefEndpoint,
@@ -62,31 +62,31 @@ function validateFkSourceToTarget(
 
   // Build set of valid target values for FK reference check
   const validFkValues = new Set(
-    targetTable.rows.map(row => extractKeyValueWithDefault(row.values, targetEndpoint.fieldNames))
+    targetTable.rows.map((row) => extractKeyValueWithDefault(row.values, targetEndpoint.fieldNames)),
   );
 
   // Filter rows with NULL values (optional relationships)
-  const rowsWithValues = sourceTable.rows.filter(row =>
-    !hasNullWithoutDefaultInKey(row.values, sourceEndpoint.fieldNames)
+  const rowsWithValues = sourceTable.rows.filter((row) =>
+    !hasNullWithoutDefaultInKey(row.values, sourceEndpoint.fieldNames),
   );
 
   // Find rows with FK values that don't exist in target
-  const invalidRows = rowsWithValues.filter(row => {
+  const invalidRows = rowsWithValues.filter((row) => {
     const fkValue = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
     return !validFkValues.has(fkValue);
   });
 
   // Transform invalid rows to errors
-  return flatMap(invalidRows, row => {
+  return flatMap(invalidRows, (row) => {
     const sourceColumnRef = formatFullColumnNames(
       sourceTable.mergedTable.schemaName,
       sourceTable.mergedTable.name,
-      sourceEndpoint.fieldNames
+      sourceEndpoint.fieldNames,
     );
     const targetColumnRef = formatFullColumnNames(
       targetTable.mergedTable.schemaName,
       targetTable.mergedTable.name,
-      targetEndpoint.fieldNames
+      targetEndpoint.fieldNames,
     );
     const valueStr = formatValues(row.values, sourceEndpoint.fieldNames);
     const message = `FK violation: ${sourceColumnRef} = ${valueStr} does not exist in ${targetColumnRef}`;
@@ -95,7 +95,7 @@ function validateFkSourceToTarget(
   });
 }
 
-function validateRef(ref: Ref, tableInfoMap: Map<string, TableInfo>): CompileError[] {
+function validateRef (ref: Ref, tableInfoMap: Map<string, TableInfo>): CompileError[] {
   if (!ref.endpoints) return [];
 
   const [endpoint1, endpoint2] = ref.endpoints;
@@ -107,7 +107,7 @@ function validateRef(ref: Ref, tableInfoMap: Map<string, TableInfo>): CompileErr
   return validateRelationship(table1, table2, endpoint1, endpoint2);
 }
 
-function validateRelationship(
+function validateRelationship (
   table1: TableInfo,
   table2: TableInfo,
   endpoint1: RefEndpoint,
