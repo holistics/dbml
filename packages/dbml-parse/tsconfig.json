@@ -2,6 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "./", /* Specify the root folder within your source files. */
+    "types": ["vitest/globals", "node"],
+    "lib": ["ES2022", "DOM"],
     "paths": {
       "@/*": [
         "src/*"

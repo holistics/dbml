@@ -2,12 +2,11 @@
 
 import path from 'path';
 import { defineConfig } from 'vite';
-import commonjs from 'vite-plugin-commonjs';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   plugins: [
-    commonjs(),
+    dts({ insertTypesEntry: true }),
   ],
   resolve: {
     alias: {
@@ -15,11 +14,30 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'lib',
+    target: 'node18',
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       fileName: 'index',
       formats: ['cjs', 'es'],
+    },
+    rollupOptions: {
+      external: [
+        '@google-cloud/bigquery',
+        'lodash',
+        'mssql',
+        'mysql2',
+        'oracledb',
+        'pg',
+        'snowflake-sdk',
+        'fs',
+        'fs/promises',
+        'path',
+        'crypto',
+        'stream',
+        'util',
+        'timers',
+        'zlib',
+      ],
     },
   },
   test: {
