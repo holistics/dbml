@@ -26,7 +26,7 @@ export default class IndexesBinder implements ElementBinder {
   }
 
   bind (): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || getElementKind(this.declarationNode.parent).unwrap() !== ElementKind.Table) {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Table) {
       return [];
     }
 
@@ -76,7 +76,8 @@ export default class IndexesBinder implements ElementBinder {
         });
 
       return bindees.flatMap((bindee) => {
-        const columnName = extractVarNameFromPrimaryVariable(bindee).unwrap();
+        const columnName = extractVarNameFromPrimaryVariable(bindee).unwrap_or(undefined);
+        if (columnName === undefined) return [];
         const columnIndex = createColumnSymbolIndex(columnName);
         const column = ownerTableSymbolTable.get(columnIndex);
         if (!column) {
