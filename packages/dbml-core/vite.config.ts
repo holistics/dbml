@@ -3,7 +3,6 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import commonjs from 'vite-plugin-commonjs';
-import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   plugins: [
