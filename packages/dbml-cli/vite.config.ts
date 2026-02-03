@@ -2,24 +2,35 @@
 
 import path from 'path';
 import { defineConfig } from 'vite';
-import commonjs from 'vite-plugin-commonjs';
-import dts from 'vite-plugin-dts';
 
 export default defineConfig({
-  plugins: [
-    commonjs(),
-  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src/"),
     },
   },
   build: {
+    target: 'node18',
     outDir: 'lib',
     lib: {
-      entry: path.resolve(__dirname, 'src/index.ts'),
+      entry: path.resolve(__dirname, 'src/index.js'),
       fileName: 'index',
-      formats: ['cjs', 'es'],
+      formats: ['cjs'],
+    },
+    rollupOptions: {
+      external: [
+        '@dbml/connector',
+        '@dbml/core',
+        'bluebird',
+        'chalk',
+        'commander',
+        'esm',
+        'figures',
+        'lodash',
+        'pegjs-require-import',
+        'strip-ansi',
+        'winston',
+      ],
     },
   },
   test: {
