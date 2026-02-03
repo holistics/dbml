@@ -19,7 +19,7 @@ export default defineConfig(
         'node_modules/*',
         'dist/*',
         'eslint.config.ts',
-        'jest.config.ts',
+        'vite.config.ts',
         '**/*.test.ts',
         '__tests__/**/*',
       ],
@@ -32,6 +32,7 @@ export default defineConfig(
           sourceType: 'module',
           ecmaVersion: 2020,
           project: './tsconfig.json',
+          tsconfigRootDir: import.meta.dirname,
         },
       },
       plugins: {
