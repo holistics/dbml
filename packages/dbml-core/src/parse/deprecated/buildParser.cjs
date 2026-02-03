@@ -3,11 +3,10 @@
  * The PEG parsers are being replaced by ANTLR-based parsers.
  * Use the v2 parser methods in Parser.js instead.
  */
-import pegjsRequire from 'pegjs-require-import';
-import Promise from 'bluebird';
-
-import fs from 'fs';
-import path from 'path';
+const pegjsRequire = require('pegjs-require-import');
+const Promise = require('bluebird');
+const fs = require('fs');
+const path = require('path');
 
 Promise.promisifyAll(fs);
 
