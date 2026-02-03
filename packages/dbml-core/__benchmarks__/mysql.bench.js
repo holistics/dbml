@@ -1,4 +1,4 @@
-import { benchmarkSuite } from 'jest-bench';
+import { bench, describe } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 
@@ -7,27 +7,24 @@ import importer from '../src/import';
 const mySQL = fs.readFileSync(path.join(process.cwd(), './__benchmarks__/mysql.sql'), 'utf-8');
 const mySQL2 = fs.readFileSync(path.join(process.cwd(), './__benchmarks__/mysql2.sql'), 'utf-8');
 
-benchmarkSuite('Mysql parser suite', {
-  setup () {
-
-  },
-  teardown () {
-
-  },
-
-  'Legacy Mysql parser small sql': () => {
+describe('Mysql parser suite', () => {
+  bench('Legacy Mysql parser small sql', () => {
     importer.import(mySQL, 'mysqlLegacy');
-  },
+  });
 
-  'Legacy Mysql parser huge sql': () => {
+  bench('Legacy Mysql parser large sql', () => {
     importer.import(mySQL2, 'mysqlLegacy');
-  },
+  });
 
-  'ANTLR Mysql parser small sql': () => {
+  bench('Legacy Mysql parser huge sql', () => {
+    importer.import(mySQL2, 'mysqlLegacy');
+  });
+
+  bench('ANTLR Mysql parser small sql', () => {
     importer.import(mySQL, 'mysql');
-  },
+  });
 
-  'ANTLR Mysql parser huge sql': () => {
+  bench('ANTLR Mysql parser huge sql', () => {
     importer.import(mySQL2, 'mysql');
-  },
-}, 1200000);
+  });
+});

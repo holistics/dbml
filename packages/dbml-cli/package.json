@@ -31,7 +31,6 @@
     "dbml-cli"
   ],
   "dependencies": {
-    "@babel/cli": "^7.21.0",
     "@dbml/connector": "^5.5.1",
     "@dbml/core": "^5.5.1",
     "bluebird": "^3.5.5",
