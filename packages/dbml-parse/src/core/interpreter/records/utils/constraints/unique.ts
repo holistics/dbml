@@ -8,73 +8,70 @@ import {
   createConstraintErrors,
 } from './helper';
 import { mergeTableAndPartials } from '@/core/interpreter/utils';
+import { keyBy, groupBy, compact, isEmpty, filter, flatMap } from 'lodash-es';
+
+const getConstraintType = (columnCount: number) =>
+  columnCount > 1 ? 'Composite UNIQUE' : 'UNIQUE';
 
 export function validateUnique (env: InterpreterDatabase): CompileError[] {
-  const errors: CompileError[] = [];
-
-  for (const [table, rows] of env.records) {
+  return flatMap(Array.from(env.records), ([table, rows]) => {
     if (!env.cachedMergedTables.has(table)) {
       env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
     }
     const mergedTable = env.cachedMergedTables.get(table)!;
 
-    if (rows.length === 0) continue;
+    if (isEmpty(rows)) return [];
 
     const uniqueConstraints = collectUniqueConstraints(mergedTable);
-    const columnMap = new Map(mergedTable.fields.map((c) => [c.name, c]));
+    const columnMap = keyBy(mergedTable.fields, 'name');
 
-    for (const uniqueColumns of uniqueConstraints) {
-      const uniqueColumnFields = uniqueColumns.map((col) => columnMap.get(col)).filter(Boolean);
-      errors.push(...checkUniqueDuplicates(rows, uniqueColumns, uniqueColumnFields, mergedTable));
-    }
-  }
-
-  return errors;
+    return flatMap(uniqueConstraints, (uniqueColumns) => {
+      const uniqueColumnFields = compact(uniqueColumns.map(col => columnMap[col]));
+      return checkUniqueDuplicates(rows, uniqueColumns, uniqueColumnFields, mergedTable);
+    });
+  });
 }
 
-function collectUniqueConstraints (mergedTable: Table): string[][] {
-  const uniqueConstraints: string[][] = [];
-
-  for (const field of mergedTable.fields) {
-    if (field.unique) uniqueConstraints.push([field.name]);
-  }
-
-  for (const index of mergedTable.indexes) {
-    if (index.unique) uniqueConstraints.push(index.columns.map((c) => c.value));
-  }
-
-  return uniqueConstraints;
+function collectUniqueConstraints(mergedTable: Table): string[][] {
+  return [
+    ...mergedTable.fields.filter(field => field.unique).map(field => [field.name]),
+    ...mergedTable.indexes.filter(index => index.unique).map(index => index.columns.map(c => c.value))
+  ];
 }
 
-function checkUniqueDuplicates (
+function checkUniqueDuplicates(
   rows: TableRecordRow[],
   uniqueColumns: string[],
   uniqueColumnFields: (Column | undefined)[],
   mergedTable: Table,
 ): CompileError[] {
-  const errors: CompileError[] = [];
-  const seen = new Map<string, number>();
+  // Filter out rows with NULL values (SQL standard: NULLs don't conflict in UNIQUE constraints)
+  const rowsWithoutNull = rows.filter(row =>
+    !hasNullWithoutDefaultInKey(row.values, uniqueColumns, uniqueColumnFields)
+  );
 
-  for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-    const row = rows[rowIndex];
+  // Group rows by their unique key value
+  const rowsByKeyValue = groupBy(rowsWithoutNull, row =>
+    extractKeyValueWithDefault(row.values, uniqueColumns, uniqueColumnFields)
+  );
 
-    // NULL values don't conflict in UNIQUE constraints (SQL standard behavior)
-    if (hasNullWithoutDefaultInKey(row.values, uniqueColumns, uniqueColumnFields)) {
-      continue;
-    }
+  // Find groups with more than 1 row (duplicates)
+  const duplicateGroups = filter(rowsByKeyValue, group => group.length > 1);
 
-    const keyValue = extractKeyValueWithDefault(row.values, uniqueColumns, uniqueColumnFields);
-    if (seen.has(keyValue)) {
-      const constraintType = uniqueColumns.length > 1 ? 'Composite UNIQUE' : 'UNIQUE';
-      const columnRef = formatFullColumnNames(mergedTable.schemaName, mergedTable.name, uniqueColumns);
+  // Transform duplicate groups to errors
+  return flatMap(duplicateGroups, (duplicateRows) => {
+    const constraintType = getConstraintType(uniqueColumns.length);
+    const columnRef = formatFullColumnNames(
+      mergedTable.schemaName,
+      mergedTable.name,
+      uniqueColumns
+    );
+
+    // Skip first occurrence, report rest as duplicates
+    return flatMap(duplicateRows.slice(1), row => {
       const valueStr = formatValues(row.values, uniqueColumns);
       const message = `Duplicate ${constraintType}: ${columnRef} = ${valueStr}`;
-
-      errors.push(...createConstraintErrors(row, uniqueColumns, message));
-    } else {
-      seen.set(keyValue, rowIndex);
-    }
-  }
-
-  return errors;
+      return createConstraintErrors(row, uniqueColumns, message);
+    });
+  });
 }
