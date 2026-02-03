@@ -39,7 +39,7 @@
     "coverage": "vitest run --coverage",
     "build:parser": "node src/parse/deprecated/buildParser.js",
     "build:lib": "vite build",
-    "build": "npm run build:lib && npm run build:parser",
+    "build": "npm run build:parser && npm run build:lib",
     "prepublish": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
