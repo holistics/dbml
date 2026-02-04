@@ -3,6 +3,7 @@ import Database from '../../../src/model_structure/database';
 import jsonDb from './single_schema.json';
 import { DEFAULT_SCHEMA_NAME } from '../../../src/model_structure/config';
 import { NormalizedDatabase } from '../../../types/model_structure/database';
+import { test, expect, describe } from 'vitest';
 
 describe('@dbml/core - model_structure', () => {
   let database: Database;
