@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import _ from 'lodash';
+import { forIn, isEmpty, isObject } from 'lodash-es';
+import { expect } from 'vitest';
 
 /**
  * Scans a directory for test input files matching the pattern `*.in.*`
@@ -28,12 +29,12 @@ export function getFileExtension (format: string): string {
 }
 
 function omitDeep (obj: any, predicate: (key: string, value: unknown) => boolean): any {
-  _.forIn(obj, (value, key) => {
+  forIn(obj, (value, key) => {
     if (predicate(key, value)) {
       delete obj[key];
       return;
     }
-    if (_.isObject(value)) {
+    if (isObject(value)) {
       obj[key] = omitDeep(value, predicate);
     }
   });
@@ -46,8 +47,8 @@ export function isEqualExcludeTokenEmpty (receivedObj: any, sourceObj: any): voi
       key === 'token'
       || value === undefined
       || value === null
-      || (Array.isArray(value) && _.isEmpty(value))
-      || (typeof value === 'object' && _.isEmpty(value))
+      || (Array.isArray(value) && isEmpty(value))
+      || (typeof value === 'object' && isEmpty(value))
     );
   };
 

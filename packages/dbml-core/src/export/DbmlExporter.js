@@ -1,4 +1,4 @@
-import { isEmpty, reduce } from 'lodash';
+import { isEmpty, reduce } from 'lodash-es';
 import { addQuoteIfNeeded } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';

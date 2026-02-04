@@ -1,6 +1,6 @@
 import {
   first, flatten, flattenDepth, last, nth,
-} from 'lodash';
+} from 'lodash-es';
 import TSqlParserVisitor from '../../parsers/mssql/TSqlParserVisitor';
 import { COLUMN_CONSTRAINT_KIND, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../constants';
 import { getOriginalText } from '../helpers';

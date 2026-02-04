@@ -1,4 +1,4 @@
-import { last, flatten, flattenDepth } from 'lodash';
+import { last, flatten, flattenDepth } from 'lodash-es';
 import MySQLParserVisitor from '../../parsers/mysql/MySqlParserVisitor';
 import {
   Endpoint, Enum, Field, Index, Table, Ref,
