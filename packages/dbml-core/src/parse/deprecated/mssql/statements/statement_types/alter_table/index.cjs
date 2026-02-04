@@ -1,10 +1,10 @@
 const P = require('parsimmon');
-const KP = require('../../../keyword_parsers');
+const KP = require('../../../keyword_parsers.cjs');
 const {
   pDotDelimitedName, pIgnore,
-} = require('../../../base_parsers');
-const A = require('./actions');
-const pAddAction = require('./add');
+} = require('../../../base_parsers.cjs');
+const A = require('./actions.cjs');
+const pAddAction = require('./add/index.cjs');
 
 const Lang = P.createLanguage({
 

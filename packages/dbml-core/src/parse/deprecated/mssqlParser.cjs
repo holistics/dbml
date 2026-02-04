@@ -1,6 +1,6 @@
 /**
  * @deprecated This parser is deprecated. Use parseMSSQLToJSONv2 instead.
  */
-import mssqlParser from './mssql';
+const mssqlParser = require('./mssql/index.cjs');
 
-export default mssqlParser;
+module.exports = mssqlParser;
