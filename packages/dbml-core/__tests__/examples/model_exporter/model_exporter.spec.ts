@@ -9,6 +9,7 @@ import { scanTestNames, getFileExtension, isEqualExcludeTokenEmpty } from '../te
 import { ExportFormatOption } from '../../../types/export/ModelExporter';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { test, expect, describe } from 'vitest';
 
 type ExporterClass =
   | typeof DbmlExporter

@@ -3,6 +3,7 @@ import { scanTestNames, getFileExtension } from '../testHelpers';
 import { ExportFormatOption } from '../../../types/export/ModelExporter';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { test, expect, describe } from 'vitest';
 
 describe('@dbml/core - exporter', () => {
   const runTest = async (fileName: string, testDir: string, format: ExportFormatOption) => {

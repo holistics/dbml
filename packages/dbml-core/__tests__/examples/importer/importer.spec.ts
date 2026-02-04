@@ -3,6 +3,7 @@ import { scanTestNames, getFileExtension } from '../testHelpers';
 import { ParseFormat } from '../../../types/parse/Parser';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { test, expect, describe } from 'vitest';
 
 describe('@dbml/core - importer', () => {
   const runTest = async (fileName: string, testDir: string, format: ParseFormat) => {

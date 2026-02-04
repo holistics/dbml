@@ -1,5 +1,6 @@
 import Database from '../../../src/model_structure/database';
 import jsonDb from './table_partial.json';
+import { test, expect, describe, beforeAll } from 'vitest';
 
 describe('@dbml/core - model_structure', () => {
   let database: Database;
