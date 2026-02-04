@@ -76,26 +76,49 @@ describe('@dbml/core - model_exporter', () => {
 });
 
 describe('@dbml/core - model_exporter dbml_exporter.escapeNote', () => {
-  const runTest = (inputStr: string, expectedOutput: string): void => {
-    expect(DbmlExporter.escapeNote(inputStr)).toBe(expectedOutput);
-  };
+  test('escapes simple string', () => {
+    expect(DbmlExporter.escapeNote('hello')).toBe("'hello'");
+  });
 
-  runTest('hello', "'hello'");
-  // Spec is not very clear about string single quote, but also escape \ with \\
-  runTest('hell\\o', "'hell\\\\o'");
+  test('escapes backslash in single quote string', () => {
+    // Spec is not very clear about string single quote, but also escape \ with \\
+    expect(DbmlExporter.escapeNote('hell\\o')).toBe("'hell\\\\o'");
+  });
 
-  // As soon as we have CRLF or single quotes, we switch to triple quotes
-  runTest("hel'lo", "'''hel\\'lo'''");
-  // Only triple quotes need escaping
-  // See https://dbml.dbdiagram.io/docs/#multi-line-string
-  runTest("hel'''lo", "'''hel\\'\\'\\'lo'''");
-  runTest('hel\nlo', "'''hel\nlo'''");
-  // CRLF => \n
-  runTest('hel\r\nlo', "'''hel\nlo'''");
-  runTest('hel\n\nlo', "'''hel\n\nlo'''");
-  runTest("hel'\n\nlo", "'''hel\\'\n\nlo'''");
-  runTest("hel'\n\n''lo", "'''hel\\'\n\n\\'\\'lo'''");
-  runTest("hel'\n\n''lo", "'''hel\\'\n\n\\'\\'lo'''");
-  // Spec is clear here, \ needs to be escaped as \\
-  runTest('hell\\\no', "'''hell\\\\\no'''");
+  test('escapes single quote with triple quotes', () => {
+    // As soon as we have CRLF or single quotes, we switch to triple quotes
+    expect(DbmlExporter.escapeNote("hel'lo")).toBe("'''hel\\'lo'''");
+  });
+
+  test('escapes triple quotes', () => {
+    // Only triple quotes need escaping
+    // See https://dbml.dbdiagram.io/docs/#multi-line-string
+    expect(DbmlExporter.escapeNote("hel'''lo")).toBe("'''hel\\'\\'\\'lo'''");
+  });
+
+  test('handles newline', () => {
+    expect(DbmlExporter.escapeNote('hel\nlo')).toBe("'''hel\nlo'''");
+  });
+
+  test('converts CRLF to LF', () => {
+    // CRLF => \n
+    expect(DbmlExporter.escapeNote('hel\r\nlo')).toBe("'''hel\nlo'''");
+  });
+
+  test('handles multiple newlines', () => {
+    expect(DbmlExporter.escapeNote('hel\n\nlo')).toBe("'''hel\n\nlo'''");
+  });
+
+  test('handles single quote with newlines', () => {
+    expect(DbmlExporter.escapeNote("hel'\n\nlo")).toBe("'''hel\\'\n\nlo'''");
+  });
+
+  test('handles double single quote with newlines', () => {
+    expect(DbmlExporter.escapeNote("hel'\n\n''lo")).toBe("'''hel\\'\n\n\\'\\'lo'''");
+  });
+
+  test('escapes backslash with newline', () => {
+    // Spec is clear here, \ needs to be escaped as \\
+    expect(DbmlExporter.escapeNote('hell\\\no')).toBe("'''hell\\\\\no'''");
+  });
 });
