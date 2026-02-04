@@ -137,8 +137,10 @@ export const defaultValueArbitrary = fc.oneof(
 export const checkExpressionArbitrary = functionExpressionArbitrary;
 
 // Inline check (for column settings): check: `expression`
-export const inlineCheckArbitrary = checkExpressionArbitrary
-  .map((expr) => `check: ${expr}`);
+export const inlineCheckArbitrary = fc.oneof(
+  checkExpressionArbitrary.map((expr) => `check: ${expr}`),
+  anyElementNameArbitrary.map((e) => `check: ${e}`),
+);
 
 // Relationship cardinality operators
 export const relationshipTypeArbitrary = fc.constantFrom('<', '>', '-', '<>');
