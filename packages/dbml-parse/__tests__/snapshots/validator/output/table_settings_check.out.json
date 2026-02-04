@@ -5094,71 +5094,7 @@
   "errors": [
     {
       "code": 3025,
-      "diagnostic": "'check' must be a function expression",
-      "nodeOrToken": {
-        "id": 29,
-        "kind": "<primary-expression>",
-        "startPos": {
-          "offset": 159,
-          "line": 4,
-          "column": 35
-        },
-        "fullStart": 159,
-        "endPos": {
-          "offset": 176,
-          "line": 4,
-          "column": 52
-        },
-        "fullEnd": 176,
-        "start": 159,
-        "end": 176,
-        "expression": {
-          "id": 28,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 159,
-            "line": 4,
-            "column": 35
-          },
-          "fullStart": 159,
-          "endPos": {
-            "offset": 176,
-            "line": 4,
-            "column": 52
-          },
-          "fullEnd": 176,
-          "start": 159,
-          "end": 176,
-          "variable": {
-            "kind": "<variable>",
-            "startPos": {
-              "offset": 159,
-              "line": 4,
-              "column": 35
-            },
-            "endPos": {
-              "offset": 176,
-              "line": 4,
-              "column": 52
-            },
-            "value": "invalid check 1",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 159,
-            "end": 176
-          }
-        }
-      },
-      "start": 159,
-      "end": 176,
-      "name": "CompileError"
-    },
-    {
-      "code": 3025,
-      "diagnostic": "'check' must be a function expression",
+      "diagnostic": "'check' must be a function expression or an enum reference",
       "nodeOrToken": {
         "id": 33,
         "kind": "<primary-expression>",
@@ -5222,7 +5158,7 @@
     },
     {
       "code": 3025,
-      "diagnostic": "'check' must be a function expression",
+      "diagnostic": "'check' must be a function expression or an enum reference",
       "nodeOrToken": {
         "id": 37,
         "kind": "<primary-expression>",
@@ -5282,134 +5218,6 @@
       },
       "start": 267,
       "end": 268,
-      "name": "CompileError"
-    },
-    {
-      "code": 3025,
-      "diagnostic": "'check' must be a function expression",
-      "nodeOrToken": {
-        "id": 41,
-        "kind": "<primary-expression>",
-        "startPos": {
-          "offset": 305,
-          "line": 7,
-          "column": 35
-        },
-        "fullStart": 305,
-        "endPos": {
-          "offset": 310,
-          "line": 7,
-          "column": 40
-        },
-        "fullEnd": 310,
-        "start": 305,
-        "end": 310,
-        "expression": {
-          "id": 40,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 305,
-            "line": 7,
-            "column": 35
-          },
-          "fullStart": 305,
-          "endPos": {
-            "offset": 310,
-            "line": 7,
-            "column": 40
-          },
-          "fullEnd": 310,
-          "start": 305,
-          "end": 310,
-          "variable": {
-            "kind": "<identifier>",
-            "startPos": {
-              "offset": 305,
-              "line": 7,
-              "column": 35
-            },
-            "endPos": {
-              "offset": 310,
-              "line": 7,
-              "column": 40
-            },
-            "value": "false",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 305,
-            "end": 310
-          }
-        }
-      },
-      "start": 305,
-      "end": 310,
-      "name": "CompileError"
-    },
-    {
-      "code": 3025,
-      "diagnostic": "'check' must be a function expression",
-      "nodeOrToken": {
-        "id": 45,
-        "kind": "<primary-expression>",
-        "startPos": {
-          "offset": 347,
-          "line": 8,
-          "column": 35
-        },
-        "fullStart": 347,
-        "endPos": {
-          "offset": 351,
-          "line": 8,
-          "column": 39
-        },
-        "fullEnd": 351,
-        "start": 347,
-        "end": 351,
-        "expression": {
-          "id": 44,
-          "kind": "<variable>",
-          "startPos": {
-            "offset": 347,
-            "line": 8,
-            "column": 35
-          },
-          "fullStart": 347,
-          "endPos": {
-            "offset": 351,
-            "line": 8,
-            "column": 39
-          },
-          "fullEnd": 351,
-          "start": 347,
-          "end": 351,
-          "variable": {
-            "kind": "<identifier>",
-            "startPos": {
-              "offset": 347,
-              "line": 8,
-              "column": 35
-            },
-            "endPos": {
-              "offset": 351,
-              "line": 8,
-              "column": 39
-            },
-            "value": "null",
-            "leadingTrivia": [],
-            "trailingTrivia": [],
-            "leadingInvalid": [],
-            "trailingInvalid": [],
-            "isInvalid": false,
-            "start": 347,
-            "end": 351
-          }
-        }
-      },
-      "start": 347,
-      "end": 351,
       "name": "CompileError"
     }
   ]

@@ -413,8 +413,10 @@ export default class TableValidator implements ElementValidator {
           break;
         case SettingName.Check:
           attrs.forEach((attr) => {
-            if (!(attr.value instanceof FunctionExpressionNode)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'check\' must be a function expression', attr.value || attr.name!));
+            const isFunctionalCheck = attr.value instanceof FunctionExpressionNode;
+            const isPossiblyAnEnum = destructureComplexVariable(attr.value).unwrap_or([]);
+            if (!isFunctionalCheck && !isPossiblyAnEnum.length) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'check\' must be a function expression or an enum reference', attr.value || attr.name!));
             }
           });
           break;
