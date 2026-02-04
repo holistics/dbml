@@ -456,13 +456,6 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     };
   }
 
-  // visitC_expr_func_expr (ctx) {
-  //   return {
-  //     value: ctx.getText(),
-  //     type: DATA_TYPE.EXPRESSION,
-  //   };
-  // }
-
   // iconst | fconst | sconst | bconst | xconst | func_name (sconst | OPEN_PAREN func_arg_list sort_clause_? CLOSE_PAREN sconst) | consttypename sconst | constinterval (sconst interval_? | OPEN_PAREN iconst CLOSE_PAREN sconst) | TRUE_P | FALSE_P | NULL_P
   visitAexprconst (ctx) {
     if (ctx.sconst() && ctx.getChildCount() === 1) {
