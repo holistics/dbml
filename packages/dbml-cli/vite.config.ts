@@ -12,12 +12,16 @@ export default defineConfig({
   build: {
     target: 'node18',
     outDir: 'lib',
+    minify: false,
     lib: {
-      entry: path.resolve(__dirname, 'src/index.js'),
+      entry: path.resolve(__dirname, "src/index.js"),
       fileName: 'index',
       formats: ['cjs'],
     },
     rollupOptions: {
+      output: {
+        exports: 'named',
+      },
       external: [
         '@dbml/connector',
         '@dbml/core',
@@ -32,6 +36,7 @@ export default defineConfig({
         'winston',
         'path',
         'fs',
+        /^node:.*/,
       ],
     },
   },
