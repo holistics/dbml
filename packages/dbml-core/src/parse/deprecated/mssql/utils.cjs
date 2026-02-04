@@ -2,9 +2,9 @@ const P = require('parsimmon');
 const _ = require('lodash');
 const {
   LParen, RParen, Comma,
-} = require('./keyword_parsers');
+} = require('./keyword_parsers.cjs');
 
-const wss = require('./whitespaces');
+const wss = require('./whitespaces.cjs');
 
 exports.makeNode = function () {
   return function (parser) {

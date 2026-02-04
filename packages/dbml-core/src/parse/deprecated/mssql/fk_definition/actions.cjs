@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { getFullTableName } = require('../utils');
+const { getFullTableName } = require('../utils.cjs');
 
 function makeEndPoint (tableName, columnName, relation) {
   return {

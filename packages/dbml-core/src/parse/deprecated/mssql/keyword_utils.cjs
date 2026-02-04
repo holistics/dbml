@@ -1,5 +1,5 @@
 const P = require('parsimmon');
-const wss = require('./whitespaces');
+const wss = require('./whitespaces.cjs');
 
 exports.word = function (string) {
   return P.string(string).skip(wss).desc(`"${string}"`);

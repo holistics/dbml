@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { getFullTableName } = require('../../../utils');
+const { getFullTableName } = require('../../../utils.cjs');
 
 function handleRef (tableName, result) {
   const endpointWithNoTableName = result.value.endpoints.find((ele) => !ele.tableName);

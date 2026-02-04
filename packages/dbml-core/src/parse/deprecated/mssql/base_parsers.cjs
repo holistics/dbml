@@ -1,7 +1,7 @@
 const P = require('parsimmon');
-const { makeList, streamline } = require('./utils');
-const KP = require('./keyword_parsers');
-const wss = require('./whitespaces');
+const { makeList, streamline } = require('./utils.cjs');
+const KP = require('./keyword_parsers.cjs');
+const wss = require('./whitespaces.cjs');
 
 const pIgnore = P((input, i) => {
   let j = i;

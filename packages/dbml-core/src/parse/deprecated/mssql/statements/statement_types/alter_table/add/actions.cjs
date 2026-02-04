@@ -1,4 +1,4 @@
-const { makeTableConstraint } = require('../../../../constraint_definition');
+const { makeTableConstraint } = require('../../../../constraint_definition/index.cjs');
 
 function makeDefault (_keyword, constExpression, _for, fieldName, _withValues) {
   const value = {};

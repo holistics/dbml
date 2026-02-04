@@ -1,12 +1,12 @@
 const P = require('parsimmon');
-const KP = require('../../../../keyword_parsers');
-const { pIdentifier } = require('../../../../base_parsers');
-const { makeNode, makeList } = require('../../../../utils');
-const A = require('./actions');
-const { pTableConstraintFK } = require('../../../../fk_definition');
-const { pTableConstraintIndex } = require('../../../../index_definition');
-const { pConstraintCheck, pConstExpr, pConstraintName } = require('../../../../constraint_definition');
-const { pColumnsDefinition } = require('../../../../column_definition');
+const KP = require('../../../../keyword_parsers.cjs');
+const { pIdentifier } = require('../../../../base_parsers.cjs');
+const { makeNode, makeList } = require('../../../../utils.cjs');
+const A = require('./actions.cjs');
+const { pTableConstraintFK } = require('../../../../fk_definition/index.cjs');
+const { pTableConstraintIndex } = require('../../../../index_definition/index.cjs');
+const { pConstraintCheck, pConstExpr, pConstraintName } = require('../../../../constraint_definition/index.cjs');
+const { pColumnsDefinition } = require('../../../../column_definition/index.cjs');
 
 const Lang = P.createLanguage({
   AddAction: (r) => P.seq(KP.KeywordAdd, r.AddOption.sepBy1(KP.Comma)).map((value) => value[1]),

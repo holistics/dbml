@@ -1,4 +1,4 @@
-const { getFullTableName } = require('../../../utils');
+const { getFullTableName } = require('../../../utils.cjs');
 
 function makeIndex (_create, isUnique, _clustered, _index, indexName, _on, tableName, columnNames) {
   const fullTableName = getFullTableName(tableName);

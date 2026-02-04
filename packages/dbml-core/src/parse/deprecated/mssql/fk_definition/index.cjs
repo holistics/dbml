@@ -1,8 +1,8 @@
 const P = require('parsimmon');
-const KP = require('../keyword_parsers');
-const { pDotDelimitedName, pIdentifier, pColumnNames } = require('../base_parsers');
-const { makeList, makeNode } = require('../utils');
-const A = require('./actions');
+const KP = require('../keyword_parsers.cjs');
+const { pDotDelimitedName, pIdentifier, pColumnNames } = require('../base_parsers.cjs');
+const { makeList, makeNode } = require('../utils.cjs');
+const A = require('./actions.cjs');
 
 const Lang = P.createLanguage({
   TableConstraintFK: (r) => P.seqMap(

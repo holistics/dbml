@@ -2,16 +2,13 @@
 
 import path from 'path';
 import { defineConfig } from 'vite';
-import commonjs from 'vite-plugin-commonjs';
 
 export default defineConfig({
-  plugins: [
-    commonjs(),
-  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src/"),
     },
+    extensions: ['.ts', '.js', '.cjs', '.mjs', '.json'],
   },
   build: {
     outDir: 'lib',
@@ -20,6 +17,12 @@ export default defineConfig({
       fileName: 'index',
       formats: ['cjs', 'es'],
     },
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+  },
+  optimizeDeps: {
+    exclude: ['parsimmon'],
   },
   test: {
     globals: true,

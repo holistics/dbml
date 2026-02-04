@@ -1,13 +1,13 @@
 const P = require('parsimmon');
-const KP = require('../keyword_parsers');
+const KP = require('../keyword_parsers.cjs');
 const {
   pDotDelimitedName, pIdentifier, pNumberList, pOptionList,
-} = require('../base_parsers');
-const { makeNode, makeList, streamline } = require('../utils');
-const { pColumnIndex } = require('../index_definition');
-const { pColumnConstraint } = require('../constraint_definition');
-const pExpression = require('../expression');
-const A = require('./actions');
+} = require('../base_parsers.cjs');
+const { makeNode, makeList, streamline } = require('../utils.cjs');
+const { pColumnIndex } = require('../index_definition/index.cjs');
+const { pColumnConstraint } = require('../constraint_definition/index.cjs');
+const pExpression = require('../expression.cjs');
+const A = require('./actions.cjs');
 
 const Lang = P.createLanguage({
   ColumnsDefinition: (r) => P.alt(
