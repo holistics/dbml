@@ -39,6 +39,7 @@
     "test": "vitest run",
     "test:watch": "vitest tests",
     "coverage": "vitest run --coverage",
+    "bench": "vitest bench",
     "build:parser": "node src/parse/deprecated/buildParser.cjs",
     "build:lib": "vite build",
     "build": "npm run build:parser && npm run build:lib",
