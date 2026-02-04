@@ -10,6 +10,8 @@ import { destructureComplexVariableTuple } from '../../utils';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { SymbolKind } from '../../symbol/symbolIndex';
 import SymbolFactory from '../../symbol/factory';
+import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
+import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 
 export default class TablePartialBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -57,6 +59,8 @@ export default class TablePartialBinder implements ElementBinder {
         const settingsMap = aggregateSettingList(listExpression).getValue();
 
         errors.push(...(settingsMap.ref?.flatMap((ref) => (ref.value ? this.bindInlineRef(ref.value) : [])) || []));
+        errors.push(...(settingsMap.default?.flatMap((def) => (def.value ? this.tryToBindEnumFieldRef(def.value) : [])) || []));
+        errors.push(...(settingsMap.check?.flatMap((chk) => (chk.value ? this.tryToBindEnumRef(chk.value) : [])) || []));
         args.pop();
       }
 
@@ -83,6 +87,63 @@ export default class TablePartialBinder implements ElementBinder {
     }
 
     lookupAndBindInScope(this.ast, [
+      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
+      { node: enumBindee, kind: SymbolKind.Enum },
+    ]);
+  }
+
+  // Bind enum field references in default values (e.g., order_status.pending)
+  private tryToBindEnumFieldRef (defaultValue: SyntaxNode): CompileError[] {
+    // Skip quoted strings (e.g., [default: "hello"] or [default: `hello`])
+    if (isExpressionAQuotedString(defaultValue)) {
+      return [];
+    }
+
+    // Skip keywords (null, true, false)
+    if (isExpressionAVariableNode(defaultValue)) {
+      const varName = defaultValue.expression.variable?.value?.toLowerCase();
+      if (varName && KEYWORDS_OF_DEFAULT_SETTING.includes(varName)) {
+        return [];
+      }
+    }
+
+    const fragments = destructureComplexVariableTuple(defaultValue).unwrap_or(undefined);
+    if (!fragments) {
+      return [];
+    }
+
+    const enumFieldBindee = fragments.variables.pop();
+    const enumBindee = fragments.variables.pop();
+
+    if (!enumFieldBindee || !enumBindee) {
+      return [];
+    }
+
+    const schemaBindees = fragments.variables;
+
+    return lookupAndBindInScope(this.ast, [
+      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
+      { node: enumBindee, kind: SymbolKind.Enum },
+      { node: enumFieldBindee, kind: SymbolKind.EnumField },
+    ]);
+  }
+
+  // Bind enum references in inline checks (e.g., schema.enum)
+  private tryToBindEnumRef (checkValue: SyntaxNode): CompileError[] {
+    const fragments = destructureComplexVariableTuple(checkValue).unwrap_or(undefined);
+    if (!fragments) {
+      return [];
+    }
+
+    const enumBindee = fragments.variables.pop();
+
+    if (!enumBindee) {
+      return [];
+    }
+
+    const schemaBindees = fragments.variables;
+
+    return lookupAndBindInScope(this.ast, [
       ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
       { node: enumBindee, kind: SymbolKind.Enum },
     ]);
