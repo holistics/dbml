@@ -36,6 +36,10 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
   return new Lexer(source).lex().chain((tokens) => new Parser(tokens, new SyntaxNodeIdGenerator()).parse());
 }
 
+export function validate (source: string): Report<ProgramNode, CompileError> {
+  return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).validate());
+}
+
 export function analyze (source: string): Report<ProgramNode, CompileError> {
   return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
 }

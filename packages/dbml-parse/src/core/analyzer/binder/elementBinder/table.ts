@@ -4,7 +4,7 @@ import {
 } from '../../../parser/nodes';
 import { ElementBinder } from '../types';
 import { SyntaxToken } from '../../../lexer/tokens';
-import { CompileError, CompileErrorCode } from '../../../errors';
+import { CompileError } from '../../../errors';
 import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
 import { aggregateSettingList, isValidPartialInjection } from '../../validator/utils';
 import { SymbolKind, createColumnSymbolIndex } from '../../symbol/symbolIndex';
@@ -110,6 +110,7 @@ export default class TableBinder implements ElementBinder {
 
           errors.push(...(settingsMap.ref?.flatMap((ref) => (ref.value ? this.bindInlineRef(ref.value) : [])) || []));
           errors.push(...(settingsMap.default?.flatMap((def) => (def.value ? this.tryToBindEnumFieldRef(def.value) : [])) || []));
+          errors.push(...(settingsMap.check?.flatMap((chk) => (chk.value ? this.tryToBindEnumRef(chk.value) : [])) || []));
           args.pop();
         }
 
@@ -176,6 +177,27 @@ export default class TableBinder implements ElementBinder {
       ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
       { node: enumBindee, kind: SymbolKind.Enum },
       { node: enumFieldBindee, kind: SymbolKind.EnumField },
+    ]);
+  }
+
+  // Bind enum references in inline checks (e.g., schema.enum)
+  private tryToBindEnumRef (checkValue: SyntaxNode): CompileError[] {
+    const fragments = destructureComplexVariableTuple(checkValue).unwrap_or(undefined);
+    if (!fragments) {
+      return [];
+    }
+
+    const enumBindee = fragments.variables.pop();
+
+    if (!enumBindee) {
+      return [];
+    }
+
+    const schemaBindees = fragments.variables;
+
+    return lookupAndBindInScope(this.ast, [
+      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
+      { node: enumBindee, kind: SymbolKind.Enum },
     ]);
   }
 
