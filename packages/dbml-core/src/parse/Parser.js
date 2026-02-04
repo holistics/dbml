@@ -1,15 +1,12 @@
 import { Compiler } from '@dbml/parse';
-import { createRequire } from 'module';
 import Database from '../model_structure/database';
 import { parse } from './ANTLR/ASTGeneration';
 import { CompilerError } from './error';
-
-const require = createRequire(import.meta.url);
-const mysqlParser = require('./deprecated/mysqlParser.cjs');
-const postgresParser = require('./deprecated/postgresParser.cjs');
-const dbmlParser = require('./deprecated/dbmlParser.cjs');
-const schemarbParser = require('./deprecated/schemarbParser.cjs');
-const mssqlParser = require('./deprecated/mssqlParser.cjs');
+import mysqlParser from './deprecated/mysqlParser.cjs';
+import postgresParser from './deprecated/postgresParser.cjs';
+import dbmlParser from './deprecated/dbmlParser.cjs';
+import schemarbParser from './deprecated/schemarbParser.cjs';
+import mssqlParser from './deprecated/mssqlParser.cjs';
 
 class Parser {
   constructor (dbmlCompiler) {
