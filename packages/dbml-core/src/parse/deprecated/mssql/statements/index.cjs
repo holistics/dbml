@@ -1,9 +1,9 @@
 const P = require('parsimmon');
-const KP = require('../keyword_parsers');
-const S = require('./statement_types');
-const wss = require('../whitespaces');
-const A = require('./actions');
-const { pIgnore } = require('../base_parsers');
+const KP = require('../keyword_parsers.cjs');
+const S = require('./statement_types/index.cjs');
+const wss = require('../whitespaces.cjs');
+const A = require('./actions.cjs');
+const { pIgnore } = require('../base_parsers.cjs');
 
 const Lang = P.createLanguage({
   Statements: (r) => wss.then(r.Seperator)

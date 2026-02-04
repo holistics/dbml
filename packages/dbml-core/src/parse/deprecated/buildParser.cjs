@@ -29,10 +29,10 @@ const dbmlParserSource = pegjsRequire('./dbml/parser.pegjs', options);
 const schemarbParserSource = pegjsRequire('./schemarb/parser.pegjs', options);
 
 Promise.all([
-  buildParserFile(mysqlParserSource, 'mysqlParser.js'),
-  buildParserFile(postgresParserSource, 'postgresParser.js'),
-  buildParserFile(dbmlParserSource, 'dbmlParser.js'),
-  buildParserFile(schemarbParserSource, 'schemarbParser.js'),
+  buildParserFile(mysqlParserSource, 'mysqlParser.cjs'),
+  buildParserFile(postgresParserSource, 'postgresParser.cjs'),
+  buildParserFile(dbmlParserSource, 'dbmlParser.cjs'),
+  buildParserFile(schemarbParserSource, 'schemarbParser.cjs'),
 ]).then(() => {
   console.log('Build parsers completed!');
 }).catch((err) => {

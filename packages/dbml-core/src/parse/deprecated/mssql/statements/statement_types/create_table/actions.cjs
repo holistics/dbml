@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { getFullTableName } = require('../../../utils');
+const { getFullTableName } = require('../../../utils.cjs');
 
 function createRefFromInlineRef (linesRefs, inlineRefs, fieldName, tableName) {
   if (!inlineRefs || inlineRefs.length === 0) return;

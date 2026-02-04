@@ -1,4 +1,4 @@
-const mssqlParser = require('./statements');
+const mssqlParser = require('./statements/index.cjs');
 
 mssqlParser.parseWithPegError = function (input) {
   try {

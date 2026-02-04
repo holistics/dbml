@@ -1,4 +1,4 @@
-import pegjsRequire from 'pegjs-require-import';
+const pegjsRequire = require('pegjs-require-import');
 
 const { sourceCode } = pegjsRequire('./parser.pegjs', {
   format: 'commonjs',

@@ -2,12 +2,12 @@ const P = require('parsimmon');
 const _ = require('lodash');
 const {
   pFunction, pDotDelimitedName, pConst,
-} = require('./base_parsers');
+} = require('./base_parsers.cjs');
 const {
   LParen, RParen,
-} = require('./keyword_parsers');
-const wss = require('./whitespaces');
-const { streamline } = require('./utils');
+} = require('./keyword_parsers.cjs');
+const wss = require('./whitespaces.cjs');
+const { streamline } = require('./utils.cjs');
 
 function tokenizeParen (parser) {
   return parser.many().map((value) => value.join('')).fallback(null).thru(streamline('token'));

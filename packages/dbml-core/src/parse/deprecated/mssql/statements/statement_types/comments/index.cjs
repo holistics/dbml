@@ -1,7 +1,7 @@
 const P = require('parsimmon');
-const KP = require('../../../keyword_parsers');
-const A = require('./actions');
-const { makeNode } = require('../../../utils');
+const KP = require('../../../keyword_parsers.cjs');
+const A = require('./actions.cjs');
+const { makeNode } = require('../../../utils.cjs');
 
 const Lang = P.createLanguage({
   StartComment: () => P.seq(KP.KeywordExec, KP.KeywordSP_ADDEXTENDEDPROPERTY),
