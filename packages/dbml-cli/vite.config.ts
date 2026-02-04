@@ -30,6 +30,8 @@ export default defineConfig({
         'pegjs-require-import',
         'strip-ansi',
         'winston',
+        'path',
+        'fs',
       ],
     },
   },
