@@ -21,6 +21,7 @@ export default defineConfig(
         'types/*',
         'src/parse/deprecated/*',
         'src/parse/ANTLR/parsers/*',
+        '__tests__/*',
       ],
     },
     {
