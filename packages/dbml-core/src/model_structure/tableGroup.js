@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 import Element from './element';
 import { shouldPrintSchema } from './utils';
 
