@@ -1,8 +1,9 @@
-import _ from 'lodash';
+import { capitalize } from 'lodash-es';
 import Database from '../../../src/model_structure/database';
 import jsonDb from './single_schema.json';
 import { DEFAULT_SCHEMA_NAME } from '../../../src/model_structure/config';
 import { NormalizedModel } from '../../../types/model_structure/database';
+import { test, expect, describe } from 'vitest';
 
 describe('@dbml/core - model_structure', () => {
   let database: Database;
@@ -50,7 +51,7 @@ describe('@dbml/core - model_structure', () => {
         const schema = database.schemas[0];
 
         expect(schema.name).toEqual(DEFAULT_SCHEMA_NAME);
-        expect(schema.note).toEqual(`Default ${_.capitalize(DEFAULT_SCHEMA_NAME)} Schema`);
+        expect(schema.note).toEqual(`Default ${capitalize(DEFAULT_SCHEMA_NAME)} Schema`);
       });
 
       test('schema "public" - contains all tables', () => {
@@ -411,7 +412,7 @@ describe('@dbml/core - model_structure', () => {
         const schema = getEle('schemas', getEle('database', '1').schemaIds[0]);
 
         expect(schema.name).toEqual(DEFAULT_SCHEMA_NAME);
-        expect(schema.note).toEqual(`Default ${_.capitalize(DEFAULT_SCHEMA_NAME)} Schema`);
+        expect(schema.note).toEqual(`Default ${capitalize(DEFAULT_SCHEMA_NAME)} Schema`);
       });
 
       test('schema "public" - contains all tables', () => {

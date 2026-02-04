@@ -3,6 +3,7 @@ import Parser from '../../../src/parse/Parser';
 import { scanTestNames, getFileExtension, isEqualExcludeTokenEmpty } from '../testHelpers';
 import { ParseFormat } from '../../../types/parse/Parser';
 import path from 'path';
+import { test, describe } from 'vitest';
 
 describe('@dbml/core', () => {
   describe('parser', () => {
