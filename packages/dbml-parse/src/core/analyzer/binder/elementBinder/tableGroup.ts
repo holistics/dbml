@@ -1,4 +1,4 @@
-import { partition } from 'lodash';
+import { partition } from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '../../../parser/nodes';
