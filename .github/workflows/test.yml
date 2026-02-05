@@ -102,12 +102,6 @@ jobs:
     - name: Generate coverage report
       id: coverage
       run: node .github/workflows/scripts/collect-coverage.js
-    - name: Upload coverage HTML reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-reports
-        path: |
-          packages/*/coverage
     - name: Comment PR with coverage report
       uses: marocchino/sticky-pull-request-comment@v2
       if: github.event_name == 'pull_request'
