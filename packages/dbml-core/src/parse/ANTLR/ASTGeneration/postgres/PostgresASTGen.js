@@ -211,7 +211,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const refSchemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
       const firstFieldNames = ctx.columnlist().accept(this).map((c) => c.value);
-      const secondFieldNames = ctx.column_list_()?.accept(this)?.map((c) => c.value) ;
+      const secondFieldNames = ctx.column_list_()?.accept(this)?.map((c) => c.value);
 
       const keyActions = ctx.key_actions();
       const actions = keyActions ? keyActions.accept(this) : { onDelete: null, onUpdate: null };
@@ -472,7 +472,14 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       };
     }
 
-    if (ctx.iconst() || ctx.fconst) {
+    if (ctx.iconst()) {
+      return {
+        value: ctx.iconst().accept(this),
+        type: DATA_TYPE.NUMBER,
+      };
+    }
+
+    if (ctx.fconst()) {
       return {
         value: ctx.getText(),
         type: DATA_TYPE.NUMBER,
@@ -732,7 +739,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
   // Integral | BinaryIntegral | OctalIntegral | HexadecimalIntegral
   visitIconst (ctx) {
-    return ctx.getText();
+    return Number(ctx.getText()).toString();
   }
 
   // CREATE unique_? INDEX concurrently_? (if_not_exists_? index_name_)? ON relation_expr access_method_clause? OPEN_PAREN index_params CLOSE_PAREN include_? nulls_distinct? reloptions_? opttablespace? where_clause?
