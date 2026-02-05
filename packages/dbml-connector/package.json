@@ -10,7 +10,6 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "devDependencies": {
-    "@types/lodash": "^4.17.16",
     "@types/mssql": "^9.1.5",
     "@types/node": "^22.2.0",
     "@types/oracledb": "^6.10.0",
@@ -29,7 +28,7 @@
   },
   "dependencies": {
     "@google-cloud/bigquery": "^7.9.0",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "mssql": "^11.0.1",
     "mysql2": "^3.11.0",
     "oracledb": "^6.10.0",
