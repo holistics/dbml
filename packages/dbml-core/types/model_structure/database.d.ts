@@ -11,7 +11,8 @@ import { NormalizedEnumValueIdMap } from './enumValue';
 import { NormalizedFieldIdMap } from './field';
 import { NormalizedIndexColumnIdMap } from './indexColumn';
 import { NormalizedIndexIdMap } from './indexes';
-import TablePartial from './tablePartial';
+import { NormalizedCheckIdMap } from './check';
+import TablePartial, { NormalizedTablePartialIdMap } from './tablePartial';
 export interface Project {
     note: RawNote;
     database_type: string;
@@ -281,6 +282,8 @@ export interface NormalizedDatabase {
     id: number;
     hasDefaultSchema: boolean;
     note: string | null;
+    databaseType: string;
+    name: string;
     schemaIds: number[];
     noteIds: number[];
 }
@@ -302,5 +305,7 @@ export interface NormalizedModel {
     indexes: NormalizedIndexIdMap;
     indexColumns: NormalizedIndexColumnIdMap;
     notes: NormalizedNoteIdMap;
+    checks: NormalizedCheckIdMap;
+    tablePartials: NormalizedTablePartialIdMap;
 }
 export default Database;

@@ -83,10 +83,13 @@ export interface NormalizedField {
     pk: boolean;
     not_null: boolean;
     note: string | null;
+    dbdefault: unknown;
     increment: boolean;
     endpointIds: number[];
     tableId: number;
     enumId: number | null;
+    injectedPartialId?: number;
+    checkIds: number[];
 }
 
 export interface NormalizedFieldIdMap {

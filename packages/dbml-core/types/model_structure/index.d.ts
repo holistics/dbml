@@ -76,6 +76,16 @@ export type {
     NormalizedNoteIdMap,
 } from './stickyNote';
 
+export type {
+    NormalizedTablePartial,
+    NormalizedTablePartialIdMap,
+} from './tablePartial';
+
+export type {
+    NormalizedCheck,
+    NormalizedCheckIdMap,
+} from './check';
+
 // Export other types
 export type { Project, RawDatabase, TableRecord, NormalizedRecords } from './database';
 export type { RawSchema } from './schema';

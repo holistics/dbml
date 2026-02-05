@@ -39,14 +39,16 @@ declare class Check extends Element {
 }
 
 export interface NormalizedCheck {
-    [_id: number]: {
-        id: number;
-        name: string;
-        expression: string;
-        tableId: number;
-        columnId: number | null;
-        injectedPartialId: number | null;
-    };
+    id: number;
+    name: string;
+    expression: string;
+    tableId: number;
+    columnId: number | null;
+    injectedPartialId: number | null;
+}
+
+export interface NormalizedCheckIdMap {
+    [_id: number]: NormalizedCheck;
 }
 
 export default Check;
