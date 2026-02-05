@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { forIn, isEmpty, isObject } from 'lodash-es';
-import { expect } from 'vitest';
 
 /**
  * Scans a directory for test input files matching the pattern `*.in.*`
