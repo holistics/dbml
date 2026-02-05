@@ -1,4 +1,4 @@
-import { NormalizedDatabase } from './database';
+import { NormalizedModel } from './database';
 import Element, { Token } from './element';
 import Field from './field';
 import Table from './table';
@@ -35,7 +35,7 @@ declare class Check extends Element {
         name: string;
         expression: string;
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
 
 export interface NormalizedCheck {

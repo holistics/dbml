@@ -2,7 +2,7 @@ import Element from './element';
 import Field from './field';
 import Ref from './ref';
 import DbState from './dbState';
-import { NormalizedDatabase } from './database';
+import { NormalizedModel } from './database';
 declare class Endpoint extends Element {
     relation: any;
     schemaName: string;
@@ -39,17 +39,21 @@ declare class Endpoint extends Element {
         relation: any;
     };
     setFields(fieldNames: any, table: any): void;
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
 export interface NormalizedEndpoint {
-    [_id: number]: {
-        id: number;
-        schemaName: string;
-        tableName: string;
-        fieldNames: string[];
-        relation: any;
-        refId: number;
-        fieldIds: number[];
-    };
+    id: number;
+    name: string;
+    schemaName: string | null;
+    tableName: string;
+    fieldNames: string[];
+    fieldIds: number[];
+    relation: string;
+    refId: number;
 }
+
+export interface NormalizedEndpointIdMap {
+    [_id: number]: NormalizedEndpoint;
+}
+
 export default Endpoint;
