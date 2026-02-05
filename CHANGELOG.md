@@ -1,3 +1,17 @@
+## v6.0.0 (2026-02-05)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#811](https://github.com/holistics/dbml/pull/811) Use `unwrap_or` instead of `unwrap` to avoid validation error when validating the scope of DBML elements ([@hdnax](https://github.com/hdnax))
+
+#### :boom: Breaking Change
+* `dbml-core`
+  * [#812](https://github.com/holistics/dbml/pull/812) Fix: update postgres lexer and base class to support json operators ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 2
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
 ## v5.5.1 (2026-01-30)
 
 #### :bug: Bug Fix
