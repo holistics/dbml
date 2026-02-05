@@ -6,24 +6,6 @@ import { renameTable } from './transform';
 export { renameTable, importer, exporter, ModelExporter, Parser };
 export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel, } from './parse/error';
 
-// Export model structure classes and types
-export {
-    Database,
-    Schema,
-    Table,
-    Field,
-    Index,
-    IndexColumn,
-    Enum,
-    EnumValue,
-    Ref,
-    Endpoint,
-    TableGroup,
-    StickyNote,
-    Check,
-    TablePartial,
-} from './model_structure';
-
 // Export normalized types
 export type {
     NormalizedDatabase,
