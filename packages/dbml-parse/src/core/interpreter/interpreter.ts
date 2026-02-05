@@ -70,7 +70,7 @@ export default class Interpreter {
   ast: ProgramNode;
   env: InterpreterDatabase;
 
-  constructor (ast: ProgramNode, source: string) {
+  constructor (ast: ProgramNode) {
     this.ast = ast;
     this.env = {
       schema: [],
@@ -87,7 +87,7 @@ export default class Interpreter {
       records: new Map(),
       recordsElements: [],
       cachedMergedTables: new Map(),
-      source,
+      source: ast.source,
     };
   }
 
