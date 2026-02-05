@@ -1,4 +1,4 @@
-const P = require('parsimmon');
+import P from 'parsimmon';
 
 const Lang = P.createLanguage({
   WhiteSpaces: (r) => P.alt(r.WhiteSpace, r.InlineComment, r.MulLineComment).many().desc('whitespaces or comments'),
@@ -7,4 +7,4 @@ const Lang = P.createLanguage({
   MulLineComment: () => P.regexp(/\/\*[\s\S]+?\*\//).desc('comments'),
 });
 
-module.exports = Lang.WhiteSpaces;
+export default Lang.WhiteSpaces;

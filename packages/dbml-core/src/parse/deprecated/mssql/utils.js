@@ -1,12 +1,12 @@
-const P = require('parsimmon');
-const _ = require('lodash');
-const {
+import P from 'parsimmon';
+import { last } from 'lodash-es';
+import {
   LParen, RParen, Comma,
-} = require('./keyword_parsers.cjs');
+} from './keyword_parsers.js';
 
-const wss = require('./whitespaces.cjs');
+import wss from './whitespaces.js';
 
-exports.makeNode = function () {
+export function makeNode() {
   return function (parser) {
     return P.seqMap(P.index, parser, P.index, (start, value, end) => {
       if (!value) return parser;
@@ -18,17 +18,17 @@ exports.makeNode = function () {
       return value;
     }).skip(wss);
   };
-};
+}
 
-exports.makeList = function (parser, isZero = false) {
+export function makeList(parser, isZero = false) {
   let seperator = parser.sepBy1(Comma);
   if (isZero) seperator = parser.sepBy(Comma);
   return P.seq(LParen, seperator, RParen).map((value) => {
     return value[1];
   });
-};
+}
 
-exports.streamline = function (type) {
+export function streamline(type) {
   return function (parser) {
     return parser.skip(wss).map((value) => {
       if (value !== 0 && !value) value = '';
@@ -38,12 +38,12 @@ exports.streamline = function (type) {
       };
     });
   };
-};
+}
 
-exports.getFullTableName = (nameList) => {
+export function getFullTableName(nameList) {
   let schemaName = null;
   if (nameList.length > 1) {
     schemaName = nameList[nameList.length - 2];
   }
-  return { name: _.last(nameList), schemaName };
-};
+  return { name: last(nameList), schemaName };
+}

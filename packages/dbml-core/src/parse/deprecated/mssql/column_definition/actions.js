@@ -1,18 +1,18 @@
-const _ = require('lodash');
+import { last } from 'lodash-es';
 
-function makeDataType (typeName, args) {
+function makeDataType(typeName, args) {
   const argsString = args ? args.join(',') : null;
   return {
     type: 'type',
     value: {
-      type_name: !argsString ? _.last(typeName) : `${_.last(typeName)}(${argsString})`,
+      type_name: !argsString ? last(typeName) : `${last(typeName)}(${argsString})`,
       schemaName: typeName.length > 1 ? typeName[0] : null,
       args: argsString,
     },
   };
 }
 
-function makeColumn (fieldName, dataType, fieldSettings) {
+function makeColumn(fieldName, dataType, fieldSettings) {
   const value = {};
   value[dataType.type] = dataType.value;
   fieldSettings.forEach((setting) => {
@@ -26,7 +26,7 @@ function makeColumn (fieldName, dataType, fieldSettings) {
   };
 }
 
-module.exports = {
+export {
   makeColumn,
   makeDataType,
 };

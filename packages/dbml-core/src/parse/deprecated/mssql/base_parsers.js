@@ -1,7 +1,7 @@
-const P = require('parsimmon');
-const { makeList, streamline } = require('./utils.cjs');
-const KP = require('./keyword_parsers.cjs');
-const wss = require('./whitespaces.cjs');
+import P from 'parsimmon';
+import { makeList, streamline } from './utils.js';
+import * as KP from './keyword_parsers.js';
+import wss from './whitespaces.js';
 
 const pIgnore = P((input, i) => {
   let j = i;
@@ -87,4 +87,31 @@ const Lang = P.createLanguage({
   pKeywordAscOrDesc: () => P.alt(KP.KeywordAsc, KP.KeywordDesc),
 });
 
-module.exports = Lang;
+export default Lang;
+
+// Named exports for individual parsers
+export { pIgnore };
+export const pColumnNames = Lang.pColumnNames;
+export const pDotDelimitedName = Lang.pDotDelimitedName;
+export const pOptionList = Lang.pOptionList;
+export const pOption = Lang.pOption;
+export const pComparsionOp = Lang.pComparsionOp;
+export const pConst = Lang.pConst;
+export const pFunction = Lang.pFunction;
+export const pFunctionParam = Lang.pFunctionParam;
+export const pMoney = Lang.pMoney;
+export const pSigned = Lang.pSigned;
+export const pUnicode = Lang.pUnicode;
+export const pString = Lang.pString;
+export const pNumberList = Lang.pNumberList;
+export const pNumber = Lang.pNumber;
+export const pBinary = Lang.pBinary;
+export const pScience = Lang.pScience;
+export const pIdentifier = Lang.pIdentifier;
+export const pDelimitedIdentifier = Lang.pDelimitedIdentifier;
+export const pRegularIdentifier = Lang.pRegularIdentifier;
+export const pDQDelimitedIdentifier = Lang.pDQDelimitedIdentifier;
+export const pBracketDelimitedIdentifier = Lang.pBracketDelimitedIdentifier;
+export const pKeywordPKOrUnique = Lang.pKeywordPKOrUnique;
+export const pKeywordClusteredOrNon = Lang.pKeywordClusteredOrNon;
+export const pKeywordAscOrDesc = Lang.pKeywordAscOrDesc;

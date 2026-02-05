@@ -1,7 +1,6 @@
-const _ = require('lodash');
-const { getFullTableName } = require('../../../utils.cjs');
+import { getFullTableName } from '../../../utils.js';
 
-function createRefFromInlineRef (linesRefs, inlineRefs, fieldName, tableName) {
+function createRefFromInlineRef(linesRefs, inlineRefs, fieldName, tableName) {
   if (!inlineRefs || inlineRefs.length === 0) return;
   const newRef = {};
   const inlineRef = inlineRefs[0];
@@ -22,7 +21,7 @@ function createRefFromInlineRef (linesRefs, inlineRefs, fieldName, tableName) {
   linesRefs.push(newRef);
 }
 
-function pushOutEnum (linesEnums, fieldValue, tableName) {
+function pushOutEnum(linesEnums, fieldValue, tableName) {
   if (fieldValue.enums) {
     const _enum = fieldValue.enums;
     const fieldType = fieldValue.type;
@@ -36,7 +35,7 @@ function pushOutEnum (linesEnums, fieldValue, tableName) {
   }
 }
 
-function pushOutIndex (linesIndexes, fieldValue) {
+function pushOutIndex(linesIndexes, fieldValue) {
   if (fieldValue.indexes) {
     fieldValue.indexes.columns.push({
       value: fieldValue.name,
@@ -46,7 +45,7 @@ function pushOutIndex (linesIndexes, fieldValue) {
     fieldValue.indexes = null;
   }
 }
-function getLinesValue (lines, tableName) {
+function getLinesValue(lines, tableName) {
   const value = {
     fields: [],
     enums: [],
@@ -74,7 +73,7 @@ function getLinesValue (lines, tableName) {
   };
 }
 
-function makeTable (_keyword, tableName, _keyword2, lines) {
+function makeTable(_keyword, tableName, _keyword2, lines) {
   const fullName = getFullTableName(tableName);
   const linesValue = getLinesValue(lines, fullName);
   return {
@@ -86,6 +85,6 @@ function makeTable (_keyword, tableName, _keyword2, lines) {
   };
 }
 
-module.exports = {
+export {
   makeTable,
 };

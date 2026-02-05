@@ -1,10 +1,10 @@
-const P = require('parsimmon');
-const KP = require('../keyword_parsers.cjs');
-const {
+import P from 'parsimmon';
+import * as KP from '../keyword_parsers.js';
+import {
   pIdentifier, pKeywordClusteredOrNon, pFunction, pOptionList, pColumnNames, pKeywordPKOrUnique, pOption,
-} = require('../base_parsers.cjs');
-const { makeNode } = require('../utils.cjs');
-const A = require('./actions.cjs');
+} from '../base_parsers.js';
+import { makeNode } from '../utils.js';
+import * as A from './actions.js';
 
 const Lang = P.createLanguage({
 
@@ -47,10 +47,9 @@ const Lang = P.createLanguage({
   OnIndexOption: () => P.seq(KP.KeywordOn, P.alt(pIdentifier, pFunction)),
   ColumnIndexFilestream: () => P.seq(KP.KeywordFilestream_On, pIdentifier),
 });
-module.exports = {
-  pColumnIndex: Lang.ColumnIndex,
-  pIgnoredIndexOption: Lang.IgnoredIndexOption,
-  pTableIndex: Lang.TableIndex,
-  pColumnConstraintIndex: Lang.ColumnConstraintIndex,
-  pTableConstraintIndex: Lang.TableConstraintIndex,
-};
+
+export const pColumnIndex = Lang.ColumnIndex;
+export const pIgnoredIndexOption = Lang.IgnoredIndexOption;
+export const pTableIndex = Lang.TableIndex;
+export const pColumnConstraintIndex = Lang.ColumnConstraintIndex;
+export const pTableConstraintIndex = Lang.TableConstraintIndex;

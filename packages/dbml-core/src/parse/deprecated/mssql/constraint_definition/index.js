@@ -1,13 +1,13 @@
-const P = require('parsimmon');
-const KP = require('../keyword_parsers.cjs');
-const pExpression = require('../expression.cjs');
-const {
+import P from 'parsimmon';
+import * as KP from '../keyword_parsers.js';
+import pExpression from '../expression.js';
+import {
   pIdentifier, pConst, pFunction,
-} = require('../base_parsers.cjs');
-const { makeList, streamline, makeNode } = require('../utils.cjs');
-const { pColumnConstraintFK, pTableConstraintFK } = require('../fk_definition/index.cjs');
-const { pColumnConstraintIndex, pTableConstraintIndex } = require('../index_definition/index.cjs');
-const A = require('./actions.cjs');
+} from '../base_parsers.js';
+import { makeList, streamline, makeNode } from '../utils.js';
+import { pColumnConstraintFK, pTableConstraintFK } from '../fk_definition/index.js';
+import { pColumnConstraintIndex, pTableConstraintIndex } from '../index_definition/index.js';
+import * as A from './actions.js';
 
 const Lang = P.createLanguage({
   TableConstraint: (r) => P.seqMap(
@@ -72,11 +72,9 @@ const Lang = P.createLanguage({
   ConstraintName: () => P.seq(KP.KeywordConstraint, pIdentifier).map((value) => value[1]),
 });
 
-module.exports = {
-  pColumnConstraint: Lang.ColumnConstraint,
-  pTableConstraint: Lang.TableConstraint,
-  pConstraintCheck: Lang.ConstraintCheck,
-  pConstraintName: Lang.ConstraintName,
-  pConstExpr: Lang.ConstExpr,
-  makeTableConstraint: A.makeTableConstraint,
-};
+export const pColumnConstraint = Lang.ColumnConstraint;
+export const pTableConstraint = Lang.TableConstraint;
+export const pConstraintCheck = Lang.ConstraintCheck;
+export const pConstraintName = Lang.ConstraintName;
+export const pConstExpr = Lang.ConstExpr;
+export { makeTableConstraint } from './actions.js';

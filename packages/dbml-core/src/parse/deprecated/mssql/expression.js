@@ -1,29 +1,29 @@
-const P = require('parsimmon');
-const _ = require('lodash');
-const {
+import P from 'parsimmon';
+import {
   pFunction, pDotDelimitedName, pConst,
-} = require('./base_parsers.cjs');
-const {
+} from './base_parsers.js';
+import {
   LParen, RParen,
-} = require('./keyword_parsers.cjs');
-const wss = require('./whitespaces.cjs');
-const { streamline } = require('./utils.cjs');
+} from './keyword_parsers.js';
+import wss from './whitespaces.js';
+import { streamline } from './utils.js';
+import { flattenDeep } from 'lodash-es';
 
-function tokenizeParen (parser) {
+function tokenizeParen(parser) {
   return parser.many().map((value) => value.join('')).fallback(null).thru(streamline('token'));
 }
-function enclose (parser) {
+function enclose(parser) {
   const ManyRParen = RParen.thru(tokenizeParen);
   const ManyLParen = LParen.thru(tokenizeParen);
   return P.seq(ManyLParen, parser, ManyRParen);
 }
 
-function enclosedOrNot (parser) {
+function enclosedOrNot(parser) {
   return P.alt(enclose(parser), parser);
 }
 const Lang = P.createLanguage({
   ExpressionFinal: (r) => r.Expression.map((values) => {
-    const flattened = _.flattenDeep(values);
+    const flattened = flattenDeep(values);
     return flattened.map((value) => {
       return value ? value.value : '';
     }).join('');
@@ -56,4 +56,4 @@ const Lang = P.createLanguage({
   ExpressionDDN: () => pDotDelimitedName.map((value) => value.join('.')).thru(streamline('identifier')),
 });
 
-module.exports = Lang.ExpressionFinal;
+export default Lang.ExpressionFinal;

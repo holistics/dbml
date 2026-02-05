@@ -1,6 +1,6 @@
-const { getFullTableName } = require('../../../utils.cjs');
+import { getFullTableName } from '../../../utils.js';
 
-function makeIndex (_create, isUnique, _clustered, _index, indexName, _on, tableName, columnNames) {
+function makeIndex(_create, isUnique, _clustered, _index, indexName, _on, tableName, columnNames) {
   const fullTableName = getFullTableName(tableName);
   const columns = [];
   columnNames.forEach((columnName) => {
@@ -22,6 +22,6 @@ function makeIndex (_create, isUnique, _clustered, _index, indexName, _on, table
   };
 }
 
-module.exports = {
+export {
   makeIndex,
 };

@@ -1,4 +1,4 @@
-function makeDefaultConstraint (_keyword, constExpression) {
+function makeDefaultConstraint(_keyword, constExpression) {
   const value = {};
   if (constExpression.type) {
     switch (constExpression.type) {
@@ -22,7 +22,7 @@ function makeDefaultConstraint (_keyword, constExpression) {
   };
 }
 
-function makeConstraintCheckEnum (fieldName, _ununsed, values) {
+function makeConstraintCheckEnum(fieldName, _ununsed, values) {
   const valuesProp = [];
   values.forEach((value) => {
     valuesProp.push({
@@ -40,7 +40,7 @@ function makeConstraintCheckEnum (fieldName, _ununsed, values) {
   };
 }
 
-function makeTableConstraint (constraintName, option) {
+function makeTableConstraint(constraintName, option) {
   if (!option) return null;
   return {
     type: option.type,
@@ -52,7 +52,7 @@ function makeTableConstraint (constraintName, option) {
   };
 }
 
-module.exports = {
+export {
   makeConstraintCheckEnum,
   makeDefaultConstraint,
   makeTableConstraint,
