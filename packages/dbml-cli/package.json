@@ -6,7 +6,7 @@
   "main": "lib/index.js",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "vitest",
+    "test": "vitest run",
     "test:watch": "vitest watch",
     "coverage": "vitest --coverage",
     "build": "rm -rf ./lib && tsc --noEmit && vite build",
