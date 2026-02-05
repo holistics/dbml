@@ -178,7 +178,9 @@ export interface NormalizedSchema {
     id: number;
     name: string;
     note: string | null;
+    alias: string;
     tableIds: number[];
+    noteIds: number[];
     refIds: number[];
     tableGroupIds: number[];
     enumIds: number[];

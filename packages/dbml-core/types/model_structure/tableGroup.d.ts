@@ -59,6 +59,7 @@ export interface NormalizedTableGroup {
     id: number;
     name: string;
     note: string | null;
+    color: string;
     tableIds: number[];
     schemaId: number;
 }

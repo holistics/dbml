@@ -67,11 +67,13 @@ declare class Index extends Element {
 export interface NormalizedIndex {
     id: number;
     name: string | null;
+    type: any;
     unique: boolean;
-    pk: false;
+    pk: string;
     note: string | null;
     columnIds: number[];
     tableId: number;
+    injectedPartialId?: number;
 }
 
 export interface NormalizedIndexIdMap {

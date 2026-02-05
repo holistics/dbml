@@ -65,8 +65,12 @@ declare class Ref extends Element {
 export interface NormalizedRef {
     id: number;
     name: string | null;
+    color?: string;
+    onUpdate?: string;
+    onDelete?: string;
     schemaId: number;
     endpointIds: number[];
+    injectedPartialId?: number;
 }
 
 export interface NormalizedRefIdMap {

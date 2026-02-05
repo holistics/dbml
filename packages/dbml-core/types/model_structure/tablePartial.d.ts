@@ -87,14 +87,17 @@ declare class TablePartial extends Element {
 }
 
 export interface NormalizedTablePartial {
-    [id: number]: {
-        id: number;
-        name: string;
-        note: string;
-        headerColor: string;
-        fieldIds: number[];
-        indexIds: number[];
-    };
+    id: number;
+    name: string;
+    note: string;
+    headerColor: string;
+    fieldIds: number[];
+    indexIds: number[];
+    checkIds: number[];
+}
+
+export interface NormalizedTablePartialIdMap {
+    [id: number]: NormalizedTablePartial;
 }
 
 export default TablePartial;

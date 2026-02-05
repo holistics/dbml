@@ -124,10 +124,13 @@ export interface NormalizedTable {
     name: string;
     alias: string | null;
     note: string | null;
+    headerColor: string;
     fieldIds: number[];
     indexIds: number[];
+    checkIds: number[];
     schemaId: number;
     groupId: number | null;
+    partials: TablePartial[];
 }
 
 export interface NormalizedTableIdMap {
