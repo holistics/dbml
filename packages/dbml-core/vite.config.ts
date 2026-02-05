@@ -17,9 +17,6 @@ export default defineConfig({
       fileName: 'index',
       formats: ['cjs', 'es'],
     },
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
   },
   optimizeDeps: {
     exclude: ['parsimmon'],
