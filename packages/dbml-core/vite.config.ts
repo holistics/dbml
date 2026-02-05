@@ -23,7 +23,7 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    testTimeout: 60000,
+    testTimeout: 120000,  // 2 minutes for slow tests with coverage
     coverage: {
       provider: 'v8',
       reporter: ['json-summary', 'text'],
@@ -33,8 +33,11 @@ export default defineConfig({
         '**/*.spec.ts',
         '**/*.test.ts',
         '**/__tests__/**',
-        '**/parse/ANTLR/parsers/**',  // Auto-generated ANTLR parsers (32MB)
-        '**/parse/deprecated/**',      // Deprecated parsers
+        '**/parse/ANTLR/**',           // ANTLR parsers + AST generation (33MB)
+        '**/parse/deprecated/**',      // Deprecated parsers (1.4MB)
+        '**/**/constants.js',          // Constants don't need coverage
+        '**/index.js',                 // Re-export files
+        '**/index.ts',
       ],
     },
   },
