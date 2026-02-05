@@ -1,4 +1,3 @@
-import { serialize } from '@/core/serialization/serialize';
 import Compiler from '@/compiler/index';
 import * as services from '@/services/index';
 
@@ -59,4 +58,4 @@ export {
   type TablePartial,
 } from '@/core/interpreter/types';
 
-export { serialize, Compiler, services };
+export { Compiler, services };
