@@ -125,6 +125,12 @@ This module provides SQL parsing capabilities for PostgreSQL databases, enabling
 | `AUTO_INCREMENT` (column attribute) | — | MySQL syntax - not valid in PostgreSQL |
 | `IDENTITY(seed, increment)` (column property) | — | SQL Server/Snowflake syntax - not valid in PostgreSQL |
 
+### Generated (Computed) Columns
+
+| Feature | Status | Notes |
+|---------|---------|-------|
+| `GENERATED ALWAYS AS (expr) STORED` | ◐ | Parsed but expression is ignored in output |
+
 ### Inline Indexes (in `CREATE TABLE`)
 
 | Feature | Status | Notes |
