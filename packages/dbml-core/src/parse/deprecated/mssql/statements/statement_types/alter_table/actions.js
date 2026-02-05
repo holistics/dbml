@@ -1,18 +1,17 @@
-const _ = require('lodash');
-const { getFullTableName } = require('../../../utils.cjs');
+import { getFullTableName } from '../../../utils.js';
 
-function handleRef (tableName, result) {
+function handleRef(tableName, result) {
   const endpointWithNoTableName = result.value.endpoints.find((ele) => !ele.tableName);
   endpointWithNoTableName.tableName = tableName.name;
   endpointWithNoTableName.schemaName = tableName.schemaName;
 }
 
-function addTableName (tableName, result) {
+function addTableName(tableName, result) {
   result.value.tableName = tableName.name;
   result.value.schemaName = tableName.schemaName;
 }
 
-function handleAlterTableResult (_keyword, tableName, results) {
+function handleAlterTableResult(_keyword, tableName, results) {
   if (!results) return null;
   const fullName = getFullTableName(tableName);
 
@@ -35,6 +34,6 @@ function handleAlterTableResult (_keyword, tableName, results) {
   return results;
 }
 
-module.exports = {
+export {
   handleAlterTableResult,
 };

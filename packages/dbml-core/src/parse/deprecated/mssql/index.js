@@ -1,4 +1,4 @@
-const mssqlParser = require('./statements/index.cjs');
+import mssqlParser from './statements/index.js';
 
 mssqlParser.parseWithPegError = function (input) {
   try {
@@ -19,4 +19,4 @@ mssqlParser.parseWithPegError = function (input) {
   }
 };
 
-module.exports = mssqlParser;
+export default mssqlParser;
