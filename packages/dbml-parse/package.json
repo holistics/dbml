@@ -28,7 +28,7 @@
     "build": "rm -rf ./dist && tsc --noEmit && vite build",
     "dev": "vite build --watch",
     "test": "vitest run",
-    "test:watch": "vitest tests",
+    "test:watch": "vitest watch",
     "coverage": "vitest run --coverage",
     "prepublish": "npm run build",
     "prepare": "npm run build",

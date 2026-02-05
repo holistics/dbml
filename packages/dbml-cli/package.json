@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "test": "vitest",
-    "test:watch": "vitest tests",
+    "test:watch": "vitest watch",
     "coverage": "vitest --coverage",
     "build": "rm -rf ./lib && tsc --noEmit && vite build",
     "dev": "vite build --watch",
