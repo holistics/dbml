@@ -3,7 +3,7 @@ import Element, { RawNote, Token } from './element';
 import Enum from './enum';
 import TableGroup from './tableGroup';
 import Ref from './ref';
-import Database, { NormalizedDatabase } from './database';
+import Database, { NormalizedModel } from './database';
 import DbState from './dbState';
 export interface RawSchema {
     name: string;
@@ -172,20 +172,21 @@ declare class Schema extends Element {
         note: string;
         alias: string;
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
 export interface NormalizedSchema {
-    [_id: number]: {
-        id: number;
-        name: string;
-        note: string;
-        alias: string;
-        tableIds: number[];
-        noteIds: number[];
-        enumIds: number[];
-        tableGroupIds: number[];
-        refIds: number[];
-        databaseId: number;
-    };
+    id: number;
+    name: string;
+    note: string | null;
+    tableIds: number[];
+    refIds: number[];
+    tableGroupIds: number[];
+    enumIds: number[];
+    databaseId: number;
 }
+
+export interface NormalizedSchemaIdMap {
+    [_id: number]: NormalizedSchema;
+}
+
 export default Schema;

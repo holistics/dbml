@@ -1,7 +1,7 @@
 import Element, { Token } from './element';
 import Database from './database';
 import DbState from './dbState';
-import { NormalizedDatabase } from './database';
+import { NormalizedModel } from './database';
 interface RawStickyNote {
     name: string;
     content: string;
@@ -24,14 +24,17 @@ declare class StickyNote extends Element {
         content: string;
         headerColor: string;
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
-export interface NormalizedStickyNote {
-    [id: number]: {
-        id: number;
-        name: string;
-        content: string;
-        headerColor: string;
-    };
+export interface NormalizedNote {
+    id: number;
+    name: string;
+    content: string;
+    headerColor: string | null;
 }
+
+export interface NormalizedNoteIdMap {
+    [id: number]: NormalizedNote;
+}
+
 export default StickyNote;
