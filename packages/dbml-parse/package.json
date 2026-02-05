@@ -25,7 +25,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --noEmit && vite build",
+    "build": "rm -rf ./dist && tsc --noEmit && vite build",
     "dev": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest tests",
