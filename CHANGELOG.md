@@ -2,7 +2,7 @@
 
 #### :bug: Bug Fix
 * `dbml-parse`
-  * [#811](https://github.com/holistics/dbml/pull/811) Use unwrap_or instead of unwrap to avoid validation error ([@hdnax](https://github.com/hdnax))
+  * [#811](https://github.com/holistics/dbml/pull/811) Use `unwrap_or` instead of `unwrap` to avoid validation error when validating the scope of DBML elements ([@hdnax](https://github.com/hdnax))
 
 #### :boom: Breaking Change
 * `dbml-core`
