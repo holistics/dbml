@@ -9,7 +9,7 @@
     "test": "vitest",
     "test:watch": "vitest tests",
     "coverage": "vitest --coverage",
-    "build": "tsc --noEmit && vite build",
+    "build": "rm -rf ./lib && tsc --noEmit && vite build",
     "dev": "vite build --watch",
     "prepublish": "npm run build",
     "lint": "eslint .",
