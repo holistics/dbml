@@ -37,7 +37,7 @@
   "scripts": {
     "dev": "vite build --watch",
     "test": "vitest run",
-    "test:watch": "vitest tests",
+    "test:watch": "vitest watch",
     "coverage": "vitest run --coverage",
     "bench": "vitest bench",
     "build:parser": "node src/parse/deprecated/buildParser.cjs",
