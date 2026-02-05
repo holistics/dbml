@@ -58,12 +58,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     ctx.stmtmulti().accept(this);
   }
 
-  // (stmt SEMI?)*
+  // stmt? (SEMI stmt?)*
   visitStmtmulti (ctx) {
     ctx.stmt().map((stmt) => stmt.accept(this));
   }
 
-  // check PostgresSQLParser.g4 line 31
+  // check PostgreSQLParser.g4 line 50
   visitStmt (ctx) {
     if (ctx.createstmt()) {
       const table = ctx.createstmt().accept(this);
@@ -104,12 +104,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   }
 
   /*
-   CREATE opttemp TABLE (IF_P NOT EXISTS)? qualified_name (
-   OPEN_PAREN opttableelementlist CLOSE_PAREN optinherit optpartitionspec
-   table_access_method_clause optwith oncommitoption opttablespace
-   | OF any_name opttypedtableelementlist optpartitionspec table_access_method_clause
-   optwith oncommitoption opttablespace | PARTITION OF qualified_name opttypedtableelementlist
-   partitionboundspec optpartitionspec table_access_method_clause optwith oncommitoption opttablespace)
+   CREATE opttemp? TABLE (IF_P NOT EXISTS)? qualified_name (
+   OPEN_PAREN opttableelementlist? CLOSE_PAREN optinherit? optpartitionspec?
+   table_access_method_clause? optwith? oncommitoption? opttablespace?
+   | OF any_name opttypedtableelementlist? optpartitionspec? table_access_method_clause?
+   optwith? oncommitoption? opttablespace? | PARTITION OF qualified_name opttypedtableelementlist?
+   partitionboundspec optpartitionspec? table_access_method_clause? optwith? oncommitoption? opttablespace?)
    */
   visitCreatestmt (ctx) {
     const names = ctx.qualified_name(0).accept(this);
@@ -185,10 +185,10 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
   /*
    CHECK OPEN_PAREN a_expr CLOSE_PAREN constraintattributespec
-   | UNIQUE (OPEN_PAREN columnlist CLOSE_PAREN opt_c_include opt_definition optconstablespace constraintattributespec | existingindex constraintattributespec)
-   | PRIMARY KEY (OPEN_PAREN columnlist CLOSE_PAREN opt_c_include opt_definition optconstablespace constraintattributespec | existingindex constraintattributespec)
-   | EXCLUDE access_method_clause OPEN_PAREN exclusionconstraintlist CLOSE_PAREN opt_c_include opt_definition optconstablespace exclusionwhereclause constraintattributespec
-   | FOREIGN KEY OPEN_PAREN columnlist CLOSE_PAREN REFERENCES qualified_name opt_column_list key_match key_actions constraintattributespec
+   | UNIQUE (OPEN_PAREN columnlist CLOSE_PAREN c_include_? definition_? optconstablespace? constraintattributespec | existingindex constraintattributespec)
+   | PRIMARY KEY (OPEN_PAREN columnlist CLOSE_PAREN c_include_? definition_? optconstablespace? constraintattributespec | existingindex constraintattributespec)
+   | EXCLUDE access_method_clause? OPEN_PAREN exclusionconstraintlist CLOSE_PAREN c_include_? definition_? optconstablespace? exclusionwhereclause? constraintattributespec
+   | FOREIGN KEY OPEN_PAREN columnlist CLOSE_PAREN REFERENCES qualified_name column_list_? key_match? key_actions? constraintattributespec
    */
   visitConstraintelem (ctx) {
     if (ctx.PRIMARY()) {
@@ -211,9 +211,10 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const refSchemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
       const firstFieldNames = ctx.columnlist().accept(this).map((c) => c.value);
-      const secondFieldNames = ctx.opt_column_list().accept(this)?.map((c) => c.value);
+      const secondFieldNames = ctx.column_list_()?.accept(this)?.map((c) => c.value);
 
-      const actions = ctx.key_actions().accept(this);
+      const keyActions = ctx.key_actions();
+      const actions = keyActions ? keyActions.accept(this) : { onDelete: null, onUpdate: null };
 
       return {
         kind: TABLE_CONSTRAINT_KIND.FK,
@@ -256,9 +257,9 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     }
   }
 
-  // OPEN_PAREN columnlist CLOSE_PAREN |
-  visitOpt_column_list (ctx) {
-    return ctx.columnlist()?.accept(this);
+  // OPEN_PAREN columnlist CLOSE_PAREN
+  visitColumn_list_ (ctx) {
+    return ctx.columnlist().accept(this);
   }
 
   // columnElem (COMMA columnElem)*
@@ -274,7 +275,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     };
   }
 
-  // colid typename create_generic_options colquallist
+  // colid typename create_generic_options? colquallist
   visitColumnDef (ctx) {
     const name = ctx.colid().accept(this);
     const type = ctx.typename().accept(this);
@@ -336,12 +337,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   /*
    NOT NULL_P
    | NULL_P
-   | UNIQUE opt_definition optconstablespace
-   | PRIMARY KEY opt_definition optconstablespace
-   | CHECK OPEN_PAREN a_expr CLOSE_PAREN opt_no_inherit
+   | UNIQUE definition_? optconstablespace?
+   | PRIMARY KEY definition_? optconstablespace?
+   | CHECK OPEN_PAREN a_expr CLOSE_PAREN no_inherit_?
    | DEFAULT b_expr
-   | GENERATED generated_when AS (IDENTITY_P optparenthesizedseqoptlist | OPEN_PAREN a_expr CLOSE_PAREN STORED)
-   | REFERENCES qualified_name opt_column_list key_match key_actions
+   | GENERATED generated_when AS (IDENTITY_P optparenthesizedseqoptlist? | OPEN_PAREN a_expr CLOSE_PAREN STORED)
+   | REFERENCES qualified_name column_list_? key_match? key_actions?
    */
   visitColconstraintelem (ctx) {
     if (ctx.NULL_P()) {
@@ -392,9 +393,10 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       const names = ctx.qualified_name().accept(this);
       const refTableName = last(names);
       const refSchemaName = names.length > 1 ? names[names.length - 2] : undefined;
-      const secondFieldNames = ctx.opt_column_list().accept(this)?.map((c) => c.value);
+      const secondFieldNames = ctx.column_list_()?.accept(this)?.map((c) => c.value);
 
-      const actions = ctx.key_actions().accept(this);
+      const keyActions = ctx.key_actions();
+      const actions = keyActions ? keyActions.accept(this) : { onDelete: null, onUpdate: null };
       return {
         kind: COLUMN_CONSTRAINT_KIND.INLINE_REF,
         value: {
@@ -416,7 +418,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     }
   }
 
-  // check PostgresSQLParser.g4 line 3619
+  // check PostgreSQLParser.g4 line 3693
   visitB_expr (ctx) {
     if (ctx.c_expr()) return ctx.c_expr().accept(this);
     return {
@@ -425,7 +427,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     };
   }
 
-  // check PostgresSQLParser.g4 line 3640
+  // check PostgreSQLParser.g4 line 3714
   visitC_expr_expr (ctx) {
     if (ctx.aexprconst()) return ctx.aexprconst().accept(this);
     if (ctx.a_expr()) {
@@ -454,7 +456,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     };
   }
 
-  // iconst | fconst | sconst | bconst | xconst | func_name (sconst | OPEN_PAREN func_arg_list opt_sort_clause CLOSE_PAREN sconst) | consttypename sconst | constinterval (sconst opt_interval | OPEN_PAREN iconst CLOSE_PAREN sconst) | TRUE_P | FALSE_P | NULL_P
+  // iconst | fconst | sconst | bconst | xconst | func_name (sconst | OPEN_PAREN func_arg_list sort_clause_? CLOSE_PAREN sconst) | consttypename sconst | constinterval (sconst interval_? | OPEN_PAREN iconst CLOSE_PAREN sconst) | TRUE_P | FALSE_P | NULL_P
   visitAexprconst (ctx) {
     if (ctx.sconst() && ctx.getChildCount() === 1) {
       return {
@@ -470,7 +472,14 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       };
     }
 
-    if (ctx.iconst() || ctx.fconst) {
+    if (ctx.iconst()) {
+      return {
+        value: ctx.iconst().accept(this),
+        type: DATA_TYPE.NUMBER,
+      };
+    }
+
+    if (ctx.fconst()) {
       return {
         value: ctx.getText(),
         type: DATA_TYPE.NUMBER,
@@ -483,7 +492,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     };
   }
 
-  // key_update | key_delete | key_update key_delete | key_delete key_update |
+  // key_update | key_delete | key_update key_delete | key_delete key_update
   visitKey_actions (ctx) {
     let [onDelete, onUpdate] = [null, null];
     if (ctx.key_update()) onUpdate = ctx.key_update().accept(this);
@@ -530,26 +539,21 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
    identifier
    | unreserved_keyword
    | col_name_keyword
-   | plsql_unreserved_keyword
-   | LEFT
-   | RIGHT
    */
   visitColid (ctx) {
     return ctx.getChild(0).accept(this);
   }
 
-  // check PostgresSQLParser.g4 line 4187
+  // check PostgreSQLParser.g4 line 4468
   visitUnreserved_keyword (ctx) {
     return ctx.getText();
   }
 
   /*
-   Identifier opt_uescape
+   Identifier uescape_?
    | QuotedIdentifier
    | UnicodeQuotedIdentifier
-   | plsqlvariablename
-   | plsqlidentifier
-   | plsql_unreserved_keyword
+   | PLSQLVARIABLENAME
    */
   visitIdentifier (ctx) {
     if (ctx.Identifier()) {
@@ -566,18 +570,10 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       return qId.slice(1, qId.length - 1);
     }
 
-    if (ctx.plsql_unreserved_keyword()) {
-      return ctx.plsql_unreserved_keyword().accept(this);
-    }
-
     return ctx.getChild(0).getText();
   }
 
   visitCol_name_keyword (ctx) {
-    return ctx.getChild(0).getText();
-  }
-
-  visitPlsql_unreserved_keyword (ctx) {
     return ctx.getChild(0).getText();
   }
 
@@ -587,35 +583,35 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   }
 
   // DOT (attr_name | STAR)
-  // | OPEN_BRACKET (a_expr | opt_slice_bound COLON opt_slice_bound) CLOSE_BRACKET
+  // | OPEN_BRACKET (a_expr | slice_bound_? COLON slice_bound_?) CLOSE_BRACKET
   visitIndirection_el (ctx) {
     if (ctx.attr_name()) return ctx.attr_name().accept(this);
   }
 
-  // collabel
+  // colLabel
   visitAttr_name (ctx) {
-    return ctx.collabel().accept(this);
+    return ctx.colLabel().accept(this);
   }
 
   /*
    identifier
-   | plsql_unreserved_keyword
    | unreserved_keyword
    | col_name_keyword
    | type_func_name_keyword
    | reserved_keyword
+   | EXIT
    */
-  visitCollabel (ctx) {
+  visitColLabel (ctx) {
+    if (ctx.EXIT()) return ctx.EXIT().getText();
     return ctx.getChild(0).accept(this);
   }
 
-  // check PostgresSQLParser.g4 line 4567
+  // check PostgreSQLParser.g4 line 4917
   visitReserved_keyword (ctx) {
     return ctx.getText();
   }
 
   // SETOF? simpletypename (opt_array_bounds | ARRAY (OPEN_BRACKET iconst CLOSE_BRACKET)?)
-  // | qualified_name PERCENT (ROWTYPE | TYPE_P)
   visitTypename (ctx) {
     if (ctx.simpletypename()) {
       let arrayExtension = '';
@@ -637,7 +633,8 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
    | bit
    | character
    | constdatetime
-   | constinterval (opt_interval | OPEN_PAREN iconst CLOSE_PAREN)
+   | constinterval (interval_? | OPEN_PAREN iconst CLOSE_PAREN)
+   | jsonType
    */
   visitSimpletypename (ctx) {
     if (ctx.generictype()) return ctx.generictype().accept(this);
@@ -669,17 +666,17 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     };
   }
 
-  // (TIMESTAMP | TIME) (OPEN_PAREN iconst CLOSE_PAREN)? opt_timezone
+  // (TIMESTAMP | TIME) (OPEN_PAREN iconst CLOSE_PAREN)? timezone_?
   visitConstdatetime (ctx) {
     return `${ctx.getChild(0).getText()}${ctx.iconst() ? `(${ctx.iconst().accept(this)})` : ''}`;
   }
 
-  // INT_P | INTEGER | SMALLINT | BIGINT | REAL | FLOAT_P opt_float | DOUBLE_P PRECISION | DECIMAL_P opt_type_modifiers | DEC opt_type_modifiers | NUMERIC opt_type_modifiers | BOOLEAN_P
+  // INT_P | INTEGER | SMALLINT | BIGINT | REAL | FLOAT_P float_? | DOUBLE_P PRECISION | DECIMAL_P type_modifiers_? | DEC type_modifiers_? | NUMERIC type_modifiers_? | BOOLEAN_P
   visitNumeric (ctx) {
     return ctx.getText();
   }
 
-  // (builtin_function_name | type_function_name | LEFT | RIGHT) attrs? opt_type_modifiers
+  // type_function_name attrs? type_modifiers_?
   visitGenerictype (ctx) {
     if (ctx.attrs()) {
       const names = [ctx.getChild(0).getText(), ...ctx.attrs().accept(this)];
@@ -695,8 +692,10 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     if (ctx.type_function_name()) type = ctx.type_function_name().accept(this);
     else type = ctx.getText();
 
+    // example: VARCHAR(255) -> (255) is type_modifiers_
+    const modifiers = ctx.type_modifiers_();
     return {
-      type: type + ctx.opt_type_modifiers().getText(),
+      type: type + (modifiers ? modifiers.getText() : ''),
       schemaName: null,
     };
   }
@@ -710,9 +709,9 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     return r;
   }
 
-  // (CHARACTER | CHAR_P | NCHAR) opt_varying
+  // (CHARACTER | CHAR_P | NCHAR) varying_?
   // | VARCHAR
-  // | NATIONAL (CHARACTER | CHAR_P) opt_varying
+  // | NATIONAL (CHARACTER | CHAR_P) varying_?
   visitCharacter_c (ctx) {
     // Generate n element integer array [0, 1, ..., n-1]
     const childIndices = [...Array(ctx.getChildCount()).keys()];
@@ -724,7 +723,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     return text.slice(0, text.length - 1); // remove the last whitespace
   }
 
-  // identifier | unreserved_keyword | plsql_unreserved_keyword | type_func_name_keyword
+  // identifier | unreserved_keyword | type_func_name_keyword
   visitType_function_name (ctx) {
     return ctx.getChild(0).accept(this);
   }
@@ -738,37 +737,43 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     return ctx.getText();
   }
 
-  // Integral
+  // Integral | BinaryIntegral | OctalIntegral | HexadecimalIntegral
   visitIconst (ctx) {
-    return ctx.Integral().getText();
+    return Number(ctx.getText()).toString();
   }
 
-  // CREATE opt_unique INDEX opt_concurrently opt_index_name ON relation_expr access_method_clause OPEN_PAREN index_params CLOSE_PAREN opt_include opt_reloptions opttablespace where_clause
-  // | CREATE opt_unique INDEX opt_concurrently IF_P NOT EXISTS name ON relation_expr access_method_clause OPEN_PAREN index_params CLOSE_PAREN opt_include opt_reloptions opttablespace where_clause
+  // CREATE unique_? INDEX concurrently_? (if_not_exists_? index_name_)? ON relation_expr access_method_clause? OPEN_PAREN index_params CLOSE_PAREN include_? nulls_distinct? reloptions_? opttablespace? where_clause?
+  // | CREATE unique_? INDEX concurrently_? if_not_exists_? name ON relation_expr access_method_clause? OPEN_PAREN index_params CLOSE_PAREN include_? nulls_distinct? reloptions_? opttablespace? where_clause?
   visitIndexstmt (ctx) {
     const names = ctx.relation_expr().accept(this);
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
-    if (ctx.opt_index_name()) {
-      const r = {
-        pathName: {
-          tableName,
-          schemaName,
-        },
-        index: new Index({
-          name: ctx.opt_index_name().accept(this),
-          unique: ctx.opt_unique().accept(this),
-          type: ctx.access_method_clause().accept(this),
-          columns: ctx.index_params().accept(this),
-        }),
-      };
-      return r;
+    // Get index name from either index_name_ (first grammar alternative) or name (second alternative)
+    let indexName = null;
+    if (ctx.index_name_()) {
+      indexName = ctx.index_name_().accept(this);
+    } else if (ctx.name()) {
+      indexName = ctx.name().accept(this);
     }
+
+    const accessMethodClause = ctx.access_method_clause();
+    return {
+      pathName: {
+        tableName,
+        schemaName,
+      },
+      index: new Index({
+        name: indexName,
+        unique: ctx.unique_()?.accept(this) ?? false,
+        type: accessMethodClause ? accessMethodClause.accept(this) : undefined,
+        columns: ctx.index_params().accept(this),
+      }),
+    };
   }
 
-  // name |
-  visitOpt_index_name (ctx) {
+  // name
+  visitIndex_name_ (ctx) {
     return ctx.name()?.accept(this);
   }
 
@@ -777,7 +782,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     return ctx.colid().accept(this);
   }
 
-  // USING name |
+  // USING name
   visitAccess_method_clause (ctx) {
     if (ctx.name()) return ctx.name().accept(this);
   }
@@ -811,20 +816,20 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     };
   }
 
-  // UNIQUE |
-  visitOpt_unique (ctx) {
+  // UNIQUE
+  visitUnique_ (ctx) {
     return !!ctx.UNIQUE();
   }
 
   /*
    ALTER TABLE (IF_P EXISTS)? relation_expr (alter_table_cmds | partition_cmd)
-   | ALTER TABLE ALL IN_P TABLESPACE name (OWNED BY role_list)? SET TABLESPACE name opt_nowait
+   | ALTER TABLE ALL IN_P TABLESPACE name (OWNED BY role_list)? SET TABLESPACE name nowait_?
    | ALTER INDEX (IF_P EXISTS)? qualified_name (alter_table_cmds | index_partition_cmd)
-   | ALTER INDEX ALL IN_P TABLESPACE name (OWNED BY role_list)? SET TABLESPACE name opt_nowait
+   | ALTER INDEX ALL IN_P TABLESPACE name (OWNED BY role_list)? SET TABLESPACE name nowait_?
    | ALTER SEQUENCE (IF_P EXISTS)? qualified_name alter_table_cmds
    | ALTER VIEW (IF_P EXISTS)? qualified_name alter_table_cmds
    | ALTER MATERIALIZED VIEW (IF_P EXISTS)? qualified_name alter_table_cmds
-   | ALTER MATERIALIZED VIEW ALL IN_P TABLESPACE name (OWNED BY role_list)? SET TABLESPACE name opt_nowait
+   | ALTER MATERIALIZED VIEW ALL IN_P TABLESPACE name (OWNED BY role_list)? SET TABLESPACE name nowait_?
    | ALTER FOREIGN TABLE (IF_P EXISTS)? relation_expr alter_table_cmds
    */
   visitAltertablestmt (ctx) {
@@ -899,7 +904,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     return ctx.alter_table_cmd().map((a) => a.accept(this));
   }
 
-  // check PostgresSQLParser.g4 line 410
+  // check PostgreSQLParser.g4 line 424
   visitAlter_table_cmd (ctx) {
     if (ctx.tableconstraint()) {
       const constraint = ctx.tableconstraint().accept(this);
@@ -966,7 +971,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     return ctx.sconst().accept(this);
   }
 
-  // anysconst opt_uescape
+  // anysconst uescape_?
   visitSconst (ctx) {
     return ctx.anysconst().accept(this);
   }
@@ -997,13 +1002,13 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   }
 
   /*
-   CREATE opt_or_replace AGGREGATE func_name aggr_args definition
-   | CREATE opt_or_replace AGGREGATE func_name old_aggr_definition
+   CREATE or_replace_? AGGREGATE func_name aggr_args definition
+   | CREATE or_replace_? AGGREGATE func_name old_aggr_definition
    | CREATE OPERATOR any_operator definition
    | CREATE TYPE_P any_name definition
    | CREATE TYPE_P any_name
-   | CREATE TYPE_P any_name AS OPEN_PAREN opttablefuncelementlist CLOSE_PAREN
-   | CREATE TYPE_P any_name AS ENUM_P OPEN_PAREN opt_enum_val_list CLOSE_PAREN
+   | CREATE TYPE_P any_name AS OPEN_PAREN opttablefuncelementlist? CLOSE_PAREN
+   | CREATE TYPE_P any_name AS ENUM_P OPEN_PAREN enum_val_list_? CLOSE_PAREN
    | CREATE TYPE_P any_name AS RANGE definition
    | CREATE TEXT_P SEARCH PARSER any_name definition
    | CREATE TEXT_P SEARCH DICTIONARY any_name definition
@@ -1015,12 +1020,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
    | CREATE COLLATION IF_P NOT EXISTS any_name FROM any_name
    */
   visitDefinestmt (ctx) {
-    if (ctx.TYPE_P() && ctx.opt_enum_val_list()) {
+    if (ctx.TYPE_P() && ctx.enum_val_list_()) {
       const names = ctx.any_name(0).accept(this);
       const enumName = last(names);
       const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
-      const values = ctx.opt_enum_val_list().accept(this).map((e) => ({ name: e }));
+      const values = ctx.enum_val_list_().accept(this).map((e) => ({ name: e }));
       if (!values) return;
 
       // enum is a keyworkd
@@ -1034,8 +1039,8 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     }
   }
 
-  // enum_val_list |
-  visitOpt_enum_val_list (ctx) {
+  // enum_val_list
+  visitEnum_val_list_ (ctx) {
     return ctx.enum_val_list()?.accept(this);
   }
 
@@ -1045,7 +1050,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   }
 
   // insertstmt
-  //  : opt_with_clause INSERT INTO insert_target insert_rest opt_on_conflict returning_clause
+  //  : with_clause_? INSERT INTO insert_target insert_rest on_conflict_? returning_clause?
   //  ;
   visitInsertstmt (ctx) {
     const names = ctx.insert_target().accept(this);
@@ -1130,36 +1135,43 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
   }
 
   // select_no_parens
-  //  : select_clause opt_sort_clause (for_locking_clause opt_select_limit | select_limit opt_for_locking_clause)?
-  //  | with_clause select_clause opt_sort_clause (for_locking_clause opt_select_limit | select_limit opt_for_locking_clause)?
+  //  : select_clause sort_clause_? (for_locking_clause select_limit_? | select_limit for_locking_clause_?)?
+  //  | with_clause select_clause sort_clause_? (for_locking_clause select_limit_? | select_limit for_locking_clause_?)?
   //  ;
   visitSelect_no_parens (ctx) {
     return ctx.select_clause().accept(this);
   }
 
   // select_clause
-  //  : simple_select
-  //  | select_with_parens
+  //  : simple_select_intersect ((UNION | EXCEPT) all_or_distinct? simple_select_intersect)*
   //  ;
   visitSelect_clause (ctx) {
-    return ctx.simple_select().accept(this);
+    // Navigate through simple_select_intersect to get values
+    const intersects = ctx.simple_select_intersect();
+    if (!intersects || intersects.length === 0) {
+      return null;
+    }
+    // For INSERT statements, we typically only care about the first simple_select_intersect
+    return intersects[0].accept(this);
   }
 
-  // simple_select
-  //  : ( SELECT (opt_all_clause into_clause opt_target_list | distinct_clause target_list)
-  //          into_clause
-  //          from_clause
-  //          where_clause
-  //          group_clause
-  //          having_clause
-  //          window_clause
-  //      | values_clause
-  //      | TABLE relation_expr
-  //      | select_with_parens set_operator_with_all_or_distinct (simple_select | select_with_parens)
-  //    )
-  //       (set_operator_with_all_or_distinct (simple_select | select_with_parens))*
+  // simple_select_intersect
+  //  : simple_select_pramary (INTERSECT all_or_distinct? simple_select_pramary)*
   //  ;
-  visitSimple_select (ctx) {
+  visitSimple_select_intersect (ctx) {
+    // Navigate through simple_select_pramary (note the typo "pramary" in grammar)
+    const primaries = ctx.simple_select_pramary();
+    if (!primaries || primaries.length === 0) {
+      return null;
+    }
+    // For INSERT statements, we typically only care about the first simple_select_pramary
+    return primaries[0].accept(this);
+  }
+
+  // simple_select_pramary (note: "pramary" is a typo in the grammar, should be "primary")
+  //  : SELECT ... | values_clause | TABLE relation_expr | select_with_parens
+  //  ;
+  visitSimple_select_pramary (ctx) {
     if (!ctx.values_clause()) {
       return null;
     }
