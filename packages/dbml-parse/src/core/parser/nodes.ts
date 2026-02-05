@@ -110,11 +110,14 @@ export class ProgramNode extends SyntaxNode {
 
   eof?: SyntaxToken;
 
+  source: string;
+
   constructor (
-    { body = [], eof }: { body?: ElementDeclarationNode[]; eof?: SyntaxToken },
+    { body = [], eof, source }: { body?: ElementDeclarationNode[]; eof?: SyntaxToken; source: string },
     id: SyntaxNodeId,
   ) {
     super(id, SyntaxNodeKind.PROGRAM, [...body, eof]);
+    this.source = source;
     this.body = body;
     this.eof = eof;
   }

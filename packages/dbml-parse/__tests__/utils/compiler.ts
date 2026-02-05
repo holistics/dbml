@@ -34,7 +34,7 @@ export function lex (source: string): Report<SyntaxToken[]> {
 }
 
 export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
-  return new Lexer(source).lex().chain((tokens) => new Parser(tokens, new SyntaxNodeIdGenerator()).parse());
+  return new Lexer(source).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator()).parse());
 }
 
 export function analyze (source: string): Report<ProgramNode> {

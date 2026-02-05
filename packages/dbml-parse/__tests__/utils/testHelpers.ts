@@ -33,6 +33,11 @@ export function serialize (
         return (value as NodeSymbol)?.id;
       }
 
+      // Don't include source in the serialized AST
+      if (this instanceof ProgramNode && key === 'source') {
+        return undefined;
+      }
+
       // For root node symbol: output full symbol table with reference IDs
       if (key === 'symbol') {
         return {

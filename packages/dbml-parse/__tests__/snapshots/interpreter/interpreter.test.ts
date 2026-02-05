@@ -20,7 +20,7 @@ describe('[snapshot] interpreter', () => {
     const report = new Lexer(program)
       .lex()
       .chain((tokens) => {
-        return new Parser(tokens, nodeIdGenerator).parse();
+        return new Parser(program, tokens, nodeIdGenerator).parse();
       })
       .chain(({ ast }) => {
         return new Analyzer(ast, symbolIdGenerator).analyze();
@@ -33,7 +33,7 @@ describe('[snapshot] interpreter', () => {
         2,
       );
     } else {
-      const res = new Interpreter(report.getValue(), program).interpret();
+      const res = new Interpreter(report.getValue()).interpret();
       if (res.getErrors().length > 0) {
         output = JSON.stringify(
           res.getErrors(),

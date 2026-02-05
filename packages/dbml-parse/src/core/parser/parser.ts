@@ -62,7 +62,10 @@ export default class Parser {
 
   private nodeFactory: NodeFactory;
 
-  constructor (tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
+  private source: string;
+
+  constructor (source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
+    this.source = source;
     this.tokens = tokens;
     this.nodeFactory = new NodeFactory(nodeIdGenerator);
   }
@@ -173,7 +176,7 @@ export default class Parser {
   parse (): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
     const body = this.program();
     const eof = this.advance();
-    const program = this.nodeFactory.create(ProgramNode, { body, eof });
+    const program = this.nodeFactory.create(ProgramNode, { body, eof, source: this.source });
     this.gatherInvalid();
 
     return new Report({ ast: program, tokens: this.tokens }, this.errors);

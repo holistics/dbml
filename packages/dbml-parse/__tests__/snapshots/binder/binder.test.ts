@@ -1,13 +1,12 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
-import { serialize } from '@/core/serialization/serialize';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
 import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
 import Analyzer from '@/core/analyzer/analyzer';
-import { scanTestNames } from '@tests/utils';
+import { serialize, scanTestNames } from '@tests/utils';
 
 describe('[snapshot] binder', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
@@ -19,7 +18,7 @@ describe('[snapshot] binder', () => {
     const report = new Lexer(program)
       .lex()
       .chain((tokens) => {
-        return new Parser(tokens, nodeIdGenerator).parse();
+        return new Parser(program, tokens, nodeIdGenerator).parse();
       })
       .chain(({ ast }) => {
         return new Analyzer(ast, symbolIdGenerator).analyze();
